@@ -122,7 +122,7 @@ class TermSelectionViewModel @Inject constructor(
     fun onAddTermClicked() {
         val parentOptions = if (isCategories) {
             loadedTerms.map {
-                ParentOption(it.id, it.name)
+                ParentOption(it.id, displayName(it))
             }
         } else {
             emptyList()
@@ -287,7 +287,7 @@ class TermSelectionViewModel @Inject constructor(
         val selectable = terms.map { term ->
             SelectableTerm(
                 id = term.id,
-                name = term.name,
+                name = displayName(term),
                 level = if (
                     isCategories && !hasSearchQuery
                 ) {
@@ -323,7 +323,7 @@ class TermSelectionViewModel @Inject constructor(
             visited.add(term.id)
             result.add(term)
             terms.filter { it.parent == term.id }
-                .sortedBy { it.name.lowercase() }
+                .sortedBy { displayName(it).lowercase() }
                 .forEach { addWithChildren(it) }
         }
 
@@ -332,7 +332,7 @@ class TermSelectionViewModel @Inject constructor(
                 it.parent == null ||
                 termsById[it.parent] == null
         }
-            .sortedBy { it.name.lowercase() }
+            .sortedBy { displayName(it).lowercase() }
             .forEach { addWithChildren(it) }
 
         return result
@@ -351,6 +351,10 @@ class TermSelectionViewModel @Inject constructor(
         }
         return level
     }
+
+    private fun displayName(
+        term: AnyTermWithViewContext,
+    ) = term.name.ifBlank { term.slug }
 
     private fun handleCreateTermError() {
         _events.trySend(

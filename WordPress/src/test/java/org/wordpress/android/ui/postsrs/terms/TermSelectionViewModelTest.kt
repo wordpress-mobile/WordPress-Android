@@ -143,6 +143,33 @@ class TermSelectionViewModelTest : BaseUnitTest(
         assertThat(viewModel.uiState.value.terms).isEmpty()
     }
 
+    @Test
+    fun `uses the slug when a term name is empty`() = test {
+        val unnamedTerm = term(
+            id = 1L,
+            name = "",
+            slug = "generated-category",
+        )
+        whenever(
+            restClient.fetchTermsPage(
+                site,
+                TermEndpointType.Categories,
+                nextPageParams = null,
+            )
+        ).thenReturn(
+            PostRsRestClient.TermsPageResult(
+                listOf(unnamedTerm),
+                null,
+            )
+        )
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.terms.single().name)
+            .isEqualTo("generated-category")
+    }
+
     private fun createViewModel(): TermSelectionViewModel {
         val savedStateHandle = SavedStateHandle(
             mapOf(
@@ -163,10 +190,12 @@ class TermSelectionViewModelTest : BaseUnitTest(
     private fun term(
         id: Long,
         name: String,
+        slug: String = name,
     ): AnyTermWithViewContext {
         val term = org.mockito.kotlin.mock<AnyTermWithViewContext>()
         whenever(term.id).thenReturn(id)
         whenever(term.name).thenReturn(name)
+        whenever(term.slug).thenReturn(slug)
         whenever(term.parent).thenReturn(0L)
         return term
     }
