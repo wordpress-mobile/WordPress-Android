@@ -79,24 +79,26 @@ class TaxonomyRsApiRestClient @Inject constructor(
                     )
                     notifyTermDeleted(RemoteTermPayload(termModel, site))
                 } else {
-                    notifyFailedDeleting(taxonomyName, site, term)
+                    // The request itself succeeded, so there is no error to map: the API simply
+                    // reported the term as not deleted.
+                    appLogWrapper.e(AppLog.T.POSTS, "Failed deleting $taxonomyName: API reported it as not deleted")
+                    notifyFailedDeleting(site, term, TaxonomyError(TaxonomyErrorType.GENERIC_ERROR))
                 }
             }
             else -> {
-                notifyFailedDeleting(taxonomyName, site, term, termResponse)
+                appLogWrapper.e(AppLog.T.POSTS, "Failed deleting $taxonomyName: ${termResponse.toLogErrorString()}")
+                notifyFailedDeleting(site, term, termResponse.toTaxonomyError())
             }
         }
     }
 
     private fun notifyFailedDeleting(
-        taxonomyName: String,
         site: SiteModel,
         term: TermModel,
-        result: WpRequestResult<*>? = null
+        error: TaxonomyError
     ) {
-        appLogWrapper.e(AppLog.T.POSTS, "Failed deleting $taxonomyName: ${result?.toLogErrorString()}")
         val payload = RemoteTermPayload(term, site)
-        payload.error = result?.toTaxonomyError() ?: TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
+        payload.error = error
         notifyTermDeleted(payload)
     }
 
