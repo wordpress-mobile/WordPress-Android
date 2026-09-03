@@ -2755,12 +2755,15 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 mediaId, postRepository
             ) { _: PostImmutableModel? ->
              }
-        } else if (editPostSettingsFragment != null) {
-            editPostSettingsFragment?.updateFeaturedImage(mediaId, imagePicked)
         } else {
-            // The post settings screen isn't shown (e.g. the featured image is being set from the
-            // pre-publish sheet), so write the id straight to the post ourselves.
-            updateFeaturedImageUseCase.updateFeaturedImage(mediaId, editPostRepository) { }
+            // The post settings screen may not be showing (e.g. the image was set from the
+            // pre-publish sheet), so fall back to writing the id ourselves. Either way the editor is
+            // synced below via sendToJSFeaturedImageId.
+            if (editPostSettingsFragment != null) {
+                editPostSettingsFragment?.updateFeaturedImage(mediaId, imagePicked)
+            } else {
+                updateFeaturedImageUseCase.updateFeaturedImage(mediaId, editPostRepository) { }
+            }
         }
         if (editorFragment is GutenbergEditorFragment) {
             (editorFragment as GutenbergEditorFragment).sendToJSFeaturedImageId(mediaId.toInt())

@@ -2471,14 +2471,17 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 mediaId, postRepository
             ) { _: PostImmutableModel? ->
              }
-        } else if (editPostSettingsFragment != null) {
-            editPostSettingsFragment?.updateFeaturedImage(mediaId, imagePicked)
         } else {
-            // The post settings screen isn't shown (e.g. the featured image is being set from the
-            // pre-publish sheet), so write the id ourselves and push it to the editor.
-            updateFeaturedImageUseCase.updateFeaturedImage(mediaId, editPostRepository) {
-                editorFragment?.setFeaturedImageId(editPostRepository.featuredImageId)
+            // The post settings screen may not be showing (e.g. the image was set from the
+            // pre-publish sheet), so fall back to writing the id ourselves.
+            if (editPostSettingsFragment != null) {
+                editPostSettingsFragment?.updateFeaturedImage(mediaId, imagePicked)
+            } else {
+                updateFeaturedImageUseCase.updateFeaturedImage(mediaId, editPostRepository) { }
             }
+            // Push straight to the editor so it doesn't keep showing a stale image. Uses mediaId
+            // rather than the repository value because the write above is async.
+            editorFragment?.setFeaturedImageId(mediaId)
         }
     }
 
