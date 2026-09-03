@@ -3890,7 +3890,11 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     override fun getEditPostRepository() = editPostRepository
     override fun getSite() = siteModel
     override fun syncFeaturedImageIdToEditor() {
-        editorFragment?.setFeaturedImageId(editPostRepository.featuredImageId)
+        val featuredImageId = editPostRepository.featuredImageId
+        editorFragment?.setFeaturedImageId(featuredImageId)
+        // setFeaturedImageId only stores the id; push it to the JS editor so the featured image
+        // block isn't left showing a stale image after a set/remove from the pre-publish sheet.
+        (editorFragment as? GutenbergEditorFragment)?.sendToJSFeaturedImageId(featuredImageId.toInt())
     }
     override fun supportsFeaturedImageEditing() = true
 

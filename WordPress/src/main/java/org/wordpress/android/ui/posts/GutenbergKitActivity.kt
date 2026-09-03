@@ -2479,8 +2479,10 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
             } else {
                 updateFeaturedImageUseCase.updateFeaturedImage(mediaId, editPostRepository) { }
             }
-            // Push straight to the editor so it doesn't keep showing a stale image. Uses mediaId
-            // rather than the repository value because the write above is async.
+            // Record the id on the fragment (kept across config changes). GutenbergKit's
+            // GutenbergView exposes no app->webview featured-image setter, so the already-loaded
+            // editor can only pick this up on its next load; the PostModel write above is the
+            // source of truth for saving.
             editorFragment?.setFeaturedImageId(mediaId)
         }
     }
@@ -3139,6 +3141,9 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     override fun getEditPostRepository() = editPostRepository
     override fun getSite() = siteModel
     override fun syncFeaturedImageIdToEditor() {
+        // GutenbergKit's GutenbergView has no app->webview featured-image setter, so this only
+        // records the id on the fragment; the loaded editor reflects it on its next load. The
+        // PostModel write done by the caller is what actually persists the change.
         editorFragment?.setFeaturedImageId(editPostRepository.featuredImageId)
     }
     override fun supportsFeaturedImageEditing() = true
