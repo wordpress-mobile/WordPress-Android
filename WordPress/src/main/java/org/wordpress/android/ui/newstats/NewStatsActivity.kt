@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -1511,25 +1512,38 @@ private fun StatsPeriodMenu(
         expanded = expanded,
         onDismissRequest = onDismiss
     ) {
-        // Show preset periods
-        StatsPeriod.presets().forEach { period ->
-            val isSelected = selectedPeriod == period
-            DropdownMenuItem(
-                text = { Text(text = stringResource(id = period.labelResId)) },
-                onClick = { onPresetSelected(period) },
-                trailingIcon = if (isSelected) {
-                    { Icon(Icons.Default.Check, contentDescription = null) }
-                } else {
-                    null
-                }
-            )
-        }
+        // Rolling "last N" presets
+        StatsPeriodMenuItems(StatsPeriod.rollingPresets(), selectedPeriod, onPresetSelected)
+        HorizontalDivider()
+        // Calendar-aligned presets (Today, This Week/Month/Year)
+        StatsPeriodMenuItems(StatsPeriod.calendarPresets(), selectedPeriod, onPresetSelected)
+        HorizontalDivider()
         // Show Custom option
         val isCustomSelected = selectedPeriod is StatsPeriod.Custom
         DropdownMenuItem(
             text = { Text(text = stringResource(id = R.string.stats_period_custom)) },
             onClick = { onCustomSelected() },
             trailingIcon = if (isCustomSelected) {
+                { Icon(Icons.Default.Check, contentDescription = null) }
+            } else {
+                null
+            }
+        )
+    }
+}
+
+@Composable
+private fun StatsPeriodMenuItems(
+    presets: List<StatsPeriod>,
+    selectedPeriod: StatsPeriod?,
+    onPresetSelected: (StatsPeriod) -> Unit
+) {
+    presets.forEach { period ->
+        val isSelected = selectedPeriod == period
+        DropdownMenuItem(
+            text = { Text(text = stringResource(id = period.labelResId)) },
+            onClick = { onPresetSelected(period) },
+            trailingIcon = if (isSelected) {
                 { Icon(Icons.Default.Check, contentDescription = null) }
             } else {
                 null

@@ -137,7 +137,6 @@ Language: sq_AL
     <string name="stats_period_selector_content_description">Përzgjidhni periudhë statistikash</string>
     <string name="stats_period_custom">Vetjake</string>
     <string name="stats_period_last_12_months">12 muajt e fundit</string>
-    <string name="stats_period_last_6_months">6 muajt e fundit</string>
     <string name="stats_period_last_30_days">30 ditët e fundit</string>
     <string name="stats_period_last_7_days">7 ditët e fundit</string>
     <string name="stats_period_today">Sot</string>

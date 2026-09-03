@@ -226,7 +226,6 @@ Language: es_CO
     <string name="stats_select_date_range">Selecciona un rango de fechas</string>
     <string name="stats_period_custom">Personalizada</string>
     <string name="stats_period_last_12_months">Últimos 12 meses</string>
-    <string name="stats_period_last_6_months">Últimos 6 meses</string>
     <string name="stats_period_last_30_days">Últimos 30 días</string>
     <string name="stats_period_last_7_days">Últimos 7 días</string>
     <string name="stats_period_today">Hoy</string>
