@@ -94,9 +94,4 @@ in the `libs/` directory comes from external libraries, which might
 be covered by a different license compatible with the GPLv2.
 
 [1]: https://play.google.com/store/apps/details?id=org.wordpress.android
-[3]: https://developer.android.com/studio
-[4]: https://make.wordpress.org/chat/
-[5]: https://developer.wordpress.com/apps/
-[6]: https://developer.wordpress.com/docs/oauth2/
-[7]: https://developer.wordpress.com/docs/api/
 [8]: https://developers.google.com/identity/
