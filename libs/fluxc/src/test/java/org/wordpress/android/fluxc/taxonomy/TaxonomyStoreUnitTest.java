@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY;
@@ -77,6 +78,27 @@ public class TaxonomyStoreUnitTest {
             // Callers subscribe to REMOVE_TERM, so both outcomes have to arrive under that cause
             // for the screen that started the deletion to hear about either one.
             assertEquals(TaxonomyAction.REMOVE_TERM, mLastTaxonomyChanged.causeOfChange);
+        } finally {
+            mDispatcher.unregister(this);
+        }
+    }
+
+    @Test
+    public void testSuccessfulDeletionIsReportedAsRemoveTerm() {
+        mDispatcher.register(this);
+        try {
+            TermModel category = TaxonomyTestUtils.generateSampleCategory();
+            TaxonomySqlUtils.insertOrUpdateTerm(category);
+
+            RemoteTermPayload payload = new RemoteTermPayload(category, new SiteModel());
+
+            mTaxonomyStore.onAction(TaxonomyActionBuilder.newDeletedTermAction(payload));
+
+            assertNotNull(mLastTaxonomyChanged);
+            assertFalse(mLastTaxonomyChanged.isError());
+            assertEquals(TaxonomyAction.REMOVE_TERM, mLastTaxonomyChanged.causeOfChange);
+            assertEquals(1, mLastTaxonomyChanged.rowsAffected);
+            assertEquals(0, TaxonomyTestUtils.getTermsCount());
         } finally {
             mDispatcher.unregister(this);
         }
