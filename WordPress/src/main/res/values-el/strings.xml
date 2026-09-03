@@ -6,6 +6,7 @@ Generator: GlotPress/4.1.0
 Language: el_GR
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="site_creation_domain_tag_sale">Προσφορά</string>
     <string name="site_creation_domain_tag_recommended">Προτεινόμενο</string>
     <string name="site_creation_domain_tag_best_alternative">Καλύτερη Εναλλακτική</string>
     <string name="help_buttons_screen_title">Βοήθεια</string>
