@@ -2471,8 +2471,19 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 mediaId, postRepository
             ) { _: PostImmutableModel? ->
              }
-        } else if (editPostSettingsFragment != null) {
-            editPostSettingsFragment?.updateFeaturedImage(mediaId, imagePicked)
+        } else {
+            // The post settings screen may not be showing (e.g. the image was set from the
+            // pre-publish sheet), so fall back to writing the id ourselves.
+            if (editPostSettingsFragment != null) {
+                editPostSettingsFragment?.updateFeaturedImage(mediaId, imagePicked)
+            } else {
+                updateFeaturedImageUseCase.updateFeaturedImage(mediaId, editPostRepository) { }
+            }
+            // Record the id on the fragment (kept across config changes). GutenbergKit's
+            // GutenbergView exposes no app->webview featured-image setter, so the already-loaded
+            // editor can only pick this up on its next load; the PostModel write above is the
+            // source of truth for saving.
+            editorFragment?.setFeaturedImageId(mediaId)
         }
     }
 
@@ -3129,6 +3140,13 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     // EditorDataProvider methods
     override fun getEditPostRepository() = editPostRepository
     override fun getSite() = siteModel
+    override fun syncFeaturedImageIdToEditor() {
+        // GutenbergKit's GutenbergView has no app->webview featured-image setter, so this only
+        // records the id on the fragment; the loaded editor reflects it on its next load. The
+        // PostModel write done by the caller is what actually persists the change.
+        editorFragment?.setFeaturedImageId(editPostRepository.featuredImageId)
+    }
+    override fun supportsFeaturedImageEditing() = true
 
     override fun onMenuOpened(featureId: Int, menu: Menu): Boolean {
         // This is a workaround for bag discovered on Chromebooks, where Enter key will not work in the toolbar menu
