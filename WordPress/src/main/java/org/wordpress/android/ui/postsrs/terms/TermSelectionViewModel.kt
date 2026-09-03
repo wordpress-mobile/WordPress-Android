@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.util.AppLog
@@ -27,6 +28,7 @@ import uniffi.wp_api.AnyTermWithViewContext
 import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.TermListParams
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 @Suppress("TooManyFunctions")
@@ -36,6 +38,7 @@ class TermSelectionViewModel @Inject constructor(
     private val restClient: PostRsRestClient,
     private val resourceProvider: ResourceProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
     private val isCategories: Boolean =
         savedStateHandle[EXTRA_IS_CATEGORIES] ?: true
@@ -68,7 +71,6 @@ class TermSelectionViewModel @Inject constructor(
 
     private var loadedTerms =
         mutableListOf<AnyTermWithViewContext>()
-    private var nextPageParams: TermListParams? = null
     private val selectedIds =
         initialSelectedIds.toMutableSet()
     private var searchJob: Job? = null
@@ -117,21 +119,6 @@ class TermSelectionViewModel @Inject constructor(
         }
     }
 
-    fun onLoadMore() {
-        val currentSite = site ?: return
-        val params = nextPageParams ?: return
-        if (!_uiState.value.isLoadingMore) {
-            _uiState.update {
-                it.copy(isLoadingMore = true)
-            }
-            viewModelScope.launch {
-                fetchPage(
-                    currentSite, params, append = true
-                )
-            }
-        }
-    }
-
     fun onAddTermClicked() {
         val parentOptions = if (isCategories) {
             loadedTerms.map {
@@ -166,7 +153,7 @@ class TermSelectionViewModel @Inject constructor(
         }
         viewModelScope.launch {
             try {
-                val newId = withContext(Dispatchers.IO) {
+                val newId = withContext(ioDispatcher) {
                     restClient.createTerm(
                         currentSite,
                         endpointType,
@@ -226,88 +213,64 @@ class TermSelectionViewModel @Inject constructor(
         }
         viewModelScope.launch {
             loadedTerms.clear()
-            nextPageParams = null
             val search = _uiState.value.searchQuery
                 .trim().ifEmpty { null }
-            fetchPage(
-                currentSite,
-                initialParams = null,
-                append = false,
-                search = search,
-            )
+            fetchAllPages(currentSite, search)
         }
     }
 
     @Suppress("TooGenericExceptionCaught", "LongMethod")
-    private suspend fun fetchPage(
+    private suspend fun fetchAllPages(
         site: SiteModel,
-        initialParams: TermListParams?,
-        append: Boolean,
         search: String? = null,
     ) {
-        try {
-            val result = withContext(Dispatchers.IO) {
-                restClient.fetchTermsPage(
-                    site,
-                    endpointType,
-                    search = search,
-                    nextPageParams = initialParams,
-                )
-            }
-            if (append) {
+        var nextPageParams: TermListParams? = null
+        do {
+            try {
+                val result = withContext(ioDispatcher) {
+                    restClient.fetchTermsPage(
+                        site,
+                        endpointType,
+                        search = search,
+                        nextPageParams = nextPageParams,
+                    )
+                }
                 loadedTerms.addAll(result.terms)
-            } else {
-                loadedTerms.clear()
-                loadedTerms.addAll(result.terms)
-            }
-            nextPageParams = result.nextPageParams
-            _uiState.update {
-                it.copy(
-                    isLoading = false,
-                    isSearching = false,
-                    isLoadingMore = false,
-                    isCreating = false,
-                    canLoadMore =
-                        result.nextPageParams != null,
-                    error = null,
+                nextPageParams = result.nextPageParams
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Failed to load terms",
+                    e
                 )
+                if (loadedTerms.isEmpty()) {
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            isSearching = false,
+                            isCreating = false,
+                            error = resourceProvider.getString(
+                                R.string.request_failed_message
+                            )
+                        )
+                    }
+                    return
+                }
+                nextPageParams = null
             }
-            rebuildUi()
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            AppLog.e(
-                AppLog.T.POSTS,
-                "Failed to load terms",
-                e
+        } while (nextPageParams != null)
+
+        _uiState.update {
+            it.copy(
+                isLoading = false,
+                isSearching = false,
+                isCreating = false,
+                error = null,
             )
-            if (append) {
-                _uiState.update {
-                    it.copy(
-                        isSearching = false,
-                        isLoadingMore = false,
-                    )
-                }
-                _events.trySend(
-                    TermSelectionEvent.ShowSnackbar(
-                        resourceProvider.getString(
-                            R.string.request_failed_message
-                        )
-                    )
-                )
-            } else {
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        isSearching = false,
-                        isCreating = false,
-                        error = resourceProvider.getString(
-                            R.string.request_failed_message
-                        )
-                    )
-                }
-            }
         }
+        rebuildUi()
     }
 
     private fun rebuildUi() {
