@@ -204,14 +204,11 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
     @Suppress("unused")
     @Subscribe(threadMode = MAIN)
     fun onMediaUploaded(event: OnMediaUploaded) {
-        val media = event.media
+        val media = event.media ?: return
+        if (!::viewModel.isInitialized) return
         // Only react to featured-image uploads for the post this sheet is editing; a queued upload
         // for a different post must not refresh this card (matches EditPostActivity's guard).
-        if (media != null &&
-            media.markedLocallyAsFeatured &&
-            media.localPostId == getEditPostRepository().id &&
-            ::viewModel.isInitialized
-        ) {
+        if (media.markedLocallyAsFeatured && media.localPostId == getEditPostRepository().id) {
             viewModel.refreshFeaturedImage()
         }
     }

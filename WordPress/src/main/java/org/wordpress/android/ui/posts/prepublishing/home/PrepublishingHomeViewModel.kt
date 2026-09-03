@@ -277,16 +277,17 @@ class PrepublishingHomeViewModel @Inject constructor(
     }
 
     private fun createFeaturedImageUiState(): FeaturedImageUiState {
-        if (editPostRepository.isPage || !isFeaturedImageEditingSupported) {
-            return FeaturedImageUiState.Hidden
+        val post = editPostRepository.getPost()
+        return if (editPostRepository.isPage || !isFeaturedImageEditingSupported || post == null) {
+            FeaturedImageUiState.Hidden
+        } else {
+            FeaturedImageUiState.Visible(
+                featuredImageData = featuredImageHelper.createCurrentFeaturedImageState(site, post),
+                onSetOrReplaceClicked = ::onFeaturedImageSetOrReplaceClicked,
+                onRemoveClicked = ::onFeaturedImageRemoveClicked,
+                onRetryClicked = ::onFeaturedImageRetryClicked
+            )
         }
-        val post = editPostRepository.getPost() ?: return FeaturedImageUiState.Hidden
-        return FeaturedImageUiState.Visible(
-            featuredImageData = featuredImageHelper.createCurrentFeaturedImageState(site, post),
-            onSetOrReplaceClicked = ::onFeaturedImageSetOrReplaceClicked,
-            onRemoveClicked = ::onFeaturedImageRemoveClicked,
-            onRetryClicked = ::onFeaturedImageRetryClicked
-        )
     }
 
     private fun onFeaturedImageSetOrReplaceClicked() {
