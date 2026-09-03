@@ -161,7 +161,7 @@ class StatsRepository @Inject constructor(
         } else {
             shifted
         }
-        return snapToPreset(result)
+        return snapToPreset(result, source = period)
     }
 
     /**
@@ -170,10 +170,19 @@ class StatsRepository @Inject constructor(
      * instead of an equivalent Custom range. Only forward can match — every preset window ends today.
      * Day-based presets match exactly; a month preset whose window drifted by a short-month clamp
      * stays Custom, a safe fallback (identical data, shown as dates rather than the preset name).
+     *
+     * On a calendar-unit boundary day (e.g. today is the first day of the week) a "This week/month/
+     * year" window collapses to a single day identical to Today's window, so several presets match at
+     * once. In that case we prefer the preset whose calendar unit matches the navigated [source], so
+     * paging forward onto the present keeps the "This Week" label (and its whole-unit stepping) rather
+     * than silently switching to Today's daily stepping.
      */
-    private fun snapToPreset(range: StatsPeriod.Custom): StatsPeriod {
+    private fun snapToPreset(range: StatsPeriod.Custom, source: StatsPeriod): StatsPeriod {
         val window = range.startDate to range.endDate
-        return StatsPeriod.presets().firstOrNull { currentPeriodWindow(it) == window } ?: range
+        val matches = StatsPeriod.presets().filter { currentPeriodWindow(it) == window }
+        if (matches.isEmpty()) return range
+        val sourceUnit = calendarUnitOf(source)
+        return matches.firstOrNull { calendarUnitOf(it) == sourceUnit } ?: matches.first()
     }
 
     /** Whether paging backward stays above the year-[NAVIGATION_FLOOR_YEAR] floor. */
