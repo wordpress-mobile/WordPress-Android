@@ -207,7 +207,6 @@ Language: ar
     <string name="stats_period_today">اليوم</string>
     <string name="stats_period_last_7_days">آخر 7 أيام</string>
     <string name="stats_period_last_30_days">آخر 30 يومًا</string>
-    <string name="stats_period_last_6_months">آخر 6 أشهر</string>
     <string name="stats_period_last_12_months">آخر 12 شهرًا</string>
     <string name="stats_period_custom">مخصص</string>
     <string name="stats_period_selector_content_description">تحديد فترة الإحصاءات</string>

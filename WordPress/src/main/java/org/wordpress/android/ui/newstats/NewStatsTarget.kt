@@ -10,9 +10,9 @@ data class NewStatsTarget(val tab: StatsTab, val period: StatsPeriod?)
 
 /**
  * Maps the [StatsTimeframe] carried by an old-stats deep link onto the closest New Stats target.
- * Note [StatsTimeframe.WEEK]'s seven days and [StatsTimeframe.MONTH]'s thirty are the nearest New
- * Stats offers - it has no calendar-aligned periods - and nothing maps to
- * [StatsPeriod.Last6Months].
+ * Note [StatsTimeframe.WEEK] and [StatsTimeframe.MONTH] map to the rolling last-7-days and
+ * last-30-days periods rather than the calendar-aligned [StatsPeriod.ThisWeek]/[StatsPeriod.ThisMonth],
+ * preserving the previous deep-link behaviour.
  */
 fun StatsTimeframe?.toNewStatsTarget(): NewStatsTarget = when (this) {
     StatsTimeframe.DAY -> NewStatsTarget(StatsTab.TRAFFIC, StatsPeriod.Today)

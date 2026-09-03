@@ -237,7 +237,6 @@ Language: nl
     <string name="stats_period_selector_content_description">Statistieken periode selecteren</string>
     <string name="stats_period_custom">Aangepast</string>
     <string name="stats_period_last_12_months">Laatste 12 maanden</string>
-    <string name="stats_period_last_6_months">Laatste 6 maanden</string>
     <string name="stats_period_last_30_days">Afgelopen 30 dagen</string>
     <string name="stats_period_last_7_days">Laatste 7 dagen</string>
     <string name="stats_period_today">Vandaag</string>

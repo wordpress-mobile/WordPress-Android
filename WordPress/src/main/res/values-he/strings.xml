@@ -234,7 +234,6 @@ Language: he_IL
     <string name="stats_period_selector_content_description">תקופת הזמן של הנתונים הסטטיסטיים</string>
     <string name="stats_period_custom">התאמה אישית</string>
     <string name="stats_period_last_12_months">12 החודשים האחרונים</string>
-    <string name="stats_period_last_6_months">ששת החודשים האחרונים</string>
     <string name="stats_period_last_30_days">30 הימים האחרונים</string>
     <string name="stats_period_last_7_days">7 הימים האחרונים</string>
     <string name="stats_period_today">היום</string>

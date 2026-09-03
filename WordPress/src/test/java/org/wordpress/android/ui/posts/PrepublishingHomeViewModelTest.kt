@@ -14,11 +14,14 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageData
+import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.PrepublishingScreenNavigation
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ButtonUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ButtonUiState.PublishButtonUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.FeaturedImageUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.SocialUiState
@@ -49,6 +52,12 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     lateinit var getCategoriesUseCase: GetCategoriesUseCase
 
     @Mock
+    lateinit var featuredImageHelper: FeaturedImageHelper
+
+    @Mock
+    lateinit var updateFeaturedImageUseCase: UpdateFeaturedImageUseCase
+
+    @Mock
     lateinit var site: SiteModel
 
     @Before
@@ -60,6 +69,8 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
             getButtonUiStateUseCase,
             mock(),
             getCategoriesUseCase,
+            featuredImageHelper,
+            updateFeaturedImageUseCase,
             testDispatcher()
         )
         whenever(
@@ -76,6 +87,9 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn((""))
         whenever(site.name).thenReturn("")
         whenever(getCategoriesUseCase.getPostCategoriesString(any(), any())).thenReturn("")
+        whenever(editPostRepository.getPost()).thenReturn(mock())
+        whenever(featuredImageHelper.createCurrentFeaturedImageState(any(), any()))
+            .thenReturn(FeaturedImageData(FeaturedImageState.IMAGE_EMPTY, null))
 
         // need to observe forever to be able to access `value` since it's a MediatorLiveData
         viewModel.uiState.observeForever(mock())
@@ -159,6 +173,42 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `verify featured image card is visible for a post on a supporting host`() {
+        // arrange
+        whenever(editPostRepository.isPage).thenReturn(false)
+
+        // act
+        viewModel.start(editPostRepository, site)
+
+        // assert
+        assertThat(getFeaturedImageUiState()).isInstanceOf(FeaturedImageUiState.Visible::class.java)
+    }
+
+    @Test
+    fun `verify featured image card is hidden for a page`() {
+        // arrange
+        whenever(editPostRepository.isPage).thenReturn(true)
+
+        // act
+        viewModel.start(editPostRepository, site)
+
+        // assert
+        assertThat(getFeaturedImageUiState()).isEqualTo(FeaturedImageUiState.Hidden)
+    }
+
+    @Test
+    fun `verify featured image card is hidden when the host cannot edit featured images`() {
+        // arrange
+        whenever(editPostRepository.isPage).thenReturn(false)
+
+        // act
+        viewModel.start(editPostRepository, site, isFeaturedImageEditingSupported = false)
+
+        // assert
+        assertThat(getFeaturedImageUiState()).isEqualTo(FeaturedImageUiState.Hidden)
+    }
+
+    @Test
     fun `verify that header ui state is propagated to prepublishingHomeUiState once the viewModel is started`() {
         // arrange
         val expectedActionsAmount = 1
@@ -173,17 +223,12 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `verify that publish button ui state is propagated to uiState once the viewModel is started`() {
-        // arrange
-        val expectedActionsAmount = 1
-
+    fun `verify that publish button ui state is exposed once the viewModel is started`() {
         // act
         viewModel.start(editPostRepository, site)
 
         // assert
-        assertThat(viewModel.uiState.value?.filterIsInstance(ButtonUiState::class.java)?.size).isEqualTo(
-            expectedActionsAmount
-        )
+        assertThat(viewModel.buttonUiState.value).isInstanceOf(PublishButtonUiState::class.java)
     }
 
     @Test
@@ -427,7 +472,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     private fun getHeaderUiState() = viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.first()
 
     private fun getButtonUiState(): ButtonUiState? {
-        return viewModel.uiState.value?.filterIsInstance(ButtonUiState::class.java)?.first()
+        return viewModel.buttonUiState.value
     }
 
     private fun getHomeUiState(actionType: ActionType): HomeUiState? {
@@ -435,4 +480,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
             ?.filterIsInstance(HomeUiState::class.java)
         return actions?.find { it.navigationAction == actionType }
     }
+
+    private fun getFeaturedImageUiState(): FeaturedImageUiState? =
+        viewModel.uiState.value?.filterIsInstance(FeaturedImageUiState::class.java)?.firstOrNull()
 }

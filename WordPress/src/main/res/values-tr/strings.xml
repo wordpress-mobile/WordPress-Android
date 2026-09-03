@@ -237,7 +237,6 @@ Language: tr
     <string name="stats_period_selector_content_description">İstatistik dönemini seçin</string>
     <string name="stats_period_custom">Özel</string>
     <string name="stats_period_last_12_months">Son 12 ay</string>
-    <string name="stats_period_last_6_months">Son 6 ay</string>
     <string name="stats_period_last_30_days">Son 30 gün</string>
     <string name="stats_period_last_7_days">Son 7 gün</string>
     <string name="stats_period_today">Bugün</string>

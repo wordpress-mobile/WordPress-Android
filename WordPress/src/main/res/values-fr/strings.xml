@@ -226,7 +226,6 @@ Language: fr
     <string name="stats_period_selector_content_description">Sélectionner une période pour les statistiques</string>
     <string name="stats_period_custom">Personnalisé</string>
     <string name="stats_period_last_12_months">12 derniers mois</string>
-    <string name="stats_period_last_6_months">6 derniers mois</string>
     <string name="stats_period_last_30_days">30 derniers jours</string>
     <string name="stats_period_last_7_days">7 derniers jours</string>
     <string name="stats_period_today">Aujourd’hui</string>

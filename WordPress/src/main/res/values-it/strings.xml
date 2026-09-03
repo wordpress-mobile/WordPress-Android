@@ -237,7 +237,6 @@ Language: it
     <string name="stats_period_selector_content_description">Seleziona periodo delle statistiche</string>
     <string name="stats_period_custom">Personalizza</string>
     <string name="stats_period_last_12_months">Ultimi 12 mesi</string>
-    <string name="stats_period_last_6_months">Ultimi 6 mesi</string>
     <string name="stats_period_last_30_days">Ultimi 30 giorni</string>
     <string name="stats_period_last_7_days">Ultimi 7 giorni</string>
     <string name="stats_period_today">Oggi</string>

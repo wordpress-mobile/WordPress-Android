@@ -1689,8 +1689,10 @@
     <string name="stats_period_today">Today</string>
     <string name="stats_period_last_7_days">Last 7 days</string>
     <string name="stats_period_last_30_days">Last 30 days</string>
-    <string name="stats_period_last_6_months">Last 6 months</string>
     <string name="stats_period_last_12_months">Last 12 months</string>
+    <string name="stats_period_this_week">This Week</string>
+    <string name="stats_period_this_month">This Month</string>
+    <string name="stats_period_this_year">This Year</string>
     <string name="stats_period_custom">Custom</string>
     <string name="stats_period_selector_content_description">Select stats period</string>
     <string name="stats_period_previous_content_description">Previous period</string>
