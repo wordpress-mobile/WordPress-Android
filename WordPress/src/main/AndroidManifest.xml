@@ -1398,6 +1398,16 @@
                 tools:node="remove" />
         </provider>
 
+        <!-- The Gravatar Quick Editor library exports two activities the app never launches (it shows the editor
+             as a sheet inside the host activity). They would crash without the initializer removed above, so
+             drop them rather than leave an exported entry point around. -->
+        <activity
+            android:name="com.gravatar.quickeditor.ui.GravatarQuickEditorActivity"
+            tools:node="remove" />
+        <activity
+            android:name="com.gravatar.quickeditor.ui.oauth.GravatarOAuthActivity"
+            tools:node="remove" />
+
         <activity android:name=".ui.blaze.blazepromote.BlazePromoteParentActivity"
             android:exported="false"
             android:label="@string/blaze_activity_title"

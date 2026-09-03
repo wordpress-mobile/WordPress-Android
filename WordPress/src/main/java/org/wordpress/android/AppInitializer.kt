@@ -29,8 +29,8 @@ import com.android.volley.RequestQueue
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import com.google.firebase.iid.FirebaseInstanceId
 import com.wordpress.rest.RestClient
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
@@ -62,6 +62,7 @@ import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.fluxc.tools.FluxCImageLoader
 import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError
 import org.wordpress.android.modules.APPLICATION_SCOPE
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.networking.NetworkConnectionMonitor
 import org.wordpress.android.networking.OAuthAuthenticator
 import org.wordpress.android.networking.RestClientUtils
@@ -195,6 +196,10 @@ class AppInitializer @Inject constructor(
     @Inject
     @Named(APPLICATION_SCOPE)
     lateinit var appScope: CoroutineScope
+
+    @Inject
+    @Named(IO_THREAD)
+    lateinit var ioDispatcher: CoroutineDispatcher
 
     @Inject
     lateinit var selectedSiteRepository: SelectedSiteRepository
@@ -367,6 +372,7 @@ class AppInitializer @Inject constructor(
             enqueuePeriodicUploadWorkAsync()
         }
 
+        systemNotificationsTracker.checkSystemNotificationsState()
         ImageEditorInitializer.init(imageManager, imageEditorTracker, imageEditorFileUtils, appScope)
 
         initDebugCookieManager()
@@ -389,19 +395,14 @@ class AppInitializer @Inject constructor(
     // when called from Application.onCreate(). The Help screen is the only entry
     // point that needs Zendesk and is gated by user navigation, so deferring init
     // to a background coroutine is safe in practice.
-    @Suppress("TooGenericExceptionCaught")
     private fun initZendeskAsync() {
-        appScope.launch(Dispatchers.IO) {
-            try {
-                zendeskHelper.setupZendesk(
-                    application,
-                    BuildConfig.ZENDESK_DOMAIN,
-                    BuildConfig.ZENDESK_APP_ID,
-                    BuildConfig.ZENDESK_OAUTH_CLIENT_ID
-                )
-            } catch (e: Exception) {
-                AppLog.e(T.SUPPORT, "Failed to initialize Zendesk SDK", e)
-            }
+        launchIo(T.SUPPORT, "Failed to initialize Zendesk SDK") {
+            zendeskHelper.setupZendesk(
+                application,
+                BuildConfig.ZENDESK_DOMAIN,
+                BuildConfig.ZENDESK_APP_ID,
+                BuildConfig.ZENDESK_OAUTH_CLIENT_ID
+            )
         }
     }
 
@@ -440,7 +441,7 @@ class AppInitializer @Inject constructor(
      */
     @Suppress("TooGenericExceptionCaught")
     private fun launchIo(tag: T, failureMessage: String, block: suspend () -> Unit): Job =
-        appScope.launch(Dispatchers.IO) {
+        appScope.launch(ioDispatcher) {
             try {
                 block()
             } catch (e: Exception) {
@@ -564,18 +565,9 @@ class AppInitializer @Inject constructor(
     private fun initAnalytics(elapsedTimeOnCreate: Long) {
         AnalyticsTracker.registerTracker(tracker)
         AnalyticsTracker.init(context)
-        // Tracked synchronously so these always precede APPLICATION_OPENED, which is part of a critical funnel
-        trackInstallOrUpgrade(elapsedTimeOnCreate)
-        // Refreshing the metadata reads the account and every site from the database, so it runs off the main
-        // thread. The notification-state event stays behind it in the same coroutine so it is attributed to
-        // the right user (the tracker only learns the WP.com username from the refresh).
-        launchIo(T.STATS, "Failed to initialize analytics metadata") {
-            AnalyticsUtils.refreshMetadata(accountStore, siteStore)
-            systemNotificationsTracker.checkSystemNotificationsState()
-        }
-    }
+        AnalyticsUtils.refreshMetadata(accountStore, siteStore)
 
-    private fun trackInstallOrUpgrade(elapsedTimeOnCreate: Long) {
+        // Track app upgrade and install
         val versionCode = PackageUtils.getVersionCode(context)
         val oldVersionCode = AppPrefs.getLastAppVersionCode()
         if (oldVersionCode == 0) {

@@ -56,11 +56,18 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         // Both branches read posts from the database. Doing that on the main thread inside a broadcast
         // (in particular BOOT_COMPLETED, which starts the process in the background) shows up as ANRs, so
         // the work is moved to a background thread and the broadcast is kept alive with goAsync().
-        final String action = intent.getAction();
+        final boolean isBootCompleted = Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction());
+        final int postId = intent.getIntExtra(POST_ID_EXTRA, 0);
         final PendingResult pendingResult = goAsync();
         new Thread(() -> {
             try {
-                handleIntent(context, intent, action);
+                if (isBootCompleted) {
+                    AppLog.i(AppLog.T.NOTIFS, "entering Pending Drafts Receiver from BOOT_COMPLETED");
+                    rescheduleNotificationsForLocalDrafts(context);
+                } else {
+                    AppLog.i(AppLog.T.NOTIFS, "entering Pending Drafts Receiver from alarm");
+                    buildNotificationForPostId(postId, context);
+                }
             } catch (Exception e) {
                 AppLog.e(AppLog.T.NOTIFS, "Pending Drafts Receiver failed", e);
             } finally {
@@ -69,26 +76,18 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         }, "PendingDraftsReceiver").start();
     }
 
-    private void handleIntent(Context context, Intent intent, String action) {
-        // for the case of being spanned after device restarts, get the latest drafts
-        // and check the lastUpdated
-        if (action != null && action.equals("android.intent.action.BOOT_COMPLETED")) {
-            AppLog.i(AppLog.T.NOTIFS, "entering Pending Drafts Receiver from BOOT_COMPLETED");
-            // build notifications for existing local drafts
-            SiteModel site = mSiteStore.getSiteByLocalId(mSelectedSiteRepository.getSelectedSiteLocalId());
-            if (site != null) {
-                List<PostModel> draftPosts = mPostStore.getPostsForSite(site);
-                for (PostModel post : draftPosts) {
-                    // reschedule next notifications for each local draft post we have, as we have
-                    // just been rebooted
-                    PendingDraftsNotificationsUtils.scheduleNextNotifications(context, post.getId(),
-                            post.getDateLocallyChanged());
-                }
-            }
-        } else {
-            AppLog.i(AppLog.T.NOTIFS, "entering Pending Drafts Receiver from alarm");
-            // get extras from intent in order to build notification
-            buildNotificationForPostId(intent.getIntExtra(POST_ID_EXTRA, 0), context);
+    /**
+     * After a reboot every alarm is gone, so reschedule the next notification for each local draft.
+     */
+    private void rescheduleNotificationsForLocalDrafts(Context context) {
+        SiteModel site = mSiteStore.getSiteByLocalId(mSelectedSiteRepository.getSelectedSiteLocalId());
+        if (site == null) {
+            return;
+        }
+        List<PostModel> draftPosts = mPostStore.getPostsForSite(site);
+        for (PostModel post : draftPosts) {
+            PendingDraftsNotificationsUtils.scheduleNextNotifications(context, post.getId(),
+                    post.getDateLocallyChanged());
         }
     }
 

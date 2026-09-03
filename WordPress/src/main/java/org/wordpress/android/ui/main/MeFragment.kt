@@ -15,6 +15,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -29,8 +30,11 @@ import com.gravatar.quickeditor.ui.editor.GravatarQuickEditorParams
 import com.gravatar.quickeditor.ui.editor.QuickEditorScopeOption
 import com.gravatar.types.Email
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -131,6 +135,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     @Inject
     lateinit var appLogWrapper: AppLogWrapper
 
+    // Started in onCreate so the KeyStore-backed Gravatar init is usually finished before the avatar is tapped
+    private lateinit var quickEditorReady: Deferred<Boolean>
+
     @Inject
     lateinit var activityNavigator: ActivityNavigator
 
@@ -146,6 +153,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
+        val appContext = requireContext().applicationContext
+        quickEditorReady = lifecycleScope.async(Dispatchers.IO) {
+            GravatarQuickEditorInitializer.initialize(appContext)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -153,23 +164,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         binding = MeFragmentBinding.bind(view).apply {
             setupViews()
             setupObservers(savedInstanceState)
-        }
-        warmUpGravatarQuickEditor()
-    }
-
-    /**
-     * Initializes the Gravatar Quick Editor off the main thread so the KeyStore work is already done by the
-     * time the user taps the avatar. [showQuickEditor] still calls the (idempotent) initializer as a guard.
-     */
-    @Suppress("TooGenericExceptionCaught")
-    private fun warmUpGravatarQuickEditor() {
-        val appContext = requireContext().applicationContext
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                GravatarQuickEditorInitializer.initialize(appContext)
-            } catch (e: Exception) {
-                appLogWrapper.e(AppLog.T.MAIN, "Gravatar: Failed to initialize the quick editor: ${e.message}")
-            }
         }
     }
 
@@ -276,43 +270,53 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     private fun MeFragmentBinding.showQuickEditor(
         page: AvatarPickerAndAboutEditorConfiguration.Page
     ) {
-        try {
-            appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Showing Gravatar quick editor: ${page.value}")
-            GravatarQuickEditorInitializer.initialize(requireContext())
-            GravatarQuickEditor.show(
-                fragment = this@MeFragment,
-                gravatarQuickEditorParams = GravatarQuickEditorParams {
-                    email = Email(accountStore.account.email)
-                    scopeOption = QuickEditorScopeOption.avatarAndAbout {
-                        initialPage = page
-                        fields = setOf(
-                            AboutInputField.FirstName,
-                            AboutInputField.LastName,
-                            AboutInputField.DisplayName,
-                            AboutInputField.AboutMe
-                        )
-                    }
-                },
-                authenticationMethod = AuthenticationMethod.Bearer(accountStore.accessToken.orEmpty()),
-                updateHandler = { event ->
-                    when (event) {
-                        AvatarPickerResult -> {
-                            loadAvatar(null, true)
+        appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Showing Gravatar quick editor: ${page.value}")
+        val appContext = requireContext().applicationContext
+        viewLifecycleOwner.lifecycleScope.launch {
+            // Complete except in the first moments of the fragment's life, so this almost never suspends. A
+            // warm-up that failed (e.g. a transient KeyStore error) gets one more try here.
+            val ready = quickEditorReady.await() ||
+                withContext(Dispatchers.IO) { GravatarQuickEditorInitializer.initialize(appContext) }
+            if (!ready) return@launch
+            // A tap that did suspend could resume after the fragment left the screen
+            if (!viewLifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) return@launch
+            try {
+                GravatarQuickEditor.show(
+                    fragment = this@MeFragment,
+                    gravatarQuickEditorParams = GravatarQuickEditorParams {
+                        email = Email(accountStore.account.email)
+                        scopeOption = QuickEditorScopeOption.avatarAndAbout {
+                            initialPage = page
+                            fields = setOf(
+                                AboutInputField.FirstName,
+                                AboutInputField.LastName,
+                                AboutInputField.DisplayName,
+                                AboutInputField.AboutMe
+                            )
                         }
+                    },
+                    authenticationMethod = AuthenticationMethod.Bearer(accountStore.accessToken.orEmpty()),
+                    updateHandler = { event ->
+                        when (event) {
+                            AvatarPickerResult -> {
+                                loadAvatar(null, true)
+                            }
 
-                        is AboutEditorResult -> {
-                            meDisplayName.text = event.profile.displayName.ifEmpty { accountStore.account.displayName }
+                            is AboutEditorResult -> {
+                                meDisplayName.text =
+                                    event.profile.displayName.ifEmpty { accountStore.account.displayName }
+                            }
+
+                            else -> Unit
                         }
-
-                        else -> Unit
+                    },
+                    onDismiss = {
+                        appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Gravatar quick editor dismissed: ${page.value}")
                     }
-                },
-                onDismiss = {
-                    appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Gravatar quick editor dismissed: ${page.value}")
-                }
-            )
-        } catch (exception: Exception) {
-            appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Error opening Gravatar quick editor: ${exception.message}")
+                )
+            } catch (exception: Exception) {
+                appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Error opening Gravatar quick editor: ${exception.message}")
+            }
         }
     }
 
