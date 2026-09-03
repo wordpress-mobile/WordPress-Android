@@ -2,6 +2,8 @@
 ---
 
 
+priority: 1
+
 steps:
   - label: "Update release notes"
     plugins: [$CI_TOOLKIT]
