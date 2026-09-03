@@ -783,6 +783,7 @@
     <string name="error_tag_exists">A tag with this name already exists</string>
     <string name="dlg_confirm_delete_tag">Permanently delete \'%s\' tag?</string>
     <string name="dlg_deleting_tag">Deleting</string>
+    <string name="deleting_tag_failed">Deleting tag failed</string>
     <string name="dlg_saving_tag">Saving</string>
 
     <!-- Jetpack settings -->
