@@ -56,10 +56,11 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         // Both branches read posts from the database. Doing that on the main thread inside a broadcast
         // (in particular BOOT_COMPLETED, which starts the process in the background) shows up as ANRs, so
         // the work is moved to a background thread and the broadcast is kept alive with goAsync().
+        final String action = intent.getAction();
         final PendingResult pendingResult = goAsync();
         new Thread(() -> {
             try {
-                handleIntent(context, intent);
+                handleIntent(context, intent, action);
             } catch (Exception e) {
                 AppLog.e(AppLog.T.NOTIFS, "Pending Drafts Receiver failed", e);
             } finally {
@@ -68,10 +69,9 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         }, "PendingDraftsReceiver").start();
     }
 
-    private void handleIntent(Context context, Intent intent) {
+    private void handleIntent(Context context, Intent intent, String action) {
         // for the case of being spanned after device restarts, get the latest drafts
         // and check the lastUpdated
-        String action = intent.getAction();
         if (action != null && action.equals("android.intent.action.BOOT_COMPLETED")) {
             AppLog.i(AppLog.T.NOTIFS, "entering Pending Drafts Receiver from BOOT_COMPLETED");
             // build notifications for existing local drafts
