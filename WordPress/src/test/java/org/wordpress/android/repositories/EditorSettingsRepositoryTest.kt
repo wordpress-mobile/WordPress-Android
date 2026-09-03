@@ -230,6 +230,36 @@ class EditorSettingsRepositoryTest : BaseUnitTest() {
         }
 
     @Test
+    fun `jetpack site probes the direct host, not the WP_com proxy`() =
+        runTest {
+            val jetpackSite = SiteModel().apply {
+                id = 7
+                url = "https://jetpack.example.com"
+                // isUsingWpComRestApi via Jetpack, but not Atomic and not WP.com Simple → direct host.
+                setIsJetpackConnected(true)
+                setOrigin(SiteModel.ORIGIN_WPCOM_REST)
+            }
+            mockDiscoverySuccess(
+                siteUrl = jetpackSite.url,
+                hasEditorSettings = true,
+                hasEditorAssets = true
+            )
+            whenever(themeRepository.fetchCurrentTheme(jetpackSite))
+                .thenReturn(buildTheme(isBlockTheme = false))
+
+            val result =
+                repository.fetchEditorCapabilitiesForSite(jetpackSite)
+
+            assertThat(result).isTrue()
+            verify(appPrefsWrapper)
+                .setSiteSupportsEditorSettings(jetpackSite, true)
+            verify(appPrefsWrapper)
+                .setSiteSupportsEditorAssets(jetpackSite, true)
+            // The proxy is only for minting — capability detection goes direct.
+            verify(wpApiClientProvider, never()).getWpApiClient(jetpackSite)
+        }
+
+    @Test
     fun `atomic site returns false when discovery fails`() =
         runTest {
             val atomicSite = SiteModel().apply {

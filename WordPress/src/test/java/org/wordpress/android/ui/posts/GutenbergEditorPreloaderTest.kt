@@ -19,8 +19,8 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.datasets.SiteSettingsProvider
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.repositories.EditorSettingsRepository
-import org.wordpress.android.ui.accounts.login.SiteApiRestUrlRecoverer
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.repositories.SiteProvisioningSource
 import org.wordpress.gutenberg.model.EditorAssetBundle
 import org.wordpress.gutenberg.model.EditorConfiguration
 import org.wordpress.gutenberg.model.EditorDependencies
@@ -49,10 +49,10 @@ class GutenbergEditorPreloaderTest :
     lateinit var editorServiceProvider: EditorServiceProvider
 
     @Mock
-    lateinit var editorSettingsRepository: EditorSettingsRepository
+    lateinit var siteProvisioningSource: SiteProvisioningSource
 
     @Mock
-    lateinit var siteApiRestUrlRecoverer: SiteApiRestUrlRecoverer
+    lateinit var siteStore: SiteStore
 
     private val editorDependencies = EditorDependencies.empty
 
@@ -75,8 +75,8 @@ class GutenbergEditorPreloaderTest :
             gutenbergKitSettingsBuilder = gutenbergKitSettingsBuilder,
             siteSettingsProvider = siteSettingsProvider,
             editorServiceProvider = editorServiceProvider,
-            editorSettingsRepository = editorSettingsRepository,
-            siteApiRestUrlRecoverer = siteApiRestUrlRecoverer,
+            siteProvisioningSource = siteProvisioningSource,
+            siteStore = siteStore,
             bgDispatcher = testDispatcher()
         )
     }
@@ -194,7 +194,7 @@ class GutenbergEditorPreloaderTest :
     }
 
     @Test
-    fun `successful preload fetches editor capabilities`() = test {
+    fun `successful preload runs the provisioning source`() = test {
         val site = createSite()
         enablePreloading(site)
         stubSuccessfulPreload()
@@ -203,8 +203,7 @@ class GutenbergEditorPreloaderTest :
         preloader.preloadIfNeeded(site, this)
         advanceUntilIdle()
 
-        verify(editorSettingsRepository)
-            .fetchEditorCapabilitiesForSite(site)
+        verify(siteProvisioningSource).await(site)
     }
 
     @Test
@@ -479,24 +478,6 @@ class GutenbergEditorPreloaderTest :
 
         assertThat(preloader.getDependencies(siteA)).isNull()
         assertThat(preloader.getDependencies(siteB)).isNull()
-    }
-
-    // endregion
-
-    // region wpApiRestUrl recovery
-
-    @Test
-    fun `successful preload invokes discovery only — slice owns persistence`() = test {
-        val site = createSite()
-        enablePreloading(site)
-        stubSuccessfulPreload()
-        stubEditorService()
-
-        preloader.preloadIfNeeded(site, this)
-        advanceUntilIdle()
-
-        verify(siteApiRestUrlRecoverer).discoverApiRootUrl(site.url)
-        verify(siteApiRestUrlRecoverer, never()).persistApiRootUrl(any(), any())
     }
 
     // endregion
