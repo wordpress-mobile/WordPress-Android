@@ -3821,10 +3821,6 @@
     <string name="prepublishing_nudges_home_tags_not_set">Not set</string>
     <string name="prepublishing_nudges_home_categories_not_set">Not set</string>
     <string name="prepublishing_nudges_toolbar_title_categories">Categories</string>
-    <string name="prepublishing_nudges_featured_image_action">Featured image</string>
-    <string name="prepublishing_nudges_toolbar_title_featured_image">Featured image</string>
-    <string name="prepublishing_nudges_home_featured_image_set">Set</string>
-    <string name="prepublishing_nudges_home_featured_image_not_set">Not set</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Add New Category</string>
     <string name="prepublishing_nudges_add_category_button">Add Category</string>
     <string name="prepublishing_nudges_toolbar_title_social">Social sharing</string>

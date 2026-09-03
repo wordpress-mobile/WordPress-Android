@@ -7,10 +7,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PostPrepublishingHomeFragmentBinding
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel
@@ -31,6 +36,12 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
     lateinit var imageManager: ImageManager
 
     @Inject
+    lateinit var mediaPickerLauncher: MediaPickerLauncher
+
+    @Inject
+    lateinit var dispatcher: Dispatcher
+
+    @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PrepublishingHomeViewModel
     private lateinit var jetpackSocialViewModel: EditorJetpackSocialViewModel
@@ -40,6 +51,25 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireNotNull(activity).application as WordPress).component().inject(this)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        dispatcher.register(this)
+    }
+
+    override fun onStop() {
+        dispatcher.unregister(this)
+        super.onStop()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // The media picker returns its result to the host activity, so refresh here to reflect an
+        // image that was set or queued while the sheet was in the background.
+        if (::viewModel.isInitialized) {
+            viewModel.refreshFeaturedImage()
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -102,6 +132,27 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
             actionClickedListener?.onSubmitButtonClicked(publishPost)
         }
 
+        viewModel.buttonUiState.observe(viewLifecycleOwner) { buttonUiState ->
+            publishButton.text = uiHelpers.getTextOfUiString(requireContext(), buttonUiState.buttonText)
+            publishButton.setOnClickListener {
+                buttonUiState.onButtonClicked?.invoke(buttonUiState.publishPost)
+            }
+        }
+
+        viewModel.launchFeaturedImagePicker.observeEvent(viewLifecycleOwner) { postId ->
+            mediaPickerLauncher.showFeaturedImagePicker(requireActivity(), getSite(), postId)
+        }
+
+        viewModel.syncFeaturedImageToEditor.observeEvent(viewLifecycleOwner) {
+            getEditorDataProvider()?.syncFeaturedImageIdToEditor()
+        }
+
+        // updateAsync mutates the shared post and fires postChanged; observe it raw (not observeEvent)
+        // since it is a single-consumption Event shared with other observers.
+        getEditPostRepository().postChanged.observe(viewLifecycleOwner) {
+            viewModel.refreshFeaturedImage()
+        }
+
         viewModel.start(getEditPostRepository(), getSite(), isFeaturedImageEditingSupported())
     }
 
@@ -147,6 +198,15 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
             activity
         } else {
             throw RuntimeException("$activity must implement EditorDataProvider")
+        }
+    }
+
+    @Suppress("unused")
+    @Subscribe(threadMode = MAIN)
+    fun onMediaUploaded(event: OnMediaUploaded) {
+        val media = event.media
+        if (media != null && media.markedLocallyAsFeatured && ::viewModel.isInitialized) {
+            viewModel.refreshFeaturedImage()
         }
     }
 

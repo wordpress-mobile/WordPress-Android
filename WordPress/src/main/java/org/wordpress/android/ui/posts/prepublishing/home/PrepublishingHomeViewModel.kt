@@ -12,11 +12,15 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel
 import org.wordpress.android.ui.posts.FeaturedImageHelper
+import org.wordpress.android.ui.posts.FeaturedImageHelper.TrackableEvent
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
 import org.wordpress.android.ui.posts.GetPostTagsUseCase
 import org.wordpress.android.ui.posts.PostSettingsUtils
+import org.wordpress.android.ui.posts.UpdateFeaturedImageUseCase
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.PrepublishingScreenNavigation
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ButtonUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.FeaturedImageUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.SocialUiState
@@ -40,11 +44,13 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val featuredImageHelper: FeaturedImageHelper,
+    private val updateFeaturedImageUseCase: UpdateFeaturedImageUseCase,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
     private var updateStoryTitleJob: Job? = null
     private lateinit var editPostRepository: EditPostRepository
+    private lateinit var site: SiteModel
     private var isFeaturedImageEditingSupported = false
 
     private val _onActionClicked = MutableLiveData<Event<ActionType>>()
@@ -53,18 +59,32 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val _onSubmitButtonClicked = MutableLiveData<Event<PublishPost>>()
     val onSubmitButtonClicked: LiveData<Event<PublishPost>> = _onSubmitButtonClicked
 
+    // The publish/submit button is pinned as a footer outside the scrolling list, so it's exposed
+    // separately rather than as a list item.
+    private val _buttonUiState = MutableLiveData<ButtonUiState>()
+    val buttonUiState: LiveData<ButtonUiState> = _buttonUiState
+
+    private val _launchFeaturedImagePicker = MutableLiveData<Event<Int>>()
+    val launchFeaturedImagePicker: LiveData<Event<Int>> = _launchFeaturedImagePicker
+
+    private val _syncFeaturedImageToEditor = MutableLiveData<Event<Unit>>()
+    val syncFeaturedImageToEditor: LiveData<Event<Unit>> = _syncFeaturedImageToEditor
+
     private val _uiState = MutableLiveData<List<PrepublishingHomeItemUiState>>()
     private var _socialUiState: MutableLiveData<SocialUiState> = MutableLiveData(SocialUiState.Hidden)
+    private val _featuredImageUiState: MutableLiveData<FeaturedImageUiState> =
+        MutableLiveData(FeaturedImageUiState.Hidden)
 
     val uiState: LiveData<List<PrepublishingHomeItemUiState>> = merge(
         _uiState,
-        _socialUiState
-    ) { list, socialUiState ->
+        _socialUiState,
+        _featuredImageUiState
+    ) { list, socialUiState, featuredImageUiState ->
         list?.map { item ->
-            if (item is SocialUiState) {
-                socialUiState ?: SocialUiState.Hidden
-            } else {
-                item
+            when (item) {
+                is SocialUiState -> socialUiState ?: SocialUiState.Hidden
+                is FeaturedImageUiState -> featuredImageUiState ?: FeaturedImageUiState.Hidden
+                else -> item
             }
         }
     }
@@ -75,6 +95,7 @@ class PrepublishingHomeViewModel @Inject constructor(
         isFeaturedImageEditingSupported: Boolean = true
     ) {
         this.editPostRepository = editPostRepository
+        this.site = site
         this.isFeaturedImageEditingSupported = isFeaturedImageEditingSupported
         if (isStarted) return
         // PrepublishingViewModel already dismisses the sheet when the host has no post, but that
@@ -87,6 +108,7 @@ class PrepublishingHomeViewModel @Inject constructor(
         isStarted = true
 
         setupHomeUiState(editPostRepository, site)
+        refreshFeaturedImage()
     }
 
     private fun setupHomeUiState(
@@ -131,29 +153,21 @@ class PrepublishingHomeViewModel @Inject constructor(
                 ))
             }
 
-            if (!editPostRepository.isPage && isFeaturedImageEditingSupported) {
-                add(HomeUiState(
-                    navigationAction = PrepublishingScreenNavigation.FeaturedImage,
-                    actionResult = if (hasFeaturedImage(editPostRepository)) {
-                        UiStringRes(R.string.prepublishing_nudges_home_featured_image_set)
-                    } else {
-                        UiStringRes(R.string.prepublishing_nudges_home_featured_image_not_set)
-                    },
-                    actionClickable = true,
-                    onNavigationActionClicked = ::onActionClicked
-                ))
-            }
+            // Placeholder replaced via merge with the live featured-image state (see refreshFeaturedImage).
+            // Its visibility is driven by that state, so it stays Hidden for pages / unsupported hosts.
+            add(FeaturedImageUiState.Hidden)
 
             add(SocialUiState.Hidden)
-
-            add(getButtonUiStateUseCase.getUiState(editPostRepository, site) { publishPost ->
-                launch(bgDispatcher) {
-                    waitForStoryTitleJobAndSubmit(publishPost)
-                }
-            })
         }.toList()
 
         _uiState.postValue(prepublishingHomeUiStateList)
+        _buttonUiState.postValue(
+            getButtonUiStateUseCase.getUiState(editPostRepository, site) { publishPost ->
+                launch(bgDispatcher) {
+                    waitForStoryTitleJobAndSubmit(publishPost)
+                }
+            }
+        )
     }
 
     private fun MutableList<PrepublishingHomeItemUiState>.showNotSetPost(
@@ -233,12 +247,57 @@ class PrepublishingHomeViewModel @Inject constructor(
         updateStoryTitleJob?.cancel()
     }
 
-    // Reflects an in-progress upload as "set" too, rather than checking the raw id, so a device
-    // image that is still uploading doesn't briefly read as "Not set". Uses the cheap check because
-    // setupHomeUiState runs on the main thread.
-    private fun hasFeaturedImage(editPostRepository: EditPostRepository): Boolean {
-        val post = editPostRepository.getPost() ?: return false
-        return featuredImageHelper.hasFeaturedImageOrPendingUpload(post)
+    /**
+     * Recomputes the featured-image card off the main thread (createCurrentFeaturedImageState does a
+     * media-store lookup). Called after any featured-image change and on upload events so the card
+     * reflects empty -> uploading -> set without leaving the sheet.
+     */
+    fun refreshFeaturedImage() {
+        if (!isStarted) return
+        if (editPostRepository.isPage || !isFeaturedImageEditingSupported) {
+            _featuredImageUiState.postValue(FeaturedImageUiState.Hidden)
+            return
+        }
+        launch(bgDispatcher) {
+            val post = editPostRepository.getPost()
+            if (post == null) {
+                _featuredImageUiState.postValue(FeaturedImageUiState.Hidden)
+                return@launch
+            }
+            val featuredImageData = featuredImageHelper.createCurrentFeaturedImageState(site, post)
+            _featuredImageUiState.postValue(
+                FeaturedImageUiState.Visible(
+                    featuredImageData = featuredImageData,
+                    onSetOrReplaceClicked = ::onFeaturedImageSetOrReplaceClicked,
+                    onRemoveClicked = ::onFeaturedImageRemoveClicked,
+                    onRetryClicked = ::onFeaturedImageRetryClicked
+                )
+            )
+        }
+    }
+
+    private fun onFeaturedImageSetOrReplaceClicked() {
+        val post = editPostRepository.getPost() ?: return
+        // Replacing mid-upload would otherwise leave two uploads marked as featured.
+        featuredImageHelper.cancelFeaturedImageUpload(site, post, false)
+        featuredImageHelper.trackFeaturedImageEvent(TrackableEvent.IMAGE_SET_CLICKED, post.id)
+        _launchFeaturedImagePicker.postValue(Event(post.id))
+    }
+
+    private fun onFeaturedImageRemoveClicked() {
+        val post = editPostRepository.getPost() ?: return
+        featuredImageHelper.cancelFeaturedImageUpload(site, post, false)
+        featuredImageHelper.trackFeaturedImageEvent(TrackableEvent.IMAGE_REMOVE_CLICKED, post.id)
+        updateFeaturedImageUseCase.updateFeaturedImage(NO_FEATURED_IMAGE_ID, editPostRepository) {
+            refreshFeaturedImage()
+            _syncFeaturedImageToEditor.postValue(Event(Unit))
+        }
+    }
+
+    private fun onFeaturedImageRetryClicked() {
+        val post = editPostRepository.getPost() ?: return
+        featuredImageHelper.retryFeaturedImageUpload(site, post)
+        refreshFeaturedImage()
     }
 
     private fun onActionClicked(actionType: ActionType) {
@@ -257,5 +316,9 @@ class PrepublishingHomeViewModel @Inject constructor(
         } ?: SocialUiState.Hidden
 
         _socialUiState.postValue(newState)
+    }
+
+    companion object {
+        private const val NO_FEATURED_IMAGE_ID = 0L
     }
 }
