@@ -110,13 +110,16 @@ class PrepublishingHomeViewModel @Inject constructor(
         isStarted = true
 
         setupHomeUiState(editPostRepository, site)
-        refreshFeaturedImage()
     }
 
     private fun setupHomeUiState(
         editPostRepository: EditPostRepository,
         site: SiteModel
     ) {
+        // Built synchronously alongside the other rows so the card is present in the first frame instead
+        // of popping in (and reflowing the sheet) once a background refresh completes. Later updates go
+        // through refreshFeaturedImage, which runs off the main thread.
+        val featuredImageUiState = createFeaturedImageUiState()
         val prepublishingHomeUiStateList = mutableListOf<PrepublishingHomeItemUiState>().apply {
             add(
                 HeaderUiState(
@@ -155,13 +158,14 @@ class PrepublishingHomeViewModel @Inject constructor(
                 ))
             }
 
-            // Placeholder replaced via merge with the live featured-image state (see refreshFeaturedImage).
-            // Its visibility is driven by that state, so it stays Hidden for pages / unsupported hosts.
-            add(FeaturedImageUiState.Hidden)
+            // Replaced via merge with the live featured-image state; it stays Hidden for pages /
+            // unsupported hosts.
+            add(featuredImageUiState)
 
             add(SocialUiState.Hidden)
         }.toList()
 
+        _featuredImageUiState.postValue(featuredImageUiState)
         _uiState.postValue(prepublishingHomeUiStateList)
         _buttonUiState.postValue(
             getButtonUiStateUseCase.getUiState(editPostRepository, site) { publishPost ->
@@ -252,39 +256,37 @@ class PrepublishingHomeViewModel @Inject constructor(
     /**
      * Recomputes the featured-image card off the main thread (createCurrentFeaturedImageState does a
      * media-store lookup). Called after any featured-image change and on upload events so the card
-     * reflects empty -> uploading -> set without leaving the sheet.
+     * reflects empty -> uploading -> set without leaving the sheet. The initial state is seeded
+     * synchronously by setupHomeUiState, so this only handles updates.
      *
-     * This is invoked from several sources that can fire near-simultaneously (start, onResume, the
-     * postChanged observer, onMediaUploaded). Runs single-flight: cancelling the previous launch keeps
-     * the latest state from being overwritten by a slower in-flight one and avoids redundant media-store
-     * reads for the same unchanged state on sheet open.
+     * onResume, the postChanged observer and onMediaUploaded can fire near-simultaneously. Runs
+     * single-flight: cancelling the previous launch keeps the latest state from being overwritten by a
+     * slower in-flight one. Skipping the relaunch while one is active would not be safe, since that job
+     * may already have read the pre-change state.
      */
     fun refreshFeaturedImage() {
         if (!isStarted) return
         refreshFeaturedImageJob?.cancel()
-        if (editPostRepository.isPage || !isFeaturedImageEditingSupported) {
-            _featuredImageUiState.postValue(FeaturedImageUiState.Hidden)
-            return
-        }
         refreshFeaturedImageJob = launch(bgDispatcher) {
-            val post = editPostRepository.getPost()
-            if (post == null) {
-                _featuredImageUiState.postValue(FeaturedImageUiState.Hidden)
-                return@launch
-            }
-            val featuredImageData = featuredImageHelper.createCurrentFeaturedImageState(site, post)
+            val featuredImageUiState = createFeaturedImageUiState()
             // Bail if a newer refresh superseded this one while the synchronous lookup ran, so a
             // slower/stale result never overwrites the latest state.
             ensureActive()
-            _featuredImageUiState.postValue(
-                FeaturedImageUiState.Visible(
-                    featuredImageData = featuredImageData,
-                    onSetOrReplaceClicked = ::onFeaturedImageSetOrReplaceClicked,
-                    onRemoveClicked = ::onFeaturedImageRemoveClicked,
-                    onRetryClicked = ::onFeaturedImageRetryClicked
-                )
-            )
+            _featuredImageUiState.postValue(featuredImageUiState)
         }
+    }
+
+    private fun createFeaturedImageUiState(): FeaturedImageUiState {
+        if (editPostRepository.isPage || !isFeaturedImageEditingSupported) {
+            return FeaturedImageUiState.Hidden
+        }
+        val post = editPostRepository.getPost() ?: return FeaturedImageUiState.Hidden
+        return FeaturedImageUiState.Visible(
+            featuredImageData = featuredImageHelper.createCurrentFeaturedImageState(site, post),
+            onSetOrReplaceClicked = ::onFeaturedImageSetOrReplaceClicked,
+            onRemoveClicked = ::onFeaturedImageRemoveClicked,
+            onRetryClicked = ::onFeaturedImageRetryClicked
+        )
     }
 
     private fun onFeaturedImageSetOrReplaceClicked() {
