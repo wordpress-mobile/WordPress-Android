@@ -1,10 +1,11 @@
 package org.wordpress.android
 
+import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.database.SQLException
-import android.database.sqlite.SQLiteException
 import android.os.Build
+import android.os.Bundle
 import android.util.Log
 import androidx.work.Configuration
 import coil.decode.VideoFrameDecoder
@@ -16,6 +17,7 @@ import org.wordpress.android.modules.AppComponent
 import org.wordpress.android.ui.main.EdgeToEdgeActivityLifecycleCallbacks
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.GravatarQuickEditorInitializer
 
 /**
  * An abstract class to be extended by {@link WordPressApp} for real application and WordPressTest for UI test
@@ -25,8 +27,8 @@ abstract class WordPress : Application(), coil.ImageLoaderFactory, Configuration
     abstract fun initializer(): AppInitializer
 
     /**
-     * WorkManager is initialized on demand (the default initializer is removed in the manifest) so that
-     * process starts which never touch WorkManager don't pay for its Room database on the main thread.
+     * WorkManager is initialized on demand (the default initializer is removed in the manifest) so that its
+     * Room database is opened by whichever thread first needs it, off the main thread on normal process starts.
      */
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
@@ -42,6 +44,28 @@ abstract class WordPress : Application(), coil.ImageLoaderFactory, Configuration
                 EdgeToEdgeActivityLifecycleCallbacks()
             )
         }
+        registerActivityLifecycleCallbacks(GravatarQuickEditorActivityInitializer())
+    }
+
+    /**
+     * The Gravatar Quick Editor's startup initializer is removed from the manifest (see
+     * [GravatarQuickEditorInitializer]). The library also declares exported activities that read the same
+     * container, so make sure it exists before any of them is created in a fresh process.
+     */
+    private class GravatarQuickEditorActivityInitializer : ActivityLifecycleCallbacks {
+        override fun onActivityPreCreated(activity: Activity, savedInstanceState: Bundle?) {
+            if (activity.javaClass.name.startsWith(GravatarQuickEditorInitializer.LIBRARY_PACKAGE)) {
+                GravatarQuickEditorInitializer.initialize(activity)
+            }
+        }
+
+        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) = Unit
+        override fun onActivityStarted(activity: Activity) = Unit
+        override fun onActivityResumed(activity: Activity) = Unit
+        override fun onActivityPaused(activity: Activity) = Unit
+        override fun onActivityStopped(activity: Activity) = Unit
+        override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit
+        override fun onActivityDestroyed(activity: Activity) = Unit
     }
 
     fun component(): AppComponent = EntryPoints.get(this, AppComponent::class.java)
@@ -89,34 +113,32 @@ abstract class WordPress : Application(), coil.ImageLoaderFactory, Configuration
         lateinit var versionName: String
         var appIsInTheBackground = true
 
+        // Remembered so a database that can't be opened even after being recreated isn't deleted again on
+        // every access; the first failure is enough.
         @Volatile
-        private var wpDBInstance: WordPressDB? = null
+        private var wpDBFailure: SQLException? = null
 
         /**
          * The legacy app database. Opened lazily (and warmed up off the main thread by [AppInitializer]) so
          * that background process starts don't run the SQLite open + migrations on the main thread.
          */
         @JvmStatic
-        val wpDB: WordPressDB
-            get() = wpDBInstance ?: synchronized(this) {
-                wpDBInstance ?: openWpDb(getContext()).also { wpDBInstance = it }
-            }
+        val wpDB: WordPressDB by lazy { openWpDb(getContext()) }
 
         private fun openWpDb(context: Context): WordPressDB {
+            wpDBFailure?.let { throw it }
             return try {
                 WordPressDB(context)
-            } catch (e: SQLiteException) {
-                recreateWpDb(context, e)
             } catch (e: SQLException) {
-                recreateWpDb(context, e)
+                AppLog.e(T.DB, "Invalid database, deleting and recreating it", e)
+                WordPressDB.deleteDatabase(context)
+                try {
+                    WordPressDB(context)
+                } catch (retry: SQLException) {
+                    wpDBFailure = retry
+                    throw retry
+                }
             }
-        }
-
-        private fun recreateWpDb(context: Context, e: Exception): WordPressDB {
-            AppLog.e(T.DB, e)
-            AppLog.e(T.DB, "Invalid database, sign out user and delete database")
-            WordPressDB.deleteDatabase(context)
-            return WordPressDB(context)
         }
 
         @JvmField

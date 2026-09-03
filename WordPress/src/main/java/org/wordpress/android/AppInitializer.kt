@@ -435,18 +435,27 @@ class AppInitializer @Inject constructor(
     }
 
     /**
+     * Runs [block] on the IO dispatcher, logging (rather than propagating) any failure. [appScope] has a plain
+     * [Job], so an uncaught exception would crash the process and cancel every other coroutine in the scope.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    private fun launchIo(tag: T, failureMessage: String, block: suspend () -> Unit): Job =
+        appScope.launch(Dispatchers.IO) {
+            try {
+                block()
+            } catch (e: Exception) {
+                AppLog.e(tag, failureMessage, e)
+            }
+        }
+
+    /**
      * Enqueues our periodic upload work request, which uploads local drafts or published posts with local
      * changes even when the app is closed. Runs off the main thread because the first WorkManager access
      * initializes it on demand (see [WordPress.workManagerConfiguration]), which opens its Room database.
      */
-    @Suppress("TooGenericExceptionCaught")
     private fun enqueuePeriodicUploadWorkAsync() {
-        periodicUploadEnqueueJob = appScope.launch(Dispatchers.IO) {
-            try {
-                enqueuePeriodicUploadWorkRequestForAllSites()
-            } catch (e: Exception) {
-                AppLog.e(T.MAIN, "Failed to enqueue periodic upload work", e)
-            }
+        periodicUploadEnqueueJob = launchIo(T.MAIN, "Failed to enqueue periodic upload work") {
+            enqueuePeriodicUploadWorkRequestForAllSites()
         }
     }
 
@@ -454,15 +463,8 @@ class AppInitializer @Inject constructor(
      * Opens the legacy app database off the main thread so that the first main-thread reader usually finds it
      * ready. [WordPress.wpDB] is lazy and synchronized, so readers that get there first simply open it themselves.
      */
-    @Suppress("TooGenericExceptionCaught")
     private fun warmUpWpDb() {
-        appScope.launch(Dispatchers.IO) {
-            try {
-                WordPress.wpDB
-            } catch (e: Exception) {
-                AppLog.e(T.DB, "Failed to open the app database", e)
-            }
-        }
+        launchIo(T.DB, "Failed to open the app database") { WordPress.wpDB }
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -478,11 +480,11 @@ class AppInitializer @Inject constructor(
 
     private fun sanitizeMediaUploadStateForSite() {
         val selectedSiteLocalId: Int = selectedSiteRepository.getSelectedSiteLocalId(true)
-        Thread {
+        launchIo(T.MEDIA, "Failed to sanitize the media upload state") {
             // The site lookup is a database read (plus credential decryption), so keep it off the main thread
-            val site = siteStore.getSiteByLocalId(selectedSiteLocalId) ?: return@Thread
+            val site = siteStore.getSiteByLocalId(selectedSiteLocalId) ?: return@launchIo
             UploadService.sanitizeMediaUploadStateForSite(mediaStore, dispatcher, site)
-        }.start()
+        }
     }
 
 
@@ -562,17 +564,14 @@ class AppInitializer @Inject constructor(
     private fun initAnalytics(elapsedTimeOnCreate: Long) {
         AnalyticsTracker.registerTracker(tracker)
         AnalyticsTracker.init(context)
+        // Tracked synchronously so these always precede APPLICATION_OPENED, which is part of a critical funnel
+        trackInstallOrUpgrade(elapsedTimeOnCreate)
         // Refreshing the metadata reads the account and every site from the database, so it runs off the main
-        // thread. The startup events below stay in the same coroutine, after the refresh, so they are attributed
-        // to the right user (the tracker only learns the WP.com username from the refresh).
-        appScope.launch(Dispatchers.IO) {
-            try {
-                AnalyticsUtils.refreshMetadata(accountStore, siteStore)
-                trackInstallOrUpgrade(elapsedTimeOnCreate)
-                systemNotificationsTracker.checkSystemNotificationsState()
-            } catch (e: Exception) {
-                AppLog.e(T.STATS, "Failed to initialize analytics metadata", e)
-            }
+        // thread. The notification-state event stays behind it in the same coroutine so it is attributed to
+        // the right user (the tracker only learns the WP.com username from the refresh).
+        launchIo(T.STATS, "Failed to initialize analytics metadata") {
+            AnalyticsUtils.refreshMetadata(accountStore, siteStore)
+            systemNotificationsTracker.checkSystemNotificationsState()
         }
     }
 

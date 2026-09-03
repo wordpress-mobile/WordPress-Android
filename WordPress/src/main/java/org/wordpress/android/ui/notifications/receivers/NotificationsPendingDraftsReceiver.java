@@ -60,8 +60,8 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         new Thread(() -> {
             try {
                 handleIntent(context, intent);
-            } catch (Throwable t) {
-                AppLog.e(AppLog.T.NOTIFS, "Pending Drafts Receiver failed", t);
+            } catch (Exception e) {
+                AppLog.e(AppLog.T.NOTIFS, "Pending Drafts Receiver failed", e);
             } finally {
                 pendingResult.finish();
             }
