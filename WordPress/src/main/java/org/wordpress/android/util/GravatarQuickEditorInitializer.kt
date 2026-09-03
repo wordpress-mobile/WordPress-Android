@@ -17,8 +17,8 @@ import org.wordpress.android.util.AppLog.T
  * The initializer class is internal to the library, hence the lookup by name. WordPress/proguard.cfg keeps the
  * class and its no-arg constructor so the lookup survives R8.
  *
- * TODO: remove this (and the manifest override) once gravatar-android builds its container lazily or exposes a
- *  public initialize(context) entry point.
+ * Remove this (and the manifest override) once gravatar-android builds its container lazily or exposes a
+ * public initialize(context) entry point.
  */
 object GravatarQuickEditorInitializer {
     private const val INITIALIZER_CLASS = "com.gravatar.quickeditor.initializer.QuickEditorContainerInitializer"
