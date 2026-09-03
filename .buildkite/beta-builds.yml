@@ -15,6 +15,7 @@ steps:
     command: |
       checkout_release_branch "$RELEASE_VERSION"
       validate_gradle_wrapper
+    priority: 1
     plugins: [$CI_TOOLKIT]
 
   # Wait for Gradle Wrapper to be validated before running any other jobs
@@ -31,6 +32,7 @@ steps:
         command: |
           checkout_release_branch "$RELEASE_VERSION"
           .buildkite/commands/lint.sh wordpress
+        priority: 1
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/lint-results*.*"
@@ -40,6 +42,7 @@ steps:
         command: |
           checkout_release_branch "$RELEASE_VERSION"
           .buildkite/commands/lint.sh jetpack
+        priority: 1
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/lint-results*.*"
@@ -56,6 +59,7 @@ steps:
           checkout_release_branch "$RELEASE_VERSION"
           .buildkite/commands/beta-build.sh wordpress
         depends_on: wplint
+        priority: 1
         plugins: [$CI_TOOLKIT]
         notify:
           - slack: "#build-and-ship"
@@ -72,6 +76,7 @@ steps:
           checkout_release_branch "$RELEASE_VERSION"
           .buildkite/commands/beta-build.sh jetpack
         depends_on: jplint
+        priority: 1
         plugins: [$CI_TOOLKIT]
         notify:
           - slack: "#build-and-ship"
@@ -92,4 +97,5 @@ steps:
     command: |
       checkout_release_branch "$RELEASE_VERSION"
       .buildkite/commands/create-github-release.sh
+    priority: 1
     plugins: [$CI_TOOLKIT]
