@@ -930,30 +930,42 @@ class TaxonomyRsApiRestClientTest {
         return TermDeleteResponse(deleted, createTestAnyTermWithEditContext())
     }
 
+    // The edit and view context terms are separate generated types with no common supertype, so the
+    // one term these fixtures describe is defined once here and built into each of them.
     private fun createTestAnyTermWithEditContext(): AnyTermWithEditContext {
         return AnyTermWithEditContext(
-            id = 2L,
-            count = 3L,
-            description = "Test category description",
-            link = "https://example.com/category/test",
-            name = "Test Category",
-            slug = "test-category",
+            id = TEST_TERM_ID,
+            count = TEST_TERM_COUNT,
+            description = TEST_TERM_DESCRIPTION,
+            link = TEST_TERM_LINK,
+            name = TEST_TERM_NAME,
+            slug = TEST_TERM_SLUG,
             taxonomy = TaxonomyType.Category,
-            parent = 0L
+            parent = TEST_TERM_PARENT
         )
     }
 
     private fun createTestAnyTermWithViewContext(): AnyTermWithViewContext {
         return AnyTermWithViewContext(
-            id = 2L,
-            count = 3L,
-            description = "Test category description",
-            link = "https://example.com/category/test",
-            name = "Test Category",
-            slug = "test-category",
+            id = TEST_TERM_ID,
+            count = TEST_TERM_COUNT,
+            description = TEST_TERM_DESCRIPTION,
+            link = TEST_TERM_LINK,
+            name = TEST_TERM_NAME,
+            slug = TEST_TERM_SLUG,
             taxonomy = TaxonomyType.Category,
-            parent = 0L
+            parent = TEST_TERM_PARENT
         )
+    }
+
+    companion object {
+        private const val TEST_TERM_ID = 2L
+        private const val TEST_TERM_COUNT = 3L
+        private const val TEST_TERM_DESCRIPTION = "Test category description"
+        private const val TEST_TERM_LINK = "https://example.com/category/test"
+        private const val TEST_TERM_NAME = "Test Category"
+        private const val TEST_TERM_SLUG = "test-category"
+        private const val TEST_TERM_PARENT = 0L
     }
 }
 
