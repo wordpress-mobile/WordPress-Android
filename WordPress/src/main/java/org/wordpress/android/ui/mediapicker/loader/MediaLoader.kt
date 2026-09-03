@@ -36,7 +36,15 @@ data class MediaLoader(
                 }
 
                 if (currentAction !is NextPage) {
-                    state = updateState(state.copy(isLoading = true, emptyState = null))
+                    // Apply the new filter together with the loading state. Otherwise the first search
+                    // enters the loading state still carrying the previous (empty) filter, which makes
+                    // the picker hide the loading spinner instead of showing it (see CMM-2382).
+                    val loadingState = when (currentAction) {
+                        is Filter -> state.copy(filter = currentAction.filter)
+                        is ClearFilter -> state.copy(filter = null)
+                        else -> state
+                    }
+                    state = updateState(loadingState.copy(isLoading = true, emptyState = null))
                 }
                 val updatedState = loadState(currentAction, state)
                 if (state != updatedState) {
