@@ -39,11 +39,7 @@ data class MediaLoader(
                     // Apply the new filter together with the loading state. Otherwise the first search
                     // enters the loading state still carrying the previous (empty) filter, which makes
                     // the picker hide the loading spinner instead of showing it (see CMM-2382).
-                    val loadingState = when (currentAction) {
-                        is Filter -> state.copy(filter = currentAction.filter)
-                        is ClearFilter -> state.copy(filter = null)
-                        else -> state
-                    }
+                    val loadingState = state.applyFilterFor(currentAction)
                     state = updateState(loadingState.copy(isLoading = true, emptyState = null))
                 }
                 val updatedState = loadState(currentAction, state)
@@ -64,10 +60,8 @@ data class MediaLoader(
         return when (loadAction) {
             is Start -> {
                 if (state.domainItems.isEmpty()) {
-                    buildDomainModel(
-                        mediaSource.load(filter = loadAction.filter),
-                        state.copy(filter = loadAction.filter)
-                    )
+                    val filteredState = state.applyFilterFor(loadAction)
+                    buildDomainModel(mediaSource.load(filter = filteredState.filter), filteredState)
                 } else {
                     state
                 }
@@ -89,16 +83,27 @@ data class MediaLoader(
                 buildDomainModel(load, state)
             }
             is Filter -> {
-                val load = mediaSource.load(filter = loadAction.filter)
-                buildDomainModel(load, state.copy(filter = loadAction.filter))
+                val filteredState = state.applyFilterFor(loadAction)
+                buildDomainModel(mediaSource.load(filter = filteredState.filter), filteredState)
             }
             is ClearFilter -> {
-                val load = mediaSource.load(filter = null)
-                buildDomainModel(load, state.copy(filter = null))
+                val filteredState = state.applyFilterFor(loadAction)
+                buildDomainModel(mediaSource.load(filter = filteredState.filter), filteredState)
             }
             is Retry -> {
                 buildDomainModel(mediaSource.load(filter = state.filter), state)
             }
+        }
+    }
+
+    // Single source of truth for the filter an action implies, so the loading state and the loaded
+    // state stay in sync. Any action carrying a filter must be handled here (see CMM-2382).
+    private fun DomainModel.applyFilterFor(loadAction: LoadAction): DomainModel {
+        return when (loadAction) {
+            is Start -> copy(filter = loadAction.filter)
+            is Filter -> copy(filter = loadAction.filter)
+            is ClearFilter -> copy(filter = null)
+            else -> this
         }
     }
 
