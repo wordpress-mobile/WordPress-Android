@@ -7,18 +7,17 @@
     android:orientation="vertical"
     android:paddingStart="@dimen/margin_extra_large"
     android:paddingEnd="@dimen/margin_extra_large"
-    android:paddingTop="@dimen/margin_medium"
-    android:paddingBottom="@dimen/margin_medium">
+    android:paddingTop="@dimen/margin_extra_large"
+    android:paddingBottom="@dimen/margin_extra_large">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/featured_image_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_medium"
         android:text="@string/post_settings_featured_image"
-        android:textAllCaps="true"
-        android:textAppearance="?attr/textAppearanceCaption"
-        android:textColor="?android:attr/textColorSecondary" />
+        android:textAlignment="viewStart"
+        android:textAppearance="?attr/textAppearanceSubtitle1" />
 
     <FrameLayout
         android:id="@+id/featured_image_card"
