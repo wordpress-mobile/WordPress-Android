@@ -15,6 +15,7 @@ If you're a developer wanting to contribute, read on.
 
 Notes:
 
+* To use WordPress.com features (signing in with a WordPress.com account, the Reader, Stats, etc.) you need your own WordPress.com OAuth2 client ID and secret. Please read the [WordPress.com Authentication](docs/wpcom-authentication.md) guide.
 * While loading/building the app in Android Studio, ignore the prompt to update the Gradle plugin version, as that will probably introduce build errors. On the other hand, feel free to update if you are planning to work on ensuring the compatibility of the newer version.
 
 ## Build and Test ##
@@ -29,10 +30,11 @@ To build, install, and test the project from the command line:
 
 ## Running the app ##
 
-You can use your own WordPress site for developing and testing the app. If you don't have one, you can create a temporary test site for free at https://jurassic.ninja/.
-On the app start up screen, choose "Enter your existing site address" and enter the URL of your site and your credentials.
+You can sign in with a self-hosted WordPress site or with a WordPress.com account.
 
-Note: Access to WordPress.com features is temporarily disabled in the development environment.
+To use your own site, choose "Enter your existing site address" on the app start up screen, then enter the URL of your site and your credentials. If you don't have a site, you can create a temporary test site for free at https://jurassic.ninja/.
+
+To use a WordPress.com account, first configure your own OAuth2 credentials by following the [WordPress.com Authentication](docs/wpcom-authentication.md) guide, then choose "Log in or sign up with WordPress.com" on the app start up screen.
 
 ## Directory structure ##
     .
@@ -73,6 +75,7 @@ If you have questions or just want to say hi, join the [WordPress Slack](https:/
 
 ## Documentation
 
+- [WordPress.com Authentication](docs/wpcom-authentication.md) - configuring your own OAuth2 credentials
 - [Coding Style](docs/coding-style.md) - guidelines and validation and auto-formatting tools
 - [Pull Request Guidelines](docs/pull-request-guidelines.md) - branch naming and how to write good pull requests
 
