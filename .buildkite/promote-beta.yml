@@ -7,6 +7,8 @@
 agents:
   queue: "android"
 
+priority: 1
+
 steps:
   - label: ":android: Gather builds to promote to beta"
     command: ".buildkite/commands/gather-beta-candidates.sh"
