@@ -34,6 +34,9 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.temporal.TemporalAdjusters
+import java.time.temporal.WeekFields
+import java.util.Locale
 
 @ExperimentalCoroutinesApi
 @Suppress("LargeClass")
@@ -1242,6 +1245,67 @@ class StatsRepositoryTest : BaseUnitTest() {
         // we assert the YearMonth here rather than the exact day.
         assertThat(result.endDate).isEqualTo(today.minusMonths(12))
         assertThat(YearMonth.from(result.startDate)).isEqualTo(YearMonth.from(today).minusMonths(23))
+    }
+
+    @Test
+    fun `previousPeriod of ThisWeek is the whole previous calendar week`() {
+        val today = LocalDate.now()
+        val weekStart = today.with(TemporalAdjusters.previousOrSame(WeekFields.of(Locale.getDefault()).firstDayOfWeek))
+
+        val result = repository.previousPeriod(StatsPeriod.ThisWeek) as StatsPeriod.Custom
+
+        // Back from a partial "this week" (week start..today) lands on the full previous week, not a
+        // same-length mirror ending on the day before the week started.
+        assertThat(result.startDate).isEqualTo(weekStart.minusWeeks(1))
+        assertThat(result.endDate).isEqualTo(weekStart.minusDays(1))
+    }
+
+    @Test
+    fun `previousPeriod of ThisMonth is the whole previous calendar month`() {
+        val today = LocalDate.now()
+        val previousMonthStart = today.withDayOfMonth(1).minusMonths(1)
+
+        val result = repository.previousPeriod(StatsPeriod.ThisMonth) as StatsPeriod.Custom
+
+        assertThat(result.startDate).isEqualTo(previousMonthStart)
+        assertThat(result.endDate).isEqualTo(previousMonthStart.withDayOfMonth(previousMonthStart.lengthOfMonth()))
+    }
+
+    @Test
+    fun `previousPeriod of ThisYear is the whole previous calendar year`() {
+        val previousYear = LocalDate.now().year - 1
+
+        val result = repository.previousPeriod(StatsPeriod.ThisYear) as StatsPeriod.Custom
+
+        assertThat(result.startDate).isEqualTo(LocalDate.of(previousYear, 1, 1))
+        assertThat(result.endDate).isEqualTo(LocalDate.of(previousYear, 12, 31))
+    }
+
+    @Test
+    fun `previousPeriod paged twice from ThisMonth keeps stepping whole calendar months`() {
+        val twoMonthsAgoStart = LocalDate.now().withDayOfMonth(1).minusMonths(2)
+
+        val once = repository.previousPeriod(StatsPeriod.ThisMonth)
+        val twice = repository.previousPeriod(once) as StatsPeriod.Custom
+
+        // Continued paging on a full-calendar-month window stays aligned to whole months rather than
+        // drifting by a fixed day count.
+        assertThat(twice.startDate).isEqualTo(twoMonthsAgoStart)
+        assertThat(twice.endDate).isEqualTo(twoMonthsAgoStart.withDayOfMonth(twoMonthsAgoStart.lengthOfMonth()))
+    }
+
+    @Test
+    fun `nextPeriod from the previous full month returns to the current month to date`() {
+        val today = LocalDate.now()
+        val monthStart = today.withDayOfMonth(1)
+        val previous = repository.previousPeriod(StatsPeriod.ThisMonth)
+
+        val result = repository.nextPeriod(previous)
+
+        // Forward from the whole previous month lands on the current month up to today; on the 1st that
+        // window is a single day and snaps to Today, otherwise it restores the ThisMonth preset.
+        val expected = if (today == monthStart) StatsPeriod.Today else StatsPeriod.ThisMonth
+        assertThat(result).isEqualTo(expected)
     }
 
     @Test
