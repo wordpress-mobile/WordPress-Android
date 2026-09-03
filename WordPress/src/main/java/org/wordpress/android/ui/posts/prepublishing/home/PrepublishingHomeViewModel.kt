@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.ensureActive
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
@@ -49,6 +50,7 @@ class PrepublishingHomeViewModel @Inject constructor(
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
     private var updateStoryTitleJob: Job? = null
+    private var refreshFeaturedImageJob: Job? = null
     private lateinit var editPostRepository: EditPostRepository
     private lateinit var site: SiteModel
     private var isFeaturedImageEditingSupported = false
@@ -251,20 +253,29 @@ class PrepublishingHomeViewModel @Inject constructor(
      * Recomputes the featured-image card off the main thread (createCurrentFeaturedImageState does a
      * media-store lookup). Called after any featured-image change and on upload events so the card
      * reflects empty -> uploading -> set without leaving the sheet.
+     *
+     * This is invoked from several sources that can fire near-simultaneously (start, onResume, the
+     * postChanged observer, onMediaUploaded). Runs single-flight: cancelling the previous launch keeps
+     * the latest state from being overwritten by a slower in-flight one and avoids redundant media-store
+     * reads for the same unchanged state on sheet open.
      */
     fun refreshFeaturedImage() {
         if (!isStarted) return
+        refreshFeaturedImageJob?.cancel()
         if (editPostRepository.isPage || !isFeaturedImageEditingSupported) {
             _featuredImageUiState.postValue(FeaturedImageUiState.Hidden)
             return
         }
-        launch(bgDispatcher) {
+        refreshFeaturedImageJob = launch(bgDispatcher) {
             val post = editPostRepository.getPost()
             if (post == null) {
                 _featuredImageUiState.postValue(FeaturedImageUiState.Hidden)
                 return@launch
             }
             val featuredImageData = featuredImageHelper.createCurrentFeaturedImageState(site, post)
+            // Bail if a newer refresh superseded this one while the synchronous lookup ran, so a
+            // slower/stale result never overwrites the latest state.
+            ensureActive()
             _featuredImageUiState.postValue(
                 FeaturedImageUiState.Visible(
                     featuredImageData = featuredImageData,

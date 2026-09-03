@@ -174,22 +174,28 @@ sealed class PrepublishingHomeViewHolder(
                     state == FeaturedImageState.IMAGE_UPLOAD_FAILED
             val isEmpty = state == FeaturedImageState.IMAGE_EMPTY
 
+            val mediaUri = uiState.featuredImageData.mediaUri
+            val hasMediaUri = !mediaUri.isNullOrEmpty()
+            val showRemoteImage = isRemote && hasMediaUri
+            val showLocalImage = isLocalUpload && hasMediaUri
+
             with(uiHelpers) {
-                updateVisibility(placeholder, isEmpty)
-                updateVisibility(remoteImage, isRemote)
-                updateVisibility(localImage, isLocalUpload)
+                // Fall back to the placeholder when a remote/local image state has no URI to load,
+                // otherwise we'd show a blank ImageView with no indication the image is missing.
+                updateVisibility(placeholder, isEmpty || (!showRemoteImage && !showLocalImage))
+                updateVisibility(remoteImage, showRemoteImage)
+                updateVisibility(localImage, showLocalImage)
                 updateVisibility(retryOverlay, state.retryOverlayVisible)
                 updateVisibility(progressOverlay, state.progressOverlayVisible)
             }
 
-            val mediaUri = uiState.featuredImageData.mediaUri
             when {
-                isRemote && !mediaUri.isNullOrEmpty() -> {
+                showRemoteImage -> {
                     imageManager.cancelRequestAndClearImageView(localImage)
-                    imageManager.load(remoteImage, ImageType.IMAGE, mediaUri, ScaleType.CENTER_CROP)
+                    imageManager.load(remoteImage, ImageType.IMAGE, mediaUri.orEmpty(), ScaleType.CENTER_CROP)
                 }
-                isLocalUpload && !mediaUri.isNullOrEmpty() ->
-                    imageManager.load(localImage, ImageType.IMAGE, mediaUri, ScaleType.CENTER_CROP)
+                showLocalImage ->
+                    imageManager.load(localImage, ImageType.IMAGE, mediaUri.orEmpty(), ScaleType.CENTER_CROP)
                 else -> {
                     imageManager.cancelRequestAndClearImageView(remoteImage)
                     imageManager.cancelRequestAndClearImageView(localImage)
