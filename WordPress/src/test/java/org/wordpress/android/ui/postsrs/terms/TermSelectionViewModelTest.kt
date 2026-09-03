@@ -4,14 +4,17 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runCurrent
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
@@ -142,6 +145,44 @@ class TermSelectionViewModelTest : BaseUnitTest(
         assertThat(viewModel.uiState.value.isLoading).isFalse()
         assertThat(viewModel.uiState.value.error).isEqualTo("error")
         assertThat(viewModel.uiState.value.terms).isEmpty()
+    }
+
+    @Test
+    fun `retry cancels an in-flight load`() = test {
+        val staleTerm = term(id = 1L, name = "Stale")
+        val freshTerm = term(id = 2L, name = "Fresh")
+        var requestCount = 0
+        whenever(
+            restClient.fetchTermsPage(
+                site,
+                TermEndpointType.Categories,
+                nextPageParams = null,
+            )
+        ).doSuspendableAnswer {
+            requestCount++
+            if (requestCount == 1) {
+                delay(60_000)
+                PostRsRestClient.TermsPageResult(
+                    listOf(staleTerm),
+                    null,
+                )
+            } else {
+                PostRsRestClient.TermsPageResult(
+                    listOf(freshTerm),
+                    null,
+                )
+            }
+        }
+
+        val viewModel = createViewModel()
+        runCurrent()
+
+        viewModel.retry()
+        advanceUntilIdle()
+
+        assertThat(requestCount).isEqualTo(2)
+        assertThat(viewModel.uiState.value.terms.map { it.id })
+            .containsExactly(2L)
     }
 
     private fun createViewModel(): TermSelectionViewModel {

@@ -74,6 +74,7 @@ class TermSelectionViewModel @Inject constructor(
     private val selectedIds =
         initialSelectedIds.toMutableSet()
     private var searchJob: Job? = null
+    private var loadJob: Job? = null
 
     init {
         if (site == null) {
@@ -196,6 +197,7 @@ class TermSelectionViewModel @Inject constructor(
         showLoading: Boolean = true,
     ) {
         val currentSite = site ?: return
+        loadJob?.cancel()
         if (showLoading) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 _uiState.value = TermSelectionUiState(
@@ -211,7 +213,7 @@ class TermSelectionViewModel @Inject constructor(
                 it.copy(isLoading = true, error = null)
             }
         }
-        viewModelScope.launch {
+        loadJob = viewModelScope.launch {
             loadedTerms.clear()
             val search = _uiState.value.searchQuery
                 .trim().ifEmpty { null }
