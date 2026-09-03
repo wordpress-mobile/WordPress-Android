@@ -237,7 +237,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        viewModel.onPeriodChanged(StatsPeriod.Last6Months)
+        viewModel.onPeriodChanged(StatsPeriod.Last12Months)
         viewModel.loadDataIfNeeded()
         advanceUntilIdle()
 
@@ -851,7 +851,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        viewModel.onPeriodChanged(StatsPeriod.Last6Months)
+        viewModel.onPeriodChanged(StatsPeriod.Last12Months)
         viewModel.loadData()
         advanceUntilIdle()
 
@@ -859,8 +859,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         viewModel.onBarTapped(0)
         advanceUntilIdle()
 
-        // Committed period stays Last6Months; only the effective period drills to the month.
-        assertThat(viewModel.selectedPeriod.value).isEqualTo(StatsPeriod.Last6Months)
+        // Committed period stays Last12Months; only the effective period drills to the month.
+        assertThat(viewModel.selectedPeriod.value).isEqualTo(StatsPeriod.Last12Months)
         val effective = viewModel.effectivePeriod.value
         assertThat(effective).isInstanceOf(StatsPeriod.Custom::class.java)
         with(effective as StatsPeriod.Custom) {

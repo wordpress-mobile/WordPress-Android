@@ -547,8 +547,8 @@ class ViewsStatsViewModel @Inject constructor(
     @Suppress("ReturnCount", "TooGenericExceptionCaught")
     private fun drillDownPeriod(rawPeriod: String): StatsPeriod? {
         val period = currentPeriod
-        val isMonthlyGranularity = period is StatsPeriod.Last6Months ||
-            period is StatsPeriod.Last12Months ||
+        val isMonthlyGranularity = period is StatsPeriod.Last12Months ||
+            period is StatsPeriod.ThisYear ||
             (period is StatsPeriod.Custom &&
                 isCustomPeriodMonthly(period))
 
@@ -760,8 +760,10 @@ class ViewsStatsViewModel @Inject constructor(
     private fun fillsBottomFromChart(period: StatsPeriod): Boolean = when (period) {
         is StatsPeriod.Last7Days,
         is StatsPeriod.Last30Days,
-        is StatsPeriod.Last6Months,
-        is StatsPeriod.Last12Months -> true
+        is StatsPeriod.Last12Months,
+        is StatsPeriod.ThisWeek,
+        is StatsPeriod.ThisMonth,
+        is StatsPeriod.ThisYear -> true
         // A multi-day Custom chart shares the bottom row's unit and quantity (both derive from the
         // repository's span-based rule, year-coarsening included), so its response already holds the
         // row's totals — including visitor uniques de-duplicated at the same granularity.
@@ -1027,7 +1029,7 @@ class ViewsStatsViewModel @Inject constructor(
         if (unit == StatsUnit.YEAR) return formatYearRange(startDate, endDate)
         return when (period) {
             is StatsPeriod.Today -> formatSingleDayRange(endDate)
-            is StatsPeriod.Last6Months, is StatsPeriod.Last12Months -> formatMonthRange(startDate, endDate)
+            is StatsPeriod.Last12Months, is StatsPeriod.ThisYear -> formatMonthRange(startDate, endDate)
             is StatsPeriod.Custom -> {
                 if (isCustomPeriodMonthly(period)) formatMonthRange(startDate, endDate)
                 else formatDayRange(startDate, endDate)

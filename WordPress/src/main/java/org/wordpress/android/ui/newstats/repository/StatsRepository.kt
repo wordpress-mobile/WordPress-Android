@@ -44,6 +44,9 @@ import org.wordpress.android.util.AppLog
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.time.temporal.TemporalAdjusters
+import java.time.temporal.WeekFields
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.cancellation.CancellationException
@@ -58,9 +61,7 @@ private const val WEEKLY_QUANTITY = 7
 private const val DAYS_BEFORE_END_DATE = -6
 private const val DAYS_IN_7_DAYS = 7
 private const val DAYS_IN_30_DAYS = 30
-private const val DAYS_IN_6_MONTHS = 182
 private const val DAYS_IN_12_MONTHS = 365
-private const val MONTHS_IN_6_MONTHS = 6
 private const val MONTHS_IN_12_MONTHS = 12
 private const val MAX_DAYS_IN_MONTH = 31
 private const val MAX_DAYS_IN_2_YEARS = 731
@@ -869,8 +870,12 @@ class StatsRepository @Inject constructor(
             is StatsPeriod.Today -> today to today
             is StatsPeriod.Last7Days -> today.minusDays((DAYS_IN_7_DAYS - 1).toLong()) to today
             is StatsPeriod.Last30Days -> today.minusDays((DAYS_IN_30_DAYS - 1).toLong()) to today
-            is StatsPeriod.Last6Months -> today.minusMonths((MONTHS_IN_6_MONTHS - 1).toLong()) to today
             is StatsPeriod.Last12Months -> today.minusMonths((MONTHS_IN_12_MONTHS - 1).toLong()) to today
+            // Calendar-aligned windows run from the start of the current week/month/year up to today.
+            is StatsPeriod.ThisWeek ->
+                today.with(TemporalAdjusters.previousOrSame(WeekFields.of(Locale.getDefault()).firstDayOfWeek)) to today
+            is StatsPeriod.ThisMonth -> today.withDayOfMonth(1) to today
+            is StatsPeriod.ThisYear -> today.withDayOfYear(1) to today
             is StatsPeriod.Custom -> period.startDate to period.endDate
         }
     }
@@ -885,8 +890,17 @@ class StatsRepository @Inject constructor(
     private fun getPeriodConfig(period: StatsPeriod): PeriodConfig = when (period) {
         is StatsPeriod.Last7Days -> PeriodConfig(DAYS_IN_7_DAYS, StatsUnit.DAY, DateUnit.DAY)
         is StatsPeriod.Last30Days -> PeriodConfig(DAYS_IN_30_DAYS, StatsUnit.DAY, DateUnit.DAY)
-        is StatsPeriod.Last6Months -> PeriodConfig(MONTHS_IN_6_MONTHS, StatsUnit.MONTH, DateUnit.MONTH)
         is StatsPeriod.Last12Months -> PeriodConfig(MONTHS_IN_12_MONTHS, StatsUnit.MONTH, DateUnit.MONTH)
+        // Calendar-aligned windows have a variable length, so their granularity and quantity are
+        // derived from the actual window (day up to a month, month beyond) via [unitAndQuantityFor].
+        is StatsPeriod.ThisWeek,
+        is StatsPeriod.ThisMonth,
+        is StatsPeriod.ThisYear -> {
+            val (start, end) = currentPeriodWindow(period)
+            val (unit, quantity) = unitAndQuantityFor(start, end)
+            val dateUnit = if (unit == StatsUnit.MONTH) DateUnit.MONTH else DateUnit.DAY
+            PeriodConfig(quantity, unit, dateUnit)
+        }
         else -> PeriodConfig(DAYS_IN_7_DAYS, StatsUnit.DAY, DateUnit.DAY) // Fallback to 7 days
     }
 
@@ -1143,10 +1157,17 @@ class StatsRepository @Inject constructor(
                 StatsDateRange.Preset(num = DAYS_IN_7_DAYS, date = todayString)
             is StatsPeriod.Last30Days ->
                 StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = todayString)
-            is StatsPeriod.Last6Months ->
-                StatsDateRange.Preset(num = DAYS_IN_6_MONTHS, date = todayString)
             is StatsPeriod.Last12Months ->
                 StatsDateRange.Preset(num = DAYS_IN_12_MONTHS, date = todayString)
+            is StatsPeriod.ThisWeek,
+            is StatsPeriod.ThisMonth,
+            is StatsPeriod.ThisYear -> {
+                val (start, end) = currentPeriodWindow(period)
+                StatsDateRange.Custom(
+                    startDate = start.format(dateFormatter),
+                    date = end.format(dateFormatter)
+                )
+            }
             is StatsPeriod.Custom ->
                 StatsDateRange.Custom(
                     startDate = period.startDate.format(dateFormatter),
@@ -1175,15 +1196,23 @@ class StatsRepository @Inject constructor(
                 StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = todayString) to
                     StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = previousEndString)
             }
-            is StatsPeriod.Last6Months -> {
-                val previousEndString = today.minusDays(DAYS_IN_6_MONTHS.toLong()).format(dateFormatter)
-                StatsDateRange.Preset(num = DAYS_IN_6_MONTHS, date = todayString) to
-                    StatsDateRange.Preset(num = DAYS_IN_6_MONTHS, date = previousEndString)
-            }
             is StatsPeriod.Last12Months -> {
                 val previousEndString = today.minusDays(DAYS_IN_12_MONTHS.toLong()).format(dateFormatter)
                 StatsDateRange.Preset(num = DAYS_IN_12_MONTHS, date = todayString) to
                     StatsDateRange.Preset(num = DAYS_IN_12_MONTHS, date = previousEndString)
+            }
+            is StatsPeriod.ThisWeek,
+            is StatsPeriod.ThisMonth,
+            is StatsPeriod.ThisYear -> {
+                val (start, end) = currentPeriodWindow(period)
+                val (previousStart, previousEnd) = previousWindowMirror(start, end)
+                StatsDateRange.Custom(
+                    startDate = start.format(dateFormatter),
+                    date = end.format(dateFormatter)
+                ) to StatsDateRange.Custom(
+                    startDate = previousStart.format(dateFormatter),
+                    date = previousEnd.format(dateFormatter)
+                )
             }
             is StatsPeriod.Custom -> {
                 val (previousStart, previousEnd) = previousWindowMirror(period.startDate, period.endDate)
