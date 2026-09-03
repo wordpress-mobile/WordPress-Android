@@ -54,7 +54,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
         val termResponse = client.request { requestBuilder ->
             requestBuilder.terms().delete(
                 termEndpointType = termEndpointType,
-                termId = term.id.toLong()
+                termId = term.remoteTermId
             )
         }
         when (termResponse) {
@@ -67,7 +67,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                     val termModel = TermModel(
                         term.id,
                         site.id,
-                        term.id.toLong(),
+                        term.remoteTermId,
                         taxonomyName,
                         term.name,
                         term.slug,

@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpapi.taxonomy
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -17,9 +18,11 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.wordpress.android.fluxc.Dispatcher
@@ -37,8 +40,11 @@ import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.AnyTermWithEditContext
 import uniffi.wp_api.RequestMethod
 import uniffi.wp_api.TermDeleteResponse
+import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.TermsRequestCreateResponse
 import uniffi.wp_api.TermsRequestDeleteResponse
+import uniffi.wp_api.TermsRequestExecutor
+import uniffi.wp_api.UniffiWpApiClient
 import uniffi.wp_api.TermsRequestListWithEditContextResponse
 import uniffi.wp_api.TermsRequestUpdateResponse
 import uniffi.wp_api.TaxonomyType
@@ -493,6 +499,38 @@ class TaxonomyRsApiRestClientTest {
     }
 
     @Test
+    fun `deleteTerm category deletes by the remote term id`() = runTest {
+        val deleteResponse = TermsRequestDeleteResponse(
+            createTestCategoryDeleteData(deleted = true),
+            mock<WpNetworkHeaderMap>()
+        )
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { delete(any(), any()) } doReturn deleteResponse
+        }
+        val uniffiClient = mock<UniffiWpApiClient> {
+            on { terms() } doReturn termsExecutor
+        }
+
+        // The other delete tests stub the request wholesale, which leaves the id sent to the API
+        // unobservable. Running the request against a stubbed executor exposes it: TermModel
+        // carries both a local row id and a remote one, and only the remote one identifies the
+        // term to the API.
+        whenever(wpApiClient.request<TermsRequestDeleteResponse>(any())).thenAnswer { invocation ->
+            @Suppress("UNCHECKED_CAST")
+            val executeRequest =
+                invocation.getArgument<Any>(0) as suspend (UniffiWpApiClient) -> TermsRequestDeleteResponse
+            runBlocking { executeRequest(uniffiClient) }
+            WpRequestResult.Success(response = deleteResponse)
+        }
+
+        taxonomyClient.deleteTerm(testSite, testCategoryTermModel)
+
+        verifyBlocking(termsExecutor) {
+            delete(TermEndpointType.Categories, testCategoryTermModel.remoteTermId)
+        }
+    }
+
+    @Test
     fun `deleteTerm category with success response dispatches success action`() = runTest {
         val categoryDeleteData = createTestCategoryDeleteData(deleted = true)
 
@@ -522,7 +560,7 @@ class TaxonomyRsApiRestClientTest {
         // Verify the deleted term has the correct properties
         assertEquals(testCategoryTermModel.id, payload.term.id)
         assertEquals(testSite.id, payload.term.localSiteId)
-        assertEquals(testCategoryTermModel.id.toLong(), payload.term.remoteTermId)
+        assertEquals(testCategoryTermModel.remoteTermId, payload.term.remoteTermId)
         assertEquals(testCategoryTaxonomyName, payload.term.taxonomy)
         assertEquals(testCategoryTermModel.name, payload.term.name)
         assertEquals(testCategoryTermModel.slug, payload.term.slug)
@@ -619,7 +657,7 @@ class TaxonomyRsApiRestClientTest {
         // Verify the deleted term has the correct properties
         assertEquals(testTagTermModel.id, payload.term.id)
         assertEquals(testSite.id, payload.term.localSiteId)
-        assertEquals(testTagTermModel.id.toLong(), payload.term.remoteTermId)
+        assertEquals(testTagTermModel.remoteTermId, payload.term.remoteTermId)
         assertEquals(testTagTaxonomyName, payload.term.taxonomy)
         assertEquals(testTagTermModel.name, payload.term.name)
         assertEquals(testTagTermModel.slug, payload.term.slug)
