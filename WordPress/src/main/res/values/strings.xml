@@ -4715,7 +4715,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- HE Support - Conversation Detail Screen -->
     <string name="he_support_last_updated">Last updated %1$s</string>
     <string name="he_support_reply_button">Reply</string>
+    <string name="he_support_add_more_info_button">Add more info</string>
     <string name="he_support_send_button">Send</string>
+    <string name="he_support_reply_sent_confirmation">Your reply has been sent. Check your email for updates.</string>
     <string name="he_support_message_label">Message</string>
     <string name="he_support_downloading_attachment">Downloading %1$s…</string>
     <string name="he_support_loading_image">Loading image</string>
@@ -4733,8 +4735,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="he_support_include_logs_description">Including logs can help our team investigate issues. Logs may contain recent app activity.</string>
     <string name="he_support_download_attachment">Download attachment</string>
     <string name="he_support_select_attachments">Select attachments</string>
-    <string name="he_support_status_waiting_for_support">Waiting for Support</string>
-    <string name="he_support_status_waiting_for_user">Waiting for User</string>
+    <string name="he_support_status_ongoing">Ongoing</string>
     <string name="he_support_status_solved">Solved</string>
     <string name="he_support_status_closed">Closed</string>
     <string name="he_support_status_unknown">Unknown</string>
