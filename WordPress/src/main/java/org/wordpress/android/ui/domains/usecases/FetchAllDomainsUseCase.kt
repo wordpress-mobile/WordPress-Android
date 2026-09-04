@@ -5,7 +5,6 @@ import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
-import rs.wordpress.api.kotlin.toLogErrorString
 import uniffi.wp_api.AllDomainItem
 import uniffi.wp_api.AllDomainsParams
 import uniffi.wp_api.DomainSubtypeId
@@ -65,7 +64,7 @@ class FetchAllDomainsUseCase @Inject constructor(
                 AppLog.e(
                     AppLog.T.API,
                     "An error occurred while fetching all domains: " +
-                        result.toLogErrorString()
+                        result
                 )
                 AllDomains.Error
             }

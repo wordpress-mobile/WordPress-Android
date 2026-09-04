@@ -27,7 +27,6 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
-import rs.wordpress.api.kotlin.toLogErrorString
 import uniffi.wp_api.DomainSuggestion
 import uniffi.wp_api.DomainSuggestionsParams
 import uniffi.wp_api.Product
@@ -172,7 +171,7 @@ class DomainSuggestionsViewModel @Inject constructor(
                 else -> AppLog.e(
                     T.DOMAIN_REGISTRATION,
                     "An error occurred while fetching domain products: " +
-                        result.toLogErrorString()
+                        result
                 )
             }
             initializeDefaultSuggestions()
@@ -299,7 +298,7 @@ class DomainSuggestionsViewModel @Inject constructor(
         AppLog.e(
             T.DOMAIN_REGISTRATION,
             "An error occurred while fetching the domain suggestions: " +
-                result.toLogErrorString()
+                result
         )
         // The list answers the query in the search field. A search that failed
         // has no results, so carrying the previous ones over would leave the

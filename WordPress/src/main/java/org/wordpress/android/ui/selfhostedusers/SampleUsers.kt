@@ -3,6 +3,10 @@ package org.wordpress.android.ui.selfhostedusers
 import uniffi.wp_api.UserCapabilitiesMap
 import uniffi.wp_api.UserRole
 import uniffi.wp_api.UserWithEditContext
+import java.util.Date
+
+// 2023-01-01T00:00:00Z, used as the placeholder registration date for the sample users.
+private const val SAMPLE_REGISTERED_DATE_MILLIS = 1672531200000L
 
 /**
  * This is a temporary object to supply a list of users for the self-hosted user list.
@@ -25,7 +29,7 @@ object SampleUsers {
         locale = "en-US",
         name = "Sample User",
         nickname = "User nickname",
-        registeredDate = "2023-01-01",
+        registeredDate = Date(SAMPLE_REGISTERED_DATE_MILLIS),
         roles = listOf(UserRole.Administrator),
         slug = "sample-user",
         url = "example.com",
@@ -46,7 +50,7 @@ object SampleUsers {
         locale = "en-US",
         name = "Sample User",
         nickname = "User nickname",
-        registeredDate = "2023-01-01",
+        registeredDate = Date(SAMPLE_REGISTERED_DATE_MILLIS),
         roles = listOf(UserRole.Contributor),
         slug = "sample-user",
         url = "example.com",
@@ -66,7 +70,7 @@ object SampleUsers {
         locale = "en-US",
         name = "Sample User",
         nickname = "User nickname",
-        registeredDate = "2023-01-01",
+        registeredDate = Date(SAMPLE_REGISTERED_DATE_MILLIS),
         roles = listOf(UserRole.Contributor, UserRole.Editor, UserRole.Subscriber),
         slug = "sample-user",
         url = "example.com",
