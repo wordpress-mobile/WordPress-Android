@@ -224,9 +224,8 @@ class SiteSqlUtils
         }
         return if (siteResult.isEmpty()) {
             // No site with this local ID, REMOTE_ID + URL, or XMLRPC URL, then insert it
-            // The generated WellSql mapper persists getWpApiRestUrl(), which synthesizes a WP.com
-            // proxy root while the site reads as Simple. The update path below excludes the column,
-            // so whatever this insert writes is what the row keeps for good.
+            // The generated WellSql mapper persists getWpApiRestUrl(), and the update path below
+            // excludes the column — so whatever this insert writes is what the row keeps for good.
             AppLog.d(
                 DB,
                 "Inserting site: ${finalSiteModel.url} wpApiRestUrl=${finalSiteModel.wpApiRestUrl}" +

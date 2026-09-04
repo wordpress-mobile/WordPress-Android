@@ -190,7 +190,7 @@ class SiteModelTest {
         assertFalse(site.isWPComSimpleSite)
     }
 
-    /* getWpApiRestUrl — proxy URL for simple sites */
+    /* getWpApiRestUrl — the stored value only, never a synthesized WP.com proxy root */
     @Test
     fun `atomic site returns stored wpApiRestUrl`() {
         val site = SiteUtils.generateWPComSite()
@@ -215,29 +215,29 @@ class SiteModelTest {
         assertNull(site.wpApiRestUrl)
     }
 
+    /**
+     * The getter must not synthesize a proxy root here. The generated WellSql mapper reads it when
+     * inserting a row and the update path excludes the column, so a synthesized value would be
+     * persisted at insert and kept for the life of the site — surviving an Atomic transfer that
+     * makes it wrong.
+     */
     @Test
-    fun `simple site proxy URL uses wpcom siteId not local id`() {
+    fun `simple site with no stored wpApiRestUrl returns null`() {
         val site = SiteUtils.generateWPComSite()
         site.setIsWPComAtomic(false)
         site.siteId = 99887766
-        site.id = 42
 
-        assertEquals(
-            "https://public-api.wordpress.com/wp/v2/sites/99887766",
-            site.wpApiRestUrl
-        )
+        assertTrue(site.isWPComSimpleSite)
+        assertNull(site.wpApiRestUrl)
     }
 
     @Test
-    fun `simple site proxy URL overrides stored wpApiRestUrl`() {
+    fun `simple site returns stored wpApiRestUrl unchanged`() {
         val site = SiteUtils.generateWPComSite()
         site.setIsWPComAtomic(false)
-        site.wpApiRestUrl = "https://should-be-ignored.example.com/wp-json/"
+        site.wpApiRestUrl = "https://simple.example.com/wp-json/"
 
-        assertEquals(
-            "https://public-api.wordpress.com/wp/v2/sites/${site.siteId}",
-            site.wpApiRestUrl
-        )
+        assertEquals("https://simple.example.com/wp-json/", site.wpApiRestUrl)
     }
 
     @Test
