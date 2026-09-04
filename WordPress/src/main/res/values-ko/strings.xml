@@ -232,7 +232,6 @@ Language: ko_KR
     <string name="stats_period_selector_content_description">통계 기간 선택</string>
     <string name="stats_period_custom">사용자 정의</string>
     <string name="stats_period_last_12_months">최근 12개월</string>
-    <string name="stats_period_last_6_months">최근 6개월</string>
     <string name="stats_period_last_30_days">최근 30일</string>
     <string name="stats_period_last_7_days">최근 7일</string>
     <string name="stats_period_today">오늘</string>

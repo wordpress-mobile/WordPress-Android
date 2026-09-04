@@ -237,7 +237,6 @@ Language: sv_SE
     <string name="stats_period_selector_content_description">Välj statistikperiod</string>
     <string name="stats_period_custom">Anpassad</string>
     <string name="stats_period_last_12_months">Senaste 12 månaderna</string>
-    <string name="stats_period_last_6_months">Senaste 6 månaderna</string>
     <string name="stats_period_last_30_days">Senaste 30 dagarna</string>
     <string name="stats_period_last_7_days">Senaste 7 dagarna</string>
     <string name="stats_period_today">Idag</string>
