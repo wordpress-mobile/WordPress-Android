@@ -22,6 +22,7 @@ class GutenbergKitSettingsBuilder @Inject constructor(
         cookies: Map<String, String>,
         isNetworkLoggingEnabled: Boolean,
         post: PostImmutableModel? = null,
+        source: ConfigSource = ConfigSource.EDITOR,
     ): EditorConfiguration {
         val applicationPassword = site.apiRestPasswordPlain
         val shouldUseWPComRestApi =
@@ -43,6 +44,8 @@ class GutenbergKitSettingsBuilder @Inject constructor(
         val siteApiNamespace = buildSiteApiNamespace(
             shouldUseWPComRestApi, site.siteId, site.url
         )
+
+        logSiteApiRouting(site, siteApiRoot, shouldUseWPComRestApi, source)
 
         val postType = if (post?.isPage == true) PostTypeDetails.page else PostTypeDetails.post
 
@@ -86,6 +89,46 @@ class GutenbergKitSettingsBuilder @Inject constructor(
             setEnableNetworkLogging(isNetworkLoggingEnabled)
             setEnableNativeBlockInserter(true)
         }.build()
+    }
+
+    /**
+     * Records how the editor resolved its REST root, and flags the one combination that cannot
+     * work: a WP.com proxy root (which already embeds `wp/v2/sites/<id>`) paired with an empty
+     * `siteApiNamespace`, so GutenbergKit appends each already-namespaced path unchanged and
+     * every request 404s with `rest_no_route`.
+     *
+     * [SiteModel.getWpApiRestUrl] synthesizes that proxy root whenever the site reads as WP.com
+     * Simple, so `isSimple` distinguishes a misclassified site (synthesized live, clears on a
+     * sync that restores `is_wpcom_atomic`) from a proxy root persisted into `WP_API_REST_URL`
+     * (excluded from full-row writes, so it survives every refresh).
+     *
+     * [source] matters because the two entry points read the site differently — the preloader
+     * re-reads it from the store, the editor uses the copy serialized into its intent — so lines
+     * that disagree for one launch point at a stale in-memory model rather than a stale row.
+     */
+    private fun logSiteApiRouting(
+        site: SiteModel,
+        siteApiRoot: String,
+        shouldUseWPComRestApi: Boolean,
+        source: ConfigSource
+    ) {
+        AppLog.d(
+            AppLog.T.EDITOR,
+            "Editor API routing for ${site.url}: source=$source" +
+                " wpcomRest=$shouldUseWPComRestApi root=$siteApiRoot" +
+                " isWPCom=${site.isWPCom} isAtomic=${site.isWPComAtomic}" +
+                " isSimple=${site.isWPComSimpleSite} isPrivate=${site.isPrivate}" +
+                " comingSoon=${site.isComingSoon} origin=${site.origin}" +
+                " hasAppPassword=${!site.apiRestPasswordPlain.isNullOrEmpty()}"
+        )
+        if (!shouldUseWPComRestApi && siteApiRoot.startsWith(WPCOM_API_ROOT)) {
+            AppLog.e(
+                AppLog.T.EDITOR,
+                "Editor REST root is a WP.com proxy root but namespacing is off, so every" +
+                    " request will carry a duplicate namespace: site=${site.url}" +
+                    " source=$source root=$siteApiRoot isSimple=${site.isWPComSimpleSite}"
+            )
+        }
     }
 
     internal fun buildAuthHeader(
@@ -180,3 +223,9 @@ class GutenbergKitSettingsBuilder @Inject constructor(
             "https://public-api.wordpress.com/"
     }
 }
+
+/**
+ * Which entry point asked for a configuration. [PRELOADER] re-reads the site from the store;
+ * [EDITOR] uses the copy serialized into the editor's intent. Diagnostic only.
+ */
+enum class ConfigSource { PRELOADER, EDITOR }
