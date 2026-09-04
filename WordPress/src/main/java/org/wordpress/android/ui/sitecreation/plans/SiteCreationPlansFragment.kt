@@ -18,7 +18,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -108,11 +108,13 @@ class SiteCreationPlansFragment : Fragment(), SiteCreationPlansWebViewClientList
     ) {
         val uiState by viewModel.uiState.collectAsState()
         Scaffold(
-            // The host activity (BaseAppCompatActivity) already pads the window for the system bars
-            // on edge-to-edge (Android 15+). Consume those insets here so the Scaffold and TopAppBar
-            // don't apply the status bar inset a second time, which pushed the whole screen down by
-            // the status bar height on first load (CMM-2371).
-            modifier = Modifier.consumeWindowInsets(WindowInsets.systemBars),
+            // The host activity (BaseAppCompatActivity) already pads the window for the system bars,
+            // display cutout and IME on edge-to-edge (Android 15+). Consume those same insets here
+            // (safeDrawing == systemBars ∪ displayCutout ∪ ime) so the Scaffold and TopAppBar don't
+            // apply them a second time — which pushed the whole screen down by the status bar height
+            // on first load, and (on cutout devices in landscape) indents the top bar past the
+            // notch (CMM-2371).
+            modifier = Modifier.consumeWindowInsets(WindowInsets.safeDrawing),
             contentWindowInsets = WindowInsets(0, 0, 0, 0),
             topBar = {
                 MainTopAppBar(
