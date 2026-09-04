@@ -1685,7 +1685,6 @@ Language: sr_RS
     <string name="file_error_create">Није могуће направити привремену датотеку за отпремање медија. Потврдите да имате довољно слободног простора за складиштење на свом уређају.</string>
     <string name="view_in_browser">Погледајте у прегледачу веба</string>
     <string name="reader_title_applog">Белешка апликације</string>
-    <string name="fatal_db_error">Дошло је до грешке током прављења базе података апликације. Покушајте поново са инсталацијом апликације.</string>
     <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Водоравно поравнање</string>
     <string name="mnu_comment_spam">Непожељни коментар</string>
     <string name="comment_status_spam">Непожељни коментар</string>

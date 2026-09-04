@@ -3836,7 +3836,6 @@ Language: it
     <string name="reader_toast_err_removing_tag">Impossibile rimuovere questo tag</string>
     <string name="reader_toast_err_adding_tag">Impossibile aggiungere questo tag</string>
     <string name="reader_title_applog">Registro applicazione</string>
-    <string name="fatal_db_error">Si è verificato un errore durante la creazione del database delle app. Prova a reinstallare l\'app.</string>
     <string name="error_refresh_media">Al momento non è stato possibile aggiornare l\'elemento multimediale</string>
     <string name="wordpress_blog">Blog di WordPress</string>
     <string name="local_changes">Modifiche locali</string>

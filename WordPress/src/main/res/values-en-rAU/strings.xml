@@ -1494,7 +1494,6 @@ Language: en_AU
     <string name="new_media">New media</string>
     <string name="local_changes">Local changes</string>
     <string name="wordpress_blog">WordPress blog</string>
-    <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="reader_title_applog">Application log</string>
     <string name="remove_account">Remove site</string>
     <string name="notifications_empty_all">No notifications…yet.</string>

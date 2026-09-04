@@ -534,7 +534,6 @@ Language: hr
     <string name="file_not_found">Nije moguće pronaći medijski zapis za prijenos. Jeli obrisan ili premješten?</string>
     <string name="file_error_create">Nije moguće kreirati privremeni zapis za prijenos medijskog zapisa. Provjerite da ima dovoljno slobodnog mjesta na vašem uređaju.</string>
     <string name="http_authorization_required" a8c-src-lib="module:login">Potrebna autorizacija</string>
-    <string name="fatal_db_error">Pojavila se greška prilikom kreiranja app baze podataka. Pokušajte ponovno instalirati app.</string>
     <string name="remove_account">Ukloni web-stranicu</string>
     <string name="delete_post">Obriši objavu?</string>
     <string name="delete_page">Obriši stranicu?</string>
