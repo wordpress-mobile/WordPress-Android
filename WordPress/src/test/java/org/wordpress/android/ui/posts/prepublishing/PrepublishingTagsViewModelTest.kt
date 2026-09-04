@@ -9,7 +9,9 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doNothing
-import org.mockito.kotlin.mock
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
@@ -39,6 +41,7 @@ class PrepublishingTagsViewModelTest : BaseUnitTest() {
         viewModel = PrepublishingTagsViewModel(
             getPostTagsUseCase,
             updatePostTagsUseCase,
+            testDispatcher(),
             testDispatcher()
         )
     }
@@ -90,6 +93,47 @@ class PrepublishingTagsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(captor.value).isEqualTo("test,nature")
+    }
+
+    @Test
+    fun `a burst of added tags is persisted with a single throttled write`() = test {
+        whenever(getPostTagsUseCase.getTags(any())).thenReturn(null)
+
+        viewModel.start(editPostRepository)
+        viewModel.onTagAdded("a")
+        viewModel.onTagAdded("b")
+        viewModel.onTagAdded("c")
+        advanceUntilIdle()
+
+        verify(updatePostTagsUseCase, times(1)).updateTags(eq("a,b,c"), any())
+    }
+
+    @Test
+    fun `pending input is committed and persisted when the screen is dismissed`() = test {
+        whenever(getPostTagsUseCase.getTags(any())).thenReturn(null)
+        val captor = ArgumentCaptor.forClass(String::class.java)
+        doNothing().whenever(updatePostTagsUseCase).updateTags(captor.capture(), any())
+        var uiState: PrepublishingTagsUiState? = null
+        viewModel.uiState.observeForever { uiState = it }
+
+        viewModel.start(editPostRepository)
+        viewModel.onInputChanged("vacation")
+        viewModel.commitPendingTag()
+        viewModel.onBackButtonClicked()
+
+        assertThat(uiState?.selectedTags).containsExactly("vacation")
+        assertThat(captor.value).isEqualTo("vacation")
+    }
+
+    @Test
+    fun `duplicate site tag names are suggested only once`() {
+        whenever(getPostTagsUseCase.getTags(any())).thenReturn(null)
+        var uiState: PrepublishingTagsUiState? = null
+        viewModel.uiState.observeForever { uiState = it }
+
+        viewModel.start(editPostRepository, listOf("news", "news", "tech"))
+
+        assertThat(uiState?.suggestions).containsExactly("news", "tech")
     }
 
     @Test

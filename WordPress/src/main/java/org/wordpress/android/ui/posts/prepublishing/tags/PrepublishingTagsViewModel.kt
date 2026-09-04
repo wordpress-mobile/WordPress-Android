@@ -3,8 +3,11 @@ package org.wordpress.android.ui.posts.prepublishing.tags
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.GetPostTagsUseCase
 import org.wordpress.android.ui.posts.UpdatePostTagsUseCase
@@ -30,7 +33,8 @@ data class PrepublishingTagsUiState(
 class PrepublishingTagsViewModel @Inject constructor(
     private val getPostTagsUseCase: GetPostTagsUseCase,
     private val updatePostTagsUseCase: UpdatePostTagsUseCase,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
     private lateinit var editPostRepository: EditPostRepository
@@ -39,6 +43,8 @@ class PrepublishingTagsViewModel @Inject constructor(
     private var currentFilter: String = ""
     private var initialTags: List<String> = emptyList()
     private val selectedTags: MutableList<String> = mutableListOf()
+    private var persistJob: Job? = null
+    private var pendingWrite = false
 
     private val _uiState = MutableLiveData<PrepublishingTagsUiState>()
     val uiState: LiveData<PrepublishingTagsUiState> = _uiState
@@ -103,7 +109,17 @@ class PrepublishingTagsViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Adds any text still sitting in the input field (never confirmed with a comma, IME action or
+     * suggestion tap) as a tag. Called right before the screen is dismissed so typed-but-uncommitted
+     * text is not silently dropped.
+     */
+    fun commitPendingTag() {
+        onTagAdded(currentFilter)
+    }
+
     fun onBackButtonClicked() {
+        flushPendingTags()
         _dismissKeyboard.postValue(Event(Unit))
         _navigateToHomeScreen.postValue(Event(Unit))
     }
@@ -111,11 +127,43 @@ class PrepublishingTagsViewModel @Inject constructor(
     fun wereTagsChanged(): Boolean = selectedTags != initialTags
 
     private fun persistAndRefresh() {
-        val joinedTags = selectedTags.joinToString(SEPARATOR)
-        launch(bgDispatcher) {
-            updatePostTagsUseCase.updateTags(joinedTags, editPostRepository)
-        }
         updateUiState()
+        // Throttle persistence so a burst of edits (e.g. pasting "a,b,c") collapses into a single
+        // write. Cancelling the pending job guarantees only the latest snapshot is persisted and
+        // that no two writes race on the shared post model. The throttle runs on the main
+        // dispatcher so pendingWrite is only ever touched on a single thread.
+        pendingWrite = true
+        persistJob?.cancel()
+        persistJob = launch(mainDispatcher) {
+            delay(PERSIST_THROTTLE_DELAY_MS)
+            writePendingTags()
+        }
+    }
+
+    /**
+     * Persists the latest tags immediately, cancelling any queued throttled write. Called when the
+     * screen is dismissed (back button or [onCleared]) so the latest snapshot is never lost while a
+     * write is still queued.
+     */
+    private fun flushPendingTags() {
+        persistJob?.cancel()
+        writePendingTags()
+    }
+
+    /**
+     * Writes the current tags if a write is still pending. The write is dispatched on
+     * [EditPostRepository]'s own scope, which outlives this ViewModel, so it completes even when
+     * this call originates from [onCleared].
+     */
+    private fun writePendingTags() {
+        if (!pendingWrite) return
+        pendingWrite = false
+        updatePostTagsUseCase.updateTags(selectedTags.joinToString(SEPARATOR), editPostRepository)
+    }
+
+    override fun onCleared() {
+        flushPendingTags()
+        super.onCleared()
     }
 
     private fun updateUiState() {
@@ -132,7 +180,7 @@ class PrepublishingTagsViewModel @Inject constructor(
         return allTags.filter { tagName ->
             selectedTags.none { it.equals(tagName, ignoreCase = true) } &&
                     (filter.isEmpty() || tagName.lowercase(Locale.getDefault()).contains(filter))
-        }
+        }.distinct()
     }
 
     private fun parseTags(tags: String?): List<String> {
@@ -142,5 +190,6 @@ class PrepublishingTagsViewModel @Inject constructor(
 
     companion object {
         private const val SEPARATOR = ","
+        private const val PERSIST_THROTTLE_DELAY_MS = 500L
     }
 }

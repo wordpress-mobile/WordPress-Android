@@ -96,6 +96,7 @@ class PrepublishingTagsFragment : Fragment(R.layout.prepublishing_tags_fragment)
     private fun PrepublishingToolbarBinding.init() {
         toolbarTitle.text = getString(R.string.prepublishing_nudges_toolbar_title_tags)
         backButton.setOnClickListener {
+            viewModel.commitPendingTag()
             if (viewModel.wereTagsChanged()) {
                 analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_TAGS_CHANGED)
             }
