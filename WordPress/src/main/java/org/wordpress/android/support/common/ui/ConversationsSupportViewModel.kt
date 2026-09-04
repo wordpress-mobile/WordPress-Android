@@ -132,6 +132,53 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
         }
     }
 
+    // Guards against overlapping silent refreshes (e.g. the minute timer and onStart firing close
+    // together) whose out-of-order responses could show an older list. Confined to the main thread
+    // (viewModelScope runs on Main), so no synchronization is needed.
+    private var isSilentRefreshInFlight = false
+
+    /**
+     * Reloads the conversation list from the server without showing the pull-to-refresh spinner or a
+     * blocking loader. Used by the list screen's periodic auto-refresh and its refresh-on-resume so
+     * new or updated conversations appear while the screen stays open. Leaves the current list and
+     * error state untouched on failure (a background refresh should not surface an error).
+     */
+    @Suppress("TooGenericExceptionCaught")
+    fun refreshConversationsSilently() {
+        // Skip while a visible load or pull-to-refresh owns the state (so we neither cut its spinner
+        // short nor overwrite its newer result), and coalesce overlapping silent refreshes.
+        val state = _conversationsState.value
+        if (isSilentRefreshInFlight ||
+            state == ConversationsState.Loading ||
+            state == ConversationsState.Refreshing
+        ) {
+            return
+        }
+        isSilentRefreshInFlight = true
+        viewModelScope.launch {
+            try {
+                if (!networkUtilsWrapper.isNetworkAvailable()) return@launch
+                val conversations = getConversations()
+                // A visible load/refresh may have started while we were fetching; don't stomp it.
+                val currentState = _conversationsState.value
+                if (conversations != null &&
+                    currentState != ConversationsState.Loading &&
+                    currentState != ConversationsState.Refreshing
+                ) {
+                    _conversations.value = conversations
+                    _conversationsState.value = ConversationsState.Loaded
+                }
+            } catch (throwable: Throwable) {
+                appLogWrapper.e(
+                    AppLog.T.SUPPORT, "Error silently refreshing support conversations: " +
+                            "${throwable.message} - ${throwable.stackTraceToString()}"
+                )
+            } finally {
+                isSilentRefreshInFlight = false
+            }
+        }
+    }
+
     fun clearError() {
         _errorMessage.value = null
     }

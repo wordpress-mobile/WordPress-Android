@@ -4,9 +4,12 @@ import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.AccountStore
@@ -43,6 +46,22 @@ class UnifiedSupportViewModel @Inject constructor(
 ) : ConversationsSupportViewModel<UnifiedConversation>(accountStore, appLogWrapper, networkUtilsWrapper) {
     private val _isSendingReply = MutableStateFlow(false)
     val isSendingReply: StateFlow<Boolean> = _isSendingReply.asStateFlow()
+
+    // Consumable one-shot event emitted after a Happiness Engineer ticket reply is successfully sent,
+    // so the UI can confirm it to the user (not emitted for bot chat sends — they reply in-thread and
+    // have no email follow-up). A CONFLATED channel buffers the event when no collector is attached
+    // (e.g. the composition-restart gap during rotation) so it isn't dropped, and trySend never
+    // suspends, so emitting it can't stall the reply's finally block.
+    private val _replySentEvents = Channel<Unit>(Channel.CONFLATED)
+    val replySentEvents: Flow<Unit> = _replySentEvents.receiveAsFlow()
+
+    // Auto-refresh race guards (all touched only on the main thread):
+    // [conversationMutationGeneration] is bumped synchronously the moment a reply send begins, so an
+    // auto-refresh poll that started before the send discards its now-stale result instead of
+    // restoring a pre-reply snapshot over the just-sent reply. [isRefreshingSelectedConversation]
+    // serialises polls so overlapping responses can't land out of order.
+    private var conversationMutationGeneration = 0L
+    private var isRefreshingSelectedConversation = false
 
     // Reply form state for HE-style conversations (survives configuration changes)
     private val _replyFormState = MutableStateFlow(ConversationReplyFormState())
@@ -141,6 +160,53 @@ class UnifiedSupportViewModel @Inject constructor(
     override suspend fun getConversation(conversationId: Long): UnifiedConversation? =
         repository.loadConversation(conversationId)
 
+    /**
+     * Silently reloads the currently open conversation from the server, without showing the
+     * full-screen loading indicator. Used by the detail screen's periodic auto-refresh so new
+     * replies from support show up while the screen stays open.
+     *
+     * No-ops for bot conversations (they have no server-side changes to poll and a not-yet-created
+     * new conversation has no id to fetch), while a reply is in flight or the conversation is still
+     * loading (so we never clobber the optimistic message or the initial load), and while another
+     * poll is already running (so overlapping responses can't land out of order).
+     */
+    @Suppress("TooGenericExceptionCaught")
+    fun refreshSelectedConversation() {
+        val conversation = _selectedConversation.value ?: return
+        val canRefresh = !conversation.isBot &&
+                conversation.id != NEW_CONVERSATION_ID &&
+                !_isSendingReply.value &&
+                !isLoadingConversation.value &&
+                !isRefreshingSelectedConversation
+        if (!canRefresh) return
+        // Snapshot the generation before fetching; if a send bumps it while we're on the network,
+        // this poll's result is stale and must be dropped (see conversationMutationGeneration).
+        val generationAtStart = conversationMutationGeneration
+        isRefreshingSelectedConversation = true
+        viewModelScope.launch {
+            try {
+                if (!networkUtilsWrapper.isNetworkAvailable()) return@launch
+                val updated = repository.loadConversation(conversation.id)
+                // Apply only if nothing changed the open conversation while we were fetching: same
+                // conversation still open, no reply sending, and no send began since we started.
+                val stillCurrent = updated != null &&
+                        _selectedConversation.value?.id == updated.id &&
+                        !_isSendingReply.value &&
+                        conversationMutationGeneration == generationAtStart
+                if (stillCurrent) {
+                    _selectedConversation.value = updated
+                }
+            } catch (throwable: Throwable) {
+                appLogWrapper.e(
+                    AppLog.T.SUPPORT, "Error auto-refreshing conversation: " +
+                            "${throwable.message} - ${throwable.stackTraceToString()}"
+                )
+            } finally {
+                isRefreshingSelectedConversation = false
+            }
+        }
+    }
+
     @Suppress("TooGenericExceptionCaught", "LongMethod")
     fun sendReply(message: String, includeAppLogs: Boolean = false) {
         val conversation = _selectedConversation.value ?: return
@@ -149,6 +215,9 @@ class UnifiedSupportViewModel @Inject constructor(
         // gets to set it.
         if (_isSendingReply.value) return
         _isSendingReply.value = true
+        // Invalidate any auto-refresh poll already in flight: its response predates this send, so it
+        // must not overwrite the reply we're about to add.
+        conversationMutationGeneration++
 
         viewModelScope.launch {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
@@ -196,6 +265,11 @@ class UnifiedSupportViewModel @Inject constructor(
                         _conversations.value = listOf(updated.copy(messages = emptyList())) + _conversations.value
                     } else {
                         replaceInList(updated)
+                    }
+                    // Confirm HE ticket replies only; bot chat sends need no confirmation. trySend is
+                    // non-suspending, so it never delays the finally block below.
+                    if (!conversation.isBot) {
+                        _replySentEvents.trySend(Unit)
                     }
                 } else {
                     rollbackOptimisticMessage(conversation, optimisticMessage.id)

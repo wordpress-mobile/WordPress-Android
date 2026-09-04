@@ -313,8 +313,6 @@ Language: es_CO
     <string name="he_support_video_playback_error_title">No se puede reproducir el vídeo</string>
     <string name="he_support_conversation_closed_message">Esta conversación está cerrada. Ya no puedes responder a ella.</string>
     <string name="he_support_status_solved">Solucionado</string>
-    <string name="he_support_status_waiting_for_user">Esperando al usuario</string>
-    <string name="he_support_status_waiting_for_support">Esperando al equipo de soporte</string>
     <string name="he_support_select_attachments">Seleccionar adjuntos</string>
     <string name="he_support_download_attachment">Descargar adjunto</string>
     <string name="he_support_include_logs_description">Incluir registros puede ayudar a nuestro equipo a investigar los problemas. Los registros pueden contener actividad reciente de la aplicación.</string>
