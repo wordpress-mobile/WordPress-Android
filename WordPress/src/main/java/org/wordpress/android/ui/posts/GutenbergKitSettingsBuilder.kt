@@ -31,7 +31,7 @@ class GutenbergKitSettingsBuilder @Inject constructor(
         val siteApiRoot = if (shouldUseWPComRestApi) {
             WPCOM_API_ROOT
         } else {
-            site.wpApiRestUrl ?: "${site.url}/wp-json/"
+            resolveDirectHostApiRoot(site)
         }
 
         val authHeader = buildAuthHeader(
@@ -92,15 +92,30 @@ class GutenbergKitSettingsBuilder @Inject constructor(
     }
 
     /**
-     * Records how the editor resolved its REST root, and flags the one combination that cannot
-     * work: a WP.com proxy root (which already embeds `wp/v2/sites/<id>`) paired with an empty
-     * `siteApiNamespace`, so GutenbergKit appends each already-namespaced path unchanged and
-     * every request 404s with `rest_no_route`.
+     * The site's own REST root, for the branch that sends unnamespaced paths straight to the host.
      *
-     * [SiteModel.getWpApiRestUrl] synthesizes that proxy root whenever the site reads as WP.com
-     * Simple, so `isSimple` distinguishes a misclassified site (synthesized live, clears on a
-     * sync that restores `is_wpcom_atomic`) from a proxy root persisted into `WP_API_REST_URL`
-     * (excluded from full-row writes, so it survives every refresh).
+     * A root under [WPCOM_API_ROOT] cannot serve that purpose: it already embeds
+     * `wp/v2/sites/<id>`, so GutenbergKit would append each already-namespaced path to it and every
+     * request would 404 with `rest_no_route`. Older installs have exactly such a value stored in
+     * `WP_API_REST_URL` — see the migration in `WellSqlConfig` — so reject it rather than trusting
+     * the column, and fall back to the site's own host.
+     */
+    internal fun resolveDirectHostApiRoot(site: SiteModel): String {
+        val stored = site.wpApiRestUrl?.takeIf { it.isNotEmpty() }
+        if (stored != null && stored.startsWith(WPCOM_API_ROOT)) {
+            AppLog.e(
+                AppLog.T.EDITOR,
+                "Ignoring WP.com proxy root stored for ${site.url}: it already embeds its" +
+                    " namespace, so it cannot be used as a direct-host root ($stored)"
+            )
+            return "${site.url}/wp-json/"
+        }
+        return stored ?: "${site.url}/wp-json/"
+    }
+
+    /**
+     * Records how the editor resolved its REST root, alongside the site classification it was
+     * derived from, so an editor that fails to load can be traced without a debugger.
      *
      * [source] matters because the two entry points read the site differently — the preloader
      * re-reads it from the store, the editor uses the copy serialized into its intent — so lines
@@ -121,14 +136,6 @@ class GutenbergKitSettingsBuilder @Inject constructor(
                 " comingSoon=${site.isComingSoon} origin=${site.origin}" +
                 " hasAppPassword=${!site.apiRestPasswordPlain.isNullOrEmpty()}"
         )
-        if (!shouldUseWPComRestApi && siteApiRoot.startsWith(WPCOM_API_ROOT)) {
-            AppLog.e(
-                AppLog.T.EDITOR,
-                "Editor REST root is a WP.com proxy root but namespacing is off, so every" +
-                    " request will carry a duplicate namespace: site=${site.url}" +
-                    " source=$source root=$siteApiRoot isSimple=${site.isWPComSimpleSite}"
-            )
-        }
     }
 
     internal fun buildAuthHeader(
