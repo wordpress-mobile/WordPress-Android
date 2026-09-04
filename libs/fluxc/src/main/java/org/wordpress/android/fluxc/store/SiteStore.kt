@@ -1616,6 +1616,14 @@ open class SiteStore @Inject constructor(
         if (username.isNullOrEmpty() || password.isNullOrEmpty()) return 0
         var rowsAffected = persistCredentials(username, password)
         site.wpApiRestUrl?.takeIf { it.isNotEmpty() }?.let {
+            // getWpApiRestUrl() synthesizes a WP.com proxy root while the site reads as Simple,
+            // and this column is excluded from full-row writes, so whatever lands here outlives
+            // the classification that produced it.
+            AppLog.d(
+                T.DB,
+                "Persisting wpApiRestUrl=$it for ${site.url} (isWPCom=${site.isWPCom}" +
+                        " isAtomic=${site.isWPComAtomic} isSimple=${site.isWPComSimpleSite})"
+            )
             rowsAffected += persistWpApiRestUrl(it)
         }
         return rowsAffected

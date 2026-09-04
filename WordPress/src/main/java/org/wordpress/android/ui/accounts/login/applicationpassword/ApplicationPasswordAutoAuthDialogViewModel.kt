@@ -78,6 +78,7 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
                         val password = response.response.data.password
                         val apiRootUrl =
                             wpApiClientProvider.getApiRootUrlFrom(site)
+                        logResolvedApiRoot(site, apiRootUrl)
                         val result = applicationPasswordLoginHelper
                             .storeApplicationPasswordCredentialsFrom(
                                 urlLogin = UriLogin(
@@ -137,6 +138,27 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
                 _isLoading.value = false
             }
         }
+    }
+
+    /**
+     * Records the REST root this mint is about to persist, alongside the classification it was
+     * derived from. [WpApiClientProvider.getApiRootUrlFrom] reads [SiteModel.getWpApiRestUrl],
+     * which synthesizes a WP.com proxy root — one that already embeds `wp/v2/sites/<id>` — while
+     * the site reads as WP.com Simple. The value is passed straight through to
+     * [ApplicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom], which persists it
+     * to `WP_API_REST_URL`; that column is excluded from full-row writes, so a proxy root written
+     * here survives every later sync and outlives the classification that produced it.
+     *
+     * This site comes from an intent extra, so it can be a snapshot taken before an Atomic
+     * transfer landed. `isSimple=true` here means the persisted root is about to be wrong.
+     */
+    private fun logResolvedApiRoot(site: SiteModel, apiRootUrl: String) {
+        appLogWrapper.d(
+            AppLog.T.API,
+            "A_P: Resolved API root for ${site.url}: root=$apiRootUrl" +
+                " isWPCom=${site.isWPCom} isAtomic=${site.isWPComAtomic}" +
+                " isSimple=${site.isWPComSimpleSite} siteId=${site.siteId}"
+        )
     }
 
     private fun logCreationError(siteUrl: String, detail: String) {
