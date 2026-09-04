@@ -142,15 +142,17 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
 
     /**
      * Records the REST root this mint is about to persist, alongside the classification it was
-     * derived from. [WpApiClientProvider.getApiRootUrlFrom] reads [SiteModel.getWpApiRestUrl],
-     * which synthesizes a WP.com proxy root — one that already embeds `wp/v2/sites/<id>` — while
-     * the site reads as WP.com Simple. The value is passed straight through to
-     * [ApplicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom], which persists it
-     * to `WP_API_REST_URL`; that column is excluded from full-row writes, so a proxy root written
-     * here survives every later sync and outlives the classification that produced it.
+     * derived from.
      *
-     * This site comes from an intent extra, so it can be a snapshot taken before an Atomic
-     * transfer landed. `isSimple=true` here means the persisted root is about to be wrong.
+     * [WpApiClientProvider.getApiRootUrlFrom] falls back to `"${'$'}{site.url}/wp-json"` when the site
+     * has no stored root, and the value goes straight to
+     * [ApplicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom], which persists it to
+     * `WP_API_REST_URL`. That column is excluded from full-row writes, so whatever is written here
+     * outlives the site state that produced it — worth a record of both.
+     *
+     * The site comes from an intent extra, so it can be a snapshot taken before an Atomic transfer
+     * landed; a classification here that disagrees with the stored row explains a root that looks
+     * wrong later.
      */
     private fun logResolvedApiRoot(site: SiteModel, apiRootUrl: String) {
         appLogWrapper.d(

@@ -1602,8 +1602,10 @@ open class SiteStore @Inject constructor(
      * fetch, and app-password XML-RPC login in createOrUpdateSites) differ only in targeting the row by local id
      * or by URL, so each passes its matching writer pair.
      *
-     * wpApiRestUrl is written only alongside credentials: a /me/sites model never carries a discovered root, so
-     * without that gate a credential-less sync would write null over a value discovery had already found.
+     * The credential check gates the whole write — a model carrying no credentials has nothing to persist here,
+     * and a /me/sites sync is exactly that. The column is separately protected by the isNotEmpty() check below:
+     * that, not the credential gate, is what stops a model with credentials but no discovered root from blanking
+     * a value discovery already found.
      */
     private fun persistAppPasswordColumns(
         site: SiteModel,

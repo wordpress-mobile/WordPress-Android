@@ -225,7 +225,6 @@ class SiteModelTest {
     fun `simple site with no stored wpApiRestUrl returns null`() {
         val site = SiteUtils.generateWPComSite()
         site.setIsWPComAtomic(false)
-        site.siteId = 99887766
 
         assertTrue(site.isWPComSimpleSite)
         assertNull(site.wpApiRestUrl)

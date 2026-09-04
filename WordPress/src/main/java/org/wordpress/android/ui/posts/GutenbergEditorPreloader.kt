@@ -113,7 +113,7 @@ class GutenbergEditorPreloader @Inject constructor(
                         accessToken = accountStore.accessToken,
                         cookies = emptyMap(),
                         isNetworkLoggingEnabled = false,
-                        source = ConfigSource.PRELOADER,
+                        source = GutenbergKitSettingsBuilder.ConfigSource.PRELOADER,
                     )
                 val result = editorServiceProvider.prepare(
                     context = appContext,
