@@ -14,10 +14,10 @@ class JetpackFeatureRemovalWidgetHelper @Inject constructor(
     )
 
     fun disableWidgetReceiversIfNeeded() {
-        if (!buildConfigWrapper.isJetpackApp) {
-            widgetReceivers.forEach { packageManagerWrapper.disableComponentEnabledSetting(it) }
-        } else {
+        if (buildConfigWrapper.isJetpackApp) {
             widgetReceivers.forEach { packageManagerWrapper.enableComponentEnabledSetting(it) }
+        } else {
+            widgetReceivers.forEach { packageManagerWrapper.disableComponentEnabledSetting(it) }
         }
     }
 

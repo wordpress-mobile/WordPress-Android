@@ -15,12 +15,10 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     private val jetpackFeatureOverlayShownTracker: JetpackFeatureOverlayShownTracker,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
-    fun shouldHideJetpackFeatures(): Boolean {
-        return !buildConfigWrapper.isJetpackApp
-    }
+    fun shouldHideJetpackFeatures(): Boolean = !buildConfigWrapper.isJetpackApp
 
     fun shouldShowFeatureCollectionJetpackOverlayForFirstTime(): Boolean {
-        return !buildConfigWrapper.isJetpackApp &&
+        return shouldHideJetpackFeatures() &&
                 !jetpackFeatureOverlayShownTracker.getFeatureCollectionOverlayShown()
     }
 
