@@ -65,6 +65,7 @@ import org.wordpress.android.editor.EditorImagePreviewListener
 import org.wordpress.android.editor.EditorImageSettingsListener
 import org.wordpress.android.editor.ExceptionLogger
 import org.wordpress.android.editor.gutenberg.DialogVisibility
+import org.wordpress.android.ui.posts.editor.GBKMediaUploadProcessor
 import org.wordpress.android.ui.posts.editor.GutenbergKitEditorFragment
 import org.wordpress.android.ui.posts.editor.GutenbergKitNetworkLogger
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase
@@ -172,6 +173,7 @@ import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity.Companion.createIntent
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.SiteSettingsInterface
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
@@ -193,6 +195,8 @@ import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.MediaUtils
+import org.wordpress.android.util.MediaUtilsWrapper
+import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ReblogUtils
 import org.wordpress.android.util.ShortcutUtils
@@ -205,6 +209,7 @@ import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource
 import org.wordpress.android.util.config.ContactSupportFeatureConfig
@@ -357,6 +362,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     @Inject lateinit var reblogUtils: ReblogUtils
 
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Inject lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 
     @Inject lateinit var publishPostImmediatelyUseCase: PublishPostImmediatelyUseCase
 
@@ -387,6 +393,9 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     @Inject lateinit var editorJetpackSocialViewModel: EditorJetpackSocialViewModel
     @Inject lateinit var gutenbergKitNetworkLogger: GutenbergKitNetworkLogger
     @Inject lateinit var gutenbergKitSettingsBuilder: GutenbergKitSettingsBuilder
+    @Inject lateinit var mediaUtilsWrapper: MediaUtilsWrapper
+    @Inject lateinit var siteUtilsWrapper: SiteUtilsWrapper
+    @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
     private lateinit var editPostNavigationViewModel: EditPostNavigationViewModel
     private lateinit var editPostSettingsViewModel: EditPostSettingsViewModel
     private lateinit var prepublishingViewModel: PrepublishingViewModel
@@ -2260,6 +2269,19 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                             }
                         )
                     }
+
+                    // Process device media per the app's media settings before upload
+                    editorFragment?.setMediaUploadDelegate(
+                        GBKMediaUploadProcessor(
+                            site = siteModel,
+                            appContext = applicationContext,
+                            mediaUtilsWrapper = mediaUtilsWrapper,
+                            appPrefsWrapper = appPrefsWrapper,
+                            siteUtilsWrapper = siteUtilsWrapper,
+                            analyticsTrackerWrapper = analyticsTrackerWrapper,
+                            analyticsUtilsWrapper = analyticsUtilsWrapper,
+                        )
+                    )
                 }
                 VIEW_PAGER_PAGE_SETTINGS -> editPostSettingsFragment = fragment as EditPostSettingsFragment
             }

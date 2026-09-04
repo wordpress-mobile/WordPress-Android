@@ -39,6 +39,7 @@ import org.wordpress.gutenberg.GutenbergView.LogJsExceptionListener
 import org.wordpress.gutenberg.GutenbergView.OpenMediaLibraryListener
 import org.wordpress.gutenberg.GutenbergView.TitleAndContentCallback
 import org.wordpress.gutenberg.Media
+import org.wordpress.gutenberg.MediaUploadDelegate
 import org.wordpress.gutenberg.model.EditorConfiguration
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -61,6 +62,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     private var onLogJsExceptionListener: LogJsExceptionListener? = null
     private var modalDialogStateListener: GutenbergView.ModalDialogStateListener? = null
     private var networkRequestListener: GutenbergView.NetworkRequestListener? = null
+    private var mediaUploadDelegate: MediaUploadDelegate? = null
     private var rootView: View? = null
     private var isXPostsEnabled: Boolean = false
 
@@ -189,6 +191,14 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             coroutineScope = this.lifecycleScope,
             context = requireContext()
         )
+
+        // Must be set before the editor loads: GutenbergKit captures the delegate when the page
+        // begins loading and throws from the setter afterward. The constructor already kicks off
+        // the load when dependencies are preloaded, so assign it here rather than alongside the
+        // listeners below.
+        mediaUploadDelegate?.let {
+            gutenbergView.mediaUploadDelegate = it
+        }
 
         gutenbergViewContainer.addView(
             gutenbergView,
@@ -550,6 +560,29 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     ) {
         networkRequestListener = listener
         gutenbergView?.setNetworkRequestListener(listener)
+    }
+
+    /**
+     * Sets the delegate that processes media before upload. Must be called before [onCreateView],
+     * which is the only place the delegate reaches the view: GutenbergKit captures it when the
+     * editor page begins loading and throws from its setter afterward, so pushing it into a live
+     * view here would crash. The field is the single source of truth.
+     *
+     * Unlike the other hooks here ([setNetworkRequestListener], [setImageLoader]), this one cannot
+     * push into an already-created view, so arriving late is a silent no-op: uploads fall back to
+     * GutenbergKit's unprocessed WebView path with no error. That can only happen if the view was
+     * created before the delegate was assigned — e.g. a configuration change restoring the fragment
+     * ahead of a deferred setupViewPager() callback. Log it rather than let it pass unnoticed.
+     */
+    fun setMediaUploadDelegate(delegate: MediaUploadDelegate) {
+        if (gutenbergView != null) {
+            AppLog.w(
+                AppLog.T.MEDIA,
+                "GutenbergKitEditorFragment: media upload delegate set after the view was created" +
+                        " - uploads will bypass the app's media settings for this session"
+            )
+        }
+        mediaUploadDelegate = delegate
     }
 
     override fun onUndoPressed() {

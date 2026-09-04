@@ -8,6 +8,7 @@ import org.wordpress.android.editor.EditorMediaUtils
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.utils.MimeTypes.Plan
 import org.wordpress.android.util.AppLog.T
+import java.io.File
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -35,6 +36,15 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun isVideoMimeType(mimeType: String?): Boolean =
         org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType(mimeType)
 
+    fun isAudioMimeType(mimeType: String?): Boolean =
+        org.wordpress.android.fluxc.utils.MediaUtils.isAudioMimeType(mimeType)
+
+    fun isApplicationMimeType(mimeType: String?): Boolean =
+        org.wordpress.android.fluxc.utils.MediaUtils.isApplicationMimeType(mimeType)
+
+    fun stripImageLocation(imagePath: String) =
+        org.wordpress.android.fluxc.utils.MediaUtils.stripLocation(imagePath)
+
     fun isInMediaStore(mediaUri: Uri?): Boolean =
         MediaUtils.isInMediaStore(mediaUri)
 
@@ -60,8 +70,28 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun isVideoFile(mediaUri: Uri): Boolean =
         isVideo(mediaUri) || isVideoMimeType(getMimeType(mediaUri))
 
-    fun isProhibitedVideoDuration(context: Context, site: SiteModel, uri: Uri): Boolean {
-        if (isVideoFile(uri) && site.hasFreePlan && !site.isActiveModuleEnabled("videopress")) {
+    /**
+     * Duration check for a file whose type is already known from its upload metadata.
+     *
+     * Callers must pass the mime type they resolved, because the [Uri] overload cannot recover it
+     * here: a `file://` URI makes [getMimeType] return null (ContentResolver only types content
+     * URIs), collapsing [isVideoFile] to [MediaUtils.isVideo] — an extension-only test. A video
+     * whose filename carries no recognized extension would then skip the check entirely and let a
+     * free site upload a video over the limit.
+     */
+    fun isProhibitedVideoDuration(context: Context, site: SiteModel, file: File, mimeType: String): Boolean =
+        isProhibitedVideoDuration(context, site, Uri.fromFile(file), isVideoMimeType(mimeType))
+
+    fun isProhibitedVideoDuration(context: Context, site: SiteModel, uri: Uri): Boolean =
+        isProhibitedVideoDuration(context, site, uri, isVideoFile(uri))
+
+    private fun isProhibitedVideoDuration(
+        context: Context,
+        site: SiteModel,
+        uri: Uri,
+        isVideo: Boolean
+    ): Boolean {
+        if (isVideo && site.hasFreePlan && !site.isActiveModuleEnabled("videopress")) {
             val retriever = MediaMetadataRetriever()
 
             try {
