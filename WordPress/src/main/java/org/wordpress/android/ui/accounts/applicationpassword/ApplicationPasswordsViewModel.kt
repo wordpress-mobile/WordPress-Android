@@ -26,6 +26,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.ApplicationPasswordWithViewContext
@@ -168,9 +169,15 @@ class ApplicationPasswordsViewModel @Inject constructor(
         formatDate(lastUsed)
     }
 
-    /** Formats a date to "yyyy/MM/dd" for display. */
+    /**
+     * Formats a date to "yyyy/MM/dd" for display, rendered in UTC. The API reports these
+     * timestamps without an offset, so formatting in UTC keeps the displayed day equal to the one
+     * the server reported instead of shifting it by the device's timezone offset.
+     */
     private fun formatDate(date: Date): String =
-        SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(date)
+        SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+            .apply { timeZone = TimeZone.getTimeZone("UTC") }
+            .format(date)
 
     private suspend fun getApplicationPasswordsList(site: SiteModel): List<ApplicationPasswordWithViewContext> {
         // Always use the direct-host Basic-auth client. `getWpApiClient` routes WPCom-flagged

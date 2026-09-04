@@ -47,6 +47,7 @@ import uniffi.wp_api.IpAddress
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 @AndroidEntryPoint
 class ApplicationPasswordsListActivity : BaseAppCompatActivity() {
@@ -264,8 +265,15 @@ class ApplicationPasswordsListActivity : BaseAppCompatActivity() {
         }
     }
 
+    /**
+     * Formats a date to "yyyy/MM/dd" for display, rendered in UTC. The API reports these
+     * timestamps without an offset, so formatting in UTC keeps the displayed day equal to the one
+     * the server reported instead of shifting it by the device's timezone offset.
+     */
     private fun formatDate(date: Date): String =
-        SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(date)
+        SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+            .apply { timeZone = TimeZone.getTimeZone("UTC") }
+            .format(date)
 
     @Composable
     private fun formatLastIp(lastIp: IpAddress?): String {
