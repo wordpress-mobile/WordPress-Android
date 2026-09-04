@@ -63,8 +63,7 @@ class FetchAllDomainsUseCase @Inject constructor(
             else -> {
                 AppLog.e(
                     AppLog.T.API,
-                    "An error occurred while fetching all domains: " +
-                        result
+                    "An error occurred while fetching all domains"
                 )
                 AllDomains.Error
             }

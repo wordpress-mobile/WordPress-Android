@@ -170,8 +170,7 @@ class DomainSuggestionsViewModel @Inject constructor(
                 is WpRequestResult.Success -> products = result.response.values.toList()
                 else -> AppLog.e(
                     T.DOMAIN_REGISTRATION,
-                    "An error occurred while fetching domain products: " +
-                        result
+                    "An error occurred while fetching domain products"
                 )
             }
             initializeDefaultSuggestions()
@@ -297,8 +296,7 @@ class DomainSuggestionsViewModel @Inject constructor(
     private fun showSuggestionsError(result: WpRequestResult<*>) {
         AppLog.e(
             T.DOMAIN_REGISTRATION,
-            "An error occurred while fetching the domain suggestions: " +
-                result
+            "An error occurred while fetching the domain suggestions"
         )
         // The list answers the query in the search field. A search that failed
         // has no results, so carrying the previous ones over would leave the

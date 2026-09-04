@@ -3,9 +3,12 @@ package org.wordpress.android.networking.restapi
 import okhttp3.OkHttpClient
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.applyWpRsTimeouts
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManagerWrapper
+import rs.wordpress.api.kotlin.DEFAULT_REQUEST_ERROR_LOG_POLICY
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpHttpClient
+import rs.wordpress.api.kotlin.WpRequestErrorLogger
 import rs.wordpress.api.kotlin.WpRequestExecutor
 import rs.wordpress.api.kotlin.fromLocale
 import uniffi.wp_api.WpAuthentication
@@ -29,6 +32,15 @@ class WpComApiClientProvider @Inject constructor(
             WpComLanguage.fromLocale(localeManagerWrapper.getLocale())
     }
 
+    /**
+     * Logs request failures through the library's redaction policy. The default policy keeps the
+     * request path and omits the response body, which is the guarantee the removed
+     * WpRequestResult.toLogErrorString() used to give at each call site.
+     */
+    private val errorLogger = WpRequestErrorLogger(DEFAULT_REQUEST_ERROR_LOG_POLICY) { message ->
+        AppLog.e(AppLog.T.API, message)
+    }
+
     fun getWpComApiClient(accessToken: String): WpComApiClient {
         val okHttpClient = OkHttpClient.Builder()
             .applyWpRsTimeouts()
@@ -41,6 +53,7 @@ class WpComApiClientProvider @Inject constructor(
             ),
             authProvider = WpAuthenticationProvider.staticWithAuth(WpAuthentication.Bearer(token = accessToken)
             ),
+            errorLogger = errorLogger,
             languageProvider = languageProvider
         )
     }

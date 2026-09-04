@@ -29,6 +29,7 @@ import uniffi.wp_api.AutoDiscoveryAttemptFailure
 import uniffi.wp_api.FetchAndParseApiRootFailure
 import uniffi.wp_api.WpErrorCode
 import uniffi.wp_api.applicationPasswordsUrl
+import uniffi.wp_api.localizedDescription
 import java.net.URI
 import javax.inject.Inject
 import javax.inject.Named
@@ -147,9 +148,11 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 is ApiDiscoveryResult.Failure ->
                     handleAuthenticationDiscoveryError(
                         siteUrl,
-                        // AutoDiscoveryAttemptFailure is a Throwable, so its message is the library's
-                        // description of what went wrong (0.8.0 dropped the userFacingErrorMessage helper).
-                        urlDiscoveryResult.failure.message.orEmpty(),
+                        // 0.8.0 replaced userFacingErrorMessage() with localizedDescription(), which
+                        // returns a translated sentence. This message is shown to the user on the
+                        // login screen, so the raw Throwable message (an internal debug dump of the
+                        // discovery attempt) must not be used here.
+                        urlDiscoveryResult.failure.localizedDescription(),
                         urlDiscoveryResult.failureReason(),
                     )
             }

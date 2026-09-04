@@ -1421,17 +1421,18 @@ class StatsDataSourceImpl @Inject constructor(
                             displayName =
                                 subscriber.displayName,
                             subscribedSince =
-                                java.time.ZonedDateTime
-                                    .ofInstant(
-                                        (subscriber.dateSubscribed?.toInstant()
-                                            ?: java.time.Instant.EPOCH),
-                                        java.time.ZoneId
-                                            .systemDefault()
-                                    ).format(
-                                        java.time.format
-                                            .DateTimeFormatter
-                                            .ISO_LOCAL_DATE_TIME
-                                    )
+                                subscriber.dateSubscribed?.let { dateSubscribed ->
+                                    java.time.ZonedDateTime
+                                        .ofInstant(
+                                            dateSubscribed.toInstant(),
+                                            java.time.ZoneId
+                                                .systemDefault()
+                                        ).format(
+                                            java.time.format
+                                                .DateTimeFormatter
+                                                .ISO_LOCAL_DATE_TIME
+                                        )
+                                }.orEmpty()
                         )
                     }
                 )
