@@ -24,7 +24,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
+import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.TaxonomyStore
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
@@ -75,7 +75,7 @@ class TermsViewModelTest : BaseUnitTest() {
     private lateinit var trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor
 
     @Mock
-    private lateinit var networkAvailabilityProvider: WpNetworkAvailabilityProvider
+    private lateinit var wpComApiClientProvider: WpComApiClientProvider
 
     @Mock
     private lateinit var wpApiClient: WpApiClient
@@ -104,7 +104,7 @@ class TermsViewModelTest : BaseUnitTest() {
             taxonomyStore = taxonomyStore,
             fluxCDispatcher = fluxCDispatcher,
             trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor,
-            networkAvailabilityProvider = networkAvailabilityProvider
+            wpComApiClientProvider = wpComApiClientProvider
         )
     }
 
