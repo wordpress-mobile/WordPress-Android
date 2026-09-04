@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
@@ -125,6 +126,8 @@ class TermSelectionViewModelTest : BaseUnitTest(
         assertThat(viewModel.uiState.value.error).isNull()
         assertThat(viewModel.uiState.value.terms.map { it.id })
             .containsExactly(1L)
+        assertThat(viewModel.events.first())
+            .isEqualTo(TermSelectionEvent.ShowSnackbar("error"))
     }
 
     @Test

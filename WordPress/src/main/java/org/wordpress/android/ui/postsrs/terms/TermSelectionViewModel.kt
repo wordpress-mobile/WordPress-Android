@@ -260,6 +260,15 @@ class TermSelectionViewModel @Inject constructor(
                     }
                     return
                 }
+                // Keep the pages already fetched, but tell the user the
+                // list is incomplete so they can retry.
+                _events.trySend(
+                    TermSelectionEvent.ShowSnackbar(
+                        resourceProvider.getString(
+                            R.string.request_failed_message
+                        )
+                    )
+                )
                 nextPageParams = null
             }
         } while (nextPageParams != null)
