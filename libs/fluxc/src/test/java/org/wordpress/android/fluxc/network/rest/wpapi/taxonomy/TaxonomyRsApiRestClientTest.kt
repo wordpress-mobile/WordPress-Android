@@ -17,9 +17,12 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.wordpress.android.fluxc.Dispatcher
@@ -38,9 +41,12 @@ import uniffi.wp_api.AnyTermWithEditContext
 import uniffi.wp_api.AnyTermWithViewContext
 import uniffi.wp_api.RequestMethod
 import uniffi.wp_api.TermDeleteResponse
+import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.TermsRequestCreateResponse
 import uniffi.wp_api.TermsRequestDeleteResponse
+import uniffi.wp_api.TermsRequestExecutor
 import uniffi.wp_api.TermsRequestListWithViewContextResponse
+import uniffi.wp_api.UniffiWpApiClient
 import uniffi.wp_api.TermsRequestUpdateResponse
 import uniffi.wp_api.TaxonomyType
 import uniffi.wp_api.TermListParams
@@ -564,17 +570,35 @@ class TaxonomyRsApiRestClientTest {
     }
 
     @Test
+    fun `deleteTerm category deletes by the remote term id`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { delete(any(), any()) } doReturn createTestDeleteResponse(deleted = true)
+        }
+        val uniffiClient = mock<UniffiWpApiClient> {
+            on { terms() } doReturn termsExecutor
+        }
+
+        // The other delete tests stub the request wholesale, which leaves the id sent to the API
+        // unobservable. Running the request against a stubbed executor exposes it: TermModel
+        // carries both a local row id and a remote one, and only the remote one identifies the
+        // term to the API.
+        whenever(wpApiClient.request<TermsRequestDeleteResponse>(any())).doSuspendableAnswer { invocation ->
+            val executeRequest =
+                invocation.getArgument<suspend (UniffiWpApiClient) -> TermsRequestDeleteResponse>(0)
+            WpRequestResult.Success(response = executeRequest(uniffiClient))
+        }
+
+        taxonomyClient.deleteTerm(testSite, testCategoryTermModel)
+
+        verifyBlocking(termsExecutor) {
+            delete(TermEndpointType.Categories, testCategoryTermModel.remoteTermId)
+        }
+    }
+
+    @Test
     fun `deleteTerm category with success response dispatches success action`() = runTest {
-        val categoryDeleteData = createTestCategoryDeleteData(deleted = true)
-
-        // Create the correct response structure following the MediaRsApiRestClientTest pattern
-        val categoryResponse = TermsRequestDeleteResponse(
-            categoryDeleteData,
-            mock<WpNetworkHeaderMap>()
-        )
-
         val successResponse: WpRequestResult<TermsRequestDeleteResponse> = WpRequestResult.Success(
-            response = categoryResponse
+            response = createTestDeleteResponse(deleted = true)
         )
 
         whenever(wpApiClient.request<TermsRequestDeleteResponse>(any())).thenReturn(successResponse)
@@ -593,7 +617,7 @@ class TaxonomyRsApiRestClientTest {
         // Verify the deleted term has the correct properties
         assertEquals(testCategoryTermModel.id, payload.term.id)
         assertEquals(testSite.id, payload.term.localSiteId)
-        assertEquals(testCategoryTermModel.id.toLong(), payload.term.remoteTermId)
+        assertEquals(testCategoryTermModel.remoteTermId, payload.term.remoteTermId)
         assertEquals(testCategoryTaxonomyName, payload.term.taxonomy)
         assertEquals(testCategoryTermModel.name, payload.term.name)
         assertEquals(testCategoryTermModel.slug, payload.term.slug)
@@ -604,16 +628,8 @@ class TaxonomyRsApiRestClientTest {
 
     @Test
     fun `deleteTerm category with failed deletion response dispatches error action`() = runTest {
-        val categoryDeleteData = createTestCategoryDeleteData(deleted = false)
-
-        // Create the correct response structure with deleted = false
-        val categoryResponse = TermsRequestDeleteResponse(
-            categoryDeleteData,
-            mock<WpNetworkHeaderMap>()
-        )
-
         val successResponse: WpRequestResult<TermsRequestDeleteResponse> = WpRequestResult.Success(
-            response = categoryResponse
+            response = createTestDeleteResponse(deleted = false)
         )
 
         whenever(wpApiClient.request<TermsRequestDeleteResponse>(any())).thenReturn(successResponse)
@@ -662,16 +678,8 @@ class TaxonomyRsApiRestClientTest {
 
     @Test
     fun `deleteTerm tag with success response dispatches success action`() = runTest {
-        val tagDeleteData = createTestTagDeleteData(deleted = true)
-
-        // Create the correct response structure following the MediaRsApiRestClientTest pattern
-        val tagResponse = TermsRequestDeleteResponse(
-            tagDeleteData,
-            mock<WpNetworkHeaderMap>()
-        )
-
         val successResponse: WpRequestResult<TermsRequestDeleteResponse> = WpRequestResult.Success(
-            response = tagResponse
+            response = createTestDeleteResponse(deleted = true)
         )
 
         whenever(wpApiClient.request<TermsRequestDeleteResponse>(any())).thenReturn(successResponse)
@@ -690,7 +698,7 @@ class TaxonomyRsApiRestClientTest {
         // Verify the deleted term has the correct properties
         assertEquals(testTagTermModel.id, payload.term.id)
         assertEquals(testSite.id, payload.term.localSiteId)
-        assertEquals(testTagTermModel.id.toLong(), payload.term.remoteTermId)
+        assertEquals(testTagTermModel.remoteTermId, payload.term.remoteTermId)
         assertEquals(testTagTaxonomyName, payload.term.taxonomy)
         assertEquals(testTagTermModel.name, payload.term.name)
         assertEquals(testTagTermModel.slug, payload.term.slug)
@@ -701,16 +709,8 @@ class TaxonomyRsApiRestClientTest {
 
     @Test
     fun `deleteTerm tag with failed deletion response dispatches error action`() = runTest {
-        val tagDeleteData = createTestTagDeleteData(deleted = false)
-
-        // Create the correct response structure with deleted = false
-        val tagResponse = TermsRequestDeleteResponse(
-            tagDeleteData,
-            mock<WpNetworkHeaderMap>()
-        )
-
         val successResponse: WpRequestResult<TermsRequestDeleteResponse> = WpRequestResult.Success(
-            response = tagResponse
+            response = createTestDeleteResponse(deleted = false)
         )
 
         whenever(wpApiClient.request<TermsRequestDeleteResponse>(any())).thenReturn(successResponse)
@@ -922,12 +922,11 @@ class TaxonomyRsApiRestClientTest {
         )
     )
 
-    private fun createTestCategoryDeleteData(deleted: Boolean): TermDeleteResponse {
-        return TermDeleteResponse(deleted, createTestAnyTermWithEditContext())
-    }
-
-    private fun createTestTagDeleteData(deleted: Boolean): TermDeleteResponse {
-        return TermDeleteResponse(deleted, createTestAnyTermWithEditContext())
+    private fun createTestDeleteResponse(deleted: Boolean): TermsRequestDeleteResponse {
+        return TermsRequestDeleteResponse(
+            TermDeleteResponse(deleted, createTestAnyTermWithEditContext()),
+            mock<WpNetworkHeaderMap>()
+        )
     }
 
     // The edit and view context terms are separate generated types with no common supertype, so the

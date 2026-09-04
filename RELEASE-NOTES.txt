@@ -17,6 +17,7 @@
 * [*] Reworked editor capability detection to be more reliable and prevent a false "Unable to connect to your site" banner on private Atomic sites.
 * [**] Posts and pages that have no excerpt no longer get an automatically generated one filled in and saved when you update them.
 * [**] Authors and contributors can now pick categories and tags in the post editor on Atomic and self-hosted sites, instead of hitting a category refresh error.
+* [**] Deleting a category now works on sites connected with an application password, and a category or tag that can't be deleted tells you so instead of leaving the screen loading. [https://github.com/wordpress-mobile/WordPress-Android/pull/23294]
 
 26.9
 -----
