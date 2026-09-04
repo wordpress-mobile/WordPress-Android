@@ -259,14 +259,16 @@ class GutenbergKitSettingsBuilder @Inject constructor(
         }
     }
 
+    /**
+     * Which entry point asked for a configuration. [PRELOADER] re-reads the site from the store,
+     * [EDITOR] uses the copy serialized into the editor's intent — so a log line naming the source
+     * distinguishes a stale row from a stale in-memory model. Diagnostic only.
+     */
+    enum class ConfigSource { PRELOADER, EDITOR }
+
     companion object {
         private const val AUTH_BEARER_PREFIX = "Bearer "
         private const val AUTH_BASIC_PREFIX = "Basic "
     }
 }
 
-/**
- * Which entry point asked for a configuration. [PRELOADER] re-reads the site from the store;
- * [EDITOR] uses the copy serialized into the editor's intent. Diagnostic only.
- */
-enum class ConfigSource { PRELOADER, EDITOR }

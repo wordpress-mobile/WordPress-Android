@@ -2232,7 +2232,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 ),
                 isNetworkLoggingEnabled = AppPrefs.isTrackNetworkRequestsEnabled(),
                 post = post,
-                source = ConfigSource.EDITOR,
+                source = GutenbergKitSettingsBuilder.ConfigSource.EDITOR,
             )
         }
 
