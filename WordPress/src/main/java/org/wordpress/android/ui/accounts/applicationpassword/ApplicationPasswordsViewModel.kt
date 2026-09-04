@@ -24,7 +24,9 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.ApplicationPasswordWithViewContext
@@ -112,9 +114,9 @@ class ApplicationPasswordsViewModel @Inject constructor(
             }
             SORT_BY_LAST_USED_ID -> { // Sort by last used
                 if (sortOrder == WpApiParamOrder.ASC) {
-                    filteredPasswords.sortedBy { it.lastUsed ?: "" }
+                    filteredPasswords.sortedBy { it.lastUsed }
                 } else {
-                    filteredPasswords.sortedByDescending { it.lastUsed ?: "" }
+                    filteredPasswords.sortedByDescending { it.lastUsed }
                 }
             }
             else -> filteredPasswords
@@ -152,7 +154,7 @@ class ApplicationPasswordsViewModel @Inject constructor(
                     valueType = DataViewFieldType.TEXT,
                 ),
                 DataViewItemField(
-                    value = formatDateString(applicationPassword.created),
+                    value = formatDate(applicationPassword.created),
                     valueType = DataViewFieldType.DATE,
                 ),
             ),
@@ -161,29 +163,21 @@ class ApplicationPasswordsViewModel @Inject constructor(
         )
     }
 
-    private fun formatLastUsed(lastUsed: String?): String = if (lastUsed.isNullOrEmpty()) {
+    private fun formatLastUsed(lastUsed: Date?): String = if (lastUsed == null) {
         context.resources.getString(R.string.application_password_never_used)
     } else {
-        formatDateString(lastUsed)
+        formatDate(lastUsed)
     }
 
     /**
-     * Formats a date string from "2025-08-07T11:02:34" format to "July 31, 2025" format.
-     * If the input doesn't match the expected format, returns the input as-is.
+     * Formats a date to "yyyy/MM/dd" for display, rendered in UTC. The API reports these
+     * timestamps without an offset, so formatting in UTC keeps the displayed day equal to the one
+     * the server reported instead of shifting it by the device's timezone offset.
      */
-    @Suppress("TooGenericExceptionCaught", "SwallowedException")
-    private fun formatDateString(dateString: String): String {
-        return try {
-            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-            val outputFormat = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
-
-            val parsedDate = inputFormat.parse(dateString)
-            parsedDate?.let { outputFormat.format(it) } ?: dateString
-        } catch (e: Exception) {
-            // If parsing fails, return the original string
-            dateString
-        }
-    }
+    private fun formatDate(date: Date): String =
+        SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+            .apply { timeZone = TimeZone.getTimeZone("UTC") }
+            .format(date)
 
     private suspend fun getApplicationPasswordsList(site: SiteModel): List<ApplicationPasswordWithViewContext> {
         // Always use the direct-host Basic-auth client. `getWpApiClient` routes WPCom-flagged
