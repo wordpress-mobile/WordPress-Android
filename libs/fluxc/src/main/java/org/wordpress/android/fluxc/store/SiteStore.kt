@@ -1602,9 +1602,8 @@ open class SiteStore @Inject constructor(
      * fetch, and app-password XML-RPC login in createOrUpdateSites) differ only in targeting the row by local id
      * or by URL, so each passes its matching writer pair.
      *
-     * wpApiRestUrl is written only alongside credentials. A credential-less /me/sites model can be a WP.com simple
-     * site whose getWpApiRestUrl() synthesizes a public-api proxy URL; gating on credentials keeps that synthetic
-     * value out of the DB (such sites never carry app-password credentials).
+     * wpApiRestUrl is written only alongside credentials: a /me/sites model never carries a discovered root, so
+     * without that gate a credential-less sync would write null over a value discovery had already found.
      */
     private fun persistAppPasswordColumns(
         site: SiteModel,
@@ -1616,9 +1615,8 @@ open class SiteStore @Inject constructor(
         if (username.isNullOrEmpty() || password.isNullOrEmpty()) return 0
         var rowsAffected = persistCredentials(username, password)
         site.wpApiRestUrl?.takeIf { it.isNotEmpty() }?.let {
-            // getWpApiRestUrl() synthesizes a WP.com proxy root while the site reads as Simple,
-            // and this column is excluded from full-row writes, so whatever lands here outlives
-            // the classification that produced it.
+            // This column is excluded from full-row writes, so whatever lands here outlives every
+            // later sync — worth a record of what was written and what the site looked like.
             AppLog.d(
                 T.DB,
                 "Persisting wpApiRestUrl=$it for ${site.url} (isWPCom=${site.isWPCom}" +
