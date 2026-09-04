@@ -16,6 +16,7 @@
 * [**] Self-hosted sites added with an application password now have their Jetpack status detected, so opening Stats in the Jetpack app no longer asks you to install a plugin your site already has.
 * [*] Reworked editor capability detection to be more reliable and prevent a false "Unable to connect to your site" banner on private Atomic sites.
 * [**] Authors and contributors can now pick categories and tags in the post editor on Atomic and self-hosted sites, instead of hitting a category refresh error.
+* [**] Deleting a category now works on sites connected with an application password, and a category or tag that can't be deleted tells you so instead of leaving the screen loading. [https://github.com/wordpress-mobile/WordPress-Android/pull/23294]
 
 26.9
 -----
