@@ -1615,13 +1615,6 @@ open class SiteStore @Inject constructor(
         if (username.isNullOrEmpty() || password.isNullOrEmpty()) return 0
         var rowsAffected = persistCredentials(username, password)
         site.wpApiRestUrl?.takeIf { it.isNotEmpty() }?.let {
-            // This column is excluded from full-row writes, so whatever lands here outlives every
-            // later sync — worth a record of what was written and what the site looked like.
-            AppLog.d(
-                T.DB,
-                "Persisting wpApiRestUrl=$it for ${site.url} (isWPCom=${site.isWPCom}" +
-                        " isAtomic=${site.isWPComAtomic} isSimple=${site.isWPComSimpleSite})"
-            )
             rowsAffected += persistWpApiRestUrl(it)
         }
         return rowsAffected
