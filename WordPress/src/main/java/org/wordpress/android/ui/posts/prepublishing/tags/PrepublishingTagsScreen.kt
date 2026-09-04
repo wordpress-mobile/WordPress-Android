@@ -194,8 +194,15 @@ private fun TagsChipInputField(
                     fieldValue = newValue
                     onInputChange(newValue.text.removePrefix(SENTINEL))
                 } else if (newValue.text.isEmpty()) {
-                    // The field is now fully empty: a backspace on the sentinel of an empty field.
-                    onBackspaceWhenEmpty()
+                    // The field is now fully empty. Distinguish a real backspace on the sentinel of
+                    // an already-empty field (delete the last chip) from a select-all-delete / clear
+                    // of typed text (only reset the input, keeping the chips intact). The latter is
+                    // detected by the field having held more than just the sentinel beforehand.
+                    if (fieldValue.text == SENTINEL) {
+                        onBackspaceWhenEmpty()
+                    } else {
+                        onInputChange("")
+                    }
                     // Never leave the field without its sentinel.
                     fieldValue = TextFieldValue(SENTINEL, selection = TextRange(SENTINEL.length))
                 } else {

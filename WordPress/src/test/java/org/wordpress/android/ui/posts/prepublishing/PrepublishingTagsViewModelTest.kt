@@ -14,13 +14,11 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.R
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.GetPostTagsUseCase
 import org.wordpress.android.ui.posts.UpdatePostTagsUseCase
 import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsUiState
 import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsViewModel
-import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.Event
 
 @ExperimentalCoroutinesApi
@@ -47,18 +45,6 @@ class PrepublishingTagsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when viewModel is started updateToolbarTitle is called with the tags title`() {
-        var title: UiStringRes? = null
-        viewModel.toolbarTitleUiState.observeForever {
-            title = it as UiStringRes
-        }
-
-        viewModel.start(editPostRepository)
-
-        assertThat(title?.stringRes).isEqualTo(R.string.prepublishing_nudges_toolbar_title_tags)
-    }
-
-    @Test
     fun `when viewModel is started the post's existing tags are exposed as selected tags`() {
         whenever(getPostTagsUseCase.getTags(any())).thenReturn("test,nature")
         var uiState: PrepublishingTagsUiState? = null
@@ -67,6 +53,17 @@ class PrepublishingTagsViewModelTest : BaseUnitTest() {
         viewModel.start(editPostRepository)
 
         assertThat(uiState?.selectedTags).containsExactly("test", "nature")
+    }
+
+    @Test
+    fun `duplicate initial post tags are de-duplicated case-insensitively into a single chip`() {
+        whenever(getPostTagsUseCase.getTags(any())).thenReturn("news,News,tech")
+        var uiState: PrepublishingTagsUiState? = null
+        viewModel.uiState.observeForever { uiState = it }
+
+        viewModel.start(editPostRepository)
+
+        assertThat(uiState?.selectedTags).containsExactly("news", "tech")
     }
 
     @Test

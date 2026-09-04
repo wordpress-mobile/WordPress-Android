@@ -5,14 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.GetPostTagsUseCase
 import org.wordpress.android.ui.posts.UpdatePostTagsUseCase
-import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.Locale
@@ -55,9 +52,6 @@ class PrepublishingTagsViewModel @Inject constructor(
     private val _dismissKeyboard = MutableLiveData<Event<Unit>>()
     val dismissKeyboard: LiveData<Event<Unit>> = _dismissKeyboard
 
-    private val _toolbarTitleUiState = MutableLiveData<UiString>()
-    val toolbarTitleUiState: LiveData<UiString> = _toolbarTitleUiState
-
     fun start(editPostRepository: EditPostRepository, siteTags: List<String> = emptyList()) {
         this.editPostRepository = editPostRepository
         this.allTags = siteTags
@@ -68,11 +62,13 @@ class PrepublishingTagsViewModel @Inject constructor(
         }
         isStarted = true
 
+        // De-duplicate case-insensitively so a post with repeated tags (e.g. "news, News") does not
+        // render as indistinguishable duplicate chips whose X buttons would both remove every match.
         initialTags = parseTags(getPostTagsUseCase.getTags(editPostRepository))
+            .distinctBy { it.lowercase(Locale.getDefault()) }
         selectedTags.clear()
         selectedTags.addAll(initialTags)
 
-        _toolbarTitleUiState.postValue(UiStringRes(R.string.prepublishing_nudges_toolbar_title_tags))
         updateUiState()
     }
 
