@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
-import rs.wordpress.api.kotlin.toLogErrorString
 import uniffi.wp_api.AnyTermWithViewContext
 import uniffi.wp_api.TermCreateParams
 import uniffi.wp_api.TermEndpointType
@@ -86,8 +85,9 @@ class TaxonomyRsApiRestClient @Inject constructor(
                 }
             }
             else -> {
-                appLogWrapper.e(AppLog.T.POSTS, "Failed deleting $taxonomyName: ${termResponse.toLogErrorString()}")
-                notifyFailedDeleting(site, term, termResponse.toTaxonomyError())
+                val error = termResponse.toTaxonomyError()
+                appLogWrapper.e(AppLog.T.POSTS, "Failed deleting $taxonomyName: ${error.toLogString()}")
+                notifyFailedDeleting(site, term, error)
             }
         }
     }
@@ -160,12 +160,13 @@ class TaxonomyRsApiRestClient @Inject constructor(
                 dispatcher.dispatch(TaxonomyActionBuilder.newPushedTermAction(payload))
             }
             else -> {
+                val error = termResponse.toTaxonomyError()
                 appLogWrapper.e(
                     AppLog.T.POSTS,
-                    "Failed creating $taxonomyName: ${term.name} - ${termResponse.toLogErrorString()}"
+                    "Failed creating $taxonomyName: ${term.name} - ${error.toLogString()}"
                 )
                 val payload = RemoteTermPayload(term, site)
-                payload.error = termResponse.toTaxonomyError()
+                payload.error = error
                 dispatcher.dispatch(TaxonomyActionBuilder.newPushedTermAction(payload))
             }
         }
@@ -230,9 +231,10 @@ class TaxonomyRsApiRestClient @Inject constructor(
                 notifyTermUpdated(payload)
             }
             else -> {
-                appLogWrapper.e(AppLog.T.POSTS, "Failed updating ${term.name}: ${termResponse.toLogErrorString()}")
+                val error = termResponse.toTaxonomyError()
+                appLogWrapper.e(AppLog.T.POSTS, "Failed updating ${term.name}: ${error.toLogString()}")
                 val payload = RemoteTermPayload(term, site)
-                payload.error = termResponse.toTaxonomyError()
+                payload.error = error
                 notifyTermUpdated(payload)
             }
         }
@@ -287,7 +289,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                     // mid-pagination degrades gracefully instead of dropping the whole list.
                     appLogWrapper.e(
                         AppLog.T.POSTS,
-                        "Fetch $termEndpointType list failed: ${termsResponse.toLogErrorString()}"
+                        "Fetch $termEndpointType list failed: ${termsResponse.toTaxonomyError().toLogString()}"
                     )
                     failure = termsResponse
                     break
@@ -355,6 +357,13 @@ class TaxonomyRsApiRestClient @Inject constructor(
         }
         return TaxonomyError(type, (this as? WpRequestResult.WpError)?.errorMessage.orEmpty())
     }
+
+    /**
+     * Describes a failure for the log. The result itself is not interpolated because its toString()
+     * writes the whole response body.
+     */
+    private fun TaxonomyError.toLogString(): String =
+        if (message.isEmpty()) type.toString() else "$type - $message"
 
     companion object {
         private const val TERMS_PER_PAGE = 100u
