@@ -112,5 +112,8 @@ google-upload-credentials.json
 
 developer.properties
 
+# Local overrides of `defaults.properties`, see `secrets.properties-example`
+secrets.properties
+
 # Claude
 .claude/settings.local.json
