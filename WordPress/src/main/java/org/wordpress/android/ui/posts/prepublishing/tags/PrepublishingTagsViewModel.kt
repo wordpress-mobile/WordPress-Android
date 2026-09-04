@@ -162,6 +162,9 @@ class PrepublishingTagsViewModel @Inject constructor(
     }
 
     override fun onCleared() {
+        // Covers dismiss paths that never reach the back handler (e.g. dragging the sheet away):
+        // promote any typed-but-uncommitted text before the final synchronous flush so it is saved.
+        commitPendingTag()
         flushPendingTags()
         super.onCleared()
     }

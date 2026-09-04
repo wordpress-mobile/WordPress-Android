@@ -39,14 +39,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEventType
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onPreviewKeyEvent
-import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
@@ -57,6 +54,11 @@ private val OUTLINE_SHAPE = RoundedCornerShape(4.dp)
 private const val SUGGESTIONS_MAX_HEIGHT_DP = 320
 private const val INPUT_MIN_WIDTH_DP = 120
 private const val CLOSE_ICON_SIZE_DP = 18
+
+// Invisible zero-width space kept as the first character of the input field. Deleting into an empty
+// field removes it, which fires onValueChange even on soft keyboards (they emit a delete to the
+// InputConnection rather than a Key.Backspace event), letting us detect "backspace on empty".
+private const val SENTINEL = "\u200B"
 
 @Composable
 fun PrepublishingTagsScreen(
@@ -69,11 +71,22 @@ fun PrepublishingTagsScreen(
 ) {
     var input by rememberSaveable { mutableStateOf("") }
 
-    fun commit(rawTag: String) {
+    fun addTag(rawTag: String) {
         val tag = rawTag.trim()
         if (tag.isNotEmpty()) onTagAdded(tag)
+    }
+
+    fun commit(rawTag: String) {
+        addTag(rawTag)
         input = ""
         onInputChanged("")
+    }
+
+    // After process death the composable's [input] is restored (rememberSaveable) while the
+    // recreated ViewModel starts with an empty filter. Push the restored text back so a dismiss
+    // that commits the pending tag (commitPendingTag) does not silently drop it.
+    LaunchedEffect(Unit) {
+        if (input.isNotEmpty()) onInputChanged(input)
     }
 
     Column(
@@ -92,23 +105,23 @@ fun PrepublishingTagsScreen(
             tags = uiState.selectedTags,
             input = input,
             onInputChange = { newValue ->
-                when {
-                    newValue.endsWith(",") || newValue.endsWith("\n") -> commit(newValue.dropLast(1))
-                    newValue.contains(",") -> {
-                        val parts = newValue.split(",")
-                        parts.dropLast(1).forEach { part -> part.trim().takeIf { it.isNotEmpty() }?.let(onTagAdded) }
-                        input = parts.last()
-                        onInputChanged(parts.last())
-                    }
-                    else -> {
-                        input = newValue
-                        onInputChanged(newValue)
-                    }
+                if (newValue.contains(",") || newValue.contains("\n")) {
+                    // Split on every comma/newline so multi-tag input like "a,b," becomes separate
+                    // tags instead of one tag containing commas. The final segment stays in the
+                    // input as the in-progress tag.
+                    val parts = newValue.split(",", "\n")
+                    parts.dropLast(1).forEach { part -> addTag(part) }
+                    val remainder = parts.last()
+                    input = remainder
+                    onInputChanged(remainder)
+                } else {
+                    input = newValue
+                    onInputChanged(newValue)
                 }
             },
             onImeAdd = { commit(input) },
             onChipRemove = onTagRemoved,
-            onBackspaceWhenEmpty = { if (input.isEmpty()) onLastTagRemoved() }
+            onBackspaceWhenEmpty = onLastTagRemoved
         )
 
         if (uiState.suggestions.isNotEmpty()) {
@@ -132,6 +145,20 @@ private fun TagsChipInputField(
 ) {
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    // The field text is always prefixed with the invisible [SENTINEL]. See SENTINEL for why.
+    var fieldValue by remember {
+        mutableStateOf(TextFieldValue(SENTINEL, selection = TextRange(SENTINEL.length)))
+    }
+
+    // Keep the field text in sync with the hoisted [input] (cleared after a commit, restored after
+    // process death), always re-adding the sentinel and placing the cursor at the end.
+    LaunchedEffect(input) {
+        if (fieldValue.text.removePrefix(SENTINEL) != input) {
+            val text = SENTINEL + input
+            fieldValue = TextFieldValue(text, selection = TextRange(text.length))
+        }
+    }
 
     FlowRow(
         modifier = Modifier
@@ -161,8 +188,18 @@ private fun TagsChipInputField(
         }
 
         BasicTextField(
-            value = input,
-            onValueChange = onInputChange,
+            value = fieldValue,
+            onValueChange = { newValue ->
+                if (newValue.text.startsWith(SENTINEL)) {
+                    fieldValue = newValue
+                    onInputChange(newValue.text.removePrefix(SENTINEL))
+                } else {
+                    // The sentinel was deleted: a backspace at the very start of the field.
+                    if (input.isEmpty()) onBackspaceWhenEmpty() else onInputChange(newValue.text)
+                    // Never leave the field without its sentinel.
+                    fieldValue = TextFieldValue(SENTINEL, selection = TextRange(SENTINEL.length))
+                }
+            },
             singleLine = true,
             textStyle = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface),
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
@@ -171,15 +208,7 @@ private fun TagsChipInputField(
             modifier = Modifier
                 .widthIn(min = INPUT_MIN_WIDTH_DP.dp)
                 .align(Alignment.CenterVertically)
-                .focusRequester(focusRequester)
-                .onPreviewKeyEvent { event ->
-                    if (event.key == Key.Backspace && event.type == KeyEventType.KeyDown && input.isEmpty()) {
-                        onBackspaceWhenEmpty()
-                        true
-                    } else {
-                        false
-                    }
-                },
+                .focusRequester(focusRequester),
             decorationBox = { innerTextField ->
                 Box(contentAlignment = Alignment.CenterStart) {
                     if (input.isEmpty() && tags.isEmpty()) {

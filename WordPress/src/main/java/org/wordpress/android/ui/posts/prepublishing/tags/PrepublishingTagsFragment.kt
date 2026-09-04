@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingViewModel
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingScreenClosedListener
 import org.wordpress.android.ui.posts.trackPrepublishingNudges
 import org.wordpress.android.util.ActivityUtils
@@ -47,6 +48,7 @@ class PrepublishingTagsFragment : Fragment(R.layout.prepublishing_tags_fragment)
     lateinit var taxonomyStore: TaxonomyStore
 
     private lateinit var viewModel: PrepublishingTagsViewModel
+    private lateinit var parentViewModel: PrepublishingViewModel
     private lateinit var site: SiteModel
     private var closeListener: PrepublishingScreenClosedListener? = null
     private var binding: PrepublishingTagsFragmentBinding? = null
@@ -95,18 +97,26 @@ class PrepublishingTagsFragment : Fragment(R.layout.prepublishing_tags_fragment)
 
     private fun PrepublishingToolbarBinding.init() {
         toolbarTitle.text = getString(R.string.prepublishing_nudges_toolbar_title_tags)
-        backButton.setOnClickListener {
-            viewModel.commitPendingTag()
-            if (viewModel.wereTagsChanged()) {
-                analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_TAGS_CHANGED)
-            }
-            viewModel.onBackButtonClicked()
+        backButton.setOnClickListener { handleBackNavigation() }
+    }
+
+    /**
+     * Commits any typed-but-uncommitted tag, tracks the change if needed, then navigates back.
+     * Shared by the toolbar back button and the device back button so no dismiss path drops text.
+     */
+    private fun handleBackNavigation() {
+        viewModel.commitPendingTag()
+        if (viewModel.wereTagsChanged()) {
+            analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_TAGS_CHANGED)
         }
+        viewModel.onBackButtonClicked()
     }
 
     private fun PrepublishingTagsFragmentBinding.initViewModel() {
         viewModel = ViewModelProvider(this@PrepublishingTagsFragment, viewModelFactory)
             .get(PrepublishingTagsViewModel::class.java)
+        parentViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+            .get(PrepublishingViewModel::class.java)
 
         viewModel.dismissKeyboard.observeEvent(viewLifecycleOwner) {
             ActivityUtils.hideKeyboardForced(requireView())
@@ -114,6 +124,12 @@ class PrepublishingTagsFragment : Fragment(R.layout.prepublishing_tags_fragment)
 
         viewModel.navigateToHomeScreen.observeEvent(viewLifecycleOwner) {
             closeListener?.onBackClicked()
+        }
+
+        // The host swallows the device back button and routes it here so typed text is committed
+        // before navigating away, mirroring the toolbar back button.
+        parentViewModel.triggerOnDeviceBackPressed.observeEvent(viewLifecycleOwner) {
+            handleBackNavigation()
         }
 
         prepublishingTagsComposeView.setContent {
