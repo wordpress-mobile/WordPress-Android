@@ -12,7 +12,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -31,7 +31,7 @@ class ReminderNotifierTest {
     private val accountStore: AccountStore = mock()
     private val notificationManager: ReminderNotificationManager = mock()
     private val analyticsTracker: BloggingRemindersAnalyticsTracker = mock()
-    private val jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper = mock()
+    private val buildConfigWrapper: BuildConfigWrapper = mock()
 
     @Before
     fun setUp() {
@@ -42,7 +42,7 @@ class ReminderNotifierTest {
             accountStore,
             notificationManager,
             analyticsTracker,
-            jetpackFeatureRemovalHelper
+            buildConfigWrapper
         )
     }
 

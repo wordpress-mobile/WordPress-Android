@@ -121,7 +121,6 @@ import org.wordpress.android.ui.Shortcut
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION
 import org.wordpress.android.ui.history.HistoryListItem.Revision
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
@@ -372,7 +371,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
 
     @Inject lateinit var bloggingPromptsStore: BloggingPromptsStore
 
-    @Inject lateinit var jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
 
     @Inject lateinit var contactSupportFeatureConfig: ContactSupportFeatureConfig
 

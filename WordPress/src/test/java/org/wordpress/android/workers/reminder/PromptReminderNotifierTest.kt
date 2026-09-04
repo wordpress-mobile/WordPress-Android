@@ -17,7 +17,7 @@ import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.config.BloggingPromptsFeature
 import org.wordpress.android.viewmodel.ContextProvider
@@ -37,7 +37,7 @@ class PromptReminderNotifierTest : BaseUnitTest() {
     private val bloggingRemindersStore: BloggingRemindersStore = mock()
     private val bloggingReminder: BloggingRemindersModel = mock()
     private val htmlCompatWrapper: HtmlCompatWrapper = mock()
-    private val jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper = mock()
+    private val buildConfigWrapper: BuildConfigWrapper = mock()
 
 
     private val classToTest = PromptReminderNotifier(
@@ -51,7 +51,7 @@ class PromptReminderNotifierTest : BaseUnitTest() {
         bloggingRemindersAnalyticsTracker = bloggingRemindersAnalyticsTracker,
         htmlCompatWrapper = htmlCompatWrapper,
         bloggingRemindersStore = bloggingRemindersStore,
-        jetpackFeatureRemovalHelper = jetpackFeatureRemovalHelper
+        buildConfigWrapper = buildConfigWrapper
     )
 
     @Before
@@ -107,7 +107,7 @@ class PromptReminderNotifierTest : BaseUnitTest() {
         )
         whenever(bloggingPromptsFeature.isEnabled()).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(jetpackFeatureRemovalHelper.shouldShowNotifications()).thenReturn(false)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(siteModel)
         assertFalse(classToTest.shouldNotify(123))
     }
@@ -125,7 +125,7 @@ class PromptReminderNotifierTest : BaseUnitTest() {
         )
         whenever(bloggingPromptsFeature.isEnabled()).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(jetpackFeatureRemovalHelper.shouldShowNotifications()).thenReturn(true)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(siteModel)
         assertTrue(classToTest.shouldNotify(siteId))
     }

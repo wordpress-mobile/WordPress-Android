@@ -21,11 +21,11 @@ import org.wordpress.android.ui.PagePostCreationSourcesDetail.PAGE_FROM_PAGES_LI
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment.Companion.MODAL_LAYOUT_PICKER_TAG
 import org.wordpress.android.ui.pagesrs.screens.PagesRsListScreen
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.clipboardManager
 import org.wordpress.android.util.extensions.setContent
@@ -37,7 +37,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class PagesRsListActivity : BaseAppCompatActivity() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
+    @Inject lateinit var buildConfigWrapper: BuildConfigWrapper
 
     private val viewModel: PagesRsListViewModel by viewModels()
     private lateinit var mlpViewModel: ModalLayoutPickerViewModel
@@ -152,7 +152,7 @@ class PagesRsListActivity : BaseAppCompatActivity() {
 
     private fun startCreatePageFlow() {
         if (mlpViewModel.canShowModalLayoutPicker() &&
-            jetpackFeatureRemovalHelper.shouldShowTemplateSelectionInPages()
+            buildConfigWrapper.isJetpackApp
         ) {
             mlpViewModel.createPageFlowTriggered()
         } else {

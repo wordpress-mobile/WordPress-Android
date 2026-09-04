@@ -10,7 +10,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.mysite.items.ACTIVITY_ITEM
 import org.wordpress.android.ui.mysite.items.ADMIN_ITEM
 import org.wordpress.android.ui.mysite.items.BACKUP_ITEM
@@ -51,9 +50,6 @@ class SiteListItemBuilderTest {
     lateinit var siteModel: SiteModel
 
     @Mock
-    lateinit var jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
-
-    @Mock
     lateinit var siteMonitoringFeatureConfig: SiteMonitoringFeatureConfig
 
     @Mock
@@ -72,7 +68,6 @@ class SiteListItemBuilderTest {
             siteUtilsWrapper,
             buildConfigWrapper,
             themeBrowserUtils,
-            jetpackFeatureRemovalHelper,
             siteMonitoringFeatureConfig,
             selfHostedUsersFeatureConfig,
             siteCapabilityChecker
@@ -338,11 +333,11 @@ class SiteListItemBuilderTest {
         assertThat(item).isNull()
     }
 
-    // Me stands in for the bottom navigation once Jetpack features are removed, so it is built
-    // for every site regardless of capabilities.
+    // Me stands in for the bottom navigation in the WordPress app, so it is built for every site
+    // regardless of capabilities.
     @Test
-    fun `me item built when jetpack features are removed, regardless of site capabilities`() {
-        whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
+    fun `me item built in the WordPress app, regardless of site capabilities`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
 
         val item = siteListItemBuilder.buildMeItemIfAvailable(SITE_ITEM_ACTION)
 
@@ -350,8 +345,8 @@ class SiteListItemBuilderTest {
     }
 
     @Test
-    fun `me item not built when jetpack features are not removed`() {
-        whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(false)
+    fun `me item not built in the Jetpack app`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
 
         val item = siteListItemBuilder.buildMeItemIfAvailable(SITE_ITEM_ACTION)
 

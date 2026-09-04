@@ -9,7 +9,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.AccountData
 import org.wordpress.android.util.BuildConfigWrapper
 import kotlin.test.assertEquals
@@ -22,9 +21,6 @@ class AccountDataViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var buildConfigWrapper: BuildConfigWrapper
 
-    @Mock
-    lateinit var jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
-
     private lateinit var viewModelSlice: AccountDataViewModelSlice
 
     private lateinit var isRefreshing: MutableList<Boolean>
@@ -35,8 +31,7 @@ class AccountDataViewModelSliceTest : BaseUnitTest() {
     fun setUp() {
         viewModelSlice = AccountDataViewModelSlice(
             accountStore,
-            buildConfigWrapper,
-            jetpackFeatureRemovalHelper
+            buildConfigWrapper
         )
         viewModelSlice.initialize(testScope())
         isRefreshing = mutableListOf()
@@ -57,19 +52,8 @@ class AccountDataViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given wp app, when in not correct phase, card is not built`() = test {
+    fun `given wp app, card is built`() = test {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
-        whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(false)
-
-        viewModelSlice.onResume()
-
-        assertThat(uiModels.last()).isNull()
-    }
-
-    @Test
-    fun `given wp app, when in correct phase, card is built`() = test {
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
-        whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
         val accountModel = getAccountData()
         whenever(accountStore.account).thenReturn(accountModel)
 
