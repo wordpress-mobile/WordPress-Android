@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts
 import android.util.Base64
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.WPComApiProxy
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.gutenberg.model.EditorConfiguration
@@ -91,7 +92,7 @@ class GutenbergKitSettingsBuilder @Inject constructor(
             applicationPassword.isNullOrEmpty() && site.isUsingWpComRestApi
 
         val siteApiRoot = if (shouldUseWPComRestApi) {
-            WPCOM_API_ROOT
+            WPComApiProxy.ROOT
         } else {
             resolveDirectHostApiRoot(site)
         }
@@ -115,24 +116,38 @@ class GutenbergKitSettingsBuilder @Inject constructor(
     /**
      * The site's own REST root, for the branch that sends unnamespaced paths straight to the host.
      *
-     * A root under [WPCOM_API_ROOT] cannot serve that purpose: it already embeds
-     * `wp/v2/sites/<id>`, so GutenbergKit would append each already-namespaced path to it and every
-     * request would 404 with `rest_no_route`. Older installs have exactly such a value stored in
-     * `WP_API_REST_URL` — see the migration in `WellSqlConfig` — so reject it rather than trusting
-     * the column, and fall back to the site's own host.
+     * A [WPComApiProxy] root cannot serve that purpose: it already embeds its namespace, so
+     * GutenbergKit would append an already-namespaced path to it and every request would 404 with
+     * `rest_no_route`. `SiteSqlUtils.updateWpApiRestUrl` refuses to store one and the migration in
+     * `WellSqlConfig` clears those older installs already hold, so this is a backstop for a row
+     * that predates both.
      */
     internal fun resolveDirectHostApiRoot(site: SiteModel): String {
+        val fallback = "${site.url}/wp-json/"
         val stored = site.wpApiRestUrl?.takeIf { it.isNotEmpty() }
-        if (stored != null && stored.startsWith(WPCOM_API_ROOT)) {
+        if (WPComApiProxy.isProxyRoot(stored)) {
             AppLog.e(
                 AppLog.T.EDITOR,
                 "Ignoring WP.com proxy root stored for ${site.url}: it already embeds its" +
                     " namespace, so it cannot be used as a direct-host root ($stored)"
             )
-            return "${site.url}/wp-json/"
+            return fallback
         }
-        return stored ?: "${site.url}/wp-json/"
+        return stored?.withTrailingSlash() ?: fallback
     }
+
+    /**
+     * GutenbergKit's JS strips a path's leading slash and concatenates it onto the root
+     * (`api-fetch`'s `createRootURLMiddleware`), and [buildEditorAssetsEndpoint] concatenates with
+     * no separator either, so a root without a trailing slash yields `…/wp-jsonwp/v2/types`.
+     * `WpApiClientProvider` builds slash-less roots (`"${url}/wp-json"`) that reach the stored
+     * column through the application-password login, so normalize rather than trusting the writer.
+     *
+     * Roots carrying a query string are the plain-permalink `?rest_route=` form, which `api-fetch`
+     * handles by switching the path's `?` to `&`. Appending a slash there would corrupt them.
+     */
+    private fun String.withTrailingSlash(): String =
+        if (endsWith("/") || contains("?")) this else "$this/"
 
     /**
      * Records how the editor resolved its REST root, alongside the site classification it was
@@ -247,8 +262,6 @@ class GutenbergKitSettingsBuilder @Inject constructor(
     companion object {
         private const val AUTH_BEARER_PREFIX = "Bearer "
         private const val AUTH_BASIC_PREFIX = "Basic "
-        private const val WPCOM_API_ROOT =
-            "https://public-api.wordpress.com/"
     }
 }
 

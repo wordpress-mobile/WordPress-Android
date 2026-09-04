@@ -8,10 +8,12 @@ import android.preference.PreferenceManager
 import android.view.Gravity
 import android.widget.Toast
 import androidx.annotation.StringDef
+import androidx.annotation.VisibleForTesting
 import com.yarolegovich.wellsql.DefaultWellConfig
 import com.yarolegovich.wellsql.WellSql
 import com.yarolegovich.wellsql.WellTableManager
 import org.wordpress.android.fluxc.BuildConfig
+import org.wordpress.android.fluxc.model.WPComApiProxy
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel
 import org.wordpress.android.util.AppLog
@@ -28,6 +30,18 @@ open class WellSqlConfig : DefaultWellConfig {
         // SQLite versions prior to 3.32.0 (2020-05-22) or 32766 for SQLite versions after 3.32.0.
         // @see https://www.sqlite.org/limits.html
         const val SQLITE_MAX_VARIABLE_NUMBER = 999
+
+        /**
+         * Clears REST roots that point at the WP.com proxy, which can never be a direct-host root.
+         * Matches the same prefix [SiteSqlUtils.updateWpApiRestUrl] now refuses to store, so a value
+         * the writer would reject can't survive in an older row. Exposed for
+         * [WellSqlConfigMigrationTest]: the migration is the whole fix for existing installs, and a
+         * typo in the pattern would ship as a silent no-op.
+         */
+        @VisibleForTesting
+        const val CLEAR_WPCOM_PROXY_REST_ROOTS =
+            "UPDATE SiteModel SET WP_API_REST_URL = NULL " +
+                    "WHERE WP_API_REST_URL LIKE '${WPComApiProxy.ROOT_LIKE_PATTERN}'"
     }
 
     constructor(context: Context) : super(context)
@@ -2098,12 +2112,9 @@ open class WellSqlConfig : DefaultWellConfig {
                 // SiteModel.getWpApiRestUrl() used to synthesize a WP.com proxy root for Simple
                 // sites, and the generated mapper persisted it when the row was inserted. Nothing
                 // rewrites the column afterwards, so clear the derived values and let discovery
-                // repopulate a real REST root. Matched by prefix: only the synthesizer produced it.
+                // repopulate a real REST root.
                 212 -> {
-                    db.execSQL(
-                        "UPDATE SiteModel SET WP_API_REST_URL = NULL WHERE WP_API_REST_URL " +
-                                "LIKE 'https://public-api.wordpress.com/wp/v2/sites/%'"
-                    )
+                    db.execSQL(CLEAR_WPCOM_PROXY_REST_ROOTS)
                 }
             }
         }

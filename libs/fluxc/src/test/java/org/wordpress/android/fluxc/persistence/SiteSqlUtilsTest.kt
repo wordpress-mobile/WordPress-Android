@@ -61,6 +61,48 @@ class SiteSqlUtilsTest {
         assertThat(rowsUpdated).isEqualTo(0)
     }
 
+    /**
+     * A WP.com proxy URL carries its namespace in the path, so it can never be the direct-host root
+     * this column holds. Refusing it at the single writer keeps it away from every reader, rather
+     * than each of them having to recognise it (CMM-2383).
+     */
+    @Test
+    fun `updateWpApiRestUrl refuses a WPCom proxy url and leaves the stored value intact`() {
+        val site = SiteModel().apply {
+            id = 1
+            siteId = 42
+            url = "https://example.test"
+            wpApiRestUrl = "https://example.test/wp-json/"
+        }
+        WellSql.insert(site).execute()
+
+        val rowsUpdated = siteSqlUtils.updateWpApiRestUrl(
+            localId = 1,
+            wpApiRestUrl = "https://public-api.wordpress.com/wp/v2/sites/42"
+        )
+
+        assertThat(rowsUpdated).isEqualTo(0)
+        assertThat(siteSqlUtils.getSitesWithLocalId(1).single().wpApiRestUrl)
+            .isEqualTo("https://example.test/wp-json/")
+    }
+
+    @Test
+    fun `updateWpApiRestUrl refuses any WPCom proxy url shape`() {
+        WellSql.insert(SiteModel().apply {
+            id = 1
+            siteId = 42
+            url = "https://example.test"
+        }).execute()
+
+        val rowsUpdated = siteSqlUtils.updateWpApiRestUrl(
+            localId = 1,
+            wpApiRestUrl = "https://public-api.wordpress.com/wp-json/?rest_route=/sites/example.test"
+        )
+
+        assertThat(rowsUpdated).isEqualTo(0)
+        assertThat(siteSqlUtils.getSitesWithLocalId(1).single().wpApiRestUrl).isNull()
+    }
+
     @Test
     fun `insertOrUpdateSite update does not clobber wpApiRestUrl from a stale model`() {
         val healed = "https://example.test/wp-json/"

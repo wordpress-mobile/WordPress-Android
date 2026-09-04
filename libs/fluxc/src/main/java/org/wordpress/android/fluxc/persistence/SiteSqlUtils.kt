@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostFormatModel
 import org.wordpress.android.fluxc.model.RoleModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.WPComApiProxy
 import org.wordpress.android.fluxc.model.layouts.GutenbergLayoutCategoriesModel
 import org.wordpress.android.fluxc.model.layouts.GutenbergLayoutCategoryModel
 import org.wordpress.android.fluxc.model.layouts.GutenbergLayoutModel
@@ -307,6 +308,16 @@ class SiteSqlUtils
      * stale in-memory sites can't clobber a value that was healed/discovered out of band.
      */
     fun updateWpApiRestUrl(localId: Int, wpApiRestUrl: String): Int {
+        // A WP.com proxy URL carries its namespace in the path, so it can never serve as the
+        // direct-host root this column holds — storing one double-namespaces every request that
+        // later reads it. Refuse it here rather than in each of the readers.
+        if (WPComApiProxy.isProxyRoot(wpApiRestUrl)) {
+            AppLog.e(
+                DB,
+                "Refusing to store WP.com proxy URL as a REST root for localId=$localId: $wpApiRestUrl"
+            )
+            return 0
+        }
         return WellSql.update(SiteModel::class.java)
                 .whereId(localId)
                 .put(wpApiRestUrl, { value ->
