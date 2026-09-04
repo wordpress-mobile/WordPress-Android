@@ -25,9 +25,11 @@ import org.wordpress.android.util.crashlogging.sendReportWithTag
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.DiscoveredAuthenticationMechanism
+import uniffi.wp_api.AutoDiscoveryAttemptFailure
 import uniffi.wp_api.FetchAndParseApiRootFailure
 import uniffi.wp_api.WpErrorCode
 import uniffi.wp_api.applicationPasswordsUrl
+import uniffi.wp_api.localizedDescription
 import java.net.URI
 import javax.inject.Inject
 import javax.inject.Named
@@ -143,12 +145,14 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     }
                 }
 
-                is ApiDiscoveryResult.FailureFetchAndParseApiRoot,
-                is ApiDiscoveryResult.FailureFindApiRoot,
-                is ApiDiscoveryResult.FailureParseSiteUrl ->
+                is ApiDiscoveryResult.Failure ->
                     handleAuthenticationDiscoveryError(
                         siteUrl,
-                        urlDiscoveryResult.userFacingErrorMessage(siteUrl).orEmpty(),
+                        // 0.8.0 replaced userFacingErrorMessage() with localizedDescription(), which
+                        // returns a translated sentence. This message is shown to the user on the
+                        // login screen, so the raw Throwable message (an internal debug dump of the
+                        // discovery attempt) must not be used here.
+                        urlDiscoveryResult.failure.localizedDescription(),
                         urlDiscoveryResult.failureReason(),
                     )
             }
@@ -160,7 +164,8 @@ class ApplicationPasswordLoginHelper @Inject constructor(
      * signal — WordPress.com sends `private_site` from a site whose Privacy setting hides it.
      */
     private fun ApiDiscoveryResult.failureReason(): DiscoveryResult.FailureReason {
-        val wpError = (this as? ApiDiscoveryResult.FailureFetchAndParseApiRoot)
+        val wpError = ((this as? ApiDiscoveryResult.Failure)?.failure
+            as? AutoDiscoveryAttemptFailure.FetchAndParseApiRoot)
             ?.fetchAndParseApiRootFailure as? FetchAndParseApiRootFailure.WpError
             ?: return DiscoveryResult.FailureReason.Unknown
         // `private_site` has no dedicated WpErrorCode, so the library surfaces it as a CustomException
