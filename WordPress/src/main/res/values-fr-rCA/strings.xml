@@ -3808,7 +3808,6 @@ Language: fr
     <string name="reader_toast_err_removing_tag">Impossible de supprimer cette étiquette</string>
     <string name="reader_toast_err_adding_tag">Impossible d’ajouter cette étiquette</string>
     <string name="reader_title_applog">Journal de l\'application</string>
-    <string name="fatal_db_error">Une erreur s\'est produite lors de la création de la base de données de l\'app. Essayez de réinstaller l\'app.</string>
     <string name="error_refresh_media">Impossible d’actualiser le contenu multimédia pour l’instant.</string>
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="local_changes">Changements locaux</string>

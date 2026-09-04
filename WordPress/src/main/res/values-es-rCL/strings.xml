@@ -3373,7 +3373,6 @@ Language: es_CL
     <string name="local_changes">Cambios locales</string>
     <string name="wordpress_blog">Blog de WordPress</string>
     <string name="reader_title_applog">Registro de la aplicación</string>
-    <string name="fatal_db_error">Hubo un error al crear la base de datos de la app. Por favor, intenta reinstalar la app.</string>
     <string name="cannot_delete_multi_media_items">Algunos elementos multimedia no pudieron ser borrados. Prueba más tarde.</string>
     <string name="error_refresh_media">No se puede actualizar Media en este momento</string>
     <string name="invalid_site_url_message">Comprueba que la URL del sitio ingresada es válida</string>

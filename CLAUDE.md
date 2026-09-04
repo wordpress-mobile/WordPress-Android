@@ -133,6 +133,12 @@ WordPress/src/main/java/org/wordpress/android/
 - [ ] Did the user respond affirmatively to THIS specific request (not a previous one)?
 - [ ] Are you committing only the changes the user approved?
 
+### Editing PR Descriptions
+**IMPORTANT**: When asked to modify a PR description, always first retrieve the current
+description from the server (e.g. `gh pr view <number> --json body`) and edit that live
+content. Never rewrite the whole description from local knowledge or memory, since it may
+have been changed on the server side and those changes would be lost.
+
 ## Release Notes Compilation Process
 
 ### Overview

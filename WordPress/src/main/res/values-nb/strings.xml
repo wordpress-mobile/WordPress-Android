@@ -2076,7 +2076,6 @@ Language: nb_NO
     <string name="media_error_no_permission">Du har ikke tillatelse til å se mediebiblioteket</string>
     <string name="post_not_found">En feil oppstod under innlastning av innlegget. Oppfrisk innleggene dine, og prøv igjen.</string>
     <string name="error_refresh_media">Media kunne ikke bli oppfrisket for øyeblikket</string>
-    <string name="fatal_db_error">En feil oppstod under oppretting av app-databasen. Prøv å reinstallere appen.</string>
     <string name="media_gallery_type_thumbnail_grid">Forhåndsvisningsnetting</string>
     <string name="file_error_create">Klarte ikke å lage en midlertidig fil for medieopplastning. Vennligst sørg for at det er nok ledig lagring på enheten din.</string>
     <string name="file_not_found">Klarte ikke å finne filen som skulle lastes opp. Ble den kanskje slettet eller flyttet?</string>
