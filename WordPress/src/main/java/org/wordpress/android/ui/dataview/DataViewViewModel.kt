@@ -22,12 +22,10 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
+import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import rs.wordpress.api.kotlin.WpComApiClient
 import uniffi.wp_api.WpApiParamOrder
-import uniffi.wp_api.WpAuthentication
-import uniffi.wp_api.WpAuthenticationProvider
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -46,7 +44,7 @@ open class DataViewViewModel @Inject constructor(
     private val accountStore: AccountStore,
     @Named(IO_THREAD) protected val ioDispatcher: CoroutineDispatcher,
     private val trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor,
-    private val networkAvailabilityProvider: WpNetworkAvailabilityProvider,
+    private val wpComApiClientProvider: WpComApiClientProvider,
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableStateFlow(DataViewUiState())
     val uiState: StateFlow<DataViewUiState> = _uiState.asStateFlow()
@@ -91,14 +89,9 @@ open class DataViewViewModel @Inject constructor(
 
     // TODO this is strictly for wp.com sites, we'll need different auth for self-hosted
     protected val wpComApiClient: WpComApiClient by lazy {
-        WpComApiClient(
-            authProvider = WpAuthenticationProvider.staticWithAuth(
-                requireNotNull(accountStore.accessToken) { "Access token is required but was null" }.let { token ->
-                    WpAuthentication.Bearer(token = token)
-                }
-            ),
+        wpComApiClientProvider.getWpComApiClient(
+            accessToken = requireNotNull(accountStore.accessToken) { "Access token is required but was null" },
             interceptors = listOf(trackNetworkRequestsInterceptor),
-            networkAvailabilityProvider = networkAvailabilityProvider
         )
     }
 

@@ -1,5 +1,6 @@
 package org.wordpress.android.networking.restapi
 
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.applyWpRsTimeouts
@@ -41,9 +42,18 @@ class WpComApiClientProvider @Inject constructor(
         AppLog.e(AppLog.T.API, message)
     }
 
-    fun getWpComApiClient(accessToken: String): WpComApiClient {
+    /**
+     * [interceptors] are installed on the underlying OkHttp client. Callers that need request
+     * inspection (e.g. the network-request tracker) pass their own; every client built here gets
+     * the shared timeouts, error logger and language provider either way.
+     */
+    fun getWpComApiClient(
+        accessToken: String,
+        interceptors: List<Interceptor> = emptyList(),
+    ): WpComApiClient {
         val okHttpClient = OkHttpClient.Builder()
             .applyWpRsTimeouts()
+            .apply { interceptors.forEach { addInterceptor(it) } }
             .build()
 
         return WpComApiClient(
