@@ -422,6 +422,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.core)
     implementation(libs.androidx.lifecycle.livedata.main)
     implementation(libs.androidx.lifecycle.process)
+    implementation(libs.androidx.startup.runtime)
     implementation(libs.android.volley)
     implementation(libs.google.play.review)
     implementation(libs.google.mlkit.barcode.scanning.common)

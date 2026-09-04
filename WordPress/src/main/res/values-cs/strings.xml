@@ -3862,7 +3862,6 @@ Language: cs_CZ
     <string name="mnu_comment_approve">Schválit</string>
     <string name="mnu_comment_unapprove">Zamítnout</string>
     <string name="dlg_confirm_trash_comments">Přesunout do koše?</string>
-    <string name="fatal_db_error">Vyskytla se chyba při vytváření databáze aplikace. Zkuste přeinstalovat tuto aplikaci.</string>
     <string name="local_changes">Místní změny</string>
     <string name="reader_title_applog">Protokol aplikace</string>
     <string name="post_settings">Nastavení příspěvku</string>

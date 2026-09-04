@@ -5,6 +5,7 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.EntryPoints
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.runBlocking
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
@@ -27,6 +28,9 @@ class InitializationRule : TestRule {
                     AppInitializerEntryPoint::class.java
                 ).appInitializer()
                 instrumentation.runOnMainSync { appInitializer.init() }
+                // init() enqueues the periodic upload work asynchronously; wait for it so the enqueue lands in
+                // the real WorkManager before a test swaps in WorkManagerTestInitHelper's instance.
+                runBlocking { appInitializer.periodicUploadEnqueueJob?.join() }
 
                 application.initializer = appInitializer
 

@@ -3836,7 +3836,6 @@ Language: es
     <string name="reader_toast_err_removing_tag">No se ha podido eliminar esta etiqueta</string>
     <string name="reader_toast_err_adding_tag">No se ha podido añadir esta etiqueta</string>
     <string name="reader_title_applog">Registro de la aplicación</string>
-    <string name="fatal_db_error">Ha ocurrido un error al crear la base de datos de la aplicación. Por favor, intenta reinstalar la aplicación. </string>
     <string name="error_refresh_media">No se pueden actualizar los medios en este momento</string>
     <string name="wordpress_blog">Blog de WordPress</string>
     <string name="local_changes">Cambios locales</string>
