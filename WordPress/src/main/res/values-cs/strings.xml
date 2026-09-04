@@ -237,7 +237,6 @@ Language: cs_CZ
     <string name="stats_period_selector_content_description">Vyberte období statistik</string>
     <string name="stats_period_custom">Vlastní</string>
     <string name="stats_period_last_12_months">Posledních 12 měsíců</string>
-    <string name="stats_period_last_6_months">Posledních 6 měsíců</string>
     <string name="stats_period_last_30_days">Posledních 30 dní</string>
     <string name="stats_period_last_7_days">Posledních 7 dní</string>
     <string name="stats_period_today">Dnes</string>

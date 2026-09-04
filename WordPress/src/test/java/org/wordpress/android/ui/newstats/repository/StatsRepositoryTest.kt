@@ -34,6 +34,9 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.temporal.TemporalAdjusters
+import java.time.temporal.WeekFields
+import java.util.Locale
 
 @ExperimentalCoroutinesApi
 @Suppress("LargeClass")
@@ -491,27 +494,6 @@ class StatsRepositoryTest : BaseUnitTest() {
                 quantity = eq(30),
                 endDate = any(),
                 startDate = anyOrNull(),
-                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
-            )
-        }
-
-    @Test
-    fun `given successful response, when fetchStatsForPeriod with Last6Months, then data source called with MONTH`() =
-        test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
-                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
-
-            repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last6Months)
-
-            // The chart is fetched twice (current + previous), each requesting the card's stat fields
-            // so the same response can also fill the bottom row. start_date stays null: it is a
-            // YEAR-only workaround and must not leak into the fixed periods, which work as they are.
-            verify(statsDataSource, times(2)).fetchStatsVisits(
-                siteId = eq(TEST_SITE_ID),
-                unit = eq(StatsUnit.MONTH),
-                quantity = eq(6),
-                endDate = any(),
-                startDate = isNull(),
                 statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )
         }
@@ -1253,27 +1235,77 @@ class StatsRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `previousPeriod of Last6Months steps back six calendar months at month granularity`() {
-        val today = LocalDate.now()
-
-        val result = repository.previousPeriod(StatsPeriod.Last6Months) as StatsPeriod.Custom
-
-        // Month-granularity windows are fetched by calendar month, so only the month matters — the
-        // start day drifts harmlessly when an intermediate minusMonths clamps to a short month
-        // (e.g. on Jul 30, today-5mo lands on Feb 28), which is why we assert the YearMonth here.
-        assertThat(result.endDate).isEqualTo(today.minusMonths(6))
-        assertThat(YearMonth.from(result.startDate)).isEqualTo(YearMonth.from(today).minusMonths(11))
-    }
-
-    @Test
     fun `previousPeriod of Last12Months steps back twelve calendar months`() {
         val today = LocalDate.now()
 
         val result = repository.previousPeriod(StatsPeriod.Last12Months) as StatsPeriod.Custom
 
-        // See the Last6Months test: month-granularity windows assert the YearMonth, not the day.
+        // Month-granularity windows are fetched by calendar month, so only the month matters — the
+        // start day can drift when an intermediate minusMonths clamps to a short month, which is why
+        // we assert the YearMonth here rather than the exact day.
         assertThat(result.endDate).isEqualTo(today.minusMonths(12))
         assertThat(YearMonth.from(result.startDate)).isEqualTo(YearMonth.from(today).minusMonths(23))
+    }
+
+    @Test
+    fun `previousPeriod of ThisWeek is the whole previous calendar week`() {
+        val today = LocalDate.now()
+        val weekStart = today.with(TemporalAdjusters.previousOrSame(WeekFields.of(Locale.getDefault()).firstDayOfWeek))
+
+        val result = repository.previousPeriod(StatsPeriod.ThisWeek) as StatsPeriod.Custom
+
+        // Back from a partial "this week" (week start..today) lands on the full previous week, not a
+        // same-length mirror ending on the day before the week started.
+        assertThat(result.startDate).isEqualTo(weekStart.minusWeeks(1))
+        assertThat(result.endDate).isEqualTo(weekStart.minusDays(1))
+    }
+
+    @Test
+    fun `previousPeriod of ThisMonth is the whole previous calendar month`() {
+        val today = LocalDate.now()
+        val previousMonthStart = today.withDayOfMonth(1).minusMonths(1)
+
+        val result = repository.previousPeriod(StatsPeriod.ThisMonth) as StatsPeriod.Custom
+
+        assertThat(result.startDate).isEqualTo(previousMonthStart)
+        assertThat(result.endDate).isEqualTo(previousMonthStart.withDayOfMonth(previousMonthStart.lengthOfMonth()))
+    }
+
+    @Test
+    fun `previousPeriod of ThisYear is the whole previous calendar year`() {
+        val previousYear = LocalDate.now().year - 1
+
+        val result = repository.previousPeriod(StatsPeriod.ThisYear) as StatsPeriod.Custom
+
+        assertThat(result.startDate).isEqualTo(LocalDate.of(previousYear, 1, 1))
+        assertThat(result.endDate).isEqualTo(LocalDate.of(previousYear, 12, 31))
+    }
+
+    @Test
+    fun `previousPeriod paged twice from ThisMonth keeps stepping whole calendar months`() {
+        val twoMonthsAgoStart = LocalDate.now().withDayOfMonth(1).minusMonths(2)
+
+        val once = repository.previousPeriod(StatsPeriod.ThisMonth)
+        val twice = repository.previousPeriod(once) as StatsPeriod.Custom
+
+        // Continued paging on a full-calendar-month window stays aligned to whole months rather than
+        // drifting by a fixed day count.
+        assertThat(twice.startDate).isEqualTo(twoMonthsAgoStart)
+        assertThat(twice.endDate).isEqualTo(twoMonthsAgoStart.withDayOfMonth(twoMonthsAgoStart.lengthOfMonth()))
+    }
+
+    @Test
+    fun `nextPeriod from the previous full month returns to the current month to date`() {
+        val today = LocalDate.now()
+        val monthStart = today.withDayOfMonth(1)
+        val previous = repository.previousPeriod(StatsPeriod.ThisMonth)
+
+        val result = repository.nextPeriod(previous)
+
+        // Forward from the whole previous month lands on the current month up to today; on the 1st that
+        // window is a single day and snaps to Today, otherwise it restores the ThisMonth preset.
+        val expected = if (today == monthStart) StatsPeriod.Today else StatsPeriod.ThisMonth
+        assertThat(result).isEqualTo(expected)
     }
 
     @Test

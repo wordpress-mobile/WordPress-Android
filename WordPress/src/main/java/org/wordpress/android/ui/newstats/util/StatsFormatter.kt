@@ -123,8 +123,10 @@ fun StatsPeriod.toDateRangeString(resourceProvider: ResourceProvider): String {
         is StatsPeriod.Today -> resourceProvider.getString(R.string.stats_period_today)
         is StatsPeriod.Last7Days -> resourceProvider.getString(R.string.stats_period_last_7_days)
         is StatsPeriod.Last30Days -> resourceProvider.getString(R.string.stats_period_last_30_days)
-        is StatsPeriod.Last6Months -> resourceProvider.getString(R.string.stats_period_last_6_months)
         is StatsPeriod.Last12Months -> resourceProvider.getString(R.string.stats_period_last_12_months)
+        is StatsPeriod.ThisWeek -> resourceProvider.getString(R.string.stats_period_this_week)
+        is StatsPeriod.ThisMonth -> resourceProvider.getString(R.string.stats_period_this_month)
+        is StatsPeriod.ThisYear -> resourceProvider.getString(R.string.stats_period_this_year)
         is StatsPeriod.Custom -> formatCustomDateRange(startDate, endDate)
     }
 }

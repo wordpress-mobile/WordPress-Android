@@ -226,7 +226,6 @@ Language: ro
     <string name="stats_period_selector_content_description">Selectează perioada pentru statistici</string>
     <string name="stats_period_custom">Personalizată</string>
     <string name="stats_period_last_12_months">Ultimele 12 luni</string>
-    <string name="stats_period_last_6_months">Ultimele 6 luni</string>
     <string name="stats_most_viewed_top_n">Primele %d</string>
     <string name="stats_period_last_30_days">Ultimele 30 de zile</string>
     <string name="stats_period_last_7_days">Ultimele 7 zile</string>
