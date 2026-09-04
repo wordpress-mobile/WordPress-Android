@@ -313,8 +313,6 @@ Language: en_GB
     <string name="he_support_status_unknown">Unknown</string>
     <string name="he_support_status_closed">Closed</string>
     <string name="he_support_status_solved">Solved</string>
-    <string name="he_support_status_waiting_for_user">Waiting for User</string>
-    <string name="he_support_status_waiting_for_support">Waiting for Support</string>
     <string name="he_support_select_attachments">Select attachments</string>
     <string name="he_support_download_attachment">Download attachment</string>
     <string name="he_support_include_logs_description">Including logs can help our team investigate issues. Logs may contain recent app activity.</string>

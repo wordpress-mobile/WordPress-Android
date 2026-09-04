@@ -19,15 +19,10 @@ fun ConversationStatusBadge(
 ) {
     val conversationStatus = ConversationStatus.fromStatus(status)
     val (statusText, backgroundColor, textColor) = when (conversationStatus) {
-        ConversationStatus.WAITING_FOR_SUPPORT -> Triple(
-            stringResource(R.string.he_support_status_waiting_for_support),
+        ConversationStatus.ONGOING -> Triple(
+            stringResource(R.string.he_support_status_ongoing),
             MaterialTheme.colorScheme.primaryContainer,
             MaterialTheme.colorScheme.onPrimaryContainer
-        )
-        ConversationStatus.WAITING_FOR_USER -> Triple(
-            stringResource(R.string.he_support_status_waiting_for_user),
-            MaterialTheme.colorScheme.secondaryContainer,
-            MaterialTheme.colorScheme.onSecondaryContainer
         )
         ConversationStatus.SOLVED -> Triple(
             stringResource(R.string.he_support_status_solved),

@@ -313,8 +313,6 @@ Language: de
     <string name="he_support_status_unknown">Unbekannt</string>
     <string name="he_support_status_closed">Geschlossen</string>
     <string name="he_support_status_solved">Gelöst</string>
-    <string name="he_support_status_waiting_for_user">Wartet auf Benutzer</string>
-    <string name="he_support_status_waiting_for_support">Wartet auf Support</string>
     <string name="he_support_select_attachments">Anhänge auswählen</string>
     <string name="he_support_download_attachment">Anhang herunterladen</string>
     <string name="he_support_include_logs_description">Das Hinzufügen von Protokollen kann unserem Team helfen, Probleme zu untersuchen. Protokolle können aktuelle App-Aktivitäten enthalten.</string>

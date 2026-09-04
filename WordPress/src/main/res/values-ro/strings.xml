@@ -313,8 +313,6 @@ Language: ro
     <string name="he_support_status_unknown">Necunoscută</string>
     <string name="he_support_status_closed">Închisă</string>
     <string name="he_support_status_solved">Rezolvată</string>
-    <string name="he_support_status_waiting_for_support">Așteaptă suport</string>
-    <string name="he_support_status_waiting_for_user">Așteaptă utilizatorul</string>
     <string name="he_support_select_attachments">Selectează atașamente</string>
     <string name="he_support_download_attachment">Descarcă atașamente</string>
     <string name="he_support_include_logs_description">Includerea jurnalelor poate ajuta echipa noastră să investigheze problemele. Jurnalele pot să conțină activități recente din aplicație.</string>

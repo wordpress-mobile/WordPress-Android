@@ -310,8 +310,6 @@ Language: ja_JP
     <string name="he_support_status_unknown">不明</string>
     <string name="he_support_status_closed">クローズド</string>
     <string name="he_support_status_solved">解決済み</string>
-    <string name="he_support_status_waiting_for_user">ユーザーを待機中</string>
-    <string name="he_support_status_waiting_for_support">サポートを待機中</string>
     <string name="he_support_select_attachments">添付ファイルを選択</string>
     <string name="he_support_download_attachment">添付ファイルをダウンロード</string>
     <string name="he_support_include_logs_description">ログを添付すると問題の調査に役立ちます。 ログには最近のアプリのアクティビティが含まれている可能性があります。</string>
