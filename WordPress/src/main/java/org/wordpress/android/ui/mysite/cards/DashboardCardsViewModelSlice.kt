@@ -191,11 +191,11 @@ class DashboardCardsViewModelSlice @Inject constructor(
 
 
     fun clearValue() {
+        personalizeCardViewModelSlice.clearValue()
         jetpackInstallFullPluginCardViewModelSlice.clearValue()
         blazeCardViewModelSlice.clearValue()
         bloggingPromptCardViewModelSlice.clearValue()
         bloganuaryNudgeCardViewModelSlice.clearValue()
-        personalizeCardViewModelSlice.clearValue()
         quickLinksItemViewModelSlice.clearValue()
         plansCardViewModelSlice.clearValue()
         cardViewModelSlice.clearValue()
