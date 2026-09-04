@@ -98,6 +98,57 @@ class GutenbergKitSettingsBuilderApiRoutingTest {
         assertThat(config.siteApiNamespace).isEmpty()
     }
 
+    /**
+     * `api-fetch`'s `createRootURLMiddleware` strips a path's leading slash before concatenating it
+     * onto the root, and `buildEditorAssetsEndpoint` concatenates with no separator, so a root
+     * stored without a trailing slash would produce `…/wp-jsonwp/v2/types`. `WpApiClientProvider`
+     * builds exactly such slash-less roots, and they reach this column via app-password login.
+     */
+    @Test
+    fun `stored root without a trailing slash gains one`() {
+        val site = atomicSiteWithAppPassword(storedRoot = "https://mysite.com/wp-json")
+
+        val config = builder.buildPostConfiguration(
+            site = site,
+            accessToken = "wpcom_token",
+            cookies = emptyMap(),
+            isNetworkLoggingEnabled = false,
+        )
+
+        assertThat(config.siteApiRoot).isEqualTo("https://mysite.com/wp-json/")
+    }
+
+    /**
+     * A site without pretty permalinks advertises the `?rest_route=` form, which `api-fetch`
+     * handles by switching the path's `?` to `&`. Appending a slash would corrupt it.
+     */
+    @Test
+    fun `stored root with a query string is left alone`() {
+        val site = atomicSiteWithAppPassword(
+            storedRoot = "https://mysite.com/?rest_route=/"
+        )
+
+        val config = builder.buildPostConfiguration(
+            site = site,
+            accessToken = "wpcom_token",
+            cookies = emptyMap(),
+            isNetworkLoggingEnabled = false,
+        )
+
+        assertThat(config.siteApiRoot).isEqualTo("https://mysite.com/?rest_route=/")
+    }
+
+    private fun atomicSiteWithAppPassword(storedRoot: String?) = SiteModel().apply {
+        url = "https://mysite.com"
+        siteId = 123L
+        setIsWPCom(true)
+        setIsWPComAtomic(true)
+        origin = SiteModel.ORIGIN_WPCOM_REST
+        wpApiRestUrl = storedRoot
+        apiRestPasswordPlain = "app_pass"
+        apiRestUsernamePlain = "admin"
+    }
+
     @Test
     fun `simple site with no stored root still uses the WPCom proxy with a namespace`() {
         val site = SiteModel().apply {
