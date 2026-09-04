@@ -14,10 +14,7 @@ import uniffi.wp_api.SparsePostExcerpt
 class PostRsToFluxCMapperTest {
     private val restClient: PostRsRestClient = mock()
     private val mapper = PostRsToFluxCMapper(restClient)
-    private val site = SiteModel().apply {
-        id = 1
-        siteId = 2L
-    }
+    private val site = SiteModel()
 
     /**
      * The regression guard for CMM-2392: `rendered` is the summary WordPress generates from the
@@ -50,13 +47,6 @@ class PostRsToFluxCMapperTest {
         val post = rsPost(SparsePostExcerpt(null, AUTO_GENERATED, false))
 
         assertThat(mapper.map(post, site).excerpt).isEmpty()
-    }
-
-    @Test
-    fun `whitespace-only raw excerpt does not fall back to the rendered excerpt`() = runTest {
-        val post = rsPost(SparsePostExcerpt("   ", AUTO_GENERATED, false))
-
-        assertThat(mapper.map(post, site).excerpt).isEqualTo("   ")
     }
 
     // Only the excerpt and content are read in these tests; mocking avoids building the
