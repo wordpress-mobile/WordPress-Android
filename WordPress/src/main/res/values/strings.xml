@@ -3819,6 +3819,8 @@
     <string name="prepublishing_nudges_toolbar_title_tags">Add Tags</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publish Date</string>
     <string name="prepublishing_tags_description">Tags help tell readers what a post is about</string>
+    <string name="prepublishing_tags_add_hint">Add a tag</string>
+    <string name="prepublishing_tags_remove_tag_desc">Remove tag %1$s</string>
     <string name="prepublishing_nudges_home_tags_not_set">Not set</string>
     <string name="prepublishing_nudges_home_categories_not_set">Not set</string>
     <string name="prepublishing_nudges_toolbar_title_categories">Categories</string>

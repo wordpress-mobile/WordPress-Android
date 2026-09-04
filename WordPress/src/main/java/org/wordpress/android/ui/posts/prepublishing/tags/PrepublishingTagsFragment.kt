@@ -3,49 +3,67 @@ package org.wordpress.android.ui.posts.prepublishing.tags
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import org.apache.commons.text.StringEscapeUtils
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.PrepublishingTagsFragmentBinding
+import org.wordpress.android.databinding.PrepublishingToolbarBinding
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.TaxonomyAction
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.TaxonomyStore
+import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment
-import org.wordpress.android.ui.posts.TagsFragment
-import org.wordpress.android.ui.posts.TagsSelectedListener
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingViewModel
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingScreenClosedListener
 import org.wordpress.android.ui.posts.trackPrepublishingNudges
-import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
-class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
-    private var closeListener: PrepublishingScreenClosedListener? = null
-
+class PrepublishingTagsFragment : Fragment(R.layout.prepublishing_tags_fragment) {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
-    lateinit var uiHelpers: UiHelpers
-
-    @Inject
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
-    private lateinit var viewModel: PrepublishingTagsViewModel
+    @Inject
+    lateinit var dispatcher: Dispatcher
 
-    override fun getContentLayout() = R.layout.prepublishing_tags_fragment
+    @Inject
+    lateinit var taxonomyStore: TaxonomyStore
+
+    private lateinit var viewModel: PrepublishingTagsViewModel
+    private lateinit var parentViewModel: PrepublishingViewModel
+    private lateinit var site: SiteModel
+    private var closeListener: PrepublishingScreenClosedListener? = null
+    private var binding: PrepublishingTagsFragmentBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
+        site = requireNotNull(arguments?.getSerializableCompat<SiteModel>(WordPress.SITE)) {
+            "Required argument site is missing."
+        }
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         closeListener = parentFragment as PrepublishingScreenClosedListener
-        mTagsSelectedListener = this
     }
 
     override fun onDetach() {
@@ -53,62 +71,91 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
         closeListener = null
     }
 
-    override fun getTagsFromEditPostRepositoryOrArguments() = viewModel.getPostTags()
+    override fun onStart() {
+        super.onStart()
+        dispatcher.register(this)
+    }
 
-    companion object {
-        const val TAG = "prepublishing_tags_fragment_tag"
-
-        @JvmStatic
-        fun newInstance(site: SiteModel): PrepublishingTagsFragment {
-            val bundle = Bundle().apply {
-                putSerializable(WordPress.SITE, site)
-            }
-            return PrepublishingTagsFragment().apply { arguments = bundle }
-        }
+    override fun onStop() {
+        dispatcher.unregister(this)
+        super.onStop()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         with(PrepublishingTagsFragmentBinding.bind(view)) {
-            prepublishingToolbar.backButton.setOnClickListener {
-                trackTagsChangedEvent()
-                viewModel.onBackButtonClicked()
-            }
+            binding = this
+            includePrepublishingToolbar.init()
             initViewModel()
         }
-        super.onViewCreated(view, savedInstanceState)
     }
 
-    private fun trackTagsChangedEvent() {
-        if (wereTagsChanged()) {
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
+
+    private fun PrepublishingToolbarBinding.init() {
+        toolbarTitle.text = getString(R.string.prepublishing_nudges_toolbar_title_tags)
+        backButton.setOnClickListener { handleBackNavigation() }
+    }
+
+    /**
+     * Commits any typed-but-uncommitted tag, tracks the change if needed, then navigates back.
+     * Shared by the toolbar back button and the device back button so no dismiss path drops text.
+     */
+    private fun handleBackNavigation() {
+        viewModel.commitPendingTag()
+        if (viewModel.wereTagsChanged()) {
             analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_TAGS_CHANGED)
         }
+        viewModel.onBackButtonClicked()
     }
 
     private fun PrepublishingTagsFragmentBinding.initViewModel() {
         viewModel = ViewModelProvider(this@PrepublishingTagsFragment, viewModelFactory)
             .get(PrepublishingTagsViewModel::class.java)
+        parentViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+            .get(PrepublishingViewModel::class.java)
 
-        viewModel.dismissKeyboard.observeEvent(viewLifecycleOwner, {
-            ActivityUtils.hideKeyboardForced(fragmentPostSettingsTags.tagsEditText)
-        })
+        viewModel.dismissKeyboard.observeEvent(viewLifecycleOwner) {
+            ActivityUtils.hideKeyboardForced(requireView())
+        }
 
-        viewModel.navigateToHomeScreen.observeEvent(viewLifecycleOwner, {
+        viewModel.navigateToHomeScreen.observeEvent(viewLifecycleOwner) {
             closeListener?.onBackClicked()
-        })
+        }
 
-        viewModel.toolbarTitleUiState.observe(viewLifecycleOwner, { uiString ->
-            prepublishingToolbar.toolbarTitle.text = uiHelpers.getTextOfUiString(requireContext(), uiString)
-        })
+        // The host swallows the device back button and routes it here so typed text is committed
+        // before navigating away, mirroring the toolbar back button.
+        parentViewModel.triggerOnDeviceBackPressed.observeEvent(viewLifecycleOwner) {
+            handleBackNavigation()
+        }
 
-        viewModel.start(getEditPostRepository())
+        prepublishingTagsComposeView.setContent {
+            AppThemeM3 {
+                val uiState by viewModel.uiState.observeAsState(PrepublishingTagsUiState())
+                PrepublishingTagsScreen(
+                    uiState = uiState,
+                    onInputChanged = viewModel::onInputChanged,
+                    onTagAdded = viewModel::onTagAdded,
+                    onTagRemoved = viewModel::onTagRemoved,
+                    onLastTagRemoved = viewModel::onLastTagRemoved,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
+
+        viewModel.start(getEditPostRepository(), getSiteTagNames())
     }
+
+    private fun getSiteTagNames(): List<String> =
+        taxonomyStore.getTagsForSite(site).map { StringEscapeUtils.unescapeHtml4(it.name) }
 
     private fun getEditPostRepository(): EditPostRepository {
         val editorDataProvider = requireNotNull(getEditorDataProvider()) {
-            "This is possibly null because it's " +
-                    "called during config changes."
+            "This is possibly null because it's called during config changes."
         }
-
         return editorDataProvider.editPostRepository
     }
 
@@ -121,7 +168,23 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
         }
     }
 
-    override fun onTagsSelected(selectedTags: String) {
-        viewModel.onTagsSelected(selectedTags)
+    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onTaxonomyChanged(event: OnTaxonomyChanged) {
+        if (event.causeOfChange == TaxonomyAction.FETCH_TAGS) {
+            viewModel.onSiteTagsChanged(getSiteTagNames())
+        }
+    }
+
+    companion object {
+        const val TAG = "prepublishing_tags_fragment_tag"
+
+        @JvmStatic
+        fun newInstance(site: SiteModel): PrepublishingTagsFragment {
+            val bundle = Bundle().apply {
+                putSerializable(WordPress.SITE, site)
+            }
+            return PrepublishingTagsFragment().apply { arguments = bundle }
+        }
     }
 }
