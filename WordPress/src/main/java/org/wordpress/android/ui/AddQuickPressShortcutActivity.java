@@ -152,7 +152,7 @@ public class AddQuickPressShortcutActivity extends BaseAppCompatActivity {
 
                     String shortcutName = quickPressShortcutName.getText().toString();
 
-                    WordPress.wpDB.addQuickPressShortcut(siteIds[position], shortcutName);
+                    WordPress.getWpDB().addQuickPressShortcut(siteIds[position], shortcutName);
 
                     ShortcutInfoCompat pinShortcutInfo =
                             new ShortcutInfoCompat.Builder(getApplicationContext(), shortcutName)

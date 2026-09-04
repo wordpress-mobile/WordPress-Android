@@ -3836,7 +3836,6 @@ Language: de
     <string name="reader_toast_err_removing_tag">Dieses Schlagwort konnte nicht entfernt werden</string>
     <string name="reader_toast_err_adding_tag">Dieses Schlagwort konnte nicht hinzugefügt werden</string>
     <string name="reader_title_applog">Anwendungsprotokoll</string>
-    <string name="fatal_db_error">Bei der Erstellung der App-Datenbank ist ein Fehler aufgetreten. Versuche die App erneut zu installieren.</string>
     <string name="error_refresh_media">Die Medien konnten zu diesem Zeitpunkt nicht aktualisiert werden</string>
     <string name="wordpress_blog">WordPress-Blog</string>
     <string name="local_changes">Lokale Änderungen</string>

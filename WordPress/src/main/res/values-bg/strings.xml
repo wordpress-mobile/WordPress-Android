@@ -817,7 +817,6 @@ Language: bg
     <string name="local_draft">Локална чернова</string>
     <string name="new_media">Нов файл</string>
     <string name="link_enter_url_text">Текст на връзката (по избор)</string>
-    <string name="fatal_db_error">Възникна грешка при създаване на базата от данни на приложението. Моля преинсталирайте приложението.</string>
     <string name="comment_status_unapproved">Предстоящ</string>
     <string name="post_not_found">Възникна грешка при зареждане на тази плубликация. Опреснете Вашите публикации и опитайте отново.</string>
     <string name="trash">Кошче</string>

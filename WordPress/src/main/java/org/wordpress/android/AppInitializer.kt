@@ -12,28 +12,26 @@ import android.app.SyncNotedAppOp
 import android.content.ComponentCallbacks2
 import android.content.Context
 import android.content.res.Configuration
-import android.database.SQLException
-import android.database.sqlite.SQLiteException
 import android.net.http.HttpResponseCache
 import android.os.Build
 import android.os.Build.VERSION_CODES
 import android.os.SystemClock
 import android.text.TextUtils
-import android.util.Log
 import android.webkit.WebView
 import androidx.annotation.RequiresApi
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.preference.PreferenceManager
-import androidx.work.WorkManager
 import com.android.volley.RequestQueue
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import com.google.firebase.iid.FirebaseInstanceId
 import com.wordpress.rest.RestClient
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -64,6 +62,7 @@ import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.fluxc.tools.FluxCImageLoader
 import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError
 import org.wordpress.android.modules.APPLICATION_SCOPE
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.networking.NetworkConnectionMonitor
 import org.wordpress.android.networking.OAuthAuthenticator
 import org.wordpress.android.networking.RestClientUtils
@@ -109,7 +108,6 @@ import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfi
 import org.wordpress.android.util.enqueuePeriodicUploadWorkRequestForAllSites
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.AppReviewManager
-import org.wordpress.android.workers.WordPressWorkersFactory
 import java.io.File
 import java.io.IOException
 import java.net.CookieManager
@@ -185,9 +183,6 @@ class AppInitializer @Inject constructor(
     lateinit var imageEditorFileUtils: ImageEditorFileUtils
 
     @Inject
-    lateinit var wordPressWorkerFactory: WordPressWorkersFactory
-
-    @Inject
     lateinit var gcmRegistrationScheduler: GCMRegistrationScheduler
 
     @Inject
@@ -201,6 +196,10 @@ class AppInitializer @Inject constructor(
     @Inject
     @Named(APPLICATION_SCOPE)
     lateinit var appScope: CoroutineScope
+
+    @Inject
+    @Named(IO_THREAD)
+    lateinit var ioDispatcher: CoroutineDispatcher
 
     @Inject
     lateinit var selectedSiteRepository: SelectedSiteRepository
@@ -246,6 +245,13 @@ class AppInitializer @Inject constructor(
 
     private lateinit var applicationLifecycleMonitor: ApplicationLifecycleMonitor
 
+    /**
+     * The coroutine enqueuing the periodic upload work. Exposed so UI tests can wait for it before swapping in
+     * a test WorkManager.
+     */
+    @VisibleForTesting
+    var periodicUploadEnqueueJob: Job? = null
+        private set
 
     private var startDate: Long
 
@@ -311,7 +317,7 @@ class AppInitializer @Inject constructor(
         AppLog.i(T.UTILS, "AppInitializer.init")
 
         WordPress.versionName = PackageUtils.getVersionName(application)
-        initWpDb()
+        warmUpWpDb()
         context?.let { enableHttpResponseCache(it) }
 
         AppReviewManager.init(application)
@@ -362,14 +368,9 @@ class AppInitializer @Inject constructor(
         // remove expired lists
         dispatcher.dispatch(ListActionBuilder.newRemoveExpiredListsAction(RemoveExpiredListsPayload()))
 
-
         if (!initialized) {
-            initWorkManager()
+            enqueuePeriodicUploadWorkAsync()
         }
-
-        // Enqueue our periodic upload work request. The UploadWorkRequest will be called even if the app is closed.
-        // It will upload local draft or published posts with local changes to the server.
-        enqueuePeriodicUploadWorkRequestForAllSites()
 
         systemNotificationsTracker.checkSystemNotificationsState()
         ImageEditorInitializer.init(imageManager, imageEditorTracker, imageEditorFileUtils, appScope)
@@ -394,19 +395,14 @@ class AppInitializer @Inject constructor(
     // when called from Application.onCreate(). The Help screen is the only entry
     // point that needs Zendesk and is gated by user navigation, so deferring init
     // to a background coroutine is safe in practice.
-    @Suppress("TooGenericExceptionCaught")
     private fun initZendeskAsync() {
-        appScope.launch(Dispatchers.IO) {
-            try {
-                zendeskHelper.setupZendesk(
-                    application,
-                    BuildConfig.ZENDESK_DOMAIN,
-                    BuildConfig.ZENDESK_APP_ID,
-                    BuildConfig.ZENDESK_OAUTH_CLIENT_ID
-                )
-            } catch (e: Exception) {
-                AppLog.e(T.SUPPORT, "Failed to initialize Zendesk SDK", e)
-            }
+        launchIo(T.SUPPORT, "Failed to initialize Zendesk SDK") {
+            zendeskHelper.setupZendesk(
+                application,
+                BuildConfig.ZENDESK_DOMAIN,
+                BuildConfig.ZENDESK_APP_ID,
+                BuildConfig.ZENDESK_OAUTH_CLIENT_ID
+            )
         }
     }
 
@@ -439,13 +435,37 @@ class AppInitializer @Inject constructor(
         appOpsManager.setOnOpNotedCallback(context?.mainExecutor, appOpsCallback)
     }
 
-    private fun initWorkManager() {
-        val configBuilder = androidx.work.Configuration.Builder().setWorkerFactory(wordPressWorkerFactory)
-        if (BuildConfig.DEBUG) {
-            configBuilder.setMinimumLoggingLevel(Log.DEBUG)
+    /**
+     * Runs [block] on the IO dispatcher, logging (rather than propagating) any failure. [appScope] has a plain
+     * [Job], so an uncaught exception would crash the process and cancel every other coroutine in the scope.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    private fun launchIo(tag: T, failureMessage: String, block: suspend () -> Unit): Job =
+        appScope.launch(ioDispatcher) {
+            try {
+                block()
+            } catch (e: Exception) {
+                AppLog.e(tag, failureMessage, e)
+            }
         }
-        configBuilder.setJobSchedulerJobIdRange(WORK_MANAGER_ID_RANGE_MIN, WORK_MANAGER_ID_RANGE_MAX)
-        WorkManager.initialize(application, configBuilder.build())
+
+    /**
+     * Enqueues our periodic upload work request, which uploads local drafts or published posts with local
+     * changes even when the app is closed. Runs off the main thread because the first WorkManager access
+     * initializes it on demand (see [WordPress.workManagerConfiguration]), which opens its Room database.
+     */
+    private fun enqueuePeriodicUploadWorkAsync() {
+        periodicUploadEnqueueJob = launchIo(T.MAIN, "Failed to enqueue periodic upload work") {
+            enqueuePeriodicUploadWorkRequestForAllSites()
+        }
+    }
+
+    /**
+     * Opens the legacy app database off the main thread so that the first main-thread reader usually finds it
+     * ready. [WordPress.wpDB] is lazy and synchronized, so readers that get there first simply open it themselves.
+     */
+    private fun warmUpWpDb() {
+        launchIo(T.DB, "Failed to open the app database") { WordPress.wpDB }
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -461,11 +481,10 @@ class AppInitializer @Inject constructor(
 
     private fun sanitizeMediaUploadStateForSite() {
         val selectedSiteLocalId: Int = selectedSiteRepository.getSelectedSiteLocalId(true)
-        val site = siteStore.getSiteByLocalId(selectedSiteLocalId)
-        site?.let {
-            Thread {
-                UploadService.sanitizeMediaUploadStateForSite(mediaStore, dispatcher, site)
-            }.start()
+        launchIo(T.MEDIA, "Failed to sanitize the media upload state") {
+            // The site lookup is a database read (plus credential decryption), so keep it off the main thread
+            val site = siteStore.getSiteByLocalId(selectedSiteLocalId) ?: return@launchIo
+            UploadService.sanitizeMediaUploadStateForSite(mediaStore, dispatcher, site)
         }
     }
 
@@ -581,28 +600,6 @@ class AppInitializer @Inject constructor(
             dispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
             dispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction())
             NotificationsUpdateServiceStarter.startService(context)
-        }
-    }
-
-    private fun initWpDb() {
-        if (!createAndVerifyWpDb()) {
-            AppLog.e(T.DB, "Invalid database, sign out user and delete database")
-            // Force DB deletion
-            WordPressDB.deleteDatabase(application)
-            WordPress.wpDB = WordPressDB(application)
-        }
-    }
-
-    private fun createAndVerifyWpDb(): Boolean {
-        return try {
-            WordPress.wpDB = WordPressDB(application)
-            true
-        } catch (e: SQLiteException) {
-            AppLog.e(T.DB, e)
-            false
-        } catch (e: SQLException) {
-            AppLog.e(T.DB, e)
-            false
         }
     }
 
@@ -965,11 +962,6 @@ class AppInitializer @Inject constructor(
         private const val KILOBYTES_IN_BYTES = 1024
         private const val MEMORY_CACHE_RATIO = 0.25 // Use 1/4th of the available memory for memory cache.
         private const val DEFAULT_TIMEOUT = 2 * 60 // 2 minutes
-
-        // Use service ids near the int max to avoid collisions with existing JobService ids
-        // The minimum range size is 1000, but we can easily give 10000.
-        private const val WORK_MANAGER_ID_RANGE_MAX = Int.MAX_VALUE
-        private const val WORK_MANAGER_ID_RANGE_MIN = WORK_MANAGER_ID_RANGE_MAX - 10000
 
         @SuppressLint("StaticFieldLeak")
         var context: Context? = null

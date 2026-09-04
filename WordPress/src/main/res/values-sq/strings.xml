@@ -3721,7 +3721,6 @@ Language: sq_AL
     <string name="reader_toast_err_removing_tag">S’arrihet të hiqet kjo etiketë</string>
     <string name="reader_toast_err_adding_tag">S’arrihet të shtohet kjo etiketë</string>
     <string name="reader_title_applog">Regjistër aplikacioni</string>
-    <string name="fatal_db_error">Ndodhi një gabim gjatë krijimit të bazës së të dhënave për aplikacionin. Provoni të riinstaloni aplikacionin.</string>
     <string name="error_refresh_media">Media s’u rifreskua dot tani</string>
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="local_changes">Ndryshime vendore</string>
