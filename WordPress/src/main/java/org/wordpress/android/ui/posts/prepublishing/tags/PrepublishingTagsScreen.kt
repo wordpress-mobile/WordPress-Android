@@ -193,11 +193,19 @@ private fun TagsChipInputField(
                 if (newValue.text.startsWith(SENTINEL)) {
                     fieldValue = newValue
                     onInputChange(newValue.text.removePrefix(SENTINEL))
-                } else {
-                    // The sentinel was deleted: a backspace at the very start of the field.
-                    if (input.isEmpty()) onBackspaceWhenEmpty() else onInputChange(newValue.text)
+                } else if (newValue.text.isEmpty()) {
+                    // The field is now fully empty: a backspace on the sentinel of an empty field.
+                    onBackspaceWhenEmpty()
                     // Never leave the field without its sentinel.
                     fieldValue = TextFieldValue(SENTINEL, selection = TextRange(SENTINEL.length))
+                } else {
+                    // The sentinel was deleted mid-text (backspace at the very start of the word).
+                    // Re-prefix the sentinel and keep the remaining text so it is not lost, shifting
+                    // the caret by the re-added sentinel.
+                    val restored = SENTINEL + newValue.text
+                    val cursor = newValue.selection.start + SENTINEL.length
+                    fieldValue = TextFieldValue(restored, selection = TextRange(cursor))
+                    onInputChange(newValue.text)
                 }
             },
             singleLine = true,

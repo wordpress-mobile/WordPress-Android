@@ -124,7 +124,9 @@ class PrepublishingTagsViewModel @Inject constructor(
         _navigateToHomeScreen.postValue(Event(Unit))
     }
 
-    fun wereTagsChanged(): Boolean = selectedTags != initialTags
+    // Compare as sets so reordering (e.g. removing then re-adding the same tag) is not reported as a
+    // change; only a differing tag set counts.
+    fun wereTagsChanged(): Boolean = selectedTags.toSet() != initialTags.toSet()
 
     private fun persistAndRefresh() {
         updateUiState()
@@ -183,7 +185,7 @@ class PrepublishingTagsViewModel @Inject constructor(
         return allTags.filter { tagName ->
             selectedTags.none { it.equals(tagName, ignoreCase = true) } &&
                     (filter.isEmpty() || tagName.lowercase(Locale.getDefault()).contains(filter))
-        }.distinct()
+        }.distinctBy { it.lowercase(Locale.getDefault()) }
     }
 
     private fun parseTags(tags: String?): List<String> {
