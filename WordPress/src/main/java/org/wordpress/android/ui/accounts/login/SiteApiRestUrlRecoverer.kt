@@ -60,7 +60,12 @@ class SiteApiRestUrlRecoverer @Inject constructor(
     suspend fun persistApiRootUrl(localId: Int, apiRootUrl: String): Boolean = withContext(bgDispatcher) {
         val rowsUpdated = siteSqlUtils.updateWpApiRestUrl(localId, apiRootUrl)
         if (rowsUpdated == 0) {
-            appLogWrapper.w(AppLog.T.API, "Cannot persist wpApiRestUrl: no site with localId=$localId")
+            // The writer also returns 0 when it refuses the value, and it logs why in that case.
+            appLogWrapper.w(
+                AppLog.T.API,
+                "Did not persist wpApiRestUrl for localId=$localId: no such row, or the " +
+                        "writer rejected $apiRootUrl"
+            )
             false
         } else {
             appLogWrapper.d(AppLog.T.API, "Persisted wpApiRestUrl=$apiRootUrl for localId=$localId")
