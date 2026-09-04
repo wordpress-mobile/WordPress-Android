@@ -17,7 +17,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.viewmodel.Event
@@ -39,9 +38,6 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var savePostToDbUseCase: SavePostToDbUseCase
-
-    @Mock
-    lateinit var jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
 
     private lateinit var viewModel: PostListMainViewModel
 

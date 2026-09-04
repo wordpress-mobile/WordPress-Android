@@ -51,7 +51,6 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayVi
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.ForwardToJetpack
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -81,6 +80,7 @@ import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils
 import org.wordpress.android.ui.utils.PreMigrationDeepLinkData
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
@@ -205,7 +205,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     lateinit var mAccountStore: AccountStore
 
     @Inject
-    lateinit var jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
+    lateinit var buildConfigWrapper: BuildConfigWrapper
 
     @Inject
     lateinit var getReadingPreferencesSyncUseCase: ReaderGetReadingPreferencesSyncUseCase
@@ -419,7 +419,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             host = uri.host
         }
 
-        if (uri == null || jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) {
+        if (uri == null || !buildConfigWrapper.isJetpackApp) {
             readerTracker.trackDeepLink(AnalyticsTracker.Stat.DEEP_LINKED, action!!, host!!, uri)
             // invalid uri so, just show the entry screen
             val intent = Intent(this, WPLaunchActivity::class.java)

@@ -13,8 +13,8 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NotificationType.CREATE_SITE
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @RunWith(MockitoJUnitRunner::class)
@@ -26,7 +26,7 @@ class CreateSiteNotificationHandlerTest {
     private val accountStore: AccountStore = mock()
     private val siteStore: SiteStore = mock()
     private val notificationsTracker: SystemNotificationsTracker = mock()
-    private val jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper = mock()
+    private val buildConfigWrapper: BuildConfigWrapper = mock()
 
     @Before
     fun setUp() {
@@ -38,7 +38,7 @@ class CreateSiteNotificationHandlerTest {
             accountStore,
             siteStore,
             notificationsTracker,
-            jetpackFeatureRemovalHelper
+            buildConfigWrapper
         )
     }
 
@@ -92,7 +92,7 @@ class CreateSiteNotificationHandlerTest {
             )
         ).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(jetpackFeatureRemovalHelper.shouldShowNotifications()).thenReturn(true)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
 
         assertThat(createSiteNotificationHandler.shouldShowNotification()).isTrue
     }
@@ -107,7 +107,7 @@ class CreateSiteNotificationHandlerTest {
         ).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(siteStore.hasSite()).thenReturn(false)
-        whenever(jetpackFeatureRemovalHelper.shouldShowNotifications()).thenReturn(true)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
 
         assertThat(createSiteNotificationHandler.shouldShowNotification()).isTrue
     }

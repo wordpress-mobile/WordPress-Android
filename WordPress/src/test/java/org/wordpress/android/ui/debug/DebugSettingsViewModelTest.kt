@@ -9,8 +9,8 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.notifications.NotificationManagerWrapper
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DebugUtils
 import org.wordpress.android.util.config.FeatureFlagConfig
 import org.wordpress.android.util.config.ManualFeatureConfig
@@ -43,7 +43,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
     lateinit var remoteFieldConfigRepository: RemoteFieldConfigRepository
 
     @Mock
-    lateinit var jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
+    lateinit var buildConfigWrapper: BuildConfigWrapper
 
     private lateinit var viewModel: DebugSettingsViewModel
     private val uiStates = mutableListOf<UiState>()
@@ -60,7 +60,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
             weeklyRoundupNotifier,
             notificationManager,
             contextProvider,
-            jetpackFeatureRemovalHelper
+            buildConfigWrapper
         )
         observeUIState()
     }

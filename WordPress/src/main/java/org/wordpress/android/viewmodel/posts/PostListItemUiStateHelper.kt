@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.post.PostStatus.TRASHED
 import org.wordpress.android.fluxc.model.post.PostStatus.UNKNOWN
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
@@ -75,7 +74,6 @@ class PostListItemUiStateHelper @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val uploadUiStateUseCase: PostModelUploadUiStateUseCase,
     private val labelColorUseCase: PostPageListLabelColorUseCase,
-    private val jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val buildConfigWrapper: BuildConfigWrapper
 ) {
@@ -108,8 +106,6 @@ class PostListItemUiStateHelper @Inject constructor(
             uploadUiState = uploadUiState,
             siteHasCapabilitiesToPublish = capabilitiesToPublish,
             statsSupported = statsSupported,
-            shouldShowStatsInJetpackRemovalPhase =
-            jetpackFeatureRemovalHelper.shouldShowPublishedPostStatsButton(),
             shouldShowPromoteWithBlaze = blazeFeatureUtils.isPostBlazeEligible(
                 site,
                 postStatus,
@@ -401,7 +397,6 @@ class PostListItemUiStateHelper @Inject constructor(
         uploadUiState: PostUploadUiState,
         siteHasCapabilitiesToPublish: Boolean,
         statsSupported: Boolean,
-        shouldShowStatsInJetpackRemovalPhase: Boolean,
         shouldShowPromoteWithBlaze: Boolean
     ): List<PostListButtonType> {
         val canRetryUpload = uploadUiState is UploadFailed
@@ -415,7 +410,7 @@ class PostListItemUiStateHelper @Inject constructor(
                 postStatus == PUBLISHED &&
                 !isLocalDraft &&
                 !isLocallyChanged &&
-                shouldShowStatsInJetpackRemovalPhase
+                buildConfigWrapper.isJetpackApp
         val canShowCopy = postStatus == PUBLISHED || postStatus == DRAFT
         val canShowShareButton = !isLocalDraft && postStatus != TRASHED
         val canShowViewButton = !canRetryUpload && postStatus != TRASHED

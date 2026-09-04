@@ -7,8 +7,8 @@ import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.NavigationAction.DebugCookies
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.notifications.NotificationManagerWrapper
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DebugUtils
 import org.wordpress.android.ui.debug.UiItem.FeatureFlag.RemoteFeatureFlag
 import org.wordpress.android.ui.debug.UiItem.FeatureFlag.LocalFeatureFlag
@@ -37,7 +37,7 @@ class DebugSettingsViewModel
     private val weeklyRoundupNotifier: WeeklyRoundupNotifier,
     private val notificationManager: NotificationManagerWrapper,
     private val contextProvider: ContextProvider,
-    private val jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper,
+    private val buildConfigWrapper: BuildConfigWrapper,
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
@@ -69,7 +69,7 @@ class DebugSettingsViewModel
     }
 
     fun onForceShowWeeklyRoundupClick() = launch(bgDispatcher) {
-        if (!jetpackFeatureRemovalHelper.shouldShowNotifications())
+        if (!buildConfigWrapper.isJetpackApp)
             return@launch
         weeklyRoundupNotifier.buildNotifications().forEach {
             notificationManager.notify(it.id, it.asNotificationCompatBuilder(contextProvider.getContext()).build())

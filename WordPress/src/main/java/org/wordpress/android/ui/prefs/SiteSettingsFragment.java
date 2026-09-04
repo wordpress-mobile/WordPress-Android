@@ -78,7 +78,7 @@ import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper;
+import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.PlansConstants;
 import org.wordpress.android.ui.posts.EditorCapabilityResolver;
 import org.wordpress.android.ui.posts.EditorCapabilityState;
@@ -195,7 +195,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject BloggingPromptsFeature mBloggingPromptsFeature;
     @Inject ManageCategoriesFeatureConfig mManageCategoriesFeatureConfig;
     @Inject UiHelpers mUiHelpers;
-    @Inject JetpackFeatureRemovalHelper mJetpackFeatureRemovalHelper;
+    @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject BloggingPromptsSettingsHelper mPromptsSettingsHelper;
     @Inject EditorCapabilityResolver mEditorCapabilityResolver;
     @Inject GutenbergKitFeatureChecker mGutenbergKitFeatureChecker;
@@ -1142,8 +1142,11 @@ public class SiteSettingsFragment extends PreferenceFragment
             hideAdminRequiredPreferences();
         }
 
+        // the WordPress app does not ship the Jetpack-powered settings
+        final boolean jetpackFeaturesRemoved = !mBuildConfigWrapper.isJetpackApp();
+
         // hide site accelerator jetpack settings if plugin version < 5.8
-        if (mJetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures() || (
+        if (jetpackFeaturesRemoved || (
                 !supportsJetpackSiteAcceleratorSettings(mSite)
                 && mSite.getPlanId() != PlansConstants.BUSINESS_PLAN_ID)) {
             removeJetpackSiteAcceleratorSettings();
@@ -1166,7 +1169,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (!mManageCategoriesFeatureConfig.isEnabled()) {
             removeCategoriesPreference();
         }
-        if (mJetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) {
+        if (jetpackFeaturesRemoved) {
             WPPrefUtils.removePreference(this, R.string.pref_key_site_writing,
                     R.string.pref_key_site_related_posts);
             WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,

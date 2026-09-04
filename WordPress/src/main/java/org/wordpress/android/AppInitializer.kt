@@ -72,7 +72,6 @@ import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.debug.cookies.DebugCookieManager
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalWidgetHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
@@ -236,9 +235,6 @@ class AppInitializer @Inject constructor(
 
     @Inject
     lateinit var jetpackFeatureRemovalWidgetHelper: JetpackFeatureRemovalWidgetHelper
-
-    @Inject
-    lateinit var jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
 
     @Inject
     lateinit var perAppLocaleManager: PerAppLocaleManager
@@ -939,7 +935,7 @@ class AppInitializer @Inject constructor(
     }
 
     private fun updateNotificationSettings() {
-        if (!jetpackFeatureRemovalHelper.shouldShowNotifications()) {
+        if (!buildConfig.isJetpackApp) {
             NotificationsUtils.cancelAllNotifications(application)
             // Only create the transient notification channel to handle upload notifications
             createNotificationChannelsOnSdk26(

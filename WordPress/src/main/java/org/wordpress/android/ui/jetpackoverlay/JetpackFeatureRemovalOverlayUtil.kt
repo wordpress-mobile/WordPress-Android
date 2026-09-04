@@ -2,6 +2,7 @@ package org.wordpress.android.ui.jetpackoverlay
 
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource.APP_OPEN
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
@@ -10,16 +11,14 @@ private const val SCREEN_TYPE_KEY = "source"
 private const val DISMISSAL_TYPE_KEY = "dismissal_type"
 
 class JetpackFeatureRemovalOverlayUtil @Inject constructor(
-    private val jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper,
+    private val buildConfigWrapper: BuildConfigWrapper,
     private val jetpackFeatureOverlayShownTracker: JetpackFeatureOverlayShownTracker,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
-    fun shouldHideJetpackFeatures(): Boolean {
-        return jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()
-    }
+    fun shouldHideJetpackFeatures(): Boolean = !buildConfigWrapper.isJetpackApp
 
     fun shouldShowFeatureCollectionJetpackOverlayForFirstTime(): Boolean {
-        return jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures() &&
+        return shouldHideJetpackFeatures() &&
                 !jetpackFeatureOverlayShownTracker.getFeatureCollectionOverlayShown()
     }
 
@@ -27,7 +26,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.JETPACK_DEEP_LINK_OVERLAY_DISPLAYED,
             mapOf(
-                CURRENT_PHASE_KEY to jetpackFeatureRemovalHelper.getDeepLinkTrackingName()
+                CURRENT_PHASE_KEY to deepLinkTrackingName()
             )
         )
     }
@@ -36,7 +35,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.JETPACK_DEEP_LINK_OVERLAY_BUTTON_OPEN_IN_JETPACK_APP_TAPPED,
             mapOf(
-                CURRENT_PHASE_KEY to jetpackFeatureRemovalHelper.getDeepLinkTrackingName()
+                CURRENT_PHASE_KEY to deepLinkTrackingName()
             )
         )
     }
@@ -47,11 +46,14 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.JETPACK_DEEP_LINK_OVERLAY_DISMISSED,
             mapOf(
-                CURRENT_PHASE_KEY to jetpackFeatureRemovalHelper.getDeepLinkTrackingName(),
+                CURRENT_PHASE_KEY to deepLinkTrackingName(),
                 DISMISSAL_TYPE_KEY to dismissalType.trackingName
             )
         )
     }
+
+    private fun deepLinkTrackingName(): String? =
+        if (buildConfigWrapper.isJetpackApp) null else JETPACK_DEEPLINK_TRACKING_NAME
 
     fun onFeatureCollectionOverlayShown(source: JetpackFeatureCollectionOverlaySource) {
         if (source == APP_OPEN) {

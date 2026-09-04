@@ -11,10 +11,10 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.support.ZendeskHelper;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.BuildConfigWrapper;
 
 import java.util.Map;
 
@@ -37,7 +37,7 @@ public class GCMMessageService extends FirebaseMessagingService {
     @Inject ZendeskHelper mZendeskHelper;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject GCMMessageHandler mGCMMessageHandler;
-    @Inject JetpackFeatureRemovalHelper mJetpackFeatureRemovalHelper;
+    @Inject BuildConfigWrapper mBuildConfigWrapper;
 
     @Inject GCMRegistrationScheduler mGCMRegistrationScheduler;
 
@@ -74,7 +74,7 @@ public class GCMMessageService extends FirebaseMessagingService {
             return;
         }
 
-        if (!mJetpackFeatureRemovalHelper.shouldShowNotifications()) {
+        if (!mBuildConfigWrapper.isJetpackApp()) {
             return;
         }
 
