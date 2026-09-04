@@ -24,6 +24,68 @@ class GutenbergKitSettingsBuilder @Inject constructor(
         post: PostImmutableModel? = null,
         source: ConfigSource = ConfigSource.EDITOR,
     ): EditorConfiguration {
+        val transport = resolveApiTransport(site, accessToken, source)
+        val postType = if (post?.isPage == true) PostTypeDetails.page else PostTypeDetails.post
+
+        val cachedHosts = buildCachedHosts(site.url)
+        val thirdPartyBlocks = editorCapabilityResolver.resolveThirdPartyBlocks(site)
+        val editorAssetsEndpoint = if (thirdPartyBlocks.isAvailable) {
+            buildEditorAssetsEndpoint(transport.siteApiRoot, transport.siteApiNamespace)
+        } else {
+            null
+        }
+
+        return EditorConfiguration.builder(
+            siteURL = site.url,
+            siteApiRoot = transport.siteApiRoot,
+            postType = postType
+        ).apply {
+            setTitle(post?.title ?: "")
+            setContent(post?.content ?: "")
+            setPostId(
+                if (post?.isLocalDraft == true) null
+                else post?.remotePostId?.toUInt()
+            )
+            setPostStatus(post?.status ?: "draft")
+            setAuthHeader(transport.authHeader)
+            setSiteApiNamespace(transport.siteApiNamespace)
+            setNamespaceExcludedPaths(
+                arrayOf(
+                    "/wpcom/v2/following/recommendations",
+                    "/wpcom/v2/following/mine"
+                )
+            )
+            setThemeStyles(
+                editorCapabilityResolver.resolveThemeStyles(site).shouldApplyInEditor
+            )
+            setPlugins(thirdPartyBlocks.shouldApplyInEditor)
+            setLocale(perAppLocaleManager.getCurrentLocale())
+            setCookies(cookies)
+            setEnableAssetCaching(true)
+            setCachedAssetHosts(cachedHosts)
+            setEditorAssetsEndpoint(editorAssetsEndpoint)
+            setEnableNetworkLogging(isNetworkLoggingEnabled)
+            setEnableNativeBlockInserter(true)
+        }.build()
+    }
+
+    /**
+     * How the editor reaches this site's REST API. The three values are derived from one another
+     * and only make sense together: a WP.com root needs [siteApiNamespace] to carry
+     * `sites/<id>/`, a direct-host root needs it empty, and [authHeader] has to match the host
+     * being addressed. Resolving them in one place is what keeps them from drifting apart.
+     */
+    private class ApiTransport(
+        val siteApiRoot: String,
+        val siteApiNamespace: Array<String>,
+        val authHeader: String,
+    )
+
+    private fun resolveApiTransport(
+        site: SiteModel,
+        accessToken: String?,
+        source: ConfigSource
+    ): ApiTransport {
         val applicationPassword = site.apiRestPasswordPlain
         val shouldUseWPComRestApi =
             applicationPassword.isNullOrEmpty() && site.isUsingWpComRestApi
@@ -47,48 +109,7 @@ class GutenbergKitSettingsBuilder @Inject constructor(
 
         logSiteApiRouting(site, siteApiRoot, shouldUseWPComRestApi, source)
 
-        val postType = if (post?.isPage == true) PostTypeDetails.page else PostTypeDetails.post
-
-        val cachedHosts = buildCachedHosts(site.url)
-        val thirdPartyBlocks = editorCapabilityResolver.resolveThirdPartyBlocks(site)
-        val editorAssetsEndpoint = if (thirdPartyBlocks.isAvailable) {
-            buildEditorAssetsEndpoint(siteApiRoot, siteApiNamespace)
-        } else {
-            null
-        }
-
-        return EditorConfiguration.builder(
-            siteURL = site.url,
-            siteApiRoot = siteApiRoot,
-            postType = postType
-        ).apply {
-            setTitle(post?.title ?: "")
-            setContent(post?.content ?: "")
-            setPostId(
-                if (post?.isLocalDraft == true) null
-                else post?.remotePostId?.toUInt()
-            )
-            setPostStatus(post?.status ?: "draft")
-            setAuthHeader(authHeader)
-            setSiteApiNamespace(siteApiNamespace)
-            setNamespaceExcludedPaths(
-                arrayOf(
-                    "/wpcom/v2/following/recommendations",
-                    "/wpcom/v2/following/mine"
-                )
-            )
-            setThemeStyles(
-                editorCapabilityResolver.resolveThemeStyles(site).shouldApplyInEditor
-            )
-            setPlugins(thirdPartyBlocks.shouldApplyInEditor)
-            setLocale(perAppLocaleManager.getCurrentLocale())
-            setCookies(cookies)
-            setEnableAssetCaching(true)
-            setCachedAssetHosts(cachedHosts)
-            setEditorAssetsEndpoint(editorAssetsEndpoint)
-            setEnableNetworkLogging(isNetworkLoggingEnabled)
-            setEnableNativeBlockInserter(true)
-        }.build()
+        return ApiTransport(siteApiRoot, siteApiNamespace, authHeader)
     }
 
     /**
