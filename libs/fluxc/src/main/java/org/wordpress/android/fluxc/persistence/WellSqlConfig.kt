@@ -41,7 +41,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 212
+        return 213
     }
 
     override fun getDbName(): String {
@@ -2093,6 +2093,17 @@ open class WellSqlConfig : DefaultWellConfig {
                 211 -> {
                     db.execSQL("ALTER TABLE ActivityLog ADD MCP_AGENT BOOLEAN")
                     db.execSQL("ALTER TABLE ActivityLog ADD MCP_CLIENT TEXT")
+                }
+
+                // SiteModel.getWpApiRestUrl() used to synthesize a WP.com proxy root for Simple
+                // sites, and the generated mapper persisted it when the row was inserted. Nothing
+                // rewrites the column afterwards, so clear the derived values and let discovery
+                // repopulate a real REST root. Matched by prefix: only the synthesizer produced it.
+                212 -> {
+                    db.execSQL(
+                        "UPDATE SiteModel SET WP_API_REST_URL = NULL WHERE WP_API_REST_URL " +
+                                "LIKE 'https://public-api.wordpress.com/wp/v2/sites/%'"
+                    )
                 }
             }
         }
