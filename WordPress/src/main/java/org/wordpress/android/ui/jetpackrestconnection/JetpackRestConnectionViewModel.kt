@@ -16,7 +16,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STA
 import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STATE_STARTED
 import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STATE_STEP_KEY
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
@@ -41,8 +40,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private val jetpackModuleHelper: JetpackStatsModuleHelper,
     private val appLogWrapper: AppLogWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val wpAppNotifierHandler: WpAppNotifierHandler,
-) : ScopedViewModel(mainDispatcher), WpAppNotifierHandler.NotifierListener {
+) : ScopedViewModel(mainDispatcher) {
     // Internal variables that can be overridden for testing
     internal var uiDelayMs: Long = UI_DELAY_MS
     internal var stepTimeoutMs: Long = STEP_TIMEOUT_MS
@@ -80,7 +78,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
         _uiEvent.value = null
 
         analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_REST_CONNECT_STARTED)
-        wpAppNotifierHandler.addListener(this)
 
         startStep(fromStep ?: ConnectionStep.LoginWpCom)
     }
@@ -95,7 +92,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
             _buttonType.value = ButtonType.Retry
         }
 
-        wpAppNotifierHandler.removeListener(this)
         _currentStep.value = null
     }
 
@@ -362,7 +358,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
      * Step 2: Installs Jetpack to the current site if not already installed
      */
     private suspend fun installJetpack() {
-        val result = jetpackInstaller.installJetpack(site)
+        val result = jetpackInstaller.installJetpack(site, onInvalidAuth = ::onInstallAuthFailed)
 
         result.fold(
             onSuccess = { status ->
@@ -475,12 +471,14 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     /**
-     * Called when auth fails in the WpApiClient created in JetpackConnectionHelper.initWpApiClient, reset the
-     * access token and restart the connection flow so the user sees the login page
+     * Invoked when the site rejects the application password during the Jetpack install step. This is
+     * delivered **locally** by the install client's notifier (see [JetpackConnectionHelper.initWpApiClient]),
+     * not by the app-wide `WpAppNotifierHandler`, so the app-wide SiteProvisioningSource doesn't also react
+     * and race this connection (see #22944). Reset the access token and restart the flow so the user sees
+     * the login page.
      */
-    override fun onRequestedWithInvalidAuthentication(siteUrl: String) {
+    private fun onInstallAuthFailed() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Invalid authentication, restarting")
-        wpAppNotifierHandler.removeListener(this)
         accountStore.resetAccessToken()
         clearValues()
         startConnectionFlow()

@@ -461,7 +461,6 @@ Language: cy_GB
     <string name="new_media">Cyfryngau newydd</string>
     <string name="local_changes">Newidiadau lleol</string>
     <string name="wordpress_blog">Blog WordPress</string>
-    <string name="fatal_db_error">Digwyddodd gwall wrth greu cronfa ddata\'r ap. Ceisiwch ailosod yr ap.</string>
     <string name="reader_title_applog">Cofnod yr ap</string>
     <string name="invalid_site_url_message">Gwiriwch fod URL y blog yn ddilys</string>
     <string name="share_link">Rhannu dolen</string>

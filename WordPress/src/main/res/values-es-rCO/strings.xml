@@ -226,7 +226,6 @@ Language: es_CO
     <string name="stats_select_date_range">Selecciona un rango de fechas</string>
     <string name="stats_period_custom">Personalizada</string>
     <string name="stats_period_last_12_months">Últimos 12 meses</string>
-    <string name="stats_period_last_6_months">Últimos 6 meses</string>
     <string name="stats_period_last_30_days">Últimos 30 días</string>
     <string name="stats_period_last_7_days">Últimos 7 días</string>
     <string name="stats_period_today">Hoy</string>
@@ -3871,7 +3870,6 @@ Language: es_CO
     <string name="file_not_found">No ha sido posible encontrar el archivo a cargar. ¿Se ha borrado o cambiado de ubicación?</string>
     <string name="media_gallery_type_thumbnail_grid">Cuadrícula de miniaturas</string>
     <string name="plugin_not_found">Ocurrió un error al acceder a este plugin</string>
-    <string name="fatal_db_error">Ha ocurrido un error al crear la base de datos de la aplicación. Por favor, intenta reinstalar la aplicación. </string>
     <string name="cannot_delete_multi_media_items">Algunos medios no se han podido borrar en este momento. Inténtalo de nuevo más tarde.</string>
     <string name="post_settings">Ajustes de entrada</string>
     <string name="reader_toast_err_removing_tag">No se ha podido eliminar esta etiqueta</string>

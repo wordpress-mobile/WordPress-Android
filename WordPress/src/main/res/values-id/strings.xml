@@ -230,7 +230,6 @@ Language: id
     <string name="stats_period_selector_content_description">Pilih periode statistik</string>
     <string name="stats_period_custom">Kustom</string>
     <string name="stats_period_last_12_months">12 bulan terakhir</string>
-    <string name="stats_period_last_6_months">6 bulan terakhir</string>
     <string name="stats_period_last_30_days">30 hari terakhir</string>
     <string name="stats_period_last_7_days">7 hari terakhir</string>
     <string name="stats_period_today">Hari ini</string>
@@ -3824,7 +3823,6 @@ Language: id
     <string name="reader_toast_err_removing_tag">Tidak bisa menghapus tag ini</string>
     <string name="reader_toast_err_adding_tag">Tidak bisa menambahkan tag ini</string>
     <string name="reader_title_applog">Log aplikasi</string>
-    <string name="fatal_db_error">Terjadi gagal ketika membuat basis data app. Coba instal ulang app.</string>
     <string name="error_refresh_media">Media tidak bisa disegarkan saat ini</string>
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="local_changes">Perubahan lokal</string>

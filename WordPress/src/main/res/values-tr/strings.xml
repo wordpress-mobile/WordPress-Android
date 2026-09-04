@@ -237,7 +237,6 @@ Language: tr
     <string name="stats_period_selector_content_description">İstatistik dönemini seçin</string>
     <string name="stats_period_custom">Özel</string>
     <string name="stats_period_last_12_months">Son 12 ay</string>
-    <string name="stats_period_last_6_months">Son 6 ay</string>
     <string name="stats_period_last_30_days">Son 30 gün</string>
     <string name="stats_period_last_7_days">Son 7 gün</string>
     <string name="stats_period_today">Bugün</string>
@@ -3835,7 +3834,6 @@ Language: tr
     <string name="reader_toast_err_removing_tag">Bu etiket kaldırılamıyor</string>
     <string name="reader_toast_err_adding_tag">Bu etiket eklenemiyor</string>
     <string name="reader_title_applog">Uygulama günlüğü</string>
-    <string name="fatal_db_error">Uygulama veri tabanı oluşturulurken sorun çıktı. Uygulamayı yeniden kurmayı deneyin.</string>
     <string name="error_refresh_media">Ortam dosyaları şu anda yenilenemedi</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="local_changes">Yerel değişiklikler</string>

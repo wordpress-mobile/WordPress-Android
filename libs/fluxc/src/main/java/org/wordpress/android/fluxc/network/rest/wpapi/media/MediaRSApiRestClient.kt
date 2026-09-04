@@ -28,6 +28,7 @@ import uniffi.wp_api.MediaListParams
 import uniffi.wp_api.MediaUpdateParams
 import uniffi.wp_api.MediaWithEditContext
 import uniffi.wp_api.RequestExecutionErrorReason
+import uniffi.wp_api.WpDateString
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Named
@@ -527,7 +528,7 @@ class MediaRSApiRestClient @Inject constructor(
         alt = this@toMediaModel.altText
         postId = this@toMediaModel.postId ?: 0
         mimeType = this@toMediaModel.mimeType
-        uploadDate = this@toMediaModel.date
+        uploadDate = this@toMediaModel.date.value
         authorId = this@toMediaModel.author
         uploadState = MediaUploadState.UPLOADED.toString()
 
@@ -592,7 +593,7 @@ class MediaRSApiRestClient @Inject constructor(
         description = description,
         altText = alt,
         author = if (authorId > 0) authorId else null,
-        date = uploadDate
+        date = uploadDate?.let { WpDateString(it) }
         )
 
     class FileCheckWrapper @Inject constructor() {

@@ -231,7 +231,6 @@ Language: th
     <string name="email_invalid" a8c-src-lib="module:login">ใส่ที่อยู่อีเมลที่ใช้งานได้</string>
     <string name="new_media">ไฟล์สื่อใหม่</string>
     <string name="wordpress_blog">บล็อกเวิร์ดเพรส</string>
-    <string name="fatal_db_error">มีความผิดพลาดเกิดขึ้นระหว่างการสร้างฐานข้อมูลแอพ  โปรดลองติดตั้งแอพใหม่อีกครั้ง</string>
     <string name="new_post">เรื่องใหม่</string>
     <string name="view_in_browser">ดูในเบราว์เซอร์</string>
     <string name="add_new_category">เพิ่มหมวดหมู่ใหม่</string>

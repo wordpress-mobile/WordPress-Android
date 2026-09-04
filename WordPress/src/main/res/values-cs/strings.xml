@@ -237,7 +237,6 @@ Language: cs_CZ
     <string name="stats_period_selector_content_description">Vyberte období statistik</string>
     <string name="stats_period_custom">Vlastní</string>
     <string name="stats_period_last_12_months">Posledních 12 měsíců</string>
-    <string name="stats_period_last_6_months">Posledních 6 měsíců</string>
     <string name="stats_period_last_30_days">Posledních 30 dní</string>
     <string name="stats_period_last_7_days">Posledních 7 dní</string>
     <string name="stats_period_today">Dnes</string>
@@ -3861,7 +3860,6 @@ Language: cs_CZ
     <string name="mnu_comment_approve">Schválit</string>
     <string name="mnu_comment_unapprove">Zamítnout</string>
     <string name="dlg_confirm_trash_comments">Přesunout do koše?</string>
-    <string name="fatal_db_error">Vyskytla se chyba při vytváření databáze aplikace. Zkuste přeinstalovat tuto aplikaci.</string>
     <string name="local_changes">Místní změny</string>
     <string name="reader_title_applog">Protokol aplikace</string>
     <string name="post_settings">Nastavení příspěvku</string>

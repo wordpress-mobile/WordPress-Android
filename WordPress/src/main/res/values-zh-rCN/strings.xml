@@ -235,7 +235,6 @@ Language: zh_CN
     <string name="stats_period_selector_content_description">选择统计信息时间段</string>
     <string name="stats_period_custom">自定义</string>
     <string name="stats_period_last_12_months">过去 12 个月</string>
-    <string name="stats_period_last_6_months">过去 6 个月</string>
     <string name="stats_period_last_30_days">过去 30 天</string>
     <string name="stats_period_last_7_days">过去 7 天</string>
     <string name="stats_period_today">今天</string>
@@ -3828,7 +3827,6 @@ Language: zh_CN
     <string name="reader_toast_err_removing_tag">无法删除此标签</string>
     <string name="reader_toast_err_adding_tag">无法添加此标签</string>
     <string name="reader_title_applog">程序日志</string>
-    <string name="fatal_db_error">创建程序数据库时出错，请重新安装程序.</string>
     <string name="error_refresh_media">此时无法刷新媒体</string>
     <string name="wordpress_blog">WordPress 博客</string>
     <string name="local_changes">本地修改</string>

@@ -1689,12 +1689,15 @@
     <string name="stats_period_today">Today</string>
     <string name="stats_period_last_7_days">Last 7 days</string>
     <string name="stats_period_last_30_days">Last 30 days</string>
-    <string name="stats_period_last_6_months">Last 6 months</string>
     <string name="stats_period_last_12_months">Last 12 months</string>
+    <string name="stats_period_this_week">This Week</string>
+    <string name="stats_period_this_month">This Month</string>
+    <string name="stats_period_this_year">This Year</string>
     <string name="stats_period_custom">Custom</string>
     <string name="stats_period_selector_content_description">Select stats period</string>
     <string name="stats_period_previous_content_description">Previous period</string>
     <string name="stats_period_next_content_description">Next period</string>
+    <string name="stats_view_selected_period_content_description">View stats for the selected period</string>
     <string name="stats_select_date_range">Select date range</string>
 
     <!-- Most Viewed Stats Card -->
@@ -2348,7 +2351,6 @@
     <string name="error_media_xmlrpc_not_allowed">Your action is not allowed</string>
     <string name="error_media_xmlrcp_server_error">Internal server error occurred</string>
     <string name="error_post_does_not_exist">This post no longer exists</string>
-    <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
     <string name="error_fetch_remote_site_settings">Couldn\'t retrieve site info</string>
     <string name="error_post_remote_site_settings">Couldn\'t save site info</string>
@@ -4589,6 +4591,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_authorization_cancelled">Authorization cancelled</string>
     <string name="application_password_title">Authenticate using Application Password</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">The provided site does not support Application Password authentication.</string>
+    <string name="application_password_private_site_error">This site is private, so we can\'t read its settings to sign you in.</string>
+    <string name="application_password_private_site_card">This site is private, so we can\'t reconnect to it.</string>
     <string name="application_password_invalid">Invalid Application Password</string>
     <string name="application_password_invalid_description">Your application password no longer exists. Please sign in again to create a new application password.</string>
     <string name="application_password_required">Application Password Required</string>

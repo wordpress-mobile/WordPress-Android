@@ -237,7 +237,6 @@ Language: en_GB
     <string name="stats_period_selector_content_description">Select stats period</string>
     <string name="stats_period_custom">Custom</string>
     <string name="stats_period_last_12_months">Last 12 months</string>
-    <string name="stats_period_last_6_months">Last 6 months</string>
     <string name="stats_period_last_30_days">Last 30 days</string>
     <string name="stats_period_last_7_days">Last 7 days</string>
     <string name="stats_period_today">Today</string>
@@ -3835,7 +3834,6 @@ Language: en_GB
     <string name="reader_toast_err_removing_tag">Unable to remove this tag</string>
     <string name="reader_toast_err_adding_tag">Unable to add this tag</string>
     <string name="reader_title_applog">Application log</string>
-    <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_refresh_media">Media couldn\'t be refreshed at this time</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="local_changes">Local changes</string>

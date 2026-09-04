@@ -170,6 +170,7 @@ android {
         buildConfigField "boolean", "DYNAMIC_DASHBOARD_CARDS", "false"
         buildConfigField "boolean", "STATS_TRAFFIC_SUBSCRIBERS_TABS", "false"
         buildConfigField "boolean", "NEW_STATS", "false"
+        buildConfigField "boolean", "WP_COM_WP_RS", "false"
         buildConfigField "boolean", "READER_READING_PREFERENCES", "false"
         buildConfigField "boolean", "READER_READING_PREFERENCES_FEEDBACK", "false"
         buildConfigField "boolean", "READER_TAGS_FEED", "false"
@@ -421,6 +422,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.core)
     implementation(libs.androidx.lifecycle.livedata.main)
     implementation(libs.androidx.lifecycle.process)
+    implementation(libs.androidx.startup.runtime)
     implementation(libs.android.volley)
     implementation(libs.google.play.review)
     implementation(libs.google.mlkit.barcode.scanning.common)

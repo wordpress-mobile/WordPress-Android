@@ -3512,7 +3512,6 @@ Language: pt_BR
     <string name="reader_toast_err_removing_tag">Não foi possível remover a tag</string>
     <string name="reader_toast_err_adding_tag">Não foi possível adicionar a tag</string>
     <string name="reader_title_applog">Log do aplicativo</string>
-    <string name="fatal_db_error">Ocorreu um erro ao criar o banco de dados do aplicativo. Tente reinstalar o aplicativo.</string>
     <string name="error_refresh_media">Arquivo de mídia não pôde ser atualizado neste momento</string>
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="local_changes">Alterações locais</string>

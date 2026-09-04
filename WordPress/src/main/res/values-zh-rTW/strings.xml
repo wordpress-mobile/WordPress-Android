@@ -237,7 +237,6 @@ Language: zh_TW
     <string name="stats_period_selector_content_description">選取統計資料期間</string>
     <string name="stats_period_custom">自訂</string>
     <string name="stats_period_last_12_months">過去 12 個月</string>
-    <string name="stats_period_last_6_months">過去 6 個月</string>
     <string name="stats_period_last_30_days">過去 30 天</string>
     <string name="stats_period_last_7_days">過去 7 天</string>
     <string name="stats_period_today">今天</string>
@@ -3815,7 +3814,6 @@ Language: zh_TW
     <string name="reader_toast_err_removing_tag">無法移除此標籤</string>
     <string name="reader_toast_err_adding_tag">無法新增此標籤</string>
     <string name="reader_title_applog">應用程式記錄檔</string>
-    <string name="fatal_db_error">建立應用程式資料庫時發生錯誤。請嘗試重新安裝應用程式。</string>
     <string name="error_refresh_media">目前無法重新整理媒體</string>
     <string name="wordpress_blog">WordPress 網誌</string>
     <string name="local_changes">本機變更</string>

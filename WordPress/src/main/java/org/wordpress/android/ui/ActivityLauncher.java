@@ -109,6 +109,7 @@ import org.wordpress.android.ui.navmenus.NavMenusActivity;
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
+import org.wordpress.android.ui.rs.WpRsRouting;
 import org.wordpress.android.ui.selfhostedusers.SelfHostedUsersActivity;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
@@ -131,7 +132,6 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.utils.PreMigrationDeepLinkData;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UriWrapper;
 import org.wordpress.android.util.UrlUtils;
@@ -145,6 +145,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import dagger.hilt.InstallIn;
+import dagger.hilt.android.EntryPointAccessors;
+import dagger.hilt.components.SingletonComponent;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ACCESS_ERROR;
@@ -641,8 +645,15 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    private static boolean canUseWpRs(@NonNull Context context, @Nullable SiteModel site) {
+        return EntryPointAccessors
+                .fromApplication(context.getApplicationContext(), ActivityLauncherEntryPoint.class)
+                .wpRsRouting()
+                .canUseWpRs(site);
+    }
+
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {
-        if (SiteUtils.canUseWpRs(site)) {
+        if (canUseWpRs(context, site)) {
             context.startActivity(PostRsListActivity.Companion.createIntent(context));
             return;
         }
@@ -678,7 +689,7 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPages(@NonNull Context context, @NonNull SiteModel site) {
-        if (SiteUtils.canUseWpRs(site)) {
+        if (canUseWpRs(context, site)) {
             context.startActivity(PagesRsListActivity.Companion.createIntent(context));
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
             return;
@@ -725,7 +736,7 @@ public class ActivityLauncher {
 
     public static void viewUnifiedComments(Context context, SiteModel site) {
         // Neither screen reads the site from the Intent; both resolve it from SelectedSiteRepository.
-        Intent intent = SiteUtils.canUseWpRs(site)
+        Intent intent = canUseWpRs(context, site)
                 ? CommentsRsListActivity.Companion.createIntent(context)
                 : new Intent(context, UnifiedCommentsActivity.class);
         context.startActivity(intent);
@@ -1884,5 +1895,12 @@ public class ActivityLauncher {
                                      @NonNull String taxonomyName, boolean isHierarchical) {
         Intent intent = TermsDataViewActivity.Companion.getIntent(context, taxonomySlug, taxonomyName, isHierarchical);
         context.startActivity(intent);
+    }
+
+    // Fully qualified because PostUtils.EntryPoint is already imported under the simple name.
+    @dagger.hilt.EntryPoint
+    @InstallIn(SingletonComponent.class)
+    interface ActivityLauncherEntryPoint {
+        WpRsRouting wpRsRouting();
     }
 }

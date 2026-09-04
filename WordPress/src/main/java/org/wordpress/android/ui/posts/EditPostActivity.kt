@@ -2755,8 +2755,15 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 mediaId, postRepository
             ) { _: PostImmutableModel? ->
              }
-        } else if (editPostSettingsFragment != null) {
-            editPostSettingsFragment?.updateFeaturedImage(mediaId, imagePicked)
+        } else {
+            // The post settings screen may not be showing (e.g. the image was set from the
+            // pre-publish sheet), so fall back to writing the id ourselves. Either way the editor is
+            // synced below via sendToJSFeaturedImageId.
+            if (editPostSettingsFragment != null) {
+                editPostSettingsFragment?.updateFeaturedImage(mediaId, imagePicked)
+            } else {
+                updateFeaturedImageUseCase.updateFeaturedImage(mediaId, editPostRepository) { }
+            }
         }
         if (editorFragment is GutenbergEditorFragment) {
             (editorFragment as GutenbergEditorFragment).sendToJSFeaturedImageId(mediaId.toInt())
@@ -3882,6 +3889,14 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     // EditorDataProvider methods
     override fun getEditPostRepository() = editPostRepository
     override fun getSite() = siteModel
+    override fun syncFeaturedImageIdToEditor() {
+        val featuredImageId = editPostRepository.featuredImageId
+        editorFragment?.setFeaturedImageId(featuredImageId)
+        // setFeaturedImageId only stores the id; push it to the JS editor so the featured image
+        // block isn't left showing a stale image after a set/remove from the pre-publish sheet.
+        (editorFragment as? GutenbergEditorFragment)?.sendToJSFeaturedImageId(featuredImageId.toInt())
+    }
+    override fun supportsFeaturedImageEditing() = true
 
     override fun onMenuOpened(featureId: Int, menu: Menu): Boolean {
         // This is a workaround for bag discovered on Chromebooks, where Enter key will not work in the toolbar menu

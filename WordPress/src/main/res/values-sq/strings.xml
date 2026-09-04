@@ -137,7 +137,6 @@ Language: sq_AL
     <string name="stats_period_selector_content_description">Përzgjidhni periudhë statistikash</string>
     <string name="stats_period_custom">Vetjake</string>
     <string name="stats_period_last_12_months">12 muajt e fundit</string>
-    <string name="stats_period_last_6_months">6 muajt e fundit</string>
     <string name="stats_period_last_30_days">30 ditët e fundit</string>
     <string name="stats_period_last_7_days">7 ditët e fundit</string>
     <string name="stats_period_today">Sot</string>
@@ -3720,7 +3719,6 @@ Language: sq_AL
     <string name="reader_toast_err_removing_tag">S’arrihet të hiqet kjo etiketë</string>
     <string name="reader_toast_err_adding_tag">S’arrihet të shtohet kjo etiketë</string>
     <string name="reader_title_applog">Regjistër aplikacioni</string>
-    <string name="fatal_db_error">Ndodhi një gabim gjatë krijimit të bazës së të dhënave për aplikacionin. Provoni të riinstaloni aplikacionin.</string>
     <string name="error_refresh_media">Media s’u rifreskua dot tani</string>
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="local_changes">Ndryshime vendore</string>
