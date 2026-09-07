@@ -73,7 +73,6 @@ import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerMode;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.main.feedbackform.FeedbackFormActivity;
-import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.pages.PageParentActivity;
@@ -129,7 +128,6 @@ import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.suggestion.SuggestionType;
 import org.wordpress.android.ui.taxonomies.TermsDataViewActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
-import org.wordpress.android.ui.utils.PreMigrationDeepLinkData;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
@@ -167,8 +165,6 @@ import static org.wordpress.android.ui.blaze.blazepromote.BlazePromoteParentActi
 import static org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModelKt.KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.restore.RestoreViewModelKt.KEY_RESTORE_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.scan.ScanFragment.ARG_THREAT_ID;
-import static org.wordpress.android.ui.main.WPMainActivity.ARG_BYPASS_MIGRATION;
-import static org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity.KEY_DEEP_LINK_DATA;
 import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_LIST_TYPE_KEY;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
@@ -185,16 +181,11 @@ public class ActivityLauncher {
     public static final String CATEGORY_DETAIL_ID = "category_detail_key";
 
     public static void showMainActivity(Context context) {
-        showMainActivity(context, false, false);
+        showMainActivity(context, false);
     }
 
-    public static void showMainActivity(Context context, boolean bypassMigration) {
-        showMainActivity(context, bypassMigration, false);
-    }
-
-    public static void showMainActivity(Context context, boolean bypassMigration, boolean selectPrimarySite) {
+    public static void showMainActivity(Context context, boolean selectPrimarySite) {
         Intent intent = getMainActivityInNewStack(context);
-        intent.putExtra(ARG_BYPASS_MIGRATION, bypassMigration);
         if (selectPrimarySite) {
             intent.putExtra(WPMainActivity.ARG_SELECT_PRIMARY_SITE, true);
         }
@@ -1807,35 +1798,10 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void startJetpackMigrationFlow(@NonNull Context context,
-                                                 @Nullable PreMigrationDeepLinkData deepLinkData) {
-        Intent intent = new Intent(context, JetpackMigrationActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        if (deepLinkData != null) {
-            intent.putExtra(KEY_DEEP_LINK_DATA, deepLinkData);
-        }
-        context.startActivity(intent);
-    }
-
-    public static void openDeepLinkAfterJPMigration(@NonNull Context context, String action, Uri uri) {
-        Intent intent = new Intent()
-                .setPackage(context.getPackageName())
-                .setAction(action)
-                .setData(uri)
-                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-    }
-
     public static void openJetpackForDeeplink(@NonNull Context context, String action, UriWrapper uri) {
-        openJetpackForDeeplink(context, action, uri, false);
-    }
-
-    public static void openJetpackForDeeplink(@NonNull Context context, String action, UriWrapper uri,
-                                              Boolean bypassMigration) {
         Intent intent = new Intent();
         intent.setAction(action);
         intent.setData(uri.getUri());
-        intent.putExtra(ARG_BYPASS_MIGRATION, bypassMigration);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }

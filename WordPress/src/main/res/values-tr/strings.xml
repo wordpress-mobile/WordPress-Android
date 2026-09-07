@@ -753,8 +753,6 @@ Language: tr
     <string name="barcode_scanning_alert_dialog_rationale_message">Barkodun taranması için kamera izni gereklidir</string>
     <string name="barcode_scanning_alert_dialog_title">Kamera izni verin</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%d düzeyden daha derin bir şekilde iç içe geçmiş bloklar, mobil düzenleyicide düzgün görüntülenmeyebilir.</string>
-    <string name="jp_migration_lets_go_button">Başlayalım</string>
-    <string name="jp_migration_done_no_sites_message">Jetpack uygulamasıyla WordPress yolculuğunuzu sürdürme zamanı.</string>
     <string name="domain_management_clear_search">Aramayı temizle</string>
     <string name="media_encoder_quality_very_high">Çok yüksek</string>
     <string name="notification_security_key_needed" a8c-src-lib="module:login">Lütfen ilerlemek için güvenlik anahtarınızı yazın.</string>
@@ -939,7 +937,6 @@ Language: tr
     <string name="sharing_twitter_deprecation_notice_find_out_more">Ayrıntılı bilgi alın</string>
     <string name="sharing_twitter_deprecation_notice_description">X otomatik paylaşım özelliği, X hüküm ve koşulları ile fiyatlandırma değişiklikleri nedeniyle artık kullanılmıyor.</string>
     <string name="sharing_twitter_deprecation_notice_title">X otomatik paylaşım özelliği artık kullanılamıyor</string>
-    <string name="jp_migration_notifications_allow_title">Sitenizle ilgili bilgileri almak için bildirimlere izin verin</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Etiketsiz renk. %s</string>
     <string name="dashboard_activity_card_title">Son etkinlik</string>
     <string name="site_creation_search_domain_example_body">Yukarıdaki örnekte olduğu gibi, bir etki alanı, kişilerin sitenizi bir tarayıcı üzerinden bulmasını ve ziyaret etmesini sağlar.</string>
@@ -950,7 +947,6 @@ Language: tr
     <string name="new_site_creation_preview_caption_paid">Özel etki alanınızın çalışmaya başlaması 30 dakika kadar sürebilir.</string>
     <string name="new_site_creation_preview_subtitle_paid">Alındınızı e-posta ile gönderdik. %s</string>
     <string name="notifications_disabled_permission_dialog">Uygulama bildirimleri kapatıldı. Açmak için buraya dokunun.</string>
-    <string name="jp_migration_done_delete_wp_message">Veri çakışmalarını önlemek için aygıtınızdan &lt;b&gt;WordPress uygulamasını kaldırmanızı&lt;/b&gt; öneririz.</string>
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blokları kaldır</string>
     <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Gizlilik ve değerlendirme</string>
     <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Oynatma ayarları</string>
@@ -1011,8 +1007,6 @@ Language: tr
     <string name="site_creation_domain_tag_unavailable">Bu etki alanı zaten kaydedilmiş</string>
     <string name="site_creation_domain_tag_recommended">Önerilen</string>
     <string name="site_creation_domain_tag_best_alternative">En iyi alternatif</string>
-    <string name="support_faq_caption">Sık sorulan soruların yanıtları için SSS bölümümüze bakın.</string>
-    <string name="support_faq_title">Jetpack uygulamasına geçtiğiniz için teşekkür ederiz!</string>
     <string name="logs_button">Günlükler</string>
     <string name="tickets">Biletler</string>
     <string name="free">Ücretsiz</string>
@@ -1100,30 +1094,8 @@ Language: tr
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Bağlantıları Jetpack ile açma özelliği kapatılamadı</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Bağlantıları Jetpack ile açma özelliği açılamadı</string>
     <string name="preference_open_links_in_jetpack">Bağlantıları Jetpack ile aç</string>
-    <string name="jp_migration_network_error_message">Ağ bağlantısı olmadığı için verilerinizi ve ayarlarınızı aktaramıyoruz.</string>
-    <string name="jp_migration_network_error_subtitle">Lütfen ağ bağlantınızı denetleyip yeniden deneyin.</string>
-    <string name="jp_migration_network_error_title">İnternet bağlantısı kurulamadı.</string>
-    <string name="jp_migration_generic_error_message">Lütfen destek ekibi ile görüşün ya da bir süre sonra yeniden deneyin.</string>
-    <string name="jp_migration_generic_error_subtitle">Kusura bakmayın. Bir sorun çıktı. Verileriniz güvende ama şu an onları aktaramıyoruz.</string>
     <string name="jp_migration_generic_error_title">Kusura bakmayın. Bir sorun çıktı.</string>
-    <string name="jp_migration_try_again_button">Yeniden deneyin</string>
-    <string name="jp_migration_finish_button">Bitir</string>
-    <string name="jp_migration_remove_wp_app_icon_content_description">WordPress uygulaması simgesini kaldır</string>
-    <string name="jp_migration_done_subtitle">Tüm verilerinizi ve ayarlarınızı aktardık. Her şey bıraktığınız yerde.</string>
-    <string name="jp_migration_done_title">Jetpack uygulamasına geçtiğiniz için teşekkürler!</string>
-    <string name="jp_migration_notifications_disabled_in_wp_message">WordPress uygulamasından gelen bildirimleri kapatacağız.</string>
-    <string name="jp_migration_notifications_subtitle">Aynı bildirimleri alacaksınız, ancak bunlar artık Jetpack uygulamasından gelecek.</string>
-    <string name="wordpress_help_center_button">WordPress yardım merkezi</string>
     <string name="support_title">Destek</string>
-    <string name="notification_disable_broadcast_permission_desc">Uygulamanın WordPress bildirimlerini kapatmasına izin verir.</string>
-    <string name="notification_disable_broadcast_permission_label">WordPress bildirimlerini kapat</string>
-    <string name="jp_migration_help_button">Yardıma mı ihtiyacınız var?</string>
-    <string name="jp_migration_continue_button">İlerle</string>
-    <string name="jp_migration_welcome_site_found_message">Sitenizi bulduk. Tüm verilerinizi aktararak ilerleyin ve otomatik olarak Jetpack oturumu açın.</string>
-    <string name="jp_migration_welcome_sites_found_message">Sitelerinizi bulduk. Tüm verilerinizi aktararak ilerleyin ve otomatik olarak Jetpack oturumu açın.</string>
-    <string name="jp_migration_avatar_content_description">Profil fotoğrafınız</string>
-    <string name="jp_migration_welcome_subtitle">WordPress uygulamasından geçtiğiniz anlaşılıyor.</string>
-    <string name="jp_migration_welcome_title">Jetpack uygulamasına hoş geldiniz!</string>
     <string name="icon_desc">simge</string>
     <string name="post_settings_parent">Üst sayfa</string>
     <string name="post_settings_page_attributes">Sayfa öznitelikleri</string>

@@ -734,8 +734,6 @@ Language: ja_JP
     <string name="barcode_scanning_alert_dialog_rationale_message">バーコードをスキャンするにはカメラの権限が必要です</string>
     <string name="barcode_scanning_alert_dialog_title">カメラの権限を付与</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%dレベルよりも深くネストされたブロックは、モバイルエディターで適切にレンダリングされない場合があります。</string>
-    <string name="jp_migration_lets_go_button">スタート</string>
-    <string name="jp_migration_done_no_sites_message">Jetpack アプリで WordPress のジャーニーを続ける時が来ました。</string>
     <string name="domain_management_clear_search">検索をクリア</string>
     <string name="media_encoder_quality_very_high">非常に高い</string>
     <string name="notification_security_key_needed" a8c-src-lib="module:login">続行するにはセキュリティキーを入力してください。</string>
@@ -919,7 +917,6 @@ Language: ja_JP
     <string name="sharing_twitter_deprecation_notice_find_out_more">さらに詳しく</string>
     <string name="sharing_twitter_deprecation_notice_description">Twitter の自動共有機能は Twitter の規約と価格に変更があったため利用できなくなりました。</string>
     <string name="sharing_twitter_deprecation_notice_title">Twitter の自動共有機能は利用できなくなりました</string>
-    <string name="jp_migration_notifications_allow_title">サイトを更新するよう通知を許可する</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ラベルない色。 %s</string>
     <string name="dashboard_activity_card_title">最近のアクティビティ</string>
     <string name="site_creation_search_domain_example_body">上記の例のように、ドメインを使用するとユーザーは、Web ブラウザーからサイトを見つけてアクセスできます。</string>
@@ -930,7 +927,6 @@ Language: ja_JP
     <string name="new_site_creation_preview_caption_paid">カスタムドメインが使用可能になるまでに最長30分かかる場合があります。</string>
     <string name="new_site_creation_preview_subtitle_paid">領収書をメールで送信しました。 %s</string>
     <string name="notifications_disabled_permission_dialog">アプリ通知が無効化されています。 ここをタップして有効化します。</string>
-    <string name="jp_migration_done_delete_wp_message">データの競合を避けるため、お使いの端末から &lt;b&gt;WordPress アプリをアンインストール&lt;/b&gt;することをおすすめします。</string>
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ブロックを削除</string>
     <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">プライバシーと評価</string>
     <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">再生設定</string>
@@ -991,8 +987,6 @@ Language: ja_JP
     <string name="site_creation_domain_tag_unavailable">このドメインはすでに登録されています</string>
     <string name="site_creation_domain_tag_recommended">おすすめ</string>
     <string name="site_creation_domain_tag_best_alternative">こちらもおすすめ</string>
-    <string name="support_faq_caption">FAQ でよくある質問に対する回答をご確認ください。</string>
-    <string name="support_faq_title">Jetpack アプリにお切り替えいただきありがとうございます !</string>
     <string name="logs_button">ログ</string>
     <string name="tickets">チケット</string>
     <string name="free">無料</string>
@@ -1080,30 +1074,8 @@ Language: ja_JP
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">「Jetpack でリンクを開く」を無効にできません</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">「Jetpack でリンクを開く」を有効にできません</string>
     <string name="preference_open_links_in_jetpack">Jetpack でリンクを開く</string>
-    <string name="jp_migration_network_error_message">ネットワークに接続しないと、データと設定を転送できません。</string>
-    <string name="jp_migration_network_error_subtitle">ネットワーク接続が有効であることを確認し、もう一度お試しください。</string>
-    <string name="jp_migration_network_error_title">インターネットに接続できません。</string>
-    <string name="jp_migration_generic_error_message">サポートにお問い合わせいただくか、後でやり直してください。</string>
-    <string name="jp_migration_generic_error_subtitle">申し訳ありません。エラーが発生しました。 データは安全ですが、現在転送できません。</string>
     <string name="jp_migration_generic_error_title">エラーが発生しました…</string>
-    <string name="jp_migration_try_again_button">再試行</string>
-    <string name="jp_migration_finish_button">完了</string>
-    <string name="jp_migration_remove_wp_app_icon_content_description">WordPress アプリのアイコンを削除</string>
-    <string name="jp_migration_done_subtitle">すべてのデータと設定を転送しました。 すべて移行先にあります。</string>
-    <string name="jp_migration_done_title">Jetpack にお切り替えいただきありがとうございます。</string>
-    <string name="jp_migration_notifications_disabled_in_wp_message">WordPress アプリからの通知をオフにします。</string>
-    <string name="jp_migration_notifications_subtitle">通知内容はすべて同じですが、Jetpack アプリから送信されるようになりました。</string>
-    <string name="wordpress_help_center_button">WordPress ヘルプセンター</string>
     <string name="support_title">サポート</string>
-    <string name="notification_disable_broadcast_permission_desc">アプリが WordPress の通知を無効にすることを許可します。</string>
-    <string name="notification_disable_broadcast_permission_label">WordPress の通知を無効化</string>
-    <string name="jp_migration_help_button">ヘルプが必要ですか ?</string>
-    <string name="jp_migration_continue_button">続行</string>
-    <string name="jp_migration_welcome_site_found_message">サイトが見つかりました。 すべてのデータを転送して Jetpack に自動でログインするには続行します。</string>
-    <string name="jp_migration_welcome_sites_found_message">サイトが見つかりました。 すべてのデータを転送して Jetpack に自動でログインするには続行します。</string>
-    <string name="jp_migration_avatar_content_description">自分のプロフィール写真</string>
-    <string name="jp_migration_welcome_subtitle">WordPress アプリから切り替わっているようです。</string>
-    <string name="jp_migration_welcome_title">Jetpack へようこそ !</string>
     <string name="icon_desc">アイコン</string>
     <string name="post_settings_parent">親ページ</string>
     <string name="post_settings_page_attributes">ページ属性</string>

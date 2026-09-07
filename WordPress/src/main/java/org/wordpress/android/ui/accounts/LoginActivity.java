@@ -392,7 +392,7 @@ public class LoginActivity extends BaseAppCompatActivity implements
         LoginFlow.CompletionBehavior behavior = getLoginFlow().getCompletionBehavior();
         if (behavior == LoginFlow.CompletionBehavior.MAIN_ACTIVITY) {
             // Select the primary site after WP.com login
-            ActivityLauncher.showMainActivity(this, false, true);
+            ActivityLauncher.showMainActivity(this, true);
         }
         // For FINISH and FINISH_WITH_SITE, just finish and let the caller handle navigation
         setResult(Activity.RESULT_OK);
@@ -501,9 +501,6 @@ public class LoginActivity extends BaseAppCompatActivity implements
     }
 
     private void loggedInAndFinish(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
-        AppPrefs.setIsJetpackMigrationEligible(false);
-        AppPrefs.setIsJetpackMigrationInProgress(false);
-
         // If doLoginUpdate is true, we need to fetch account and sites before navigating.
         // This happens after WordPress.com OAuth login where we only have the token.
         if (doLoginUpdate) {

@@ -742,8 +742,6 @@ Language: id
     <string name="barcode_scanning_alert_dialog_rationale_message">Izin kamera diperlukan untuk memindai barcode</string>
     <string name="barcode_scanning_alert_dialog_title">Izinkan Akses Kamera</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok bertingkat yang kedalamannya melebihi %d level mungkin tidak dapat ditampilkan dengan benar di editor seluler.</string>
-    <string name="jp_migration_lets_go_button">Ayo</string>
-    <string name="jp_migration_done_no_sites_message">Waktunya untuk melanjutkan perjalanan WordPress Anda di aplikasi Jetpack!</string>
     <string name="domain_management_clear_search">Hapus pencarian</string>
     <string name="media_encoder_quality_very_high">Sangat Tinggi</string>
     <string name="notification_security_key_needed" a8c-src-lib="module:login">Silakan berikan kunci keamanan Anda untuk melanjutkan.</string>
@@ -928,7 +926,6 @@ Language: id
     <string name="sharing_twitter_deprecation_notice_find_out_more">Cari tahu selengkapnya</string>
     <string name="sharing_twitter_deprecation_notice_description">Membagikan otomatis di Twitter tidak lagi tersedia karena perubahan kebijakan dan harga di Twitter.</string>
     <string name="sharing_twitter_deprecation_notice_title">Membagikan otomatis di Twitter tidak lagi tersedia</string>
-    <string name="jp_migration_notifications_allow_title">Izinkan pemberitahuan untuk mengikuti perkembangan situs Anda</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Warna tanpa label. %s</string>
     <string name="dashboard_activity_card_title">Aktivitas terbaru</string>
     <string name="site_creation_search_domain_example_body">Seperti contoh di atas, domain mengizinkan Anda menemukan dan mengunjungi situs Anda dari web browser.</string>
@@ -939,7 +936,6 @@ Language: id
     <string name="new_site_creation_preview_caption_paid">Diperlukan 30 menit agar domain khusus Anda dapat berfungsi.</string>
     <string name="new_site_creation_preview_subtitle_paid">Kami telah mengirim e-mail resi Anda. %s</string>
     <string name="notifications_disabled_permission_dialog">Pemberitahuan aplikasi telah dinonaktifkan. Ketuk di sini untuk mengaktifkannya.</string>
-    <string name="jp_migration_done_delete_wp_message">Kami sarankan untuk &lt;b&gt;menghapus instalan aplikasi WordPress&lt;/b&gt; di perangkat Anda guna mencegah terjadinya konflik data.</string>
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Hapus blok</string>
     <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Privasi dan rating</string>
     <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pengaturan Playback</string>
@@ -1000,8 +996,6 @@ Language: id
     <string name="site_creation_domain_tag_unavailable">Domain ini sudah terdaftar</string>
     <string name="site_creation_domain_tag_recommended">Disarankan</string>
     <string name="site_creation_domain_tag_best_alternative">Alternatif Terbaik</string>
-    <string name="support_faq_caption">Tanya Jawab Umum akan menjawab berbagai pertanyaan yang umum diajukan.</string>
-    <string name="support_faq_title">Terima kasih sudah beralih ke aplikasi Jetpack.</string>
     <string name="logs_button">Log</string>
     <string name="tickets">Tiket</string>
     <string name="free">Gratis</string>
@@ -1089,30 +1083,8 @@ Language: id
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Tidak dapat menonaktifkan fitur buka tautan di Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Tidak dapat mengaktifkan fitur buka tautan di Jetpack</string>
     <string name="preference_open_links_in_jetpack">Buka tautan di Jetpack</string>
-    <string name="jp_migration_network_error_message">Tanpa koneksi internet, kami tidak dapat mentransfer data dan pengaturan.</string>
-    <string name="jp_migration_network_error_subtitle">Pastikan koneksi internet berfungsi lalu coba kembali.</string>
-    <string name="jp_migration_network_error_title">Tidak dapat menyambung ke internet.</string>
-    <string name="jp_migration_generic_error_message">Hubungi dukungan atau coba lagi nanti.</string>
-    <string name="jp_migration_generic_error_subtitle">Mohon maaf, prosesnya tidak berjalan sesuai rencana. Data Anda tetap aman, tetapi kali ini kami tidak dapat mentransfernya.</string>
     <string name="jp_migration_generic_error_title">Ups, ada yang salah..</string>
-    <string name="jp_migration_try_again_button">Coba lagi</string>
-    <string name="jp_migration_finish_button">Selesai</string>
-    <string name="jp_migration_remove_wp_app_icon_content_description">Hapus ikon Aplikasi WordPress</string>
-    <string name="jp_migration_done_subtitle">Kami telah mentransfer semua data dan pengaturan Anda. Semua percis seperti terakhir Anda tinggalkan.</string>
-    <string name="jp_migration_done_title">Terima kasih telah beralih ke Jetpack!</string>
-    <string name="jp_migration_notifications_disabled_in_wp_message">Kami akan menonaktifkan pemberitahuan dari aplikasi WordPress.</string>
-    <string name="jp_migration_notifications_subtitle">Anda akan tetap menerima pemberitahuan tersebut, tetapi dari aplikasi Jetpack.</string>
-    <string name="wordpress_help_center_button">Pusat bantuan WordPress</string>
     <string name="support_title">Dukungan</string>
-    <string name="notification_disable_broadcast_permission_desc">Mengizinkan aplikasi untuk menonaktifkan pemberitahuan WordPress.</string>
-    <string name="notification_disable_broadcast_permission_label">nonaktifkan pemberitahuan WordPress</string>
-    <string name="jp_migration_help_button">Butuh bantuan?</string>
-    <string name="jp_migration_continue_button">Lanjutkan</string>
-    <string name="jp_migration_welcome_site_found_message">Kami menemukan situs Anda. Lanjutkan memindahkan semua data Anda dan masuk ke Jetpack secara otomatis.</string>
-    <string name="jp_migration_welcome_sites_found_message">Kami menemukan situs Anda. Lanjutkan memindahkan semua data Anda dan masuk ke Jetpack secara otomatis.</string>
-    <string name="jp_migration_avatar_content_description">Foto profil Anda</string>
-    <string name="jp_migration_welcome_subtitle">Sepertinya Anda beralih dari aplikasi WordPress.</string>
-    <string name="jp_migration_welcome_title">Selamat datang di Jetpack!</string>
     <string name="icon_desc">ikon</string>
     <string name="post_settings_parent">Halaman Induk</string>
     <string name="post_settings_page_attributes">Atribut Halaman</string>

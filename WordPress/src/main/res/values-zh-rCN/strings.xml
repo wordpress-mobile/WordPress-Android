@@ -748,8 +748,6 @@ Language: zh_CN
     <string name="barcode_scanning_alert_dialog_rationale_message">需要相机权限才能扫描条形码</string>
     <string name="barcode_scanning_alert_dialog_title">授予相机权限</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">嵌套深度超过 %d 层级的区块在移动端编辑器中可能无法正常渲染。</string>
-    <string name="jp_migration_lets_go_button">开始使用</string>
-    <string name="jp_migration_done_no_sites_message">是时候在 Jetpack 应用程序上继续您的 WordPress 之旅了。</string>
     <string name="domain_management_clear_search">清除搜索</string>
     <string name="media_encoder_quality_very_high">非常高</string>
     <string name="notification_security_key_needed" a8c-src-lib="module:login">请提供您的安全密钥以继续。</string>
@@ -934,7 +932,6 @@ Language: zh_CN
     <string name="sharing_twitter_deprecation_notice_find_out_more">了解更多</string>
     <string name="sharing_twitter_deprecation_notice_description">由于 Twitter 更改了条款和定价，Twitter 自动共享功能已无法使用。</string>
     <string name="sharing_twitter_deprecation_notice_title">Twitter 自动分享功能已无法使用</string>
-    <string name="jp_migration_notifications_allow_title">允许通知，持续关注您的站点</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">未标记的颜色 %s</string>
     <string name="dashboard_activity_card_title">近期的动态</string>
     <string name="site_creation_search_domain_example_body">如以上示例所示，域名允许访客从其 Web 浏览器查找和访问您的站点。</string>
@@ -945,7 +942,6 @@ Language: zh_CN
     <string name="new_site_creation_preview_caption_paid">最多可能需花费 30 分钟时间，您的自定义域名才能开始运行。</string>
     <string name="new_site_creation_preview_subtitle_paid">我们已将您的收据通过电子邮件发送给您。 %s</string>
     <string name="notifications_disabled_permission_dialog">应用程序通知已禁用。 轻点此处以启用。</string>
-    <string name="jp_migration_done_delete_wp_message">我们建议您&lt;b&gt;卸载设备上的 WordPress 应用&lt;/b&gt;以避免发生数据冲突。</string>
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">移除区块</string>
     <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">隐私和评级</string>
     <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">播放设置</string>
@@ -1006,8 +1002,6 @@ Language: zh_CN
     <string name="site_creation_domain_tag_unavailable">此域名已注册</string>
     <string name="site_creation_domain_tag_recommended">推荐</string>
     <string name="site_creation_domain_tag_best_alternative">更好的替代方案</string>
-    <string name="support_faq_caption">查看我们的常见问题解答，为您可能遇到的常见问题寻找答案。</string>
-    <string name="support_faq_title">感谢您切换至 Jetpack 应用程序！</string>
     <string name="logs_button">日志</string>
     <string name="tickets">票据</string>
     <string name="free">免费</string>
@@ -1095,30 +1089,8 @@ Language: zh_CN
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">无法禁用在 Jetpack 中打开链接</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">无法启用在 Jetpack 中打开链接</string>
     <string name="preference_open_links_in_jetpack">在 Jetpack 中打开链接</string>
-    <string name="jp_migration_network_error_message">如果没有网络连接，我们将无法传输您的数据和设置。</string>
-    <string name="jp_migration_network_error_subtitle">请检查以确保您的网络连接正常，然后重试。</string>
-    <string name="jp_migration_network_error_title">无法连接到互联网。</string>
-    <string name="jp_migration_generic_error_message">请联系支持人员或稍后重试。</string>
-    <string name="jp_migration_generic_error_subtitle">很抱歉，发生了些意外。 您的数据是安全的，但我们目前无法传输数据。</string>
     <string name="jp_migration_generic_error_title">糟糕，出错了..</string>
-    <string name="jp_migration_try_again_button">重试</string>
-    <string name="jp_migration_finish_button">完成</string>
-    <string name="jp_migration_remove_wp_app_icon_content_description">删除 WordPress 应用图标</string>
-    <string name="jp_migration_done_subtitle">我们已传输您的所有数据和设置。 一切都完好如初。</string>
-    <string name="jp_migration_done_title">感谢您切换至 Jetpack！</string>
-    <string name="jp_migration_notifications_disabled_in_wp_message">我们将关闭 WordPress 应用中的通知功能。</string>
-    <string name="jp_migration_notifications_subtitle">您将收到所有相同的通知，但现在这些通知来自 Jetpack 应用。</string>
-    <string name="wordpress_help_center_button">WordPress 帮助中心</string>
     <string name="support_title">支持</string>
-    <string name="notification_disable_broadcast_permission_desc">允许此应用禁用 WordPress 通知功能。</string>
-    <string name="notification_disable_broadcast_permission_label">禁用 WordPress 通知功能</string>
-    <string name="jp_migration_help_button">需要帮助？</string>
-    <string name="jp_migration_continue_button">继续</string>
-    <string name="jp_migration_welcome_site_found_message">我们找到了您的站点。 继续转移您的所有数据并自动登录至 Jetpack。</string>
-    <string name="jp_migration_welcome_sites_found_message">我们找到了您的站点。 继续转移您的所有数据并自动登录至 Jetpack。</string>
-    <string name="jp_migration_avatar_content_description">您的个人资料照片</string>
-    <string name="jp_migration_welcome_subtitle">您似乎是从 WordPress 应用程序转移过来。</string>
-    <string name="jp_migration_welcome_title">欢迎使用 Jetpack！</string>
     <string name="icon_desc">图标</string>
     <string name="post_settings_parent">父页</string>
     <string name="post_settings_page_attributes">页面属性</string>

@@ -753,8 +753,6 @@ Language: cs_CZ
     <string name="barcode_scanning_alert_dialog_rationale_message">Pro skenování čárového kódu je vyžadováno oprávnění fotoaparátu</string>
     <string name="barcode_scanning_alert_dialog_title">Udělit oprávnění fotoaparátu</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bloky vnořené hlouběji než %d úrovní se nemusí v mobilním editoru správně zobrazovat.</string>
-    <string name="jp_migration_lets_go_button">Jdeme na to</string>
-    <string name="jp_migration_done_no_sites_message">Je čas pokračovat ve vaší cestě WordPressem v aplikaci Jetpack.</string>
     <string name="domain_management_clear_search">Vymazat hledání</string>
     <string name="media_encoder_quality_very_high">Velmi vysoké</string>
     <string name="notification_security_key_needed" a8c-src-lib="module:login">Pro pokračování zadejte svůj bezpečnostní klíč.</string>
@@ -939,7 +937,6 @@ Language: cs_CZ
     <string name="sharing_twitter_deprecation_notice_find_out_more">Zjistěte více</string>
     <string name="sharing_twitter_deprecation_notice_description">Automatické sdílení na Twitteru již není dostupné kvůli změnám podmínek a cen Twitteru.</string>
     <string name="sharing_twitter_deprecation_notice_title">Automatické sdílení na Twitteru již není dostupné</string>
-    <string name="jp_migration_notifications_allow_title">Povolte oznámení pro sledování svého webu</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nepojmenovaná barva. %s</string>
     <string name="dashboard_activity_card_title">Nedávná aktivita</string>
     <string name="site_creation_search_domain_example_body">Stejně jako výše uvedený příklad, doména umožňuje lidem najít a navštívit váš web z jejich webového prohlížeče.</string>
@@ -950,7 +947,6 @@ Language: cs_CZ
     <string name="new_site_creation_preview_caption_paid">Správné fungování vaší vlastní domény může trvat až 30 minut.</string>
     <string name="new_site_creation_preview_subtitle_paid">Zaslali jsme vám e-mailem účtenku. %s</string>
     <string name="notifications_disabled_permission_dialog">Oznámení aplikace byla zakázána. Klepnutím zde je povolíte.</string>
-    <string name="jp_migration_done_delete_wp_message">Doporučujeme &lt;b&gt;odinstalovat aplikaci WordPress&lt;/b&gt; ve vašem zařízení, abyste předešli konfliktům dat.</string>
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Odebrat bloky</string>
     <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Soukromí a hodnocení</string>
     <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nastavení přehrávání</string>
@@ -1011,8 +1007,6 @@ Language: cs_CZ
     <string name="site_creation_domain_tag_unavailable">Tato doména je již registrována</string>
     <string name="site_creation_domain_tag_recommended">Doporučeno</string>
     <string name="site_creation_domain_tag_best_alternative">Nejlepší alternativa</string>
-    <string name="support_faq_caption">Odpovědi na běžné otázky, které můžete mít, najdete v našich FAQ.</string>
-    <string name="support_faq_title">Děkujeme, že jste přešli na aplikaci Jetpack!</string>
     <string name="logs_button">Protokoly</string>
     <string name="tickets">Vstupenky</string>
     <string name="free">Zdarma</string>
@@ -1100,30 +1094,8 @@ Language: cs_CZ
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Nelze zakázat otevřené odkazy v Jetpacku</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Nelze povolit otevřené odkazy v Jetpacku</string>
     <string name="preference_open_links_in_jetpack">Otevřít odkazy v Jetpacku</string>
-    <string name="jp_migration_network_error_message">Bez připojení k síti nemůžeme přenést vaše data a nastavení.</string>
-    <string name="jp_migration_network_error_subtitle">Zkontrolujte, zda vaše síťové připojení funguje, a zkuste to znovu.</string>
-    <string name="jp_migration_network_error_title">Nelze se připojit k internetu.</string>
-    <string name="jp_migration_generic_error_message">Kontaktujte podporu nebo to zkuste znovu později.</string>
-    <string name="jp_migration_generic_error_subtitle">Je nám líto, ale něco nevyšlo podle plánu. Vaše data jsou v bezpečí, ale momentálně je nemůžeme přenést.</string>
     <string name="jp_migration_generic_error_title">Aha, něco se pokazilo..</string>
-    <string name="jp_migration_try_again_button">Zkuste to znovu</string>
-    <string name="jp_migration_finish_button">Dokončit</string>
-    <string name="jp_migration_remove_wp_app_icon_content_description">Odstranit ikonu aplikace WordPress</string>
-    <string name="jp_migration_done_subtitle">Přenesli jsme všechna vaše data a nastavení. Všechno je tam, kde jsi to nechal.</string>
-    <string name="jp_migration_done_title">Děkujeme, že jste přešli na Jetpack!</string>
-    <string name="jp_migration_notifications_subtitle">Budete dostávat všechna stejná oznámení, ale nyní budou pocházet z aplikace Jetpack.</string>
-    <string name="jp_migration_notifications_disabled_in_wp_message">Vypneme oznámení z WordPress aplikace.</string>
-    <string name="wordpress_help_center_button">WordPress centrum nápovědy</string>
     <string name="support_title">Podpora</string>
-    <string name="notification_disable_broadcast_permission_desc">Umožňuje aplikaci zakázat WordPress oznámení.</string>
-    <string name="notification_disable_broadcast_permission_label">zakázat WordPress oznámení</string>
-    <string name="jp_migration_help_button">Potřebujete pomoci?</string>
-    <string name="jp_migration_continue_button">Pokračovat</string>
-    <string name="jp_migration_welcome_site_found_message">Našli jsme vaše stránky. Pokračujte v přenosu všech dat a automaticky se přihlaste k Jetpacku.</string>
-    <string name="jp_migration_welcome_sites_found_message">Našli jsme vaše stránky. Pokračujte v přenosu všech dat a automaticky se přihlaste k Jetpacku.</string>
-    <string name="jp_migration_avatar_content_description">Vaše profilová fotka</string>
-    <string name="jp_migration_welcome_subtitle">Vypadá to, že přecházíte z WordPress aplikace.</string>
-    <string name="jp_migration_welcome_title">Vítejte v Jetpacku!</string>
     <string name="icon_desc">ikona</string>
     <string name="post_settings_parent">Nadřazená stránka</string>
     <string name="post_settings_page_attributes">Vlastnosti stránky</string>

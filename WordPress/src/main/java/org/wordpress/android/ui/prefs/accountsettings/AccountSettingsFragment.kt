@@ -413,7 +413,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
             AccountClosureAction.SUPPORT_CONTACTED -> contactSupport()
             AccountClosureAction.ACCOUNT_CLOSED -> signOut()
             AccountClosureAction.USER_LOGGED_OUT -> {
-                ActivityLauncher.showMainActivity(context, true)
+                ActivityLauncher.showMainActivity(context)
             }
         }
     }

@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="org.wordpress.android.permission.DISABLE_NOTIFICATIONS"/>
-
     <application tools:ignore="MissingApplicationIcon">
         <!-- Deep Linking Activity -->
         <activity android:name="org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity"

@@ -17,8 +17,6 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayVi
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.ForwardToJetpack;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource;
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
-import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils;
-import org.wordpress.android.ui.utils.PreMigrationDeepLinkData;
 import org.wordpress.android.util.PackageManagerWrapper;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UriWrapper;
@@ -29,7 +27,6 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import static org.wordpress.android.WordPress.getContext;
-import static org.wordpress.android.ui.main.WPMainActivity.ARG_BYPASS_MIGRATION;
 
 /**
  * An activity to handle deep linking and intercepting links like:
@@ -45,7 +42,6 @@ public class DeepLinkingIntentReceiverActivity extends BaseAppCompatActivity {
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject PackageManagerWrapper mPackageManagerWrapper;
     @Inject ActivityLauncherWrapper mActivityLauncherWrapper;
-    @Inject JetpackAppMigrationFlowUtils mJetpackAppMigrationFlowUtils;
     private DeepLinkingIntentReceiverViewModel mViewModel;
     private JetpackFeatureFullScreenOverlayViewModel mJetpackFullScreenViewModel;
 
@@ -68,14 +64,6 @@ public class DeepLinkingIntentReceiverActivity extends BaseAppCompatActivity {
 
         String action = getIntent().getAction();
         Uri data = getIntent().getData();
-        boolean shouldBypassMigration = getIntent().getBooleanExtra(ARG_BYPASS_MIGRATION, false);
-
-        // Start migration flow passing deep link data if requirements are met
-        if (!shouldBypassMigration && mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
-            PreMigrationDeepLinkData deepLinkData = new PreMigrationDeepLinkData(action, data);
-            mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow(deepLinkData);
-            return;
-        }
 
         mViewModel.start(
                 action,

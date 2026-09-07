@@ -76,8 +76,6 @@ import org.wordpress.android.ui.reader.utils.ReaderPostSeenStatusWrapper
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
-import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils
-import org.wordpress.android.ui.utils.PreMigrationDeepLinkData
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BuildConfigWrapper
@@ -197,8 +195,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var deepLinkOpenWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
 
-    @Inject
-    lateinit var jetpackAppMigrationFlowUtils: JetpackAppMigrationFlowUtils
     private var jetpackFullScreenViewModel: JetpackFeatureFullScreenOverlayViewModel? = null
 
     @Inject
@@ -218,17 +214,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             ViewModelProvider(this)[JetpackFeatureFullScreenOverlayViewModel::class.java]
 
         setContentView(R.layout.reader_activity_post_pager)
-
-        // Start migration flow passing deep link data if requirements are met
-        if (jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
-            val deepLinkData = PreMigrationDeepLinkData(
-                intent.action,
-                intent.data
-            )
-            jetpackAppMigrationFlowUtils.startJetpackMigrationFlow(deepLinkData)
-            finish()
-            return
-        }
 
         viewPager = findViewById(R.id.viewpager)
         // lint complains about OFFSCREEN_PAGE_LIMIT, even through it's a valid constant (?)
