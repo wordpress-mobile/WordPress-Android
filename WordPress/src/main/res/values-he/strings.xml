@@ -309,8 +309,6 @@ Language: he_IL
     <string name="he_support_status_unknown">לא ידוע</string>
     <string name="he_support_status_closed">סגור</string>
     <string name="he_support_status_solved">נפתר</string>
-    <string name="he_support_status_waiting_for_user">בהמתנה למשתמש</string>
-    <string name="he_support_status_waiting_for_support">בהמתנה לתמיכה</string>
     <string name="he_support_select_attachments">לבחור קבצים מצורפים</string>
     <string name="he_support_download_attachment">להוריד את הקובץ המצורף</string>
     <string name="he_support_include_logs_description">הוספה של יומני פעילות יכולה לעזור לצוות שלנו לחקור בעיות. יומני הפעילות עשויים להכיל פעולות שבוצעו באפליקציה לאחרונה.</string>
@@ -3816,7 +3814,6 @@ Language: he_IL
     <string name="reader_toast_err_removing_tag">לא ניתן להסיר תגית זו</string>
     <string name="reader_toast_err_adding_tag">לא ניתן להוסיף תגית זו</string>
     <string name="reader_title_applog">יומן יישום</string>
-    <string name="fatal_db_error">אירעה שגיאה בזמן יצירת מסד הנתונים של היישום. נסה להתקין מחדש את היישום.</string>
     <string name="error_refresh_media">לא ניתן לרענן את פריטי המדיה כעת</string>
     <string name="wordpress_blog">אתר ב-WordPress</string>
     <string name="local_changes">שינויים מקומיים</string>

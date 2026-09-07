@@ -166,7 +166,7 @@ sealed class DomainCardUiState {
                 statusText = domain.domainStatus.statusText,
                 textColor = domain.domainStatus.textColor,
                 isBold = domain.domainStatus.isBold,
-                expiry = domain.expiry?.toLocalDateOrNull(),
+                expiry = domain.expiry?.value?.toLocalDateOrNull(),
             )
         )
     }

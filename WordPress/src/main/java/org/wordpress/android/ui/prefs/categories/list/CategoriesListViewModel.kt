@@ -101,7 +101,7 @@ class CategoriesListViewModel @Inject constructor(
             processFetchCategoriesCallback(event)
         if (event.causeOfChange == TaxonomyAction.UPDATE_TERM)
             launch { fetchCategoriesFromNetwork() }
-        if (event.causeOfChange == TaxonomyAction.REMOVE_TERM)
+        if (event.causeOfChange == TaxonomyAction.REMOVE_TERM && !event.isError)
             launch { fetchCategoriesFromNetwork() }
     }
 

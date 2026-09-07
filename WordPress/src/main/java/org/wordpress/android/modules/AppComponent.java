@@ -175,6 +175,7 @@ import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementListAdapter;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.image.getters.WPCustomImageGetter;
+import org.wordpress.android.workers.WordPressWorkersFactory;
 
 import dagger.hilt.EntryPoint;
 import dagger.hilt.InstallIn;
@@ -183,6 +184,8 @@ import dagger.hilt.components.SingletonComponent;
 @InstallIn(SingletonComponent.class)
 @EntryPoint
 public interface AppComponent {
+    WordPressWorkersFactory wordPressWorkersFactory();
+
     void inject(WPMainActivity object);
 
     void inject(MediaUploadHandler object);

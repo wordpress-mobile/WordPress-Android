@@ -285,6 +285,14 @@ public class SiteSettingsTagListActivity extends BaseAppCompatActivity
                 }
                 break;
             case REMOVE_TERM:
+                hideProgressDialog();
+                hideDetailFragment();
+                if (event.isError()) {
+                    ToastUtils.showToast(this, R.string.deleting_tag_failed);
+                } else {
+                    loadTags();
+                }
+                break;
             case UPDATE_TERM:
                 hideProgressDialog();
                 hideDetailFragment();

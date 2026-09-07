@@ -310,8 +310,6 @@ Language: zh_CN
     <string name="he_support_status_unknown">未知</string>
     <string name="he_support_status_closed">已关闭</string>
     <string name="he_support_status_solved">已解决</string>
-    <string name="he_support_status_waiting_for_user">正在等待用户</string>
-    <string name="he_support_status_waiting_for_support">正在等待支持人员</string>
     <string name="he_support_select_attachments">选择附件</string>
     <string name="he_support_download_attachment">下载附件</string>
     <string name="he_support_include_logs_description">包含日志可以帮助我们的团队调查问题。 日志可能包含最近的应用程序活动。</string>
@@ -3829,7 +3827,6 @@ Language: zh_CN
     <string name="reader_toast_err_removing_tag">无法删除此标签</string>
     <string name="reader_toast_err_adding_tag">无法添加此标签</string>
     <string name="reader_title_applog">程序日志</string>
-    <string name="fatal_db_error">创建程序数据库时出错，请重新安装程序.</string>
     <string name="error_refresh_media">此时无法刷新媒体</string>
     <string name="wordpress_blog">WordPress 博客</string>
     <string name="local_changes">本地修改</string>

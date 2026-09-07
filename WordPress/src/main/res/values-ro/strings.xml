@@ -313,8 +313,6 @@ Language: ro
     <string name="he_support_status_unknown">Necunoscută</string>
     <string name="he_support_status_closed">Închisă</string>
     <string name="he_support_status_solved">Rezolvată</string>
-    <string name="he_support_status_waiting_for_support">Așteaptă suport</string>
-    <string name="he_support_status_waiting_for_user">Așteaptă utilizatorul</string>
     <string name="he_support_select_attachments">Selectează atașamente</string>
     <string name="he_support_download_attachment">Descarcă atașamente</string>
     <string name="he_support_include_logs_description">Includerea jurnalelor poate ajuta echipa noastră să investigheze problemele. Jurnalele pot să conțină activități recente din aplicație.</string>
@@ -3853,7 +3851,6 @@ Language: ro
     <string name="new_media">Media nouă</string>
     <string name="local_changes">Schimbări locale</string>
     <string name="wordpress_blog">Blog WordPress</string>
-    <string name="fatal_db_error">A apărut o eroare în timp ce se creea baza de date a aplicației. Încearcă reinstalarea ei.</string>
     <string name="page_settings">Setări pagină</string>
     <string name="local_draft">Ciornă locală</string>
     <string name="error_refresh_media">Media nu a putut fi reîmprospătată în acest moment</string>
