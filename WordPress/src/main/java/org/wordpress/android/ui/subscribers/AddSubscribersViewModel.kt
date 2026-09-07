@@ -73,7 +73,7 @@ class AddSubscribersViewModel @Inject constructor(
         }
     }
 
-    private suspend fun addSubscribers(emails: List<String>) = runCatching {
+    private suspend fun addSubscribers(emails: List<String>): Result<Boolean> = runCatching {
         withContext(ioDispatcher) {
             val params = AddSubscribersParams(
                 emails = emails
@@ -111,5 +111,5 @@ class AddSubscribersViewModel @Inject constructor(
                 _showProgress.value = false
             }
         }
-    }
+    }.getOrElse { Result.failure(it) }
 }
