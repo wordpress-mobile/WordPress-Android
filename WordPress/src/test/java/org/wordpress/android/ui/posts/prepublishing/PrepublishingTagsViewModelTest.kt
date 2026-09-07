@@ -10,6 +10,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doNothing
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -64,6 +65,29 @@ class PrepublishingTagsViewModelTest : BaseUnitTest() {
         viewModel.start(editPostRepository)
 
         assertThat(uiState?.selectedTags).containsExactly("news", "tech")
+    }
+
+    @Test
+    fun `hidden duplicate initial tags are reconciled into the post on start`() = test {
+        whenever(getPostTagsUseCase.getTags(any())).thenReturn("news,News,tech")
+        val captor = ArgumentCaptor.forClass(String::class.java)
+        doNothing().whenever(updatePostTagsUseCase).updateTags(captor.capture(), any())
+
+        viewModel.start(editPostRepository)
+        advanceUntilIdle()
+
+        // The stored post carried the hidden duplicate "News"; it is rewritten to match the chips.
+        verify(updatePostTagsUseCase, times(1)).updateTags(eq("news,tech"), any())
+    }
+
+    @Test
+    fun `initial tags without duplicates are not rewritten on start`() = test {
+        whenever(getPostTagsUseCase.getTags(any())).thenReturn("news,tech")
+
+        viewModel.start(editPostRepository)
+        advanceUntilIdle()
+
+        verify(updatePostTagsUseCase, never()).updateTags(any(), any())
     }
 
     @Test

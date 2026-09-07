@@ -64,12 +64,20 @@ class PrepublishingTagsViewModel @Inject constructor(
 
         // De-duplicate case-insensitively so a post with repeated tags (e.g. "news, News") does not
         // render as indistinguishable duplicate chips whose X buttons would both remove every match.
-        initialTags = parseTags(getPostTagsUseCase.getTags(editPostRepository))
-            .distinctBy { it.lowercase(Locale.getDefault()) }
+        val rawTags = parseTags(getPostTagsUseCase.getTags(editPostRepository))
+        initialTags = rawTags.distinctBy { it.lowercase(Locale.getDefault()) }
         selectedTags.clear()
         selectedTags.addAll(initialTags)
 
-        updateUiState()
+        if (rawTags.size != initialTags.size) {
+            // De-duplication dropped hidden duplicates the post still stores even though the UI now
+            // shows a single chip. Reconcile the post with what the user sees so the hidden
+            // duplicates cannot survive to publish even when the user makes no further edit;
+            // wereTagsChanged() compares de-duplicated sets and could not otherwise detect them.
+            persistAndRefresh()
+        } else {
+            updateUiState()
+        }
     }
 
     fun onSiteTagsChanged(siteTags: List<String>) {

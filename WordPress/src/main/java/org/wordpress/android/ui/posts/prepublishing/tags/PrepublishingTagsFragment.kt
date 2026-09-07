@@ -9,6 +9,10 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.apache.commons.text.StringEscapeUtils
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -32,7 +36,9 @@ import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.viewmodel.observeEvent
+import org.wordpress.android.modules.BG_THREAD
 import javax.inject.Inject
+import javax.inject.Named
 
 class PrepublishingTagsFragment : Fragment(R.layout.prepublishing_tags_fragment) {
     @Inject
@@ -46,6 +52,10 @@ class PrepublishingTagsFragment : Fragment(R.layout.prepublishing_tags_fragment)
 
     @Inject
     lateinit var taxonomyStore: TaxonomyStore
+
+    @Inject
+    @Named(BG_THREAD)
+    lateinit var bgDispatcher: CoroutineDispatcher
 
     private lateinit var viewModel: PrepublishingTagsViewModel
     private lateinit var parentViewModel: PrepublishingViewModel
@@ -146,7 +156,14 @@ class PrepublishingTagsFragment : Fragment(R.layout.prepublishing_tags_fragment)
             }
         }
 
-        viewModel.start(getEditPostRepository(), getSiteTagNames())
+        // Resolve the repository on the main thread (its config-change nullability is checked here)
+        // then load the site tags off the main thread to avoid a DB read + HTML unescape on the UI
+        // thread when the sheet opens.
+        val editPostRepository = getEditPostRepository()
+        viewLifecycleOwner.lifecycleScope.launch {
+            val siteTags = withContext(bgDispatcher) { getSiteTagNames() }
+            viewModel.start(editPostRepository, siteTags)
+        }
     }
 
     private fun getSiteTagNames(): List<String> =
@@ -172,7 +189,10 @@ class PrepublishingTagsFragment : Fragment(R.layout.prepublishing_tags_fragment)
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onTaxonomyChanged(event: OnTaxonomyChanged) {
         if (event.causeOfChange == TaxonomyAction.FETCH_TAGS) {
-            viewModel.onSiteTagsChanged(getSiteTagNames())
+            viewLifecycleOwner.lifecycleScope.launch {
+                val siteTags = withContext(bgDispatcher) { getSiteTagNames() }
+                viewModel.onSiteTagsChanged(siteTags)
+            }
         }
     }
 
