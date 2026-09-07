@@ -2,6 +2,7 @@ package org.wordpress.android.ui.domains
 
 import uniffi.wp_api.SiteDomain
 import uniffi.wp_api.SiteDomainType
+import uniffi.wp_api.WpDateString
 
 /**
  * Builds a [SiteDomain] for tests, exposing the fields the domains dashboard
@@ -25,7 +26,7 @@ fun testSiteDomain(
     wpcomDomain = wpcomDomain,
     autoRenewing = null,
     expired = null,
-    expiry = expiry,
+    expiry = expiry?.let { WpDateString(it) },
     expirySoon = expirySoon,
     hasRegistration = hasRegistration,
     hasPrivateRegistration = null,

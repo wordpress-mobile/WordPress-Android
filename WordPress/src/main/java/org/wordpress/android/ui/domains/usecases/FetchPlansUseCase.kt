@@ -6,7 +6,6 @@ import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
-import rs.wordpress.api.kotlin.toLogErrorString
 import uniffi.wp_api.ProductId
 import uniffi.wp_api.SitePlan
 import uniffi.wp_api.SitePlansParams
@@ -51,8 +50,7 @@ class FetchPlansUseCase @Inject constructor(
             else -> {
                 AppLog.e(
                     AppLog.T.API,
-                    "An error occurred while fetching site plans: " +
-                        result.toLogErrorString()
+                    "An error occurred while fetching site plans"
                 )
                 SitePlansResult.Error
             }

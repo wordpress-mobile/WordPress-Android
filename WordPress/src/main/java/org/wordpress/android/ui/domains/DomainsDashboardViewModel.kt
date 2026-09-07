@@ -207,13 +207,13 @@ class DomainsDashboardViewModel @Inject constructor(
                     UiStringText(
                         htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                             R.string.domains_site_domain_expires_soon,
-                            it.expiry.orEmpty()
+                            it.expiry?.value.orEmpty()
                         )
                     )
                 } else {
                     UiStringResWithParams(
                         R.string.domains_site_domain_expires,
-                        listOf(UiStringText(it.expiry.orEmpty()))
+                        listOf(UiStringText(it.expiry?.value.orEmpty()))
                     )
                 },
                 allDomainItem?.let {
