@@ -13,7 +13,6 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.PhaseThreeBlogPostLinkConfig
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
@@ -30,9 +29,6 @@ class JetpackFeatureCardHelperTest {
     @Mock
     lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
 
-    @Mock
-    lateinit var phaseThreeBlogPostLinkConfig: PhaseThreeBlogPostLinkConfig
-
     private lateinit var helper: JetpackFeatureCardHelper
 
     @Before
@@ -41,8 +37,7 @@ class JetpackFeatureCardHelperTest {
             analyticsTrackerWrapper,
             appPrefsWrapper,
             buildConfigWrapper,
-            dateTimeUtilsWrapper,
-            phaseThreeBlogPostLinkConfig
+            dateTimeUtilsWrapper
         )
     }
 

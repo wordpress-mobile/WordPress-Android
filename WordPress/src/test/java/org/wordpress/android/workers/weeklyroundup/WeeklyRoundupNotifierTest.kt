@@ -21,10 +21,10 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NotificationPushIds.WEEKLY_ROUNDUP_NOTIFICATION_ID
 import org.wordpress.android.push.NotificationType.WEEKLY_ROUNDUP
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -66,7 +66,7 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
     }
     private val statsUtils: StatsUtils = mock()
 
-    private val jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper = mock()
+    private val buildConfigWrapper: BuildConfigWrapper = mock()
 
     @Before
     fun setUp() {
@@ -81,7 +81,7 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
             weeklyRoundupRepository,
             appPrefs,
             statsUtils,
-            jetpackFeatureRemovalHelper
+            buildConfigWrapper
         )
     }
 
@@ -104,7 +104,7 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
     fun `should show notification when the user is logged in and has sites`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(siteStore.hasSitesAccessedViaWPComRest()).thenReturn(true)
-        whenever(jetpackFeatureRemovalHelper.shouldShowNotifications()).thenReturn(true)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
 
         assertThat(weeklyRoundupNotifier.shouldShowNotifications()).isTrue
     }
@@ -113,7 +113,7 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
     fun `should not show notification when the user is in jetpack feature removal phase`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(siteStore.hasSitesAccessedViaWPComRest()).thenReturn(true)
-        whenever(jetpackFeatureRemovalHelper.shouldShowNotifications()).thenReturn(false)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
 
         assertThat(weeklyRoundupNotifier.shouldShowNotifications()).isFalse()
     }
