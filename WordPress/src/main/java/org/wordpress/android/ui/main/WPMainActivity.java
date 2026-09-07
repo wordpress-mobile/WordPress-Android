@@ -374,13 +374,11 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                                 (SiteModel) getIntent().getSerializableExtra(SITE), mAccountStore.hasAccessToken());
                     }
                 }
+            } else if (mIsMagicLinkLogin) {
+                authTokenToSet = getAuthToken();
             } else {
-                if (mIsMagicLinkLogin) {
-                    authTokenToSet = getAuthToken();
-                } else {
-                    showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
-                    finish();
-                }
+                showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
+                finish();
             }
             checkDismissNotification();
             checkTrackAnalyticsEvent();

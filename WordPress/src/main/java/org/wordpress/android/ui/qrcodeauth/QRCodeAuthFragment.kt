@@ -39,9 +39,9 @@ import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Content
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Error
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Loading
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Scanning
+import org.wordpress.android.ui.compose.components.LoadingState
 import org.wordpress.android.ui.qrcodeauth.compose.state.ContentState
 import org.wordpress.android.ui.qrcodeauth.compose.state.ErrorState
-import org.wordpress.android.ui.qrcodeauth.compose.state.LoadingState
 import org.wordpress.android.viewmodel.observeEvent
 
 @AndroidEntryPoint

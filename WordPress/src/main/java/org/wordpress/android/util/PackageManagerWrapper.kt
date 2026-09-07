@@ -2,9 +2,11 @@ package org.wordpress.android.util
 
 import android.content.ComponentName
 import android.content.Intent
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.extensions.getActivityInfoCompat
+import org.wordpress.android.util.extensions.getPackageInfoCompat
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,6 +17,9 @@ class PackageManagerWrapper @Inject constructor(
 ) {
     fun isPackageInstalled(packageName: String) =
         contextProvider.getContext().packageManager.getLaunchIntentForPackage(packageName) != null
+
+    fun getPackageInfo(packageName: String, flags: Int = 0): PackageInfo? =
+        contextProvider.getContext().packageManager.getPackageInfoCompat(packageName, flags)
 
     fun disableComponentEnabledSetting(name: String) {
         contextProvider.getContext().packageManager.setComponentEnabledSetting(

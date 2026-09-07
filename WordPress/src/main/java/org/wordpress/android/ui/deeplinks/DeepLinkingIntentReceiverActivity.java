@@ -62,11 +62,10 @@ public class DeepLinkingIntentReceiverActivity extends BaseAppCompatActivity {
         mJetpackFullScreenViewModel = new ViewModelProvider(this).get(JetpackFeatureFullScreenOverlayViewModel.class);
         setupObservers();
 
-        String action = getIntent().getAction();
         Uri data = getIntent().getData();
 
         mViewModel.start(
-                action,
+                getIntent().getAction(),
                 (data == null) ? null : new UriWrapper(data),
                 extractEntryPoint(getIntent()),
                 savedInstanceState);
