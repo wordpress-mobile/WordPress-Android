@@ -17,6 +17,7 @@ import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistr
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.FREE_DOMAIN_WITH_ANNUAL_PLAN
+import org.wordpress.android.ui.domains.usecases.CreateCartResult
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -126,7 +127,6 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     override fun onCleared() {
         debouncer.shutdown()
-        createCartUseCase.clear()
         super.onCleared()
     }
 
@@ -351,7 +351,7 @@ class DomainSuggestionsViewModel @Inject constructor(
 
         showLoadingButton(true)
 
-        val event = createCartUseCase.execute(
+        val result = createCartUseCase.execute(
             site,
             selectedSuggestion.productId,
             selectedSuggestion.domainName,
@@ -361,15 +361,18 @@ class DomainSuggestionsViewModel @Inject constructor(
 
         showLoadingButton(false)
 
-        if (event.isError) {
-            AppLog.e(T.DOMAIN_REGISTRATION, "Failed cart creation: ${event.error.message}")
-            // TODO Handle failed cart creation
-        } else {
-            AppLog.d(T.DOMAIN_REGISTRATION, "Successful cart creation: ${event.cartDetails}")
-            if (domainRegistrationPurpose == FREE_DOMAIN_WITH_ANNUAL_PLAN) {
-                openPlans(selectedSuggestion)
-            } else {
-                selectDomain(selectedSuggestion)
+        when (result) {
+            is CreateCartResult.Error -> {
+                AppLog.e(T.DOMAIN_REGISTRATION, "Failed cart creation")
+                // TODO Handle failed cart creation
+            }
+            is CreateCartResult.Success -> {
+                AppLog.d(T.DOMAIN_REGISTRATION, "Successful cart creation")
+                if (domainRegistrationPurpose == FREE_DOMAIN_WITH_ANNUAL_PLAN) {
+                    openPlans(selectedSuggestion)
+                } else {
+                    selectDomain(selectedSuggestion)
+                }
             }
         }
     }

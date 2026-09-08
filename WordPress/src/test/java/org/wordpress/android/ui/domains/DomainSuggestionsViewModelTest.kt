@@ -18,14 +18,13 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.TransactionsStore.OnShoppingCartCreated
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
+import org.wordpress.android.ui.domains.usecases.CreateCartResult
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.util.helpers.Debouncer
 import rs.wordpress.api.kotlin.WpComApiClient
@@ -511,7 +510,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     fun `clicking select domain button for purchase calls cart creation use case and emits selected domain`() = test {
         mockResponses(productsResponse(), suggestionsResponse())
         whenever(createCartUseCase.execute(site, DUMMY_PRODUCT_ID, DUMMY_DOMAIN_NAME, true, false))
-            .thenReturn(dummySuccessfulOnShoppingCartCreated)
+            .thenReturn(CreateCartResult.Success)
 
         viewModel.start(site, DOMAIN_PURCHASE)
         viewModel.onDomainSuggestionSelected(dummySelectedDomainSuggestionItem)
@@ -526,14 +525,6 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     companion object {
         const val DUMMY_PRODUCT_ID = 1
         const val DUMMY_DOMAIN_NAME = "domainname.com"
-
-        val dummySuccessfulOnShoppingCartCreated = OnShoppingCartCreated(
-            CreateShoppingCartResponse(
-                1,
-                "dummy_cart_key",
-                emptyList()
-            )
-        )
 
         val dummySelectedDomainSuggestionItem = DomainSuggestionItem(
             domainName = DUMMY_DOMAIN_NAME,

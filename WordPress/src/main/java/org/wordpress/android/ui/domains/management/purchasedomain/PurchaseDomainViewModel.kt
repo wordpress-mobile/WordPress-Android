@@ -16,6 +16,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
+import org.wordpress.android.ui.domains.usecases.CreateCartResult
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -85,7 +86,7 @@ class PurchaseDomainViewModel @AssistedInject constructor(
     private fun createCart(site: SiteModel?, productId: Int, domainName: String, supportsPrivacy: Boolean) = launch {
         _uiStateFlow.update { if (site == null) UiState.SubmittingJustDomainCart else UiState.SubmittingSiteDomainCart }
 
-        val event = createCartUseCase.execute(
+        val result = createCartUseCase.execute(
             site,
             productId,
             domainName,
@@ -93,21 +94,22 @@ class PurchaseDomainViewModel @AssistedInject constructor(
             false
         )
 
-        if (event.isError) {
-            _uiStateFlow.update { UiState.ErrorSubmittingCart }
-        } else {
-            launch {
-                delay(loadingStateAnimationResetDelay)
-                _uiStateFlow.update { UiState.Initial }
-            }
-            site?.also {
-                if (it.shouldOfferPlans) {
-                    _actionEvents.emit(ActionEvent.GoToExistingSitePlans(domain = domain, siteModel = site))
-                } else {
-                    _actionEvents.emit(ActionEvent.GoToExistingSiteCheckout(domain = domain, siteModel = site))
+        when (result) {
+            is CreateCartResult.Error -> _uiStateFlow.update { UiState.ErrorSubmittingCart }
+            is CreateCartResult.Success -> {
+                launch {
+                    delay(loadingStateAnimationResetDelay)
+                    _uiStateFlow.update { UiState.Initial }
                 }
-            } ?:
-            _actionEvents.emit(ActionEvent.GoToDomainPurchasing(domain = domain))
+                site?.also {
+                    if (it.shouldOfferPlans) {
+                        _actionEvents.emit(ActionEvent.GoToExistingSitePlans(domain = domain, siteModel = site))
+                    } else {
+                        _actionEvents.emit(ActionEvent.GoToExistingSiteCheckout(domain = domain, siteModel = site))
+                    }
+                } ?:
+                _actionEvents.emit(ActionEvent.GoToDomainPurchasing(domain = domain))
+            }
         }
     }
 
