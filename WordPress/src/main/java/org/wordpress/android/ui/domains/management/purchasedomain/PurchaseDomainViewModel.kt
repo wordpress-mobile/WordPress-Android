@@ -68,13 +68,22 @@ class PurchaseDomainViewModel @AssistedInject constructor(
         }
     }
 
-    fun onDomainRegistrationComplete(event: DomainRegistrationCompletedEvent?) = event?.also {
+    /**
+     * Called when the checkout web view closes.
+     *
+     * A null [event] means it was dismissed rather than completed. The checkout
+     * reports a completed purchase and nothing else, so there is no failure to
+     * report here; the screen returns to the state it was opened from.
+     */
+    fun onDomainRegistrationComplete(event: DomainRegistrationCompletedEvent?) {
+        if (event == null) {
+            _uiStateFlow.value = UiState.Initial
+            return
+        }
         launch {
             analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_COMPLETED)
             _actionEvents.emit(ActionEvent.OpenDomainManagement)
         }
-    } ?: run {
-        _uiStateFlow.value = UiState.ErrorInCheckout
     }
 
     private val SiteModel.shouldOfferPlans
@@ -118,7 +127,6 @@ class PurchaseDomainViewModel @AssistedInject constructor(
         object SubmittingJustDomainCart : UiState
         object SubmittingSiteDomainCart : UiState
         object ErrorSubmittingCart : UiState
-        object ErrorInCheckout : UiState
     }
 
     sealed class ActionEvent {

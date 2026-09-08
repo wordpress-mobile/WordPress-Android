@@ -28,7 +28,6 @@ import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomain
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.SubmittingJustDomainCart
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.SubmittingSiteDomainCart
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.ErrorSubmittingCart
-import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.ErrorInCheckout
 import org.wordpress.android.ui.domains.usecases.CreateCartResult
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -120,9 +119,26 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `WHEN check out fails THEN the ui is set to the ErrorInCheckout state`() = test {
+    fun `WHEN check out is dismissed THEN the ui returns to the Initial state`() = test {
+        mockCartCreation()
+        viewModel.onNewDomainSelected()
+
         viewModel.onDomainRegistrationComplete(null)
-        assertThat(viewModel.uiStateFlow.value).isEqualTo(ErrorInCheckout)
+
+        assertThat(viewModel.uiStateFlow.value).isEqualTo(Initial)
+    }
+
+    @Test
+    fun `WHEN check out is dismissed THEN stay on the screen`() = testWithActionEvents { events ->
+        mockCartCreation()
+        viewModel.onNewDomainSelected()
+        advanceUntilIdle()
+        val eventsBefore = events.size
+
+        viewModel.onDomainRegistrationComplete(null)
+        advanceUntilIdle()
+
+        assertThat(events).hasSize(eventsBefore)
     }
 
     @Test

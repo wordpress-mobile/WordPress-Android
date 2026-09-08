@@ -66,7 +66,7 @@ fun PurchaseDomainScreen(
             )
         },
         content = {
-            if (uiState == UiState.ErrorSubmittingCart || uiState == UiState.ErrorInCheckout) {
+            if (uiState == UiState.ErrorSubmittingCart) {
                 ErrorScreen(onButtonTapped = onErrorButtonTapped)
             } else {
                 Box(
