@@ -8,8 +8,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
@@ -22,7 +20,6 @@ import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.RequestMethod
 import uniffi.wp_api.SitePlan
-import uniffi.wp_api.SitePlanCurrentPlanInfo
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -152,17 +149,10 @@ class FetchPlansUseCaseTest : BaseUnitTest() {
             .thenReturn(WpRequestResult.Success(plans) as WpRequestResult<Any>)
     }
 
-    private fun currentPlan(hasDomainCredit: Boolean): SitePlan = mock {
-        on { currentPlan } doReturn SitePlanCurrentPlanInfo(
-            purchaseId = null,
-            userIsOwner = null,
-            hasDomainCredit = hasDomainCredit
-        )
-    }
+    private fun currentPlan(hasDomainCredit: Boolean): SitePlan =
+        testSitePlan(currentPlan = testCurrentPlan(hasDomainCredit))
 
-    private fun nonCurrentPlan(): SitePlan = mock {
-        on { currentPlan } doReturn null
-    }
+    private fun nonCurrentPlan(): SitePlan = testSitePlan()
 
     companion object {
         private const val FREE_PLAN = 1uL

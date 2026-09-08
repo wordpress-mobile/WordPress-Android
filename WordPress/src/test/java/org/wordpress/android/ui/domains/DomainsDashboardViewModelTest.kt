@@ -4,7 +4,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -31,7 +30,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import uniffi.wp_api.SiteDomain
 import uniffi.wp_api.SitePlan
-import uniffi.wp_api.SitePlanCurrentPlanInfo
 
 @ExperimentalCoroutinesApi
 class DomainsDashboardViewModelTest : BaseUnitTest() {
@@ -268,13 +266,8 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
         viewModel.start(site)
     }
 
-    private fun planWithCredit(hasDomainCredit: Boolean): SitePlan = mock {
-        on { currentPlan } doReturn SitePlanCurrentPlanInfo(
-            purchaseId = null,
-            userIsOwner = null,
-            hasDomainCredit = hasDomainCredit
-        )
-    }
+    private fun planWithCredit(hasDomainCredit: Boolean): SitePlan =
+        testSitePlan(currentPlan = testCurrentPlan(hasDomainCredit))
 
     companion object {
         private const val TEST_SITE_ID = 1234L
