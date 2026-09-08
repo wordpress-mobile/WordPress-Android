@@ -362,10 +362,7 @@ class DomainSuggestionsViewModel @Inject constructor(
         showLoadingButton(false)
 
         when (result) {
-            is CreateCartResult.Error -> {
-                AppLog.e(T.DOMAIN_REGISTRATION, "Failed cart creation")
-                // TODO Handle failed cart creation
-            }
+            is CreateCartResult.Error -> AppLog.e(T.DOMAIN_REGISTRATION, "Failed cart creation")
             is CreateCartResult.Success -> {
                 AppLog.d(T.DOMAIN_REGISTRATION, "Successful cart creation")
                 if (domainRegistrationPurpose == FREE_DOMAIN_WITH_ANNUAL_PLAN) {
