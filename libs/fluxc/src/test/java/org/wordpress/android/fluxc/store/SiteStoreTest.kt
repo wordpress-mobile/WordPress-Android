@@ -1,7 +1,5 @@
 package org.wordpress.android.fluxc.store
 
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -22,17 +20,11 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.PostFormatModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SitesModel
-import org.wordpress.android.fluxc.model.asDomainModel
 import org.wordpress.android.fluxc.model.jetpacksocial.JetpackSocialMapper
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.PARSE_ERROR
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordsManager
 import org.wordpress.android.fluxc.network.rest.wpapi.site.SiteWPAPIRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
-import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload
@@ -40,10 +32,8 @@ import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
 import org.wordpress.android.fluxc.persistence.JetpackCPConnectedSitesDao
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
-import org.wordpress.android.fluxc.persistence.domains.DomainDao
 import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao
 import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload
-import org.wordpress.android.fluxc.store.SiteStore.FetchedDomainsPayload
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType.SITE_NAME_INVALID
@@ -70,11 +60,8 @@ class SiteStoreTest {
     @Mock lateinit var privateAtomicCookie: PrivateAtomicCookie
     @Mock lateinit var siteSqlUtils: SiteSqlUtils
     @Mock lateinit var jetpackCPConnectedSitesDao: JetpackCPConnectedSitesDao
-    @Mock lateinit var domainsDao: DomainDao
     @Mock lateinit var jetpackSocialDao: JetpackSocialDao
     @Mock lateinit var jetpackSocialMapper: JetpackSocialMapper
-    @Mock lateinit var domainsSuccessResponse: Response.Success<DomainsResponse>
-    @Mock lateinit var domainsErrorResponse: Response.Error<DomainsResponse>
     private lateinit var siteStore: SiteStore
 
     @Before
@@ -88,7 +75,6 @@ class SiteStoreTest {
             privateAtomicCookie,
             siteSqlUtils,
             jetpackCPConnectedSitesDao,
-            domainsDao,
             jetpackSocialDao,
             jetpackSocialMapper,
             initCoroutineEngine()
@@ -399,67 +385,6 @@ class SiteStoreTest {
         assertThat(onPostFormatsChanged.site).isEqualTo(site)
         assertThat(onPostFormatsChanged.error).isEqualTo(payload.error)
         verifyNoInteractions(siteSqlUtils)
-    }
-
-    @Test
-    fun `fetchSiteDomains from WPCom endpoint`() = test {
-        val site = SiteModel()
-        site.setIsWPCom(true)
-
-        whenever(siteRestClient.fetchSiteDomains(site)).thenReturn(domainsSuccessResponse)
-        whenever(domainsSuccessResponse.data).thenReturn(DomainsResponse(listOf()))
-
-        val onSiteDomainsFetched = siteStore.fetchSiteDomains(site)
-
-        assertThat(onSiteDomainsFetched.domains).isNotNull
-        assertThat(onSiteDomainsFetched.error).isNull()
-    }
-
-    @Test
-    fun `fetchSiteDomains error from WPCom endpoint returns error`() = test {
-        val site = SiteModel()
-        site.setIsWPCom(true)
-
-        whenever(siteRestClient.fetchSiteDomains(site)).thenReturn(domainsErrorResponse)
-        whenever(domainsErrorResponse.error).thenReturn(WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
-
-        val onSiteDomainsFetched = siteStore.fetchSiteDomains(site)
-
-        verifyNoInteractions(domainsDao)
-        assertThat(onSiteDomainsFetched.error).isEqualTo(SiteError(GENERIC_ERROR, null))
-        assertThat(onSiteDomainsFetched).isEqualTo(FetchedDomainsPayload(site, onSiteDomainsFetched.domains))
-    }
-
-    @Test
-    fun `getSiteDomains is backed by DomainsDao`() = test {
-        val siteLocalId = 1234
-        val domainEntity = DomainDao.DomainEntity(
-            siteLocalId = siteLocalId,
-            domain = "example.wordpress.com",
-            primaryDomain = true,
-            wpcomDomain = true
-        )
-
-        whenever(domainsDao.getDomains(siteLocalId)).thenReturn(flowOf(listOf(domainEntity)))
-
-        assertEquals(
-            domainsDao.getDomains(siteLocalId).first().map(DomainDao.DomainEntity::toDomainModel),
-            siteStore.getSiteDomains(siteLocalId).first()
-        )
-    }
-
-    @Test
-    fun `fetchSiteDomains updates stored domains`() = test {
-        val siteLocalId = 1234
-        val site = SiteModel()
-        site.id = siteLocalId
-        val domains = listOf(Domain(domain = "example.wordpress.com", primaryDomain = true, wpcomDomain = true))
-
-        whenever(siteRestClient.fetchSiteDomains(site)).thenReturn(Response.Success(DomainsResponse(domains)))
-
-        siteStore.fetchSiteDomains(site)
-
-        verify(domainsDao).insert(siteLocalId, domains.map(Domain::asDomainModel))
     }
 
     @Test

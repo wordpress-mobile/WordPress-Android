@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
 import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
-import org.wordpress.android.fluxc.persistence.domains.DomainDao
 import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao
 import javax.inject.Singleton
 
@@ -68,12 +67,6 @@ class DatabaseModule {
     @Provides
     fun provideRemoteConfigDao(wpAndroidDatabase: WPAndroidDatabase): RemoteConfigDao {
         return wpAndroidDatabase.remoteConfigDao()
-    }
-
-    @Singleton
-    @Provides
-    fun provideDomainsDao(wpAndroidDatabase: WPAndroidDatabase): DomainDao {
-        return wpAndroidDatabase.domainDao()
     }
 
     @Singleton
