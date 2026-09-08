@@ -48,6 +48,7 @@ import uniffi.wp_api.MediaDeleteResponse
 import uniffi.wp_api.MediaDescriptionWithEditContext
 import uniffi.wp_api.MediaDetails
 import uniffi.wp_api.MediaDetailsPayload
+import uniffi.wp_api.WpDateString
 import uniffi.wp_api.MediaRequestCreateResponse
 import uniffi.wp_api.MediaRequestDeleteResponse
 import uniffi.wp_api.MediaRequestListWithEditContextResponse
@@ -739,12 +740,12 @@ class MediaRsApiRestClientTest {
             postId = null,
             mimeType = "image/jpeg",
             mediaType = MediaType.Image,
-            date = "2023-01-01T00:00:00",
+            date = WpDateString("2023-01-01T00:00:00"),
             dateGmt = Date(),
             author = 1L,
             mediaDetails = mock<MediaDetails>(),
             guid = createTestPostGuid(),
-            modified = "2023-01-01T00:00:00",
+            modified = WpDateString("2023-01-01T00:00:00"),
             modifiedGmt = Date(),
             slug = "test-media-slug",
             status = MediaStatus.Inherit,
@@ -799,7 +800,7 @@ class MediaRsApiRestClientTest {
         alt = this@toMediaModel.altText
         postId = this@toMediaModel.postId ?: 0
         mimeType = this@toMediaModel.mimeType
-        uploadDate = this@toMediaModel.date
+        uploadDate = this@toMediaModel.date.value
         authorId = this@toMediaModel.author
         uploadState = MediaUploadState.UPLOADED.toString()
 

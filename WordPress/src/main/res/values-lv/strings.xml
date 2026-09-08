@@ -3359,7 +3359,6 @@ Language: lv
     <string name="local_changes">Vietējās izmaiņas</string>
     <string name="wordpress_blog">WordPress emuārs</string>
     <string name="error_refresh_media">Medijus šobrīd nevar atsvaidzināt</string>
-    <string name="fatal_db_error">Veidojot lietotņu datu bāzi, radās kļūda. Mēģiniet pārinstalēt lietotni.</string>
     <string name="reader_title_applog">Lietojumprogrammu žurnāls</string>
     <string name="select_categories">Atlasiet kategorijas</string>
     <string name="connection_error">Savienojuma kļūda</string>

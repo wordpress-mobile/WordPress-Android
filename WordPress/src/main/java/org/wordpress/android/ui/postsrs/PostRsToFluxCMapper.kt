@@ -37,10 +37,11 @@ class PostRsToFluxCMapper @Inject constructor(
                 post.content.raw?.takeIf { it.isNotBlank() }
                     ?: post.content.rendered
             )
-            setExcerpt(
-                post.excerpt?.raw?.takeIf { it.isNotBlank() }
-                    ?: post.excerpt?.rendered ?: ""
-            )
+            // Only `raw` is the author's excerpt. `rendered` is WordPress's auto-generated
+            // summary of the content when no excerpt is set, so falling back to it would save
+            // an excerpt the author never wrote (CMM-2392). Edit context always returns `raw`,
+            // which means an empty value is a real one.
+            setExcerpt(post.excerpt?.raw ?: "")
 
             setStatus(mapStatus(post.status))
             setLink(post.link)

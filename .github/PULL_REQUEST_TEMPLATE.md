@@ -1,3 +1,9 @@
+## TL;DR
+<!--
+A short, one or two sentence summary of what this PR does and why it matters.
+⚠️ This section MUST be written by a human.
+-->
+
 ## Description
 <!-- Describe the changes, why they are needed, and how they address the issue -->
 

@@ -53,8 +53,6 @@ class TermSelectionActivity : BaseAppCompatActivity() {
                         viewModel::onTermToggled,
                     onSearchQueryChanged =
                         viewModel::onSearchQueryChanged,
-                    onLoadMore =
-                        viewModel::onLoadMore,
                     onAddTermClicked =
                         viewModel::onAddTermClicked,
                     onAddDialogDismissed =

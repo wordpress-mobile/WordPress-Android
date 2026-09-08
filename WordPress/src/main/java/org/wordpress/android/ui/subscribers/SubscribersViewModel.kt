@@ -207,9 +207,9 @@ class SubscribersViewModel @Inject constructor(
                     weight = .6f,
                 ),
                 DataViewItemField(
-                    value = dateFormatWrapper
-                        .getDateInstance()
-                        .format(subscriber.dateSubscribed),
+                    value = subscriber.dateSubscribed?.let {
+                        dateFormatWrapper.getDateInstance().format(it)
+                    }.orEmpty(),
                     valueType = DataViewFieldType.DATE,
                     weight = .4f,
                 ),

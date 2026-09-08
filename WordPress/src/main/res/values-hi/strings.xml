@@ -277,7 +277,6 @@ Language: hi_IN
     <string name="local_draft">स्थानीय प्रारूप</string>
     <string name="file_error_create">मीडिया अपलोड करने के लिए अस्थायी फ़ाइल नहीं बनाया जा सका. आपके डिवाइस पर पर्याप्त खाली स्थान है सुनिश्चित करें.</string>
     <string name="file_not_found">अपलोड करने के लिए मीडिया फाइल नहीं मिल सका. उसे हटाया या स्थानांतरित किया गया?</string>
-    <string name="fatal_db_error">एप्लिकेशन बनाते हुए त्रुटि हुई. एप्लिकेशन को फिर से इनस्टॉल करने का प्रयास करें.</string>
     <string name="reader_title_applog">एप्लीकेशन लॉग</string>
     <string name="remove_account">ब्लॉग हटाये</string>
     <string name="delete_post">पोस्ट हटाये?</string>

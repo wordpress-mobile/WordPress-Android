@@ -94,7 +94,6 @@ sealed class MySiteCardAndItem(open val type: Type) {
             val onHideMenuItemClick: ListItemInteraction,
             val onLearnMoreClick: ListItemInteraction,
             val onMoreMenuClick: ListItemInteraction,
-            val learnMoreUrl: String?,
         ) : Card(JETPACK_FEATURE_CARD)
 
         data class JetpackInstallFullPluginCard(

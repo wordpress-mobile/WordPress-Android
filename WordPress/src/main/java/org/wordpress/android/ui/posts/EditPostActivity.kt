@@ -132,7 +132,6 @@ import org.wordpress.android.ui.Shortcut
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION
 import org.wordpress.android.ui.history.HistoryListItem.Revision
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
@@ -399,7 +398,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     @Inject lateinit var bloggingPromptsStore: BloggingPromptsStore
 
-    @Inject lateinit var jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
 
     @Inject lateinit var contactSupportFeatureConfig: ContactSupportFeatureConfig
 
@@ -1533,7 +1531,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         if (helpMenuItem != null) {
             // Support section will be disabled in WordPress app when Jetpack-powered features are removed.
             // Therefore, we have to update the Help menu item accordingly.
-            val showHelpAndSupport = jetpackFeatureRemovalHelper.shouldShowHelpAndSupportOnEditor()
+            val showHelpAndSupport = buildConfigWrapper.isJetpackApp
             val helpMenuTitle = if (showHelpAndSupport) R.string.help_and_support else R.string.help
             helpMenuItem.setTitle(helpMenuTitle)
             if (editorFragment is GutenbergEditorFragment && showMenuItems) {
@@ -2442,7 +2440,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 isNewPost,
                 gutenbergWebViewAuthorizationData,
                 gutenbergPropsBuilder,
-                jetpackFeatureRemovalHelper.shouldShowJetpackPoweredEditorFeatures()
+                buildConfigWrapper.isJetpackApp
             )
         }
 
@@ -2502,8 +2500,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             val shouldUseFastImage = !siteModel.isPrivate && !siteModel.isPrivateWPComAtomic
             val hostAppNamespace = if (buildConfigWrapper.isJetpackApp) "Jetpack" else "WordPress"
 
-            // Disable Jetpack-powered editor features in WordPress app based on Jetpack Features Removal Phase helper
-            val jetpackFeaturesRemoved = !jetpackFeatureRemovalHelper.shouldShowJetpackPoweredEditorFeatures()
+            // The WordPress app does not ship the Jetpack-powered editor features
+            val jetpackFeaturesRemoved = !buildConfigWrapper.isJetpackApp
             if (jetpackFeaturesRemoved) {
                 return GutenbergPropsBuilder(
                     enableContactInfoBlock = false,
@@ -2755,8 +2753,15 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 mediaId, postRepository
             ) { _: PostImmutableModel? ->
              }
-        } else if (editPostSettingsFragment != null) {
-            editPostSettingsFragment?.updateFeaturedImage(mediaId, imagePicked)
+        } else {
+            // The post settings screen may not be showing (e.g. the image was set from the
+            // pre-publish sheet), so fall back to writing the id ourselves. Either way the editor is
+            // synced below via sendToJSFeaturedImageId.
+            if (editPostSettingsFragment != null) {
+                editPostSettingsFragment?.updateFeaturedImage(mediaId, imagePicked)
+            } else {
+                updateFeaturedImageUseCase.updateFeaturedImage(mediaId, editPostRepository) { }
+            }
         }
         if (editorFragment is GutenbergEditorFragment) {
             (editorFragment as GutenbergEditorFragment).sendToJSFeaturedImageId(mediaId.toInt())
@@ -3882,6 +3887,14 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     // EditorDataProvider methods
     override fun getEditPostRepository() = editPostRepository
     override fun getSite() = siteModel
+    override fun syncFeaturedImageIdToEditor() {
+        val featuredImageId = editPostRepository.featuredImageId
+        editorFragment?.setFeaturedImageId(featuredImageId)
+        // setFeaturedImageId only stores the id; push it to the JS editor so the featured image
+        // block isn't left showing a stale image after a set/remove from the pre-publish sheet.
+        (editorFragment as? GutenbergEditorFragment)?.sendToJSFeaturedImageId(featuredImageId.toInt())
+    }
+    override fun supportsFeaturedImageEditing() = true
 
     override fun onMenuOpened(featureId: Int, menu: Menu): Boolean {
         // This is a workaround for bag discovered on Chromebooks, where Enter key will not work in the toolbar menu

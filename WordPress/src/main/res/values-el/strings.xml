@@ -1023,7 +1023,6 @@ Language: el_GR
     <string name="file_error_create">Αδυναμία δημιουργίας προσωρινού αρχείου για μεταφόρτωση πολυμέσων. Βεβαιωθείτε ότι υπάρχει αρκετός ελεύθερος χώρος στη συσκευή σας.</string>
     <string name="http_authorization_required" a8c-src-lib="module:login">Απαιτείται εξουσιοδότηση</string>
     <string name="new_media">Νέο πολυμέσο</string>
-    <string name="fatal_db_error">Προέκυψε σφάλμα κατά τη δημιουργία της βάσης δεδομένων της εφαρμογής. Δοκιμάστε να την εγκαταστήσετε ξανά.</string>
     <string name="reader_title_applog">Αρχείο καταγραφής εφαρμογής</string>
     <string name="reader_toast_err_adding_tag">Αδυναμία προσθήκης αυτής της ετικέτας</string>
     <string name="reader_toast_err_removing_tag">Αδυναμία αφαίρεσης αυτής της ετικέτας</string>

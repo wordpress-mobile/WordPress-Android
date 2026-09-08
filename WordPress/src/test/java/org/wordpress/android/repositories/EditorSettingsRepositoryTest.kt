@@ -23,6 +23,7 @@ import uniffi.wp_api.ApiRootRequestGetResponse
 import uniffi.wp_api.ApiUrlResolver
 import uniffi.wp_api.AutoDiscoveryAttemptSuccess
 import uniffi.wp_api.DiscoveredAuthenticationMechanism
+import uniffi.wp_api.AutoDiscoveryAttemptFailure
 import uniffi.wp_api.ParseUrlException
 import uniffi.wp_api.ThemeAuthor
 import uniffi.wp_api.ThemeAuthorUri
@@ -270,8 +271,8 @@ class EditorSettingsRepositoryTest : BaseUnitTest() {
             }
             whenever(wpLoginClient.apiDiscovery(atomicSite.url))
                 .thenReturn(
-                    ApiDiscoveryResult.FailureParseSiteUrl(
-                        ParseUrlException.Generic("")
+                    ApiDiscoveryResult.Failure(
+                        AutoDiscoveryAttemptFailure.ParseSiteUrl(ParseUrlException.Generic(""))
                     )
                 )
             whenever(themeRepository.fetchCurrentTheme(atomicSite))
@@ -390,8 +391,8 @@ class EditorSettingsRepositoryTest : BaseUnitTest() {
     private suspend fun mockDiscoveryFailure(siteUrl: String) {
         whenever(wpLoginClient.apiDiscovery(siteUrl))
             .thenReturn(
-                ApiDiscoveryResult.FailureParseSiteUrl(
-                    ParseUrlException.Generic("")
+                ApiDiscoveryResult.Failure(
+                    AutoDiscoveryAttemptFailure.ParseSiteUrl(ParseUrlException.Generic(""))
                 )
             )
     }

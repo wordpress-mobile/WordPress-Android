@@ -150,7 +150,6 @@ Language: gd_GB
     <string name="new_media">Meadhan ùr</string>
     <string name="local_changes">Atharraichean ionadail</string>
     <string name="wordpress_blog">Bloga WordPress</string>
-    <string name="fatal_db_error">Thachair mearachd fhad ’s a bha sinn a’ cruthachadh stòr-dàta nan aplacaidean. Feuch is stàlaich an aplacaid às ùr.</string>
     <string name="reader_title_applog">Loga na h-aplacaid</string>
     <string name="invalid_site_url_message">Dèan cinnteach gu bheil an URL a chuir thu a-steach dligheach</string>
     <string name="share_link">Co-roinn an ceangal</string>

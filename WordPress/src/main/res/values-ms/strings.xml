@@ -717,7 +717,6 @@ Language: ms
     <string name="category_name">Nama kategori</string>
     <string name="local_changes">Perubahan setempat</string>
     <string name="wordpress_blog">Blog WordPress</string>
-    <string name="fatal_db_error">Ralat berlaku semasa mencipta pangkalan data aplikasi. Cuba memasangnya semula.</string>
     <string name="reader_title_applog">Log aplikasi</string>
     <string name="http_authorization_required" a8c-src-lib="module:login">Kebenaran diperlukan</string>
     <string name="new_post">Kiriman baharu</string>

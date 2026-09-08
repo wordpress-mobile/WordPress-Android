@@ -207,7 +207,6 @@ Language: ar
     <string name="stats_period_today">اليوم</string>
     <string name="stats_period_last_7_days">آخر 7 أيام</string>
     <string name="stats_period_last_30_days">آخر 30 يومًا</string>
-    <string name="stats_period_last_6_months">آخر 6 أشهر</string>
     <string name="stats_period_last_12_months">آخر 12 شهرًا</string>
     <string name="stats_period_custom">مخصص</string>
     <string name="stats_period_selector_content_description">تحديد فترة الإحصاءات</string>
@@ -312,8 +311,6 @@ Language: ar
     <string name="he_support_include_logs_description">يمكن أن يساعد تضمين السجلات فريقنا في التحقيق في المشكلات. قد تحتوي السجلات على نشاط التطبيق الأخير.</string>
     <string name="he_support_download_attachment">تنزيل المرفق</string>
     <string name="he_support_select_attachments">تحديد المرفقات</string>
-    <string name="he_support_status_waiting_for_support">في انتظار الدعم</string>
-    <string name="he_support_status_waiting_for_user">في انتظار المستخدم</string>
     <string name="he_support_status_solved">تم الحل</string>
     <string name="he_support_status_closed">مغلق</string>
     <string name="he_support_status_unknown">غير معروف</string>
@@ -3833,7 +3830,6 @@ Language: ar
     <string name="new_media">وسائط جديدة</string>
     <string name="local_changes">التغيرات المحلية</string>
     <string name="post_settings">إعدادات المقالة</string>
-    <string name="fatal_db_error">حدث خطأ اثناء إنشاء قاعدة بيانات التطبيق. حاول إعادة تنصيب التطبيق.</string>
     <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">المحاذاة الأفقية</string>
     <string name="trash">سلة المهملات</string>
     <string name="comment_status_spam">مزعج</string>

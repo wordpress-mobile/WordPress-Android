@@ -125,7 +125,6 @@ Language: az
     <string name="reader_title_applog">Proqram jurnalı</string>
     <string name="local_changes">Yerli dəyişikliklər</string>
     <string name="wordpress_blog">WordPress bloqu</string>
-    <string name="fatal_db_error">Proqram üçün verilənlər bazası yaradılarkən bir xəta baş verdi. Proqramı təkrar qurmağa cəhd edin.</string>
     <string name="http_authorization_required" a8c-src-lib="module:login">Qeydiyyat gərəklidir</string>
     <string name="view_in_browser">Brauzerdə bax</string>
     <string name="add_new_category">Yeni kateqoriya əlavə et</string>

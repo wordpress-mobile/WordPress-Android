@@ -462,6 +462,7 @@ platform :android do
 
     # Bundle and source map files are copied to a specific folder as part of the build process.
     bundle_source_map_path = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'build', 'react-native-bundle-source-map')
+    UI.user_error!("Missing source maps: #{bundle_source_map_path}") unless File.directory?(bundle_source_map_path)
 
     sentry_upload_sourcemap(
       auth_token: get_required_env('SENTRY_AUTH_TOKEN'),

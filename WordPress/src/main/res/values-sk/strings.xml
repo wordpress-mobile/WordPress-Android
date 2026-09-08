@@ -1266,7 +1266,6 @@ Language: sk
     <string name="trash">Kôš</string>
     <string name="link_enter_url_text">Text odkazu (voliteľný)</string>
     <string name="local_changes">Miestne zmeny</string>
-    <string name="fatal_db_error">Počas vytvárania databázy sa vyskytla chyba. Preinštalujte aplikáciu.</string>
     <string name="media_error_no_permission">Nemáte práva na zobrazenie knižnice súborov</string>
     <string name="new_media">Nový súbor</string>
     <string name="post_not_found">Počas načítania príspevku sa vyskytla chyba. Obnovte príspevky a skúste znova.</string>

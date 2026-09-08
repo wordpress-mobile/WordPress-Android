@@ -20,7 +20,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelperKt;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalTrackingKt;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
@@ -1657,13 +1657,13 @@ public class AppPrefs {
 
     @NonNull private static String getHideJetpackFeatureCardWithPhaseKey() {
         return DeletablePrefKey.SHOULD_HIDE_JETPACK_FEATURE_CARD.name()
-               + JetpackFeatureRemovalHelperKt.JETPACK_REMOVAL_TRACKING_NAME;
+               + JetpackFeatureRemovalTrackingKt.JETPACK_REMOVAL_TRACKING_NAME;
     }
 
     @NonNull
     private static String getJetpackFeatureCardLastShownTimeStampWithPhaseKey() {
         return DeletablePrefKey.JETPACK_FEATURE_CARD_LAST_SHOWN_TIMESTAMP.name()
-               + JetpackFeatureRemovalHelperKt.JETPACK_REMOVAL_TRACKING_NAME;
+               + JetpackFeatureRemovalTrackingKt.JETPACK_REMOVAL_TRACKING_NAME;
     }
 
     public static Boolean getShouldHideJetpackInstallFullPluginCard(int siteId) {

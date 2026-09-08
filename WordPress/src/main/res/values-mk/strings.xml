@@ -88,7 +88,6 @@ Language: mk
     <string name="saving_changes">Зачувување на подесувањата</string>
     <string name="wordpress_blog">WordPress блог</string>
     <string name="select_categories">Избери категории</string>
-    <string name="fatal_db_error">Настана грешка при креирање на базата на податоци за апликацијата. Направи преинсталирање на апликацијата.</string>
     <string name="reader_title_applog">Дневник на апликацијата</string>
     <string name="edit_comment">Измени коментар</string>
     <string name="mnu_comment_approve">Одобри</string>

@@ -48,7 +48,7 @@ public final class SiteSettingsTable {
 
     public static SparseArrayCompat<CategoryModel> getAllCategories() {
         String sqlCommand = sqlSelectAllCategories() + ";";
-        Cursor cursor = WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null);
+        Cursor cursor = WordPress.getWpDB().getDatabase().rawQuery(sqlCommand, null);
         try {
             if (cursor == null || !cursor.moveToFirst() || cursor.getCount() == 0) {
                 return null;
@@ -77,7 +77,7 @@ public final class SiteSettingsTable {
 
         String whereClause = sqlWhere(SiteSettingsModel.ID_COLUMN_NAME, Long.toString(id));
         String sqlCommand = sqlSelectAllSettings() + whereClause + ";";
-        return WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null);
+        return WordPress.getWpDB().getDatabase().rawQuery(sqlCommand, null);
     }
 
     public static void saveCategory(CategoryModel category) {
@@ -86,7 +86,7 @@ public final class SiteSettingsTable {
         }
 
         ContentValues values = category.serializeToDatabase();
-        category.isInLocalTable = WordPress.wpDB.getDatabase().insertWithOnConflict(
+        category.isInLocalTable = WordPress.getWpDB().getDatabase().insertWithOnConflict(
                 CATEGORIES_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1;
     }
 
@@ -106,7 +106,7 @@ public final class SiteSettingsTable {
         }
 
         ContentValues values = settings.serializeToDatabase();
-        settings.isInLocalTable = WordPress.wpDB.getDatabase().insertWithOnConflict(
+        settings.isInLocalTable = WordPress.getWpDB().getDatabase().insertWithOnConflict(
                 SiteSettingsModel.SETTINGS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1;
 
         saveCategories(settings.categories);

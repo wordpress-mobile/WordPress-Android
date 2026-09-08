@@ -18,6 +18,7 @@ import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.CommentContentWithEditContext
 import uniffi.wp_api.CommentStatus
 import uniffi.wp_api.CommentType
+import uniffi.wp_api.WpDateString
 import uniffi.wp_api.CommentWithEditContext
 import uniffi.wp_api.CommentsRequestExecutor
 import uniffi.wp_api.CommentsRequestRetrieveWithEditContextResponse
@@ -302,7 +303,7 @@ class CommentsRsDataSourceTest {
         authorUrl = authorUrl,
         authorUserAgent = "",
         content = CommentContentWithEditContext(raw = contentRaw, rendered = ""),
-        date = "",
+        date = WpDateString(""),
         dateGmt = Date(0),
         link = "",
         parent = 0L,

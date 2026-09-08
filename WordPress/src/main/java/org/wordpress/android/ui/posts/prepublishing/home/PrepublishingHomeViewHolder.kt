@@ -3,8 +3,9 @@ package org.wordpress.android.ui.posts.prepublishing.home
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
+import android.widget.ImageView.ScaleType
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.compose.foundation.clickable
@@ -22,7 +23,8 @@ import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState
-import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ButtonUiState
+import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.FeaturedImageUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.SocialUiState
@@ -90,23 +92,6 @@ sealed class PrepublishingHomeViewHolder(
         }
     }
 
-    class PrepublishingSubmitButtonViewHolder(parentView: ViewGroup, val uiHelpers: UiHelpers) :
-        PrepublishingHomeViewHolder(
-            parentView,
-            R.layout.prepublishing_home_publish_button_list_item
-        ) {
-        private val button: Button = itemView.findViewById(R.id.publish_button)
-
-        override fun onBind(uiState: PrepublishingHomeItemUiState) {
-            uiState as ButtonUiState
-
-            button.text = uiHelpers.getTextOfUiString(itemView.context, uiState.buttonText)
-            button.setOnClickListener {
-                uiState.onButtonClicked?.invoke(uiState.publishPost)
-            }
-        }
-    }
-
     class PrepublishingSocialItemViewHolder(
         parentView: ViewGroup,
         val uiHelpers: UiHelpers,
@@ -161,6 +146,95 @@ sealed class PrepublishingHomeViewHolder(
                     }
                 }
             }
+        }
+    }
+
+    class PrepublishingFeaturedImageViewHolder(
+        parentView: ViewGroup,
+        val uiHelpers: UiHelpers,
+        val imageManager: ImageManager
+    ) : PrepublishingHomeViewHolder(parentView, R.layout.prepublishing_home_featured_image_item) {
+        private val card: View = itemView.findViewById(R.id.featured_image_card)
+        private val placeholder: View = itemView.findViewById(R.id.featured_image_placeholder)
+        private val remoteImage: ImageView = itemView.findViewById(R.id.post_featured_image)
+        private val localImage: ImageView = itemView.findViewById(R.id.post_featured_image_local)
+        private val retryOverlay: View = itemView.findViewById(R.id.featured_image_retry_overlay)
+        private val progressOverlay: View = itemView.findViewById(R.id.featured_image_progress_overlay)
+
+        override fun onBind(uiState: PrepublishingHomeItemUiState) {
+            // Hidden items are filtered out before reaching the adapter, but guard rather than crash
+            // if one ever does.
+            val uiState = uiState as? FeaturedImageUiState.Visible ?: return
+            val state = uiState.featuredImageData.uiState
+            // A remote image (on the server) uses one ImageView, a local upload another, so an empty
+            // view can never cover a loaded image in the FrameLayout.
+            val isRemote = state == FeaturedImageState.REMOTE_IMAGE_LOADING ||
+                    state == FeaturedImageState.REMOTE_IMAGE_SET
+            val isLocalUpload = state == FeaturedImageState.IMAGE_UPLOAD_IN_PROGRESS ||
+                    state == FeaturedImageState.IMAGE_UPLOAD_FAILED
+            val isEmpty = state == FeaturedImageState.IMAGE_EMPTY
+
+            val mediaUri = uiState.featuredImageData.mediaUri
+            val hasMediaUri = !mediaUri.isNullOrEmpty()
+            val showRemoteImage = isRemote && hasMediaUri
+            val showLocalImage = isLocalUpload && hasMediaUri
+
+            with(uiHelpers) {
+                // Fall back to the placeholder when a remote/local image state has no URI to load,
+                // otherwise we'd show a blank ImageView with no indication the image is missing.
+                updateVisibility(placeholder, isEmpty || (!showRemoteImage && !showLocalImage))
+                updateVisibility(remoteImage, showRemoteImage)
+                updateVisibility(localImage, showLocalImage)
+                updateVisibility(retryOverlay, state.retryOverlayVisible)
+                updateVisibility(progressOverlay, state.progressOverlayVisible)
+            }
+
+            when {
+                showRemoteImage -> {
+                    imageManager.cancelRequestAndClearImageView(localImage)
+                    imageManager.load(remoteImage, ImageType.IMAGE, mediaUri.orEmpty(), ScaleType.CENTER_CROP)
+                }
+                showLocalImage ->
+                    imageManager.load(localImage, ImageType.IMAGE, mediaUri.orEmpty(), ScaleType.CENTER_CROP)
+                else -> {
+                    imageManager.cancelRequestAndClearImageView(remoteImage)
+                    imageManager.cancelRequestAndClearImageView(localImage)
+                }
+            }
+
+            card.setOnClickListener { anchor ->
+                when {
+                    isEmpty -> uiState.onSetOrReplaceClicked()
+                    state == FeaturedImageState.IMAGE_UPLOAD_FAILED -> showOptionsMenu(anchor, uiState, retry = true)
+                    else -> showOptionsMenu(anchor, uiState, retry = false)
+                }
+            }
+        }
+
+        private fun showOptionsMenu(anchor: View, uiState: FeaturedImageUiState.Visible, retry: Boolean) {
+            PopupMenu(anchor.context, anchor).apply {
+                if (retry) {
+                    menu.add(0, MENU_RETRY, 0, R.string.post_settings_retry_featured_image)
+                } else {
+                    menu.add(0, MENU_REPLACE, 0, R.string.post_settings_choose_featured_image)
+                }
+                menu.add(0, MENU_REMOVE, 1, R.string.post_settings_remove_featured_image)
+                setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        MENU_REPLACE -> uiState.onSetOrReplaceClicked()
+                        MENU_RETRY -> uiState.onRetryClicked()
+                        MENU_REMOVE -> uiState.onRemoveClicked()
+                    }
+                    true
+                }
+                show()
+            }
+        }
+
+        companion object {
+            private const val MENU_REPLACE = 1
+            private const val MENU_REMOVE = 2
+            private const val MENU_RETRY = 3
         }
     }
 }
