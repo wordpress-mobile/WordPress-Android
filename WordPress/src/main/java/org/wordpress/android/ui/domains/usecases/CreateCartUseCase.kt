@@ -54,7 +54,7 @@ class CreateCartUseCase @Inject constructor(
             )
             return CreateCartResult.Error
         }
-        val cartKey = site?.let { CartKey.Site(it.siteId.toULong()) } ?: CartKey.NoSite
+        val cartKey = cartKeyFor(site)
         val params = createShoppingCartParams(
             domainProductId = domainProductId,
             domainName = domainName,
@@ -75,6 +75,16 @@ class CreateCartUseCase @Inject constructor(
         }
     }
 }
+
+/**
+ * Whose cart this is, which decides the endpoint the cart is created against.
+ *
+ * A null [site] means the domain is being bought before the site that will
+ * carry it exists, which the API serves under `no-site`. The identifier is the
+ * WordPress.com site ID, not the local one.
+ */
+internal fun cartKeyFor(site: SiteModel?): CartKey =
+    site?.let { CartKey.Site(it.siteId.toULong()) } ?: CartKey.NoSite
 
 /**
  * The cart request body: the domain being bought, and the plan it is bundled
