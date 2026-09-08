@@ -593,13 +593,4 @@ object ReaderUtils {
     fun commentExists(blogId: Long, postId: Long, commentId: Long): Boolean {
         return ReaderCommentTable.commentExists(blogId, postId, commentId)
     }
-
-    /**
-     * Self-hosted sites have a site id of 0, but we use -1 to indicate a self-hosted site
-     *
-     * @param authorBlogId site id of the post's author
-     */
-    fun isSelfHosted(authorBlogId: Long): Boolean {
-        return authorBlogId < 1
-    }
 }
