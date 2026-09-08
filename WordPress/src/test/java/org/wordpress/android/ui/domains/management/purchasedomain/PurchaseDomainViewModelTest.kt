@@ -120,7 +120,6 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
 
     @Test
     fun `WHEN check out is dismissed THEN the ui returns to the Initial state`() = test {
-        mockCartCreation()
         viewModel.onNewDomainSelected()
 
         viewModel.onDomainRegistrationComplete(null)
@@ -130,7 +129,6 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
 
     @Test
     fun `WHEN check out is dismissed THEN stay on the screen`() = testWithActionEvents { events ->
-        mockCartCreation()
         viewModel.onNewDomainSelected()
         advanceUntilIdle()
         val eventsBefore = events.size

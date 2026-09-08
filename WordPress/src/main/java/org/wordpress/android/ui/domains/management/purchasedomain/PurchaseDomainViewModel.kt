@@ -71,9 +71,10 @@ class PurchaseDomainViewModel @AssistedInject constructor(
     /**
      * Called when the checkout web view closes.
      *
-     * A null [event] means it was dismissed rather than completed. The checkout
-     * reports a completed purchase and nothing else, so there is no failure to
-     * report here; the screen returns to the state it was opened from.
+     * This screen never asks for the close button, so the only result it can be
+     * handed is a completed purchase. A null [event] therefore means the web
+     * view was dismissed rather than that anything failed, and the screen
+     * returns to the state it was opened from.
      */
     fun onDomainRegistrationComplete(event: DomainRegistrationCompletedEvent?) {
         if (event == null) {
