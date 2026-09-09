@@ -156,13 +156,14 @@ class PrepublishingTagsFragment : Fragment(R.layout.prepublishing_tags_fragment)
             }
         }
 
-        // Resolve the repository on the main thread (its config-change nullability is checked here)
-        // then load the site tags off the main thread to avoid a DB read + HTML unescape on the UI
-        // thread when the sheet opens.
-        val editPostRepository = getEditPostRepository()
+        // Start synchronously so the repository is assigned and the post's own tags (read from the
+        // in-memory post model) are ready before the focused input can commit a tag. Then load the
+        // site-tag suggestions off the main thread to avoid a DB read + HTML unescape on the UI
+        // thread, feeding them in through onSiteTagsChanged once they are available.
+        viewModel.start(getEditPostRepository())
         viewLifecycleOwner.lifecycleScope.launch {
             val siteTags = withContext(bgDispatcher) { getSiteTagNames() }
-            viewModel.start(editPostRepository, siteTags)
+            viewModel.onSiteTagsChanged(siteTags)
         }
     }
 
