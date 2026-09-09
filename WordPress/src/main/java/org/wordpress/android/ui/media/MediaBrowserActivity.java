@@ -62,7 +62,6 @@ import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityNavigator;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper;
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaFilter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
@@ -71,6 +70,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.photopicker.MediaPickerConstants;
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
+import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.PlansConstants;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
@@ -125,7 +125,7 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     @Inject MediaPickerLauncher mMediaPickerLauncher;
     @Inject MediaUtilsWrapper mMediaUtilsWrapper;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
-    @Inject JetpackFeatureRemovalHelper mJetpackFeatureRemovalHelper;
+    @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject ActivityNavigator mActivityNavigator;
     @Inject ApplicationPasswordReauthNotifier mReauthNotifier;
     @Inject LiveData<ConnectionStatus> mConnectionStatus;
@@ -981,7 +981,7 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
                 });
 
         if (mBrowserType.isBrowser() && mSite.isUsingWpComRestApi()
-            && !mJetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) {
+            && mBuildConfigWrapper.isJetpackApp()) {
             popup.getMenu().add(R.string.photo_picker_stock_media).setOnMenuItemClickListener(
                     item -> {
                         doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_STOCK_MEDIA);

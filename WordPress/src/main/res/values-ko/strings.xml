@@ -308,8 +308,6 @@ Language: ko_KR
     <string name="he_support_status_unknown">알 수 없음</string>
     <string name="he_support_status_closed">닫힘</string>
     <string name="he_support_status_solved">해결됨</string>
-    <string name="he_support_status_waiting_for_user">사용자 대기 중</string>
-    <string name="he_support_status_waiting_for_support">지원 대기 중</string>
     <string name="he_support_select_attachments">첨부 파일 선택</string>
     <string name="he_support_download_attachment">첨부 파일 다운로드</string>
     <string name="he_support_include_logs_description">로그를 포함하면 팀에서 문제를 조사하는 데 도움이 될 수 있습니다. 로그에 최근 앱 활동이 포함될 수 있습니다.</string>

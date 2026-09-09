@@ -14,8 +14,6 @@ Language: pt_BR
     <string name="he_support_status_unknown">Desconhecido</string>
     <string name="he_support_status_closed">Encerrado</string>
     <string name="he_support_status_solved">Resolvido</string>
-    <string name="he_support_status_waiting_for_user">Aguardando usuário</string>
-    <string name="he_support_status_waiting_for_support">Aguardando suporte</string>
     <string name="he_support_select_attachments">Selecionar anexos</string>
     <string name="he_support_download_attachment">Fazer download do anexo</string>
     <string name="he_support_include_logs_description">Incluir registros pode ajudar nossa equipe a investigar problemas. Os registros podem conter atividades recentes do aplicativo.</string>

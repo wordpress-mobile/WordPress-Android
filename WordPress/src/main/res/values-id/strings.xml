@@ -305,8 +305,6 @@ Language: id
     <string name="he_support_status_unknown">Tidak diketahui</string>
     <string name="he_support_status_closed">Ditutup</string>
     <string name="he_support_status_solved">Teratasi</string>
-    <string name="he_support_status_waiting_for_user">Menunggu Pengguna</string>
-    <string name="he_support_status_waiting_for_support">Menunggu Dukungan</string>
     <string name="he_support_select_attachments">Pilih lampiran</string>
     <string name="he_support_download_attachment">Unduh lampiran</string>
     <string name="he_support_include_logs_description">Menyertakan log dapat membantu tim kami menyelidiki kendala. Log mungkin berisi aktivitas aplikasi terbaru.</string>

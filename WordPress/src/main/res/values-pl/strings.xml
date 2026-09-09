@@ -313,8 +313,6 @@ Language: pl
     <string name="he_support_status_unknown">Nieznany</string>
     <string name="he_support_status_closed">Zamknięty</string>
     <string name="he_support_status_solved">Rozwiązany</string>
-    <string name="he_support_status_waiting_for_user">Oczekiwanie na użytkownika</string>
-    <string name="he_support_status_waiting_for_support">Oczekiwanie na pomoc techniczną</string>
     <string name="he_support_select_attachments">Wybierz załączniki</string>
     <string name="he_support_download_attachment">Pobierz załącznik</string>
     <string name="he_support_include_logs_description">Dołączenie dzienników może pomóc naszemu zespołowi w badaniu problemów. Dzienniki mogą zawierać ostatnią aktywność aplikacji.</string>

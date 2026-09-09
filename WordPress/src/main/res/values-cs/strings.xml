@@ -313,8 +313,6 @@ Language: cs_CZ
     <string name="he_support_status_unknown">Neznámý</string>
     <string name="he_support_status_closed">Uzavřeno</string>
     <string name="he_support_status_solved">Vyřešeno</string>
-    <string name="he_support_status_waiting_for_user">Čeká na uživatele</string>
-    <string name="he_support_status_waiting_for_support">Čeká na podporu</string>
     <string name="he_support_select_attachments">Vybrat přílohy</string>
     <string name="he_support_download_attachment">Stáhnout přílohu</string>
     <string name="he_support_include_logs_description">Přiložení záznamů může pomoci našemu týmu při vyšetřování problémů. Záznamy mohou obsahovat nedávnou aktivitu aplikace.</string>

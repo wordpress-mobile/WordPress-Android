@@ -313,8 +313,6 @@ Language: nl
     <string name="he_support_status_unknown">Onbekend</string>
     <string name="he_support_status_closed">Gesloten</string>
     <string name="he_support_status_solved">Opgelost</string>
-    <string name="he_support_status_waiting_for_user">Wachten op gebruiker</string>
-    <string name="he_support_status_waiting_for_support">Wachten op steun</string>
     <string name="he_support_select_attachments">Bijlagen selecteren</string>
     <string name="he_support_download_attachment">Download bijlage</string>
     <string name="he_support_include_logs_description">Het toevoegen van logs kan ons team helpen bij het onderzoeken van problemen. Logs kunnen recente app-activiteit bevatten.</string>

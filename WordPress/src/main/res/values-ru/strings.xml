@@ -313,8 +313,6 @@ Language: ru
     <string name="he_support_status_unknown">Неизвестно</string>
     <string name="he_support_status_closed">Закрыто</string>
     <string name="he_support_status_solved">Задача решена</string>
-    <string name="he_support_status_waiting_for_user">Ожидание пользователя</string>
-    <string name="he_support_status_waiting_for_support">Ожидание поддержки</string>
     <string name="he_support_select_attachments">Выбрать вложения</string>
     <string name="he_support_download_attachment">Скачать вложение</string>
     <string name="he_support_include_logs_description">Приложенные журналы помогут нам понять, в чём причина проблем. Журналы могут содержать сведения о последних действиях в приложении.</string>

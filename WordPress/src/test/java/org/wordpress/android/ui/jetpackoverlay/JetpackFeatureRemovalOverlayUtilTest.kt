@@ -10,12 +10,13 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class JetpackFeatureRemovalOverlayUtilTest {
     @Mock
-    private lateinit var jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
+    private lateinit var buildConfigWrapper: BuildConfigWrapper
 
     @Mock
     private lateinit var shownTracker: JetpackFeatureOverlayShownTracker
@@ -28,7 +29,7 @@ class JetpackFeatureRemovalOverlayUtilTest {
     @Before
     fun setUp() {
         overlayUtil = JetpackFeatureRemovalOverlayUtil(
-            jetpackFeatureRemovalHelper,
+            buildConfigWrapper,
             shownTracker,
             analyticsTrackerWrapper
         )
@@ -36,14 +37,14 @@ class JetpackFeatureRemovalOverlayUtilTest {
 
     @Test
     fun `given the Jetpack app, when checking the feature collection overlay, then it is not shown`() {
-        whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(false)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
 
         assertThat(overlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime()).isFalse
     }
 
     @Test
     fun `given the WordPress app and the overlay was never shown, then it is shown`() {
-        whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         whenever(shownTracker.getFeatureCollectionOverlayShown()).thenReturn(false)
 
         assertThat(overlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime()).isTrue
@@ -51,7 +52,7 @@ class JetpackFeatureRemovalOverlayUtilTest {
 
     @Test
     fun `given the WordPress app and the overlay was already shown, then it is not shown again`() {
-        whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         whenever(shownTracker.getFeatureCollectionOverlayShown()).thenReturn(true)
 
         assertThat(overlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime()).isFalse
@@ -72,8 +73,8 @@ class JetpackFeatureRemovalOverlayUtilTest {
     }
 
     @Test
-    fun `shouldHideJetpackFeatures follows the removal state`() {
-        whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
+    fun `given the WordPress app, then Jetpack features are hidden`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
 
         assertThat(overlayUtil.shouldHideJetpackFeatures()).isTrue
     }

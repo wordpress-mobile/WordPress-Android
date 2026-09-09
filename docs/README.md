@@ -1,5 +1,9 @@
 # WordPress for Android Docs
 
+## Setup
+
+- [WordPress.com Authentication](wpcom-authentication.md) - configuring your own OAuth2 credentials to sign in with a WordPress.com account
+
 ## Development Practices
 
 - [Coding Style](coding-style.md) - guidelines and validation and auto-formatting tools
