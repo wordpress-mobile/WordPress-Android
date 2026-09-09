@@ -51,7 +51,7 @@ class FetchSupportedStatesUseCase @Inject constructor(
                     AppLog.T.API,
                     "An error occurred while fetching supported states"
                 )
-                SupportedStatesResult.Error(result.apiErrorMessage())
+                SupportedStatesResult.Error(result.apiErrorMessage(), result.isDeviceOffline())
             }
         }
     }
@@ -62,5 +62,8 @@ sealed interface SupportedStatesResult {
         val states: List<SupportedState>,
     ) : SupportedStatesResult
 
-    data class Error(val message: String? = null) : SupportedStatesResult
+    data class Error(
+        val message: String? = null,
+        val isDeviceOffline: Boolean = false,
+    ) : SupportedStatesResult
 }

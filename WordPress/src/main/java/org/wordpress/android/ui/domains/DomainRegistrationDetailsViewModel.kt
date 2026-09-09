@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
@@ -34,6 +35,7 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DomainPhoneNumberUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import uniffi.wp_api.DomainContactInformation
 import uniffi.wp_api.SupportedCountry
@@ -52,6 +54,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     private val fetchSupportedCountriesUseCase: FetchSupportedCountriesUseCase,
     private val fetchDomainContactUseCase: FetchDomainContactUseCase,
     private val fetchSupportedStatesUseCase: FetchSupportedStatesUseCase,
+    private val resourceProvider: ResourceProvider,
     @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
     private lateinit var site: SiteModel
@@ -136,12 +139,20 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         isStarted = true
     }
 
+    private fun showFetchError(message: String?, isDeviceOffline: Boolean) {
+        when {
+            isDeviceOffline -> _showErrorMessage.value =
+                resourceProvider.getString(R.string.error_network_connection)
+            message != null -> _showErrorMessage.value = message
+        }
+    }
+
     private fun fetchSupportedCountries() = launch {
         _uiState.value = _uiState.value?.copy(isFormProgressIndicatorVisible = true)
         when (val result = fetchSupportedCountriesUseCase.execute()) {
             is SupportedCountriesResult.Error -> {
                 _uiState.value = _uiState.value?.copy(isFormProgressIndicatorVisible = false)
-                result.message?.let { _showErrorMessage.value = it }
+                showFetchError(result.message, result.isDeviceOffline)
                 AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching supported countries")
             }
             is SupportedCountriesResult.Success -> {
@@ -155,7 +166,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         when (val result = fetchDomainContactUseCase.execute()) {
             is DomainContactResult.Error -> {
                 _uiState.value = _uiState.value?.copy(isFormProgressIndicatorVisible = false)
-                result.message?.let { _showErrorMessage.value = it }
+                showFetchError(result.message, result.isDeviceOffline)
                 AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching domain contact details")
             }
             is DomainContactResult.Success -> {
@@ -197,7 +208,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                         isStateProgressIndicatorVisible = false,
                         isDomainRegistrationButtonEnabled = true
                     )
-                result.message?.let { _showErrorMessage.value = it }
+                showFetchError(result.message, result.isDeviceOffline)
                 AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching supported states")
             }
             is SupportedStatesResult.Success -> {

@@ -50,7 +50,7 @@ class FetchSupportedCountriesUseCase @Inject constructor(
                     AppLog.T.API,
                     "An error occurred while fetching supported countries"
                 )
-                SupportedCountriesResult.Error(result.apiErrorMessage())
+                SupportedCountriesResult.Error(result.apiErrorMessage(), result.isDeviceOffline())
             }
         }
     }
@@ -76,5 +76,8 @@ sealed interface SupportedCountriesResult {
         val countries: List<SupportedCountry>,
     ) : SupportedCountriesResult
 
-    data class Error(val message: String? = null) : SupportedCountriesResult
+    data class Error(
+        val message: String? = null,
+        val isDeviceOffline: Boolean = false,
+    ) : SupportedCountriesResult
 }

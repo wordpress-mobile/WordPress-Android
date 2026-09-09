@@ -16,6 +16,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.SiteAction
@@ -51,6 +52,7 @@ import org.wordpress.android.ui.domains.usecases.FetchSupportedCountriesUseCase
 import org.wordpress.android.ui.domains.usecases.FetchSupportedStatesUseCase
 import org.wordpress.android.ui.domains.usecases.SupportedCountriesResult
 import org.wordpress.android.ui.domains.usecases.SupportedStatesResult
+import org.wordpress.android.viewmodel.ResourceProvider
 import uniffi.wp_api.DomainContactInformation
 import uniffi.wp_api.SupportedCountry
 import uniffi.wp_api.SupportedState
@@ -80,6 +82,9 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var fetchSupportedStatesUseCase: FetchSupportedStatesUseCase
+
+    @Mock
+    private lateinit var resourceProvider: ResourceProvider
     private var site: SiteModel = SiteModel()
 
     @Mock
@@ -178,6 +183,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     private val domainContactInformationFetchErrorMessage = "Error fetching domain contact information"
     private val domainSupportedStatesFetchErrorMessage = "Error fetching domain supported states"
     private val fetchSupportedCountriesErrorMessage = "Error fetching countries"
+    private val offlineMessage = "Check your network connection and try again"
 
     private val createShoppingCartResponse = CreateShoppingCartResponse(
         siteId.toInt(),
@@ -202,6 +208,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
             fetchSupportedCountriesUseCase,
             fetchDomainContactUseCase,
             fetchSupportedStatesUseCase,
+            resourceProvider,
             NoDelayCoroutineDispatcher()
         )
         // Setting up chain of actions
@@ -322,6 +329,28 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         assertThat(domainContactModelWithPrefilledPhonePrefix).isNotNull()
         assertThat(domainContactModelWithPrefilledPhonePrefix?.phoneNumberPrefix).isNull()
+    }
+
+    @Test
+    fun offlineFetchingCountriesDuringPreload() = test {
+        whenever(resourceProvider.getString(R.string.error_network_connection)).thenReturn(offlineMessage)
+        whenever(fetchSupportedCountriesUseCase.execute())
+            .thenReturn(SupportedCountriesResult.Error(message = null, isDeviceOffline = true))
+
+        viewModel.start(site, domainProductDetails)
+
+        verify(errorMessageObserver).onChanged(offlineMessage)
+    }
+
+    @Test
+    fun offlineFetchingStates() = test {
+        whenever(resourceProvider.getString(R.string.error_network_connection)).thenReturn(offlineMessage)
+        whenever(fetchSupportedStatesUseCase.execute(any()))
+            .thenReturn(SupportedStatesResult.Error(message = null, isDeviceOffline = true))
+
+        viewModel.start(site, domainProductDetails)
+
+        verify(errorMessageObserver).onChanged(offlineMessage)
     }
 
     @Test

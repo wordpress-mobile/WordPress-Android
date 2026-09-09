@@ -50,7 +50,7 @@ class FetchDomainContactUseCase @Inject constructor(
                     AppLog.T.API,
                     "An error occurred while fetching domain contact details"
                 )
-                DomainContactResult.Error(result.apiErrorMessage())
+                DomainContactResult.Error(result.apiErrorMessage(), result.isDeviceOffline())
             }
         }
     }
@@ -61,5 +61,8 @@ sealed interface DomainContactResult {
         val contact: DomainContactInformation,
     ) : DomainContactResult
 
-    data class Error(val message: String? = null) : DomainContactResult
+    data class Error(
+        val message: String? = null,
+        val isDeviceOffline: Boolean = false,
+    ) : DomainContactResult
 }
