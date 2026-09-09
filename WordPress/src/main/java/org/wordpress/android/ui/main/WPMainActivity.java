@@ -124,7 +124,6 @@ import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
-import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils;
 import org.wordpress.android.ui.utils.UiString.UiStringRes;
 import org.wordpress.android.ui.voicetocontent.VoiceToContentDialogFragment;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
@@ -215,7 +214,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     public static final String ARG_STAT_TO_TRACK = "stat_to_track";
     public static final String ARG_EDITOR_ORIGIN = "editor_origin";
     public static final String ARG_IS_CHANGING_CONFIGURATION = "IS_CHANGING_CONFIGURATION";
-    public static final String ARG_BYPASS_MIGRATION = "bypass_migration";
     public static final String ARG_MEDIA = "show_media";
     public static final String ARG_ME = "show_me";
     public static final String ARG_OPEN_PAGE_MESSAGE = "open_page_message";
@@ -256,7 +254,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
     @Inject CreateSiteNotificationScheduler mCreateSiteNotificationScheduler;
     @Inject WeeklyRoundupScheduler mWeeklyRoundupScheduler;
-    @Inject JetpackAppMigrationFlowUtils mJetpackAppMigrationFlowUtils;
     @Inject DeepLinkOpenWebLinksWithJetpackHelper mDeepLinkOpenWebLinksWithJetpackHelper;
     @Inject OpenWebLinksWithJetpackFlowFeatureConfig mOpenWebLinksWithJetpackFlowFeatureConfig;
     @Inject QRCodeAuthFlowFeatureConfig mQrCodeAuthFlowFeatureConfig;
@@ -328,8 +325,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                 InstallationReferrerServiceStarter.startService(this, null);
             }
 
-            if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)
-                && !AppPrefs.getIsJetpackMigrationInProgress()) {
+            if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
                 NotificationType notificationType =
                         (NotificationType) getIntent().getSerializableExtra(ARG_NOTIFICATION_TYPE);
                 if (notificationType != null) {
@@ -378,26 +374,11 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                                 (SiteModel) getIntent().getSerializableExtra(SITE), mAccountStore.hasAccessToken());
                     }
                 }
+            } else if (mIsMagicLinkLogin) {
+                authTokenToSet = getAuthToken();
             } else {
-                if (mIsMagicLinkLogin) {
-                    authTokenToSet = getAuthToken();
-                } else {
-                    boolean shouldBypassMigration = (getIntent() != null && getIntent()
-                            .getBooleanExtra(ARG_BYPASS_MIGRATION, false));
-                    if (!shouldBypassMigration && mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
-                        mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow();
-                    } else {
-                        if (shouldBypassMigration) {
-                            AppPrefs.setIsJetpackMigrationInProgress(false);
-                            AppPrefs.saveIsFirstTrySharedLoginJetpack(true);
-                            AppPrefs.saveIsFirstTryUserFlagsJetpack(true);
-                            AppPrefs.saveIsFirstTryReaderSavedPostsJetpack(true);
-                            AppPrefs.saveIsFirstTryBloggingRemindersSyncJetpack(true);
-                        }
-                        showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
-                    }
-                    finish();
-                }
+                showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
+                finish();
             }
             checkDismissNotification();
             checkTrackAnalyticsEvent();

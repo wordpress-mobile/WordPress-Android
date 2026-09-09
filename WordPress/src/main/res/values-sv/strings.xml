@@ -753,8 +753,6 @@ Language: sv_SE
     <string name="barcode_scanning_alert_dialog_rationale_message">Kameraåtkomst krävs för streckkodsskanning.</string>
     <string name="barcode_scanning_alert_dialog_title">Bevilja kameraåtkomst</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Block som är inbäddade djupare än %d kanske inte renderas korrekt i den mobila redigeraren.</string>
-    <string name="jp_migration_lets_go_button">Sätt igång</string>
-    <string name="jp_migration_done_no_sites_message">Det är dags att fortsätta din WordPress-resa med Jetpack-appen.</string>
     <string name="domain_management_clear_search">Rensa sökning</string>
     <string name="media_encoder_quality_very_high">Mycket hög</string>
     <string name="notification_security_key_needed" a8c-src-lib="module:login">Ange din säkerhetsnyckel för att fortsätta.</string>
@@ -939,7 +937,6 @@ Language: sv_SE
     <string name="sharing_twitter_deprecation_notice_find_out_more">Få reda på mer</string>
     <string name="sharing_twitter_deprecation_notice_description">Automatisk delning på Twitter är inte längre tillgängligt på grund av Twitters ändringar i villkor och pris.</string>
     <string name="sharing_twitter_deprecation_notice_title">Automatisk delning på Twitter är inte längre tillgängligt</string>
-    <string name="jp_migration_notifications_allow_title">Tillåt aviseringar för att hålla koll på din webbplats</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Omärkt färg. %s</string>
     <string name="dashboard_activity_card_title">Senaste aktivitet</string>
     <string name="site_creation_search_domain_example_body">Precis som i exemplet ovan så låter en domän människor hitta och besöka din webbplats från sina webbläsare.</string>
@@ -950,7 +947,6 @@ Language: sv_SE
     <string name="new_site_creation_preview_caption_paid">Det kan dröja upp till 30 minuter innan din anpassade domän börjar fungera.</string>
     <string name="new_site_creation_preview_subtitle_paid">Vi har skickat ditt kvitto via e-post. %s</string>
     <string name="notifications_disabled_permission_dialog">App-notiser har inaktiverats. Tryck här för att aktivera dem.</string>
-    <string name="jp_migration_done_delete_wp_message">Vi rekommenderar att du &lt;b&gt;avinstallerar WordPress-appen&lt;/b&gt; på din enhet för att undvika datakonflikter.</string>
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ta bort block</string>
     <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Integritet och klassificering</string>
     <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Uppspelningsinställningar</string>
@@ -1011,8 +1007,6 @@ Language: sv_SE
     <string name="site_creation_domain_tag_unavailable">Denna domän är redan registrerad</string>
     <string name="site_creation_domain_tag_recommended">Rekommenderat</string>
     <string name="site_creation_domain_tag_best_alternative">Bästa alternativ</string>
-    <string name="support_faq_caption">Se våra vanliga frågor för svar på vanliga frågor du kan ha.</string>
-    <string name="support_faq_title">Tack för att du byter till Jetpack-appen!</string>
     <string name="logs_button">Loggar</string>
     <string name="tickets">Biljetter</string>
     <string name="free">Gratis</string>
@@ -1100,30 +1094,8 @@ Language: sv_SE
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Det gick inte att inaktivera öppning av länkar i Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Det gick inte att aktivera öppning av länkar i Jetpack</string>
     <string name="preference_open_links_in_jetpack">Öppna länkar i Jetpack</string>
-    <string name="jp_migration_network_error_message">Vi kan inte överföra dina data och inställningar utan en nätverksanslutning.</string>
-    <string name="jp_migration_network_error_subtitle">Kontrollera att din internetanslutning fungerar och försök igen.</string>
-    <string name="jp_migration_network_error_title">Det går inte att ansluta till Internet.</string>
-    <string name="jp_migration_generic_error_message">Kontakta supporten eller försök igen senare.</string>
-    <string name="jp_migration_generic_error_subtitle">Något oväntat har inträffat. Dina data är i trygghet, men just nu fungerar inte överföringen.</string>
     <string name="jp_migration_generic_error_title">Aj då, något gick fel …</string>
-    <string name="jp_migration_try_again_button">Försök igen</string>
-    <string name="jp_migration_finish_button">Slutför</string>
-    <string name="jp_migration_remove_wp_app_icon_content_description">Ta bort WordPress-appens ikon</string>
-    <string name="jp_migration_done_subtitle">Vi har flyttat över alla data och dina inställningar, så allt är precis som förut.</string>
-    <string name="jp_migration_done_title">Tack för att du bytt till Jetpack!</string>
-    <string name="jp_migration_notifications_disabled_in_wp_message">Aviseringar från WordPress-appent kommer att stängas av.</string>
-    <string name="jp_migration_notifications_subtitle">Du kommer att få samma aviseringar som tidigare, men nu från Jetpack-appen.</string>
-    <string name="wordpress_help_center_button">WordPress hjälpcenter</string>
     <string name="support_title">Support</string>
-    <string name="notification_disable_broadcast_permission_desc">Tillåter att appen inaktiverar WordPress-aviseringar.</string>
-    <string name="notification_disable_broadcast_permission_label">inaktivera WordPress-aviseringar</string>
-    <string name="jp_migration_help_button">Behöver du hjälp?</string>
-    <string name="jp_migration_continue_button">Fortsätt</string>
-    <string name="jp_migration_welcome_site_found_message">Vi har hittat din webbplats. Gå vidare för att automatiskt överföra dina data och logga in till Jetpack.</string>
-    <string name="jp_migration_welcome_sites_found_message">Vi har hittat dina webbplatser. Gå vidare för att automatiskt överföra dina data och logga in till Jetpack.</string>
-    <string name="jp_migration_avatar_content_description">Ditt profilfoto</string>
-    <string name="jp_migration_welcome_subtitle">Det verkar som att du byter från WordPress-appen.</string>
-    <string name="jp_migration_welcome_title">Välkommen till Jetpack!</string>
     <string name="icon_desc">ikon</string>
     <string name="post_settings_parent">Överordnad sida</string>
     <string name="post_settings_page_attributes">Sidattribut</string>

@@ -23,13 +23,7 @@ Language: es_MX
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">No se puede deshabilitar las ligas abiertas en Jetpack.</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">No se puede activar las ligas abiertas en Jetpack.</string>
     <string name="preference_open_links_in_jetpack">Abrir las ligas en Jetpack.</string>
-    <string name="jp_migration_network_error_message">No pudimos cambiar sus datos y configuraciones sin conexión con la red.</string>
-    <string name="jp_migration_network_error_subtitle">Por favor, cheque para asegurar que su conexión de red está funcionando y inténtelo de nuevo.</string>
-    <string name="jp_migration_network_error_title">No se puede conectar al internet.</string>
-    <string name="jp_migration_generic_error_message">Por favor, contacte al apoyo o inténtelo más tarde.</string>
-    <string name="jp_migration_generic_error_subtitle">Lo siento que algo no salió como estuvo planeado. Sus datos están seguros, pero no podemos cambiarlos en este momento.</string>
     <string name="jp_migration_generic_error_title">Ups, algo salió mal.</string>
-    <string name="jp_migration_try_again_button">Inténtelo de nuevo.</string>
     <string name="gutenberg_native_create_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Crear enlace</string>
     <string name="domains_title">Dominios</string>
     <string name="storage_utils_dialog_dont_show_button">No mostrar de nuevo</string>

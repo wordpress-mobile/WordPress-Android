@@ -296,8 +296,6 @@ Language: lv
     <string name="barcode_scanning_alert_dialog_title">Piešķirt kameras atļauju</string>
     <string name="barcode_scanning_alert_dialog_rationale_message">Lai skenētu svītrkodu, nepieciešama kameras atļauja.</string>
     <string name="domain_management_clear_search">Notīrīt meklēšanu</string>
-    <string name="jp_migration_done_no_sites_message">Ir pienācis laiks turpināt savu WordPress ceļojumu Jetpack lietotnē.</string>
-    <string name="jp_migration_lets_go_button">Ejam!</string>
     <string name="media_encoder_quality_very_high">Ļoti augsts</string>
     <string name="login_text_security_key" a8c-src-lib="module:login">Izmantojiet drošības atslēgu</string>
     <string name="login_error_security_key" a8c-src-lib="module:login">Radās problēmas ar pieteikšanos drošības atslēgai</string>
@@ -481,7 +479,6 @@ Language: lv
     <string name="sharing_twitter_deprecation_notice_title">Automātiskā koplietošana pakalpojumā Twitter vairs nav pieejama</string>
     <string name="sharing_twitter_deprecation_notice_description">Twitter auto-dalīšanās vairs nav pieejama, jo Twitter ir veicis izmaiņas terminos un cenās.</string>
     <string name="sharing_twitter_deprecation_notice_find_out_more">Uzzināt vairāk</string>
-    <string name="jp_migration_notifications_allow_title">Ļaujiet saņemt paziņojumus, lai sekotu līdzi jūsu vietnei</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_search_domain_example_body">Līdzīgi kā iepriekš minētajā piemērā, domēns ļauj cilvēkiem atrast un apmeklēt jūsu vietni savā tīmekļa pārlūkprogrammā.</string>
     <string name="dashboard_activity_card_title">Pēdējā darbība</string>
@@ -492,7 +489,6 @@ Language: lv
     <string name="site_creation_domain_header_subtitle">Meklējiet īsu un neaizmirstamu domēnu, lai palīdzētu cilvēkiem atrast un apmeklēt jūsu vietni.</string>
     <string name="site_creation_domain_search_input_hint">Meklējiet ar atslēgvārdiem</string>
     <string name="notifications_disabled_permission_dialog">Lietotņu paziņojumi ir atspējoti. Pieskarieties šeit, lai tos iespējotu.</string>
-    <string name="jp_migration_done_delete_wp_message">Lai izvairītos no datu konfliktiem, ieteicams ierīcē &lt;b&gt;atinstalēt lietotni WordPress&lt;/b&gt;.</string>
     <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Privātums un vērtējums</string>
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Noņemt blokus</string>
     <string name="blogging_reminders_notifications_permission_caption">Lai izmantotu blogošanas atgādinājumus, jums būs jāieslēdz pašpiegādes paziņojumi.</string>
@@ -550,8 +546,6 @@ Language: lv
     <string name="free">Bezmaksas</string>
     <string name="tickets">Biļetes</string>
     <string name="logs_button">Žurnāli</string>
-    <string name="support_faq_title">Paldies, ka pārslēdzāties uz Jetpack lietotni!</string>
-    <string name="support_faq_caption">Atbildes uz bieži uzdotajiem jautājumiem skatiet mūsu BUJ.</string>
     <string name="site_creation_domain_tag_best_alternative">Labākā alternatīva</string>
     <string name="site_creation_domain_tag_recommended">Ieteicams</string>
     <string name="site_creation_domain_tag_unavailable">Šis domēns jau ir reģistrēts</string>
@@ -642,30 +636,8 @@ Language: lv
     <string name="preference_open_links_in_jetpack">Atveriet saites pakalpojumā Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Nevar iespējot atvērtās saites pakalpojumā Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Nevar atspējot atvērtās saites pakalpojumā Jetpack</string>
-    <string name="jp_migration_generic_error_subtitle">Atvainojiet, bet kaut kas neizdevās kā plānots. Jūsu dati ir drošībā, taču mēs pašlaik nevaram tos pārsūtīt.</string>
-    <string name="jp_migration_generic_error_message">Lūdzu, sazinieties ar atbalsta dienestu vai vēlāk mēģiniet vēlreiz.</string>
-    <string name="jp_migration_network_error_title">Nevar izveidot savienojumu ar internetu.</string>
-    <string name="jp_migration_network_error_subtitle">Lūdzu, pārbaudiet, vai tīkla savienojums darbojas, un mēģiniet vēlreiz.</string>
-    <string name="jp_migration_network_error_message">Mēs nevaram pārsūtīt jūsu datus un iestatījumus bez tīkla savienojuma.</string>
-    <string name="jp_migration_remove_wp_app_icon_content_description">Noņemiet WordPress lietotnes ikonu</string>
-    <string name="jp_migration_finish_button">Pabeigt</string>
-    <string name="jp_migration_try_again_button">Mēģini vēlreiz</string>
     <string name="jp_migration_generic_error_title">Ak, kaut kas nogāja greizi…</string>
-    <string name="jp_migration_done_subtitle">Mēs esam pārsūtījuši visus jūsu datus un iestatījumus. Viss ir tieši tur, kur tas tika atstāts.</string>
-    <string name="jp_migration_notifications_subtitle">Jūs saņemsiet visus tos pašus paziņojumus, taču tagad tie tiks saņemti no lietotnes Jetpack.</string>
-    <string name="jp_migration_notifications_disabled_in_wp_message">Mēs izslēgsim paziņojumus no WordPress lietotnes.</string>
-    <string name="jp_migration_done_title">Paldies, ka pārgājāt uz Jetpack!</string>
-    <string name="notification_disable_broadcast_permission_label">atspējot WordPress paziņojumus</string>
-    <string name="notification_disable_broadcast_permission_desc">Ļauj lietotnei atspējot WordPress paziņojumus.</string>
     <string name="support_title">Atbalsts</string>
-    <string name="wordpress_help_center_button">WordPress palīdzības centrs</string>
-    <string name="jp_migration_welcome_subtitle">Šķiet, ka jūs pārejat no WordPress lietotnes.</string>
-    <string name="jp_migration_avatar_content_description">Jūsu profila fotogrāfija</string>
-    <string name="jp_migration_welcome_sites_found_message">Mēs atradām jūsu vietnes. Turpiniet pārsūtīt visus savus datus un automātiski pierakstieties Jetpack.</string>
-    <string name="jp_migration_welcome_site_found_message">Mēs atradām jūsu vietni. Turpiniet pārsūtīt visus savus datus un automātiski pierakstieties Jetpack.</string>
-    <string name="jp_migration_continue_button">Turpināt</string>
-    <string name="jp_migration_help_button">Vajadzīga palīdzība?</string>
-    <string name="jp_migration_welcome_title">Laipni lūdzam Jetpack!</string>
     <string name="icon_desc">ikona</string>
     <string name="post_settings_page_attributes">Lapas atribūti</string>
     <string name="post_settings_parent">Pamata lapa</string>

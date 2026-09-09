@@ -727,8 +727,6 @@ Language: fr
     <string name="barcode_scanning_alert_dialog_rationale_message">L’accès à l’appareil photo doit être autorisé pour scanner le code-barres</string>
     <string name="barcode_scanning_alert_dialog_title">Autoriser l’accès à l’appareil photo</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Les blocs imbriqués à un niveau supérieur à %d peuvent ne pas s’afficher correctement dans l’éditeur mobile.</string>
-    <string name="jp_migration_lets_go_button">C’est parti</string>
-    <string name="jp_migration_done_no_sites_message">Il est temps de poursuivre votre aventure WordPress sur l’application Jetpack.</string>
     <string name="domain_management_clear_search">Supprimer la recherche</string>
     <string name="media_encoder_quality_very_high">Très élevée</string>
     <string name="notification_security_key_needed" a8c-src-lib="module:login">Veuillez fournir votre clé de sécurité pour continuer.</string>
@@ -913,7 +911,6 @@ Language: fr
     <string name="sharing_twitter_deprecation_notice_find_out_more">En savoir plus</string>
     <string name="sharing_twitter_deprecation_notice_description">Le partage automatique sur Twitter n’est plus disponible en raison de modifications des conditions générales et tarifaires de Twitter.</string>
     <string name="sharing_twitter_deprecation_notice_title">Le partage automatique sur Twitter n’est plus disponible</string>
-    <string name="jp_migration_notifications_allow_title">Autoriser les notifications pour suivre l’évolution de votre site</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Couleur sans libellé. %s</string>
     <string name="dashboard_activity_card_title">Activité récente</string>
     <string name="site_creation_search_domain_example_body">Comme le montre l’exemple ci-dessus, un domaine permet aux internautes de trouver et de visiter votre site depuis leur navigateur Web.</string>
@@ -924,7 +921,6 @@ Language: fr
     <string name="new_site_creation_preview_caption_paid">Un délai de 30 minutes peut être nécessaire pour que votre domaine personnalisé soit opérationnel.</string>
     <string name="new_site_creation_preview_subtitle_paid">Nous vous avons envoyé le reçu par e-mail. %s</string>
     <string name="notifications_disabled_permission_dialog">Les notifications de l’application ont été désactivées. Appuyez ici pour les activer.</string>
-    <string name="jp_migration_done_delete_wp_message">Nous vous recommandons de &lt;b&gt;désinstaller l’application WordPress&lt;/b&gt; sur votre appareil pour éviter les conflits de données.</string>
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Retirer les blocs</string>
     <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Confidentialité et évaluation</string>
     <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Réglages de la lecture</string>
@@ -985,8 +981,6 @@ Language: fr
     <string name="site_creation_domain_tag_unavailable">Ce nom de domaine est déjà enregistré.</string>
     <string name="site_creation_domain_tag_recommended">Recommandé</string>
     <string name="site_creation_domain_tag_best_alternative">Meilleure alternative</string>
-    <string name="support_faq_caption">Notre FAQ comporte les réponses aux questions fréquentes que vous vous posez peut-être.</string>
-    <string name="support_faq_title">Merci d’être passé à l’application Jetpack !</string>
     <string name="logs_button">Journaux</string>
     <string name="tickets">Billets</string>
     <string name="free">Gratuit</string>
@@ -1074,30 +1068,8 @@ Language: fr
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Impossible de désactiver l’ouverture des liens dans Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Impossible d’activer l’ouverture des liens dans Jetpack</string>
     <string name="preference_open_links_in_jetpack">Ouvrir les liens dans Jetpack</string>
-    <string name="jp_migration_network_error_message">Nous ne pouvons pas transférer vos données et réglages sans connexion réseau.</string>
-    <string name="jp_migration_network_error_subtitle">Assurez-vous que votre connexion réseau fonctionne, puis réessayez.</string>
-    <string name="jp_migration_network_error_title">Impossible de se connecter à Internet.</string>
-    <string name="jp_migration_generic_error_message">Contactez l’assistance ou réessayez ultérieurement.</string>
-    <string name="jp_migration_generic_error_subtitle">Une erreur inattendue s’est produite. Veuillez nous en excuser. Vos données sont en sécurité, mais il nous est impossible de les transférer pour l’instant.</string>
     <string name="jp_migration_generic_error_title">Oups, un problème est survenu.</string>
-    <string name="jp_migration_try_again_button">Réessayer</string>
-    <string name="jp_migration_finish_button">Terminer</string>
-    <string name="jp_migration_remove_wp_app_icon_content_description">Supprimer l’icône de l’application WordPress</string>
-    <string name="jp_migration_done_subtitle">Nous avons transféré tous vos réglages et données. Tout se trouve au même endroit qu’avant.</string>
-    <string name="jp_migration_done_title">Merci d’être passé à Jetpack !</string>
-    <string name="jp_migration_notifications_disabled_in_wp_message">Nous désactiverons les notifications de l’application WordPress.</string>
-    <string name="jp_migration_notifications_subtitle">Vous recevrez les mêmes notifications, mais elles proviendront maintenant de l’application Jetpack.</string>
-    <string name="wordpress_help_center_button">Centre d’aide WordPress</string>
     <string name="support_title">Assistance</string>
-    <string name="notification_disable_broadcast_permission_desc">Autorisez l’application à désactiver les notifications de WordPress.</string>
-    <string name="notification_disable_broadcast_permission_label">désactiver les notifications de WordPress</string>
-    <string name="jp_migration_help_button">Besoin d’aide ?</string>
-    <string name="jp_migration_continue_button">Continuer</string>
-    <string name="jp_migration_welcome_site_found_message">Nous avons trouvé votre site. Cliquez sur Continuer pour transférer l’ensemble de vos données et vous connecter automatiquement à Jetpack.</string>
-    <string name="jp_migration_welcome_sites_found_message">Nous avons trouvé vos sites. Cliquez sur Continuer pour transférer l’ensemble de vos données et vous connecter automatiquement à Jetpack.</string>
-    <string name="jp_migration_avatar_content_description">Votre photo de profil</string>
-    <string name="jp_migration_welcome_subtitle">Il semblerait que vous ayez transféré vos données depuis l’application WordPress.</string>
-    <string name="jp_migration_welcome_title">Bienvenue dans Jetpack !</string>
     <string name="icon_desc">icône</string>
     <string name="post_settings_parent">Page parente</string>
     <string name="post_settings_page_attributes">Attributs de la page</string>

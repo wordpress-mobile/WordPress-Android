@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar_main"
         android:layout_width="match_parent"
@@ -21,295 +20,174 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/nested_scroll_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:fillViewport="true"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/log_out_button_container">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:id="@+id/user_details_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_extra_large"
-                    android:visibility="gone"
-                    tools:visibility="visible">
-
-                    <ImageView
-                        android:id="@+id/user_avatar"
-                        android:layout_width="@dimen/avatar_sz_large"
-                        android:layout_height="@dimen/avatar_sz_large"
-                        android:layout_centerHorizontal="true"
-                        android:contentDescription="@string/reader_avatar_desc"
-                        android:src="@drawable/ic_user_placeholder_primary_24" />
-
-                    <org.wordpress.android.widgets.WPTextView
-                        android:id="@+id/user_display_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/user_avatar"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/margin_medium_large"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:textAppearance="?attr/textAppearanceSubtitle1"
-                        android:textStyle="bold"
-                        tools:text="Full Name" />
-
-                    <org.wordpress.android.widgets.WPTextView
-                        android:id="@+id/user_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/user_display_name"
-                        android:layout_centerHorizontal="true"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="?attr/wpColorOnSurfaceMedium"
-                        tools:text="\@username" />
-                </RelativeLayout>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/help_center_button"
-                    style="@style/HelpActivitySingleText"
-                    android:text="@string/wordpress_help_center_button"
-                    android:visibility="gone"/>
-
-                <LinearLayout
-                    android:id="@+id/JpFaqContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:orientation="vertical"
-                    android:padding="@dimen/margin_extra_large"
-                    android:visibility="gone"
-                    tools:visibility="visible">
-
-                    <ImageView
-                        android:id="@+id/wp_jp_logo"
-                        android:layout_width="@dimen/margin_64dp"
-                        android:layout_height="@dimen/margin_64dp"
-                        android:contentDescription="@string/support_faq_caption"
-                        android:src="@drawable/ic_wordpress_jetpack_logo" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/support_faq_title"
-                        android:textAppearance="?attr/textAppearanceSubtitle1" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/support_faq_caption"
-                        android:textAppearance="?attr/textAppearanceCaption" />
-                </LinearLayout>
-
-                <View
-                    android:id="@+id/JpFaqContainerBottomDivider"
-                    android:visibility="gone"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/divider_size"
-                    android:background="?android:attr/listDivider"
-                    tools:visibility="visible"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/contact_us_button"
-                    style="@style/HelpActivitySingleText"
-                    android:text="@string/contact_support" />
-
-                <LinearLayout
-                    android:id="@+id/forumContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:orientation="vertical"
-                    android:padding="@dimen/margin_extra_large"
-                    android:visibility="gone"
-                    tools:visibility="visible">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/support_forums_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/support_forum_title"
-                        android:textAppearance="?attr/textAppearanceSubtitle1" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/support_forum_caption"
-                        android:textAppearance="?attr/textAppearanceCaption" />
-                </LinearLayout>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/faq_button"
-                    style="@style/HelpActivitySingleText"
-                    android:text="@string/browse_our_faq_button" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tickets_button"
-                    style="@style/HelpActivitySingleText"
-                    android:text="@string/tickets" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/debug_settings_button"
-                    style="@style/HelpActivitySingleText"
-                    android:visibility="gone"
-                    android:text="@string/preference_open_debug_settings" />
-
-                <LinearLayout
-                    android:id="@+id/contactEmailContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:orientation="vertical"
-                    android:padding="@dimen/margin_extra_large">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/support_contact_email"
-                        android:textAppearance="?attr/textAppearanceSubtitle1" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/contactEmailAddress"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/support_contact_email_not_set"
-                        android:textAppearance="?attr/textAppearanceCaption" />
-                </LinearLayout>
-
-                <View
-                    android:id="@+id/emailContainerBottomDivider"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/divider_size"
-                    android:background="?android:attr/listDivider" />
-
-                <LinearLayout
-                    android:id="@+id/trackNetworkRequestsSection"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:id="@+id/trackNetworkRequestsContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingBottom="@dimen/margin_large"
-                        android:paddingEnd="@dimen/margin_extra_large"
-                        android:paddingStart="@dimen/margin_extra_large"
-                        android:paddingTop="@dimen/margin_large">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <com.google.android.material.textview.MaterialTextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/track_network_requests"
-                                android:textAppearance="?attr/textAppearanceSubtitle1" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/track_network_requests_description"
-                                android:textAppearance="?attr/textAppearanceCaption" />
-                        </LinearLayout>
-
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/trackNetworkRequestsSwitch"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/networkRequestsRetentionInfo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="@dimen/margin_extra_large"
-                        android:paddingEnd="@dimen/margin_extra_large"
-                        android:paddingBottom="@dimen/margin_medium"
-                        android:textAppearance="?attr/textAppearanceCaption"
-                        android:visibility="gone"
-                        tools:text="Retention: 1 Hour"
-                        tools:visibility="visible" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/viewNetworkRequestsButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:padding="@dimen/margin_extra_large"
-                        android:text="@string/view_network_requests"
-                        android:textAppearance="?attr/textAppearanceSubtitle1"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/divider_size"
-                        android:background="?android:attr/listDivider" />
-                </LinearLayout>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/logs_button"
-                    style="@style/HelpActivitySingleText"
-                    android:text="@string/logs_button" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/applicationVersion"
-                    style="@style/HelpActivitySingleText"
-                    android:textColor="?attr/wpColorOnSurfaceMedium"
-                    tools:text="Version NN.1" />
-
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
-
-        <FrameLayout
-            android:id="@+id/log_out_button_container"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:background="?attr/colorSurface"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:visibility="visible">
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/contact_us_button"
+                style="@style/HelpActivitySingleText"
+                android:text="@string/contact_support" />
+
+            <LinearLayout
+                android:id="@+id/forumContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:orientation="vertical"
+                android:padding="@dimen/margin_extra_large"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/support_forums_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/support_forum_title"
+                    android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/support_forum_caption"
+                    android:textAppearance="?attr/textAppearanceCaption" />
+            </LinearLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/faq_button"
+                style="@style/HelpActivitySingleText"
+                android:text="@string/browse_our_faq_button" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tickets_button"
+                style="@style/HelpActivitySingleText"
+                android:text="@string/tickets" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/debug_settings_button"
+                style="@style/HelpActivitySingleText"
+                android:visibility="gone"
+                android:text="@string/preference_open_debug_settings" />
+
+            <LinearLayout
+                android:id="@+id/contactEmailContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:orientation="vertical"
+                android:padding="@dimen/margin_extra_large">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/support_contact_email"
+                    android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/contactEmailAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/support_contact_email_not_set"
+                    android:textAppearance="?attr/textAppearanceCaption" />
+            </LinearLayout>
 
             <View
+                android:id="@+id/emailContainerBottomDivider"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/divider_size"
                 android:background="?android:attr/listDivider" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/log_out_button"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+            <LinearLayout
+                android:id="@+id/trackNetworkRequestsSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/help_logout_button_margin"
-                android:layout_marginTop="@dimen/help_logout_button_margin"
-                android:layout_marginBottom="@dimen/help_logout_button_margin_bottom"
-                android:text="@string/signout"
-                android:textAppearance="?attr/textAppearanceSubtitle2"
-                android:textColor="?attr/wpColorError" />
-        </FrameLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/trackNetworkRequestsContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/margin_large"
+                    android:paddingEnd="@dimen/margin_extra_large"
+                    android:paddingStart="@dimen/margin_extra_large"
+                    android:paddingTop="@dimen/margin_large">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/track_network_requests"
+                            android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/track_network_requests_description"
+                            android:textAppearance="?attr/textAppearanceCaption" />
+                    </LinearLayout>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/trackNetworkRequestsSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/networkRequestsRetentionInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/margin_extra_large"
+                    android:paddingEnd="@dimen/margin_extra_large"
+                    android:paddingBottom="@dimen/margin_medium"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    android:visibility="gone"
+                    tools:text="Retention: 1 Hour"
+                    tools:visibility="visible" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/viewNetworkRequestsButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="@dimen/margin_extra_large"
+                    android:text="@string/view_network_requests"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_size"
+                    android:background="?android:attr/listDivider" />
+            </LinearLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/logs_button"
+                style="@style/HelpActivitySingleText"
+                android:text="@string/logs_button" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/applicationVersion"
+                style="@style/HelpActivitySingleText"
+                android:textColor="?attr/wpColorOnSurfaceMedium"
+                tools:text="Version NN.1" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

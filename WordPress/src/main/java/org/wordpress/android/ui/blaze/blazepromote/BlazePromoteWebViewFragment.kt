@@ -54,7 +54,7 @@ import org.wordpress.android.ui.blaze.OnBlazeWebViewClientListener
 import org.wordpress.android.ui.blaze.blazeoverlay.BlazeViewModel
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.utils.uiStringText
-import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingState
+import org.wordpress.android.ui.compose.components.LoadingState
 import org.wordpress.android.editor.R as EditorR
 
 @AndroidEntryPoint

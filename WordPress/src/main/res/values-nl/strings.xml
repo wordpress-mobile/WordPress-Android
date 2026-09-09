@@ -753,8 +753,6 @@ Language: nl
     <string name="barcode_scanning_alert_dialog_rationale_message">De cameramachtiging is vereist om de streepjescode te scannen.</string>
     <string name="barcode_scanning_alert_dialog_title">Cameramachtiging toekennen</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blokken die dieper dan %d niveaus genesteld zijn worden mogelijk niet goed weergegeven in de mobiele editor.</string>
-    <string name="jp_migration_lets_go_button">Aan de slag</string>
-    <string name="jp_migration_done_no_sites_message">Het is tijd om je WordPress reis voort te zetten op de Jetpack app.</string>
     <string name="domain_management_clear_search">Zoekopdracht wissen</string>
     <string name="media_encoder_quality_very_high">Zeer hoog</string>
     <string name="notification_security_key_needed" a8c-src-lib="module:login">Voer je beveiligingssleutel in om door te gaan.</string>
@@ -939,7 +937,6 @@ Language: nl
     <string name="sharing_twitter_deprecation_notice_find_out_more">Meer informatie</string>
     <string name="sharing_twitter_deprecation_notice_description">Automatisch delen op Twitter is niet langer beschikbaar vanwege wijzigingen van de voorwaarden en prijzen van Twitter.</string>
     <string name="sharing_twitter_deprecation_notice_title">Automatisch delen op Twitter is niet langer beschikbaar</string>
-    <string name="jp_migration_notifications_allow_title">Sta meldingen toe om op de hoogte te blijven van je site</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Niet-gelabelde kleur. %s</string>
     <string name="dashboard_activity_card_title">Recente activiteit</string>
     <string name="site_creation_search_domain_example_body">Net als in het voorbeeld hierboven kunnen mensen met een domein je site vinden en bezoeken vanuit hun webbrowser.</string>
@@ -950,7 +947,6 @@ Language: nl
     <string name="new_site_creation_preview_caption_paid">Het kan tot 30 minuten duren voor je aangepaste domein werkt.</string>
     <string name="new_site_creation_preview_subtitle_paid">We hebben je betalingsbewijs naar je gemaild. %s</string>
     <string name="notifications_disabled_permission_dialog">Appmeldingen zijn uitgeschakeld. Tik hier om ze in te schakelen.</string>
-    <string name="jp_migration_done_delete_wp_message">We raden je aan om &lt;b&gt;de WordPress app van je apparaat te verwijderen&lt;/b&gt; om gegevensconflicten te vermijden.</string>
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blokken verwijderen</string>
     <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Privacy en waardering</string>
     <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Afspeelinstellingen</string>
@@ -1011,8 +1007,6 @@ Language: nl
     <string name="site_creation_domain_tag_unavailable">Dit domein is al geregistreerd</string>
     <string name="site_creation_domain_tag_recommended">Aanbevolen</string>
     <string name="site_creation_domain_tag_best_alternative">Beste alternatief</string>
-    <string name="support_faq_caption">Bekijk onze FAQ voor antwoorden op veelgestelde vragen die je misschien hebt.</string>
-    <string name="support_faq_title">Bedankt voor het overschakelen naar de Jetpack app!</string>
     <string name="logs_button">Logs</string>
     <string name="tickets">Tickets</string>
     <string name="free">Gratis</string>
@@ -1100,30 +1094,8 @@ Language: nl
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Kan links openen in Jetpack niet uitschakelen</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Kan links openen in Jetpack niet inschakelen</string>
     <string name="preference_open_links_in_jetpack">Links in Jetpack openen</string>
-    <string name="jp_migration_network_error_message">We kunnen je gegevens en instellingen niet overdragen zonder netwerkverbinding.</string>
-    <string name="jp_migration_network_error_subtitle">Controleer of je een netwerkverbinding hebt en probeer het opnieuw.</string>
-    <string name="jp_migration_network_error_title">Kan geen verbinding maken met het internet.</string>
-    <string name="jp_migration_generic_error_message">Probeer het later opnieuw of neem contact op met de klantenservice.</string>
-    <string name="jp_migration_generic_error_subtitle">Er is iets misgegaan. Je gegevens zijn veilig, maar we kunnen ze op dit moment niet overdragen.</string>
     <string name="jp_migration_generic_error_title">Er is iets fout gegaan..</string>
-    <string name="jp_migration_try_again_button">Opnieuw proberen</string>
-    <string name="jp_migration_finish_button">Afronden</string>
-    <string name="jp_migration_remove_wp_app_icon_content_description">WordPress app icoon verwijderen</string>
-    <string name="jp_migration_done_subtitle">We hebben al je gegevens en instellingen overgedragen. Alles staat precies waar je het gelaten hebt.</string>
-    <string name="jp_migration_done_title">Bedankt dat je bent overgestapt naar Jetpack!</string>
-    <string name="jp_migration_notifications_disabled_in_wp_message">We zullen meldingen van de WordPress-app uitschakelen.</string>
-    <string name="jp_migration_notifications_subtitle">Je krijgt dezelfde meldingen, maar ze komen nu van de Jetpack-app.</string>
-    <string name="wordpress_help_center_button">WordPress help centrum</string>
     <string name="support_title">Ondersteuning</string>
-    <string name="notification_disable_broadcast_permission_desc">Staat de app toe om meldingen van WordPress uit te schakelen.</string>
-    <string name="notification_disable_broadcast_permission_label">meldingen van WordPress uitschakelen</string>
-    <string name="jp_migration_help_button">Hulp nodig?</string>
-    <string name="jp_migration_continue_button">Doorgaan</string>
-    <string name="jp_migration_welcome_site_found_message">We hebben je site gevonden. Ga door met het overdragen van je gegevens en meld je automatisch aan bij Jetpack.</string>
-    <string name="jp_migration_welcome_sites_found_message">We hebben je sites gevonden. Ga door met het overdragen van je gegevens en meld je automatisch aan bij Jetpack.</string>
-    <string name="jp_migration_avatar_content_description">Je profielfoto</string>
-    <string name="jp_migration_welcome_subtitle">Het lijkt erop dat je vanuit de WordPress-app komt.</string>
-    <string name="jp_migration_welcome_title">Welkom bij Jetpack!</string>
     <string name="icon_desc">icoon</string>
     <string name="post_settings_parent">Hoofdpagina</string>
     <string name="post_settings_page_attributes">Pagina attributen</string>

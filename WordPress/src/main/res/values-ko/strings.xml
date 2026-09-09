@@ -744,8 +744,6 @@ Language: ko_KR
     <string name="barcode_scanning_alert_dialog_rationale_message">바코드를 스캔하려면 카메라 권한이 필요합니다.</string>
     <string name="barcode_scanning_alert_dialog_title">카메라 권한 부여</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%d 레벨보다 깊숙이 중첩된 블록은 모바일 편집기에서 올바르게 렌더링되지 않을 수 있습니다.</string>
-    <string name="jp_migration_lets_go_button">지금 시작</string>
-    <string name="jp_migration_done_no_sites_message">젯팩 앱에서 워드프레스 여정을 계속하실 때가 되었습니다.</string>
     <string name="domain_management_clear_search">검색 지우기</string>
     <string name="media_encoder_quality_very_high">매우 높음</string>
     <string name="notification_security_key_needed" a8c-src-lib="module:login">계속하려면 보안 키를 입력하세요.</string>
@@ -930,7 +928,6 @@ Language: ko_KR
     <string name="sharing_twitter_deprecation_notice_find_out_more">더 알아보기</string>
     <string name="sharing_twitter_deprecation_notice_description">Twitter의 약관 및 가격 변경으로 인해 Twitter 자동 공유를 더 이상 사용할 수 없습니다.</string>
     <string name="sharing_twitter_deprecation_notice_title">Twitter 자동 공유를 더 이상 사용할 수 없습니다.</string>
-    <string name="jp_migration_notifications_allow_title">알림이 사이트에 계속 표시되도록 허용</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">레이블이 없는 색상입니다. %s</string>
     <string name="dashboard_activity_card_title">최근 활동</string>
     <string name="site_creation_search_domain_example_body">위의 예와 같이 사용자가 웹 브라우저에서 도메인을 통해 사이트를 찾고 방문할 수 있습니다.</string>
@@ -941,7 +938,6 @@ Language: ko_KR
     <string name="new_site_creation_preview_caption_paid">사용자 정의 도메인이 작동하기 시작하려면 30분 정도 걸릴 수 있습니다.</string>
     <string name="new_site_creation_preview_subtitle_paid">영수증을 이메일로 보내드렸습니다. %s</string>
     <string name="notifications_disabled_permission_dialog">앱 알림이 비활성화되었습니다. 활성화하려면 여기를 누르세요.</string>
-    <string name="jp_migration_done_delete_wp_message">데이터가 충돌하지 않도록 기기에서 &lt;b&gt;워드프레스 앱을 제거&lt;/b&gt;하는 것이 좋습니다.</string>
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">블록 제거</string>
     <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">개인정보 보호 및 평점</string>
     <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">재생 설정</string>
@@ -1002,8 +998,6 @@ Language: ko_KR
     <string name="site_creation_domain_tag_unavailable">이 도메인은 이미 등록되었습니다.</string>
     <string name="site_creation_domain_tag_recommended">권장</string>
     <string name="site_creation_domain_tag_best_alternative">최선의 대안</string>
-    <string name="support_faq_caption">궁금할 수도 있는 일반적인 질문에 대한 답변은 FAQ를 참조하세요.</string>
-    <string name="support_faq_title">젯팩 앱으로 전환해 주셔서 감사합니다!</string>
     <string name="logs_button">로그</string>
     <string name="tickets">티켓</string>
     <string name="free">무료</string>
@@ -1091,30 +1085,8 @@ Language: ko_KR
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">젯팩에서 링크 열기를 비활성화할 수 없음</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">젯팩에서 링크 여기를 활성화할 수 없음</string>
     <string name="preference_open_links_in_jetpack">젯팩에서 링크 열기</string>
-    <string name="jp_migration_network_error_message">네트워크 연결 없이 데이터와 설정을 이전할 수 없습니다.</string>
-    <string name="jp_migration_network_error_subtitle">네트워크 연결이 작동하도록 점검하고 다시 시도하세요.</string>
-    <string name="jp_migration_network_error_title">인터넷에 연결할 수 없습니다.</string>
-    <string name="jp_migration_generic_error_message">지원팀에 문의하거나 나중에 다시 시도하세요.</string>
-    <string name="jp_migration_generic_error_subtitle">죄송합니다. 계획대로 진행되지 않았습니다. 데이터는 안전하지만, 지금은 이전할 수 없습니다.</string>
     <string name="jp_migration_generic_error_title">죄송합니다. 문제가 발생했습니다…</string>
-    <string name="jp_migration_try_again_button">다시 시도</string>
-    <string name="jp_migration_finish_button">마침</string>
-    <string name="jp_migration_remove_wp_app_icon_content_description">워드프레스 앱 아이콘 제거</string>
-    <string name="jp_migration_done_subtitle">모든 데이터와 설정을 이전했습니다. 모든 것이 그대로 다 남아 있습니다.</string>
-    <string name="jp_migration_done_title">젯팩으로 전환해 주셔서 감사합니다!</string>
-    <string name="jp_migration_notifications_disabled_in_wp_message">워드프레스 앱의 알림을 해제하겠습니다.</string>
-    <string name="jp_migration_notifications_subtitle">동일한 알림을 모두 받겠지만, 이제는 젯팩 앱에서 알림을 보냅니다.</string>
-    <string name="wordpress_help_center_button">워드프레스 도움말 센터</string>
     <string name="support_title">지원</string>
-    <string name="notification_disable_broadcast_permission_desc">앱에 워드프레스 알림 비활성화를 허용하세요.</string>
-    <string name="notification_disable_broadcast_permission_label">워드프레스 알림 비활성화</string>
-    <string name="jp_migration_help_button">도움말이 필요하신가요?</string>
-    <string name="jp_migration_continue_button">계속</string>
-    <string name="jp_migration_welcome_site_found_message">사이트를 찾았습니다. 자동으로 모든 데이터를 계속 이전하고 젯팩에 로그인합니다.</string>
-    <string name="jp_migration_welcome_sites_found_message">사이트를 찾았습니다. 자동으로 모든 데이터를 계속 이전하고 젯팩에 로그인합니다.</string>
-    <string name="jp_migration_avatar_content_description">프로필 사진</string>
-    <string name="jp_migration_welcome_subtitle">워드프레스 앱에서 전환 중이신 것 같습니다.</string>
-    <string name="jp_migration_welcome_title">젯팩에 오신 것을 환영합니다!</string>
     <string name="icon_desc">아이콘</string>
     <string name="post_settings_parent">상위 페이지</string>
     <string name="post_settings_page_attributes">페이지 속성</string>

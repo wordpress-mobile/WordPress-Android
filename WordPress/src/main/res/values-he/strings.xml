@@ -743,8 +743,6 @@ Language: he_IL
     <string name="barcode_scanning_alert_dialog_rationale_message">ההרשאה למצלמה נדרשת כדי לסרוק את הברקוד</string>
     <string name="barcode_scanning_alert_dialog_title">לאשר הרשאות מצלמה</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">בעורך לנייד ייתכן עיבוד לא תקין של בלוקים בקינון עמוק מ-%d רמות.</string>
-    <string name="jp_migration_lets_go_button">קדימה</string>
-    <string name="jp_migration_done_no_sites_message">It\'s time to continue your WordPress journey on the Jetpack app.</string>
     <string name="domain_management_clear_search">לנקות את החיפוש</string>
     <string name="media_encoder_quality_very_high">גבוהה מאוד</string>
     <string name="notification_security_key_needed" a8c-src-lib="module:login">כדי להמשיך עליך לספק מפתח אבטחה.</string>
@@ -926,7 +924,6 @@ Language: he_IL
     <string name="sharing_twitter_deprecation_notice_find_out_more">למידע נוסף</string>
     <string name="sharing_twitter_deprecation_notice_description">האפשרות לשיתוף אוטומטי בטוויטר כבר לא זמינה עקב השינויים בתנאים ובתמחור של טוויטר.</string>
     <string name="sharing_twitter_deprecation_notice_title">האפשרות לשיתוף אוטומטי בטוויטר כבר לא זמינה</string>
-    <string name="jp_migration_notifications_allow_title">לאפשר להודעות להתעדכן מול האתר שלך</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">צבע ללא תווית. %s</string>
     <string name="dashboard_activity_card_title">פעילות אחרונה</string>
     <string name="site_creation_search_domain_example_body">כמו הדוגמה שמוצגת למעלה, דומיין מאפשר לאנשים למצוא את האתר שלך ולבקר בו מדפדפן האינטרנט שלהם.</string>
@@ -937,7 +934,6 @@ Language: he_IL
     <string name="new_site_creation_preview_caption_paid">יידרשו עד 30 דקות להתחלת הפעילות של הדומיין האישי.</string>
     <string name="new_site_creation_preview_subtitle_paid">שלחנו את הקבלה שלך באימייל. %s</string>
     <string name="notifications_disabled_permission_dialog">הודעות מהאפליקציה הושבתו. יש להקיש כאן כדי להפעיל אותן.</string>
-    <string name="jp_migration_done_delete_wp_message">אנחנו ממליצים &lt;b&gt;להסיר את ההתקנה של האפליקציה של WordPress&lt;/b&gt; כדי להימנע מהתנגשויות נתונים.</string>
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">להסיר בלוקים</string>
     <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">פרטיות ודירוג</string>
     <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">הגדרות ניגון</string>
@@ -998,8 +994,6 @@ Language: he_IL
     <string name="site_creation_domain_tag_unavailable">הדומיין הזה כבר רשום.</string>
     <string name="site_creation_domain_tag_recommended">מומלץ</string>
     <string name="site_creation_domain_tag_best_alternative">החלופה הטובה ביותר</string>
-    <string name="support_faq_caption">כדאי לעיין בשאלות הנפוצות שלנו כדי למצוא מענה על כמה מהשאלות הרגילות שאולי יהיו לך.</string>
-    <string name="support_faq_title">תודה שהחלפת לאפליקציה של Jetpack!</string>
     <string name="logs_button">קובצי יומן</string>
     <string name="tickets">כרטיסים</string>
     <string name="free">חינם</string>
@@ -1087,30 +1081,8 @@ Language: he_IL
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">אין אפשרות להשבית את פתיחת הקישורים ב-Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">אין אפשרות להפעיל את פתיחת הקישורים ב-Jetpack</string>
     <string name="preference_open_links_in_jetpack">לפתוח את הקישורים ב-Jetpack</string>
-    <string name="jp_migration_network_error_message">אין לנו אפשרות להעביר את הנתונים וההגדרות שלך ללא חיבור לרשת.</string>
-    <string name="jp_migration_network_error_subtitle">יש לבדוק שהחיבור לרשת תקין ולנסות שוב.</string>
-    <string name="jp_migration_network_error_title">לא ניתן להתחבר לאינטרנט.</string>
-    <string name="jp_migration_generic_error_message">יש לפנות לתמיכה או לנסות שוב מאוחר יותר.</string>
-    <string name="jp_migration_generic_error_subtitle">מצטערים, משהו לא פעל כמו שצריך. הנתונים שלך בטוחים אבל אנחנו לא יכולים להעביר אותם כעת.</string>
     <string name="jp_migration_generic_error_title">אוי, משהו השתבש…</string>
-    <string name="jp_migration_try_again_button">לנסות שוב</string>
-    <string name="jp_migration_finish_button">סיום</string>
-    <string name="jp_migration_remove_wp_app_icon_content_description">סמל של \'להסיר את האפליקציה של WordPress\'</string>
-    <string name="jp_migration_done_subtitle">העברנו את כל הנתונים וההגדרות שלך. השארנו הכול במקום.</string>
-    <string name="jp_migration_done_title">תודה שעברת אל Jetpack!</string>
-    <string name="jp_migration_notifications_disabled_in_wp_message">אנחנו נשבית את קבלת ההודעות מהאפליקציה של WordPress.</string>
-    <string name="jp_migration_notifications_subtitle">אותן הודעות ימשיכו להישלח אליך אבל כעת הן יגיעו מהאפליקציה של Jetpack.</string>
-    <string name="wordpress_help_center_button">מרכז העזרה של WordPress</string>
     <string name="support_title">תמיכה</string>
-    <string name="notification_disable_broadcast_permission_desc">הפעולה מאפשרת לאפליקציה להשבית את ההודעות של WordPress.</string>
-    <string name="notification_disable_broadcast_permission_label">להשבית הודעות של WordPress</string>
-    <string name="jp_migration_help_button">נדרשת לך עזרה?</string>
-    <string name="jp_migration_continue_button">המשך</string>
-    <string name="jp_migration_welcome_site_found_message">מצאנו את האתר שלך. אפשר להמשיך להעביר את כל הנתונים שלך ולהתחבר ל-Jetpack באופן אוטומטי.</string>
-    <string name="jp_migration_welcome_sites_found_message">מצאנו את האתרים שלך. אפשר להמשיך להעביר את כל הנתונים שלך ולהתחבר ל-Jetpack באופן אוטומטי.</string>
-    <string name="jp_migration_avatar_content_description">תמונת הפרופיל שלך</string>
-    <string name="jp_migration_welcome_subtitle">נראה שעברת מהאפליקציה של WordPress.</string>
-    <string name="jp_migration_welcome_title">ברוך בואך אל Jetpack!</string>
     <string name="icon_desc">סמל</string>
     <string name="post_settings_parent">עמוד ראשי</string>
     <string name="post_settings_page_attributes">מאפייני עמוד</string>

@@ -1,7 +1,7 @@
 package org.wordpress.android.util.crashlogging
 
 import android.content.pm.PackageManager.NameNotFoundException
-import org.wordpress.android.util.publicdata.PackageManagerWrapper
+import org.wordpress.android.util.PackageManagerWrapper
 import javax.inject.Inject
 
 class WebviewVersionProvider @Inject constructor(private val packageManager: PackageManagerWrapper) {
@@ -10,7 +10,7 @@ class WebviewVersionProvider @Inject constructor(private val packageManager: Pac
 
     @Suppress("SwallowedException")
     fun getVersion(): String = try {
-        packageManager.getPackageInfo(webviewPackageName, 0)?.versionName ?: unknownVersion
+        packageManager.getPackageInfo(webviewPackageName)?.versionName ?: unknownVersion
     } catch (e: NameNotFoundException) {
         unknownVersion
     }

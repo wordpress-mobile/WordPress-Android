@@ -303,8 +303,6 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
 
     fun setSelectedSite(siteLocalId: Int) = AppPrefs.setSelectedSite(siteLocalId)
 
-    fun getMySiteInitialScreen(isJetpackApp: Boolean): String = AppPrefs.getMySiteInitialScreen(isJetpackApp)
-
     fun setSkippedPromptDay(date: Date?, siteId: Int) = AppPrefs.setSkippedPromptDay(date, siteId)
 
     fun getSkippedPromptDay(siteId: Int): Date? = AppPrefs.getSkippedPromptDay(siteId)
@@ -314,36 +312,6 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun saveFirstBloggingPromptsOnboarding(isFirstTime: Boolean) {
         AppPrefs.saveFirstBloggingPromptsOnboarding(isFirstTime)
     }
-
-    fun getIsFirstTrySharedLoginJetpack(): Boolean = AppPrefs.getIsFirstTrySharedLoginJetpack()
-
-    fun saveIsFirstTrySharedLoginJetpack(isFirstTry: Boolean) = AppPrefs.saveIsFirstTrySharedLoginJetpack(isFirstTry)
-
-    fun getIsFirstTryUserFlagsJetpack(): Boolean = AppPrefs.getIsFirstTryUserFlagsJetpack()
-
-    fun saveIsFirstTryUserFlagsJetpack(isFirstTry: Boolean) = AppPrefs.saveIsFirstTryUserFlagsJetpack(isFirstTry)
-
-    fun getIsFirstTryBloggingRemindersSyncJetpack(): Boolean = AppPrefs.getIsFirstTryBloggingRemindersSyncJetpack()
-
-    fun saveIsFirstTryBloggingRemindersSyncJetpack(isFirstTry: Boolean) =
-        AppPrefs.saveIsFirstTryBloggingRemindersSyncJetpack(isFirstTry)
-
-    fun getIsFirstTryReaderSavedPostsJetpack(): Boolean = AppPrefs.getIsFirstTryReaderSavedPostsJetpack()
-
-    fun saveIsFirstTryReaderSavedPostsJetpack(isFirstTry: Boolean) =
-        AppPrefs.saveIsFirstTryReaderSavedPostsJetpack(isFirstTry)
-
-    fun setJetpackMigrationCompleted(isCompleted: Boolean) = AppPrefs.setIsJetpackMigrationCompleted(isCompleted)
-
-    fun isJetpackMigrationCompleted() = AppPrefs.getIsJetpackMigrationCompleted()
-
-    fun setJetpackMigrationInProgress(isInProgress: Boolean) = AppPrefs.setIsJetpackMigrationInProgress(isInProgress)
-
-    fun isJetpackMigrationInProgress() = AppPrefs.getIsJetpackMigrationInProgress()
-
-    fun setJetpackMigrationEligible(isEligible: Boolean) = AppPrefs.setIsJetpackMigrationEligible(isEligible)
-
-    fun isJetpackMigrationEligible() = AppPrefs.getIsJetpackMigrationEligible()
 
     fun getOpenWebLinksWithJetpackOverlayLastShownTimestamp(): Long =
         AppPrefs.getOpenWebLinksWithJetpackOverlayLastShownTimestamp()

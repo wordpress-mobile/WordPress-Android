@@ -3,10 +3,6 @@
 
     <string name="app_name" translatable="false">WordPress</string>
 
-    <!-- notification permission strings (used in WordPress AndroidManifest.xml) -->
-    <string name="notification_disable_broadcast_permission_label">disable WordPress notifications</string>
-    <string name="notification_disable_broadcast_permission_desc">Allows the app to disable WordPress notifications.</string>
-
     <!-- login prologue strings (used by WordPress variant) -->
     <string name="login_prologue_revamped_tagline">Write, edit, and publish from anywhere.</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress icon</string>
@@ -2655,7 +2651,6 @@
     <string name="help">Help</string>
     <string name="support_title">Support</string>
     <string name="help_and_support">Help &amp; Support</string>
-    <string name="wordpress_help_center_button">WordPress help center</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="tickets">Tickets</string>
     <string name="logs_button">Logs</string>
@@ -2665,8 +2660,6 @@
     <string name="support_push_notification_message">New message from \'Help &amp; Support\'</string>
     <string name="support_forum_title">Community forums</string>
     <string name="support_forum_caption">Get help from our group of volunteers.</string>
-    <string name="support_faq_title">Thank you for switching to the Jetpack app!</string>
-    <string name="support_faq_caption">See our FAQ for answers to common questions you may have.</string>
 
     <!-- Contact us -->
     <string name="support_ticket_subject">WordPress for Android Support</string>
@@ -4216,31 +4209,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_continue_to_reader">Continue to Reader</string>
     <string name="wp_jetpack_continue_to_stats">Continue to Stats</string>
     <string name="wp_jetpack_continue_to_notifications">Continue to Notifications</string>
-    <!-- Jetpack Welcome Screen -->
-    <string name="jp_migration_welcome_title">Welcome to Jetpack!</string>
-    <string name="jp_migration_welcome_subtitle">It looks like you’re switching from the WordPress app.</string>
-    <string name="jp_migration_avatar_content_description">Your profile photo</string>
-    <string name="jp_migration_welcome_sites_found_message">We found your sites. Continue to transfer all your data and sign in to Jetpack automatically.</string>
-    <string name="jp_migration_welcome_site_found_message">We found your site. Continue to transfer all your data and sign in to Jetpack automatically.</string>
-    <string name="jp_migration_continue_button">Continue</string>
-    <string name="jp_migration_help_button">Need help?</string>
-    <string name="jp_migration_notifications_allow_title">Allow notifications to keep up with your site</string>
-    <string name="jp_migration_notifications_subtitle">You’ll get all the same notifications but now they’ll come from the Jetpack app.</string>
-    <string name="jp_migration_notifications_disabled_in_wp_message">We\'ll turn off notifications from the WordPress app.</string>
-    <string name="jp_migration_done_title">Thanks for switching to Jetpack!</string>
-    <string name="jp_migration_done_subtitle">We’ve transferred all your data and settings. Everything is right where you left it.</string>
-    <string name="jp_migration_done_delete_wp_message">We recommend &lt;b&gt;uninstalling the WordPress app&lt;/b&gt; on your device to avoid data conflicts.</string>
-    <string name="jp_migration_remove_wp_app_icon_content_description">Remove WordPress App icon</string>
-    <string name="jp_migration_finish_button">Finish</string>
-    <string name="jp_migration_try_again_button">Try again</string>
+    <!-- Site Creation Plans error state (key name is historical) -->
     <string name="jp_migration_generic_error_title">Uh oh, something went wrong..</string>
-    <string name="jp_migration_generic_error_subtitle">We’re sorry but something didn’t go as planned. Your data is safe, but we’re unable to transfer it at this time.</string>
-    <string name="jp_migration_generic_error_message">Please contact support or try again later.</string>
-    <string name="jp_migration_network_error_title">Unable to connect to the internet.</string>
-    <string name="jp_migration_network_error_subtitle">Please check to make sure your network connection is working and try again.</string>
-    <string name="jp_migration_network_error_message">We are unable to transfer your data and settings without a network connection.</string>
-    <string name="jp_migration_done_no_sites_message">It\'s time to continue your WordPress journey on the Jetpack app.</string>
-    <string name="jp_migration_lets_go_button">Let\'s go</string>
 
     <!-- Open Web Links With Jetpack -->
     <string name="preference_open_links_in_jetpack">Open links in Jetpack</string>
