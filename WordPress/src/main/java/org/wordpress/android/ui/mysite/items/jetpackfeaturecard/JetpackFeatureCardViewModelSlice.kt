@@ -34,8 +34,7 @@ class JetpackFeatureCardViewModelSlice @Inject constructor(
                 onHideMenuItemClick = ListItemInteraction.create(this::onJetpackFeatureCardHideMenuItemClick),
                 onLearnMoreClick = ListItemInteraction.create(this::onJetpackFeatureCardLearnMoreClick),
                 onRemindMeLaterItemClick = ListItemInteraction.create(this::onJetpackFeatureCardRemindMeLaterClick),
-                onMoreMenuClick = ListItemInteraction.create(this::onJetpackFeatureCardMoreMenuClick),
-                learnMoreUrl = jetpackFeatureCardHelper.getLearnMoreUrl()
+                onMoreMenuClick = ListItemInteraction.create(this::onJetpackFeatureCardMoreMenuClick)
             )
         )
     }

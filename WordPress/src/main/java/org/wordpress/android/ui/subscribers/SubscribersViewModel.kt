@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
+import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.wrappers.SimpleDateFormatWrapper
@@ -46,7 +46,7 @@ class SubscribersViewModel @Inject constructor(
     accountStore: AccountStore,
     @Named(IO_THREAD) ioDispatcher: CoroutineDispatcher,
     trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor,
-    networkAvailabilityProvider: WpNetworkAvailabilityProvider,
+    wpComApiClientProvider: WpComApiClientProvider,
 ) : DataViewViewModel(
     mainDispatcher = mainDispatcher,
     appLogWrapper = appLogWrapper,
@@ -56,7 +56,7 @@ class SubscribersViewModel @Inject constructor(
     accountStore = accountStore,
     ioDispatcher = ioDispatcher,
     trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor,
-    networkAvailabilityProvider = networkAvailabilityProvider
+    wpComApiClientProvider = wpComApiClientProvider
 ) {
     private val _subscriberStats = MutableStateFlow<IndividualSubscriberStats?>(null)
     val subscriberStats = _subscriberStats.asStateFlow()

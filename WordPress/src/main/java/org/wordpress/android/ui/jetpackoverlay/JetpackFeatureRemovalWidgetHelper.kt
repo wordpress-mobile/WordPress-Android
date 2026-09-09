@@ -1,10 +1,11 @@
 package org.wordpress.android.ui.jetpackoverlay
 
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.PackageManagerWrapper
 import javax.inject.Inject
 
 class JetpackFeatureRemovalWidgetHelper @Inject constructor(
-    private val jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper,
+    private val buildConfigWrapper: BuildConfigWrapper,
     private val packageManagerWrapper: PackageManagerWrapper
 ) {
     private val widgetReceivers = listOf(
@@ -13,10 +14,10 @@ class JetpackFeatureRemovalWidgetHelper @Inject constructor(
     )
 
     fun disableWidgetReceiversIfNeeded() {
-        if (jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) {
-            widgetReceivers.forEach { packageManagerWrapper.disableComponentEnabledSetting(it) }
-        } else {
+        if (buildConfigWrapper.isJetpackApp) {
             widgetReceivers.forEach { packageManagerWrapper.enableComponentEnabledSetting(it) }
+        } else {
+            widgetReceivers.forEach { packageManagerWrapper.disableComponentEnabledSetting(it) }
         }
     }
 
