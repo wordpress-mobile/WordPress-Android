@@ -9,13 +9,11 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.generated.TransactionActionBuilder
 import org.wordpress.android.fluxc.model.DomainContactModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedStateResponse
-import org.wordpress.android.fluxc.store.AccountStore.OnDomainContactFetched
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainPayload
 import org.wordpress.android.fluxc.store.SiteStore.OnDomainSupportedStatesFetched
@@ -27,6 +25,8 @@ import org.wordpress.android.fluxc.store.TransactionsStore.OnShoppingCartRedeeme
 import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartError
 import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartPayload
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.domains.usecases.DomainContactResult
+import org.wordpress.android.ui.domains.usecases.FetchDomainContactUseCase
 import org.wordpress.android.ui.domains.usecases.FetchSupportedCountriesUseCase
 import org.wordpress.android.ui.domains.usecases.SupportedCountriesResult
 import org.wordpress.android.util.AppLog
@@ -35,6 +35,7 @@ import org.wordpress.android.util.DomainPhoneNumberUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import uniffi.wp_api.DomainContactInformation
 import uniffi.wp_api.SupportedCountry
 import javax.inject.Inject
 import javax.inject.Named
@@ -48,6 +49,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     private val siteStore: SiteStore,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val fetchSupportedCountriesUseCase: FetchSupportedCountriesUseCase,
+    private val fetchDomainContactUseCase: FetchDomainContactUseCase,
     @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
     private lateinit var site: SiteModel
@@ -147,44 +149,47 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
             }
             is SupportedCountriesResult.Success -> {
                 supportedCountries = result.countries
-                dispatcher.dispatch(AccountActionBuilder.newFetchDomainContactAction())
+                fetchDomainContact()
             }
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onDomainContactFetched(event: OnDomainContactFetched) {
-        if (event.isError) {
-            _uiState.value = _uiState.value?.copy(isFormProgressIndicatorVisible = false)
-            _showErrorMessage.value = event.error.message
-            AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching domain contact details")
-        } else {
-            _domainContactForm.value = DomainContactFormModel.fromDomainContactModel(event.contactModel)
-            _uiState.value = _uiState.value?.copy(isFormProgressIndicatorVisible = false)
+    private suspend fun fetchDomainContact() {
+        when (val result = fetchDomainContactUseCase.execute()) {
+            is DomainContactResult.Error -> {
+                _uiState.value = _uiState.value?.copy(isFormProgressIndicatorVisible = false)
+                result.message?.let { _showErrorMessage.value = it }
+                AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching domain contact details")
+            }
+            is DomainContactResult.Success -> {
+                val contact = result.contact
+                _domainContactForm.value = DomainContactFormModel.fromDomainContactInformation(contact)
+                _uiState.value = _uiState.value?.copy(isFormProgressIndicatorVisible = false)
 
-            val countryCode = event.contactModel?.countryCode
+                val countryCode = contact.countryCode
 
-            if (event.contactModel != null && !TextUtils.isEmpty(countryCode)) {
-                _uiState.value =
-                    uiState.value?.copy(
-                        selectedCountry = supportedCountries?.firstOrNull {
-                            it.code == event.contactModel?.countryCode
-                        },
-                        isStateProgressIndicatorVisible = true,
-                        isDomainRegistrationButtonEnabled = false
-                    )
+                if (!TextUtils.isEmpty(countryCode)) {
+                    _uiState.value =
+                        uiState.value?.copy(
+                            selectedCountry = supportedCountries?.firstOrNull {
+                                it.code == countryCode
+                            },
+                            isStateProgressIndicatorVisible = true,
+                            isDomainRegistrationButtonEnabled = false
+                        )
 
-                // if customer does not have a phone number we will try to prefill a country code
-                if (TextUtils.isEmpty(event.contactModel?.phone)) {
-                    val countryCodePrefix = DomainPhoneNumberUtils.getPhoneNumberPrefix(countryCode!!)
-                    _domainContactForm.value = _domainContactForm.value?.copy(
-                        phoneNumberPrefix = countryCodePrefix
+                    // if customer does not have a phone number we will try to prefill a country code
+                    if (TextUtils.isEmpty(contact.phone)) {
+                        val countryCodePrefix = DomainPhoneNumberUtils.getPhoneNumberPrefix(countryCode!!)
+                        _domainContactForm.value = _domainContactForm.value?.copy(
+                            phoneNumberPrefix = countryCodePrefix
+                        )
+                    }
+
+                    dispatcher.dispatch(
+                        SiteActionBuilder.newFetchDomainSupportedStatesAction(countryCode)
                     )
                 }
-
-                dispatcher.dispatch(
-                    SiteActionBuilder.newFetchDomainSupportedStatesAction(event.contactModel?.countryCode)
-                )
             }
         }
     }
@@ -427,28 +432,22 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                 )
             }
 
-            fun fromDomainContactModel(domainContactModel: DomainContactModel?): DomainContactFormModel? {
-                if (domainContactModel == null) {
-                    return null
-                }
-
-                return DomainContactFormModel(
-                    firstName = domainContactModel.firstName,
-                    lastName = domainContactModel.lastName,
-                    organization = domainContactModel.organization,
-                    addressLine1 = domainContactModel.addressLine1,
-                    addressLine2 = domainContactModel.addressLine2,
-                    postalCode = domainContactModel.postalCode,
-                    city = domainContactModel.city,
-                    state = domainContactModel.state,
-                    countryCode = domainContactModel.countryCode,
-                    email = domainContactModel.email,
-                    phoneNumberPrefix = DomainPhoneNumberUtils.getPhoneNumberPrefixFromFullPhoneNumber(
-                        domainContactModel.phone
-                    ),
-                    phoneNumber = DomainPhoneNumberUtils.getPhoneNumberWithoutPrefix(domainContactModel.phone)
-                )
-            }
+            fun fromDomainContactInformation(contact: DomainContactInformation) = DomainContactFormModel(
+                firstName = contact.firstName,
+                lastName = contact.lastName,
+                organization = contact.organization,
+                addressLine1 = contact.address1,
+                addressLine2 = contact.address2,
+                postalCode = contact.postalCode,
+                city = contact.city,
+                state = contact.state,
+                countryCode = contact.countryCode,
+                email = contact.email,
+                phoneNumberPrefix = DomainPhoneNumberUtils.getPhoneNumberPrefixFromFullPhoneNumber(
+                    contact.phone
+                ),
+                phoneNumber = DomainPhoneNumberUtils.getPhoneNumberWithoutPrefix(contact.phone)
+            )
         }
     }
 }
