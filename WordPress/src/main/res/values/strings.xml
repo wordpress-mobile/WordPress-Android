@@ -3,8 +3,6 @@
 
     <string name="app_name" translatable="false">WordPress</string>
 
-    <!-- notification permission strings (used in WordPress AndroidManifest.xml) -->
-
     <!-- login prologue strings (used by WordPress variant) -->
     <string name="login_prologue_revamped_tagline">Write, edit, and publish from anywhere.</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress icon</string>

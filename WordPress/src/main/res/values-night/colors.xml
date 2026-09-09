@@ -55,8 +55,6 @@
     <color name="site_creation_intent_item_emoji_bg">#3d3d3d</color>
     <color name="site_creation_preview_card_border">@color/white_translucent_20</color>
 
-    <!-- Jetpack Migration -->
-
     <!-- Jetpack feture removal overlay secondary button color -->
     <color name="jp_feature_removal_overlay_secondary_button_color">@color/white</color>
 

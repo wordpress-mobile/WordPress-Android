@@ -22,7 +22,6 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalTrackingKt;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -308,9 +307,6 @@ public class AppPrefs {
 
         // Tracks which block types are considered "new" via impression counts
         GUTENBERG_BLOCK_TYPE_IMPRESSIONS,
-
-        // Used to identify the App Settings for initial screen that is updated when the variant is assigned
-        wp_pref_initial_screen,
 
         // Indicates if this is the first time the user sees the blogging prompts onboarding dialog
         IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING,
@@ -1529,13 +1525,6 @@ public class AppPrefs {
 
     @NonNull private static String getSkippedBloggingPromptDayConfigKey(int siteId) {
         return DeletablePrefKey.SKIPPED_BLOGGING_PROMPT_DAY.name() + siteId;
-    }
-
-    public static String getMySiteInitialScreen(boolean isJetpackApp) {
-        return getString(
-                UndeletablePrefKey.wp_pref_initial_screen,
-                isJetpackApp ? MySiteTabType.DASHBOARD.getLabel() : MySiteTabType.SITE_MENU.getLabel()
-        );
     }
 
     public static Boolean getIsFirstBloggingPromptsOnboarding() {
