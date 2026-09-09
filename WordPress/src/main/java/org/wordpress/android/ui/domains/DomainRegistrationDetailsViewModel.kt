@@ -9,14 +9,12 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.action.TransactionAction.FETCH_SUPPORTED_COUNTRIES
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.generated.TransactionActionBuilder
 import org.wordpress.android.fluxc.model.DomainContactModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedStateResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.transactions.SupportedDomainCountry
 import org.wordpress.android.fluxc.store.AccountStore.OnDomainContactFetched
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainPayload
@@ -26,16 +24,18 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.store.TransactionsStore
 import org.wordpress.android.fluxc.store.TransactionsStore.OnShoppingCartCreated
 import org.wordpress.android.fluxc.store.TransactionsStore.OnShoppingCartRedeemed
-import org.wordpress.android.fluxc.store.TransactionsStore.OnSupportedCountriesFetched
 import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartError
 import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartPayload
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.domains.usecases.FetchSupportedCountriesUseCase
+import org.wordpress.android.ui.domains.usecases.SupportedCountriesResult
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DomainPhoneNumberUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import uniffi.wp_api.SupportedCountry
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -47,6 +47,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     @Suppress("unused") private val transactionsStore: TransactionsStore, // needed for events to work
     private val siteStore: SiteStore,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val fetchSupportedCountriesUseCase: FetchSupportedCountriesUseCase,
     @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
     private lateinit var site: SiteModel
@@ -56,7 +57,18 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
 
     private var siteCheckTries = 0
 
-    private var supportedCountries: List<SupportedDomainCountry>? = null
+    private var supportedCountries: List<SupportedCountry>? = null
+
+    /**
+     * Read by the country picker, which shares this ViewModel with the form.
+     *
+     * The picker used to be handed the list through its fragment arguments.
+     * [SupportedCountry] is a uniffi record and not `Parcelable`, and the
+     * picker already holds this ViewModel to report the selection back, so it
+     * reads the list from here instead of being given a copy of it.
+     */
+    val countriesForPicker: List<SupportedCountry>
+        get() = supportedCountries.orEmpty()
     private val _supportedStates = MutableLiveData<List<SupportedStateResponse>?>()
 
     private val _uiState = MutableLiveData<DomainRegistrationDetailsUiState>()
@@ -71,8 +83,8 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     val formError: LiveData<RedeemShoppingCartError>
         get() = _formError
 
-    private val _showCountryPickerDialog = SingleLiveEvent<List<SupportedDomainCountry>>()
-    val showCountryPickerDialog: LiveData<List<SupportedDomainCountry>>
+    private val _showCountryPickerDialog = SingleLiveEvent<List<SupportedCountry>>()
+    val showCountryPickerDialog: LiveData<List<SupportedCountry>>
         get() = _showCountryPickerDialog
 
     private val _showStatePickerDialog = SingleLiveEvent<List<SupportedStateResponse>>()
@@ -98,7 +110,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         val isDomainRegistrationButtonEnabled: Boolean = false,
         val isPrivacyProtectionEnabled: Boolean = true,
         val selectedState: SupportedStateResponse? = null,
-        val selectedCountry: SupportedDomainCountry? = null,
+        val selectedCountry: SupportedCountry? = null,
         val isStateInputEnabled: Boolean = false
     )
 
@@ -125,20 +137,18 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         isStarted = true
     }
 
-    private fun fetchSupportedCountries() {
+    private fun fetchSupportedCountries() = launch {
         _uiState.value = _uiState.value?.copy(isFormProgressIndicatorVisible = true)
-        dispatcher.dispatch(TransactionActionBuilder.generateNoPayloadAction(FETCH_SUPPORTED_COUNTRIES))
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onSupportedCountriesFetched(event: OnSupportedCountriesFetched) {
-        if (event.isError) {
-            _uiState.value = _uiState.value?.copy(isFormProgressIndicatorVisible = false)
-            _showErrorMessage.value = event.error.message
-            AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching supported countries")
-        } else {
-            supportedCountries = event.countries?.toCollection(ArrayList())
-            dispatcher.dispatch(AccountActionBuilder.newFetchDomainContactAction())
+        when (val result = fetchSupportedCountriesUseCase.execute()) {
+            is SupportedCountriesResult.Error -> {
+                _uiState.value = _uiState.value?.copy(isFormProgressIndicatorVisible = false)
+                result.message?.let { _showErrorMessage.value = it }
+                AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching supported countries")
+            }
+            is SupportedCountriesResult.Success -> {
+                supportedCountries = result.countries
+                dispatcher.dispatch(AccountActionBuilder.newFetchDomainContactAction())
+            }
         }
     }
 
@@ -336,7 +346,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         )
     }
 
-    fun onCountrySelected(country: SupportedDomainCountry) {
+    fun onCountrySelected(country: SupportedCountry) {
         if (country != uiState.value?.selectedCountry) {
             _supportedStates.value = null
             _uiState.value =

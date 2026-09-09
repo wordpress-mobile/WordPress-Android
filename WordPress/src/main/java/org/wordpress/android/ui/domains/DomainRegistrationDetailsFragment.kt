@@ -27,7 +27,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.DomainRegistrationDetailsFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedStateResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.transactions.SupportedDomainCountry
 import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.ADDRESS_1
 import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.ADDRESS_2
 import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.CITY
@@ -201,7 +200,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
         viewModel.showCountryPickerDialog.observe(viewLifecycleOwner,
             {
                 if (it != null && it.isNotEmpty()) {
-                    showCountryPicker(it)
+                    showCountryPicker()
                 }
             })
 
@@ -384,12 +383,8 @@ class DomainRegistrationDetailsFragment : Fragment() {
         dialogFragment.show(childFragmentManager, StatePickerDialogFragment.TAG)
     }
 
-    private fun showCountryPicker(countries: List<SupportedDomainCountry>) {
-        val dialogFragment = CountryPickerDialogFragment.newInstance(
-            countries.toCollection(
-                ArrayList()
-            )
-        )
+    private fun showCountryPicker() {
+        val dialogFragment = CountryPickerDialogFragment()
         dialogFragment.show(childFragmentManager, CountryPickerDialogFragment.TAG)
     }
 
@@ -488,35 +483,19 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
     @AndroidEntryPoint
     class CountryPickerDialogFragment : DialogFragment() {
-        private lateinit var countries: ArrayList<SupportedDomainCountry>
-
         @Inject
         lateinit var viewModelFactory: ViewModelProvider.Factory
         private lateinit var viewModel: DomainRegistrationDetailsViewModel
 
         companion object {
-            private const val EXTRA_COUNTRIES = "EXTRA_COUNTRIES"
             const val TAG = "COUNTRY_PICKER_DIALOG_FRAGMENT"
-
-            fun newInstance(countries: ArrayList<SupportedDomainCountry>): CountryPickerDialogFragment {
-                val fragment = CountryPickerDialogFragment()
-                val bundle = Bundle()
-                bundle.putParcelableArrayList(EXTRA_COUNTRIES, countries)
-                fragment.arguments = bundle
-                return fragment
-            }
-        }
-
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            countries = arguments?.getParcelableArrayList<SupportedDomainCountry>(EXTRA_COUNTRIES)
-                    as ArrayList<SupportedDomainCountry>
         }
 
         @Suppress("UseCheckOrError")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             viewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
                 .get(DomainRegistrationDetailsViewModel::class.java)
+            val countries = viewModel.countriesForPicker
             val builder = MaterialAlertDialogBuilder(requireContext())
             builder.setTitle(R.string.domain_registration_country_picker_dialog_title)
             builder.setItems(countries.map { it.name }.toTypedArray()) { _, which ->
