@@ -346,7 +346,9 @@ internal fun CommentWithViewContext.toRsComment() = CommentsRsDataSource.RsComme
     authorAvatarUrl = pickAvatarUrl(),
     // dateGmt is a UTC java.util.Date (an absolute instant), so relative-time formatting is
     // correct regardless of the site's timezone — unlike the offset-less local `date` field.
-    dateGmt = dateGmt,
+    // 0.8.0 types the comment date as nullable; a comment realistically always has one, so fall
+    // back to the epoch if it is ever absent rather than propagate nullability through the model.
+    dateGmt = dateGmt ?: Date(0),
     contentHtml = content.rendered,
     url = link,
     postId = post,

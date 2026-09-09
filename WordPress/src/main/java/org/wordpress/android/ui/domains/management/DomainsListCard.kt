@@ -26,6 +26,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.domains.management.composable.PendingGhostStrip
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import uniffi.wp_api.AllDomainItem
+import uniffi.wp_api.WpDateString
 import uniffi.wp_api.DomainListItemStatus
 import uniffi.wp_api.DomainListItemStatusId
 import uniffi.wp_api.DomainListItemStatusType
@@ -163,7 +164,7 @@ private fun previewDomain(
     autoRenewing = false,
     currentUserIsOwner = true,
     isDomainOnlySite = false,
-    expiry = expiry,
+    expiry = expiry?.let { WpDateString(it) },
     expired = false,
     primaryDomain = true,
     canSetAsPrimary = true,

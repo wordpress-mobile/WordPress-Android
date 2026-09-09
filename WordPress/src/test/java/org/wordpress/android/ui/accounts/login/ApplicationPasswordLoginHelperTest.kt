@@ -29,6 +29,7 @@ import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.AutoDiscoveryAttemptSuccess
 import uniffi.wp_api.DiscoveredAuthenticationMechanism
 import uniffi.wp_api.OAuth2Endpoints
+import uniffi.wp_api.AutoDiscoveryAttemptFailure
 import uniffi.wp_api.ParseUrlException
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -77,9 +78,6 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     @Mock
     lateinit var wpApiClientProvider: WpApiClientProvider
 
-    @Mock
-    lateinit var credentialsChangedNotifier: CredentialsChangedNotifier
-
     private lateinit var applicationPasswordLoginHelper: ApplicationPasswordLoginHelper
 
     @Before
@@ -96,8 +94,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             apiRootUrlCache,
             discoverSuccessWrapper,
             crashLogging,
-            wpApiClientProvider,
-            credentialsChangedNotifier
+            wpApiClientProvider
         )
     }
 
@@ -156,7 +153,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     fun `storeApplicationPasswordCredentialsFrom when apiRootUrl null and fallback discovery fails returns BadData`() =
         runTest {
             whenever(wpLoginClient.apiDiscovery(any())).thenReturn(
-                ApiDiscoveryResult.FailureParseSiteUrl(ParseUrlException.Generic(""))
+                ApiDiscoveryResult.Failure(AutoDiscoveryAttemptFailure.ParseSiteUrl(ParseUrlException.Generic("")))
             )
 
             val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
@@ -230,7 +227,6 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
         verify(siteStore).sites
         verify(dispatcherWrapper).updateApplicationPassword(eq(siteModel))
         verify(wpApiClientProvider).clearSelfHostedClient(eq(siteModel.id))
-        verify(credentialsChangedNotifier).notifyChanged(eq(siteModel.id))
     }
 
     @Test
@@ -427,8 +423,8 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
         runTest {
             whenever(wpLoginClient.apiDiscovery(eq(TEST_URL)))
                 .thenReturn(
-                    ApiDiscoveryResult.FailureParseSiteUrl(
-                        ParseUrlException.Generic("")
+                    ApiDiscoveryResult.Failure(
+                        AutoDiscoveryAttemptFailure.ParseSiteUrl(ParseUrlException.Generic(""))
                     )
                 )
 

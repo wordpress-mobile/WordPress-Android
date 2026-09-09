@@ -66,6 +66,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.utils.rsDebugTitle
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.ConfirmationDialogState
 import org.wordpress.android.ui.postsrs.PendingConfirmation
@@ -171,7 +172,7 @@ fun PostRsListScreen(
                             modifier = Modifier.fillMaxWidth().focusRequester(focusRequester)
                         )
                     } else {
-                        Text(text = stringResource(R.string.my_site_btn_blog_posts))
+                        Text(text = rsDebugTitle(R.string.my_site_btn_blog_posts))
                     }
                 },
                 navigationIcon = {

@@ -1,91 +1,80 @@
 package org.wordpress.android.ui.mysite.cards.connectivity
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.repositories.EditorSettingsRepository
-import org.wordpress.android.ui.accounts.login.CredentialsChangedNotifier
+import org.wordpress.android.repositories.SiteProvisioningSource
+import org.wordpress.android.repositories.SiteReadiness
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
-import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import javax.inject.Inject
 
 class SiteConnectivityBannerViewModelSlice @Inject constructor(
-    private val editorSettingsRepository: EditorSettingsRepository,
+    private val siteProvisioningSource: SiteProvisioningSource,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val credentialsChangedNotifier: CredentialsChangedNotifier,
-    private val selectedSiteRepository: SelectedSiteRepository,
+    connectionStatus: LiveData<ConnectionStatus>,
 ) {
     private lateinit var scope: CoroutineScope
-    private var currentJob: Job? = null
+    private var collectJob: Job? = null
     private var currentSite: SiteModel? = null
 
-    private val _uiModel = MutableLiveData<MySiteCardAndItem?>()
+    private val readiness = MutableLiveData<SiteReadiness?>()
+
+    private val _uiModel = MediatorLiveData<MySiteCardAndItem?>()
     val uiModel: LiveData<MySiteCardAndItem?> = _uiModel
 
-    /* Site capabilities rarely change, so once we've successfully fetched them for a site we
-       skip subsequent non-user-initiated fetches in this slice's lifetime. Failed fetches do
-       not populate this set, so a transient network failure recovers on the next onResume.
-       User-initiated calls (PTR, banner retry) always bypass this gate. */
-    private val fetchedCapabilitiesForSite = mutableSetOf<Int>()
+    init {
+        _uiModel.addSource(readiness) { render() }
+        // Losing the network doesn't re-run the pipeline, so the readiness we hold stays Unreachable
+        // and the banner would sit there stacked on the global "no connection" bar. This source is a
+        // change trigger only — it emits on transitions and swallows its initial value — so the
+        // decision reads the live availability rather than the emitted status.
+        _uiModel.addSource(connectionStatus) { render() }
+    }
 
     fun initialize(scope: CoroutineScope) {
         this.scope = scope
-        // Re-run detection the moment an application password is established for the selected site
-        // (e.g. the headless mint finished after our first fetch lost the race), instead of waiting
-        // for the next resume/refresh. Re-read the selected site so we see the just-persisted
-        // credentials; isUserInitiated = false so a replayed event is a no-op once cached.
-        scope.launch {
-            credentialsChangedNotifier.events.collect { siteLocalId ->
-                val site = selectedSiteRepository.getSelectedSite()
-                if (site != null && site.id == siteLocalId) {
-                    fetchCapabilities(site, isUserInitiated = false)
-                }
-            }
-        }
     }
 
+    /**
+     * Subscribes the banner to [site]'s readiness. The banner is a thin view over
+     * that state — it surfaces only on [SiteReadiness.Unreachable], which the pipeline
+     * reports both when the capability probe failed and when the site couldn't be
+     * reached at the auth stage while the device was online. Every other state
+     * (probing, needs auth, offline, ready) leaves it hidden: when credentials are the
+     * problem the application-password card owns it, and the banner stays out of the
+     * way. [isUserInitiated] (pull-to-refresh, retry) forces a fresh run.
+     */
     fun fetchCapabilities(site: SiteModel, isUserInitiated: Boolean) {
-        currentJob?.cancel()
+        collectJob?.cancel()
         currentSite = site
-        currentJob = scope.launch {
-            if (site.id in fetchedCapabilitiesForSite && !isUserInitiated) {
-                return@launch
+        if (isUserInitiated) siteProvisioningSource.invalidate(site)
+        collectJob = scope.launch {
+            siteProvisioningSource.stateFor(site).collect { state ->
+                // Bail if the user switched sites while suspended — postValue is
+                // not a suspension point, so cancellation alone won't catch this.
+                if (currentSite?.id != site.id) return@collect
+                readiness.postValue(state)
             }
-            val ok = editorSettingsRepository.fetchEditorCapabilitiesForSite(site)
-            if (ok) {
-                fetchedCapabilitiesForSite.add(site.id)
-            }
-            val hasCache = editorSettingsRepository.hasCachedCapabilities(site)
-            // Bail if the user switched sites while we were suspended — postValue
-            // isn't a suspension point, so cancellation alone won't catch this.
-            if (currentSite?.id != site.id) return@launch
-            // Suppress the banner when the device is offline — the global "no
-            // connection" banner already covers this case, and stacking warnings
-            // for the same root cause is just noise.
-            val suppressForOffline = !ok && !networkUtilsWrapper.isNetworkAvailable()
-            // Atomic sites probe the direct host with an application password that's minted
-            // asynchronously on this same screen, so a first-login fetch can fail purely because
-            // the credential isn't ready yet. Treat that as pending, not a connection failure —
-            // the application-password card owns that state and a later fetch will succeed.
-            val suppressForPendingAuth =
-                !ok && editorSettingsRepository.isAwaitingApplicationPassword(site)
-            // Show the banner only as a last resort — not when detection succeeded, when we have
-            // cached capabilities, or while a transient non-error state (offline / pending creds)
-            // already explains the failure.
-            val suppressBanner = ok || hasCache || suppressForOffline || suppressForPendingAuth
-            _uiModel.postValue(if (suppressBanner) null else buildBanner())
         }
     }
 
     fun clearBanner() {
-        currentJob?.cancel()
+        collectJob?.cancel()
         currentSite = null
-        _uiModel.postValue(null)
+        readiness.postValue(null)
+    }
+
+    private fun render() {
+        val showBanner = readiness.value is SiteReadiness.Unreachable &&
+            networkUtilsWrapper.isNetworkAvailable()
+        _uiModel.value = if (showBanner) buildBanner() else null
     }
 
     private fun buildBanner(): MySiteCardAndItem.Item.SingleActionCard =
@@ -93,10 +82,7 @@ class SiteConnectivityBannerViewModelSlice @Inject constructor(
             textResource = R.string.site_connectivity_banner_text,
             imageResource = R.drawable.ic_cloud_off_themed_24dp,
             onActionClick = {
-                val site = currentSite
-                if (site != null && currentJob?.isActive != true) {
-                    fetchCapabilities(site, isUserInitiated = true)
-                }
+                currentSite?.let { fetchCapabilities(it, isUserInitiated = true) }
             },
             showLearnMore = false,
             centerImageVertically = true,

@@ -470,7 +470,6 @@ Language: eu_ES
     <string name="file_error_create">Ezin izan da media fitxategia igotzeko behin-behineko fitxategia sortu. Ziurtatu zaitez gailuak behar haina toki duela.</string>
     <string name="new_post">Bidalketa berria</string>
     <string name="new_media">Media berria</string>
-    <string name="fatal_db_error">Errorea gertatu da aplikazioaren datu-basea sortzean. Saiatu aplikazioa berrinstalatzen.</string>
     <string name="reader_title_applog">Aplikazioaren loga</string>
     <string name="cannot_delete_multi_media_items">Mediaren bat ezin izan da orain ezabatu. Saiatu zaitez berriz beranduago.</string>
     <string name="post_not_found">Errore bat gertatu da bidalketa kargatzean. Eguneratu bidalketak eta saiatu berriz.</string>

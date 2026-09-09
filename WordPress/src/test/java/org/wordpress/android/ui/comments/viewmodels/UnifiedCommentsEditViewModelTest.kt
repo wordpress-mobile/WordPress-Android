@@ -47,6 +47,7 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.Fi
 import org.wordpress.android.ui.comments.unified.usecase.GetCommentUseCase
 import org.wordpress.android.ui.notifications.utils.NotificationsActionsWrapper
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.rs.WpRsRouting
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource
@@ -82,6 +83,9 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 
+    @Mock
+    lateinit var wpRsRouting: WpRsRouting
+
     private lateinit var viewModel: UnifiedCommentsEditViewModel
 
     private var uiState: MutableList<EditCommentUiState> = mutableListOf()
@@ -93,7 +97,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         siteId = REMOTE_SITE_ID
     }
 
-    // A WP.com site is served by wordpress-rs (isUsingWpComRestApi() is true), unlike [site].
+    // A site wordpress-rs serves, unlike [site] — see the wpRsRouting stub in setup().
     private val rsSite = SiteModel().apply {
         id = LOCAL_SITE_ID
         siteId = REMOTE_SITE_ID
@@ -117,6 +121,8 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         whenever(readerCommentTableWrapper.getComment(REMOTE_SITE_ID, postId, remoteCommentId))
             .thenReturn(READER_COMMENT_ENTITY)
 
+        whenever(wpRsRouting.canUseWpRs(rsSite)).thenReturn(true)
+
         viewModel = UnifiedCommentsEditViewModel(
             mainDispatcher = testDispatcher(),
             bgDispatcher = testDispatcher(),
@@ -128,7 +134,8 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
             getCommentUseCase = getCommentUseCase,
             notificationActionsWrapper = notificationActionsWrapper,
             readerCommentTableWrapper = readerCommentTableWrapper,
-            analyticsUtilsWrapper
+            analyticsUtilsWrapper = analyticsUtilsWrapper,
+            wpRsRouting = wpRsRouting
         )
 
         setupObservers()

@@ -2613,7 +2613,6 @@ Language: vi_VN
     <string name="mnu_comment_unapprove">Không duyệt</string>
     <string name="new_post">Viết bài</string>
     <string name="new_media">Tải lên media</string>
-    <string name="fatal_db_error">Xảy ra lỗi khi tạo cơ sở dữ liệu ứng dụng. Thử cài đặt lại ứng dụng.</string>
     <string name="reader_title_applog">Nhật ký ứng dụng</string>
     <string name="add_new_category">Thêm chuyên mục mới</string>
     <string name="category_name">Tên chuyên mục</string>

@@ -164,6 +164,36 @@ class CategoriesListViewModelTest : BaseUnitTest() {
         assertTrue(uiStates.last() is Content)
     }
 
+    @Test
+    fun `given a deletion succeeds, when the callback arrives, then the list is fetched again`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        viewModel.start(siteModel)
+
+        viewModel.onTaxonomyChanged(OnTaxonomyChanged(1, TaxonomyAction.REMOVE_TERM))
+        advanceUntilIdle()
+
+        verify(getCategoriesUseCase, times(2)).fetchSiteCategories(siteModel)
+    }
+
+    @Test
+    fun `given a deletion fails on no network, when the callback arrives, then the list is left alone`() = test {
+        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(mock())
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true).thenReturn(false)
+        viewModel.start(siteModel)
+
+        viewModel.onTaxonomyChanged(getRemoveTermError())
+        advanceUntilIdle()
+
+        verify(getCategoriesUseCase, times(1)).fetchSiteCategories(siteModel)
+        assertTrue(uiStates.last() is Content)
+    }
+
+    private fun getRemoveTermError(): OnTaxonomyChanged {
+        val taxonomyChanged = OnTaxonomyChanged(0, TaxonomyAction.REMOVE_TERM)
+        taxonomyChanged.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR)
+        return taxonomyChanged
+    }
+
     private fun getGenericTaxonomyError(): OnTaxonomyChanged {
         val taxonomyChanged = OnTaxonomyChanged(0, TaxonomyAction.FETCH_CATEGORIES)
         taxonomyChanged.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR)

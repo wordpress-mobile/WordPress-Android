@@ -8,6 +8,8 @@
 agents:
   queue: "android"
 
+priority: 1
+
 steps:
   - label: ":android: Gather build to release to production"
     command: ".buildkite/commands/gather-production-candidate.sh"

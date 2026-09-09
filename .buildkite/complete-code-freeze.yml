@@ -1,6 +1,8 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
 ---
 
+priority: 1
+
 steps:
   - label: "Complete Code Freeze"
     plugins: [$CI_TOOLKIT]

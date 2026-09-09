@@ -44,7 +44,6 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
@@ -61,6 +60,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteEditorsChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.inappupdate.IInAppUpdateManager;
 import org.wordpress.android.inappupdate.InAppUpdateListener;
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordReauthNotifier;
 import org.wordpress.android.ui.accounts.login.LoginAnalyticsListener;
 import org.wordpress.android.networking.NetworkConnectionMonitor;
 import org.wordpress.android.push.GCMMessageHandler;
@@ -88,7 +88,6 @@ import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper;
 import org.wordpress.android.ui.main.MainActionListItem.ActionType;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
@@ -187,7 +186,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         BloggingPromptsReminderSchedulerListener,
         BloggingPromptsOnboardingListener,
         UpdateSelectedSiteListener,
-        WpAppNotifierHandler.NotifierListener {
+        ApplicationPasswordReauthNotifier.Listener {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_CREATE_SITE = "ARG_CREATE_SITE";
     public static final String ARG_IS_MAGIC_LINK_LOGIN = "ARG_IS_MAGIC_LINK_LOGIN";
@@ -262,7 +261,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Inject OpenWebLinksWithJetpackFlowFeatureConfig mOpenWebLinksWithJetpackFlowFeatureConfig;
     @Inject QRCodeAuthFlowFeatureConfig mQrCodeAuthFlowFeatureConfig;
     @Inject JetpackFeatureRemovalOverlayUtil mJetpackFeatureRemovalOverlayUtil;
-    @Inject JetpackFeatureRemovalHelper mJetpackFeatureRemovalHelper;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -276,7 +274,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
     @Inject PerAppLocaleManager mPerAppLocaleManager;
 
-    @Inject WpAppNotifierHandler mWpAppNotifierHandler;
+    @Inject ApplicationPasswordReauthNotifier mReauthNotifier;
 
     @Inject NetworkConnectionMonitor mNetworkConnectionMonitor;
 
@@ -323,7 +321,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         String authTokenToSet = null;
 
         mBottomNav = findViewById(R.id.bottom_navigation);
-        mBottomNav.init(getSupportFragmentManager(), this, mJetpackFeatureRemovalHelper);
+        mBottomNav.init(getSupportFragmentManager(), this);
 
         if (savedInstanceState == null) {
             if (!AppPrefs.isInstallationReferrerObtained()) {
@@ -759,7 +757,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
     private void triggerCreatePageFlow(ActionType actionType) {
         if (mMLPViewModel.canShowModalLayoutPicker()
-            && mJetpackFeatureRemovalHelper.shouldShowTemplateSelectionInPages()) {
+            && mBuildConfigWrapper.isJetpackApp()) {
             mMLPViewModel.createPageFlowTriggered(getCreatePageDashboardSourceFromActionType(actionType));
         } else {
             if (actionType == ActionType.CREATE_NEW_PAGE_FROM_PAGES_CARD) {
@@ -808,7 +806,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                     break;
                 case ARG_NOTIFICATIONS:
                     setUpMainView();
-                    if (mJetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) {
+                    if (!mBuildConfigWrapper.isJetpackApp()) {
                         Map<String, String> trackingProperties = new HashMap<>();
                         trackingProperties.put("calling_function", "deeplink_notifications");
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
@@ -818,7 +816,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                     break;
                 case ARG_READER:
                     setUpMainView();
-                    if (mJetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) {
+                    if (!mBuildConfigWrapper.isJetpackApp()) {
                         Map<String, String> trackingProperties = new HashMap<>();
                         trackingProperties.put("calling_function", "deeplink_reader");
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
@@ -845,7 +843,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                     if (!mSelectedSiteRepository.hasSelectedSite()) {
                         initSelectedSite();
                     }
-                    if (mJetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) {
+                    if (!mBuildConfigWrapper.isJetpackApp()) {
                         Map<String, String> trackingProperties = new HashMap<>();
                         trackingProperties.put("calling_function", "deeplink_stats");
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
@@ -1052,7 +1050,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
         setUpMainView();
 
-        mWpAppNotifierHandler.addListener(this);
+        mReauthNotifier.addListener(this);
 
         // Load selected site
         initSelectedSite();
@@ -1210,19 +1208,19 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         switch (pageType) {
             case MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
-                mJetpackFeatureRemovalHelper.trackPageAccessedEventIfNeeded(PageType.MY_SITE, getSelectedSite());
+                mAnalyticsTrackerWrapper.track(AnalyticsTracker.Stat.MY_SITE_ACCESSED, getSelectedSite());
                 break;
             case READER:
                 ActivityId.trackLastActivity(ActivityId.READER);
-                mJetpackFeatureRemovalHelper.trackPageAccessedEventIfNeeded(PageType.READER);
+                mAnalyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_ACCESSED);
                 break;
             case NOTIFS:
                 ActivityId.trackLastActivity(ActivityId.NOTIFICATIONS);
-                mJetpackFeatureRemovalHelper.trackPageAccessedEventIfNeeded(PageType.NOTIFS);
+                mAnalyticsTrackerWrapper.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
                 break;
             case ME:
                 ActivityId.trackLastActivity(ActivityId.ME);
-                mJetpackFeatureRemovalHelper.trackPageAccessedEventIfNeeded(PageType.ME);
+                mAnalyticsTrackerWrapper.track(AnalyticsTracker.Stat.ME_ACCESSED);
                 break;
             default:
                 break;
@@ -1702,7 +1700,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     protected void onPause() {
         super.onPause();
 
-        mWpAppNotifierHandler.removeListener(this);
+        mReauthNotifier.removeListener(this);
     }
 
     private void enableDeepLinkingComponentsIfNeeded() {
@@ -1760,7 +1758,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         }
     }
 
-    @Override public void onRequestedWithInvalidAuthentication(@NonNull String siteUrl) {
+    @Override public void onReauthRequired(@NonNull String siteUrl) {
         showApplicationPasswordOffReauthenticateDialog(siteUrl);
     }
 

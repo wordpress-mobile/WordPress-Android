@@ -19,6 +19,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.outlined.ShowChart
 import androidx.compose.material.icons.filled.ChatBubbleOutline
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -30,6 +31,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -63,6 +65,7 @@ import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianValueFormatter
+import com.patrykandpatrick.vico.compose.cartesian.data.ColumnCartesianLayerModel
 import com.patrykandpatrick.vico.compose.cartesian.data.columnModel
 import com.patrykandpatrick.vico.compose.cartesian.data.lineModel
 import com.patrykandpatrick.vico.compose.cartesian.decoration.HorizontalLine
@@ -79,6 +82,7 @@ import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
 import com.patrykandpatrick.vico.compose.common.Fill
 import com.patrykandpatrick.vico.compose.common.Insets
 import com.patrykandpatrick.vico.compose.common.component.LineComponent
+import com.patrykandpatrick.vico.compose.common.data.ExtraStore
 import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import org.wordpress.android.R
@@ -96,10 +100,16 @@ private val CardCornerRadius = 10.dp
 private val CardPadding = 16.dp
 private val CardMargin = 16.dp
 private val ChartHeight = 180.dp
+// Width of each bar in the views-over-time bar chart. With scroll disabled and fillMaxWidth,
+// Vico scales the column collection to fit, so this sets the bars' width relative to the spacing.
+private val ChartBarThickness = 24.dp
 // Vertical space the loaded header occupies: headlineLarge line height (40dp) + 4dp + the difference
 // row's bodyMedium line height (20dp). Reserved in the Unavailable state so a metric switch on a
 // single-day period doesn't resize the card.
 private val ChartHeaderHeight = 64.dp
+// Size of the drill-down arrow shown inline next to the title for a soft-selected bar. Kept compact
+// so it fits on the title row without growing it.
+private val SelectedBarArrowSize = 28.dp
 private val StatItemWidth = 100.dp
 private val StatItemIndicatorHeight = 3.dp
 private val BadgeCornerRadius = 4.dp
@@ -126,6 +136,7 @@ fun ViewsStatsCard(
     onRetry: () -> Unit,
     onRemoveCard: () -> Unit,
     modifier: Modifier = Modifier,
+    onDrillIntoSelectedBar: () -> Unit = {},
     cardPosition: CardPosition? = null,
     onMoveUp: (() -> Unit)? = null,
     onMoveToTop: (() -> Unit)? = null,
@@ -150,7 +161,7 @@ fun ViewsStatsCard(
             is ViewsStatsCardUiState.Loading -> LoadingContent()
             is ViewsStatsCardUiState.Content -> ContentCard(
                 uiState, onChartTypeChanged, onMetricSelected, onBarTapped, onRetry, onRemoveCard,
-                cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
+                onDrillIntoSelectedBar, cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
             )
             is ViewsStatsCardUiState.Error -> ErrorContent(
                 uiState, onRetry, onRemoveCard,
@@ -235,6 +246,7 @@ private fun ContentCard(
     onBarTapped: (Int) -> Unit,
     onRetry: () -> Unit,
     onRemoveCard: () -> Unit,
+    onDrillIntoSelectedBar: () -> Unit,
     cardPosition: CardPosition?,
     onMoveUp: (() -> Unit)?,
     onMoveToTop: (() -> Unit)?,
@@ -250,9 +262,12 @@ private fun ContentCard(
                 .alpha(if (state.isLoadingNewPeriod) 0.5f else 1f)
         ) {
             // Title + menu are always shown so the card controls stay reachable in every state.
-            // Chart-type options only make sense once the chart has loaded.
+            // Chart-type options only make sense once the chart has loaded. The soft-selected bar's
+            // date sits inline next to the title, so selecting a bar doesn't add a row or resize card.
             CardTitleRow(
                 title = stringResource(state.selectedMetric.labelRes),
+                selectedBar = state.selectedBar,
+                onDrillIntoSelectedBar = onDrillIntoSelectedBar,
                 chartTypeMenu = if (chart is ChartUiState.Loaded) {
                     { ChartTypeMenuItems(chart.chartType, onChartTypeChanged) }
                 } else {
@@ -277,7 +292,8 @@ private fun ContentCard(
                         periodAverage = chart.periodAverage,
                         chartType = chart.chartType,
                         selectedMetric = state.selectedMetric,
-                        onBarTapped = onBarTapped
+                        onBarTapped = onBarTapped,
+                        selectedBarIndex = state.selectedBar?.index
                     )
                 }
                 is ChartUiState.Unavailable -> {
@@ -318,6 +334,8 @@ private fun ContentCard(
 @Composable
 private fun CardTitleRow(
     title: String,
+    selectedBar: SelectedBar?,
+    onDrillIntoSelectedBar: () -> Unit,
     chartTypeMenu: @Composable (() -> Unit)?,
     onRemoveCard: () -> Unit,
     cardPosition: CardPosition?,
@@ -331,11 +349,38 @@ private fun CardTitleRow(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold
-        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            // The soft-selected bar's date is shown inline after the title (plus a drill-down arrow,
+            // hidden for hourly buckets that have no narrower period). Inline placement avoids adding
+            // a row, so selecting/clearing a bar never changes the card height.
+            if (selectedBar != null) {
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = selectedBar.label,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                if (selectedBar.canDrillDown) {
+                    IconButton(
+                        onClick = onDrillIntoSelectedBar,
+                        modifier = Modifier.size(SelectedBarArrowSize)
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = stringResource(
+                                R.string.stats_view_selected_period_content_description
+                            ),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+            }
+        }
         StatsCardMenu(
             onRemoveClick = onRemoveCard,
             cardPosition = cardPosition,
@@ -569,7 +614,8 @@ private fun ViewsStatsChart(
     periodAverage: Long,
     chartType: ChartType,
     selectedMetric: StatsMetric,
-    onBarTapped: (Int) -> Unit = {}
+    onBarTapped: (Int) -> Unit = {},
+    selectedBarIndex: Int? = null
 ) {
     // Key the model producer on chartType so it gets recreated when chart type changes
     val modelProducer = remember(chartType) { CartesianChartModelProducer() }
@@ -779,32 +825,29 @@ private fun ViewsStatsChart(
                     }
                 }
             }
+            // Build the base (full-color) and dimmed columns inside remember, keyed on the stable
+            // inputs. LineComponent/List aren't stable keys, so keying on the freshly-allocated lists
+            // would miss every recomposition and rebuild the provider on this hot path.
+            val columnProvider = remember(primaryColor, secondaryColor, selectedBarIndex) {
+                val roundedTop = RoundedCornerShape(topStartPercent = 20, topEndPercent = 20)
+                val baseColumns = listOf(
+                    LineComponent(fill = Fill(primaryColor), thickness = ChartBarThickness, shape = roundedTop),
+                    LineComponent(fill = Fill(primaryColor), thickness = ChartBarThickness),
+                    LineComponent(fill = Fill(secondaryColor), thickness = ChartBarThickness, shape = roundedTop)
+                )
+                val dimPrimary = dimColor(primaryColor)
+                val dimSecondary = dimColor(secondaryColor)
+                val dimmedColumns = listOf(
+                    LineComponent(fill = Fill(dimPrimary), thickness = ChartBarThickness, shape = roundedTop),
+                    LineComponent(fill = Fill(dimPrimary), thickness = ChartBarThickness),
+                    LineComponent(fill = Fill(dimSecondary), thickness = ChartBarThickness, shape = roundedTop)
+                )
+                HighlightColumnProvider(baseColumns, dimmedColumns, selectedBarIndex)
+            }
             CartesianChartHost(
                 chart = rememberCartesianChart(
                     rememberColumnCartesianLayer(
-                        columnProvider = ColumnCartesianLayer
-                            .ColumnProvider.series(
-                                LineComponent(
-                                    fill = Fill(primaryColor),
-                                    thickness = 16.dp,
-                                    shape = RoundedCornerShape(
-                                        topStartPercent = 20,
-                                        topEndPercent = 20,
-                                    )
-                                ),
-                                LineComponent(
-                                    fill = Fill(primaryColor),
-                                    thickness = 16.dp,
-                                ),
-                                LineComponent(
-                                    fill = Fill(secondaryColor),
-                                    thickness = 16.dp,
-                                    shape = RoundedCornerShape(
-                                        topStartPercent = 20,
-                                        topEndPercent = 20,
-                                    )
-                                )
-                            ),
+                        columnProvider = columnProvider,
                         mergeMode = {
                             ColumnCartesianLayer.MergeMode.Stacked
                         }
@@ -1033,6 +1076,38 @@ private fun ErrorContent(
 private fun formatDifference(difference: Long): String {
     val formattedValue = formatStatValue(abs(difference))
     return if (difference < 0) "-$formattedValue" else "+$formattedValue"
+}
+
+// Alpha applied to non-selected bars while a bar is soft-selected, scaling the color's own alpha so
+// the already-muted previous-period series stays proportionally faded.
+private const val DIM_ALPHA_FACTOR = 0.3f
+
+private fun dimColor(color: Color): Color = color.copy(alpha = color.alpha * DIM_ALPHA_FACTOR)
+
+/**
+ * A Vico [ColumnCartesianLayer.ColumnProvider] that renders the bar at [selectedIndex] in full color
+ * and every other bar dimmed, across all three stacked series. When [selectedIndex] is null (no soft
+ * selection) every bar uses the base color, matching the default appearance. [base] and [dimmed] each
+ * hold one [LineComponent] per series, indexed by `seriesIndex`.
+ */
+private class HighlightColumnProvider(
+    private val base: List<LineComponent>,
+    private val dimmed: List<LineComponent>,
+    private val selectedIndex: Int?
+) : ColumnCartesianLayer.ColumnProvider {
+    override fun getColumn(
+        entry: ColumnCartesianLayerModel.Entry,
+        extraStore: ExtraStore
+    ): LineComponent {
+        val useDimmed = selectedIndex != null && entry.x.toInt() != selectedIndex
+        return (if (useDimmed) dimmed else base)[entry.seriesIndex]
+    }
+
+    override fun getWidestSeriesColumn(
+        seriesKey: Any,
+        seriesIndex: Int,
+        extraStore: ExtraStore
+    ): LineComponent = base[seriesIndex]
 }
 
 @Preview(showBackground = true)

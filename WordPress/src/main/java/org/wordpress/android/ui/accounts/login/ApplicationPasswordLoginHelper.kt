@@ -25,7 +25,11 @@ import org.wordpress.android.util.crashlogging.sendReportWithTag
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.DiscoveredAuthenticationMechanism
+import uniffi.wp_api.AutoDiscoveryAttemptFailure
+import uniffi.wp_api.FetchAndParseApiRootFailure
+import uniffi.wp_api.WpErrorCode
 import uniffi.wp_api.applicationPasswordsUrl
+import uniffi.wp_api.localizedDescription
 import java.net.URI
 import javax.inject.Inject
 import javax.inject.Named
@@ -35,6 +39,11 @@ private const val SUCCESS_TAG = "success"
 private const val REASON_TAG = "reason"
 private const val SOURCE_TAG = "source"
 private const val ERROR_TAG = "error"
+
+// WordPress.com returns this error code from the REST root of a site whose Privacy setting is
+// Private (or Coming Soon). The gate sits in front of WordPress, so discovery never reaches the
+// API — the site's Application Password support is irrelevant to the failure.
+private const val PRIVATE_SITE_ERROR_CODE = "private_site"
 
 class ApplicationPasswordLoginHelper @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -48,19 +57,46 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     private val discoverSuccessWrapper: DiscoverSuccessWrapper,
     private val crashLogging: CrashLogging,
     private val wpApiClientProvider: WpApiClientProvider,
-    private val credentialsChangedNotifier: CredentialsChangedNotifier,
 ) {
     private var processedAppPasswordData: String? = null
 
     sealed class DiscoveryResult {
         data class Authorized(val authorizationUrl: String) : DiscoveryResult()
-        data class Failed(val userFacingMessage: String) : DiscoveryResult()
+
+        /**
+         * Discovery couldn't reach or read the site's REST API. [userFacingMessage] is the library's
+         * description of what went wrong; [reason] narrows it when we can recognise the cause, so the
+         * UI can explain it rather than guess.
+         */
+        data class Failed(
+            val userFacingMessage: String,
+            val reason: FailureReason = FailureReason.Unknown,
+        ) : DiscoveryResult()
 
         /**
          * The site is hosted on WordPress.com: API discovery reported OAuth2 as the authentication
          * mechanism, so it can't use Application Passwords and should log in via WordPress.com.
          */
         object WpComSite : DiscoveryResult()
+
+        /** A recognised cause for a [Failed] discovery. */
+        enum class FailureReason {
+            /** Nothing more specific than the library's message. */
+            Unknown,
+
+            /**
+             * The site's Privacy setting blocks anonymous requests, so discovery got a 403 instead of
+             * the REST root. Nothing is wrong with the site's Application Password support — it just
+             * has to be publicly reachable for the login flow to read its API.
+             */
+            PrivateSite,
+
+            /**
+             * Discovery succeeded but the site advertises no application-passwords endpoint, so it
+             * genuinely can't be logged into this way.
+             */
+            NotSupported,
+        }
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -84,6 +120,15 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     } else {
                         val authorizationUrl =
                             discoverSuccessWrapper.getApplicationPasswordsAuthenticationUrl(urlDiscoveryResult)
+                        if (authorizationUrl == null) {
+                            // Discovery worked; the site just doesn't offer application passwords. This
+                            // is the one case the old blanket "not supported" message was right about.
+                            return@withContext handleAuthenticationDiscoveryError(
+                                siteUrl,
+                                "No application-passwords authentication URL advertised",
+                                DiscoveryResult.FailureReason.NotSupported,
+                            )
+                        }
                         val apiRootUrl = discoverSuccessWrapper.getApiRootUrl(urlDiscoveryResult)
                         if (apiRootUrl.isNotEmpty()) {
                             // Store the ApiRootUrl for use it after the login
@@ -100,20 +145,47 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     }
                 }
 
-                is ApiDiscoveryResult.FailureFetchAndParseApiRoot,
-                is ApiDiscoveryResult.FailureFindApiRoot,
-                is ApiDiscoveryResult.FailureParseSiteUrl ->
+                is ApiDiscoveryResult.Failure ->
                     handleAuthenticationDiscoveryError(
                         siteUrl,
-                        urlDiscoveryResult.userFacingErrorMessage(siteUrl).orEmpty()
+                        // 0.8.0 replaced userFacingErrorMessage() with localizedDescription(), which
+                        // returns a translated sentence. This message is shown to the user on the
+                        // login screen, so the raw Throwable message (an internal debug dump of the
+                        // discovery attempt) must not be used here.
+                        urlDiscoveryResult.failure.localizedDescription(),
+                        urlDiscoveryResult.failureReason(),
                     )
             }
         }
 
-    private fun handleAuthenticationDiscoveryError(siteUrl: String, message: String): DiscoveryResult {
-        appLogWrapper.e(AppLog.T.API, "A_P: Error during API discovery for $siteUrl - $message")
+    /**
+     * Recognise causes worth naming to the user. A [FetchAndParseApiRootFailure.WpError] means we
+     * reached the site and it answered with a REST error envelope, so its `code` is a reliable
+     * signal — WordPress.com sends `private_site` from a site whose Privacy setting hides it.
+     */
+    private fun ApiDiscoveryResult.failureReason(): DiscoveryResult.FailureReason {
+        val wpError = ((this as? ApiDiscoveryResult.Failure)?.failure
+            as? AutoDiscoveryAttemptFailure.FetchAndParseApiRoot)
+            ?.fetchAndParseApiRootFailure as? FetchAndParseApiRootFailure.WpError
+            ?: return DiscoveryResult.FailureReason.Unknown
+        // `private_site` has no dedicated WpErrorCode, so the library surfaces it as a CustomException
+        // carrying the raw code string.
+        val rawCode = (wpError.errorCode as? WpErrorCode.CustomException)?.v1
+        return if (rawCode == PRIVATE_SITE_ERROR_CODE) {
+            DiscoveryResult.FailureReason.PrivateSite
+        } else {
+            DiscoveryResult.FailureReason.Unknown
+        }
+    }
+
+    private fun handleAuthenticationDiscoveryError(
+        siteUrl: String,
+        message: String,
+        reason: DiscoveryResult.FailureReason = DiscoveryResult.FailureReason.Unknown,
+    ): DiscoveryResult {
+        appLogWrapper.e(AppLog.T.API, "A_P: Error during API discovery for $siteUrl - $message ($reason)")
         AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
-        return DiscoveryResult.Failed(message)
+        return DiscoveryResult.Failed(message, reason)
     }
 
     sealed class StoreCredentialsResult {
@@ -167,7 +239,6 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 }
                 wpApiClientProvider.clearSelfHostedClient(site.id)
                 dispatcherWrapper.updateApplicationPassword(site)
-                credentialsChangedNotifier.notifyChanged(site.id)
                 trackSuccessful(effectiveUrlLogin.siteUrl)
                 trackCreated(creationSource, success = true)
                 processedAppPasswordData = effectiveUrlLogin.siteUrl
@@ -438,12 +509,9 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     WPUrlUtils.isWordPressCom(authentication.endpoints.authorizationUrl)
         }
 
+        /** `null` when the site advertises no application-passwords endpoint. */
         fun getApplicationPasswordsAuthenticationUrl(
             successObject: ApiDiscoveryResult.Success
-        ): String = requireNotNull(
-            applicationPasswordsUrl(successObject.success.authentication)?.url()
-        ) {
-            "Application passwords authentication URL is required"
-        }
+        ): String? = applicationPasswordsUrl(successObject.success.authentication)?.url()
     }
 }

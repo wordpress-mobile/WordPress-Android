@@ -419,9 +419,11 @@ public class TaxonomyStore extends Store {
 
     private void handleDeleteTermCompleted(@NonNull RemoteTermPayload payload) {
         if (payload.isError()) {
+            // Reported as REMOVE_TERM, the same cause a successful deletion emits, because that is
+            // the cause callers subscribe to.
             OnTaxonomyChanged event = new OnTaxonomyChanged(
                     0,
-                    TaxonomyAction.DELETE_TERM
+                    TaxonomyAction.REMOVE_TERM
             );
             event.error = payload.error;
             emitChange(event);

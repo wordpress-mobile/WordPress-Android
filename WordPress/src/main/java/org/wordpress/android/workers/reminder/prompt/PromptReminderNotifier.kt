@@ -21,9 +21,9 @@ import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.push.NotificationPushIds.REMINDER_NOTIFICATION_ID
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.notifications.DismissNotificationReceiver
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.config.BloggingPromptsFeature
@@ -45,7 +45,7 @@ class PromptReminderNotifier @Inject constructor(
     val bloggingRemindersAnalyticsTracker: BloggingRemindersAnalyticsTracker,
     val htmlCompatWrapper: HtmlCompatWrapper,
     private val bloggingRemindersStore: BloggingRemindersStore,
-    private val jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
+    private val buildConfigWrapper: BuildConfigWrapper
 ) {
     @Suppress("MagicNumber")
     suspend fun notify(siteId: Int) {
@@ -169,12 +169,12 @@ class PromptReminderNotifier @Inject constructor(
         val siteModel = siteStore.getSiteByLocalId(siteId)
         val bloggingRemindersModel = bloggingRemindersStore.bloggingRemindersModel(siteId).first()
         val hasOptedInBloggingPromptsReminders = siteModel != null && bloggingRemindersModel.isPromptIncluded
-        // In Jetpack feature removal phase 4, all notifications are disabled.
-        val shouldShowNotificationsInJetpackRemovalPhase = jetpackFeatureRemovalHelper.shouldShowNotifications()
+        // The WordPress app has no notifications at all.
+        val shouldShowNotifications = buildConfigWrapper.isJetpackApp
         return hasAccessToken &&
                 isBloggingPromptsEnabled &&
                 hasOptedInBloggingPromptsReminders &&
-                shouldShowNotificationsInJetpackRemovalPhase
+                shouldShowNotifications
     }
 
     companion object {

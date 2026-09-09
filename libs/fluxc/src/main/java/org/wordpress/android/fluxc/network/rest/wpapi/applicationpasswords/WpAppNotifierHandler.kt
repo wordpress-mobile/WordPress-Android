@@ -18,7 +18,10 @@ class WpAppNotifierHandler @Inject constructor() {
         cleanupDeadReferences()
         listeners.forEach {
             val listener = it.value.get()
-            listener?.onRequestedWithInvalidAuthentication(site.url)
+            // Hand listeners the whole SiteModel, not just its URL: URL is not a unique key
+            // (UNIQUE is on SITE_ID+URL), so a listener resolving back by URL can't tell which row
+            // actually failed. The id pins it to the exact site whose client raised the 401.
+            listener?.onRequestedWithInvalidAuthentication(site)
         }
     }
 
@@ -37,6 +40,6 @@ class WpAppNotifierHandler @Inject constructor() {
     }
 
     interface NotifierListener {
-        fun onRequestedWithInvalidAuthentication(siteUrl: String)
+        fun onRequestedWithInvalidAuthentication(site: SiteModel)
     }
 }

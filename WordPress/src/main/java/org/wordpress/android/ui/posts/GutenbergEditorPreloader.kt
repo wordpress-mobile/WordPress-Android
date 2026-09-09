@@ -10,9 +10,9 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.datasets.SiteSettingsProvider
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.repositories.EditorSettingsRepository
-import org.wordpress.android.ui.accounts.login.SiteApiRestUrlRecoverer
+import org.wordpress.android.repositories.SiteProvisioningSource
 import org.wordpress.android.util.AppLog
 import org.wordpress.gutenberg.model.EditorDependencies
 import java.util.concurrent.ConcurrentHashMap
@@ -63,8 +63,8 @@ class GutenbergEditorPreloader @Inject constructor(
     private val gutenbergKitSettingsBuilder: GutenbergKitSettingsBuilder,
     private val siteSettingsProvider: SiteSettingsProvider,
     private val editorServiceProvider: EditorServiceProvider,
-    private val editorSettingsRepository: EditorSettingsRepository,
-    private val siteApiRestUrlRecoverer: SiteApiRestUrlRecoverer,
+    private val siteProvisioningSource: SiteProvisioningSource,
+    private val siteStore: SiteStore,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     private sealed class PreloadState {
@@ -95,12 +95,13 @@ class GutenbergEditorPreloader @Inject constructor(
         val siteId = site.id
         val job = scope.launch(bgDispatcher) {
             try {
-                if (site.wpApiRestUrl.isNullOrEmpty()) {
-                    siteApiRestUrlRecoverer.discoverApiRootUrl(site.url)
-                        ?.let { site.wpApiRestUrl = it }
-                }
-                editorSettingsRepository
-                    .fetchEditorCapabilitiesForSite(site)
+                // The provisioning source mints creds, recovers the REST root, and
+                // detects capabilities — one shared, deduplicated run, so the preloader
+                // and connectivity banner can't double-probe. We only need it to have
+                // run; re-read the provisioned site so the config points at the
+                // recovered REST root.
+                siteProvisioningSource.await(site)
+                val provisionedSite = siteStore.getSiteByLocalId(siteId) ?: site
                 // Preloading produces EditorDependencies, which the editor
                 // consumes alongside its own per-launch EditorConfiguration.
                 // Cookies and network-logging are per-launch concerns the
@@ -108,7 +109,7 @@ class GutenbergEditorPreloader @Inject constructor(
                 // defaults here.
                 val config = gutenbergKitSettingsBuilder
                     .buildPostConfiguration(
-                        site = site,
+                        site = provisionedSite,
                         accessToken = accountStore.accessToken,
                         cookies = emptyMap(),
                         isNetworkLoggingEnabled = false,
@@ -146,6 +147,9 @@ class GutenbergEditorPreloader @Inject constructor(
     @MainThread
     fun refreshPreloading(site: SiteModel, scope: CoroutineScope) {
         clearSite(site)
+        // Pull-to-refresh: force a fresh provisioning run so the await in
+        // preloadIfNeeded re-detects instead of returning the cached result.
+        siteProvisioningSource.invalidate(site)
         preloadIfNeeded(site, scope)
     }
 

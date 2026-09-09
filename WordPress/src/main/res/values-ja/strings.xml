@@ -235,7 +235,6 @@ Language: ja_JP
     <string name="stats_period_selector_content_description">統計の期間を選択</string>
     <string name="stats_period_custom">カスタム</string>
     <string name="stats_period_last_12_months">過去12か月</string>
-    <string name="stats_period_last_6_months">過去6か月</string>
     <string name="stats_period_last_30_days">過去30日間</string>
     <string name="stats_period_last_7_days">過去7日間</string>
     <string name="stats_period_today">今日</string>
@@ -311,8 +310,6 @@ Language: ja_JP
     <string name="he_support_status_unknown">不明</string>
     <string name="he_support_status_closed">クローズド</string>
     <string name="he_support_status_solved">解決済み</string>
-    <string name="he_support_status_waiting_for_user">ユーザーを待機中</string>
-    <string name="he_support_status_waiting_for_support">サポートを待機中</string>
     <string name="he_support_select_attachments">添付ファイルを選択</string>
     <string name="he_support_download_attachment">添付ファイルをダウンロード</string>
     <string name="he_support_include_logs_description">ログを添付すると問題の調査に役立ちます。 ログには最近のアプリのアクティビティが含まれている可能性があります。</string>
@@ -3815,7 +3812,6 @@ Language: ja_JP
     <string name="reader_toast_err_removing_tag">このタグを削除できません</string>
     <string name="reader_toast_err_adding_tag">このタグを追加できません</string>
     <string name="reader_title_applog">アプリケーションログ</string>
-    <string name="fatal_db_error">アプリのデータベースを作成する際にエラーが発生しました。アプリをもう一度インストールしてみてください。</string>
     <string name="error_refresh_media">メディアファイルを再読み込みできませんでした</string>
     <string name="wordpress_blog">WordPress ブログ</string>
     <string name="local_changes">ローカルの変更</string>

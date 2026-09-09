@@ -4,9 +4,9 @@ import android.app.Activity;
 
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper;
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.BuildConfigWrapper;
 
 import javax.inject.Inject;
 
@@ -20,7 +20,7 @@ public class ShortcutsNavigator {
     @Inject ShortcutsNavigator() {
     }
 
-    @Inject JetpackFeatureRemovalHelper mJetpackFeatureRemovalHelper;
+    @Inject BuildConfigWrapper mBuildConfigWrapper;
 
     public void showTargetScreen(String action, Activity activity, SiteModel currentSite) {
         Shortcut shortcut = Shortcut.fromActionString(action);
@@ -32,7 +32,7 @@ public class ShortcutsNavigator {
         switch (shortcut) {
             case OPEN_STATS:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SHORTCUT_STATS_CLICKED);
-                if (!mJetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) {
+                if (mBuildConfigWrapper.isJetpackApp()) {
                     ActivityLauncher.viewBlogStats(activity, currentSite, StatsLaunchedFrom.SHORTCUT);
                 }
                 break;
@@ -49,7 +49,7 @@ public class ShortcutsNavigator {
                 break;
             case OPEN_NOTIFICATIONS:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SHORTCUT_NOTIFICATIONS_CLICKED);
-                if (!mJetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) {
+                if (mBuildConfigWrapper.isJetpackApp()) {
                     ActivityLauncher.viewNotifications(activity);
                 }
                 break;

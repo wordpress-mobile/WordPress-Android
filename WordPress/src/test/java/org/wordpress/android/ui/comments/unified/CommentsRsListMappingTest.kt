@@ -6,6 +6,7 @@ import org.mockito.kotlin.mock
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import uniffi.wp_api.CommentContentWithViewContext
 import uniffi.wp_api.CommentType
+import uniffi.wp_api.WpDateString
 import uniffi.wp_api.CommentWithViewContext
 import uniffi.wp_api.UserAvatarSize
 import uniffi.wp_api.WpAdditionalFields
@@ -91,7 +92,7 @@ class CommentsRsListMappingTest {
         authorName = "Jane",
         authorUrl = "https://example.com",
         content = CommentContentWithViewContext(rendered = "<p>hello</p>"),
-        date = "2026-07-01T12:00:00",
+        date = WpDateString("2026-07-01T12:00:00"),
         dateGmt = DATE_GMT,
         link = "https://example.com/post/#comment-42",
         parent = parent,

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.newstats.datasource
 
 import org.wordpress.android.networking.restapi.WpComApiClientProvider
-import org.wordpress.android.util.LocaleManagerWrapper
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.StatsCityViewsParams
@@ -20,7 +19,7 @@ import uniffi.wp_api.StatsRegionViewsParams
 import uniffi.wp_api.StatsRegionViewsPeriod
 import uniffi.wp_api.StatsDevicesParams
 import uniffi.wp_api.StatsDevicesPeriod
-import uniffi.wp_api.StatsInsightsParams
+import uniffi.wp_api.WpDateString
 import uniffi.wp_api.StatsPostChange
 import uniffi.wp_api.StatsPostResponse
 import uniffi.wp_api.StatsPostTarget
@@ -37,7 +36,6 @@ import uniffi.wp_api.StatsVideoPlaysPeriod
 import uniffi.wp_api.StatsVisitsField
 import uniffi.wp_api.StatsVisitsParams
 import uniffi.wp_api.StatsVisitsUnit
-import uniffi.wp_api.WpComLanguage
 import uniffi.wp_api.StatsSubscribersParams
 import uniffi.wp_api.StatsSubscribersUnit
 import uniffi.wp_api.StatsSubscribersStatField
@@ -52,7 +50,6 @@ import uniffi.wp_api.StatsUtmParams
 import uniffi.wp_api.WpApiParamOrder
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import rs.wordpress.api.kotlin.fromLocale
 import javax.inject.Inject
 
 /**
@@ -61,8 +58,7 @@ import javax.inject.Inject
  */
 @Suppress("LargeClass")
 class StatsDataSourceImpl @Inject constructor(
-    private val wpComApiClientProvider: WpComApiClientProvider,
-    private val localeManagerWrapper: LocaleManagerWrapper
+    private val wpComApiClientProvider: WpComApiClientProvider
 ) : StatsDataSource {
     /**
      * Access token for API authentication.
@@ -102,8 +98,8 @@ class StatsDataSourceImpl @Inject constructor(
         val params = StatsVisitsParams(
             unit = unit.toApiUnit(),
             quantity = quantity.toUInt(),
-            endDate = endDate,
-            startDate = startDate,
+            endDate = WpDateString(endDate),
+            startDate = startDate?.let { WpDateString(it) },
             statFields = statFields?.map { it.toApiField() } ?: emptyList(),
         )
 
@@ -130,19 +126,19 @@ class StatsDataSourceImpl @Inject constructor(
     private fun mapToStatsVisitsData(response: uniffi.wp_api.StatsVisitsResponse): StatsVisitsData {
         return StatsVisitsData(
             visits = response.visitsData().map { dataPoint ->
-                VisitsDataPoint(period = dataPoint.period, visits = dataPoint.visits.toLong())
+                VisitsDataPoint(period = dataPoint.period.value, visits = dataPoint.visits.toLong())
             },
             visitors = response.visitorsData().map { dataPoint ->
-                VisitorsDataPoint(period = dataPoint.period, visitors = dataPoint.visitors.toLong())
+                VisitorsDataPoint(period = dataPoint.period.value, visitors = dataPoint.visitors.toLong())
             },
             likes = response.likesData().map { dataPoint ->
-                LikesDataPoint(period = dataPoint.period, likes = dataPoint.likes.toLong())
+                LikesDataPoint(period = dataPoint.period.value, likes = dataPoint.likes.toLong())
             },
             comments = response.commentsData().map { dataPoint ->
-                CommentsDataPoint(period = dataPoint.period, comments = dataPoint.comments.toLong())
+                CommentsDataPoint(period = dataPoint.period.value, comments = dataPoint.comments.toLong())
             },
             posts = response.postsData().map { dataPoint ->
-                PostsDataPoint(period = dataPoint.period, posts = dataPoint.posts.toLong())
+                PostsDataPoint(period = dataPoint.period.value, posts = dataPoint.posts.toLong())
             }
         )
     }
@@ -164,23 +160,18 @@ class StatsDataSourceImpl @Inject constructor(
         StatsVisitField.POSTS -> StatsVisitsField.POSTS
     }
 
-    private val wpComLanguage: WpComLanguage?
-        get() = WpComLanguage.fromLocale(localeManagerWrapper.getLocale())
-
     private fun buildTopPostsParams(dateRange: StatsDateRange, max: Int) = when (dateRange) {
         is StatsDateRange.Preset -> StatsTopPostsParams(
             period = StatsTopPostsPeriod.DAY,
-            date = dateRange.date,
+            date = WpDateString(dateRange.date),
             num = dateRange.num.toUInt(),
             max = max.coerceAtLeast(1).toUInt(),
-            locale = wpComLanguage
         )
         is StatsDateRange.Custom -> StatsTopPostsParams(
             period = StatsTopPostsPeriod.DAY,
-            date = dateRange.date,
-            startDate = dateRange.startDate,
+            date = WpDateString(dateRange.date),
+            startDate = WpDateString(dateRange.startDate),
             max = max.coerceAtLeast(1).toUInt(),
-            locale = wpComLanguage
         )
     }
 
@@ -232,17 +223,15 @@ class StatsDataSourceImpl @Inject constructor(
         val params = when (dateRange) {
             is StatsDateRange.Preset -> StatsReferrersParams(
                 period = StatsReferrersPeriod.DAY,
-                date = dateRange.date,
+                date = WpDateString(dateRange.date),
                 num = dateRange.num.toUInt(),
                 max = maxParam,
-                locale = wpComLanguage
             )
             is StatsDateRange.Custom -> StatsReferrersParams(
                 period = StatsReferrersPeriod.DAY,
-                date = dateRange.date,
-                startDate = dateRange.startDate,
+                date = WpDateString(dateRange.date),
+                startDate = WpDateString(dateRange.startDate),
                 max = maxParam,
-                locale = wpComLanguage
             )
         }
 
@@ -291,18 +280,16 @@ class StatsDataSourceImpl @Inject constructor(
     private fun buildCountryViewsParams(dateRange: StatsDateRange, max: Int) = when (dateRange) {
         is StatsDateRange.Preset -> StatsCountryViewsParams(
             period = StatsCountryViewsPeriod.DAY,
-            date = dateRange.date,
+            date = WpDateString(dateRange.date),
             num = dateRange.num.toUInt(),
             max = max.coerceAtLeast(1).toUInt(),
-            locale = wpComLanguage,
             summarize = true
         )
         is StatsDateRange.Custom -> StatsCountryViewsParams(
             period = StatsCountryViewsPeriod.DAY,
-            date = dateRange.date,
-            startDate = dateRange.startDate,
+            date = WpDateString(dateRange.date),
+            startDate = WpDateString(dateRange.startDate),
             max = max.coerceAtLeast(1).toUInt(),
-            locale = wpComLanguage,
             summarize = true
         )
     }
@@ -359,18 +346,16 @@ class StatsDataSourceImpl @Inject constructor(
     ) = when (dateRange) {
         is StatsDateRange.Preset -> StatsRegionViewsParams(
             period = StatsRegionViewsPeriod.DAY,
-            date = dateRange.date,
+            date = WpDateString(dateRange.date),
             num = dateRange.num.toUInt(),
             max = max.coerceAtLeast(1).toUInt(),
-            locale = wpComLanguage,
             summarize = true
         )
         is StatsDateRange.Custom -> StatsRegionViewsParams(
             period = StatsRegionViewsPeriod.DAY,
-            date = dateRange.date,
-            startDate = dateRange.startDate,
+            date = WpDateString(dateRange.date),
+            startDate = WpDateString(dateRange.startDate),
             max = max.coerceAtLeast(1).toUInt(),
-            locale = wpComLanguage,
             summarize = true
         )
     }
@@ -433,18 +418,16 @@ class StatsDataSourceImpl @Inject constructor(
     ) = when (dateRange) {
         is StatsDateRange.Preset -> StatsCityViewsParams(
             period = StatsCityViewsPeriod.DAY,
-            date = dateRange.date,
+            date = WpDateString(dateRange.date),
             num = dateRange.num.toUInt(),
             max = max.coerceAtLeast(1).toUInt(),
-            locale = wpComLanguage,
             summarize = true
         )
         is StatsDateRange.Custom -> StatsCityViewsParams(
             period = StatsCityViewsPeriod.DAY,
-            date = dateRange.date,
-            startDate = dateRange.startDate,
+            date = WpDateString(dateRange.date),
+            startDate = WpDateString(dateRange.startDate),
             max = max.coerceAtLeast(1).toUInt(),
-            locale = wpComLanguage,
             summarize = true
         )
     }
@@ -508,18 +491,16 @@ class StatsDataSourceImpl @Inject constructor(
     private fun buildTopAuthorsParams(dateRange: StatsDateRange, max: Int) = when (dateRange) {
         is StatsDateRange.Preset -> StatsTopAuthorsParams(
             period = StatsTopAuthorsPeriod.DAY,
-            date = dateRange.date,
+            date = WpDateString(dateRange.date),
             num = dateRange.num.toUInt(),
             max = if (max > 0) max.toUInt() else null,
-            locale = wpComLanguage,
             summarize = true
         )
         is StatsDateRange.Custom -> StatsTopAuthorsParams(
             period = StatsTopAuthorsPeriod.DAY,
-            date = dateRange.date,
-            startDate = dateRange.startDate,
+            date = WpDateString(dateRange.date),
+            startDate = WpDateString(dateRange.startDate),
             max = if (max > 0) max.toUInt() else null,
-            locale = wpComLanguage,
             summarize = true
         )
     }
@@ -577,15 +558,15 @@ class StatsDataSourceImpl @Inject constructor(
     ) = when (dateRange) {
         is StatsDateRange.Preset -> StatsClicksParams(
             period = StatsClicksPeriod.DAY,
-            date = dateRange.date,
+            date = WpDateString(dateRange.date),
             num = dateRange.num.toUInt(),
             max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
         is StatsDateRange.Custom -> StatsClicksParams(
             period = StatsClicksPeriod.DAY,
-            date = dateRange.date,
-            startDate = dateRange.startDate,
+            date = WpDateString(dateRange.date),
+            startDate = WpDateString(dateRange.startDate),
             max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
@@ -597,15 +578,15 @@ class StatsDataSourceImpl @Inject constructor(
     ) = when (dateRange) {
         is StatsDateRange.Preset -> StatsDevicesParams(
             period = StatsDevicesPeriod.DAY,
-            date = dateRange.date,
+            date = WpDateString(dateRange.date),
             num = dateRange.num.toUInt(),
             max = max.coerceAtLeast(1).toUInt(),
             summarize = true
         )
         is StatsDateRange.Custom -> StatsDevicesParams(
             period = StatsDevicesPeriod.DAY,
-            date = dateRange.date,
-            startDate = dateRange.startDate,
+            date = WpDateString(dateRange.date),
+            startDate = WpDateString(dateRange.startDate),
             max = max.coerceAtLeast(1).toUInt(),
             summarize = true
         )
@@ -707,15 +688,15 @@ class StatsDataSourceImpl @Inject constructor(
     ) = when (dateRange) {
         is StatsDateRange.Preset -> StatsSearchTermsParams(
             period = StatsSearchTermsPeriod.DAY,
-            date = dateRange.date,
+            date = WpDateString(dateRange.date),
             num = dateRange.num.toUInt(),
             max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
         is StatsDateRange.Custom -> StatsSearchTermsParams(
             period = StatsSearchTermsPeriod.DAY,
-            date = dateRange.date,
-            startDate = dateRange.startDate,
+            date = WpDateString(dateRange.date),
+            startDate = WpDateString(dateRange.startDate),
             max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
@@ -806,15 +787,15 @@ class StatsDataSourceImpl @Inject constructor(
     ) = when (dateRange) {
         is StatsDateRange.Preset -> StatsVideoPlaysParams(
             period = StatsVideoPlaysPeriod.DAY,
-            date = dateRange.date,
+            date = WpDateString(dateRange.date),
             num = dateRange.num.toUInt(),
             max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
         is StatsDateRange.Custom -> StatsVideoPlaysParams(
             period = StatsVideoPlaysPeriod.DAY,
-            date = dateRange.date,
-            startDate = dateRange.startDate,
+            date = WpDateString(dateRange.date),
+            startDate = WpDateString(dateRange.startDate),
             max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
@@ -905,15 +886,15 @@ class StatsDataSourceImpl @Inject constructor(
     ) = when (dateRange) {
         is StatsDateRange.Preset -> StatsFileDownloadsParams(
             period = StatsFileDownloadsPeriod.DAY,
-            date = dateRange.date,
+            date = WpDateString(dateRange.date),
             num = dateRange.num.toUInt(),
             max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
         is StatsDateRange.Custom -> StatsFileDownloadsParams(
             period = StatsFileDownloadsPeriod.DAY,
-            date = dateRange.date,
-            startDate = dateRange.startDate,
+            date = WpDateString(dateRange.date),
+            startDate = WpDateString(dateRange.startDate),
             max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
@@ -1068,10 +1049,7 @@ class StatsDataSourceImpl @Inject constructor(
             .request { requestBuilder ->
                 requestBuilder.statsInsights()
                     .getStatsInsights(
-                        wpComSiteId = siteId.toULong(),
-                        params = StatsInsightsParams(
-                            locale = wpComLanguage
-                        )
+                        wpComSiteId = siteId.toULong()
                     )
             }
 
@@ -1136,15 +1114,11 @@ class StatsDataSourceImpl @Inject constructor(
     override suspend fun fetchStatsSummary(
         siteId: Long
     ): StatsSummaryDataResult {
-        val params = uniffi.wp_api.StatsSummaryParams(
-            locale = wpComLanguage
-        )
         val result = getOrCreateClient()
             .request { requestBuilder ->
                 requestBuilder.statsSummary()
                     .getStatsSummary(
-                        wpComSiteId = siteId.toULong(),
-                        params = params
+                        wpComSiteId = siteId.toULong()
                     )
             }
 
@@ -1167,8 +1141,7 @@ class StatsDataSourceImpl @Inject constructor(
                         comments =
                             stats.comments.toLong(),
                         viewsBestDay =
-                            stats.viewsBestDay
-                                .orEmpty(),
+                            stats.viewsBestDay.value,
                         viewsBestDayTotal =
                             stats.viewsBestDayTotal
                                 .toLong()
@@ -1209,7 +1182,6 @@ class StatsDataSourceImpl @Inject constructor(
     ): StatsTagsDataResult {
         val params = StatsTagsParams(
             max = if (max > 0) max.toUInt() else null,
-            locale = wpComLanguage
         )
         val result = getOrCreateClient()
             .request { requestBuilder ->
@@ -1301,7 +1273,7 @@ class StatsDataSourceImpl @Inject constructor(
         dailyViews = response.dailyViews
             .map {
                 PostViewsDailyView(
-                    day = it.period,
+                    day = it.period.value,
                     views = it.views.toLong()
                 )
             },
@@ -1330,7 +1302,7 @@ class StatsDataSourceImpl @Inject constructor(
         post = response.post?.let { post ->
             PostViewsPost(
                 title = post.title,
-                date = post.date,
+                date = post.date.value,
                 likeCount = response.likeCount
                     ?.toLong() ?: 0L,
                 commentCount = response.discussion
@@ -1341,8 +1313,8 @@ class StatsDataSourceImpl @Inject constructor(
 
     private fun StatsPostWeek.toPostViewsWeek() =
         PostViewsWeek(
-            startDay = days.firstOrNull()?.day.orEmpty(),
-            endDay = days.lastOrNull()?.day.orEmpty(),
+            startDay = days.firstOrNull()?.day?.value.orEmpty(),
+            endDay = days.lastOrNull()?.day?.value.orEmpty(),
             total = total.toLong(),
             change = when (val change = change) {
                 is StatsPostChange.Percentage ->
@@ -1368,7 +1340,7 @@ class StatsDataSourceImpl @Inject constructor(
         val params = StatsSubscribersParams(
             unit = subscribersUnit,
             quantity = quantity.toUInt(),
-            date = date,
+            date = date?.let { WpDateString(it) },
             statFields = listOf(
                 StatsSubscribersStatField.SUBSCRIBERS
             )
@@ -1395,7 +1367,7 @@ class StatsDataSourceImpl @Inject constructor(
                     StatsSubscribersData(
                         subscribersData = dataPoints.map {
                             SubscribersDataPoint(
-                                date = it.period,
+                                date = it.period.value,
                                 count = it.subscribers
                                     .toLong()
                             )
@@ -1449,17 +1421,18 @@ class StatsDataSourceImpl @Inject constructor(
                             displayName =
                                 subscriber.displayName,
                             subscribedSince =
-                                java.time.ZonedDateTime
-                                    .ofInstant(
-                                        subscriber.dateSubscribed
-                                            .toInstant(),
-                                        java.time.ZoneId
-                                            .systemDefault()
-                                    ).format(
-                                        java.time.format
-                                            .DateTimeFormatter
-                                            .ISO_LOCAL_DATE_TIME
-                                    )
+                                subscriber.dateSubscribed?.let { dateSubscribed ->
+                                    java.time.ZonedDateTime
+                                        .ofInstant(
+                                            dateSubscribed.toInstant(),
+                                            java.time.ZoneId
+                                                .systemDefault()
+                                        ).format(
+                                            java.time.format
+                                                .DateTimeFormatter
+                                                .ISO_LOCAL_DATE_TIME
+                                        )
+                                }.orEmpty()
                         )
                     }
                 )
@@ -1530,7 +1503,7 @@ class StatsDataSourceImpl @Inject constructor(
         val utmKeys = keys.mapNotNull(::toStatsUtmKey)
         val params = StatsUtmParams(
             max = max.toUInt(),
-            date = date,
+            date = WpDateString(date),
             days = days.toUInt(),
             startDate = null,
             queryTopPosts = queryTopPosts

@@ -41,7 +41,8 @@ fun PrepublishingHomeSocialNoConnectionsItem(
     Column(
         modifier = Modifier
             .background(backgroundColor)
-            .then(modifier),
+            .then(modifier)
+            .padding(Margin.ExtraLarge.value),
     ) {
         TrainOfIcons(
             iconModels = connectionIconModels,

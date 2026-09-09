@@ -32,7 +32,9 @@ class PostRsFluxCBridge @Inject constructor(
      * to exist in FluxC's local database. If [lastModified] is
      * provided and differs from the cached row's
      * `remoteLastModified`, the cache is considered
-     * stale and the post is re-fetched from the server.
+     * stale and the post is re-fetched from the server —
+     * unless the row holds unsynced local edits, which the
+     * fetch would otherwise overwrite.
      *
      * @throws IllegalStateException if the post cannot be fetched or inserted.
      */
@@ -41,11 +43,12 @@ class PostRsFluxCBridge @Inject constructor(
         site: SiteModel,
         lastModified: String? = null
     ): PostModel {
-        // Fast path — already in FluxC and still fresh
+        // Fast path — already in FluxC and either still fresh
+        // or holding local changes the editor must not lose
         postStore.getPostByRemotePostId(remotePostId, site)?.let { cached ->
-            if (lastModified == null ||
-                lastModified == cached.remoteLastModified
-            ) {
+            val fresh = lastModified == null ||
+                    lastModified == cached.remoteLastModified
+            if (fresh || cached.isLocallyChanged) {
                 return cached
             }
         }

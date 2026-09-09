@@ -2,22 +2,17 @@ package org.wordpress.android.ui.mysite.cards.applicationpassword
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import androidx.annotation.VisibleForTesting
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
-import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.repositories.SiteAuthState
+import org.wordpress.android.repositories.SiteProvisioningSource
+import org.wordpress.android.repositories.SiteReadiness
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
-import org.wordpress.android.ui.accounts.login.CredentialsChangedNotifier
-import org.wordpress.android.ui.accounts.login.SiteApiRestUrlRecoverer
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -25,22 +20,26 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
-import javax.inject.Named
 
+/**
+ * Renders the application-password card from the site's readiness. All the
+ * provisioning mechanics — validate, mint, REST-root recovery, XML-RPC
+ * recovery — live in [SiteProvisioningSource]; this slice is a thin view over
+ * the result:
+ *
+ * - [SiteAuthState.Unprovisionable] → a re-authentication banner (creds went
+ *   bad) or a first-time "authenticate" card, looked up lazily.
+ * - provisioned (any non-[SiteReadiness.NeedsAuth] terminal state) → hidden,
+ *   except true self-hosted sites whose XML-RPC endpoint the pipeline couldn't
+ *   recover, which get the XML-RPC-disabled card.
+ */
 class ApplicationPasswordViewModelSlice @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val siteStore: SiteStore,
     private val appLogWrapper: AppLogWrapper,
-    private val wpApiClientProvider: WpApiClientProvider,
-    private val applicationPasswordValidator: ApplicationPasswordValidator,
-    private val selfHostedEndpointFinder: SelfHostedEndpointFinder,
-    private val siteXMLRPCClient: SiteXMLRPCClient,
-    private val siteApiRestUrlRecoverer: SiteApiRestUrlRecoverer,
-    private val credentialsChangedNotifier: CredentialsChangedNotifier,
-    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
+    private val siteProvisioningSource: SiteProvisioningSource,
 ) {
     lateinit var scope: CoroutineScope
 
@@ -57,101 +56,54 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     val uiModelMutable = MutableLiveData<MySiteCardAndItem?>()
     val uiModel: LiveData<MySiteCardAndItem?> = uiModelMutable
 
-    // Single-flight guard: buildCard is invoked from onResume / refresh / onSitePicked, which can
-    // fire close together. Without this, two coroutines both pass the "creds missing" check in
-    // ApplicationPasswordsManager and issue two server-side mints. Worse, the 409 conflict handler
-    // then deletes-and-recreates the winner's password, so the losing racer destroys working creds.
-    private var buildJob: Job? = null
+    private var collectJob: Job? = null
+    private var currentSite: SiteModel? = null
 
     fun buildCard(siteModel: SiteModel) {
-        if (buildJob?.isActive == true) {
-            appLogWrapper.d(
-                AppLog.T.MAIN,
-                "A_P: Skipping buildCard for ${siteModel.url} - previous run still in flight"
-            )
-            return
+        collectJob?.cancel()
+        currentSite = siteModel
+        collectJob = scope.launch {
+            siteProvisioningSource.stateFor(siteModel).collect { readiness ->
+                // Bail if the user switched sites while suspended — postValue is not a
+                // suspension point, so cancellation alone won't catch this.
+                if (currentSite?.id != siteModel.id) return@collect
+                renderCard(siteModel, readiness)
+            }
         }
-        buildJob = scope.launch {
-            val storedSite = siteStore.sites.firstOrNull { it.id == siteModel.id } ?: siteModel
-            val hadCreds = !applicationPasswordLoginHelper.siteHasBadCredentials(storedSite)
+    }
 
-            // Step 1: if we already have stored creds, validate them with Basic auth against the
-            // direct host. This actually exercises the application password (unlike
-            // WpApiClientProvider.getWpApiClient, which routes WPCom-flagged sites through the
-            // bearer-token path and would not catch a revoked password).
-            if (hadCreds) {
-                when (applicationPasswordValidator.validate(storedSite)) {
-                    ApplicationPasswordValidator.Outcome.Valid -> {
-                        // Heal in the background so the card hides immediately on a slow network.
-                        scope.launch { healApiRestUrlIfMissing(storedSite) }
-                        handleValidAuth(storedSite)
-                        return@launch
-                    }
-                    ApplicationPasswordValidator.Outcome.NetworkUnavailable -> {
-                        // Don't punish flaky networks — leave the card hidden and try again next time.
-                        uiModelMutable.postValue(null)
-                        appLogWrapper.d(AppLog.T.MAIN, "A_P: Validation network error for ${storedSite.url}")
-                        return@launch
-                    }
-                    ApplicationPasswordValidator.Outcome.Invalid -> {
-                        // Stored creds are stale (revoked, deleted, etc.) — clear them so the next
-                        // mint creates fresh ones, and invalidate the cached client.
-                        appLogWrapper.d(AppLog.T.MAIN, "A_P: Stored creds invalid for ${storedSite.url}, clearing")
-                        siteStore.deleteStoredApplicationPasswordCredentials(storedSite)
-                        wpApiClientProvider.clearSelfHostedClient(storedSite.id)
-                    }
+    private suspend fun renderCard(site: SiteModel, readiness: SiteReadiness) {
+        when (readiness) {
+            is SiteReadiness.NeedsAuth -> when (val auth = readiness.auth) {
+                is SiteAuthState.Unprovisionable ->
+                    if (auth.hadCredentials) buildReauthenticationBanner(site) else buildAuthenticationCard(site)
+                SiteAuthState.Provisioning -> {
+                    // Mint in flight / transient validation error — hide and let the next run retry.
+                    uiModelMutable.postValue(null)
+                    appLogWrapper.d(AppLog.T.MAIN, "A_P: Provisioning in progress for ${site.url}")
                 }
             }
-
-            // Step 2: mint a fresh application password via the FluxC Jetpack tunnel. wordpress-rs
-            // can't do this today — the WP.com REST proxy doesn't expose the application-passwords
-            // endpoint under /wp/v2/sites/{id}/... (see Automattic/wordpress-rs#1350) — so FluxC's
-            // Jetpack-tunnel client is the only working path for Atomic / Jetpack-WPCom-REST sites.
-            val createResult = siteStore.createApplicationPassword(storedSite)
-            if (!createResult.isError && createResult.credentials != null) {
-                wpApiClientProvider.clearSelfHostedClient(storedSite.id)
-                appLogWrapper.d(AppLog.T.MAIN, "A_P: Headless mint succeeded for ${storedSite.url}")
-                credentialsChangedNotifier.notifyChanged(storedSite.id)
-                // The mint goes through the Jetpack tunnel and never runs discovery — without this
-                // step, freshly minted Atomic sites end up with working creds but a NULL
-                // wpApiRestUrl in the local DB. Run in the background so the card hides immediately.
-                scope.launch { healApiRestUrlIfMissing(storedSite) }
-                handleValidAuth(storedSite)
-                return@launch
-            }
-            appLogWrapper.d(
-                AppLog.T.MAIN,
-                "A_P: Headless mint failed for ${storedSite.url} (notSupported=" +
-                    "${createResult.error?.notSupported})"
-            )
-
-            // Step 3: mint failed. If we started with creds, show the reauth banner; otherwise the
-            // standard "authenticate" card. Either way, discovery is required to populate the URL.
-            if (hadCreds) {
-                buildReauthenticationBanner(storedSite)
-            } else {
-                buildAuthenticationCard(storedSite)
-            }
+            // Any terminal provisioned state — the credentials are usable, so the only card left to
+            // show is the self-hosted XML-RPC fallback. Capability outcome (Ready/Unreachable) is the
+            // connectivity banner's concern, not this card's.
+            SiteReadiness.Ready,
+            SiteReadiness.Unreachable,
+            SiteReadiness.TransientError -> handleProvisioned(site)
+            SiteReadiness.Probing -> Unit // leave the card unchanged while the pipeline runs
         }
     }
 
-    private suspend fun healApiRestUrlIfMissing(site: SiteModel) {
-        if (!site.wpApiRestUrl.isNullOrEmpty()) return
-        siteApiRestUrlRecoverer.discoverApiRootUrl(site.url)?.let { apiRootUrl ->
-            site.wpApiRestUrl = apiRootUrl
-            siteApiRestUrlRecoverer.persistApiRootUrl(site.id, apiRootUrl)
-        }
-    }
-
-    private fun handleValidAuth(site: SiteModel) {
-        // Only true self-hosted sites need the XML-RPC fallback path — Atomic and Jetpack-WPCom-REST
-        // sites talk REST end-to-end and don't need XML-RPC.
-        if (!site.isUsingWpComRestApi && site.xmlRpcUrl.isNullOrEmpty()) {
-            // A missing xmlRpcUrl doesn't mean XML-RPC is disabled — the login fetch may have fallen back to
-            // WPAPI on a transient error (e.g. a 429 rate-limit). Keep the card hidden and let rediscovery
-            // decide; it only surfaces the warning on a definitive negative.
-            uiModelMutable.postValue(null)
-            attemptXmlRpcRediscovery(site)
+    private fun handleProvisioned(site: SiteModel) {
+        // Read fresh: the pipeline's parallel XML-RPC branch may have just recovered the endpoint.
+        val storedSite = siteStore.getSiteByLocalId(site.id) ?: site
+        // Only true self-hosted sites need XML-RPC, and a missing endpoint alone isn't proof it's off —
+        // recovery also fails transiently (e.g. a 429). Warn only when the pipeline reached a definitive
+        // negative, so a throttled site doesn't get a false "XML-RPC Disabled".
+        if (!storedSite.isUsingWpComRestApi &&
+            storedSite.xmlRpcUrl.isNullOrEmpty() &&
+            siteProvisioningSource.isXmlRpcUnavailable(storedSite.id)
+        ) {
+            buildXmlRpcDisabledCard(storedSite)
         } else {
             uiModelMutable.postValue(null)
             appLogWrapper.d(AppLog.T.MAIN, "A_P: Hiding card for ${site.url} - authenticated")
@@ -177,14 +129,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                     "A_P: Hiding reauthentication card for ${site.url} - WordPress.com site"
                 )
             }
-            is ApplicationPasswordLoginHelper.DiscoveryResult.Failed -> {
-                // TODO follow-up: surface result.userFacingMessage in the card (issue #22884).
-                uiModelMutable.postValue(null)
-                appLogWrapper.d(
-                    AppLog.T.MAIN,
-                    "A_P: Hiding reauthentication card for ${site.url} - bad discovery: ${result.userFacingMessage}"
-                )
-            }
+            is ApplicationPasswordLoginHelper.DiscoveryResult.Failed -> handleFailedDiscovery(site, result)
         }
     }
 
@@ -197,15 +142,40 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                 uiModelMutable.postValue(null)
                 appLogWrapper.d(AppLog.T.MAIN, "A_P: Hiding card for ${site.url} - WordPress.com site")
             }
-            is ApplicationPasswordLoginHelper.DiscoveryResult.Failed -> {
-                // TODO follow-up: surface result.userFacingMessage in the card (issue #22884).
-                uiModelMutable.postValue(null)
-                appLogWrapper.d(
-                    AppLog.T.MAIN,
-                    "A_P: Hiding card for ${site.url} - bad discovery: ${result.userFacingMessage}"
-                )
-            }
+            is ApplicationPasswordLoginHelper.DiscoveryResult.Failed -> handleFailedDiscovery(site, result)
         }
+    }
+
+    /**
+     * Discovery couldn't produce an authorization URL, so neither the create nor the re-authenticate
+     * card can be built. A private site is the one cause we can name: its Privacy gate answers the
+     * anonymous discovery request with a 403, and without saying so the user sees nothing at all
+     * while their credentials stay broken. Every other cause still hides the card pending #22884.
+     */
+    private fun handleFailedDiscovery(
+        site: SiteModel,
+        result: ApplicationPasswordLoginHelper.DiscoveryResult.Failed,
+    ) {
+        if (result.reason == ApplicationPasswordLoginHelper.DiscoveryResult.FailureReason.PrivateSite) {
+            uiModelMutable.postValue(
+                MySiteCardAndItem.Item.SingleActionCard(
+                    textResource = R.string.application_password_private_site_card,
+                    // Hidden by centerText — the card is a notice with nothing to tap.
+                    imageResource = R.drawable.ic_notice_white_24dp,
+                    onActionClick = { },
+                    showLearnMore = false,
+                    centerText = true,
+                )
+            )
+            appLogWrapper.d(AppLog.T.MAIN, "A_P: Showing private-site card for ${site.url}")
+            return
+        }
+        // TODO follow-up: surface result.userFacingMessage in the card (issue #22884).
+        uiModelMutable.postValue(null)
+        appLogWrapper.d(
+            AppLog.T.MAIN,
+            "A_P: Hiding card for ${site.url} - bad discovery: ${result.userFacingMessage}"
+        )
     }
 
     private fun showApplicationPasswordCreateCard(site: SiteModel, alternativeUrl: String) {
@@ -245,60 +215,6 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             "A_P: Showing XML-RPC disabled card for ${site.url}"
         )
     }
-
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    internal fun attemptXmlRpcRediscovery(site: SiteModel) {
-        scope.launch {
-            val xmlRpcEndpoint = try {
-                withContext(ioDispatcher) {
-                    selfHostedEndpointFinder
-                        .verifyOrDiscoverXMLRPCEndpoint(site.url)
-                }
-            } catch (e: SelfHostedEndpointFinder.DiscoveryException) {
-                // Only surface the "XML-RPC Disabled" warning on a definitive negative. A transient failure
-                // (e.g. a 429 rate-limit) leaves the state unknown, so keep the card hidden and re-check on the
-                // next refresh rather than wrongly claiming XML-RPC is off.
-                if (e.discoveryError.indicatesXmlRpcUnavailable()) {
-                    buildXmlRpcDisabledCard(site)
-                } else {
-                    uiModelMutable.postValue(null)
-                    appLogWrapper.d(
-                        AppLog.T.MAIN,
-                        "A_P: XML-RPC rediscovery inconclusive for ${site.url} " +
-                            "(${e.discoveryError}) - hiding card"
-                    )
-                }
-                return@launch
-            }
-
-            // Discovery verified a working xmlrpc.php, so XML-RPC is enabled. Confirm the credentials with an
-            // authenticated call before persisting the endpoint, but keep the card hidden either way.
-            val result = withContext(ioDispatcher) {
-                siteXMLRPCClient.fetchSites(
-                    xmlRpcEndpoint,
-                    site.apiRestUsernamePlain,
-                    site.apiRestPasswordPlain
-                )
-            }
-            if (!result.isError) {
-                site.xmlRpcUrl = xmlRpcEndpoint
-                // Persist only the rediscovered column — mirrors healApiRestUrlIfMissing. A full-row
-                // updateSite would rewrite ~80 columns from this in-memory model for a one-field change
-                // (risking clobbering other out-of-band values), so write just xmlRpcUrl.
-                siteStore.persistXmlRpcUrl(site.id, xmlRpcEndpoint)
-            }
-            uiModelMutable.postValue(null)
-        }
-    }
-
-    // A missing/unusable XML-RPC endpoint is only a genuine "disabled" signal when discovery reaches a
-    // definitive conclusion. Transient errors (RATE_LIMITED, GENERIC_ERROR) and unrelated conditions
-    // (auth/SSL/invalid URL) must not surface the warning, to avoid false positives on throttled sites.
-    private fun SelfHostedEndpointFinder.DiscoveryError.indicatesXmlRpcUnavailable(): Boolean =
-        this == SelfHostedEndpointFinder.DiscoveryError.NO_SITE_ERROR ||
-            this == SelfHostedEndpointFinder.DiscoveryError.MISSING_XMLRPC_METHOD ||
-            this == SelfHostedEndpointFinder.DiscoveryError.XMLRPC_BLOCKED ||
-            this == SelfHostedEndpointFinder.DiscoveryError.XMLRPC_FORBIDDEN
 
     private fun onClick(site: SiteModel, alternativeUrl: String) {
         _onNavigation.postValue(

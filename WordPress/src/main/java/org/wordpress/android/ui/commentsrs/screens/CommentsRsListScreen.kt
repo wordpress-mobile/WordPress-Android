@@ -65,6 +65,7 @@ import org.wordpress.android.ui.commentsrs.CommentsTabUiState
 import org.wordpress.android.ui.commentsrs.PendingConfirmation
 import org.wordpress.android.ui.commentsrs.batchActions
 import org.wordpress.android.ui.commentsrs.isEnabledFor
+import org.wordpress.android.ui.compose.utils.rsDebugTitle
 import org.wordpress.android.ui.postsrs.SnackbarMessage
 
 // Material's disabled-content alpha, used to dim batch-action icons that can't apply to the
@@ -208,7 +209,7 @@ fun CommentsRsListScreen(
                         }
                     }
                     TopBarMode.NORMAL -> TopAppBar(
-                        title = { Text(text = stringResource(R.string.comments)) },
+                        title = { Text(text = rsDebugTitle(R.string.comments)) },
                         navigationIcon = {
                             IconButton(onClick = onNavigateBack) {
                                 Icon(

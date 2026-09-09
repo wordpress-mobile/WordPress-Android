@@ -31,6 +31,7 @@ import org.wordpress.android.ui.comments.unified.extension.isNotEqualTo
 import org.wordpress.android.ui.comments.unified.usecase.GetCommentUseCase
 import org.wordpress.android.ui.notifications.utils.NotificationsActionsWrapper
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.rs.WpRsRouting
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -55,7 +56,8 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     private val getCommentUseCase: GetCommentUseCase,
     private val notificationActionsWrapper: NotificationsActionsWrapper,
     private val readerCommentTableWrapper: ReaderCommentTableWrapper,
-    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
+    private val wpRsRouting: WpRsRouting
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<EditCommentUiState>()
     private val _uiActionEvent = MutableLiveData<Event<EditCommentActionEvent>>()
@@ -254,7 +256,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     private suspend fun mapCommentEssentials(): CommentEssentials {
         // A failed load returns default CommentEssentials, which fails isValid() and surfaces
         // the load-error snackbar in initViews().
-        val essentials = if (canUseRs()) loadCommentViaRs() else loadCommentViaFluxC()
+        val essentials = if (wpRsRouting.canUseWpRs(site)) loadCommentViaRs() else loadCommentViaFluxC()
         return essentials ?: CommentEssentials()
     }
 
@@ -287,7 +289,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         // application-password sites (FluxC's updateEditComment can't reach app-password sites).
         // Fall back to FluxC for sites rs can't serve — e.g. XML-RPC-only self-hosted comments
         // still reachable through the legacy detail/reader launch points.
-        val saved = if (canUseRs()) {
+        val saved = if (wpRsRouting.canUseWpRs(site)) {
             updateCommentViaRs(editedCommentEssentials)
         } else {
             updateCommentViaFluxC(editedCommentEssentials)
@@ -327,8 +329,6 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         )
         return !commentsStore.updateEditComment(site, updatedComment).isError
     }
-
-    private fun canUseRs(): Boolean = site.isUsingWpComRestApi || site.hasApplicationPassword()
 
     /**
      * Saves the edit through wordpress-rs and, on success, mirrors the SERVER's resulting state

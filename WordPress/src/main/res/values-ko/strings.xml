@@ -232,7 +232,6 @@ Language: ko_KR
     <string name="stats_period_selector_content_description">통계 기간 선택</string>
     <string name="stats_period_custom">사용자 정의</string>
     <string name="stats_period_last_12_months">최근 12개월</string>
-    <string name="stats_period_last_6_months">최근 6개월</string>
     <string name="stats_period_last_30_days">최근 30일</string>
     <string name="stats_period_last_7_days">최근 7일</string>
     <string name="stats_period_today">오늘</string>
@@ -309,8 +308,6 @@ Language: ko_KR
     <string name="he_support_status_unknown">알 수 없음</string>
     <string name="he_support_status_closed">닫힘</string>
     <string name="he_support_status_solved">해결됨</string>
-    <string name="he_support_status_waiting_for_user">사용자 대기 중</string>
-    <string name="he_support_status_waiting_for_support">지원 대기 중</string>
     <string name="he_support_select_attachments">첨부 파일 선택</string>
     <string name="he_support_download_attachment">첨부 파일 다운로드</string>
     <string name="he_support_include_logs_description">로그를 포함하면 팀에서 문제를 조사하는 데 도움이 될 수 있습니다. 로그에 최근 앱 활동이 포함될 수 있습니다.</string>
@@ -3828,7 +3825,6 @@ Language: ko_KR
     <string name="reader_toast_err_removing_tag">이 태그를 제거할 수 없음</string>
     <string name="reader_toast_err_adding_tag">이 태그를 추가할 수 없음</string>
     <string name="reader_title_applog">응용 프로그램 로그</string>
-    <string name="fatal_db_error">앱 데이터베이스를 생성하는 동안 에러가 발생했습니다. 앱을 다시 설치하시기 바랍니다.</string>
     <string name="error_refresh_media">현재 미디어를 새로 고칠 수 없습니다</string>
     <string name="wordpress_blog">WordPress 블로그</string>
     <string name="local_changes">로컬 변경</string>

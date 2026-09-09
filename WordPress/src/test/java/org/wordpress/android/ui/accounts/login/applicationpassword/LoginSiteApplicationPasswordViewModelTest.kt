@@ -14,7 +14,9 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.viewmodel.ResourceProvider
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
@@ -24,6 +26,9 @@ class LoginSiteApplicationPasswordViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var applicationPasswordLoginHelper: ApplicationPasswordLoginHelper
 
+    @Mock
+    private lateinit var resourceProvider: ResourceProvider
+
     private lateinit var viewModel: LoginSiteApplicationPasswordViewModel
 
     // Test dispatcher for coroutines
@@ -32,7 +37,7 @@ class LoginSiteApplicationPasswordViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        viewModel = LoginSiteApplicationPasswordViewModel(applicationPasswordLoginHelper)
+        viewModel = LoginSiteApplicationPasswordViewModel(applicationPasswordLoginHelper, resourceProvider)
     }
 
     @Test
@@ -93,10 +98,10 @@ class LoginSiteApplicationPasswordViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Given discovery fails, when running discovery, then the generic error is shown`() = test {
+    fun `Given discovery fails, when running discovery, then the library message is shown as-is`() = test {
         // Given
         val siteUrl = "https://example.com"
-        val errorMessage = "not supported"
+        val errorMessage = "Found a site but failed to read its API configuration."
         whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl))
             .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.Failed(errorMessage))
 
@@ -110,12 +115,59 @@ class LoginSiteApplicationPasswordViewModelTest : BaseUnitTest() {
         viewModel.runApiDiscovery(siteUrl)
         advanceUntilIdle()
 
-        // Then
+        // Then — the specific reason survives, and no URL is emitted for the UI to misread as a
+        // failure signal (that empty emission is what used to overwrite this message).
         assertEquals(errorMessage, viewModel.errorMessage.value)
-        assertEquals("", collectedUrl)
+        assertNull(collectedUrl)
         assertEquals(false, wpComDetected)
 
         wpComJob.cancel()
         discoveryJob.cancel()
+    }
+
+    @Test
+    fun `Given a private site, when running discovery, then the private-site explanation is shown`() = test {
+        // The library reports a private site as a generic "couldn't read the API configuration",
+        // which reads as though the site is broken. Name the actual cause instead.
+        val siteUrl = "https://example.com"
+        val privateSiteMessage = "This site is private, so we can't read its settings to sign you in."
+        whenever(resourceProvider.getString(R.string.application_password_private_site_error))
+            .thenReturn(privateSiteMessage)
+        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl))
+            .thenReturn(
+                ApplicationPasswordLoginHelper.DiscoveryResult.Failed(
+                    userFacingMessage = "Found a site but failed to read its API configuration.",
+                    reason = ApplicationPasswordLoginHelper.DiscoveryResult.FailureReason.PrivateSite,
+                )
+            )
+
+        viewModel.runApiDiscovery(siteUrl)
+        advanceUntilIdle()
+
+        assertEquals(privateSiteMessage, viewModel.errorMessage.value)
+        assertEquals(false, viewModel.loadingStateFlow.value)
+    }
+
+    @Test
+    fun `Given a site without application passwords, then the not-supported message is shown`() = test {
+        // Discovery succeeded but advertised no application-passwords endpoint. Removing the
+        // fragment's blanket overwrite took this message's only producer with it, leaving the raw
+        // untranslated exception text on screen (#22944 review c3).
+        val siteUrl = "https://example.com"
+        val notSupportedMessage = "The provided site does not support Application Password authentication."
+        whenever(resourceProvider.getString(R.string.application_password_not_supported_error))
+            .thenReturn(notSupportedMessage)
+        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl))
+            .thenReturn(
+                ApplicationPasswordLoginHelper.DiscoveryResult.Failed(
+                    userFacingMessage = "No application-passwords authentication URL advertised",
+                    reason = ApplicationPasswordLoginHelper.DiscoveryResult.FailureReason.NotSupported,
+                )
+            )
+
+        viewModel.runApiDiscovery(siteUrl)
+        advanceUntilIdle()
+
+        assertEquals(notSupportedMessage, viewModel.errorMessage.value)
     }
 }

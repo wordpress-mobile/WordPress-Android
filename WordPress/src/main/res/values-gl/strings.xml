@@ -3526,7 +3526,6 @@ Language: gl_ES
     <string name="dlg_confirm_trash_comments">Botar ao lixo?</string>
     <string name="trash">Lixo</string>
     <string name="reader_title_applog">Rexistro da aplicación</string>
-    <string name="fatal_db_error">Houbo un erro mentres se creaba a base de datos da aplicación. Proba a reinstalar a aplicación.</string>
     <string name="post_not_found">Houbo un erro mentres se cargaba o artigo. Actualiza os artigos e téntao de novo.</string>
     <string name="file_not_found">Non foi posible atopar o ficheiro para cargar. Terá sido eliminado ou movido?</string>
     <string name="error_refresh_media">Non se poden actualizar os medios neste momento</string>

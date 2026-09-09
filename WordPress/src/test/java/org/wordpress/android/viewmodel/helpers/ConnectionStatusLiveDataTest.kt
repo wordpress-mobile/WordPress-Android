@@ -1,97 +1,69 @@
-@file:Suppress("DEPRECATION")
-
 package org.wordpress.android.viewmodel.helpers
 
-import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
 import org.junit.Test
-import org.mockito.kotlin.any
-import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus.UNAVAILABLE
 
 @ExperimentalCoroutinesApi
 class ConnectionStatusLiveDataTest : BaseUnitTest() {
-    private lateinit var connectionStatusLiveData: LiveData<ConnectionStatus>
-    private lateinit var broadcastReceiver: BroadcastReceiver
+    private val source = MutableLiveData<Boolean>()
 
-    @Before
-    fun setUp() {
-        val captor = argumentCaptor<BroadcastReceiver>()
-        @SuppressLint("UnspecifiedRegisterReceiverFlag")
-        val context = mock<Context> {
-            on { registerReceiver(captor.capture(), any()) } doReturn mock()
-        }
+    @Test
+    fun `it does not emit the state the source already holds when observation starts`() {
+        source.value = true
 
-        connectionStatusLiveData = ConnectionStatusLiveData.Factory(context).create()
-        // Start observing to capture the broadcastReceiver
-        connectionStatusLiveData.observeForever { }
+        val emitted = observe()
 
-        broadcastReceiver = captor.firstValue
+        assertThat(emitted).isEmpty()
     }
 
     @Test
-    fun `it emits a value when receiving a network info change`() {
-        assertThat(connectionStatusLiveData.value).isNull()
+    fun `it emits when the connected state changes`() {
+        source.value = true
+        val emitted = observe()
 
-        broadcastReceiver.onReceive(mockedBroadcastReceiverContext(connectedNetwork = false), mock())
+        source.value = false
 
-        assertThat(connectionStatusLiveData.value).isEqualTo(ConnectionStatus.UNAVAILABLE)
+        assertThat(emitted).containsExactly(UNAVAILABLE)
     }
 
     @Test
-    fun `it emits a value when the network availability changes`() {
-        // Arrange
-        broadcastReceiver.onReceive(mockedBroadcastReceiverContext(connectedNetwork = true), mock())
-        assertThat(connectionStatusLiveData.value).isEqualTo(ConnectionStatus.AVAILABLE)
+    fun `it does not emit when the source repeats the same state`() {
+        source.value = true
+        val emitted = observe()
 
-        // Act
-        broadcastReceiver.onReceive(mockedBroadcastReceiverContext(connectedNetwork = false), mock())
+        repeat(3) { source.value = true }
 
-        // Assert
-        assertThat(connectionStatusLiveData.value).isEqualTo(ConnectionStatus.UNAVAILABLE)
+        assertThat(emitted).isEmpty()
     }
 
     @Test
-    fun `it does not emit a value when the network available didn't change`() {
-        // Arrange
-        var emitCount = 0
+    fun `it emits every change in both directions`() {
+        source.value = true
+        val emitted = observe()
 
-        connectionStatusLiveData.observeForever {
-            emitCount += 1
-        }
+        source.value = false
+        source.value = true
 
-        broadcastReceiver.onReceive(mockedBroadcastReceiverContext(connectedNetwork = true), mock())
-
-        // Act
-        repeat(3) {
-            broadcastReceiver.onReceive(mockedBroadcastReceiverContext(connectedNetwork = true), mock())
-        }
-
-        // Assert
-        assertThat(emitCount).isEqualTo(1)
-        assertThat(connectionStatusLiveData.value).isEqualTo(ConnectionStatus.AVAILABLE)
+        assertThat(emitted).containsExactly(UNAVAILABLE, AVAILABLE)
     }
 
-    @Suppress("DEPRECATION")
-    private fun mockedBroadcastReceiverContext(connectedNetwork: Boolean): Context {
-        val networkInfo = mock<NetworkInfo> {
-            on { isConnected } doReturn connectedNetwork
-        }
-        val connectivityManager = mock<ConnectivityManager> {
-            on { activeNetworkInfo } doReturn networkInfo
-        }
+    @Test
+    fun `it emits the first state when the source has none at creation`() {
+        val emitted = observe()
 
-        return mock {
-            on { getSystemService(any()) } doReturn connectivityManager
-        }
+        source.value = true
+
+        assertThat(emitted).containsExactly(AVAILABLE)
+    }
+
+    private fun observe(): List<ConnectionStatus> {
+        val emitted = mutableListOf<ConnectionStatus>()
+        ConnectionStatusLiveData(source).observeForever { emitted.add(it) }
+        return emitted
     }
 }

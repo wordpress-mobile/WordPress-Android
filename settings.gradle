@@ -24,18 +24,29 @@ gradle.ext {
     secretProperties = loadSecrets(
             logger,
             file("${rootDir}/defaults.properties"),
-            file(secretPath)
+            file(secretPath),
+            file("${rootDir}/secrets.properties")
     )
     developerProperties = loadPropertiesFromFile(file("$rootDir/developer.properties"))
 }
 
-static def loadSecrets(Logger logger, File defaultsFile, File secretsFile) {
+static def loadSecrets(Logger logger, File defaultsFile, File secretsFile, File localSecretsFile) {
+    def properties
     if (secretsFile.exists()) {
-        return loadPropertiesFromFile(secretsFile)
+        properties = loadPropertiesFromFile(secretsFile)
     } else {
         logger.warn("Secrets file not found. Using defaults.")
-        return loadPropertiesFromFile(defaultsFile)
+        properties = loadPropertiesFromFile(defaultsFile)
     }
+
+    // Values in the git-ignored `secrets.properties` at the root of the repository take precedence,
+    // which lets contributors supply their own credentials. See `secrets.properties-example`.
+    if (localSecretsFile.exists()) {
+        logger.lifecycle("Applying local secret overrides from ${localSecretsFile.name}.")
+        properties.putAll(loadPropertiesFromFile(localSecretsFile))
+    }
+
+    return properties
 }
 
 static def loadPropertiesFromFile(File inputFile) {

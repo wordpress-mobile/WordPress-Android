@@ -21,11 +21,29 @@ sealed class ViewsStatsCardUiState {
         val chart: ChartUiState,
         val bottomStats: BottomStatsUiState,
         val selectedMetric: StatsMetric = StatsMetric.DEFAULT,
-        val isLoadingNewPeriod: Boolean = false
+        val isLoadingNewPeriod: Boolean = false,
+        val selectedBar: SelectedBar? = null
     ) : ViewsStatsCardUiState()
 
     data class Error(val message: String) : ViewsStatsCardUiState()
 }
+
+/**
+ * A "soft" bar selection in the Views chart. Tapping a bar selects it (rather than drilling down):
+ * the chart stays put with the bar highlighted, the header numbers reflect that bar, and — when the
+ * bar maps to a narrower period ([canDrillDown]) — the other cards and the top range label follow
+ * it. The drill-down (loading the whole screen for that period) is deferred to the arrow affordance.
+ *
+ * @param index x-index into [ViewsStatsChartData.currentPeriod]; drives the highlight and the header.
+ * @param label formatted date label for the selected bucket, shown below the card title.
+ * @param canDrillDown whether the bar maps to a narrower period. False for hourly buckets, which have
+ * nothing smaller to drill into — those show the header + highlight only, with no arrow.
+ */
+data class SelectedBar(
+    val index: Int,
+    val label: String,
+    val canDrillDown: Boolean
+)
 
 /**
  * State of the chart region (header totals + chart). Loads from the two chart calls, independently
