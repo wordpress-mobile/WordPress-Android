@@ -13,10 +13,8 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.generated.TransactionActionBuilder
 import org.wordpress.android.fluxc.model.DomainContactModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedStateResponse
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainPayload
-import org.wordpress.android.fluxc.store.SiteStore.OnDomainSupportedStatesFetched
 import org.wordpress.android.fluxc.store.SiteStore.OnPrimaryDomainDesignated
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.store.TransactionsStore
@@ -28,7 +26,9 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.domains.usecases.DomainContactResult
 import org.wordpress.android.ui.domains.usecases.FetchDomainContactUseCase
 import org.wordpress.android.ui.domains.usecases.FetchSupportedCountriesUseCase
+import org.wordpress.android.ui.domains.usecases.FetchSupportedStatesUseCase
 import org.wordpress.android.ui.domains.usecases.SupportedCountriesResult
+import org.wordpress.android.ui.domains.usecases.SupportedStatesResult
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DomainPhoneNumberUtils
@@ -37,6 +37,7 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import uniffi.wp_api.DomainContactInformation
 import uniffi.wp_api.SupportedCountry
+import uniffi.wp_api.SupportedState
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -50,6 +51,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val fetchSupportedCountriesUseCase: FetchSupportedCountriesUseCase,
     private val fetchDomainContactUseCase: FetchDomainContactUseCase,
+    private val fetchSupportedStatesUseCase: FetchSupportedStatesUseCase,
     @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
     private lateinit var site: SiteModel
@@ -71,7 +73,13 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
      */
     val countriesForPicker: List<SupportedCountry>
         get() = supportedCountries.orEmpty()
-    private val _supportedStates = MutableLiveData<List<SupportedStateResponse>?>()
+    private val _supportedStates = MutableLiveData<List<SupportedState>?>()
+
+    /**
+     * Read by the state picker, for the same reason [countriesForPicker] is.
+     */
+    val statesForPicker: List<SupportedState>
+        get() = _supportedStates.value.orEmpty()
 
     private val _uiState = MutableLiveData<DomainRegistrationDetailsUiState>()
     val uiState: LiveData<DomainRegistrationDetailsUiState>
@@ -89,8 +97,8 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     val showCountryPickerDialog: LiveData<List<SupportedCountry>>
         get() = _showCountryPickerDialog
 
-    private val _showStatePickerDialog = SingleLiveEvent<List<SupportedStateResponse>>()
-    val showStatePickerDialog: LiveData<List<SupportedStateResponse>>
+    private val _showStatePickerDialog = SingleLiveEvent<List<SupportedState>>()
+    val showStatePickerDialog: LiveData<List<SupportedState>>
         get() = _showStatePickerDialog
 
     private val _domainContactForm = MutableLiveData<DomainContactFormModel>()
@@ -111,7 +119,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         val isRegistrationProgressIndicatorVisible: Boolean = false,
         val isDomainRegistrationButtonEnabled: Boolean = false,
         val isPrivacyProtectionEnabled: Boolean = true,
-        val selectedState: SupportedStateResponse? = null,
+        val selectedState: SupportedState? = null,
         val selectedCountry: SupportedCountry? = null,
         val isStateInputEnabled: Boolean = false
     )
@@ -168,7 +176,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
 
                 val countryCode = contact.countryCode
 
-                if (!TextUtils.isEmpty(countryCode)) {
+                if (!countryCode.isNullOrEmpty()) {
                     _uiState.value =
                         uiState.value?.copy(
                             selectedCountry = supportedCountries?.firstOrNull {
@@ -180,38 +188,38 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
 
                     // if customer does not have a phone number we will try to prefill a country code
                     if (TextUtils.isEmpty(contact.phone)) {
-                        val countryCodePrefix = DomainPhoneNumberUtils.getPhoneNumberPrefix(countryCode!!)
+                        val countryCodePrefix = DomainPhoneNumberUtils.getPhoneNumberPrefix(countryCode)
                         _domainContactForm.value = _domainContactForm.value?.copy(
                             phoneNumberPrefix = countryCodePrefix
                         )
                     }
 
-                    dispatcher.dispatch(
-                        SiteActionBuilder.newFetchDomainSupportedStatesAction(countryCode)
-                    )
+                    fetchSupportedStates(countryCode)
                 }
             }
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onDomainSupportedStatesFetched(event: OnDomainSupportedStatesFetched) {
-        if (event.isError) {
-            _uiState.value =
-                uiState.value?.copy(
+    private suspend fun fetchSupportedStates(countryCode: String) {
+        when (val result = fetchSupportedStatesUseCase.execute(countryCode)) {
+            is SupportedStatesResult.Error -> {
+                _uiState.value =
+                    uiState.value?.copy(
+                        isStateProgressIndicatorVisible = false,
+                        isDomainRegistrationButtonEnabled = true
+                    )
+                result.message?.let { _showErrorMessage.value = it }
+                AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching supported states")
+            }
+            is SupportedStatesResult.Success -> {
+                _uiState.value = uiState.value?.copy(
+                    selectedState = result.states.firstOrNull { it.code == domainContactForm.value?.state },
                     isStateProgressIndicatorVisible = false,
-                    isDomainRegistrationButtonEnabled = true
+                    isDomainRegistrationButtonEnabled = true,
+                    isStateInputEnabled = result.states.isNotEmpty()
                 )
-            event.error?.message?.let { _showErrorMessage.value = it }
-            AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching supported countries")
-        } else {
-            _uiState.value = uiState.value?.copy(
-                selectedState = event.supportedStates?.firstOrNull { it.code == domainContactForm.value?.state },
-                isStateProgressIndicatorVisible = false,
-                isDomainRegistrationButtonEnabled = true,
-                isStateInputEnabled = !event.supportedStates.isNullOrEmpty()
-            )
-            _supportedStates.value = event.supportedStates
+                _supportedStates.value = result.states
+            }
         }
     }
 
@@ -368,11 +376,11 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                 state = null,
                 phoneNumberPrefix = DomainPhoneNumberUtils.getPhoneNumberPrefix(country.code)
             )
-            dispatcher.dispatch(SiteActionBuilder.newFetchDomainSupportedStatesAction(country.code))
+            launch { fetchSupportedStates(country.code) }
         }
     }
 
-    fun onStateSelected(state: SupportedStateResponse) {
+    fun onStateSelected(state: SupportedState) {
         _uiState.value = uiState.value?.copy(selectedState = state)
     }
 

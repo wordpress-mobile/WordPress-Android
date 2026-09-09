@@ -26,7 +26,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.DomainRegistrationDetailsFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedStateResponse
 import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.ADDRESS_1
 import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.ADDRESS_2
 import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.CITY
@@ -207,7 +206,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
         viewModel.showStatePickerDialog.observe(viewLifecycleOwner,
             {
                 if (it != null && it.isNotEmpty()) {
-                    showStatePicker(it)
+                    showStatePicker()
                 }
             })
 
@@ -378,8 +377,8 @@ class DomainRegistrationDetailsFragment : Fragment() {
         )
     }
 
-    private fun showStatePicker(states: List<SupportedStateResponse>) {
-        val dialogFragment = StatePickerDialogFragment.newInstance(states.toCollection(ArrayList()))
+    private fun showStatePicker() {
+        val dialogFragment = StatePickerDialogFragment()
         dialogFragment.show(childFragmentManager, StatePickerDialogFragment.TAG)
     }
 
@@ -438,35 +437,19 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
     @AndroidEntryPoint
     class StatePickerDialogFragment : DialogFragment() {
-        private lateinit var states: ArrayList<SupportedStateResponse>
-
         @Inject
         lateinit var viewModelFactory: ViewModelProvider.Factory
         private lateinit var viewModel: DomainRegistrationDetailsViewModel
 
         companion object {
-            private const val EXTRA_STATES = "EXTRA_STATES"
             const val TAG = "STATE_PICKER_DIALOG_FRAGMENT"
-
-            fun newInstance(states: ArrayList<SupportedStateResponse>): StatePickerDialogFragment {
-                val fragment = StatePickerDialogFragment()
-                val bundle = Bundle()
-                bundle.putParcelableArrayList(EXTRA_STATES, states)
-                fragment.arguments = bundle
-                return fragment
-            }
-        }
-
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            states = requireArguments().getParcelableArrayList<SupportedStateResponse>(EXTRA_STATES)
-                    as ArrayList<SupportedStateResponse>
         }
 
         @Suppress("UseCheckOrError")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             viewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
                 .get(DomainRegistrationDetailsViewModel::class.java)
+            val states = viewModel.statesForPicker
             val builder = MaterialAlertDialogBuilder(requireContext())
             builder.setTitle(R.string.domain_registration_state_picker_dialog_title)
             builder.setItems(states.map { it.name }.toTypedArray()) { _, which ->
