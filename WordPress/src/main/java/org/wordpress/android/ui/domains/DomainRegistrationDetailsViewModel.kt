@@ -63,21 +63,10 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
 
     private var supportedCountries: List<SupportedCountry>? = null
 
-    /**
-     * Read by the country picker, which shares this ViewModel with the form.
-     *
-     * The picker used to be handed the list through its fragment arguments.
-     * [SupportedCountry] is a uniffi record and not `Parcelable`, and the
-     * picker already holds this ViewModel to report the selection back, so it
-     * reads the list from here instead of being given a copy of it.
-     */
     val countriesForPicker: List<SupportedCountry>
         get() = supportedCountries.orEmpty()
     private val _supportedStates = MutableLiveData<List<SupportedState>?>()
 
-    /**
-     * Read by the state picker, for the same reason [countriesForPicker] is.
-     */
     val statesForPicker: List<SupportedState>
         get() = _supportedStates.value.orEmpty()
 

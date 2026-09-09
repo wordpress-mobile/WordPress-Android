@@ -66,9 +66,8 @@ class FetchSupportedCountriesUseCase @Inject constructor(
  * account's country and [SupportedCountries.all] holds the rest. Concatenating
  * them restores the array the API sent, minus the separators.
  *
- * A country therefore appears more than once, which is what the picker has
- * always shown: the account's country and the common ones sit at the top, and
- * the alphabetical run below repeats them.
+ * A country therefore appears more than once: the account's country and the
+ * common ones sit at the top, and the alphabetical run below repeats them.
  */
 private fun SupportedCountries.asPickerList(): List<SupportedCountry> = featured + all
 

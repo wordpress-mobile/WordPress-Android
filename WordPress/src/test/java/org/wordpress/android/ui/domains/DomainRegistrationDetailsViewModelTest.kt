@@ -229,7 +229,6 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     fun contactDetailsPreload() = test {
         viewModel.start(site, domainProductDetails)
 
-        // The form's fetches are all migrated, so nothing is dispatched
         verify(dispatcher, never()).dispatch(any())
         verify(fetchSupportedStatesUseCase).execute(primaryCountry.code)
 
@@ -331,7 +330,6 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         viewModel.start(site, domainProductDetails)
 
-        // The chain stops here, so nothing is dispatched
         verify(dispatcher, never()).dispatch(any())
 
         assertThat(uiStateResults.size).isEqualTo(3)
@@ -355,7 +353,6 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         viewModel.start(site, domainProductDetails)
 
-        // The chain stops here, so nothing is dispatched
         verify(dispatcher, never()).dispatch(any())
 
         verify(errorMessageObserver).onChanged(domainContactInformationFetchErrorMessage)
@@ -383,7 +380,6 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         viewModel.start(site, domainProductDetails)
 
-        // The form's fetches are all migrated, so nothing is dispatched
         verify(dispatcher, never()).dispatch(any())
 
         verify(fetchSupportedStatesUseCase).execute(primaryCountry.code)
@@ -468,7 +464,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         assertThat(viewModel.uiState.value?.selectedCountry).isEqualTo(primaryCountry)
         viewModel.onCountrySelected(primaryCountry)
 
-        // Selecting the country already selected refetches nothing
+        // The one call is the preload's, so selecting the same country refetched nothing
         verify(fetchSupportedStatesUseCase, times(1)).execute(any())
 
         assertThat(viewModel.uiState.value?.selectedCountry).isEqualTo(primaryCountry)
