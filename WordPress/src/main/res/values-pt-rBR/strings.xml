@@ -182,7 +182,6 @@ Language: pt_BR
     <string name="experimental_block_editor_note">O editor de blocos experimental se tornará o padrão em uma versão futura, e a capacidade de desativá-lo será removida.</string>
     <string name="avatar_update_email_unverified">Para atualizar o seu avatar, você precisa confirmar o seu endereço de e-mail primeiro.</string>
     <string name="feedback_form_note_link_wordpress">fóruns da comunidade.</string>
-    <string name="default_web_client_id" a8c-src-lib="module:login">espaço reservado</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Atalho para Alternar %s</string>
     <string name="personalization_screen_card_accessibility_label">Cartão para Alternar %s</string>
     <string name="user_avatar_content_description">Avatar do usuário %s</string>
@@ -451,9 +450,6 @@ Language: pt_BR
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blocos aninhados em mais de %d níveis podem não ser renderizados de maneira adequada no editor para dispositivos móveis.</string>
     <string name="domain_management_clear_search">Limpar pesquisa</string>
     <string name="media_encoder_quality_very_high">Muito alta</string>
-    <string name="notification_security_key_needed" a8c-src-lib="module:login">Forneça sua chave de segurança para continuar.</string>
-    <string name="login_error_security_key" a8c-src-lib="module:login">Ocorreu um erro no login com a chave de segurança</string>
-    <string name="login_text_security_key" a8c-src-lib="module:login">Usar uma chave de segurança</string>
     <string name="new_domain_search_screen_error_title">Não foi possível encontrar domínios</string>
     <string name="new_domain_search_screen_list_item_sale_price">%s no primeiro ano</string>
     <string name="new_domain_search_screen_list_item_regular_price">%s / ano</string>
@@ -999,11 +995,6 @@ Language: pt_BR
     <string name="notification_channel_weekly_roundup_title">Resumo semanal</string>
     <string name="my_site_dashboard_tab_title">Início</string>
     <string name="adding_cat">Adicionando categoria</string>
-    <string name="login_select_email_client">Qual aplicativo de e-mail você usa?</string>
-    <string name="login_error_xml_rpc_auth_error_communicating" a8c-src-lib="module:login">Houve um problema de comunicação com o site. Um código de erro HTTP 401 foi retornado.</string>
-    <string name="login_error_xml_rpc_cannot_read_site_auth_required" a8c-src-lib="module:login">As chamadas XML-RPC parecem bloqueadas neste site (código de erro 401). Se a tentativa de login falhar, toque no ícone de ajuda para ver as perguntas frequentes.</string>
-    <string name="login_error_xml_rpc_cannot_read_site" a8c-src-lib="module:login">Não foi possível ler o site WordPress nesse URL. Clique no ícone de ajuda para ver as perguntas frequentes.</string>
-    <string name="login_error_xml_rpc_services_disabled" a8c-src-lib="module:login">Os serviços XML-RPC estão desativados neste site.</string>
     <string name="my_site_menu_tab_title">Menu</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Sua pesquisa inclui caracteres não compatíveis com os domínios do WordPress.com. Os caracteres permitidos são: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Verifique sua conexão com a internet e atualize a página.</string>
@@ -1245,11 +1236,6 @@ Language: pt_BR
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Insira as credenciais do seu servidor&lt;/a&gt; para corrigir ameaças.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Insira as credenciais do seu servidor&lt;/a&gt; para corrigir ameaças.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Clique duas vezes para adicionar um link.</string>
-    <string name="login_empty_view_try_another_account">Tente com outra conta</string>
-    <string name="login_empty_view_see_instructions">Ver instruções</string>
-    <string name="login_no_jetpack_sites_error_message">Se você já possui um site, precisará instalar o plugin gratuito do Jetpack e conectá-lo à sua conta do WordPress.com.</string>
-    <string name="login_empty_view_avatar_content_description">Sua foto de perfil</string>
-    <string name="login_not_a_jetpack_site">Para utilizar este aplicativo em %1$s você precisa ter o plugin Jetpack instalado e conectado à sua conta do WordPress.com. </string>
     <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Configurações de largura</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Rel do link</string>
     <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Configurações de coluna</string>
@@ -1285,7 +1271,6 @@ Language: pt_BR
     <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Mais</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Descreva brevemente o link para ajudar pessoas que usam leitores de tela</string>
     <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Adicionar blocos</string>
-    <string name="login_no_jetpack_sites">Nenhum site Jetpack foi encontrado</string>
     <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">O que é texto alternativo?</string>
     <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Modificar %s em</string>
     <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Modificar bloco…</string>
@@ -1332,7 +1317,6 @@ Language: pt_BR
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Toque duas vezes para abrir a janela de ações para editar, substituir ou remover a imagem</string>
     <string name="new_site_creation_search_domain_example">exemplo.com</string>
     <string name="new_site_creation_search_domain_input_hint">Digite um nome para o seu site</string>
-    <string name="magic_link_not_meaning_to_create_account" a8c-src-lib="module:login">Não queria criar uma conta nova? Volte para reinserir seu endereço de e-mail.</string>
     <string name="invite_links_disable_dialog_message">Assim que esse link de convite for desativado, ninguém poderá usá-lo para ingressar em sua equipe. Você tem certeza?</string>
     <string name="invite_links_disable_dialog_title">Desativar link de convite</string>
     <string name="invite_links_bad_format_response">Resposta inválida recebida</string>
@@ -1594,8 +1578,6 @@ Language: pt_BR
     <string name="hpp_retry_error">Verifique sua conexão com a internet e tente novamente.</string>
     <string name="hpp_error_subtitle">Toque em tentar novamente quando estiver online.</string>
     <string name="hpp_error_title">Modelos não estão disponíveis off-line</string>
-    <string name="continue_site_credentials" a8c-src-lib="module:login">Prosseguir com as informações salvas</string>
-    <string name="login_find_your_connected_email" a8c-src-lib="module:login">Encontre o e-mail conectado</string>
     <string name="reader_discover_no_posts_follow_subtitle">Tente seguir mais tags para melhorar a pesquisa</string>
     <string name="reader_discover_no_posts_title">Nenhum post recente</string>
     <string name="reader_discover_empty_title">Desejamos boas-vindas!</string>
@@ -1636,8 +1618,6 @@ Language: pt_BR
     <string name="suggestion_no_connection">Sem conexão à internet.\nAs sugestões estão indisponíveis.</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s selecionado(s)</string>
-    <string name="login_get_link_by_email" a8c-src-lib="module:login">Receber um link de acesso por e-mail</string>
-    <string name="email_not_registered_wpcom" a8c-src-lib="module:login">Hmm, não encontramos uma conta WordPress.com conectada a esse endereço de e-mail.</string>
     <string name="permission_microphone">Microfone</string>
     <string name="comment_unable_to_show_error">Não é possível mostrar este comentário</string>
     <string name="media_browse_for_items">Procurar por itens</string>
@@ -1674,26 +1654,7 @@ Language: pt_BR
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Escolher imagem</string>
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bloco removido</string>
     <string name="enter_your_site_address">Digite o endereço de seu site</string>
-    <string name="signup_confirmation_title" a8c-src-lib="module:login">Confirmação de inscrição</string>
-    <string name="continue_with_google_terms_of_service_text" a8c-src-lib="module:login">Se você continuar com o Google e ainda não tiver uma conta no WordPress.com, você criará uma conta e concordará com nossos %1$sTermos de Serviços%2$s.</string>
-    <string name="continue_terms_of_service_text" a8c-src-lib="module:login">Ao continuar, você concorda com os nossos %1$sTermos de Serviço%2$s.</string>
-    <string name="signup_confirmation_message" a8c-src-lib="module:login">Usaremos este endereço de e-mail para criar sua nova conta no WordPress.com.</string>
-    <string name="signup_magic_link_message" a8c-src-lib="module:login">Nós enviamos um link por e-mail para criar sua nova conta no WordPress.com. Verifique sua caixa de e-mails neste dispositivo e toque no link recebido do WordPress.com.</string>
-    <string name="enter_account_info_for_site" a8c-src-lib="module:login">Digite as informações da conta de %1$s.</string>
-    <string name="login_or" a8c-src-lib="module:login">ou</string>
-    <string name="continue_google_button_suffix" a8c-src-lib="module:login">Continuar com Google</string>
-    <string name="login_find_your_site_adress" a8c-src-lib="module:login">Encontrar um endereço para seu site</string>
-    <string name="login_done">Concluído</string>
-    <string name="magic_link_not_seeing_email_message" a8c-src-lib="module:login">Não encontrou o e-mail? Verifique a caixa de spam ou lixeira.</string>
-    <string name="login_magic_links_sent_label" a8c-src-lib="module:login">Verifique seu e-mail neste dispositivo e toque no link que você recebeu do WordPress.com.</string>
-    <string name="login_magic_links_label" a8c-src-lib="module:login">Enviaremos um e-mail com um link que conectará à sua conta instantaneamente sem precisar de senha.</string>
-    <string name="check_email" a8c-src-lib="module:login">Verificar e-mail</string>
     <string name="get_started" a8c-src-lib="module:login">Iniciar</string>
-    <string name="enter_email_to_continue_wordpress_com" a8c-src-lib="module:login">Digite seu endereço de e-mail para acessar ou criar uma conta no WordPress.com.</string>
-    <string name="or_type_your_password" a8c-src-lib="module:login">Ou digite sua senha</string>
-    <string name="create_account" a8c-src-lib="module:login">Criar conta</string>
-    <string name="send_link_by_email" a8c-src-lib="module:login">Enviar link por e-mail</string>
-    <string name="reset_your_password" a8c-src-lib="module:login">Redefinir sua senha</string>
     <string name="reader_error_request_failed_title">Houve um problema ao completar a solicitação. Tente novamente mais tarde.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Mover esse post para a lixeira também apagará as alterações não salvas. Você tem certeza de que deseja continuar?</string>
     <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Opções do bloco %s</string>
@@ -1916,9 +1877,6 @@ Language: pt_BR
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Legenda da galeria. %s</string>
     <string name="create_post_page_fab_tooltip">Criar um post ou página</string>
     <string name="content_description_person_building_website">Pessoa construindo um site</string>
-    <string name="post_signup_interstitial_not_right_now">Agora não</string>
-    <string name="post_signup_interstitial_subtitle">O que você quiser criar ou compartilhar, nós te ajudaremos aqui.</string>
-    <string name="post_signup_interstitial_title">Boas-vindas ao WordPress</string>
     <string name="stock_media_picker_list_content_description">Biblioteca de fotos</string>
     <string name="photo_picker_image_thumbnail_unselected">Imagem não selecionada</string>
     <string name="photo_picker_image_selected">,Selecionado</string>
@@ -1932,12 +1890,6 @@ Language: pt_BR
     <string name="dialog_confirm_scheduled_post_sync_title">Pronto para sincronizar?</string>
     <string name="new_site_creation_unavailable_domain">Este domínio não está disponível</string>
     <string name="negative_prefix">-%s</string>
-    <string name="login_discovery_error_generic" a8c-src-lib="module:login">Não foi possível acessar seu site. Entre em contato com sua hospedagem para resolver isso.</string>
-    <string name="login_discovery_error_ssl" a8c-src-lib="module:login">Não foi possível acessar seu site devido a um problema com o &lt;b&gt;certificado SSL&lt;/b&gt;. Entre em contato com sua hospedagem para resolver isso.</string>
-    <string name="login_discovery_error_http_auth" a8c-src-lib="module:login">Não foi possível acessar seu site porque ele requer &lt;b&gt;autenticação HTTP&lt;/b&gt;. Entre em contato com sua hospedagem para resolver isso.</string>
-    <string name="login_discovery_error_xmlrpc" a8c-src-lib="module:login">Não foi possível acessar o &lt;b&gt;arquivo XMLRPC&lt;/b&gt; de seu site. Entre em contato com sua hospedagem para resolver isso.</string>
-    <string name="login_site_credentials_magic_link_label" a8c-src-lib="module:login">Quase pronto! Só precisamos verificar seu endereço de e-mail conectado ao Jetpack: &lt;b&gt;%1$s&lt;/b&gt;</string>
-    <string name="enter_credentials_for_site" a8c-src-lib="module:login">Acessar com as credenciais do site %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Página do site</string>
     <string name="reader_my_likes_display_name">Curtidas</string>
     <string name="reader_discover_display_name">Explorar</string>
@@ -2094,8 +2046,6 @@ Language: pt_BR
     <string name="post_notification_off">Desativado</string>
     <string name="post_settings_add_to_calendar">Adicionar ao calendário</string>
     <string name="post_settings_notification">Notificação</string>
-    <string name="login_invalid_site_url" a8c-src-lib="module:login">Digite o endereço completo do site, tal como exemplo.com.</string>
-    <string name="enter_email_for_site" a8c-src-lib="module:login">Acesse com o WordPress.com para se conectar ao %1$s</string>
     <string name="stats_post_views_label">Visualizações</string>
     <string name="stats_post_label">Post</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -2199,8 +2149,6 @@ Language: pt_BR
     <string name="posts_trashed_empty">Não há nenhum post na lixeira</string>
     <string name="posts_draft_empty">Não há nenhum rascunho de post</string>
     <string name="posts_scheduled_empty">Não há nenhum post agendado</string>
-    <string name="notification_wpcom_username_needed" a8c-src-lib="module:login">Acesse com seu nome de usuário e senha.</string>
-    <string name="error_user_username_instead_of_email" a8c-src-lib="module:login">Acesse usando seu nome de usuário do WordPress.com ao invés de seu endereço de e-mail.</string>
     <string name="stats_insights_average_words">Média de palavras por post</string>
     <string name="stats_insights_total_words">Total de palavras</string>
     <string name="stats_insights_average_likes">Média de curtidas por post</string>
@@ -2210,7 +2158,6 @@ Language: pt_BR
     <string name="stats_insights_posts">Posts</string>
     <string name="stats_insights_year">Ano</string>
     <string name="stats_insights_this_year_site_stats">Esse ano</string>
-    <string name="no_site_error" a8c-src-lib="module:login">O site publicado nesse endereço não é um site WordPress. Para que possamos nos conectar a ele, é necessário que seja um site feito usando o WordPress.</string>
     <string name="plugin_check_domain_credit_error">Falha ao verificar por créditos de domínio disponíveis</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Verificando créditos de domínios</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Registrar domínio</string>
@@ -2343,7 +2290,6 @@ Language: pt_BR
     <string name="history_detail_button_previous">Anterior</string>
     <string name="history_detail_button_next">Próximo</string>
     <string name="media_space_used">%1$s usados</string>
-    <string name="enter_wpcom_or_jetpack_site" a8c-src-lib="module:login">Informe um site feito no WordPress.com ou do feito com o WordPress.org e conectado ao Jetpack.</string>
     <string name="history_loading_revision">Carregando revisão</string>
     <string name="history_loaded_revision">Revisão carregada</string>
     <string name="history_load_dialog_button_positive">Carregar</string>
@@ -2371,8 +2317,6 @@ Language: pt_BR
     <string name="pages_scheduled">Agendado</string>
     <string name="pages_drafts">Rascunhos</string>
     <string name="pages_published">Publicado</string>
-    <string name="login_error_sms_throttled" a8c-src-lib="module:login">Já fizemos muitas tentativas de enviar o código de verificação por SMS. Espere alguns minutos e solicite um novo código mais tarde.</string>
-    <string name="login_error_email_not_found_v2" a8c-src-lib="module:login">Não há nenhuma conta no WordPress.com usando essa conta do Google.</string>
     <string name="site_picker_remove_site_empty">Nenhum site corresponde à sua pesquisa</string>
     <string name="reader_no_followed_blogs_search_title">Nenhum blog corresponde à sua pesquisa</string>
     <string name="page_parent_changed">A página ascendente foi alterada</string>
@@ -2391,7 +2335,6 @@ Language: pt_BR
     <string name="content_description_more">Mais</string>
     <string name="my_site_create_new_site_title">Você não tem nenhum site</string>
     <string name="reader_empty_subscribed_tags_subtitle">Adicione tags aqui para encontrar posts sobre seus assuntos favoritos</string>
-    <string name="login_to_to_connect_jetpack" a8c-src-lib="module:login">Acesse a conta do WordPress.com usada para conectar o Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Perguntas frequentes sobre o Jetpack</string>
     <string name="stats_jetpack_connection_setup_info">Para usar estatísticas em seu site WordPress é necessário instalar o plugin Jetpack.</string>
@@ -2441,13 +2384,7 @@ Language: pt_BR
     <string name="reader_empty_search_title">Nenhum resultado encontrado</string>
     <string name="comment_read_source_post">Ler o post original</string>
     <string name="sites">Sites</string>
-    <string name="signup_magic_link_title" a8c-src-lib="module:login">Link mágico enviado</string>
-    <string name="verification_2fa_screen_title" a8c-src-lib="module:login">Código de verificação</string>
-    <string name="selfhosted_site_login_title" a8c-src-lib="module:login">Informações de acesso</string>
-    <string name="magic_link_sent_login_title" a8c-src-lib="module:login">Link mágico enviado</string>
-    <string name="magic_link_login_title" a8c-src-lib="module:login">Acessar com link mágico</string>
     <string name="site_address_login_title" a8c-src-lib="module:login">Endereço do site para acesso</string>
-    <string name="email_address_login_title" a8c-src-lib="module:login">Endereço de e-mail para acesso</string>
     <string name="reader_empty_saved_posts_description">Toque em %s para salvar um post em sua lista.</string>
     <string name="reader_empty_saved_posts_title">Nenhum post salvo ainda.</string>
     <string name="reader_bookmark_snack_title">Post salvo</string>
@@ -2549,7 +2486,6 @@ Language: pt_BR
     <string name="invite_user_delete_desc">remover %s</string>
     <string name="profile_picture">Imagem do perfil de %s</string>
     <string name="comment_checkmark_desc">verificação</string>
-    <string name="signup_with_google_progress" a8c-src-lib="module:login">Acessando com o Google…</string>
     <string name="jetpack_connection_failed_with_reason">A conexão com o Jetpack falhou: %s</string>
     <string name="jetpack_already_connected_toast">Você já está conectado ao Jetpack</string>
     <string name="menu_visual_mode">Editor visual</string>
@@ -2576,7 +2512,6 @@ Language: pt_BR
     <string name="notif_detail_screen_title">Informações da notificação %s</string>
     <string name="edit_photo_screen_title">Editar foto</string>
     <string name="share_intent_screen_title">Escolher site</string>
-    <string name="signup_epilogue_screen_title">Nova conta</string>
     <string name="person_detail_screen_title">Informações da pessoa</string>
     <string name="media_settings_screen_title">Detalhes do arquivo</string>
     <string name="publicize_buttons_screen_title">Botões de compartilhamento</string>
@@ -2627,7 +2562,6 @@ Language: pt_BR
     <string name="site_creation_domain_finish_button">Criar site</string>
     <string name="notification_site_creation_created">Toque para continuar.</string>
     <string name="notification_site_creation_title_success">Site criado!</string>
-    <string name="google_error_timeout" a8c-src-lib="module:login">O Google demorou muito tempo para responder. Pode ser preciso esperar até que você tenha uma conexão melhor com a internet.</string>
     <string name="username_changer_title">Mudar nome de usuário</string>
     <string name="username_changer_hint">Digite para mais sugestões</string>
     <string name="username_changer_header">Atualmente, seu nome de usuário é %1$s%2$s%3$s. Com poucas exceções, outras pessoas verão apenas o seu nome de exibição, %4$s%5$s%6$s.</string>
@@ -2637,18 +2571,6 @@ Language: pt_BR
     <string name="username_changer_dismiss_button_positive">Descartar</string>
     <string name="username_changer_action">Salvar</string>
     <string name="content_description_add_avatar">Adicionar avatar</string>
-    <string name="signup_user_exists">Este e-mail já existe no WordPress.com.\nContinuando com o acesso.</string>
-    <string name="signup_updating_account">Atualizando conta…</string>
-    <string name="signup_magic_link_progress" a8c-src-lib="module:login">Enviando e-mail</string>
-    <string name="signup_magic_link_error_button_positive" a8c-src-lib="module:login">Tentar novamente</string>
-    <string name="signup_magic_link_error_button_negative" a8c-src-lib="module:login">Fechar</string>
-    <string name="signup_magic_link_error" a8c-src-lib="module:login">Houve um problema ao enviar o e-mail. Você pode tentar novamente agora ou fechar e tentar de novo mais tarde.</string>
-    <string name="signup_epilogue_hint_username">Nome de usuário</string>
-    <string name="signup_epilogue_hint_password_detail">Você sempre pode acessar com um link como o que acabou de usar, mas também é possível definir uma senha se preferir.</string>
-    <string name="signup_epilogue_hint_password">Senha (opcional)</string>
-    <string name="signup_epilogue_hint_display">Nome de exibição</string>
-    <string name="signup_epilogue_error_button_positive">Tentar novamente</string>
-    <string name="signup_epilogue_error_button_negative">Reverter</string>
     <string name="signup_epilogue_error_generic">Houve um problema ao atualizar sua conta. Você pode tentar novamente ou reverter suas alterações para continuar.</string>
     <string name="plugin_needs_update">Precisa de atualização</string>
     <string name="plugin_caption_search">Pesquisar plugins</string>
@@ -2736,18 +2658,6 @@ Language: pt_BR
     <string name="my_site_btn_plugins">Plugins</string>
     <string name="media_edit_link_hint">Abrir link em uma nova janela/aba</string>
     <string name="media_edit_link_text">Apontar para</string>
-    <string name="notification_login_failed" a8c-src-lib="module:login">Ocorreu um erro.</string>
-    <string name="notification_2fa_needed" a8c-src-lib="module:login">Forneça um código de autenticação para continuar.</string>
-    <string name="notification_error_wrong_password" a8c-src-lib="module:login">Confira novamente sua senha para continuar.</string>
-    <string name="notification_login_title_stopped" a8c-src-lib="module:login">Acesso interrompido</string>
-    <string name="notification_logging_in" a8c-src-lib="module:login">Aguarde o acesso.</string>
-    <string name="notification_login_title_in_progress" a8c-src-lib="module:login">Acesso em andamento…</string>
-    <string name="notification_logged_in" a8c-src-lib="module:login">Toque para continuar.</string>
-    <string name="notification_login_title_success" a8c-src-lib="module:login">Acesso realizado!</string>
-    <string name="login_error_generic_start" a8c-src-lib="module:login">Não foi possível iniciar o acesso pelo Google.</string>
-    <string name="login_empty_password" a8c-src-lib="module:login">Digite uma senha</string>
-    <string name="login_text_otp_another" a8c-src-lib="module:login">Ao invés disso, enviar por mensagem de texto um outro código para mim.</string>
-    <string name="enter_verification_code_sms" a8c-src-lib="module:login">Enviamos uma mensagem de texto para o número de telefone com final %s. Digite o código de verificação do SMS.</string>
     <string name="image_size">Tamanho</string>
     <string name="uploading_subtitle_media_only_one">1 arquivo restante</string>
     <string name="uploading_subtitle_media_only">%1$d de %2$d arquivos restantes</string>
@@ -2764,15 +2674,10 @@ Language: pt_BR
     <string name="confirm_remove_media_image">Remover esta imagem do post?</string>
     <string name="media_edit_customize_card_caption">Personalizar</string>
     <string name="media_edit_file_details_card_caption">Detalhes do arquivo</string>
-    <string name="login_error_suffix" a8c-src-lib="module:login">\nTalvez tentar com outra conta?</string>
-    <string name="login_error_generic" a8c-src-lib="module:login">Houve um problema na conexão com a conta do Google.</string>
     <string name="login_error_button">Fechar</string>
-    <string name="enter_wpcom_password_google" a8c-src-lib="module:login">Para continuar com esta conta do Google, digite a senha da conta correspondente no WordPress.com. Isso só será solicitado uma vez.</string>
     <string name="error_generic_network">Ocorreu um erro na rede. Verifique sua conexão e tente novamente.</string>
     <string name="post_settings_remove_featured_image">Remover imagem destacada</string>
     <string name="post_settings_choose_featured_image">Escolher imagem destacada</string>
-    <string name="login_log_in_for_share_intent" a8c-src-lib="module:login">Acesse o WordPress.com para compartilhar o conteúdo.</string>
-    <string name="enter_site_address_share_intent" a8c-src-lib="module:login">Digite o endereço do site WordPress onde você gostaria de compartilhar o conteúdo.</string>
     <string name="jetpack_disconnect_error_toast">Erro ao desconectar o site</string>
     <string name="jetpack_disconnect_success_toast">Site desconectado</string>
     <string name="jetpack_disconnect_confirm">Desconectar</string>
@@ -2853,28 +2758,13 @@ Language: pt_BR
     <string name="post_queued">Post na fila</string>
     <string name="uploading_post">Fazendo upload de \"%s\"</string>
     <string name="connection_to_server_lost">Conexão com o servidor perdida</string>
-    <string name="login_email_client_not_found">Não é possível detectar seu aplicativo cliente de e-mail</string>
-    <string name="login_empty_2fa" a8c-src-lib="module:login">Digite um código de verificação</string>
-    <string name="login_empty_username" a8c-src-lib="module:login">Digite um nome de usuário</string>
-    <string name="login_log_in_for_deeplink" a8c-src-lib="module:login">Faça o login no WordPress.com para acessar a publicação.</string>
-    <string name="login_error_while_adding_site" a8c-src-lib="module:login">Erro ao adicionar o site. Código de erro: %s</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">Verificando o endereço do site</string>
-    <string name="login_site_address_more_help" a8c-src-lib="module:login">Precisa de mais ajuda?</string>
-    <string name="login_site_address_help_content" a8c-src-lib="module:login">O endereço do seu site aparece na barra na parte superior da tela quando você visita seu site no Chrome.</string>
-    <string name="login_site_address_help_title" a8c-src-lib="module:login">Qual é o endereço do meu site?</string>
     <string name="login_site_address" a8c-src-lib="module:login">Endereço do site</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Digite o endereço do site WordPress que você deseja conectar.</string>
     <string name="login_already_logged_in_wpcom">Já conectado no WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Continuar</string>
     <string name="connect_more">Conectar outro site</string>
-    <string name="enter_wpcom_password" a8c-src-lib="module:login">Digite sua senha do WordPress.com.</string>
-    <string name="login_magic_link_email_requesting" a8c-src-lib="module:login">Solicitando o e-mail de login</string>
-    <string name="password_incorrect" a8c-src-lib="module:login">Parece que esta senha está errada. Verifique seus dados e tente novamente.</string>
-    <string name="requesting_otp" a8c-src-lib="module:login">Solicitando um código de verificação via SMS.</string>
-    <string name="login_text_otp" a8c-src-lib="module:login">Envie-me uma mensagem de texto com o código em vez disso.</string>
-    <string name="enter_verification_code" a8c-src-lib="module:login">Quase lá! Digite o código de verificação do seu aplicativo de autenticação.</string>
     <string name="next">Próximo</string>
-    <string name="enter_email_wordpress_com" a8c-src-lib="module:login">Fazer login no WordPress.com usando um endereço de e-mail para gerenciar todos os seus sites WordPress.</string>
     <string name="me_profile_photo">Foto de perfil</string>
     <string name="error_media_parse_error">Resposta inesperada do servidor</string>
     <string name="upload_finished_toast">Não é possível parar o upload porque já foi concluído</string>
@@ -3019,8 +2909,6 @@ Language: pt_BR
     <string name="error_unknown_post_type">Formato de post desconhecido</string>
     <string name="submit_for_review">Enviar</string>
     <string name="title_subscriber">Assinante</string>
-    <string name="duplicate_site_detected" a8c-src-lib="module:login">Um site duplicado foi detectado.</string>
-    <string name="cannot_add_duplicate_site" a8c-src-lib="module:login">Esse site já existe no aplicativo, você não pode adicioná-lo.</string>
     <string name="already_logged_in_wpcom">Você não pode adicionar um site do WordPress.com que não esteja vinculado a sua conta atual.</string>
     <string name="error_media_load">Não foi possível carregar a mídia</string>
     <string name="error_media_refresh_no_connection">Conexão necessária para a atualização da biblioteca</string>
@@ -3031,8 +2919,6 @@ Language: pt_BR
     <string name="media_generic_error">Ocorreu um erro na mídia</string>
     <string name="retry">Tentar novamente</string>
     <string name="confirm">Confirmar</string>
-    <string name="xmlrpc_endpoint_forbidden_error" a8c-src-lib="module:login">Não foi possível conectar. Recebemos um erro 403 ao tentar acessar o arquivo XMLRPC de seu site.\nO aplicativo necessita dessa conexão para se comunicar com seu site.\nEntre em contato com sua hospedagem para corrigir esse problema.</string>
-    <string name="xmlrpc_post_blocked_error" a8c-src-lib="module:login">Não foi possível conectar. Seu servidor está bloqueando solicitações POST e\n       o aplicativo precisa delas para se comunicar com o seu site. Entre em contato com seu servidor para resolver este problema.</string>
     <string name="pending_draft_one_generic">Não o deixe de lado! \"%1$s\" está esperando ser publicado.</string>
     <string name="pending_draft_one_month">Não o deixe de lado! \"%1$s\" está esperando ser publicado.</string>
     <string name="pending_draft_one_week_2">\"%1$s\" ainda é um rascunho. Lembre-se de publicá-lo!</string>
@@ -3115,8 +3001,6 @@ Language: pt_BR
     <string name="error_refreshing_gravatar">Erro ao carregar o seu Gravatar</string>
     <string name="error_locating_image">Erro ao localizar o recorte da imagem</string>
     <string name="error_cropping_image">Erro ao cortar a imagem</string>
-    <string name="checking_email" a8c-src-lib="module:login">Verificando e-mail</string>
-    <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Atualmente indisponível. Digite sua senha</string>
     <string name="logging_in">Fazendo login</string>
     <string name="web_address_dialog_hint">Exibido ao público quando você comentar.</string>
     <string name="export_your_content_message">Seus posts, páginas e configurações serão enviados para você em %s</string>
@@ -3149,7 +3033,6 @@ Language: pt_BR
     <string name="comments_empty_list_filtered_pending">Nenhum comentário pendente</string>
     <string name="comments_empty_list_filtered_approved">Nenhum comentário aprovado</string>
     <string name="button_skip">Pular</string>
-    <string name="xmlrpc_missing_method_error" a8c-src-lib="module:login">Não foi possível conectar. Alguns métodos XML-RPC necessários estão faltando no servidor.</string>
     <string name="alignment_center">Centro</string>
     <string name="post_format_video">Vídeo</string>
     <string name="post_format_status">Status</string>
@@ -3209,7 +3092,6 @@ Language: pt_BR
     <string name="about_the_app">Sobre o aplicativo</string>
     <string name="error_post_account_settings">Não foi possível salvar as configurações da sua conta</string>
     <string name="error_fetch_account_settings">Não foi possível recuperar as configurações da sua conta</string>
-    <string name="error_fetch_my_profile" a8c-src-lib="module:login">Não foi possível recuperar seu perfil</string>
     <string name="site_settings_unknown_language_code_error">Código de idioma não reconhecido</string>
     <string name="site_settings_threading_dialog_description">Permitir que os comentários sejam agrupados em tópicos.</string>
     <string name="site_settings_threading_dialog_header">Agrupar até</string>
@@ -3395,9 +3277,6 @@ Language: pt_BR
     <string name="my_site_btn_blog_posts">Posts</string>
     <string name="reader_label_new_posts_subtitle">Toque para mostrar</string>
     <string name="select_all">Selecionar todos</string>
-    <string name="auth_required" a8c-src-lib="module:login">Faça login novamente para continuar.</string>
-    <string name="invalid_verification_code" a8c-src-lib="module:login">Código de verificação inválido</string>
-    <string name="verification_code" a8c-src-lib="module:login">Código de verificação</string>
     <string name="language">Idioma</string>
     <string name="reader_empty_posts_request_failed">Não foi possível recuperar os posts</string>
     <string name="error_notification_open">Não foi possível abrir a notificação</string>
@@ -3460,7 +3339,6 @@ Language: pt_BR
     <string name="ssl_certificate_error">Certificado SSL inválido</string>
     <string name="help">Ajuda</string>
     <string name="username_or_password_incorrect">O nome de usuário ou a senha digitada está incorreta</string>
-    <string name="email_invalid" a8c-src-lib="module:login">Digite um endereço de e-mail válido</string>
     <string name="invalid_email_message">Seu endereço de e-mail é inválido</string>
     <string name="error_downloading_image">Erro ao baixar a imagem</string>
     <string name="error_load_comment">Não foi possível carregar o comentário</string>
@@ -3489,7 +3367,6 @@ Language: pt_BR
     <string name="local_changes">Alterações locais</string>
     <string name="new_media">Nova mídia</string>
     <string name="new_post">Novo post</string>
-    <string name="http_authorization_required" a8c-src-lib="module:login">Autorização obrigatória</string>
     <string name="invalid_site_url_message">Verifique se a URL do site inserida é válida</string>
     <string name="file_error_create">Não foi possível criar um arquivo temporário para carregar a mídia. Certifique-se de que há espaço livro suficiente em seu dispositivo.</string>
     <string name="category_name">Nome da categoria</string>
@@ -3534,7 +3411,6 @@ Language: pt_BR
     <string name="reader_likes_you_and_one">Você e mais um gostaram disso</string>
     <string name="pick_video">Selecionar vídeo</string>
     <string name="pick_photo">Selecione a foto</string>
-    <string name="sign_up_label" a8c-src-lib="module:login">Inscrever-se</string>
     <string name="reader_toast_err_url_intent">Não é possível abrir %s</string>
     <string name="reader_toast_err_view_image">Não é possível visualizar a imagem </string>
     <string name="reader_toast_err_share_intent">Não é possível compartilhar </string>
@@ -3577,8 +3453,6 @@ Language: pt_BR
     <string name="note_reply_successful">Resposta publicada</string>
     <string name="sign_in">Fazer login</string>
     <string name="loading">Carregando…</string>
-    <string name="httppassword" a8c-src-lib="module:login">Senha HTTP</string>
-    <string name="httpuser" a8c-src-lib="module:login">Usuário HTTP</string>
     <string name="error_media_upload">Ocorreu um erro durante o envio de mídia</string>
     <string name="incorrect_credentials">Usuário ou senha incorreta.</string>
     <string name="log_in" a8c-src-lib="module:login">Fazer login</string>

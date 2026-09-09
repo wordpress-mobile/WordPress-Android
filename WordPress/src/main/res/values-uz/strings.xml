@@ -53,8 +53,6 @@ Language: uz
     <string name="more_notifications">va yana %d ta.</string>
     <string name="sign_in">Kirish</string>
     <string name="loading">Yuklanmoqda…</string>
-    <string name="httppassword" a8c-src-lib="module:login">HTTP parol</string>
-    <string name="httpuser" a8c-src-lib="module:login">HTTP foydalanuvchi nomi</string>
     <string name="error_media_upload">Media yuklash jarayonida xatolik yuz berdi.</string>
     <string name="incorrect_credentials">Foydalanuvchi nomi yoki parol xato.</string>
     <string name="log_in" a8c-src-lib="module:login">Kirish</string>

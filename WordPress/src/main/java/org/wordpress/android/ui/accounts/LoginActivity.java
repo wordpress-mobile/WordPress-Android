@@ -18,7 +18,6 @@ import androidx.annotation.Nullable;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -32,26 +31,20 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.ui.accounts.login.LoginAnalyticsListener;
+import org.wordpress.android.ui.accounts.login.LoginAnalyticsTracker;
 import org.wordpress.android.ui.accounts.login.applicationpassword.LoginSiteApplicationPasswordFragment;
 import org.wordpress.android.support.ZendeskExtraTags;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
-import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSites;
-import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSiteAddressError;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.ui.accounts.login.LoginPrologueRevampedFragment;
 import org.wordpress.android.ui.accounts.login.WPcomLoginHelper;
-import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
-import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorFragment;
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.main.ChooseSiteActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
-import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
@@ -68,16 +61,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import dagger.android.AndroidInjector;
-import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasAndroidInjector;
 import dagger.hilt.android.AndroidEntryPoint;
 
-import static org.wordpress.android.util.ActivityUtils.hideKeyboard;
-
 @AndroidEntryPoint
-public class LoginActivity extends BaseAppCompatActivity implements
-        HasAndroidInjector, BasicDialogPositiveClickInterface {
+public class LoginActivity extends BaseAppCompatActivity {
     public static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
     public static final String MAGIC_LOGIN = "magic-login";
     public static final String TOKEN_PARAMETER = "token";
@@ -102,16 +89,13 @@ public class LoginActivity extends BaseAppCompatActivity implements
     }
 
     private LoginFlow mLoginFlow;
-    private LoginViewModel mViewModel;
     @Inject protected WPcomLoginHelper mLoginHelper;
 
-    @Inject DispatchingAndroidInjector<Object> mDispatchingAndroidInjector;
-    @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
+    @Inject protected LoginAnalyticsTracker mLoginAnalyticsTracker;
     @Inject UnifiedLoginTracker mUnifiedLoginTracker;
     @Inject protected SiteStore mSiteStore;
     @Inject protected AccountStore mAccountStore;
     @Inject protected Dispatcher mDispatcher;
-    @Inject protected ViewModelProvider.Factory mViewModelFactory;
 
     // Flag to track when we're waiting for account/sites to load after OAuth login
     private boolean mIsWaitingForSitesToLoad = false;
@@ -187,7 +171,7 @@ public class LoginActivity extends BaseAppCompatActivity implements
         setContentView(rootContainer);
 
         if (savedInstanceState == null) {
-            mLoginAnalyticsListener.trackLoginAccessed();
+            mLoginAnalyticsTracker.trackLoginAccessed();
 
             mUnifiedLoginTracker.setSource(loginFlow.getAnalyticsSource());
 
@@ -222,22 +206,6 @@ public class LoginActivity extends BaseAppCompatActivity implements
         if (mIsWaitingForSitesToLoad) {
             showLoadingOverlay();
         }
-
-        initViewModel();
-    }
-
-    private void initViewModel() {
-        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(LoginViewModel.class);
-
-        // initObservers
-        mViewModel.getNavigationEvents().observe(this, event -> {
-            LoginNavigationEvents loginEvent = event.getContentIfNotHandled();
-            if (loginEvent instanceof ShowSiteAddressError) {
-                showSiteAddressError((ShowSiteAddressError) loginEvent);
-            } else if (loginEvent instanceof ShowNoJetpackSites) {
-                showNoJetpackSites();
-            }
-        });
     }
 
     @Override
@@ -426,16 +394,6 @@ public class LoginActivity extends BaseAppCompatActivity implements
         }
     }
 
-    private void hideLoadingOverlay() {
-        if (mLoadingOverlay != null) {
-            mLoadingOverlay.setVisibility(View.GONE);
-        }
-        View fragmentContainer = findViewById(mFragmentContainerId);
-        if (fragmentContainer != null) {
-            fragmentContainer.setVisibility(View.VISIBLE);
-        }
-    }
-
     private void showLoginError(@NonNull Exception error) {
         AppLog.e(T.MAIN, "OAuth login failed", error);
 
@@ -594,7 +552,7 @@ public class LoginActivity extends BaseAppCompatActivity implements
         ActivityLauncher.viewHelp(this, origin, null, extraSupportTags, mExperimentalFeatures);
     }
 
-    public void helpSiteAddress(String url) {
+    public void helpSiteAddress() {
         viewHelp(Origin.LOGIN_SITE_ADDRESS);
     }
 
@@ -606,35 +564,5 @@ public class LoginActivity extends BaseAppCompatActivity implements
 
         // Start Notification service
         NotificationsUpdateServiceStarter.startService(getApplicationContext());
-    }
-
-    @Override
-    public void onPositiveClicked(@NonNull String instanceTag) {
-        // No dialog tags currently handled
-    }
-
-    @Override public AndroidInjector<Object> androidInjector() {
-        return mDispatchingAndroidInjector;
-    }
-
-    public void handleSiteAddressError(ConnectSiteInfoPayload siteInfo) {
-        mViewModel.onHandleSiteAddressError(siteInfo);
-    }
-
-    public void handleNoJetpackSites() {
-        // hide keyboard if you can
-        hideKeyboard(this);
-        mViewModel.onHandleNoJetpackSites();
-    }
-
-
-    private void showSiteAddressError(ShowSiteAddressError event) {
-        LoginSiteCheckErrorFragment fragment = LoginSiteCheckErrorFragment.Companion.newInstance(event.getUrl());
-        slideInFragment(fragment, true, LoginSiteCheckErrorFragment.TAG);
-    }
-
-    private void showNoJetpackSites() {
-        LoginNoSitesFragment fragment = LoginNoSitesFragment.Companion.newInstance();
-        slideInFragment(fragment, false, LoginNoSitesFragment.TAG);
     }
 }

@@ -28,7 +28,6 @@
         <item name="wpColorOnSurfaceHigh">@color/material_on_surface_emphasis_high_type</item>
         <item name="wpColorActionModeIcon">?attr/colorOnSurface</item>
         <item name="wpColorSurfaceSecondary">@color/background_dark_elevated</item>
-        <item name="wpColorLoginPrologueBg">?attr/colorSurface</item>
         <item name="wpColorTextPrimary">?attr/wpColorOnSurfaceHigh</item>
         <item name="wpColorTextSecondary">@color/text_secondary</item>
 
