@@ -17,6 +17,7 @@ import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.ADD_CATE
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.CATEGORIES
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.PUBLISH
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.TAGS
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
 import org.wordpress.android.util.AppLog
@@ -109,10 +110,10 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
     }
 
     // Send this back out to the current screen and so it can determine if it needs to save
-    // any data before accepting a backPress - in our case, the only view that needs this today
-    // is the Categories selection & AddCategory
+    // any data before accepting a backPress - the screens that need this are the Categories
+    // selection, AddCategory and Tags (which must commit typed-but-uncommitted text first).
     fun onDeviceBackPressed() {
-        if (currentScreen == CATEGORIES || currentScreen == ADD_CATEGORY) {
+        if (currentScreen == CATEGORIES || currentScreen == ADD_CATEGORY || currentScreen == TAGS) {
             _triggerOnDeviceBackPressed.value = Event(currentScreen as PrepublishingScreen)
         } else {
             onBackClicked()

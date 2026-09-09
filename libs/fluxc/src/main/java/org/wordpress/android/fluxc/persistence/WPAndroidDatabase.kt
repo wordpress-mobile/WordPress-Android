@@ -32,13 +32,11 @@ import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntit
 import org.wordpress.android.fluxc.persistence.coverters.StringListConverter
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao.CardEntity
-import org.wordpress.android.fluxc.persistence.domains.DomainDao
-import org.wordpress.android.fluxc.persistence.domains.DomainDao.DomainEntity
 import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao
 import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao.JetpackSocialEntity
 
 @Database(
-        version = 29,
+        version = 30,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
@@ -50,7 +48,6 @@ import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao.Je
             FeatureFlag::class,
             RemoteConfig::class,
             JetpackCPConnectedSiteEntity::class,
-            DomainEntity::class,
             BlazeCampaignEntity::class,
             JetpackSocialEntity::class,
             BlazeCampaignObjectiveEntity::class,
@@ -70,6 +67,7 @@ import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao.Je
             AutoMigration(from = 25, to = 26, spec = AutoMigration25to26::class),
             AutoMigration(from = 27, to = 28),
             AutoMigration(from = 28, to = 29),
+            AutoMigration(from = 29, to = 30, spec = AutoMigration29to30::class),
         ]
 )
 @TypeConverters(
@@ -91,8 +89,6 @@ abstract class WPAndroidDatabase : RoomDatabase() {
     abstract fun featureFlagConfigDao(): FeatureFlagConfigDao
 
     abstract fun remoteConfigDao(): RemoteConfigDao
-
-    abstract fun domainDao(): DomainDao
 
     abstract fun jetpackCPConnectedSitesDao(): JetpackCPConnectedSitesDao
 
@@ -366,3 +362,8 @@ abstract class WPAndroidDatabase : RoomDatabase() {
     DeleteTable(tableName = "BlazeAdSuggestions")
 )
 internal class AutoMigration25to26 : AutoMigrationSpec
+
+@DeleteTable.Entries(
+    DeleteTable(tableName = "Domains")
+)
+internal class AutoMigration29to30 : AutoMigrationSpec
