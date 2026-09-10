@@ -14,6 +14,8 @@ Language: bg
     <string name="he_support_status_unknown">Неизвестно</string>
     <string name="he_support_status_closed">Затворено</string>
     <string name="he_support_status_solved">Разрешено</string>
+    <string name="he_support_status_waiting_for_user">Изчаква потребителя</string>
+    <string name="he_support_status_waiting_for_support">Изчаква поддръжката</string>
     <string name="he_support_select_attachments">Избор на прикачени файлове</string>
     <string name="he_support_download_attachment">Изтегляне на прикачен файл</string>
     <string name="he_support_include_logs_description">Включването на дневници ще помогне на екипа ни да разреши проблема. Дневниците могат да съдържат скорошна дейност.</string>
@@ -815,6 +817,7 @@ Language: bg
     <string name="local_draft">Локална чернова</string>
     <string name="new_media">Нов файл</string>
     <string name="link_enter_url_text">Текст на връзката (по избор)</string>
+    <string name="fatal_db_error">Възникна грешка при създаване на базата от данни на приложението. Моля преинсталирайте приложението.</string>
     <string name="comment_status_unapproved">Предстоящ</string>
     <string name="post_not_found">Възникна грешка при зареждане на тази плубликация. Опреснете Вашите публикации и опитайте отново.</string>
     <string name="trash">Кошче</string>

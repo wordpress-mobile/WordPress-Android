@@ -6,6 +6,7 @@ Generator: GlotPress/4.1.0
 Language: el_GR
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="site_creation_domain_tag_sale">Προσφορά</string>
     <string name="site_creation_domain_tag_recommended">Προτεινόμενο</string>
     <string name="site_creation_domain_tag_best_alternative">Καλύτερη Εναλλακτική</string>
     <string name="help_buttons_screen_title">Βοήθεια</string>
@@ -17,7 +18,10 @@ Language: el_GR
     <string name="blogging_prompts_list_number_of_answers_one">1 απάντηση</string>
     <string name="blogging_prompts_list_number_of_answers_zero">0 απαντήσεις</string>
     <string name="blogging_prompts_list_answered_prompt">Απαντήθηκε</string>
+    <string name="jp_migration_network_error_title">Αδυναμία σύνδεσης στο διαδίκτυο</string>
+    <string name="jp_migration_try_again_button">Δοκιμάστε ξανά</string>
     <string name="jp_migration_generic_error_title">Χμμ.. κάτι πήγε στραβά!</string>
+    <string name="jp_migration_welcome_title">Καλώς ήρθατε στο Jetpack!</string>
     <string name="icon_desc">εικονίδιο</string>
     <string name="post_settings_parent">Γονική σελίδα</string>
     <string name="post_settings_page_attributes">Χαρακτηριστικά σελίδας</string>
@@ -1020,6 +1024,7 @@ Language: el_GR
     <string name="file_error_create">Αδυναμία δημιουργίας προσωρινού αρχείου για μεταφόρτωση πολυμέσων. Βεβαιωθείτε ότι υπάρχει αρκετός ελεύθερος χώρος στη συσκευή σας.</string>
     <string name="http_authorization_required" a8c-src-lib="module:login">Απαιτείται εξουσιοδότηση</string>
     <string name="new_media">Νέο πολυμέσο</string>
+    <string name="fatal_db_error">Προέκυψε σφάλμα κατά τη δημιουργία της βάσης δεδομένων της εφαρμογής. Δοκιμάστε να την εγκαταστήσετε ξανά.</string>
     <string name="reader_title_applog">Αρχείο καταγραφής εφαρμογής</string>
     <string name="reader_toast_err_adding_tag">Αδυναμία προσθήκης αυτής της ετικέτας</string>
     <string name="reader_toast_err_removing_tag">Αδυναμία αφαίρεσης αυτής της ετικέτας</string>
