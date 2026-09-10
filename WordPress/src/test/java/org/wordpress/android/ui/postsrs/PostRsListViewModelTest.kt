@@ -31,6 +31,7 @@ import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.rs.RsCommentCountFetcher
 import org.wordpress.android.ui.rs.RsPostChangeListener
+import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -609,6 +610,52 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
                 cancelAndIgnoreRemainingEvents()
             }
         }
+    // region density
+
+    @Test
+    fun `density starts from the stored preference`() = test {
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(true)
+
+        val viewModel = createViewModel()
+
+        assertThat(viewModel.density.value).isEqualTo(ContentListDensity.CONDENSED)
+    }
+
+    @Test
+    fun `density defaults to comfortable`() = test {
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(false)
+
+        val viewModel = createViewModel()
+
+        assertThat(viewModel.density.value).isEqualTo(ContentListDensity.COMFORTABLE)
+    }
+
+    @Test
+    fun `toggling density persists the new value`() = test {
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(false)
+        val viewModel = createViewModel()
+
+        viewModel.onDensityToggled(PostRsListTab.PUBLISHED)
+        advanceUntilIdle()
+
+        assertThat(viewModel.density.value).isEqualTo(ContentListDensity.CONDENSED)
+        verify(appPrefsWrapper).isContentListCondensed = true
+    }
+
+    @Test
+    fun `a condensed list fetches no metrics for its visible rows`() = test {
+        // The point of condensing: the rows show no views or comments, so nothing is requested.
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(true)
+        val viewModel = createViewModel()
+
+        viewModel.onRowsVisible(PostRsListTab.PUBLISHED, listOf(1L, 2L))
+        advanceUntilIdle()
+
+        verify(commentCountFetcher, never()).fetchCommentCounts(any(), any())
+        verify(statsDataSource, never()).fetchPostViews(any(), any())
+    }
+
+    // endregion
 }
 
 private const val UPLOADED_POST_ID = 4242L

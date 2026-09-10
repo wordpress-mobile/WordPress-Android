@@ -59,6 +59,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
             val searchQuery by viewModel.searchQuery.collectAsState()
             val authorFilter by viewModel.authorFilter.collectAsState()
             val confirmation by viewModel.pendingConfirmation.collectAsState()
+            val density by viewModel.density.collectAsState()
             AppThemeM3 {
                 PostRsListScreen(
                     tabStates = tabStates,
@@ -88,6 +89,8 @@ class PostRsListActivity : BaseAppCompatActivity() {
                     onPostMenuAction = viewModel::onPostMenuAction,
                     onCreatePost = viewModel::createNewPost,
                     onRowsVisible = viewModel::onRowsVisible,
+                    onDensityToggled = viewModel::onDensityToggled,
+                    density = density,
                     isRedesignEnabled = isRedesignEnabled
                 )
             }

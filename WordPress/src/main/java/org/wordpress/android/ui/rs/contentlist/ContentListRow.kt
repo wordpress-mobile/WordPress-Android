@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,17 +53,19 @@ fun ContentListRow(
     state: ContentListRowUiState,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    density: ContentListDensity = ContentListDensity.COMFORTABLE,
     menu: (@Composable () -> Unit)? = null
 ) {
+    val padding = if (density.isCondensed) CONDENSED_CARD_PADDING else CARD_PADDING
     ContentListCard(onClick = onClick, isSyncing = state.isSyncing, modifier = modifier) {
         Row(
             modifier = Modifier.padding(
-                start = CARD_PADDING,
-                top = CARD_PADDING,
-                end = CARD_PADDING,
+                start = padding,
+                top = padding,
+                end = padding,
                 bottom = CARD_PADDING_WITH_MENU
             ),
-            horizontalArrangement = Arrangement.spacedBy(CARD_PADDING),
+            horizontalArrangement = Arrangement.spacedBy(padding),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
@@ -70,10 +73,15 @@ fun ContentListRow(
                     state = state,
                     titleSize = TITLE_SIZE,
                     titleLineHeight = TITLE_LINE_HEIGHT,
+                    density = density,
                     menu = menu
                 )
             }
-            RowThumbnail(imageUrl = state.imageUrl, isImagePending = state.isImagePending)
+            RowThumbnail(
+                imageUrl = state.imageUrl,
+                isImagePending = state.isImagePending,
+                size = if (density.isCondensed) CONDENSED_THUMBNAIL_SIZE else THUMBNAIL_SIZE
+            )
         }
     }
 }
@@ -81,6 +89,8 @@ fun ContentListRow(
 /**
  * Lead row: the featured image runs the full width of the card above the text. Used for the newest
  * item in a list, which is what gives the redesign its reason to care about featured images.
+ *
+ * Comfortable density only - a condensed list has no lead row, so this is never drawn condensed.
  */
 @Composable
 fun ContentListHeroRow(
@@ -122,6 +132,7 @@ fun ContentListHeroRow(
                     state = state,
                     titleSize = HERO_TITLE_SIZE,
                     titleLineHeight = HERO_TITLE_LINE_HEIGHT,
+                    density = ContentListDensity.COMFORTABLE,
                     menu = menu
                 )
             }
@@ -240,20 +251,26 @@ private fun CardBody(isSyncing: Boolean, content: @Composable () -> Unit) {
 
 /**
  * The text stack shared by both row shapes: badges, title, excerpt, then the metadata line. Only
- * the title's size differs between them.
+ * the title's size and the density differ between them.
+ *
+ * Condensed drops the excerpt, which is what actually shortens the row, and the metrics, which the
+ * ViewModel then does not fetch.
  */
 @Composable
 private fun RowBody(
     state: ContentListRowUiState,
     titleSize: TextUnit,
     titleLineHeight: TextUnit,
+    density: ContentListDensity,
     menu: (@Composable () -> Unit)?
 ) {
     RowBadges(state.badges)
     RowTitle(title = state.title, fontSize = titleSize, lineHeight = titleLineHeight)
-    RowExcerpt(state.excerpt)
+    if (!density.isCondensed) {
+        RowExcerpt(state.excerpt)
+    }
     Spacer(modifier = Modifier.height(TITLE_META_GAP))
-    RowMetaLine(state = state, menu = menu)
+    RowMetaLine(state = state, showMetrics = !density.isCondensed, menu = menu)
 }
 
 @Composable
@@ -297,6 +314,7 @@ private fun RowExcerpt(excerpt: String) {
 @Composable
 private fun RowMetaLine(
     state: ContentListRowUiState,
+    showMetrics: Boolean,
     menu: (@Composable () -> Unit)?
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -305,21 +323,10 @@ private fun RowMetaLine(
             verticalAlignment = Alignment.CenterVertically
         ) {
             MetaText(state.dateLabel)
-            if (state.areMetricsPending) {
-                // Views and comments arrive together, one request per row, so a single bar stands
-                // in for both rather than two that would resolve on the same frame anyway.
-                MetaSeparator()
-                ShimmerBox(
-                    modifier = Modifier
-                        .width(METRICS_SKELETON_WIDTH)
-                        .height(METRICS_SKELETON_HEIGHT)
-                        .clip(RoundedCornerShape(PLACEHOLDER_RADIUS))
-                )
-            } else {
-                state.viewCount?.let { MetricText(R.plurals.content_list_view_count, it) }
-                // A post with no comments still says so; unlike views, zero is meaningful here and
-                // the number arrives in the same response, so hiding it would look like a gap.
-                state.commentCount?.let { MetricText(R.plurals.content_list_comment_count, it) }
+            // A condensed list does not fetch metrics, so it shows neither them nor a skeleton
+            // waiting on a request that is never made.
+            if (showMetrics) {
+                RowMetrics(state)
             }
             if (state.hasSyncFailed) {
                 MetaSeparator()
@@ -346,6 +353,27 @@ private fun MetricText(@PluralsRes pluralResId: Int, count: Long) {
             NumberFormat.getIntegerInstance().format(count)
         )
     )
+}
+
+/** Views and comments, or a single bar standing in for both while they are still being fetched. */
+@Composable
+private fun RowMetrics(state: ContentListRowUiState) {
+    if (state.areMetricsPending) {
+        // Views and comments arrive together, so one bar stands in for both rather than two that
+        // would resolve on the same frame anyway.
+        MetaSeparator()
+        ShimmerBox(
+            modifier = Modifier
+                .width(METRICS_SKELETON_WIDTH)
+                .height(METRICS_SKELETON_HEIGHT)
+                .clip(RoundedCornerShape(PLACEHOLDER_RADIUS))
+        )
+        return
+    }
+    state.viewCount?.let { MetricText(R.plurals.content_list_view_count, it) }
+    // A post with no comments still says so; unlike views, zero is meaningful here and the number
+    // arrives in the same response, so hiding it would look like a gap.
+    state.commentCount?.let { MetricText(R.plurals.content_list_comment_count, it) }
 }
 
 @Composable
@@ -398,7 +426,14 @@ private fun RowBadges(@StringRes badges: List<Int>) {
 }
 
 @Composable
-private fun RowThumbnail(imageUrl: String?, isImagePending: Boolean) {
+private fun RowThumbnail(
+    imageUrl: String?,
+    isImagePending: Boolean,
+    size: Dp = THUMBNAIL_SIZE
+) {
+    val thumbnailModifier = Modifier
+        .size(size)
+        .clip(RoundedCornerShape(THUMBNAIL_RADIUS))
     when {
         imageUrl != null -> AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
@@ -406,16 +441,10 @@ private fun RowThumbnail(imageUrl: String?, isImagePending: Boolean) {
                 .crossfade(true)
                 .build(),
             contentDescription = stringResource(R.string.featured_image_desc),
-            modifier = Modifier
-                .size(THUMBNAIL_SIZE)
-                .clip(RoundedCornerShape(THUMBNAIL_RADIUS)),
+            modifier = thumbnailModifier,
             contentScale = ContentScale.Crop
         )
-        isImagePending -> ShimmerBox(
-            modifier = Modifier
-                .size(THUMBNAIL_SIZE)
-                .clip(RoundedCornerShape(THUMBNAIL_RADIUS))
-        )
+        isImagePending -> ShimmerBox(modifier = thumbnailModifier)
         else -> Unit
     }
 }
@@ -430,6 +459,8 @@ private val CARD_PADDING_WITH_MENU = 4.dp
 private val CARD_RADIUS = 14.dp
 private val CARD_BORDER_WIDTH = 1.dp
 private val THUMBNAIL_SIZE = 72.dp
+private val CONDENSED_THUMBNAIL_SIZE = 56.dp
+private val CONDENSED_CARD_PADDING = 12.dp
 private val THUMBNAIL_RADIUS = 10.dp
 private val HERO_IMAGE_HEIGHT = 130.dp
 private val TITLE_META_GAP = 6.dp

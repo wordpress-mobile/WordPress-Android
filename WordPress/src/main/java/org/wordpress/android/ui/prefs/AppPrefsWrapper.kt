@@ -52,6 +52,10 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         get() = AppPrefs.getAuthorFilterSelection()
         set(value) = AppPrefs.setAuthorFilterSelection(value)
 
+    var isContentListCondensed: Boolean
+        get() = AppPrefs.isContentListCondensed()
+        set(value) = AppPrefs.setContentListCondensed(value)
+
     var pagesListAuthorSelection: AuthorFilterSelection
         get() = AppPrefs.getPagesAuthorFilterSelection()
         set(value) = AppPrefs.setPagesAuthorFilterSelection(value)

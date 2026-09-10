@@ -34,6 +34,7 @@ import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.rs.RsCommentCountFetcher
+import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.ui.rs.RsTabLoading
 import org.wordpress.android.ui.rs.RsTabRefreshJobs
@@ -175,6 +176,11 @@ class PostRsListViewModel @Inject constructor(
             SiteUtils.isAccessedViaWPComRest(_site) &&
             _site.hasCapabilityViewStats
     }
+
+    private val _density = MutableStateFlow(
+        ContentListDensity.of(appPrefsWrapper.isContentListCondensed)
+    )
+    val density: StateFlow<ContentListDensity> = _density.asStateFlow()
 
     private val _authorFilter = MutableStateFlow(
         if (isAuthorFilterSupported) {
@@ -1146,12 +1152,31 @@ class PostRsListViewModel @Inject constructor(
     }
 
     /**
+     * Flips the list between its two densities, persisting the choice for the pages list too.
+     *
+     * Condensed does not fetch metrics, so returning to comfortable has to ask for them: the rows on
+     * screen have not changed, and the visible-row stream is what normally triggers a fetch.
+     */
+    @MainThread
+    fun onDensityToggled(tab: PostRsListTab) {
+        val next = ContentListDensity.of(!_density.value.isCondensed)
+        _density.value = next
+        appPrefsWrapper.isContentListCondensed = next.isCondensed
+        viewModelScope.launch {
+            // Re-map the rows so their pending flags match the new density before anything fetches.
+            loadItemsForTab(tab)
+            if (!next.isCondensed) retryMetricsForVisibleRows(tab)
+        }
+    }
+
+    /**
      * Whether rows on [tab] should expect metrics at all, and so whether to show a skeleton.
      *
      * Comment counts work on every site, so any published list expects something; view counts are
      * an extra that only WordPress.com-connected sites add on top.
      */
-    private fun expectsMetrics(tab: PostRsListTab) = tab == PostRsListTab.PUBLISHED
+    private fun expectsMetrics(tab: PostRsListTab) =
+        tab == PostRsListTab.PUBLISHED && !_density.value.isCondensed
 
     /**
      * Search results mix statuses into one list and metrics are only fetched for published posts,

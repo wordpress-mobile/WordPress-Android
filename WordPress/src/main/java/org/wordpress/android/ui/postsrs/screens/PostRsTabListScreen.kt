@@ -48,6 +48,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.rs.contentlist.ContentDateGroup
+import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentDateGrouper
 import org.wordpress.android.ui.rs.contentlist.ContentListGroupHeader
 import org.wordpress.android.ui.rs.contentlist.ContentListHeroRow
@@ -76,7 +77,8 @@ fun PostRsTabListScreen(
     isSearchIdle: Boolean = false,
     isSearching: Boolean = false,
     isRedesignEnabled: Boolean = false,
-    showDateGroups: Boolean = true
+    showDateGroups: Boolean = true,
+    density: ContentListDensity = ContentListDensity.COMFORTABLE
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -131,7 +133,8 @@ fun PostRsTabListScreen(
                 isRedesignEnabled = isRedesignEnabled,
                 // Date buckets are computed against "now", so a list of future-dated posts would
                 // land under "This week" wholesale. The Scheduled tab opts out instead.
-                showDateGroups = showDateGroups && !isSearching
+                showDateGroups = showDateGroups && !isSearching,
+                density = density
             )
         }
     }
@@ -150,13 +153,14 @@ private fun PostListContent(
     onPostMenuAction: (Long, PostRsMenuAction) -> Unit,
     onRowsVisible: (List<Long>) -> Unit,
     isRedesignEnabled: Boolean,
-    showDateGroups: Boolean
+    showDateGroups: Boolean,
+    density: ContentListDensity
 ) {
     val listState = rememberLazyListState()
 
-    val entries = remember(posts, isRedesignEnabled, showDateGroups) {
+    val entries = remember(posts, isRedesignEnabled, showDateGroups, density) {
         if (isRedesignEnabled) {
-            buildEntries(posts, showDateGroups)
+            buildEntries(posts, showDateGroups, density)
         } else {
             posts.map { PostListEntry.Legacy(it) }
         }
@@ -239,6 +243,7 @@ private fun PostListContent(
                     entry = entry,
                     onPostClick = onPostClick,
                     onPostMenuAction = onPostMenuAction,
+                    density = density,
                     modifier = Modifier.animateItem()
                 )
             }
@@ -372,7 +377,8 @@ private sealed interface PostListEntry {
 
 private fun buildEntries(
     posts: List<PostRsUiModel>,
-    showDateGroups: Boolean
+    showDateGroups: Boolean,
+    density: ContentListDensity
 ): List<PostListEntry> {
     val entries = mutableListOf<PostListEntry>()
     var currentGroupKey: String? = null
@@ -403,7 +409,10 @@ private fun buildEntries(
         // The lead row keys off the featured image *id*, which is present as soon as the post
         // loads, rather than the resolved URL, which arrives a network call later. Keying off the
         // URL would pop the first row from compact to hero once the image resolved.
-        val isHero = showDateGroups && !hasContentRow && post.featuredImageId != 0L
+        val isHero = !density.isCondensed &&
+            showDateGroups &&
+            !hasContentRow &&
+            post.featuredImageId != 0L
         hasContentRow = true
         entries += PostListEntry.Row(post, isHero)
     }
@@ -415,6 +424,7 @@ private fun RedesignedRow(
     entry: PostListEntry.Row,
     onPostClick: (Long) -> Unit,
     onPostMenuAction: (Long, PostRsMenuAction) -> Unit,
+    density: ContentListDensity,
     modifier: Modifier = Modifier
 ) {
     val post = entry.post
@@ -434,7 +444,13 @@ private fun RedesignedRow(
     if (entry.isHero) {
         ContentListHeroRow(state = state, onClick = onClick, modifier = modifier, menu = menu)
     } else {
-        ContentListRow(state = state, onClick = onClick, modifier = modifier, menu = menu)
+        ContentListRow(
+            state = state,
+            onClick = onClick,
+            modifier = modifier,
+            density = density,
+            menu = menu
+        )
     }
 }
 

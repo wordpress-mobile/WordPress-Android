@@ -21,6 +21,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.ViewAgenda
+import androidx.compose.material.icons.automirrored.filled.ViewList
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
@@ -79,6 +81,7 @@ import org.wordpress.android.ui.postsrs.SnackbarMessage
 import org.wordpress.android.ui.postsrs.PostRsListViewModel.Companion.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostTabUiState
+import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListFilterChips
 
 @Suppress("CyclomaticComplexMethod")
@@ -108,6 +111,8 @@ fun PostRsListScreen(
     onPostMenuAction: (Long, PostRsMenuAction) -> Unit,
     onCreatePost: () -> Unit,
     onRowsVisible: (PostRsListTab, List<Long>) -> Unit,
+    onDensityToggled: (PostRsListTab) -> Unit,
+    density: ContentListDensity = ContentListDensity.COMFORTABLE,
     isRedesignEnabled: Boolean = false
 ) {
     val tabs = PostRsListTab.entries
@@ -223,6 +228,12 @@ fun PostRsListScreen(
                                 }
                             )
                         }
+                        if (isRedesignEnabled) {
+                            DensityToggleButton(
+                                density = density,
+                                onToggle = { onDensityToggled(activeTab) }
+                            )
+                        }
                         IconButton(onClick = onSearchOpen) {
                             Icon(
                                 Icons.Default.Search,
@@ -320,6 +331,7 @@ fun PostRsListScreen(
                     onPostMenuAction = onPostMenuAction,
                     onCreatePost = onCreatePost,
                     onRowsVisible = { ids -> onRowsVisible(tab, ids) },
+                    density = density,
                     isRedesignEnabled = isRedesignEnabled,
                     showDateGroups = tab != PostRsListTab.SCHEDULED
                 )
@@ -368,6 +380,32 @@ fun PostRsListScreen(
         ) {
             CircularProgressIndicator()
         }
+    }
+}
+
+/**
+ * Flips between the two list densities. Deliberately a top-bar action rather than an overflow item:
+ * a view control the user is expected to find has to be visible.
+ */
+@Composable
+private fun DensityToggleButton(
+    density: ContentListDensity,
+    onToggle: () -> Unit
+) {
+    val labelResId = if (density.isCondensed) {
+        R.string.content_list_density_show_comfortable
+    } else {
+        R.string.content_list_density_show_condensed
+    }
+    IconButton(onClick = onToggle) {
+        Icon(
+            imageVector = if (density.isCondensed) {
+                Icons.Default.ViewAgenda
+            } else {
+                Icons.AutoMirrored.Filled.ViewList
+            },
+            contentDescription = stringResource(labelResId)
+        )
     }
 }
 
