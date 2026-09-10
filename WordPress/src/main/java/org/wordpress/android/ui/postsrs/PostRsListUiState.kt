@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.rs.RsDateFormatter
+import org.wordpress.android.ui.rs.contentlist.ContentListRowUiState
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
 import uniffi.wp_api.AnyPostWithEditContext
@@ -59,6 +60,14 @@ data class PostRsUiModel(
     val title: String,
     val excerpt: String,
     val date: String,
+    /** Raw publish date, used to bucket rows into the redesigned list's date groups. */
+    val dateGmtMillis: Long = 0L,
+    /** All-time views, or null when stats are unavailable or not fetched yet. */
+    val viewCount: Long? = null,
+    /** All-time comment count, or null when stats are unavailable or not fetched yet. */
+    val commentCount: Long? = null,
+    /** True while this row's metrics are expected but have not arrived, so it shows a skeleton. */
+    val areMetricsPending: Boolean = false,
     val lastModified: String = "",
     val link: String = "",
     val hasPassword: Boolean = false,
@@ -169,6 +178,7 @@ private fun FullEntityAnyPostWithEditContext.toUiModel(
                 ?: ""
             ).let { HtmlUtils.fastStripHtml(it).trim() },
         date = RsDateFormatter.format(post.dateGmt, nowLabel, isScheduled = post.status is PostStatus.Future),
+        dateGmtMillis = post.dateGmt.time,
         lastModified = DateTimeUtils.iso8601UTCFromDate(
             post.modifiedGmt
         ),
@@ -198,6 +208,26 @@ private fun FullEntityAnyPostWithEditContext.toUiModel(
         displayState = displayState
     )
 }
+
+/**
+ * Projects a post onto the shared row model the redesigned list renders. Keeping the projection
+ * here means the row component itself stays free of anything post-specific, so the pages screen
+ * can supply its own equivalent.
+ */
+fun PostRsUiModel.toContentListRowUiState() = ContentListRowUiState(
+    id = remotePostId,
+    title = title,
+    excerpt = excerpt,
+    dateLabel = date,
+    imageUrl = featuredImageUrl,
+    isImagePending = featuredImageId != 0L && featuredImageUrl == null,
+    viewCount = viewCount,
+    commentCount = commentCount,
+    areMetricsPending = areMetricsPending,
+    badges = badges,
+    isSyncing = displayState == PostDisplayState.FETCHING_WITH_DATA,
+    hasSyncFailed = displayState == PostDisplayState.FAILED_WITH_DATA
+)
 
 @StringRes
 internal fun PostStatus?.toLabel(): Int = when (this) {

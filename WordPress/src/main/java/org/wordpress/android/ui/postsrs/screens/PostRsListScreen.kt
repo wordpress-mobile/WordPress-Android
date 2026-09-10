@@ -2,6 +2,7 @@ package org.wordpress.android.ui.postsrs.screens
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -59,6 +61,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -76,6 +79,7 @@ import org.wordpress.android.ui.postsrs.SnackbarMessage
 import org.wordpress.android.ui.postsrs.PostRsListViewModel.Companion.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostTabUiState
+import org.wordpress.android.ui.rs.contentlist.ContentListFilterChips
 
 @Suppress("CyclomaticComplexMethod")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -102,7 +106,9 @@ fun PostRsListScreen(
     onNavigateBack: () -> Unit,
     onPostClick: (Long, PostRsListTab) -> Unit,
     onPostMenuAction: (Long, PostRsMenuAction) -> Unit,
-    onCreatePost: () -> Unit
+    onCreatePost: () -> Unit,
+    onRowsVisible: (PostRsListTab, List<Long>) -> Unit,
+    isRedesignEnabled: Boolean = false
 ) {
     val tabs = PostRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
@@ -145,6 +151,15 @@ fun PostRsListScreen(
     }
 
     Scaffold(
+        // Cards are drawn on `surface`, so the page behind them has to sit one step recessed or
+        // they read as a flat sheet. Which role that is differs by mode: this app's dark scheme
+        // makes `surface` darker than `surfaceContainerLow`, so reusing the light-mode role there
+        // would put the page *above* the cards. The pre-redesign list keeps the theme background.
+        containerColor = when {
+            !isRedesignEnabled -> MaterialTheme.colorScheme.background
+            isSystemInDarkTheme() -> MaterialTheme.colorScheme.surfaceContainerLowest
+            else -> MaterialTheme.colorScheme.surfaceContainerLow
+        },
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
@@ -172,7 +187,10 @@ fun PostRsListScreen(
                             modifier = Modifier.fillMaxWidth().focusRequester(focusRequester)
                         )
                     } else {
-                        Text(text = rsDebugTitle(R.string.my_site_btn_blog_posts))
+                        Text(
+                            text = rsDebugTitle(R.string.my_site_btn_blog_posts),
+                            fontFamily = if (isRedesignEnabled) FontFamily.Serif else null
+                        )
                     }
                 },
                 navigationIcon = {
@@ -220,31 +238,51 @@ fun PostRsListScreen(
             }
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = onCreatePost,
-            ) {
-                Icon(
-                    Icons.Default.Add,
-                    contentDescription = stringResource(R.string.posts_empty_list_button)
+            if (isRedesignEnabled) {
+                ExtendedFloatingActionButton(
+                    onClick = onCreatePost,
+                    icon = { Icon(Icons.Default.Add, contentDescription = null) },
+                    text = { Text(stringResource(R.string.content_list_fab_write)) }
                 )
+            } else {
+                FloatingActionButton(
+                    onClick = onCreatePost,
+                ) {
+                    Icon(
+                        Icons.Default.Add,
+                        contentDescription = stringResource(R.string.posts_empty_list_button)
+                    )
+                }
             }
         }
     ) { contentPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
             if (!isSearchActive) {
-                PrimaryScrollableTabRow(
-                    selectedTabIndex = pagerState.settledPage,
-                    edgePadding = 0.dp
-                ) {
-                    tabs.forEachIndexed { index, tab ->
-                        Tab(
-                            selected = pagerState.settledPage == index,
-                            onClick = {
-                                coroutineScope.launch { pagerState.animateScrollToPage(index) }
-                            },
-                            unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            text = { Text(text = stringResource(tab.labelResId)) }
-                        )
+                if (isRedesignEnabled) {
+                    // The pager stays: chips replace the tab row's appearance, not swiping between
+                    // tabs, which users of this screen already rely on.
+                    ContentListFilterChips(
+                        labels = tabs.map { stringResource(it.labelResId) },
+                        selectedIndex = pagerState.settledPage,
+                        onSelect = { index ->
+                            coroutineScope.launch { pagerState.animateScrollToPage(index) }
+                        }
+                    )
+                } else {
+                    PrimaryScrollableTabRow(
+                        selectedTabIndex = pagerState.settledPage,
+                        edgePadding = 0.dp
+                    ) {
+                        tabs.forEachIndexed { index, tab ->
+                            Tab(
+                                selected = pagerState.settledPage == index,
+                                onClick = {
+                                    coroutineScope.launch { pagerState.animateScrollToPage(index) }
+                                },
+                                unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                text = { Text(text = stringResource(tab.labelResId)) }
+                            )
+                        }
                     }
                 }
             }
@@ -280,7 +318,10 @@ fun PostRsListScreen(
                     onLoadMore = { onLoadMore(tab) },
                     onPostClick = { postId -> onPostClick(postId, tab) },
                     onPostMenuAction = onPostMenuAction,
-                    onCreatePost = onCreatePost
+                    onCreatePost = onCreatePost,
+                    onRowsVisible = { ids -> onRowsVisible(tab, ids) },
+                    isRedesignEnabled = isRedesignEnabled,
+                    showDateGroups = tab != PostRsListTab.SCHEDULED
                 )
             }
         }

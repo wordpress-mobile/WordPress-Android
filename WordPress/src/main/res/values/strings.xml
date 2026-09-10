@@ -5111,4 +5111,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="about_automattic_logo_description" tools:ignore="UnusedResources" a8c-src-lib="about">Automattic logo</string>
     <string name="about_automattic_back_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">Back icon</string>
     <string name="about_automattic_app_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">App icon</string>
+
+    <!-- Redesigned posts/pages list -->
+    <string name="content_list_group_this_week">This week</string>
+    <string name="content_list_group_earlier_in">Earlier in %1$s</string>
+    <string name="content_list_fab_write">Write</string>
+    <string name="experimental_content_list_redesign">Posts list redesign</string>
+    <string name="experimental_content_list_redesign_description">Show the redesigned posts list: featured-image cards, date groups and filter chips.</string>
 </resources>
