@@ -19,10 +19,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_P
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_COMPLETED
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse.Extra
-import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse.Product
-import org.wordpress.android.fluxc.store.TransactionsStore
 import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoBack
@@ -32,7 +28,7 @@ import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomain
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.SubmittingJustDomainCart
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.SubmittingSiteDomainCart
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.ErrorSubmittingCart
-import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.ErrorInCheckout
+import org.wordpress.android.ui.domains.usecases.CreateCartResult
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
@@ -123,9 +119,24 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `WHEN check out fails THEN the ui is set to the ErrorInCheckout state`() = test {
+    fun `WHEN check out is dismissed THEN the ui returns to the Initial state`() = test {
+        viewModel.onNewDomainSelected()
+
         viewModel.onDomainRegistrationComplete(null)
-        assertThat(viewModel.uiStateFlow.value).isEqualTo(ErrorInCheckout)
+
+        assertThat(viewModel.uiStateFlow.value).isEqualTo(Initial)
+    }
+
+    @Test
+    fun `WHEN check out is dismissed THEN stay on the screen`() = testWithActionEvents { events ->
+        viewModel.onNewDomainSelected()
+        advanceUntilIdle()
+        val eventsBefore = events.size
+
+        viewModel.onDomainRegistrationComplete(null)
+        advanceUntilIdle()
+
+        assertThat(events).hasSize(eventsBefore)
     }
 
     @Test
@@ -232,11 +243,7 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
                 isTemporary = false,
                 planProductId = null
             )
-        ).thenReturn(
-            TransactionsStore.OnShoppingCartCreated(
-                TransactionsRestClient.CreateShoppingCartResponse(0, cartKey, listOf(testProduct))
-            )
-        )
+        ).thenReturn(CreateCartResult.Success)
         whenever(
             createCartUseCase.execute(
                 testSite, productId, domain,
@@ -244,11 +251,7 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
                 isTemporary = false,
                 planProductId = null
             )
-        ).thenReturn(
-            TransactionsStore.OnShoppingCartCreated(
-                TransactionsRestClient.CreateShoppingCartResponse(siteId.toInt(), cartKey, listOf(testProduct))
-            )
-        )
+        ).thenReturn(CreateCartResult.Success)
         whenever(
             createCartUseCase.execute(
                 testFreeSite, productId, domain,
@@ -256,11 +259,7 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
                 isTemporary = false,
                 planProductId = null
             )
-        ).thenReturn(
-            TransactionsStore.OnShoppingCartCreated(
-                TransactionsRestClient.CreateShoppingCartResponse(siteId.toInt(), cartKey, listOf(testProduct))
-            )
-        )
+        ).thenReturn(CreateCartResult.Success)
     }
 
     private fun mockCartError() = test {
@@ -271,9 +270,7 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
                 isTemporary = false,
                 planProductId = null
             )
-        ).thenReturn(
-            TransactionsStore.OnShoppingCartCreated(shoppingCartCreateError)
-        )
+        ).thenReturn(CreateCartResult.Error)
     }
 
     private fun testWithActionEvents(block: suspend TestScope.(events: List<ActionEvent>) -> Unit) = test {
@@ -288,14 +285,8 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
     companion object {
         private const val productId = 8
         private const val domain = "domain.com"
-        private const val cartKey = "cart_key"
         private const val siteId = 5L
         private const val supportsPrivacy = true
         private val testSite = SiteModel().apply { siteId = siteId }
-        private val testProduct = Product(productId, domain, Extra(privacy = true))
-        private val shoppingCartCreateError = TransactionsStore.CreateShoppingCartError(
-            TransactionsStore.CreateCartErrorType.GENERIC_ERROR,
-            "Error Creating Cart"
-        )
     }
 }

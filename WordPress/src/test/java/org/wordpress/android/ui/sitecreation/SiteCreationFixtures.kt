@@ -2,14 +2,12 @@ package org.wordpress.android.ui.sitecreation
 
 import org.mockito.kotlin.mock
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.store.SiteStore.SiteError
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.GENERIC_ERROR
-import org.wordpress.android.fluxc.store.TransactionsStore.CreateShoppingCartError
-import org.wordpress.android.fluxc.store.TransactionsStore.OnShoppingCartCreated
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity
 import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
+import org.wordpress.android.ui.domains.usecases.CreateCartResult
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Created
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.CreatedButNotFetched
@@ -54,8 +52,8 @@ val CHECKOUT_EVENT = DomainRegistrationCompletedEvent(URL_CUSTOM, "email@host.co
 val FETCH_SUCCESS = OnSiteChanged(1)
 val FETCH_ERROR = OnSiteChanged(0).apply { error = SiteError(GENERIC_ERROR) }
 
-val CART_SUCCESS = OnShoppingCartCreated(mock<CreateShoppingCartResponse>())
-val CART_ERROR = OnShoppingCartCreated(mock<CreateShoppingCartError>())
+val CART_SUCCESS = CreateCartResult.Success
+val CART_ERROR = CreateCartResult.Error
 
 val RESULT_CREATED = mock<Created>()
 val RESULT_NOT_IN_LOCAL_DB = CreatedButNotFetched.NotInLocalDb(SITE_MODEL)
