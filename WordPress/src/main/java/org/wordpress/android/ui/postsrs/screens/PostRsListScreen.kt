@@ -21,8 +21,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.ViewAgenda
-import androidx.compose.material.icons.automirrored.filled.ViewList
+import androidx.compose.material.icons.filled.DensityLarge
+import androidx.compose.material.icons.filled.DensitySmall
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
@@ -397,11 +397,14 @@ private fun DensityToggleButton(
         R.string.content_list_density_show_condensed
     }
     IconButton(onClick = onToggle) {
+        // Both glyphs come from the same family - bars at different spacing - so the two states
+        // read as one control rather than two unrelated pictures. The icon shows the density the
+        // tap will switch *to*, which is what the content description says.
         Icon(
             imageVector = if (density.isCondensed) {
-                Icons.Default.ViewAgenda
+                Icons.Default.DensityLarge
             } else {
-                Icons.AutoMirrored.Filled.ViewList
+                Icons.Default.DensitySmall
             },
             contentDescription = stringResource(labelResId)
         )
