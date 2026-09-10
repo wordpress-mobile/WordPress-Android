@@ -9,7 +9,6 @@ Language: ja_JP
     <string name="support_screen_unified_support_description">いつでもサポートチームから回答を得られます</string>
     <string name="support_screen_unified_support_title">ヘルプ</string>
     <string name="unified_support_attachment_match_score">%1$d%% 一致</string>
-    <string name="unified_support_status_bot">Oddie ボット</string>
     <string name="unified_support_bot_typing_content_description">サポートボットが入力中</string>
     <string name="unified_support_message_input_placeholder">メッセージを入力…</string>
     <string name="unified_support_conversations_title">ヘルプ</string>
@@ -93,7 +92,6 @@ Language: ja_JP
     <string name="gutenberg_kit_announcement_learn_more">さらに詳しく</string>
     <string name="gutenberg_kit_announcement_maybe_later">後で確認する</string>
     <string name="gutenberg_kit_announcement_activate">有効化</string>
-    <string name="gutenberg_kit_announcement_body_deadline">2026年6月末までに、全ユーザーにとってデフォルトのエディターとなります。 %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">次世代ブロックエディターの準備ができました。たくさんの新機能があります。</string>
     <string name="gutenberg_kit_announcement_title">より高性能のブロックエディターが登場します</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">まずブロックエディターに切り替えてから、新しいエディターをお試しください。</string>
@@ -237,7 +235,6 @@ Language: ja_JP
     <string name="stats_period_selector_content_description">統計の期間を選択</string>
     <string name="stats_period_custom">カスタム</string>
     <string name="stats_period_last_12_months">過去12か月</string>
-    <string name="stats_period_last_6_months">過去6か月</string>
     <string name="stats_period_last_30_days">過去30日間</string>
     <string name="stats_period_last_7_days">過去7日間</string>
     <string name="stats_period_today">今日</string>
@@ -254,8 +251,6 @@ Language: ja_JP
     <string name="post_rs_confirm_delete_message">この投稿は完全に削除されます。 この操作を取り消すことはできません。</string>
     <string name="post_rs_confirm_trash_message">この投稿をゴミ箱へ移動してもよいですか ?</string>
     <string name="post_rs_failed_to_load">投稿の読み込みに失敗しました</string>
-    <string name="experimental_rs_pages_list_description">アプリケーションパスワードを使用して、WordPress.com やインストール型サイト用のより現代的な UI で固定ページリストを表示</string>
-    <string name="experimental_rs_pages_list">新しい固定ページリスト</string>
     <string name="stats_error_admin_url_unavailable">このサイトの WP 管理画面を開けません</string>
     <string name="stats_error_parsing">データの読み込み中に問題が発生しました もう一度お試しください</string>
     <string name="stats_error_network">ネットワークエラーです。 接続を確認して、もう一度お試しください</string>
@@ -315,8 +310,6 @@ Language: ja_JP
     <string name="he_support_status_unknown">不明</string>
     <string name="he_support_status_closed">クローズド</string>
     <string name="he_support_status_solved">解決済み</string>
-    <string name="he_support_status_waiting_for_user">ユーザーを待機中</string>
-    <string name="he_support_status_waiting_for_support">サポートを待機中</string>
     <string name="he_support_select_attachments">添付ファイルを選択</string>
     <string name="he_support_download_attachment">添付ファイルをダウンロード</string>
     <string name="he_support_include_logs_description">ログを添付すると問題の調査に役立ちます。 ログには最近のアプリのアクティビティが含まれている可能性があります。</string>
@@ -741,8 +734,6 @@ Language: ja_JP
     <string name="barcode_scanning_alert_dialog_rationale_message">バーコードをスキャンするにはカメラの権限が必要です</string>
     <string name="barcode_scanning_alert_dialog_title">カメラの権限を付与</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%dレベルよりも深くネストされたブロックは、モバイルエディターで適切にレンダリングされない場合があります。</string>
-    <string name="jp_migration_lets_go_button">スタート</string>
-    <string name="jp_migration_done_no_sites_message">Jetpack アプリで WordPress のジャーニーを続ける時が来ました。</string>
     <string name="domain_management_clear_search">検索をクリア</string>
     <string name="media_encoder_quality_very_high">非常に高い</string>
     <string name="notification_security_key_needed" a8c-src-lib="module:login">続行するにはセキュリティキーを入力してください。</string>
@@ -926,22 +917,16 @@ Language: ja_JP
     <string name="sharing_twitter_deprecation_notice_find_out_more">さらに詳しく</string>
     <string name="sharing_twitter_deprecation_notice_description">Twitter の自動共有機能は Twitter の規約と価格に変更があったため利用できなくなりました。</string>
     <string name="sharing_twitter_deprecation_notice_title">Twitter の自動共有機能は利用できなくなりました</string>
-    <string name="jp_migration_notifications_allow_title">サイトを更新するよう通知を許可する</string>
-    <string name="wp_jp_static_poster_message">Jetpack アプリで WordPress アプリの全機能に加えて統計、Reader、通知などを特別に利用できるようになりました。</string>
-    <string name="wp_jp_static_poster_title_plural">Jetpack\u00A0app で WordPress と %sを利用できます。</string>
-    <string name="wp_jp_static_poster_title">Jetpack\u00A0app で WordPress と %sを利用できます。</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ラベルない色。 %s</string>
     <string name="dashboard_activity_card_title">最近のアクティビティ</string>
     <string name="site_creation_search_domain_example_body">上記の例のように、ドメインを使用するとユーザーは、Web ブラウザーからサイトを見つけてアクセスできます。</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_domain_search_input_hint">キーワードで検索</string>
     <string name="site_creation_domain_header_subtitle">ユーザーがあなたのサイトを探してアクセスしやすくなる、短く覚えやすいドメインを検索します。</string>
-    <string name="site_creation_domain_cost_sale">最初の年</string>
     <string name="site_creation_error_cart_subtitle">サイトは正常に作成されましたが、カスタムドメインの購入手続きの準備中に問題が発生しました。 もう一度お試しいただくか、ヘルプが必要な場合はサポートにご連絡ください。</string>
     <string name="new_site_creation_preview_caption_paid">カスタムドメインが使用可能になるまでに最長30分かかる場合があります。</string>
     <string name="new_site_creation_preview_subtitle_paid">領収書をメールで送信しました。 %s</string>
     <string name="notifications_disabled_permission_dialog">アプリ通知が無効化されています。 ここをタップして有効化します。</string>
-    <string name="jp_migration_done_delete_wp_message">データの競合を避けるため、お使いの端末から &lt;b&gt;WordPress アプリをアンインストール&lt;/b&gt;することをおすすめします。</string>
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ブロックを削除</string>
     <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">プライバシーと評価</string>
     <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">再生設定</string>
@@ -984,9 +969,6 @@ Language: ja_JP
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">このサイト</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s が使用している %2$s は、まだアプリのすべての機能をサポートしていません。 %3$s をインストールしてください。</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s が使用している %2$s は、まだアプリのすべての機能をサポートしていません。 %3$s をインストールしてください。</string>
-    <string name="wp_jp_static_poster_footnote">切り替えは無料で、数分で終わります。</string>
-    <string name="wp_jp_static_poster_button_secondary">詳細は Jetpack.com をご覧ください</string>
-    <string name="wp_jp_static_poster_button_primary">Jetpack アプリに切り替える</string>
     <string name="my_site_btn_wp_admin">WP 管理画面</string>
     <string name="my_site_header_manage">管理</string>
     <string name="my_site_header_traffic">トラフィック</string>
@@ -1003,11 +985,8 @@ Language: ja_JP
     <string name="blaze_promotional_text">Blaze でサイトのトラフィックを増やす</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="site_creation_domain_tag_unavailable">このドメインはすでに登録されています</string>
-    <string name="site_creation_domain_tag_sale">セール</string>
     <string name="site_creation_domain_tag_recommended">おすすめ</string>
     <string name="site_creation_domain_tag_best_alternative">こちらもおすすめ</string>
-    <string name="support_faq_caption">FAQ でよくある質問に対する回答をご確認ください。</string>
-    <string name="support_faq_title">Jetpack アプリにお切り替えいただきありがとうございます !</string>
     <string name="logs_button">ログ</string>
     <string name="tickets">チケット</string>
     <string name="free">無料</string>
@@ -1043,12 +1022,6 @@ Language: ja_JP
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">サイトの可能性を十分に引き出すことができます。 Jetpack で統計や通知などを利用できます。</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">ご利用のサイトには Jetpack プラグインが設定されています</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpack モバイルアプリは、Jetpack プラグインと連携させて利用できます。 今すぐ乗り換えて、統計、通知、Reader などをご利用ください。</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">新しいコメントや「いいね」、表示数などの通知を受信できます。</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">お気に入りのサイトやコミュニティを見つけてフォローし、コンテンツを共有できます。</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">便利な統計概要と包括的な統計情報で、トラフィックの成長を確認できます。</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">統計情報と統計概要</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack を使用すれば、WordPress でさらなる機能を利用できます。 切り替えは無料で、数分で終わります。</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Jetpack で WordPress をレベルアップ</string>
     <string name="blogging_prompts_onboarding_content_note_content">ブログのプロンプトやリマインダーは、「My Site」 &gt; 「設定」 &gt; 「ブログ」でいつでもコントロールできます</string>
     <string name="blogging_reminders_prompt_subtitle">通知にはヒントになる言葉や短いフレーズが記載されます</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">&lt;b&gt;「サイトの設定」&lt;/b&gt;に移動して表示をオンに戻す</string>
@@ -1060,15 +1033,6 @@ Language: ja_JP
     <string name="site_settings_blogging_prompts_title">プロンプトを表示</string>
     <string name="site_settings_blogging">ブログ</string>
     <string name="install_play_store_to_get_jetpack">Jetpack アプリを入手するには Google Play ストアをインストールしてください</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">後で実行する</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Jetpack に切り替える </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">統計、Reader、通知などの Jetpack 機能は、WordPress アプリから削除されました。</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack 機能が移動しました。</string>
-    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s がまもなく %2$s に移動します</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s がまもなく %2$s に移動します</string>
-    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s がまもなく移動します</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s がまもなく移動します</string>
-    <string name="wp_jetpack_powered_phase_2">Jetpack アプリを入手</string>
     <string name="my_site_blogging_prompt_card_view_answers">すべての回答を表示</string>
     <string name="stats_insights_total_stats_seven_days_negative">前の7日間と比べて%1$s 減少</string>
     <string name="stats_insights_total_stats_seven_days_positive">前の7日間と比べて%1$s 増加</string>
@@ -1078,21 +1042,10 @@ Language: ja_JP
     <string name="stats_insights_views_and_visitors_seven_days_views_positive">過去7日間の表示数は、その前の7日間よりも%1$s人増えました。</string>
     <string name="stats_timeframe_previous_seven_days">前の7日間</string>
     <string name="stats_timeframe_last_seven_days">過去7日間</string>
-    <string name="weeks_quantity_other">%d週</string>
-    <string name="weeks_quantity_one">1週</string>
     <string name="my_site_blogging_prompt_card_attribution_day_one">&lt;b&gt;Day One&lt;/b&gt; から</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">後で再通知</string>
-    <string name="jetpack_feature_card_content_phase_three">統計、Reader、通知などの機能は、まもなく Jetpack モバイルアプリに移動します。</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Jetpack アプリに切り替える</string>
-    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">詳細は jetpack.com をご覧ください</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">切り替えは無料で、数分で終わります。</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">統計、Reader、通知などの Jetpack 機能は、まもなく WordPress アプリから削除されます。</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">統計、Reader、通知などの Jetpack 機能は、%sに WordPress アプリから削除されます。</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Jetpack 機能はまもなく移動します。</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">通知は Jetpack アプリに移動しています</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader は Jetpack アプリに移動しています</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">統計は Jetpack アプリに移動しています</string>
-    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">新しい Jetpack アプリに切り替える</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">プロンプトの読み込みでエラーが発生しました。</string>
     <string name="blogging_prompts_list_error_fetch_title">エラーです</string>
     <string name="blogging_prompts_list_no_prompts">プロンプトはまだありません</string>
@@ -1118,39 +1071,11 @@ Language: ja_JP
     <string name="wp_jetpack_continue_without_jetpack">Jetpack なしで連携</string>
     <string name="deep_linking_weblinks_alias_label">weblinks</string>
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">端末で リアルタイムの通知を引き続き受信するには、Jetpack アプリに切り替えてください。</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Jetpack アプリに切り替えると、Reader を使用してお気に入りのサイトや投稿をすべて検索、フォロー、「いいね」できます。</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Jetpack アプリに切り替えて、統計と統計概要を使用してサイトのトラフィックの増加を確認してください。</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Jetpack アプリで通知を受け取る</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Jetpack アプリで任意のサイトをフォロー</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">新しい Jetpack アプリを使用して統計を入手する</string>
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">「Jetpack でリンクを開く」を無効にできません</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">「Jetpack でリンクを開く」を有効にできません</string>
     <string name="preference_open_links_in_jetpack">Jetpack でリンクを開く</string>
-    <string name="jp_migration_network_error_message">ネットワークに接続しないと、データと設定を転送できません。</string>
-    <string name="jp_migration_network_error_subtitle">ネットワーク接続が有効であることを確認し、もう一度お試しください。</string>
-    <string name="jp_migration_network_error_title">インターネットに接続できません。</string>
-    <string name="jp_migration_generic_error_message">サポートにお問い合わせいただくか、後でやり直してください。</string>
-    <string name="jp_migration_generic_error_subtitle">申し訳ありません。エラーが発生しました。 データは安全ですが、現在転送できません。</string>
     <string name="jp_migration_generic_error_title">エラーが発生しました…</string>
-    <string name="jp_migration_try_again_button">再試行</string>
-    <string name="jp_migration_finish_button">完了</string>
-    <string name="jp_migration_remove_wp_app_icon_content_description">WordPress アプリのアイコンを削除</string>
-    <string name="jp_migration_done_subtitle">すべてのデータと設定を転送しました。 すべて移行先にあります。</string>
-    <string name="jp_migration_done_title">Jetpack にお切り替えいただきありがとうございます。</string>
-    <string name="jp_migration_notifications_disabled_in_wp_message">WordPress アプリからの通知をオフにします。</string>
-    <string name="jp_migration_notifications_subtitle">通知内容はすべて同じですが、Jetpack アプリから送信されるようになりました。</string>
-    <string name="wordpress_help_center_button">WordPress ヘルプセンター</string>
     <string name="support_title">サポート</string>
-    <string name="notification_disable_broadcast_permission_desc">アプリが WordPress の通知を無効にすることを許可します。</string>
-    <string name="notification_disable_broadcast_permission_label">WordPress の通知を無効化</string>
-    <string name="jp_migration_help_button">ヘルプが必要ですか ?</string>
-    <string name="jp_migration_continue_button">続行</string>
-    <string name="jp_migration_welcome_site_found_message">サイトが見つかりました。 すべてのデータを転送して Jetpack に自動でログインするには続行します。</string>
-    <string name="jp_migration_welcome_sites_found_message">サイトが見つかりました。 すべてのデータを転送して Jetpack に自動でログインするには続行します。</string>
-    <string name="jp_migration_avatar_content_description">自分のプロフィール写真</string>
-    <string name="jp_migration_welcome_subtitle">WordPress アプリから切り替わっているようです。</string>
-    <string name="jp_migration_welcome_title">Jetpack へようこそ !</string>
     <string name="icon_desc">アイコン</string>
     <string name="post_settings_parent">親ページ</string>
     <string name="post_settings_page_attributes">ページ属性</string>
@@ -1186,7 +1111,6 @@ Language: ja_JP
     <string name="weekly_roundup_notification_text_views_only">先週、%1$s件の表示がありました。</string>
     <string name="weekly_roundup_notification_text_all">先週、%1$s件の表示、%2$s件の「いいね」、%3$s件のコメントを受け取りました。</string>
     <string name="stats_insights_like_guide_card">⭐️最新の投稿 %1$s が%2$s回「いいね」されました。</string>
-    <string name="wp_jetpack_powered">Jetpack 提供</string>
     <string name="qrcode_auth_flow_content_description">ログインコードをスキャンしていることを示す画像</string>
     <string name="qrcode_auth_flow_error_content_description">エラーが発生していることを示す画像</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">認証できませんでした</string>
@@ -3860,7 +3784,6 @@ Language: ja_JP
     <string name="reader_toast_err_removing_tag">このタグを削除できません</string>
     <string name="reader_toast_err_adding_tag">このタグを追加できません</string>
     <string name="reader_title_applog">アプリケーションログ</string>
-    <string name="fatal_db_error">アプリのデータベースを作成する際にエラーが発生しました。アプリをもう一度インストールしてみてください。</string>
     <string name="error_refresh_media">メディアファイルを再読み込みできませんでした</string>
     <string name="wordpress_blog">WordPress ブログ</string>
     <string name="local_changes">ローカルの変更</string>
