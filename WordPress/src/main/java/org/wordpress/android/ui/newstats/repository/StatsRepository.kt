@@ -39,6 +39,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.newstats.StatsPeriod
 import androidx.annotation.StringRes
+import androidx.annotation.VisibleForTesting
 import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.util.AppLog
 import java.time.LocalDate
@@ -954,7 +955,8 @@ class StatsRepository @Inject constructor(
      * Note: [calculatePeriodDates] handles the hourly cases (Today and single-day Custom) separately
      * before reaching here, so those build their own window ending at "<day> 23:00:00".
      */
-    private fun currentPeriodWindow(period: StatsPeriod): Pair<LocalDate, LocalDate> {
+    @VisibleForTesting
+    internal fun currentPeriodWindow(period: StatsPeriod): Pair<LocalDate, LocalDate> {
         val today = LocalDate.now()
         return when (period) {
             is StatsPeriod.Today -> today to today
