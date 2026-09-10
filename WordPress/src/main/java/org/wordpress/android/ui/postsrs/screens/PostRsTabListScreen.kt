@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.postsrs.screens
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
@@ -103,13 +106,13 @@ fun PostRsTabListScreen(
         when {
             isSearchIdle -> Box(Modifier.fillMaxSize())
             state.isLoading -> ShimmerList(isRedesignEnabled)
-            state.error != null && state.posts.isEmpty() -> {
+            state.error != null && state.posts.isEmpty() -> FadeInOnAppear {
                 ErrorContent(
                     error = state.error,
                     onRetry = if (state.isAuthError) null else onRefresh
                 )
             }
-            state.posts.isEmpty() && !state.isRefreshing -> {
+            state.posts.isEmpty() && !state.isRefreshing -> FadeInOnAppear {
                 EmptyContent(
                     emptyMessageResId = if (isSearching) {
                         R.string
@@ -277,6 +280,26 @@ private fun ShimmerList(isRedesignEnabled: Boolean) {
         items(SHIMMER_ITEM_COUNT) {
             if (isRedesignEnabled) ContentListPlaceholderRow() else PlaceholderItem()
         }
+    }
+}
+
+/**
+ * Fades its content in the first time it appears.
+ *
+ * Driven by a [MutableTransitionState] rather than a plain `visible = true`: the states this wraps
+ * only enter the composition once the list has turned out to be empty or failed, so a plain flag
+ * would already sit at its target on first composition and the fade would be skipped entirely.
+ */
+@Composable
+private fun FadeInOnAppear(content: @Composable () -> Unit) {
+    val visibleState = remember { MutableTransitionState(false) }
+    visibleState.targetState = true
+
+    AnimatedVisibility(
+        visibleState = visibleState,
+        enter = fadeIn(animationSpec = tween(STATE_FADE_MS))
+    ) {
+        content()
     }
 }
 
@@ -505,6 +528,9 @@ private fun PostRsOverflowMenu(
 }
 
 private val MENU_ICON_SIZE = 20.dp
+
+/** Long enough to read as a fade rather than a flicker, short enough not to feel sluggish. */
+private const val STATE_FADE_MS = 300
 
 /** How long the visible-row set must settle before metrics are fetched for it. */
 private const val VISIBLE_ROWS_DEBOUNCE_MS = 300L
