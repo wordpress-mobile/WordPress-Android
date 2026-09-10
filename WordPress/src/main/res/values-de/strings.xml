@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-09-02 20:52:44+0000
+Translation-Revision-Date: 2026-09-09 00:23:52+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: de
@@ -2306,7 +2306,7 @@ Language: de
     <string name="reader_acessibility_list_loaded">„Die Liste wurde mit %1$d Einträgen geladen.“</string>
     <string name="notifications_tab_dialog_switch_desc">Benachrichtigungen</string>
     <string name="main_switch_default_title_off">Deaktiviert</string>
-    <string name="main_switch_default_title_on">Aktiviert</string>
+    <string name="main_switch_default_title_on">Ein</string>
     <string name="notifications_tab_dialog_main_off_message">Wenn du die Benachrichtigungen für diese Website deaktivierst, wird auch die Benachrichtigungsanzeige auf dem Tab „Benachrichtigungen“ für diese Website deaktiviert. Du kannst detailliert festlegen, welche Art von Benachrichtigung du siehst, nachdem du die Benachrichtigungen für diese Website aktiviert hast.</string>
     <string name="notifications_tab_dialog_main_off_title">Aktiviere die Benachrichtigungen für diese Website, um Benachrichtigungen auf dem Tab „Benachrichtigungen“ zu sehen.</string>
     <string name="notifications_tab_dialog_main_hint_off">Benachrichtigungsanzeige auf dem Tab „Benachrichtigungen“ für diese Website aktivieren</string>
@@ -3141,7 +3141,7 @@ Language: de
     <string name="notification_settings_main_hint_off">Benachrichtigungen aktivieren</string>
     <string name="notification_settings_main_hint_on">Benachrichtigungen deaktivieren</string>
     <string name="notification_settings_main_status_off">Deaktiviert</string>
-    <string name="notification_settings_main_status_on">Aktiviert</string>
+    <string name="notification_settings_main_status_on">Ein</string>
     <string name="max_video_resolution">Maximale Videogröße</string>
     <string name="max_thumbnail_px_size">Maximale Bildgröße</string>
     <string name="error_upload_post_media_param">Es gab einen Fehler beim Hochladen der Medien in diesem Beitrag: %s.</string>
