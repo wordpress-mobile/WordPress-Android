@@ -1328,19 +1328,27 @@ class StatsRepositoryTest : BaseUnitTest() {
 
         val result = repository.nextPeriod(previousWeek)
 
-        assertThat(result).isEqualTo(StatsPeriod.Last7Days)
+        // On the last day of the week that source range is itself a full calendar week, so the step is
+        // a calendar step and the landing window is both Last 7 Days and This Week — snapToPreset then
+        // prefers the source's own calendar unit.
+        val weekStart = today.with(
+            TemporalAdjusters.previousOrSame(WeekFields.of(Locale.getDefault()).firstDayOfWeek)
+        )
+        val expected = if (today == weekStart.plusDays(6)) StatsPeriod.ThisWeek else StatsPeriod.Last7Days
+        assertThat(result).isEqualTo(expected)
     }
 
     @Test
     fun `nextPeriod clamps so the window never ends after today`() {
         val today = LocalDate.now()
-        // A ten-day range ending today (no preset has this span, so it stays Custom): forward would
-        // overshoot into the future and must be clamped back to end on today.
+        // A ten-day range ending today: forward would overshoot into the future and must be clamped
+        // back to end on today. The clamped window may or may not coincide with a preset (on the 10th
+        // of the month it is exactly month-to-date), so assert the window rather than the subtype.
         val endingToday = StatsPeriod.Custom(today.minusDays(9), today)
 
-        val result = repository.nextPeriod(endingToday) as StatsPeriod.Custom
+        val result = repository.nextPeriod(endingToday)
 
-        assertThat(result.endDate).isEqualTo(today)
+        assertThat(repository.currentPeriodWindow(result).second).isEqualTo(today)
     }
 
     @Test
