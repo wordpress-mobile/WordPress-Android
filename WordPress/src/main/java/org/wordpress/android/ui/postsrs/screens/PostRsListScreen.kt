@@ -63,7 +63,6 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -192,10 +191,10 @@ fun PostRsListScreen(
                             modifier = Modifier.fillMaxWidth().focusRequester(focusRequester)
                         )
                     } else {
-                        Text(
-                            text = rsDebugTitle(R.string.my_site_btn_blog_posts),
-                            fontFamily = if (isRedesignEnabled) FontFamily.Serif else null
-                        )
+                        // Plain sans, like every other top bar in the app. The serif belongs on
+                        // the row titles, which are content; a serif on the chrome reads as a
+                        // rendering fault rather than a choice.
+                        Text(text = rsDebugTitle(R.string.my_site_btn_blog_posts))
                     }
                 },
                 navigationIcon = {
