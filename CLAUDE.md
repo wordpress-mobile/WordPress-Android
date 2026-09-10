@@ -38,7 +38,6 @@ This repository builds two apps from shared codebase:
 ├── WordPress/                 # Main app module
 ├── libs/
 │   ├── fluxc/                 # Networking and data layer (FluxC architecture)
-│   ├── login/                 # Shared login functionality
 │   ├── editor/                # Block editor integration
 │   ├── image-editor/          # Image editing functionality
 │   ├── analytics/             # Analytics and tracking

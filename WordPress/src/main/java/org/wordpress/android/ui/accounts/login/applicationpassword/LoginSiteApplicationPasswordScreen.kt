@@ -51,7 +51,7 @@ import org.wordpress.android.R
 fun LoginSiteApplicationPasswordScreen(
     errorMessage: String?,
     onBackClick: () -> Unit,
-    onHelpClick: (cleanedAddress: String) -> Unit,
+    onHelpClick: () -> Unit,
     onContinueClick: (cleanedAddress: String) -> Unit,
     onErrorDismissed: () -> Unit,
     modifier: Modifier = Modifier,
@@ -85,7 +85,7 @@ fun LoginSiteApplicationPasswordScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { onHelpClick(cleanedAddress) }) {
+                    IconButton(onClick = onHelpClick) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.HelpOutline,
                             contentDescription = stringResource(R.string.help)

@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.accounts.LoginActivity
-import org.wordpress.android.ui.accounts.login.LoginAnalyticsListener
+import org.wordpress.android.ui.accounts.login.LoginAnalyticsTracker
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.UrlUtils
@@ -36,7 +36,7 @@ class LoginSiteApplicationPasswordFragment : Fragment() {
     lateinit var activityNavigator: ActivityNavigator
 
     @Inject
-    lateinit var analyticsListener: LoginAnalyticsListener
+    lateinit var analyticsTracker: LoginAnalyticsTracker
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -66,9 +66,9 @@ class LoginSiteApplicationPasswordFragment : Fragment() {
                         onBackClick = {
                             requireActivity().onBackPressedDispatcher.onBackPressed()
                         },
-                        onHelpClick = { cleanedAddress ->
-                            analyticsListener.trackShowHelpClick()
-                            loginActivity?.helpSiteAddress(cleanedAddress)
+                        onHelpClick = {
+                            analyticsTracker.trackShowHelpClick()
+                            loginActivity?.helpSiteAddress()
                         },
                         onContinueClick = { cleanedAddress ->
                             discover(cleanedAddress)
@@ -91,7 +91,7 @@ class LoginSiteApplicationPasswordFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         activity?.setTitle(R.string.site_address_login_title)
-        analyticsListener.trackUrlFormViewed()
+        analyticsTracker.trackUrlFormViewed()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -106,7 +106,7 @@ class LoginSiteApplicationPasswordFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.errorMessage.collect { error ->
                     error?.let {
-                        analyticsListener.trackFailure(it)
+                        analyticsTracker.trackFailure(it)
                     }
                 }
             }
@@ -118,7 +118,7 @@ class LoginSiteApplicationPasswordFragment : Fragment() {
                     // WP.com sites can't use application passwords; send them to the OAuth flow.
                     // Discovery already ran here (unlike the up-front WPUrlUtils.isWordPressCom()
                     // check), so record that it resolved to a WordPress.com site.
-                    analyticsListener.trackConnectedSiteInfoSucceeded(mapOf("is_wpcom" to true))
+                    analyticsTracker.trackConnectedSiteInfoSucceeded(mapOf("is_wpcom" to true))
                     loginActivity?.showWPcomLoginScreen(requireContext())
                 }
             }
@@ -127,7 +127,7 @@ class LoginSiteApplicationPasswordFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        analyticsListener.siteAddressFormScreenResumed()
+        analyticsTracker.siteAddressFormScreenResumed()
     }
 
     private fun discover(cleanedUrl: String) {
@@ -140,8 +140,8 @@ class LoginSiteApplicationPasswordFragment : Fragment() {
             loginActivity?.showWPcomLoginScreen(requireContext())
             return
         }
-        analyticsListener.trackSubmitClicked()
-        analyticsListener.trackConnectedSiteInfoRequested(cleanedUrl)
+        analyticsTracker.trackSubmitClicked()
+        analyticsTracker.trackConnectedSiteInfoRequested(cleanedUrl)
         viewModel.runApiDiscovery(cleanedUrl)
     }
 

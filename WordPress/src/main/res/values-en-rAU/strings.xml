@@ -7,7 +7,6 @@ Language: en_AU
 -->
 <resources>
     <string name="post_publishing_set_up_blogging_reminders_message">Your post is publishing… in the meantime, you can set up blogging reminders on days you want to post.</string>
-    <string name="login_empty_view_avatar_content_description">Your profile photo</string>
     <string name="activity_log_backup_finished_snackbar_message_no_dates">Your site has been successfully backed up</string>
     <string name="activity_log_backup_finished_snackbar_message">Your site has been successfully backed up\nBacked up from %1$s %2$s</string>
     <string name="activity_log_backup_started_snackbar_message">Your site is being backed up\nBacking up from %1$s %2$s</string>
@@ -108,8 +107,6 @@ Language: en_AU
     <string name="post_notification_off">Off</string>
     <string name="post_settings_add_to_calendar">Add to calendar</string>
     <string name="post_settings_notification">Notification</string>
-    <string name="login_invalid_site_url">Please enter a complete website address, like example.com.</string>
-    <string name="enter_email_for_site">Log in with WordPress.com to connect to %1$s</string>
     <string name="stats_post_views_label">Views</string>
     <string name="stats_post_label">Post</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -214,8 +211,6 @@ Language: en_AU
     <string name="posts_draft_empty">You don\'t have any draft posts</string>
     <string name="posts_scheduled_empty">You don\'t have any scheduled posts</string>
     <string name="posts_published_empty">You haven\'t published any posts yet</string>
-    <string name="notification_wpcom_username_needed">Please log in with your username and password.</string>
-    <string name="error_user_username_instead_of_email">Please log in using your WordPress.com username instead of your email address.</string>
     <string name="stats_insights_average_words">Avg words/post</string>
     <string name="stats_insights_total_words">Total words</string>
     <string name="stats_insights_average_likes">Avg likes/post</string>
@@ -225,7 +220,6 @@ Language: en_AU
     <string name="stats_insights_posts">Posts</string>
     <string name="stats_insights_year">Year</string>
     <string name="stats_insights_this_year_site_stats">This Year</string>
-    <string name="no_site_error">The site at this address is not a WordPress site. For us to connect to it, the site must use WordPress.</string>
     <string name="plugin_check_domain_credit_error">Failed to check available domain credits</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Checking domain credits</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Register domain</string>
@@ -353,7 +347,6 @@ Language: en_AU
     <string name="history_detail_button_previous">Previous</string>
     <string name="history_detail_button_next">Next</string>
     <string name="media_space_used">%1$s used</string>
-    <string name="enter_wpcom_or_jetpack_site">Please enter a WordPress.com or Jetpack-connected self-hosted WordPress site</string>
     <string name="history_loading_revision">Loading revision</string>
     <string name="history_loaded_revision">Revision loaded</string>
     <string name="history_load_dialog_button_positive">Load</string>
@@ -379,13 +372,11 @@ Language: en_AU
     <string name="pages_move_to_trash">Move to Trash</string>
     <string name="pages_move_to_draft">Move to Draft</string>
     <string name="pages_delete_permanently">Delete Permanently</string>
-    <string name="login_error_sms_throttled">We\'ve made too many attempts to send an SMS verification code — take a break, and request a new one in a minute.</string>
     <string name="pages_view">View</string>
     <string name="pages_trashed">Trashed</string>
     <string name="pages_scheduled">Scheduled</string>
     <string name="pages_published">Published</string>
     <string name="pages_drafts">Drafts</string>
-    <string name="login_error_email_not_found_v2">There\'s no WordPress.com account matching this Google account.</string>
     <string name="page_parent_changed">Page parent has been changed</string>
     <string name="site_picker_remove_site_empty">No sites matching your search</string>
     <string name="top_level">Top level</string>
@@ -401,7 +392,6 @@ Language: en_AU
     <string name="page_delete_dialog_message">Are you sure you want to delete page %s?</string>
     <string name="my_site_create_new_site_title">You don\'t have any sites</string>
     <string name="content_description_more">More</string>
-    <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin.</string>
@@ -449,13 +439,7 @@ Language: en_AU
     <string name="reader_empty_search_title">No results found</string>
     <string name="comment_read_source_post">Read the source post</string>
     <string name="sites">Sites</string>
-    <string name="signup_magic_link_title">Magic link sent</string>
-    <string name="verification_2fa_screen_title">Code verification</string>
-    <string name="selfhosted_site_login_title">Login credentials</string>
-    <string name="magic_link_sent_login_title">Magic link sent</string>
-    <string name="magic_link_login_title">Magic link login</string>
     <string name="site_address_login_title">Site address login</string>
-    <string name="email_address_login_title">Email address login</string>
     <string name="reader_bookmark_snack_btn">View All</string>
     <string name="reader_empty_saved_posts_description">Tap %s to save a post to your list.</string>
     <string name="reader_save_for_later_title">Saved posts</string>
@@ -553,7 +537,6 @@ Language: en_AU
     <string name="invite_user_delete_desc">remove %s</string>
     <string name="profile_picture">%s\'s profile picture</string>
     <string name="comment_checkmark_desc">check mark</string>
-    <string name="signup_with_google_progress">Signing up with Google…</string>
     <string name="open_external_link_desc">Open external link</string>
     <string name="jetpack_connection_failed_with_reason">Connection to Jetpack failed: %s</string>
     <string name="jetpack_already_connected_toast">You are already connected to Jetpack</string>
@@ -582,7 +565,6 @@ Language: en_AU
     <string name="notif_detail_screen_title">Notification detail %s</string>
     <string name="edit_photo_screen_title">Edit Photo</string>
     <string name="share_intent_screen_title">Pick site</string>
-    <string name="signup_epilogue_screen_title">New account</string>
     <string name="person_detail_screen_title">Person detail</string>
     <string name="media_settings_screen_title">File details</string>
     <string name="publicize_buttons_screen_title">Sharing buttons</string>
@@ -636,24 +618,12 @@ Language: en_AU
     <string name="notification_site_creation_title_success">Site created!</string>
     <string name="username_changer_action">Save</string>
     <string name="username_changer_error_none">No usernames are suggested from %1$s%2$s%3$s. Please enter more letters or numbers to get suggestions.</string>
-    <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
-    <string name="signup_user_exists">Email already exists on WordPress.com.\nProceeding with login.</string>
     <string name="username_changer_dismiss_message">Discard changing username?</string>
     <string name="username_changer_dismiss_button_positive">Discard</string>
     <string name="username_changer_title">Change username</string>
     <string name="username_changer_error_generic">An error occurred while retrieving username suggestions.</string>
     <string name="content_description_add_avatar">Add avatar</string>
-    <string name="signup_updating_account">Updating account…</string>
-    <string name="signup_magic_link_progress">Sending email</string>
-    <string name="signup_epilogue_hint_username">Username</string>
     <string name="signup_epilogue_error_generic">There was some trouble updating your account. You can retry or revert your changes to continue.</string>
-    <string name="signup_epilogue_error_button_negative">Revert</string>
-    <string name="signup_epilogue_error_button_positive">Retry</string>
-    <string name="signup_magic_link_error_button_positive">Retry</string>
-    <string name="signup_epilogue_hint_password">Password (optional)</string>
-    <string name="signup_epilogue_hint_display">Display Name</string>
-    <string name="signup_magic_link_error_button_negative">Close</string>
-    <string name="signup_magic_link_error">There was some trouble sending the email. You can retry now or close and try again later.</string>
     <string name="plugin_search_error">Unable to search plugins</string>
     <string name="plugin_installed_successfully">Successfully installed %s</string>
     <string name="plugin_see_all">See All</string>
@@ -739,17 +709,6 @@ Language: en_AU
     <string name="plugin_active">Active</string>
     <string name="media_edit_link_hint">Open link in a new window/tab</string>
     <string name="media_edit_link_text">Link to</string>
-    <string name="notification_login_failed">An error has occurred.</string>
-    <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
-    <string name="notification_error_wrong_password">Please double check your password to continue.</string>
-    <string name="notification_login_title_stopped">Login stopped</string>
-    <string name="notification_logging_in">Please wait while logging in.</string>
-    <string name="notification_login_title_in_progress">Login in progress…</string>
-    <string name="notification_logged_in">Tap to continue.</string>
-    <string name="notification_login_title_success">Logged in!</string>
-    <string name="login_error_generic_start">Google login could not be started.</string>
-    <string name="login_empty_password">Please enter a password</string>
-    <string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
     <string name="image_size">Size</string>
     <string name="uploading_subtitle_media_only_one">1 file remaining</string>
     <string name="uploading_subtitle_media_only">%1$d of %2$d files remaining</string>
@@ -766,15 +725,10 @@ Language: en_AU
     <string name="confirm_remove_media_image">Remove this image from the post?</string>
     <string name="media_edit_customize_card_caption">Customise</string>
     <string name="media_edit_file_details_card_caption">File Details</string>
-    <string name="login_error_suffix">\nMaybe try a different account?</string>
-    <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
     <string name="login_error_button">Close</string>
-    <string name="enter_wpcom_password_google">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
     <string name="error_generic_network">A network error occurred. Please check your connection and try again.</string>
     <string name="post_settings_remove_featured_image">Remove featured image</string>
     <string name="post_settings_choose_featured_image">Choose featured image</string>
-    <string name="login_log_in_for_share_intent">Log in to WordPress.com to share the content.</string>
-    <string name="enter_site_address_share_intent">Enter the address of your WordPress site you\'d like to share the content to.</string>
     <string name="jetpack_disconnect_error_toast">Error disconnecting site</string>
     <string name="jetpack_disconnect_success_toast">Site disconnected</string>
     <string name="jetpack_disconnect_confirm">Disconnect</string>
@@ -847,26 +801,12 @@ Language: en_AU
     <string name="post_queued">Queued post</string>
     <string name="uploading_post">Uploading \"%s\"</string>
     <string name="connection_to_server_lost">The connection to the server was lost</string>
-    <string name="login_email_client_not_found">Can\'t detect your email client app</string>
-    <string name="login_empty_2fa">Please enter a verification code</string>
-    <string name="login_empty_username">Please enter a username</string>
-    <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
-    <string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
     <string name="login_checking_site_address">Checking site address</string>
-    <string name="login_site_address_more_help">Need more help?</string>
-    <string name="login_site_address_help_content">Your site address appears in the bar at the top of the screen when you visit your site in Chrome.</string>
-    <string name="login_site_address_help_title">What\'s my site address?</string>
     <string name="login_site_address">Site address</string>
     <string name="enter_site_address">Enter the address of the WordPress site you\'d like to connect.</string>
     <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
     <string name="login_continue">Continue</string>
-    <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
-    <string name="login_magic_link_email_requesting">Requesting log-in email</string>
-    <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
-    <string name="requesting_otp">Requesting a verification code via SMS.</string>
-    <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
     <string name="next">Next</string>
-    <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
     <string name="me_profile_photo">Profile Photo</string>
     <string name="error_media_parse_error">Unexpected response from server</string>
     <string name="upload_finished_toast">Can\'t stop the upload because it\'s already finished</string>
@@ -1013,8 +953,6 @@ Language: en_AU
     <string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
     <string name="error_unknown_post_type">Unknown post format</string>
     <string name="submit_for_review">Submit</string>
-    <string name="duplicate_site_detected">A duplicate site has been detected.</string>
-    <string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
     <string name="already_logged_in_wpcom">You\'re already logged in a WordPress.com account, you can\'t add a WordPress.com site bound to another account.</string>
     <string name="error_media_load">Unable to load media</string>
     <string name="error_media_refresh_no_connection">Connection required to refresh library</string>
@@ -1025,8 +963,6 @@ Language: en_AU
     <string name="media_generic_error">Media error occurred</string>
     <string name="retry">Retry</string>
     <string name="confirm">Confirm</string>
-    <string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your\n        site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve\n        this problem.</string>
-    <string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs\n        that in order to communicate with your site. Contact your host to solve this problem.</string>
     <string name="pending_draft_one_generic">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
     <string name="pending_draft_one_month">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' remains a draft. Remember to publish it!</string>
@@ -1105,8 +1041,6 @@ Language: en_AU
     <string name="error_locating_image">Error locating the cropped image</string>
     <string name="error_refreshing_gravatar">Error reloading your Gravatar</string>
     <string name="error_cropping_image">Error cropping the image</string>
-    <string name="checking_email">Checking email</string>
-    <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
     <string name="logging_in">Logging in</string>
     <string name="web_address_dialog_hint">Shown publicly when you comment.</string>
     <string name="export_your_content_message">Your posts, pages, and settings will be emailed to you at %s.</string>
@@ -1138,7 +1072,6 @@ Language: en_AU
     <string name="comments_empty_list_filtered_pending">No pending comments</string>
     <string name="comments_empty_list_filtered_approved">No approved comments</string>
     <string name="button_skip">Skip</string>
-    <string name="xmlrpc_missing_method_error">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
     <string name="post_format_status">Status</string>
     <string name="post_format_video">Video</string>
     <string name="alignment_center">Centre</string>
@@ -1198,7 +1131,6 @@ Language: en_AU
     <string name="about_the_app">About the app</string>
     <string name="error_post_account_settings">Couldn\'t save your account settings</string>
     <string name="error_fetch_account_settings">Couldn\'t retrieve your account settings</string>
-    <string name="error_fetch_my_profile">Couldn\'t retrieve your profile</string>
     <string name="site_settings_unknown_language_code_error">Language code not recognised</string>
     <string name="site_settings_threading_dialog_description">Allow comments to be nested in threads.</string>
     <string name="site_settings_threading_dialog_header">Thread up to</string>
@@ -1378,9 +1310,6 @@ Language: en_AU
     <string name="reader_label_new_posts_subtitle">Tap to show them</string>
     <string name="select_all">Select all</string>
     <string name="language">Language</string>
-    <string name="verification_code">Verification code</string>
-    <string name="invalid_verification_code">Invalid verification code</string>
-    <string name="auth_required">Log in again to continue.</string>
     <string name="reader_empty_posts_request_failed">Unable to retrieve posts</string>
     <string name="error_notification_open">Could not open notification</string>
     <string name="stats_search_terms_unknown_search_terms">Unknown Search Terms</string>
@@ -1458,7 +1387,6 @@ Language: en_AU
     <string name="error_load_comment">Couldn\'t load the comment</string>
     <string name="error_downloading_image">Error downloading image</string>
     <string name="invalid_email_message">Your email address isn\'t valid</string>
-    <string name="email_invalid">Enter a valid email address</string>
     <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
     <string name="error_deleting_post">An error occurred while deleting the post</string>
     <string name="select_categories">Select categories</string>
@@ -1489,7 +1417,6 @@ Language: en_AU
     <string name="add_new_category">Add new category</string>
     <string name="category_name">Category name</string>
     <string name="file_error_create">Couldn\'t create temp file for media upload. Make sure there is enough free space on your device.</string>
-    <string name="http_authorization_required">Authorisation required</string>
     <string name="new_post">New post</string>
     <string name="new_media">New media</string>
     <string name="local_changes">Local changes</string>
@@ -1552,8 +1479,6 @@ Language: en_AU
     <string name="more_notifications">and %d more.</string>
     <string name="sign_in">Sign in</string>
     <string name="loading">Loading…</string>
-    <string name="httpuser">HTTP username</string>
-    <string name="httppassword">HTTP password</string>
     <string name="error_media_upload">An error occurred while uploading media</string>
     <string name="incorrect_credentials">Incorrect username or password.</string>
     <string name="password">Password</string>

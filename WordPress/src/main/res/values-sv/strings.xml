@@ -485,7 +485,6 @@ Language: sv_SE
     <string name="experimental_block_editor_note">Den experimentella blockredigeraren kommer att bli standard i en framtida version och möjligheten att inaktivera den kommer att tas bort.</string>
     <string name="avatar_update_email_unverified">För att uppdatera din profilbild måste du först verifiera din e-postadress.</string>
     <string name="feedback_form_note_link_wordpress">community-forum.</string>
-    <string name="default_web_client_id" a8c-src-lib="module:login">platshållare</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Slå på/av %s-genväg</string>
     <string name="personalization_screen_card_accessibility_label">Slå på/av %s-kort</string>
     <string name="user_avatar_content_description">Profilbild för användare %s</string>
@@ -755,9 +754,6 @@ Language: sv_SE
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Block som är inbäddade djupare än %d kanske inte renderas korrekt i den mobila redigeraren.</string>
     <string name="domain_management_clear_search">Rensa sökning</string>
     <string name="media_encoder_quality_very_high">Mycket hög</string>
-    <string name="notification_security_key_needed" a8c-src-lib="module:login">Ange din säkerhetsnyckel för att fortsätta.</string>
-    <string name="login_error_security_key" a8c-src-lib="module:login">Det uppstod vissa problem med säkerhetsnyckelsinloggningen</string>
-    <string name="login_text_security_key" a8c-src-lib="module:login">Använd en säkerhetsnyckel</string>
     <string name="new_domain_search_screen_error_title">Kunde inte att hämta domäner</string>
     <string name="new_domain_search_screen_list_item_sale_price">%s för första året</string>
     <string name="new_domain_search_screen_list_item_regular_price">%s/år</string>
@@ -1305,11 +1301,6 @@ Language: sv_SE
     <string name="notification_channel_weekly_roundup_title">Veckosammanfattning</string>
     <string name="my_site_dashboard_tab_title">Hem</string>
     <string name="adding_cat">Lägger till kategori</string>
-    <string name="login_select_email_client">Vilken e-postapp använder du?</string>
-    <string name="login_error_xml_rpc_auth_error_communicating" a8c-src-lib="module:login">Det uppstod ett problem med att kommunicera med webbplatsen. En HTTP-felkod 401 returnerades.</string>
-    <string name="login_error_xml_rpc_cannot_read_site_auth_required" a8c-src-lib="module:login">Anrop med XML-RPC verkar blockerade på denna webbplats (felkod 401). Om försöket att logga in misslyckas tryck på hjälpikonen för att se vanliga frågor.</string>
-    <string name="login_error_xml_rpc_cannot_read_site" a8c-src-lib="module:login">Kunde inte läsa WordPress-webbplatsen på denna URL. Tryck på hjälpikonen för att se vanliga frågor.</string>
-    <string name="login_error_xml_rpc_services_disabled" a8c-src-lib="module:login">Tjänsten XML-RPC är inaktiverad på denna webbplats.</string>
     <string name="my_site_menu_tab_title">Meny</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Din sökning innehåller tecken som inte stöds i WordPress.com-domäner. Följande tecken är tillåtna: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Kontrollera din internetanslutning och ladda om sidan.</string>
@@ -1552,11 +1543,6 @@ Language: sv_SE
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Ange inloggningsuppgifterna till din server&lt;/a&gt; för att åtgärda hoten.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Ange inloggningsuppgifterna till din server&lt;/a&gt; för att åtgärda hotet.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dubbeltryck för att lägga till en länk.</string>
-    <string name="login_empty_view_try_another_account">Prova med ett annat konto</string>
-    <string name="login_empty_view_see_instructions">Se instruktionerna</string>
-    <string name="login_no_jetpack_sites_error_message">Om du redan har en webbplats behöver du installera gratis-tillägget Jetpack och ansluta det till ditt konto hos WordPress.com.</string>
-    <string name="login_empty_view_avatar_content_description">Ditt profilfoto</string>
-    <string name="login_not_a_jetpack_site">För att använda denna app för %1$s måste du ha tillägget Jetpack installerat och anslutet till ditt WordPress.com-konto.</string>
     <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Breddinställningar</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Länk-rel</string>
     <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Kolumninställningar</string>
@@ -1592,7 +1578,6 @@ Language: sv_SE
     <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Mer</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Beskriv kortfattat länken för den som använder skärmläsare.</string>
     <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Lägg till block</string>
-    <string name="login_no_jetpack_sites">Inga Jetpack-webbplatser hittades</string>
     <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Vad är alternativ text?</string>
     <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Omvandla %s till</string>
     <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Omvandla block …</string>
@@ -1639,7 +1624,6 @@ Language: sv_SE
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dubbeltryck för att öppna åtgärdsbladet där du kan redigera, ersätta eller ta bort bilden</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="new_site_creation_search_domain_input_hint">Skriv ett namn för din webbplats</string>
-    <string name="magic_link_not_meaning_to_create_account" a8c-src-lib="module:login">Vill du inte registrera ett nytt konto? Gå tillbaka för att mata in e-postadressen igen.</string>
     <string name="invite_links_disable_dialog_message">När denna inbjudningslänk har inaktiverats kan ingen använda den för att ansluta sig till ditt team. Är du säker?</string>
     <string name="invite_links_disable_dialog_title">Inaktivera inbjudningslänk</string>
     <string name="invite_links_bad_format_response">Ett ogiltigt svar har tagits emot</string>
@@ -1901,8 +1885,6 @@ Language: sv_SE
     <string name="hpp_retry_error">Kontrollera din internet-anslutning och försök igen.</string>
     <string name="hpp_error_subtitle">Tryck på ”Försök igen” när du har förbindelse med internet igen.</string>
     <string name="hpp_error_title">Layouter är inte tillgängliga när du saknar internetförbindelse</string>
-    <string name="continue_site_credentials" a8c-src-lib="module:login">Fortsätt med butiksautentiseringsuppgifter</string>
-    <string name="login_find_your_connected_email" a8c-src-lib="module:login">Hitta din anslutna e-postadress</string>
     <string name="reader_discover_no_posts_follow_subtitle">Försök att följa fler etiketter för att söka bredare</string>
     <string name="reader_discover_no_posts_title">Inga nya inlägg</string>
     <string name="reader_discover_empty_title">Välkommen!</string>
@@ -1943,8 +1925,6 @@ Language: sv_SE
     <string name="suggestion_no_connection">Internetförbindelse saknas.\nFörslag är inte tillgängliga.</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s valt</string>
-    <string name="login_get_link_by_email" a8c-src-lib="module:login">Få en länk för inloggning via e-post</string>
-    <string name="email_not_registered_wpcom" a8c-src-lib="module:login">Hmm. Vi hittar inget konto hos WordPress.com som är kopplat till denna e-postadress.</string>
     <string name="permission_microphone">Mikrofon</string>
     <string name="comment_unable_to_show_error">Det går inte att visa denna kommentar</string>
     <string name="media_browse_for_items">Bläddra bland objekt</string>
@@ -1981,26 +1961,7 @@ Language: sv_SE
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Välj bild</string>
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blocket har tagits bort</string>
     <string name="enter_your_site_address">Ange din befintliga webbplatsadress</string>
-    <string name="signup_confirmation_title" a8c-src-lib="module:login">Bekräftelse av registrering</string>
-    <string name="continue_with_google_terms_of_service_text" a8c-src-lib="module:login">Om du fortsätter med Google och inte redan har ett WordPress.com-konto, skapar du ett konto och samtycker till våra %1$sanvändarvillkor%2$s.</string>
-    <string name="continue_terms_of_service_text" a8c-src-lib="module:login">Genom att gå vidare accepterar du våra %1$sanvändarvillkor%2$s.</string>
-    <string name="signup_confirmation_message" a8c-src-lib="module:login">Vi kommer att använda den här e-postadressen för att skapa ditt nya WordPress.com-konto.</string>
-    <string name="signup_magic_link_message" a8c-src-lib="module:login">Vi har skickat en registreringslänk som låter dig skapa ditt nya konto hos WordPress.com. Öppna e-posten på din enhet och tryck på länken i meddelandet du fått från WordPress.com.</string>
-    <string name="enter_account_info_for_site" a8c-src-lib="module:login">Ange din kontoinformation för %1$s.</string>
-    <string name="login_or" a8c-src-lib="module:login">eller</string>
-    <string name="continue_google_button_suffix" a8c-src-lib="module:login">Fortsätt med Google</string>
-    <string name="login_find_your_site_adress" a8c-src-lib="module:login">Hitta din webbplatsadress</string>
-    <string name="login_done">Klart</string>
-    <string name="magic_link_not_seeing_email_message" a8c-src-lib="module:login">Hittar du inte meddelandet? Kolla i mappen för skräppost eller reklam.</string>
-    <string name="login_magic_links_sent_label" a8c-src-lib="module:login">Öppna e-posten på din enhet och tryck på länken i meddelandet du fått från WordPress.com.</string>
-    <string name="login_magic_links_label" a8c-src-lib="module:login">Vi skickar en länk som låter dig logga in direkt, utan något lösenord.</string>
-    <string name="check_email" a8c-src-lib="module:login">Kolla din e-post</string>
     <string name="get_started" a8c-src-lib="module:login">Kom igång</string>
-    <string name="enter_email_to_continue_wordpress_com" a8c-src-lib="module:login">Ange din e-postadress för att logga in eller skapa ett WordPress.com-konto.</string>
-    <string name="or_type_your_password" a8c-src-lib="module:login">Eller skriv ditt lösenord</string>
-    <string name="create_account" a8c-src-lib="module:login">Skapa konto</string>
-    <string name="send_link_by_email" a8c-src-lib="module:login">Skicka länk via e-post</string>
-    <string name="reset_your_password" a8c-src-lib="module:login">Återställ ditt lösenord</string>
     <string name="reader_error_request_failed_title">Ett problem inträffade när din begäran skulle behandlas. Försök igen senare.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Om du lägger detta inlägg i papperskorgen kommer även lokala ändringar att kastas. Vill du fortsätta?</string>
     <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Inställningar för blocket %s</string>
@@ -2223,9 +2184,6 @@ Language: sv_SE
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bildtext för galleri. %s</string>
     <string name="create_post_page_fab_tooltip">Skapa ett inlägg eller en sida</string>
     <string name="content_description_person_building_website">Person som bygger en webbplats</string>
-    <string name="post_signup_interstitial_not_right_now">Inte just nu</string>
-    <string name="post_signup_interstitial_subtitle">Oavsett vad du vill skapa eller dela kommer vi att hjälpa dig här.</string>
-    <string name="post_signup_interstitial_title">Välkommen till WordPress</string>
     <string name="stock_media_picker_list_content_description">Fotobibliotek</string>
     <string name="photo_picker_image_thumbnail_unselected">Bilden är inte längre markerad</string>
     <string name="photo_picker_image_selected">, markerad</string>
@@ -2239,12 +2197,6 @@ Language: sv_SE
     <string name="dialog_confirm_scheduled_post_sync_title">Är du klar att synkronisera?</string>
     <string name="new_site_creation_unavailable_domain">Denna domän är inte tillgänglig</string>
     <string name="negative_prefix">-%s</string>
-    <string name="login_discovery_error_generic" a8c-src-lib="module:login">Vi kunde inte nå din webbplats. För att lösa detta behöver du kontakta ditt webbhotell.</string>
-    <string name="login_discovery_error_ssl" a8c-src-lib="module:login">Vi kunde inte nå din webbplats på grund av ett problem med &lt;b&gt;SSL-certifikatet&lt;/b&gt;. För att lösa detta behöver du kontakta ditt webbhotell.</string>
-    <string name="login_discovery_error_http_auth" a8c-src-lib="module:login">Vi kunde inte nå din webbplats eftersom den kräver &lt;b&gt;HTTP-autentisering&lt;/b&gt;. För att lösa detta behöver du kontakta ditt webbhotell.</string>
-    <string name="login_discovery_error_xmlrpc" a8c-src-lib="module:login">Vi kunde inte nå filen &lt;b&gt;XMLRPC&lt;/b&gt; på din webbplats. För att lösa detta behöver du kontakta ditt webbhotell.</string>
-    <string name="login_site_credentials_magic_link_label" a8c-src-lib="module:login">Nästan klart! Vi behöver bara bekräfta den e-postadress du har registrerad hos Jetpack &lt;b&gt;%1$s&lt;/b&gt;</string>
-    <string name="enter_credentials_for_site" a8c-src-lib="module:login">Logga in med dina inloggningsuppgifter för webbplatsen %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Webbplatssida</string>
     <string name="reader_my_likes_display_name">Gillar</string>
     <string name="reader_discover_display_name">Upptäck</string>
@@ -2402,8 +2354,6 @@ Language: sv_SE
     <string name="post_settings_add_to_calendar">Lägg till i kalender</string>
     <string name="post_settings_notification">Avisering</string>
     <string name="post_settings_time_and_date">Datum och tid</string>
-    <string name="login_invalid_site_url" a8c-src-lib="module:login">Skriv in den fullständiga adressen till en webbplats, såsom example.com.</string>
-    <string name="enter_email_for_site" a8c-src-lib="module:login">Logga in med WordPress.com för ansluta till %1$s</string>
     <string name="stats_post_views_label">Visningar</string>
     <string name="stats_post_label">Inlägg</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -2509,8 +2459,6 @@ Language: sv_SE
     <string name="posts_draft_empty">Du har inte några utkast till inlägg</string>
     <string name="posts_scheduled_empty">Du har inte några schemalagda inlägg</string>
     <string name="posts_published_empty">Du har inte publicerat några inlägg – ännu!</string>
-    <string name="notification_wpcom_username_needed" a8c-src-lib="module:login">Logga in med ditt användarnamn och lösenord.</string>
-    <string name="error_user_username_instead_of_email" a8c-src-lib="module:login">Logga in med ditt användarnamn för WordPress.com och inte med din e-postadress.</string>
     <string name="stats_insights_average_words">Ord per inlägg i snitt</string>
     <string name="stats_insights_total_words">Totalt antal ord</string>
     <string name="stats_insights_average_likes">Gilla per inlägg i snitt</string>
@@ -2520,7 +2468,6 @@ Language: sv_SE
     <string name="stats_insights_posts">Inlägg</string>
     <string name="stats_insights_year">År</string>
     <string name="stats_insights_this_year_site_stats">I år</string>
-    <string name="no_site_error" a8c-src-lib="module:login">Webbplatsen på denna adress är inte en WordPress-webbplats.  För att vi ska kunna ansluta till den måste webbplatsen använda WordPress.</string>
     <string name="plugin_check_domain_credit_error">Lyckades inte kontrollera domänens saldo</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Kontrollerar domänens saldo</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Registrera domän</string>
@@ -2653,7 +2600,6 @@ Language: sv_SE
     <string name="history_detail_button_previous">Föregående</string>
     <string name="history_detail_button_next">Nästa</string>
     <string name="media_space_used">%1$s används</string>
-    <string name="enter_wpcom_or_jetpack_site" a8c-src-lib="module:login">Ange en webbplats som ligger på WordPress.com eller en WordPress-webbplats på egen server som är ansluten till Jetpack</string>
     <string name="history_loading_revision">Läser in version</string>
     <string name="history_loaded_revision">Versionen har lästs in</string>
     <string name="history_load_dialog_button_positive">Läs in</string>
@@ -2682,8 +2628,6 @@ Language: sv_SE
     <string name="pages_scheduled">Schemalagda</string>
     <string name="pages_drafts">Utkast</string>
     <string name="pages_published">Publicerade</string>
-    <string name="login_error_sms_throttled" a8c-src-lib="module:login">Vi har gjort för många försök att leverera en verifieringskod via SMS – Vänta lite och be om en ny om en minut.</string>
-    <string name="login_error_email_not_found_v2" a8c-src-lib="module:login">Det finns inget WordPress.com-konto som stämmer mot detta Google-konto.</string>
     <string name="site_picker_remove_site_empty">Inga webbplatser motsvarar din sökning</string>
     <string name="reader_no_followed_blogs_search_title">Inga bloggar matchar din sökning</string>
     <string name="page_parent_changed">Överordnad sida har uppdaterats</string>
@@ -2702,7 +2646,6 @@ Language: sv_SE
     <string name="content_description_more">Mera</string>
     <string name="my_site_create_new_site_title">Du har inga webbplatser</string>
     <string name="reader_empty_subscribed_tags_subtitle">Lägg till etiketter här för att hitta inlägg om dina favoritämnen</string>
-    <string name="login_to_to_connect_jetpack" a8c-src-lib="module:login">Logga in på WordPress.com-kontot du använde för att ansluta Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Vanliga frågor om Jetpack</string>
     <string name="stats_jetpack_connection_setup_info">För att använda statistik på din WordPress-webbplats måste du installera tillägget Jetpack.</string>
@@ -2755,13 +2698,7 @@ Language: sv_SE
     <string name="reader_empty_search_title">Inga resultat hittades</string>
     <string name="comment_read_source_post">Läs käll-inlägget</string>
     <string name="sites">Webbplatser</string>
-    <string name="signup_magic_link_title" a8c-src-lib="module:login">Magisk länk har skickats</string>
-    <string name="verification_2fa_screen_title" a8c-src-lib="module:login">Bekräftelse av kod</string>
-    <string name="selfhosted_site_login_title" a8c-src-lib="module:login">Inloggningsuppgifter</string>
-    <string name="magic_link_sent_login_title" a8c-src-lib="module:login">Magisk länk har skickats</string>
-    <string name="magic_link_login_title" a8c-src-lib="module:login">Inloggning via magisk länk</string>
     <string name="site_address_login_title" a8c-src-lib="module:login">Webbplatsens inloggningsadress</string>
-    <string name="email_address_login_title" a8c-src-lib="module:login">E-postadress för inloggning</string>
     <string name="reader_empty_saved_posts_description">Knacka på %s för att spara ett inlägg till din lista.</string>
     <string name="reader_empty_saved_posts_title">Inga inlägg sparade – ännu!</string>
     <string name="reader_bookmark_snack_title">Inlägget sparat</string>
@@ -2863,7 +2800,6 @@ Language: sv_SE
     <string name="invite_user_delete_desc">ta bort %s</string>
     <string name="profile_picture">profilbild för %s</string>
     <string name="comment_checkmark_desc">förbockningsmärke</string>
-    <string name="signup_with_google_progress" a8c-src-lib="module:login">Registrering via Google…</string>
     <string name="jetpack_connection_failed_with_reason">Anslutningen till Jetpack fungerade inte: %s</string>
     <string name="jetpack_already_connected_toast">DU är redan ansluten till Jetpack</string>
     <string name="menu_visual_mode">Visuell redigerare</string>
@@ -2890,7 +2826,6 @@ Language: sv_SE
     <string name="notif_detail_screen_title">Aviseringsinformation %s</string>
     <string name="edit_photo_screen_title">Redigera foto</string>
     <string name="share_intent_screen_title">Välj webbplats</string>
-    <string name="signup_epilogue_screen_title">Nytt konto</string>
     <string name="person_detail_screen_title">Personinformation</string>
     <string name="media_settings_screen_title">Filinformation</string>
     <string name="publicize_buttons_screen_title">Delningsknappar</string>
@@ -2941,7 +2876,6 @@ Language: sv_SE
     <string name="site_creation_domain_finish_button">Skapa webbplats</string>
     <string name="notification_site_creation_created">Tryck för att fortsätta.</string>
     <string name="notification_site_creation_title_success">Webbplats skapad!</string>
-    <string name="google_error_timeout" a8c-src-lib="module:login">Det tog för lång tid för Google att svara. Du kan behöva vänta tills du har en stabilare internetuppkoppling.</string>
     <string name="username_changer_title">Ändra användarnamn</string>
     <string name="username_changer_hint">Fortsätt skriva för att få fler förslag</string>
     <string name="username_changer_header">Ditt nuvarande användarnamn är %1$s%2$s%3$s. Med få undantag kommer andra personer bara att se ditt visningsnamn, %4$s%5$s%6$s.</string>
@@ -2951,18 +2885,6 @@ Language: sv_SE
     <string name="username_changer_dismiss_button_positive">Avbryt</string>
     <string name="username_changer_action">Spara</string>
     <string name="content_description_add_avatar">Lägg till profilbild</string>
-    <string name="signup_user_exists">E-postadressen finns redan på WordPress.com.\nGår vidare till inloggning.</string>
-    <string name="signup_updating_account">Uppdaterar kontot…</string>
-    <string name="signup_magic_link_progress" a8c-src-lib="module:login">Skickar e-post</string>
-    <string name="signup_magic_link_error_button_positive" a8c-src-lib="module:login">Försök igen</string>
-    <string name="signup_magic_link_error_button_negative" a8c-src-lib="module:login">Stäng</string>
-    <string name="signup_magic_link_error" a8c-src-lib="module:login">Det gick inte att sända e-postmeddelandet. Du kan försöka igen nu eller stänga och göra ett nytt försök senare.</string>
-    <string name="signup_epilogue_hint_username">Användarnamn</string>
-    <string name="signup_epilogue_hint_password_detail">Du kan alltid logga in med en länk av samma typ som du just använde, men om du vill, kan du också konfigurera ett lösenord.</string>
-    <string name="signup_epilogue_hint_password">Lösenord (valfritt)</string>
-    <string name="signup_epilogue_hint_display">Visningsnamn</string>
-    <string name="signup_epilogue_error_button_positive">Försök igen</string>
-    <string name="signup_epilogue_error_button_negative">Backa</string>
     <string name="signup_epilogue_error_generic">Det gick inte att uppdatera ditt konto. Du kan försöka en gång till eller backa dina ändringar för att fortsätta.</string>
     <string name="plugin_needs_update">Behöver uppdateras</string>
     <string name="plugin_caption_search">Sök tillägg</string>
@@ -3050,18 +2972,6 @@ Language: sv_SE
     <string name="my_site_btn_plugins">Tillägg</string>
     <string name="media_edit_link_hint">Öppna länk i nytt fönster/ny flik</string>
     <string name="media_edit_link_text">Länka till</string>
-    <string name="notification_login_failed" a8c-src-lib="module:login">Ett fel har inträffat.</string>
-    <string name="notification_2fa_needed" a8c-src-lib="module:login">Fyll i en autentiseringskod för att fortsätta.</string>
-    <string name="notification_error_wrong_password" a8c-src-lib="module:login">Dubbelkolla ditt lösenord för att fortsätta.</string>
-    <string name="notification_login_title_stopped" a8c-src-lib="module:login">Inloggningen avbruten</string>
-    <string name="notification_logging_in" a8c-src-lib="module:login">Vänta medan inloggningen pågår.</string>
-    <string name="notification_login_title_in_progress" a8c-src-lib="module:login">Inloggning pågår…</string>
-    <string name="notification_logged_in" a8c-src-lib="module:login">Tryck för att fortsätta.</string>
-    <string name="notification_login_title_success" a8c-src-lib="module:login">Inloggad!</string>
-    <string name="login_error_generic_start" a8c-src-lib="module:login">Google login kunde inte startas.</string>
-    <string name="login_empty_password" a8c-src-lib="module:login">Skriv in ett lösenord</string>
-    <string name="login_text_otp_another" a8c-src-lib="module:login">Skicka ett nytt SMS med en kod till mig istället</string>
-    <string name="enter_verification_code_sms" a8c-src-lib="module:login">Vi har skickat ett SMS till telefonnumret som slutar på %s. Skriv in bekräftelsekoden from SMS;et.</string>
     <string name="image_size">Storlek</string>
     <string name="uploading_subtitle_media_only_one">1 fil återstår</string>
     <string name="uploading_subtitle_media_only">%1$d av %2$d filer återstår</string>
@@ -3078,15 +2988,10 @@ Language: sv_SE
     <string name="confirm_remove_media_image">Ta bort denna bild ur inlägget?</string>
     <string name="media_edit_customize_card_caption">Anpassa</string>
     <string name="media_edit_file_details_card_caption">Filinformation</string>
-    <string name="login_error_suffix" a8c-src-lib="module:login">\nDu kanske vill prova ett annat konto?</string>
-    <string name="login_error_generic" a8c-src-lib="module:login">Det var något som inte stämde vid uppkoppling till Google-kontot.</string>
     <string name="login_error_button">Stäng</string>
-    <string name="enter_wpcom_password_google" a8c-src-lib="module:login">Ange motsvarande lösenord för WordPress.com för att fortsätta med detta Google-konto. Denna fråga får du endast en gång.</string>
     <string name="error_generic_network">Ett nätverksfel har inträffat. Kontrollera anslutningen och försök igen.</string>
     <string name="post_settings_remove_featured_image">Ta bort den utvalda bilden</string>
     <string name="post_settings_choose_featured_image">Välj utvald bild</string>
-    <string name="login_log_in_for_share_intent" a8c-src-lib="module:login">Logga in på WordPress.com för att dela innehållet.</string>
-    <string name="enter_site_address_share_intent" a8c-src-lib="module:login">Skriv in adressen för den WordPress-webbplats dit du vill dela innehållet.</string>
     <string name="jetpack_disconnect_error_toast">Ett fel inträffade när webbplatsen skulle kopplas bort</string>
     <string name="jetpack_disconnect_success_toast">Webbplatsen har kopplats bort</string>
     <string name="jetpack_disconnect_confirm">Koppla bort</string>
@@ -3167,28 +3072,13 @@ Language: sv_SE
     <string name="post_queued">Inlägget i kö</string>
     <string name="uploading_post">Laddar upp ”%s”</string>
     <string name="connection_to_server_lost">Förbindelsen med servern bröts</string>
-    <string name="login_email_client_not_found">Lyckas inte hitta ditt e-postprogram</string>
-    <string name="login_empty_2fa" a8c-src-lib="module:login">Skriv in en verifieringskod</string>
-    <string name="login_empty_username" a8c-src-lib="module:login">Skriv in ett användarnamn</string>
-    <string name="login_log_in_for_deeplink" a8c-src-lib="module:login">Logga in till ditt konto på WordPress.com för att nå inlägget.</string>
-    <string name="login_error_while_adding_site" a8c-src-lib="module:login">Ett fel inträffade när webbplatsen skulle läggas till. Felkod: %s</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">Webbplatsadressen kontrolleras</string>
-    <string name="login_site_address_more_help" a8c-src-lib="module:login">Behöver du mer hjälp?</string>
-    <string name="login_site_address_help_content" a8c-src-lib="module:login">Din webbplatsadress visas i fältet längst upp när du besöker din webbplats i Chrome.</string>
-    <string name="login_site_address_help_title" a8c-src-lib="module:login">Vilket webbplatsadress har jag?</string>
     <string name="login_site_address" a8c-src-lib="module:login">Webbplatsadress</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Skriv in adressen för den WordPress-webbplats du vill ansluta.</string>
     <string name="login_already_logged_in_wpcom">Redan inloggad på WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Fortsätt</string>
     <string name="connect_more">Anslut ytterligare en webbplats</string>
-    <string name="enter_wpcom_password" a8c-src-lib="module:login">Skriv in ditt lösenord för WordPress.com.</string>
-    <string name="login_magic_link_email_requesting" a8c-src-lib="module:login">Begär e-postadress för inloggning</string>
-    <string name="password_incorrect" a8c-src-lib="module:login">Det verkar som om ditt lösenord inte stämmer. Dubbelkolla dina uppgifer och försök igen.</string>
-    <string name="requesting_otp" a8c-src-lib="module:login">Begär en verifieringskod via SMS.</string>
-    <string name="login_text_otp" a8c-src-lib="module:login">Skicka mig en kod via SMS istället</string>
-    <string name="enter_verification_code" a8c-src-lib="module:login">Nästan där! Ange verifieringskoden för WordPress.com från din autentiseringsapp.</string>
     <string name="next">Nästa</string>
-    <string name="enter_email_wordpress_com" a8c-src-lib="module:login">Logga in på WordPress.com med hjälp av en e-postadress för att hantera alla dina WordPress-webbplatser.</string>
     <string name="me_profile_photo">Profilfoto</string>
     <string name="error_media_parse_error">Oväntat svar från servern</string>
     <string name="upload_finished_toast">Det går inte att stoppa uppladdningen eftersom den redan är klar</string>
@@ -3337,8 +3227,6 @@ Language: sv_SE
     <string name="error_unknown_post_type">Okänt inläggsformat</string>
     <string name="submit_for_review">Skicka</string>
     <string name="title_subscriber">Prenumerant</string>
-    <string name="duplicate_site_detected" a8c-src-lib="module:login">En dublett-webbplats har hittats.</string>
-    <string name="cannot_add_duplicate_site" a8c-src-lib="module:login">Det går inte att lägga till denna webbplats. Den finns redan i appen.</string>
     <string name="already_logged_in_wpcom">Du är redan inloggad till ditt konto hos WordPress.com. Du kan inte lägga till någon webbplats från WordPress.com som är kopplad till ett annat konto.</string>
     <string name="error_media_load">Det går inte att läsa in media</string>
     <string name="error_media_refresh_no_connection">Anslutning krävs för uppdatering av biblioteket</string>
@@ -3349,8 +3237,6 @@ Language: sv_SE
     <string name="media_generic_error">Ett mediefel har inträffat</string>
     <string name="retry">Försök igen</string>
     <string name="confirm">Bekräfta</string>
-    <string name="xmlrpc_endpoint_forbidden_error" a8c-src-lib="module:login">Det gick inte att ansluta. Vi får fel 403 (förbjudet) när vi anropar XMLRPC-ändpunkten för din webbplats. Appen behöver detta för att kunna kommunicera med din webbplats. Kontakta webbhotellet för att lösa detta problem.</string>
-    <string name="xmlrpc_post_blocked_error" a8c-src-lib="module:login">Det gick inte att ansluta. Din webbserver blockerar POST-anrop, som appen behöver för att kommunicera med din webbplats. Kontakta ditt webbhotell för att lösa detta problem.</string>
     <string name="pending_draft_one_generic">Dröj inte längre, \'%1$s\' vill bli publicerad!</string>
     <string name="pending_draft_one_month">Dröj inte längre, \'%1$s\' vill bli publicerad!</string>
     <string name="pending_draft_one_week_2">\'%1$s\' är fortfarande ett utkast. Kom ihåg att publicera!</string>
@@ -3433,8 +3319,6 @@ Language: sv_SE
     <string name="error_refreshing_gravatar">Det gick inte att ladda om din Gravatar</string>
     <string name="error_locating_image">Det gick inte att hitta den beskurna bilden</string>
     <string name="error_cropping_image">Det gick inte att beskära bilden</string>
-    <string name="checking_email" a8c-src-lib="module:login">Kontrollerar e-post</string>
-    <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Inte tillgänglig för närvarande. Ange ditt lösenord</string>
     <string name="logging_in">Loggar in</string>
     <string name="web_address_dialog_hint">Visas offentligt när du kommenterar.</string>
     <string name="export_your_content_message">Dina inlägg, sidor och inställningar kommer att skickas via e-post till %s.</string>
@@ -3467,7 +3351,6 @@ Language: sv_SE
     <string name="comments_empty_list_filtered_pending">Inga väntande kommentarer</string>
     <string name="comments_empty_list_filtered_approved">Inga godkända kommentarer</string>
     <string name="button_skip">Hoppa över</string>
-    <string name="xmlrpc_missing_method_error" a8c-src-lib="module:login">Kunde inte ansluta. Obligatoriska XML-RPC-metoder saknas på servern.</string>
     <string name="alignment_center">Centrerat</string>
     <string name="post_format_video">Videoklipp</string>
     <string name="post_format_status">Status</string>
@@ -3527,7 +3410,6 @@ Language: sv_SE
     <string name="about_the_app">Om appen</string>
     <string name="error_post_account_settings">Kunde inte spara dina kontoinställningar</string>
     <string name="error_fetch_account_settings">Kunde inte hämta dina kontoinställningar</string>
-    <string name="error_fetch_my_profile" a8c-src-lib="module:login">Kunde inte hämta din profil</string>
     <string name="site_settings_unknown_language_code_error">Språkkoden känns inte igen</string>
     <string name="site_settings_threading_dialog_description">Tillåt att kommentarer staplas i trådar.</string>
     <string name="site_settings_threading_dialog_header">Trådar upp till</string>
@@ -3716,9 +3598,6 @@ Language: sv_SE
     <string name="my_site_btn_blog_posts">Inlägg</string>
     <string name="reader_label_new_posts_subtitle">Knacka för att visa dem</string>
     <string name="select_all">Välj alla</string>
-    <string name="auth_required" a8c-src-lib="module:login">Logga in igen för att fortsätta.</string>
-    <string name="invalid_verification_code" a8c-src-lib="module:login">Ogiltig verifieringskod</string>
-    <string name="verification_code" a8c-src-lib="module:login">Verifieringskod</string>
     <string name="language">Språk</string>
     <string name="reader_empty_posts_request_failed">Kunde inte hämta inlägg</string>
     <string name="error_notification_open">Kunde inte öppna aviseringen</string>
@@ -3782,7 +3661,6 @@ Language: sv_SE
     <string name="ssl_certificate_error">Ogiltigt SSL-ceritfikat</string>
     <string name="help">Hjälp</string>
     <string name="username_or_password_incorrect">Användarnamnet eller lösenordet som angavs är felaktigt</string>
-    <string name="email_invalid" a8c-src-lib="module:login">Ange en giltig e-postadress</string>
     <string name="invalid_email_message">Din epostadress är ogilltig</string>
     <string name="error_downloading_image">Fel vid nedladdning av bild</string>
     <string name="error_load_comment">Kunde inte ladda kommentaren</string>
@@ -3812,7 +3690,6 @@ Language: sv_SE
     <string name="new_media">Ny media</string>
     <string name="new_post">Nytt inlägg</string>
     <string name="notifications_empty_all">Inga aviseringar … ännu!</string>
-    <string name="http_authorization_required" a8c-src-lib="module:login">Autentisering krävs</string>
     <string name="invalid_site_url_message">Kontrollera att webbplatsens URL är giltig</string>
     <string name="file_error_create">Kunde inte skapa temporär mediafil för uppladdning. Se till att det finns tillräckligt med utrymme på din enhet.</string>
     <string name="category_name">Kategorinamn</string>
@@ -3857,7 +3734,6 @@ Language: sv_SE
     <string name="reader_likes_you_and_one">Du och en annan gillar detta</string>
     <string name="pick_video">Välj video</string>
     <string name="pick_photo">Välj bild</string>
-    <string name="sign_up_label" a8c-src-lib="module:login">Registrera</string>
     <string name="reader_toast_err_url_intent">Kunde inte öppna %s</string>
     <string name="reader_toast_err_view_image">Kunde inte visa bild</string>
     <string name="reader_toast_err_share_intent">Kunde inte dela</string>
@@ -3900,8 +3776,6 @@ Language: sv_SE
     <string name="note_reply_successful">Svar publicerat</string>
     <string name="sign_in">Logga in</string>
     <string name="loading">Laddar in …</string>
-    <string name="httppassword" a8c-src-lib="module:login">HTTP-lösenord</string>
-    <string name="httpuser" a8c-src-lib="module:login">HTTP-användarnamn</string>
     <string name="error_media_upload">Ett fel uppstod vid uppladdning av media</string>
     <string name="incorrect_credentials">Felaktigt användarnamn eller lösenord.</string>
     <string name="log_in" a8c-src-lib="module:login">Logga in</string>
