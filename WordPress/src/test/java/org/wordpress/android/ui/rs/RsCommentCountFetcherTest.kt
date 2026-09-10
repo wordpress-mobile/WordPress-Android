@@ -111,10 +111,24 @@ class RsCommentCountFetcherTest {
     }
 
     @Test
-    fun `a failed batch falls back and reports nothing for posts it cannot count`() = runTest {
-        stubRequests(failure(), failure(), failure())
+    fun `a failed batch gives up instead of fanning out into per-post requests`() = runTest {
+        // A request that could not reach the site would only fail again per post, holding the
+        // caller up for one timeout each to arrive at the same empty answer.
+        stubRequests(failure())
 
         assertThat(fetcher.fetchCommentCounts(site, listOf(5L, 7L))).isEmpty()
+        assertThat(recordedParams).hasSize(1)
+    }
+
+    @Test
+    fun `a per-post request that fails simply omits that post`() = runTest {
+        stubRequests(
+            response(total = 500, postIds = listOf(5L)),
+            failure(),
+            response(total = 20, postIds = emptyList())
+        )
+
+        assertThat(fetcher.fetchCommentCounts(site, listOf(5L, 7L))).isEqualTo(mapOf(7L to 20L))
     }
 
     private fun stubRequests(vararg results: WpRequestResult<Any>) {

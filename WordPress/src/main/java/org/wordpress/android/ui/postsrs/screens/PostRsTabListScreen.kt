@@ -35,6 +35,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeoutOrNull
@@ -135,6 +137,7 @@ fun PostRsTabListScreen(
     }
 }
 
+@OptIn(FlowPreview::class)
 @Composable
 private fun PostListContent(
     posts: List<PostRsUiModel>,
@@ -189,6 +192,9 @@ private fun PostListContent(
         snapshotFlow {
             listState.layoutInfo.visibleItemsInfo.mapNotNull { it.key as? Long }
         }
+            // A fling changes the visible set on nearly every frame. Without settling first, each
+            // of those emissions would start fetching for rows already gone from the screen.
+            .debounce(VISIBLE_ROWS_DEBOUNCE_MS)
             .distinctUntilChanged()
             .collect { currentOnRowsVisible(it) }
     }
@@ -475,6 +481,9 @@ private fun PostRsOverflowMenu(
 }
 
 private val MENU_ICON_SIZE = 20.dp
+
+/** How long the visible-row set must settle before metrics are fetched for it. */
+private const val VISIBLE_ROWS_DEBOUNCE_MS = 300L
 
 private const val LOAD_MORE_THRESHOLD = 5
 private const val SHIMMER_ITEM_COUNT = 8

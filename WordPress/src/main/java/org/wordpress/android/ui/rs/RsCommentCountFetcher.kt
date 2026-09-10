@@ -32,18 +32,30 @@ class RsCommentCountFetcher @Inject constructor(
      */
     suspend fun fetchCommentCounts(site: SiteModel, postIds: List<Long>): Map<Long, Long> {
         if (postIds.isEmpty()) return emptyMap()
-        return fetchAsBatch(site, postIds) ?: fetchOneByOne(site, postIds)
+        return when (val outcome = fetchAsBatch(site, postIds)) {
+            is BatchOutcome.Counted -> outcome.counts
+            // Only worth the per-post fan-out when the batch actually reached the site and simply
+            // could not fit. A failed request would just fail N more times, holding its callers up
+            // for N timeouts to end up in the same place.
+            BatchOutcome.Incomplete -> fetchOneByOne(site, postIds)
+            BatchOutcome.Failed -> emptyMap()
+        }
     }
 
-    /**
-     * One request covering every post, counted client-side.
-     *
-     * Returns null when the batch cannot be counted this way - either the request failed, or the
-     * posts between them have more comments than a single page holds, which would silently
-     * undercount the busiest of them.
-     */
+    /** What a batched attempt produced, and so whether falling back is worth the requests. */
+    private sealed interface BatchOutcome {
+        data class Counted(val counts: Map<Long, Long>) : BatchOutcome
+
+        /** The site answered, but with more comments than one page holds. */
+        data object Incomplete : BatchOutcome
+
+        /** The request did not reach the site, or it errored. */
+        data object Failed : BatchOutcome
+    }
+
+    /** One request covering every post, counted client-side. */
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun fetchAsBatch(site: SiteModel, postIds: List<Long>): Map<Long, Long>? {
+    private suspend fun fetchAsBatch(site: SiteModel, postIds: List<Long>): BatchOutcome {
         return try {
             val client = wpApiClientProvider.getWpApiClient(site)
             val result = client.request { api ->
@@ -55,21 +67,21 @@ class RsCommentCountFetcher @Inject constructor(
                     )
                 )
             }
-            (result as? WpRequestResult.Success)?.let { success ->
-                val comments = success.response.data
-                val total = success.response.headerMap.wpTotal()?.toInt()
-                // More comments exist than came back, so counting what did would undercount.
-                if (total != null && total > comments.size) {
-                    null
-                } else {
-                    tally(postIds, comments.mapNotNull { it.post })
-                }
+            val success = result as? WpRequestResult.Success
+                ?: return BatchOutcome.Failed
+            val comments = success.response.data
+            val total = success.response.headerMap.wpTotal()?.toInt()
+            // More comments exist than came back, so counting what did would undercount.
+            if (total != null && total > comments.size) {
+                BatchOutcome.Incomplete
+            } else {
+                BatchOutcome.Counted(tally(postIds, comments.mapNotNull { it.post }))
             }
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
             AppLog.e(AppLog.T.COMMENTS, "Batched comment count failed", e)
-            null
+            BatchOutcome.Failed
         }
     }
 

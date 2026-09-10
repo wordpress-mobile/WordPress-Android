@@ -113,6 +113,15 @@ class PostRsListViewModel @Inject constructor(
     private var visiblePostIds = emptySet<Long>()
 
     /**
+     * Caps concurrent view-count requests across the whole screen.
+     *
+     * Shared rather than created per call: [onRowsVisible] fires on every visible-set change, so a
+     * per-call semaphore would cap each emission separately and a fling could still put a request
+     * in flight for every row it passed.
+     */
+    private val viewCountGate = Semaphore(MAX_CONCURRENT_VIEW_FETCHES)
+
+    /**
      * Row metrics keyed by remote post id, so scrolling back to a row does not refetch it and a
      * cache reload does not blank the numbers out. Only touched from the main dispatcher.
      *
@@ -910,6 +919,11 @@ class PostRsListViewModel @Inject constructor(
                 // on the collection observers, which aren't guaranteed to fire for a refresh.
                 loadItemsForTab(tab)
                 updateTabUiState(tab) { copy(isLoading = false, isRefreshing = false) }
+                // Clearing the cache above puts those rows back into the pending state, and the
+                // list only asks for metrics when its visible rows change - which a refresh in
+                // place does not do. Without this the skeletons would spin with nothing to
+                // resolve them.
+                retryMetricsForVisibleRows(tab)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -1034,6 +1048,7 @@ class PostRsListViewModel @Inject constructor(
                     areMetricsPending = expectsMetrics(tab) &&
                         !isSearch &&
                         isAnyMetricOutstanding(model.remotePostId)
+
                 )
             }
             updateTabUiState(tab) {
@@ -1131,23 +1146,18 @@ class PostRsListViewModel @Inject constructor(
     }
 
     /**
-     * Fetches all-time views and comment counts for the rows currently on screen.
-     *
-     * The stats API has no batched "metrics for these posts" call - `fetchPostViews` answers for a
-     * single post - so this is driven by scroll position rather than by the page load, and capped
-     * by a semaphore. Each new visible set cancels the previous batch, so flinging past a hundred
-     * rows does not queue a hundred requests; whatever was already in flight finishes and lands in
-     * the cache.
-     *
-     * Published posts only: an unpublished post has no view history to report.
-     */
-    /**
      * Whether rows on [tab] should expect metrics at all, and so whether to show a skeleton.
      *
      * Comment counts work on every site, so any published list expects something; view counts are
      * an extra that only WordPress.com-connected sites add on top.
      */
     private fun expectsMetrics(tab: PostRsListTab) = tab == PostRsListTab.PUBLISHED
+
+    /**
+     * Search results mix statuses into one list and metrics are only fetched for published posts,
+     * so anything shown while searching would wait on a fetch that never comes.
+     */
+    private val isSearching: Boolean get() = _searchQuery.value.isNotBlank()
 
     /** Whether either metric is still expected for [postId] but has not arrived. */
     private fun isAnyMetricOutstanding(postId: Long) =
@@ -1158,15 +1168,17 @@ class PostRsListViewModel @Inject constructor(
      * Fetches metrics for the rows currently on screen.
      *
      * Driven by scroll position rather than by the page load because neither source is free: view
-     * counts are one request per post, and comment counts are one per visible batch. Each new
-     * visible set cancels the previous batch, so flinging past a hundred rows does not queue a
-     * hundred requests; whatever was already in flight finishes and lands in the cache.
+     * counts are one request per post, and comment counts are one per visible batch. Volume is held
+     * down by debouncing on the caller's side, a single [viewCountGate] shared across all calls,
+     * and re-checking [visiblePostIds] once a permit is granted - not by cancelling earlier
+     * batches, which would strand rows on their skeletons.
      *
-     * Published posts only - a draft has neither a view history nor comments.
+     * Published posts only - a draft has neither a view history nor comments. Skipped entirely
+     * while searching, since results there mix statuses and a draft has nothing to report.
      */
     @MainThread
     fun onRowsVisible(tab: PostRsListTab, postIds: List<Long>) {
-        if (!expectsMetrics(tab)) return
+        if (!expectsMetrics(tab) || isSearching) return
         visiblePostIds = postIds.toSet()
         fetchCommentCounts(tab, postIds)
         fetchViewCounts(tab, postIds)
@@ -1226,10 +1238,9 @@ class PostRsListViewModel @Inject constructor(
 
         track(viewModelScope.launch {
             statsDataSource.init(accessToken)
-            val gate = Semaphore(MAX_CONCURRENT_VIEW_FETCHES)
             wanted.forEach { postId ->
                 launch {
-                    gate.withPermit {
+                    viewCountGate.withPermit {
                         // Re-checked after waiting for a permit rather than before queuing: by the
                         // time a slot frees up the user may have scrolled well past this row, and
                         // fetching it would spend a request on something off screen.
@@ -1272,6 +1283,16 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Re-requests metrics for the rows already on screen, for when something other than scrolling
+     * put them back into the pending state.
+     */
+    @MainThread
+    private fun retryMetricsForVisibleRows(tab: PostRsListTab) {
+        if (visiblePostIds.isEmpty()) return
+        onRowsVisible(tab, visiblePostIds.toList())
+    }
+
     /** Pushes whatever the caches now hold for [postIds] onto the tab's rows. */
     @MainThread
     private fun applyMetrics(tab: PostRsListTab, postIds: List<Long>) {
@@ -1283,7 +1304,10 @@ class PostRsListViewModel @Inject constructor(
                         post.copy(
                             viewCount = viewCountCache[post.remotePostId],
                             commentCount = commentCountCache[post.remotePostId],
-                            areMetricsPending = isAnyMetricOutstanding(post.remotePostId)
+                            // Mirrors the guard in loadItemsForTab: without it a late-landing
+                            // fetch could raise a skeleton over a search result.
+                            areMetricsPending = !isSearching &&
+                                isAnyMetricOutstanding(post.remotePostId)
                         )
                     } else {
                         post
