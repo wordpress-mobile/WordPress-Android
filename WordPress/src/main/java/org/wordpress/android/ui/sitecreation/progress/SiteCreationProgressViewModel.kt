@@ -12,6 +12,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails
+import org.wordpress.android.ui.domains.usecases.CreateCartResult
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Created
@@ -89,7 +90,6 @@ class SiteCreationProgressViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         loadingAnimationJob?.cancel()
-        createCartUseCase.clear()
     }
 
     fun start(siteCreationState: SiteCreationState) {
@@ -205,7 +205,7 @@ class SiteCreationProgressViewModel @Inject constructor(
     private fun createCart() = launch {
         AppLog.d(T.SITE_CREATION, "Creating cart: $domain")
 
-        val event = createCartUseCase.execute(
+        val result = createCartUseCase.execute(
             site,
             domain.productId,
             domain.domainName,
@@ -214,12 +214,15 @@ class SiteCreationProgressViewModel @Inject constructor(
             planProductId = siteCreationState.plan?.productId
         )
 
-        if (event.isError) {
-            AppLog.e(T.SITE_CREATION, "Failed cart creation: ${event.error.message}")
-            updateUiStateAsync(CartError)
-        } else {
-            AppLog.d(T.SITE_CREATION, "Successful cart creation: ${event.cartDetails}")
-            _onCartCreated.postValue(CheckoutDetails(site, domain.domainName, showCloseButton = true))
+        when (result) {
+            is CreateCartResult.Error -> {
+                AppLog.e(T.SITE_CREATION, "Failed cart creation")
+                updateUiStateAsync(CartError)
+            }
+            is CreateCartResult.Success -> {
+                AppLog.d(T.SITE_CREATION, "Successful cart creation")
+                _onCartCreated.postValue(CheckoutDetails(site, domain.domainName, showCloseButton = true))
+            }
         }
     }
 

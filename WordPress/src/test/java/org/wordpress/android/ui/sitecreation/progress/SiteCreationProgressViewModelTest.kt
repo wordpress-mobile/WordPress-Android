@@ -27,8 +27,8 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.TransactionsStore.OnShoppingCartCreated
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails
+import org.wordpress.android.ui.domains.usecases.CreateCartResult
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.ui.sitecreation.CART_ERROR
 import org.wordpress.android.ui.sitecreation.CART_SUCCESS
@@ -291,7 +291,7 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
     }
 
     // region Helpers
-    private fun testWith(response: OnShoppingCartCreated, block: suspend CoroutineScope.() -> Unit) = test {
+    private fun testWith(response: CreateCartResult, block: suspend CoroutineScope.() -> Unit) = test {
         whenever(
             createCartUseCase.execute(
                 any(),
