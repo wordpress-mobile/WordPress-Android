@@ -1,5 +1,9 @@
 package org.wordpress.android.ui.postsrs.screens
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -441,16 +445,20 @@ private fun RedesignedRow(
         }
     }
 
-    if (entry.isHero) {
-        ContentListHeroRow(state = state, onClick = onClick, modifier = modifier, menu = menu)
-    } else {
-        ContentListRow(
-            state = state,
-            onClick = onClick,
-            modifier = modifier,
-            density = density,
-            menu = menu
-        )
+    // The two shapes are different layouts, not one layout resized, so the swap is crossfaded
+    // rather than left to snap. Only the lead row ever takes this branch; the rest change size
+    // only, which the card animates itself.
+    AnimatedContent(
+        targetState = entry.isHero,
+        transitionSpec = { fadeIn() togetherWith fadeOut() },
+        modifier = modifier,
+        label = "content list row density"
+    ) { isHero ->
+        if (isHero) {
+            ContentListHeroRow(state = state, onClick = onClick, menu = menu)
+        } else {
+            ContentListRow(state = state, onClick = onClick, density = density, menu = menu)
+        }
     }
 }
 

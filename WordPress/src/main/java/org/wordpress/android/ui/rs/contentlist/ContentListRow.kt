@@ -2,6 +2,7 @@ package org.wordpress.android.ui.rs.contentlist
 
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -216,6 +217,10 @@ private fun ContentListCard(
     val cardModifier = modifier
         .fillMaxWidth()
         .padding(horizontal = LIST_HORIZONTAL_PADDING, vertical = CARD_VERTICAL_SPACING)
+        // Height changes on a density switch - the excerpt and metrics going away, the thumbnail
+        // shrinking - so the card grows and shrinks rather than snapping. Rows below it are moved
+        // by animateItem(), which the list already applies.
+        .animateContentSize()
 
     // The design leans on a hairline border rather than a shadow, so elevation stays flat.
     if (onClick == null) {
