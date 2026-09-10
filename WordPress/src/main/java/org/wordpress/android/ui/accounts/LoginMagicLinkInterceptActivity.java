@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
-import org.wordpress.android.ui.accounts.login.LoginAnalyticsListener;
+import org.wordpress.android.ui.accounts.login.LoginAnalyticsTracker;
 import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -28,7 +28,7 @@ public class LoginMagicLinkInterceptActivity extends BaseAppCompatActivity {
     private String mAction;
     private Uri mUri;
 
-    @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
+    @Inject protected LoginAnalyticsTracker mLoginAnalyticsTracker;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class LoginMagicLinkInterceptActivity extends BaseAppCompatActivity {
 
         if (hasMagicLinkLoginIntent()) {
             intent.putExtra(WPMainActivity.ARG_IS_MAGIC_LINK_LOGIN, true);
-            mLoginAnalyticsListener.trackLoginMagicLinkOpened();
+            mLoginAnalyticsTracker.trackLoginMagicLinkOpened();
         }
 
         if (isJetpackConnectFlow()) {

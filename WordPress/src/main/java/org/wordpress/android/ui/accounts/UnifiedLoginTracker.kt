@@ -87,10 +87,6 @@ class UnifiedLoginTracker
         }
     }
 
-    fun setSource(source: Source) {
-        currentSource = source
-    }
-
     fun setSource(value: String) {
         Source.values().find { it.value == value }?.let {
             currentSource = it
@@ -125,61 +121,23 @@ class UnifiedLoginTracker
 
     enum class Flow(val value: String) {
         PROLOGUE("prologue"),
-        WORDPRESS_COM("wordpress_com"),
         WORDPRESS_COM_WEB("wordpress_com_web"),
-        GOOGLE_LOGIN("google_login"),
-        SMART_LOCK_LOGIN("smart_lock_login"),
-        LOGIN_MAGIC_LINK("login_magic_link"),
-        LOGIN_PASSWORD("login_password"),
         LOGIN_SITE_ADDRESS("login_site_address"),
-        SIGNUP("signup"),
-        GOOGLE_SIGNUP("google_signup"),
         APPLICATION_PASSWORD("application_password")
     }
 
     enum class Step(val value: String) {
         PROLOGUE("prologue"),
         START("start"),
-        MAGIC_LINK_REQUESTED("magic_link_requested"),
-        EMAIL_OPENED("email_opened"),
-        USERNAME_PASSWORD("username_password"),
-        SUCCESS("success"),
         HELP("help"),
-        TWO_FACTOR_AUTHENTICATION("2fa"),
-        SHOW_EMAIL_HINTS("show_email_hints"),
-        PASSWORD_CHALLENGE("password_challenge"),
-        NOT_A_JETPACK_SITE("not_a_jetpack_site"),
-        NO_JETPACK_SITES("no_jetpack_sites"),
         WPCOM_WEB_START("wpcom_web_start")
     }
 
     enum class Click(val value: String) {
         SUBMIT("submit"),
-        CONTINUE("continue"),
-        DISMISS("dismiss"),
         CONTINUE_WITH_WORDPRESS_COM("continue_with_wordpress_com"),
         LOGIN_WITH_SITE_ADDRESS("login_with_site_address"),
-        LOGIN_WITH_GOOGLE("login_with_google"),
-        FORGOTTEN_PASSWORD("forgotten_password"),
-        TERMS_OF_SERVICE_CLICKED("terms_of_service_clicked"),
-        SIGNUP_WITH_EMAIL("signup_with_email"),
-        SIGNUP_WITH_GOOGLE("signup_with_google"),
-        OPEN_EMAIL_CLIENT("open_email_client"),
-        SHOW_HELP("show_help"),
-        SEND_CODE_WITH_TEXT("send_code_with_text"),
-        SUBMIT_2FA_CODE("submit_2fa_code"),
-        REQUEST_MAGIC_LINK("request_magic_link"),
-        LOGIN_WITH_PASSWORD("login_with_password"),
-        CREATE_NEW_SITE("create_new_site"),
-        ADD_SELF_HOSTED_SITE("add_self_hosted_site"),
-        CONNECT_SITE("connect_site"),
-        SELECT_AVATAR("select_avatar"),
-        EDIT_USERNAME("edit_username"),
-        HELP_FINDING_SITE_ADDRESS("help_finding_site_address"),
-        SELECT_EMAIL_FIELD("select_email_field"),
-        PICK_EMAIL_FROM_HINT("pick_email_from_hint"),
-        CREATE_ACCOUNT("create_account"),
-        CHOOSE_SITE("choose_site")
+        SHOW_HELP("show_help")
     }
 
     companion object {

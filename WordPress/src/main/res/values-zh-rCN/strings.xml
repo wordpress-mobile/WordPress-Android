@@ -481,7 +481,6 @@ Language: zh_CN
     <string name="experimental_block_editor_note">实验性区块编辑器将在今后的版本中成为默认设置，并且将无法禁用。</string>
     <string name="avatar_update_email_unverified">要更新您的头像，请先验证您的电子邮件地址。</string>
     <string name="feedback_form_note_link_wordpress">社区论坛。</string>
-    <string name="default_web_client_id" a8c-src-lib="module:login">占位符</string>
     <string name="personalization_screen_shortcuts_accessibility_label">切换 %s 快捷键</string>
     <string name="personalization_screen_card_accessibility_label">切换 %s 卡片</string>
     <string name="user_avatar_content_description">用户 %s 的头像</string>
@@ -750,9 +749,6 @@ Language: zh_CN
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">嵌套深度超过 %d 层级的区块在移动端编辑器中可能无法正常渲染。</string>
     <string name="domain_management_clear_search">清除搜索</string>
     <string name="media_encoder_quality_very_high">非常高</string>
-    <string name="notification_security_key_needed" a8c-src-lib="module:login">请提供您的安全密钥以继续。</string>
-    <string name="login_error_security_key" a8c-src-lib="module:login">安全密钥登录出现问题</string>
-    <string name="login_text_security_key" a8c-src-lib="module:login">使用安全密钥</string>
     <string name="new_domain_search_screen_error_title">无法检索域名</string>
     <string name="new_domain_search_screen_list_item_sale_price">第一年 %s</string>
     <string name="new_domain_search_screen_list_item_regular_price">%s/年</string>
@@ -1300,11 +1296,6 @@ Language: zh_CN
     <string name="notification_channel_weekly_roundup_title">每周综述</string>
     <string name="my_site_dashboard_tab_title">首页</string>
     <string name="adding_cat">添加分类</string>
-    <string name="login_select_email_client">您使用哪款电子邮件应用程序？</string>
-    <string name="login_error_xml_rpc_auth_error_communicating" a8c-src-lib="module:login">与站点通信时出现问题。 返回了 HTTP 错误代码 401。</string>
-    <string name="login_error_xml_rpc_cannot_read_site_auth_required" a8c-src-lib="module:login">XML-RPC 调用似乎已被该站点屏蔽（错误代码 401）。 如果尝试登录失败，可点击帮助图标查看常见问题解答。</string>
-    <string name="login_error_xml_rpc_cannot_read_site" a8c-src-lib="module:login">无法通过该 URL 读取 WordPress 站点。 点击帮助图标查看常见问题解答。</string>
-    <string name="login_error_xml_rpc_services_disabled" a8c-src-lib="module:login">本站点禁用 XML-RPC 服务。</string>
     <string name="my_site_menu_tab_title">菜单</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">您的搜索中包含 WordPress.com 域名不支持的字符。 允许使用以下字符：A–Z、a–z、0–9。</string>
     <string name="my_site_error_within_card_subtitle">请检查您网络连接并刷新页面。</string>
@@ -1547,11 +1538,6 @@ Language: zh_CN
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;输入您的服务器凭据&lt;/a&gt;以修复威胁。</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;输入您的服务器凭据&lt;/a&gt;以修复威胁。</string>
     <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">双击可添加链接。</string>
-    <string name="login_empty_view_try_another_account">使用其他账户尝试</string>
-    <string name="login_empty_view_see_instructions">请参阅说明</string>
-    <string name="login_no_jetpack_sites_error_message">如果您已经拥有一个站点，则需要安装免费的 Jetpack 插件并将其连接到您的 WordPress.com 账户。</string>
-    <string name="login_empty_view_avatar_content_description">您的个人资料照片</string>
-    <string name="login_not_a_jetpack_site">要将此应用用于 %1$s，您需要安装并启用 Jetpack 插件。</string>
     <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">宽度设置</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">链接 Rel</string>
     <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">列设置</string>
@@ -1587,7 +1573,6 @@ Language: zh_CN
     <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">更多</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">简短描述此链接以帮助使用读屏软件的用户。</string>
     <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">添加区块</string>
-    <string name="login_no_jetpack_sites">未找到Jetpack站点</string>
     <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">什么是alt文字？</string>
     <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">将%s转换为</string>
     <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">转换区块…</string>
@@ -1634,7 +1619,6 @@ Language: zh_CN
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">双击“操作表页”，将其打开，以编辑、替换或清除图片</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="new_site_creation_search_domain_input_hint">为您的站点输入名称</string>
-    <string name="magic_link_not_meaning_to_create_account" a8c-src-lib="module:login">不打算创建新账户？返回以重新输入您的电子邮箱地址。</string>
     <string name="invite_links_disable_dialog_message">禁用此邀请链接后，任何人都无法再使用它来加入您的团队。 是否确定？</string>
     <string name="invite_links_disable_dialog_title">禁用邀请链接</string>
     <string name="invite_links_bad_format_response">收到无效响应</string>
@@ -1896,8 +1880,6 @@ Language: zh_CN
     <string name="hpp_retry_error">请检查您的互联网连接，然后重试。</string>
     <string name="hpp_error_subtitle">当您恢复在线时，请点击重试。</string>
     <string name="hpp_error_title">离线时无法使用布局</string>
-    <string name="continue_site_credentials" a8c-src-lib="module:login">继续使用商店凭证</string>
-    <string name="login_find_your_connected_email" a8c-src-lib="module:login">找到您的关联电子邮件</string>
     <string name="reader_discover_no_posts_follow_subtitle">尝试关注更多标签以扩大搜索范围</string>
     <string name="reader_discover_no_posts_title">无近期文章</string>
     <string name="reader_discover_empty_title">欢迎！</string>
@@ -1938,8 +1920,6 @@ Language: zh_CN
     <string name="suggestion_no_connection">未连接互联网。\n建议不可用。</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s 已选择</string>
-    <string name="login_get_link_by_email" a8c-src-lib="module:login">通过电子邮件获取登录链接</string>
-    <string name="email_not_registered_wpcom" a8c-src-lib="module:login">找不到与此电子邮箱地址关联的 WordPress.com 账户。</string>
     <string name="permission_microphone">麦克风</string>
     <string name="comment_unable_to_show_error">无法显示此评论</string>
     <string name="media_browse_for_items">浏览商品</string>
@@ -1976,26 +1956,7 @@ Language: zh_CN
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">选择图像</string>
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">区块已删除</string>
     <string name="enter_your_site_address">输入您的现有站点地址</string>
-    <string name="signup_confirmation_title" a8c-src-lib="module:login">注册确认</string>
-    <string name="continue_with_google_terms_of_service_text" a8c-src-lib="module:login">如果您继续使用 Google，并且还没有 WordPress.com 账户，则需要创建一个账户，并同意我们的%1$s服务条款%2$s。</string>
-    <string name="continue_terms_of_service_text" a8c-src-lib="module:login">继续即表示您同意我们的%1$s服务条款%2$s。</string>
-    <string name="signup_confirmation_message" a8c-src-lib="module:login">我们将使用此电子邮箱地址为您创建新 WordPress.com 账户。</string>
-    <string name="signup_magic_link_message" a8c-src-lib="module:login">我们已通过电子邮件向您发送一个注册链接，供您创建新的 WordPress.com 账户。 请在此设备上查看电子邮件，并轻点您从 WordPress.com 收到的电子邮件中的链接。</string>
-    <string name="enter_account_info_for_site" a8c-src-lib="module:login">输入您的 %1$s 账户信息。</string>
-    <string name="login_or" a8c-src-lib="module:login">或</string>
-    <string name="continue_google_button_suffix" a8c-src-lib="module:login">继续使用 Google</string>
-    <string name="login_find_your_site_adress" a8c-src-lib="module:login">找到您的站点地址</string>
-    <string name="login_done">完成</string>
-    <string name="magic_link_not_seeing_email_message" a8c-src-lib="module:login">没有看到邮件？ 请检查您的垃圾邮件文件夹。</string>
-    <string name="login_magic_links_sent_label" a8c-src-lib="module:login">检查此设备上的电子邮件客户端并轻点您从 WordPress.com 收到的电子邮件中的链接。</string>
-    <string name="login_magic_links_label" a8c-src-lib="module:login">我们将通过电子邮件向您发送一个链接，无需密码即可登录。</string>
-    <string name="check_email" a8c-src-lib="module:login">查收电子邮件</string>
     <string name="get_started" a8c-src-lib="module:login">开始</string>
-    <string name="enter_email_to_continue_wordpress_com" a8c-src-lib="module:login">输入您的电子邮箱地址以登录或创建 WordPress.com 账户。</string>
-    <string name="or_type_your_password" a8c-src-lib="module:login">或者输入您的密码</string>
-    <string name="create_account" a8c-src-lib="module:login">创建账户</string>
-    <string name="send_link_by_email" a8c-src-lib="module:login">通过电子邮件发送链接</string>
-    <string name="reset_your_password" a8c-src-lib="module:login">重置密码</string>
     <string name="reader_error_request_failed_title">处理请求时出现问题。 请稍后重试。</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">将此文章放入回收站还将放弃本地更改，是否确定要继续？</string>
     <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s 区块选项</string>
@@ -2218,9 +2179,6 @@ Language: zh_CN
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">图库说明。%s</string>
     <string name="create_post_page_fab_tooltip">创建文章或页面</string>
     <string name="content_description_person_building_website">网站构建者</string>
-    <string name="post_signup_interstitial_not_right_now">现在不行</string>
-    <string name="post_signup_interstitial_subtitle">无论您想创建或分享什么，我们随时为您提供帮助。</string>
-    <string name="post_signup_interstitial_title">欢迎使用 WordPress</string>
     <string name="stock_media_picker_list_content_description">照片库</string>
     <string name="photo_picker_image_thumbnail_unselected">未选的图片</string>
     <string name="photo_picker_image_selected">，已选</string>
@@ -2234,12 +2192,6 @@ Language: zh_CN
     <string name="dialog_confirm_scheduled_post_sync_title">准备好同步了？</string>
     <string name="new_site_creation_unavailable_domain">此域不可用</string>
     <string name="negative_prefix">-%s</string>
-    <string name="login_discovery_error_generic" a8c-src-lib="module:login">我们无法访问您的站点。您需要联系您的主机来解决这个问题。</string>
-    <string name="login_discovery_error_ssl" a8c-src-lib="module:login">由于 &lt;b&gt;SSL 证书&lt;/b&gt;的问题，我们无法访问您的站点。您需要联系您的主机来解决这个问题。</string>
-    <string name="login_discovery_error_http_auth" a8c-src-lib="module:login">由于需要 &lt;b&gt;HTTP 验证&lt;/b&gt;，我们无法访问您的站点。您需要联系您的主机来解决这个问题。</string>
-    <string name="login_discovery_error_xmlrpc" a8c-src-lib="module:login">我们无法访问您的站点上的 &lt;b&gt;XMLRPC 文件&lt;/b&gt;。您需要联系您的主机来解决这个问题。</string>
-    <string name="login_site_credentials_magic_link_label" a8c-src-lib="module:login">马上就好！我们需要验证您的 Jetpack 连接的电子邮箱地址 &lt;b&gt;%1$s&lt;/b&gt;</string>
-    <string name="enter_credentials_for_site" a8c-src-lib="module:login">使用 %1$s 站点凭据登录</string>
     <string name="my_site_bottom_sheet_add_page">站点页面</string>
     <string name="reader_my_likes_display_name">喜欢</string>
     <string name="reader_discover_display_name">发现</string>
@@ -2396,8 +2348,6 @@ Language: zh_CN
     <string name="post_notification_off">关闭</string>
     <string name="post_settings_add_to_calendar">添加到日历</string>
     <string name="post_settings_notification">通知</string>
-    <string name="login_invalid_site_url" a8c-src-lib="module:login">请输入一个完整的网站地址，例如 example.com。</string>
-    <string name="enter_email_for_site" a8c-src-lib="module:login">登录 WordPress.com 来连接 %1$s</string>
     <string name="stats_post_views_label">浏览次数</string>
     <string name="stats_post_label">文章</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -2503,8 +2453,6 @@ Language: zh_CN
     <string name="posts_draft_empty">您没有任何草稿文章</string>
     <string name="posts_scheduled_empty">您没有任何预发布的文章</string>
     <string name="posts_published_empty">您尚未发布任何文章！</string>
-    <string name="notification_wpcom_username_needed" a8c-src-lib="module:login">请使用您的用户名和密码登录。</string>
-    <string name="error_user_username_instead_of_email" a8c-src-lib="module:login">请使用您的 WordPress.com 用户名（而不是电子邮箱地址）登录。</string>
     <string name="stats_insights_average_words">每篇文章的平均字数</string>
     <string name="stats_insights_total_words">总字数</string>
     <string name="stats_insights_average_likes">平均喜欢数/文章</string>
@@ -2514,7 +2462,6 @@ Language: zh_CN
     <string name="stats_insights_posts">文章</string>
     <string name="stats_insights_year">年</string>
     <string name="stats_insights_this_year_site_stats">今年</string>
-    <string name="no_site_error" a8c-src-lib="module:login">此地址下的站点不是 WordPress 站点。要让我们进行连接，此站点必须使用 WordPress。</string>
     <string name="plugin_check_domain_credit_error">无法查看可用的域信用</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">正在查看域信用</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">注册域</string>
@@ -2647,7 +2594,6 @@ Language: zh_CN
     <string name="history_detail_button_previous">上一个</string>
     <string name="history_detail_button_next">下一个</string>
     <string name="media_space_used">已使用 %1$s</string>
-    <string name="enter_wpcom_or_jetpack_site" a8c-src-lib="module:login">请输入 WordPress.com 或连接到 Jetpack 的自托管 WordPress 站点</string>
     <string name="history_loading_revision">正在加载修订内容</string>
     <string name="history_loaded_revision">修订内容已加载</string>
     <string name="history_load_dialog_button_positive">加载</string>
@@ -2676,8 +2622,6 @@ Language: zh_CN
     <string name="pages_scheduled">预发布</string>
     <string name="pages_drafts">草稿</string>
     <string name="pages_published">已发布</string>
-    <string name="login_error_sms_throttled" a8c-src-lib="module:login">尝试发送短信验证码的次数太多了 - 休息一下，在一分钟后再申请新的短信验证码。</string>
-    <string name="login_error_email_not_found_v2" a8c-src-lib="module:login">没有与此 Google 账户匹配的 WordPress.com 账户。</string>
     <string name="site_picker_remove_site_empty">没有与您的搜索匹配的站点</string>
     <string name="reader_no_followed_blogs_search_title">没有与您的搜索匹配的博客</string>
     <string name="page_parent_changed">已更改父页面</string>
@@ -2696,7 +2640,6 @@ Language: zh_CN
     <string name="content_description_more">更多</string>
     <string name="my_site_create_new_site_title">您没有任何站点</string>
     <string name="reader_empty_subscribed_tags_subtitle">在此处添加标签，以查找有关您喜爱的主题的文章</string>
-    <string name="login_to_to_connect_jetpack" a8c-src-lib="module:login">登录用于关联 Jetpack 的 WordPress.com 账户。</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack 常见问题解答</string>
     <string name="stats_jetpack_connection_setup_info">要在 WordPress 站点中使用统计功能，您需要安装 Jetpack 插件。</string>
@@ -2749,13 +2692,7 @@ Language: zh_CN
     <string name="reader_empty_search_title">未找到结果</string>
     <string name="comment_read_source_post">阅读源文章</string>
     <string name="sites">站点</string>
-    <string name="signup_magic_link_title" a8c-src-lib="module:login">免密登录链接已发送</string>
-    <string name="verification_2fa_screen_title" a8c-src-lib="module:login">代码验证</string>
-    <string name="selfhosted_site_login_title" a8c-src-lib="module:login">登录凭据</string>
-    <string name="magic_link_sent_login_title" a8c-src-lib="module:login">免密登录链接已发送</string>
-    <string name="magic_link_login_title" a8c-src-lib="module:login">使用免密登录链接登录</string>
     <string name="site_address_login_title" a8c-src-lib="module:login">使用站点地址登录</string>
-    <string name="email_address_login_title" a8c-src-lib="module:login">使用电子邮箱地址登录</string>
     <string name="reader_empty_saved_posts_description">轻按“%s”以将文章保存到您的列表中。</string>
     <string name="reader_empty_saved_posts_title">尚未保存任何文章！</string>
     <string name="reader_bookmark_snack_title">文章已保存</string>
@@ -2857,7 +2794,6 @@ Language: zh_CN
     <string name="invite_user_delete_desc">移除 %s</string>
     <string name="profile_picture">%s 的个人资料照片</string>
     <string name="comment_checkmark_desc">选中标记</string>
-    <string name="signup_with_google_progress" a8c-src-lib="module:login">使用 Google 注册…</string>
     <string name="jetpack_connection_failed_with_reason">Jetpack 连接中断：%s</string>
     <string name="jetpack_already_connected_toast">您已连接至 Jetpack</string>
     <string name="menu_visual_mode">可视化编辑器</string>
@@ -2883,7 +2819,6 @@ Language: zh_CN
     <string name="notif_detail_screen_title">通知详情：%s</string>
     <string name="edit_photo_screen_title">编辑照片</string>
     <string name="share_intent_screen_title">选择站点</string>
-    <string name="signup_epilogue_screen_title">新建账户</string>
     <string name="person_detail_screen_title">个人详情</string>
     <string name="media_settings_screen_title">文件详情</string>
     <string name="publicize_buttons_screen_title">分享按钮</string>
@@ -2934,7 +2869,6 @@ Language: zh_CN
     <string name="site_creation_domain_finish_button">创建站点</string>
     <string name="notification_site_creation_created">轻按以继续。</string>
     <string name="notification_site_creation_title_success">站点已创建！</string>
-    <string name="google_error_timeout" a8c-src-lib="module:login">Google 响应时间过长。您可能需要等到网络连接状况更好时才能继续。</string>
     <string name="username_changer_title">更改用户名</string>
     <string name="username_changer_hint">输入以获取更多建议</string>
     <string name="username_changer_header">您当前的用户名是 %1$s%2$s%3$s。除少数例外情况外，其他人将只能查看您的显示名称 %4$s%5$s%6$s。</string>
@@ -2944,18 +2878,6 @@ Language: zh_CN
     <string name="username_changer_dismiss_button_positive">放弃</string>
     <string name="username_changer_action">保存</string>
     <string name="content_description_add_avatar">添加头像</string>
-    <string name="signup_user_exists">电子邮件已注册 WordPress.com。\n继续登录。</string>
-    <string name="signup_updating_account">正在更新账户…</string>
-    <string name="signup_magic_link_progress" a8c-src-lib="module:login">正在发送邮件</string>
-    <string name="signup_magic_link_error_button_positive" a8c-src-lib="module:login">重试</string>
-    <string name="signup_magic_link_error_button_negative" a8c-src-lib="module:login">关闭</string>
-    <string name="signup_magic_link_error" a8c-src-lib="module:login">发送电子邮件时出现问题。您可以立即重试，或关闭并稍后重试。</string>
-    <string name="signup_epilogue_hint_username">用户名</string>
-    <string name="signup_epilogue_hint_password_detail">通常情况下，您可以随时使用刚刚用过的链接登录，但如果您愿意，也可以设置密码。</string>
-    <string name="signup_epilogue_hint_password">密码（可选）</string>
-    <string name="signup_epilogue_hint_display">显示名称</string>
-    <string name="signup_epilogue_error_button_positive">重试</string>
-    <string name="signup_epilogue_error_button_negative">恢复</string>
     <string name="signup_epilogue_error_generic">更新账户时出现问题。您可以重试或恢复更改以继续。</string>
     <string name="plugin_needs_update">需要更新</string>
     <string name="plugin_caption_search">搜索插件</string>
@@ -3043,18 +2965,6 @@ Language: zh_CN
     <string name="my_site_btn_plugins">插件</string>
     <string name="media_edit_link_hint">在新窗口/选项卡中打开链接</string>
     <string name="media_edit_link_text">链接到</string>
-    <string name="notification_login_failed" a8c-src-lib="module:login">出现错误。</string>
-    <string name="notification_2fa_needed" a8c-src-lib="module:login">请提供验证码以继续。</string>
-    <string name="notification_error_wrong_password" a8c-src-lib="module:login">请仔细检查密码以继续。</string>
-    <string name="notification_login_title_stopped" a8c-src-lib="module:login">登录被阻止</string>
-    <string name="notification_logging_in" a8c-src-lib="module:login">正在登录，请稍候。</string>
-    <string name="notification_login_title_in_progress" a8c-src-lib="module:login">正在登录…</string>
-    <string name="notification_logged_in" a8c-src-lib="module:login">轻按以继续。</string>
-    <string name="notification_login_title_success" a8c-src-lib="module:login">登录成功！</string>
-    <string name="login_error_generic_start" a8c-src-lib="module:login">无法启动 Google 登录。</string>
-    <string name="login_empty_password" a8c-src-lib="module:login">请输入密码</string>
-    <string name="login_text_otp_another" a8c-src-lib="module:login">再发一条短信验证码</string>
-    <string name="enter_verification_code_sms" a8c-src-lib="module:login">我们已经向尾号 %s 的手机号码发送短信。请输入短信中的验证码。</string>
     <string name="image_size">大小</string>
     <string name="uploading_subtitle_media_only_one">还剩一个文件</string>
     <string name="uploading_subtitle_media_only">还剩 %1$d / %2$d 个文件</string>
@@ -3071,15 +2981,10 @@ Language: zh_CN
     <string name="confirm_remove_media_image">是否将该图片从文章中移除?</string>
     <string name="media_edit_customize_card_caption">自定义</string>
     <string name="media_edit_file_details_card_caption">文件详细信息</string>
-    <string name="login_error_suffix" a8c-src-lib="module:login">\n换个账户试试?</string>
-    <string name="login_error_generic" a8c-src-lib="module:login">连接到 Google 账户时出现问题。</string>
     <string name="login_error_button">关闭</string>
-    <string name="enter_wpcom_password_google" a8c-src-lib="module:login">要继续使用此 Google 账户，请提供匹配的 WordPress.com 密码。此要求仅会出现一次。</string>
     <string name="error_generic_network">发生网络错误。请检查您的连接，然后再试一次。</string>
     <string name="post_settings_remove_featured_image">删除推荐图片</string>
     <string name="post_settings_choose_featured_image">选择特色图片</string>
-    <string name="login_log_in_for_share_intent" a8c-src-lib="module:login">登录 WordPress.com 以分享内容。</string>
-    <string name="enter_site_address_share_intent" a8c-src-lib="module:login">输入您想将内容分享到的 WordPress 站点的地址。</string>
     <string name="jetpack_disconnect_error_toast">断开站点连接时出错</string>
     <string name="jetpack_disconnect_success_toast">已断开站点连接</string>
     <string name="jetpack_disconnect_confirm">断开连接</string>
@@ -3160,28 +3065,13 @@ Language: zh_CN
     <string name="post_queued">已加入队列的文章</string>
     <string name="uploading_post">正在上传「%s」</string>
     <string name="connection_to_server_lost">与服务器的连接已中断</string>
-    <string name="login_email_client_not_found">未侦测到您的电子邮件客户端应用</string>
-    <string name="login_empty_2fa" a8c-src-lib="module:login">请输入验证码</string>
-    <string name="login_empty_username" a8c-src-lib="module:login">请输入用户名</string>
-    <string name="login_log_in_for_deeplink" a8c-src-lib="module:login">登录 WordPress.com 以访问此文章。</string>
-    <string name="login_error_while_adding_site" a8c-src-lib="module:login">添加站点时出错。错误代码：%s</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">正在检查站点地址</string>
-    <string name="login_site_address_more_help" a8c-src-lib="module:login">需要更多帮助？</string>
-    <string name="login_site_address_help_content" a8c-src-lib="module:login">在您使用 Chrome 访问自己的站点时，站点地址显示在屏幕顶部的地址栏中。</string>
-    <string name="login_site_address_help_title" a8c-src-lib="module:login">我的站点地址是什么？</string>
     <string name="login_site_address" a8c-src-lib="module:login">站点地址</string>
     <string name="enter_site_address" a8c-src-lib="module:login">输入您要连接的 WordPress 站点的地址。</string>
     <string name="login_already_logged_in_wpcom">已经登录 WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">继续</string>
     <string name="connect_more">连接其他站点</string>
-    <string name="enter_wpcom_password" a8c-src-lib="module:login">输入您的 WordPress.com 密码。</string>
-    <string name="login_magic_link_email_requesting" a8c-src-lib="module:login">正在请求登录电子邮件</string>
-    <string name="password_incorrect" a8c-src-lib="module:login">密码似乎不对。请仔细检查您的信息，然后再试一次。</string>
-    <string name="requesting_otp" a8c-src-lib="module:login">正在请求短信验证码。</string>
-    <string name="login_text_otp" a8c-src-lib="module:login">通过短信向我发送代码</string>
-    <string name="enter_verification_code" a8c-src-lib="module:login">马上就好！ 请输入身份验证器应用程序中的 WordPress.com 验证码。</string>
     <string name="next">下一步</string>
-    <string name="enter_email_wordpress_com" a8c-src-lib="module:login">使用电子邮件地址登录 WordPress.com 以便管理您的所有 WordPress 站点。</string>
     <string name="me_profile_photo">个人资料照片</string>
     <string name="error_media_parse_error">服务器响应异常</string>
     <string name="upload_finished_toast">无法停止上传，因为上传已经结束</string>
@@ -3330,8 +3220,6 @@ Language: zh_CN
     <string name="error_unknown_post_type">未知文章格式</string>
     <string name="submit_for_review">提交</string>
     <string name="title_subscriber">订阅者</string>
-    <string name="duplicate_site_detected" a8c-src-lib="module:login">检测到重复的站点。</string>
-    <string name="cannot_add_duplicate_site" a8c-src-lib="module:login">应用中已存在此站点，无法重复添加。</string>
     <string name="already_logged_in_wpcom">您已登录 WordPress.com 账户，不能添加被其他账户绑定的 WordPress.com 站点。</string>
     <string name="error_media_load">无法加载媒体</string>
     <string name="error_media_refresh_no_connection">需有网络连接才能刷新库</string>
@@ -3342,8 +3230,6 @@ Language: zh_CN
     <string name="media_generic_error">发生媒体错误</string>
     <string name="retry">重试</string>
     <string name="confirm">确认</string>
-    <string name="xmlrpc_endpoint_forbidden_error" a8c-src-lib="module:login">无法连接。尝试访问您的站点 XMLRPC 终端时\n收到 403 错误。与您的站点进行通信所需要的应用程序。请联系您的托管服务提供商\n以解决此问题。</string>
-    <string name="xmlrpc_post_blocked_error" a8c-src-lib="module:login">无法连接。您的主机阻止 POST 请求，app 需要\n该接口方可与您的站点通信。请联系您的托管服务提供商解决此问题。</string>
     <string name="pending_draft_one_generic">请不要离开！「%1$s」正在等待发布。</string>
     <string name="pending_draft_one_month">请不要离开！「%1$s」正在等待发布。</string>
     <string name="pending_draft_one_week_2">「%1$s」仍是草稿。记得发布哦！</string>
@@ -3426,8 +3312,6 @@ Language: zh_CN
     <string name="error_refreshing_gravatar">重新加载 Gravatar 时出错</string>
     <string name="error_locating_image">查找已裁剪的图片时出错</string>
     <string name="error_cropping_image">裁剪图片时出错</string>
-    <string name="checking_email" a8c-src-lib="module:login">检查电子邮件地址</string>
-    <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">目前不可用。请输入密码</string>
     <string name="logging_in">正在登录</string>
     <string name="web_address_dialog_hint">公开显示您的评论。</string>
     <string name="export_your_content_message">系统会将您的文章、页面和设置发送到以下电子邮件地址：%s。</string>
@@ -3460,7 +3344,6 @@ Language: zh_CN
     <string name="comments_empty_list_filtered_pending">无待审评论</string>
     <string name="comments_empty_list_filtered_approved">无已批准的评论</string>
     <string name="button_skip">跳过</string>
-    <string name="xmlrpc_missing_method_error" a8c-src-lib="module:login">无法连接。服务器上没有所需的 XML-RPC 方法。</string>
     <string name="alignment_center">居中</string>
     <string name="post_format_video">视频</string>
     <string name="post_format_status">状态</string>
@@ -3520,7 +3403,6 @@ Language: zh_CN
     <string name="about_the_app">关于该应用程序</string>
     <string name="error_post_account_settings">无法保存您的账户设置</string>
     <string name="error_fetch_account_settings">无法检索您的账户设置</string>
-    <string name="error_fetch_my_profile" a8c-src-lib="module:login">无法检索您的个人资料</string>
     <string name="site_settings_unknown_language_code_error">无法识别语言代码</string>
     <string name="site_settings_threading_dialog_description">允许在线程中嵌入评论。</string>
     <string name="site_settings_threading_dialog_header">线程级数上限</string>
@@ -3709,9 +3591,6 @@ Language: zh_CN
     <string name="my_site_btn_blog_posts">文章</string>
     <string name="reader_label_new_posts_subtitle">轻按以显示文章</string>
     <string name="select_all">选择全部</string>
-    <string name="auth_required" a8c-src-lib="module:login">再次登录以继续操作。</string>
-    <string name="invalid_verification_code" a8c-src-lib="module:login">验证码无效</string>
-    <string name="verification_code" a8c-src-lib="module:login">验证码</string>
     <string name="language">语言</string>
     <string name="reader_empty_posts_request_failed">无法检索文章</string>
     <string name="error_notification_open">无法打开通知</string>
@@ -3775,7 +3654,6 @@ Language: zh_CN
     <string name="ssl_certificate_error">无效的SSL证书</string>
     <string name="help">帮助</string>
     <string name="username_or_password_incorrect">您输入的用户名或密码不正确</string>
-    <string name="email_invalid" a8c-src-lib="module:login">请输入一个可用的电子邮件地址</string>
     <string name="invalid_email_message">您的电子邮箱地址无效</string>
     <string name="error_downloading_image">下载图片错误</string>
     <string name="error_load_comment">无法加载评论</string>
@@ -3805,7 +3683,6 @@ Language: zh_CN
     <string name="new_media">新媒体</string>
     <string name="new_post">新文章</string>
     <string name="notifications_empty_all">尚无通知…！</string>
-    <string name="http_authorization_required" a8c-src-lib="module:login">需要验证</string>
     <string name="invalid_site_url_message">请检查输入的站点 URL 是否有效</string>
     <string name="file_error_create">无法创建上传媒体所需的临时文件。请确保设备有足够的空闲空间.</string>
     <string name="category_name">分类名称</string>
@@ -3850,7 +3727,6 @@ Language: zh_CN
     <string name="reader_likes_you_and_one">您和另外1人喜欢了</string>
     <string name="pick_video">选择视频</string>
     <string name="pick_photo">选择图片</string>
-    <string name="sign_up_label" a8c-src-lib="module:login">注册</string>
     <string name="reader_toast_err_url_intent">无法打开 %s</string>
     <string name="reader_toast_err_view_image">无法查看图片</string>
     <string name="reader_toast_err_share_intent">无法分享</string>
@@ -3893,8 +3769,6 @@ Language: zh_CN
     <string name="note_reply_successful">回复已发表</string>
     <string name="sign_in">登录</string>
     <string name="loading">正在加载…</string>
-    <string name="httppassword" a8c-src-lib="module:login">HTTP 密码</string>
-    <string name="httpuser" a8c-src-lib="module:login">HTTP 用户名</string>
     <string name="error_media_upload">上传媒体时出错</string>
     <string name="incorrect_credentials">用户名或密码不正确。</string>
     <string name="log_in" a8c-src-lib="module:login">登录</string>

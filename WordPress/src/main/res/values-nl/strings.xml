@@ -485,7 +485,6 @@ Language: nl
     <string name="experimental_block_editor_note">De experimentele blok-editor wordt de standaard in een toekomstige release en de mogelijkheid om deze uit te schakelen wordt verwijderd.</string>
     <string name="avatar_update_email_unverified">Om je avatar te updaten, moet je eerst je e-mailadres verifiëren.</string>
     <string name="feedback_form_note_link_wordpress">community forums.</string>
-    <string name="default_web_client_id" a8c-src-lib="module:login">plaatshouder</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Toggle %s snelkoppeling</string>
     <string name="personalization_screen_card_accessibility_label">Toggle %s kaart</string>
     <string name="user_avatar_content_description">Avatar voor gebruiker %s</string>
@@ -755,9 +754,6 @@ Language: nl
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blokken die dieper dan %d niveaus genesteld zijn worden mogelijk niet goed weergegeven in de mobiele editor.</string>
     <string name="domain_management_clear_search">Zoekopdracht wissen</string>
     <string name="media_encoder_quality_very_high">Zeer hoog</string>
-    <string name="notification_security_key_needed" a8c-src-lib="module:login">Voer je beveiligingssleutel in om door te gaan.</string>
-    <string name="login_error_security_key" a8c-src-lib="module:login">Er waren wat problemen met de login beveiligingssleutel</string>
-    <string name="login_text_security_key" a8c-src-lib="module:login">Een beveiligingssleutel gebruiken</string>
     <string name="new_domain_search_screen_error_title">Kon domeinen niet ophalen</string>
     <string name="new_domain_search_screen_list_item_sale_price">%s voor het eerste jaar</string>
     <string name="new_domain_search_screen_list_item_regular_price">%s per jaar</string>
@@ -1305,11 +1301,6 @@ Language: nl
     <string name="notification_channel_weekly_roundup_title">Wekelijks overzicht</string>
     <string name="my_site_dashboard_tab_title">Home</string>
     <string name="adding_cat">Categorie wordt toegevoegd</string>
-    <string name="login_select_email_client">Welke e-mail app gebruik je?</string>
-    <string name="login_error_xml_rpc_auth_error_communicating" a8c-src-lib="module:login">Er is een probleem opgetreden bij de communicatie met de site. Er is een HTTP foutcode 401 teruggestuurd.</string>
-    <string name="login_error_xml_rpc_cannot_read_site_auth_required" a8c-src-lib="module:login">XML-RPC aanroepen lijken geblokkeerd op deze site (foutcode 401). Als login niet lukt, dan op het hulp icoon tikken om de FAQ te bekijken.</string>
-    <string name="login_error_xml_rpc_cannot_read_site" a8c-src-lib="module:login">Kan de WordPress site niet lezen op die URL. Tikken op het hulp icoon om de veelgestelde vragen te bekijken.</string>
-    <string name="login_error_xml_rpc_services_disabled" a8c-src-lib="module:login">XML-RPC diensten zijn uitgeschakeld op deze site.</string>
     <string name="my_site_menu_tab_title">Menu</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Je zoekopdracht bevat karakters die niet worden ondersteund in WordPress.com domeinen. De volgende tekens zijn toegestaan: A-Z, a-z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Controleer je internetverbinding en ververs de pagina.</string>
@@ -1552,11 +1543,6 @@ Language: nl
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Voer je server referenties in&lt;/a&gt; om bedreigingen op te lossen.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Voer je server referenties in&lt;/a&gt; om de dreiging op te lossen.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Twee keer tikken om een link toe te voegen.</string>
-    <string name="login_empty_view_try_another_account">Probeer het met een ander account</string>
-    <string name="login_empty_view_see_instructions">Bekijk de instructies</string>
-    <string name="login_no_jetpack_sites_error_message">Als je al een site hebt, zul je de gratis Jetpack plugin moeten installeren en deze verbinden met je WordPress.com account.</string>
-    <string name="login_empty_view_avatar_content_description">Je profielfoto</string>
-    <string name="login_not_a_jetpack_site">Om deze app voor %1$s te gebruiken, moet de Jetpack plugin zijn geïnstalleerd en verbonden met je WordPress.com account.</string>
     <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Breedte instellingen</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Linkrelatie</string>
     <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Kolominstellingen</string>
@@ -1592,7 +1578,6 @@ Language: nl
     <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Meer</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Beschrijf kort de link om de scherm reader gebruiker te helpen</string>
     <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blokken toevoegen</string>
-    <string name="login_no_jetpack_sites">Geen Jetpack sites gevonden</string>
     <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Wat is een alt-tekst?</string>
     <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Transformeer %s naar</string>
     <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Transformeer blok…</string>
@@ -1639,7 +1624,6 @@ Language: nl
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Twee keer tikken om het actieblad te openen om de afbeelding te bewerken, vervangen of wissen</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="new_site_creation_search_domain_input_hint">Typ een naam voor je site</string>
-    <string name="magic_link_not_meaning_to_create_account" a8c-src-lib="module:login">Wilde je geen nieuw account aanmaken? Ga terug om je e-mailadres opnieuw in te voeren.</string>
     <string name="invite_links_disable_dialog_message">Zodra deze uitnodigingslink is uitgeschakeld, kan niemand deze gebruiken om lid te worden van je team. Weet je het zeker?</string>
     <string name="invite_links_disable_dialog_title">Uitnodigingslink uitschakelen</string>
     <string name="invite_links_bad_format_response">Ongeldige reactie ontvangen</string>
@@ -1901,8 +1885,6 @@ Language: nl
     <string name="hpp_retry_error">Controleer je internetverbinding en probeer het opnieuw.</string>
     <string name="hpp_error_subtitle">Tikken op opnieuw proberen wanneer je weer online bent.</string>
     <string name="hpp_error_title">Lay-outs zijn niet beschikbaar indien offline</string>
-    <string name="continue_site_credentials" a8c-src-lib="module:login">Doorgaan met winkel referenties</string>
-    <string name="login_find_your_connected_email" a8c-src-lib="module:login">Vind je verbonden e-mail</string>
     <string name="reader_discover_no_posts_follow_subtitle">Probeer meer tags te volgen om de zoekopdracht te verbreden</string>
     <string name="reader_discover_no_posts_title">Geen recente berichten</string>
     <string name="reader_discover_empty_title">Welkom!</string>
@@ -1943,8 +1925,6 @@ Language: nl
     <string name="suggestion_no_connection">Geen internetverbinding.\nSuggesties zijn niet beschikbaar.</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s geselecteerd</string>
-    <string name="login_get_link_by_email" a8c-src-lib="module:login">Verkrijg een login link via e-mail</string>
-    <string name="email_not_registered_wpcom" a8c-src-lib="module:login">We kunnen geen WordPress.com account vinden dat verbonden is met dit e-mailadres.</string>
     <string name="permission_microphone">Microfoon</string>
     <string name="comment_unable_to_show_error">Niet in staat om deze reactie te tonen</string>
     <string name="media_browse_for_items">Blader voor items</string>
@@ -1981,26 +1961,7 @@ Language: nl
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Afbeelding kiezen</string>
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok verwijderd</string>
     <string name="enter_your_site_address">Voer je bestaande site adres in</string>
-    <string name="signup_confirmation_title" a8c-src-lib="module:login">Inschrijfbevestiging</string>
-    <string name="continue_with_google_terms_of_service_text" a8c-src-lib="module:login">Als je doorgaat met Google en nog geen WordPress.com account hebt, maakt je een account aan en ga je akkoord met onze %1$sDienstvoorwaarden%2$s.</string>
-    <string name="continue_terms_of_service_text" a8c-src-lib="module:login">Door verder te gaan, stem je in met onze %1$sDienstvoorwaarden%2$s.</string>
-    <string name="signup_confirmation_message" a8c-src-lib="module:login">We gebruiken dit e-mailadres om je nieuwe WordPress.com account aan te maken.</string>
-    <string name="signup_magic_link_message" a8c-src-lib="module:login">We hebben je een link gestuurd om je nieuwe WordPress.com account aan te maken. Controleer je e-mail op dit apparaat en tik op de link in de e-mail die je van WordPress.com ontvangt.</string>
-    <string name="enter_account_info_for_site" a8c-src-lib="module:login">Voer je accountgegevens in voor %1$s.</string>
-    <string name="login_or" a8c-src-lib="module:login">of</string>
-    <string name="continue_google_button_suffix" a8c-src-lib="module:login">Doorgaan met Google</string>
-    <string name="login_find_your_site_adress" a8c-src-lib="module:login">Vind het adres van je site</string>
-    <string name="login_done">Gedaan</string>
-    <string name="magic_link_not_seeing_email_message" a8c-src-lib="module:login">Zie je de e-mail niet? Controleer je spam-map of ongewenste e-mail.</string>
-    <string name="login_magic_links_sent_label" a8c-src-lib="module:login">Controleer je e-mail op dit apparaat en tik op de link in de e-mail die je van WordPress.com hebt ontvangen.</string>
-    <string name="login_magic_links_label" a8c-src-lib="module:login">We e-mailen je een link waarmee je direct kan inloggen, geen wachtwoord nodig.</string>
-    <string name="check_email" a8c-src-lib="module:login">E-mail controleren</string>
     <string name="get_started" a8c-src-lib="module:login">Ga aan de slag</string>
-    <string name="enter_email_to_continue_wordpress_com" a8c-src-lib="module:login">Voer je e-mailadres in om in te loggen of maak een WordPress.com account aan.</string>
-    <string name="or_type_your_password" a8c-src-lib="module:login">Of typ je wachtwoord</string>
-    <string name="create_account" a8c-src-lib="module:login">Account maken</string>
-    <string name="send_link_by_email" a8c-src-lib="module:login">Link per e-mail verzenden</string>
-    <string name="reset_your_password" a8c-src-lib="module:login">Je wachtwoord resetten</string>
     <string name="reader_error_request_failed_title">Er is een probleem opgetreden bij het verwerken van de aanvraag. Probeer het later opnieuw.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Dit bericht naar de prullenbak verplaatsen zal ook lokale wijzigingen negeren, weet je zeker dat je verder wil gaan?</string>
     <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s blok opties</string>
@@ -2223,9 +2184,6 @@ Language: nl
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bijschrift galerij. %s</string>
     <string name="create_post_page_fab_tooltip">Een bericht of pagina maken</string>
     <string name="content_description_person_building_website">Persoon die de site gebouwd heeft</string>
-    <string name="post_signup_interstitial_not_right_now">Niet nu</string>
-    <string name="post_signup_interstitial_subtitle">Wat je ook wil creëren of delen, wij helpen je erbij.</string>
-    <string name="post_signup_interstitial_title">Welkom bij WordPress</string>
     <string name="stock_media_picker_list_content_description">Fotobibliotheek</string>
     <string name="photo_picker_image_thumbnail_unselected">Afbeelding gedeselecteerd</string>
     <string name="photo_picker_image_selected">, geselecteerd</string>
@@ -2239,12 +2197,6 @@ Language: nl
     <string name="dialog_confirm_scheduled_post_sync_title">Klaar om te synchroniseren?</string>
     <string name="new_site_creation_unavailable_domain">Dit domein is niet beschikbaar</string>
     <string name="negative_prefix">-%s</string>
-    <string name="login_discovery_error_generic" a8c-src-lib="module:login">We konden geen toegang krijgen tot je site. Neem contact op met je host om dit probleem te verhelpen.</string>
-    <string name="login_discovery_error_ssl" a8c-src-lib="module:login">We konden geen toegang krijgen tot je site vanwege een probleem met het &lt;b&gt;SSL-certificaat&lt;/b&gt;. Neem contact op met je host om dit probleem te verhelpen.</string>
-    <string name="login_discovery_error_http_auth" a8c-src-lib="module:login">We konden geen toegang krijgen tot je site omdat hiervoor &lt;b&gt;HTTP authenticatie is vereist&lt;/b&gt;. Neem contact op met je host om dit probleem te verhelpen.</string>
-    <string name="login_discovery_error_xmlrpc" a8c-src-lib="module:login">We konden geen toegang krijgen tot het &lt;b&gt;XMLRPC-bestand&lt;/b&gt; op je site. Neem contact op met je host om dit probleem te verhelpen.</string>
-    <string name="login_site_credentials_magic_link_label" a8c-src-lib="module:login">Bijna klaar! We hoeven nu alleen nog het e-mailadres (&lt;b&gt;%1$s&lt;/b&gt;) te verifiëren dat aan je Jetpack-account is gekoppeld</string>
-    <string name="enter_credentials_for_site" a8c-src-lib="module:login">Login met je site referenties voor %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Sitepagina</string>
     <string name="reader_my_likes_display_name">Vind-ik-leuks</string>
     <string name="reader_discover_display_name">Ontdek</string>
@@ -2402,8 +2354,6 @@ Language: nl
     <string name="post_settings_add_to_calendar">Aan agenda toevoegen</string>
     <string name="post_settings_notification">Melding</string>
     <string name="post_settings_time_and_date">Datum &amp; tijd</string>
-    <string name="login_invalid_site_url" a8c-src-lib="module:login">Voer een compleet siteadres in, zoals example.com.</string>
-    <string name="enter_email_for_site" a8c-src-lib="module:login">Login met WordPress.com om verbinding te maken met %1$s</string>
     <string name="stats_post_views_label">Weergaven</string>
     <string name="stats_post_label">Bericht</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -2509,8 +2459,6 @@ Language: nl
     <string name="posts_draft_empty">Je hebt geen conceptberichten</string>
     <string name="posts_scheduled_empty">Je hebt geen geplande berichten</string>
     <string name="posts_published_empty">Je hebt nog geen berichten gepubliceerd - nog niet!</string>
-    <string name="notification_wpcom_username_needed" a8c-src-lib="module:login">Login met je gebruikersnaam en wachtwoord.</string>
-    <string name="error_user_username_instead_of_email" a8c-src-lib="module:login">Login met je WordPress.com gebruikersnaam in plaats van met je e-mailadres.</string>
     <string name="stats_insights_average_words">Gemiddeld aantal woorden per bericht</string>
     <string name="stats_insights_total_words">Totaalaantal woorden</string>
     <string name="stats_insights_average_likes">Gemiddeld aantal vind-ik-leuk per bericht</string>
@@ -2520,7 +2468,6 @@ Language: nl
     <string name="stats_insights_posts">Berichten</string>
     <string name="stats_insights_year">Jaar</string>
     <string name="stats_insights_this_year_site_stats">Dit jaar</string>
-    <string name="no_site_error" a8c-src-lib="module:login">De site op dit adres is geen WordPress site. Om er verbinding mee te kunnen maken, moet de site gebruikmaken van WordPress.</string>
     <string name="plugin_check_domain_credit_error">Fout bij het controleren van beschikbare domein credits</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Domein credits worden gecontroleerd</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Domein registreren</string>
@@ -2653,7 +2600,6 @@ Language: nl
     <string name="history_detail_button_previous">Vorige</string>
     <string name="history_detail_button_next">Volgende</string>
     <string name="media_space_used">%1$s gebruikt</string>
-    <string name="enter_wpcom_or_jetpack_site" a8c-src-lib="module:login">Voer een WordPress.com site of een aan Jetpack gekoppelde zelf-gehoste WordPress site in</string>
     <string name="history_loading_revision">Bezig met laden revisie</string>
     <string name="history_loaded_revision">Revisie geladen</string>
     <string name="history_load_dialog_button_positive">Laden</string>
@@ -2682,8 +2628,6 @@ Language: nl
     <string name="pages_scheduled">Gepland</string>
     <string name="pages_drafts">Concepten</string>
     <string name="pages_published">Gepubliceerd</string>
-    <string name="login_error_sms_throttled" a8c-src-lib="module:login">We hebben te vaak geprobeerd om een sms-verificatiecode te versturen. Even geduld en vraag er over een minuut nog een aan.</string>
-    <string name="login_error_email_not_found_v2" a8c-src-lib="module:login">Er is geen WordPress.com account dat overeenkomt met dit Google account.</string>
     <string name="site_picker_remove_site_empty">Er komen geen sites overeen met je zoekopdracht</string>
     <string name="reader_no_followed_blogs_search_title">Er komen geen blogs overeen met je zoekopdracht</string>
     <string name="page_parent_changed">Het hoofd van de pagina is gewijzigd</string>
@@ -2702,7 +2646,6 @@ Language: nl
     <string name="content_description_more">Meer</string>
     <string name="my_site_create_new_site_title">Je hebt geen sites</string>
     <string name="reader_empty_subscribed_tags_subtitle">Voeg hier tags toe om berichten te vinden over je favoriete onderwerpen</string>
-    <string name="login_to_to_connect_jetpack" a8c-src-lib="module:login">Login op het WordPress.com account dat je gebruikte om verbinding te maken met Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Veelgestelde vragen Jetpack</string>
     <string name="stats_jetpack_connection_setup_info">Installeer de Jetpack plugin om statistieken voor je WordPress site te gebruiken.</string>
@@ -2755,13 +2698,7 @@ Language: nl
     <string name="reader_empty_search_title">Geen resultaten gevonden</string>
     <string name="comment_read_source_post">Het oorspronkelijke bericht lezen</string>
     <string name="sites">Sites</string>
-    <string name="signup_magic_link_title" a8c-src-lib="module:login">Magische link verzonden</string>
-    <string name="verification_2fa_screen_title" a8c-src-lib="module:login">Code verificatie</string>
-    <string name="selfhosted_site_login_title" a8c-src-lib="module:login">Login referenties</string>
-    <string name="magic_link_sent_login_title" a8c-src-lib="module:login">Magische link verzonden</string>
-    <string name="magic_link_login_title" a8c-src-lib="module:login">Magische link login</string>
     <string name="site_address_login_title" a8c-src-lib="module:login">Site adres login</string>
-    <string name="email_address_login_title" a8c-src-lib="module:login">E-mailadres login</string>
     <string name="reader_empty_saved_posts_description">Tikken op %s om een bericht op te slaan in je lijst.</string>
     <string name="reader_empty_saved_posts_title">Nog geen berichten opgeslagen!</string>
     <string name="reader_bookmark_snack_title">Bericht opgeslagen</string>
@@ -2863,7 +2800,6 @@ Language: nl
     <string name="invite_user_delete_desc">%s verwijderen</string>
     <string name="profile_picture">profielfoto van %s\'</string>
     <string name="comment_checkmark_desc">vinkje</string>
-    <string name="signup_with_google_progress" a8c-src-lib="module:login">Inschrijven bij Google …</string>
     <string name="jetpack_connection_failed_with_reason">Verbinden met Jetpack mislukt: %s</string>
     <string name="jetpack_already_connected_toast">Je bent al verbonden met Jetpack</string>
     <string name="menu_visual_mode">Visuele editor</string>
@@ -2890,7 +2826,6 @@ Language: nl
     <string name="notif_detail_screen_title">Melding detail %s</string>
     <string name="edit_photo_screen_title">Foto bewerken</string>
     <string name="share_intent_screen_title">Site kiezen</string>
-    <string name="signup_epilogue_screen_title">Nieuw account</string>
     <string name="person_detail_screen_title">Persoons detail</string>
     <string name="media_settings_screen_title">Bestandsdetaills</string>
     <string name="publicize_buttons_screen_title">Deelknoppen</string>
@@ -2941,7 +2876,6 @@ Language: nl
     <string name="site_creation_domain_finish_button">Site maken</string>
     <string name="notification_site_creation_created">Tikken om door te gaan.</string>
     <string name="notification_site_creation_title_success">Site gemaakt!</string>
-    <string name="google_error_timeout" a8c-src-lib="module:login">Reactie van Google duurde te lang. Je moet mogelijk wachten tot je een sterkere internetverbinding hebt.</string>
     <string name="username_changer_title">Gebruikersnaam wijzigen</string>
     <string name="username_changer_hint">Typ om meer suggesties te krijgen</string>
     <string name="username_changer_header">Je huidige gebruikersnaam is %1$s%2$s%3$s. Met een paar uitzonderingen, zullen anderen alleen je display naam zien, %4$s%5$s%6$s.</string>
@@ -2951,18 +2885,6 @@ Language: nl
     <string name="username_changer_dismiss_button_positive">Negeren</string>
     <string name="username_changer_action">Opslaan</string>
     <string name="content_description_add_avatar">Avatar toevoegen</string>
-    <string name="signup_user_exists">E-mailadres bestaat al op WordPress.com\nDoorgaan met login.</string>
-    <string name="signup_updating_account">Account aan het updaten…</string>
-    <string name="signup_magic_link_progress" a8c-src-lib="module:login">E-mail aan het verzenden</string>
-    <string name="signup_magic_link_error_button_positive" a8c-src-lib="module:login">Opnieuw proberen</string>
-    <string name="signup_magic_link_error_button_negative" a8c-src-lib="module:login">Sluiten</string>
-    <string name="signup_magic_link_error" a8c-src-lib="module:login">Er was enige moeite met het verzenden van de e-mail. Je kunt nu opnieuw proberen of sluiten en later opnieuw proberen.</string>
-    <string name="signup_epilogue_hint_username">Gebruikersnaam</string>
-    <string name="signup_epilogue_hint_password_detail">Je kunt altijd inloggen met de link zoals je die net hebt gebruikt maar je kunt ook een wachtwoord instellen als dat je voorkeur heeft.</string>
-    <string name="signup_epilogue_hint_password">Wachtwoord (optioneel)</string>
-    <string name="signup_epilogue_hint_display">Weergavenaam</string>
-    <string name="signup_epilogue_error_button_positive">Opnieuw proberen</string>
-    <string name="signup_epilogue_error_button_negative">Terug draaien</string>
     <string name="signup_epilogue_error_generic">Er waren wat problemen bij het updaten van je account. Je kan het opnieuw proberen of je veranderingen terug draaien om door te gaan.</string>
     <string name="plugin_needs_update">Vereist updaten</string>
     <string name="plugin_caption_search">Plugins zoeken</string>
@@ -3050,18 +2972,6 @@ Language: nl
     <string name="my_site_btn_plugins">Plugins</string>
     <string name="media_edit_link_hint">Link in een nieuw venster/tab openen</string>
     <string name="media_edit_link_text">Link naar</string>
-    <string name="notification_login_failed" a8c-src-lib="module:login">Er is een fout opgetreden.</string>
-    <string name="notification_2fa_needed" a8c-src-lib="module:login">Voer een authenticatiecode in om door te gaan.</string>
-    <string name="notification_error_wrong_password" a8c-src-lib="module:login">Controleer je wachtwoord om door te gaan.</string>
-    <string name="notification_login_title_stopped" a8c-src-lib="module:login">Login gestopt</string>
-    <string name="notification_logging_in" a8c-src-lib="module:login">Wacht terwijl je inlogt.</string>
-    <string name="notification_login_title_in_progress" a8c-src-lib="module:login">Login bezig…</string>
-    <string name="notification_logged_in" a8c-src-lib="module:login">Tikken om door te gaan.</string>
-    <string name="notification_login_title_success" a8c-src-lib="module:login">Ingelogd!</string>
-    <string name="login_error_generic_start" a8c-src-lib="module:login">Login via Google kon niet worden gestart.</string>
-    <string name="login_empty_password" a8c-src-lib="module:login">Voer een wachtwoord in</string>
-    <string name="login_text_otp_another" a8c-src-lib="module:login">SMS mij een andere code in plaats daarvan</string>
-    <string name="enter_verification_code_sms" a8c-src-lib="module:login">We hebben een SMS verzonden naar het telefoonnummer dat eindigt op %s. Voer de verificatiecode in de SMS in.</string>
     <string name="image_size">Grootte</string>
     <string name="uploading_subtitle_media_only_one">1 bestand resterend</string>
     <string name="uploading_subtitle_media_only">%1$d van %2$d bestanden resterend</string>
@@ -3078,15 +2988,10 @@ Language: nl
     <string name="confirm_remove_media_image">Deze afbeelding verwijderen uit het bericht?</string>
     <string name="media_edit_customize_card_caption">Aanpassen</string>
     <string name="media_edit_file_details_card_caption">Bestand details</string>
-    <string name="login_error_suffix" a8c-src-lib="module:login">\nMisschien een ander account proberen?</string>
-    <string name="login_error_generic" a8c-src-lib="module:login">Er kon geen verbinding worden gemaakt met het Google-account.</string>
     <string name="login_error_button">Sluiten</string>
-    <string name="enter_wpcom_password_google" a8c-src-lib="module:login">Om door te gaan met dit Google account, geef het bijbehorende WordPress.com wachtwoord op. Dit zal slechts één keer worden gevraagd.</string>
     <string name="error_generic_network">Er is een netwerkfout opgetreden. Controleer je verbinding en probeer het nogmaals.</string>
     <string name="post_settings_remove_featured_image">Uitgelichte afbeelding verwijderen</string>
     <string name="post_settings_choose_featured_image">Uitgelichte afbeelding kiezen</string>
-    <string name="login_log_in_for_share_intent" a8c-src-lib="module:login">Login op WordPress.com om inhoud te delen.</string>
-    <string name="enter_site_address_share_intent" a8c-src-lib="module:login">Voer het adres van je WordPress site in waarmee je de inhoud wil delen.</string>
     <string name="jetpack_disconnect_error_toast">Fout bij loskoppelen van site</string>
     <string name="jetpack_disconnect_success_toast">Site losgekoppeld</string>
     <string name="jetpack_disconnect_confirm">Verbreken</string>
@@ -3167,28 +3072,13 @@ Language: nl
     <string name="post_queued">Bericht in wachtrij</string>
     <string name="uploading_post">\"%s\" wordt geüpload</string>
     <string name="connection_to_server_lost">De verbinding met de server is verbroken</string>
-    <string name="login_email_client_not_found">Kan je e-mailclient app niet detecteren</string>
-    <string name="login_empty_2fa" a8c-src-lib="module:login">Voer een verificatiecode in</string>
-    <string name="login_empty_username" a8c-src-lib="module:login">Voer een gebruikersnaam in</string>
-    <string name="login_log_in_for_deeplink" a8c-src-lib="module:login">Login op WordPress.com om dit bericht te bekijken.</string>
-    <string name="login_error_while_adding_site" a8c-src-lib="module:login">Fout bij het toevoegen van site. Foutcode: %s</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">Site adres wordt gecontroleerd</string>
-    <string name="login_site_address_more_help" a8c-src-lib="module:login">Meer hulp nodig?</string>
-    <string name="login_site_address_help_content" a8c-src-lib="module:login">Het adres van je site wordt aan de bovenzijde van je scherm weergegeven wanneer je je site in Chrome bekijkt.</string>
-    <string name="login_site_address_help_title" a8c-src-lib="module:login">Wat is mijn site adres?</string>
     <string name="login_site_address" a8c-src-lib="module:login">Site adres</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Voer het adres van de WordPress site in die je wil verbinden.</string>
     <string name="login_already_logged_in_wpcom">Al ingelogd op WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Doorgaan</string>
     <string name="connect_more">Een andere site koppelen</string>
-    <string name="enter_wpcom_password" a8c-src-lib="module:login">Voer je WordPress.com wachtwoord in.</string>
-    <string name="login_magic_link_email_requesting" a8c-src-lib="module:login">E-mail voor login aangevraagd</string>
-    <string name="password_incorrect" a8c-src-lib="module:login">Het lijkt erop alsof dit wachtwoord onjuist is. Controleer je gegevens en probeer het nogmaals.</string>
-    <string name="requesting_otp" a8c-src-lib="module:login">Verificatiecode via SMS aanvragen.</string>
-    <string name="login_text_otp" a8c-src-lib="module:login">SMS mij een code in plaats daarvan</string>
-    <string name="enter_verification_code" a8c-src-lib="module:login">Bijna klaar! Voer de verificatiecode voor WordPress.com uit je Authenticator-app in.</string>
     <string name="next">Volgende</string>
-    <string name="enter_email_wordpress_com" a8c-src-lib="module:login">Login bij WordPress.com met een e-mailadres om al je WordPress sites te beheren.</string>
     <string name="me_profile_photo">Profielfoto</string>
     <string name="error_media_parse_error">Onverwachte reactie van server</string>
     <string name="upload_finished_toast">Kan de upload niet stoppen, omdat deze al afgerond is</string>
@@ -3337,8 +3227,6 @@ Language: nl
     <string name="error_unknown_post_type">Onbekend bericht format</string>
     <string name="submit_for_review">Verzenden</string>
     <string name="title_subscriber">Abonnee</string>
-    <string name="duplicate_site_detected" a8c-src-lib="module:login">Er is een dubbele site gevonden.</string>
-    <string name="cannot_add_duplicate_site" a8c-src-lib="module:login">De site komt al voor in de app. Je kunt deze dus niet toevoegen.</string>
     <string name="already_logged_in_wpcom">Je bent al aangemeld bij een WordPress.com-account. Je kunt geen WordPress.com-site toevoegen die is gekoppeld aan een ander account.</string>
     <string name="error_media_load">Kan media niet laden</string>
     <string name="error_media_refresh_no_connection">Een verbinding is vereist om de bibliotheek te verversen</string>
@@ -3349,8 +3237,6 @@ Language: nl
     <string name="media_generic_error">Er is een mediafout opgetreden</string>
     <string name="retry">Opnieuw proberen</string>
     <string name="confirm">Bevestigen</string>
-    <string name="xmlrpc_endpoint_forbidden_error" a8c-src-lib="module:login">Kon geen verbinding maken. Er is een 403 fout opgetreden tijdens onze poging om het XMLRPC endpoint van je\n        site te openen. De app heeft dat nodig om met je site te communiceren. Neem contact op met je host voor een oplossing voor\n        dit probleem.</string>
-    <string name="xmlrpc_post_blocked_error" a8c-src-lib="module:login">Kon geen verbinding maken. Je host blokkeert POST aanvragen en de app heeft\n        dat nodig om met je site te communiceren. Neem contact op met je host om dit probleem op te lossen.</string>
     <string name="pending_draft_one_generic">Neen, laat het niet hangen! \'%1$s\' is klaar om gepubliceerd te worden.</string>
     <string name="pending_draft_one_month">Neen, laat het niet hangen! \'%1$s\' is klaar om gepubliceerd te worden.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' blijft een concept. Vergeet niet deze te publiceren!</string>
@@ -3433,8 +3319,6 @@ Language: nl
     <string name="error_refreshing_gravatar">Fout bij het opnieuw laden van je Gravatar</string>
     <string name="error_locating_image">Fout bij het vinden van de bij te snijden afbeelding</string>
     <string name="error_cropping_image">Fout bij het bijsnijden van de afbeelding</string>
-    <string name="checking_email" a8c-src-lib="module:login">E-mail wordt gecontroleerd</string>
-    <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Momenteel niet beschikbaar. Voer je wachtwoord in</string>
     <string name="logging_in">Bezig met inloggen</string>
     <string name="web_address_dialog_hint">Wordt openbaar weergegeven als je reageert.</string>
     <string name="export_your_content_message">Je berichten, pagina\'s en instellingen worden naar je e-mailadres, %s, verzonden.</string>
@@ -3467,7 +3351,6 @@ Language: nl
     <string name="comments_empty_list_filtered_pending">Geen reacties in behandeling</string>
     <string name="comments_empty_list_filtered_approved">Geen goedgekeurde reacties</string>
     <string name="button_skip">Overslaan</string>
-    <string name="xmlrpc_missing_method_error" a8c-src-lib="module:login">Kon geen verbinding maken. Vereiste XML-RPC methoden ontbreken op de server.</string>
     <string name="alignment_center">Midden</string>
     <string name="post_format_video">Video</string>
     <string name="post_format_status">Status</string>
@@ -3527,7 +3410,6 @@ Language: nl
     <string name="about_the_app">Over de app</string>
     <string name="error_post_account_settings">Kon je accountinstellingen niet opslaan</string>
     <string name="error_fetch_account_settings">Kon je accountinstellingen niet ophalen</string>
-    <string name="error_fetch_my_profile" a8c-src-lib="module:login">Kon je profiel niet ophalen</string>
     <string name="site_settings_unknown_language_code_error">Taalcode niet herkend</string>
     <string name="site_settings_threading_dialog_description">Geneste reacties in threads toestaan.</string>
     <string name="site_settings_threading_dialog_header">Thread tot aan</string>
@@ -3716,9 +3598,6 @@ Language: nl
     <string name="my_site_btn_blog_posts">Berichten</string>
     <string name="reader_label_new_posts_subtitle">Tikken om ze te tonen</string>
     <string name="select_all">Alles selecteren</string>
-    <string name="auth_required" a8c-src-lib="module:login">Log opnieuw in om door te gaan.</string>
-    <string name="invalid_verification_code" a8c-src-lib="module:login">Ongeldige verificatiecode</string>
-    <string name="verification_code" a8c-src-lib="module:login">Verificatiecode</string>
     <string name="language">Taal</string>
     <string name="reader_empty_posts_request_failed">Niet in staat om berichten op te halen</string>
     <string name="error_notification_open">Kon melding niet openen</string>
@@ -3782,7 +3661,6 @@ Language: nl
     <string name="ssl_certificate_error">Ongeldig SSL certificaat</string>
     <string name="help">Hulp</string>
     <string name="username_or_password_incorrect">De gebruikersnaam of het wachtwoord dat je hebt ingevoerd is onjuist</string>
-    <string name="email_invalid" a8c-src-lib="module:login">Voer een geldig e-mailadres in</string>
     <string name="invalid_email_message">Je e-mailadres is niet geldig</string>
     <string name="error_downloading_image">Fout bij downloaden van afbeelding</string>
     <string name="error_load_comment">Kon de reactie niet laden</string>
@@ -3812,7 +3690,6 @@ Language: nl
     <string name="new_media">Nieuwe media</string>
     <string name="new_post">Nieuw bericht</string>
     <string name="notifications_empty_all">Geen meldingen…nog niet!</string>
-    <string name="http_authorization_required" a8c-src-lib="module:login">Autorisatie vereist</string>
     <string name="invalid_site_url_message">Controleer of de ingevoerde site-URL geldig is</string>
     <string name="file_error_create">Kon geen tijdelijk bestand maken voor het uploaden van media. Controleer of er genoeg vrije ruimte is op je apparaat.</string>
     <string name="category_name">Categorienaam</string>
@@ -3857,7 +3734,6 @@ Language: nl
     <string name="reader_likes_you_and_one">Jij en één andere vinden dit leuk</string>
     <string name="pick_video">Video selecteren</string>
     <string name="pick_photo">Foto selecteren</string>
-    <string name="sign_up_label" a8c-src-lib="module:login">Abonneren</string>
     <string name="reader_toast_err_url_intent">Onmogelijk %s te openen</string>
     <string name="reader_toast_err_view_image">Niet in staat om afbeelding te bekijken</string>
     <string name="reader_toast_err_share_intent">Niet in staat om te delen</string>
@@ -3900,8 +3776,6 @@ Language: nl
     <string name="note_reply_successful">Reactie gepubliceerd</string>
     <string name="sign_in">Login</string>
     <string name="loading">Aan het laden…</string>
-    <string name="httppassword" a8c-src-lib="module:login">HTTP wachtwoord</string>
-    <string name="httpuser" a8c-src-lib="module:login">HTTP gebruikersnaam</string>
     <string name="error_media_upload">Er heeft zich een fout voorgedaan tijdens het uploaden van media</string>
     <string name="incorrect_credentials">Incorrecte gebruikersnaam of wachtwoord.</string>
     <string name="log_in" a8c-src-lib="module:login">Login</string>

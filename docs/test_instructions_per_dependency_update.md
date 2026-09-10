@@ -52,9 +52,8 @@ rather than strict requirements.
     1. [Firebase](#firebase)
     2. [FirebaseIid](#firebaseiid)
     3. [MLKitBarcodeScanning](#mlkitbarcodescanning)
-    4. [PlayServicesAuth](#playservicesauth)
-    5. [PlayServicesCoreScanner](#playservicescodescanner)
-    6. [PlayReview](#playreview)
+    4. [PlayServicesCoreScanner](#playservicescodescanner)
+    5. [PlayReview](#playreview)
 5. Tool
     1. [Zendesk](#zendesk)
     2. [JSoup](#jsoup)
@@ -333,74 +332,6 @@ Step.3:
 - Scan the QR code on the web browser.
 - Follow the remaining prompts on your mobile to log in to WordPress on your web browser (desktop),
   verify that you have successfully logged-in and are able to use WordPress as expected.
-
-</details>
-
------
-
-### PlayServicesAuth [[google-play-services-auth](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/gradle/libs.versions.toml)] <a name="playservicesauth"></a>
-
-ℹ️ These set of testing instructions are for internal contributors only, which can have access to
-   upload an `.aab` to Google Play Store. As such, external contributors can't possibly test this
-   update.
-
-<details>
-  <summary>1. [JP] Google Sign-in on Jetpack</summary>
-
-ℹ️ Prerequisite: If you don't have access to upload an `.aab` to Google Play Store for
-   `Jetpack - Website Builder`, post a request to `+systemsrequests`.
-
-- Check-out this branch and edit the `version.properties` file to pick a dummy `versionName` and
-  `versionCode`, preferable using a higher `versionCode` to the existing one.
-  - I recommend using a `versionCode` of `1000000001` and above.
-  - I recommend using an explicit `versionName` like `deps-update-google-play-services-20-4-1`
-    (similar to the name of this branch itself)
-- Build the release `.aab` locally using this command: `./gradlew bundleJetpackRelease`
-- Upload the locally generated `.aab`, found within the `WordPress/build/outputs/bundle/jetpackRelease/`
-  build folder, and into Google Play Console (`Jetpack - Website Builder`) via:
-  `App Bundle Explorer` > `Upload new version` (top-right)
-  - Wait for the upload to complete, then via this newly uploaded app version, navigation to the
-    `Downloads`, on the `Assets` section, find the `Signed, universal APK` and click the `Download`
-    icon (middle-right) to download the signed `.apk` locally.
-  - After having this signed `.apk` downloaded locally, go ahead and click on the `Delete app bundle`
-    to delete the this app bundle from the list of available app bundles.
-- Install this download signed `.apk` using this command:
-  `adb install -r Downloads/jpandroid-deps-update-google-play-services-20-4-1-Signed.apk`
-  (note that you can use `./tools/rename_apk_aab.sh` to rename the download signed `.apk`)
-- If you were already logged-in to Jetpack, log-out and log-in again using the `Continue with Google`
-  button (note that you need to use a non `A8C` account to be able to complete this flow).
-- Verify that the Google sign-in works, that you have successfully logged-in and are able to use the
-  app as expected.
-
-</details>
-
-<details>
-  <summary>2. [WP] Google Sign-in on WordPress</summary>
-
-ℹ️ Prerequisite: If you don't have access to upload an `.aab` to Google Play Store for
-   `WordPress - Website Builder`, post a request to `+systemsrequests`.
-
-- Check-out this branch and edit the `version.properties` file to pick a dummy `versionName` and
-  `versionCode`, preferable using a higher `versionCode` to the existing one.
-  - I recommend using a `versionCode` of `1000000001` and above.
-  - I recommend using an explicit `versionName` like `deps-update-google-play-services-20-4-1`
-    (similar to the name of this branch itself)
-- Build the release `.aab` locally using this command: `./gradlew bundleWordPressRelease`
-- Upload the locally generated `.aab`, found within the `WordPress/build/outputs/bundle/wordpressRelease/`
-  build folder, and into Google Play Console (`WordPress - Website Builder`) via:
-  `App Bundle Explorer` > `Upload new version` (top-right)
-  - Wait for the upload to complete, then via this newly uploaded app version, navigation to the
-    `Downloads`, on the `Assets` section, find the `Signed, universal APK` and click the `Download`
-    icon (middle-right) to download the signed `.apk` locally.
-  - After having this signed `.apk` downloaded locally, go ahead and click on the `Delete app bundle`
-    to delete the this app bundle from the list of available app bundles.
-- Install this download signed `.apk` using this command:
-  `adb install -r Downloads/wpandroid-deps-update-google-play-services-20-4-1-Signed.apk`
-  (note that you can use `./tools/rename_apk_aab.sh` to rename the download signed `.apk`)
-- If you were already logged-in to WordPress, log-out and log-in again using the `Continue with Google`
-  button (note that you need to use a non `A8C` account to be able to complete this flow).
-- Verify that the Google sign-in works, that you have successfully logged-in and are able to use the
-  app as expected.
 
 </details>
 
