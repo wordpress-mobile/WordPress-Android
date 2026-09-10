@@ -1296,16 +1296,15 @@ class StatsRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `nextPeriod from the previous full month returns to the current month to date`() {
-        val today = LocalDate.now()
-        val monthStart = today.withDayOfMonth(1)
         val previous = repository.previousPeriod(StatsPeriod.ThisMonth)
 
         val result = repository.nextPeriod(previous)
 
-        // Forward from the whole previous month lands on the current month up to today; on the 1st that
-        // window is a single day and snaps to Today, otherwise it restores the ThisMonth preset.
-        val expected = if (today == monthStart) StatsPeriod.Today else StatsPeriod.ThisMonth
-        assertThat(result).isEqualTo(expected)
+        // Forward from the whole previous month lands on the current month up to today and restores the
+        // ThisMonth preset. On the 1st that window collapses to a single day, so Today's window matches
+        // it too, but snapToPreset prefers the source's own calendar unit (MONTH) and still returns
+        // ThisMonth.
+        assertThat(result).isEqualTo(StatsPeriod.ThisMonth)
     }
 
     @Test
@@ -1348,7 +1347,7 @@ class StatsRepositoryTest : BaseUnitTest() {
 
         val result = repository.nextPeriod(endingToday)
 
-        assertThat(repository.currentPeriodWindow(result).second).isEqualTo(today)
+        assertThat(repository.currentPeriodWindow(result)).isEqualTo(today.minusDays(9) to today)
     }
 
     @Test
