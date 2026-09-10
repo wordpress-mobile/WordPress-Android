@@ -11,8 +11,6 @@ import org.wordpress.android.fluxc.persistence.RemoteConfigDao
 import org.wordpress.android.fluxc.persistence.WPAndroidDatabase
 import org.wordpress.android.fluxc.persistence.WPAndroidDatabase.Companion.buildDb
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
-import org.wordpress.android.fluxc.persistence.blaze.BlazeObjectivesDao
-import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
 import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
@@ -81,18 +79,6 @@ class DatabaseModule {
     @Provides
     fun provideBlazeCampaignsDao(wpAndroidDatabase: WPAndroidDatabase): BlazeCampaignsDao {
         return wpAndroidDatabase.blazeCampaignsDao()
-    }
-
-    @Singleton
-    @Provides
-    fun provideBlazeTargetingDao(wpAndroidDatabase: WPAndroidDatabase): BlazeTargetingDao {
-        return wpAndroidDatabase.blazeTargetingDao()
-    }
-
-    @Singleton
-    @Provides
-    fun provideBlazeObjectivesDao(wpAndroidDatabase: WPAndroidDatabase): BlazeObjectivesDao {
-        return wpAndroidDatabase.blazeObjectivesDao()
     }
 
     @Singleton
