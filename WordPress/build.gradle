@@ -111,6 +111,10 @@ base {
     archivesName = "org.wordpress.android"
 }
 
+def uploadKeystore = new File(gradle.ext.decryptedSecretsDir, "upload.jks")
+def uploadCredentials = ["uploadStorePassword", "uploadKeyAlias", "uploadKeyPassword"]
+def uploadKeyAvailable = uploadKeystore.exists() && uploadCredentials.every { gradle.ext.secretProperties.containsKey(it) }
+
 android {
     useLibrary 'android.test.runner'
 
@@ -274,10 +278,10 @@ android {
     }
 
     signingConfigs {
-        if (["uploadStoreFile", "uploadStorePassword", "uploadKeyAlias", "uploadKeyPassword"].count { !gradle.ext.secretProperties.containsKey(it) } == 0) {
-            logger.info("App signing properties found in secrets.properties, configuring signing for release builds.")
+        if (uploadKeyAvailable) {
+            logger.info("Upload keystore found, configuring signing for release builds.")
             release {
-                storeFile = rootProject.file(gradle.ext.secretProperties.get("uploadStoreFile"))
+                storeFile = uploadKeystore
                 storePassword = gradle.ext.secretProperties.get("uploadStorePassword")
                 keyAlias = gradle.ext.secretProperties.get("uploadKeyAlias")
                 keyPassword = gradle.ext.secretProperties.get("uploadKeyPassword")
@@ -285,13 +289,11 @@ android {
             android.buildTypes.release.signingConfig = android.signingConfigs.release
         }
 
-        if (gradle.ext.secretProperties.containsKey("debugStoreFile")) {
-            logger.info("Debug signing properties found in secrets.properties, configuring signing for debug builds.")
-            def sharedDebugStore = file(gradle.ext.secretProperties.get("debugStoreFile").replaceFirst("^~", System.getProperty("user.home")))
-            if (sharedDebugStore.exists()) {
-                debug {
-                    storeFile sharedDebugStore
-                }
+        def debugKeystore = new File(gradle.ext.decryptedSecretsDir, "debug.keystore")
+        if (debugKeystore.exists()) {
+            logger.info("Shared debug keystore found, configuring signing for debug builds.")
+            debug {
+                storeFile debugKeystore
             }
         }
     }
@@ -328,6 +330,22 @@ android {
         buildConfig true
         viewBinding true
         compose true
+    }
+}
+
+// Without the upload key a release build still succeeds, producing an unsigned artifact that only
+// fails once something tries to upload it. AGP creates `validateSigning*` only for variants that
+// are already signed, so the guard hangs off the packaging tasks — always present, and reached
+// before the artifact is written. Checked at execution time so contributors without the secrets
+// keep their debug builds.
+tasks.matching { it.name.startsWith("package") && it.name.contains("Release") }.configureEach {
+    doFirst {
+        if (!uploadKeyAvailable) {
+            throw new GradleException(
+                "The upload keystore is missing, so this release build would not be signed. " +
+                    "Please run `bundle exec fastlane run configure_apply` to apply secrets."
+            )
+        }
     }
 }
 
