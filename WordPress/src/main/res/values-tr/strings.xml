@@ -485,7 +485,6 @@ Language: tr
     <string name="experimental_block_editor_note">Deneysel blok düzenleyici gelecekteki bir sürümde varsayılan olacak ve bunu devre dışı bırakma özelliği kaldırılacak.</string>
     <string name="avatar_update_email_unverified">Avatarınızı güncellemek için öncelikle e-posta adresinizi doğrulamanız gerekir.</string>
     <string name="feedback_form_note_link_wordpress">topluluk forumları.</string>
-    <string name="default_web_client_id" a8c-src-lib="module:login">yer tutucu</string>
     <string name="personalization_screen_shortcuts_accessibility_label">%s kısayolu aç/kapat</string>
     <string name="personalization_screen_card_accessibility_label">%s kartı aç/kapat</string>
     <string name="user_avatar_content_description">%s adlı kullanıcının avatarı</string>
@@ -755,9 +754,6 @@ Language: tr
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%d düzeyden daha derin bir şekilde iç içe geçmiş bloklar, mobil düzenleyicide düzgün görüntülenmeyebilir.</string>
     <string name="domain_management_clear_search">Aramayı temizle</string>
     <string name="media_encoder_quality_very_high">Çok yüksek</string>
-    <string name="notification_security_key_needed" a8c-src-lib="module:login">Lütfen ilerlemek için güvenlik anahtarınızı yazın.</string>
-    <string name="login_error_security_key" a8c-src-lib="module:login">Güvenlik anahtarıyla oturum açarken bir sorunla karşılaştık</string>
-    <string name="login_text_security_key" a8c-src-lib="module:login">Bir güvenlik anahtarı kullanın</string>
     <string name="new_domain_search_screen_error_title">Etki alanları alınamadı</string>
     <string name="new_domain_search_screen_list_item_sale_price">İlk yıl için %s</string>
     <string name="new_domain_search_screen_list_item_regular_price">%s/yıl</string>
@@ -1305,11 +1301,6 @@ Language: tr
     <string name="notification_channel_weekly_roundup_title">Haftalık özet</string>
     <string name="my_site_dashboard_tab_title">Giriş</string>
     <string name="adding_cat">Kategori ekleniyor</string>
-    <string name="login_select_email_client">Hangi e-posta uygulamasını kullanıyorsunuz?</string>
-    <string name="login_error_xml_rpc_auth_error_communicating" a8c-src-lib="module:login">Siteyle iletişim kurulurken bir sorun çıktı. Bir HTTP 401 hata kodu döndürüldü.</string>
-    <string name="login_error_xml_rpc_cannot_read_site_auth_required" a8c-src-lib="module:login">Bu sitede XML-RPC çağrıları engellenmiş görünüyor (hata kodu 401). Oturum açma girişimi başarısız olursa, SSS bölümünü görüntülemek için yardım simgesine dokunun.</string>
-    <string name="login_error_xml_rpc_cannot_read_site" a8c-src-lib="module:login">Bu adresteki WordPress sitesi okunamadı. SSS bölümüne bakmak için yardım simgesine dokunun.</string>
-    <string name="login_error_xml_rpc_services_disabled" a8c-src-lib="module:login">XML-RPC servisleri bu site için kapalı.</string>
     <string name="my_site_menu_tab_title">Menü</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Aramanızda, WordPress.com etki alanlarında desteklenmeyen karakterler var. Şu karakterler kullanılabilir: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">İnternet bağlantınızı denetleyip sayfayı yenileyin.</string>
@@ -1552,11 +1543,6 @@ Language: tr
     <string name="threat_fix_enter_server_creds_msg_plural">Tehditleri gidermek için &lt;a href=\"%1$s\"&gt;sunucu kimlik doğrulama bilgilerinizi yazın&lt;/a&gt;.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">Tehdidi gidermek için &lt;a href=\"%1$s\"&gt;sunucu kimlik doğrulama bilgilerinizi yazın&lt;/a&gt;.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bağlantı eklemek için iki kez dokunun.</string>
-    <string name="login_empty_view_try_another_account">Başka bir hesapla deneyin</string>
-    <string name="login_empty_view_see_instructions">Yönergelere bakın</string>
-    <string name="login_no_jetpack_sites_error_message">Zaten bir siteniz varsa, ücretsiz Jetpack eklentisini kurmanız ve WordPress.com hesabınıza bağlamanız gerekir.</string>
-    <string name="login_empty_view_avatar_content_description">Profil fotoğrafınız</string>
-    <string name="login_not_a_jetpack_site">Bu uygulamayı %1$s için kullanmak istiyorsanız Jetpack eklentisi kurulmuş ve bir WordPress.com hesabınıza bağlanmış olmalıdır.</string>
     <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Genişlik ayarları</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bağlantı Rel</string>
     <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sütun ayarları</string>
@@ -1592,7 +1578,6 @@ Language: tr
     <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Diğer</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ekran okuyucu kullanıcısına yardımcı olmak için bağlantıyı kısaca açıklayın</string>
     <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok ekle</string>
-    <string name="login_no_jetpack_sites">Herhangi bir Jetpack sitesi bulunamadı</string>
     <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatif metin nedir?</string>
     <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s ögesini şuna dönüştür</string>
     <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bloğu dönüştür…</string>
@@ -1639,7 +1624,6 @@ Language: tr
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Görseli düzenlemek, değiştirmek veya temizlemek üzere işlem sayfasını açmak için iki kez dokunun</string>
     <string name="new_site_creation_search_domain_example">ornek.com</string>
     <string name="new_site_creation_search_domain_input_hint">Siteniz için bir ad yazın</string>
-    <string name="magic_link_not_meaning_to_create_account" a8c-src-lib="module:login">Yeni bir hesap açmayı istemediniz mi? E-posta adresinizi yeniden yazmak için geri dönün.</string>
     <string name="invite_links_disable_dialog_message">Davet bağlantısı etkisizleştirildiğinde, ekibinizden kimse katılamaz. Emin misiniz?</string>
     <string name="invite_links_disable_dialog_title">Davet bağlantısını etkisizleştir</string>
     <string name="invite_links_bad_format_response">Geçersiz yanıt alındı</string>
@@ -1901,8 +1885,6 @@ Language: tr
     <string name="hpp_retry_error">Lütfen İnternet bağlantınızı denetleyip yeniden deneyin.</string>
     <string name="hpp_error_subtitle">Çevrim içi olduğunuzda yeniden dene üzerine dokunun.</string>
     <string name="hpp_error_title">Çevrim dışıyken yerleşimler kullanılamaz</string>
-    <string name="continue_site_credentials" a8c-src-lib="module:login">Mağaza kimlik doğrulama bilgileriyle ilerleyin</string>
-    <string name="login_find_your_connected_email" a8c-src-lib="module:login">Bağlı e-postanızı bulun</string>
     <string name="reader_discover_no_posts_follow_subtitle">Arama kapsamını genişletmek için daha fazla etiketi takip etmeyi deneyin</string>
     <string name="reader_discover_no_posts_title">Yeni yazı yok</string>
     <string name="reader_discover_empty_title">Hoş geldiniz!</string>
@@ -1943,8 +1925,6 @@ Language: tr
     <string name="suggestion_no_connection">İnternet bağlantısı yok.\nÖneriler kullanılamaz.</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s seçilmiş</string>
-    <string name="login_get_link_by_email" a8c-src-lib="module:login">E-posta ile bir oturum açma bağlantısı alın</string>
-    <string name="email_not_registered_wpcom" a8c-src-lib="module:login">Bu e-posta hesabına bağlı bir WordPress.com hesabı bulamıyoruz.</string>
     <string name="permission_microphone">Mikrofon</string>
     <string name="comment_unable_to_show_error">Bu yorum görüntülenemedi</string>
     <string name="media_browse_for_items">Ögelere göz at</string>
@@ -1981,26 +1961,7 @@ Language: tr
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Görsel seç</string>
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok kaldırıldı</string>
     <string name="enter_your_site_address">Var olan site adresinizi yazın</string>
-    <string name="signup_confirmation_title" a8c-src-lib="module:login">Kayıt onayı</string>
-    <string name="continue_with_google_terms_of_service_text" a8c-src-lib="module:login">Google ile ilerlerseniz ve WordPress.com hesabınız yoksa, bir hesap oluşturup %1$shizmet koşulları%2$s metnimizi kabul etmiş olursunuz.</string>
-    <string name="continue_terms_of_service_text" a8c-src-lib="module:login">İlerleyerek, %1$shizmet koşulları%2$s metnimizi kabul etmiş olursunuz.</string>
-    <string name="signup_confirmation_message" a8c-src-lib="module:login">Bu e-posta adresini, yeni WordPress.com hesabınızı oluşturmak için kullanacağız.</string>
-    <string name="signup_magic_link_message" a8c-src-lib="module:login">Yeni WordPress.com hesabınızı oluşturmanız için size hesap açma bağlantısı gönderdik. Bu aygıttan e-postanızı denetleyin ve WordPress.com tarafından gönderilen e-postadaki bağlantıya dokunun.</string>
-    <string name="enter_account_info_for_site" a8c-src-lib="module:login">%1$s için hesap bilgilerinizi yazın.</string>
-    <string name="login_or" a8c-src-lib="module:login">veya</string>
-    <string name="continue_google_button_suffix" a8c-src-lib="module:login">Google ile ilerle</string>
-    <string name="login_find_your_site_adress" a8c-src-lib="module:login">Site adresinizi bulun</string>
-    <string name="login_done">Bitti</string>
-    <string name="magic_link_not_seeing_email_message" a8c-src-lib="module:login">E-postayı görmüyor musunuz? İstenmeyen e-posta klasörünüze bakın.</string>
-    <string name="login_magic_links_sent_label" a8c-src-lib="module:login">Bu aygıttan e-postanızı denetleyin ve WordPress.com tarafından gönderilen e-postadaki bağlantıya dokunun.</string>
-    <string name="login_magic_links_label" a8c-src-lib="module:login">Size e-posta ile hemen oturum açabileceğiniz bir bağlantı göndereceğiz. Herhangi bir parola gerekmez.</string>
-    <string name="check_email" a8c-src-lib="module:login">E-postayı denetle</string>
     <string name="get_started" a8c-src-lib="module:login">Başlayın</string>
-    <string name="enter_email_to_continue_wordpress_com" a8c-src-lib="module:login">Oturum açmak ya da bir WordPress.com hesabı oluşturmak için e-posta adresinizi yazın.</string>
-    <string name="or_type_your_password" a8c-src-lib="module:login">Veya parolanızı yazın</string>
-    <string name="create_account" a8c-src-lib="module:login">Hesap oluştur</string>
-    <string name="send_link_by_email" a8c-src-lib="module:login">Bağlantıyı e-postayla gönder</string>
-    <string name="reset_your_password" a8c-src-lib="module:login">Parolanızı sıfırlayın</string>
     <string name="reader_error_request_failed_title">İstek işlenirken bir sorun çıktı. Lütfen bir süre sonra yeniden deneyin.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Bu yazının çöpe atılması, yerel değişiklikleri yok sayar. İlerlemek istediğinize emin misiniz?</string>
     <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s blok seçenekleri</string>
@@ -2223,9 +2184,6 @@ Language: tr
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Galeri yazısı. %s</string>
     <string name="create_post_page_fab_tooltip">Yazı veya sayfa oluştur</string>
     <string name="content_description_person_building_website">İnsan yapımı site</string>
-    <string name="post_signup_interstitial_not_right_now">Şimdi değil</string>
-    <string name="post_signup_interstitial_subtitle">Oluşturmak veya paylaşmak istediğiniz her şeyi burada yapmanıza yardımcı olacağız.</string>
-    <string name="post_signup_interstitial_title">WordPress\'e hoş geldiniz</string>
     <string name="stock_media_picker_list_content_description">Fotoğraf kitaplığı</string>
     <string name="photo_picker_image_thumbnail_unselected">Görsel bırakıldı</string>
     <string name="photo_picker_image_selected">,Seçildi</string>
@@ -2239,12 +2197,6 @@ Language: tr
     <string name="dialog_confirm_scheduled_post_sync_title">Eşitlemeye hazır mısınız?</string>
     <string name="new_site_creation_unavailable_domain">Bu etki alanı kullanılamaz</string>
     <string name="negative_prefix">-%s</string>
-    <string name="login_discovery_error_generic" a8c-src-lib="module:login">Sitenize erişemedik. Bu sorunu çözmek için sunucu hizmeti sağlayıcınızla görüşmeniz gerekir.</string>
-    <string name="login_discovery_error_ssl" a8c-src-lib="module:login">&lt;b&gt;SSL sertifikası&lt;/b&gt; ile ilgili bir sorun nedeniyle sitenize erişemedik. Bu sorunu çözmek için sunucu hizmeti sağlayıcınızla görüşmeniz gerekir.</string>
-    <string name="login_discovery_error_http_auth" a8c-src-lib="module:login">&lt;b&gt;HTTP kimlik doğrulaması&lt;/b&gt; gerektiğinden sitenize erişemedik. Bu sorunu çözmek için sunucu hizmeti sağlayıcınıza görüşmeniz gerekir.</string>
-    <string name="login_discovery_error_xmlrpc" a8c-src-lib="module:login">Sitenizdeki &lt;b&gt;XMLRPC dosyasına&lt;/b&gt; erişemedik. Bu sorunu çözmek için sunucu hizmeti sağlayıcınıza görüşmeniz gerekir.</string>
-    <string name="login_site_credentials_magic_link_label" a8c-src-lib="module:login">Çok az kaldı! Yalnızca Jetpack bağlantılı e-posta adresinizi doğrulamamız gerekiyor&lt;b&gt;%1$s&lt;/b&gt;</string>
-    <string name="enter_credentials_for_site" a8c-src-lib="module:login">%1$s kimlik doğrulama bilgilerinizle oturum açın</string>
     <string name="my_site_bottom_sheet_add_page">Site sayfası</string>
     <string name="reader_my_likes_display_name">Beğeniler</string>
     <string name="reader_discover_display_name">Keşfet</string>
@@ -2402,8 +2354,6 @@ Language: tr
     <string name="post_settings_add_to_calendar">Takvime ekle</string>
     <string name="post_settings_notification">Bildirim</string>
     <string name="post_settings_time_and_date">Tarih ve Saat</string>
-    <string name="login_invalid_site_url" a8c-src-lib="module:login">Lütfen ornek.com gibi eksiksiz bir site adresi yazın.</string>
-    <string name="enter_email_for_site" a8c-src-lib="module:login">%1$s ile bağlanmak için WordPress.com hesabınızda oturum açın</string>
     <string name="stats_post_views_label">Görüntülemeler</string>
     <string name="stats_post_label">Yazı</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -2509,8 +2459,6 @@ Language: tr
     <string name="posts_draft_empty">Herhangi bir taslak yazınız yok</string>
     <string name="posts_scheduled_empty">Zamanlanmış bir yazınız yok</string>
     <string name="posts_published_empty">Henüz hiçbir gönderi yayımlamadınız!</string>
-    <string name="notification_wpcom_username_needed" a8c-src-lib="module:login">Lütfen kullanıcı adı ve parola ile oturum açın.</string>
-    <string name="error_user_username_instead_of_email" a8c-src-lib="module:login">Lütfen e-posta adresiniz yerine WordPress.com kullanıcı adınızı kullanarak oturum açın.</string>
     <string name="stats_insights_average_words">Ort sözcük/yazı</string>
     <string name="stats_insights_total_words">Toplam sözcük</string>
     <string name="stats_insights_average_likes">Ort beğeni/yazı</string>
@@ -2520,7 +2468,6 @@ Language: tr
     <string name="stats_insights_posts">Yazılar</string>
     <string name="stats_insights_year">Yıl</string>
     <string name="stats_insights_this_year_site_stats">Bu yıl</string>
-    <string name="no_site_error" a8c-src-lib="module:login">Bu adresteki site bir WordPress sitesi değil. Bağlanabilmemiz için sitenin WordPress kullanması gerekir.</string>
     <string name="plugin_check_domain_credit_error">Kullanılabilecek etki alanı kredisi denetlenemedi</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Etki alanı kredileri denetleniyor</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Etki alanı kaydet</string>
@@ -2653,7 +2600,6 @@ Language: tr
     <string name="history_detail_button_previous">Önceki</string>
     <string name="history_detail_button_next">Sonraki</string>
     <string name="media_space_used">%1$s kullanıldı</string>
-    <string name="enter_wpcom_or_jetpack_site" a8c-src-lib="module:login">Lütfen WordPress.com ya da Jetpack bağlantılı kullanıcı tarafından barındırılan WordPress sitesini yazın</string>
     <string name="history_loading_revision">Değişiklik yükleniyor</string>
     <string name="history_loaded_revision">Değişiklik yüklendi</string>
     <string name="history_load_dialog_button_positive">Yükle</string>
@@ -2682,8 +2628,6 @@ Language: tr
     <string name="pages_scheduled">Zamanlanmış</string>
     <string name="pages_drafts">Taslaklar</string>
     <string name="pages_published">Yayınlanmış</string>
-    <string name="login_error_sms_throttled" a8c-src-lib="module:login">Çok fazla SMS doğrulama kodu gönderdik. Biraz ara verin ve bir dakika sonra yenisini isteyin.</string>
-    <string name="login_error_email_not_found_v2" a8c-src-lib="module:login">Bu Google hesabıyla eşleşen bir WordPress.com hesabı bulunmuyor.</string>
     <string name="site_picker_remove_site_empty">Aramanızla eşleşen bir site bulunamadı</string>
     <string name="reader_no_followed_blogs_search_title">Aramanızla eşleşen bir blog yok</string>
     <string name="page_parent_changed">Üst sayfa değiştirildi</string>
@@ -2702,7 +2646,6 @@ Language: tr
     <string name="content_description_more">Daha fazlası</string>
     <string name="my_site_create_new_site_title">Herhangi bir siteniz yok</string>
     <string name="reader_empty_subscribed_tags_subtitle">Beğendiğiniz konularla ilgili yazıları bulmak için buraya etiket ekleyin</string>
-    <string name="login_to_to_connect_jetpack" a8c-src-lib="module:login">Jetpack bağlamak için kullandığınız WordPress.com hesabında oturum açın.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack SSS</string>
     <string name="stats_jetpack_connection_setup_info">WordPress sitenizdeki istatistikleri kullanmak için Jetpack eklentisini kurmanız gerekir.</string>
@@ -2755,13 +2698,7 @@ Language: tr
     <string name="reader_empty_search_title">Sonuç bulunamadı</string>
     <string name="comment_read_source_post">Yazı kaynağını oku</string>
     <string name="sites">Siteler</string>
-    <string name="signup_magic_link_title" a8c-src-lib="module:login">Sihirli bağlantı gönderildi</string>
-    <string name="verification_2fa_screen_title" a8c-src-lib="module:login">Kod doğrulama</string>
-    <string name="selfhosted_site_login_title" a8c-src-lib="module:login">Oturum açma bilgileri</string>
-    <string name="magic_link_sent_login_title" a8c-src-lib="module:login">Sihirli bağlantı gönderildi</string>
-    <string name="magic_link_login_title" a8c-src-lib="module:login">Sihirli oturum açma bağlantısı</string>
     <string name="site_address_login_title" a8c-src-lib="module:login">Site adresi ile oturum açma</string>
-    <string name="email_address_login_title" a8c-src-lib="module:login">E-posta ile oturum açma</string>
     <string name="reader_empty_saved_posts_description">%s üzerine dokunarak yazıyı listenize kaydedin.</string>
     <string name="reader_empty_saved_posts_title">Henüz bir yazı kaydedilmemiş!</string>
     <string name="reader_bookmark_snack_title">Yazı kaydedildi</string>
@@ -2863,7 +2800,6 @@ Language: tr
     <string name="invite_user_delete_desc">%s adlı kullanıcıyı kaldır</string>
     <string name="profile_picture">%s adlı kullanıcının profil resmi</string>
     <string name="comment_checkmark_desc">onay işareti</string>
-    <string name="signup_with_google_progress" a8c-src-lib="module:login">Google ile hesap açılıyor…</string>
     <string name="jetpack_connection_failed_with_reason">Jetpack ile bağlantı kurulamadı: %s</string>
     <string name="jetpack_already_connected_toast">Jetpack bağlantınız zaten var</string>
     <string name="menu_visual_mode">Görsel Düzenleyici</string>
@@ -2890,7 +2826,6 @@ Language: tr
     <string name="notif_detail_screen_title">Bildirim ayrıntıları %s</string>
     <string name="edit_photo_screen_title">Fotoğrafı düzenle</string>
     <string name="share_intent_screen_title">Site seçin</string>
-    <string name="signup_epilogue_screen_title">Yeni hesap</string>
     <string name="person_detail_screen_title">Kişi bilgileri</string>
     <string name="media_settings_screen_title">Dosya bilgileri</string>
     <string name="publicize_buttons_screen_title">Paylaşım düğmeleri</string>
@@ -2941,7 +2876,6 @@ Language: tr
     <string name="site_creation_domain_finish_button">Site oluştur</string>
     <string name="notification_site_creation_created">İlerlemek için dokunun.</string>
     <string name="notification_site_creation_title_success">Site oluşturuldu!</string>
-    <string name="google_error_timeout" a8c-src-lib="module:login">Google çok uzun sürede yanıt verdi. Daha hızlı bir İnternet bağlantınız oluncaya kadar beklemeniz gerekebilir.</string>
     <string name="username_changer_title">Kullanıcı adını değiştirin</string>
     <string name="username_changer_hint">Daha fazla öneri almak için yazın</string>
     <string name="username_changer_header">Geçerli kullanıcı adınız %1$s%2$s%3$s. Birkaç istisna dışında, başkaları yalnızca, %4$s%5$s%6$s görüntülenecek adınızı görür.</string>
@@ -2951,18 +2885,6 @@ Language: tr
     <string name="username_changer_dismiss_button_positive">Vazgeç</string>
     <string name="username_changer_action">Kaydet</string>
     <string name="content_description_add_avatar">Avatar ekle</string>
-    <string name="signup_user_exists">E-posta WordPress.com üzerinde zaten var.\nOturum açmaya geçiliyor.</string>
-    <string name="signup_updating_account">Hesap güncelleniyor…</string>
-    <string name="signup_magic_link_progress" a8c-src-lib="module:login">E-posta gönderiliyor</string>
-    <string name="signup_magic_link_error_button_positive" a8c-src-lib="module:login">Yeniden dene</string>
-    <string name="signup_magic_link_error_button_negative" a8c-src-lib="module:login">Kapat</string>
-    <string name="signup_magic_link_error" a8c-src-lib="module:login">E-posta gönderilirken bir sorun çıktı. Şimdi yeniden deneyebilir ya da kapatıp bir süre sonra yeniden deneyebilirsiniz.</string>
-    <string name="signup_epilogue_hint_username">Kullanıcı adı</string>
-    <string name="signup_epilogue_hint_password_detail">Her zaman az önce kullandığınız gibi bir bağlantıyla oturum açabilirsiniz, ancak isterseniz bir parola da oluşturabilirsiniz.</string>
-    <string name="signup_epilogue_hint_password">Parola (seçime bağlı)</string>
-    <string name="signup_epilogue_hint_display">Görüntülenecek ad</string>
-    <string name="signup_epilogue_error_button_positive">Yeniden dene</string>
-    <string name="signup_epilogue_error_button_negative">Geri al</string>
     <string name="signup_epilogue_error_generic">Hesabınız güncellenirken bir sorun çıktı. Yeniden deneyebilir ya da ilerlemek için değişikliklerinizi geri alabilirsiniz.</string>
     <string name="plugin_needs_update">Güncellenmesi gerekiyor</string>
     <string name="plugin_caption_search">Eklentileri ara</string>
@@ -3050,18 +2972,6 @@ Language: tr
     <string name="my_site_btn_plugins">Eklentiler</string>
     <string name="media_edit_link_hint">Bağlantı yeni sekmede/pencere açılsın</string>
     <string name="media_edit_link_text">Bağlantı</string>
-    <string name="notification_login_failed" a8c-src-lib="module:login">Bir sorun çıktı.</string>
-    <string name="notification_2fa_needed" a8c-src-lib="module:login">Lütfen ilerlemek için bir kimlik doğrulama kodu yazın.</string>
-    <string name="notification_error_wrong_password" a8c-src-lib="module:login">Lütfen ilerlemek için parolanızı iki kere denetleyin.</string>
-    <string name="notification_login_title_stopped" a8c-src-lib="module:login">Oturum açma durduruldu</string>
-    <string name="notification_logging_in" a8c-src-lib="module:login">Lütfen oturum açılırken bekleyin.</string>
-    <string name="notification_login_title_in_progress" a8c-src-lib="module:login">Oturum açılıyor…</string>
-    <string name="notification_logged_in" a8c-src-lib="module:login">İlerlemek için dokunun.</string>
-    <string name="notification_login_title_success" a8c-src-lib="module:login">Oturum açıldı!</string>
-    <string name="login_error_generic_start" a8c-src-lib="module:login">Google oturum açma işlemi başlatılamadı.</string>
-    <string name="login_empty_password" a8c-src-lib="module:login">Lütfen bir parola yazın</string>
-    <string name="login_text_otp_another" a8c-src-lib="module:login">Bana SMS ile başka bir kod gönder</string>
-    <string name="enter_verification_code_sms" a8c-src-lib="module:login">%s ile biten telefon numaranıza SMS gönderdik. Lütfen aldığınız doğrulama kodunu yazın.</string>
     <string name="image_size">Boyut</string>
     <string name="uploading_subtitle_media_only_one">1 dosya kaldı</string>
     <string name="uploading_subtitle_media_only">%1$d / %2$d dosya kaldı</string>
@@ -3078,15 +2988,10 @@ Language: tr
     <string name="confirm_remove_media_image">Bu görsel yazıdan kaldırılsın mı?</string>
     <string name="media_edit_customize_card_caption">Özelleştir</string>
     <string name="media_edit_file_details_card_caption">Dosya bilgileri</string>
-    <string name="login_error_suffix" a8c-src-lib="module:login">\nBelki de farklı bir hesap denemelisiniz.</string>
-    <string name="login_error_generic" a8c-src-lib="module:login">Google hesabı ile bağlantı kurarken bir miktar sorun yaşadık.</string>
     <string name="login_error_button">Kapat</string>
-    <string name="enter_wpcom_password_google" a8c-src-lib="module:login">Bu Google hesabıyla ilerlemek için lütfen eşleşen WordPress.com parolasını yazın. Bu yalnızca bir kez sorulacak.</string>
     <string name="error_generic_network">Bir ağ sorunu çıktı. Lütfen bağlantınızı denetleyip yeniden deneyin.</string>
     <string name="post_settings_remove_featured_image">Öne çıkarılmış görseli kaldır</string>
     <string name="post_settings_choose_featured_image">Öne çıkarılmış görseli seçin</string>
-    <string name="login_log_in_for_share_intent" a8c-src-lib="module:login">İçeriği paylaşmak için WordPress.com oturumu açın.</string>
-    <string name="enter_site_address_share_intent" a8c-src-lib="module:login">İçeriğini paylaşmak istediğiniz WordPress sitenizin adresini yazın.</string>
     <string name="jetpack_disconnect_error_toast">Site bağlantısı kesilirken sorun çıktı</string>
     <string name="jetpack_disconnect_success_toast">Site bağlantısı kesildi</string>
     <string name="jetpack_disconnect_confirm">Bağlantıyı kes</string>
@@ -3167,28 +3072,13 @@ Language: tr
     <string name="post_queued">Yazı kuyruğa alındı</string>
     <string name="uploading_post">\"%s\" yükleniyor</string>
     <string name="connection_to_server_lost">Sunucuyla bağlantı kesildi</string>
-    <string name="login_email_client_not_found">E-posta istemcisi uygulamanızı öğrenemedik</string>
-    <string name="login_empty_2fa" a8c-src-lib="module:login">Lütfen bir doğrulama kodu yazın</string>
-    <string name="login_empty_username" a8c-src-lib="module:login">Lütfen bir kullanıcı adı yazın</string>
-    <string name="login_log_in_for_deeplink" a8c-src-lib="module:login">Bu yazıya erişmek için WordPress.com hesabınızda oturum açın.</string>
-    <string name="login_error_while_adding_site" a8c-src-lib="module:login">Site eklenirken sorun çıktı. Hata kodu: %s</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">Site adresi denetleniyor</string>
-    <string name="login_site_address_more_help" a8c-src-lib="module:login">Daha fazla yardım mı gerekiyor?</string>
-    <string name="login_site_address_help_content" a8c-src-lib="module:login">Sitenizin adresi, sitenizi Chrome ile açtığınızda ekranın üst bölümündeki çubukta görüntülenir.</string>
-    <string name="login_site_address_help_title" a8c-src-lib="module:login">Site adresim ne?</string>
     <string name="login_site_address" a8c-src-lib="module:login">Site adresi</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Bağlanmak istediğiniz WordPress sitesinin adresini yazın.</string>
     <string name="login_already_logged_in_wpcom">Zaten WordPress.com oturumu açılmış</string>
     <string name="login_continue" a8c-src-lib="module:login">İlerle</string>
     <string name="connect_more">Başka siteye bağlan</string>
-    <string name="enter_wpcom_password" a8c-src-lib="module:login">WordPress.com parolanızı yazın.</string>
-    <string name="login_magic_link_email_requesting" a8c-src-lib="module:login">Oturum açma e-postası istemek</string>
-    <string name="password_incorrect" a8c-src-lib="module:login">Bu parola yanlış gibi görünüyor. Lütfen bilgilerinizi iki kez denetleyip yeniden deneyin.</string>
-    <string name="requesting_otp" a8c-src-lib="module:login">SMS ile bir doğrulama kodu istemek.</string>
-    <string name="login_text_otp" a8c-src-lib="module:login">Bunun yerine bana SMS ile bir kod gönder</string>
-    <string name="enter_verification_code" a8c-src-lib="module:login">Çok az kaldı! Lütfen WordPress.com için kimlik doğrulayıcı uygulamanızdaki doğrulama kodunu yazın.</string>
     <string name="next">Sonraki</string>
-    <string name="enter_email_wordpress_com" a8c-src-lib="module:login">Tüm WordPress sitelerinizi yönetmek için bir e-posta adresi ile WordPress.com oturumu açın.</string>
     <string name="me_profile_photo">Profil fotoğrafı</string>
     <string name="error_media_parse_error">Sunucu beklenmeyen bir yanıt verdi</string>
     <string name="upload_finished_toast">Yükleme durdurulamıyor çünkü çoktan tamamlanmış</string>
@@ -3337,8 +3227,6 @@ Language: tr
     <string name="error_unknown_post_type">Bilinmeyen yazı biçimi</string>
     <string name="submit_for_review">Gönder</string>
     <string name="title_subscriber">Abone</string>
-    <string name="duplicate_site_detected" a8c-src-lib="module:login">Bir çift site bulundu.</string>
-    <string name="cannot_add_duplicate_site" a8c-src-lib="module:login">Bu site uygulamada zaten var. Yeniden ekleyemezsiniz.</string>
     <string name="already_logged_in_wpcom">Zaten WordPress.com hesabınızda oturum açmış durumdasınız. Başka bir hesapla ilişkili WordPress.com hesabını ekleyemezsiniz.</string>
     <string name="error_media_load">Ortam dosyası yüklenemedi</string>
     <string name="error_media_refresh_no_connection">Kitaplığı yenilemek için bağlantı kurulmuş olmalıdır</string>
@@ -3349,8 +3237,6 @@ Language: tr
     <string name="media_generic_error">Ortam sorunu çıktı</string>
     <string name="retry">Yeniden dene</string>
     <string name="confirm">Onayla</string>
-    <string name="xmlrpc_endpoint_forbidden_error" a8c-src-lib="module:login">Bağlantı kurulamadı. Sitenizin XMLRPC uç noktasına bağlanırken bir 403\n     hatası aldık. Uygulamanın sitenizle iletişim kurabilmesi gerekli. Sorunu çözmek için\n     hizmet sağlayıcınızla görüşün.</string>
-    <string name="xmlrpc_post_blocked_error" a8c-src-lib="module:login">Bağlantı kurulamadı. Sunucunuz POST isteklerini engelliyor ve uygulama sitenizle\n    iletişim kurmak için buna gerek duyuyor. Bu sorunu gidermek için barındırma hizmeti sağlayıcınızla görüşün.</string>
     <string name="pending_draft_one_generic">Asılı bırakmayın! \'%1$s\' yayınlanmayı bekliyor.</string>
     <string name="pending_draft_one_month">Asılı bırakmayın! \'%1$s\' yayınlanmayı bekliyor.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' bir taslak olarak kaldı. Yayınlamayı unutmayın!</string>
@@ -3433,8 +3319,6 @@ Language: tr
     <string name="error_refreshing_gravatar">Gravatar yenilenirken sorun çıktı</string>
     <string name="error_locating_image">Kırpılmış görsel konumlandırılırken sorun çıktı</string>
     <string name="error_cropping_image">Görsel kırpılırken sorun çıktı</string>
-    <string name="checking_email" a8c-src-lib="module:login">E-posta denetleniyor</string>
-    <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Şu an kullanılamıyor. Lütfen parolanızı yazın</string>
     <string name="logging_in">Oturum açılıyor</string>
     <string name="web_address_dialog_hint">Yorum yaptığınızda herkes tarafından görülebilir.</string>
     <string name="export_your_content_message">Yazılarınız, sayfalarınız ve ayarlarınız size %s adresine e-posta ile gönderilecek.</string>
@@ -3467,7 +3351,6 @@ Language: tr
     <string name="comments_empty_list_filtered_pending">Bekleyen yorum yok</string>
     <string name="comments_empty_list_filtered_approved">Onaylanmış yorum yok</string>
     <string name="button_skip">Atla</string>
-    <string name="xmlrpc_missing_method_error" a8c-src-lib="module:login">Bağlantı kurulamadı. Sunucuda gerekli XML-RPC işlevleri eksik.</string>
     <string name="alignment_center">Ortada</string>
     <string name="post_format_video">Video</string>
     <string name="post_format_status">Durum</string>
@@ -3527,7 +3410,6 @@ Language: tr
     <string name="about_the_app">Uygulama hakkında</string>
     <string name="error_post_account_settings">Hesap ayarlarınız kaydedilemedi</string>
     <string name="error_fetch_account_settings">Hesap ayarlarınız alınamadı</string>
-    <string name="error_fetch_my_profile" a8c-src-lib="module:login">Profiliniz alınamadı</string>
     <string name="site_settings_unknown_language_code_error">Dil kodu tanınmadı</string>
     <string name="site_settings_threading_dialog_description">Yorumlarda konurlar iç içe görüntülensin.</string>
     <string name="site_settings_threading_dialog_header">Konudaki yorum sayısı</string>
@@ -3716,9 +3598,6 @@ Language: tr
     <string name="my_site_btn_blog_posts">Yazılar</string>
     <string name="reader_label_new_posts_subtitle">Görüntülemek için dokunun</string>
     <string name="select_all">Tümünü seç</string>
-    <string name="auth_required" a8c-src-lib="module:login">İlerlemek için yeniden oturum açın.</string>
-    <string name="invalid_verification_code" a8c-src-lib="module:login">Doğrulama kodu geçersiz</string>
-    <string name="verification_code" a8c-src-lib="module:login">Doğrulama kodu</string>
     <string name="language">Dil</string>
     <string name="reader_empty_posts_request_failed">Yazılar alınamadı</string>
     <string name="error_notification_open">Bildirim açılamadı</string>
@@ -3782,7 +3661,6 @@ Language: tr
     <string name="ssl_certificate_error">SSL sertifikası geçersiz</string>
     <string name="help">Yardım</string>
     <string name="username_or_password_incorrect">Yazdığınız kullanıcı adı veya parola yanlış</string>
-    <string name="email_invalid" a8c-src-lib="module:login">Geçerli bir e-posta adresi yazın</string>
     <string name="invalid_email_message">E-posta adresi geçersiz</string>
     <string name="error_downloading_image">Görsel indirilirken sorun çıktı</string>
     <string name="error_load_comment">Yorum yüklenemedi</string>
@@ -3812,7 +3690,6 @@ Language: tr
     <string name="new_media">Yeni ortam</string>
     <string name="new_post">Yeni yazı</string>
     <string name="notifications_empty_all">Henüz bildirim yok!</string>
-    <string name="http_authorization_required" a8c-src-lib="module:login">Yetkilendirme gerekli</string>
     <string name="invalid_site_url_message">Yazdığınız site adresinin geçerli olduğundan emin olun</string>
     <string name="file_error_create">Geçici ortam dosyası oluşturulamadı. Aygıtınızda yeterli boş alan olduğundan emin olun.</string>
     <string name="category_name">Kategori adı</string>
@@ -3857,7 +3734,6 @@ Language: tr
     <string name="reader_likes_you_and_one">Siz ve bir başkası daha bunu değendi</string>
     <string name="pick_video">Video seçin</string>
     <string name="pick_photo">Fotoğraf seçin</string>
-    <string name="sign_up_label" a8c-src-lib="module:login">Hesap aç</string>
     <string name="reader_toast_err_url_intent">%s açılamadı</string>
     <string name="reader_toast_err_view_image">Görsel görüntülenemedi</string>
     <string name="reader_toast_err_share_intent">Paylaşılamadı</string>
@@ -3900,8 +3776,6 @@ Language: tr
     <string name="note_reply_successful">Yanıt yayınlandı</string>
     <string name="sign_in">Oturum aç</string>
     <string name="loading">Yükleniyor…</string>
-    <string name="httppassword" a8c-src-lib="module:login">HTTP parolası</string>
-    <string name="httpuser" a8c-src-lib="module:login">HTTP kullanıcı adı</string>
     <string name="error_media_upload">Ortam dosyası yüklenirken bir sorun çıktı</string>
     <string name="incorrect_credentials">Kullanıcı adı veya parola geçersiz.</string>
     <string name="log_in" a8c-src-lib="module:login">Oturum aç</string>

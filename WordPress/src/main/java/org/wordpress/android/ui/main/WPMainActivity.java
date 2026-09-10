@@ -61,7 +61,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.inappupdate.IInAppUpdateManager;
 import org.wordpress.android.inappupdate.InAppUpdateListener;
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordReauthNotifier;
-import org.wordpress.android.ui.accounts.login.LoginAnalyticsListener;
+import org.wordpress.android.ui.accounts.login.LoginAnalyticsTracker;
 import org.wordpress.android.networking.NetworkConnectionMonitor;
 import org.wordpress.android.push.GCMMessageHandler;
 import org.wordpress.android.push.GCMMessageService;
@@ -237,7 +237,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Inject SiteStore mSiteStore;
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
-    @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
+    @Inject protected LoginAnalyticsTracker mLoginAnalyticsTracker;
     @Inject ShortcutsNavigator mShortcutsNavigator;
     @Inject ShortcutUtils mShortcutUtils;
     // Injected to ensure the store responds to dispatched actions
@@ -1420,7 +1420,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
         if (mAccountStore.hasAccessToken()) {
             if (mIsMagicLinkLogin) {
-                mLoginAnalyticsListener.trackLoginMagicLinkSucceeded();
+                mLoginAnalyticsTracker.trackLoginMagicLinkSucceeded();
 
                 if (mJetpackConnectSource != null) {
                     ActivityLauncher.continueJetpackConnect(this, mJetpackConnectSource, getSelectedSite());

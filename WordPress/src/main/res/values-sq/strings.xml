@@ -381,7 +381,6 @@ Language: sq_AL
     <string name="experimental_block_editor_note">Përpunuesi eksprerimental me blloqe do të bëhet parazgjedhja, në një hedhje të ardhshme në qarkullim dhe aftësia për ta aktivizuar do të hiqet.</string>
     <string name="avatar_update_email_unverified">Që të përditësoni avatarin tuaj, lypset të verifikohet adresa juaj email së pari.</string>
     <string name="feedback_form_note_link_wordpress">forume bashkësie.</string>
-    <string name="default_web_client_id" a8c-src-lib="module:login">vendmbajtëse</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Shfaq/fshih shkurtoren %s</string>
     <string name="personalization_screen_card_accessibility_label">Shfaq/fshih kartën %s</string>
     <string name="user_avatar_content_description">Avatar për përdoruesin %s</string>
@@ -649,9 +648,6 @@ Language: sq_AL
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blloqe brenda njëri-tjetri më thellë se %d nivele mund të mos funksionojnë si duhet te përpunuesi për celular.</string>
     <string name="domain_management_clear_search">Spastroje kërkimin</string>
     <string name="media_encoder_quality_very_high">Shumë e Lartë</string>
-    <string name="notification_security_key_needed" a8c-src-lib="module:login">Ju lutemi, që të vazhdohet, jepni kyçin tuaj të sigurisë.</string>
-    <string name="login_error_security_key" a8c-src-lib="module:login">Pati ca problem me hyrjen me kyç sigurie</string>
-    <string name="login_text_security_key" a8c-src-lib="module:login">Përdorni një kyç sigurie</string>
     <string name="new_domain_search_screen_error_title">S’u morën dot përkatësi</string>
     <string name="new_domain_search_screen_list_item_sale_price">%s për vitin e parë</string>
     <string name="new_domain_search_screen_list_item_regular_price">$%s / vit</string>
@@ -1196,11 +1192,6 @@ Language: sq_AL
     <string name="notification_channel_weekly_roundup_title">Përmbledhje Javore</string>
     <string name="my_site_dashboard_tab_title">Kreu</string>
     <string name="adding_cat">Shtim kategorish</string>
-    <string name="login_select_email_client">Cilin aplikacion email përdorni?</string>
-    <string name="login_error_xml_rpc_auth_error_communicating" a8c-src-lib="module:login">Pati një problem komunikimi me sajtin. U kthye një kod gabimi HTTP 401.</string>
-    <string name="login_error_xml_rpc_cannot_read_site_auth_required" a8c-src-lib="module:login">Duket se në këtë sajt bllokohen thirrjet XML-RPC (kod gabimi 401). Nëse dështon përpjekja për hyrje, prekni ikonën e ndihmës që të shihni PBR.</string>
-    <string name="login_error_xml_rpc_cannot_read_site" a8c-src-lib="module:login">S’arrihet të lexohet sajti WordPress tek ajo URL. Prekni ikonën e ndihmës që të shihni PBR.</string>
-    <string name="login_error_xml_rpc_services_disabled" a8c-src-lib="module:login">Shërbimet XML-RPC janë të çaktivizuara për këtë sajt.</string>
     <string name="my_site_menu_tab_title">Menu</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Kërkimi juaj përmban shenja të pambuluara në përkatësi WordPress.com. Lejohen shenjat vijuese: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Kontrolloni lidhjen tuaj internet dhe rifreskoni faqen.</string>
@@ -1440,11 +1431,6 @@ Language: sq_AL
     <string name="threat_fix_enter_server_creds_msg_plural">Që të zgjidhen kërcënimet, &lt;a href=\"%1$s\"&gt;jepni kredencialet tuaja për te shërbyesi&lt;/a&gt;.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">Që të zgjidhet kërcënimit, &lt;a href=\"%1$s\"&gt;jepni kredencialet tuaja për te shërbyesi&lt;/a&gt;.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Që të shtoni një lidhje, prekeni dyfish.</string>
-    <string name="login_empty_view_try_another_account">Provoni me tjetër llogari</string>
-    <string name="login_empty_view_see_instructions">Shihni udhëzimet</string>
-    <string name="login_no_jetpack_sites_error_message">Nëse keni tashmë një sajt, do t’ju duhet të instaloni shtojcën e lirë Jetpack dhe ta lidhni me llogarinë tuaj WordPress.com.</string>
-    <string name="login_empty_view_avatar_content_description">Fotoja e profilit tuaj</string>
-    <string name="login_not_a_jetpack_site">Që të përdorni këtë aplikacion për %1$s, do t’ju duhet të keni të instaluar shtojcën Jetpack dhe të lidhur me llogarinë tuaj WordPress.com.</string>
     <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Rregullime Gjerësie</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Atribut “Rel” Lidhjeje</string>
     <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Rregullime Shtylle</string>
@@ -1480,7 +1466,6 @@ Language: sq_AL
     <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Më tepër</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Përshkruajeni shkurt lidhjen, që të ndihmoni përdoruesin e lexuesit të ekranit</string>
     <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Shtoni blloqe</string>
-    <string name="login_no_jetpack_sites">S’u gjetën sajte Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ç’është teksti alternativ?</string>
     <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Shndërroje %s në</string>
     <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Shndërroni bllokun…</string>
@@ -1527,7 +1512,6 @@ Language: sq_AL
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Prekeni dy herë që të hapet Fleta e Veprimeve për përpunim, zëvendësim ose spastrim të figurës</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="new_site_creation_search_domain_input_hint">Shtypni një emër për sajtin tuaj</string>
-    <string name="magic_link_not_meaning_to_create_account" a8c-src-lib="module:login">S’e kishit fjalën të krijonit një llogari të re? Kthehuni mbrapsht, që të jepni adresën tuaj email.</string>
     <string name="invite_links_disable_dialog_message">Pasi të jetë çaktivizuar kjo lidhje ftese, askush s’do të jetë në gjendje të bëhet pjesë e ekipit tuaj. Jeni i sigurt?</string>
     <string name="invite_links_disable_dialog_title">Çaktivizo lidhje ftese</string>
     <string name="invite_links_bad_format_response">U mor përgjigje e pavlefshme</string>
@@ -1788,8 +1772,6 @@ Language: sq_AL
     <string name="hpp_retry_error">Ju lutemi, Kontrolloni lidhjen tuaj në internet dhe riprovoni.</string>
     <string name="hpp_error_subtitle">Kur të jeni sërish i lidhur, prekni Riprovo.</string>
     <string name="hpp_error_title">S’mund të kihen skema, teksa jeni jashtë linje</string>
-    <string name="continue_site_credentials" a8c-src-lib="module:login">Vazhdo me kredenciale shitoreje</string>
-    <string name="login_find_your_connected_email" a8c-src-lib="module:login">Gjeni email-in tuaj të lidhur</string>
     <string name="reader_discover_no_posts_follow_subtitle">Provoni të ndiqni më tepër etiketa që të zgjerohet kërkimi</string>
     <string name="reader_discover_no_posts_title">Pa postime së fundi</string>
     <string name="reader_discover_empty_title">Mirë se vini!</string>
@@ -1830,8 +1812,6 @@ Language: sq_AL
     <string name="suggestion_no_connection">S’ka lidhje në internet.\nS’merren dot sugjerime.</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s të përzgjedhura</string>
-    <string name="login_get_link_by_email" a8c-src-lib="module:login">Merrni me email një lidhje hyrjeje</string>
-    <string name="email_not_registered_wpcom" a8c-src-lib="module:login">Hëm, s’gjejmë dot një llogari WordPress.com të lidhur me këtë adresë email.</string>
     <string name="permission_microphone">Mikrofon</string>
     <string name="comment_unable_to_show_error">S’arrihet të shfaqet ky koment</string>
     <string name="media_browse_for_items">Shfletoni për objekte</string>
@@ -1868,26 +1848,7 @@ Language: sq_AL
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Zgjidhni figurë</string>
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blloku u hoq</string>
     <string name="enter_your_site_address">Jepni adresën e sajtit tuaj ekzistues</string>
-    <string name="signup_confirmation_title" a8c-src-lib="module:login">Ripohim regjistrimi</string>
-    <string name="continue_with_google_terms_of_service_text" a8c-src-lib="module:login">Nëse vazhdoni me Google dhe ende s’keni një llogari WordPress.com, po krijoni një llogari dhe pajtoheni me %1$sKushtet tona të Shërbimit%2$s.</string>
-    <string name="continue_terms_of_service_text" a8c-src-lib="module:login">Duke u regjistruar, pajtoheni me %1$sKushtet tona të Shërbimit%2$s.</string>
-    <string name="signup_confirmation_message" a8c-src-lib="module:login">Këtë adresë email do ta përdorim për të krijuar llogarinë tuaj të re WordPress.com.</string>
-    <string name="signup_magic_link_message" a8c-src-lib="module:login">Ju dërguam me email një lidhje regjistrimi për të krijuar llogarinë tuaj të re WordPress.com. Kontrolloni email-et në këtë pajisje dhe prekni lidhjen te email-i i ardhur nga WordPress.com.</string>
-    <string name="enter_account_info_for_site" a8c-src-lib="module:login">Jepni të dhënat e llogarisë suaj për %1$s.</string>
-    <string name="login_or" a8c-src-lib="module:login">ose</string>
-    <string name="continue_google_button_suffix" a8c-src-lib="module:login">Vazhdoni me Google</string>
-    <string name="login_find_your_site_adress" a8c-src-lib="module:login">Gjeni adresën e sajtit tuaj</string>
-    <string name="login_done">U bë</string>
-    <string name="magic_link_not_seeing_email_message" a8c-src-lib="module:login">S’e shihni email-in? Shihni te dosja juaj Të padëshiruar ose Të pavlera.</string>
-    <string name="login_magic_links_sent_label" a8c-src-lib="module:login">Hapni email-et në këtë pajisje dhe prekni lidhjen te email-i që morët nga WordPress.com.</string>
-    <string name="login_magic_links_label" a8c-src-lib="module:login">Do t’ju dërgojmë me email një lidhje që do t’ju fusë menjëherë, pa qenë nevoja për fjalëkalim.</string>
-    <string name="check_email" a8c-src-lib="module:login">Kontrolloni email-in</string>
     <string name="get_started" a8c-src-lib="module:login">Fillojani</string>
-    <string name="enter_email_to_continue_wordpress_com" a8c-src-lib="module:login">Që të bëni hyrjen ose të krijoni një llogari te WordPress.com, jepni adresën tuaj email.</string>
-    <string name="or_type_your_password" a8c-src-lib="module:login">Ose shtypni fjalëkalimin tuaj</string>
-    <string name="create_account" a8c-src-lib="module:login">Krijo llogari</string>
-    <string name="send_link_by_email" a8c-src-lib="module:login">Dërgoje lidhjen me email</string>
-    <string name="reset_your_password" a8c-src-lib="module:login">Ricaktoni fjalëkalimi tuaj</string>
     <string name="reader_error_request_failed_title">Pati një problem me trajtimin e kërkesës. Ju lutemi, riprovoni.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Shpënia te hedhurinat e këtij postimi do të hedhë tej edhe ndryshimet e paruajtura, jeni i sigurt se doni të vazhdohet?</string>
     <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Mundësi blloku %s</string>
@@ -2110,9 +2071,6 @@ Language: sq_AL
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Përshkrim galerie. %s</string>
     <string name="create_post_page_fab_tooltip">Krijoni një postim ose faqe</string>
     <string name="content_description_person_building_website">Personi që po krijon sajt</string>
-    <string name="post_signup_interstitial_not_right_now">Jo tani</string>
-    <string name="post_signup_interstitial_subtitle">Çfarëdo që doni të krijoni ose ndani me të tjerët, do t’ju ndihmojmë ta bëni mu këtu.</string>
-    <string name="post_signup_interstitial_title">Mirë se vini në WordPress</string>
     <string name="stock_media_picker_list_content_description">Fototekë</string>
     <string name="photo_picker_image_thumbnail_unselected">U shpërzgjodh figurë</string>
     <string name="photo_picker_image_selected">,E përzgjedhur</string>
@@ -2126,12 +2084,6 @@ Language: sq_AL
     <string name="dialog_confirm_scheduled_post_sync_title">Gati për Njëkohësim?</string>
     <string name="new_site_creation_unavailable_domain">Kjo përkatësi s’është e lirë</string>
     <string name="negative_prefix">-%s</string>
-    <string name="login_discovery_error_generic" a8c-src-lib="module:login">S’qemë në gjendje të hyjmë në sajtin tuaj. Do t’ju duhet të lidheni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
-    <string name="login_discovery_error_ssl" a8c-src-lib="module:login">S’qemë në gjendje të hyjmë në sajtin tuaj, për shkak të një problemi me &lt;b&gt;Dëshminë SSL&lt;/b&gt;. Do t’ju duhet të lidheni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
-    <string name="login_discovery_error_http_auth" a8c-src-lib="module:login">S’qemë në gjendje të hyjmë në sajtin tuaj, ngaqë lyp &lt;b&gt;Mirëfilltësim HTTP&lt;/b&gt;. Do t’ju duhet të lidheni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
-    <string name="login_discovery_error_xmlrpc" a8c-src-lib="module:login">S’qemë në gjendje të hyjmë te &lt;b&gt;kartela&lt;/b&gt; në sajtin tuaj. Do t’ju duhet të lidheni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
-    <string name="login_site_credentials_magic_link_label" a8c-src-lib="module:login">Thuajse mbërritëm! Na duhet vetëm të verifikojmë adresën tuaj email të lidhur me Jetpack-un &lt;b&gt;%1$s&lt;/b&gt;</string>
-    <string name="enter_credentials_for_site" a8c-src-lib="module:login">Hyni me kredencialet tuaja për sajtin %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Faqe sajti</string>
     <string name="reader_my_likes_display_name">Pëlqime</string>
     <string name="reader_discover_display_name">Zbuloni</string>
@@ -2289,8 +2241,6 @@ Language: sq_AL
     <string name="post_settings_add_to_calendar">Shtoje në kalendar</string>
     <string name="post_settings_notification">Njoftim</string>
     <string name="post_settings_time_and_date">Datë &amp; Kohë</string>
-    <string name="login_invalid_site_url" a8c-src-lib="module:login">Ju lutemi, jepni një adresë të plotë sajti, bie fjala, example.com.</string>
-    <string name="enter_email_for_site" a8c-src-lib="module:login">Që të lidheni me %1$s, bëni hyrjen te llogaria juaj WordPress.com</string>
     <string name="stats_post_views_label">Pamje</string>
     <string name="stats_post_label">Postim</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -2396,8 +2346,6 @@ Language: sq_AL
     <string name="posts_draft_empty">S’keni ndonjë postim skicë</string>
     <string name="posts_scheduled_empty">S’keni postime të planifikuara për botim</string>
     <string name="posts_published_empty">S’keni botuar ndonjë postim - ende jo!</string>
-    <string name="notification_wpcom_username_needed" a8c-src-lib="module:login">Ju lutemi, bëni hyrjen me emrin tuaj të përdoruesit dhe fjalëkalimin.</string>
-    <string name="error_user_username_instead_of_email" a8c-src-lib="module:login">Ju lutemi, hyni duke përdorur emrin tuaj të përdoruesit WordPress.com, në vend se adresën tuaj email.</string>
     <string name="stats_insights_average_words">Mesatare fjalësh/postim</string>
     <string name="stats_insights_total_words">Fjalë gjithsej</string>
     <string name="stats_insights_average_likes">Mesatare pëlqimesh/postim</string>
@@ -2407,7 +2355,6 @@ Language: sq_AL
     <string name="stats_insights_posts">Postime</string>
     <string name="stats_insights_year">Vit</string>
     <string name="stats_insights_this_year_site_stats">Këtë Vit</string>
-    <string name="no_site_error" a8c-src-lib="module:login">Sajti në këtë adresë s’është sajt WordPress. Që të mund të lidhemi me të, sajti duhet të përdorë WordPress-in.</string>
     <string name="plugin_check_domain_credit_error">S’u arrit të kontrollohet kredit përkatësie gjendje</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Po kontrollohet kredit përkatësie</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Regjistroje përkatësinë</string>
@@ -2540,7 +2487,6 @@ Language: sq_AL
     <string name="history_detail_button_previous">I mëparshmi</string>
     <string name="history_detail_button_next">Pasuesi</string>
     <string name="media_space_used">%1$s të përdorura</string>
-    <string name="enter_wpcom_or_jetpack_site" a8c-src-lib="module:login">Ju lutemi, jepni një sajt WordPress.com ose një WordPress që e strehoni diku dhe që është i lidhur me Jetpack-un</string>
     <string name="history_loading_revision">Po ngarkohet rishikimi</string>
     <string name="history_loaded_revision">Rishikimi u ngarkua</string>
     <string name="history_load_dialog_button_positive">Ngarkoje</string>
@@ -2569,8 +2515,6 @@ Language: sq_AL
     <string name="pages_scheduled">Planifikuar</string>
     <string name="pages_drafts">Skica</string>
     <string name="pages_published">I botuar</string>
-    <string name="login_error_sms_throttled" a8c-src-lib="module:login">Provuam shumë herë t’ju dërgonin një kod verifikimi SMS — bëni ca pushim, dhe kërkoni një të ri pas ndonjë minute.</string>
-    <string name="login_error_email_not_found_v2" a8c-src-lib="module:login">S’ka llogari WordPress.com që përputhet me këtë llogari Google.</string>
     <string name="site_picker_remove_site_empty">S’u gjetën sajte me përputhje për kërkimin tuaj</string>
     <string name="reader_no_followed_blogs_search_title">S’ka blogje që përputhen me kërkimin tuaj</string>
     <string name="page_parent_changed">Faqja mëmë është ndryshuar</string>
@@ -2589,7 +2533,6 @@ Language: sq_AL
     <string name="content_description_more">Më tepër</string>
     <string name="my_site_create_new_site_title">S’keni ende ndonjë sajt</string>
     <string name="reader_empty_subscribed_tags_subtitle">Shtoni këtu etiketa që të gjeni postime rreth temave tuaja të parapëlqyera</string>
-    <string name="login_to_to_connect_jetpack" a8c-src-lib="module:login">Bëni hyrjen te llogaria WordPress.com që përdorët për t’ia përshoqëruar Jetpack-ut.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">PBR për Jetpack</string>
     <string name="stats_jetpack_connection_setup_info">Që të përdorni Statistikat te sajti juaj WordPress, do t’ju duhet të instaloni shtojcën Jetpack.</string>
@@ -2642,13 +2585,7 @@ Language: sq_AL
     <string name="reader_empty_search_title">S’u gjetën përfundime</string>
     <string name="comment_read_source_post">Lexoni postimin burim</string>
     <string name="sites">Sajte</string>
-    <string name="signup_magic_link_title" a8c-src-lib="module:login">Lidhja magjike u dërgua</string>
-    <string name="verification_2fa_screen_title" a8c-src-lib="module:login">Verifikim kodi</string>
-    <string name="selfhosted_site_login_title" a8c-src-lib="module:login">Kredenciale hyrjeje</string>
-    <string name="magic_link_sent_login_title" a8c-src-lib="module:login">Lidhja magjike u dërgua</string>
-    <string name="magic_link_login_title" a8c-src-lib="module:login">Hyrje me lidhje magjike</string>
     <string name="site_address_login_title" a8c-src-lib="module:login">Hyrje me adresë sajti</string>
-    <string name="email_address_login_title" a8c-src-lib="module:login">Hyrje me adresë email</string>
     <string name="reader_empty_saved_posts_description">Prekeni %s që të ruhet një postim te lista juaj.</string>
     <string name="reader_empty_saved_posts_title">Ende pa postime të ruajtur!</string>
     <string name="reader_bookmark_snack_title">Postimi u ruajt</string>
@@ -2750,7 +2687,6 @@ Language: sq_AL
     <string name="invite_user_delete_desc">hiqe %s</string>
     <string name="profile_picture">Foto profili e %s</string>
     <string name="comment_checkmark_desc">shenjë</string>
-    <string name="signup_with_google_progress" a8c-src-lib="module:login">Po bëhet regjistrim me Google…</string>
     <string name="jetpack_connection_failed_with_reason">Dështoi lidhja me Jetpack-un: %s</string>
     <string name="jetpack_already_connected_toast">Jeni tashmë i lidhur te Jetpack-u</string>
     <string name="menu_visual_mode">Përpunues Pamor</string>
@@ -2777,7 +2713,6 @@ Language: sq_AL
     <string name="notif_detail_screen_title">Hollësi njoftimi %s</string>
     <string name="edit_photo_screen_title">Përpunoni Foto</string>
     <string name="share_intent_screen_title">Zgjidhni sajt</string>
-    <string name="signup_epilogue_screen_title">Llogari e re</string>
     <string name="person_detail_screen_title">Hollësi personi</string>
     <string name="media_settings_screen_title">Hollësi kartele</string>
     <string name="publicize_buttons_screen_title">Butona ndarjesh me të tjerët</string>
@@ -2828,7 +2763,6 @@ Language: sq_AL
     <string name="site_creation_domain_finish_button">Krijoje sajtin</string>
     <string name="notification_site_creation_created">Prekeni që të vazhdohet.</string>
     <string name="notification_site_creation_title_success">Sajti u krijua!</string>
-    <string name="google_error_timeout" a8c-src-lib="module:login">Google u vonua shumë me përgjigjen. Mund të doni të prisni derisa të keni një lidhje internet më të fuqishme.</string>
     <string name="username_changer_title">Ndryshoni emër përdoruesi</string>
     <string name="username_changer_hint">Shtypni që të merrni më tepër sugjerime</string>
     <string name="username_changer_header">Emri juaj i tanishëm i përdoruesit është %1$s%2$s%3$s. Me pak përjashtime, të tjerët zor se do ta shohin emrin tuaj të ekranit, %4$s%5$s%6$s.</string>
@@ -2838,18 +2772,6 @@ Language: sq_AL
     <string name="username_changer_dismiss_button_positive">Hidhe Tej</string>
     <string name="username_changer_action">Ruaje</string>
     <string name="content_description_add_avatar">Shtoni avatar</string>
-    <string name="signup_user_exists">Email tashmë ekzistues në WordPress.com.\nPo vazhdohet me hyrjen.</string>
-    <string name="signup_updating_account">Po përditësohet llogaria…</string>
-    <string name="signup_magic_link_progress" a8c-src-lib="module:login">Mesazhi po dërgohet</string>
-    <string name="signup_magic_link_error_button_positive" a8c-src-lib="module:login">Riprovoni</string>
-    <string name="signup_magic_link_error_button_negative" a8c-src-lib="module:login">Mbylle</string>
-    <string name="signup_magic_link_error" a8c-src-lib="module:login">Pati ca probleme me dërgimin e email-it.  Mund të riprovoni tani ose ta mbyllni dhe të riprovoni më vonë.</string>
-    <string name="signup_epilogue_hint_username">Emër përdoruesi</string>
-    <string name="signup_epilogue_hint_password_detail">Mundeni të hyni përherë me një lidhje si ajo që sapo përdorët, por mund të caktoni edhe një fjalëkalim, nëse parapëlqeni.</string>
-    <string name="signup_epilogue_hint_password">Fjalëkalim (opsional)</string>
-    <string name="signup_epilogue_hint_display">Emër Shfaqjeje</string>
-    <string name="signup_epilogue_error_button_positive">Riprovoni</string>
-    <string name="signup_epilogue_error_button_negative">Riktheje</string>
     <string name="signup_epilogue_error_generic">Pati ca probleme me përditësimin e llogarisë tuaj. Që të vazhdohet, mund të riprovoni ose prapësoni ndryshimet.</string>
     <string name="plugin_needs_update">Lyp përditësim</string>
     <string name="plugin_caption_search">Kërkoni Për Shtojca</string>
@@ -2937,18 +2859,6 @@ Language: sq_AL
     <string name="my_site_btn_plugins">Shtojca</string>
     <string name="media_edit_link_hint">Hape lidhjen në dritare/skedë të re</string>
     <string name="media_edit_link_text">Lidhje për te</string>
-    <string name="notification_login_failed" a8c-src-lib="module:login">Ndodhi një gabim.</string>
-    <string name="notification_2fa_needed" a8c-src-lib="module:login">Ju lutemi, që të vazhdohet jepni një kod mirëfilltësimi.</string>
-    <string name="notification_error_wrong_password" a8c-src-lib="module:login">Ju lutemi, që të vazhdohet, rikontrolloni fjalëkalimin.</string>
-    <string name="notification_login_title_stopped" a8c-src-lib="module:login">Hyrja u ndal</string>
-    <string name="notification_logging_in" a8c-src-lib="module:login">Ju lutemi, prisni, teksa bëhet hyrja.</string>
-    <string name="notification_login_title_in_progress" a8c-src-lib="module:login">Hyrja në ecuri e sipër…</string>
-    <string name="notification_logged_in" a8c-src-lib="module:login">Prekeni që të vazhdohet.</string>
-    <string name="notification_login_title_success" a8c-src-lib="module:login">U futët!</string>
-    <string name="login_error_generic_start" a8c-src-lib="module:login">S’u nis dot hyrja me Google.</string>
-    <string name="login_empty_password" a8c-src-lib="module:login">Ju lutemi, jepni një fjalëkalim</string>
-    <string name="login_text_otp_another" a8c-src-lib="module:login">Më mirë më dërgoni një kod tjetër</string>
-    <string name="enter_verification_code_sms" a8c-src-lib="module:login">Dërguam një mesazh teksti te numri i telefonit që përfundon me %s. Ju lutemi, futni kodin e verifikimit nga SMS-ja.</string>
     <string name="image_size">Përmasa</string>
     <string name="uploading_subtitle_media_only_one">ende 1 kartelë</string>
     <string name="uploading_subtitle_media_only">Ende %1$d nga %2$d kartela gjithsej</string>
@@ -2965,15 +2875,10 @@ Language: sq_AL
     <string name="confirm_remove_media_image">Të hiqet kjo figurë nga postimi?</string>
     <string name="media_edit_customize_card_caption">Përshtateni</string>
     <string name="media_edit_file_details_card_caption">Hollësi Kartele</string>
-    <string name="login_error_suffix" a8c-src-lib="module:login">\nNdoshta të provohej me një llogari tjetër?</string>
-    <string name="login_error_generic" a8c-src-lib="module:login">Pati problem në lidhjen me llogarinë Google.</string>
     <string name="login_error_button">Mbylle</string>
-    <string name="enter_wpcom_password_google" a8c-src-lib="module:login">Që të vazhdohet me këtë llogari Google, ju lutemi, jepni fjalëkalimin për te WordPress.com. Kjo do t’ju kërkohet vetëm një herë.</string>
     <string name="error_generic_network">Ndodhi një gabim rrjeti. Ju lutemi, kontrolloni lidhjen tuaj dhe riprovoni.</string>
     <string name="post_settings_remove_featured_image">Hiqe figurën e zgjedhur</string>
     <string name="post_settings_choose_featured_image">Zgjidhni figurë të zgjedhur</string>
-    <string name="login_log_in_for_share_intent" a8c-src-lib="module:login">Që ta ndani lëndën me të tjerët, bëni hyrjen në WordPress.com.</string>
-    <string name="enter_site_address_share_intent" a8c-src-lib="module:login">Jepni adresën e sajtit tuaj WordPress te i cili do të donit të ndanit lëndë me të tjerët.</string>
     <string name="jetpack_disconnect_error_toast">Gabim në shkëputje sajti</string>
     <string name="jetpack_disconnect_success_toast">Sajti u shkëput</string>
     <string name="jetpack_disconnect_confirm">Shkëpute</string>
@@ -3054,28 +2959,13 @@ Language: sq_AL
     <string name="post_queued">Postimi u vu në radhë</string>
     <string name="uploading_post">Po ngarkohet \"%s\"</string>
     <string name="connection_to_server_lost">Humbi lidhja me shërbyesin</string>
-    <string name="login_email_client_not_found">S’zbulohet dot aplikacioni juaj për email</string>
-    <string name="login_empty_2fa" a8c-src-lib="module:login">Ju lutem, jepni një kod verifikimi</string>
-    <string name="login_empty_username" a8c-src-lib="module:login">Ju lutemi, jepni emër përdoruesi</string>
-    <string name="login_log_in_for_deeplink" a8c-src-lib="module:login">Që të lexoni këtë postim, bëni hyrjen te WordPress.com.</string>
-    <string name="login_error_while_adding_site" a8c-src-lib="module:login">Gabim gjatë shtimit të sajtit. Kod gabimi: %s</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">Po kontrollohet adresa e sajtit</string>
-    <string name="login_site_address_more_help" a8c-src-lib="module:login">Ju duhet më tepër ndihmë?</string>
-    <string name="login_site_address_help_content" a8c-src-lib="module:login">Adresa e sajtit tuaj shfaqet te shtylla në krye të skenës, kur vizitoni sajtin tuaj nën Chrome.</string>
-    <string name="login_site_address_help_title" a8c-src-lib="module:login">Cila është adresa e sajtit tim?</string>
     <string name="login_site_address" a8c-src-lib="module:login">Adresë sajti</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Jepni adresën e sajtit WordPress te i cili do të donit të lidheshit.</string>
     <string name="login_already_logged_in_wpcom">Jeni tashmë i futur te WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Vazhdo</string>
     <string name="connect_more">Lidhni një sajt tjetër</string>
-    <string name="enter_wpcom_password" a8c-src-lib="module:login">Jepni fjalëkalimin tuaj WordPress.com.</string>
-    <string name="login_magic_link_email_requesting" a8c-src-lib="module:login">Po kërkohet email hyrjesh</string>
-    <string name="password_incorrect" a8c-src-lib="module:login">Duket sikur ky fjalëkalim është i pasaktë. Ju lutemi, kontrollojeni edhe një herë informacionin tuaj dhe riprovoni.</string>
-    <string name="requesting_otp" a8c-src-lib="module:login">Po kërkohet një kod verifikimi përmes SMS-je.</string>
-    <string name="login_text_otp" a8c-src-lib="module:login">Më mirë më dërgoni kod me tekst</string>
-    <string name="enter_verification_code" a8c-src-lib="module:login">Thuajse arritëm! Ju lutemi, jepni kodin e verifikimit për WordPress.com prej aplikacionit tuaj të mirëfilltësimeve.</string>
     <string name="next">Pasuesi</string>
-    <string name="enter_email_wordpress_com" a8c-src-lib="module:login">Që të administroni krejt sajtet tuaj WordPress, bëni hyrjen te WordPress.com.</string>
     <string name="me_profile_photo">Foto Profili</string>
     <string name="error_media_parse_error">Përgjigje e papritur nga shërbyesi</string>
     <string name="upload_finished_toast">Ngarkimi s’mund të ndalet, ngaqë ka mbaruar tashmë</string>
@@ -3224,8 +3114,6 @@ Language: sq_AL
     <string name="error_unknown_post_type">Format i panjohur postimesh</string>
     <string name="submit_for_review">Parashtroje</string>
     <string name="title_subscriber">Pajtimtar</string>
-    <string name="duplicate_site_detected" a8c-src-lib="module:login">U pikas një sajt i përsëdytur.</string>
-    <string name="cannot_add_duplicate_site" a8c-src-lib="module:login">Ky sajt ekziston tashmë në aplikacion, s’mund ta shtoni.</string>
     <string name="already_logged_in_wpcom">Jeni tashmë i futur në një llogari WordPress.com, s’mund të shtoni një sajt WordPress.com të lidhur pas një llogarie tjetër.</string>
     <string name="error_media_load">S’arrihet të ngarkohet media</string>
     <string name="error_media_refresh_no_connection">Lypset lidhje që të rifreskohet mediateka</string>
@@ -3236,8 +3124,6 @@ Language: sq_AL
     <string name="media_generic_error">Ndodhi një gabim mediash</string>
     <string name="retry">Riprovoni</string>
     <string name="confirm">Ripohojeni</string>
-    <string name="xmlrpc_endpoint_forbidden_error" a8c-src-lib="module:login">S’u bë dot lidhja. Morëm një gabim 403, kur provuam të hyjmë\n        te pikëmbarimi XMLRPC i sajtit tuaj. Kjo i duhet aplikacionit, që të mund të komunikojë me sajtin tuaj.\n        Lidhuni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
-    <string name="xmlrpc_post_blocked_error" a8c-src-lib="module:login">S’u bë dot lidhja. Strehuesi juaj i bllokon kërkesat POST, dhe aplikacionit\n        i duhen që të mund të komunikojë me sajtin tuaj. Lidhuni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
     <string name="pending_draft_one_generic">Mos e lini varur! \'%1$s\' është në pritje të botimit.</string>
     <string name="pending_draft_one_month">Mos e lini varur! \'%1$s\' është në pritje të botimit.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' mbetet skicë. Mos harroni ta botoni!</string>
@@ -3320,8 +3206,6 @@ Language: sq_AL
     <string name="error_refreshing_gravatar">Gabim në ringarkimin e Gravatarit tuaj</string>
     <string name="error_locating_image">Gabim në ngarkimin e figurës së qethur</string>
     <string name="error_cropping_image">Gabim teksa qethej figura</string>
-    <string name="checking_email" a8c-src-lib="module:login">Po kontrollohet email-i</string>
-    <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Jo e mundshme këtë çast. Ju lutemi, jepni fjalëkalimin tuaj</string>
     <string name="logging_in">Po hyhet</string>
     <string name="web_address_dialog_hint">E shfaqur publikisht kur komentoni.</string>
     <string name="export_your_content_message">Postimet, faqet dhe rregullimet tuaja do t’ju dërgohen me email te %s.</string>
@@ -3354,7 +3238,6 @@ Language: sq_AL
     <string name="comments_empty_list_filtered_pending">S’ka komente në pritje të shqyrtimit</string>
     <string name="comments_empty_list_filtered_approved">S’ka komente të miratuara</string>
     <string name="button_skip">Anashkaloje</string>
-    <string name="xmlrpc_missing_method_error" a8c-src-lib="module:login">S’u lidh dot. Metodat e domosdoshme XML-RPC mungojnë te shërbyesi.</string>
     <string name="alignment_center">Në qendër</string>
     <string name="post_format_video">Video</string>
     <string name="post_format_status">Gjendje</string>
@@ -3414,7 +3297,6 @@ Language: sq_AL
     <string name="about_the_app">Rreth aplikacionit</string>
     <string name="error_post_account_settings">S’u ruajtën dot rregullimet e llogarisë tuaj</string>
     <string name="error_fetch_account_settings">S’u morën dot rregullimet e llogarisë tuaj</string>
-    <string name="error_fetch_my_profile" a8c-src-lib="module:login">S’u mor dot profili juaj</string>
     <string name="site_settings_unknown_language_code_error">Kod gjuhe i papranuar</string>
     <string name="site_settings_threading_dialog_description">Lejo komente të folezëzuar në rrjedha.</string>
     <string name="site_settings_threading_dialog_header">Rrjedhë deri në</string>
@@ -3602,9 +3484,6 @@ Language: sq_AL
     <string name="my_site_btn_blog_posts">Postime</string>
     <string name="reader_label_new_posts_subtitle">Prekeni që të shfaqen</string>
     <string name="select_all">Përzgjidhe krejt</string>
-    <string name="auth_required" a8c-src-lib="module:login">Hyni sërish që të vazhdohet.</string>
-    <string name="invalid_verification_code" a8c-src-lib="module:login">Kod verifikimi i pavlefshëm</string>
-    <string name="verification_code" a8c-src-lib="module:login">Kod verifikimi</string>
     <string name="language">Gjuhë</string>
     <string name="reader_empty_posts_request_failed">S’arrin të marrë dot postimet</string>
     <string name="error_notification_open">S’u hap dot njoftimi</string>
@@ -3667,7 +3546,6 @@ Language: sq_AL
     <string name="ssl_certificate_error">Dëshmi SSL e pavlefshme</string>
     <string name="help">Ndihmë</string>
     <string name="username_or_password_incorrect">Emri i përdoruesit apo fjalëkalimi që dhatë është i pasaktë</string>
-    <string name="email_invalid" a8c-src-lib="module:login">Jepni një adresë email të vlefshme</string>
     <string name="invalid_email_message">Adresa juaj email s’është e vlefshme</string>
     <string name="error_downloading_image">Gabim në shkarkim figure</string>
     <string name="error_load_comment">S\'u ngarkua dot komenti</string>
@@ -3697,7 +3575,6 @@ Language: sq_AL
     <string name="new_media">Media e re</string>
     <string name="new_post">Postim i ri</string>
     <string name="notifications_empty_all">S’ka njoftime…ende jo!</string>
-    <string name="http_authorization_required" a8c-src-lib="module:login">Lypset autorizim</string>
     <string name="invalid_site_url_message">Kontrolloni nëse URL-ja e sajtit të dhënë është e vlefshme</string>
     <string name="file_error_create">S’u krijua dot kartelë e përkohshme për ngarkim medie. Sigurohuni që në pajisjen tuaj ka hapësirë të lirë të mjaftueshme.</string>
     <string name="category_name">Emër kategorie</string>
@@ -3742,7 +3619,6 @@ Language: sq_AL
     <string name="reader_likes_you_and_one">Këtë e pëlqeni ju dhe një tjetër</string>
     <string name="pick_video">Përzgjidhni video</string>
     <string name="pick_photo">Përzgjidhni foto</string>
-    <string name="sign_up_label" a8c-src-lib="module:login">Regjistrohuni</string>
     <string name="reader_toast_err_url_intent">S’arrin të hapë %s</string>
     <string name="reader_toast_err_view_image">S’arrin të shihet figura</string>
     <string name="reader_toast_err_share_intent">S’arrin të ndajë me të tjerët</string>
@@ -3785,8 +3661,6 @@ Language: sq_AL
     <string name="note_reply_successful">Përgjigja u botua</string>
     <string name="sign_in">Hyni</string>
     <string name="loading">Po ngarkohet…</string>
-    <string name="httppassword" a8c-src-lib="module:login">Fjalëkalim HTTP</string>
-    <string name="httpuser" a8c-src-lib="module:login">Emër përdoruesi HTTP</string>
     <string name="error_media_upload">Ndodhi një gabim gjatë ngarkimit të medias</string>
     <string name="incorrect_credentials">Emër përdoruesi ose fjalëkalim i pasaktë.</string>
     <string name="log_in" a8c-src-lib="module:login">Hyni</string>

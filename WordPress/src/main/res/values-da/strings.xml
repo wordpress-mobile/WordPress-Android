@@ -6,7 +6,6 @@ Generator: GlotPress/4.1.0
 Language: da_DK
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="signup_magic_link_title" a8c-src-lib="module:login">Magisk link sendt</string>
     <string name="error_media_save">Kunne ikke gemme medie</string>
     <string name="editor_draft_saved_locally">Kladde gemt på enheden</string>
     <string name="editor_draft_saved_online">Kladde gemt online</string>
@@ -90,9 +89,6 @@ Language: da_DK
     <string name="my_site_btn_site_settings">Webstedsindstillinger</string>
     <string name="select_all">Vælg alle</string>
     <string name="language">Sprog</string>
-    <string name="auth_required" a8c-src-lib="module:login">Log ind igen for at fortsætte.</string>
-    <string name="verification_code" a8c-src-lib="module:login">Godkendelseskode</string>
-    <string name="invalid_verification_code" a8c-src-lib="module:login">Ugyldig godkendelseskode</string>
     <string name="reader_empty_posts_request_failed">Kunne ikke hente indlæg</string>
     <string name="stats_view_authors">Forfattere</string>
     <string name="stats_view_search_terms">Søgeord</string>
@@ -163,7 +159,6 @@ Language: da_DK
     <string name="error_refresh_pages">Sider kunne ikke genindlæses</string>
     <string name="error_refresh_posts">Indlæg kunne ikke genindlæses </string>
     <string name="invalid_email_message">Din e-mailadresse er ikke gyldig</string>
-    <string name="email_invalid" a8c-src-lib="module:login">Indtast en gyldig e-mailadresse</string>
     <string name="theme_fetch_failed">Det lykkedes ikke at hente temaer</string>
     <string name="sdcard_message">Et SD-kort skal være stukket ind og tilgængeligt for at kunne uploade medier</string>
     <string name="gallery_error">Mediet kunne ikke hentes</string>
@@ -201,7 +196,6 @@ Language: da_DK
     <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Vandret justering</string>
     <string name="link_enter_url_text">Linktekst (valgfri)</string>
     <string name="local_changes">Lokale ændringer</string>
-    <string name="http_authorization_required" a8c-src-lib="module:login">Godkendelse påkrævet</string>
     <string name="remove_account">Fjern websted</string>
     <string name="media_error_no_permission">Du har ikke tilladelse til at se mediebiblioteket</string>
     <string name="cannot_delete_multi_media_items">Nogle medier kan ikke slettes på nuværende tidspunkt. Prøv igen senere.</string>
@@ -257,8 +251,6 @@ Language: da_DK
     <string name="new_notifications">%d nye notifikationer</string>
     <string name="note_reply_successful">Svar sendt</string>
     <string name="loading">Indlæser…</string>
-    <string name="httpuser" a8c-src-lib="module:login">HTTP-brugernavn</string>
-    <string name="httppassword" a8c-src-lib="module:login">HTTP-adgangskode</string>
     <string name="error_media_upload">Der opstod en fejl under overførsel af medie</string>
     <string name="incorrect_credentials">Forkert brugernavn eller adgangskode.</string>
     <string name="password">Kodeord</string>

@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordLoginViewModel;
-import org.wordpress.android.ui.accounts.LoginViewModel;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingViewModel;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
@@ -429,11 +428,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SiteSettingsTimezoneViewModel.class)
     abstract ViewModel siteSettingsTimezoneViewModel(SiteSettingsTimezoneViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(LoginViewModel.class)
-    abstract ViewModel loginViewModel(LoginViewModel viewModel);
 
     @Binds
     @IntoMap

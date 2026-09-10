@@ -8,7 +8,6 @@ import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.ShareIntentReceiverFragment;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.about.UnifiedAboutActivity;
-import org.wordpress.android.ui.accounts.login.applicationpassword.LoginSiteApplicationPasswordFragment;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailFragment;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListFragment;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterFragment;
@@ -530,8 +529,6 @@ public interface AppComponent {
     void inject(WPMainNavigationView object);
 
     void inject(PostResolutionOverlayFragment object);
-
-    void inject(LoginSiteApplicationPasswordFragment object);
 
     // Provide access to EditorLauncher for static utility classes
     EditorLauncher editorLauncher();

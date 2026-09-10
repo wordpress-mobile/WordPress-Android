@@ -477,7 +477,6 @@ Language: he_IL
     <string name="experimental_block_editor_note">עורך הבלוקים הניסיוני יהפוך לברירת המחדל בגרסה עתידית והאפשרות להשבית אותו תוסר.</string>
     <string name="avatar_update_email_unverified">כדי לעדכן את צלמית המשתמש, עליך לאמת את כתובת האימייל שלך תחילה.</string>
     <string name="feedback_form_note_link_wordpress">בפורומים של הקהילה.</string>
-    <string name="default_web_client_id" a8c-src-lib="module:login">מציין מיקום</string>
     <string name="personalization_screen_shortcuts_accessibility_label">להחליף את הקיצור %s</string>
     <string name="personalization_screen_card_accessibility_label">להחליף את הכרטיס %s</string>
     <string name="user_avatar_content_description">צלמית משתמש של המשתמש %s</string>
@@ -745,9 +744,6 @@ Language: he_IL
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">בעורך לנייד ייתכן עיבוד לא תקין של בלוקים בקינון עמוק מ-%d רמות.</string>
     <string name="domain_management_clear_search">לנקות את החיפוש</string>
     <string name="media_encoder_quality_very_high">גבוהה מאוד</string>
-    <string name="notification_security_key_needed" a8c-src-lib="module:login">כדי להמשיך עליך לספק מפתח אבטחה.</string>
-    <string name="login_error_security_key" a8c-src-lib="module:login">בעיה בהתחברות בעזרת מפתח האבטחה</string>
-    <string name="login_text_security_key" a8c-src-lib="module:login">להשתמש במפתח אבטחה</string>
     <string name="new_domain_search_screen_error_title">לא ניתן לאחזר דומיינים</string>
     <string name="new_domain_search_screen_list_item_sale_price">%s בשנה הראשונה</string>
     <string name="new_domain_search_screen_list_item_regular_price">%s לשנה</string>
@@ -1291,11 +1287,6 @@ Language: he_IL
     <string name="notification_channel_weekly_roundup_title">סיכום שבועי</string>
     <string name="my_site_dashboard_tab_title">עמוד הבית</string>
     <string name="adding_cat">מוסיף קטגוריות</string>
-    <string name="login_select_email_client">איזו אפליקציית אימייל נמצאת אצלך בשימוש?</string>
-    <string name="login_error_xml_rpc_auth_error_communicating" a8c-src-lib="module:login">הייתה בעיה בתקשורת עם האתר הזה. הוחזר קוד שגיאה של HTTP מסוג 401.</string>
-    <string name="login_error_xml_rpc_cannot_read_site_auth_required" a8c-src-lib="module:login">נראה שקריאות XML-RPC חסומות באתר הזה (קוד שגיאה 401). אם הניסיון להתחברות נכשל, יש להקיש על סמל העזרה כדי להציג את השאלות הנפוצות.</string>
-    <string name="login_error_xml_rpc_cannot_read_site" a8c-src-lib="module:login">לא ניתן לקרוא את אתר WordPress בכתובת URL זו. יש להקיש על סמל העזרה כדי להציג את השאלות הנפוצות.</string>
-    <string name="login_error_xml_rpc_services_disabled" a8c-src-lib="module:login">שירותי XML-RPC באתר זה מנותקים.</string>
     <string name="my_site_menu_tab_title">תפריט</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">החיפוש שלך כולל תווים שלא נתמכים בדומיינים של WordPress.com. התווים הבאים מותרים: A–Z‏, a–z,‏ 0–9.</string>
     <string name="my_site_error_within_card_subtitle">יש לבדוק את החיבור לאינטרנט ולרענן את העמוד.</string>
@@ -1538,11 +1529,6 @@ Language: he_IL
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;יש להזין את פרטי הכניסה של השרת&lt;/a&gt; כדי לתקן את האיומים האלה.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;יש להזין את פרטי הכניסה של השרת&lt;/a&gt; כדי לתקן את האיום הזה.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">יש להקיש פעמיים כדי להוסיף קישור.</string>
-    <string name="login_empty_view_try_another_account">לנסות עם חשבון אחר</string>
-    <string name="login_empty_view_see_instructions">להציג את ההוראות</string>
-    <string name="login_no_jetpack_sites_error_message">אם כבר יש לך אתר, יהיה עליך להתקין את התוסף החינמי של Jetpack ולחבר אותו לחשבון שלך ב-WordPress.com.</string>
-    <string name="login_empty_view_avatar_content_description">תמונת הפרופיל שלך</string>
-    <string name="login_not_a_jetpack_site">כדי להשתמש באפליקציה הזאת עבור ⁦%1$s⁩ עליך להתקין את התוסף של Jetpack ולחבר אותו לחשבון שלך ב-WordPress.com.</string>
     <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">הגדרות רוחב</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">קשר סמנטי (Rel)</string>
     <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">הגדרות טור</string>
@@ -1576,7 +1562,6 @@ Language: he_IL
     <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">עוד</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">יש לתאר בקצרה את הקישור כדי לסייע למשתמשים בקוראי מסכים</string>
     <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">להוסיף בלוקים</string>
-    <string name="login_no_jetpack_sites">לא נמצאו אתרים של Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">מה זה טקסט חלופי?</string>
     <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">לשנות את %s אל</string>
     <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">לשנות בלוק…</string>
@@ -1623,7 +1608,6 @@ Language: he_IL
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">יש להקיש פעמיים כדי לפתוח את גיליון הפעולה ולערוך, להחליף או למחוק את התמונה</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="new_site_creation_search_domain_input_hint">יש להקליד שם לאתר שלך</string>
-    <string name="magic_link_not_meaning_to_create_account" a8c-src-lib="module:login">לא התכוונת ליצור חשבון חדש? יש לחזור אחורה כדי להזין מחדש את כתובת האימייל שלך.</string>
     <string name="invite_links_disable_dialog_message">לאחר שהקישור להזמנה יושבת, לא תהיה עוד לאף אחד אפשרות להשתמש בו כדי להצטרף לצוות שלך. האם ברצונך להמשיך?</string>
     <string name="invite_links_disable_dialog_title">להשבית את הקישור להזמנה</string>
     <string name="invite_links_bad_format_response">התקבלה תגובה לא חוקית</string>
@@ -1885,8 +1869,6 @@ Language: he_IL
     <string name="hpp_retry_error">יש לבדוק את החיבור לאינטרנט ולנסות שוב.</string>
     <string name="hpp_error_subtitle">יש להקיש כדי לנסות שוב במצב מקוון.</string>
     <string name="hpp_error_title">הפריסות אינן זמינות במצב לא מקוון</string>
-    <string name="continue_site_credentials" a8c-src-lib="module:login">להמשיך עם פרטי הכניסה של החנות</string>
-    <string name="login_find_your_connected_email" a8c-src-lib="module:login">למצוא את כתובת האימייל המחוברת שלך</string>
     <string name="reader_discover_no_posts_follow_subtitle">כדאי לעקוב אחרי תגיות נוספות כדי להרחיב את החיפוש</string>
     <string name="reader_discover_no_posts_title">אין פוסטים אחרונים</string>
     <string name="reader_discover_empty_title">ברוך בואך!</string>
@@ -1927,8 +1909,6 @@ Language: he_IL
     <string name="suggestion_no_connection">אין חיבור לאינטרנט.\nההצעות לא זמינות.</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s נבחר</string>
-    <string name="login_get_link_by_email" a8c-src-lib="module:login">לקבל קישור לכניסה באימייל</string>
-    <string name="email_not_registered_wpcom" a8c-src-lib="module:login">מצטערים, לא הצלחנו לאתר את חשבון ה-WordPress.com שמקושר לכתובת האימייל הזו.</string>
     <string name="permission_microphone">מיקרופון</string>
     <string name="comment_unable_to_show_error">לא ניתן להציג תגובה זו</string>
     <string name="media_browse_for_items">לחפש פריטים</string>
@@ -1965,26 +1945,7 @@ Language: he_IL
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">לבחור תמונה</string>
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">הבלוק הוסר</string>
     <string name="enter_your_site_address">יש להזין את כתובת האתר החדש שלך</string>
-    <string name="signup_confirmation_title" a8c-src-lib="module:login">אישור הרשמה</string>
-    <string name="continue_with_google_terms_of_service_text" a8c-src-lib="module:login">אם בחרת להמשיך עם Google או ועדיין אין לך חשבון ב-WordPress.com, חשבון ייווצר עבורך ויש הסכמה מצידך ⁦%1$s⁩לתנאי השירות⁦%2$s⁩ שלנו.</string>
-    <string name="continue_terms_of_service_text" a8c-src-lib="module:login">המשך הפעולה מהווה את הסכמתך ⁦%1$s⁩לתנאי השימוש⁦%2$s⁩ שלנו.</string>
-    <string name="signup_confirmation_message" a8c-src-lib="module:login">אנחנו נשתמש בכתובת האימייל הזאת כדי ליצור את החשבון החדש שלך ב-WordPress.com.</string>
-    <string name="signup_magic_link_message" a8c-src-lib="module:login">שלחנו אליך אימייל עם קישור להרשמה כדי ליצור את החשבון החדש שלך ב-WordPress.com. עליך לבדוק את האימייל ממכשיר זה ולהקיש על הקישור בהודעה שקיבלת מ-WordPress.com.</string>
-    <string name="enter_account_info_for_site" a8c-src-lib="module:login">להזין את פרטי החשבון שלך ב-⁦%1$s⁩.</string>
-    <string name="login_or" a8c-src-lib="module:login">או</string>
-    <string name="continue_google_button_suffix" a8c-src-lib="module:login">להמשיך עם Google</string>
-    <string name="login_find_your_site_adress" a8c-src-lib="module:login">למצוא את הכותרת של האתר שלך</string>
-    <string name="login_done">בוצע</string>
-    <string name="magic_link_not_seeing_email_message" a8c-src-lib="module:login">לא רואה את האימייל? כדאי לבדוק בתיבת הספאם או דואר הזבל.</string>
-    <string name="login_magic_links_sent_label" a8c-src-lib="module:login">עליך לבדוק את האימייל ממכשיר זה ולהקיש על הקישור בהודעה שקיבלת מ-WordPress.com.</string>
-    <string name="login_magic_links_label" a8c-src-lib="module:login">נשלח לך קישור להתחברות מיידית, ללא צורך בסיסמה.</string>
-    <string name="check_email" a8c-src-lib="module:login">יש לבדוק את האימייל</string>
     <string name="get_started" a8c-src-lib="module:login">מתחילים כאן</string>
-    <string name="enter_email_to_continue_wordpress_com" a8c-src-lib="module:login">יש להזין את כתובת האימייל שלך כדי להתחבר או ליצור חשבון ב-WordPress.com.</string>
-    <string name="or_type_your_password" a8c-src-lib="module:login">או להקליד את הסיסמה שלך</string>
-    <string name="create_account" a8c-src-lib="module:login">ליצור חשבון</string>
-    <string name="send_link_by_email" a8c-src-lib="module:login">לשלוח את הקישור באימייל</string>
-    <string name="reset_your_password" a8c-src-lib="module:login">יש לאפס את הסיסמה שלך</string>
     <string name="reader_error_request_failed_title">הייתה בעיה בטיפול בבקשה הזאת. יש לנסות שוב מאוחר יותר.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">העברת הפוסט לפח תבטל גם שינויים מקומיים, האם ברצונך להמשיך?</string>
     <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s אפשרויות הבלוק</string>
@@ -2206,9 +2167,6 @@ Language: he_IL
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">כיתוב לגלריה. %s</string>
     <string name="create_post_page_fab_tooltip">ליצור פוסט או עמוד</string>
     <string name="content_description_person_building_website">אדם שבונה אתר אינטרנט</string>
-    <string name="post_signup_interstitial_not_right_now">לא כרגע</string>
-    <string name="post_signup_interstitial_subtitle">לא משנה מה ברצונך ליצור או לשתף, אנחנו נעזור לך לעשות זאת כאן.</string>
-    <string name="post_signup_interstitial_title">ברוכים הבאים ל-WordPress</string>
     <string name="stock_media_picker_list_content_description">ספריית תמונות</string>
     <string name="photo_picker_image_thumbnail_unselected">הבחירה בתמונה בוטלה</string>
     <string name="photo_picker_image_selected">, נבחרה</string>
@@ -2222,12 +2180,6 @@ Language: he_IL
     <string name="dialog_confirm_scheduled_post_sync_title">הכול מוכן לסנכרון?</string>
     <string name="new_site_creation_unavailable_domain">הדומיין לא זמין</string>
     <string name="negative_prefix">-%s</string>
-    <string name="login_discovery_error_generic" a8c-src-lib="module:login">לא הייתה לנו אפשרות לגשת לאתר שלך. עליך ליצור קשר עם חברת האחסון שלך כדי לפתור את הבעיה.</string>
-    <string name="login_discovery_error_ssl" a8c-src-lib="module:login">לא הייתה לנו אפשרות לגשת לאתר שלך עקב בעיה &lt;b&gt;בתעודת SSL&lt;/b&gt;. עליך ליצור קשר עם חברת האחסון שלך כדי לפתור את הבעיה.</string>
-    <string name="login_discovery_error_http_auth" a8c-src-lib="module:login">לא הייתה לנו אפשרות לגשת לאתר שלך מכיוון שהוא דורש &lt;b&gt;אימות HTTP&lt;/b&gt;. עליך ליצור קשר עם חברת האחסון שלך כדי לפתור את הבעיה.</string>
-    <string name="login_discovery_error_xmlrpc" a8c-src-lib="module:login">לא הייתה לנו אפשרות לגשת &lt;b&gt;לקובץ XMLRPC&lt;/b&gt; באתר שלך. עליך ליצור קשר עם חברת האחסון שלך כדי לפתור את הבעיה.</string>
-    <string name="login_site_credentials_magic_link_label" a8c-src-lib="module:login">כמעט סיימת! אנחנו רק צריכים לאמת שהשירות של Jetpack מחובר לכתובת האימייל שלך &lt;b&gt;%1$s&lt;/b&gt;</string>
-    <string name="enter_credentials_for_site" a8c-src-lib="module:login">יש להתחבר עם פרטי הכניסה שלך לאתר %1$s</string>
     <string name="my_site_bottom_sheet_add_page">עמוד האתר</string>
     <string name="reader_my_likes_display_name">לייקים</string>
     <string name="reader_discover_display_name">היכרות</string>
@@ -2383,8 +2335,6 @@ Language: he_IL
     <string name="post_notification_off">מופסק</string>
     <string name="post_settings_add_to_calendar">Add to calendar</string>
     <string name="post_settings_notification">הודעה</string>
-    <string name="login_invalid_site_url" a8c-src-lib="module:login">יש להזין את כתובת האתר המלאה, לדוגמה example.com.</string>
-    <string name="enter_email_for_site" a8c-src-lib="module:login">עליך להתחבר אל WordPress.com כדי להתחבר אל %1$s</string>
     <string name="stats_post_views_label">צפיות</string>
     <string name="stats_post_label">פוסט</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -2490,8 +2440,6 @@ Language: he_IL
     <string name="posts_draft_empty">אין לך אף פוסט שנשמר כטיוטה</string>
     <string name="posts_scheduled_empty">אין לך אף פוסט מתוזמן לפרסום</string>
     <string name="posts_published_empty">עדיין לא פרסמת אף פוסט!</string>
-    <string name="notification_wpcom_username_needed" a8c-src-lib="module:login">עליך להיכנס באמצעות שם המשתמש והסיסמה שלך.</string>
-    <string name="error_user_username_instead_of_email" a8c-src-lib="module:login">יש להיכנס באמצעות שם המשתמש ב-WordPress.com במקום כתובת המייל.</string>
     <string name="stats_insights_average_words">ממוצע מילים לפוסט</string>
     <string name="stats_insights_total_words">סה\"כ מילים</string>
     <string name="stats_insights_average_likes">ממוצע לייקים לפוסט</string>
@@ -2501,7 +2449,6 @@ Language: he_IL
     <string name="stats_insights_posts">פוסטים</string>
     <string name="stats_insights_year">שנה</string>
     <string name="stats_insights_this_year_site_stats">השנה</string>
-    <string name="no_site_error" a8c-src-lib="module:login">כתובת האתר שהזנת אינה עבור אתר ב-WordPress. כדי שנוכל להתחבר לאתר, האתר חייב להשתמש בפלטפורמה של WordPress.</string>
     <string name="plugin_check_domain_credit_error">לא הייתה אפשרות לבדוק את נקודות הזיכוי הזמינות בדומיין</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">בודק נקודות זיכוי בדומיין</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">רישום הדומיין</string>
@@ -2634,7 +2581,6 @@ Language: he_IL
     <string name="history_detail_button_previous">הקודם</string>
     <string name="history_detail_button_next">לשלב הבא</string>
     <string name="media_space_used">%1$s נוצלו</string>
-    <string name="enter_wpcom_or_jetpack_site" a8c-src-lib="module:login">יש להזין אתר של WordPress באחסון עצמי שמחובר ל-WordPress.com או ל-Jetpack</string>
     <string name="history_loading_revision">טוען גרסה עדכנית</string>
     <string name="history_loaded_revision">הגרסה העדכנית הוטענה</string>
     <string name="history_load_dialog_button_positive">טעינה</string>
@@ -2663,8 +2609,6 @@ Language: he_IL
     <string name="pages_scheduled">מתוזמן לפרסום</string>
     <string name="pages_drafts">טיוטות</string>
     <string name="pages_published">פורסם</string>
-    <string name="login_error_sms_throttled" a8c-src-lib="module:login">ביצענו יותר מדי ניסיונות לשלוח קוד אימות בהודעת טקסט - אנחנו ממליצים להמתין רגע ולנסות שוב עוד דקה.</string>
-    <string name="login_error_email_not_found_v2" a8c-src-lib="module:login">אין חשבון WordPress.com שתואם לחשבון Google זה.</string>
     <string name="site_picker_remove_site_empty">לא נמצאו אתרים שתואמים לחיפוש שלך</string>
     <string name="reader_no_followed_blogs_search_title">לא נמצאו בלוגים שמתאימים לחיפוש שלך</string>
     <string name="page_parent_changed">ההורה של העמוד השתנה</string>
@@ -2683,7 +2627,6 @@ Language: he_IL
     <string name="content_description_more">עוד</string>
     <string name="my_site_create_new_site_title">אין לך עוד אתרים</string>
     <string name="reader_empty_subscribed_tags_subtitle">ניתן להוסיף כאן תגיות כדי למצוא פוסטים על הנושאים המועדפים עליך</string>
-    <string name="login_to_to_connect_jetpack" a8c-src-lib="module:login">יש להיכנס לחשבון WordPress.com שדרכו חיברת את Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">שאלות נפוצות בנושא Jetpack</string>
     <string name="stats_jetpack_connection_setup_info">להשתמש בנתונים סטטיסטיים באתר שלך ב-WordPress, עליך להתקין את התוסף של Jetpack.</string>
@@ -2736,13 +2679,7 @@ Language: he_IL
     <string name="reader_empty_search_title">לא נמצאו תוצאות</string>
     <string name="comment_read_source_post">קריאת הפוסט המקורי</string>
     <string name="sites">אתרים</string>
-    <string name="signup_magic_link_title" a8c-src-lib="module:login">הקישור הישיר נשלח</string>
-    <string name="verification_2fa_screen_title" a8c-src-lib="module:login">אימות קוד</string>
-    <string name="selfhosted_site_login_title" a8c-src-lib="module:login">פרטי כניסה</string>
-    <string name="magic_link_sent_login_title" a8c-src-lib="module:login">הקישור הישיר נשלח</string>
-    <string name="magic_link_login_title" a8c-src-lib="module:login">התחברות באמצעות קישור ישיר</string>
     <string name="site_address_login_title" a8c-src-lib="module:login">התחברות באמצעות כתובת האתר</string>
-    <string name="email_address_login_title" a8c-src-lib="module:login">התחברות באמצעות כתובת אימייל</string>
     <string name="reader_empty_saved_posts_description">יש להקיש על %s כדי לשמור את הפוסט ברשימה שלך.</string>
     <string name="reader_empty_saved_posts_title">עדיין לא נשמרו פוסטים! </string>
     <string name="reader_bookmark_snack_title">הפוסט נשמר</string>
@@ -2844,7 +2781,6 @@ Language: he_IL
     <string name="invite_user_delete_desc">הסרת %s</string>
     <string name="profile_picture">תמונת הפרופיל של %s</string>
     <string name="comment_checkmark_desc">סימן ביקורת</string>
-    <string name="signup_with_google_progress" a8c-src-lib="module:login">מתחבר ל-Google…</string>
     <string name="jetpack_connection_failed_with_reason">ההתחברות ל-Jetpack נכשלה: %s</string>
     <string name="jetpack_already_connected_toast">החשבון שלך ב-Jetpack כבר מחובר</string>
     <string name="menu_visual_mode">עורך ויזואלי</string>
@@ -2871,7 +2807,6 @@ Language: he_IL
     <string name="notif_detail_screen_title">פרטי הודעות %s</string>
     <string name="edit_photo_screen_title">עריכת תמונה</string>
     <string name="share_intent_screen_title">בחר אתר</string>
-    <string name="signup_epilogue_screen_title">חשבון חדש</string>
     <string name="person_detail_screen_title">פרטי המשתמש</string>
     <string name="media_settings_screen_title">פרטי הקובץ</string>
     <string name="publicize_buttons_screen_title">כפתורי שיתוף</string>
@@ -2922,7 +2857,6 @@ Language: he_IL
     <string name="site_creation_domain_finish_button">יצירת אתר</string>
     <string name="notification_site_creation_created">יש להקיש להמשך.</string>
     <string name="notification_site_creation_title_success">האתר נוצר!</string>
-    <string name="google_error_timeout" a8c-src-lib="module:login">זמן התגובה של Google היה ארוך מדי. ייתכן שהחיבור לאינטרנט לא מספיק יציב ויש להמתין לחיבור טוב יותר.</string>
     <string name="username_changer_title">החלפת שם משתמש</string>
     <string name="username_changer_hint">יש להקליד כדי לקבל הצעות נוספות</string>
     <string name="username_changer_header">שם המשתמש הנוכחי שלך הוא %1$s%2$s%3$s. למעט מקרים בודדים, משתמשים אחרים באתר יראו רק את השם התצוגה שלך, %4$s%5$s%6$s.</string>
@@ -2932,18 +2866,6 @@ Language: he_IL
     <string name="username_changer_dismiss_button_positive">מחיקה</string>
     <string name="username_changer_action">שמירה</string>
     <string name="content_description_add_avatar">הוספה של תמונת פרופיל</string>
-    <string name="signup_user_exists">כתובת האימייל כבר קיימת ב-WordPress.com.\nהמשך להתחברות.</string>
-    <string name="signup_updating_account">מעדכן את החשבון….</string>
-    <string name="signup_magic_link_progress" a8c-src-lib="module:login">שולח אימייל</string>
-    <string name="signup_magic_link_error_button_positive" a8c-src-lib="module:login">יש לנסות שנית</string>
-    <string name="signup_magic_link_error_button_negative" a8c-src-lib="module:login">סגור</string>
-    <string name="signup_magic_link_error" a8c-src-lib="module:login">אירעה תקלה בשליחת האימייל. אפשר לנסות שוב עכשיו או לסגור ולנסות שוב מאוחר יותר.</string>
-    <string name="signup_epilogue_hint_username">שם משתמש</string>
-    <string name="signup_epilogue_hint_password_detail">אפשר תמיד להתחבר באמצעות קישור, כמו הקישור שבו השתמשת כעת, אבל באפשרותך גם להגדיר סיסמה לבחירתך.</string>
-    <string name="signup_epilogue_hint_password">סיסמה (לא חובה)</string>
-    <string name="signup_epilogue_hint_display">שם תצוגה</string>
-    <string name="signup_epilogue_error_button_positive">יש לנסות שנית</string>
-    <string name="signup_epilogue_error_button_negative">חזרה למצב קודם</string>
     <string name="signup_epilogue_error_generic">אירעה בעיה בעדכון החשבון שלך. אפשר לנסות שוב או לבטל את השינויים כדי להמשיך.</string>
     <string name="plugin_needs_update">נדרש עדכון</string>
     <string name="plugin_caption_search">חיפוש בתוספים</string>
@@ -3031,18 +2953,6 @@ Language: he_IL
     <string name="my_site_btn_plugins">תוספים</string>
     <string name="media_edit_link_hint">פתיחה בחלון חדש / בלשונית חדשה</string>
     <string name="media_edit_link_text">קישור אל</string>
-    <string name="notification_login_failed" a8c-src-lib="module:login">אירעה שגיאה.</string>
-    <string name="notification_2fa_needed" a8c-src-lib="module:login">יש לספק את קוד האישור כדי להמשיך.</string>
-    <string name="notification_error_wrong_password" a8c-src-lib="module:login">יש לבדוק את הסיסמה שנית לפני ההמשך.</string>
-    <string name="notification_login_title_stopped" a8c-src-lib="module:login">ההתחברות הופסקה</string>
-    <string name="notification_logging_in" a8c-src-lib="module:login">יש להמתין לפני ההתחברות.</string>
-    <string name="notification_login_title_in_progress" a8c-src-lib="module:login">ההתחברות בתהליך…</string>
-    <string name="notification_logged_in" a8c-src-lib="module:login">יש להקיש להמשך.</string>
-    <string name="notification_login_title_success" a8c-src-lib="module:login">התחברת!</string>
-    <string name="login_error_generic_start" a8c-src-lib="module:login">לא ניתן להתחיל בתהליך ההתחברות ל-Google.</string>
-    <string name="login_empty_password" a8c-src-lib="module:login">יש להזין סיסמה</string>
-    <string name="login_text_otp_another" a8c-src-lib="module:login">שלחו לי קוד אחר כתחליף</string>
-    <string name="enter_verification_code_sms" a8c-src-lib="module:login">שלחנו לך הודעת טקסט למספר הטלפון שמסתיים בספרות %s. יש להזין את קוד האימות שהתקבל בהודעת הטקסט.</string>
     <string name="image_size">גדולה</string>
     <string name="uploading_subtitle_media_only_one">נותר קובץ אחד</string>
     <string name="uploading_subtitle_media_only">נותרו %1$d קבצים מתוך %2$d</string>
@@ -3059,15 +2969,10 @@ Language: he_IL
     <string name="confirm_remove_media_image">האם להסיר את התמונה הזו מהפוסט?</string>
     <string name="media_edit_customize_card_caption">התאמה אישית</string>
     <string name="media_edit_file_details_card_caption">פרטי הקובץ</string>
-    <string name="login_error_suffix" a8c-src-lib="module:login">\nמומלץ לנסות חשבון אחר.</string>
-    <string name="login_error_generic" a8c-src-lib="module:login">הייתה בעיה להתחבר עם חשבון Google.</string>
     <string name="login_error_button">סגור</string>
-    <string name="enter_wpcom_password_google" a8c-src-lib="module:login">כדי להמשיך עם חשבון Google, יש לספק סיסמת WordPress.com תואמת. נבקש את הנתונים האלו פעם אחת בלבד.</string>
     <string name="error_generic_network">אירעה שגיאת רשת. יש לבדוק את החיבור ולנסות שוב.</string>
     <string name="post_settings_remove_featured_image">הסרת התמונה המרכזית</string>
     <string name="post_settings_choose_featured_image">בחירת התמונה המרכזית</string>
-    <string name="login_log_in_for_share_intent" a8c-src-lib="module:login">יש להתחבר ל-WordPress.com כדי לשתף תוכן.</string>
-    <string name="enter_site_address_share_intent" a8c-src-lib="module:login">יש להזין את הכתובת של האתר שלך ב-WordPress שאליו ברצונך לשתף את התוכן.</string>
     <string name="jetpack_disconnect_error_toast">שגיאה במהלך ניתוק אתר</string>
     <string name="jetpack_disconnect_success_toast">האתר מנותק</string>
     <string name="jetpack_disconnect_confirm">התנתקות</string>
@@ -3148,28 +3053,13 @@ Language: he_IL
     <string name="post_queued">הפוסט נמצא בתור</string>
     <string name="uploading_post">מעלה את \"%s\"</string>
     <string name="connection_to_server_lost">החיבור לשרת אבד</string>
-    <string name="login_email_client_not_found">לא ניתן לאתר את האפליקציה של שירות האימייל שלך</string>
-    <string name="login_empty_2fa" a8c-src-lib="module:login">יש להזין קוד אימות</string>
-    <string name="login_empty_username" a8c-src-lib="module:login">נא להכניס שם משתמש</string>
-    <string name="login_log_in_for_deeplink" a8c-src-lib="module:login">יש להתחבר ל-WordPress.com כדי לקבל גישה לפוסט זה.</string>
-    <string name="login_error_while_adding_site" a8c-src-lib="module:login">שגיאה אירעה במהלך הוספת האתר. קוד שגיאה: %s</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">בודק את כתובת האתר</string>
-    <string name="login_site_address_more_help" a8c-src-lib="module:login">נדרשת עזרה נוספת?</string>
-    <string name="login_site_address_help_content" a8c-src-lib="module:login">עם הכניסה לאתר בדפדפן Chrome, כתובת האתר שלך תופיע בסרגל העליון של המסך.</string>
-    <string name="login_site_address_help_title" a8c-src-lib="module:login">מה כתובת האתר שלי?</string>
     <string name="login_site_address" a8c-src-lib="module:login">כתובת אתר</string>
     <string name="enter_site_address" a8c-src-lib="module:login">יש להזין את כתובת האתר ב-WordPress שאליו ברצונך להתחבר.</string>
     <string name="login_already_logged_in_wpcom">כבר בוצע חיבור ל-WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">המשך</string>
     <string name="connect_more">חיבור אתר נוסף</string>
-    <string name="enter_wpcom_password" a8c-src-lib="module:login">הזן את הסיסמה שלך ל-WordPress.com.</string>
-    <string name="login_magic_link_email_requesting" a8c-src-lib="module:login">שולח בקשה לאימייל להתחברות</string>
-    <string name="password_incorrect" a8c-src-lib="module:login">נראה שהסיסמה הזו שגויה. יש לבדוק את המידע שהזנת ולנסות שוב.</string>
-    <string name="requesting_otp" a8c-src-lib="module:login">שולח קוד אימות באמצעות SMS.</string>
-    <string name="login_text_otp" a8c-src-lib="module:login">שליחת קוד במקום</string>
-    <string name="enter_verification_code" a8c-src-lib="module:login">כמעט סיימת! יש להזין את קוד האימות עבור WordPress.com מאפליקציית האימות.</string>
     <string name="next">הבא</string>
-    <string name="enter_email_wordpress_com" a8c-src-lib="module:login">התחברות ל-WordPress.com באמצעות כתובת אימייל כדי לנהל את האתרים שלך ב-WordPress.</string>
     <string name="me_profile_photo">תמונת פרופיל</string>
     <string name="error_media_parse_error">תגובה לא צפויה מהשרת</string>
     <string name="upload_finished_toast">לא ניתן להפסיק את ההעלאה כיוון שכבר הסתיימה</string>
@@ -3317,8 +3207,6 @@ Language: he_IL
     <string name="error_unknown_post_type">סוג פוסט לא מזוהה</string>
     <string name="submit_for_review">שלח</string>
     <string name="title_subscriber">מנוי</string>
-    <string name="duplicate_site_detected" a8c-src-lib="module:login">נמצא אתר כפול.</string>
-    <string name="cannot_add_duplicate_site" a8c-src-lib="module:login">אתר זה כבר קיים באפליקציה, אין אפשרות להוסיף אותו.</string>
     <string name="already_logged_in_wpcom">כבר התחברת לחשבון שלך ב-WordPress.com. אין באפשרותך להוסיף אתר WordPress.com שקשור לחשבון אחר.</string>
     <string name="error_media_load">לא ניתן לטעון את פריטי המדיה</string>
     <string name="error_media_refresh_no_connection">נדרש חיבור כדי לרענן את הספרייה</string>
@@ -3329,8 +3217,6 @@ Language: he_IL
     <string name="media_generic_error">אירעה שגיאה בפריטי המדיה</string>
     <string name="retry">יש לנסות שנית</string>
     <string name="confirm">אישור</string>
-    <string name="xmlrpc_endpoint_forbidden_error" a8c-src-lib="module:login">לא ניתן להתחבר. התקבלה שגיאת 403 בניסיון לגשת ל-\n נקודת הקצה XMLRPC של האתר שלך. כדי שהאפליקציה תוכל לבצע התקשרות עם האתר שלך, יש להפעיל אפשרות זו. יש ליצור קשר עם חברת האחסון שלך כדי לפתור בעיה זו.</string>
-    <string name="xmlrpc_post_blocked_error" a8c-src-lib="module:login">לא ניתן להתחבר. חברת האחסון שלך חוסמת בקשות POST, והאפליקציה דורשת את\n הפעלת האפשרות הזו כדי לבצע התקשרות עם האתר שלך. יש ליצור קשר עם חברת האחסון שלך כדי לפתור בעיה זו.</string>
     <string name="pending_draft_one_generic">מומלץ לסיים את הפעולה! הפוסט \'%1$s \' ממתין לפרסום.</string>
     <string name="pending_draft_one_month">מומלץ לסיים את הפעולה! הפוסט \'%1$s \' ממתין לפרסום.</string>
     <string name="pending_draft_one_week_2">האתר \'%1$s\' נשמר כטיוטה בלבד. לא לשכוח לפרסם אותו!</string>
@@ -3413,8 +3299,6 @@ Language: he_IL
     <string name="error_refreshing_gravatar">שגיאה בטעינה מחדש של ה-gravatar שלך</string>
     <string name="error_locating_image">שגיאה באיתור התמונה החתוכה</string>
     <string name="error_cropping_image">שגיאה בחיתוך בתמונה</string>
-    <string name="checking_email" a8c-src-lib="module:login">בודק אימייל</string>
-    <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">לא זמין כרגע. יש להזין סיסמה</string>
     <string name="logging_in">נכנס</string>
     <string name="web_address_dialog_hint">תוצג באופן ציבורי בעת פרסום תגובות שלך.</string>
     <string name="export_your_content_message">הפוסטים, העמודים וההגדרות שלך יישלחו באימייל לכתובת %s.</string>
@@ -3447,7 +3331,6 @@ Language: he_IL
     <string name="comments_empty_list_filtered_pending">אין תגובות שממתינות לאישור</string>
     <string name="comments_empty_list_filtered_approved">אין תגובות מאושרות</string>
     <string name="button_skip">דילוג</string>
-    <string name="xmlrpc_missing_method_error" a8c-src-lib="module:login">לא ניתן להתחבר. שיטות XML-RPC נדרשות חסרות בשרת.</string>
     <string name="alignment_center">מרכז</string>
     <string name="post_format_video">וידאו</string>
     <string name="post_format_status">מצב</string>
@@ -3507,7 +3390,6 @@ Language: he_IL
     <string name="about_the_app">מידע על האפליקציה</string>
     <string name="error_post_account_settings">לא ניתן לשמור הגדרות החשבון</string>
     <string name="error_fetch_account_settings">לא ניתן לאחזר את הגדרות החשבון שלך</string>
-    <string name="error_fetch_my_profile" a8c-src-lib="module:login">לא ניתן לאחזר את הפרופיל שלך</string>
     <string name="site_settings_unknown_language_code_error">קוד שפה לא מזוהה</string>
     <string name="site_settings_threading_dialog_description">אפשר תגובות משורשרות</string>
     <string name="site_settings_threading_dialog_header">שרשור עד עומק של</string>
@@ -3696,9 +3578,6 @@ Language: he_IL
     <string name="my_site_btn_blog_posts">פוסטים</string>
     <string name="reader_label_new_posts_subtitle">יש ללחוץ כדי להציג</string>
     <string name="select_all">בחר הכל</string>
-    <string name="auth_required" a8c-src-lib="module:login">יש להתחבר שוב כדי המשיך.</string>
-    <string name="invalid_verification_code" a8c-src-lib="module:login">קוד אימות שגוי</string>
-    <string name="verification_code" a8c-src-lib="module:login">קוד אימות</string>
     <string name="language">שפה</string>
     <string name="reader_empty_posts_request_failed">לא הצלחנו לאחזר פוסטים</string>
     <string name="error_notification_open">לא הצלחנו לפתוח את ההתראה</string>
@@ -3762,7 +3641,6 @@ Language: he_IL
     <string name="ssl_certificate_error">אישור SSL לא תקף</string>
     <string name="help">עזרה</string>
     <string name="username_or_password_incorrect">שם המשתמש או הסיסמה שהקלדת שגויים</string>
-    <string name="email_invalid" a8c-src-lib="module:login">הקלד כתובת אימייל חוקית</string>
     <string name="invalid_email_message">כתובת האימייל שלך לא תקפה</string>
     <string name="error_downloading_image">שגיאה בזמן הורדת תמונה</string>
     <string name="error_load_comment">לא ניתן היה להעלות את התגובה</string>
@@ -3792,7 +3670,6 @@ Language: he_IL
     <string name="new_media">מדיה חדשה</string>
     <string name="new_post">רשומה חדשה</string>
     <string name="notifications_empty_all">אין התראות… עדיין!</string>
-    <string name="http_authorization_required" a8c-src-lib="module:login">דרושה הרשאה</string>
     <string name="invalid_site_url_message">יש לוודא שכתובת ה-URL של האתר שהוזנה תקפה</string>
     <string name="file_error_create">יצירת קובץ temp להעלאת קבצים לא הצליחה. וודא שיש מספיק מקום פנוי במכשיר.</string>
     <string name="category_name">שם קטגוריה</string>
@@ -3837,7 +3714,6 @@ Language: he_IL
     <string name="reader_likes_you_and_one">אתה ועוד אחד אוהבים את זה</string>
     <string name="pick_video">בחר וידאו</string>
     <string name="pick_photo">בחר תמונה</string>
-    <string name="sign_up_label" a8c-src-lib="module:login">הרשמה</string>
     <string name="reader_toast_err_url_intent">לא ניתן לפתוח את %s</string>
     <string name="reader_toast_err_view_image">לא ניתן להציג תמונה</string>
     <string name="reader_toast_err_share_intent">לא ניתן לשתף</string>
@@ -3880,8 +3756,6 @@ Language: he_IL
     <string name="note_reply_successful">תגובה פורסמה</string>
     <string name="sign_in">להתחבר</string>
     <string name="loading">טוען…</string>
-    <string name="httppassword" a8c-src-lib="module:login">סיסמה</string>
-    <string name="httpuser" a8c-src-lib="module:login">שם משתמש</string>
     <string name="error_media_upload">ארעה שגיאה במהלך העלאת הקובץ.</string>
     <string name="incorrect_credentials">שם משתמש או סיסמה לא נכונים.</string>
     <string name="log_in" a8c-src-lib="module:login">להתחבר</string>
