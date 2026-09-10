@@ -24,10 +24,12 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.rs.RsCommentCountFetcher
 import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -47,6 +49,8 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
+    @Mock lateinit var statsDataSource: StatsDataSource
+    @Mock lateinit var commentCountFetcher: RsCommentCountFetcher
     @Mock lateinit var dispatcher: Dispatcher
 
     private lateinit var site: SiteModel
@@ -86,6 +90,8 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         appPrefsWrapper = appPrefsWrapper,
         analyticsTracker = analyticsTracker,
         changeListener = changeListener,
+        statsDataSource = statsDataSource,
+        commentCountFetcher = commentCountFetcher,
     ).also { activeViewModel = it }
 
     @Test

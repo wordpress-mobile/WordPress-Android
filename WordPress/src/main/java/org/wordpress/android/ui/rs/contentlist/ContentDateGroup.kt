@@ -49,17 +49,17 @@ object ContentDateGrouper {
         now: Long = System.currentTimeMillis(),
         locale: Locale = Locale.getDefault()
     ): ContentDateGroup {
-        if (millis >= now - WEEK_MILLIS) return ContentDateGroup.ThisWeek
-
         val then = Calendar.getInstance().apply { timeInMillis = millis }
         val today = Calendar.getInstance().apply { timeInMillis = now }
         val sameYear = then.get(Calendar.YEAR) == today.get(Calendar.YEAR)
+        val sameMonth = sameYear && then.get(Calendar.MONTH) == today.get(Calendar.MONTH)
 
-        if (sameYear && then.get(Calendar.MONTH) == today.get(Calendar.MONTH)) {
-            return ContentDateGroup.EarlierThisMonth(format(MONTH_PATTERN, millis, locale))
+        return when {
+            millis >= now - WEEK_MILLIS -> ContentDateGroup.ThisWeek
+            sameMonth -> ContentDateGroup.EarlierThisMonth(format(MONTH_PATTERN, millis, locale))
+            sameYear -> ContentDateGroup.SpecificMonth(format(MONTH_PATTERN, millis, locale))
+            else -> ContentDateGroup.SpecificMonth(format(MONTH_YEAR_PATTERN, millis, locale))
         }
-        val pattern = if (sameYear) MONTH_PATTERN else MONTH_YEAR_PATTERN
-        return ContentDateGroup.SpecificMonth(format(pattern, millis, locale))
     }
 
     // Standalone month form ('L'), which is what a bare header needs in languages that inflect the

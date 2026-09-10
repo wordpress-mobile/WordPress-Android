@@ -55,28 +55,36 @@ class RsCommentCountFetcher @Inject constructor(
                     )
                 )
             }
-            if (result !is WpRequestResult.Success) return null
-
-            val comments = result.response.data
-            val total = result.response.headerMap.wpTotal()?.toInt()
-            // More comments exist than came back, so counting what did would undercount.
-            if (total != null && total > comments.size) return null
-
-            // Seed every requested id: a post with no comments is simply absent from the response,
-            // and "no comments" is a real answer rather than a missing one.
-            val counts = postIds.associateWith { 0L }.toMutableMap()
-            comments.forEach { comment ->
-                comment.post?.let { postId ->
-                    counts[postId]?.let { counts[postId] = it + 1 }
+            (result as? WpRequestResult.Success)?.let { success ->
+                val comments = success.response.data
+                val total = success.response.headerMap.wpTotal()?.toInt()
+                // More comments exist than came back, so counting what did would undercount.
+                if (total != null && total > comments.size) {
+                    null
+                } else {
+                    tally(postIds, comments.mapNotNull { it.post })
                 }
             }
-            counts
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
             AppLog.e(AppLog.T.COMMENTS, "Batched comment count failed", e)
             null
         }
+    }
+
+    /**
+     * Counts how often each id appears in [commentPostIds].
+     *
+     * Every id in [postIds] is seeded at zero: a post with no comments is simply absent from the
+     * response, and "no comments" is a real answer rather than a missing one.
+     */
+    private fun tally(postIds: List<Long>, commentPostIds: List<Long>): Map<Long, Long> {
+        val counts = postIds.associateWith { 0L }.toMutableMap()
+        commentPostIds.forEach { postId ->
+            counts[postId]?.let { counts[postId] = it + 1 }
+        }
+        return counts
     }
 
     /**
@@ -101,8 +109,7 @@ class RsCommentCountFetcher @Inject constructor(
                     listOf(SparseCommentFieldWithViewContext.ID)
                 )
             }
-            if (result !is WpRequestResult.Success) return null
-            result.response.headerMap.wpTotal()?.toLong()
+            (result as? WpRequestResult.Success)?.response?.headerMap?.wpTotal()?.toLong()
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {

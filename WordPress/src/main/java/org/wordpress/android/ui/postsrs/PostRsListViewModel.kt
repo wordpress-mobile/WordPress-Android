@@ -1216,16 +1216,13 @@ class PostRsListViewModel @Inject constructor(
      */
     @MainThread
     private fun fetchViewCounts(tab: PostRsListTab, postIds: List<Long>) {
-        if (!canFetchViewCounts) return
         // The stats data source authenticates with the WP.com bearer token and throws if it is
         // asked for data before being given one.
-        val accessToken = accountStore.accessToken
-        if (accessToken.isNullOrEmpty()) return
-
+        val accessToken = accountStore.accessToken.takeUnless { it.isNullOrEmpty() }
         val wanted = postIds.filter {
             !viewCountCache.containsKey(it) && it !in inFlightViewCounts
         }
-        if (wanted.isEmpty()) return
+        if (!canFetchViewCounts || accessToken == null || wanted.isEmpty()) return
 
         track(viewModelScope.launch {
             statsDataSource.init(accessToken)
