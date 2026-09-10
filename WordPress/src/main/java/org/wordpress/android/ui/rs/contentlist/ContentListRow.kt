@@ -63,10 +63,11 @@ fun ContentListRow(
             modifier = Modifier.padding(
                 start = padding,
                 top = padding,
-                end = padding,
-                bottom = CARD_PADDING_WITH_MENU
+                // The overflow button carries its own inset, so the card supplies none on that
+                // edge; without a menu the card pads itself as usual.
+                end = if (menu == null) padding else 0.dp,
+                bottom = padding
             ),
-            horizontalArrangement = Arrangement.spacedBy(padding),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
@@ -75,14 +76,18 @@ fun ContentListRow(
                     titleSize = TITLE_SIZE,
                     titleLineHeight = TITLE_LINE_HEIGHT,
                     density = density,
-                    menu = menu
+                    menu = null
                 )
             }
             RowThumbnail(
                 imageUrl = state.imageUrl,
                 isImagePending = state.isImagePending,
-                size = if (density.isCondensed) CONDENSED_THUMBNAIL_SIZE else THUMBNAIL_SIZE
+                size = if (density.isCondensed) CONDENSED_THUMBNAIL_SIZE else THUMBNAIL_SIZE,
+                modifier = Modifier.padding(start = padding)
             )
+            // Outside the text column so it lands at the card's edge whether or not the post has a
+            // featured image. Inside it, the thumbnail pushed the button left by its own width.
+            menu?.invoke()
         }
     }
 }
@@ -256,7 +261,11 @@ private fun CardBody(isSyncing: Boolean, content: @Composable () -> Unit) {
 
 /**
  * The text stack shared by both row shapes: badges, title, excerpt, then the metadata line. Only
- * the title's size and the density differ between them.
+ * the title's size, the density and whether the metadata line carries the overflow button differ.
+ *
+ * The compact row places its button outside this column, next to the thumbnail, so that it lands at
+ * the card edge either way. The hero row has no trailing thumbnail, so its metadata line already
+ * runs to the card edge and the button sits there.
  *
  * Condensed drops the excerpt, which is what actually shortens the row, and the metrics, which the
  * ViewModel then does not fetch.
@@ -434,9 +443,10 @@ private fun RowBadges(@StringRes badges: List<Int>) {
 private fun RowThumbnail(
     imageUrl: String?,
     isImagePending: Boolean,
-    size: Dp = THUMBNAIL_SIZE
+    size: Dp = THUMBNAIL_SIZE,
+    modifier: Modifier = Modifier
 ) {
-    val thumbnailModifier = Modifier
+    val thumbnailModifier = modifier
         .size(size)
         .clip(RoundedCornerShape(THUMBNAIL_RADIUS))
     when {
@@ -458,8 +468,9 @@ private val LIST_HORIZONTAL_PADDING = 12.dp
 private val CARD_VERTICAL_SPACING = 4.dp
 private val CARD_PADDING = 14.dp
 
-// The overflow button carries its own 48dp touch target, whose internal padding supplies most of
-// the card's bottom inset - so the inset itself is trimmed to keep the row from growing.
+// The hero row keeps its overflow button on the metadata line, and that button's 48dp touch target
+// supplies most of the card's bottom inset - so the inset itself is trimmed to keep the row from
+// growing. The compact row puts its button beside the thumbnail and pads itself normally.
 private val CARD_PADDING_WITH_MENU = 4.dp
 private val CARD_RADIUS = 14.dp
 private val CARD_BORDER_WIDTH = 1.dp
