@@ -16,6 +16,8 @@ import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.CommentListParams
 import uniffi.wp_api.CommentsRequestExecutor
+import uniffi.wp_api.RequestExecutionErrorReason
+import uniffi.wp_api.RequestMethod
 import uniffi.wp_api.CommentsRequestFilterListWithViewContextResponse
 import uniffi.wp_api.SparseCommentFieldWithViewContext
 import uniffi.wp_api.SparseCommentWithViewContext
@@ -149,7 +151,14 @@ class RsCommentCountFetcherTest {
         )
     }
 
-    private fun failure(): WpRequestResult<Any> = mock<WpRequestResult.RequestExecutionFailed<Any>>()
+    /** A real instance rather than a mock: [WpRequestResult.RequestExecutionFailed] is a data class. */
+    private fun failure(): WpRequestResult<Any> = WpRequestResult.RequestExecutionFailed(
+        statusCode = null,
+        redirects = null,
+        reason = RequestExecutionErrorReason.DeviceIsOfflineError(errorMessage = "offline"),
+        requestUrl = "https://example.com",
+        requestMethod = RequestMethod.GET
+    )
 
     /** Only [postId] matters to the count; the rest of the sparse comment is left unset. */
     private fun sparseComment(postId: Long) = SparseCommentWithViewContext(
