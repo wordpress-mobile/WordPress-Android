@@ -348,7 +348,7 @@ private sealed interface PostListEntry {
      * throws rather than merely looking odd.
      */
     data class Header(val group: ContentDateGroup, val ordinal: Int) : PostListEntry {
-        override val key get() = "header_" + ordinal + "_" + group.key
+        override val key get() = "header_${ordinal}_${group.key}"
         override val postId: Long? get() = null
     }
 

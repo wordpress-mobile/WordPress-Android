@@ -1201,18 +1201,19 @@ class PostRsListViewModel @Inject constructor(
         track(viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
-                val counts = withContext(Dispatchers.IO) {
-                    commentCountFetcher.fetchCommentCounts(site, wanted)
+                val counts = try {
+                    withContext(Dispatchers.IO) {
+                        commentCountFetcher.fetchCommentCounts(site, wanted)
+                    }
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    AppLog.e(AppLog.T.POSTS, "Failed to fetch comment counts", e)
+                    emptyMap()
                 }
-                // Anything the fetch could not answer for is recorded as "nothing to show" so its
-                // row stops waiting; a refresh clears those entries and tries again.
+                // Every id is written, so anything the fetch could not answer for is recorded as
+                // "nothing to show" and its row stops waiting; a refresh clears those and retries.
                 wanted.forEach { commentCountCache[it] = counts[it] }
-                applyMetrics(tab, wanted)
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                AppLog.e(AppLog.T.POSTS, "Failed to fetch comment counts", e)
-                wanted.forEach { commentCountCache[it] = null }
                 applyMetrics(tab, wanted)
             } finally {
                 inFlightCommentCounts.removeAll(wanted.toSet())
@@ -1265,18 +1266,22 @@ class PostRsListViewModel @Inject constructor(
      */
     private suspend fun fetchViewCountFor(tab: PostRsListTab, postId: Long) {
         if (!inFlightViewCounts.add(postId)) return
-        @Suppress("TooGenericExceptionCaught")
         try {
-            val result = withContext(Dispatchers.IO) {
-                statsDataSource.fetchPostViews(siteId = site.siteId, postId = postId)
+            // A null either way: the fetch failed, or it answered with nothing usable. Both mean
+            // the row has no number to show and should stop waiting for one.
+            @Suppress("TooGenericExceptionCaught")
+            val views = try {
+                val result = withContext(Dispatchers.IO) {
+                    statsDataSource.fetchPostViews(siteId = site.siteId, postId = postId)
+                }
+                (result as? PostViewsDataResult.Success)?.data?.totalViews
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.POSTS, "Failed to fetch view count for post $postId", e)
+                null
             }
-            viewCountCache[postId] = (result as? PostViewsDataResult.Success)?.data?.totalViews
-            applyMetrics(tab, listOf(postId))
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            AppLog.e(AppLog.T.POSTS, "Failed to fetch view count for post $postId", e)
-            viewCountCache[postId] = null
+            viewCountCache[postId] = views
             applyMetrics(tab, listOf(postId))
         } finally {
             inFlightViewCounts.remove(postId)

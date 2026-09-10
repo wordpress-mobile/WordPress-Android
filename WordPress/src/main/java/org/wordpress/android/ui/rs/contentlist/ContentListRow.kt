@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.rs.contentlist
 
+import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -23,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
@@ -64,11 +66,12 @@ fun ContentListRow(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                RowBadges(state.badges)
-                RowTitle(title = state.title, fontSize = TITLE_SIZE, lineHeight = TITLE_LINE_HEIGHT)
-                RowExcerpt(state.excerpt)
-                Spacer(modifier = Modifier.height(TITLE_META_GAP))
-                RowMetaLine(state = state, menu = menu)
+                RowBody(
+                    state = state,
+                    titleSize = TITLE_SIZE,
+                    titleLineHeight = TITLE_LINE_HEIGHT,
+                    menu = menu
+                )
             }
             RowThumbnail(imageUrl = state.imageUrl, isImagePending = state.isImagePending)
         }
@@ -115,15 +118,12 @@ fun ContentListHeroRow(
                     bottom = CARD_PADDING_WITH_MENU
                 )
             ) {
-                RowBadges(state.badges)
-                RowTitle(
-                    title = state.title,
-                    fontSize = HERO_TITLE_SIZE,
-                    lineHeight = HERO_TITLE_LINE_HEIGHT
+                RowBody(
+                    state = state,
+                    titleSize = HERO_TITLE_SIZE,
+                    titleLineHeight = HERO_TITLE_LINE_HEIGHT,
+                    menu = menu
                 )
-                RowExcerpt(state.excerpt)
-                Spacer(modifier = Modifier.height(TITLE_META_GAP))
-                RowMetaLine(state = state, menu = menu)
             }
         }
     }
@@ -238,6 +238,24 @@ private fun CardBody(isSyncing: Boolean, content: @Composable () -> Unit) {
     }
 }
 
+/**
+ * The text stack shared by both row shapes: badges, title, excerpt, then the metadata line. Only
+ * the title's size differs between them.
+ */
+@Composable
+private fun RowBody(
+    state: ContentListRowUiState,
+    titleSize: TextUnit,
+    titleLineHeight: TextUnit,
+    menu: (@Composable () -> Unit)?
+) {
+    RowBadges(state.badges)
+    RowTitle(title = state.title, fontSize = titleSize, lineHeight = titleLineHeight)
+    RowExcerpt(state.excerpt)
+    Spacer(modifier = Modifier.height(TITLE_META_GAP))
+    RowMetaLine(state = state, menu = menu)
+}
+
 @Composable
 private fun RowTitle(
     title: String,
@@ -298,38 +316,16 @@ private fun RowMetaLine(
                         .clip(RoundedCornerShape(PLACEHOLDER_RADIUS))
                 )
             } else {
-                state.viewCount?.let { views ->
-                    MetaSeparator()
-                    MetaText(
-                        pluralStringResource(
-                            R.plurals.content_list_view_count,
-                            views.toInt(),
-                            NumberFormat.getIntegerInstance().format(views)
-                        )
-                    )
-                }
+                state.viewCount?.let { MetricText(R.plurals.content_list_view_count, it) }
                 // A post with no comments still says so; unlike views, zero is meaningful here and
                 // the number arrives in the same response, so hiding it would look like a gap.
-                state.commentCount?.let { comments ->
-                    MetaSeparator()
-                    MetaText(
-                        pluralStringResource(
-                            R.plurals.content_list_comment_count,
-                            comments.toInt(),
-                            NumberFormat.getIntegerInstance().format(comments)
-                        )
-                    )
-                }
+                state.commentCount?.let { MetricText(R.plurals.content_list_comment_count, it) }
             }
             if (state.hasSyncFailed) {
                 MetaSeparator()
-                Text(
+                MetaText(
                     text = stringResource(R.string.post_rs_sync_failed),
-                    style = MaterialTheme.typography.bodySmall,
-                    fontSize = META_SIZE,
-                    color = MaterialTheme.colorScheme.error,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    color = MaterialTheme.colorScheme.error
                 )
             }
         }
@@ -339,13 +335,29 @@ private fun RowMetaLine(
     }
 }
 
+/** A separator followed by one metric, e.g. "· 1,204 views". */
 @Composable
-private fun MetaText(text: String) {
+private fun MetricText(@PluralsRes pluralResId: Int, count: Long) {
+    MetaSeparator()
+    MetaText(
+        pluralStringResource(
+            pluralResId,
+            count.toInt(),
+            NumberFormat.getIntegerInstance().format(count)
+        )
+    )
+}
+
+@Composable
+private fun MetaText(
+    text: String,
+    color: Color = MaterialTheme.colorScheme.onSurfaceVariant
+) {
     Text(
         text = text,
         style = MaterialTheme.typography.bodySmall,
         fontSize = META_SIZE,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        color = color,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis
     )
