@@ -140,10 +140,10 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     }
 
     private fun showFetchError(message: String?, isDeviceOffline: Boolean) {
-        when {
-            isDeviceOffline -> _showErrorMessage.value =
-                resourceProvider.getString(R.string.error_network_connection)
-            message != null -> _showErrorMessage.value = message
+        _showErrorMessage.value = when {
+            isDeviceOffline -> resourceProvider.getString(R.string.error_network_connection)
+            !message.isNullOrBlank() -> message
+            else -> resourceProvider.getString(R.string.request_failed_message)
         }
     }
 

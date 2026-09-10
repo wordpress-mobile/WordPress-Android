@@ -184,6 +184,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     private val domainSupportedStatesFetchErrorMessage = "Error fetching domain supported states"
     private val fetchSupportedCountriesErrorMessage = "Error fetching countries"
     private val offlineMessage = "Check your network connection and try again"
+    private val requestFailedMessage = "There was a problem handling the request. Please try again later."
 
     private val createShoppingCartResponse = CreateShoppingCartResponse(
         siteId.toInt(),
@@ -351,6 +352,28 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         viewModel.start(site, domainProductDetails)
 
         verify(errorMessageObserver).onChanged(offlineMessage)
+    }
+
+    @Test
+    fun failureWithNoMessageFetchingCountriesDuringPreload() = test {
+        whenever(resourceProvider.getString(R.string.request_failed_message)).thenReturn(requestFailedMessage)
+        whenever(fetchSupportedCountriesUseCase.execute())
+            .thenReturn(SupportedCountriesResult.Error(message = null, isDeviceOffline = false))
+
+        viewModel.start(site, domainProductDetails)
+
+        verify(errorMessageObserver).onChanged(requestFailedMessage)
+    }
+
+    @Test
+    fun failureWithBlankMessageFetchingCountriesDuringPreload() = test {
+        whenever(resourceProvider.getString(R.string.request_failed_message)).thenReturn(requestFailedMessage)
+        whenever(fetchSupportedCountriesUseCase.execute())
+            .thenReturn(SupportedCountriesResult.Error(message = "", isDeviceOffline = false))
+
+        viewModel.start(site, domainProductDetails)
+
+        verify(errorMessageObserver).onChanged(requestFailedMessage)
     }
 
     @Test
