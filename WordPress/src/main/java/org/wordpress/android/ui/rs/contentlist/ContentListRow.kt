@@ -436,8 +436,8 @@ private fun RowBadges(@StringRes badges: List<Int>) {
 private fun RowThumbnail(
     imageUrl: String?,
     isImagePending: Boolean,
-    size: Dp = THUMBNAIL_SIZE,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    size: Dp = THUMBNAIL_SIZE
 ) {
     val thumbnailModifier = modifier
         .size(size)
