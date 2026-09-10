@@ -75,8 +75,7 @@ fun ContentListRow(
                     state = state,
                     titleSize = TITLE_SIZE,
                     titleLineHeight = TITLE_LINE_HEIGHT,
-                    density = density,
-                    menu = null
+                    density = density
                 )
             }
             RowThumbnail(
@@ -126,21 +125,26 @@ fun ContentListHeroRow(
                         .height(HERO_IMAGE_HEIGHT)
                 )
             }
-            Column(
+            Row(
                 modifier = Modifier.padding(
                     start = CARD_PADDING,
                     top = CARD_PADDING,
-                    end = CARD_PADDING,
-                    bottom = CARD_PADDING_WITH_MENU
-                )
+                    // Matches the compact row so the button lands the same distance from the card
+                    // edge on every row, hero or not.
+                    end = if (menu == null) CARD_PADDING else 0.dp,
+                    bottom = CARD_PADDING
+                ),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                RowBody(
-                    state = state,
-                    titleSize = HERO_TITLE_SIZE,
-                    titleLineHeight = HERO_TITLE_LINE_HEIGHT,
-                    density = ContentListDensity.COMFORTABLE,
-                    menu = menu
-                )
+                Column(modifier = Modifier.weight(1f)) {
+                    RowBody(
+                        state = state,
+                        titleSize = HERO_TITLE_SIZE,
+                        titleLineHeight = HERO_TITLE_LINE_HEIGHT,
+                        density = ContentListDensity.COMFORTABLE
+                    )
+                }
+                menu?.invoke()
             }
         }
     }
@@ -263,9 +267,8 @@ private fun CardBody(isSyncing: Boolean, content: @Composable () -> Unit) {
  * The text stack shared by both row shapes: badges, title, excerpt, then the metadata line. Only
  * the title's size, the density and whether the metadata line carries the overflow button differ.
  *
- * The compact row places its button outside this column, next to the thumbnail, so that it lands at
- * the card edge either way. The hero row has no trailing thumbnail, so its metadata line already
- * runs to the card edge and the button sits there.
+ * Neither shape puts the overflow button in here: both place it beside this column so that it lands
+ * the same distance from the card edge on every row.
  *
  * Condensed drops the excerpt, which is what actually shortens the row, and the metrics, which the
  * ViewModel then does not fetch.
@@ -275,8 +278,7 @@ private fun RowBody(
     state: ContentListRowUiState,
     titleSize: TextUnit,
     titleLineHeight: TextUnit,
-    density: ContentListDensity,
-    menu: (@Composable () -> Unit)?
+    density: ContentListDensity
 ) {
     RowBadges(state.badges)
     RowTitle(title = state.title, fontSize = titleSize, lineHeight = titleLineHeight)
@@ -284,7 +286,7 @@ private fun RowBody(
         RowExcerpt(state.excerpt)
     }
     Spacer(modifier = Modifier.height(TITLE_META_GAP))
-    RowMetaLine(state = state, showMetrics = !density.isCondensed, menu = menu)
+    RowMetaLine(state = state, showMetrics = !density.isCondensed)
 }
 
 @Composable
@@ -328,30 +330,21 @@ private fun RowExcerpt(excerpt: String) {
 @Composable
 private fun RowMetaLine(
     state: ContentListRowUiState,
-    showMetrics: Boolean,
-    menu: (@Composable () -> Unit)?
+    showMetrics: Boolean
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Row(
-            modifier = Modifier.weight(1f),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            MetaText(state.dateLabel)
-            // A condensed list does not fetch metrics, so it shows neither them nor a skeleton
-            // waiting on a request that is never made.
-            if (showMetrics) {
-                RowMetrics(state)
-            }
-            if (state.hasSyncFailed) {
-                MetaSeparator()
-                MetaText(
-                    text = stringResource(R.string.post_rs_sync_failed),
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
+        MetaText(state.dateLabel)
+        // A condensed list does not fetch metrics, so it shows neither them nor a skeleton
+        // waiting on a request that is never made.
+        if (showMetrics) {
+            RowMetrics(state)
         }
-        if (menu != null) {
-            menu()
+        if (state.hasSyncFailed) {
+            MetaSeparator()
+            MetaText(
+                text = stringResource(R.string.post_rs_sync_failed),
+                color = MaterialTheme.colorScheme.error
+            )
         }
     }
 }
@@ -468,10 +461,6 @@ private val LIST_HORIZONTAL_PADDING = 12.dp
 private val CARD_VERTICAL_SPACING = 4.dp
 private val CARD_PADDING = 14.dp
 
-// The hero row keeps its overflow button on the metadata line, and that button's 48dp touch target
-// supplies most of the card's bottom inset - so the inset itself is trimmed to keep the row from
-// growing. The compact row puts its button beside the thumbnail and pads itself normally.
-private val CARD_PADDING_WITH_MENU = 4.dp
 private val CARD_RADIUS = 14.dp
 private val CARD_BORDER_WIDTH = 1.dp
 private val THUMBNAIL_SIZE = 72.dp
