@@ -271,6 +271,18 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                 showError(result.message, result.isDeviceOffline)
                 AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while redeeming a shopping cart")
             }
+            is RedeemCartResult.PartialFailure -> {
+                analyticsTracker.track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_FAILED)
+                _uiState.value = uiState.value?.copy(isRegistrationProgressIndicatorVisible = false)
+                _showErrorMessage.value = resourceProvider.getString(
+                    R.string.domain_registration_purchase_incomplete,
+                    domainProductDetails.domainName
+                )
+                AppLog.e(
+                    T.DOMAIN_REGISTRATION,
+                    "The domain was paid for but could not be registered"
+                )
+            }
             is RedeemCartResult.Success -> {
                 // after cart is redeemed, wait for a bit before manually setting domain as primary
                 delay(SITE_CHECK_DELAY_MS)

@@ -76,6 +76,21 @@ class RedeemCartUseCaseTest : BaseUnitTest() {
         assertThat(result).isEqualTo(RedeemCartResult.Success)
     }
 
+    @Suppress("UNCHECKED_CAST")
+    @Test
+    fun `given a product could not be provisioned, when execute, returns a partial failure`() = test {
+        val receipt = testTransactionReceipt(
+            success = false,
+            failedPurchases = mapOf(1234uL to listOf(testFailedPurchase("domainname.com"))),
+        )
+        whenever(wpComApiClient.request<Any>(any()))
+            .thenReturn(WpRequestResult.Success(receipt) as WpRequestResult<Any>)
+
+        val result = useCase.execute(cart, contact)
+
+        assertThat(result).isEqualTo(RedeemCartResult.PartialFailure)
+    }
+
     @Test
     fun `given the request fails, when execute, returns error carrying no field or message`() = test {
         whenever(wpComApiClient.request<Any>(any()))

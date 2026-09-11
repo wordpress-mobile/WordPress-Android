@@ -53,7 +53,17 @@ class RedeemCartUseCase @Inject constructor(
         val params = redeemCartParams(cart, contact)
         val result = client.request { it.me().redeemCart(params).data }
         return when (result) {
-            is WpRequestResult.Success -> RedeemCartResult.Success
+            is WpRequestResult.Success ->
+                if (result.response.success) {
+                    RedeemCartResult.Success
+                } else {
+                    AppLog.e(
+                        AppLog.T.API,
+                        "A shopping cart was charged for but ${result.response.failedPurchases.size} " +
+                                "of its sites had products that could not be provisioned"
+                    )
+                    RedeemCartResult.PartialFailure
+                }
             else -> {
                 AppLog.e(
                     AppLog.T.API,
@@ -87,6 +97,13 @@ internal fun redeemCartParams(
 
 sealed interface RedeemCartResult {
     data object Success : RedeemCartResult
+
+    /**
+     * The transaction was charged and a receipt exists, but at least one
+     * product in the cart could not be provisioned. A rejection that costs the
+     * customer nothing arrives as an [Error] instead.
+     */
+    data object PartialFailure : RedeemCartResult
 
     data class Error(
         val field: DomainContactField? = null,
