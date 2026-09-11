@@ -169,7 +169,7 @@ private fun PostListContent(
         if (isRedesignEnabled) {
             buildEntries(posts, showDateGroups, density)
         } else {
-            posts.map { PostListEntry.Legacy(it) }
+            posts.map { PostListEntry.NonContent(it) }
         }
     }
     val currentEntries by rememberUpdatedState(entries)
@@ -236,16 +236,24 @@ private fun PostListContent(
                     group = entry.group,
                     modifier = Modifier.animateItem()
                 )
-                is PostListEntry.Legacy -> PostRsListItem(
-                    post = entry.post,
-                    onClick = { onPostClick(entry.post.remotePostId) },
-                    onMenuAction = { action ->
-                        onPostMenuAction(entry.post.remotePostId, action)
-                    },
-                    modifier = Modifier.animateItem()
-                )
-                is PostListEntry.Placeholder ->
-                    ContentListPlaceholderRow(modifier = Modifier.animateItem())
+                is PostListEntry.NonContent ->
+                    // The redesigned placeholder only belongs to the redesigned list; with the flag
+                    // off every row, placeholder included, goes through the pre-redesign item.
+                    if (isRedesignEnabled &&
+                        entry.post.displayState == PostDisplayState.PLACEHOLDER
+                    ) {
+                        ContentListPlaceholderRow(modifier = Modifier.animateItem())
+                    } else {
+                        // The pre-redesign row still owns the error presentation.
+                        PostRsListItem(
+                            post = entry.post,
+                            onClick = { onPostClick(entry.post.remotePostId) },
+                            onMenuAction = { action ->
+                                onPostMenuAction(entry.post.remotePostId, action)
+                            },
+                            modifier = Modifier.animateItem()
+                        )
+                    }
                 is PostListEntry.Row -> RedesignedRow(
                     entry = entry,
                     onPostClick = onPostClick,
@@ -389,14 +397,11 @@ private sealed interface PostListEntry {
         override val postId get() = post.remotePostId
     }
 
-    /** A row whose post has not loaded yet. */
-    data class Placeholder(val post: PostRsUiModel) : PostListEntry {
-        override val key get() = post.remotePostId
-        override val postId get() = post.remotePostId
-    }
-
-    /** Rendered by the pre-redesign row, which still owns the error presentation. */
-    data class Legacy(val post: PostRsUiModel) : PostListEntry {
+    /**
+     * A row that is not a loaded post: still loading, or failed. Which of the two it is comes from
+     * the post's own [PostRsUiModel.displayState] at render time.
+     */
+    data class NonContent(val post: PostRsUiModel) : PostListEntry {
         override val key get() = post.remotePostId
         override val postId get() = post.remotePostId
     }
@@ -413,16 +418,11 @@ private fun buildEntries(
     var hasContentRow = false
 
     posts.forEach { post ->
-        when (post.displayState) {
-            PostDisplayState.PLACEHOLDER -> {
-                entries += PostListEntry.Placeholder(post)
-                return@forEach
-            }
-            PostDisplayState.ERROR -> {
-                entries += PostListEntry.Legacy(post)
-                return@forEach
-            }
-            else -> Unit
+        if (post.displayState == PostDisplayState.PLACEHOLDER ||
+            post.displayState == PostDisplayState.ERROR
+        ) {
+            entries += PostListEntry.NonContent(post)
+            return@forEach
         }
 
         if (showDateGroups && post.dateGmtMillis > 0L) {

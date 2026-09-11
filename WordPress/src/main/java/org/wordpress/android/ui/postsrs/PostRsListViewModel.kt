@@ -1015,7 +1015,9 @@ class PostRsListViewModel @Inject constructor(
 
         @Suppress("TooGenericExceptionCaught")
         try {
-            val isSearch = _searchQuery.value.isNotBlank()
+            // Snapshotted rather than read live: this function suspends for IO between the
+            // three reads below, and the query can change under it.
+            val isSearch = isSearching
             val nowLabel = resourceProvider.getString(R.string.rs_date_now)
             val items = withContext(Dispatchers.IO) {
                 collection.loadItems().map { item ->
@@ -1172,8 +1174,9 @@ class PostRsListViewModel @Inject constructor(
     /**
      * Whether rows on [tab] should expect metrics at all, and so whether to show a skeleton.
      *
-     * Comment counts work on every site, so any published list expects something; view counts are
-     * an extra that only WordPress.com-connected sites add on top.
+     * Published posts only, and only at comfortable density - a condensed row shows no metrics, so
+     * it does not fetch them either. Within that, comment counts work on every site while view
+     * counts are an extra that only WordPress.com-connected sites add on top.
      */
     private fun expectsMetrics(tab: PostRsListTab) =
         tab == PostRsListTab.PUBLISHED && !_density.value.isCondensed

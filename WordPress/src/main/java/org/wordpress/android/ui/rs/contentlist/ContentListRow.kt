@@ -58,34 +58,22 @@ fun ContentListRow(
 ) {
     val padding = if (density.isCondensed) CONDENSED_CARD_PADDING else CARD_PADDING
     ContentListCard(onClick = onClick, isSyncing = state.isSyncing, modifier = modifier) {
-        Row(
-            modifier = Modifier.padding(
-                start = padding,
-                top = padding,
-                // The overflow button carries its own inset, so the card supplies none on that
-                // edge; without a menu the card pads itself as usual.
-                end = if (menu == null) padding else 0.dp,
-                bottom = padding
-            ),
-            verticalAlignment = Alignment.CenterVertically
+        RowTextAndMenu(
+            state = state,
+            titleSize = TITLE_SIZE,
+            titleLineHeight = TITLE_LINE_HEIGHT,
+            density = density,
+            padding = padding,
+            menu = menu
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                RowBody(
-                    state = state,
-                    titleSize = TITLE_SIZE,
-                    titleLineHeight = TITLE_LINE_HEIGHT,
-                    density = density
-                )
-            }
-            RowThumbnail(
+            FeaturedImage(
                 imageUrl = state.imageUrl,
                 isImagePending = state.isImagePending,
-                size = if (density.isCondensed) CONDENSED_THUMBNAIL_SIZE else THUMBNAIL_SIZE,
-                modifier = Modifier.padding(start = padding)
+                modifier = Modifier
+                    .padding(start = padding)
+                    .size(if (density.isCondensed) CONDENSED_THUMBNAIL_SIZE else THUMBNAIL_SIZE)
+                    .clip(RoundedCornerShape(THUMBNAIL_RADIUS))
             )
-            // Outside the text column so it lands at the card's edge whether or not the post has a
-            // featured image. Inside it, the thumbnail pushed the button left by its own width.
-            menu?.invoke()
         }
     }
 }
@@ -105,46 +93,21 @@ fun ContentListHeroRow(
 ) {
     ContentListCard(onClick = onClick, isSyncing = state.isSyncing, modifier = modifier) {
         Column {
-            if (state.imageUrl != null) {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(state.imageUrl)
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = stringResource(R.string.featured_image_desc),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(HERO_IMAGE_HEIGHT),
-                    contentScale = ContentScale.Crop
-                )
-            } else if (state.isImagePending) {
-                ShimmerBox(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(HERO_IMAGE_HEIGHT)
-                )
-            }
-            Row(
-                modifier = Modifier.padding(
-                    start = CARD_PADDING,
-                    top = CARD_PADDING,
-                    // Matches the compact row so the button lands the same distance from the card
-                    // edge on every row, hero or not.
-                    end = if (menu == null) CARD_PADDING else 0.dp,
-                    bottom = CARD_PADDING
-                ),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    RowBody(
-                        state = state,
-                        titleSize = HERO_TITLE_SIZE,
-                        titleLineHeight = HERO_TITLE_LINE_HEIGHT,
-                        density = ContentListDensity.COMFORTABLE
-                    )
-                }
-                menu?.invoke()
-            }
+            FeaturedImage(
+                imageUrl = state.imageUrl,
+                isImagePending = state.isImagePending,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(HERO_IMAGE_HEIGHT)
+            )
+            RowTextAndMenu(
+                state = state,
+                titleSize = HERO_TITLE_SIZE,
+                titleLineHeight = HERO_TITLE_LINE_HEIGHT,
+                density = ContentListDensity.COMFORTABLE,
+                padding = CARD_PADDING,
+                menu = menu
+            )
         }
     }
 }
@@ -173,7 +136,16 @@ fun ContentListGroupHeader(
 /** Loading placeholder shaped like [ContentListRow] so the list does not jump when data lands. */
 @Composable
 fun ContentListPlaceholderRow(modifier: Modifier = Modifier) {
-    ContentListCard(onClick = null, isSyncing = false, modifier = modifier) {
+    // Its own Card rather than ContentListCard: a placeholder is not clickable, and it is the only
+    // caller that would need that to be optional.
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = LIST_HORIZONTAL_PADDING, vertical = CARD_VERTICAL_SPACING),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        border = BorderStroke(CARD_BORDER_WIDTH, MaterialTheme.colorScheme.outlineVariant),
+        shape = RoundedCornerShape(CARD_RADIUS)
+    ) {
         Row(
             modifier = Modifier.padding(CARD_PADDING),
             horizontalArrangement = Arrangement.spacedBy(CARD_PADDING),
@@ -214,33 +186,22 @@ fun ContentListPlaceholderRow(modifier: Modifier = Modifier) {
 
 @Composable
 private fun ContentListCard(
-    onClick: (() -> Unit)?,
+    onClick: () -> Unit,
     isSyncing: Boolean,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
-    val colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-    val border = BorderStroke(CARD_BORDER_WIDTH, MaterialTheme.colorScheme.outlineVariant)
-    val shape = RoundedCornerShape(CARD_RADIUS)
-    val cardModifier = modifier
-        .fillMaxWidth()
-        .padding(horizontal = LIST_HORIZONTAL_PADDING, vertical = CARD_VERTICAL_SPACING)
-
     // The design leans on a hairline border rather than a shadow, so elevation stays flat.
-    if (onClick == null) {
-        Card(modifier = cardModifier, colors = colors, border = border, shape = shape) {
-            CardBody(isSyncing = isSyncing, content = content)
-        }
-    } else {
-        Card(
-            onClick = onClick,
-            modifier = cardModifier,
-            colors = colors,
-            border = border,
-            shape = shape
-        ) {
-            CardBody(isSyncing = isSyncing, content = content)
-        }
+    Card(
+        onClick = onClick,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = LIST_HORIZONTAL_PADDING, vertical = CARD_VERTICAL_SPACING),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        border = BorderStroke(CARD_BORDER_WIDTH, MaterialTheme.colorScheme.outlineVariant),
+        shape = RoundedCornerShape(CARD_RADIUS)
+    ) {
+        CardBody(isSyncing = isSyncing, content = content)
     }
 }
 
@@ -427,16 +388,17 @@ private fun RowBadges(@StringRes badges: List<Int>) {
     }
 }
 
+/**
+ * The row's featured image at whatever size [modifier] gives it: full width for the lead row, a
+ * fixed square for the rest. Shimmers while the URL is still being resolved, and takes no space at
+ * all when the post has no featured image.
+ */
 @Composable
-private fun RowThumbnail(
+private fun FeaturedImage(
     imageUrl: String?,
     isImagePending: Boolean,
-    modifier: Modifier = Modifier,
-    size: Dp = THUMBNAIL_SIZE
+    modifier: Modifier = Modifier
 ) {
-    val thumbnailModifier = modifier
-        .size(size)
-        .clip(RoundedCornerShape(THUMBNAIL_RADIUS))
     when {
         imageUrl != null -> AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
@@ -444,11 +406,52 @@ private fun RowThumbnail(
                 .crossfade(true)
                 .build(),
             contentDescription = stringResource(R.string.featured_image_desc),
-            modifier = thumbnailModifier,
+            modifier = modifier,
             contentScale = ContentScale.Crop
         )
-        isImagePending -> ShimmerBox(modifier = thumbnailModifier)
+        isImagePending -> ShimmerBox(modifier = modifier)
         else -> Unit
+    }
+}
+
+/**
+ * The text column with the overflow button beside it, and an optional [trailing] slot between them
+ * for the compact row's thumbnail.
+ *
+ * Shared by both row shapes so the button lands the same distance from the card edge on every row -
+ * they drifted apart once already, which is how the hero's button ended up 14dp further in.
+ */
+@Composable
+private fun RowTextAndMenu(
+    state: ContentListRowUiState,
+    titleSize: TextUnit,
+    titleLineHeight: TextUnit,
+    density: ContentListDensity,
+    padding: Dp,
+    menu: (@Composable () -> Unit)?,
+    trailing: @Composable () -> Unit = {}
+) {
+    Row(
+        modifier = Modifier.padding(
+            start = padding,
+            top = padding,
+            // The overflow button carries its own inset, so the card supplies none on that edge;
+            // without a menu the card pads itself as usual.
+            end = if (menu == null) padding else 0.dp,
+            bottom = padding
+        ),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            RowBody(
+                state = state,
+                titleSize = titleSize,
+                titleLineHeight = titleLineHeight,
+                density = density
+            )
+        }
+        trailing()
+        menu?.invoke()
     }
 }
 
