@@ -13,6 +13,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.anyVararg
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
@@ -26,6 +27,7 @@ import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPay
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.ReaderEvents.FollowedBlogsFetched
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
@@ -79,6 +81,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSi
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState
 import org.wordpress.android.ui.utils.HtmlMessageUtils
+import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
 private const val SOURCE = "source"
@@ -135,6 +138,9 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     private lateinit var accountStore: AccountStore
 
     @Mock
+    private lateinit var eventBusWrapper: EventBusWrapper
+
+    @Mock
     private lateinit var resourceProvider: ResourceProvider
 
     @Mock
@@ -161,6 +167,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
             seenStatusToggleUseCase,
             readerBlogTableWrapper,
             accountStore,
+            eventBusWrapper,
             testDispatcher()
         )
         actionHandler.initScope(testScope())
@@ -741,6 +748,52 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     }
 
     @Test
+    fun `FollowedBlogsFetched event is posted with new count when site blocked in local db`() = test {
+        // Arrange
+        whenever(blockBlogUseCase.blockBlog(any(), any()))
+            .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
+        whenever(readerBlogTableWrapper.getFollowedBlogs())
+            .thenReturn(listOf(mock(), mock()))
+        // Act
+        actionHandler.onAction(
+            mock(),
+            BLOCK_SITE,
+            false,
+            SOURCE
+        )
+
+        // Assert
+        val captor = argumentCaptor<Any>()
+        verify(eventBusWrapper).post(captor.capture())
+        val event = captor.firstValue as FollowedBlogsFetched
+        assertThat(event.getTotalSubscriptions()).isEqualTo(2)
+        assertThat(event.didChange()).isTrue()
+    }
+
+    @Test
+    fun `FollowedBlogsFetched event is posted when user clicks on undo action in snackbar`() = test {
+        // Arrange
+        whenever(blockBlogUseCase.blockBlog(any(), any()))
+            .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
+        whenever(readerBlogTableWrapper.getFollowedBlogs()).thenReturn(emptyList())
+        val observedValues = startObserving(backgroundScope)
+        actionHandler.onAction(
+            mock(),
+            BLOCK_SITE,
+            false,
+            SOURCE
+        )
+        // Act
+        observedValues.snackbarMsgs[0].buttonAction.invoke()
+        // Assert
+        val captor = argumentCaptor<Any>()
+        verify(eventBusWrapper, times(2)).post(captor.capture())
+        val events = captor.allValues.map { it as FollowedBlogsFetched }
+        assertThat(events)
+            .allMatch { it.didChange() && it.getTotalSubscriptions() == 0 }
+    }
+
+    @Test
     fun `Snackbar shown when site blocked in local db`() = test {
         // Arrange
         whenever(blockBlogUseCase.blockBlog(any(), any()))
@@ -792,6 +845,28 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
 
         // Assert
         assertThat(observedValues.refreshPosts.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `FollowedBlogsFetched event is posted when request to block site fails with request failed error`() = test {
+        // Arrange
+        whenever(blockBlogUseCase.blockBlog(any(), any()))
+            .thenReturn(flowOf(Failed.RequestFailed))
+        whenever(readerBlogTableWrapper.getFollowedBlogs()).thenReturn(emptyList())
+        // Act
+        actionHandler.onAction(
+            mock(),
+            BLOCK_SITE,
+            false,
+            SOURCE
+        )
+
+        // Assert
+        val captor = argumentCaptor<Any>()
+        verify(eventBusWrapper).post(captor.capture())
+        val event = captor.firstValue as FollowedBlogsFetched
+        assertThat(event.getTotalSubscriptions()).isZero()
+        assertThat(event.didChange()).isTrue()
     }
 
     @Test
