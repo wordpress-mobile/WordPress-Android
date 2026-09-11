@@ -436,7 +436,12 @@ private fun buildEntries(
         // the featured image *id*, which is present as soon as the post loads, rather than the
         // resolved URL, which arrives a network call later - keying off the URL would pop rows from
         // compact to hero as their images resolved.
-        val isHero = !density.isCondensed && showDateGroups && post.featuredImageId != 0L
+        // An image-led card with no image is just a compact card with the wrong padding, so a
+        // post whose media could not be resolved falls back to the compact shape.
+        val isHero = !density.isCondensed &&
+            showDateGroups &&
+            post.featuredImageId != 0L &&
+            !post.isFeaturedImageUnresolvable
         entries += PostListEntry.Row(post, isHero)
     }
     return entries

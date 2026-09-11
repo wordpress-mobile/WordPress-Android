@@ -78,6 +78,8 @@ data class PostRsUiModel(
     val authorDisplayName: String? = null,
     val featuredImageId: Long = 0L,
     val featuredImageUrl: String? = null,
+    /** True when the media lookup answered without a URL, so the row should stop waiting for one. */
+    val isFeaturedImageUnresolvable: Boolean = false,
     val actions: List<PostRsMenuAction> = emptyList(),
     val badges: List<Int> = emptyList(),
     val displayState: PostDisplayState =
@@ -220,7 +222,9 @@ fun PostRsUiModel.toContentListRowUiState() = ContentListRowUiState(
     excerpt = excerpt,
     dateLabel = date,
     imageUrl = featuredImageUrl,
-    isImagePending = featuredImageId != 0L && featuredImageUrl == null,
+    isImagePending = featuredImageId != 0L &&
+        featuredImageUrl == null &&
+        !isFeaturedImageUnresolvable,
     viewCount = viewCount,
     commentCount = commentCount,
     areMetricsPending = areMetricsPending,

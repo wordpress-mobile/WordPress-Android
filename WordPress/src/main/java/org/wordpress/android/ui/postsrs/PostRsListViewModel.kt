@@ -136,6 +136,13 @@ class PostRsListViewModel @Inject constructor(
     private val commentCountCache = mutableMapOf<Long, Long?>()
     private val inFlightViewCounts = mutableSetOf<Long>()
     private val inFlightCommentCounts = mutableSetOf<Long>()
+
+    /**
+     * Featured media ids whose lookup came back without a URL. Rows use this to stop waiting: the
+     * fetch is not retried on its own, so without it they shimmer indefinitely. Cleared by a
+     * refresh, which is what gives a failed lookup another go.
+     */
+    private val unresolvableImageIds = mutableSetOf<Long>()
     private var lastTrackedTab: PostRsListTab? = null
 
     private val _events = Channel<PostRsListEvent>(Channel.BUFFERED)
@@ -792,6 +799,7 @@ class PostRsListViewModel @Inject constructor(
         visiblePostIds = emptySet()
         viewCountCache.clear()
         commentCountCache.clear()
+        unresolvableImageIds.clear()
         inFlightViewCounts.clear()
         inFlightCommentCounts.clear()
         _tabStates.value = emptyMap()
@@ -920,6 +928,7 @@ class PostRsListViewModel @Inject constructor(
                 // while numbers already fetched stay put.
                 viewCountCache.entries.removeAll { it.value == null }
                 commentCountCache.entries.removeAll { it.value == null }
+                unresolvableImageIds.clear()
                 userRefreshingTabs.remove(tab)
                 // Read the fetched items and end both progress states here rather than relying
                 // on the collection observers, which aren't guaranteed to fire for a refresh.
@@ -1047,6 +1056,8 @@ class PostRsListViewModel @Inject constructor(
                     } else {
                         null
                     },
+                    isFeaturedImageUnresolvable =
+                        model.featuredImageId in unresolvableImageIds,
                     // Read straight from the metrics cache: rebuilding from the collection would
                     // otherwise blank out numbers already fetched on every change it reports.
                     viewCount = viewCountCache[model.remotePostId],
@@ -1098,15 +1109,18 @@ class PostRsListViewModel @Inject constructor(
                     THUMBNAIL_ASPECT
                 )
             }
-            if (urls.isEmpty()) return@launch
+            // Anything the lookup did not answer for is recorded so its row stops waiting. The
+            // request is a batch, so one unreadable item leaves every id in it unanswered.
+            unresolvableImageIds.addAll(unresolvedIds.filterNot { urls.containsKey(it) })
             updateTabUiState(tab) {
                 copy(
                     posts = this.posts.map { post ->
                         val url = urls[post.featuredImageId]
-                        if (url != null) {
-                            post.copy(featuredImageUrl = url)
-                        } else {
-                            post
+                        when {
+                            url != null -> post.copy(featuredImageUrl = url)
+                            post.featuredImageId in unresolvableImageIds ->
+                                post.copy(isFeaturedImageUnresolvable = true)
+                            else -> post
                         }
                     }
                 )
