@@ -16,6 +16,8 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -25,10 +27,14 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.datasource.PostViewsDataResult
+import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.rs.RsCommentCountFetcher
+import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.ui.rs.RsTabLoading
 import org.wordpress.android.ui.rs.RsTabRefreshJobs
@@ -65,6 +71,8 @@ class PostRsListViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val changeListener: RsPostChangeListener,
+    private val statsDataSource: StatsDataSource,
+    private val commentCountFetcher: RsCommentCountFetcher,
 ) : ViewModel() {
     private val _tabStates = MutableStateFlow<Map<PostRsListTab, PostTabUiState>>(emptyMap())
     val tabStates: StateFlow<Map<PostRsListTab, PostTabUiState>> = _tabStates.asStateFlow()
@@ -92,6 +100,49 @@ class PostRsListViewModel @Inject constructor(
     private val fetchedTabs = mutableSetOf<PostRsListTab>()
     private val resolveImageJobs = mutableMapOf<PostRsListTab, Job>()
     private val resolveAuthorJobs = mutableMapOf<PostRsListTab, Job>()
+    /**
+     * Outstanding metric fetches, cancelled only at teardown.
+     *
+     * Deliberately not cancelled when the visible rows change: a cancelled fetch releases its
+     * in-flight claim without filling the cache, and the next visible set would skip those ids as
+     * "already in flight", stranding their rows on the loading skeleton with nothing left to
+     * resolve them. Volume is bounded by [visiblePostIds] instead.
+     */
+    private val metricJobs = mutableSetOf<Job>()
+
+    /** The rows on screen right now, so work queued for rows scrolled past can be dropped. */
+    private var visiblePostIds = emptySet<Long>()
+
+    /**
+     * Caps concurrent view-count requests across the whole screen.
+     *
+     * Shared rather than created per call: [onRowsVisible] fires on every visible-set change, so a
+     * per-call semaphore would cap each emission separately and a fling could still put a request
+     * in flight for every row it passed.
+     */
+    private val viewCountGate = Semaphore(MAX_CONCURRENT_VIEW_FETCHES)
+
+    /**
+     * Row metrics keyed by remote post id, so scrolling back to a row does not refetch it and a
+     * cache reload does not blank the numbers out. Only touched from the main dispatcher.
+     *
+     * A present key means "fetched"; a null value means the fetch came back with nothing usable.
+     * Rows distinguish the two so a failure clears the loading skeleton rather than pinning it.
+     *
+     * The two are kept apart because they do not reach equally far: comment counts come from the
+     * site's own REST API and work everywhere, while view counts need WordPress.com stats.
+     */
+    private val viewCountCache = mutableMapOf<Long, Long?>()
+    private val commentCountCache = mutableMapOf<Long, Long?>()
+    private val inFlightViewCounts = mutableSetOf<Long>()
+    private val inFlightCommentCounts = mutableSetOf<Long>()
+
+    /**
+     * Featured media ids whose lookup came back without a URL. Rows use this to stop waiting: the
+     * fetch is not retried on its own, so without it they shimmer indefinitely. Cleared by a
+     * refresh, which is what gives a failed lookup another go.
+     */
+    private val unresolvableImageIds = mutableSetOf<Long>()
     private var lastTrackedTab: PostRsListTab? = null
 
     private val _events = Channel<PostRsListEvent>(Channel.BUFFERED)
@@ -119,6 +170,24 @@ class PostRsListViewModel @Inject constructor(
             _site.hasCapabilityEditOthersPosts &&
             _site.isSingleUserSite == false
     }
+
+    /**
+     * View counts come from the WP.com stats endpoint, so they need a WP.com site ID and the
+     * capability to read stats. Self-hosted sites reached over application passwords have neither
+     * and show no view counts - their comment counts still work, since those come from the site's
+     * own REST API.
+     */
+    private val canFetchViewCounts: Boolean by lazy {
+        _site != null &&
+            _site.siteId > 0 &&
+            SiteUtils.isAccessedViaWPComRest(_site) &&
+            _site.hasCapabilityViewStats
+    }
+
+    private val _density = MutableStateFlow(
+        ContentListDensity.of(appPrefsWrapper.isContentListCondensed)
+    )
+    val density: StateFlow<ContentListDensity> = _density.asStateFlow()
 
     private val _authorFilter = MutableStateFlow(
         if (isAuthorFilterSupported) {
@@ -725,6 +794,14 @@ class PostRsListViewModel @Inject constructor(
         resolveImageJobs.clear()
         resolveAuthorJobs.values.forEach { it.cancel() }
         resolveAuthorJobs.clear()
+        metricJobs.forEach { it.cancel() }
+        metricJobs.clear()
+        visiblePostIds = emptySet()
+        viewCountCache.clear()
+        commentCountCache.clear()
+        unresolvableImageIds.clear()
+        inFlightViewCounts.clear()
+        inFlightCommentCounts.clear()
         _tabStates.value = emptyMap()
     }
 
@@ -847,11 +924,21 @@ class PostRsListViewModel @Inject constructor(
             try {
                 withContext(Dispatchers.IO) { collection.refresh() }
                 fetchedTabs.add(tab)
+                // Drop only the "nothing to show" entries so a transient failure is retried,
+                // while numbers already fetched stay put.
+                viewCountCache.entries.removeAll { it.value == null }
+                commentCountCache.entries.removeAll { it.value == null }
+                unresolvableImageIds.clear()
                 userRefreshingTabs.remove(tab)
                 // Read the fetched items and end both progress states here rather than relying
                 // on the collection observers, which aren't guaranteed to fire for a refresh.
                 loadItemsForTab(tab)
                 updateTabUiState(tab) { copy(isLoading = false, isRefreshing = false) }
+                // Clearing the cache above puts those rows back into the pending state, and the
+                // list only asks for metrics when its visible rows change - which a refresh in
+                // place does not do. Without this the skeletons would spin with nothing to
+                // resolve them.
+                retryMetricsForVisibleRows(tab)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -937,7 +1024,9 @@ class PostRsListViewModel @Inject constructor(
 
         @Suppress("TooGenericExceptionCaught")
         try {
-            val isSearch = _searchQuery.value.isNotBlank()
+            // Snapshotted rather than read live: this function suspends for IO between the
+            // three reads below, and the query can change under it.
+            val isSearch = isSearching
             val nowLabel = resourceProvider.getString(R.string.rs_date_now)
             val items = withContext(Dispatchers.IO) {
                 collection.loadItems().map { item ->
@@ -966,7 +1055,19 @@ class PostRsListViewModel @Inject constructor(
                         existing.authorDisplayName
                     } else {
                         null
-                    }
+                    },
+                    isFeaturedImageUnresolvable =
+                        model.featuredImageId in unresolvableImageIds,
+                    // Read straight from the metrics cache: rebuilding from the collection would
+                    // otherwise blank out numbers already fetched on every change it reports.
+                    viewCount = viewCountCache[model.remotePostId],
+                    commentCount = commentCountCache[model.remotePostId],
+                    // Search mixes statuses into one list, and metrics are only fetched for
+                    // published posts, so skeletons there would never resolve.
+                    areMetricsPending = expectsMetrics(tab) &&
+                        !isSearch &&
+                        isAnyMetricOutstanding(model.remotePostId)
+
                 )
             }
             updateTabUiState(tab) {
@@ -1008,15 +1109,18 @@ class PostRsListViewModel @Inject constructor(
                     THUMBNAIL_ASPECT
                 )
             }
-            if (urls.isEmpty()) return@launch
+            // Anything the lookup did not answer for is recorded so its row stops waiting. The
+            // request is a batch, so one unreadable item leaves every id in it unanswered.
+            unresolvableImageIds.addAll(unresolvedIds.filterNot { urls.containsKey(it) })
             updateTabUiState(tab) {
                 copy(
                     posts = this.posts.map { post ->
                         val url = urls[post.featuredImageId]
-                        if (url != null) {
-                            post.copy(featuredImageUrl = url)
-                        } else {
-                            post
+                        when {
+                            url != null -> post.copy(featuredImageUrl = url)
+                            post.featuredImageId in unresolvableImageIds ->
+                                post.copy(isFeaturedImageUnresolvable = true)
+                            else -> post
                         }
                     }
                 )
@@ -1060,6 +1164,203 @@ class PostRsListViewModel @Inject constructor(
                     }
                 )
             }
+        }
+    }
+
+    /**
+     * Flips the list between its two densities, persisting the choice for the pages list too.
+     *
+     * Condensed does not fetch metrics, so returning to comfortable has to ask for them: the rows on
+     * screen have not changed, and the visible-row stream is what normally triggers a fetch.
+     */
+    @MainThread
+    fun onDensityToggled(tab: PostRsListTab) {
+        val next = ContentListDensity.of(!_density.value.isCondensed)
+        _density.value = next
+        appPrefsWrapper.isContentListCondensed = next.isCondensed
+        viewModelScope.launch {
+            // Re-map the rows so their pending flags match the new density before anything fetches.
+            loadItemsForTab(tab)
+            if (!next.isCondensed) retryMetricsForVisibleRows(tab)
+        }
+    }
+
+    /**
+     * Whether rows on [tab] should expect metrics at all, and so whether to show a skeleton.
+     *
+     * Published posts only, and only at comfortable density - a condensed row shows no metrics, so
+     * it does not fetch them either. Within that, comment counts work on every site while view
+     * counts are an extra that only WordPress.com-connected sites add on top.
+     */
+    private fun expectsMetrics(tab: PostRsListTab) =
+        tab == PostRsListTab.PUBLISHED && !_density.value.isCondensed
+
+    /**
+     * Search results mix statuses into one list and metrics are only fetched for published posts,
+     * so anything shown while searching would wait on a fetch that never comes.
+     */
+    private val isSearching: Boolean get() = _searchQuery.value.isNotBlank()
+
+    /** Whether either metric is still expected for [postId] but has not arrived. */
+    private fun isAnyMetricOutstanding(postId: Long) =
+        !commentCountCache.containsKey(postId) ||
+            (canFetchViewCounts && !viewCountCache.containsKey(postId))
+
+    /**
+     * Fetches metrics for the rows currently on screen.
+     *
+     * Driven by scroll position rather than by the page load because neither source is free: view
+     * counts are one request per post, and comment counts are one per visible batch. Volume is held
+     * down by debouncing on the caller's side, a single [viewCountGate] shared across all calls,
+     * and re-checking [visiblePostIds] once a permit is granted - not by cancelling earlier
+     * batches, which would strand rows on their skeletons.
+     *
+     * Published posts only - a draft has neither a view history nor comments. Skipped entirely
+     * while searching, since results there mix statuses and a draft has nothing to report.
+     */
+    @MainThread
+    fun onRowsVisible(tab: PostRsListTab, postIds: List<Long>) {
+        if (!expectsMetrics(tab) || isSearching) return
+        visiblePostIds = postIds.toSet()
+        fetchCommentCounts(tab, postIds)
+        fetchViewCounts(tab, postIds)
+    }
+
+    /**
+     * Fetches comment counts for the visible rows in a single batched request.
+     *
+     * Unlike view counts this needs no WordPress.com account or stats capability: it reads the
+     * site's own REST API through whichever transport the site already uses.
+     */
+    @MainThread
+    private fun fetchCommentCounts(tab: PostRsListTab, postIds: List<Long>) {
+        val wanted = postIds.filter {
+            !commentCountCache.containsKey(it) && it !in inFlightCommentCounts
+        }
+        if (wanted.isEmpty()) return
+
+        inFlightCommentCounts.addAll(wanted)
+        track(viewModelScope.launch {
+            @Suppress("TooGenericExceptionCaught")
+            try {
+                val counts = try {
+                    withContext(Dispatchers.IO) {
+                        commentCountFetcher.fetchCommentCounts(site, wanted)
+                    }
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    AppLog.e(AppLog.T.POSTS, "Failed to fetch comment counts", e)
+                    emptyMap()
+                }
+                // Every id is written, so anything the fetch could not answer for is recorded as
+                // "nothing to show" and its row stops waiting; a refresh clears those and retries.
+                wanted.forEach { commentCountCache[it] = counts[it] }
+                applyMetrics(tab, wanted)
+            } finally {
+                inFlightCommentCounts.removeAll(wanted.toSet())
+            }
+        })
+    }
+
+    /**
+     * Fetches all-time view counts for the visible rows, a few at a time.
+     *
+     * The stats API answers for one post at a time, so this is capped by a semaphore and each row
+     * is merged in as soon as it lands rather than waiting for the whole batch.
+     */
+    @MainThread
+    private fun fetchViewCounts(tab: PostRsListTab, postIds: List<Long>) {
+        // The stats data source authenticates with the WP.com bearer token and throws if it is
+        // asked for data before being given one.
+        val accessToken = accountStore.accessToken.takeUnless { it.isNullOrEmpty() }
+        val wanted = postIds.filter {
+            !viewCountCache.containsKey(it) && it !in inFlightViewCounts
+        }
+        if (!canFetchViewCounts || accessToken == null || wanted.isEmpty()) return
+
+        track(viewModelScope.launch {
+            statsDataSource.init(accessToken)
+            wanted.forEach { postId ->
+                launch {
+                    viewCountGate.withPermit {
+                        // Re-checked after waiting for a permit rather than before queuing: by the
+                        // time a slot frees up the user may have scrolled well past this row, and
+                        // fetching it would spend a request on something off screen.
+                        if (postId in visiblePostIds) fetchViewCountFor(tab, postId)
+                    }
+                }
+            }
+        })
+    }
+
+    /** Keeps a job around so teardown can cancel it, and forgets it once it finishes. */
+    private fun track(job: Job) {
+        metricJobs.add(job)
+        job.invokeOnCompletion { metricJobs.remove(job) }
+    }
+
+    /**
+     * Fetches one post's view count.
+     *
+     * Metrics decorate the rows; the list is perfectly usable without them, so nothing in this path
+     * is allowed to take the screen down.
+     */
+    private suspend fun fetchViewCountFor(tab: PostRsListTab, postId: Long) {
+        if (!inFlightViewCounts.add(postId)) return
+        try {
+            // A null either way: the fetch failed, or it answered with nothing usable. Both mean
+            // the row has no number to show and should stop waiting for one.
+            @Suppress("TooGenericExceptionCaught")
+            val views = try {
+                val result = withContext(Dispatchers.IO) {
+                    statsDataSource.fetchPostViews(siteId = site.siteId, postId = postId)
+                }
+                (result as? PostViewsDataResult.Success)?.data?.totalViews
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.POSTS, "Failed to fetch view count for post $postId", e)
+                null
+            }
+            viewCountCache[postId] = views
+            applyMetrics(tab, listOf(postId))
+        } finally {
+            inFlightViewCounts.remove(postId)
+        }
+    }
+
+    /**
+     * Re-requests metrics for the rows already on screen, for when something other than scrolling
+     * put them back into the pending state.
+     */
+    @MainThread
+    private fun retryMetricsForVisibleRows(tab: PostRsListTab) {
+        if (visiblePostIds.isEmpty()) return
+        onRowsVisible(tab, visiblePostIds.toList())
+    }
+
+    /** Pushes whatever the caches now hold for [postIds] onto the tab's rows. */
+    @MainThread
+    private fun applyMetrics(tab: PostRsListTab, postIds: List<Long>) {
+        val touched = postIds.toSet()
+        updateTabUiState(tab) {
+            copy(
+                posts = posts.map { post ->
+                    if (post.remotePostId in touched) {
+                        post.copy(
+                            viewCount = viewCountCache[post.remotePostId],
+                            commentCount = commentCountCache[post.remotePostId],
+                            // Mirrors the guard in loadItemsForTab: without it a late-landing
+                            // fetch could raise a skeleton over a search result.
+                            areMetricsPending = !isSearching &&
+                                isAnyMetricOutstanding(post.remotePostId)
+                        )
+                    } else {
+                        post
+                    }
+                }
+            )
         }
     }
 
@@ -1148,6 +1449,12 @@ class PostRsListViewModel @Inject constructor(
         private const val SEARCH_DEBOUNCE_MS = 250L
         internal const val MIN_SEARCH_QUERY_LENGTH = 3
         private const val THUMBNAIL_SIZE_DP = 64
+
+        /**
+         * View counts are one request each, so a screenful is fetched a few at a time rather than
+         * all at once. Comment counts need no such cap - they come back in one batched request.
+         */
+        private const val MAX_CONCURRENT_VIEW_FETCHES = 4
 
         /** Rows show the thumbnail in a square slot, cropped to fill. */
         private const val THUMBNAIL_ASPECT = 1f
