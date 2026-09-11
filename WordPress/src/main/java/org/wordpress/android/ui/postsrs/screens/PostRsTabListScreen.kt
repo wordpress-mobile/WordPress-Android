@@ -415,7 +415,6 @@ private fun buildEntries(
     val entries = mutableListOf<PostListEntry>()
     var currentGroupKey: String? = null
     var headerCount = 0
-    var hasContentRow = false
 
     posts.forEach { post ->
         if (post.displayState == PostDisplayState.PLACEHOLDER ||
@@ -433,14 +432,11 @@ private fun buildEntries(
             }
         }
 
-        // The lead row keys off the featured image *id*, which is present as soon as the post
-        // loads, rather than the resolved URL, which arrives a network call later. Keying off the
-        // URL would pop the first row from compact to hero once the image resolved.
-        val isHero = !density.isCondensed &&
-            showDateGroups &&
-            !hasContentRow &&
-            post.featuredImageId != 0L
-        hasContentRow = true
+        // Every post with a featured image gets the hero treatment, not just the newest. Keyed off
+        // the featured image *id*, which is present as soon as the post loads, rather than the
+        // resolved URL, which arrives a network call later - keying off the URL would pop rows from
+        // compact to hero as their images resolved.
+        val isHero = !density.isCondensed && showDateGroups && post.featuredImageId != 0L
         entries += PostListEntry.Row(post, isHero)
     }
     return entries

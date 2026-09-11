@@ -79,10 +79,10 @@ fun ContentListRow(
 }
 
 /**
- * Lead row: the featured image runs the full width of the card above the text. Used for the newest
- * item in a list, which is what gives the redesign its reason to care about featured images.
+ * Image-led row: the featured image runs the full width of the card above the text. Used for every
+ * post that has one, which is what gives the redesign its reason to care about featured images.
  *
- * Comfortable density only - a condensed list has no lead row, so this is never drawn condensed.
+ * Comfortable density only - a condensed list draws no images this way, so this is never condensed.
  */
 @Composable
 fun ContentListHeroRow(
