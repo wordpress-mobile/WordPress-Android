@@ -218,6 +218,15 @@ fun PostRsListScreen(
                             }
                         }
                     } else {
+                        // Ahead of the author filter, not between it and search: these actions are
+                        // end-aligned, so inserting anywhere later would shift both pre-existing
+                        // icons left of where they have always been.
+                        if (isRedesignEnabled) {
+                            DensityToggleButton(
+                                density = density,
+                                onToggle = { onDensityToggled(activeTab) }
+                            )
+                        }
                         if (isAuthorFilterSupported) {
                             AuthorFilterButton(
                                 authorFilter = authorFilter,
@@ -225,12 +234,6 @@ fun PostRsListScreen(
                                 onSelectionChanged = { selection ->
                                     onAuthorFilterChanged(selection, activeTab)
                                 }
-                            )
-                        }
-                        if (isRedesignEnabled) {
-                            DensityToggleButton(
-                                density = density,
-                                onToggle = { onDensityToggled(activeTab) }
                             )
                         }
                         IconButton(onClick = onSearchOpen) {
