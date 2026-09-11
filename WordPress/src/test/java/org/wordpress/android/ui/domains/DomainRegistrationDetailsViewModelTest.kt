@@ -25,10 +25,6 @@ import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainError
-import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainErrorType
-import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainPayload
-import org.wordpress.android.fluxc.store.SiteStore.OnPrimaryDomainDesignated
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.store.SiteStore.SiteError
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType
@@ -37,6 +33,8 @@ import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel.Domai
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel.DomainRegistrationDetailsUiState
 import org.wordpress.android.ui.domains.usecases.CreateCartResult
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
+import org.wordpress.android.ui.domains.usecases.DesignatePrimaryDomainResult
+import org.wordpress.android.ui.domains.usecases.DesignatePrimaryDomainUseCase
 import org.wordpress.android.ui.domains.usecases.DomainContactField
 import org.wordpress.android.ui.domains.usecases.DomainContactResult
 import org.wordpress.android.ui.domains.usecases.FetchDomainContactUseCase
@@ -80,6 +78,9 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var redeemCartUseCase: RedeemCartUseCase
+
+    @Mock
+    private lateinit var designatePrimaryDomainUseCase: DesignatePrimaryDomainUseCase
 
     @Mock
     private lateinit var resourceProvider: ResourceProvider
@@ -161,10 +162,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     private val createCartErrorMessage = "Error Creating Cart"
     private val redeemCartErrorMessage = "Wrong phone number"
     private val siteChangedError = SiteError(SiteErrorType.GENERIC_ERROR, "Error fetching site")
-    private val primaryDomainError = DesignatePrimaryDomainError(
-        DesignatePrimaryDomainErrorType.GENERIC_ERROR,
-        "Error designating primary domain"
-    )
+    private val primaryDomainErrorMessage = "Error designating primary domain"
     private val domainContactInformationFetchErrorMessage = "Error fetching domain contact information"
     private val domainSupportedStatesFetchErrorMessage = "Error fetching domain supported states"
     private val fetchSupportedCountriesErrorMessage = "Error fetching countries"
@@ -191,6 +189,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
             fetchSupportedStatesUseCase,
             createCartUseCase,
             redeemCartUseCase,
+            designatePrimaryDomainUseCase,
             resourceProvider,
             NoDelayCoroutineDispatcher()
         )
@@ -201,9 +200,9 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
             setupFetchStates(false)
             setupCreateCart(false)
             setupRedeemCart(false)
+            setupDesignatePrimaryDomain(false)
         }
         setupFetchSiteDispatcher(false)
-        setupPrimaryDomainDispatcher(false)
 
         uiStateResults.clear()
         viewModel.uiState.observeForever { if (it != null) uiStateResults.add(it) }
@@ -543,14 +542,12 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         verify(createCartUseCase).execute(site, productId, testDomainName, true, true, null)
         // The prefilled contact round-trips: the form holds the fetched details unchanged
         verify(redeemCartUseCase).execute(shoppingCart, domainContactInformation)
+        verify(designatePrimaryDomainUseCase).execute(site, testDomainName)
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher, times(2)).dispatch(captor.capture())
+        verify(dispatcher, times(1)).dispatch(captor.capture())
 
-        val actionsDispatched = captor.allValues
-
-        validateDesignatePrimaryDomainActions(actionsDispatched[0])
-        validateFetchSiteAction(actionsDispatched[1])
+        validateFetchSiteAction(captor.allValues[0])
 
         assertThat(uiStateResults.size).isEqualTo(2)
 
@@ -634,6 +631,22 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `a failed primary domain designation is reported and the site still refreshes`() = test {
+        setupDesignatePrimaryDomain(true)
+
+        viewModel.start(site, domainProductDetails)
+        viewModel.onRegisterDomainButtonClicked()
+
+        verify(errorMessageObserver).onChanged(primaryDomainErrorMessage)
+
+        val captor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher, times(1)).dispatch(captor.capture())
+        validateFetchSiteAction(captor.allValues[0])
+
+        verify(completedDomainRegistrationObserver).onChanged(domainRegistrationCompletedEvent)
+    }
+
+    @Test
     fun onErrorFetchingSite() = test {
         setupFetchSiteDispatcher(true)
 
@@ -643,12 +656,9 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         viewModel.onRegisterDomainButtonClicked()
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher, times(2)).dispatch(captor.capture())
+        verify(dispatcher, times(1)).dispatch(captor.capture())
 
-        val actionsDispatched = captor.allValues
-
-        validateDesignatePrimaryDomainActions(actionsDispatched[0])
-        validateFetchSiteAction(actionsDispatched[1])
+        validateFetchSiteAction(captor.allValues[0])
 
         assertThat(uiStateResults.size).isEqualTo(2)
 
@@ -771,16 +781,13 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         }
     }
 
-    private fun setupPrimaryDomainDispatcher(isError: Boolean) {
-        val event = OnPrimaryDomainDesignated(site, isError)
-        if (isError) {
-            event.error = primaryDomainError
+    private suspend fun setupDesignatePrimaryDomain(isError: Boolean) {
+        val result = if (isError) {
+            DesignatePrimaryDomainResult.Error(primaryDomainErrorMessage)
+        } else {
+            DesignatePrimaryDomainResult.Success
         }
-        whenever(dispatcher.dispatch(argWhere<Action<Void>> {
-            it.type == SiteAction.DESIGNATE_PRIMARY_DOMAIN
-        })).then {
-            viewModel.onPrimaryDomainDesignated(event)
-        }
+        whenever(designatePrimaryDomainUseCase.execute(any(), any())).thenReturn(result)
     }
 
     private fun validateFetchSiteAction(action: Action<*>) {
@@ -790,16 +797,6 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         val fetchSitePayload = action.payload as SiteModel
         assertThat(fetchSitePayload).isEqualTo(site)
-    }
-
-    private fun validateDesignatePrimaryDomainActions(action: Action<*>) {
-        assertThat(action.type).isEqualTo(SiteAction.DESIGNATE_PRIMARY_DOMAIN)
-        assertThat(action.payload).isNotNull
-        assertThat(action.payload).isInstanceOf(DesignatePrimaryDomainPayload::class.java)
-
-        val designatePrimaryDomainPayload = action.payload as DesignatePrimaryDomainPayload
-        assertThat(designatePrimaryDomainPayload.site).isEqualTo(site)
-        assertThat(designatePrimaryDomainPayload.domain).isEqualTo(testDomainName)
     }
 
     private fun clearPreLoadUiStateResult() {
