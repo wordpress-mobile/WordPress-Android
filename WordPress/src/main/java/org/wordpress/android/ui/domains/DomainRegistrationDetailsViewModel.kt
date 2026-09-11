@@ -12,23 +12,21 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
-import org.wordpress.android.fluxc.generated.TransactionActionBuilder
-import org.wordpress.android.fluxc.model.DomainContactModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainPayload
 import org.wordpress.android.fluxc.store.SiteStore.OnPrimaryDomainDesignated
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
-import org.wordpress.android.fluxc.store.TransactionsStore
-import org.wordpress.android.fluxc.store.TransactionsStore.OnShoppingCartCreated
-import org.wordpress.android.fluxc.store.TransactionsStore.OnShoppingCartRedeemed
-import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartError
-import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartPayload
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.domains.usecases.CreateCartResult
+import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
+import org.wordpress.android.ui.domains.usecases.DomainContactField
 import org.wordpress.android.ui.domains.usecases.DomainContactResult
 import org.wordpress.android.ui.domains.usecases.FetchDomainContactUseCase
 import org.wordpress.android.ui.domains.usecases.FetchSupportedCountriesUseCase
 import org.wordpress.android.ui.domains.usecases.FetchSupportedStatesUseCase
+import org.wordpress.android.ui.domains.usecases.RedeemCartResult
+import org.wordpress.android.ui.domains.usecases.RedeemCartUseCase
 import org.wordpress.android.ui.domains.usecases.SupportedCountriesResult
 import org.wordpress.android.ui.domains.usecases.SupportedStatesResult
 import org.wordpress.android.util.AppLog
@@ -39,6 +37,7 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import uniffi.wp_api.DomainContactInformation
+import uniffi.wp_api.ShoppingCart
 import uniffi.wp_api.SupportedCountry
 import uniffi.wp_api.SupportedState
 import javax.inject.Inject
@@ -49,12 +48,13 @@ const val MAX_SITE_CHECK_TRIES = 10
 
 class DomainRegistrationDetailsViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
-    @Suppress("unused") private val transactionsStore: TransactionsStore, // needed for events to work
     private val siteStore: SiteStore,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val fetchSupportedCountriesUseCase: FetchSupportedCountriesUseCase,
     private val fetchDomainContactUseCase: FetchDomainContactUseCase,
     private val fetchSupportedStatesUseCase: FetchSupportedStatesUseCase,
+    private val createCartUseCase: CreateCartUseCase,
+    private val redeemCartUseCase: RedeemCartUseCase,
     private val resourceProvider: ResourceProvider,
     @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
@@ -84,8 +84,8 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     val showErrorMessage: LiveData<String>
         get() = _showErrorMessage
 
-    private val _formError = SingleLiveEvent<RedeemShoppingCartError>()
-    val formError: LiveData<RedeemShoppingCartError>
+    private val _formError = SingleLiveEvent<DomainContactFieldError>()
+    val formError: LiveData<DomainContactFieldError>
         get() = _formError
 
     private val _showCountryPickerDialog = SingleLiveEvent<List<SupportedCountry>>()
@@ -119,6 +119,12 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         val isStateInputEnabled: Boolean = false
     )
 
+    /** A contact field the server rejected, and what it said about it. */
+    data class DomainContactFieldError(
+        val field: DomainContactField,
+        val message: String?
+    )
+
     init {
         dispatcher.register(this)
     }
@@ -142,7 +148,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         isStarted = true
     }
 
-    private fun showFetchError(message: String?, isDeviceOffline: Boolean) {
+    private fun showError(message: String?, isDeviceOffline: Boolean) {
         _showErrorMessage.value = when {
             isDeviceOffline -> resourceProvider.getString(R.string.error_network_connection)
             !message.isNullOrBlank() -> message
@@ -155,7 +161,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         when (val result = fetchSupportedCountriesUseCase.execute()) {
             is SupportedCountriesResult.Error -> {
                 _uiState.value = _uiState.value?.copy(isFormProgressIndicatorVisible = false)
-                showFetchError(result.message, result.isDeviceOffline)
+                showError(result.message, result.isDeviceOffline)
                 AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching supported countries")
             }
             is SupportedCountriesResult.Success -> {
@@ -169,7 +175,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         when (val result = fetchDomainContactUseCase.execute()) {
             is DomainContactResult.Error -> {
                 _uiState.value = _uiState.value?.copy(isFormProgressIndicatorVisible = false)
-                showFetchError(result.message, result.isDeviceOffline)
+                showError(result.message, result.isDeviceOffline)
                 AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching domain contact details")
             }
             is DomainContactResult.Success -> {
@@ -221,7 +227,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                         isStateProgressIndicatorVisible = false,
                         isDomainRegistrationButtonEnabled = true
                     )
-                showFetchError(result.message, result.isDeviceOffline)
+                showError(result.message, result.isDeviceOffline)
                 AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching supported states")
             }
             is SupportedStatesResult.Success -> {
@@ -236,54 +242,46 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onShoppingCartCreated(event: OnShoppingCartCreated) {
-        if (event.isError) {
-            _uiState.value = uiState.value?.copy(isRegistrationProgressIndicatorVisible = false)
-            AppLog.e(
-                T.DOMAIN_REGISTRATION,
-                "An error occurred while creating a shopping cart : " + event.error.message
-            )
-            _showErrorMessage.value = event.error.message
-            return
-        }
-
-        dispatcher.dispatch(
-            TransactionActionBuilder.newRedeemCartWithCreditsAction(
-                RedeemShoppingCartPayload(
-                    event.cartDetails!!,
-                    DomainContactFormModel.toDomainContactModel(domainContactForm.value)!!
-                )
-            )
+    private suspend fun createCart() {
+        val result = createCartUseCase.execute(
+            site,
+            domainProductDetails.productId,
+            domainProductDetails.domainName,
+            uiState.value?.isPrivacyProtectionEnabled!!,
+            isTemporary = true
         )
+        when (result) {
+            is CreateCartResult.Error -> {
+                _uiState.value = uiState.value?.copy(isRegistrationProgressIndicatorVisible = false)
+                showError(result.message, result.isDeviceOffline)
+                AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while creating a shopping cart")
+            }
+            is CreateCartResult.Success -> redeemCart(result.cart)
+        }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onCartRedeemed(event: OnShoppingCartRedeemed) {
-        if (event.isError) {
-            analyticsTracker.track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_FAILED)
-            _uiState.value = uiState.value?.copy(isRegistrationProgressIndicatorVisible = false)
-            _formError.value = event.error
-            _showErrorMessage.value = event.error.message
-            AppLog.e(
-                T.DOMAIN_REGISTRATION,
-                "An error occurred while redeeming a shopping cart : " + event.error.type +
-                        " " + event.error.message
-            )
-            return
-        }
-
-        // after cart is redeemed, wait for a bit before manually setting domain as primary
-        launch {
-            delay(SITE_CHECK_DELAY_MS)
-            dispatcher.dispatch(
-                SiteActionBuilder.newDesignatePrimaryDomainAction(
-                    DesignatePrimaryDomainPayload(
-                        site,
-                        domainProductDetails.domainName
+    private suspend fun redeemCart(cart: ShoppingCart) {
+        val contact = DomainContactFormModel.toDomainContactInformation(domainContactForm.value)!!
+        when (val result = redeemCartUseCase.execute(cart, contact)) {
+            is RedeemCartResult.Error -> {
+                analyticsTracker.track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_FAILED)
+                _uiState.value = uiState.value?.copy(isRegistrationProgressIndicatorVisible = false)
+                result.field?.let { _formError.value = DomainContactFieldError(it, result.message) }
+                showError(result.message, result.isDeviceOffline)
+                AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while redeeming a shopping cart")
+            }
+            is RedeemCartResult.Success -> {
+                // after cart is redeemed, wait for a bit before manually setting domain as primary
+                delay(SITE_CHECK_DELAY_MS)
+                dispatcher.dispatch(
+                    SiteActionBuilder.newDesignatePrimaryDomainAction(
+                        DesignatePrimaryDomainPayload(
+                            site,
+                            domainProductDetails.domainName
+                        )
                     )
                 )
-            )
+            }
         }
     }
 
@@ -362,16 +360,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
             countryCode = uiState.value?.selectedCountry?.code,
             state = uiState.value?.selectedState?.code
         )
-        dispatcher.dispatch(
-            TransactionActionBuilder.newCreateShoppingCartWithDomainAndPlanAction(
-                TransactionsStore.CreateShoppingCartWithDomainAndPlanPayload(
-                    site,
-                    domainProductDetails.productId,
-                    domainProductDetails.domainName,
-                    uiState.value?.isPrivacyProtectionEnabled!!
-                )
-            )
-        )
+        launch { createCart() }
     }
 
     fun onCountrySelected(country: SupportedCountry) {
@@ -431,17 +420,19 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         val phoneNumber: String?
     ) {
         companion object {
-            fun toDomainContactModel(domainContactFormModel: DomainContactFormModel?): DomainContactModel? {
+            fun toDomainContactInformation(
+                domainContactFormModel: DomainContactFormModel?
+            ): DomainContactInformation? {
                 if (domainContactFormModel == null) {
                     return null
                 }
 
-                return DomainContactModel(
+                return DomainContactInformation(
                     firstName = domainContactFormModel.firstName,
                     lastName = domainContactFormModel.lastName,
                     organization = domainContactFormModel.organization,
-                    addressLine1 = domainContactFormModel.addressLine1,
-                    addressLine2 = domainContactFormModel.addressLine2,
+                    address1 = domainContactFormModel.addressLine1,
+                    address2 = domainContactFormModel.addressLine2,
                     postalCode = domainContactFormModel.postalCode,
                     city = domainContactFormModel.city,
                     state = domainContactFormModel.state,
@@ -451,7 +442,8 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                         domainContactFormModel.phoneNumberPrefix,
                         domainContactFormModel.phoneNumber
                     ),
-                    fax = null
+                    fax = null,
+                    extra = null
                 )
             }
 
