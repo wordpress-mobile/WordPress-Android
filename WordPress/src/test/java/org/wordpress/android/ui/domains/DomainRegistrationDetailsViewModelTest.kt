@@ -163,6 +163,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     private val redeemCartErrorMessage = "Wrong phone number"
     private val siteChangedError = SiteError(SiteErrorType.GENERIC_ERROR, "Error fetching site")
     private val primaryDomainErrorMessage = "Error designating primary domain"
+    private val purchaseIncompleteMessage = "Your domain credit was used, but it could not be registered"
     private val domainContactInformationFetchErrorMessage = "Error fetching domain contact information"
     private val domainSupportedStatesFetchErrorMessage = "Error fetching domain supported states"
     private val fetchSupportedCountriesErrorMessage = "Error fetching countries"
@@ -628,6 +629,27 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         verify(formErrorObserver, never()).onChanged(any())
         verify(errorMessageObserver).onChanged("Not enough credits")
+    }
+
+    @Test
+    fun `a charged purchase that registered nothing stops the flow and says so`() = test {
+        whenever(resourceProvider.getString(R.string.domain_registration_purchase_incomplete, testDomainName))
+            .thenReturn(purchaseIncompleteMessage)
+        whenever(redeemCartUseCase.execute(any(), any())).thenReturn(RedeemCartResult.PartialFailure)
+
+        viewModel.start(site, domainProductDetails)
+        clearPreLoadUiStateResult()
+
+        viewModel.onRegisterDomainButtonClicked()
+
+        verifyNoInteractions(designatePrimaryDomainUseCase)
+        verify(dispatcher, never()).dispatch(any())
+        verify(completedDomainRegistrationObserver, never()).onChanged(any())
+
+        verify(errorMessageObserver).onChanged(purchaseIncompleteMessage)
+        verify(analyticsTracker).track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_FAILED)
+
+        assertThat(uiStateResults.last().isRegistrationProgressIndicatorVisible).isEqualTo(false)
     }
 
     @Test

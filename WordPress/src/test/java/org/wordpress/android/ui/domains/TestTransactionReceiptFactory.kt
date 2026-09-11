@@ -24,3 +24,14 @@ fun testTransactionReceipt(
     isGiftPurchase = false,
     isGravatarDomain = false,
 )
+
+/** A product the transaction charged for but could not provision. */
+fun testFailedPurchase(
+    domainName: String,
+) = TransactionFailedPurchase(
+    productId = 0uL,
+    productName = "",
+    productSlug = "",
+    productMeta = domainName,
+    productCost = 0L,
+)
