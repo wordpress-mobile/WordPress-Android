@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteError
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.GENERIC_ERROR
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity
 import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
+import org.wordpress.android.ui.domains.testShoppingCart
 import org.wordpress.android.ui.domains.usecases.CreateCartResult
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Created
@@ -52,8 +53,8 @@ val CHECKOUT_EVENT = DomainRegistrationCompletedEvent(URL_CUSTOM, "email@host.co
 val FETCH_SUCCESS = OnSiteChanged(1)
 val FETCH_ERROR = OnSiteChanged(0).apply { error = SiteError(GENERIC_ERROR) }
 
-val CART_SUCCESS = CreateCartResult.Success
-val CART_ERROR = CreateCartResult.Error
+val CART_SUCCESS = CreateCartResult.Success(testShoppingCart())
+val CART_ERROR = CreateCartResult.Error()
 
 val RESULT_CREATED = mock<Created>()
 val RESULT_NOT_IN_LOCAL_DB = CreatedButNotFetched.NotInLocalDb(SITE_MODEL)

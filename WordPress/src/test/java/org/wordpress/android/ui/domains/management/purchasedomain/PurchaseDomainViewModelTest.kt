@@ -20,6 +20,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_P
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_COMPLETED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
+import org.wordpress.android.ui.domains.testShoppingCart
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoBack
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToDomainPurchasing
@@ -243,7 +244,7 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
                 isTemporary = false,
                 planProductId = null
             )
-        ).thenReturn(CreateCartResult.Success)
+        ).thenReturn(CreateCartResult.Success(testShoppingCart()))
         whenever(
             createCartUseCase.execute(
                 testSite, productId, domain,
@@ -251,7 +252,7 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
                 isTemporary = false,
                 planProductId = null
             )
-        ).thenReturn(CreateCartResult.Success)
+        ).thenReturn(CreateCartResult.Success(testShoppingCart()))
         whenever(
             createCartUseCase.execute(
                 testFreeSite, productId, domain,
@@ -259,7 +260,7 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
                 isTemporary = false,
                 planProductId = null
             )
-        ).thenReturn(CreateCartResult.Success)
+        ).thenReturn(CreateCartResult.Success(testShoppingCart()))
     }
 
     private fun mockCartError() = test {
@@ -270,7 +271,7 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
                 isTemporary = false,
                 planProductId = null
             )
-        ).thenReturn(CreateCartResult.Error)
+        ).thenReturn(CreateCartResult.Error())
     }
 
     private fun testWithActionEvents(block: suspend TestScope.(events: List<ActionEvent>) -> Unit) = test {
