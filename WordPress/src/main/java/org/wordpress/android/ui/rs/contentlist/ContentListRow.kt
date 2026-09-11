@@ -455,8 +455,10 @@ private fun RowTextAndMenu(
     }
 }
 
-private val LIST_HORIZONTAL_PADDING = 12.dp
-private val CARD_VERTICAL_SPACING = 4.dp
+private val LIST_HORIZONTAL_PADDING = 8.dp
+
+// Applied per card, so the gap between two adjacent cards is twice this.
+private val CARD_VERTICAL_SPACING = 2.dp
 private val CARD_PADDING = 14.dp
 
 private val CARD_RADIUS = 14.dp
@@ -482,7 +484,9 @@ private val META_SIZE = 13.sp
 private val METRICS_SKELETON_WIDTH = 132.dp
 private val METRICS_SKELETON_HEIGHT = 11.dp
 private val GROUP_HEADER_TRACKING = 1.3.sp
-private val GROUP_HEADER_INSET = 16.dp
+// Sits 4dp further in than the cards, as the mockup has it - so it tracks
+// LIST_HORIZONTAL_PADDING rather than being an independent value.
+private val GROUP_HEADER_INSET = LIST_HORIZONTAL_PADDING + 4.dp
 private val GROUP_HEADER_TOP_PADDING = 16.dp
 private val GROUP_HEADER_BOTTOM_PADDING = 4.dp
 private val BADGE_BOTTOM_PADDING = 6.dp

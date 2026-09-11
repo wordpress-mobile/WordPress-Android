@@ -67,6 +67,7 @@ fun ContentListFilterChips(
     }
 }
 
-private val CHIP_ROW_H_PADDING = 12.dp
+/** Matches the content list's own horizontal padding so the chips line up with the cards. */
+private val CHIP_ROW_H_PADDING = 8.dp
 private val CHIP_ROW_V_PADDING = 4.dp
 private val CHIP_SPACING = 8.dp
