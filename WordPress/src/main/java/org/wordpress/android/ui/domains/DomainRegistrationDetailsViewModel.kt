@@ -334,7 +334,9 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     }
 
     fun onCountrySelectorClicked() {
-        _showCountryPickerDialog.value = supportedCountries!!
+        // The field is tappable while the countries load and after that load fails,
+        // so there is not always a list to show.
+        supportedCountries?.let { _showCountryPickerDialog.value = it }
     }
 
     fun onStateSelectorClicked() {

@@ -461,6 +461,16 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun onCountrySelectorClickedAfterCountriesFailedToLoad() = test {
+        setupFetchSupportedCountries(true)
+        viewModel.start(site, domainProductDetails)
+
+        viewModel.onCountrySelectorClicked()
+
+        verify(countryPickerDialogObserver, never()).onChanged(any())
+    }
+
+    @Test
     fun onStateSelectorClicked() = test {
         viewModel.start(site, domainProductDetails)
 
