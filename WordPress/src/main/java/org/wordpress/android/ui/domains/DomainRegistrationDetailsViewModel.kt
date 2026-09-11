@@ -14,12 +14,12 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainPayload
-import org.wordpress.android.fluxc.store.SiteStore.OnPrimaryDomainDesignated
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.domains.usecases.CreateCartResult
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
+import org.wordpress.android.ui.domains.usecases.DesignatePrimaryDomainResult
+import org.wordpress.android.ui.domains.usecases.DesignatePrimaryDomainUseCase
 import org.wordpress.android.ui.domains.usecases.DomainContactField
 import org.wordpress.android.ui.domains.usecases.DomainContactResult
 import org.wordpress.android.ui.domains.usecases.FetchDomainContactUseCase
@@ -55,6 +55,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     private val fetchSupportedStatesUseCase: FetchSupportedStatesUseCase,
     private val createCartUseCase: CreateCartUseCase,
     private val redeemCartUseCase: RedeemCartUseCase,
+    private val designatePrimaryDomainUseCase: DesignatePrimaryDomainUseCase,
     private val resourceProvider: ResourceProvider,
     @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
@@ -273,27 +274,16 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
             is RedeemCartResult.Success -> {
                 // after cart is redeemed, wait for a bit before manually setting domain as primary
                 delay(SITE_CHECK_DELAY_MS)
-                dispatcher.dispatch(
-                    SiteActionBuilder.newDesignatePrimaryDomainAction(
-                        DesignatePrimaryDomainPayload(
-                            site,
-                            domainProductDetails.domainName
-                        )
-                    )
-                )
+                designatePrimaryDomain()
             }
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onPrimaryDomainDesignated(event: OnPrimaryDomainDesignated) {
-        if (event.isError) { // in case of error we notify used and proceed to next step
-            event.error?.message?.let { _showErrorMessage.value = it }
-            AppLog.e(
-                T.DOMAIN_REGISTRATION,
-                "An error occurred while redeeming a shopping cart : " + event.error.type +
-                        " " + event.error.message
-            )
+    private suspend fun designatePrimaryDomain() {
+        val result = designatePrimaryDomainUseCase.execute(site, domainProductDetails.domainName)
+        if (result is DesignatePrimaryDomainResult.Error) { // in case of error we notify used and proceed to next step
+            showError(result.message, result.isDeviceOffline)
+            AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while designating the primary domain")
         }
 
         dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site))
