@@ -4,6 +4,7 @@ import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -63,6 +64,8 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     private var isStarted = false
 
     private var siteCheckTries = 0
+
+    private var supportedStatesJob: Job? = null
 
     private var supportedCountries: List<SupportedCountry>? = null
 
@@ -200,7 +203,17 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchSupportedStates(countryCode: String) {
+    /**
+     * Cancels a states request still in flight, so that picking a country
+     * while the one before it is still loading cannot leave the earlier
+     * country's states standing against the later country.
+     */
+    private fun fetchSupportedStates(countryCode: String) {
+        supportedStatesJob?.cancel()
+        supportedStatesJob = launch { loadSupportedStates(countryCode) }
+    }
+
+    private suspend fun loadSupportedStates(countryCode: String) {
         when (val result = fetchSupportedStatesUseCase.execute(countryCode)) {
             is SupportedStatesResult.Error -> {
                 _uiState.value =
@@ -378,7 +391,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                 state = null,
                 phoneNumberPrefix = DomainPhoneNumberUtils.getPhoneNumberPrefix(country.code)
             )
-            launch { fetchSupportedStates(country.code) }
+            fetchSupportedStates(country.code)
         }
     }
 
