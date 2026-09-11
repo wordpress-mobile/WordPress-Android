@@ -200,19 +200,6 @@ public class AnalyticsUtils {
         return siteStore.getSitesAccessedViaWPComRestCount() - siteStore.getWPComSitesCount() > 0;
     }
 
-    public static void refreshMetadataNewUser(String username, String email) {
-        AnalyticsMetadata metadata = new AnalyticsMetadata();
-        metadata.setUserConnected(true);
-        metadata.setWordPressComUser(true);
-        metadata.setJetpackUser(false);
-        metadata.setNumBlogs(1);
-        metadata.setUsername(username);
-        metadata.setEmail(email);
-        // GB is enabled for new users
-        metadata.setGutenbergEnabled(true);
-        AnalyticsTracker.refreshMetadata(metadata);
-    }
-
     public static int getWordCount(String content) {
         String text = HtmlCompat.fromHtml(
                 content.replaceAll("<img[^>]*>", ""),
@@ -621,19 +608,6 @@ public class AnalyticsUtils {
         if (!isWpcomLogin) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.ADDED_SELF_HOSTED_SITE);
         }
-    }
-
-    /**
-     * Refreshes analytics metadata and bumps the account created stat.
-     *
-     * @param username
-     * @param email
-     */
-    public static void trackAnalyticsAccountCreated(String username, String email, Map<String, Object> properties) {
-        AnalyticsUtils.refreshMetadataNewUser(username, email);
-        // This stat is part of a funnel that provides critical information.  Before
-        // making ANY modification to this stat please refer to: p4qSXL-35X-p2
-        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT, properties);
     }
 
     public static void trackLoginProloguePages(int page) {
