@@ -608,6 +608,16 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `an edited contact detail is what the redeem call carries`() = test {
+        viewModel.start(site, domainProductDetails)
+
+        viewModel.onDomainContactDetailsChanged(domainContactFormModel.copy(phoneNumber = "647673"))
+        viewModel.onRegisterDomainButtonClicked()
+
+        verify(redeemCartUseCase).execute(shoppingCart, domainContactInformation.copy(phone = "+1.647673"))
+    }
+
+    @Test
     fun `a rejected contact field is reported against that field`() = test {
         setupRedeemCart(true)
 
