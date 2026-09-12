@@ -115,12 +115,6 @@ internal fun createShoppingCartParams(
 }
 
 sealed interface CreateCartResult {
-    /**
-     * The created cart, which the redeem call takes whole.
-     *
-     * [cart] carries a tax location holding the customer's address and IP, so
-     * it does not belong in a log line.
-     */
     data class Success(val cart: ShoppingCart) : CreateCartResult
 
     data class Error(
