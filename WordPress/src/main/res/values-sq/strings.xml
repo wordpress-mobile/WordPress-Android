@@ -137,7 +137,6 @@ Language: sq_AL
     <string name="stats_period_selector_content_description">Përzgjidhni periudhë statistikash</string>
     <string name="stats_period_custom">Vetjake</string>
     <string name="stats_period_last_12_months">12 muajt e fundit</string>
-    <string name="stats_period_last_6_months">6 muajt e fundit</string>
     <string name="stats_period_last_30_days">30 ditët e fundit</string>
     <string name="stats_period_last_7_days">7 ditët e fundit</string>
     <string name="stats_period_today">Sot</string>
@@ -213,8 +212,6 @@ Language: sq_AL
     <string name="he_support_status_unknown">E panjohur</string>
     <string name="he_support_status_closed">E mbyllur</string>
     <string name="he_support_status_solved">E zgjidhur</string>
-    <string name="he_support_status_waiting_for_user">Po pritet për Përdorues</string>
-    <string name="he_support_status_waiting_for_support">Po pritet për Asistencën</string>
     <string name="he_support_select_attachments">Përzgjidhni bashkëngjitje</string>
     <string name="he_support_download_attachment">Shkarkoje bashkëngjitjen</string>
     <string name="he_support_include_logs_description">Përfshirja e regjistrave mund ta ndihmojë ekipin tonë të hetojë probleme. Regjistrat mund të përmbajnë veprimtari aplikacioni së fundi.</string>
@@ -384,7 +381,6 @@ Language: sq_AL
     <string name="experimental_block_editor_note">Përpunuesi eksprerimental me blloqe do të bëhet parazgjedhja, në një hedhje të ardhshme në qarkullim dhe aftësia për ta aktivizuar do të hiqet.</string>
     <string name="avatar_update_email_unverified">Që të përditësoni avatarin tuaj, lypset të verifikohet adresa juaj email së pari.</string>
     <string name="feedback_form_note_link_wordpress">forume bashkësie.</string>
-    <string name="default_web_client_id">vendmbajtëse</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Shfaq/fshih shkurtoren %s</string>
     <string name="personalization_screen_card_accessibility_label">Shfaq/fshih kartën %s</string>
     <string name="user_avatar_content_description">Avatar për përdoruesin %s</string>
@@ -650,13 +646,8 @@ Language: sq_AL
     <string name="barcode_scanning_alert_dialog_rationale_message">Që të skanohet kodi me vija, lypsen leje mbi kamerën</string>
     <string name="barcode_scanning_alert_dialog_title">Akordoni Leje Mbi Kameran</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blloqe brenda njëri-tjetri më thellë se %d nivele mund të mos funksionojnë si duhet te përpunuesi për celular.</string>
-    <string name="jp_migration_lets_go_button">Shkojmë</string>
-    <string name="jp_migration_done_no_sites_message">Ka ardhur koha a vazhdoni udhëtimin tuaj WordPress te aplikacioni Jetpack.</string>
     <string name="domain_management_clear_search">Spastroje kërkimin</string>
     <string name="media_encoder_quality_very_high">Shumë e Lartë</string>
-    <string name="notification_security_key_needed">Ju lutemi, që të vazhdohet, jepni kyçin tuaj të sigurisë.</string>
-    <string name="login_error_security_key">Pati ca problem me hyrjen me kyç sigurie</string>
-    <string name="login_text_security_key">Përdorni një kyç sigurie</string>
     <string name="new_domain_search_screen_error_title">S’u morën dot përkatësi</string>
     <string name="new_domain_search_screen_list_item_sale_price">%s për vitin e parë</string>
     <string name="new_domain_search_screen_list_item_regular_price">$%s / vit</string>
@@ -836,22 +827,16 @@ Language: sq_AL
     <string name="sharing_twitter_deprecation_notice_find_out_more">Shihni më tepër</string>
     <string name="sharing_twitter_deprecation_notice_description">Ndarja e automatizuar me të tjerë që nga Twitter s’mund të përdoret më, për shkak ndryshimesh në kushte dhe çmim nga ana e Twitter-it.</string>
     <string name="sharing_twitter_deprecation_notice_title">Ndarja e automatizuar me të tjerë që nga Twitter s’mund të përdoret më</string>
-    <string name="jp_migration_notifications_allow_title">Lejoni njoftime, që të jeni në dijeni se ç’ndodh në sajtin tuaj</string>
-    <string name="wp_jp_static_poster_message">Aplikacioni Jetpack ka krejt anët e aplikacionit WordPress dhe tanimë edhe hyrje përjashtimore te Statistika, Lexues, Njoftime, etj.</string>
-    <string name="wp_jp_static_poster_title_plural">Përdorni WordPress-in me %s në Jetpack\u00A0app.</string>
-    <string name="wp_jp_static_poster_title">Përdorni WordPress-in me %s në Jetpack\u00A0app.</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ngjyrë pa etiketë. %s</string>
     <string name="dashboard_activity_card_title">Veprimtari së fundi</string>
     <string name="site_creation_search_domain_example_body">Në ngjashmëri me shembullin më sipër, një përkatësi u lejon njerëzve të gjejnë dhe vizitojnë sajtin tuaj që nga shfletuesi.</string>
     <string name="site_creation_search_domain_example_title">EmriiSajtitTuaj.com</string>
     <string name="site_creation_domain_search_input_hint">Kërkoni me fjalëkyçe</string>
     <string name="site_creation_domain_header_subtitle">Kërkoni për një përkatësi të shkurtër dhe që mund të mbahet mend, për t’i ndihmuar njerëzit të gjejnë dhe vizitojnë sajtin tuaj.</string>
-    <string name="site_creation_domain_cost_sale">për vitin e parë</string>
     <string name="site_creation_error_cart_subtitle">Sajti juaj është krijuar me sukses, por hasëm një problem, teksa përgatisnim përkatësinë tuaj vetjake për blerje. Ju lutemi, riprovoni, ose lidhuni me asistencën për ndihmë.</string>
     <string name="new_site_creation_preview_caption_paid">Mund të duhen deri në 30 minuta që përkatësia juaj vetjake të fillojë të funksionojë.</string>
     <string name="new_site_creation_preview_subtitle_paid">Ju dërguam faturën tuaj me email. %s</string>
     <string name="notifications_disabled_permission_dialog">Njoftimet nga aplikacioni janë çaktivizuar. Prekni këtu, që të aktivizohen.</string>
-    <string name="jp_migration_done_delete_wp_message">Rekomandojmë &lt;b&gt;çinstalimin e aplikacionit WordPress&lt;/b&gt; në pajisjen tuaj, për të shmangur përplasje të dhënash.</string>
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Hiqi blloqet</string>
     <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Privatësi dhe Vlerësim</string>
     <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Rregullime Luajtjeje</string>
@@ -894,9 +879,6 @@ Language: sq_AL
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Këtë sajt</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s po përdor %2$s, të cilat nuk i mbulojnë ende krejt veçoritë e aplikacionit. Ju lutemi, instaloni %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s po përdor %2$s, i cili nuk i mbulon ende krejt veçoritë e aplikacionit. Ju lutemi, instaloni %3$s.</string>
-    <string name="wp_jp_static_poster_footnote">Kalimi është falas dhe do vetëm një minutë.</string>
-    <string name="wp_jp_static_poster_button_secondary">Mësoni më tepër, te Jetpack.com</string>
-    <string name="wp_jp_static_poster_button_primary">Kaloni te aplikacioni Jetpack</string>
     <string name="my_site_btn_wp_admin">Përgjegjës WP-je</string>
     <string name="my_site_header_manage">Administrojini</string>
     <string name="my_site_header_traffic">Trafik</string>
@@ -912,11 +894,8 @@ Language: sq_AL
     <string name="blaze_promotional_subtitle_1">Promovoni çfarëdo postimi ose faqeje, brenda pak minutash, për vetëm pak dollarë në ditë.</string>
     <string name="blaze_promotional_text">Shpini më tepër trafik te sajti juaj, përmes Blaze-it</string>
     <string name="site_creation_domain_tag_unavailable">Kjo përkatësi është e regjistruar tashmë</string>
-    <string name="site_creation_domain_tag_sale">Ulje çmimesh</string>
     <string name="site_creation_domain_tag_recommended">E rekomanduar</string>
     <string name="site_creation_domain_tag_best_alternative">Alternativa Më e Mirë</string>
-    <string name="support_faq_caption">Për përgjigje pyetjesh të rëndomta që mund të keni, shihni PBR-të tona.</string>
-    <string name="support_faq_title">Faleminderit që kaloni te aplikacioni Jetpack!</string>
     <string name="logs_button">Regjistra</string>
     <string name="tickets">Bileta</string>
     <string name="free">Falas</string>
@@ -952,12 +931,6 @@ Language: sq_AL
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Çlironi potencialin e plotë të sajtit tuaj. Merrni statistika, njoftime, etj, me Jetpack-un.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Sajti juaj e ka shtojcën Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Aplikacioni Jetpack për celular është menduar të punojë tok me shtojcën Jetpack. Kaloni që tani në të, që të mund të përdorni statistikat, njoftimet, lexuesin, etj.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Merrni njoftime për komente, pëlqime, parje të reja, etj.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Gjeni dhe ndiqni sajtet dhe bashkësitë tuaja të parapëlqyera dhe ndani me të tjerë lëndën tuaj.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Shiheni si rritet trafiku juaj, me prirje të dobishme dhe statistika të plota.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistika &amp; Tendenca</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack-u ju lejon të bëni më tepër gjëra me sajtin tuaj WordPress. Kalimi është falas dhe do vetëm një minutë.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Jepini WordPress-it një përforcim me Jetpack-un</string>
     <string name="blogging_prompts_onboarding_content_note_content">Cytjet dhe Kujtuesit për Blogim mund t’i kontrolloni në çfarëdo kohe që nga Sajti Im &gt; Rregullime &gt; Blogim</string>
     <string name="blogging_reminders_prompt_subtitle">Njoftimi do të përfshijë një fjalë, ose togfjalësh të shkurtër, për frymëzim</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Që ta riaktivizoni, vizitoni &lt;b&gt;Rregullime Sajti&lt;/b&gt;</string>
@@ -969,15 +942,6 @@ Language: sq_AL
     <string name="site_settings_blogging_prompts_title">Shfaq cytje</string>
     <string name="site_settings_blogging">Blogim</string>
     <string name="install_play_store_to_get_jetpack">Që të merrni aplikacionin Jetpack, ju lutemi, instaloni Google Play Store</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Bëjeni më vonë</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Kalo te Jetpack </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistikat, Lexuesi, Njoftimet dhe të tjera veçorit të fuqishme të Jetpack-ut janë hequr nga aplikacioni WordPress.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Veçori të Jetpack-ut janë lëvizur.</string>
-    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s po kalohet në %2$s</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s po kalohet në %2$s</string>
-    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">Së shpejti %1$s do të lëvizen</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">Së shpejti %1$s do të lëvizet</string>
-    <string name="wp_jetpack_powered_phase_2">Merrni aplikacionin Jetpack</string>
     <string name="my_site_blogging_prompt_card_view_answers">Shihni krejt përgjigjet</string>
     <string name="stats_insights_total_stats_seven_days_negative">%1$s më poshtë se 7 ditët e mëparshme</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s më sipër se 7 ditët e mëparshme</string>
@@ -987,21 +951,10 @@ Language: sq_AL
     <string name="stats_insights_views_and_visitors_seven_days_views_positive">Parjet tuaja gjatë 7 ditëve të fundit janë %1$s më lart se ato të 7 ditëve të kaluara.</string>
     <string name="stats_timeframe_previous_seven_days">7 ditët e mëparshme</string>
     <string name="stats_timeframe_last_seven_days">7 ditët e fundit</string>
-    <string name="weeks_quantity_other">%d javë</string>
-    <string name="weeks_quantity_one">1 javë</string>
     <string name="my_site_blogging_prompt_card_attribution_day_one">Nga &lt;b&gt;Dita e Parë&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Kujtoma më vonë</string>
-    <string name="jetpack_feature_card_content_phase_three">Statistikat, Lexuesi, Njoftimet dhe të tjera veçorit të Jetpack-ut së shpejti do të kalohen te aplikacioni Jetpack për celular.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Kaloni te aplikacioni Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Mësoni më tepër, te jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Kalimi është falas dhe do vetëm një minutë.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Statistikat, Lexuesi, Njoftimet dhe të tjera veçorit të fuqishme të Jetpack-ut do të hiqen së shpejti nga aplikacioni WordPress.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Statistikat, Lexuesi, Njoftimet dhe të tjera veçorit të fuqishme të Jetpack-ut do të hiqen nga aplikacioni WordPress në %s.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Veçoritë Jetpack së shpejti do të shpërngulen.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Njoftimet po kalojnë te aplikacioni Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Lexuesi po kalohet te aplikacioni Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Statistikat tuaja po kalojnë te aplikacioni Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Kaloni në aplikacionin e ri Jetpack</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Pati një gabim në ngarkim cytjesh.</string>
     <string name="blogging_prompts_list_error_fetch_title">Hëm</string>
     <string name="blogging_prompts_list_no_prompts">Ende pa cytje</string>
@@ -1027,39 +980,11 @@ Language: sq_AL
     <string name="wp_jetpack_continue_without_jetpack">Vazhdo pa Jetpack-un</string>
     <string name="deep_linking_weblinks_alias_label">lidhje web</string>
     <string name="deep_linking_urilinks_alias_label">lidhje URI</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Që të vazhdoni të merrni në pajisjen tuaj njoftime të atypëratyshme, kaloni te aplikacioni Jetpack.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Që të gjeni, ndiqni dhe pëlqeni krejt sajtet dhe postimet tuaj të parapëlqyer me Lexuesin, kaloni te aplikacioni Jetpack.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Që të shihni shtim trafiku në sajtin tuaj, përmes statistikash dhe prirjesh, kaloni te aplikacioni Jetpack.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Merrini njoftimet tuaja me aplikacionin Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Ndiqni çfarëdo sajti, me aplikacionin Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Merrni statistikat tuaja duke përdorur aplikacionin e ri Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">S’arrihet të çaktivizohet hapje lidhjesh në Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">S’arrihet të aktivizohet hapje lidhjesh në Jetpack</string>
     <string name="preference_open_links_in_jetpack">Lidhjet hapi në Jetpack</string>
-    <string name="jp_migration_network_error_message">S’jeni në gjendje të shpërngulim të dhënat dhe rregullimet tuaja pa një lidhje në rrjet.</string>
-    <string name="jp_migration_network_error_subtitle">JU lutemi, kontrolloni për t’u siguruar se lidhja juaj në rrjet funksionon dhe riprovoni.</string>
-    <string name="jp_migration_network_error_title">S’arrihet të lidhet në internet.</string>
-    <string name="jp_migration_generic_error_message">Ju lutemi, lidhuni me ata të asistencës ose riprovoni më vonë.</string>
-    <string name="jp_migration_generic_error_subtitle">Na ndjeni, por diçka nuk shkoi siç qe planifikuar. Të dhënat tuaja janë të parrezik, por s’qemë në gjendje t’i shpërngulim këtë herë.</string>
     <string name="jp_migration_generic_error_title">Mooos, diç shkoi ters.</string>
-    <string name="jp_migration_try_again_button">Riprovoni</string>
-    <string name="jp_migration_finish_button">Përfundoje</string>
-    <string name="jp_migration_remove_wp_app_icon_content_description">Hiqni ikonë aplikacioni WordPress</string>
-    <string name="jp_migration_done_subtitle">Kemi shpërngulur krejt të dhënat dhe rregullimet tuaja. Gjithçka është mu atje ku e latë.</string>
-    <string name="jp_migration_done_title">Faleminderit që kaloni në Jetpack!</string>
-    <string name="jp_migration_notifications_disabled_in_wp_message">Do t’i çaktivizojmë njoftimet prej aplikacionit WordPress.</string>
-    <string name="jp_migration_notifications_subtitle">Do të merrni të njëjtat njoftime, por tani do të vijnë nga aplikacioni Jetpack.</string>
-    <string name="wordpress_help_center_button">Qendër ndihme WordPress</string>
     <string name="support_title">Asistencë</string>
-    <string name="notification_disable_broadcast_permission_desc">E lejon aplikacionin të çaktivizojë njoftimet nga WordPress-i.</string>
-    <string name="notification_disable_broadcast_permission_label">çaktivizoni njoftimet WordPress</string>
-    <string name="jp_migration_help_button">Ju duhet ndihmë?</string>
-    <string name="jp_migration_continue_button">Vazhdo</string>
-    <string name="jp_migration_welcome_site_found_message">E gjetëm sajtin tuaj. Vazhdoni,  që të shpërngulen krejt të dhënat tuaja dhe të bëhet automatikisht hyrja në Jetpack.</string>
-    <string name="jp_migration_welcome_sites_found_message">I gjetëm sajtet tuaj. Vazhdoni,  që të shpërngulen krejt të dhënat tuaja dhe të bëhet automatikisht hyrja në Jetpack.</string>
-    <string name="jp_migration_avatar_content_description">Fotoja juaj e profilit</string>
-    <string name="jp_migration_welcome_subtitle">Duket sikur po bëni migrimin që nga aplikacioni WordPress.</string>
-    <string name="jp_migration_welcome_title">Mirë se vini te Jetpack-u!</string>
     <string name="icon_desc">ikonë</string>
     <string name="post_settings_parent">Faqe Mëmë</string>
     <string name="post_settings_page_attributes">Atribute Faqeje</string>
@@ -1095,7 +1020,6 @@ Language: sq_AL
     <string name="weekly_roundup_notification_text_views_only">Javën e kaluar patët %1$s parje.</string>
     <string name="weekly_roundup_notification_text_all">Javën e kaluar patët %1$s parje, %2$s pëlqime dhe %3$s komente.</string>
     <string name="stats_insights_like_guide_card">⭐️ Postimi juaj më i ri %1$s ka marrë %2$s pëlqime.</string>
-    <string name="wp_jetpack_powered">Bazuar në Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Figurë që tregon skanim kodi hyrjeje në punë e sipër</string>
     <string name="qrcode_auth_flow_error_content_description">Figurë që tregon një gabim</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">Mirëfilltësimi Dështoi</string>
@@ -1268,11 +1192,6 @@ Language: sq_AL
     <string name="notification_channel_weekly_roundup_title">Përmbledhje Javore</string>
     <string name="my_site_dashboard_tab_title">Kreu</string>
     <string name="adding_cat">Shtim kategorish</string>
-    <string name="login_select_email_client">Cilin aplikacion email përdorni?</string>
-    <string name="login_error_xml_rpc_auth_error_communicating">Pati një problem komunikimi me sajtin. U kthye një kod gabimi HTTP 401.</string>
-    <string name="login_error_xml_rpc_cannot_read_site_auth_required">Duket se në këtë sajt bllokohen thirrjet XML-RPC (kod gabimi 401). Nëse dështon përpjekja për hyrje, prekni ikonën e ndihmës që të shihni PBR.</string>
-    <string name="login_error_xml_rpc_cannot_read_site">S’arrihet të lexohet sajti WordPress tek ajo URL. Prekni ikonën e ndihmës që të shihni PBR.</string>
-    <string name="login_error_xml_rpc_services_disabled">Shërbimet XML-RPC janë të çaktivizuara për këtë sajt.</string>
     <string name="my_site_menu_tab_title">Menu</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Kërkimi juaj përmban shenja të pambuluara në përkatësi WordPress.com. Lejohen shenjat vijuese: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Kontrolloni lidhjen tuaj internet dhe rifreskoni faqen.</string>
@@ -1512,11 +1431,6 @@ Language: sq_AL
     <string name="threat_fix_enter_server_creds_msg_plural">Që të zgjidhen kërcënimet, &lt;a href=\"%1$s\"&gt;jepni kredencialet tuaja për te shërbyesi&lt;/a&gt;.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">Që të zgjidhet kërcënimit, &lt;a href=\"%1$s\"&gt;jepni kredencialet tuaja për te shërbyesi&lt;/a&gt;.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Që të shtoni një lidhje, prekeni dyfish.</string>
-    <string name="login_empty_view_try_another_account">Provoni me tjetër llogari</string>
-    <string name="login_empty_view_see_instructions">Shihni udhëzimet</string>
-    <string name="login_no_jetpack_sites_error_message">Nëse keni tashmë një sajt, do t’ju duhet të instaloni shtojcën e lirë Jetpack dhe ta lidhni me llogarinë tuaj WordPress.com.</string>
-    <string name="login_empty_view_avatar_content_description">Fotoja e profilit tuaj</string>
-    <string name="login_not_a_jetpack_site">Që të përdorni këtë aplikacion për %1$s, do t’ju duhet të keni të instaluar shtojcën Jetpack dhe të lidhur me llogarinë tuaj WordPress.com.</string>
     <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Rregullime Gjerësie</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Atribut “Rel” Lidhjeje</string>
     <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Rregullime Shtylle</string>
@@ -1552,7 +1466,6 @@ Language: sq_AL
     <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Më tepër</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Përshkruajeni shkurt lidhjen, që të ndihmoni përdoruesin e lexuesit të ekranit</string>
     <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Shtoni blloqe</string>
-    <string name="login_no_jetpack_sites">S’u gjetën sajte Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ç’është teksti alternativ?</string>
     <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Shndërroje %s në</string>
     <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Shndërroni bllokun…</string>
@@ -1599,7 +1512,6 @@ Language: sq_AL
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Prekeni dy herë që të hapet Fleta e Veprimeve për përpunim, zëvendësim ose spastrim të figurës</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="new_site_creation_search_domain_input_hint">Shtypni një emër për sajtin tuaj</string>
-    <string name="magic_link_not_meaning_to_create_account">S’e kishit fjalën të krijonit një llogari të re? Kthehuni mbrapsht, që të jepni adresën tuaj email.</string>
     <string name="invite_links_disable_dialog_message">Pasi të jetë çaktivizuar kjo lidhje ftese, askush s’do të jetë në gjendje të bëhet pjesë e ekipit tuaj. Jeni i sigurt?</string>
     <string name="invite_links_disable_dialog_title">Çaktivizo lidhje ftese</string>
     <string name="invite_links_bad_format_response">U mor përgjigje e pavlefshme</string>
@@ -1860,8 +1772,6 @@ Language: sq_AL
     <string name="hpp_retry_error">Ju lutemi, Kontrolloni lidhjen tuaj në internet dhe riprovoni.</string>
     <string name="hpp_error_subtitle">Kur të jeni sërish i lidhur, prekni Riprovo.</string>
     <string name="hpp_error_title">S’mund të kihen skema, teksa jeni jashtë linje</string>
-    <string name="continue_site_credentials">Vazhdo me kredenciale shitoreje</string>
-    <string name="login_find_your_connected_email">Gjeni email-in tuaj të lidhur</string>
     <string name="reader_discover_no_posts_follow_subtitle">Provoni të ndiqni më tepër etiketa që të zgjerohet kërkimi</string>
     <string name="reader_discover_no_posts_title">Pa postime së fundi</string>
     <string name="reader_discover_empty_title">Mirë se vini!</string>
@@ -1902,8 +1812,6 @@ Language: sq_AL
     <string name="suggestion_no_connection">S’ka lidhje në internet.\nS’merren dot sugjerime.</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s të përzgjedhura</string>
-    <string name="login_get_link_by_email">Merrni me email një lidhje hyrjeje</string>
-    <string name="email_not_registered_wpcom">Hëm, s’gjejmë dot një llogari WordPress.com të lidhur me këtë adresë email.</string>
     <string name="permission_microphone">Mikrofon</string>
     <string name="comment_unable_to_show_error">S’arrihet të shfaqet ky koment</string>
     <string name="media_browse_for_items">Shfletoni për objekte</string>
@@ -1940,26 +1848,7 @@ Language: sq_AL
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Zgjidhni figurë</string>
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blloku u hoq</string>
     <string name="enter_your_site_address">Jepni adresën e sajtit tuaj ekzistues</string>
-    <string name="signup_confirmation_title">Ripohim regjistrimi</string>
-    <string name="continue_with_google_terms_of_service_text">Nëse vazhdoni me Google dhe ende s’keni një llogari WordPress.com, po krijoni një llogari dhe pajtoheni me %1$sKushtet tona të Shërbimit%2$s.</string>
-    <string name="continue_terms_of_service_text">Duke u regjistruar, pajtoheni me %1$sKushtet tona të Shërbimit%2$s.</string>
-    <string name="signup_confirmation_message">Këtë adresë email do ta përdorim për të krijuar llogarinë tuaj të re WordPress.com.</string>
-    <string name="signup_magic_link_message">Ju dërguam me email një lidhje regjistrimi për të krijuar llogarinë tuaj të re WordPress.com. Kontrolloni email-et në këtë pajisje dhe prekni lidhjen te email-i i ardhur nga WordPress.com.</string>
-    <string name="enter_account_info_for_site">Jepni të dhënat e llogarisë suaj për %1$s.</string>
-    <string name="login_or">ose</string>
-    <string name="continue_google_button_suffix">Vazhdoni me Google</string>
-    <string name="login_find_your_site_adress">Gjeni adresën e sajtit tuaj</string>
-    <string name="login_done">U bë</string>
-    <string name="magic_link_not_seeing_email_message">S’e shihni email-in? Shihni te dosja juaj Të padëshiruar ose Të pavlera.</string>
-    <string name="login_magic_links_sent_label">Hapni email-et në këtë pajisje dhe prekni lidhjen te email-i që morët nga WordPress.com.</string>
-    <string name="login_magic_links_label">Do t’ju dërgojmë me email një lidhje që do t’ju fusë menjëherë, pa qenë nevoja për fjalëkalim.</string>
-    <string name="check_email">Kontrolloni email-in</string>
     <string name="get_started" a8c-src-lib="module:login">Fillojani</string>
-    <string name="enter_email_to_continue_wordpress_com">Që të bëni hyrjen ose të krijoni një llogari te WordPress.com, jepni adresën tuaj email.</string>
-    <string name="or_type_your_password">Ose shtypni fjalëkalimin tuaj</string>
-    <string name="create_account">Krijo llogari</string>
-    <string name="send_link_by_email">Dërgoje lidhjen me email</string>
-    <string name="reset_your_password">Ricaktoni fjalëkalimi tuaj</string>
     <string name="reader_error_request_failed_title">Pati një problem me trajtimin e kërkesës. Ju lutemi, riprovoni.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Shpënia te hedhurinat e këtij postimi do të hedhë tej edhe ndryshimet e paruajtura, jeni i sigurt se doni të vazhdohet?</string>
     <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Mundësi blloku %s</string>
@@ -2182,9 +2071,6 @@ Language: sq_AL
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Përshkrim galerie. %s</string>
     <string name="create_post_page_fab_tooltip">Krijoni një postim ose faqe</string>
     <string name="content_description_person_building_website">Personi që po krijon sajt</string>
-    <string name="post_signup_interstitial_not_right_now">Jo tani</string>
-    <string name="post_signup_interstitial_subtitle">Çfarëdo që doni të krijoni ose ndani me të tjerët, do t’ju ndihmojmë ta bëni mu këtu.</string>
-    <string name="post_signup_interstitial_title">Mirë se vini në WordPress</string>
     <string name="stock_media_picker_list_content_description">Fototekë</string>
     <string name="photo_picker_image_thumbnail_unselected">U shpërzgjodh figurë</string>
     <string name="photo_picker_image_selected">,E përzgjedhur</string>
@@ -2198,12 +2084,6 @@ Language: sq_AL
     <string name="dialog_confirm_scheduled_post_sync_title">Gati për Njëkohësim?</string>
     <string name="new_site_creation_unavailable_domain">Kjo përkatësi s’është e lirë</string>
     <string name="negative_prefix">-%s</string>
-    <string name="login_discovery_error_generic">S’qemë në gjendje të hyjmë në sajtin tuaj. Do t’ju duhet të lidheni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
-    <string name="login_discovery_error_ssl">S’qemë në gjendje të hyjmë në sajtin tuaj, për shkak të një problemi me &lt;b&gt;Dëshminë SSL&lt;/b&gt;. Do t’ju duhet të lidheni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
-    <string name="login_discovery_error_http_auth">S’qemë në gjendje të hyjmë në sajtin tuaj, ngaqë lyp &lt;b&gt;Mirëfilltësim HTTP&lt;/b&gt;. Do t’ju duhet të lidheni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
-    <string name="login_discovery_error_xmlrpc">S’qemë në gjendje të hyjmë te &lt;b&gt;kartela&lt;/b&gt; në sajtin tuaj. Do t’ju duhet të lidheni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
-    <string name="login_site_credentials_magic_link_label">Thuajse mbërritëm! Na duhet vetëm të verifikojmë adresën tuaj email të lidhur me Jetpack-un &lt;b&gt;%1$s&lt;/b&gt;</string>
-    <string name="enter_credentials_for_site">Hyni me kredencialet tuaja për sajtin %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Faqe sajti</string>
     <string name="reader_my_likes_display_name">Pëlqime</string>
     <string name="reader_discover_display_name">Zbuloni</string>
@@ -2361,8 +2241,6 @@ Language: sq_AL
     <string name="post_settings_add_to_calendar">Shtoje në kalendar</string>
     <string name="post_settings_notification">Njoftim</string>
     <string name="post_settings_time_and_date">Datë &amp; Kohë</string>
-    <string name="login_invalid_site_url">Ju lutemi, jepni një adresë të plotë sajti, bie fjala, example.com.</string>
-    <string name="enter_email_for_site">Që të lidheni me %1$s, bëni hyrjen te llogaria juaj WordPress.com</string>
     <string name="stats_post_views_label">Pamje</string>
     <string name="stats_post_label">Postim</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -2468,8 +2346,6 @@ Language: sq_AL
     <string name="posts_draft_empty">S’keni ndonjë postim skicë</string>
     <string name="posts_scheduled_empty">S’keni postime të planifikuara për botim</string>
     <string name="posts_published_empty">S’keni botuar ndonjë postim - ende jo!</string>
-    <string name="notification_wpcom_username_needed">Ju lutemi, bëni hyrjen me emrin tuaj të përdoruesit dhe fjalëkalimin.</string>
-    <string name="error_user_username_instead_of_email">Ju lutemi, hyni duke përdorur emrin tuaj të përdoruesit WordPress.com, në vend se adresën tuaj email.</string>
     <string name="stats_insights_average_words">Mesatare fjalësh/postim</string>
     <string name="stats_insights_total_words">Fjalë gjithsej</string>
     <string name="stats_insights_average_likes">Mesatare pëlqimesh/postim</string>
@@ -2479,7 +2355,6 @@ Language: sq_AL
     <string name="stats_insights_posts">Postime</string>
     <string name="stats_insights_year">Vit</string>
     <string name="stats_insights_this_year_site_stats">Këtë Vit</string>
-    <string name="no_site_error">Sajti në këtë adresë s’është sajt WordPress. Që të mund të lidhemi me të, sajti duhet të përdorë WordPress-in.</string>
     <string name="plugin_check_domain_credit_error">S’u arrit të kontrollohet kredit përkatësie gjendje</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Po kontrollohet kredit përkatësie</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Regjistroje përkatësinë</string>
@@ -2612,7 +2487,6 @@ Language: sq_AL
     <string name="history_detail_button_previous">I mëparshmi</string>
     <string name="history_detail_button_next">Pasuesi</string>
     <string name="media_space_used">%1$s të përdorura</string>
-    <string name="enter_wpcom_or_jetpack_site">Ju lutemi, jepni një sajt WordPress.com ose një WordPress që e strehoni diku dhe që është i lidhur me Jetpack-un</string>
     <string name="history_loading_revision">Po ngarkohet rishikimi</string>
     <string name="history_loaded_revision">Rishikimi u ngarkua</string>
     <string name="history_load_dialog_button_positive">Ngarkoje</string>
@@ -2641,8 +2515,6 @@ Language: sq_AL
     <string name="pages_scheduled">Planifikuar</string>
     <string name="pages_drafts">Skica</string>
     <string name="pages_published">I botuar</string>
-    <string name="login_error_sms_throttled">Provuam shumë herë t’ju dërgonin një kod verifikimi SMS — bëni ca pushim, dhe kërkoni një të ri pas ndonjë minute.</string>
-    <string name="login_error_email_not_found_v2">S’ka llogari WordPress.com që përputhet me këtë llogari Google.</string>
     <string name="site_picker_remove_site_empty">S’u gjetën sajte me përputhje për kërkimin tuaj</string>
     <string name="reader_no_followed_blogs_search_title">S’ka blogje që përputhen me kërkimin tuaj</string>
     <string name="page_parent_changed">Faqja mëmë është ndryshuar</string>
@@ -2661,7 +2533,6 @@ Language: sq_AL
     <string name="content_description_more">Më tepër</string>
     <string name="my_site_create_new_site_title">S’keni ende ndonjë sajt</string>
     <string name="reader_empty_subscribed_tags_subtitle">Shtoni këtu etiketa që të gjeni postime rreth temave tuaja të parapëlqyera</string>
-    <string name="login_to_to_connect_jetpack">Bëni hyrjen te llogaria WordPress.com që përdorët për t’ia përshoqëruar Jetpack-ut.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">PBR për Jetpack</string>
     <string name="stats_jetpack_connection_setup_info">Që të përdorni Statistikat te sajti juaj WordPress, do t’ju duhet të instaloni shtojcën Jetpack.</string>
@@ -2714,13 +2585,7 @@ Language: sq_AL
     <string name="reader_empty_search_title">S’u gjetën përfundime</string>
     <string name="comment_read_source_post">Lexoni postimin burim</string>
     <string name="sites">Sajte</string>
-    <string name="signup_magic_link_title">Lidhja magjike u dërgua</string>
-    <string name="verification_2fa_screen_title">Verifikim kodi</string>
-    <string name="selfhosted_site_login_title">Kredenciale hyrjeje</string>
-    <string name="magic_link_sent_login_title">Lidhja magjike u dërgua</string>
-    <string name="magic_link_login_title">Hyrje me lidhje magjike</string>
     <string name="site_address_login_title" a8c-src-lib="module:login">Hyrje me adresë sajti</string>
-    <string name="email_address_login_title">Hyrje me adresë email</string>
     <string name="reader_empty_saved_posts_description">Prekeni %s që të ruhet një postim te lista juaj.</string>
     <string name="reader_empty_saved_posts_title">Ende pa postime të ruajtur!</string>
     <string name="reader_bookmark_snack_title">Postimi u ruajt</string>
@@ -2822,7 +2687,6 @@ Language: sq_AL
     <string name="invite_user_delete_desc">hiqe %s</string>
     <string name="profile_picture">Foto profili e %s</string>
     <string name="comment_checkmark_desc">shenjë</string>
-    <string name="signup_with_google_progress">Po bëhet regjistrim me Google…</string>
     <string name="jetpack_connection_failed_with_reason">Dështoi lidhja me Jetpack-un: %s</string>
     <string name="jetpack_already_connected_toast">Jeni tashmë i lidhur te Jetpack-u</string>
     <string name="menu_visual_mode">Përpunues Pamor</string>
@@ -2849,7 +2713,6 @@ Language: sq_AL
     <string name="notif_detail_screen_title">Hollësi njoftimi %s</string>
     <string name="edit_photo_screen_title">Përpunoni Foto</string>
     <string name="share_intent_screen_title">Zgjidhni sajt</string>
-    <string name="signup_epilogue_screen_title">Llogari e re</string>
     <string name="person_detail_screen_title">Hollësi personi</string>
     <string name="media_settings_screen_title">Hollësi kartele</string>
     <string name="publicize_buttons_screen_title">Butona ndarjesh me të tjerët</string>
@@ -2900,7 +2763,6 @@ Language: sq_AL
     <string name="site_creation_domain_finish_button">Krijoje sajtin</string>
     <string name="notification_site_creation_created">Prekeni që të vazhdohet.</string>
     <string name="notification_site_creation_title_success">Sajti u krijua!</string>
-    <string name="google_error_timeout">Google u vonua shumë me përgjigjen. Mund të doni të prisni derisa të keni një lidhje internet më të fuqishme.</string>
     <string name="username_changer_title">Ndryshoni emër përdoruesi</string>
     <string name="username_changer_hint">Shtypni që të merrni më tepër sugjerime</string>
     <string name="username_changer_header">Emri juaj i tanishëm i përdoruesit është %1$s%2$s%3$s. Me pak përjashtime, të tjerët zor se do ta shohin emrin tuaj të ekranit, %4$s%5$s%6$s.</string>
@@ -2910,18 +2772,6 @@ Language: sq_AL
     <string name="username_changer_dismiss_button_positive">Hidhe Tej</string>
     <string name="username_changer_action">Ruaje</string>
     <string name="content_description_add_avatar">Shtoni avatar</string>
-    <string name="signup_user_exists">Email tashmë ekzistues në WordPress.com.\nPo vazhdohet me hyrjen.</string>
-    <string name="signup_updating_account">Po përditësohet llogaria…</string>
-    <string name="signup_magic_link_progress">Mesazhi po dërgohet</string>
-    <string name="signup_magic_link_error_button_positive">Riprovoni</string>
-    <string name="signup_magic_link_error_button_negative">Mbylle</string>
-    <string name="signup_magic_link_error">Pati ca probleme me dërgimin e email-it.  Mund të riprovoni tani ose ta mbyllni dhe të riprovoni më vonë.</string>
-    <string name="signup_epilogue_hint_username">Emër përdoruesi</string>
-    <string name="signup_epilogue_hint_password_detail">Mundeni të hyni përherë me një lidhje si ajo që sapo përdorët, por mund të caktoni edhe një fjalëkalim, nëse parapëlqeni.</string>
-    <string name="signup_epilogue_hint_password">Fjalëkalim (opsional)</string>
-    <string name="signup_epilogue_hint_display">Emër Shfaqjeje</string>
-    <string name="signup_epilogue_error_button_positive">Riprovoni</string>
-    <string name="signup_epilogue_error_button_negative">Riktheje</string>
     <string name="signup_epilogue_error_generic">Pati ca probleme me përditësimin e llogarisë tuaj. Që të vazhdohet, mund të riprovoni ose prapësoni ndryshimet.</string>
     <string name="plugin_needs_update">Lyp përditësim</string>
     <string name="plugin_caption_search">Kërkoni Për Shtojca</string>
@@ -3009,18 +2859,6 @@ Language: sq_AL
     <string name="my_site_btn_plugins">Shtojca</string>
     <string name="media_edit_link_hint">Hape lidhjen në dritare/skedë të re</string>
     <string name="media_edit_link_text">Lidhje për te</string>
-    <string name="notification_login_failed">Ndodhi një gabim.</string>
-    <string name="notification_2fa_needed">Ju lutemi, që të vazhdohet jepni një kod mirëfilltësimi.</string>
-    <string name="notification_error_wrong_password">Ju lutemi, që të vazhdohet, rikontrolloni fjalëkalimin.</string>
-    <string name="notification_login_title_stopped">Hyrja u ndal</string>
-    <string name="notification_logging_in">Ju lutemi, prisni, teksa bëhet hyrja.</string>
-    <string name="notification_login_title_in_progress">Hyrja në ecuri e sipër…</string>
-    <string name="notification_logged_in">Prekeni që të vazhdohet.</string>
-    <string name="notification_login_title_success">U futët!</string>
-    <string name="login_error_generic_start">S’u nis dot hyrja me Google.</string>
-    <string name="login_empty_password">Ju lutemi, jepni një fjalëkalim</string>
-    <string name="login_text_otp_another">Më mirë më dërgoni një kod tjetër</string>
-    <string name="enter_verification_code_sms">Dërguam një mesazh teksti te numri i telefonit që përfundon me %s. Ju lutemi, futni kodin e verifikimit nga SMS-ja.</string>
     <string name="image_size">Përmasa</string>
     <string name="uploading_subtitle_media_only_one">ende 1 kartelë</string>
     <string name="uploading_subtitle_media_only">Ende %1$d nga %2$d kartela gjithsej</string>
@@ -3037,15 +2875,10 @@ Language: sq_AL
     <string name="confirm_remove_media_image">Të hiqet kjo figurë nga postimi?</string>
     <string name="media_edit_customize_card_caption">Përshtateni</string>
     <string name="media_edit_file_details_card_caption">Hollësi Kartele</string>
-    <string name="login_error_suffix">\nNdoshta të provohej me një llogari tjetër?</string>
-    <string name="login_error_generic">Pati problem në lidhjen me llogarinë Google.</string>
     <string name="login_error_button">Mbylle</string>
-    <string name="enter_wpcom_password_google">Që të vazhdohet me këtë llogari Google, ju lutemi, jepni fjalëkalimin për te WordPress.com. Kjo do t’ju kërkohet vetëm një herë.</string>
     <string name="error_generic_network">Ndodhi një gabim rrjeti. Ju lutemi, kontrolloni lidhjen tuaj dhe riprovoni.</string>
     <string name="post_settings_remove_featured_image">Hiqe figurën e zgjedhur</string>
     <string name="post_settings_choose_featured_image">Zgjidhni figurë të zgjedhur</string>
-    <string name="login_log_in_for_share_intent">Që ta ndani lëndën me të tjerët, bëni hyrjen në WordPress.com.</string>
-    <string name="enter_site_address_share_intent">Jepni adresën e sajtit tuaj WordPress te i cili do të donit të ndanit lëndë me të tjerët.</string>
     <string name="jetpack_disconnect_error_toast">Gabim në shkëputje sajti</string>
     <string name="jetpack_disconnect_success_toast">Sajti u shkëput</string>
     <string name="jetpack_disconnect_confirm">Shkëpute</string>
@@ -3126,28 +2959,13 @@ Language: sq_AL
     <string name="post_queued">Postimi u vu në radhë</string>
     <string name="uploading_post">Po ngarkohet \"%s\"</string>
     <string name="connection_to_server_lost">Humbi lidhja me shërbyesin</string>
-    <string name="login_email_client_not_found">S’zbulohet dot aplikacioni juaj për email</string>
-    <string name="login_empty_2fa">Ju lutem, jepni një kod verifikimi</string>
-    <string name="login_empty_username">Ju lutemi, jepni emër përdoruesi</string>
-    <string name="login_log_in_for_deeplink">Që të lexoni këtë postim, bëni hyrjen te WordPress.com.</string>
-    <string name="login_error_while_adding_site">Gabim gjatë shtimit të sajtit. Kod gabimi: %s</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">Po kontrollohet adresa e sajtit</string>
-    <string name="login_site_address_more_help">Ju duhet më tepër ndihmë?</string>
-    <string name="login_site_address_help_content">Adresa e sajtit tuaj shfaqet te shtylla në krye të skenës, kur vizitoni sajtin tuaj nën Chrome.</string>
-    <string name="login_site_address_help_title">Cila është adresa e sajtit tim?</string>
     <string name="login_site_address" a8c-src-lib="module:login">Adresë sajti</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Jepni adresën e sajtit WordPress te i cili do të donit të lidheshit.</string>
     <string name="login_already_logged_in_wpcom">Jeni tashmë i futur te WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Vazhdo</string>
     <string name="connect_more">Lidhni një sajt tjetër</string>
-    <string name="enter_wpcom_password">Jepni fjalëkalimin tuaj WordPress.com.</string>
-    <string name="login_magic_link_email_requesting">Po kërkohet email hyrjesh</string>
-    <string name="password_incorrect">Duket sikur ky fjalëkalim është i pasaktë. Ju lutemi, kontrollojeni edhe një herë informacionin tuaj dhe riprovoni.</string>
-    <string name="requesting_otp">Po kërkohet një kod verifikimi përmes SMS-je.</string>
-    <string name="login_text_otp">Më mirë më dërgoni kod me tekst</string>
-    <string name="enter_verification_code">Thuajse arritëm! Ju lutemi, jepni kodin e verifikimit për WordPress.com prej aplikacionit tuaj të mirëfilltësimeve.</string>
     <string name="next">Pasuesi</string>
-    <string name="enter_email_wordpress_com">Që të administroni krejt sajtet tuaj WordPress, bëni hyrjen te WordPress.com.</string>
     <string name="me_profile_photo">Foto Profili</string>
     <string name="error_media_parse_error">Përgjigje e papritur nga shërbyesi</string>
     <string name="upload_finished_toast">Ngarkimi s’mund të ndalet, ngaqë ka mbaruar tashmë</string>
@@ -3296,8 +3114,6 @@ Language: sq_AL
     <string name="error_unknown_post_type">Format i panjohur postimesh</string>
     <string name="submit_for_review">Parashtroje</string>
     <string name="title_subscriber">Pajtimtar</string>
-    <string name="duplicate_site_detected">U pikas një sajt i përsëdytur.</string>
-    <string name="cannot_add_duplicate_site">Ky sajt ekziston tashmë në aplikacion, s’mund ta shtoni.</string>
     <string name="already_logged_in_wpcom">Jeni tashmë i futur në një llogari WordPress.com, s’mund të shtoni një sajt WordPress.com të lidhur pas një llogarie tjetër.</string>
     <string name="error_media_load">S’arrihet të ngarkohet media</string>
     <string name="error_media_refresh_no_connection">Lypset lidhje që të rifreskohet mediateka</string>
@@ -3308,8 +3124,6 @@ Language: sq_AL
     <string name="media_generic_error">Ndodhi një gabim mediash</string>
     <string name="retry">Riprovoni</string>
     <string name="confirm">Ripohojeni</string>
-    <string name="xmlrpc_endpoint_forbidden_error">S’u bë dot lidhja. Morëm një gabim 403, kur provuam të hyjmë\n        te pikëmbarimi XMLRPC i sajtit tuaj. Kjo i duhet aplikacionit, që të mund të komunikojë me sajtin tuaj.\n        Lidhuni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
-    <string name="xmlrpc_post_blocked_error">S’u bë dot lidhja. Strehuesi juaj i bllokon kërkesat POST, dhe aplikacionit\n        i duhen që të mund të komunikojë me sajtin tuaj. Lidhuni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
     <string name="pending_draft_one_generic">Mos e lini varur! \'%1$s\' është në pritje të botimit.</string>
     <string name="pending_draft_one_month">Mos e lini varur! \'%1$s\' është në pritje të botimit.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' mbetet skicë. Mos harroni ta botoni!</string>
@@ -3392,8 +3206,6 @@ Language: sq_AL
     <string name="error_refreshing_gravatar">Gabim në ringarkimin e Gravatarit tuaj</string>
     <string name="error_locating_image">Gabim në ngarkimin e figurës së qethur</string>
     <string name="error_cropping_image">Gabim teksa qethej figura</string>
-    <string name="checking_email">Po kontrollohet email-i</string>
-    <string name="magic_link_unavailable_error_message">Jo e mundshme këtë çast. Ju lutemi, jepni fjalëkalimin tuaj</string>
     <string name="logging_in">Po hyhet</string>
     <string name="web_address_dialog_hint">E shfaqur publikisht kur komentoni.</string>
     <string name="export_your_content_message">Postimet, faqet dhe rregullimet tuaja do t’ju dërgohen me email te %s.</string>
@@ -3426,7 +3238,6 @@ Language: sq_AL
     <string name="comments_empty_list_filtered_pending">S’ka komente në pritje të shqyrtimit</string>
     <string name="comments_empty_list_filtered_approved">S’ka komente të miratuara</string>
     <string name="button_skip">Anashkaloje</string>
-    <string name="xmlrpc_missing_method_error">S’u lidh dot. Metodat e domosdoshme XML-RPC mungojnë te shërbyesi.</string>
     <string name="alignment_center">Në qendër</string>
     <string name="post_format_video">Video</string>
     <string name="post_format_status">Gjendje</string>
@@ -3486,7 +3297,6 @@ Language: sq_AL
     <string name="about_the_app">Rreth aplikacionit</string>
     <string name="error_post_account_settings">S’u ruajtën dot rregullimet e llogarisë tuaj</string>
     <string name="error_fetch_account_settings">S’u morën dot rregullimet e llogarisë tuaj</string>
-    <string name="error_fetch_my_profile">S’u mor dot profili juaj</string>
     <string name="site_settings_unknown_language_code_error">Kod gjuhe i papranuar</string>
     <string name="site_settings_threading_dialog_description">Lejo komente të folezëzuar në rrjedha.</string>
     <string name="site_settings_threading_dialog_header">Rrjedhë deri në</string>
@@ -3674,9 +3484,6 @@ Language: sq_AL
     <string name="my_site_btn_blog_posts">Postime</string>
     <string name="reader_label_new_posts_subtitle">Prekeni që të shfaqen</string>
     <string name="select_all">Përzgjidhe krejt</string>
-    <string name="auth_required">Hyni sërish që të vazhdohet.</string>
-    <string name="invalid_verification_code">Kod verifikimi i pavlefshëm</string>
-    <string name="verification_code">Kod verifikimi</string>
     <string name="language">Gjuhë</string>
     <string name="reader_empty_posts_request_failed">S’arrin të marrë dot postimet</string>
     <string name="error_notification_open">S’u hap dot njoftimi</string>
@@ -3739,7 +3546,6 @@ Language: sq_AL
     <string name="ssl_certificate_error">Dëshmi SSL e pavlefshme</string>
     <string name="help">Ndihmë</string>
     <string name="username_or_password_incorrect">Emri i përdoruesit apo fjalëkalimi që dhatë është i pasaktë</string>
-    <string name="email_invalid">Jepni një adresë email të vlefshme</string>
     <string name="invalid_email_message">Adresa juaj email s’është e vlefshme</string>
     <string name="error_downloading_image">Gabim në shkarkim figure</string>
     <string name="error_load_comment">S\'u ngarkua dot komenti</string>
@@ -3763,14 +3569,12 @@ Language: sq_AL
     <string name="reader_toast_err_removing_tag">S’arrihet të hiqet kjo etiketë</string>
     <string name="reader_toast_err_adding_tag">S’arrihet të shtohet kjo etiketë</string>
     <string name="reader_title_applog">Regjistër aplikacioni</string>
-    <string name="fatal_db_error">Ndodhi një gabim gjatë krijimit të bazës së të dhënave për aplikacionin. Provoni të riinstaloni aplikacionin.</string>
     <string name="error_refresh_media">Media s’u rifreskua dot tani</string>
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="local_changes">Ndryshime vendore</string>
     <string name="new_media">Media e re</string>
     <string name="new_post">Postim i ri</string>
     <string name="notifications_empty_all">S’ka njoftime…ende jo!</string>
-    <string name="http_authorization_required">Lypset autorizim</string>
     <string name="invalid_site_url_message">Kontrolloni nëse URL-ja e sajtit të dhënë është e vlefshme</string>
     <string name="file_error_create">S’u krijua dot kartelë e përkohshme për ngarkim medie. Sigurohuni që në pajisjen tuaj ka hapësirë të lirë të mjaftueshme.</string>
     <string name="category_name">Emër kategorie</string>
@@ -3815,7 +3619,6 @@ Language: sq_AL
     <string name="reader_likes_you_and_one">Këtë e pëlqeni ju dhe një tjetër</string>
     <string name="pick_video">Përzgjidhni video</string>
     <string name="pick_photo">Përzgjidhni foto</string>
-    <string name="sign_up_label">Regjistrohuni</string>
     <string name="reader_toast_err_url_intent">S’arrin të hapë %s</string>
     <string name="reader_toast_err_view_image">S’arrin të shihet figura</string>
     <string name="reader_toast_err_share_intent">S’arrin të ndajë me të tjerët</string>
@@ -3858,8 +3661,6 @@ Language: sq_AL
     <string name="note_reply_successful">Përgjigja u botua</string>
     <string name="sign_in">Hyni</string>
     <string name="loading">Po ngarkohet…</string>
-    <string name="httppassword">Fjalëkalim HTTP</string>
-    <string name="httpuser">Emër përdoruesi HTTP</string>
     <string name="error_media_upload">Ndodhi një gabim gjatë ngarkimit të medias</string>
     <string name="incorrect_credentials">Emër përdoruesi ose fjalëkalim i pasaktë.</string>
     <string name="log_in" a8c-src-lib="module:login">Hyni</string>

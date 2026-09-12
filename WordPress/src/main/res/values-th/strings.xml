@@ -149,9 +149,6 @@ Language: th
     <string name="reader_label_new_posts_subtitle">แตะเพื่อแสดงมัน</string>
     <string name="select_all">เลือกทั้งหมด</string>
     <string name="language">ภาษา</string>
-    <string name="verification_code">โค้ดยืนยัน</string>
-    <string name="invalid_verification_code">โค้ดยืนยันไม่ถูกต้อง</string>
-    <string name="auth_required">เข้าสู่ระบบอีกครั้งเพื่อทำต่อ</string>
     <string name="reader_empty_posts_request_failed">ไม่สามารถดึงเรื่องได้</string>
     <string name="error_notification_open">ไม่สามารถเปิดคำเตือนได้</string>
     <string name="stats_search_terms_unknown_search_terms">เงื่อนไขการค้นหาที่ไม่รู้จัก</string>
@@ -228,10 +225,8 @@ Language: th
     <string name="error_refresh_pages">ไม่สามารถโหลดใหม่หน้าในตอนนี้</string>
     <string name="error_refresh_comments">ไม่สามารถโหลดใหม่ความเห็นในตอนนี้</string>
     <string name="invalid_email_message">ที่อยู่อีเมลของคุณไม่ถูกต้อง</string>
-    <string name="email_invalid">ใส่ที่อยู่อีเมลที่ใช้งานได้</string>
     <string name="new_media">ไฟล์สื่อใหม่</string>
     <string name="wordpress_blog">บล็อกเวิร์ดเพรส</string>
-    <string name="fatal_db_error">มีความผิดพลาดเกิดขึ้นระหว่างการสร้างฐานข้อมูลแอพ  โปรดลองติดตั้งแอพใหม่อีกครั้ง</string>
     <string name="new_post">เรื่องใหม่</string>
     <string name="view_in_browser">ดูในเบราว์เซอร์</string>
     <string name="add_new_category">เพิ่มหมวดหมู่ใหม่</string>
@@ -262,7 +257,6 @@ Language: th
     <string name="local_changes">การเปลี่ยนแปลงบนอุปกรณ์</string>
     <string name="media_gallery_type_thumbnail_grid">ตารางรูปขนาดย่อ</string>
     <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">การเรียงในแนวนอน</string>
-    <string name="http_authorization_required">ต้องการการอนุญาติ</string>
     <string name="reader_title_applog">log แอพพลิเคชั่น</string>
     <string name="remove_account">ลบเว็บ</string>
     <string name="share_link">แบ่งปันลิงก์</string>
@@ -314,8 +308,6 @@ Language: th
     <string name="more_notifications">และ %d เพิ่มเติม</string>
     <string name="sign_in">เข้าสู่ระบบ</string>
     <string name="loading">กำลังโหลดข้อมูล…</string>
-    <string name="httpuser">ชื่อผู้ใช้ HTTP</string>
-    <string name="httppassword">รหัสผ่าน HTTP</string>
     <string name="error_media_upload">มีความผิดพลาดเกิดขึ้นขณะทำการอัปโหลดไฟล์สื่อ</string>
     <string name="incorrect_credentials">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</string>
     <string name="password">รหัสผ่าน</string>

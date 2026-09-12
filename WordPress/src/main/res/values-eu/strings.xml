@@ -134,7 +134,6 @@ Language: eu_ES
     <string name="notification_settings_main_hint_off">Gaitu jakinarazpenak</string>
     <string name="notification_settings_main_hint_on">Desgaitu jakinarazpenak</string>
     <string name="add_media_progress">Media gehitzen</string>
-    <string name="login_site_address_help_title">Zein da nire gunearen helbidea?</string>
     <string name="post_title">Izenburua</string>
     <string name="post_status_draft">Zirriborroa</string>
     <string name="post_settings_post_format">Bidalketa formatua</string>
@@ -190,7 +189,6 @@ Language: eu_ES
     <string name="error_remove_user">Ezin izan da erabiltzailea ezabatu</string>
     <string name="error_update_role">Ezin izan da erabiltzailearen rola eguneratu</string>
     <string name="error_refreshing_gravatar">Errorea zure Gravatarra birkargatzean</string>
-    <string name="checking_email">E-posta egiaztatzen</string>
     <string name="logging_in">Saioa hasten</string>
     <string name="web_address_dialog_hint">Publikoki erakusten da iruzkinak egitean.</string>
     <string name="export_your_content_message">Zure bidalketak, orrialdeak eta ezarpenak e-posta bidez bidaliko zaizkizu %s helbidera.</string>
@@ -368,9 +366,6 @@ Language: eu_ES
     <string name="reader_label_new_posts_subtitle">Egin tap berauek erakusteko</string>
     <string name="select_all">Aukeratu denak</string>
     <string name="language">Hizkuntza</string>
-    <string name="verification_code">Egiaztaketa kodea</string>
-    <string name="invalid_verification_code">Egiaztaketa kode okerra</string>
-    <string name="auth_required">Hasi saioa berriro jarraitzeko.</string>
     <string name="reader_empty_posts_request_failed">Huts egin du bidalketak eskuratzeak</string>
     <string name="stats_view_authors">Egileak</string>
     <string name="pages_fetching">Orrialdeak eskuratzen…</string>
@@ -427,7 +422,6 @@ Language: eu_ES
     <string name="error_edit_comment">Iruzkina editatzean errore bat gertatu da</string>
     <string name="error_moderate_comment">Iruzkina moderatzean errore bat gertatu da</string>
     <string name="invalid_email_message">Zure posta helbidea ez da zuzena</string>
-    <string name="email_invalid">Sartu posta helbide zuzen bat</string>
     <string name="cat_name_required">Kategoria izena beharrezkoa da</string>
     <string name="error_load_comment">Ezin izan da iruzkina kargatu</string>
     <string name="error_downloading_image">Irudia deskargatzean errorea</string>
@@ -462,7 +456,6 @@ Language: eu_ES
     <string name="file_not_found">Ezin izan da igotzeko fitxategia aurkitu. Mugitua edo ezabatua izan da?</string>
     <string name="learn_more">Gehiago jakin</string>
     <string name="media_gallery_type_thumbnail_grid">Miniaturen sareta</string>
-    <string name="http_authorization_required">Baimena beharrezkoa</string>
     <string name="connection_error">Errorea konektatzean</string>
     <string name="media_error_no_permission">Ez duzu media bilduma ikusteko baimenik</string>
     <string name="remove_account">Ezabatu gunea</string>
@@ -470,7 +463,6 @@ Language: eu_ES
     <string name="file_error_create">Ezin izan da media fitxategia igotzeko behin-behineko fitxategia sortu. Ziurtatu zaitez gailuak behar haina toki duela.</string>
     <string name="new_post">Bidalketa berria</string>
     <string name="new_media">Media berria</string>
-    <string name="fatal_db_error">Errorea gertatu da aplikazioaren datu-basea sortzean. Saiatu aplikazioa berrinstalatzen.</string>
     <string name="reader_title_applog">Aplikazioaren loga</string>
     <string name="cannot_delete_multi_media_items">Mediaren bat ezin izan da orain ezabatu. Saiatu zaitez berriz beranduago.</string>
     <string name="post_not_found">Errore bat gertatu da bidalketa kargatzean. Eguneratu bidalketak eta saiatu berriz.</string>
@@ -504,7 +496,6 @@ Language: eu_ES
     <string name="reader_hint_comment_on_comment">Erantzun iruzkinari…</string>
     <string name="reader_view_reblog">Birblogeatu </string>
     <string name="comments_empty_list">Oraindik iruzkin gabe</string>
-    <string name="sign_up_label">Izena eman</string>
     <string name="media_gallery_type_squares">Karratuak</string>
     <string name="media_edit_title_text">Izenburua</string>
     <string name="share_action">Partekatu</string>
@@ -532,8 +523,6 @@ Language: eu_ES
     <string name="note_reply_successful">Erantzuna argitaratuta.</string>
     <string name="sign_in">Hasi saioa</string>
     <string name="loading">Kargatzen…</string>
-    <string name="httppassword">HTTP pasahitza</string>
-    <string name="httpuser">HTTP erabiltzaile-izena</string>
     <string name="error_media_upload">Errore bat gertatu da mediak kargatzean</string>
     <string name="incorrect_credentials">Erabiltzaile-izen edo pasahitz okerra.</string>
     <string name="password">Pasahitza</string>
