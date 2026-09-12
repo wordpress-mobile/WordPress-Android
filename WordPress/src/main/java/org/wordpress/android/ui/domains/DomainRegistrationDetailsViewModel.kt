@@ -243,7 +243,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun createCart() {
+    private suspend fun createCart(contact: DomainContactInformation) {
         val result = createCartUseCase.execute(
             site,
             domainProductDetails.productId,
@@ -257,12 +257,11 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                 showError(result.message, result.isDeviceOffline)
                 AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while creating a shopping cart")
             }
-            is CreateCartResult.Success -> redeemCart(result.cart)
+            is CreateCartResult.Success -> redeemCart(result.cart, contact)
         }
     }
 
-    private suspend fun redeemCart(cart: ShoppingCart) {
-        val contact = DomainContactFormModel.toDomainContactInformation(domainContactForm.value)!!
+    private suspend fun redeemCart(cart: ShoppingCart, contact: DomainContactInformation) {
         when (val result = redeemCartUseCase.execute(cart, contact)) {
             is RedeemCartResult.Error -> {
                 analyticsTracker.track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_FAILED)
@@ -363,7 +362,16 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
             countryCode = uiState.value?.selectedCountry?.code,
             state = uiState.value?.selectedState?.code
         )
-        launch { createCart() }
+        // The contact is settled before anything is bought, so a form that has
+        // somehow not loaded cannot get as far as a cart.
+        val contact = domainContactForm.value?.toDomainContactInformation()
+        if (contact == null) {
+            _uiState.value = uiState.value?.copy(isRegistrationProgressIndicatorVisible = false)
+            showError(message = null, isDeviceOffline = false)
+            AppLog.e(T.DOMAIN_REGISTRATION, "The registration form holds no contact details")
+            return
+        }
+        launch { createCart(contact) }
     }
 
     fun onCountrySelected(country: SupportedCountry) {
@@ -422,34 +430,26 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         val phoneNumberPrefix: String?,
         val phoneNumber: String?
     ) {
+        fun toDomainContactInformation() = DomainContactInformation(
+            firstName = firstName,
+            lastName = lastName,
+            organization = organization,
+            address1 = addressLine1,
+            address2 = addressLine2,
+            postalCode = postalCode,
+            city = city,
+            state = state,
+            countryCode = countryCode,
+            email = email,
+            phone = DomainPhoneNumberUtils.formatPhoneNumberandPrefix(
+                phoneNumberPrefix,
+                phoneNumber
+            ),
+            fax = null,
+            extra = null
+        )
+
         companion object {
-            fun toDomainContactInformation(
-                domainContactFormModel: DomainContactFormModel?
-            ): DomainContactInformation? {
-                if (domainContactFormModel == null) {
-                    return null
-                }
-
-                return DomainContactInformation(
-                    firstName = domainContactFormModel.firstName,
-                    lastName = domainContactFormModel.lastName,
-                    organization = domainContactFormModel.organization,
-                    address1 = domainContactFormModel.addressLine1,
-                    address2 = domainContactFormModel.addressLine2,
-                    postalCode = domainContactFormModel.postalCode,
-                    city = domainContactFormModel.city,
-                    state = domainContactFormModel.state,
-                    countryCode = domainContactFormModel.countryCode,
-                    email = domainContactFormModel.email,
-                    phone = DomainPhoneNumberUtils.formatPhoneNumberandPrefix(
-                        domainContactFormModel.phoneNumberPrefix,
-                        domainContactFormModel.phoneNumber
-                    ),
-                    fax = null,
-                    extra = null
-                )
-            }
-
             fun fromDomainContactInformation(contact: DomainContactInformation) = DomainContactFormModel(
                 firstName = contact.firstName,
                 lastName = contact.lastName,

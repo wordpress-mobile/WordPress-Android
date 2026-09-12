@@ -608,6 +608,21 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `with no contact details loaded, tapping register buys nothing`() = test {
+        whenever(resourceProvider.getString(R.string.request_failed_message)).thenReturn(requestFailedMessage)
+        setupFetchDomainContact(true)
+
+        viewModel.start(site, domainProductDetails)
+        viewModel.onRegisterDomainButtonClicked()
+
+        assertThat(viewModel.domainContactForm.value).isNull()
+        verifyNoInteractions(createCartUseCase)
+        verifyNoInteractions(redeemCartUseCase)
+        verify(errorMessageObserver).onChanged(requestFailedMessage)
+        assertThat(viewModel.uiState.value?.isRegistrationProgressIndicatorVisible).isFalse()
+    }
+
+    @Test
     fun `an edited contact detail is what the redeem call carries`() = test {
         viewModel.start(site, domainProductDetails)
 
@@ -745,8 +760,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
     @Test
     fun mappingOfDomainContactDetailModels() = test {
-        val convertedDomainContactInformation =
-            DomainContactFormModel.toDomainContactInformation(domainContactFormModel)
+        val convertedDomainContactInformation = domainContactFormModel.toDomainContactInformation()
         assertThat(convertedDomainContactInformation).isEqualTo(domainContactInformation)
 
         val convertedDomainContactFormModel =
