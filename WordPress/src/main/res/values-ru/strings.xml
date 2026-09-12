@@ -9,6 +9,7 @@ Language: ru
     <string name="support_screen_unified_support_description">Получайте ответы от нашей службы поддержки в любое время</string>
     <string name="support_screen_unified_support_title">Справка</string>
     <string name="unified_support_attachment_match_score">Совпадение %1$d%%</string>
+    <string name="unified_support_status_bot">Бот Oddie</string>
     <string name="unified_support_bot_typing_content_description">Бот поддержки вводит текст</string>
     <string name="unified_support_message_input_placeholder">Написать сообщение…</string>
     <string name="unified_support_conversations_title">Справка</string>
@@ -93,6 +94,7 @@ Language: ru
     <string name="gutenberg_kit_announcement_learn_more">Узнать больше</string>
     <string name="gutenberg_kit_announcement_maybe_later">Возможно позже</string>
     <string name="gutenberg_kit_announcement_activate">Активировать</string>
+    <string name="gutenberg_kit_announcement_body_deadline">К концу июня 2026 года он станет редактором по умолчанию. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">Редактор блоков нового поколения готов к работе, и вас ждёт множество новых функций.</string>
     <string name="gutenberg_kit_announcement_title">Совсем скоро: улучшенный редактор блоков</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Переключитесь на новый блочный редактор одним из первых.</string>
@@ -237,6 +239,7 @@ Language: ru
     <string name="stats_period_selector_content_description">Выбрать период сбора статистики</string>
     <string name="stats_period_custom">Произвольный</string>
     <string name="stats_period_last_12_months">Последние 12 месяцев</string>
+    <string name="stats_period_last_6_months">Последние 6 месяцев</string>
     <string name="stats_period_last_30_days">Последние 30 дней</string>
     <string name="stats_period_last_7_days">Последние 7 дней</string>
     <string name="stats_period_today">Сегодня</string>
@@ -253,6 +256,8 @@ Language: ru
     <string name="post_rs_confirm_delete_message">Эта запись будет удалена навсегда. Это действие нельзя отменить.</string>
     <string name="post_rs_confirm_trash_message">Вы действительно хотите удалить эту запись?</string>
     <string name="post_rs_failed_to_load">Ошибка при загрузке записи</string>
+    <string name="experimental_rs_pages_list_description">Показывать список записей WordPress.com и на автономных сайтах с паролями приложений в более современном интерфейсе</string>
+    <string name="experimental_rs_pages_list">Список новых записей</string>
     <string name="stats_error_admin_url_unavailable">Не возможно открыть WP Admin на этом сайте</string>
     <string name="stats_error_parsing">При загрузке данных возникла ошибка. Повторите попытку</string>
     <string name="stats_error_network">Ошибка сети. Проверьте подключение и повторите попытку</string>
@@ -313,6 +318,8 @@ Language: ru
     <string name="he_support_status_unknown">Неизвестно</string>
     <string name="he_support_status_closed">Закрыто</string>
     <string name="he_support_status_solved">Задача решена</string>
+    <string name="he_support_status_waiting_for_user">Ожидание пользователя</string>
+    <string name="he_support_status_waiting_for_support">Ожидание поддержки</string>
     <string name="he_support_select_attachments">Выбрать вложения</string>
     <string name="he_support_download_attachment">Скачать вложение</string>
     <string name="he_support_include_logs_description">Приложенные журналы помогут нам понять, в чём причина проблем. Журналы могут содержать сведения о последних действиях в приложении.</string>
@@ -485,6 +492,7 @@ Language: ru
     <string name="experimental_block_editor_note">Экспериментальный редактор блоков станет редактором блоков по умолчанию в следующей версии, и его нельзя будет отключить.</string>
     <string name="avatar_update_email_unverified">Чтобы обновить аватар, необходимо подтвердить адрес электронной почты.</string>
     <string name="feedback_form_note_link_wordpress">форумы сообщества.</string>
+    <string name="default_web_client_id">заполнитель</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Включить ярлык %s</string>
     <string name="personalization_screen_card_accessibility_label">Включить карточку %s</string>
     <string name="user_avatar_content_description">Аватар пользователя %s</string>
@@ -752,8 +760,13 @@ Language: ru
     <string name="barcode_scanning_alert_dialog_rationale_message">Разрешите доступ к камере, чтобы сканировать штрихкод</string>
     <string name="barcode_scanning_alert_dialog_title">Разрешить доступ к камере</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Блоки, вложенные глубже, чем %d уровней, могут отображаться неправильно в мобильном редакторе.</string>
+    <string name="jp_migration_lets_go_button">Поехали!</string>
+    <string name="jp_migration_done_no_sites_message">Пришло время продолжить путешествие по WordPress в приложении Jetpack!</string>
     <string name="domain_management_clear_search">Очистить поиск</string>
     <string name="media_encoder_quality_very_high">Очень высокое</string>
+    <string name="notification_security_key_needed">Пожалуйста предоставьте ключ безопасности для продолжения.</string>
+    <string name="login_error_security_key">Возникла проблема со входом в систему с помощью ключа безопасности</string>
+    <string name="login_text_security_key">Использовать ключ безопасности</string>
     <string name="new_domain_search_screen_error_title">Не удалось получить список доменов</string>
     <string name="new_domain_search_screen_list_item_sale_price">%s за первый год</string>
     <string name="new_domain_search_screen_list_item_regular_price">%s в год</string>
@@ -933,16 +946,22 @@ Language: ru
     <string name="sharing_twitter_deprecation_notice_find_out_more">Подробнее</string>
     <string name="sharing_twitter_deprecation_notice_description">Автоматическая публикация в Twitter больше не доступна из-за изменения условий использования и цен Twitter.</string>
     <string name="sharing_twitter_deprecation_notice_title">Автоматическая публикация в Twitter больше не доступна</string>
+    <string name="jp_migration_notifications_allow_title">Разрешите уведомления, чтобы быть в курсе событий на сайте</string>
+    <string name="wp_jp_static_poster_message">Приложение Jetpack обладает всеми возможностями приложения WordPress, а теперь и исключительным доступом к статистике, «Чтиву», уведомлениям и другим функциям.</string>
+    <string name="wp_jp_static_poster_title_plural">Используйте WordPress с %s в приложении Jetpack.</string>
+    <string name="wp_jp_static_poster_title">Используйте WordPress с %s в приложении Jetpack.</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Цвет без ярлыка. %s</string>
     <string name="dashboard_activity_card_title">Недавние действия</string>
     <string name="site_creation_search_domain_example_body">Зная домен, пользователи могут найти сайт с помощью браузера, как в примере выше.</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_domain_search_input_hint">Поиск по ключевым словам</string>
     <string name="site_creation_domain_header_subtitle">Выберите короткий и запоминающийся домен, который поможет посетителям найти ваш сайт.</string>
+    <string name="site_creation_domain_cost_sale">на первый год</string>
     <string name="site_creation_error_cart_subtitle">Веб-сайт создан, но возникла проблема с подготовкой пользовательского домена для оформления заказа. Повторите попытку или обратитесь в службу поддержки.</string>
     <string name="new_site_creation_preview_caption_paid">Это может занять до 30 минут, после чего пользовательский домен начнёт работать.</string>
     <string name="new_site_creation_preview_subtitle_paid">Чек отправлен вам на почту. %s</string>
     <string name="notifications_disabled_permission_dialog">Уведомления в приложении отключены. Нажмите здесь, чтобы включить.</string>
+    <string name="jp_migration_done_delete_wp_message">Рекомендуем &lt;b&gt;удалить приложение WordPress&lt;/b&gt; с устройства, чтобы избежать конфликтов данных.</string>
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Удалить блоки</string>
     <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Конфиденциальность и рейтинг</string>
     <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Настройки воспроизведения</string>
@@ -985,6 +1004,9 @@ Language: ru
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Этот сайт</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">На %1$s используется плагин %2$s, который пока поддерживает не все функции приложения. Установите %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">На %1$s используется плагин %2$s, который пока поддерживает не все функции приложения. Установите %3$s.</string>
+    <string name="wp_jp_static_poster_footnote">Переход бесплатен и занимает всего минуту.</string>
+    <string name="wp_jp_static_poster_button_secondary">Дополнительные сведения см. на Jetpack.com</string>
+    <string name="wp_jp_static_poster_button_primary">Перейти в новое приложение Jetpack</string>
     <string name="my_site_btn_wp_admin">Консоль</string>
     <string name="my_site_header_manage">Управление</string>
     <string name="my_site_header_traffic">Посещаемость</string>
@@ -1001,8 +1023,11 @@ Language: ru
     <string name="blaze_promotional_text">Повысьте посещаемость своего сайта с помощью Blaze</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="site_creation_domain_tag_unavailable">Этот домен уже зарегистрирован</string>
+    <string name="site_creation_domain_tag_sale">Распродажа</string>
     <string name="site_creation_domain_tag_recommended">Рекомендуемые</string>
     <string name="site_creation_domain_tag_best_alternative">Лучшая альтернатива</string>
+    <string name="support_faq_caption">Ищите ответы на типовые вопросы в разделе \"Часто задаваемые вопросы\".</string>
+    <string name="support_faq_title">Благодарим за переход на приложение Jetpack!</string>
     <string name="logs_button">Журналы</string>
     <string name="tickets">Билеты</string>
     <string name="free">Бесплатно</string>
@@ -1038,6 +1063,12 @@ Language: ru
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Используйте возможности сайта максимально эффективно. Установите Jetpack и получите доступ к статистике, уведомлениям и другим функциям.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">На вашем сайте есть плагин Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Мобильное приложение Jetpack создано работать в паре с плагином Jetpack. Перейдите в приложение, чтобы использовать статистику, уведомления, Чтиво и другие возможности.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Получайте уведомления о новых комментариях, отметках «Нравится», просмотрах и других событиях.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Находите интересные сайты и сообщества и подписывайтесь на них, а также публикуйте своё содержимое.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Увеличивайте посещаемость с помощью полезной статистики и аналитики.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Статистика и обзор</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack открывает дополнительные возможности для сайтов WordPress. Переход бесплатен и занимает всего минуту.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Расширьте возможности WordPress с помощью Jetpack</string>
     <string name="blogging_prompts_onboarding_content_note_content">Настроить подсказки по ведению блога и напоминания можно в любое время в разделе Мой сайт &gt; Настройки &gt; Ведение блога.</string>
     <string name="blogging_reminders_prompt_subtitle">Напоминание будет содержать слово или короткую вдохновляющую фразу</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Перейдите в &lt;b&gt;настройки сайта&lt;/b&gt;, чтобы снова включить</string>
@@ -1049,6 +1080,15 @@ Language: ru
     <string name="site_settings_blogging_prompts_title">Показать подсказки</string>
     <string name="site_settings_blogging">Ведение блога</string>
     <string name="install_play_store_to_get_jetpack">Пожалуйста, установите Google Play Store, чтобы получить приложение Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Позже</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Перейти на Jetpack </string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Статистика, Чтиво, Уведомления и другие функции Jetpack удалены из приложения WordPress.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Возможности Jetpack переехали.</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s переедут через %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s переедет через %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s скоро переедут</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s скоро переедет</string>
+    <string name="wp_jetpack_powered_phase_2">Получить приложение Jetpack</string>
     <string name="my_site_blogging_prompt_card_view_answers">Показать все ответы</string>
     <string name="stats_insights_total_stats_seven_days_negative">На %1$s меньше, чем в предыдущие 7 дней</string>
     <string name="stats_insights_total_stats_seven_days_positive">На %1$s больше, чем в предыдущие 7 дней</string>
@@ -1058,10 +1098,21 @@ Language: ru
     <string name="stats_insights_views_and_visitors_seven_days_views_positive">Просмотров за последние 7 дней на %1$s больше, чем в предыдущие.</string>
     <string name="stats_timeframe_previous_seven_days">Предыдущие 7 дней</string>
     <string name="stats_timeframe_last_seven_days">Последние 7 дней</string>
+    <string name="weeks_quantity_other">%d нед.</string>
+    <string name="weeks_quantity_one">1 неделя</string>
     <string name="my_site_blogging_prompt_card_attribution_day_one">От &lt;b&gt;В Первый День&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Напомнить мне позже</string>
+    <string name="jetpack_feature_card_content_phase_three">Статистика, Чтиво, Уведомления и другие функции скоро переедут в мобильное приложение Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Перейти в новое приложение Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Узнайте больше на Jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Переход бесплатен и займет всего минуту.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Статистика, Чтиво, Уведомления и другие функции Jetpack скоро будут удалены из приложения WordPress.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Статистика, Чтиво, Уведомления и другие функции Jetpack скоро будут удалены из приложения WordPress %s.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Возможности Jetpack скоро переедут.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Уведомления переезжают в Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Чтиво переезжает в приложение Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Статистика переезжает в приложение Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Перейти в новое приложение Jetpack</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">При загрузке подсказок возникла ошибка.</string>
     <string name="blogging_prompts_list_error_fetch_title">Ой!</string>
     <string name="blogging_prompts_list_no_prompts">Пока нет подсказок</string>
@@ -1087,11 +1138,39 @@ Language: ru
     <string name="wp_jetpack_continue_without_jetpack">Продолжить без Jetpack</string>
     <string name="deep_linking_weblinks_alias_label">веб-ссылки</string>
     <string name="deep_linking_urilinks_alias_label">URI-ссылки</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Перейдите в приложение Jetpack, чтобы получать на устройство  уведомления в реальном времени.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Перейдите в приложение Jetpack, чтобы найти, подписаться и поставить отметки «Нравится» любимым сайтам и записям в Чтиве.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Перейдите в приложение Jetpack, чтобы следить за ростом посещаемости в разделах «Статистика» и «Обзор».</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Получайте уведомления в приложении Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Подпишитесь на любые сайты в приложении Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Просматривайте статистику в новом приложении Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Не удалось отключить открытие ссылок в Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Не удалось включить открытие ссылок в Jetpack</string>
     <string name="preference_open_links_in_jetpack">Открывать ссылки в Jetpack</string>
+    <string name="jp_migration_network_error_message">Не удаётся перенести ваши данные и настройки без подключения к сети.</string>
+    <string name="jp_migration_network_error_subtitle">Убедитесь, что сетевое подключение работает, и повторите попытку.</string>
+    <string name="jp_migration_network_error_title">Не удаётся подключиться к Интернету.</string>
+    <string name="jp_migration_generic_error_message">Обратитесь в службу поддержки или повторите попытку позже.</string>
+    <string name="jp_migration_generic_error_subtitle">К сожалению, что-то пошло не по плану. Ваши данные в безопасности, но сейчас не могут быть перенесены.</string>
     <string name="jp_migration_generic_error_title">Что-то пошло не так…</string>
+    <string name="jp_migration_try_again_button">Повторить попытку</string>
+    <string name="jp_migration_finish_button">Завершить</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">Удаление значка приложения WordPress</string>
+    <string name="jp_migration_done_subtitle">Все данные и настройки перенесены. Всё осталось по-прежнему.</string>
+    <string name="jp_migration_done_title">Благодарим за переход в Jetpack!</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">Уведомления из приложения WordPress будут отключены.</string>
+    <string name="jp_migration_notifications_subtitle">Вам будут приходить те же уведомления, но теперь из приложения Jetpack.</string>
+    <string name="wordpress_help_center_button">Справочный центр WordPress</string>
     <string name="support_title">Поддержка</string>
+    <string name="notification_disable_broadcast_permission_desc">Позволяет отключить уведомления WordPress в приложении.</string>
+    <string name="notification_disable_broadcast_permission_label">Отключите уведомления WordPress</string>
+    <string name="jp_migration_help_button">Нужна помощь?</string>
+    <string name="jp_migration_continue_button">Продолжить</string>
+    <string name="jp_migration_welcome_site_found_message">Мы нашли ваш сайт. После переноса данных вход в Jetpack произойдет автоматически.</string>
+    <string name="jp_migration_welcome_sites_found_message">Мы нашли ваши сайты. После переноса данных вход в Jetpack произойдет автоматически.</string>
+    <string name="jp_migration_avatar_content_description">Фотография в вашем профиле</string>
+    <string name="jp_migration_welcome_subtitle">Похоже, вы перешли с приложения WordPress.</string>
+    <string name="jp_migration_welcome_title">Jetpack приветствует вас!</string>
     <string name="icon_desc">значок</string>
     <string name="post_settings_parent">Родительская страница</string>
     <string name="post_settings_page_attributes">Атрибуты страницы</string>
@@ -1127,6 +1206,7 @@ Language: ru
     <string name="weekly_roundup_notification_text_views_only">Просмотров сайта за последнюю неделю — %1$s.</string>
     <string name="weekly_roundup_notification_text_all">За последнюю неделю: просмотров сайта — %1$s, отметок «Нравится» —%2$s, комментариев — %3$s.</string>
     <string name="stats_insights_like_guide_card">⭐️ На последней записи %1$s %2$s отметка «Нравится».</string>
+    <string name="wp_jetpack_powered">Работает с Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Изображение процедуры сканирования кода для входа</string>
     <string name="qrcode_auth_flow_error_content_description">Изображение ошибки</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">Сбой аутентификации</string>
@@ -1301,6 +1381,11 @@ Language: ru
     <string name="notification_channel_weekly_roundup_title">За неделю</string>
     <string name="my_site_dashboard_tab_title">Главная</string>
     <string name="adding_cat">Добавление категории</string>
+    <string name="login_select_email_client">Каким приложением электронной почты вы пользуетесь?</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">Возникла проблема при подключении к сайту. Получен код ошибки HTTP 401.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">Вызовы XML-RPC на этом сайте заблокированы (код ошибки 401). Если войти не удалось, нажмите на значок справки, чтобы открыть часто задаваемые вопросы.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">Не удалось найти веб-сайт WordPress по этому URL-адресу. Нажмите на значок справки, чтобы открыть часто задаваемые вопросы.</string>
+    <string name="login_error_xml_rpc_services_disabled">Сервисы XML-RPC на этом сайте отключены.</string>
     <string name="my_site_menu_tab_title">Меню сайта</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Ваш поиск включает символы, которые не поддерживаются в доменах WordPress.com. Допускаются только буквенно-цифровые символы: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Проверьте подключение к Интернету и обновите страницу.</string>
@@ -1543,6 +1628,11 @@ Language: ru
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Введите данные для доступа к серверу&lt;/a&gt;, чтобы исправить угрозы.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Введите данные для доступа к серверу&lt;/a&gt;, чтобы исправить угрозу.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Нажмите дважды для добавления ссылки.</string>
+    <string name="login_empty_view_try_another_account">Использовать другую учётную запись</string>
+    <string name="login_empty_view_see_instructions">См. инструкции</string>
+    <string name="login_no_jetpack_sites_error_message">Если у вас уже есть сайт, вам необходимо установить бесплатный плагин Jetpack и подключить его к вашей учетной записи WordPress.com.</string>
+    <string name="login_empty_view_avatar_content_description">Фотография вашего профиля</string>
+    <string name="login_not_a_jetpack_site">Чтобы использовать это приложение для %1$s, нужно установить и настроить плагин Jetpack и подключить его к учетной записи WordPress.com</string>
     <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Настройки ширины</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link rel</string>
     <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Настройки столбцов</string>
@@ -1578,6 +1668,7 @@ Language: ru
     <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Далее</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Кратко опишите ссылку, чтобы помочь пользователям с программой чтения с экрана</string>
     <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Добавить блоки</string>
+    <string name="login_no_jetpack_sites">Нет сайтов с Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Что такое текст alt?</string>
     <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Преобразовать %s в</string>
     <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Преобразовать блок…</string>
@@ -1624,6 +1715,7 @@ Language: ru
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Нажмите дважды, чтобы открыть список действий для редактирования, замены или очистки изображения.</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="new_site_creation_search_domain_input_hint">Выберите название для вашего сайта.</string>
+    <string name="magic_link_not_meaning_to_create_account">Не планировали создание новой учётной записи? Перейдите назад и введите ваш адрес email.</string>
     <string name="invite_links_disable_dialog_message">Если эта ссылка для приглашения будет отключена, никто не сможет использовать её для присоединения к вашей команде. Вы уверены в этом?</string>
     <string name="invite_links_disable_dialog_title">Отключить пригласительную ссылку</string>
     <string name="invite_links_bad_format_response">Получен неверный ответ</string>
@@ -1885,6 +1977,8 @@ Language: ru
     <string name="hpp_retry_error">Проверьте подключение к Интернету и повторите попытку.</string>
     <string name="hpp_error_subtitle">Нажмите повторить при появлении подключения к сети.</string>
     <string name="hpp_error_title">Макеты недоступны при отсутствии подключения к сети</string>
+    <string name="continue_site_credentials">Продолжить с учетными данными магазина</string>
+    <string name="login_find_your_connected_email">Узнать адрес привязанной эл. почты</string>
     <string name="reader_discover_no_posts_follow_subtitle">Для расширения поиска попробуйте подписаться на больше меток</string>
     <string name="reader_discover_no_posts_title">Нет свежих записей</string>
     <string name="reader_discover_empty_title">Добро пожаловать!</string>
@@ -1925,6 +2019,8 @@ Language: ru
     <string name="suggestion_no_connection">Нет подключения к сети.\nПредложения недоступны.</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">Выбрано %s</string>
+    <string name="login_get_link_by_email">Получить ссылку для входа по email</string>
+    <string name="email_not_registered_wpcom">Не получается найти учётную запись WordPress.com для этого адреса email.</string>
     <string name="permission_microphone">микрофон</string>
     <string name="comment_unable_to_show_error">Не удаётся показать этот комментарий</string>
     <string name="media_browse_for_items">Поиск элементов</string>
@@ -1961,7 +2057,26 @@ Language: ru
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Выбор изображения</string>
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Блок удалён</string>
     <string name="enter_your_site_address">Введите адрес вашего сайта</string>
+    <string name="signup_confirmation_title">Подтверждение регистрации</string>
+    <string name="continue_with_google_terms_of_service_text">Если вы продолжите работу с учетной записью Google, не имея учётной записи WordPress.com, вы создадите учётную запись и примете наши %1$sУсловия обслуживания%2$s.</string>
+    <string name="continue_terms_of_service_text">Продолжив, вы соглашаетесь с нашими %1$sПравилами пользования%2$s.</string>
+    <string name="signup_confirmation_message">Этот адрес эл.почты будет использован при создании вашей новой учётной записи WordPress.com.</string>
+    <string name="signup_magic_link_message">Мы отослали вам ссылку для создания учётной записи WordPress.com. Проверьте почту на вашем устройстве и нажмите на ссылку, полученную с WordPress.com.</string>
+    <string name="enter_account_info_for_site">Введите данные вашей учётной записи для %1$s.</string>
+    <string name="login_or">или</string>
+    <string name="continue_google_button_suffix">Продолжить с Google</string>
+    <string name="login_find_your_site_adress">Найдите адрес вашего сайта</string>
+    <string name="login_done">Готово</string>
+    <string name="magic_link_not_seeing_email_message">Не нашли письмо? Загляните в папку со спамом.</string>
+    <string name="login_magic_links_sent_label">Проверьте почту на этом устройстве и нажмите ссылку в письме от WordPress.com</string>
+    <string name="login_magic_links_label">Мы пришлём вам ссылку для входа, которая позволит вам сразу войти без пароля.</string>
+    <string name="check_email">Проверка почты</string>
     <string name="get_started" a8c-src-lib="module:login">Начать </string>
+    <string name="enter_email_to_continue_wordpress_com">Введите ваш адрес электронной почты чтобы войти или создать учётную запись WordPress.com.</string>
+    <string name="or_type_your_password">или введите ваш пароль</string>
+    <string name="create_account">Создать учётную запись</string>
+    <string name="send_link_by_email">Прислать ссылку по электронной почте</string>
+    <string name="reset_your_password">Сбросить пароль</string>
     <string name="reader_error_request_failed_title">При выполнении запроса возникла проблема. Повторите попытку позже.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Удаление в корзину этой записи отменит локальные изменения, вы точно хотите продолжить?</string>
     <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">настройки блока %s</string>
@@ -2184,6 +2299,9 @@ Language: ru
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Подпись галереи. %s</string>
     <string name="create_post_page_fab_tooltip">Создать запись или страницу</string>
     <string name="content_description_person_building_website">Личность, создающая сайт</string>
+    <string name="post_signup_interstitial_not_right_now">Не сейчас</string>
+    <string name="post_signup_interstitial_subtitle">Хотите ли вы создавать или делиться - мы поможем вам.</string>
+    <string name="post_signup_interstitial_title">Добро пожаловать в WordPress!</string>
     <string name="stock_media_picker_list_content_description">Библиотека фотографий</string>
     <string name="photo_picker_image_thumbnail_unselected">Выделение изображения снято</string>
     <string name="photo_picker_image_selected">,Выбрано</string>
@@ -2197,6 +2315,12 @@ Language: ru
     <string name="dialog_confirm_scheduled_post_sync_title">Готовы начать синхронизацию?</string>
     <string name="new_site_creation_unavailable_domain">Этот домен недоступен</string>
     <string name="negative_prefix">-%s</string>
+    <string name="login_discovery_error_generic">Мы не смогли подключиться к сайту. Возможно потребуется обратиться в техподдержку хостинга, чтобы решить эту проблему.</string>
+    <string name="login_discovery_error_ssl">Мы не смогли подключиться к сайту, поскольку имеется проблема с &lt;b&gt;сертификатом SSL&lt;/b&gt;. Возможно потребуется обратиться в техподдержку хостинга, чтобы решить эту проблему.</string>
+    <string name="login_discovery_error_http_auth">Мы не смогли подключиться к сайту, поскольку он требует &lt;b&gt;HTTP авторизации&lt;/b&gt;. Возможно потребуется обратиться в техподдержку хостинга, чтобы решить эту проблему.</string>
+    <string name="login_discovery_error_xmlrpc">Мы не смогли подключиться к &lt;b&gt;XMLRPC&lt;/b&gt; сайта. Возможно потребуется обратиться в техподдержку хостинга, чтобы решить эту проблему.</string>
+    <string name="login_site_credentials_magic_link_label">Почти готово! Нужно только проверить адрес эл.почты подключения Jetpack &lt;b&gt;%1$s&lt;/b&gt;</string>
+    <string name="enter_credentials_for_site">Войдите с именем пользователя и паролем для сайта %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Страница сайта</string>
     <string name="reader_my_likes_display_name">Отметки \"Нравится\"</string>
     <string name="reader_discover_display_name">Найти</string>
@@ -2354,6 +2478,8 @@ Language: ru
     <string name="post_settings_add_to_calendar">Добавить в календарь</string>
     <string name="post_settings_notification">Уведомление</string>
     <string name="post_settings_time_and_date">Дата и время</string>
+    <string name="login_invalid_site_url">Введите полный адрес вебсайта, например example.com.</string>
+    <string name="enter_email_for_site">Войдите на WordPress.com, чтобы подключиться к %1$s</string>
     <string name="stats_post_views_label">Просмотры</string>
     <string name="stats_post_label">Запись</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -2459,6 +2585,8 @@ Language: ru
     <string name="posts_draft_empty">У вас нет черновиков записей</string>
     <string name="posts_scheduled_empty">У вас нет запланированных записей</string>
     <string name="posts_published_empty">У вас нет опубликрованных записей</string>
+    <string name="notification_wpcom_username_needed">Пожалуйста, войдите указав имя пользователя и пароль.</string>
+    <string name="error_user_username_instead_of_email">Пожалуйста, войдите с именем пользователя на WordPress.com вместо email адреса.</string>
     <string name="stats_insights_average_words">В среднем слов на запись</string>
     <string name="stats_insights_total_words">Всего слов</string>
     <string name="stats_insights_average_likes">В среднем отметок \"нравится\" на запись</string>
@@ -2468,6 +2596,7 @@ Language: ru
     <string name="stats_insights_posts">Записи</string>
     <string name="stats_insights_year">Год</string>
     <string name="stats_insights_this_year_site_stats">За этот год</string>
+    <string name="no_site_error">Сайт по этому адресу не использует WordPress. Вы можете подключиться только к сайтам на WordPress.</string>
     <string name="plugin_check_domain_credit_error">Ошибка проверки возможности покупки домена</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Проверка возможности покупки домена</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Зарегистрировать домен</string>
@@ -2600,6 +2729,7 @@ Language: ru
     <string name="history_detail_button_previous">Предыдущая</string>
     <string name="history_detail_button_next">Следующая</string>
     <string name="media_space_used">Использовано места: %1$s</string>
+    <string name="enter_wpcom_or_jetpack_site">Пожалуйста введите сайт WordPress.com или с подключенным Jetpack</string>
     <string name="history_loading_revision">Загрузка редакции</string>
     <string name="history_loaded_revision">Редакция загружена</string>
     <string name="history_load_dialog_button_positive">Загрузить</string>
@@ -2628,6 +2758,8 @@ Language: ru
     <string name="pages_scheduled">Запланировано</string>
     <string name="pages_drafts">Черновики</string>
     <string name="pages_published">Опубликовано</string>
+    <string name="login_error_sms_throttled">Слишком много попыток отправить СМС-код проверки, отдохните и запросите снова через пару минут.</string>
+    <string name="login_error_email_not_found_v2">Ни одна учетная запись WordPress.com не совпадает с этой записью в Google.</string>
     <string name="site_picker_remove_site_empty">Нет сайтов по критериям поиска</string>
     <string name="reader_no_followed_blogs_search_title">Нет блогов по критериям поиска</string>
     <string name="page_parent_changed">Родитель для страницы сменен</string>
@@ -2646,6 +2778,7 @@ Language: ru
     <string name="content_description_more">Больше</string>
     <string name="my_site_create_new_site_title">У вас нет сайтов</string>
     <string name="reader_empty_subscribed_tags_subtitle">Добавьте любимые метки здесь, чтобы найти по ним записи</string>
+    <string name="login_to_to_connect_jetpack">Войдите в учетную запись WordPress.com, с которой был подключен Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
     <string name="stats_jetpack_connection_setup_info">Для использования Статистики на вашем сайте WordPress требуется установить плагин Jetpack.</string>
@@ -2698,7 +2831,13 @@ Language: ru
     <string name="reader_empty_search_title">Результатов не найдено</string>
     <string name="comment_read_source_post">Прочесть исходную запись</string>
     <string name="sites">Сайты</string>
+    <string name="signup_magic_link_title">Магическая ссылка отослана</string>
+    <string name="verification_2fa_screen_title">Проверка кода</string>
+    <string name="selfhosted_site_login_title">Данные для входа</string>
+    <string name="magic_link_sent_login_title">Магическая ссылка отослана</string>
+    <string name="magic_link_login_title">Вход по магической ссылке</string>
     <string name="site_address_login_title" a8c-src-lib="module:login">Вход по адресу сайта</string>
+    <string name="email_address_login_title">Вход по email адресу</string>
     <string name="reader_empty_saved_posts_description">Нажмите %s для сохранения записи в ваш список.</string>
     <string name="reader_empty_saved_posts_title">Пока не сохранено никаких записей!</string>
     <string name="reader_bookmark_snack_title">Запись сохранена</string>
@@ -2800,6 +2939,7 @@ Language: ru
     <string name="invite_user_delete_desc">удалить %s</string>
     <string name="profile_picture">Изображение профиля %s</string>
     <string name="comment_checkmark_desc">отметка</string>
+    <string name="signup_with_google_progress">Регистрация через Google…</string>
     <string name="jetpack_connection_failed_with_reason">Подключение к Jetpack не удалось: %s</string>
     <string name="jetpack_already_connected_toast">Вы уже подключили Jetpack</string>
     <string name="menu_visual_mode">Визуальный редактор</string>
@@ -2826,6 +2966,7 @@ Language: ru
     <string name="notif_detail_screen_title">Подробности уведомления %s</string>
     <string name="edit_photo_screen_title">Изменить фото</string>
     <string name="share_intent_screen_title">Выберите сайт</string>
+    <string name="signup_epilogue_screen_title">Новая учетная запись</string>
     <string name="person_detail_screen_title">Информация о человеке</string>
     <string name="media_settings_screen_title">Информация о файле</string>
     <string name="publicize_buttons_screen_title">Кнопки поделиться</string>
@@ -2876,6 +3017,7 @@ Language: ru
     <string name="site_creation_domain_finish_button">Создать сайт</string>
     <string name="notification_site_creation_created">Нажмите для продолжения.</string>
     <string name="notification_site_creation_title_success">Сайт создан!</string>
+    <string name="google_error_timeout">Google отвечает слишком долго. Возможно вам стоит подождать пока ваше подключение к Интернет станет лучше.</string>
     <string name="username_changer_title">Сменить имя пользователя</string>
     <string name="username_changer_hint">Введите что-нибудь для получения еще предложений</string>
     <string name="username_changer_header">Ваше имя пользователя - %1$s%2$s%3$s. За некоторыми исключениями, другие будут видеть ваше отображаемое имя - %4$s%5$s%6$s.</string>
@@ -2885,6 +3027,18 @@ Language: ru
     <string name="username_changer_dismiss_button_positive">Отменить</string>
     <string name="username_changer_action">Сохранить</string>
     <string name="content_description_add_avatar">Добавить аватар</string>
+    <string name="signup_user_exists">Email уже зарегистрирован на WordPress.com\nПереходим ко входу.</string>
+    <string name="signup_updating_account">Обновление учетной записи…</string>
+    <string name="signup_magic_link_progress">Отправка email</string>
+    <string name="signup_magic_link_error_button_positive">Повторить</string>
+    <string name="signup_magic_link_error_button_negative">Закрыть</string>
+    <string name="signup_magic_link_error">Возникла проблема при отправке почты. Вы можете повторить сейчас или закрыть и попробовать еще раз позже.</string>
+    <string name="signup_epilogue_hint_username">Имя пользователя</string>
+    <string name="signup_epilogue_hint_password_detail">Вы всегда можете войти со ссылкой, как вы только что использовали, но если хотите, то можно и установить пароль.</string>
+    <string name="signup_epilogue_hint_password">Пароль (не обязательно)</string>
+    <string name="signup_epilogue_hint_display">Отображаемое имя</string>
+    <string name="signup_epilogue_error_button_positive">Повтор</string>
+    <string name="signup_epilogue_error_button_negative">Откат</string>
     <string name="signup_epilogue_error_generic">Возникла ошибка обновления учетной записи. Вы можете повторить или сделать откат изменений.</string>
     <string name="plugin_needs_update">Требует обновления</string>
     <string name="plugin_caption_search">Искать плагины</string>
@@ -2972,6 +3126,18 @@ Language: ru
     <string name="my_site_btn_plugins">Плагины</string>
     <string name="media_edit_link_hint">Открыть ссылку в новом окне/вкладке</string>
     <string name="media_edit_link_text">Ссылка на</string>
+    <string name="notification_login_failed">Произошла ошибка</string>
+    <string name="notification_2fa_needed">Пожалуйста, введите код авторизации для продолжения.</string>
+    <string name="notification_error_wrong_password">Пожалуйста, перепроверьте свой пароль для продолжения.</string>
+    <string name="notification_login_title_stopped">Вход остановлен</string>
+    <string name="notification_logging_in">Пожалуйста подождите пока авторизуемся.</string>
+    <string name="notification_login_title_in_progress">Вход …</string>
+    <string name="notification_logged_in">Нажмите чтобы продолжить.</string>
+    <string name="notification_login_title_success">Вход успешен!</string>
+    <string name="login_error_generic_start">Процесс входа в Google не может быть запущен.</string>
+    <string name="login_empty_password">Пожалуйста, введите пароль</string>
+    <string name="login_text_otp_another">Пришлите мне другой код.</string>
+    <string name="enter_verification_code_sms">Мы послали текстовое сообщение на телефонный номер оканчивающийся на %s. Пожалуйста введите проверочный код из SMS.</string>
     <string name="image_size">Размер</string>
     <string name="uploading_subtitle_media_only_one">остался 1 файл</string>
     <string name="uploading_subtitle_media_only">осталось %1$d из %2$d файлов</string>
@@ -2988,10 +3154,15 @@ Language: ru
     <string name="confirm_remove_media_image">Удалить это изображение из записи?</string>
     <string name="media_edit_customize_card_caption">Настроить</string>
     <string name="media_edit_file_details_card_caption">Информация о файле</string>
+    <string name="login_error_suffix">\nВозможно попробуете другую учетную запись?</string>
+    <string name="login_error_generic">Возникла ошибка подключения к учетной записи Google.</string>
     <string name="login_error_button">Закрыть</string>
+    <string name="enter_wpcom_password_google">Чтобы войти через эту учетную запись Google, пожалуйста укажите соответствующий пароль WordPress.com. Это запрашивается только один раз.</string>
     <string name="error_generic_network">Возникла ошибка сети. Проверьте ваше подключение и попробуйте снова.</string>
     <string name="post_settings_remove_featured_image">Убрать изображение записи</string>
     <string name="post_settings_choose_featured_image">Выберите изображение записи</string>
+    <string name="login_log_in_for_share_intent">Войдите в WordPress.com чтобы поделиться содержимым.</string>
+    <string name="enter_site_address_share_intent">Введите адрес вашего сайта WordPress, на который вы хотите поделиться содержимым.</string>
     <string name="jetpack_disconnect_error_toast">Ошибка отключения сайта</string>
     <string name="jetpack_disconnect_success_toast">Сайт отключен</string>
     <string name="jetpack_disconnect_confirm">Отключить</string>
@@ -3072,13 +3243,28 @@ Language: ru
     <string name="post_queued">Запись в очереди</string>
     <string name="uploading_post">Выполняется загрузка записи «%s»</string>
     <string name="connection_to_server_lost">Соединение с сервером прервано</string>
+    <string name="login_email_client_not_found">Не удалось определить ваш почтовый клиент</string>
+    <string name="login_empty_2fa">Введите проверочный код.</string>
+    <string name="login_empty_username">Введите имя пользователя</string>
+    <string name="login_log_in_for_deeplink">Чтобы получить доступ к записи, войдите на WordPress.com.</string>
+    <string name="login_error_while_adding_site">При добавлении сайта произошла ошибка. Код ошибки: %s</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">Проверка адреса сайта</string>
+    <string name="login_site_address_more_help">Нужна дополнительная помощь?</string>
+    <string name="login_site_address_help_content">При открытии сайта в браузере Chrome его адрес отображается в строке в верхней части экрана.</string>
+    <string name="login_site_address_help_title">Какой адрес у моего сайта?</string>
     <string name="login_site_address" a8c-src-lib="module:login">Адрес сайта</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Введите адрес сайта WordPress, к которому требуется подключиться.</string>
     <string name="login_already_logged_in_wpcom">Вы уже вошли на WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Продолжить</string>
     <string name="connect_more">Подключить ещё один сайт</string>
+    <string name="enter_wpcom_password">Введите свой пароль на WordPress.com.</string>
+    <string name="login_magic_link_email_requesting">Выполняется запрос электронного письма со ссылкой для входа</string>
+    <string name="password_incorrect">Похоже, пароль введён неправильно. Проверьте правильность введенных данных и повторите попытку.</string>
+    <string name="requesting_otp">Выполняется запрос на получение проверочного кода в SMS-сообщении.</string>
+    <string name="login_text_otp">Пришлите мне сообщение с кодом.</string>
+    <string name="enter_verification_code">Почти готово! Введите проверочный код для WordPress.com из приложения Authenticator.</string>
     <string name="next">Вперед</string>
+    <string name="enter_email_wordpress_com">Для управления всеми своими сайтами WordPress войдите в систему WordPress.com с помощью адреса электронной почты.</string>
     <string name="me_profile_photo">Фотография профиля</string>
     <string name="error_media_parse_error">Непредвиденный ответ сервера.</string>
     <string name="upload_finished_toast">Загрузку нельзя остановить, так как она уже завершена.</string>
@@ -3227,6 +3413,8 @@ Language: ru
     <string name="error_unknown_post_type">Неизвестный формат записи</string>
     <string name="submit_for_review">Отправить</string>
     <string name="title_subscriber">Подписчик</string>
+    <string name="duplicate_site_detected">Обнаружена копия сайта.</string>
+    <string name="cannot_add_duplicate_site">Этот сайт уже существует в приложении, его нельзя добавить.</string>
     <string name="already_logged_in_wpcom">Вы уже вошли в учетную запись WordPress.com. Вы не можете добавить сайт WordPress.com, привязанный к другой учетной записи.</string>
     <string name="error_media_load">Не удается загрузить медиафайлы</string>
     <string name="error_media_refresh_no_connection">Для обновления библиотеки требуется подключение</string>
@@ -3237,6 +3425,8 @@ Language: ru
     <string name="media_generic_error">Проблема с медиафайлом</string>
     <string name="retry">Повторить попытку</string>
     <string name="confirm">Подтвердить</string>
+    <string name="xmlrpc_endpoint_forbidden_error">Не удалось подключиться. При попытке подключиться к конечной точке XMLRPC вашего сайта мы получили\n ошибку 403. Это необходимо для обмена данными между приложением и вашим сайтом. Свяжитесь с хостинг-провайдером, чтобы решить\n эту проблему.</string>
+    <string name="xmlrpc_post_blocked_error">Не удалось подключиться. Ваш хостинг-провайдер блокирует запросы POST, которые нужны приложению\n для обмена данными с вашим сайтом. Свяжитесь с хостинг-провайдером, чтобы решить эту проблему.</string>
     <string name="pending_draft_one_generic">Не бросайте эту запись! Запись «%1$s» должна увидеть свет.</string>
     <string name="pending_draft_one_month">Не бросайте эту запись! Запись «%1$s» должна увидеть свет.</string>
     <string name="pending_draft_one_week_2">Запись «%1$s» остаётся в черновиках. Не забудьте опубликовать её!</string>
@@ -3319,6 +3509,8 @@ Language: ru
     <string name="error_refreshing_gravatar">При перезагрузке граватара произошла ошибка</string>
     <string name="error_locating_image">Не удалось найти обрезанное изображение</string>
     <string name="error_cropping_image">При обрезке изображения произошла ошибка</string>
+    <string name="checking_email">Проверка адреса эл. почты</string>
+    <string name="magic_link_unavailable_error_message">В настоящий момент ссылка недоступна. Введите пароль</string>
     <string name="logging_in">Вход в систему</string>
     <string name="web_address_dialog_hint">Отображается для всех пользователей, когда вы добавляете комментарии.</string>
     <string name="export_your_content_message">Ваши записи, страницы и настройки будут отправлены вам по электронной почте %s.</string>
@@ -3351,6 +3543,7 @@ Language: ru
     <string name="comments_empty_list_filtered_pending">Нет комментариев на утверждении</string>
     <string name="comments_empty_list_filtered_approved">Нет одобренных комментариев</string>
     <string name="button_skip">Пропустить</string>
+    <string name="xmlrpc_missing_method_error">Не удалось подключиться. На сервере отсутствуют необходимые методы XML-RPC.</string>
     <string name="alignment_center">По центру</string>
     <string name="post_format_video">Видео</string>
     <string name="post_format_status">Статус</string>
@@ -3410,6 +3603,7 @@ Language: ru
     <string name="about_the_app">О приложении</string>
     <string name="error_post_account_settings">Не удалось сохранить настройки учётной записи.</string>
     <string name="error_fetch_account_settings">Не удалось загрузить настройки учетной записи.</string>
+    <string name="error_fetch_my_profile">Не удалось загрузить профиль.</string>
     <string name="site_settings_unknown_language_code_error">Код языка не распознан.</string>
     <string name="site_settings_threading_dialog_description">Разрешить вложение комментариев в ветках.</string>
     <string name="site_settings_threading_dialog_header">Ветки до</string>
@@ -3598,6 +3792,9 @@ Language: ru
     <string name="my_site_btn_blog_posts">Записи</string>
     <string name="reader_label_new_posts_subtitle">Нажмите, чтобы показать записи.</string>
     <string name="select_all">Выделить все</string>
+    <string name="auth_required">Войдите заново для продолжения.</string>
+    <string name="invalid_verification_code">Неверный код подтверждения</string>
+    <string name="verification_code">Код подтверждения</string>
     <string name="language">Язык</string>
     <string name="reader_empty_posts_request_failed">Не удалось загрузить записи.</string>
     <string name="error_notification_open">Не удалось открыть уведомление.</string>
@@ -3661,6 +3858,7 @@ Language: ru
     <string name="ssl_certificate_error">Недействительный сертификат SSL</string>
     <string name="help">Помощь</string>
     <string name="username_or_password_incorrect">Имя пользователя или пароль введены неверно</string>
+    <string name="email_invalid">Введите правильный email адрес</string>
     <string name="invalid_email_message">Ваш адрес email не подходит</string>
     <string name="error_downloading_image">Ошибка при загрузке картинки</string>
     <string name="error_load_comment">Невозможно загрузить комментарии</string>
@@ -3684,12 +3882,14 @@ Language: ru
     <string name="reader_toast_err_removing_tag">Не удается удалить эту метку</string>
     <string name="reader_toast_err_adding_tag">Не удается подписаться на эту метку</string>
     <string name="reader_title_applog">Лог приложения</string>
+    <string name="fatal_db_error">Произошла ошибка при создании базы данных приложения- попробуйте его переустановить.</string>
     <string name="error_refresh_media">В данный момент не удалось обновить медиафайлы.</string>
     <string name="wordpress_blog">Блог WordPress</string>
     <string name="local_changes">Локальные изменения</string>
     <string name="new_media">Новое медиа</string>
     <string name="new_post">Новая запись</string>
     <string name="notifications_empty_all">Уведомлений пока нет.</string>
+    <string name="http_authorization_required">Требуется авторизация</string>
     <string name="invalid_site_url_message">Убедитесь, что введен допустимый URL-адрес сайта</string>
     <string name="file_error_create">Не удалось создать временный файл для выгрузки медиа. Убедитесь, что имеется достаточно свободного места на вашем устройстве.</string>
     <string name="category_name">Имя категории</string>
@@ -3734,6 +3934,7 @@ Language: ru
     <string name="reader_likes_you_and_one">Вам и ещё одному понравилось это</string>
     <string name="pick_video">Выберите видео</string>
     <string name="pick_photo">Выберите фото</string>
+    <string name="sign_up_label">Зарегистрироваться</string>
     <string name="reader_toast_err_url_intent">Не удаётся открыть %s</string>
     <string name="reader_toast_err_view_image">Не удаётся просмотреть изображение</string>
     <string name="reader_toast_err_share_intent">Не в состоянии поделиться</string>
@@ -3776,6 +3977,8 @@ Language: ru
     <string name="note_reply_successful">Ответ опубликован</string>
     <string name="sign_in">Войти</string>
     <string name="loading">Загрузка…</string>
+    <string name="httppassword">Пароль для HTTP-авторизации</string>
+    <string name="httpuser">Имя для HTTP-авторизации</string>
     <string name="error_media_upload">Произошла ошибка при загрузке медиафайла</string>
     <string name="incorrect_credentials">Неправильное имя или пароль.</string>
     <string name="log_in" a8c-src-lib="module:login">Войти</string>

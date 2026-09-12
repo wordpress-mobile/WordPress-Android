@@ -9,6 +9,7 @@ Language: zh_TW
     <string name="support_screen_unified_support_description">隨時取得支援團隊的解答</string>
     <string name="support_screen_unified_support_title">取得協助</string>
     <string name="unified_support_attachment_match_score">%1$d%% 相符</string>
+    <string name="unified_support_status_bot">Oddie 機器人</string>
     <string name="unified_support_bot_typing_content_description">支援機器人正在輸入訊息</string>
     <string name="unified_support_message_input_placeholder">輸入訊息…</string>
     <string name="unified_support_conversations_title">取得協助</string>
@@ -93,6 +94,7 @@ Language: zh_TW
     <string name="gutenberg_kit_announcement_learn_more">深入了解</string>
     <string name="gutenberg_kit_announcement_maybe_later">稍後再說</string>
     <string name="gutenberg_kit_announcement_activate">啟用</string>
+    <string name="gutenberg_kit_announcement_body_deadline">2026 年 6 月底，此編輯器將成為所有使用者的預設編輯器。 %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">新一代區塊編輯器已準備就緒，且提供更多新功能。</string>
     <string name="gutenberg_kit_announcement_title">更完善的區塊編輯器即將推出</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">請先切換至區塊編輯器，以嘗試使用新的編輯器。</string>
@@ -237,6 +239,7 @@ Language: zh_TW
     <string name="stats_period_selector_content_description">選取統計資料期間</string>
     <string name="stats_period_custom">自訂</string>
     <string name="stats_period_last_12_months">過去 12 個月</string>
+    <string name="stats_period_last_6_months">過去 6 個月</string>
     <string name="stats_period_last_30_days">過去 30 天</string>
     <string name="stats_period_last_7_days">過去 7 天</string>
     <string name="stats_period_today">今天</string>
@@ -253,6 +256,8 @@ Language: zh_TW
     <string name="post_rs_confirm_delete_message">這將會永久刪除此文章。 此動作無法復原。</string>
     <string name="post_rs_confirm_trash_message">你確定要將這篇文章移至垃圾桶嗎？</string>
     <string name="post_rs_failed_to_load">無法載入文章</string>
+    <string name="experimental_rs_pages_list_description">以更現代的 UI 顯示頁面清單，適用於 WordPress.com 和使用應用程式密碼的自助託管網站</string>
+    <string name="experimental_rs_pages_list">全新頁面清單</string>
     <string name="stats_error_admin_url_unavailable">無法開啟此網站的 WP 管理員</string>
     <string name="stats_error_parsing">載入資料時發生問題。 請再試一次</string>
     <string name="stats_error_network">網路錯誤。 請檢查你的連線並再試一次</string>
@@ -312,6 +317,8 @@ Language: zh_TW
     <string name="he_support_status_unknown">不明</string>
     <string name="he_support_status_closed">已關閉</string>
     <string name="he_support_status_solved">已解決</string>
+    <string name="he_support_status_waiting_for_user">正在等候使用者</string>
+    <string name="he_support_status_waiting_for_support">正在等候支援</string>
     <string name="he_support_select_attachments">選取附件</string>
     <string name="he_support_download_attachment">下載附件</string>
     <string name="he_support_include_logs_description">若包含記錄，就能協助我們的團隊調查問題。 記錄檔可能包含最近的應用程式活動。</string>
@@ -483,6 +490,7 @@ Language: zh_TW
     <string name="experimental_block_editor_note">試用版區塊編輯器將在未來版本中成為預設選項，屆時將無法停用。</string>
     <string name="avatar_update_email_unverified">若想更新大頭貼，請先驗證電子郵件地址。</string>
     <string name="feedback_form_note_link_wordpress">社群論壇。</string>
+    <string name="default_web_client_id">預留位置</string>
     <string name="personalization_screen_shortcuts_accessibility_label">切換「%s」捷徑</string>
     <string name="personalization_screen_card_accessibility_label">切換「%s」卡片</string>
     <string name="user_avatar_content_description">使用者「%s」大頭貼</string>
@@ -744,8 +752,13 @@ Language: zh_TW
     <string name="barcode_scanning_alert_dialog_rationale_message">需要相機權限才能掃瞄條碼</string>
     <string name="barcode_scanning_alert_dialog_title">授予相機使用權限</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">行動編輯器可能無法正確顯示內嵌超過 %d 層的區塊。</string>
+    <string name="jp_migration_lets_go_button">我們開始吧</string>
+    <string name="jp_migration_done_no_sites_message">現在就在 Jetpack 應用程式上繼續你的 WordPress 旅程。</string>
     <string name="domain_management_clear_search">清除搜尋</string>
     <string name="media_encoder_quality_very_high">超高</string>
+    <string name="notification_security_key_needed">請提供安全性金鑰以繼續使用。</string>
+    <string name="login_error_security_key">使用安全性金鑰登入時遇到問題</string>
+    <string name="login_text_security_key">使用安全性金鑰</string>
     <string name="new_domain_search_screen_error_title">無法擷取網域</string>
     <string name="new_domain_search_screen_list_item_sale_price">第一年 %s</string>
     <string name="new_domain_search_screen_list_item_regular_price">%s /年</string>
@@ -923,16 +936,22 @@ Language: zh_TW
     <string name="sharing_twitter_deprecation_notice_find_out_more">瞭解更多</string>
     <string name="sharing_twitter_deprecation_notice_description">由於 Twitter 變更條款和定價，Twitter 自動分享功能已無法使用。</string>
     <string name="sharing_twitter_deprecation_notice_title">Twitter 自動分享功能已無法使用</string>
+    <string name="jp_migration_notifications_allow_title">允許通知以掌握你的網站動態</string>
+    <string name="wp_jp_static_poster_message">Jetpack 應用程式具備 WordPress 應用程式所有功能，現在還可獨家使用統計資料、閱讀器、通知等功能。</string>
+    <string name="wp_jp_static_poster_title_plural">在 Jetpack\u00A0應用程式中使用 WordPress 和 %s。</string>
+    <string name="wp_jp_static_poster_title">在 Jetpack\u00A0應用程式中使用 WordPress 和 %s。</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">未標記的顏色。 %s</string>
     <string name="dashboard_activity_card_title">最近活動</string>
     <string name="site_creation_search_domain_example_body">如同上方範例，網域可讓使用者從網頁瀏覽器找到並造訪你的網站。</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_domain_search_input_hint">透過關鍵字搜尋</string>
     <string name="site_creation_domain_header_subtitle">搜尋簡短好記的網域，有助於使用者找到並造訪你的網站。</string>
+    <string name="site_creation_domain_cost_sale">第一年</string>
     <string name="site_creation_error_cart_subtitle">你的網站已成功建立，但準備你的自訂網域以結帳時發生問題。 請再試一次，或聯絡支援團隊取得協助。</string>
     <string name="new_site_creation_preview_caption_paid">你的自訂網域最多可能需要 30 分鐘才能開始運作。</string>
     <string name="new_site_creation_preview_subtitle_paid">我們已將收據透過電子郵件傳送給你了。 %s</string>
     <string name="notifications_disabled_permission_dialog">應用程式通知已停用。 點選此處以啟用。</string>
+    <string name="jp_migration_done_delete_wp_message">建議&lt;b&gt;解除安裝裝置上的 WordPress 應用程式&lt;/b&gt;以避免資料衝突。</string>
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">移除區塊</string>
     <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">隱私權和評分</string>
     <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">播放設定</string>
@@ -975,6 +994,9 @@ Language: zh_TW
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">本網站</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s 正在使用 %2$s，目前尚未支援應用程式的所有功能。 Please install the %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s 正在使用 %2$s，目前尚未支援應用程式的所有功能。 Please install the %3$s.</string>
+    <string name="wp_jp_static_poster_footnote">切換完全免費，只要 1 分鐘就能完成。</string>
+    <string name="wp_jp_static_poster_button_secondary">前往 jetpack.com 深入瞭解</string>
+    <string name="wp_jp_static_poster_button_primary">切換至 Jetpack 應用程式</string>
     <string name="my_site_btn_wp_admin">WP 管理員</string>
     <string name="my_site_header_manage">管理</string>
     <string name="my_site_header_traffic">流量</string>
@@ -991,8 +1013,11 @@ Language: zh_TW
     <string name="blaze_promotional_text">使用 Blaze 為你的網站吸引更多流量</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="site_creation_domain_tag_unavailable">此網域已被註冊</string>
+    <string name="site_creation_domain_tag_sale">特價</string>
     <string name="site_creation_domain_tag_recommended">推薦</string>
     <string name="site_creation_domain_tag_best_alternative">最佳替代選項</string>
+    <string name="support_faq_caption">請查看我們的常見問題集，瞭解你可能想知道的一般問題的解答。</string>
+    <string name="support_faq_title">感謝你改用 Jetpack 應用程式！</string>
     <string name="logs_button">記錄</string>
     <string name="tickets">支援票證</string>
     <string name="free">免費</string>
@@ -1028,6 +1053,12 @@ Language: zh_TW
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">充分發揮網站的潛能。 透過 Jetpack 取得統計資料、通知等。</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">你的網站已安裝 Jetpack 外掛程式</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpack 行動應用程式設計為可搭配 Jetpack 外掛程式運作。 立即切換以取得統計資料、通知、閱讀器等功能。</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">接收新留言、按讚、瀏覽次數等內容的通知。</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">尋找並追蹤你喜愛的網站和社群，並分享你的內容。</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">取得實用洞察報告和全面的統計資料，帶你見證流量成長。</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">統計資料和洞察報告</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack 讓你更充分發揮 WordPress 網站潛能。 切換完全免費，只要 1 分鐘就能完成。</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">透過 Jetpack 提升 WordPress 成效</string>
     <string name="blogging_prompts_onboarding_content_note_content">你可以隨時前往「我的網站」&gt;「設定」&gt;「撰寫網誌」控制網誌提示和提醒</string>
     <string name="blogging_reminders_prompt_subtitle">通知會包含可啟發靈感的字詞或短語</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">前往「&lt;b&gt;網站設定&lt;/b&gt;」以重新啟用</string>
@@ -1039,6 +1070,15 @@ Language: zh_TW
     <string name="site_settings_blogging_prompts_title">顯示提示</string>
     <string name="site_settings_blogging">撰寫網誌</string>
     <string name="install_play_store_to_get_jetpack">請安裝 Google Play 商店以取得 Jetpack 應用程式</string>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">稍後進行</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">切換至 Jetpack </string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">WordPress 應用程式已移除「統計資料」、「閱讀器」、「通知」和其他 Jetpack 提供的功能。</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack 功能已經搬遷。</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s 即將於 %2$s後搬遷</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s 即將於 %2$s後搬遷</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s 即將搬遷</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s 即將搬遷</string>
+    <string name="wp_jetpack_powered_phase_2">取得 Jetpack 應用程式</string>
     <string name="my_site_blogging_prompt_card_view_answers">檢視所有回應</string>
     <string name="stats_insights_total_stats_seven_days_negative">較先前 7 天低 %1$s</string>
     <string name="stats_insights_total_stats_seven_days_positive">較先前 7 天高 %1$s</string>
@@ -1048,10 +1088,21 @@ Language: zh_TW
     <string name="stats_insights_views_and_visitors_seven_days_views_positive">你在過去 7 天內的檢視數比更早之前 7 天的檢視數高 %1$s。</string>
     <string name="stats_timeframe_previous_seven_days">更早之前 7 天</string>
     <string name="stats_timeframe_last_seven_days">過去 7 天</string>
+    <string name="weeks_quantity_other">%d 週</string>
+    <string name="weeks_quantity_one">1 週</string>
     <string name="my_site_blogging_prompt_card_attribution_day_one">來自 &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">稍後再提醒我</string>
+    <string name="jetpack_feature_card_content_phase_three">「統計資料」、「閱讀器」、「通知」及其他功能即將搬遷至 Jetpack 行動應用程式。</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">切換至 Jetpack 應用程式</string>
+    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">前往 jetpack.com 深入瞭解</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">切換完全免費，只要 1 分鐘就能完成。</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">WordPress 應用程式即將移除「統計資料」、「閱讀器」、「通知」和 Jetpack 提供的其他功能。</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">WordPress 應用程式將於 %s 移除「統計資料」、「閱讀器」、「通知」和 Jetpack 提供的其他功能。</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Jetpack 功能即將搬遷了。</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">「通知」將轉移至 Jetpack 應用程式</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">「閱讀器」將轉移至 Jetpack 應用程式</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">你的統計資料將轉移至 Jetpack 應用程式</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">切換至全新 Jetpack 應用程式</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">載入提示時發生錯誤。</string>
     <string name="blogging_prompts_list_error_fetch_title">糟糕</string>
     <string name="blogging_prompts_list_no_prompts">尚無提示</string>
@@ -1077,11 +1128,39 @@ Language: zh_TW
     <string name="wp_jetpack_continue_without_jetpack">繼續但不使用 Jetpack</string>
     <string name="deep_linking_weblinks_alias_label">網頁連結</string>
     <string name="deep_linking_urilinks_alias_label">URI 連結</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">切換至 Jetpack 應用程式，以便繼續 在你的裝置上接收即時通知。</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">切換至 Jetpack 應用程式，以便透過閱讀器搜尋、追蹤並按讚所有喜愛的網站及文章。</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">切換至 Jetpack 應用程式，以便透過統計資料和洞察報告，查看網站流量成長。</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">透過 Jetpack 應用程式接收通知</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">透過 Jetpack 應用程式追蹤任何網站</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">使用全新 Jetpack 應用程式取得統計資料</string>
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">無法停用在 Jetpack 中開啟連結</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">無法啟用在 Jetpack 中開啟連結</string>
     <string name="preference_open_links_in_jetpack">在 Jetpack 中開啟連結</string>
+    <string name="jp_migration_network_error_message">沒有網路連線的情況下，我們無法轉移你的資料和設定。</string>
+    <string name="jp_migration_network_error_subtitle">請檢查並確認你的網路連線正常，然後再試一次。</string>
+    <string name="jp_migration_network_error_title">無法連線到網際網路。</string>
+    <string name="jp_migration_generic_error_message">請聯絡支援團隊，或稍後再試一次。</string>
+    <string name="jp_migration_generic_error_subtitle">很抱歉，發生未預期的情況。 你的資料安全無虞，但目前無法傳輸資料。</string>
     <string name="jp_migration_generic_error_title">糟糕，發生錯誤…</string>
+    <string name="jp_migration_try_again_button">再試一次</string>
+    <string name="jp_migration_finish_button">完成</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">移除 WordPress 應用程式圖示</string>
+    <string name="jp_migration_done_subtitle">我們已轉移你的所有資料和設定。 一切全部順暢銜接。</string>
+    <string name="jp_migration_done_title">感謝改用 Jetpack！</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">我們會關閉 WordPress 應用程式的通知。</string>
+    <string name="jp_migration_notifications_subtitle">你將收到所有相同的通知，但來源為 Jetpack 應用程式。</string>
+    <string name="wordpress_help_center_button">WordPress 說明中心</string>
     <string name="support_title">支援</string>
+    <string name="notification_disable_broadcast_permission_desc">允許應用程式停用 WordPress 通知。</string>
+    <string name="notification_disable_broadcast_permission_label">停用 WordPress 通知</string>
+    <string name="jp_migration_help_button">需要協助嗎？</string>
+    <string name="jp_migration_continue_button">繼續</string>
+    <string name="jp_migration_welcome_site_found_message">我們找到你的網站了。 繼續轉移你的所有資料，並自動登入 Jetpack。</string>
+    <string name="jp_migration_welcome_sites_found_message">我們找到你的網站了。 繼續轉移你的所有資料，並自動登入 Jetpack。</string>
+    <string name="jp_migration_avatar_content_description">你的個人檔案照片</string>
+    <string name="jp_migration_welcome_subtitle">你似乎正從 WordPress 應用程式切換過來。</string>
+    <string name="jp_migration_welcome_title">歡迎使用 Jetpack！</string>
     <string name="icon_desc">圖示</string>
     <string name="post_settings_parent">上層頁面</string>
     <string name="post_settings_page_attributes">頁面屬性</string>
@@ -1117,6 +1196,7 @@ Language: zh_TW
     <string name="weekly_roundup_notification_text_views_only">上週你有 %1$s 個瀏覽次數。</string>
     <string name="weekly_roundup_notification_text_all">上週你有 %1$s 個瀏覽次數、%2$s 個讚和 %3$s 個留言。</string>
     <string name="stats_insights_like_guide_card">⭐️ 你的最新文章 %1$s 已獲得 %2$s 個讚。</string>
+    <string name="wp_jetpack_powered">採用 Jetpack 技術</string>
     <string name="qrcode_auth_flow_content_description">圖片表示正在掃描登入碼</string>
     <string name="qrcode_auth_flow_error_content_description">圖片表示錯誤</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">驗證失敗</string>
@@ -1290,6 +1370,11 @@ Language: zh_TW
     <string name="notification_channel_weekly_roundup_title">每週綜合整理</string>
     <string name="my_site_dashboard_tab_title">首頁</string>
     <string name="adding_cat">新增類別中</string>
+    <string name="login_select_email_client">你使用哪個電子郵件應用程式？</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">與網站通訊時發生問題。 已傳回 HTTP 錯誤代碼 401。</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">這個網站似乎封鎖了 XML-RPC 呼叫 (錯誤代碼 401)。 如果嘗試登入失敗，請點選說明圖示，查看常見問題集。</string>
+    <string name="login_error_xml_rpc_cannot_read_site">無法透過該 URL 讀取 WordPress 網站。 請點選說明圖示，查看常見問題集。</string>
+    <string name="login_error_xml_rpc_services_disabled">這個網站尚未開啟 XML-RPC 服務</string>
     <string name="my_site_menu_tab_title">選單</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">你的搜尋包含 WordPress.com 網域不支援的字元。 允許使用以下字元：A–Z、a–z、0–9。</string>
     <string name="my_site_error_within_card_subtitle">請檢查你的網際網路連線並重新整理頁面。</string>
@@ -1532,6 +1617,11 @@ Language: zh_TW
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;輸入你的伺服器憑證&lt;/a&gt;以修正威脅。</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;輸入你的伺服器憑證&lt;/a&gt;以修正威脅。</string>
     <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">按兩下以新增連結。</string>
+    <string name="login_empty_view_try_another_account">嘗試其他帳號</string>
+    <string name="login_empty_view_see_instructions">查看說明</string>
+    <string name="login_no_jetpack_sites_error_message">若你已擁有網站，則需要安裝免費 Jetpack 外掛程式，並連結你的 WordPress.com 帳號。</string>
+    <string name="login_empty_view_avatar_content_description">你的個人檔案照片</string>
+    <string name="login_not_a_jetpack_site">若要將此應用程式用於 %1$s，你需要安裝 Jetpack 外掛程式並連結 WordPress.com 帳號。</string>
     <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">寬度設定</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">連結 rel 屬性</string>
     <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">欄位設定</string>
@@ -1566,6 +1656,7 @@ Language: zh_TW
     <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">更多</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">簡述連結以協助螢幕閱讀器使用者</string>
     <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">新增區塊</string>
+    <string name="login_no_jetpack_sites">找不到任何 Jetpack 網站</string>
     <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">替代文字是什麼？</string>
     <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">將 %s 轉換為</string>
     <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">轉換區塊…</string>
@@ -1612,6 +1703,7 @@ Language: zh_TW
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">點兩下開啟動作工作表，然後編輯、取代或清除圖片</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="new_site_creation_search_domain_input_hint">輸入網站的名稱</string>
+    <string name="magic_link_not_meaning_to_create_account">不是要建立一個新帳號嗎？ 返回並重新輸入你的電子郵件地址。</string>
     <string name="invite_links_disable_dialog_message">停用此邀請連結後，就沒有人能再用此連結加入你的團隊。 你確定嗎？</string>
     <string name="invite_links_disable_dialog_title">停用邀請連結</string>
     <string name="invite_links_bad_format_response">收到無效回應</string>
@@ -1872,6 +1964,8 @@ Language: zh_TW
     <string name="hpp_retry_error">請檢查你的網際網路連線，然後再試一次。</string>
     <string name="hpp_error_subtitle">請在重新上線時點選重試。</string>
     <string name="hpp_error_title">版面配置在離線時無法使用</string>
+    <string name="continue_site_credentials">使用商店憑證繼續</string>
+    <string name="login_find_your_connected_email">尋找你連結的電子郵件</string>
     <string name="reader_discover_no_posts_follow_subtitle">嘗試追蹤更多標籤，即可擴大搜尋範圍</string>
     <string name="reader_discover_no_posts_title">沒有近期文章</string>
     <string name="reader_discover_empty_title">歡迎！</string>
@@ -1912,6 +2006,8 @@ Language: zh_TW
     <string name="suggestion_no_connection">沒有網際網路連線。\n建議無法使用。</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">已選取 %s</string>
+    <string name="login_get_link_by_email">透過電子郵件取得登入連結</string>
+    <string name="email_not_registered_wpcom">很抱歉，我們找不到與此電子郵件地址連結的 WordPress.com 帳號。</string>
     <string name="permission_microphone">麥克風</string>
     <string name="comment_unable_to_show_error">無法顯示此留言</string>
     <string name="media_browse_for_items">瀏覽項目</string>
@@ -1948,7 +2044,26 @@ Language: zh_TW
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">選擇圖片</string>
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">已移除區塊</string>
     <string name="enter_your_site_address">輸入你現有的網址</string>
+    <string name="signup_confirmation_title">註冊確認</string>
+    <string name="continue_with_google_terms_of_service_text">如果你繼續使用 Google 操作且尚未擁有 WordPress.com 帳號，即表示你正在建立帳號，並同意我們的%1$s服務條款%2$s。</string>
+    <string name="continue_terms_of_service_text">繼續操作即代表你同意我們的%1$s服務條款%2$s。</string>
+    <string name="signup_confirmation_message">我們會使用這個電子郵件地址，為你建立全新的 WordPress.com 帳號。</string>
+    <string name="signup_magic_link_message">我們已透過電子郵件傳送註冊連結給你，使用此連結即可建立新的 WordPress.com 帳號。 請使用此裝置查看電子郵件，並點選 WordPress.com 所傳送電子郵件中的連結。</string>
+    <string name="enter_account_info_for_site">輸入你的 %1$s 帳號資訊。</string>
+    <string name="login_or">或</string>
+    <string name="continue_google_button_suffix">繼續使用 Google</string>
+    <string name="login_find_your_site_adress">尋找你的網站位址</string>
+    <string name="login_done">完成</string>
+    <string name="magic_link_not_seeing_email_message">沒看到電子郵件？ 請檢查你的「垃圾郵件」資料夾。</string>
+    <string name="login_magic_links_sent_label">請使用此裝置查看電子郵件，並點選 WordPress.com 所傳送電子郵件中的連結。</string>
+    <string name="login_magic_links_label">我們會透過電子郵件傳送連結給你，讓你不必輸入密碼就能立刻登入。</string>
+    <string name="check_email">檢查電子郵件</string>
     <string name="get_started" a8c-src-lib="module:login">開始使用</string>
+    <string name="enter_email_to_continue_wordpress_com">請輸入你的電子郵件地址以登入或建立 WordPress.com 帳號。</string>
+    <string name="or_type_your_password">或輸入你的密碼</string>
+    <string name="create_account">建立帳號</string>
+    <string name="send_link_by_email">以電子郵件傳送連結</string>
+    <string name="reset_your_password">重設密碼</string>
     <string name="reader_error_request_failed_title">處理要求時發生問題。 請稍後再試一次。</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">將這篇文章移至垃圾桶也會捨棄本機變更，確定要繼續此操作？</string>
     <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s 區塊選項</string>
@@ -2170,6 +2285,9 @@ Language: zh_TW
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">圖庫標題。%s</string>
     <string name="create_post_page_fab_tooltip">建立文章或頁面</string>
     <string name="content_description_person_building_website">網站架設人員</string>
+    <string name="post_signup_interstitial_not_right_now">現在不用</string>
+    <string name="post_signup_interstitial_subtitle">無論你要建立或共享，我們都會為你提供協助。</string>
+    <string name="post_signup_interstitial_title">歡迎來到 WordPress</string>
     <string name="stock_media_picker_list_content_description">圖庫</string>
     <string name="photo_picker_image_thumbnail_unselected">取消選取的圖片</string>
     <string name="photo_picker_image_selected">，已選取</string>
@@ -2183,6 +2301,12 @@ Language: zh_TW
     <string name="dialog_confirm_scheduled_post_sync_title">準備好要同步了嗎？</string>
     <string name="new_site_creation_unavailable_domain">此網域不可使用</string>
     <string name="negative_prefix">-%s</string>
+    <string name="login_discovery_error_generic">無法存取你的網站。你必須聯絡主機商以解決此問題。</string>
+    <string name="login_discovery_error_ssl">由於 &lt;b&gt;SSL 憑證&lt;/b&gt;發生問題，我們無法存取你的網站。你必須聯絡主機商以解決此問題。</string>
+    <string name="login_discovery_error_http_auth">由於你的網站須進行 &lt;b&gt;HTTP 驗證&lt;/b&gt;，我們無法存取你的網站。你必須聯絡主機商以解決此問題。</string>
+    <string name="login_discovery_error_xmlrpc">無法存取你網站上的 &lt;b&gt;XMLRPC 檔案&lt;/b&gt;。你必須聯絡主機商以解決此問題。</string>
+    <string name="login_site_credentials_magic_link_label">快完成了！我們只需驗證你與 Jetpack 綁定的電子郵件地址就行了&lt;b&gt;%1$s&lt;/b&gt;</string>
+    <string name="enter_credentials_for_site">請使用 %1$s 網站憑證登入</string>
     <string name="my_site_bottom_sheet_add_page">網頁</string>
     <string name="reader_my_likes_display_name">按讚數</string>
     <string name="reader_discover_display_name">探索</string>
@@ -2339,6 +2463,8 @@ Language: zh_TW
     <string name="post_notification_off">關閉</string>
     <string name="post_settings_add_to_calendar">新增到行事曆</string>
     <string name="post_settings_notification">通知</string>
+    <string name="login_invalid_site_url">請輸入完整的網站位址，例如 example.com。</string>
+    <string name="enter_email_for_site">透過 WordPress.com 登入以連結至 %1$s</string>
     <string name="stats_post_views_label">瀏覽次數</string>
     <string name="stats_post_label">文章</string>
     <string name="stats_list_item_description">%1$s：%2$s，%3$s：%4$s</string>
@@ -2444,6 +2570,8 @@ Language: zh_TW
     <string name="posts_draft_empty">你沒有任何文章草稿</string>
     <string name="posts_scheduled_empty">你沒有任何已安排時間的文章</string>
     <string name="posts_published_empty">你尚未發表任何文章！</string>
+    <string name="notification_wpcom_username_needed">請透過你的使用者名稱和密碼登入。</string>
+    <string name="error_user_username_instead_of_email">請使用你的 WordPress.com 使用者名稱登入，而非電子郵件地址。</string>
     <string name="stats_insights_average_words">每篇文章平均字數</string>
     <string name="stats_insights_total_words">總字數</string>
     <string name="stats_insights_average_likes">每篇文章平均按讚數</string>
@@ -2453,6 +2581,7 @@ Language: zh_TW
     <string name="stats_insights_posts">文章</string>
     <string name="stats_insights_year">年</string>
     <string name="stats_insights_this_year_site_stats">今年</string>
+    <string name="no_site_error">此地址的網站不是 WordPress 網站。若需要我們連接網站，網站必須使用 WordPress。</string>
     <string name="plugin_check_domain_credit_error">無法查看可用的網域額度</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">正在查看網域額度</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">註冊網域</string>
@@ -2585,6 +2714,7 @@ Language: zh_TW
     <string name="history_detail_button_previous">上一篇</string>
     <string name="history_detail_button_next">下一篇</string>
     <string name="media_space_used">已使用 %1$s</string>
+    <string name="enter_wpcom_or_jetpack_site">請輸入 WordPress.com 或與 Jetpack 連線的自助託管 WordPress 網站</string>
     <string name="history_loading_revision">正在載入修訂版本</string>
     <string name="history_loaded_revision">修訂版本已經載入</string>
     <string name="history_load_dialog_button_positive">載入</string>
@@ -2613,6 +2743,8 @@ Language: zh_TW
     <string name="pages_scheduled">已排程</string>
     <string name="pages_drafts">草稿</string>
     <string name="pages_published">已發佈</string>
+    <string name="login_error_sms_throttled">已嘗試傳送 SMS 驗證碼太多次，請稍待片刻，一分鐘後再送出新驗證碼要求。</string>
+    <string name="login_error_email_not_found_v2">沒有 WordPress.com 帳號符合此 Google 帳號。</string>
     <string name="site_picker_remove_site_empty">沒有網站符合你的搜尋條件</string>
     <string name="reader_no_followed_blogs_search_title">沒有網誌符合你的搜尋條件</string>
     <string name="page_parent_changed">頁面上層項目已變更</string>
@@ -2630,6 +2762,7 @@ Language: zh_TW
     <string name="content_description_more">更多</string>
     <string name="my_site_create_new_site_title">你沒有任何網站</string>
     <string name="reader_empty_subscribed_tags_subtitle">請在此處新增標籤，尋找有關最愛主題的文章</string>
+    <string name="login_to_to_connect_jetpack">請登入你用來連結 Jetpack 的 WordPress.com 帳號。</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack 常見問題</string>
     <string name="stats_jetpack_connection_setup_info">若要在你的 WordPress 網站上使用「統計」功能，必須安裝 Jetpack 外掛程式。</string>
@@ -2682,7 +2815,13 @@ Language: zh_TW
     <string name="reader_empty_search_title">找不到結果</string>
     <string name="comment_read_source_post">參閱原始文章</string>
     <string name="sites">網站</string>
+    <string name="signup_magic_link_title">神奇連結已傳送</string>
+    <string name="verification_2fa_screen_title">代碼驗證</string>
+    <string name="selfhosted_site_login_title">登入憑證</string>
+    <string name="magic_link_sent_login_title">神奇連結已傳送</string>
+    <string name="magic_link_login_title">神奇連結登入</string>
     <string name="site_address_login_title" a8c-src-lib="module:login">網站位址登入</string>
+    <string name="email_address_login_title">電子郵件地址登入</string>
     <string name="reader_empty_saved_posts_description">點選「%s」即可將文章儲存至你的清單。</string>
     <string name="reader_empty_saved_posts_title">尚未儲存任何文章！</string>
     <string name="reader_bookmark_snack_title">文章已儲存</string>
@@ -2784,6 +2923,7 @@ Language: zh_TW
     <string name="invite_user_delete_desc">移除 %s</string>
     <string name="profile_picture">%s 的個人檔案照片</string>
     <string name="comment_checkmark_desc">檢查標記</string>
+    <string name="signup_with_google_progress">透過 Google 註冊…</string>
     <string name="jetpack_connection_failed_with_reason">無法連結至 Jetpack：%s</string>
     <string name="jetpack_already_connected_toast">你已連結至 Jetpack</string>
     <string name="menu_visual_mode">視覺化編輯器</string>
@@ -2810,6 +2950,7 @@ Language: zh_TW
     <string name="notif_detail_screen_title">通知詳細資料 %s</string>
     <string name="edit_photo_screen_title">編輯照片</string>
     <string name="share_intent_screen_title">挑選網站</string>
+    <string name="signup_epilogue_screen_title">新增帳號</string>
     <string name="person_detail_screen_title">個人詳細資料</string>
     <string name="media_settings_screen_title">檔案詳細資料</string>
     <string name="publicize_buttons_screen_title">分享按鈕</string>
@@ -2860,6 +3001,7 @@ Language: zh_TW
     <string name="site_creation_domain_finish_button">建立網站</string>
     <string name="notification_site_creation_created">點選以繼續。</string>
     <string name="notification_site_creation_title_success">網站已建立！</string>
+    <string name="google_error_timeout">Google 太久沒有回應。你可能需要等到網際網路連線變強。</string>
     <string name="username_changer_title">變更使用者名稱</string>
     <string name="username_changer_hint">請輸入以獲得更多建議</string>
     <string name="username_changer_header">你目前的使用者名稱為 %1$s%2$s%3$s。除少數例外情況外，其他人只會看到你的顯示名稱 %4$s%5$s%6$s。</string>
@@ -2869,6 +3011,18 @@ Language: zh_TW
     <string name="username_changer_dismiss_button_positive">放棄</string>
     <string name="username_changer_action">儲存</string>
     <string name="content_description_add_avatar">新增大頭貼</string>
+    <string name="signup_user_exists">電子郵件已存在於 WordPress.com。\n繼續登入。</string>
+    <string name="signup_updating_account">正在更新帳號……</string>
+    <string name="signup_magic_link_progress">正在傳送電子郵件</string>
+    <string name="signup_magic_link_error_button_positive">重試</string>
+    <string name="signup_magic_link_error_button_negative">關閉</string>
+    <string name="signup_magic_link_error">傳送電子郵件時發生錯誤。你可以現在重試，或先關閉並稍後再試。</string>
+    <string name="signup_epilogue_hint_username">使用者名稱</string>
+    <string name="signup_epilogue_hint_password_detail">你可以像剛剛一樣隨時使用連結來登入，也可以依需要設定密碼。</string>
+    <string name="signup_epilogue_hint_password">密碼 (非必要)</string>
+    <string name="signup_epilogue_hint_display">顯示名稱</string>
+    <string name="signup_epilogue_error_button_positive">重試</string>
+    <string name="signup_epilogue_error_button_negative">還原</string>
     <string name="signup_epilogue_error_generic">更新你的帳號時發生錯誤。你可以重試或還原變更並繼續。</string>
     <string name="plugin_needs_update">需要更新</string>
     <string name="plugin_caption_search">搜尋外掛程式</string>
@@ -2956,6 +3110,18 @@ Language: zh_TW
     <string name="my_site_btn_plugins">外掛程式</string>
     <string name="media_edit_link_hint">在新視窗或分頁開啟連結</string>
     <string name="media_edit_link_text">連結至</string>
+    <string name="notification_login_failed">發生錯誤。</string>
+    <string name="notification_2fa_needed">請提供驗證碼以便繼續進行。</string>
+    <string name="notification_error_wrong_password">請重新確認你的密碼以便繼續進行。</string>
+    <string name="notification_login_title_stopped">已停止登入</string>
+    <string name="notification_logging_in">登入時請耐心等候。</string>
+    <string name="notification_login_title_in_progress">登入中…</string>
+    <string name="notification_logged_in">點選以繼續。</string>
+    <string name="notification_login_title_success">已登入！</string>
+    <string name="login_error_generic_start">無法啟動 Google 登入程序。</string>
+    <string name="login_empty_password">請輸入密碼。</string>
+    <string name="login_text_otp_another">請改用簡訊傳送另一個驗證碼給我</string>
+    <string name="enter_verification_code_sms">我們已將簡訊傳送至結尾為 %s 的電話號碼。請輸入簡訊中的驗證碼。</string>
     <string name="image_size">大小</string>
     <string name="uploading_subtitle_media_only_one">剩下 1 個檔案</string>
     <string name="uploading_subtitle_media_only">剩下 %1$d 個檔案 (共 %2$d 個)</string>
@@ -2972,10 +3138,15 @@ Language: zh_TW
     <string name="confirm_remove_media_image">是否要將這張圖片從文章中移除？</string>
     <string name="media_edit_customize_card_caption">自訂</string>
     <string name="media_edit_file_details_card_caption">檔案詳細資料</string>
+    <string name="login_error_suffix">\n要嘗試其他帳號嗎？</string>
+    <string name="login_error_generic">連線 Google 帳號時發生一些問題。</string>
     <string name="login_error_button">關閉</string>
+    <string name="enter_wpcom_password_google">若要繼續使用此 Google 帳號，請提供相符的 WordPress.com 密碼。只會詢問一次。</string>
     <string name="error_generic_network">網路發生錯誤。請檢查你的連線並再試一次。</string>
     <string name="post_settings_remove_featured_image">移除精選圖片</string>
     <string name="post_settings_choose_featured_image">選擇特色圖片</string>
+    <string name="login_log_in_for_share_intent">登入 WordPress.com 以便分享內容。</string>
+    <string name="enter_site_address_share_intent">請輸入你要分享內容的 WordPress 網站位址。</string>
     <string name="jetpack_disconnect_error_toast">與網站中斷連線時發生錯誤</string>
     <string name="jetpack_disconnect_success_toast">網站已中斷連線</string>
     <string name="jetpack_disconnect_confirm">中斷連線</string>
@@ -3056,13 +3227,28 @@ Language: zh_TW
     <string name="post_queued">已排進佇列的文章</string>
     <string name="uploading_post">正在上傳「%s」</string>
     <string name="connection_to_server_lost">與伺服器的連線中斷</string>
+    <string name="login_email_client_not_found">無法偵測電子郵件用戶端應用程式</string>
+    <string name="login_empty_2fa">請輸入驗證碼</string>
+    <string name="login_empty_username">請輸入使用者名稱</string>
+    <string name="login_log_in_for_deeplink">登入 WordPress.com 存取文章。</string>
+    <string name="login_error_while_adding_site">新增網站時出現錯誤。錯誤代碼：%s</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">檢查網站位址</string>
+    <string name="login_site_address_more_help">需要更多協助嗎？</string>
+    <string name="login_site_address_help_content">當你使用 Chrome 造訪自己的網站時，網站位址會顯示在畫面上方的網址列中。</string>
+    <string name="login_site_address_help_title">我的網站位址是？</string>
     <string name="login_site_address" a8c-src-lib="module:login">網站位址</string>
     <string name="enter_site_address" a8c-src-lib="module:login">請輸入要連結的 WordPress 網站位址。</string>
     <string name="login_already_logged_in_wpcom">已登入 WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">繼續</string>
     <string name="connect_more">連結其他網站</string>
+    <string name="enter_wpcom_password">輸入你的 WordPress.com 密碼。</string>
+    <string name="login_magic_link_email_requesting">要求登入的電子郵件</string>
+    <string name="password_incorrect">看來你輸入的密碼不正確。請重新確認你的資訊，然後再試一次。</string>
+    <string name="requesting_otp">透過 SMS 要求驗證碼。</string>
+    <string name="login_text_otp">請改用簡訊傳送驗證碼給我</string>
+    <string name="enter_verification_code">快完成了！ 請輸入驗證器應用程式上的 WordPress.com 驗證碼。</string>
     <string name="next">下一篇</string>
+    <string name="enter_email_wordpress_com">使用電子郵件地址登入 WordPress.com，即可管理你的所有 WordPress 網站。</string>
     <string name="me_profile_photo">個人檔案照片</string>
     <string name="error_media_parse_error">從伺服器傳來未預期的回應</string>
     <string name="upload_finished_toast">上傳已經結束，無法停止上傳</string>
@@ -3208,6 +3394,8 @@ Language: zh_TW
     <string name="error_all_media_upload_canceled">由於未知的錯誤，所有的媒體上傳均已取消。請重試上傳</string>
     <string name="error_unknown_post_type">未知的文章格式</string>
     <string name="submit_for_review">送出</string>
+    <string name="duplicate_site_detected">已偵測到重複的網站。</string>
+    <string name="cannot_add_duplicate_site">應用程式中已有此網站，你無法再度新增該網站。</string>
     <string name="already_logged_in_wpcom">你已登入 WordPress.com 帳號，無法新增連結至其他帳號的 WordPress.com 網站。</string>
     <string name="error_media_load">無法載入媒體</string>
     <string name="error_media_refresh_no_connection">需要網路連線，才能重新整理媒體庫</string>
@@ -3218,6 +3406,8 @@ Language: zh_TW
     <string name="media_generic_error">發生媒體錯誤</string>
     <string name="retry">重試</string>
     <string name="confirm">確認</string>
+    <string name="xmlrpc_endpoint_forbidden_error">無法連線。嘗試存取網站的 XMLRPC 終端時\n收到 403 錯誤訊息。此應用程式需要 XMLRPC 終端才能與你的網站通訊。請聯絡你的主機服務提供者，\n以解決此問題。</string>
+    <string name="xmlrpc_post_blocked_error">無法連結。你的主機服務提供者封鎖了 POST 請求，但此應用程式需要\n需要使用 POST 請求才能與你的網站通訊。請聯絡你的主機服務提供者，以解決此問題。</string>
     <string name="pending_draft_one_generic">別讓它晾在那裡！「%1$s」正在等你發表。</string>
     <string name="pending_draft_one_month">別讓它晾在那裡！「%1$s」正在等你發表。</string>
     <string name="pending_draft_one_week_2">「%1$s」還是草稿，請記得發表！</string>
@@ -3300,6 +3490,8 @@ Language: zh_TW
     <string name="error_refreshing_gravatar">重新載入你的 Gravatar 時發生錯誤</string>
     <string name="error_locating_image">尋找裁切的圖片時發生錯誤</string>
     <string name="error_cropping_image">裁切圖片時發生錯誤</string>
+    <string name="checking_email">正在檢查電子郵件</string>
+    <string name="magic_link_unavailable_error_message">目前無法使用。請輸入你的密碼</string>
     <string name="logging_in">正在登入</string>
     <string name="web_address_dialog_hint">當你留言時公開顯示。</string>
     <string name="export_your_content_message">我們會將你的文章、頁面和設定寄到你的電子郵件地址：%s.</string>
@@ -3332,6 +3524,7 @@ Language: zh_TW
     <string name="comments_empty_list_filtered_pending">無待審核的迴響</string>
     <string name="comments_empty_list_filtered_approved">沒有已核准的留言</string>
     <string name="button_skip">略過</string>
+    <string name="xmlrpc_missing_method_error">無法連結。伺服器缺少必要的 XML-RPC 方式。</string>
     <string name="alignment_center">置中</string>
     <string name="post_format_video">影片</string>
     <string name="post_format_status">狀態</string>
@@ -3391,6 +3584,7 @@ Language: zh_TW
     <string name="about_the_app">關於此應用程式</string>
     <string name="error_post_account_settings">無法儲存你的帳號設定</string>
     <string name="error_fetch_account_settings">無法擷取你的帳號設定</string>
+    <string name="error_fetch_my_profile">無法擷取你的個人檔案</string>
     <string name="site_settings_unknown_language_code_error">無法辨識語言代碼</string>
     <string name="site_settings_threading_dialog_description">允許留言以階層式嵌入留言串中。</string>
     <string name="site_settings_threading_dialog_header">留言串最多</string>
@@ -3578,6 +3772,9 @@ Language: zh_TW
     <string name="my_site_btn_blog_posts">文章</string>
     <string name="reader_label_new_posts_subtitle">點選以顯示</string>
     <string name="select_all">全部選取</string>
+    <string name="auth_required">再次登入以繼續操作。</string>
+    <string name="invalid_verification_code">驗證碼無效</string>
+    <string name="verification_code">驗證碼</string>
     <string name="language">語言</string>
     <string name="reader_empty_posts_request_failed">無法擷取文章</string>
     <string name="error_notification_open">無法開啟通知</string>
@@ -3641,6 +3838,7 @@ Language: zh_TW
     <string name="ssl_certificate_error">無效的 SSL 憑證</string>
     <string name="help">說明</string>
     <string name="username_or_password_incorrect">你輸入的使用者名稱或密碼不正確</string>
+    <string name="email_invalid">輸入有效的電子郵件地址</string>
     <string name="invalid_email_message">你的電子郵件地址無效</string>
     <string name="error_downloading_image">下載圖片時發生錯誤</string>
     <string name="error_load_comment">無法載入回應</string>
@@ -3664,12 +3862,14 @@ Language: zh_TW
     <string name="reader_toast_err_removing_tag">無法移除此標籤</string>
     <string name="reader_toast_err_adding_tag">無法新增此標籤</string>
     <string name="reader_title_applog">應用程式記錄檔</string>
+    <string name="fatal_db_error">建立應用程式資料庫時發生錯誤。請嘗試重新安裝應用程式。</string>
     <string name="error_refresh_media">目前無法重新整理媒體</string>
     <string name="wordpress_blog">WordPress 網誌</string>
     <string name="local_changes">本機變更</string>
     <string name="new_media">新媒體</string>
     <string name="new_post">新文章</string>
     <string name="notifications_empty_all">還沒有任何通知！</string>
+    <string name="http_authorization_required">需要授權</string>
     <string name="invalid_site_url_message">檢查輸入的網站 URL 是否有效</string>
     <string name="file_error_create">無法建立暫存檔進行媒體上傳。確認裝置上有足夠的可用空間。</string>
     <string name="category_name">類別名稱</string>
@@ -3714,6 +3914,7 @@ Language: zh_TW
     <string name="reader_likes_you_and_one">你和其他 1 人都說這個讚</string>
     <string name="pick_video">選取影片</string>
     <string name="pick_photo">選取照片</string>
+    <string name="sign_up_label">註冊</string>
     <string name="reader_toast_err_url_intent">無法開啟 %s</string>
     <string name="reader_toast_err_view_image">無法檢視圖片</string>
     <string name="reader_toast_err_share_intent">無法分享</string>
@@ -3756,6 +3957,8 @@ Language: zh_TW
     <string name="note_reply_successful">回覆已發佈</string>
     <string name="sign_in">登入</string>
     <string name="loading">正在載入…</string>
+    <string name="httppassword">HTTP 密碼</string>
+    <string name="httpuser">HTTP 使用者帳號</string>
     <string name="error_media_upload">上傳媒體時發生錯誤</string>
     <string name="incorrect_credentials">錯誤的使用者帳號或密碼。</string>
     <string name="log_in" a8c-src-lib="module:login">登入</string>
