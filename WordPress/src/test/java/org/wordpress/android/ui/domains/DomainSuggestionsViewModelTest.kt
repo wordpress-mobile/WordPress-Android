@@ -510,7 +510,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     fun `clicking select domain button for purchase calls cart creation use case and emits selected domain`() = test {
         mockResponses(productsResponse(), suggestionsResponse())
         whenever(createCartUseCase.execute(site, DUMMY_PRODUCT_ID, DUMMY_DOMAIN_NAME, true, false))
-            .thenReturn(CreateCartResult.Success)
+            .thenReturn(CreateCartResult.Success(testShoppingCart()))
 
         viewModel.start(site, DOMAIN_PURCHASE)
         viewModel.onDomainSuggestionSelected(dummySelectedDomainSuggestionItem)

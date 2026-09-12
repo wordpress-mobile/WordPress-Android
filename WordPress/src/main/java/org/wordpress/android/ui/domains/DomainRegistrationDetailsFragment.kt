@@ -26,21 +26,21 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.DomainRegistrationDetailsFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.ADDRESS_1
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.ADDRESS_2
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.CITY
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.COUNTRY_CODE
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.EMAIL
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.FIRST_NAME
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.LAST_NAME
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.ORGANIZATION
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.PHONE
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.POSTAL_CODE
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.STATE
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel.DomainContactFormModel
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel.DomainRegistrationDetailsUiState
+import org.wordpress.android.ui.domains.usecases.DomainContactField.ADDRESS_1
+import org.wordpress.android.ui.domains.usecases.DomainContactField.ADDRESS_2
+import org.wordpress.android.ui.domains.usecases.DomainContactField.CITY
+import org.wordpress.android.ui.domains.usecases.DomainContactField.COUNTRY_CODE
+import org.wordpress.android.ui.domains.usecases.DomainContactField.EMAIL
+import org.wordpress.android.ui.domains.usecases.DomainContactField.FIRST_NAME
+import org.wordpress.android.ui.domains.usecases.DomainContactField.LAST_NAME
+import org.wordpress.android.ui.domains.usecases.DomainContactField.ORGANIZATION
+import org.wordpress.android.ui.domains.usecases.DomainContactField.PHONE
+import org.wordpress.android.ui.domains.usecases.DomainContactField.POSTAL_CODE
+import org.wordpress.android.ui.domains.usecases.DomainContactField.STATE
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPUrlUtils
@@ -260,31 +260,27 @@ class DomainRegistrationDetailsFragment : Fragment() {
     ) {
         viewModel.formError.observe(viewLifecycleOwner,
             { error ->
-                var affectedInputFields: Array<TextInputEditText>? = null
-
-                when (error?.type) {
-                    FIRST_NAME -> affectedInputFields = arrayOf(firstNameInput)
-                    LAST_NAME -> affectedInputFields = arrayOf(lastNameInput)
-                    ORGANIZATION -> affectedInputFields = arrayOf(organizationInput)
-                    ADDRESS_1 -> affectedInputFields = arrayOf(addressFirstLineInput)
-                    ADDRESS_2 -> affectedInputFields = arrayOf(addressSecondLineInput)
-                    POSTAL_CODE -> affectedInputFields = arrayOf(postalCodeInput)
-                    CITY -> affectedInputFields = arrayOf(cityInput)
-                    STATE -> affectedInputFields = arrayOf(stateInput)
-                    COUNTRY_CODE -> affectedInputFields = arrayOf(countryInput)
-                    EMAIL -> affectedInputFields = arrayOf(emailInput)
-                    PHONE -> affectedInputFields = arrayOf(
+                val affectedInputFields: Array<TextInputEditText> = when (error.field) {
+                    FIRST_NAME -> arrayOf(firstNameInput)
+                    LAST_NAME -> arrayOf(lastNameInput)
+                    ORGANIZATION -> arrayOf(organizationInput)
+                    ADDRESS_1 -> arrayOf(addressFirstLineInput)
+                    ADDRESS_2 -> arrayOf(addressSecondLineInput)
+                    POSTAL_CODE -> arrayOf(postalCodeInput)
+                    CITY -> arrayOf(cityInput)
+                    STATE -> arrayOf(stateInput)
+                    COUNTRY_CODE -> arrayOf(countryInput)
+                    EMAIL -> arrayOf(emailInput)
+                    PHONE -> arrayOf(
                         countryCodeInput,
                         phoneNumberInput
                     )
-                    else -> {
-                    } // Something else, will just show a Toast with an error message
                 }
-                affectedInputFields?.forEach {
+                affectedInputFields.forEach {
                     @Suppress("DEPRECATION")
-                    showFieldError(it, StringEscapeUtils.unescapeHtml4(error?.message))
+                    showFieldError(it, StringEscapeUtils.unescapeHtml4(error.message))
                 }
-                affectedInputFields?.firstOrNull { it.requestFocus() }
+                affectedInputFields.firstOrNull { it.requestFocus() }
             })
     }
 
