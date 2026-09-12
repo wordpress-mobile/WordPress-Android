@@ -293,7 +293,8 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
 
     private suspend fun designatePrimaryDomain() {
         val result = designatePrimaryDomainUseCase.execute(site, domainProductDetails.domainName)
-        if (result is DesignatePrimaryDomainResult.Error) { // in case of error we notify used and proceed to next step
+        // A failed designation is reported to the customer, but the registration carries on
+        if (result is DesignatePrimaryDomainResult.Error) {
             showError(result.message, result.isDeviceOffline)
             AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while designating the primary domain")
         }
