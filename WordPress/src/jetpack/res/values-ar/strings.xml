@@ -29,5 +29,7 @@ Language: ar
     <string name="sign_out_wpcom_confirm_with_no_changes">تسجيل الخروج من WordPress.com؟</string>
     <string name="me_disconnect_from_wordpress_com">تسجيل الخروج من WordPress.com</string>
     <string name="support_ticket_subject">دعم Jetpack الخاص بنظام تشغيل Android</string>
+    <string name="login_magic_links_sent_label">تحقَّق من بريدك الإلكتروني على هذا الجهاز، واضغط على الرابط في رسالة البريد الإلكتروني التي تلقيتها من Jetpack.com.</string>
     <string name="continue_with_wpcom_no_signup">الاستمرار في ووردبريس.كوم</string>
+    <string name="post_signup_interstitial_title">مرحبًا بك في Jetpack</string>
 </resources>
