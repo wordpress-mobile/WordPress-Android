@@ -29,7 +29,5 @@ Language: de
     <string name="sign_out_wpcom_confirm_with_no_changes">Bei WordPress.com abmelden?</string>
     <string name="me_disconnect_from_wordpress_com">Bei WordPress.com abmelden</string>
     <string name="support_ticket_subject">Support für Jetpack für Android</string>
-    <string name="login_magic_links_sent_label">Überprüfe deine E-Mails auf diesem Gerät und tippe auf den Link in der E-Mail, die du von Jetpack.com erhalten hast.</string>
     <string name="continue_with_wpcom_no_signup">Weiter mit WordPress.com</string>
-    <string name="post_signup_interstitial_title">Willkommen bei Jetpack</string>
 </resources>
