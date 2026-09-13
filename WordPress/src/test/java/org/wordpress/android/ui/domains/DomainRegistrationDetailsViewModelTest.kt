@@ -695,7 +695,8 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         verify(completedDomainRegistrationObserver, never()).onChanged(any())
 
         verify(errorMessageObserver).onChanged(purchaseUnconfirmedMessage)
-        verify(analyticsTracker).track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_FAILED)
+        verify(analyticsTracker).track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_UNCONFIRMED)
+        verify(analyticsTracker, never()).track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_FAILED)
 
         assertThat(uiStateResults.last().isRegistrationProgressIndicatorVisible).isEqualTo(false)
     }

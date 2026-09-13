@@ -57,10 +57,12 @@ class RedeemCartUseCase @Inject constructor(
                 if (result.response.success) {
                     RedeemCartResult.Success
                 } else {
+                    // The request succeeded, so the shared request error logger does not
+                    // see this one. The receipt id is what support can act on.
                     AppLog.e(
                         AppLog.T.API,
-                        "A shopping cart was charged for but ${result.response.failedPurchases.size} " +
-                                "of its sites had products that could not be provisioned"
+                        "Receipt ${result.response.receiptId} was charged for but some of " +
+                                "its products could not be provisioned"
                     )
                     RedeemCartResult.PartialFailure
                 }

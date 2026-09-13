@@ -283,7 +283,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                 )
             }
             is RedeemCartResult.ReceiptParsingError -> {
-                analyticsTracker.track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_FAILED)
+                analyticsTracker.track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_UNCONFIRMED)
                 _uiState.value = uiState.value?.copy(isRegistrationProgressIndicatorVisible = false)
                 _showErrorMessage.value = resourceProvider.getString(
                     R.string.domain_registration_purchase_unconfirmed,
