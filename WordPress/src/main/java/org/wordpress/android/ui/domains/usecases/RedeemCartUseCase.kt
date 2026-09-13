@@ -64,6 +64,13 @@ class RedeemCartUseCase @Inject constructor(
                     )
                     RedeemCartResult.PartialFailure
                 }
+            is WpRequestResult.ResponseParsingError -> {
+                AppLog.e(
+                    AppLog.T.API,
+                    "A shopping cart was charged for but its receipt could not be read"
+                )
+                RedeemCartResult.ReceiptParsingError
+            }
             else -> {
                 AppLog.e(
                     AppLog.T.API,
@@ -101,6 +108,12 @@ sealed interface RedeemCartResult {
      * product in the cart could not be provisioned.
      */
     data object PartialFailure : RedeemCartResult
+
+    /**
+     * The transaction was charged and the receipt could not be read, so whether
+     * the cart was provisioned is unknown.
+     */
+    data object ReceiptParsingError : RedeemCartResult
 
     data class Error(
         val field: DomainContactField? = null,

@@ -282,6 +282,18 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                     "The domain was paid for but could not be registered"
                 )
             }
+            is RedeemCartResult.ReceiptParsingError -> {
+                analyticsTracker.track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_FAILED)
+                _uiState.value = uiState.value?.copy(isRegistrationProgressIndicatorVisible = false)
+                _showErrorMessage.value = resourceProvider.getString(
+                    R.string.domain_registration_purchase_unconfirmed,
+                    domainProductDetails.domainName
+                )
+                AppLog.e(
+                    T.DOMAIN_REGISTRATION,
+                    "The purchase was charged for but its receipt could not be read"
+                )
+            }
             is RedeemCartResult.Success -> {
                 // after cart is redeemed, wait for a bit before manually setting domain as primary
                 delay(SITE_CHECK_DELAY_MS)

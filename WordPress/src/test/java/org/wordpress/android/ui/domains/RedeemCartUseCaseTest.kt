@@ -92,6 +92,23 @@ class RedeemCartUseCaseTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given the receipt cannot be read, when execute, says the charge is unconfirmed`() = test {
+        whenever(wpComApiClient.request<Any>(any()))
+            .thenReturn(
+                WpRequestResult.ResponseParsingError<Any>(
+                    "invalid type: string, expected u64",
+                    "",
+                    "",
+                    RequestMethod.POST,
+                )
+            )
+
+        val result = useCase.execute(cart, contact)
+
+        assertThat(result).isEqualTo(RedeemCartResult.ReceiptParsingError)
+    }
+
+    @Test
     fun `given the request fails, when execute, returns error carrying no field or message`() = test {
         whenever(wpComApiClient.request<Any>(any()))
             .thenReturn(

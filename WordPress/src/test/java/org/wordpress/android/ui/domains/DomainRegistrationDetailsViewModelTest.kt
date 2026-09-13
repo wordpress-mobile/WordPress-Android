@@ -54,6 +54,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
+@Suppress("LargeClass")
 class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var siteStore: SiteStore
@@ -164,6 +165,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     private val siteChangedError = SiteError(SiteErrorType.GENERIC_ERROR, "Error fetching site")
     private val primaryDomainErrorMessage = "Error designating primary domain"
     private val purchaseIncompleteMessage = "Your domain credit was used, but it could not be registered"
+    private val purchaseUnconfirmedMessage = "Your domain credit was used, but we could not confirm the result"
     private val domainContactInformationFetchErrorMessage = "Error fetching domain contact information"
     private val domainSupportedStatesFetchErrorMessage = "Error fetching domain supported states"
     private val fetchSupportedCountriesErrorMessage = "Error fetching countries"
@@ -672,6 +674,27 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         verify(completedDomainRegistrationObserver, never()).onChanged(any())
 
         verify(errorMessageObserver).onChanged(purchaseIncompleteMessage)
+        verify(analyticsTracker).track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_FAILED)
+
+        assertThat(uiStateResults.last().isRegistrationProgressIndicatorVisible).isEqualTo(false)
+    }
+
+    @Test
+    fun `a charged purchase with an unreadable receipt stops the flow and says so`() = test {
+        whenever(resourceProvider.getString(R.string.domain_registration_purchase_unconfirmed, testDomainName))
+            .thenReturn(purchaseUnconfirmedMessage)
+        whenever(redeemCartUseCase.execute(any(), any())).thenReturn(RedeemCartResult.ReceiptParsingError)
+
+        viewModel.start(site, domainProductDetails)
+        clearPreLoadUiStateResult()
+
+        viewModel.onRegisterDomainButtonClicked()
+
+        verifyNoInteractions(designatePrimaryDomainUseCase)
+        verify(dispatcher, never()).dispatch(any())
+        verify(completedDomainRegistrationObserver, never()).onChanged(any())
+
+        verify(errorMessageObserver).onChanged(purchaseUnconfirmedMessage)
         verify(analyticsTracker).track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_FAILED)
 
         assertThat(uiStateResults.last().isRegistrationProgressIndicatorVisible).isEqualTo(false)
