@@ -12,9 +12,9 @@ internal fun WpRequestResult<*>.apiErrorMessage(): String? =
     (this as? WpRequestResult.WpError)?.errorMessage
 
 /**
- * The code WordPress.com sent with a refusal, for the endpoints that define
- * codes of their own. Codes the WordPress REST API also uses are modelled as
- * [WpErrorCode] variants and come back null here.
+ * The code WordPress.com sent with a refusal, when wordpress-rs did not match it
+ * to a [WpErrorCode] variant. Null when it did, and null for a failure that
+ * carries no code.
  */
 internal fun WpRequestResult<*>.apiErrorCode(): String? =
     ((this as? WpRequestResult.WpError)?.errorCode as? WpErrorCode.CustomException)?.v1

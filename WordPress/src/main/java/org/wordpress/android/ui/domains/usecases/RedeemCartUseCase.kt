@@ -82,9 +82,7 @@ class RedeemCartUseCase @Inject constructor(
 /**
  * The redeem request body.
  *
- * [cart] is handed back whole rather than rebuilt from its parts. The server
- * reads the tax location out of it and has no fallback, so a cart that lost
- * fields on the way is taxed differently from the one the customer was quoted.
+ * [cart] is handed back whole rather than rebuilt from its parts.
  */
 internal fun redeemCartParams(
     cart: ShoppingCart,
@@ -100,8 +98,7 @@ sealed interface RedeemCartResult {
 
     /**
      * The transaction was charged and a receipt exists, but at least one
-     * product in the cart could not be provisioned. A rejection that costs the
-     * customer nothing arrives as an [Error] instead.
+     * product in the cart could not be provisioned.
      */
     data object PartialFailure : RedeemCartResult
 
@@ -115,9 +112,8 @@ sealed interface RedeemCartResult {
 /**
  * A contact field the server rejected, so the form can mark it.
  *
- * A validation failure comes back as an error code naming the offending field.
- * Codes that name nothing on this form — `fax`, `insufficient_funds` — have no
- * entry here, and the screen reports those through the message alone.
+ * Not every error code names a field this form shows. Those have no entry here
+ * and are reported through the message alone.
  */
 enum class DomainContactField(val apiErrorCode: String) {
     FIRST_NAME("first_name"),

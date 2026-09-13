@@ -32,10 +32,6 @@ class DesignatePrimaryDomainUseCase @Inject constructor(
 
     /**
      * Makes [domain] the address [site] answers to.
-     *
-     * The response carries a `success` flag the server hardcodes to true, so a
-     * refusal — no paid plan, a domain that is not active, one the account does
-     * not own — arrives as an HTTP error instead.
      */
     suspend fun execute(site: SiteModel, domain: String): DesignatePrimaryDomainResult {
         val client = getOrCreateClient() ?: run {
