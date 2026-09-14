@@ -154,8 +154,13 @@ class DashboardCardsViewModelSlice @Inject constructor(
         // is shown or not, if the personalize card is not shown, then it means that
         // we are not showing dashboard at all
         personalizeCard?.let { personalize ->
-            noCardsMessageViewModelSlice.buildNoCardsMessage(cards)?.let { noCardsMessage ->
-                cards.add(noCardsMessage)
+            // the dashboard cards arrive one slice at a time, so an empty list here means "not
+            // loaded yet" as often as it means "nothing to show" - only claim the latter once the
+            // cards have actually finished building, otherwise the message flashes on every launch
+            if (!cardViewModelSlice.isBuildingCards) {
+                noCardsMessageViewModelSlice.buildNoCardsMessage(cards)?.let { noCardsMessage ->
+                    cards.add(noCardsMessage)
+                }
             }
             cards.add(personalize)
         }

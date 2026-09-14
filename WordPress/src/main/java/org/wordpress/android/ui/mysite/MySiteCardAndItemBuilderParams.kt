@@ -96,7 +96,12 @@ sealed class MySiteCardAndItemBuilderParams {
         val scanAvailable: Boolean = false,
         val enableFocusPoints: Boolean = false,
         val onClick: (ListItemAction) -> Unit,
-        val isBlazeEligible: Boolean = false
+        val isBlazeEligible: Boolean = false,
+        /**
+         * Items gated on a site capability probe, which can take seconds on a cold start. Callers
+         * that need a list quickly can leave these out and build again once the probe has landed.
+         */
+        val includeCapabilityGatedItems: Boolean = true
     ) : MySiteCardAndItemBuilderParams()
 
     data class BloggingPromptCardBuilderParams(

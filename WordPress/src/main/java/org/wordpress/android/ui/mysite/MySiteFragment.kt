@@ -13,9 +13,13 @@ import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropActivity
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.MySiteFragmentBinding
@@ -130,6 +134,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
     private var binding: MySiteFragmentBinding? = null
+    private var settleJob: Job? = null
+    private var settleDeadline = 0L
+    private var hasPaintedContent = false
     private var siteTitle: String? = null
     private var pendingApplicationPasswordSite: SiteModel? = null
     private var pendingApplicationPasswordUrl: String? = null
@@ -195,6 +202,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     override fun onDestroyView() {
         super.onDestroyView()
+        settleJob?.cancel()
+        settleJob = null
+        settleDeadline = 0L
+        hasPaintedContent = false
         binding = null
     }
 
@@ -358,8 +369,12 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun MySiteFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner) { uiModel ->
             when (uiModel) {
-                is State.SiteSelected -> loadData(uiModel)
-                is State.NoSites -> loadEmptyView(uiModel)
+                is State.SiteSelected -> loadDataWhenSettled(uiModel)
+                is State.NoSites -> {
+                    settleJob?.cancel()
+                    settleDeadline = 0L
+                    loadEmptyView(uiModel)
+                }
             }
         }
         viewModel.onBasicDialogShown.observeEvent(viewLifecycleOwner) { model ->
@@ -491,6 +506,30 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 resources.getString(R.string.my_site_blogging_prompt_card_share_chooser_title)
             )
         )
+    }
+
+    /**
+     * The dashboard is assembled from a dozen or so independent sources that report at their own
+     * pace, so rendering each state as it arrives makes the screen build itself in front of the
+     * user. Paint the first state straight away - that gets the site header up - then hold later
+     * states until they stop arriving for [SETTLE_QUIET_MS], or [SETTLE_MAX_MS] has passed, so the
+     * cards land together instead of one at a time.
+     */
+    private fun MySiteFragmentBinding.loadDataWhenSettled(state: State.SiteSelected) {
+        if (!hasPaintedContent) {
+            hasPaintedContent = true
+            loadData(state)
+            return
+        }
+        val now = System.currentTimeMillis()
+        if (settleDeadline == 0L) settleDeadline = now + SETTLE_MAX_MS
+        val delayMs = minOf(SETTLE_QUIET_MS, settleDeadline - now).coerceAtLeast(0)
+        settleJob?.cancel()
+        settleJob = viewLifecycleOwner.lifecycleScope.launch {
+            delay(delayMs)
+            settleDeadline = 0L
+            loadData(state)
+        }
     }
 
     private fun MySiteFragmentBinding.loadData(state: State.SiteSelected) {
@@ -821,6 +860,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         var TAG: String = MySiteFragment::class.java.simpleName
         private const val KEY_LIST_STATE = "key_list_state"
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
+        private const val SETTLE_QUIET_MS = 400L
+        private const val SETTLE_MAX_MS = 1200L
         fun newInstance(): MySiteFragment {
             return MySiteFragment()
         }

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -56,32 +57,45 @@ class QuickLinksItemViewModelSlice @Inject constructor(
     private val _uiState = MutableLiveData<MySiteCardAndItem.Card.QuickLinksItem?>()
     val uiState: LiveData<MySiteCardAndItem.Card.QuickLinksItem?> = _uiState
 
+    private var buildJob: Job? = null
+    private var capabilitiesJob: Job? = null
+
     fun buildCard(siteModel: SiteModel) {
         buildQuickLinks(siteModel)
     }
 
     private fun buildQuickLinks(site: SiteModel) {
-        scope.launch {
-            _uiState.postValue(
-                convertToQuickLinkRibbonItem(
-                    site,
-                    siteItemsBuilder.build(
-                        MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
-                            site = site,
-                            enableFocusPoints = false,
-                            onClick = this@QuickLinksItemViewModelSlice::onClick,
-                            isBlazeEligible = isSiteBlazeEligible(site),
-                            backupAvailable = true,
-                            scanAvailable = (!site.isWPCom && !site.isWPComAtomic)
-                        )
-                    ),
-                )
-            )
+        // This builds the whole site items list just to filter it down to the ribbon, so keep it off
+        // the main thread. Build it twice: the full list waits on a site capability probe that can
+        // take a couple of seconds on a cold start, and the ribbon sits directly under the header,
+        // so blocking on that probe lands it late and shoves the rest of the list down. Post what is
+        // ready first, then post again once the probe has landed - the ribbon is a fixed height row,
+        // so refining its contents in place doesn't move anything.
+        buildJob?.cancel()
+        buildJob = scope.launch(bgDispatcher) {
+            postQuickLinks(site, includeCapabilityGatedItems = false)
+            postQuickLinks(site, includeCapabilityGatedItems = true)
         }
     }
 
+    private suspend fun postQuickLinks(site: SiteModel, includeCapabilityGatedItems: Boolean) {
+        val items = siteItemsBuilder.build(
+            MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
+                site = site,
+                enableFocusPoints = false,
+                onClick = this@QuickLinksItemViewModelSlice::onClick,
+                isBlazeEligible = isSiteBlazeEligible(site),
+                backupAvailable = true,
+                scanAvailable = (!site.isWPCom && !site.isWPComAtomic),
+                includeCapabilityGatedItems = includeCapabilityGatedItems
+            )
+        )
+        _uiState.postValue(convertToQuickLinkRibbonItem(site, items))
+    }
+
     private fun fetchCapabilities(site: SiteModel) {
-        scope.launch(bgDispatcher) {
+        capabilitiesJob?.cancel()
+        capabilitiesJob = scope.launch(bgDispatcher) {
             jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId).collect {
                 _uiState.postValue(
                     convertToQuickLinkRibbonItem(

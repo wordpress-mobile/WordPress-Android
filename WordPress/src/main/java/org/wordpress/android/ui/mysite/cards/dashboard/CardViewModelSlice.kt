@@ -62,6 +62,14 @@ class CardViewModelSlice @Inject constructor(
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
+    /**
+     * True between the first [buildCard] for a site and the moment its cards have been built, so
+     * callers can tell "the dashboard has no cards" apart from "the dashboard hasn't loaded yet".
+     */
+    @Volatile
+    var isBuildingCards = false
+        private set
+
     val uiModel: MutableLiveData<CardsState> = merge(
         dynamicCardsViewModelSlice.topDynamicCards,
         todaysStatsViewModelSlice.uiModel,
@@ -126,6 +134,7 @@ class CardViewModelSlice @Inject constructor(
         siteModel: SiteModel
     ) {
         _isRefreshing.postValue(true)
+        isBuildingCards = true
         // fetch data from store and then refresh the data from the server
         collectJob?.cancel()
         collectJob = scope.launch(bgDispatcher) {
@@ -157,6 +166,7 @@ class CardViewModelSlice @Inject constructor(
                 osVersion = buildConfigWrapper.androidVersion
             )
             val result = cardsStore.fetchCards(payload)
+            isBuildingCards = false
             val error = result.error
             when {
                 error != null -> postErrorState()
@@ -235,7 +245,6 @@ class CardViewModelSlice @Inject constructor(
                 cards.firstOrNull { it is CardModel.DynamicCardsModel } as? CardModel.DynamicCardsModel
             )
 
-
             todaysStatsViewModelSlice.buildTodaysStatsCard(
                 cards.firstOrNull { it is CardModel.TodaysStatsCardModel } as? CardModel.TodaysStatsCardModel
             )
@@ -255,10 +264,12 @@ class CardViewModelSlice @Inject constructor(
             dynamicCardsViewModelSlice.buildBottomDynamicCards(
                 cards.firstOrNull { it is CardModel.DynamicCardsModel } as? CardModel.DynamicCardsModel
             )
+            isBuildingCards = false
         }
     }
 
     fun clearValue() {
+        isBuildingCards = false
         uiModel.postValue(CardsState.Success(emptyList(), emptyList(), emptyList()))
         collectJob?.cancel()
         fetchJob?.cancel()

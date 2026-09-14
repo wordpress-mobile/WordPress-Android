@@ -8,6 +8,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -84,9 +85,10 @@ class QuickLinksItemViewModelSliceTest : BaseUnitTest() {
 
         viewModelSlice.buildCard(site)
 
-        verify(appPrefsWrapper).getShouldShowDefaultQuickLink(MEDIA.toString(), SITE_ID)
+        // the card is built twice - once without the capability gated items, then again with them
+        verify(appPrefsWrapper, atLeastOnce()).getShouldShowDefaultQuickLink(MEDIA.toString(), SITE_ID)
         verify(appPrefsWrapper, never()).getShouldShowSiteItemAsQuickLink(MEDIA.toString(), SITE_ID)
-        verify(appPrefsWrapper).getShouldShowSiteItemAsQuickLink(COMMENTS.toString(), SITE_ID)
+        verify(appPrefsWrapper, atLeastOnce()).getShouldShowSiteItemAsQuickLink(COMMENTS.toString(), SITE_ID)
         verify(appPrefsWrapper, never()).getShouldShowDefaultQuickLink(COMMENTS.toString(), SITE_ID)
     }
 
