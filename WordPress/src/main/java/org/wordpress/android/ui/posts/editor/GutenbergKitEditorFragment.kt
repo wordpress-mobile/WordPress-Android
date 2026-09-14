@@ -437,6 +437,16 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
                     result[0] = Pair(title, content)
                     latch.countDown()
                 }
+
+                override fun onError(error: Throwable) {
+                    // Logs only the type: a parse failure's message can quote post content.
+                    AppLog.w(
+                        AppLog.T.EDITOR,
+                        "Unable to read title and content from Gutenberg editor: " +
+                            error::class.java.simpleName
+                    )
+                    latch.countDown()
+                }
             },
             completeComposition
         )
