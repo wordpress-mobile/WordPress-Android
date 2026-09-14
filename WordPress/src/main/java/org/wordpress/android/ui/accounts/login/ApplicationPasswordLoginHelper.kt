@@ -25,10 +25,7 @@ import org.wordpress.android.util.crashlogging.sendReportWithTag
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.DiscoveredAuthenticationMechanism
-import uniffi.wp_api.AutoDiscoveryAttemptFailure
-import uniffi.wp_api.FetchAndParseApiRootFailure
 import uniffi.wp_api.KnownAuthenticationBlockingPlugin
-import uniffi.wp_api.WpErrorCode
 import uniffi.wp_api.applicationPasswordsUrl
 import uniffi.wp_api.localizedDescription
 import java.net.URI
@@ -153,7 +150,8 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     }
                 }
 
-                is ApiDiscoveryResult.Failure ->
+                is ApiDiscoveryResult.Failure -> {
+                    val failure = urlDiscoveryResult.failure.toDiscoveryFailure()
                     handleAuthenticationDiscoveryError(
                         siteUrl = siteUrl,
                         source = source,
@@ -162,31 +160,24 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                         // login screen, so the raw Throwable message (an internal debug dump of the
                         // discovery attempt) must not be used here.
                         message = urlDiscoveryResult.failure.localizedDescription(),
-                        reason = urlDiscoveryResult.failureReason(),
-                        failure = urlDiscoveryResult.failure.toDiscoveryFailure(),
+                        reason = failure.toFailureReason(),
+                        failure = failure,
                     )
+                }
             }
         }
 
     /**
-     * Recognise causes worth naming to the user. A [FetchAndParseApiRootFailure.WpError] means we
-     * reached the site and it answered with a REST error envelope, so its `code` is a reliable
-     * signal — WordPress.com sends `private_site` from a site whose Privacy setting hides it.
+     * Recognise causes worth naming to the user. The REST error code is only present when we reached
+     * the site and it answered with an error envelope, so it's a reliable signal — WordPress.com
+     * sends `private_site` from a site whose Privacy setting hides it.
      */
-    private fun ApiDiscoveryResult.failureReason(): DiscoveryResult.FailureReason {
-        val wpError = ((this as? ApiDiscoveryResult.Failure)?.failure
-            as? AutoDiscoveryAttemptFailure.FetchAndParseApiRoot)
-            ?.fetchAndParseApiRootFailure as? FetchAndParseApiRootFailure.WpError
-            ?: return DiscoveryResult.FailureReason.Unknown
-        // `private_site` has no dedicated WpErrorCode, so the library surfaces it as a CustomException
-        // carrying the raw code string.
-        val rawCode = (wpError.errorCode as? WpErrorCode.CustomException)?.v1
-        return if (rawCode == PRIVATE_SITE_ERROR_CODE) {
+    private fun DiscoveryFailure.toFailureReason() =
+        if (details[ERROR_CODE_TAG] == PRIVATE_SITE_ERROR_CODE) {
             DiscoveryResult.FailureReason.PrivateSite
         } else {
             DiscoveryResult.FailureReason.Unknown
         }
-    }
 
     private fun trackDiscoverySuccessful(siteUrl: String, source: DiscoverySource, isWpCom: Boolean) {
         analyticsTracker.track(
