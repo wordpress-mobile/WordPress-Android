@@ -275,6 +275,12 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             )
         }
 
+        // A crashed editor can't be read, so saves skip it instead of waiting on a read
+        // that fails. Readiness returns when a reloaded editor becomes available.
+        gutenbergView.setEditorDidBecomeUnavailable {
+            editorReady = false
+        }
+
         this.gutenbergView = gutenbergView
 
         return rootView
