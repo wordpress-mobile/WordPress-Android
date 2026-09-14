@@ -14,6 +14,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropActivity
@@ -319,9 +320,17 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
 
         recyclerView.layoutManager = layoutManager
-        // the dashboard is assembled from many independent sources, so the list is submitted several
-        // times while it loads - animating those partial submits is what makes the screen look jumpy
-        recyclerView.itemAnimator = null
+        // The dashboard's slowest sources - Blaze especially, which has no cache to read - can land a
+        // second or two after the rest, so let a late card fade in while the list slides to make room
+        // rather than having it appear from nowhere. This is only affordable because the list now
+        // settles into a handful of submissions; animating the dozen-plus partial ones it used to
+        // make was what looked jumpy. Change animations stay off - cards that refine in place, like
+        // quick links picking up backup and scan, would cross-fade and read as a flicker.
+        recyclerView.itemAnimator = DefaultItemAnimator().apply {
+            supportsChangeAnimations = false
+            addDuration = CARD_SETTLE_ANIM_MS
+            moveDuration = CARD_SETTLE_ANIM_MS
+        }
         recyclerView.setHasFixedSize(true)
         recyclerView.addItemDecoration(
             MySiteCardAndItemDecoration(
@@ -871,6 +880,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
         private const val SETTLE_QUIET_MS = 400L
         private const val SETTLE_MAX_MS = 1200L
+
+        // the fade and the slide share a duration so a late card finishes appearing exactly as the
+        // list finishes making room for it
+        private const val CARD_SETTLE_ANIM_MS = 250L
         fun newInstance(): MySiteFragment {
             return MySiteFragment()
         }
