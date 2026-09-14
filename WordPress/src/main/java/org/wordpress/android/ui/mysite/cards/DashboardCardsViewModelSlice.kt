@@ -180,6 +180,9 @@ class DashboardCardsViewModelSlice @Inject constructor(
     }
 
     fun buildCards(site: SiteModel) {
+        // synchronously, before the coroutine below - slices that report early (personalize) would
+        // otherwise let the merge run while the cards still read as loaded rather than loading
+        cardViewModelSlice.markCardsBuilding()
         job?.cancel()
         job = scope.launch(bgDispatcher) {
             jetpackInstallFullPluginCardViewModelSlice.buildCard(site)

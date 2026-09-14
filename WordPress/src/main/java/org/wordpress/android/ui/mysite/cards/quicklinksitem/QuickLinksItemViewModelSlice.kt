@@ -73,12 +73,16 @@ class QuickLinksItemViewModelSlice @Inject constructor(
         // so refining its contents in place doesn't move anything.
         buildJob?.cancel()
         buildJob = scope.launch(bgDispatcher) {
-            postQuickLinks(site, includeCapabilityGatedItems = false)
-            postQuickLinks(site, includeCapabilityGatedItems = true)
+            postQuickLinks(site, includeCapabilityGatedItems = false, triggerCapabilityFetch = true)
+            postQuickLinks(site, includeCapabilityGatedItems = true, triggerCapabilityFetch = false)
         }
     }
 
-    private suspend fun postQuickLinks(site: SiteModel, includeCapabilityGatedItems: Boolean) {
+    private suspend fun postQuickLinks(
+        site: SiteModel,
+        includeCapabilityGatedItems: Boolean,
+        triggerCapabilityFetch: Boolean
+    ) {
         val items = siteItemsBuilder.build(
             MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
                 site = site,
@@ -90,7 +94,11 @@ class QuickLinksItemViewModelSlice @Inject constructor(
                 includeCapabilityGatedItems = includeCapabilityGatedItems
             )
         )
-        _uiState.postValue(convertToQuickLinkRibbonItem(site, items))
+        // only the first pass may kick off the backup/scan fetch - letting the second pass re-enter
+        // it would cancel the in flight job and re-dispatch the request
+        _uiState.postValue(
+            convertToQuickLinkRibbonItem(site, items, capabilitiesFetched = !triggerCapabilityFetch)
+        )
     }
 
     private fun fetchCapabilities(site: SiteModel) {
@@ -205,6 +213,9 @@ class QuickLinksItemViewModelSlice @Inject constructor(
     }
 
     fun clearValue() {
+        // both capture the outgoing site, so leaving them running lets its ribbon land on the next one
+        buildJob?.cancel()
+        capabilitiesJob?.cancel()
         _uiState.postValue(null)
     }
 }

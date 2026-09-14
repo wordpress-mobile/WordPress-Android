@@ -371,8 +371,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             when (uiModel) {
                 is State.SiteSelected -> loadDataWhenSettled(uiModel)
                 is State.NoSites -> {
-                    settleJob?.cancel()
-                    settleDeadline = 0L
+                    restartSettling()
                     loadEmptyView(uiModel)
                 }
             }
@@ -431,6 +430,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
 
         viewModel.onScrollTo.observeEvent(viewLifecycleOwner) {
+            // a site change rebuilds the whole dashboard, so settle that load like the first one
+            restartSettling()
             var quickStartScrollPosition = it
             if (quickStartScrollPosition == -1) {
                 quickStartScrollPosition = 0
@@ -514,6 +515,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
      * user. Paint the first state straight away - that gets the site header up - then hold later
      * states until they stop arriving for [SETTLE_QUIET_MS], or [SETTLE_MAX_MS] has passed, so the
      * cards land together instead of one at a time.
+     *
+     * A site change starts the whole assembly over, so [restartSettling] re-arms the immediate first
+     * paint for it. An isolated later change - a card the user just hid, say - waits out the quiet
+     * period only, since nothing else is arriving to extend it.
      */
     private fun MySiteFragmentBinding.loadDataWhenSettled(state: State.SiteSelected) {
         if (!hasPaintedContent) {
@@ -530,6 +535,13 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             settleDeadline = 0L
             loadData(state)
         }
+    }
+
+    private fun restartSettling() {
+        settleJob?.cancel()
+        settleJob = null
+        settleDeadline = 0L
+        hasPaintedContent = false
     }
 
     private fun MySiteFragmentBinding.loadData(state: State.SiteSelected) {

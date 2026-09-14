@@ -63,12 +63,15 @@ class CardViewModelSlice @Inject constructor(
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
     /**
-     * True between the first [buildCard] for a site and the moment its cards have been built, so
-     * callers can tell "the dashboard has no cards" apart from "the dashboard hasn't loaded yet".
+     * True between [markCardsBuilding] and the moment the cards have actually been built, so callers
+     * can tell "the dashboard has no cards" apart from "the dashboard hasn't loaded yet".
      */
     @Volatile
     var isBuildingCards = false
         private set
+
+    @Volatile
+    private var hasFetchedCards = false
 
     val uiModel: MutableLiveData<CardsState> = merge(
         dynamicCardsViewModelSlice.topDynamicCards,
@@ -130,11 +133,28 @@ class CardViewModelSlice @Inject constructor(
         this.scope = scope
     }
 
+    /**
+     * Marks the dashboard as loading. Must be called before any card slice starts posting, otherwise
+     * a slice that reports early (personalize) lets the merge run while this still reads false.
+     */
+    fun markCardsBuilding() {
+        isBuildingCards = true
+        hasFetchedCards = false
+    }
+
+    private fun finishBuildingCards() {
+        if (!isBuildingCards) return
+        isBuildingCards = false
+        // the flag isn't observable, so re-post the current state to make the merge run again now
+        // that "loading" has become "loaded" - otherwise nothing renders the no cards message until
+        // some unrelated slice happens to emit
+        uiModel.postValue(uiModel.value ?: CardsState.Success(emptyList(), emptyList(), emptyList()))
+    }
+
     fun buildCard(
         siteModel: SiteModel
     ) {
         _isRefreshing.postValue(true)
-        isBuildingCards = true
         // fetch data from store and then refresh the data from the server
         collectJob?.cancel()
         collectJob = scope.launch(bgDispatcher) {
@@ -166,11 +186,19 @@ class CardViewModelSlice @Inject constructor(
                 osVersion = buildConfigWrapper.androidVersion
             )
             val result = cardsStore.fetchCards(payload)
-            isBuildingCards = false
+            hasFetchedCards = true
             val error = result.error
             when {
-                error != null -> postErrorState()
-                else -> _isRefreshing.postValue(false)
+                error != null -> {
+                    finishBuildingCards()
+                    postErrorState()
+                }
+                else -> {
+                    // when the fetch brings cards back, the store re-emits and the builder below
+                    // clears the flag once they exist - only give up here if there is nothing coming
+                    if (result.model.isNullOrEmpty()) finishBuildingCards()
+                    _isRefreshing.postValue(false)
+                }
             }
         }
     }
@@ -237,6 +265,8 @@ class CardViewModelSlice @Inject constructor(
     fun postState(cards: List<CardModel>?) {
         _isRefreshing.postValue(false)
         if (cards.isNullOrEmpty()) {
+            // an empty cache before the fetch lands is "not loaded yet", not "nothing to show"
+            if (hasFetchedCards) finishBuildingCards()
             uiModel.postValue(CardsState.Success(emptyList(), emptyList(), emptyList()))
             return
         }
@@ -264,12 +294,13 @@ class CardViewModelSlice @Inject constructor(
             dynamicCardsViewModelSlice.buildBottomDynamicCards(
                 cards.firstOrNull { it is CardModel.DynamicCardsModel } as? CardModel.DynamicCardsModel
             )
-            isBuildingCards = false
+            finishBuildingCards()
         }
     }
 
     fun clearValue() {
         isBuildingCards = false
+        hasFetchedCards = false
         uiModel.postValue(CardsState.Success(emptyList(), emptyList(), emptyList()))
         collectJob?.cancel()
         fetchJob?.cancel()
