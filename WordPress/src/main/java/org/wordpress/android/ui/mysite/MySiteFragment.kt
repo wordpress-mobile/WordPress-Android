@@ -202,10 +202,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     override fun onDestroyView() {
         super.onDestroyView()
-        settleJob?.cancel()
-        settleJob = null
-        settleDeadline = 0L
-        hasPaintedContent = false
+        restartSettling()
         binding = null
     }
 

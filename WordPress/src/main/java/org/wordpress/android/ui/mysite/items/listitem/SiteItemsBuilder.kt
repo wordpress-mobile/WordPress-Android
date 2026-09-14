@@ -122,9 +122,7 @@ class SiteItemsBuilder @Inject constructor(
             ) else emptyList()
 
         val menuItems = if (params.includeCapabilityGatedItems) {
-            listOfNotNull(
-                siteListItemBuilder.buildMenusItemIfAvailable(params.site, params.onClick),
-            )
+            listOfNotNull(siteListItemBuilder.buildMenusItemIfAvailable(params.site, params.onClick))
         } else emptyList()
 
         return themeItems + menuItems
