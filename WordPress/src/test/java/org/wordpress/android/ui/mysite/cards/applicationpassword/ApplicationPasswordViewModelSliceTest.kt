@@ -67,7 +67,10 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     }
 
     private suspend fun stubAuthorized() =
-        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(eq(TEST_URL), eq(DiscoverySource.MY_SITE_CARD)))
+        whenever(
+            applicationPasswordLoginHelper
+                .getAuthorizationUrlComplete(eq(TEST_URL), eq(DiscoverySource.MY_SITE_CARD))
+        )
             .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.Authorized(TEST_AUTH_URL))
 
     @Test
@@ -94,7 +97,10 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     @Test
     fun `given unprovisionable but discovery fails, then no card`() = test {
         stubReadiness(SiteReadiness.NeedsAuth(SiteAuthState.Unprovisionable(hadCredentials = false)))
-        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(eq(TEST_URL), eq(DiscoverySource.MY_SITE_CARD)))
+        whenever(
+            applicationPasswordLoginHelper
+                .getAuthorizationUrlComplete(eq(TEST_URL), eq(DiscoverySource.MY_SITE_CARD))
+        )
             .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.Failed("bad discovery"))
 
         slice.buildCard(siteTest)
@@ -159,7 +165,10 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
         // Discovery can't produce an authorization URL through the Privacy gate, so the re-auth card
         // can't be built. Hiding it leaves the user with broken credentials and no explanation at all.
         stubReadiness(SiteReadiness.NeedsAuth(SiteAuthState.Unprovisionable(hadCredentials = true)))
-        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(eq(TEST_URL), eq(DiscoverySource.MY_SITE_CARD)))
+        whenever(
+            applicationPasswordLoginHelper
+                .getAuthorizationUrlComplete(eq(TEST_URL), eq(DiscoverySource.MY_SITE_CARD))
+        )
             .thenReturn(
                 ApplicationPasswordLoginHelper.DiscoveryResult.Failed(
                     userFacingMessage = "Found a site but failed to read its API configuration.",
@@ -177,7 +186,10 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     fun `given discovery fails for any other reason, then the card stays hidden`() = test {
         // Only a private site is named; everything else still hides pending #22884.
         stubReadiness(SiteReadiness.NeedsAuth(SiteAuthState.Unprovisionable(hadCredentials = true)))
-        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(eq(TEST_URL), eq(DiscoverySource.MY_SITE_CARD)))
+        whenever(
+            applicationPasswordLoginHelper
+                .getAuthorizationUrlComplete(eq(TEST_URL), eq(DiscoverySource.MY_SITE_CARD))
+        )
             .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.Failed("connection reset"))
 
         slice.buildCard(siteTest)
