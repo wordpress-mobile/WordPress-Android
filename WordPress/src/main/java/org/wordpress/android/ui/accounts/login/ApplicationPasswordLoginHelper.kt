@@ -8,7 +8,6 @@ import org.wordpress.android.R
 import org.wordpress.android.util.DeviceUtils
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
@@ -21,24 +20,20 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPUrlUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.crashlogging.sendReportWithTag
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.DiscoveredAuthenticationMechanism
 import uniffi.wp_api.AutoDiscoveryAttemptFailure
 import uniffi.wp_api.FetchAndParseApiRootFailure
+import uniffi.wp_api.KnownAuthenticationBlockingPlugin
 import uniffi.wp_api.WpErrorCode
 import uniffi.wp_api.applicationPasswordsUrl
 import uniffi.wp_api.localizedDescription
 import java.net.URI
 import javax.inject.Inject
 import javax.inject.Named
-
-private const val URL_TAG = "url"
-private const val SUCCESS_TAG = "success"
-private const val REASON_TAG = "reason"
-private const val SOURCE_TAG = "source"
-private const val ERROR_TAG = "error"
 
 // WordPress.com returns this error code from the REST root of a site whose Privacy setting is
 // Private (or Coming Soon). The gate sits in front of WordPress, so discovery never reaches the
@@ -57,6 +52,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     private val discoverSuccessWrapper: DiscoverSuccessWrapper,
     private val crashLogging: CrashLogging,
     private val wpApiClientProvider: WpApiClientProvider,
+    private val analyticsTracker: AnalyticsTrackerWrapper,
 ) {
     private var processedAppPasswordData: String? = null
 
@@ -100,14 +96,22 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     }
 
     @Suppress("TooGenericExceptionCaught")
-    suspend fun getAuthorizationUrlComplete(siteUrl: String): DiscoveryResult =
+    suspend fun getAuthorizationUrlComplete(siteUrl: String, source: DiscoverySource): DiscoveryResult =
         try {
-            getAuthorizationUrlCompleteInternal(siteUrl)
+            getAuthorizationUrlCompleteInternal(siteUrl, source)
         } catch (throwable: Throwable) {
-            handleAuthenticationDiscoveryError(siteUrl, throwable.message ?: throwable::class.simpleName.orEmpty())
+            handleAuthenticationDiscoveryError(
+                siteUrl = siteUrl,
+                source = source,
+                message = throwable.message ?: throwable::class.simpleName.orEmpty(),
+                failure = throwable.toDiscoveryFailure(),
+            )
         }
 
-    private suspend fun getAuthorizationUrlCompleteInternal(siteUrl: String): DiscoveryResult =
+    private suspend fun getAuthorizationUrlCompleteInternal(
+        siteUrl: String,
+        source: DiscoverySource,
+    ): DiscoveryResult =
         withContext(bgDispatcher) {
             when (val urlDiscoveryResult = wpLoginClient.apiDiscovery(siteUrl)) {
                 is ApiDiscoveryResult.Success -> {
@@ -115,7 +119,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                         // WordPress.com sites report OAuth2 as the authentication mechanism; they
                         // can't use Application Passwords and must log in via WordPress.com.
                         appLogWrapper.d(AppLog.T.API, "A_P: $siteUrl is a WordPress.com site (OAuth2)")
-                        AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
+                        trackDiscoverySuccessful(siteUrl, source, isWpCom = true)
                         DiscoveryResult.WpComSite
                     } else {
                         val authorizationUrl =
@@ -124,9 +128,13 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                             // Discovery worked; the site just doesn't offer application passwords. This
                             // is the one case the old blanket "not supported" message was right about.
                             return@withContext handleAuthenticationDiscoveryError(
-                                siteUrl,
-                                "No application-passwords authentication URL advertised",
-                                DiscoveryResult.FailureReason.NotSupported,
+                                siteUrl = siteUrl,
+                                source = source,
+                                message = "No application-passwords authentication URL advertised",
+                                reason = DiscoveryResult.FailureReason.NotSupported,
+                                failure = noAuthenticationUrlFailure(
+                                    discoverSuccessWrapper.getBlockingPlugins(urlDiscoveryResult)
+                                ),
                             )
                         }
                         val apiRootUrl = discoverSuccessWrapper.getApiRootUrl(urlDiscoveryResult)
@@ -140,20 +148,22 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                             AppLog.T.API,
                             "A_P: Found authorization for $siteUrl URL: $authorizationUrlComplete " +
                                     "API_ROOT_URL $apiRootUrl")
-                        AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
+                        trackDiscoverySuccessful(siteUrl, source, isWpCom = false)
                         DiscoveryResult.Authorized(authorizationUrlComplete)
                     }
                 }
 
                 is ApiDiscoveryResult.Failure ->
                     handleAuthenticationDiscoveryError(
-                        siteUrl,
+                        siteUrl = siteUrl,
+                        source = source,
                         // 0.8.0 replaced userFacingErrorMessage() with localizedDescription(), which
                         // returns a translated sentence. This message is shown to the user on the
                         // login screen, so the raw Throwable message (an internal debug dump of the
                         // discovery attempt) must not be used here.
-                        urlDiscoveryResult.failure.localizedDescription(),
-                        urlDiscoveryResult.failureReason(),
+                        message = urlDiscoveryResult.failure.localizedDescription(),
+                        reason = urlDiscoveryResult.failureReason(),
+                        failure = urlDiscoveryResult.failure.toDiscoveryFailure(),
                     )
             }
         }
@@ -178,13 +188,39 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         }
     }
 
+    private fun trackDiscoverySuccessful(siteUrl: String, source: DiscoverySource, isWpCom: Boolean) {
+        analyticsTracker.track(
+            Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL,
+            mapOf(
+                URL_TAG to maskUrl(siteUrl),
+                SOURCE_TAG to source.value,
+                // WordPress.com sites are counted as successful discoveries even though they can't
+                // use Application Passwords. Without this they're fused with the genuine successes.
+                IS_WPCOM_TAG to isWpCom.toString(),
+            )
+        )
+    }
+
     private fun handleAuthenticationDiscoveryError(
         siteUrl: String,
+        source: DiscoverySource,
         message: String,
+        failure: DiscoveryFailure,
         reason: DiscoveryResult.FailureReason = DiscoveryResult.FailureReason.Unknown,
     ): DiscoveryResult {
-        appLogWrapper.e(AppLog.T.API, "A_P: Error during API discovery for $siteUrl - $message ($reason)")
-        AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
+        appLogWrapper.e(
+            AppLog.T.API,
+            "A_P: Error during API discovery for $siteUrl - $message ($reason, ${failure.reason})"
+        )
+        analyticsTracker.track(
+            Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED,
+            failure.props + mapOf(URL_TAG to maskUrl(siteUrl), SOURCE_TAG to source.value)
+        )
+        // A background card probe isn't a login attempt, so it must stay out of the login
+        // event's denominator — otherwise every re-probe of a broken site inflates the failures.
+        if (source != DiscoverySource.MY_SITE_CARD) {
+            trackLoginFailed(siteUrl, "discovery_${failure.reason}")
+        }
         return DiscoveryResult.Failed(message, reason)
     }
 
@@ -286,11 +322,14 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         val properties: MutableMap<String, String?> = HashMap()
         properties[URL_TAG] = maskUrl(siteUrl.orEmpty())
         properties[REASON_TAG] = reason
-        AnalyticsTracker.track(
+        analyticsTracker.track(
             Stat.APPLICATION_PASSWORD_STORING_FAILED,
             properties
         )
         trackCreated(creationSource, success = false, error = reason)
+        // Every post-callback failure funnels through here, so this is the one place that gives the
+        // login event a denominator. User cancellation included — it's an outcome, not a non-event.
+        trackLoginFailed(siteUrl, reason)
     }
 
     private fun trackCreated(
@@ -306,7 +345,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         if (!success && !error.isNullOrEmpty()) {
             properties[ERROR_TAG] = error
         }
-        AnalyticsTracker.track(
+        analyticsTracker.track(
             Stat.APPLICATION_PASSWORD_CREATED,
             properties
         )
@@ -359,18 +398,35 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     }
 
     private fun trackSuccessful(siteUrl: String) {
-        val properties: MutableMap<String, String?> = HashMap()
-        properties[URL_TAG] = maskUrl(siteUrl)
-        properties[SUCCESS_TAG] = "true"
-        AnalyticsTracker.track(
-            if (buildConfigWrapper.isJetpackApp) {
-                Stat.JP_ANDROID_APPLICATION_PASSWORD_LOGIN
-            } else {
-                Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN
-            },
-            properties
+        analyticsTracker.track(
+            applicationPasswordLoginStat(),
+            mapOf(
+                URL_TAG to maskUrl(siteUrl),
+                SUCCESS_TAG to true.toString(),
+            )
         )
         appLogWrapper.d(AppLog.T.DB, "A_P: Saved application password credentials for: $siteUrl")
+    }
+
+    /**
+     * The failure counterpart of [trackSuccessful]. Until this existed the login event only ever
+     * fired on success, so failures were invisible and successes had nothing to be a share of.
+     */
+    private fun trackLoginFailed(siteUrl: String?, error: String) {
+        analyticsTracker.track(
+            applicationPasswordLoginStat(),
+            mapOf(
+                URL_TAG to maskUrl(siteUrl.orEmpty()),
+                SUCCESS_TAG to false.toString(),
+                ERROR_TAG to error,
+            )
+        )
+    }
+
+    private fun applicationPasswordLoginStat() = if (buildConfigWrapper.isJetpackApp) {
+        Stat.JP_ANDROID_APPLICATION_PASSWORD_LOGIN
+    } else {
+        Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN
     }
 
     fun getSiteUrlLoginFromRawData(url: String): UriLogin {
@@ -513,5 +569,14 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         fun getApplicationPasswordsAuthenticationUrl(
             successObject: ApiDiscoveryResult.Success
         ): String? = applicationPasswordsUrl(successObject.success.authentication)?.url()
+
+        /**
+         * Plugins whose REST namespaces the site advertises and which are known to block Application
+         * Passwords. The matching lives in the library, so this is the same list iOS names.
+         */
+        fun getBlockingPlugins(
+            successObject: ApiDiscoveryResult.Success
+        ): List<KnownAuthenticationBlockingPlugin> =
+            successObject.success.apiDetails.applicationPasswordBlockingPlugins()
     }
 }

@@ -13,6 +13,7 @@ import org.wordpress.android.repositories.SiteAuthState
 import org.wordpress.android.repositories.SiteProvisioningSource
 import org.wordpress.android.repositories.SiteReadiness
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.accounts.login.DiscoverySource
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -111,7 +112,9 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     }
 
     private suspend fun buildReauthenticationBanner(site: SiteModel) {
-        when (val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(site.url)) {
+        val result = applicationPasswordLoginHelper
+            .getAuthorizationUrlComplete(site.url, DiscoverySource.MY_SITE_CARD)
+        when (result) {
             is ApplicationPasswordLoginHelper.DiscoveryResult.Authorized -> {
                 uiModelMutable.postValue(
                     MySiteCardAndItem.Item.SingleActionCard(
@@ -134,7 +137,9 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     }
 
     private suspend fun buildAuthenticationCard(site: SiteModel) {
-        when (val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(site.url)) {
+        val result = applicationPasswordLoginHelper
+            .getAuthorizationUrlComplete(site.url, DiscoverySource.MY_SITE_CARD)
+        when (result) {
             is ApplicationPasswordLoginHelper.DiscoveryResult.Authorized -> {
                 showApplicationPasswordCreateCard(site, result.authorizationUrl)
             }
