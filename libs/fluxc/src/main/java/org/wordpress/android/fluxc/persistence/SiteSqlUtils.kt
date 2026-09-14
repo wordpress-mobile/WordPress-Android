@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostFormatModel
 import org.wordpress.android.fluxc.model.RoleModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.WPComApiProxy
 import org.wordpress.android.fluxc.model.layouts.GutenbergLayoutCategoriesModel
 import org.wordpress.android.fluxc.model.layouts.GutenbergLayoutCategoryModel
 import org.wordpress.android.fluxc.model.layouts.GutenbergLayoutModel
@@ -224,7 +225,13 @@ class SiteSqlUtils
         }
         return if (siteResult.isEmpty()) {
             // No site with this local ID, REMOTE_ID + URL, or XMLRPC URL, then insert it
-            AppLog.d(DB, "Inserting site: " + finalSiteModel.url)
+            // The generated WellSql mapper persists getWpApiRestUrl(), and the update path below
+            // excludes the column — so whatever this insert writes is what the row keeps for good.
+            AppLog.d(
+                DB,
+                "Inserting site: ${finalSiteModel.url} wpApiRestUrl=${finalSiteModel.wpApiRestUrl}" +
+                        " isSimple=${finalSiteModel.isWPComSimpleSite}"
+            )
             // WellSql back-fills the auto-assigned id onto the model on insert (Identifiable.setId).
             WellSql.insert(finalSiteModel).asSingleTransaction(true).execute()
             finalSiteModel.id
@@ -301,6 +308,16 @@ class SiteSqlUtils
      * stale in-memory sites can't clobber a value that was healed/discovered out of band.
      */
     fun updateWpApiRestUrl(localId: Int, wpApiRestUrl: String): Int {
+        // A WP.com proxy URL carries its namespace in the path, so it can never serve as the
+        // direct-host root this column holds — storing one double-namespaces every request that
+        // later reads it. Refuse it here rather than in each of the readers.
+        if (WPComApiProxy.isProxyRoot(wpApiRestUrl)) {
+            AppLog.e(
+                DB,
+                "Refusing to store WP.com proxy URL as a REST root for localId=$localId: $wpApiRestUrl"
+            )
+            return 0
+        }
         return WellSql.update(SiteModel::class.java)
                 .whereId(localId)
                 .put(wpApiRestUrl, { value ->
