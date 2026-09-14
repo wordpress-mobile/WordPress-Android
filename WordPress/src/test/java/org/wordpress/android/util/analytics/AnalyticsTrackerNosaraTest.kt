@@ -164,7 +164,6 @@ class AnalyticsTrackerNosaraTest {
         Stat.CREATE_ACCOUNT_EMAIL_EXISTS to "account_create_email_exists",
         Stat.CREATE_ACCOUNT_USERNAME_EXISTS to "account_create_username_exists",
         Stat.CREATE_ACCOUNT_FAILED to "account_create_failed",
-        Stat.CREATED_ACCOUNT to "account_created",
         Stat.SHARED_ITEM_READER to "item_shared_reader",
         Stat.ADDED_SELF_HOSTED_SITE to "self_hosted_blog_added",
         Stat.INSTALL_JETPACK_CANCELLED to "install_jetpack_canceled",
