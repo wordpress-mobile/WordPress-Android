@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
@@ -21,7 +20,6 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2;
 import org.wordpress.android.fluxc.model.AccountModel;
-import org.wordpress.android.fluxc.model.DomainContactModel;
 import org.wordpress.android.fluxc.model.SubscriptionModel;
 import org.wordpress.android.fluxc.model.SubscriptionsModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
@@ -43,8 +41,6 @@ import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameError;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction;
 import org.wordpress.android.fluxc.store.AccountStore.AuthOptionsError;
 import org.wordpress.android.fluxc.store.AccountStore.AuthOptionsErrorType;
-import org.wordpress.android.fluxc.store.AccountStore.DomainContactError;
-import org.wordpress.android.fluxc.store.AccountStore.DomainContactErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.IsAvailableError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserErrorType;
@@ -174,18 +170,6 @@ public class AccountRestClient extends BaseWPComRestClient {
 
         public AccountFetchUsernameSuggestionsResponsePayload(List<String> suggestions) {
             this.suggestions = suggestions;
-        }
-    }
-
-    public static class DomainContactPayload extends Payload<DomainContactError> {
-        @Nullable public DomainContactModel contactModel;
-
-        public DomainContactPayload(@NonNull DomainContactModel contactModel) {
-            this.contactModel = contactModel;
-        }
-
-        public DomainContactPayload(@NonNull DomainContactError error) {
-            this.error = error;
         }
     }
 
@@ -894,36 +878,6 @@ public class AccountRestClient extends BaseWPComRestClient {
     }
 
     /**
-     * Performs an HTTP GET call to v1.1 /me/domain-contact-information/ endpoint.  Upon receiving a response
-     * (success or error) a {@link AccountAction#FETCHED_DOMAIN_CONTACT} action is dispatched with a
-     * payload of type {@link DomainContactPayload}.
-     *
-     * {@link DomainContactPayload#isError()} can be used to check the request result.
-     */
-    public void fetchDomainContact() {
-        String url = WPCOMREST.me.domain_contact_information.getUrlV1_1();
-        add(WPComGsonRequest.buildGetRequest(url, null, DomainContactResponse.class,
-                new Listener<DomainContactResponse>() {
-                    @Override
-                    public void onResponse(DomainContactResponse response) {
-                        DomainContactPayload payload = new DomainContactPayload(responseToDomainContactModel(response));
-                        mDispatcher.dispatch(AccountActionBuilder.newFetchedDomainContactAction(payload));
-                    }
-                },
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        // Domain contact should always be available for a valid, authenticated user.
-                        // Therefore, only GENERIC_ERROR is identified here.
-                        DomainContactError contactError =
-                                new DomainContactError(DomainContactErrorType.GENERIC_ERROR, error.message);
-                        DomainContactPayload payload = new DomainContactPayload(contactError);
-                        mDispatcher.dispatch(AccountActionBuilder.newFetchedDomainContactAction(payload));
-                    }
-                }));
-    }
-
-    /**
      * Performs an HTTP GET call to the v1.1 /users/$emailOrUsername/auth-options endpoint. Upon receiving a response
      * (success or error) a {@link AccountAction#FETCHED_AUTH_OPTIONS} action is dispatched with a payload of type
      * {@link FetchAuthOptionsResponsePayload}.
@@ -1191,22 +1145,5 @@ public class AccountRestClient extends BaseWPComRestClient {
             accountModel.setPrimarySiteId(((Double) from.get("primary_site_ID")).longValue());
         }
         return !old.equals(accountModel);
-    }
-
-    private DomainContactModel responseToDomainContactModel(DomainContactResponse response) {
-        String firstName = StringEscapeUtils.unescapeHtml4(response.getFirst_name());
-        String lastName = StringEscapeUtils.unescapeHtml4(response.getLast_name());
-        String organization = StringEscapeUtils.unescapeHtml4(response.getOrganization());
-        String addressLine1 = response.getAddress_1();
-        String addressLine2 = response.getAddress_2();
-        String city = response.getCity();
-        String state = response.getState();
-        String postalCode = response.getPostal_code();
-        String countryCode = response.getCountry_code();
-        String phone = response.getPhone();
-        String fax = response.getFax();
-        String email = response.getEmail();
-        return new DomainContactModel(firstName, lastName, organization, addressLine1, addressLine2, postalCode, city,
-                state, countryCode, email, phone, fax);
     }
 }
