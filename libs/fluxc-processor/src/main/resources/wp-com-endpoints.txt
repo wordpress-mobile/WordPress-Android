@@ -16,7 +16,6 @@
 /jetpack-blogs/$site/rest-api/
 
 /me/
-/me/domain-contact-information/
 /me/settings/
 /me/sites/
 /me/sites/features
@@ -24,11 +23,6 @@
 /me/social-login/connect/
 /me/username/
 /me/account/close/
-
-/me/transactions/supported-countries/
-/me/transactions/
-/me/shopping-cart/$site
-/me/shopping-cart/no-site
 
 /me/account/close
 
@@ -43,9 +37,6 @@
 /read/site/$site#String/comment_email_subscriptions/$action#String
 /read/site/$site#String/post_email_subscriptions/$action#String
 /read/site/$site#String/post_email_subscriptions/update
-
-/domains/suggestions
-/domains/supported-states/$countryCode#String
 
 /meta/external-media/pexels
 /sites/$site/external-media-upload
@@ -75,8 +66,6 @@
 /sites/$site/media/new/
 
 /sites/$site/plans/
-
-/sites/$site/domains/primary/
 
 /sites/$site/plugins
 /sites/$site/plugins/$name#String
@@ -149,7 +138,5 @@
 /activity-log/$site/rewind/to/$rewind_ID#String
 
 /jetpack-install/$site#String
-
-/products
 
 /plans

@@ -10,6 +10,7 @@ import uniffi.wp_api.CartKey
 import uniffi.wp_api.CreateShoppingCartParams
 import uniffi.wp_api.CreateShoppingCartProduct
 import uniffi.wp_api.CreateShoppingCartProductExtra
+import uniffi.wp_api.ShoppingCart
 import javax.inject.Inject
 
 class CreateCartUseCase @Inject constructor(
@@ -52,7 +53,7 @@ class CreateCartUseCase @Inject constructor(
                 AppLog.T.API,
                 "Cannot create a shopping cart without a WP.com access token"
             )
-            return CreateCartResult.Error
+            return CreateCartResult.Error()
         }
         val cartKey = cartKeyFor(site)
         val params = createShoppingCartParams(
@@ -64,13 +65,13 @@ class CreateCartUseCase @Inject constructor(
         )
         val result = client.request { it.shoppingCart().create(cartKey, params).data }
         return when (result) {
-            is WpRequestResult.Success -> CreateCartResult.Success
+            is WpRequestResult.Success -> CreateCartResult.Success(result.response)
             else -> {
                 AppLog.e(
                     AppLog.T.API,
                     "An error occurred while creating a shopping cart"
                 )
-                CreateCartResult.Error
+                CreateCartResult.Error(result.apiErrorMessage(), result.isDeviceOffline())
             }
         }
     }
@@ -114,7 +115,10 @@ internal fun createShoppingCartParams(
 }
 
 sealed interface CreateCartResult {
-    data object Success : CreateCartResult
+    data class Success(val cart: ShoppingCart) : CreateCartResult
 
-    data object Error : CreateCartResult
+    data class Error(
+        val message: String? = null,
+        val isDeviceOffline: Boolean = false,
+    ) : CreateCartResult
 }

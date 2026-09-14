@@ -10,7 +10,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSocialResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushUsernameResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
-import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.DomainContactPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.FetchAuthOptionsResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailableResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.NewAccountResponsePayload;
@@ -70,8 +69,6 @@ public enum AccountAction implements IAction {
     UPDATE_SUBSCRIPTION_EMAIL_POST_FREQUENCY,
     @Action(payloadType = AddOrDeleteSubscriptionPayload.class)
     UPDATE_SUBSCRIPTION_NOTIFICATION_POST,
-    @Action
-    FETCH_DOMAIN_CONTACT,
     @Action(payloadType = FetchAuthOptionsPayload.class)
     FETCH_AUTH_OPTIONS,
 
@@ -98,8 +95,6 @@ public enum AccountAction implements IAction {
     FETCHED_SUBSCRIPTIONS,
     @Action(payloadType = SubscriptionResponsePayload.class)
     UPDATED_SUBSCRIPTION,
-    @Action(payloadType = DomainContactPayload.class)
-    FETCHED_DOMAIN_CONTACT,
     @Action(payloadType = FetchAuthOptionsResponsePayload.class)
     FETCHED_AUTH_OPTIONS,
 

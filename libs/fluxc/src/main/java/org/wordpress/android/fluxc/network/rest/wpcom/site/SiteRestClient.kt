@@ -5,7 +5,6 @@ import android.text.TextUtils
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.RequestQueue
 import com.android.volley.VolleyError
-import com.google.gson.reflect.TypeToken
 import org.apache.commons.text.StringEscapeUtils
 import org.json.JSONException
 import org.json.JSONObject
@@ -37,12 +36,6 @@ import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusRespon
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorForAllSitesResponsePayload
-import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainError
-import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainErrorType
-import org.wordpress.android.fluxc.store.SiteStore.DesignatedPrimaryDomainPayload
-import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesError
-import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType
-import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponsePayload
 import org.wordpress.android.fluxc.store.SiteStore.FetchedBlockLayoutsResponsePayload
 import org.wordpress.android.fluxc.store.SiteStore.FetchedEditorsPayload
 import org.wordpress.android.fluxc.store.SiteStore.FetchedJetpackCapabilitiesPayload
@@ -75,9 +68,6 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.BLOCK_SEARCH_E
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.COMING_SOON
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PRIVATE
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
-import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError
-import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainErrorType.EMPTY_RESULTS
-import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload
 import org.wordpress.android.fluxc.store.SiteStore.UserRolesError
 import org.wordpress.android.fluxc.store.SiteStore.UserRolesErrorType
 import org.wordpress.android.fluxc.utils.SiteUtils
@@ -534,63 +524,6 @@ class SiteRestClient @Inject constructor(
     }
 
     @Suppress("LongParameterList")
-    fun suggestDomains(
-        query: String,
-        quantity: Int,
-        vendor: String?,
-        onlyWordpressCom: Boolean?,
-        includeWordpressCom: Boolean?,
-        includeDotBlogSubdomain: Boolean?,
-        segmentId: Long?,
-        tlds: String?
-    ) {
-        val url = WPCOMREST.domains.suggestions.urlV1_1
-        val params = mutableMapOf<String, String>()
-        params["query"] = query
-        params["quantity"] = quantity.toString()
-        if (vendor != null) {
-            params["vendor"] = vendor
-        }
-        if (onlyWordpressCom != null) {
-            params["only_wordpressdotcom"] = onlyWordpressCom.toString() // CHECKSTYLE IGNORE
-        }
-        if (includeWordpressCom != null) {
-            params["include_wordpressdotcom"] = includeWordpressCom.toString() // CHECKSTYLE IGNORE
-        }
-        if (includeDotBlogSubdomain != null) {
-            params["include_dotblogsubdomain"] = includeDotBlogSubdomain.toString()
-        }
-        if (segmentId != null) {
-            params["segment_id"] = segmentId.toString()
-        }
-        if (tlds != null) {
-            params["tlds"] = tlds
-        }
-        val request = WPComGsonRequest.buildGetRequest<List<DomainSuggestionResponse>>(url, params,
-                object : TypeToken<List<DomainSuggestionResponse>>() {}.type,
-                { response ->
-                    val payload = SuggestDomainsResponsePayload(
-                            query,
-                            response
-                    )
-                    mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload))
-                },
-                { error ->
-                    val suggestDomainError = SuggestDomainError(error.apiError, error.message)
-                    if (suggestDomainError.type === EMPTY_RESULTS) {
-                        // Empty results is not an actual error, the API should return 200 for it
-                        val payload = SuggestDomainsResponsePayload(query, emptyList())
-                        mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload))
-                    } else {
-                        val payload = SuggestDomainsResponsePayload(query, suggestDomainError)
-                        mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload))
-                    }
-                }
-        )
-        add(request)
-    }
-
-    @Suppress("LongParameterList")
     fun fetchWpComBlockLayouts(
         site: SiteModel,
         supportedBlocks: List<String?>?,
@@ -747,55 +680,6 @@ class SiteRestClient @Inject constructor(
             mDispatcher.dispatch(SiteActionBuilder.newCheckedIsWpcomUrlAction(payload))
         }
         addUnauthedRequest(request)
-    }
-
-    /**
-     * Performs an HTTP GET call to v1.1 /domains/supported-states/$countryCode endpoint. Upon receiving a response
-     * (success or error) a [SiteAction.FETCHED_DOMAIN_SUPPORTED_STATES] action is dispatched with a
-     * payload of type [DomainSupportedStatesResponsePayload].
-     *
-     * [DomainSupportedStatesResponsePayload.isError] can be used to check the request result.
-     */
-    fun fetchSupportedStates(countryCode: String) {
-        val url = WPCOMREST.domains.supported_states.countryCode(countryCode).urlV1_1
-        val request = WPComGsonRequest.buildGetRequest<List<SupportedStateResponse>>(url, null,
-                object : TypeToken<List<SupportedStateResponse>>() {}.type,
-                { response ->
-                    val payload = DomainSupportedStatesResponsePayload(response)
-                    mDispatcher.dispatch(SiteActionBuilder.newFetchedDomainSupportedStatesAction(payload))
-                },
-                { error ->
-                    val domainSupportedStatesError = DomainSupportedStatesError(
-                            DomainSupportedStatesErrorType.fromString(error.apiError), error.message
-                    )
-                    val payload = DomainSupportedStatesResponsePayload(domainSupportedStatesError)
-                    mDispatcher.dispatch(SiteActionBuilder.newFetchedDomainSupportedStatesAction(payload))
-                })
-        add(request)
-    }
-
-    fun designatePrimaryDomain(site: SiteModel, domain: String) {
-        val url = WPCOMREST.sites.site(site.siteId).domains.primary.urlV1_1
-        val params = mutableMapOf<String, Any>()
-        params["domain"] = domain
-        val request = WPComGsonRequest
-                .buildPostRequest(url, params, DesignatePrimaryDomainResponse::class.java,
-                        { (success) ->
-                            mDispatcher.dispatch(
-                                    SiteActionBuilder.newDesignatedPrimaryDomainAction(
-                                            DesignatedPrimaryDomainPayload(site, success)
-                                    )
-                            )
-                        }
-                ) { networkError ->
-                    val error = DesignatePrimaryDomainError(
-                            DesignatePrimaryDomainErrorType.GENERIC_ERROR, networkError.message
-                    )
-                    val payload = DesignatedPrimaryDomainPayload(site, false)
-                    payload.error = error
-                    mDispatcher.dispatch(SiteActionBuilder.newDesignatedPrimaryDomainAction(payload))
-                }
-        add(request)
     }
 
     // Automated Transfers
