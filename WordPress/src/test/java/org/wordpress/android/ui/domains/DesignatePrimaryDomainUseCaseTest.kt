@@ -15,6 +15,8 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.ui.domains.usecases.DesignatePrimaryDomainResult
 import org.wordpress.android.ui.domains.usecases.DesignatePrimaryDomainUseCase
+import org.wordpress.android.ui.domains.usecases.setPrimaryDomainParams
+import org.wordpress.android.ui.domains.usecases.wpComSiteIdOf
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.RequestExecutionErrorReason
@@ -127,6 +129,21 @@ class DesignatePrimaryDomainUseCaseTest : BaseUnitTest() {
         val result = useCase.execute(site, DOMAIN_NAME)
 
         assertThat(result).isEqualTo(DesignatePrimaryDomainResult.Error())
+    }
+
+    @Test
+    fun `the request is addressed to the WordPress-com site id, not the local one`() {
+        val siteWithDifferentLocalId = SiteModel().apply {
+            siteId = 1234L
+            id = 7
+        }
+
+        assertThat(wpComSiteIdOf(siteWithDifferentLocalId)).isEqualTo(1234uL)
+    }
+
+    @Test
+    fun `the request body carries the domain to make primary`() {
+        assertThat(setPrimaryDomainParams(DOMAIN_NAME).domain).isEqualTo(DOMAIN_NAME)
     }
 
     companion object {

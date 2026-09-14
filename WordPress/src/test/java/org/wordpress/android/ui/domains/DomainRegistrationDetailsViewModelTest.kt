@@ -625,6 +625,16 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `privacy protection turned off is what the cart is created with`() = test {
+        viewModel.start(site, domainProductDetails)
+
+        viewModel.togglePrivacyProtection(false)
+        viewModel.onRegisterDomainButtonClicked()
+
+        verify(createCartUseCase).execute(site, productId, testDomainName, false, true, null)
+    }
+
+    @Test
     fun `an edited contact detail is what the redeem call carries`() = test {
         viewModel.start(site, domainProductDetails)
 

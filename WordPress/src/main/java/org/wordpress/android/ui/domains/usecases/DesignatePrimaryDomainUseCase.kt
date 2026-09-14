@@ -41,8 +41,9 @@ class DesignatePrimaryDomainUseCase @Inject constructor(
             )
             return DesignatePrimaryDomainResult.Error()
         }
-        val params = SetPrimaryDomainParams(domain)
-        val result = client.request { it.domains().setPrimary(site.siteId.toULong(), params).data }
+        val siteId = wpComSiteIdOf(site)
+        val params = setPrimaryDomainParams(domain)
+        val result = client.request { it.domains().setPrimary(siteId, params).data }
         return when (result) {
             is WpRequestResult.Success -> DesignatePrimaryDomainResult.Success
             else -> {
@@ -55,6 +56,15 @@ class DesignatePrimaryDomainUseCase @Inject constructor(
         }
     }
 }
+
+/**
+ * The site the request is addressed to. [SiteModel] also carries a local
+ * database id, which this endpoint would take without complaint.
+ */
+internal fun wpComSiteIdOf(site: SiteModel): ULong = site.siteId.toULong()
+
+/** The request body: the domain to make primary. */
+internal fun setPrimaryDomainParams(domain: String) = SetPrimaryDomainParams(domain)
 
 sealed interface DesignatePrimaryDomainResult {
     data object Success : DesignatePrimaryDomainResult
