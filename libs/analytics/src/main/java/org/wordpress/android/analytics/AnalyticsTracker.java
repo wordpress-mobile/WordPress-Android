@@ -408,9 +408,6 @@ public final class AnalyticsTracker {
         CREATE_ACCOUNT_EMAIL_EXISTS("account_create_email_exists"),
         CREATE_ACCOUNT_USERNAME_EXISTS("account_create_username_exists"),
         CREATE_ACCOUNT_FAILED("account_create_failed"),
-        // This stat is part of a funnel that provides critical information.  Before
-        // making ANY modification to this stat please refer to: p4qSXL-35X-p2
-        CREATED_ACCOUNT("account_created"),
         CLOSE_ACCOUNT_FAILED,
         CLOSED_ACCOUNT,
         ACCOUNT_LOGOUT,
