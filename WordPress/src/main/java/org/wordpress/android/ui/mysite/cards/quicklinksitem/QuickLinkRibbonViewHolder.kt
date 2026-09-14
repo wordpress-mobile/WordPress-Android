@@ -17,6 +17,7 @@ class QuickLinkRibbonViewHolder(
 ) {
     init {
         with(binding.quickLinksItemList) {
+            itemAnimator = null
             if (adapter == null) {
                 layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
                 adapter = QuickLinksItemAdapter()

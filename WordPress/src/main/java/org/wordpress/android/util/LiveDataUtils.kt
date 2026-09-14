@@ -650,6 +650,20 @@ fun <T> LiveData<T>.fold(action: (previous: T, current: T) -> T): MediatorLiveDa
 }
 
 /**
+ * Coalesces emissions that arrive within the same main thread dispatch into a single one.
+ *
+ * [LiveData.postValue] keeps only one pending value and enqueues a single main thread runnable, so
+ * when several sources emit back to back - as they do when a screen is assembled from many merged
+ * sources - observers see one settled value instead of every intermediate one. Unlike [throttle]
+ * this costs a single main thread message rather than a timed delay, so it can't starve.
+ */
+fun <T> LiveData<T>.conflate(): MediatorLiveData<T> {
+    val mediator = MediatorLiveData<T>()
+    mediator.addSource(this) { mediator.postValue(it) }
+    return mediator
+}
+
+/**
  * Call this method if you want to throttle the LiveData emissions.
  * The default implementation takes only the last emitted result after 100ms.
  */

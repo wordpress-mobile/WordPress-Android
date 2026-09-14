@@ -21,6 +21,7 @@ class PagesCardViewHolder(
     parent.viewBinding(MySitePagesCardWithPageItemsBinding::inflate)
 ) {
     init {
+        binding.pagesItems.itemAnimator = null
         binding.pagesItems.adapter = PagesItemsAdapter(uiHelpers)
     }
 

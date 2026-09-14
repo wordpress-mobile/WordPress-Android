@@ -243,6 +243,15 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when selected site is changed, then the list is scrolled back to the top`() = test {
+        initSelectedSite()
+
+        viewModel.onSitePicked()
+
+        assertThat(viewModel.onScrollTo.value?.getContentIfNotHandled()).isEqualTo(0)
+    }
+
+    @Test
     fun `given jp app, when selected site is changed, then dashboard cards are fetched`() = test {
         initSelectedSite(isJetpackApp = true)
 

@@ -27,6 +27,7 @@ sealed class PostCardViewHolder<T : ViewBinding>(
         parent.viewBinding(MySitePostCardWithPostItemsBinding::inflate)
     ) {
         init {
+            binding.postItems.itemAnimator = null
             binding.postItems.adapter = PostItemsAdapter(imageManager, uiHelpers)
         }
 

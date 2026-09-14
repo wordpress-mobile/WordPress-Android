@@ -37,6 +37,7 @@ import org.wordpress.android.ui.posts.GutenbergKitAnnouncementController
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.conflate
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
@@ -149,7 +150,7 @@ class MySiteViewModel @Inject constructor(
             SiteSelected(dashboardData = headerList + siteItems)
         else
             SiteSelected(dashboardData = headerList)
-    }.distinctUntilChanged()
+    }.conflate().distinctUntilChanged()
 
     init {
         dispatcher.register(this)
@@ -334,6 +335,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onSitePicked(site: SiteModel) {
+        onScrollTo.postValue(Event(0))
         siteInfoHeaderCardViewModelSlice.buildCard(site)
         applicationPasswordViewModelSlice.buildCard(site)
         siteConnectivityBannerViewModelSlice.clearBanner()

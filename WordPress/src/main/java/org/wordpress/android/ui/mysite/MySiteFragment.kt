@@ -14,7 +14,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropActivity
 import org.wordpress.android.R
@@ -312,6 +311,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
 
         recyclerView.layoutManager = layoutManager
+        // the dashboard is assembled from many independent sources, so the list is submitted several
+        // times while it loads - animating those partial submits is what makes the screen look jumpy
+        recyclerView.itemAnimator = null
+        recyclerView.setHasFixedSize(true)
         recyclerView.addItemDecoration(
             MySiteCardAndItemDecoration(
                 horizontalMargin = resources.getDimensionPixelSize(R.dimen.margin_extra_large),
@@ -329,15 +332,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             { viewModel.onBloggingPromptsLearnMoreClicked() },
             { viewModel.onBloggingPromptsAttributionClicked() }
         )
-
-        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                super.onItemRangeInserted(positionStart, itemCount)
-                if (positionStart == FIRST_ITEM) {
-                    recyclerView.smoothScrollToPosition(0)
-                }
-            }
-        })
 
         savedInstanceState?.getBundle(KEY_NESTED_LISTS_STATES)?.let {
             adapter.onRestoreInstanceState(it)
@@ -413,7 +407,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 .show(parentFragmentManager, GutenbergKitAnnouncementBottomSheetFragment.TAG)
         }
 
-        viewModel.refresh.observe(viewLifecycleOwner) {
+        viewModel.refresh.observeEvent(viewLifecycleOwner) {
             viewModel.refresh()
         }
 
@@ -827,7 +821,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         var TAG: String = MySiteFragment::class.java.simpleName
         private const val KEY_LIST_STATE = "key_list_state"
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
-        private const val FIRST_ITEM = 0
         fun newInstance(): MySiteFragment {
             return MySiteFragment()
         }

@@ -19,6 +19,7 @@ class ActivityCardViewHolder(
     parent.viewBinding(MySiteActivityCardWithActivityItemsBinding::inflate)
 ) {
     init {
+        binding.activityItems.itemAnimator = null
         binding.activityItems.adapter = ActivityItemsAdapter(uiHelpers)
     }
 
