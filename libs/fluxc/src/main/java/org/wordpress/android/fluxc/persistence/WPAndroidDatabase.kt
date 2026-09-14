@@ -19,12 +19,6 @@ import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferId
 import org.wordpress.android.fluxc.persistence.RemoteConfigDao.RemoteConfig
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignEntity
-import org.wordpress.android.fluxc.persistence.blaze.BlazeObjectivesDao
-import org.wordpress.android.fluxc.persistence.blaze.BlazeObjectivesDao.BlazeCampaignObjectiveEntity
-import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
-import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDeviceEntity
-import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingLanguageEntity
-import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingTopicEntity
 import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao
 import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao.BloggingPromptEntity
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao
@@ -36,7 +30,7 @@ import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao
 import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao.JetpackSocialEntity
 
 @Database(
-        version = 30,
+        version = 31,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
@@ -50,10 +44,6 @@ import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao.Je
             JetpackCPConnectedSiteEntity::class,
             BlazeCampaignEntity::class,
             JetpackSocialEntity::class,
-            BlazeCampaignObjectiveEntity::class,
-            BlazeTargetingLanguageEntity::class,
-            BlazeTargetingDeviceEntity::class,
-            BlazeTargetingTopicEntity::class,
         ],
         autoMigrations = [
             AutoMigration(from = 11, to = 12),
@@ -68,6 +58,7 @@ import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao.Je
             AutoMigration(from = 27, to = 28),
             AutoMigration(from = 28, to = 29),
             AutoMigration(from = 29, to = 30, spec = AutoMigration29to30::class),
+            AutoMigration(from = 30, to = 31, spec = AutoMigration30to31::class),
         ]
 )
 @TypeConverters(
@@ -94,11 +85,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
 
     abstract fun blazeCampaignsDao(): BlazeCampaignsDao
 
-    abstract fun blazeTargetingDao(): BlazeTargetingDao
-
     abstract fun jetpackSocialDao(): JetpackSocialDao
-
-    abstract fun blazeObjectivesDao(): BlazeObjectivesDao
 
     @Suppress("MemberVisibilityCanBePrivate")
     companion object {
@@ -367,3 +354,11 @@ internal class AutoMigration25to26 : AutoMigrationSpec
     DeleteTable(tableName = "Domains")
 )
 internal class AutoMigration29to30 : AutoMigrationSpec
+
+@DeleteTable.Entries(
+    DeleteTable(tableName = "BlazeCampaignObjectives"),
+    DeleteTable(tableName = "BlazeTargetingDevices"),
+    DeleteTable(tableName = "BlazeTargetingLanguages"),
+    DeleteTable(tableName = "BlazeTargetingTopics")
+)
+internal class AutoMigration30to31 : AutoMigrationSpec
