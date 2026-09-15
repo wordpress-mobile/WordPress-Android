@@ -658,7 +658,8 @@ fun <T> LiveData<T>.fold(action: (previous: T, current: T) -> T): MediatorLiveDa
  * of a burst and then its last, rather than every step in between, and a value arriving on its own
  * is never delayed. The held value is always the source's newest, so the observer always ends on it.
  *
- * [scope] must dispatch on the main thread; the returned LiveData is updated from it. Cancelling the
+ * [scope] bounds the timers' lifetime; they always run on the main thread, whatever the scope's own
+ * dispatcher, since that is the only thread the returned LiveData may be set from. Cancelling the
  * scope drops whatever is held.
  */
 fun <T> LiveData<T>.settle(scope: CoroutineScope, quietMs: Long, maxHoldMs: Long): LiveData<T> {
@@ -668,8 +669,8 @@ fun <T> LiveData<T>.settle(scope: CoroutineScope, quietMs: Long, maxHoldMs: Long
     var deadlineJob: Job? = null
 
     fun flush() {
-        if (deadlineJob == null) return
-        deadlineJob?.cancel()
+        val deadline = deadlineJob ?: return
+        deadline.cancel()
         deadlineJob = null
         mediator.value = this.value
     }
@@ -677,14 +678,14 @@ fun <T> LiveData<T>.settle(scope: CoroutineScope, quietMs: Long, maxHoldMs: Long
     mediator.addSource(this) { value ->
         val wasQuiet = quietJob?.isActive != true
         quietJob?.cancel()
-        quietJob = scope.launch {
+        quietJob = scope.launch(Dispatchers.Main.immediate) {
             delay(quietMs)
             flush()
         }
         if (wasQuiet) {
             mediator.value = value
         } else if (deadlineJob == null) {
-            deadlineJob = scope.launch {
+            deadlineJob = scope.launch(Dispatchers.Main.immediate) {
                 delay(maxHoldMs)
                 flush()
             }
