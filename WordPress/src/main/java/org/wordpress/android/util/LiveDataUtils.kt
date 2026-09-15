@@ -8,6 +8,8 @@ import androidx.lifecycle.map
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.viewmodel.SingleMediatorLiveEvent
 
@@ -647,6 +649,58 @@ fun <T> LiveData<T>.fold(action: (previous: T, current: T) -> T): MediatorLiveDa
         }
     }
     return mediatorLiveData
+}
+
+/**
+ * Passes a value straight through when the source has been quiet for [quietMs]. Otherwise the source
+ * is mid-burst, so the newest value is held until the burst has been quiet for [quietMs] or
+ * [maxHoldMs] has passed since the hold began, whichever comes first. Observers see the first value
+ * of a burst and then its last, rather than every step in between, and a value arriving on its own
+ * is never delayed. Each held value replaces the one before it, so the observer always ends on the
+ * newest value.
+ *
+ * [scope] must dispatch on the main thread; the returned LiveData is updated from it. Cancelling the
+ * scope drops whatever is held.
+ */
+fun <T> LiveData<T>.settle(scope: CoroutineScope, quietMs: Long, maxHoldMs: Long): LiveData<T> {
+    val mediator = MediatorLiveData<T>()
+    var held: T? = null
+    var hasHeld = false
+    var quietJob: Job? = null
+    var deadlineJob: Job? = null
+
+    fun flush() {
+        deadlineJob?.cancel()
+        deadlineJob = null
+        if (hasHeld) {
+            val value = held
+            held = null
+            hasHeld = false
+            mediator.value = value
+        }
+    }
+
+    mediator.addSource(this) { value ->
+        val wasQuiet = quietJob?.isActive != true
+        quietJob?.cancel()
+        quietJob = scope.launch {
+            delay(quietMs)
+            flush()
+        }
+        if (wasQuiet) {
+            mediator.value = value
+        } else {
+            held = value
+            hasHeld = true
+            if (deadlineJob == null) {
+                deadlineJob = scope.launch {
+                    delay(maxHoldMs)
+                    flush()
+                }
+            }
+        }
+    }
+    return mediator
 }
 
 /**

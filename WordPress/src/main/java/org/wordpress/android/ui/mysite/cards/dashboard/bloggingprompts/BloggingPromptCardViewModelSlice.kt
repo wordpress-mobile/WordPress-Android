@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -62,12 +63,20 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
 
     private lateinit var scope: CoroutineScope
 
+    private var collectJob: Job? = null
+
     fun fetchBloggingPrompt(
         siteModel: SiteModel
     ) {
-        scope.launch(bgDispatcher) {
+        // the store flow never completes, so a collector left running from the previous call would
+        // keep posting alongside this one
+        collectJob?.cancel()
+        collectJob = scope.launch(bgDispatcher) {
             if (bloggingPromptsSettingsHelper.shouldShowPromptsFeature()) {
-                refreshData(siteModel)
+                // Refresh alongside the cached read rather than ahead of it, so a prompt that is
+                // already stored shows up with the rest of the cached cards instead of a network
+                // round trip later.
+                launch { refreshData(siteModel) }
                 promptsStore.getPrompts(siteModel)
                     .map { it.model?.filter { prompt -> isSameDay(prompt.date, Date()) } }
                     .collect { result ->
@@ -227,6 +236,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     }
 
     fun clearValue() {
+        collectJob?.cancel()
         bloggingPromptsCardTrackHelper.onSiteChanged()
         _uiModel.postValue(null)
     }
