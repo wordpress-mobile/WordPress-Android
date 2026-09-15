@@ -38,6 +38,13 @@ import javax.inject.Named
 // API — the site's Application Password support is irrelevant to the failure.
 private const val PRIVATE_SITE_ERROR_CODE = "private_site"
 
+private const val SCHEME_SEPARATOR = "://"
+private const val HTTPS_SCHEME = "https://"
+
+// Stands in for a URL we couldn't parse a host out of. The point of the prop is to count distinct
+// sites, so an unparseable value is worth nothing and shipping it raw costs something.
+private const val MASKED_URL = "masked"
+
 class ApplicationPasswordLoginHelper @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val dispatcherWrapper: DispatcherWrapper,
@@ -467,13 +474,20 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     @Suppress("ReturnCount")
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal fun maskUrl(url: String): String {
+        if (url.isEmpty()) return url
+        // URI only reports a host when the string carries a scheme, and the login screen hands on
+        // whatever was typed. Without this, "myprivateblog.com" fell through unmasked, and the same
+        // site counted as two depending on whether the user happened to type a scheme.
+        val candidate = if (url.contains(SCHEME_SEPARATOR)) url else "$HTTPS_SCHEME$url"
         val host = try {
-            URI(url).host
+            URI(candidate).host
         } catch (_: Exception) {
             null
-        } ?: return url
+        } ?: return MASKED_URL
         val dotIndex = host.lastIndexOf('.')
-        if (dotIndex <= 0) return url
+        // Anything we can't split into domain and TLD is masked wholesale rather than passed
+        // through: a bare internal hostname is exactly the kind of thing worth not shipping.
+        if (dotIndex <= 0) return MASKED_URL
         val domain = host.substring(0, dotIndex)
         val tld = host.substring(dotIndex)
         val maskedDomain = when {

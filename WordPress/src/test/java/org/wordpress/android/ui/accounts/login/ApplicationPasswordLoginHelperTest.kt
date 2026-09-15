@@ -444,9 +444,31 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
         }
 
     @Test
-    fun `maskUrl with no dot returns url unmasked`() {
+    fun `maskUrl with no dot masks the whole value`() {
+        // Previously passed through. A single-label host is as likely to be an internal name as it
+        // is to be localhost, and the prop only exists to count distinct sites.
         val result = applicationPasswordLoginHelper.maskUrl("https://localhost")
-        assertEquals("https://localhost", result)
+        assertEquals("masked", result)
+    }
+
+    @Test
+    fun `maskUrl masks a scheme-less address, which is what the login screen passes`() {
+        // Regression: URI reports no host without a scheme, so this used to return the raw domain.
+        assertEquals("mxxxxxxxxxxxg.com", applicationPasswordLoginHelper.maskUrl("myprivateblog.com"))
+        assertEquals("mxxxxe.com/blog", applicationPasswordLoginHelper.maskUrl("mysite.com/blog"))
+        assertEquals("wxxxxxxxxxxxxxxxg.com", applicationPasswordLoginHelper.maskUrl("www.myprivateblog.com"))
+        assertEquals("mxxxxxxxxxxxg.com:8080", applicationPasswordLoginHelper.maskUrl("myprivateblog.com:8080"))
+    }
+
+    @Test
+    fun `maskUrl masks a value it cannot parse rather than passing it through`() {
+        assertEquals("masked", applicationPasswordLoginHelper.maskUrl("not a url at all"))
+    }
+
+    @Test
+    fun `maskUrl leaves an empty value alone`() {
+        // user_rejected and empty_raw_data both report an empty URL; a placeholder would read as a site.
+        assertEquals("", applicationPasswordLoginHelper.maskUrl(""))
     }
 
     @Test
