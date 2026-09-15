@@ -152,7 +152,6 @@ class SiteItemsBuilderTest {
             assertThat(siteDomainsItems).contains(DOMAINS_ITEM)
         }
 
-    @Suppress("ComplexMethod", "LongMethod")
     @Test
     fun `adds the menus item when the capability probe finds it available`() = runTest {
         setupHeaders()
@@ -184,6 +183,7 @@ class SiteItemsBuilderTest {
         verify(siteListItemBuilder, never()).buildMenusItemIfAvailable(any(), any())
     }
 
+    @Suppress("ComplexMethod", "LongMethod")
     private fun setupHeaders(
         addActivityLogItem: Boolean = false,
         addSiteMonitoringItem: Boolean = false,
