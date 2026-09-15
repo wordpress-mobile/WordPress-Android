@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.StoreCredentialsResult
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.UriLogin
+import org.wordpress.android.ui.accounts.login.DiscoverySource
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DeviceUtils
@@ -149,7 +150,9 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     private suspend fun fallbackToManualLogin(siteUrl: String) {
         try {
-            when (val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl)) {
+            val result = applicationPasswordLoginHelper
+                .getAuthorizationUrlComplete(siteUrl, DiscoverySource.AUTO_AUTH_FALLBACK)
+            when (result) {
                 is ApplicationPasswordLoginHelper.DiscoveryResult.Authorized ->
                     _navigationEvent.emit(NavigationEvent.FallbackToManualLogin(result.authorizationUrl))
                 is ApplicationPasswordLoginHelper.DiscoveryResult.WpComSite -> {
