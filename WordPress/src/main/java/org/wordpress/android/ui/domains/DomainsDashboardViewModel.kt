@@ -152,7 +152,7 @@ class DomainsDashboardViewModel @Inject constructor(
     }
 
     private fun getStatusColor(
-        statusType: DomainListItemStatusType?
+        statusType: DomainListItemStatusType
     ) = when (statusType) {
         is DomainListItemStatusType.Success,
         is DomainListItemStatusType.Premium -> R.color.jetpack_green_50
@@ -160,8 +160,7 @@ class DomainsDashboardViewModel @Inject constructor(
         is DomainListItemStatusType.Warning -> R.color.orange_50
         is DomainListItemStatusType.Alert,
         is DomainListItemStatusType.Error,
-        is DomainListItemStatusType.Other,
-        null -> R.color.red_50
+        is DomainListItemStatusType.Other -> R.color.red_50
     }
 
     private fun buildCtaItems(
@@ -200,6 +199,14 @@ class DomainsDashboardViewModel @Inject constructor(
         return listItems
     }
 
+    /**
+     * The account-wide domain list carries two things a row shows: the status
+     * it reports, and the details screen it opens. A domain missing from that
+     * list — because the request failed, or because it answered without that
+     * domain — leaves both unknown, so the row states neither. Its address,
+     * primary marker and expiry come from the site's own domains and stand on
+     * their own.
+     */
     private fun buildCustomDomainItems(
         site: SiteModel,
         customDomains: List<SiteDomain>,
@@ -220,10 +227,8 @@ class DomainsDashboardViewModel @Inject constructor(
             SiteDomains(
                 UiStringText(it.domain),
                 it.primaryDomain == true,
-                allDomainItem?.domainStatus?.label?.let { label ->
-                    UiStringText(label)
-                } ?: UiStringRes(R.string.error),
-                getStatusColor(allDomainItem?.domainStatus?.statusType),
+                allDomainItem?.let { item -> UiStringText(item.domainStatus.label) },
+                allDomainItem?.let { item -> getStatusColor(item.domainStatus.statusType) },
                 if (it.hasRegistration != true) {
                     null
                 } else if (it.expirySoon == true) {

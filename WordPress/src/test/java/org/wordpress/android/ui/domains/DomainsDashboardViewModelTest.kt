@@ -237,7 +237,7 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `a failed all domains fetch leaves the dashboard standing`() = test {
+    fun `a failed all domains fetch leaves the row without a status`() = test {
         stubResults(
             domainsResult = SiteDomainsResult.Success(listOf(customDomain)),
             plansResult = SitePlansResult.Success(mapOf(TEST_PRODUCT_ID to planWithCredit(false))),
@@ -247,7 +247,35 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
         viewModel.start(siteWithPaidPlan)
 
         assertThat(dashboardItems).hasSize(5)
-        assertThat((dashboardItems[3] as SiteDomains).domain).isEqualTo(UiStringText("henna.tattoo"))
+
+        val customDomainRow = dashboardItems[3] as SiteDomains
+
+        assertThat(customDomainRow.domain).isEqualTo(UiStringText("henna.tattoo"))
+        assertThat(customDomainRow.domainStatus).isNull()
+        assertThat(customDomainRow.domainStatusColor).isNull()
+        assertThat(customDomainRow.onDomainClick).isNull()
+        assertThat(customDomainRow.expiry).isEqualTo(
+            UiStringResWithParams(
+                R.string.domains_site_domain_expires,
+                listOf(UiStringText("June 8, 2022"))
+            )
+        )
+    }
+
+    @Test
+    fun `a domain missing from the all domains response has no status`() = test {
+        stubResults(
+            domainsResult = SiteDomainsResult.Success(listOf(customDomain)),
+            plansResult = SitePlansResult.Success(mapOf(TEST_PRODUCT_ID to planWithCredit(false))),
+            allDomainsResult = AllDomains.Success(listOf(testDomainItem(domain = "elsewhere.blog")))
+        )
+
+        viewModel.start(siteWithPaidPlan)
+
+        val customDomainRow = dashboardItems[3] as SiteDomains
+
+        assertThat(customDomainRow.domainStatus).isNull()
+        assertThat(customDomainRow.domainStatusColor).isNull()
     }
 
     @Test
