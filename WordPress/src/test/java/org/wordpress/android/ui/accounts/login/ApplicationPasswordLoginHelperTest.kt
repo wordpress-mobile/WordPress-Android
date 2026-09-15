@@ -487,11 +487,8 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given a failed discovery, when tracking, then the reason and source reach the event`() = runTest {
-        // Build the result before stubbing: the fixture stubs another mock, and Mockito rejects
-        // that nested inside a thenReturn() argument.
-        val apiDiscoveryResult = successWithNoAuthenticationUrl()
-        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(apiDiscoveryResult)
+    fun `given a failed discovery, when tracking, then both the reason and the login failure are sent`() = runTest {
+        givenDiscoveryWithNoAuthenticationUrl()
 
         applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.LOGIN)
 
@@ -503,13 +500,20 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             ),
             trackedProperties(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
         )
+        assertEquals(
+            mapOf(
+                "url" to "http://txxt.com",
+                "success" to "false",
+                "error" to "discovery_no_app_passwords_url",
+            ),
+            trackedProperties(Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN)
+        )
     }
 
     @Test
     fun `given a site with a blocking plugin, when no auth URL is advertised, then the plugin is named`() =
         runTest {
-            val apiDiscoveryResult = successWithNoAuthenticationUrl()
-            whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(apiDiscoveryResult)
+            val apiDiscoveryResult = givenDiscoveryWithNoAuthenticationUrl()
             whenever(discoverSuccessWrapper.getBlockingPlugins(eq(apiDiscoveryResult)))
                 .thenReturn(listOf(KnownAuthenticationBlockingPlugin("Wordfence", "wordfence/v1", "")))
 
@@ -540,30 +544,8 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given a login flow, when discovery fails, then the login event fires as a failure`() = runTest {
-        // Build the result before stubbing: the fixture stubs another mock, and Mockito rejects
-        // that nested inside a thenReturn() argument.
-        val apiDiscoveryResult = successWithNoAuthenticationUrl()
-        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(apiDiscoveryResult)
-
-        applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.LOGIN)
-
-        assertEquals(
-            mapOf(
-                "url" to "http://txxt.com",
-                "success" to "false",
-                "error" to "discovery_no_app_passwords_url",
-            ),
-            trackedProperties(Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN)
-        )
-    }
-
-    @Test
     fun `given the My Site card, when discovery fails, then no login failure is tracked`() = runTest {
-        // Build the result before stubbing: the fixture stubs another mock, and Mockito rejects
-        // that nested inside a thenReturn() argument.
-        val apiDiscoveryResult = successWithNoAuthenticationUrl()
-        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(apiDiscoveryResult)
+        givenDiscoveryWithNoAuthenticationUrl()
 
         applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.MY_SITE_CARD)
 
@@ -615,13 +597,14 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
      * exercise the catch-all. Classification of the library's own failure types is covered by
      * DiscoveryAnalyticsTest, which reads their fields rather than calling into the library.
      */
-    private fun successWithNoAuthenticationUrl(): ApiDiscoveryResult.Success {
+    private suspend fun givenDiscoveryWithNoAuthenticationUrl(): ApiDiscoveryResult.Success {
         val result = ApiDiscoveryResult.Success(
             AutoDiscoveryAttemptSuccess(
                 mock(), mock(), mock(), DiscoveredAuthenticationMechanism.ApplicationPasswords(mock())
             )
         )
         whenever(discoverSuccessWrapper.getApplicationPasswordsAuthenticationUrl(eq(result))).thenReturn(null)
+        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(result)
         return result
     }
 

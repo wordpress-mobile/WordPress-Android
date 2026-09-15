@@ -44,13 +44,7 @@ class DiscoveryAnalyticsTest {
         val failure = AutoDiscoveryAttemptFailure.FindApiRoot(
             mock(),
             FindApiRootFailure.FetchHomepage(
-                RequestExecutionException.RequestExecutionFailed(
-                    statusCode = 403u,
-                    redirects = null,
-                    reason = RequestExecutionErrorReason.HttpForbiddenError("example.com"),
-                    requestUrl = "https://example.com",
-                    requestMethod = RequestMethod.GET,
-                )
+                requestFailure(RequestExecutionErrorReason.HttpForbiddenError("example.com"), statusCode = 403u)
             )
         )
 
@@ -70,13 +64,7 @@ class DiscoveryAnalyticsTest {
             mock(),
             mock(),
             FetchAndParseApiRootFailure.FetchApiRoot(
-                RequestExecutionException.RequestExecutionFailed(
-                    statusCode = null,
-                    redirects = null,
-                    reason = RequestExecutionErrorReason.HttpTimeoutError,
-                    requestUrl = "https://example.com/wp-json",
-                    requestMethod = RequestMethod.GET,
-                )
+                requestFailure(RequestExecutionErrorReason.HttpTimeoutError, statusCode = null)
             )
         )
 
@@ -87,22 +75,17 @@ class DiscoveryAnalyticsTest {
     }
 
     @Test
-    fun `a Wordfence-generated body is reported as a block, not a parse failure`() {
-        val failure = parseApiRootFailure(ParseApiRootFailureReason.WORDFENCE_BLOCKING_ACCESS)
+    fun `an unparseable body is attributed to Wordfence when the library recognises it`() {
+        val blocked = parseApiRootFailure(ParseApiRootFailureReason.WORDFENCE_BLOCKING_ACCESS)
+        val unrecognised = parseApiRootFailure(reason = null)
 
         assertEquals(
             mapOf("reason" to "wordfence_blocking_access", "response_body_type" to "maybe_html"),
-            failure.toDiscoveryFailure().props
+            blocked.toDiscoveryFailure().props
         )
-    }
-
-    @Test
-    fun `an unrecognised unparseable body reports the body type only`() {
-        val failure = parseApiRootFailure(reason = null)
-
         assertEquals(
             mapOf("reason" to "parse_api_root_failed", "response_body_type" to "maybe_html"),
-            failure.toDiscoveryFailure().props
+            unrecognised.toDiscoveryFailure().props
         )
     }
 
@@ -198,6 +181,15 @@ class DiscoveryAnalyticsTest {
             noAuthenticationUrlFailure(listOf(plugin("Wordfence"), plugin("Hostinger Tools"))).props
         )
     }
+
+    private fun requestFailure(reason: RequestExecutionErrorReason, statusCode: UInt?) =
+        RequestExecutionException.RequestExecutionFailed(
+            statusCode = statusCode,
+            redirects = null,
+            reason = reason,
+            requestUrl = "https://example.com",
+            requestMethod = RequestMethod.GET,
+        )
 
     private fun parseApiRootFailure(reason: ParseApiRootFailureReason?) =
         AutoDiscoveryAttemptFailure.FetchAndParseApiRoot(
