@@ -6,6 +6,7 @@ import androidx.core.net.toUri
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import org.wordpress.android.R
 import org.wordpress.android.util.DeviceUtils
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -96,6 +97,11 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     suspend fun getAuthorizationUrlComplete(siteUrl: String, source: DiscoverySource): DiscoveryResult =
         try {
             getAuthorizationUrlCompleteInternal(siteUrl, source)
+        } catch (cancellation: CancellationException) {
+            // Leaving the login screen or switching sites cancels discovery mid-flight. That's not
+            // a failure — counting it would inflate exactly the rate these events exist to measure,
+            // and swallowing it would break structured concurrency.
+            throw cancellation
         } catch (throwable: Throwable) {
             handleAuthenticationDiscoveryError(
                 siteUrl = siteUrl,
@@ -266,7 +272,11 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 }
                 wpApiClientProvider.clearSelfHostedClient(site.id)
                 dispatcherWrapper.updateApplicationPassword(site)
-                trackSuccessful(effectiveUrlLogin.siteUrl)
+                trackLoginSuccessful(effectiveUrlLogin.siteUrl)
+                appLogWrapper.d(
+                    AppLog.T.DB,
+                    "A_P: Saved application password credentials for: ${effectiveUrlLogin.siteUrl}"
+                )
                 trackCreated(creationSource, success = true)
                 processedAppPasswordData = effectiveUrlLogin.siteUrl
                 StoreCredentialsResult.Success
@@ -388,19 +398,24 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         )
     }
 
-    private fun trackSuccessful(siteUrl: String) {
+    /**
+     * A completed application-password login. Called from both paths that can finish one: credentials
+     * stored against a site we already had, and — via ApplicationPasswordLoginViewModel — a site
+     * fetched for the first time. Missing the second would leave the failure counts without the
+     * matching successes, since every first-time failure does report.
+     */
+    fun trackLoginSuccessful(siteUrl: String?) {
         analyticsTracker.track(
             applicationPasswordLoginStat(),
             mapOf(
-                URL_TAG to maskUrl(siteUrl),
+                URL_TAG to maskUrl(siteUrl.orEmpty()),
                 SUCCESS_TAG to true.toString(),
             )
         )
-        appLogWrapper.d(AppLog.T.DB, "A_P: Saved application password credentials for: $siteUrl")
     }
 
     /**
-     * The failure counterpart of [trackSuccessful]. Until this existed the login event only ever
+     * The failure counterpart of [trackLoginSuccessful]. Until this existed the login event only ever
      * fired on success, so failures were invisible and successes had nothing to be a share of.
      */
     private fun trackLoginFailed(siteUrl: String?, error: String) {

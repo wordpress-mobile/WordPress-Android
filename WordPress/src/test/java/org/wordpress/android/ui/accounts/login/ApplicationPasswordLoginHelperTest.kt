@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts.login
 
 import android.content.Context
 import com.automattic.android.tracks.crashlogging.CrashLogging
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertTrue
@@ -36,6 +37,7 @@ import uniffi.wp_api.KnownAuthenticationBlockingPlugin
 import uniffi.wp_api.OAuth2Endpoints
 import uniffi.wp_api.ParseUrlException
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 
 private const val TEST_URL = "http://test.com"
@@ -579,6 +581,27 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
                 "success" to "false",
                 "error" to "user_rejected",
             ),
+            trackedProperties(Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN)
+        )
+    }
+
+    @Test
+    fun `given a cancelled discovery, when it unwinds, then it is not reported as a failure`() = runTest {
+        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).doThrow(CancellationException("cancelled"))
+
+        assertFailsWith<CancellationException> {
+            applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.LOGIN)
+        }
+
+        verify(analyticsTracker, times(0)).track(any(), any<Map<String, Any?>>())
+    }
+
+    @Test
+    fun `given a first-time site, when the login completes, then the login event reports success`() {
+        applicationPasswordLoginHelper.trackLoginSuccessful(TEST_URL)
+
+        assertEquals(
+            mapOf("url" to "http://txxt.com", "success" to "true"),
             trackedProperties(Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN)
         )
     }

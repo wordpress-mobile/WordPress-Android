@@ -608,6 +608,9 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             // Then
             val result = awaitItem()
             assertFalse(result.isError)
+            // A first-time site completes here rather than in the helper, so this is the only place
+            // the login event can report the success that matches the failures the helper reports.
+            verify(applicationPasswordLoginHelper).trackLoginSuccessful(eq(urlLogin.siteUrl))
             cancelAndIgnoreRemainingEvents()
         }
     }

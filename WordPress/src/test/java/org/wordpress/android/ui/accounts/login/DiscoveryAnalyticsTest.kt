@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts.login
 
 import org.junit.Test
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import uniffi.wp_api.ApplicationPasswordsNotSupportedReason
 import uniffi.wp_api.AutoDiscoveryAttemptFailure
 import uniffi.wp_api.FetchAndParseApiRootFailure
@@ -13,6 +14,7 @@ import uniffi.wp_api.RequestExecutionErrorReason
 import uniffi.wp_api.RequestExecutionException
 import uniffi.wp_api.RequestMethod
 import uniffi.wp_api.ResponseBodyType
+import uniffi.wp_api.WpApiDetails
 import uniffi.wp_api.WpErrorCode
 import kotlin.test.assertEquals
 
@@ -132,6 +134,29 @@ class DiscoveryAnalyticsTest {
 
         assertEquals(
             mapOf("reason" to "app_passwords_blocked_by_plugin", "plugin" to "Wordfence"),
+            failure.toDiscoveryFailure().props
+        )
+    }
+
+    @Test
+    fun `multiple blocking plugins are named from the site's api details`() {
+        val apiDetails = mock<WpApiDetails>()
+        whenever(apiDetails.applicationPasswordBlockingPlugins())
+            .thenReturn(listOf(plugin("Wordfence"), plugin("Hostinger Tools")))
+        val failure = AutoDiscoveryAttemptFailure.FetchAndParseApiRoot(
+            mock(),
+            mock(),
+            FetchAndParseApiRootFailure.ApplicationPasswordsNotSupported(
+                apiDetails,
+                ApplicationPasswordsNotSupportedReason.ApplicationPasswordBlockedByMultiplePlugins,
+            )
+        )
+
+        assertEquals(
+            mapOf(
+                "reason" to "app_passwords_blocked_by_multiple_plugins",
+                "plugin" to "Wordfence,Hostinger Tools",
+            ),
             failure.toDiscoveryFailure().props
         )
     }

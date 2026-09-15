@@ -352,6 +352,10 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 Stat.APPLICATION_PASSWORD_CREATED,
                 mapOf("source" to creationSource, "success" to "true")
             )
+            // The helper only reports the login when it stores credentials against a site we already
+            // had. This is the other way a login completes — a site fetched for the first time — and
+            // without it the event would carry first-time failures but none of their successes.
+            applicationPasswordLoginHelper.trackLoginSuccessful(currentUrlLogin?.siteUrl)
             _onFinishedEvent.emit(
                 NavigationActionData(
                     showSiteSelector = siteStore.hasSite() &&

@@ -82,13 +82,17 @@ internal fun noAuthenticationUrlFailure(
     blockingPlugins.isEmpty() -> DiscoveryFailure("no_app_passwords_url")
     blockingPlugins.size == 1 -> DiscoveryFailure(
         reason = BLOCKED_BY_PLUGIN_REASON,
-        details = mapOf(PLUGIN_TAG to blockingPlugins.first().name),
+        details = blockingPlugins.pluginDetails(),
     )
     else -> DiscoveryFailure(
         reason = BLOCKED_BY_MULTIPLE_PLUGINS_REASON,
-        details = mapOf(PLUGIN_TAG to blockingPlugins.joinToString(separator = ",") { it.name }),
+        details = blockingPlugins.pluginDetails(),
     )
 }
+
+/** Empty rather than a blank prop when the namespaces name nothing we recognise. */
+private fun List<KnownAuthenticationBlockingPlugin>.pluginDetails(): Map<String, String> =
+    if (isEmpty()) emptyMap() else mapOf(PLUGIN_TAG to joinToString(separator = ",") { it.name })
 
 private fun FindApiRootFailure.toDiscoveryFailure(): DiscoveryFailure = when (this) {
     is FindApiRootFailure.FetchHomepage -> DiscoveryFailure("fetch_homepage_failed", error.networkDetails())
@@ -114,16 +118,23 @@ private fun FetchAndParseApiRootFailure.toDiscoveryFailure(): DiscoveryFailure =
             STATUS_CODE_TAG to statusCode.toString(),
         ),
     )
-    is FetchAndParseApiRootFailure.ApplicationPasswordsNotSupported -> reason.toDiscoveryFailure()
+    is FetchAndParseApiRootFailure.ApplicationPasswordsNotSupported ->
+        reason.toDiscoveryFailure(apiDetails.applicationPasswordBlockingPlugins())
 }
 
-private fun ApplicationPasswordsNotSupportedReason?.toDiscoveryFailure(): DiscoveryFailure = when (this) {
+/**
+ * @param blockingPlugins the plugins the site's REST namespaces identify. Only the single-plugin
+ * variant names its own plugin, so the multiple-plugin one is left to read them from here.
+ */
+private fun ApplicationPasswordsNotSupportedReason?.toDiscoveryFailure(
+    blockingPlugins: List<KnownAuthenticationBlockingPlugin>
+): DiscoveryFailure = when (this) {
     is ApplicationPasswordsNotSupportedReason.ApplicationPasswordBlockedByPlugin -> DiscoveryFailure(
         reason = BLOCKED_BY_PLUGIN_REASON,
         details = mapOf(PLUGIN_TAG to plugin.name),
     )
     ApplicationPasswordsNotSupportedReason.ApplicationPasswordBlockedByMultiplePlugins ->
-        DiscoveryFailure(BLOCKED_BY_MULTIPLE_PLUGINS_REASON)
+        DiscoveryFailure(BLOCKED_BY_MULTIPLE_PLUGINS_REASON, blockingPlugins.pluginDetails())
     ApplicationPasswordsNotSupportedReason.SiteIsLocalDevelopmentEnvironment ->
         DiscoveryFailure("local_dev_environment")
     ApplicationPasswordsNotSupportedReason.ApplicationPasswordsDisabledForHttpSite ->
