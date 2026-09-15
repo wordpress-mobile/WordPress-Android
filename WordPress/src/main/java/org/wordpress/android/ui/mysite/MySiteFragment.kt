@@ -315,15 +315,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
         recyclerView.layoutManager = layoutManager
         // The slowest sources - Blaze especially, which has no cache to read - can land a second or
-        // two after the rest, so let a late card fade in while the list slides to make room rather
-        // than having it appear from nowhere. Change animations stay off: a card that refines in
-        // place, like quick links picking up backup and scan, would cross-fade and read as a flicker.
-        // The fade and the slide share a duration so a late card finishes appearing exactly as the
-        // list finishes making room for it.
-        recyclerView.itemAnimator = DefaultItemAnimator().apply {
-            supportsChangeAnimations = false
-            addDuration = moveDuration
-        }
+        // two after the rest, so let the list slide to make room for a late card and then fade it in
+        // rather than having it appear from nowhere. Change animations stay off: a card that refines
+        // in place, like quick links picking up backup and scan, would cross-fade and read as a flicker.
+        recyclerView.itemAnimator = DefaultItemAnimator().apply { supportsChangeAnimations = false }
         recyclerView.addItemDecoration(
             MySiteCardAndItemDecoration(
                 horizontalMargin = resources.getDimensionPixelSize(R.dimen.margin_extra_large),
