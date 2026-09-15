@@ -61,12 +61,16 @@ class QuickLinksItemViewModelSlice @Inject constructor(
     private var capabilitiesJob: Job? = null
 
     /**
-     * The real backup/scan capabilities once the fetch has resolved them. Both build passes read
-     * this, so the second one - which finishes last, behind the slow capability probe - cannot
-     * overwrite fetched values with the optimistic defaults.
+     * The real backup/scan capabilities once the fetch has resolved them, keyed by site so a site
+     * change can't apply the previous site's products. Both build passes read this, so the second
+     * one - which finishes last, behind the slow capability probe - cannot overwrite fetched values
+     * with the optimistic defaults.
      */
     @Volatile
-    private var fetchedCapabilities: Pair<Boolean, Boolean>? = null
+    private var fetchedCapabilities: Pair<Long, Pair<Boolean, Boolean>>? = null
+
+    private fun capabilitiesFor(site: SiteModel) =
+        fetchedCapabilities?.takeIf { it.first == site.siteId }?.second
 
     fun buildCard(siteModel: SiteModel) {
         buildQuickLinks(siteModel)
@@ -97,8 +101,8 @@ class QuickLinksItemViewModelSlice @Inject constructor(
                 enableFocusPoints = false,
                 onClick = this@QuickLinksItemViewModelSlice::onClick,
                 isBlazeEligible = isSiteBlazeEligible(site),
-                backupAvailable = fetchedCapabilities?.first ?: true,
-                scanAvailable = fetchedCapabilities?.second ?: (!site.isWPCom && !site.isWPComAtomic),
+                backupAvailable = capabilitiesFor(site)?.first ?: true,
+                scanAvailable = capabilitiesFor(site)?.second ?: (!site.isWPCom && !site.isWPComAtomic),
                 includeCapabilityGatedItems = includeCapabilityGatedItems
             )
         )
@@ -113,7 +117,7 @@ class QuickLinksItemViewModelSlice @Inject constructor(
         capabilitiesJob?.cancel()
         capabilitiesJob = scope.launch(bgDispatcher) {
             jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId).collect {
-                fetchedCapabilities = it.backup to it.scan
+                fetchedCapabilities = site.siteId to (it.backup to it.scan)
                 _uiState.postValue(
                     convertToQuickLinkRibbonItem(
                         site,

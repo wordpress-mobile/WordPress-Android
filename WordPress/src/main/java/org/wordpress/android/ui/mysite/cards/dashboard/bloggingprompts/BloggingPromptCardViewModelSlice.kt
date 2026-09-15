@@ -65,6 +65,9 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
 
     private var collectJob: Job? = null
 
+    @Volatile
+    private var isRefreshingPrompt = false
+
     fun fetchBloggingPrompt(
         siteModel: SiteModel
     ) {
@@ -73,11 +76,21 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
             if (bloggingPromptsSettingsHelper.shouldShowPromptsFeature()) {
                 // refresh alongside the cached read rather than ahead of it, so a prompt that is
                 // already stored shows up in the first paint instead of a round trip later
-                launch { refreshData(siteModel) }
+                isRefreshingPrompt = true
+                launch {
+                    try {
+                        refreshData(siteModel)
+                    } finally {
+                        isRefreshingPrompt = false
+                    }
+                }
                 promptsStore.getPrompts(siteModel)
                     .map { it.model?.filter { prompt -> isSameDay(prompt.date, Date()) } }
                     .collect { result ->
-                        postState(result?.firstOrNull())
+                        val prompt = result?.firstOrNull()
+                        // a cache read started before the refresh wrote can come back empty after
+                        // it, so don't let it clear a prompt the refresh has already produced
+                        if (prompt != null || !isRefreshingPrompt) postState(prompt)
                     }
             } else {
                 postEmptyState()

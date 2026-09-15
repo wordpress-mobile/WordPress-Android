@@ -35,7 +35,6 @@ import org.wordpress.android.util.config.FEATURE_FLAG_PLATFORM_PARAMETER
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import java.util.UUID
-import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -62,25 +61,6 @@ class CardViewModelSlice @Inject constructor(
 
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
-
-    /**
-     * True between [markCardsBuilding] and the moment the dashboard has settled, so callers can tell
-     * "the dashboard has no cards" apart from "the dashboard hasn't loaded yet".
-     *
-     * This is a LiveData rather than a flag because it feeds a merge: a plain field can be changed
-     * without anything recomputing, and nudging the merge by re-posting its own value overwrites the
-     * state the sources just produced.
-     */
-    private val _isBuildingCards = MutableLiveData(false)
-    val isBuildingCards: LiveData<Boolean> = _isBuildingCards
-
-    @Volatile
-    private var isBuildMarked = false
-
-    @Volatile
-    private var hasFetchCompleted = false
-
-    private val pendingBuilds = AtomicInteger(0)
 
     val uiModel: MutableLiveData<CardsState> = merge(
         dynamicCardsViewModelSlice.topDynamicCards,
@@ -142,31 +122,6 @@ class CardViewModelSlice @Inject constructor(
         this.scope = scope
     }
 
-    /**
-     * Marks the dashboard as loading. Must be called before any card slice starts posting, otherwise
-     * a slice that reports early (personalize) lets the merge run while this still reads false.
-     */
-    fun markCardsBuilding() {
-        isBuildMarked = true
-        hasFetchCompleted = false
-        pendingBuilds.set(0)
-        _isBuildingCards.postValue(true)
-    }
-
-    /**
-     * The dashboard has settled once the server has told us what it has and nothing is still being
-     * built from it. Checking both avoids the two orderings that would otherwise get this wrong: the
-     * store emits from inside the fetch, so a build can start before the fetch returns, and a fetch
-     * whose cards are all filtered out leaves nothing to build at all.
-     */
-    private fun settleBuildingStateIfDone() {
-        if (!isBuildMarked) return
-        if (hasFetchCompleted && pendingBuilds.get() == 0) {
-            isBuildMarked = false
-            _isBuildingCards.postValue(false)
-        }
-    }
-
     fun buildCard(
         siteModel: SiteModel
     ) {
@@ -202,17 +157,10 @@ class CardViewModelSlice @Inject constructor(
                 osVersion = buildConfigWrapper.androidVersion
             )
             val result = cardsStore.fetchCards(payload)
-            hasFetchCompleted = true
             val error = result.error
             when {
-                error != null -> {
-                    settleBuildingStateIfDone()
-                    postErrorState()
-                }
-                else -> {
-                    settleBuildingStateIfDone()
-                    _isRefreshing.postValue(false)
-                }
+                error != null -> postErrorState()
+                else -> _isRefreshing.postValue(false)
             }
         }
     }
@@ -279,12 +227,9 @@ class CardViewModelSlice @Inject constructor(
     fun postState(cards: List<CardModel>?) {
         _isRefreshing.postValue(false)
         if (cards.isNullOrEmpty()) {
-            // an empty cache before the fetch lands is "not loaded yet", not "nothing to show"
-            settleBuildingStateIfDone()
             uiModel.postValue(CardsState.Success(emptyList(), emptyList(), emptyList()))
             return
         }
-        pendingBuilds.incrementAndGet()
         scope.launch(bgDispatcher) {
             dynamicCardsViewModelSlice.buildTopDynamicCards(
                 cards.firstOrNull { it is CardModel.DynamicCardsModel } as? CardModel.DynamicCardsModel
@@ -309,18 +254,10 @@ class CardViewModelSlice @Inject constructor(
             dynamicCardsViewModelSlice.buildBottomDynamicCards(
                 cards.firstOrNull { it is CardModel.DynamicCardsModel } as? CardModel.DynamicCardsModel
             )
-            // the slices above post, so the merge recomputes after this coroutine ends and reads the
-            // settled state - nothing needs to re-post it here
-            pendingBuilds.decrementAndGet()
-            settleBuildingStateIfDone()
         }
     }
 
     fun clearValue() {
-        isBuildMarked = false
-        hasFetchCompleted = false
-        pendingBuilds.set(0)
-        _isBuildingCards.postValue(false)
         uiModel.postValue(CardsState.Success(emptyList(), emptyList(), emptyList()))
         collectJob?.cancel()
         fetchJob?.cancel()

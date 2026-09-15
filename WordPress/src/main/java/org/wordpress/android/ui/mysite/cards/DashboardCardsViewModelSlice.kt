@@ -92,8 +92,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
         plansCardViewModelSlice.uiModel,
         personalizeCardViewModelSlice.uiModel,
         jetpackInstallFullPluginCardViewModelSlice.uiModel,
-        domainRegistrationCardViewModelSlice.uiModel,
-        cardViewModelSlice.isBuildingCards
+        domainRegistrationCardViewModelSlice.uiModel
     ) { quicklinks,
         blazeCard,
         cardsState,
@@ -102,8 +101,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
         plansCard,
         personalizeCard,
         jpFullInstallFullPlugin,
-        domainRegistrationCard,
-        isBuildingCards ->
+        domainRegistrationCard ->
         return@merge mergeUiModels(
             quicklinks,
             blazeCard,
@@ -113,8 +111,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
             plansCard,
             personalizeCard,
             jpFullInstallFullPlugin,
-            domainRegistrationCard,
-            isBuildingCards == true
+            domainRegistrationCard
         )
     }.distinctUntilChanged() as MutableLiveData<List<MySiteCardAndItem>>
 
@@ -129,7 +126,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
         personalizeCard: MySiteCardAndItem.Card.PersonalizeCardModel?,
         jpFullInstallFullPlugin: MySiteCardAndItem.Card.JetpackInstallFullPluginCard?,
         domainRegistrationCard: MySiteCardAndItem.Card.DomainRegistrationCard?,
-        isBuildingCards: Boolean,
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
         jpFullInstallFullPlugin?.let { cards.add(it) }
@@ -158,13 +154,8 @@ class DashboardCardsViewModelSlice @Inject constructor(
         // is shown or not, if the personalize card is not shown, then it means that
         // we are not showing dashboard at all
         personalizeCard?.let { personalize ->
-            // the dashboard cards arrive one slice at a time, so an empty list here means "not
-            // loaded yet" as often as it means "nothing to show" - only claim the latter once the
-            // cards have actually finished building, otherwise the message flashes on every launch
-            if (!isBuildingCards) {
-                noCardsMessageViewModelSlice.buildNoCardsMessage(cards)?.let { noCardsMessage ->
-                    cards.add(noCardsMessage)
-                }
+            noCardsMessageViewModelSlice.buildNoCardsMessage(cards)?.let { noCardsMessage ->
+                cards.add(noCardsMessage)
             }
             cards.add(personalize)
         }
@@ -184,9 +175,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
     }
 
     fun buildCards(site: SiteModel) {
-        // synchronously, before the coroutine below - slices that report early (personalize) would
-        // otherwise let the merge run while the cards still read as loaded rather than loading
-        cardViewModelSlice.markCardsBuilding()
         job?.cancel()
         job = scope.launch(bgDispatcher) {
             jetpackInstallFullPluginCardViewModelSlice.buildCard(site)
