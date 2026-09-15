@@ -459,6 +459,8 @@ public class UploadUtils {
             if (onPublishingCallback != null) {
                 onPublishingCallback.onPublishing(isFirstTimePublish);
             }
+        } else {
+            ToastUtils.showToast(activity, R.string.no_network_message, ToastUtils.Duration.SHORT);
         }
         PostUtils.trackSavePostAnalytics(post, site);
     }
