@@ -98,8 +98,6 @@ class QuickLinksItemViewModelSlice @Inject constructor(
                 isBlazeEligible = isSiteBlazeEligible(site),
                 backupAvailable = backupAvailable,
                 scanAvailable = scanAvailable,
-                // The ribbon keeps only the items the user picked, and Menus is the one item whose
-                // build waits on a network probe, so only pay for that when Menus will be shown.
                 includeMenusItem = isActiveQuickLink(ListItemAction.MENUS, site.siteId)
             )
         )

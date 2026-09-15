@@ -656,28 +656,22 @@ fun <T> LiveData<T>.fold(action: (previous: T, current: T) -> T): MediatorLiveDa
  * is mid-burst, so the newest value is held until the burst has been quiet for [quietMs] or
  * [maxHoldMs] has passed since the hold began, whichever comes first. Observers see the first value
  * of a burst and then its last, rather than every step in between, and a value arriving on its own
- * is never delayed. Each held value replaces the one before it, so the observer always ends on the
- * newest value.
+ * is never delayed. The held value is always the source's newest, so the observer always ends on it.
  *
  * [scope] must dispatch on the main thread; the returned LiveData is updated from it. Cancelling the
  * scope drops whatever is held.
  */
 fun <T> LiveData<T>.settle(scope: CoroutineScope, quietMs: Long, maxHoldMs: Long): LiveData<T> {
     val mediator = MediatorLiveData<T>()
-    var held: T? = null
-    var hasHeld = false
     var quietJob: Job? = null
+    // non-null exactly while a value is being held
     var deadlineJob: Job? = null
 
     fun flush() {
+        if (deadlineJob == null) return
         deadlineJob?.cancel()
         deadlineJob = null
-        if (hasHeld) {
-            val value = held
-            held = null
-            hasHeld = false
-            mediator.value = value
-        }
+        mediator.value = this.value
     }
 
     mediator.addSource(this) { value ->
@@ -689,14 +683,10 @@ fun <T> LiveData<T>.settle(scope: CoroutineScope, quietMs: Long, maxHoldMs: Long
         }
         if (wasQuiet) {
             mediator.value = value
-        } else {
-            held = value
-            hasHeld = true
-            if (deadlineJob == null) {
-                deadlineJob = scope.launch {
-                    delay(maxHoldMs)
-                    flush()
-                }
+        } else if (deadlineJob == null) {
+            deadlineJob = scope.launch {
+                delay(maxHoldMs)
+                flush()
             }
         }
     }
