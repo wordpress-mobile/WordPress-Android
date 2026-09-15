@@ -90,7 +90,7 @@ class FetchPlansUseCaseTest : BaseUnitTest() {
             )
         )
 
-        assertThat(useCase.execute(site).hasDomainCredit()).isTrue()
+        assertThat(fetchedCredit()).isTrue()
     }
 
     @Test
@@ -102,14 +102,14 @@ class FetchPlansUseCaseTest : BaseUnitTest() {
             )
         )
 
-        assertThat(useCase.execute(site).hasDomainCredit()).isFalse()
+        assertThat(fetchedCredit()).isFalse()
     }
 
     @Test
     fun `given no plan is current, hasDomainCredit is false`() = test {
         stubPlans(mapOf(FREE_PLAN to nonCurrentPlan(), PREMIUM_PLAN to nonCurrentPlan()))
 
-        assertThat(useCase.execute(site).hasDomainCredit()).isFalse()
+        assertThat(fetchedCredit()).isFalse()
     }
 
     /**
@@ -126,7 +126,7 @@ class FetchPlansUseCaseTest : BaseUnitTest() {
             )
         )
 
-        assertThat(useCase.execute(site).hasDomainCredit()).isTrue()
+        assertThat(fetchedCredit()).isTrue()
     }
 
     @Test
@@ -138,16 +138,14 @@ class FetchPlansUseCaseTest : BaseUnitTest() {
         assertThat(result).isInstanceOf(SitePlansResult.Error::class.java)
     }
 
-    @Test
-    fun `given the fetch failed, hasDomainCredit is false`() {
-        assertThat(SitePlansResult.Error.hasDomainCredit()).isFalse()
-    }
-
     @Suppress("UNCHECKED_CAST")
     private suspend fun stubPlans(plans: Map<ULong, SitePlan>) {
         whenever(wpComApiClient.request<Any>(any()))
             .thenReturn(WpRequestResult.Success(plans) as WpRequestResult<Any>)
     }
+
+    private suspend fun fetchedCredit(): Boolean =
+        (useCase.execute(site) as SitePlansResult.Success).hasDomainCredit()
 
     private fun currentPlan(hasDomainCredit: Boolean): SitePlan =
         testSitePlan(currentPlan = testCurrentPlan(hasDomainCredit))

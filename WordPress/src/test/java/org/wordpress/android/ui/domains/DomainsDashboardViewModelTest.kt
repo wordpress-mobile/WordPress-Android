@@ -41,7 +41,10 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
 
     private lateinit var viewModel: DomainsDashboardViewModel
 
-    private val uiModel = mutableListOf<DomainsDashboardItem>()
+    private val uiStates = mutableListOf<DomainsDashboardUiState>()
+
+    private val dashboardItems: List<DomainsDashboardItem>
+        get() = (uiStates.last() as DomainsDashboardUiState.Content).items
 
     @Before
     fun setUp() {
@@ -54,7 +57,7 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
             testDispatcher()
         )
 
-        viewModel.uiModel.observeForever { if (it != null) uiModel += it }
+        viewModel.uiState.observeForever { if (it != null) uiStates += it }
     }
 
     @Test
@@ -64,8 +67,6 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
             hasCustomDomains = true,
             hasDomainCredits = false
         )
-
-        val dashboardItems = uiModel
 
         assertThat(dashboardItems).hasSize(5)
 
@@ -84,8 +85,6 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
             hasDomainCredits = false
         )
 
-        val dashboardItems = uiModel
-
         assertThat(dashboardItems).hasSize(3)
 
         assertThat(dashboardItems[0]).isInstanceOf(SiteDomainsHeader::class.java)
@@ -102,8 +101,6 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
             hasCustomDomains = true,
             hasDomainCredits = true
         )
-
-        val dashboardItems = uiModel
 
         assertThat(dashboardItems).hasSize(5)
 
@@ -124,8 +121,6 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
             hasDomainCredits = false
         )
 
-        val dashboardItems = uiModel
-
         assertThat(dashboardItems).hasSize(5)
 
         assertThat(dashboardItems[0]).isInstanceOf(SiteDomainsHeader::class.java)
@@ -143,8 +138,6 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
             hasDomainCredits = true
         )
 
-        val dashboardItems = uiModel
-
         assertThat(dashboardItems).hasSize(3)
 
         assertThat(dashboardItems[0]).isInstanceOf(SiteDomainsHeader::class.java)
@@ -159,8 +152,6 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
             hasCustomDomains = false,
             hasDomainCredits = false
         )
-
-        val dashboardItems = uiModel
 
         assertThat(dashboardItems).hasSize(3)
 
@@ -179,7 +170,7 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
             hasDomainCredits = false
         )
 
-        val customDomainRow = uiModel[3] as SiteDomains
+        val customDomainRow = dashboardItems[3] as SiteDomains
 
         assertThat(customDomainRow.domain).isEqualTo(UiStringText("henna.tattoo"))
         assertThat(customDomainRow.isPrimary).isFalse()
@@ -194,32 +185,11 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `free domain row falls back to the site address when the fetch fails`() = test {
-        val site = siteWithPaidPlan
-        whenever(fetchSiteDomainsUseCase.execute(site)).thenReturn(SiteDomainsResult.Error)
-        whenever(fetchPlansUseCase.execute(site)).thenReturn(SitePlansResult.Error)
-        whenever(fetchAllDomainsUseCase.execute()).thenReturn(AllDomains.Error)
-
-        viewModel.start(site)
-
-        val dashboardItems = uiModel
-
-        assertThat(dashboardItems).hasSize(3)
-        assertThat(dashboardItems[1]).isInstanceOf(SiteDomains::class.java)
-        assertThat((dashboardItems[1] as SiteDomains).domain).isEqualTo(UiStringText(TEST_DOMAIN_NAME))
-        assertThat(dashboardItems[2]).isInstanceOf(PurchaseDomain::class.java)
-        assertThat((dashboardItems[2] as PurchaseDomain).title)
-            .isEqualTo(UiStringRes(R.string.domains_paid_plan_add_your_domain_title))
-    }
-
-    @Test
     fun `a domain that omits the wpcom flag counts as a custom domain`() = test {
         setupWith(
             site = siteWithPaidPlan,
             domains = listOf(testSiteDomain(domain = "henna.tattoo", wpcomDomain = null))
         )
-
-        val dashboardItems = uiModel
 
         assertThat(dashboardItems).hasSize(5)
         assertThat(dashboardItems[2]).isInstanceOf(SiteDomainsHeader::class.java)
@@ -239,7 +209,86 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
             )
         )
 
-        assertThat((uiModel[3] as SiteDomains).expiry).isNull()
+        assertThat((dashboardItems[3] as SiteDomains).expiry).isNull()
+    }
+
+    @Test
+    fun `a failed site domains fetch reports the error instead of an empty list`() = test {
+        stubResults(
+            domainsResult = SiteDomainsResult.Error,
+            plansResult = SitePlansResult.Success(mapOf(TEST_PRODUCT_ID to planWithCredit(false)))
+        )
+
+        viewModel.start(siteWithPaidPlan)
+
+        assertThat(uiStates.last()).isEqualTo(DomainsDashboardUiState.Error)
+    }
+
+    @Test
+    fun `a failed plans fetch reports the error instead of no credit`() = test {
+        stubResults(
+            domainsResult = SiteDomainsResult.Success(listOf(customDomain)),
+            plansResult = SitePlansResult.Error
+        )
+
+        viewModel.start(siteWithPaidPlan)
+
+        assertThat(uiStates.last()).isEqualTo(DomainsDashboardUiState.Error)
+    }
+
+    @Test
+    fun `a failed all domains fetch leaves the dashboard standing`() = test {
+        stubResults(
+            domainsResult = SiteDomainsResult.Success(listOf(customDomain)),
+            plansResult = SitePlansResult.Success(mapOf(TEST_PRODUCT_ID to planWithCredit(false))),
+            allDomainsResult = AllDomains.Error
+        )
+
+        viewModel.start(siteWithPaidPlan)
+
+        assertThat(dashboardItems).hasSize(5)
+        assertThat((dashboardItems[3] as SiteDomains).domain).isEqualTo(UiStringText("henna.tattoo"))
+    }
+
+    @Test
+    fun `the screen reports loading before it reports a result`() = test {
+        setupWith(
+            hasPaidPlan = true,
+            hasCustomDomains = true,
+            hasDomainCredits = false
+        )
+
+        assertThat(uiStates.first()).isEqualTo(DomainsDashboardUiState.Loading)
+    }
+
+    @Test
+    fun `retrying after an error renders the dashboard once the requests succeed`() = test {
+        stubResults(
+            domainsResult = SiteDomainsResult.Error,
+            plansResult = SitePlansResult.Error,
+            allDomainsResult = AllDomains.Error
+        )
+        viewModel.start(siteWithPaidPlan)
+        assertThat(uiStates.last()).isEqualTo(DomainsDashboardUiState.Error)
+
+        stubResults(
+            domainsResult = SiteDomainsResult.Success(listOf(customDomain)),
+            plansResult = SitePlansResult.Success(mapOf(TEST_PRODUCT_ID to planWithCredit(false)))
+        )
+
+        viewModel.onRetryClick()
+
+        assertThat(dashboardItems).hasSize(5)
+    }
+
+    private suspend fun stubResults(
+        domainsResult: SiteDomainsResult,
+        plansResult: SitePlansResult,
+        allDomainsResult: AllDomains = AllDomains.Success(listOf(allDomainsDomain))
+    ) {
+        whenever(fetchSiteDomainsUseCase.execute(siteWithPaidPlan)).thenReturn(domainsResult)
+        whenever(fetchPlansUseCase.execute(siteWithPaidPlan)).thenReturn(plansResult)
+        whenever(fetchAllDomainsUseCase.execute()).thenReturn(allDomainsResult)
     }
 
     private suspend fun setupWith(site: SiteModel, domains: List<SiteDomain>) {

@@ -27,6 +27,7 @@ import org.wordpress.android.ui.domains.usecases.FetchAllDomainsUseCase
 import org.wordpress.android.ui.domains.usecases.FetchPlansUseCase
 import org.wordpress.android.ui.domains.usecases.FetchSiteDomainsUseCase
 import org.wordpress.android.ui.domains.usecases.SiteDomainsResult
+import org.wordpress.android.ui.domains.usecases.SitePlansResult
 import org.wordpress.android.ui.domains.usecases.hasDomainCredit
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -56,14 +57,11 @@ class DomainsDashboardViewModel @Inject constructor(
     lateinit var site: SiteModel
     private var isStarted: Boolean = false
 
-    private val _showProgressSpinner = MutableLiveData<Boolean>()
-    val progressBar: LiveData<Boolean> = _showProgressSpinner
-
     private val _onNavigation = MutableLiveData<Event<DomainsDashboardNavigationAction>>()
     val onNavigation: LiveData<Event<DomainsDashboardNavigationAction>> = _onNavigation
 
-    private val _uiModel = MutableLiveData<List<DomainsDashboardItem>>()
-    val uiModel: LiveData<List<DomainsDashboardItem>> = _uiModel
+    private val _uiState = MutableLiveData<DomainsDashboardUiState>()
+    val uiState: LiveData<DomainsDashboardUiState> = _uiState
 
     fun start(site: SiteModel) {
         if (isStarted) {
@@ -75,8 +73,21 @@ class DomainsDashboardViewModel @Inject constructor(
         isStarted = true
     }
 
+    fun onRetryClick() {
+        refresh(site)
+    }
+
+    /**
+     * The site's domains and its plans each settle something the screen states
+     * as fact: which domains the site has, and whether the call to action
+     * claims a free domain or sells one. Neither question has an answer that
+     * stands in for a failed request — an empty list reads as "this site has
+     * no custom domains" and an absent credit routes a user holding one into a
+     * paid checkout — so a failure of either leaves the screen reporting the
+     * error rather than drawing a dashboard.
+     */
     private fun refresh(site: SiteModel) = launch {
-        _showProgressSpinner.postValue(true)
+        _uiState.postValue(DomainsDashboardUiState.Loading)
 
         val deferredPlansResult = async { fetchPlansUseCase.execute(site) }
         val deferredDomainsResult = async { fetchSiteDomainsUseCase.execute(site) }
@@ -86,10 +97,23 @@ class DomainsDashboardViewModel @Inject constructor(
         val domainsResult = deferredDomainsResult.await()
         val allDomainsResult = deferredAllDomainsResult.await()
 
-        val domains = if (domainsResult is SiteDomainsResult.Success) domainsResult.domains else emptyList()
+        if (domainsResult !is SiteDomainsResult.Success || plansResult !is SitePlansResult.Success) {
+            _uiState.postValue(DomainsDashboardUiState.Error)
+            return@launch
+        }
+
         val allDomains = if (allDomainsResult is AllDomains.Success) allDomainsResult.domains else emptyList()
 
-        buildDashboardItems(site, plansResult.hasDomainCredit(), domains, allDomains)
+        _uiState.postValue(
+            DomainsDashboardUiState.Content(
+                buildDashboardItems(
+                    site,
+                    plansResult.hasDomainCredit(),
+                    domainsResult.domains,
+                    allDomains
+                )
+            )
+        )
     }
 
     private fun buildDashboardItems(
@@ -97,7 +121,7 @@ class DomainsDashboardViewModel @Inject constructor(
         hasDomainCredit: Boolean,
         domains: List<SiteDomain>,
         allDomains: List<AllDomainItem>
-    ) {
+    ): List<DomainsDashboardItem> {
         val listItems = mutableListOf<DomainsDashboardItem>()
 
         listItems += SiteDomainsHeader(UiStringRes(R.string.domains_free_domain))
@@ -124,8 +148,7 @@ class DomainsDashboardViewModel @Inject constructor(
 
         listItems += buildCtaItems(hasCustomDomains, hasDomainCredit, hasPaidPlan)
 
-        _showProgressSpinner.postValue(false)
-        _uiModel.postValue(listItems)
+        return listItems
     }
 
     private fun getStatusColor(
@@ -259,4 +282,12 @@ class DomainsDashboardViewModel @Inject constructor(
     fun onSuccessfulDomainRegistration() {
         refresh(site)
     }
+}
+
+sealed interface DomainsDashboardUiState {
+    data object Loading : DomainsDashboardUiState
+
+    data class Content(val items: List<DomainsDashboardItem>) : DomainsDashboardUiState
+
+    data object Error : DomainsDashboardUiState
 }
