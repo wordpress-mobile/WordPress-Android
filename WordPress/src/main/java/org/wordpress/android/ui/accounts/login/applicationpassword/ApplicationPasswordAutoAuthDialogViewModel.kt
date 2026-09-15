@@ -94,6 +94,15 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
                                 _navigationEvent.emit(
                                     NavigationEvent.Success
                                 )
+                            is StoreCredentialsResult.SiteNotFound -> {
+                                // The web callback flow retries this via fetch-sites; here the login
+                                // just ends, and nothing else reports it. (BadData already reported
+                                // itself from inside the helper, so only this branch needs it.)
+                                applicationPasswordLoginHelper.trackStoringFailed(
+                                    site.url, "site_not_found_headless", creationSource
+                                )
+                                _navigationEvent.emit(NavigationEvent.Error)
+                            }
                             else ->
                                 _navigationEvent.emit(
                                     NavigationEvent.Error
