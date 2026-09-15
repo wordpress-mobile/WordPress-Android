@@ -75,8 +75,10 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
             if (bloggingPromptsSettingsHelper.shouldShowPromptsFeature()) {
                 // Refresh alongside the cached read rather than ahead of it, so a prompt that is
                 // already stored shows up with the rest of the cached cards instead of a network
-                // round trip later.
-                launch { refreshData(siteModel) }
+                // round trip later. The fetch gets its own job rather than being a child of the
+                // collector, so cancelling the collector - every resume and site switch - never
+                // abandons a response before the store has written it.
+                scope.launch(bgDispatcher) { refreshPrompts(siteModel) }
                 promptsStore.getPrompts(siteModel)
                     .map { it.model?.filter { prompt -> isSameDay(prompt.date, Date()) } }
                     .collect { result ->
@@ -88,28 +90,13 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
         }
     }
 
-    private suspend fun refreshData(
-        siteModel: SiteModel,
-        isSinglePromptRefresh: Boolean = false
-    ) {
-        fetchPromptsAndPostErrorIfAvailable(siteModel, isSinglePromptRefresh)
-    }
-
-    private suspend fun fetchPromptsAndPostErrorIfAvailable(
-        selectedSite: SiteModel,
-        isSinglePromptRefresh: Boolean = false
-    ) {
-        val numOfPromptsToFetch = if (isSinglePromptRefresh) 1 else NUM_PROMPTS_TO_REQUEST
-        val result = promptsStore.fetchPrompts(selectedSite, numOfPromptsToFetch, Date())
-        when {
-            result.isError -> postLastState()
-            else -> {
-                result.model
-                    ?.firstOrNull { prompt -> isSameDay(prompt.date, Date()) }
-                    ?.let { prompt -> postState(prompt) }
-                    ?: postLastState()
-            }
-        }
+    /**
+     * The store writes fetched prompts to the same table the collector observes, so the collector is
+     * the only writer of the card, whatever the outcome; this just ends the refresh.
+     */
+    private suspend fun refreshPrompts(siteModel: SiteModel) {
+        promptsStore.fetchPrompts(siteModel, NUM_PROMPTS_TO_REQUEST, Date())
+        postLastState()
     }
 
     fun initialize(scope: CoroutineScope) {
