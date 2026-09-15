@@ -61,16 +61,17 @@ class QuickLinksItemViewModelSlice @Inject constructor(
     private var capabilitiesJob: Job? = null
 
     /**
-     * The real backup/scan capabilities once the fetch has resolved them, keyed by site so a site
-     * change can't apply the previous site's products. Both build passes read this, so the second
-     * one - which finishes last, behind the slow capability probe - cannot overwrite fetched values
-     * with the optimistic defaults.
+     * The real backup/scan capabilities once the fetch has resolved them, so a site change can't
+     * apply the previous site's products. Keyed by the local site id (site.id) rather than
+     * site.siteId - the latter is the WP.com blog id and is 0 for every self-hosted application
+     * password site, which would collide them all onto one entry. SiteCapabilityChecker keys its
+     * own cache the same way, for the same reason.
      */
     @Volatile
-    private var fetchedCapabilities: Pair<Long, Pair<Boolean, Boolean>>? = null
+    private var fetchedCapabilities: Pair<Int, Pair<Boolean, Boolean>>? = null
 
     private fun capabilitiesFor(site: SiteModel) =
-        fetchedCapabilities?.takeIf { it.first == site.siteId }?.second
+        fetchedCapabilities?.takeIf { it.first == site.id }?.second
 
     fun buildCard(siteModel: SiteModel) {
         buildQuickLinks(siteModel)
@@ -78,23 +79,25 @@ class QuickLinksItemViewModelSlice @Inject constructor(
 
     private fun buildQuickLinks(site: SiteModel) {
         // This builds the whole site items list just to filter it down to the ribbon, so keep it off
-        // the main thread. Build it twice: the full list waits on a site capability probe that can
-        // take a couple of seconds on a cold start, and the ribbon sits directly under the header,
-        // so blocking on that probe lands it late and shoves the rest of the list down. Post what is
-        // ready first, then post again once the probe has landed - the ribbon is a fixed height row,
-        // so refining its contents in place doesn't move anything.
+        // the main thread. The full list waits on a site capability probe that can take a couple of
+        // seconds on a cold start, and the ribbon sits directly under the header, so blocking on
+        // that probe lands it late and shoves the rest of the list down. Post what is ready first,
+        // then let whoever can produce the rest refine it in place - the ribbon is a fixed height
+        // row, so changing its contents doesn't move anything.
         buildJob?.cancel()
         buildJob = scope.launch(bgDispatcher) {
-            postQuickLinks(site, includeCapabilityGatedItems = false, triggerCapabilityFetch = true)
-            postQuickLinks(site, includeCapabilityGatedItems = true, triggerCapabilityFetch = false)
+            val capabilityFetchStarted = postQuickLinks(site, includeCapabilityGatedItems = false)
+            // Only run the second pass when nothing else is going to rebuild the ribbon. The
+            // capability fetch already rebuilds it with both the gated items and the real products,
+            // and it finishes long before this pass does - this one spends a second or two in the
+            // menus probe. Running both would land the optimistic defaults captured before the
+            // fetch on top of its fetched values, and mark them as final.
+            if (!capabilityFetchStarted) postQuickLinks(site, includeCapabilityGatedItems = true)
         }
     }
 
-    private suspend fun postQuickLinks(
-        site: SiteModel,
-        includeCapabilityGatedItems: Boolean,
-        triggerCapabilityFetch: Boolean
-    ) {
+    /** @return true when this pass kicked off the backup/scan capability fetch. */
+    private suspend fun postQuickLinks(site: SiteModel, includeCapabilityGatedItems: Boolean): Boolean {
         val items = siteItemsBuilder.build(
             MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
                 site = site,
@@ -106,18 +109,20 @@ class QuickLinksItemViewModelSlice @Inject constructor(
                 includeCapabilityGatedItems = includeCapabilityGatedItems
             )
         )
-        // only the first pass may kick off the backup/scan fetch - letting the second pass re-enter
-        // it would cancel the in flight job and re-dispatch the request
-        _uiState.postValue(
-            convertToQuickLinkRibbonItem(site, items, capabilitiesFetched = !triggerCapabilityFetch)
+        // the gated pass must not re-enter the fetch: it would cancel the in flight job and
+        // re-dispatch the request
+        val ribbon = convertToQuickLinkRibbonItem(
+            site, items, capabilitiesFetched = includeCapabilityGatedItems
         )
+        _uiState.postValue(ribbon)
+        return !includeCapabilityGatedItems && capabilitiesJob?.isActive == true
     }
 
     private fun fetchCapabilities(site: SiteModel) {
         capabilitiesJob?.cancel()
         capabilitiesJob = scope.launch(bgDispatcher) {
             jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId).collect {
-                fetchedCapabilities = site.siteId to (it.backup to it.scan)
+                fetchedCapabilities = site.id to (it.backup to it.scan)
                 _uiState.postValue(
                     convertToQuickLinkRibbonItem(
                         site,
