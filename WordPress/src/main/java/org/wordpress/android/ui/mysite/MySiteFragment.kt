@@ -318,7 +318,12 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         // two after the rest, so let the list slide to make room for a late card and then fade it in
         // rather than having it appear from nowhere. Change animations stay off: a card that refines
         // in place, like quick links picking up backup and scan, would cross-fade and read as a flicker.
-        recyclerView.itemAnimator = DefaultItemAnimator().apply { supportsChangeAnimations = false }
+        // The fade only starts once the slide has finished, so a shorter slide is what makes a late
+        // card show up promptly.
+        recyclerView.itemAnimator = DefaultItemAnimator().apply {
+            supportsChangeAnimations = false
+            moveDuration = CARD_SLIDE_MS
+        }
         recyclerView.addItemDecoration(
             MySiteCardAndItemDecoration(
                 horizontalMargin = resources.getDimensionPixelSize(R.dimen.margin_extra_large),
@@ -836,6 +841,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
         private const val SETTLE_QUIET_MS = 400L
         private const val SETTLE_MAX_HOLD_MS = 1200L
+        private const val CARD_SLIDE_MS = 150L
         fun newInstance(): MySiteFragment {
             return MySiteFragment()
         }
