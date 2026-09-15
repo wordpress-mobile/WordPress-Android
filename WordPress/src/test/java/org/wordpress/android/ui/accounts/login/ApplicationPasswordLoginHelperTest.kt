@@ -454,10 +454,17 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     @Test
     fun `maskUrl masks a scheme-less address, which is what the login screen passes`() {
         // Regression: URI reports no host without a scheme, so this used to return the raw domain.
-        assertEquals("mxxxxxxxxxxxg.com", applicationPasswordLoginHelper.maskUrl("myprivateblog.com"))
-        assertEquals("mxxxxe.com/blog", applicationPasswordLoginHelper.maskUrl("mysite.com/blog"))
-        assertEquals("wxxxxxxxxxxxxxxxg.com", applicationPasswordLoginHelper.maskUrl("www.myprivateblog.com"))
-        assertEquals("mxxxxxxxxxxxg.com:8080", applicationPasswordLoginHelper.maskUrl("myprivateblog.com:8080"))
+        // The scheme is normalised too, so one site doesn't count twice on whether it was typed.
+        assertEquals("https://mxxxxxxxxxxxg.com", applicationPasswordLoginHelper.maskUrl("myprivateblog.com"))
+        assertEquals("https://mxxxxe.com/xxxx", applicationPasswordLoginHelper.maskUrl("mysite.com/blog"))
+        assertEquals(
+            "https://wxxxxxxxxxxxxxxxg.com",
+            applicationPasswordLoginHelper.maskUrl("www.myprivateblog.com")
+        )
+        assertEquals(
+            "https://mxxxxxxxxxxxg.com:8080",
+            applicationPasswordLoginHelper.maskUrl("myprivateblog.com:8080")
+        )
     }
 
     @Test
@@ -484,10 +491,27 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `maskUrl with dot in path masks only host`() {
+    fun `maskUrl masks the path rather than passing it through`() {
+        // Subdirectory installs make the path part of a site's identity, so it is masked per
+        // segment rather than dropped — two of them must not collapse into one count.
         val result = applicationPasswordLoginHelper
             .maskUrl("https://example.com/wp-content/image.jpg")
-        assertEquals("https://exxxxxe.com/wp-content/image.jpg", result)
+        assertEquals("https://exxxxxe.com/xxxxxxxxxx/xxxxxxxxx", result)
+    }
+
+    @Test
+    fun `maskUrl keeps distinct subdirectory installs distinct`() {
+        val blog = applicationPasswordLoginHelper.maskUrl("https://example.com/blog")
+        val shop = applicationPasswordLoginHelper.maskUrl("https://example.com/shopping")
+
+        assertEquals("https://exxxxxe.com/xxxx", blog)
+        assertEquals("https://exxxxxe.com/xxxxxxxx", shop)
+    }
+
+    @Test
+    fun `maskUrl drops the query, which identifies no site`() {
+        val result = applicationPasswordLoginHelper.maskUrl("https://example.com?token=secret")
+        assertEquals("https://exxxxxe.com", result)
     }
 
     @Test

@@ -142,8 +142,14 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                                 source = source,
                                 message = "No application-passwords authentication URL advertised",
                                 reason = DiscoveryResult.FailureReason.NotSupported,
+                                // Analytics-only, and the one call in this branch that isn't
+                                // load-bearing. Letting it throw would unwind to the catch-all and
+                                // put the raw internal message on the login screen in place of the
+                                // "not supported" string — telemetry breaking what it observes.
                                 failure = noAuthenticationUrlFailure(
-                                    discoverSuccessWrapper.getBlockingPlugins(urlDiscoveryResult)
+                                    runCatching {
+                                        discoverSuccessWrapper.getBlockingPlugins(urlDiscoveryResult)
+                                    }.getOrDefault(emptyList())
                                 ),
                             )
                         }
@@ -476,27 +482,40 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     internal fun maskUrl(url: String): String {
         if (url.isEmpty()) return url
         // URI only reports a host when the string carries a scheme, and the login screen hands on
-        // whatever was typed. Without this, "myprivateblog.com" fell through unmasked, and the same
-        // site counted as two depending on whether the user happened to type a scheme.
-        val candidate = if (url.contains(SCHEME_SEPARATOR)) url else "$HTTPS_SCHEME$url"
-        val host = try {
-            URI(candidate).host
+        // whatever was typed. Without normalising, "myprivateblog.com" fell through unmasked, and
+        // the same site counted as two depending on whether the user happened to type a scheme.
+        val uri = try {
+            URI(if (url.contains(SCHEME_SEPARATOR)) url else "$HTTPS_SCHEME$url")
         } catch (_: Exception) {
             null
         } ?: return MASKED_URL
+        val host = uri.host ?: return MASKED_URL
         val dotIndex = host.lastIndexOf('.')
         // Anything we can't split into domain and TLD is masked wholesale rather than passed
         // through: a bare internal hostname is exactly the kind of thing worth not shipping.
         if (dotIndex <= 0) return MASKED_URL
-        val domain = host.substring(0, dotIndex)
-        val tld = host.substring(dotIndex)
-        val maskedDomain = when {
-            domain.length <= 2 -> "x".repeat(domain.length)
-            else -> domain.first() +
-                "x".repeat(domain.length - 2) +
-                domain.last()
+        return buildString {
+            append(uri.scheme).append(SCHEME_SEPARATOR)
+            append(maskLabel(host.substring(0, dotIndex))).append(host.substring(dotIndex))
+            if (uri.port != -1) append(':').append(uri.port)
+            // Subdirectory installs make the path part of a site's identity, so it can't just be
+            // dropped — two of them would collapse into one. Mask it instead, which keeps distinct
+            // paths distinct without shipping what they say. The query is dropped outright: it
+            // identifies no site and is the likeliest place for a token to turn up.
+            appendMaskedPath(uri.path)
         }
-        return url.replaceFirst(host, maskedDomain + tld)
+    }
+
+    private fun StringBuilder.appendMaskedPath(path: String?) {
+        if (path.isNullOrEmpty()) return
+        path.split('/').filter { it.isNotEmpty() }.forEach { append('/').append("x".repeat(it.length)) }
+        if (path.endsWith('/')) append('/')
+    }
+
+    /** First and last character kept so a masked value still reads as a domain, not a redaction. */
+    private fun maskLabel(label: String) = when {
+        label.length <= 2 -> "x".repeat(label.length)
+        else -> "${label.first()}${"x".repeat(label.length - 2)}${label.last()}"
     }
 
     fun siteHasBadCredentials(site: SiteModel) =
