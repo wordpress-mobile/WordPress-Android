@@ -157,6 +157,35 @@ public class WPMediaUtils {
     }
 
     /**
+     * Deletes the leftovers of previous sessions from the processed media cache. The app has no single point where
+     * it knows an upload is done with its local copy, and a failed optimization leaves its output behind, so the
+     * files are dropped once they are old enough not to belong to an upload that is still running.
+     */
+    public static void deleteOldProcessedMedia(@NonNull Context context, long maxAgeMs) {
+        File[] dirs = new File(context.getCacheDir(), PROCESSED_MEDIA_CACHE_DIR).listFiles();
+        if (dirs == null) {
+            return;
+        }
+
+        long oldestAllowed = System.currentTimeMillis() - maxAgeMs;
+        for (File dir : dirs) {
+            if (dir.lastModified() < oldestAllowed && !deleteRecursively(dir)) {
+                AppLog.w(T.MEDIA, "Couldn't delete the processed media directory " + dir.getName());
+            }
+        }
+    }
+
+    private static boolean deleteRecursively(@NonNull File file) {
+        File[] children = file.listFiles();
+        if (children != null) {
+            for (File child : children) {
+                deleteRecursively(child);
+            }
+        }
+        return file.delete();
+    }
+
+    /**
      * Creates a {@link File} the app can write processed media to without having to alter {@code fileName} to keep it
      * unique, so that the media keeps that name once uploaded.
      *

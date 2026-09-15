@@ -8,8 +8,9 @@ package org.wordpress.android.util
 object MediaFileNameUtils {
     /**
      * Combines the name of the original file with the extension of the processed one, since processing can change
-     * the format of the media. Falls back to the original extension when the processed file has none, which happens
-     * when the original name contains characters the extension detection can't handle, such as spaces.
+     * the format of the media. The extension is taken verbatim, including the empty one the processing steps produce
+     * when they can't detect a format: the original extension would then describe the wrong format, while an empty
+     * extension is repaired from the mime type by `FluxCUtils.mediaModelFromLocalUri`, as it already is today.
      *
      * @return the name to give to the processed file, or null when the original name can't be reused
      */
@@ -18,8 +19,7 @@ object MediaFileNameUtils {
         val baseName = baseName(originalName)
         if (baseName.isEmpty()) return null
 
-        val extension = extension(processedName) ?: extension(originalName)
-        return if (extension == null) baseName else "$baseName.$extension"
+        return baseName + extensionSuffix(processedName, fallback = extensionSuffix(originalName))
     }
 
     /**
@@ -34,13 +34,14 @@ object MediaFileNameUtils {
         return if (separatorIndex > 0) fileName.substring(0, separatorIndex) else fileName
     }
 
-    private fun extension(fileName: String): String? {
+    /**
+     * @return everything from the last extension separator of [fileName] on, e.g. ".jpg" or the bare "." left by a
+     * processing step that couldn't detect the format, or [fallback] when [fileName] carries no separator at all
+     */
+    private fun extensionSuffix(fileName: String, fallback: String = ""): String {
         val separatorIndex = fileName.lastIndexOf(EXTENSION_SEPARATOR)
-        return if (separatorIndex <= 0 || separatorIndex == fileName.lastIndex) {
-            null
-        } else {
-            fileName.substring(separatorIndex + 1)
-        }
+        // a leading separator marks a hidden file rather than an extension
+        return if (separatorIndex > 0) fileName.substring(separatorIndex) else fallback
     }
 
     private const val EXTENSION_SEPARATOR = '.'

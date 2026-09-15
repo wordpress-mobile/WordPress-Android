@@ -21,10 +21,19 @@ class MediaFileNameUtilsTest {
     }
 
     @Test
-    fun `given a processed file without extension, when building the processed name, then the original one is used`() {
+    fun `given a processed file without extension, when building the processed name, then it stays without one`() {
         val result = MediaFileNameUtils.buildProcessedFileName("my holiday photo.jpg", "my holiday photo1864.")
 
-        assertThat(result).isEqualTo("my holiday photo.jpg")
+        assertThat(result).isEqualTo("my holiday photo.")
+    }
+
+    @Test
+    fun `given a processed file without extension, when building the processed name, then the format isn't guessed`() {
+        // the processing steps write JPEG whenever they fail to detect the format, so reusing the original .png
+        // here would label JPEG bytes as a PNG
+        val result = MediaFileNameUtils.buildProcessedFileName("my holiday photo.png", "my holiday photo1864.")
+
+        assertThat(result).isEqualTo("my holiday photo.")
     }
 
     @Test
