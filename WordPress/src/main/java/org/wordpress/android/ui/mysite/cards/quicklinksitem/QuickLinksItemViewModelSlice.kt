@@ -60,6 +60,14 @@ class QuickLinksItemViewModelSlice @Inject constructor(
     private var buildJob: Job? = null
     private var capabilitiesJob: Job? = null
 
+    /**
+     * The real backup/scan capabilities once the fetch has resolved them. Both build passes read
+     * this, so the second one - which finishes last, behind the slow capability probe - cannot
+     * overwrite fetched values with the optimistic defaults.
+     */
+    @Volatile
+    private var fetchedCapabilities: Pair<Boolean, Boolean>? = null
+
     fun buildCard(siteModel: SiteModel) {
         buildQuickLinks(siteModel)
     }
@@ -89,8 +97,8 @@ class QuickLinksItemViewModelSlice @Inject constructor(
                 enableFocusPoints = false,
                 onClick = this@QuickLinksItemViewModelSlice::onClick,
                 isBlazeEligible = isSiteBlazeEligible(site),
-                backupAvailable = true,
-                scanAvailable = (!site.isWPCom && !site.isWPComAtomic),
+                backupAvailable = fetchedCapabilities?.first ?: true,
+                scanAvailable = fetchedCapabilities?.second ?: (!site.isWPCom && !site.isWPComAtomic),
                 includeCapabilityGatedItems = includeCapabilityGatedItems
             )
         )
@@ -105,6 +113,7 @@ class QuickLinksItemViewModelSlice @Inject constructor(
         capabilitiesJob?.cancel()
         capabilitiesJob = scope.launch(bgDispatcher) {
             jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId).collect {
+                fetchedCapabilities = it.backup to it.scan
                 _uiState.postValue(
                     convertToQuickLinkRibbonItem(
                         site,
@@ -216,6 +225,7 @@ class QuickLinksItemViewModelSlice @Inject constructor(
         // both capture the outgoing site, so leaving them running lets its ribbon land on the next one
         buildJob?.cancel()
         capabilitiesJob?.cancel()
+        fetchedCapabilities = null
         _uiState.postValue(null)
     }
 }

@@ -92,7 +92,8 @@ class DashboardCardsViewModelSlice @Inject constructor(
         plansCardViewModelSlice.uiModel,
         personalizeCardViewModelSlice.uiModel,
         jetpackInstallFullPluginCardViewModelSlice.uiModel,
-        domainRegistrationCardViewModelSlice.uiModel
+        domainRegistrationCardViewModelSlice.uiModel,
+        cardViewModelSlice.isBuildingCards
     ) { quicklinks,
         blazeCard,
         cardsState,
@@ -101,7 +102,8 @@ class DashboardCardsViewModelSlice @Inject constructor(
         plansCard,
         personalizeCard,
         jpFullInstallFullPlugin,
-        domainRegistrationCard ->
+        domainRegistrationCard,
+        isBuildingCards ->
         return@merge mergeUiModels(
             quicklinks,
             blazeCard,
@@ -111,7 +113,8 @@ class DashboardCardsViewModelSlice @Inject constructor(
             plansCard,
             personalizeCard,
             jpFullInstallFullPlugin,
-            domainRegistrationCard
+            domainRegistrationCard,
+            isBuildingCards == true
         )
     }.distinctUntilChanged() as MutableLiveData<List<MySiteCardAndItem>>
 
@@ -126,6 +129,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
         personalizeCard: MySiteCardAndItem.Card.PersonalizeCardModel?,
         jpFullInstallFullPlugin: MySiteCardAndItem.Card.JetpackInstallFullPluginCard?,
         domainRegistrationCard: MySiteCardAndItem.Card.DomainRegistrationCard?,
+        isBuildingCards: Boolean,
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
         jpFullInstallFullPlugin?.let { cards.add(it) }
@@ -157,7 +161,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
             // the dashboard cards arrive one slice at a time, so an empty list here means "not
             // loaded yet" as often as it means "nothing to show" - only claim the latter once the
             // cards have actually finished building, otherwise the message flashes on every launch
-            if (!cardViewModelSlice.isBuildingCards) {
+            if (!isBuildingCards) {
                 noCardsMessageViewModelSlice.buildNoCardsMessage(cards)?.let { noCardsMessage ->
                     cards.add(noCardsMessage)
                 }

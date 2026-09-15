@@ -137,6 +137,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private var binding: MySiteFragmentBinding? = null
     private var settleJob: Job? = null
     private var settleDeadline = 0L
+    private var settleWindowEnd = 0L
     private var hasPaintedContent = false
     private var siteTitle: String? = null
     private var pendingApplicationPasswordSite: SiteModel? = null
@@ -527,12 +528,19 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
      * period only, since nothing else is arriving to extend it.
      */
     private fun MySiteFragmentBinding.loadDataWhenSettled(state: State.SiteSelected) {
+        val now = System.currentTimeMillis()
         if (!hasPaintedContent) {
             hasPaintedContent = true
+            settleWindowEnd = now + SETTLE_WINDOW_MS
             loadData(state)
             return
         }
-        val now = System.currentTimeMillis()
+        if (now > settleWindowEnd) {
+            // the load is long over, so this is something the user did - hiding a card, skipping a
+            // prompt - and holding it back would just make the app feel unresponsive
+            loadData(state)
+            return
+        }
         if (settleDeadline == 0L) settleDeadline = now + SETTLE_MAX_MS
         val delayMs = minOf(SETTLE_QUIET_MS, settleDeadline - now).coerceAtLeast(0)
         settleJob?.cancel()
@@ -547,6 +555,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         settleJob?.cancel()
         settleJob = null
         settleDeadline = 0L
+        settleWindowEnd = 0L
         hasPaintedContent = false
     }
 
@@ -880,6 +889,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
         private const val SETTLE_QUIET_MS = 400L
         private const val SETTLE_MAX_MS = 1200L
+
+        // how long after the first paint the dashboard is still considered to be assembling
+        private const val SETTLE_WINDOW_MS = 8000L
 
         // the fade and the slide share a duration so a late card finishes appearing exactly as the
         // list finishes making room for it

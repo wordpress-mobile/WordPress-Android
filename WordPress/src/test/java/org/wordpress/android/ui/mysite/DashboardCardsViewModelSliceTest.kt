@@ -62,6 +62,7 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
         whenever(domainRegistrationCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
         whenever(blazeCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
         whenever(cardViewModelSlice.uiModel).thenReturn(MutableLiveData())
+        whenever(cardViewModelSlice.isBuildingCards).thenReturn(MutableLiveData(false))
         whenever(personalizeCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
         whenever(bloggingPromptCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
         whenever(quickLinksItemViewModelSlice.uiState).thenReturn(MutableLiveData())
