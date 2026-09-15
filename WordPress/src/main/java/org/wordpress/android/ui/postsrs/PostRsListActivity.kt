@@ -18,15 +18,20 @@ import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.postsrs.screens.PostRsListScreen
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
 import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.setContent
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PostRsListActivity : BaseAppCompatActivity() {
+    @Inject
+    lateinit var experimentalFeatures: ExperimentalFeatures
+
     private val viewModel: PostRsListViewModel by viewModels()
 
     private val settingsLauncher = registerForActivityResult(
@@ -43,6 +48,10 @@ class PostRsListActivity : BaseAppCompatActivity() {
 
         observeEvents()
 
+        val isRedesignEnabled = experimentalFeatures.isEnabled(
+            ExperimentalFeatures.Feature.CONTENT_LIST_REDESIGN
+        )
+
         setContent {
             val tabStates by viewModel.tabStates.collectAsState()
             val isSearchActive by viewModel.isSearchActive.collectAsState()
@@ -50,6 +59,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
             val searchQuery by viewModel.searchQuery.collectAsState()
             val authorFilter by viewModel.authorFilter.collectAsState()
             val confirmation by viewModel.pendingConfirmation.collectAsState()
+            val density by viewModel.density.collectAsState()
             AppThemeM3 {
                 PostRsListScreen(
                     tabStates = tabStates,
@@ -77,7 +87,11 @@ class PostRsListActivity : BaseAppCompatActivity() {
                     onNavigateBack = { onBackPressedDispatcher.onBackPressed() },
                     onPostClick = viewModel::openPost,
                     onPostMenuAction = viewModel::onPostMenuAction,
-                    onCreatePost = viewModel::createNewPost
+                    onCreatePost = viewModel::createNewPost,
+                    onRowsVisible = viewModel::onRowsVisible,
+                    onDensityToggled = viewModel::onDensityToggled,
+                    density = density,
+                    isRedesignEnabled = isRedesignEnabled
                 )
             }
         }

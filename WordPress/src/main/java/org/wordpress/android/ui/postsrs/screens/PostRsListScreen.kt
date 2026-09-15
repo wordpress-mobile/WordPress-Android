@@ -2,6 +2,7 @@ package org.wordpress.android.ui.postsrs.screens
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,12 +21,15 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.DensityLarge
+import androidx.compose.material.icons.filled.DensitySmall
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -76,6 +80,8 @@ import org.wordpress.android.ui.postsrs.SnackbarMessage
 import org.wordpress.android.ui.postsrs.PostRsListViewModel.Companion.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostTabUiState
+import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.rs.contentlist.ContentListFilterChips
 
 @Suppress("CyclomaticComplexMethod")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -102,7 +108,11 @@ fun PostRsListScreen(
     onNavigateBack: () -> Unit,
     onPostClick: (Long, PostRsListTab) -> Unit,
     onPostMenuAction: (Long, PostRsMenuAction) -> Unit,
-    onCreatePost: () -> Unit
+    onCreatePost: () -> Unit,
+    onRowsVisible: (PostRsListTab, List<Long>) -> Unit,
+    onDensityToggled: (PostRsListTab) -> Unit,
+    density: ContentListDensity = ContentListDensity.COMFORTABLE,
+    isRedesignEnabled: Boolean = false
 ) {
     val tabs = PostRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
@@ -145,6 +155,15 @@ fun PostRsListScreen(
     }
 
     Scaffold(
+        // Cards are drawn on `surface`, so the page behind them has to sit one step recessed or
+        // they read as a flat sheet. Which role that is differs by mode: this app's dark scheme
+        // makes `surface` darker than `surfaceContainerLow`, so reusing the light-mode role there
+        // would put the page *above* the cards. The pre-redesign list keeps the theme background.
+        containerColor = when {
+            !isRedesignEnabled -> MaterialTheme.colorScheme.background
+            isSystemInDarkTheme() -> MaterialTheme.colorScheme.surfaceContainerLowest
+            else -> MaterialTheme.colorScheme.surfaceContainerLow
+        },
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
@@ -172,6 +191,9 @@ fun PostRsListScreen(
                             modifier = Modifier.fillMaxWidth().focusRequester(focusRequester)
                         )
                     } else {
+                        // Plain sans, like every other top bar in the app. The serif belongs on
+                        // the row titles, which are content; a serif on the chrome reads as a
+                        // rendering fault rather than a choice.
                         Text(text = rsDebugTitle(R.string.my_site_btn_blog_posts))
                     }
                 },
@@ -196,6 +218,15 @@ fun PostRsListScreen(
                             }
                         }
                     } else {
+                        // Ahead of the author filter, not between it and search: these actions are
+                        // end-aligned, so inserting anywhere later would shift both pre-existing
+                        // icons left of where they have always been.
+                        if (isRedesignEnabled) {
+                            DensityToggleButton(
+                                density = density,
+                                onToggle = { onDensityToggled(activeTab) }
+                            )
+                        }
                         if (isAuthorFilterSupported) {
                             AuthorFilterButton(
                                 authorFilter = authorFilter,
@@ -220,31 +251,51 @@ fun PostRsListScreen(
             }
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = onCreatePost,
-            ) {
-                Icon(
-                    Icons.Default.Add,
-                    contentDescription = stringResource(R.string.posts_empty_list_button)
+            if (isRedesignEnabled) {
+                ExtendedFloatingActionButton(
+                    onClick = onCreatePost,
+                    icon = { Icon(Icons.Default.Add, contentDescription = null) },
+                    text = { Text(stringResource(R.string.content_list_fab_write)) }
                 )
+            } else {
+                FloatingActionButton(
+                    onClick = onCreatePost,
+                ) {
+                    Icon(
+                        Icons.Default.Add,
+                        contentDescription = stringResource(R.string.posts_empty_list_button)
+                    )
+                }
             }
         }
     ) { contentPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
             if (!isSearchActive) {
-                PrimaryScrollableTabRow(
-                    selectedTabIndex = pagerState.settledPage,
-                    edgePadding = 0.dp
-                ) {
-                    tabs.forEachIndexed { index, tab ->
-                        Tab(
-                            selected = pagerState.settledPage == index,
-                            onClick = {
-                                coroutineScope.launch { pagerState.animateScrollToPage(index) }
-                            },
-                            unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            text = { Text(text = stringResource(tab.labelResId)) }
-                        )
+                if (isRedesignEnabled) {
+                    // The pager stays: chips replace the tab row's appearance, not swiping between
+                    // tabs, which users of this screen already rely on.
+                    ContentListFilterChips(
+                        labels = tabs.map { stringResource(it.labelResId) },
+                        selectedIndex = pagerState.settledPage,
+                        onSelect = { index ->
+                            coroutineScope.launch { pagerState.animateScrollToPage(index) }
+                        }
+                    )
+                } else {
+                    PrimaryScrollableTabRow(
+                        selectedTabIndex = pagerState.settledPage,
+                        edgePadding = 0.dp
+                    ) {
+                        tabs.forEachIndexed { index, tab ->
+                            Tab(
+                                selected = pagerState.settledPage == index,
+                                onClick = {
+                                    coroutineScope.launch { pagerState.animateScrollToPage(index) }
+                                },
+                                unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                text = { Text(text = stringResource(tab.labelResId)) }
+                            )
+                        }
                     }
                 }
             }
@@ -280,7 +331,11 @@ fun PostRsListScreen(
                     onLoadMore = { onLoadMore(tab) },
                     onPostClick = { postId -> onPostClick(postId, tab) },
                     onPostMenuAction = onPostMenuAction,
-                    onCreatePost = onCreatePost
+                    onCreatePost = onCreatePost,
+                    onRowsVisible = { ids -> onRowsVisible(tab, ids) },
+                    density = density,
+                    isRedesignEnabled = isRedesignEnabled,
+                    showDateGroups = tab != PostRsListTab.SCHEDULED
                 )
             }
         }
@@ -327,6 +382,35 @@ fun PostRsListScreen(
         ) {
             CircularProgressIndicator()
         }
+    }
+}
+
+/**
+ * Flips between the two list densities. Deliberately a top-bar action rather than an overflow item:
+ * a view control the user is expected to find has to be visible.
+ */
+@Composable
+private fun DensityToggleButton(
+    density: ContentListDensity,
+    onToggle: () -> Unit
+) {
+    val labelResId = if (density.isCondensed) {
+        R.string.content_list_density_show_comfortable
+    } else {
+        R.string.content_list_density_show_condensed
+    }
+    IconButton(onClick = onToggle) {
+        // Both glyphs come from the same family - bars at different spacing - so the two states
+        // read as one control rather than two unrelated pictures. The icon shows the density the
+        // tap will switch *to*, which is what the content description says.
+        Icon(
+            imageVector = if (density.isCondensed) {
+                Icons.Default.DensityLarge
+            } else {
+                Icons.Default.DensitySmall
+            },
+            contentDescription = stringResource(labelResId)
+        )
     }
 }
 
