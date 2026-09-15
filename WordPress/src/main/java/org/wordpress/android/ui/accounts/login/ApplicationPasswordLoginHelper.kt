@@ -259,13 +259,24 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             urlLogin
         }
 
-        if (effectiveUrlLogin.apiRootUrl.isNullOrEmpty() ||
+        // A callback we have already consumed is not bad data: rotating the device re-runs
+        // setupSite() from onCreate against the retained ViewModel, which still holds this helper.
+        // The login reported its outcome the first time round, so reporting a failure now would
+        // contradict a success we already sent.
+        val isRepeatCallback = effectiveUrlLogin.siteUrl != null &&
+            effectiveUrlLogin.siteUrl == processedAppPasswordData
+
+        if (isRepeatCallback ||
+            effectiveUrlLogin.apiRootUrl.isNullOrEmpty() ||
             effectiveUrlLogin.user.isNullOrEmpty() ||
             effectiveUrlLogin.password.isNullOrEmpty() ||
-            effectiveUrlLogin.siteUrl == null ||
-            effectiveUrlLogin.siteUrl == processedAppPasswordData
+            effectiveUrlLogin.siteUrl == null
         ) {
-            logAndReportBadData(effectiveUrlLogin, creationSource)
+            if (isRepeatCallback) {
+                appLogWrapper.d(AppLog.T.DB, "A_P: Ignoring a repeat callback for: ${effectiveUrlLogin.siteUrl}")
+            } else {
+                logAndReportBadData(effectiveUrlLogin, creationSource)
+            }
             return StoreCredentialsResult.BadData
         }
 
@@ -384,9 +395,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 ", user isEmpty=${urlLogin.user.isNullOrEmpty()}" +
                 ", password isEmpty=" +
                 "${urlLogin.password.isNullOrEmpty()}" +
-                ", siteUrl isNull=${urlLogin.siteUrl == null}" +
-                ", alreadyProcessed=" +
-                "${urlLogin.siteUrl == processedAppPasswordData}"
+                ", siteUrl isNull=${urlLogin.siteUrl == null}"
         appLogWrapper.e(
             AppLog.T.DB,
             "A_P: Cannot save credentials" +

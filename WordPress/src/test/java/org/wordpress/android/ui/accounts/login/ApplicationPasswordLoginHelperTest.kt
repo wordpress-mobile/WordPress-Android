@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.clearInvocations
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -597,6 +598,22 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
 
         verify(analyticsTracker, times(0))
             .track(eq(Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN), any<Map<String, Any?>>())
+    }
+
+    @Test
+    fun `given a repeat callback, when storing, then no failure contradicts the success already sent`() = runTest {
+        // Rotating the device re-runs setupSite() from onCreate against the retained ViewModel,
+        // which still holds this helper — so the same callback arrives twice.
+        val site = SiteModel().apply { id = 1; url = TEST_URL }
+        whenever(siteStore.sites).thenReturn(listOf(site))
+        applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin, "login")
+        clearInvocations(analyticsTracker)
+
+        val result = applicationPasswordLoginHelper
+            .storeApplicationPasswordCredentialsFrom(testUriLogin, "login")
+
+        assertIs<StoreCredentialsResult.BadData>(result)
+        verify(analyticsTracker, times(0)).track(any(), any<Map<String, Any?>>())
     }
 
     @Test

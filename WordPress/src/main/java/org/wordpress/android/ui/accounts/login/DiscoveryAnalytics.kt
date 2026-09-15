@@ -119,7 +119,12 @@ private fun FetchAndParseApiRootFailure.toDiscoveryFailure(): DiscoveryFailure =
         ),
     )
     is FetchAndParseApiRootFailure.ApplicationPasswordsNotSupported ->
-        reason.toDiscoveryFailure(apiDetails.applicationPasswordBlockingPlugins())
+        // Passed lazily and guarded: this is an FFI call made purely for analytics, only one of the
+        // four reasons needs it, and letting it throw would replace the user's translated message
+        // with an internal dump.
+        reason.toDiscoveryFailure {
+            runCatching { apiDetails.applicationPasswordBlockingPlugins() }.getOrDefault(emptyList())
+        }
 }
 
 /**
@@ -127,14 +132,14 @@ private fun FetchAndParseApiRootFailure.toDiscoveryFailure(): DiscoveryFailure =
  * variant names its own plugin, so the multiple-plugin one is left to read them from here.
  */
 private fun ApplicationPasswordsNotSupportedReason?.toDiscoveryFailure(
-    blockingPlugins: List<KnownAuthenticationBlockingPlugin>
+    blockingPlugins: () -> List<KnownAuthenticationBlockingPlugin>
 ): DiscoveryFailure = when (this) {
     is ApplicationPasswordsNotSupportedReason.ApplicationPasswordBlockedByPlugin -> DiscoveryFailure(
         reason = BLOCKED_BY_PLUGIN_REASON,
         details = mapOf(PLUGIN_TAG to plugin.name),
     )
     ApplicationPasswordsNotSupportedReason.ApplicationPasswordBlockedByMultiplePlugins ->
-        DiscoveryFailure(BLOCKED_BY_MULTIPLE_PLUGINS_REASON, blockingPlugins.pluginDetails())
+        DiscoveryFailure(BLOCKED_BY_MULTIPLE_PLUGINS_REASON, blockingPlugins().pluginDetails())
     ApplicationPasswordsNotSupportedReason.SiteIsLocalDevelopmentEnvironment ->
         DiscoveryFailure("local_dev_environment")
     ApplicationPasswordsNotSupportedReason.ApplicationPasswordsDisabledForHttpSite ->
