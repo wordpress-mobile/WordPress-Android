@@ -107,6 +107,12 @@ val THEMES_ITEM = ListItem(
     onClick = ListItemInteraction.create(ListItemAction.THEMES, SITE_ITEM_ACTION),
     listItemAction = ListItemAction.THEMES
 )
+val MENUS_ITEM = ListItem(
+    R.drawable.ic_gridicons_menus,
+    UiStringRes(R.string.menus),
+    onClick = ListItemInteraction.create(ListItemAction.MENUS, SITE_ITEM_ACTION),
+    listItemAction = ListItemAction.MENUS
+)
 val DOMAINS_ITEM = ListItem(
     R.drawable.ic_domains_white_24dp,
     UiStringRes(R.string.my_site_btn_domains),
