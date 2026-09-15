@@ -101,6 +101,7 @@ import org.wordpress.android.util.ProfilingUtils
 import org.wordpress.android.util.RateLimitedTask
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.VolleyUtils
+import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.config.AppConfig
 import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfig
@@ -370,6 +371,11 @@ class AppInitializer @Inject constructor(
 
         systemNotificationsTracker.checkSystemNotificationsState()
         ImageEditorInitializer.init(imageManager, imageEditorTracker, imageEditorFileUtils, appScope)
+
+        // drop the optimized copies left behind by uploads of previous sessions
+        launchIo(T.MEDIA, "Failed to delete the old processed media") {
+            WPMediaUtils.deleteOldProcessedMedia(application, PROCESSED_MEDIA_MAX_AGE_MS)
+        }
 
         initDebugCookieManager()
 
@@ -958,6 +964,8 @@ class AppInitializer @Inject constructor(
         private const val KILOBYTES_IN_BYTES = 1024
         private const val MEMORY_CACHE_RATIO = 0.25 // Use 1/4th of the available memory for memory cache.
         private const val DEFAULT_TIMEOUT = 2 * 60 // 2 minutes
+        // matches the retention of the image editor's cache; long enough not to race an upload being retried
+        private const val PROCESSED_MEDIA_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000L // 1 week
 
         @SuppressLint("StaticFieldLeak")
         var context: Context? = null
