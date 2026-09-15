@@ -537,7 +537,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
         if (now > settleWindowEnd) {
             // the load is long over, so this is something the user did - hiding a card, skipping a
-            // prompt - and holding it back would just make the app feel unresponsive
+            // prompt - and holding it back would just make the app feel unresponsive. Drop any job
+            // still pending from inside the window, or it would fire afterwards and put its older
+            // list back with nothing left to correct it.
+            settleJob?.cancel()
+            settleDeadline = 0L
             loadData(state)
             return
         }
