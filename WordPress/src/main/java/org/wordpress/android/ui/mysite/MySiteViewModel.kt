@@ -127,6 +127,11 @@ class MySiteViewModel @Inject constructor(
         accountDataViewModelSlice.isRefreshing
     )
 
+    /* The local id of the site the cards and items were last built for. Switching sites updates the
+       header straight from the repository before onSitePicked has cleared and rebuilt the cards, so
+       until it runs the cards below the new header still belong to the previous site. */
+    private var cardsSiteLocalId: Int? = null
+
     val uiModel: LiveData<State> = merge(
         siteInfoHeaderCardViewModelSlice.uiModel,
         applicationPasswordViewModelSlice.uiModel,
@@ -143,9 +148,10 @@ class MySiteViewModel @Inject constructor(
         val nonNullSiteInfoHeaderCard =
             siteInfoHeaderCard ?: return@merge buildNoSiteState(accountData?.url, accountData?.name)
         val headerList = listOfNotNull(nonNullSiteInfoHeaderCard, applicationPAsswordModel, connectivityBanner)
-        return@merge if (!dashboardCards.isNullOrEmpty<MySiteCardAndItem>())
+        val cardsAreForSelectedSite = selectedSiteRepository.getSelectedSite()?.id == cardsSiteLocalId
+        return@merge if (cardsAreForSelectedSite && !dashboardCards.isNullOrEmpty<MySiteCardAndItem>())
             SiteSelected(dashboardData = headerList + dashboardCards)
-        else if (!siteItems.isNullOrEmpty<MySiteCardAndItem>())
+        else if (cardsAreForSelectedSite && !siteItems.isNullOrEmpty<MySiteCardAndItem>())
             SiteSelected(dashboardData = headerList + siteItems)
         else
             SiteSelected(dashboardData = headerList)
@@ -319,6 +325,7 @@ class MySiteViewModel @Inject constructor(
     ) {
         siteInfoHeaderCardViewModelSlice.buildCard(site)
         applicationPasswordViewModelSlice.buildCard(site)
+        cardsSiteLocalId = site.id
         if (shouldShowDashboard(site)) {
             dashboardCardsViewModelSlice.buildCards(site)
             dashboardItemsViewModelSlice.clearValue()
@@ -341,6 +348,7 @@ class MySiteViewModel @Inject constructor(
         dashboardCardsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.resetShownTracker()
         dashboardItemsViewModelSlice.resetShownTracker()
+        cardsSiteLocalId = site.id
         if (shouldShowDashboard(site)) {
             dashboardCardsViewModelSlice.buildCards(site)
         } else {

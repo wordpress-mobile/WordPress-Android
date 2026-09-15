@@ -19,6 +19,8 @@ class ActivityCardViewHolder(
     parent.viewBinding(MySiteActivityCardWithActivityItemsBinding::inflate)
 ) {
     init {
+        // the outer list already settles its cards; animating a card refining in place reads as flicker
+        binding.activityItems.itemAnimator = null
         binding.activityItems.adapter = ActivityItemsAdapter(uiHelpers)
     }
 
