@@ -13,6 +13,8 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.timeout
+import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
@@ -24,11 +26,14 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.rs.RsCommentCountFetcher
 import org.wordpress.android.ui.rs.RsPostChangeListener
+import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -47,6 +52,8 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
+    @Mock lateinit var statsDataSource: StatsDataSource
+    @Mock lateinit var commentCountFetcher: RsCommentCountFetcher
     @Mock lateinit var dispatcher: Dispatcher
 
     private lateinit var site: SiteModel
@@ -86,6 +93,8 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         appPrefsWrapper = appPrefsWrapper,
         analyticsTracker = analyticsTracker,
         changeListener = changeListener,
+        statsDataSource = statsDataSource,
+        commentCountFetcher = commentCountFetcher,
     ).also { activeViewModel = it }
 
     @Test
@@ -603,6 +612,76 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
                 cancelAndIgnoreRemainingEvents()
             }
         }
+    // region density
+
+    @Test
+    fun `density starts from the stored preference`() = test {
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(true)
+
+        val viewModel = createViewModel()
+
+        assertThat(viewModel.density.value).isEqualTo(ContentListDensity.CONDENSED)
+    }
+
+    @Test
+    fun `density defaults to comfortable`() = test {
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(false)
+
+        val viewModel = createViewModel()
+
+        assertThat(viewModel.density.value).isEqualTo(ContentListDensity.COMFORTABLE)
+    }
+
+    @Test
+    fun `toggling density persists the new value`() = test {
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(false)
+        val viewModel = createViewModel()
+
+        viewModel.onDensityToggled(PostRsListTab.PUBLISHED)
+        advanceUntilIdle()
+
+        assertThat(viewModel.density.value).isEqualTo(ContentListDensity.CONDENSED)
+        verify(appPrefsWrapper).isContentListCondensed = true
+    }
+
+    @Test
+    fun `a condensed list fetches no metrics for its visible rows`() = test {
+        // The point of condensing: the rows show no views or comments, so nothing is requested.
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(true)
+        val viewModel = createViewModel()
+
+        viewModel.onRowsVisible(PostRsListTab.PUBLISHED, listOf(1L, 2L))
+        advanceUntilIdle()
+
+        verify(commentCountFetcher, never()).fetchCommentCounts(any(), any())
+        verify(statsDataSource, never()).fetchPostViews(any(), any())
+    }
+
+
+    @Test
+    fun `rows seen while condensed are fetched once the list becomes comfortable`() = test {
+        // A condensed list fetches nothing, but it must still remember what is on screen: the
+        // density toggle re-requests for those rows, and nothing else will if the same rows stay
+        // visible after the switch.
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(true)
+        whenever(commentCountFetcher.fetchCommentCounts(any(), any())).thenReturn(emptyMap())
+        val viewModel = createViewModel()
+        viewModel.onRowsVisible(PostRsListTab.PUBLISHED, listOf(1L, 2L))
+        advanceUntilIdle()
+        verify(commentCountFetcher, never()).fetchCommentCounts(any(), any())
+
+        viewModel.onDensityToggled(PostRsListTab.PUBLISHED)
+        advanceUntilIdle()
+
+        // The fetch hops to Dispatchers.IO, which the test scheduler does not drive, so poll for
+        // the interaction rather than asserting it has already happened.
+        verifyBlocking(commentCountFetcher, timeout(FETCH_TIMEOUT_MS)) {
+            fetchCommentCounts(any(), any())
+        }
+    }
+
+    // endregion
 }
 
 private const val UPLOADED_POST_ID = 4242L
+private const val FETCH_TIMEOUT_MS = 2_000L
