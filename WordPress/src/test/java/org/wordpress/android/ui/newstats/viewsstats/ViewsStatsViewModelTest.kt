@@ -1561,6 +1561,132 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
         verify(statsRepository).nextPeriod(previous, StatsPeriod.ThisWeek)
     }
+
+    @Test
+    fun `given a picked preset, when paging saves the range, then the pick is persisted as the origin`() = test {
+        val previous = StatsPeriod.Custom(LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 30))
+        whenever(statsRepository.canNavigateBackward(any())).thenReturn(true)
+        whenever(statsRepository.previousPeriod(any(), anyOrNull())).thenReturn(previous)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        initViewModel()
+        advanceUntilIdle()
+        viewModel.onPeriodChanged(StatsPeriod.Last30Days)
+        advanceUntilIdle()
+
+        viewModel.onNavigatePrevious()
+        advanceUntilIdle()
+
+        // The range stored is the one on screen — a whole calendar month here — but the origin stays
+        // the preset the user picked, so a restart mid-paging doesn't have to guess between the two.
+        verify(cardsConfigurationRepository).saveConfiguration(
+            any(),
+            argThat {
+                selectedPeriodType == "custom" &&
+                    customPeriodStartDate == previous.startDate.toEpochDay() &&
+                    originPeriodType == "last_30_days"
+            }
+        )
+    }
+
+    @Test
+    fun `given a persisted origin, when restoring, then paging resolves against the picked preset`() = test {
+        // Paging back from Last 30 Days can land on a whole calendar month; without the stored origin
+        // the restored session would step forward by calendar months and return a shorter window
+        // than the thirty days the user picked (CMM-2415).
+        val paged = StatsPeriod.Custom(LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 30))
+        whenever(cardsConfigurationRepository.getConfiguration(any())).thenReturn(
+            StatsCardsConfiguration(
+                selectedPeriodType = "custom",
+                customPeriodStartDate = paged.startDate.toEpochDay(),
+                customPeriodEndDate = paged.endDate.toEpochDay(),
+                originPeriodType = "last_30_days"
+            )
+        )
+        whenever(statsRepository.canNavigateForward(any())).thenReturn(true)
+        whenever(statsRepository.nextPeriod(any(), anyOrNull())).thenReturn(StatsPeriod.Last30Days)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository, accountStore, statsRepository,
+            resourceProvider, SavedStateHandle(), cardsConfigurationRepository
+        )
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        viewModel.onNavigateNext()
+        advanceUntilIdle()
+
+        verify(statsRepository).nextPeriod(paged, StatsPeriod.Last30Days)
+    }
+
+    @Test
+    fun `given a configuration stored before origins, when restoring, then the period is its own origin`() = test {
+        val paged = StatsPeriod.Custom(LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 30))
+        whenever(cardsConfigurationRepository.getConfiguration(any())).thenReturn(
+            StatsCardsConfiguration(
+                selectedPeriodType = "custom",
+                customPeriodStartDate = paged.startDate.toEpochDay(),
+                customPeriodEndDate = paged.endDate.toEpochDay()
+            )
+        )
+        whenever(statsRepository.canNavigateForward(any())).thenReturn(true)
+        whenever(statsRepository.nextPeriod(any(), anyOrNull())).thenReturn(StatsPeriod.Last30Days)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository, accountStore, statsRepository,
+            resourceProvider, SavedStateHandle(), cardsConfigurationRepository
+        )
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        viewModel.onNavigateNext()
+        advanceUntilIdle()
+
+        verify(statsRepository).nextPeriod(paged, paged)
+    }
+
+    @Test
+    fun `given SavedStateHandle holds an origin, when restoring, then paging resolves against it`() = test {
+        val paged = StatsPeriod.Custom(LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 30))
+        val savedState = SavedStateHandle(
+            mapOf(
+                "period_type" to "custom",
+                "custom_start_date" to paged.startDate.toEpochDay(),
+                "custom_end_date" to paged.endDate.toEpochDay(),
+                "origin_period_type" to "last_30_days"
+            )
+        )
+        whenever(cardsConfigurationRepository.getConfiguration(any())).thenReturn(StatsCardsConfiguration())
+        whenever(statsRepository.canNavigateForward(any())).thenReturn(true)
+        whenever(statsRepository.nextPeriod(any(), anyOrNull())).thenReturn(StatsPeriod.Last30Days)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository, accountStore, statsRepository,
+            resourceProvider, savedState, cardsConfigurationRepository
+        )
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        viewModel.onNavigateNext()
+        advanceUntilIdle()
+
+        verify(statsRepository).nextPeriod(paged, StatsPeriod.Last30Days)
+    }
+
+    @Test
+    fun `given an entry point seeding only a period, when restoring, then that period is the origin`() = test {
+        // The period keys double as Intent extras; an entry point that opens New Stats on a preset
+        // never sets the origin keys, so the seeded period stands in for an explicit pick.
+        whenever(statsRepository.canNavigateForward(any())).thenReturn(true)
+        whenever(statsRepository.nextPeriod(any(), anyOrNull())).thenReturn(StatsPeriod.Last30Days)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        initViewModel(periodType = "last_30_days")
+        advanceUntilIdle()
+
+        viewModel.onNavigateNext()
+        advanceUntilIdle()
+
+        verify(statsRepository).nextPeriod(StatsPeriod.Last30Days, StatsPeriod.Last30Days)
+    }
     // endregion
 
     // region Metric selection

@@ -202,9 +202,10 @@ class StatsRepository @Inject constructor(
      * to the origin's is always the same window rather than the neighbouring one.
      */
     private fun isShortMonthDriftOf(range: StatsPeriod.Custom, origin: StatsPeriod, today: LocalDate): Boolean {
-        if (origin is StatsPeriod.Custom) return false
         val (unit, _) = unitAndQuantityFor(range.startDate, range.endDate)
-        if (unit == StatsUnit.DAY) return false
+        // A custom origin has no canonical present-edge window to drift from, and a day-granular
+        // window steps by a fixed number of days, so neither can be left short by a month clamp.
+        if (origin is StatsPeriod.Custom || unit == StatsUnit.DAY) return false
         val (originStart, originEnd) = currentPeriodWindow(origin)
         return range.endDate <= today &&
             daysApart(range.startDate, originStart) <= MAX_SHORT_MONTH_DRIFT_DAYS &&
@@ -236,10 +237,11 @@ class StatsRepository @Inject constructor(
     ): StatsPeriod {
         val window = range.startDate to range.endDate
         val matches = StatsPeriod.presets().filter { currentPeriodWindow(it) == window }
-        if (matches.isEmpty()) return range
-        matches.firstOrNull { it == origin }?.let { return it }
         val sourceUnit = calendarUnitOf(source)
-        return matches.firstOrNull { calendarUnitOf(it) == sourceUnit } ?: matches.first()
+        return matches.firstOrNull { it == origin }
+            ?: matches.firstOrNull { calendarUnitOf(it) == sourceUnit }
+            ?: matches.firstOrNull()
+            ?: range
     }
 
     /** Whether paging backward stays above the year-[NAVIGATION_FLOOR_YEAR] floor. */
