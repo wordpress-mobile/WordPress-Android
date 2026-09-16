@@ -16,9 +16,6 @@ import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorForAllSitesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorForAllSitesResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
-import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainPayload;
-import org.wordpress.android.fluxc.store.SiteStore.DesignatedPrimaryDomainPayload;
-import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchBlockLayoutsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchJetpackCapabilitiesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload;
@@ -36,8 +33,6 @@ import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.QuickStartCompletedResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCApplicationPasswordCredentialsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
-import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload;
-import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload;
 
 @ActionEnum
 public enum SiteAction implements IAction {
@@ -74,8 +69,6 @@ public enum SiteAction implements IAction {
     EXPORT_SITE,
     @Action(payloadType = String.class)
     IS_WPCOM_URL,
-    @Action(payloadType = SuggestDomainsPayload.class)
-    SUGGEST_DOMAINS,
     @Action(payloadType = String.class)
     FETCH_CONNECT_SITE_INFO,
     @Action(payloadType = String.class)
@@ -88,12 +81,8 @@ public enum SiteAction implements IAction {
     CHECK_AUTOMATED_TRANSFER_STATUS,
     @Action(payloadType = SiteModel.class)
     FETCH_PLANS,
-    @Action(payloadType = String.class)
-    FETCH_DOMAIN_SUPPORTED_STATES,
     @Action(payloadType = CompleteQuickStartPayload.class)
     COMPLETE_QUICK_START,
-    @Action(payloadType = DesignatePrimaryDomainPayload.class)
-    DESIGNATE_PRIMARY_DOMAIN,
     @Action(payloadType = FetchPrivateAtomicCookiePayload.class)
     FETCH_PRIVATE_ATOMIC_COOKIE,
     @Action(payloadType = FetchBlockLayoutsPayload.class)
@@ -124,12 +113,8 @@ public enum SiteAction implements IAction {
     CHECKED_AUTOMATED_TRANSFER_STATUS,
     @Action(payloadType = FetchedPlansPayload.class)
     FETCHED_PLANS,
-    @Action(payloadType = DomainSupportedStatesResponsePayload.class)
-    FETCHED_DOMAIN_SUPPORTED_STATES,
     @Action(payloadType = QuickStartCompletedResponsePayload.class)
     COMPLETED_QUICK_START,
-    @Action(payloadType = DesignatedPrimaryDomainPayload.class)
-    DESIGNATED_PRIMARY_DOMAIN,
     @Action(payloadType = FetchedPrivateAtomicCookiePayload.class)
     FETCHED_PRIVATE_ATOMIC_COOKIE,
     @Action(payloadType = FetchJetpackCapabilitiesPayload.class)
@@ -160,6 +145,4 @@ public enum SiteAction implements IAction {
     HIDE_SITES,
     @Action(payloadType = IsWPComResponsePayload.class)
     CHECKED_IS_WPCOM_URL,
-    @Action(payloadType = SuggestDomainsResponsePayload.class)
-    SUGGESTED_DOMAINS,
 }

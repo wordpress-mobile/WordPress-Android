@@ -20,7 +20,9 @@ import org.wordpress.android.ui.domains.usecases.createShoppingCartParams
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.CartKey
+import uniffi.wp_api.RequestExecutionErrorReason
 import uniffi.wp_api.RequestMethod
+import uniffi.wp_api.WpErrorCode
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -48,17 +50,18 @@ class CreateCartUseCaseTest : BaseUnitTest() {
 
     @Suppress("UNCHECKED_CAST")
     @Test
-    fun `given the cart is created, when execute, returns success`() = test {
+    fun `given the cart is created, when execute, returns the cart`() = test {
+        val cart = testShoppingCart()
         whenever(wpComApiClient.request<Any>(any()))
-            .thenReturn(WpRequestResult.Success(Unit) as WpRequestResult<Any>)
+            .thenReturn(WpRequestResult.Success(cart) as WpRequestResult<Any>)
 
         val result = useCase.execute(site, PRODUCT_ID, DOMAIN_NAME, true, false)
 
-        assertThat(result).isEqualTo(CreateCartResult.Success)
+        assertThat(result).isEqualTo(CreateCartResult.Success(cart))
     }
 
     @Test
-    fun `given cart creation returns error, when execute, returns error`() = test {
+    fun `given cart creation returns error, when execute, returns error carrying no message`() = test {
         whenever(wpComApiClient.request<Any>(any()))
             .thenReturn(
                 WpRequestResult.UnknownError<Any>(
@@ -71,7 +74,44 @@ class CreateCartUseCaseTest : BaseUnitTest() {
 
         val result = useCase.execute(site, PRODUCT_ID, DOMAIN_NAME, true, false)
 
-        assertThat(result).isEqualTo(CreateCartResult.Error)
+        assertThat(result).isEqualTo(CreateCartResult.Error())
+    }
+
+    @Test
+    fun `given the API refuses the cart, when execute, the error carries its message`() = test {
+        whenever(wpComApiClient.request<Any>(any()))
+            .thenReturn(
+                WpRequestResult.WpError<Any>(
+                    errorCode = WpErrorCode.CustomException("invalid_product"),
+                    errorMessage = "That product cannot be purchased",
+                    statusCode = 400.toUInt(),
+                    response = "",
+                    requestUrl = "",
+                    requestMethod = RequestMethod.POST,
+                )
+            )
+
+        val result = useCase.execute(site, PRODUCT_ID, DOMAIN_NAME, true, false)
+
+        assertThat(result).isEqualTo(CreateCartResult.Error("That product cannot be purchased"))
+    }
+
+    @Test
+    fun `given the device is offline, when execute, the error says so`() = test {
+        whenever(wpComApiClient.request<Any>(any()))
+            .thenReturn(
+                WpRequestResult.RequestExecutionFailed<Any>(
+                    null,
+                    null,
+                    RequestExecutionErrorReason.DeviceIsOfflineError("No internet connection"),
+                    "",
+                    RequestMethod.POST,
+                )
+            )
+
+        val result = useCase.execute(site, PRODUCT_ID, DOMAIN_NAME, true, false)
+
+        assertThat(result).isEqualTo(CreateCartResult.Error(isDeviceOffline = true))
     }
 
     @Test
@@ -80,7 +120,7 @@ class CreateCartUseCaseTest : BaseUnitTest() {
 
         val result = useCase.execute(site, PRODUCT_ID, DOMAIN_NAME, true, false)
 
-        assertThat(result).isEqualTo(CreateCartResult.Error)
+        assertThat(result).isEqualTo(CreateCartResult.Error())
     }
 
     @Test
@@ -89,7 +129,7 @@ class CreateCartUseCaseTest : BaseUnitTest() {
 
         val result = useCase.execute(site, PRODUCT_ID, DOMAIN_NAME, true, false)
 
-        assertThat(result).isEqualTo(CreateCartResult.Error)
+        assertThat(result).isEqualTo(CreateCartResult.Error())
     }
 
     @Test

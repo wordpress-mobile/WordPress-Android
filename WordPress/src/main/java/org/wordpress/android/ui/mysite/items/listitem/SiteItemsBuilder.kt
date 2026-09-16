@@ -121,11 +121,13 @@ class SiteItemsBuilder @Inject constructor(
                 siteListItemBuilder.buildThemesItemIfAvailable(params.site, params.onClick),
             ) else emptyList()
 
-        val menuItems = listOfNotNull(
-            siteListItemBuilder.buildMenusItemIfAvailable(params.site, params.onClick),
-        )
+        val menusItem = if (params.includeMenusItem) {
+            siteListItemBuilder.buildMenusItemIfAvailable(params.site, params.onClick)
+        } else {
+            null
+        }
 
-        return themeItems + menuItems
+        return themeItems + listOfNotNull(menusItem)
     }
 
     private fun buildNonJetpackDependantConfigurationItemsIfNeeded(params: SiteItemsBuilderParams):
