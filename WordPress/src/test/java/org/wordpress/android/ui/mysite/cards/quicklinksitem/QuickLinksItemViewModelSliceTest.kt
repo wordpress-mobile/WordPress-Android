@@ -8,6 +8,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -17,11 +18,13 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.ListItemActionHandler
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.COMMENTS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.MEDIA
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.MENUS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PAGES
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.POSTS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.STATS
@@ -125,6 +128,31 @@ class QuickLinksItemViewModelSliceTest : BaseUnitTest() {
         assertThat(cardLabels())
             .containsExactly(R.string.stats, R.string.my_site_btn_blog_posts, R.string.my_site_btn_site_pages,
                 R.string.more)
+    }
+
+    @Test
+    fun `the menus capability probe is skipped when Menus is not an active quick link`() = test {
+        givenMenuWithDefaultsOn()
+
+        viewModelSlice.buildCard(site)
+
+        assertThat(builderParams().includeMenusItem).isFalse()
+    }
+
+    @Test
+    fun `the menus capability probe runs when Menus is an active quick link`() = test {
+        givenMenuWithDefaultsOn()
+        whenever(appPrefsWrapper.getShouldShowSiteItemAsQuickLink(MENUS.toString(), SITE_ID)).thenReturn(true)
+
+        viewModelSlice.buildCard(site)
+
+        assertThat(builderParams().includeMenusItem).isTrue()
+    }
+
+    private suspend fun builderParams(): SiteItemsBuilderParams {
+        val captor = argumentCaptor<SiteItemsBuilderParams>()
+        verify(siteItemsBuilder).build(captor.capture())
+        return captor.firstValue
     }
 
     private fun cardLabels() = uiState!!.quickLinkItems.map { it.label.stringRes }

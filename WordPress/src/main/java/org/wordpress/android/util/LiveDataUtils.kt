@@ -8,6 +8,8 @@ import androidx.lifecycle.map
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.viewmodel.SingleMediatorLiveEvent
 
@@ -647,6 +649,49 @@ fun <T> LiveData<T>.fold(action: (previous: T, current: T) -> T): MediatorLiveDa
         }
     }
     return mediatorLiveData
+}
+
+/**
+ * Passes a value straight through when the source has been quiet for [quietMs]. Otherwise the source
+ * is mid-burst, so the newest value is held until the burst has been quiet for [quietMs] or
+ * [maxHoldMs] has passed since the hold began, whichever comes first. Observers see the first value
+ * of a burst and then its last, rather than every step in between, and a value arriving on its own
+ * is never delayed. The held value is always the source's newest, so the observer always ends on it.
+ *
+ * [scope] bounds the timers' lifetime; they always run on the main thread, whatever the scope's own
+ * dispatcher, since that is the only thread the returned LiveData may be set from. Cancelling the
+ * scope drops whatever is held.
+ */
+fun <T> LiveData<T>.settle(scope: CoroutineScope, quietMs: Long, maxHoldMs: Long): LiveData<T> {
+    val mediator = MediatorLiveData<T>()
+    var quietJob: Job? = null
+    // non-null exactly while a value is being held
+    var deadlineJob: Job? = null
+
+    fun flush() {
+        val deadline = deadlineJob ?: return
+        deadline.cancel()
+        deadlineJob = null
+        mediator.value = this.value
+    }
+
+    mediator.addSource(this) { value ->
+        val wasQuiet = quietJob?.isActive != true
+        quietJob?.cancel()
+        quietJob = scope.launch(Dispatchers.Main.immediate) {
+            delay(quietMs)
+            flush()
+        }
+        if (wasQuiet) {
+            mediator.value = value
+        } else if (deadlineJob == null) {
+            deadlineJob = scope.launch(Dispatchers.Main.immediate) {
+                delay(maxHoldMs)
+                flush()
+            }
+        }
+    }
+    return mediator
 }
 
 /**
