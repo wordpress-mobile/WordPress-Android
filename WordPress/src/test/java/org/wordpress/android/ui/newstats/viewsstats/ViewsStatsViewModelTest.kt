@@ -9,6 +9,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
@@ -1485,7 +1486,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     fun `onNavigatePrevious pages the whole screen to the previous range`() = test {
         val previous = StatsPeriod.Custom(LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 7))
         whenever(statsRepository.canNavigateBackward(any())).thenReturn(true)
-        whenever(statsRepository.previousPeriod(any())).thenReturn(previous)
+        whenever(statsRepository.previousPeriod(any(), anyOrNull())).thenReturn(previous)
         whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
         initViewModel()
         advanceUntilIdle()
@@ -1500,7 +1501,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     fun `onNavigateNext pages the whole screen to the next range`() = test {
         val next = StatsPeriod.Custom(LocalDate.of(2026, 2, 1), LocalDate.of(2026, 2, 7))
         whenever(statsRepository.canNavigateForward(any())).thenReturn(true)
-        whenever(statsRepository.nextPeriod(any())).thenReturn(next)
+        whenever(statsRepository.nextPeriod(any(), anyOrNull())).thenReturn(next)
         whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
         initViewModel()
         advanceUntilIdle()
@@ -1523,7 +1524,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(viewModel.selectedPeriod.value).isEqualTo(before)
-        verify(statsRepository, never()).previousPeriod(any())
+        verify(statsRepository, never()).previousPeriod(any(), anyOrNull())
     }
 
     @Test
@@ -1536,6 +1537,29 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.canNavigateBackward.value).isTrue()
         assertThat(viewModel.canNavigateForward.value).isFalse()
+    }
+
+    @Test
+    fun `given a picked preset, when paging back then forward, then the pick is passed as the origin`() = test {
+        // Paging back replaces the preset with a concrete range, so forward navigation has to be told
+        // which preset the user actually picked or it can land on a different label (CMM-2415).
+        val previous = StatsPeriod.Custom(LocalDate.of(2026, 9, 6), LocalDate.of(2026, 9, 12))
+        whenever(statsRepository.canNavigateBackward(any())).thenReturn(true)
+        whenever(statsRepository.canNavigateForward(any())).thenReturn(true)
+        whenever(statsRepository.previousPeriod(any(), anyOrNull())).thenReturn(previous)
+        whenever(statsRepository.nextPeriod(any(), anyOrNull())).thenReturn(StatsPeriod.ThisWeek)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        initViewModel()
+        advanceUntilIdle()
+        viewModel.onPeriodChanged(StatsPeriod.ThisWeek)
+        advanceUntilIdle()
+
+        viewModel.onNavigatePrevious()
+        advanceUntilIdle()
+        viewModel.onNavigateNext()
+        advanceUntilIdle()
+
+        verify(statsRepository).nextPeriod(previous, StatsPeriod.ThisWeek)
     }
     // endregion
 

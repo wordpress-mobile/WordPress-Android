@@ -102,6 +102,13 @@ class ViewsStatsViewModel @Inject constructor(
     private var wholePeriodBottom: BottomStatsUiState = BottomStatsUiState.Loading
 
     private var currentPeriod: StatsPeriod = _selectedPeriod.value
+
+    // The period the user last picked themselves, kept while they page back and forth. Paging turns a
+    // preset into a concrete range, so by the time forward navigation lands back on the present edge
+    // the picked label is gone — several presets can describe that same window and the wrong one would
+    // win. Only an explicit pick (selector, custom range, bar drill-down) redefines it.
+    private var periodOrigin: StatsPeriod = _selectedPeriod.value
+
     private var loadingPeriod: StatsPeriod? = null
     private var loadedPeriod: StatsPeriod? = null
     private var loadJob: Job? = null
@@ -132,6 +139,7 @@ class ViewsStatsViewModel @Inject constructor(
                 val restoredPeriod = restorePeriodFromPreferences()
                 if (restoredPeriod != null) {
                     currentPeriod = restoredPeriod
+                    periodOrigin = restoredPeriod
                     _selectedPeriod.value = restoredPeriod
                     updateNavigationState()
                 }
@@ -166,7 +174,12 @@ class ViewsStatsViewModel @Inject constructor(
         loadData()
     }
 
-    fun onPeriodChanged(period: StatsPeriod) {
+    /**
+     * Commits [period] as the screen's range. An explicit pick — the selector, a custom range, a bar
+     * drill-down — also becomes the origin future navigation resolves ties against; paging passes
+     * [keepOrigin] so the ranges it produces don't overwrite the preset the user chose.
+     */
+    fun onPeriodChanged(period: StatsPeriod, keepOrigin: Boolean = false) {
         val hasSoftSelection = _selectedBarPeriod.value != null ||
             (_uiState.value as? ViewsStatsCardUiState.Content)?.selectedBar != null
         if (period == currentPeriod) {
@@ -181,6 +194,7 @@ class ViewsStatsViewModel @Inject constructor(
         // whole-period header/bottom) so no stale overlay survives into the reload.
         clearSoftSelection()
         currentPeriod = period
+        if (!keepOrigin) periodOrigin = period
         // Drop the previous period's cached chart result so a metric switch mid-load can't re-plot from
         // stale data or evaluate availability against the wrong period; it is repopulated on next load.
         lastChartResult = null
@@ -196,7 +210,7 @@ class ViewsStatsViewModel @Inject constructor(
      */
     fun onNavigatePrevious() {
         if (!statsRepository.canNavigateBackward(currentPeriod)) return
-        navigateTo(statsRepository.previousPeriod(currentPeriod))
+        navigateTo(statsRepository.previousPeriod(currentPeriod, origin = periodOrigin))
     }
 
     /**
@@ -205,7 +219,7 @@ class ViewsStatsViewModel @Inject constructor(
      */
     fun onNavigateNext() {
         if (!statsRepository.canNavigateForward(currentPeriod)) return
-        navigateTo(statsRepository.nextPeriod(currentPeriod))
+        navigateTo(statsRepository.nextPeriod(currentPeriod, origin = periodOrigin))
     }
 
     /**
@@ -218,7 +232,7 @@ class ViewsStatsViewModel @Inject constructor(
         (_uiState.value as? ViewsStatsCardUiState.Content)?.let { content ->
             _uiState.value = content.copy(isLoadingNewPeriod = true)
         }
-        onPeriodChanged(newPeriod)
+        onPeriodChanged(newPeriod, keepOrigin = true)
         loadingPeriod = newPeriod
         loadData()
     }
