@@ -564,15 +564,16 @@ public class WPMediaUtils {
     /**
      * Downloads the {@code mediaUri} and returns the {@link Uri} for the downloaded file
      * <p>
-     * If the {@code mediaUri} is already in the the local store, no download will be done and the given
-     * {@code mediaUri} will be returned instead. This may return null if the download fails.
+     * If the {@code mediaUri} is already in the the local store, or already points at a readable local file, no
+     * download will be done and the given {@code mediaUri} will be returned instead. This may return null if the
+     * download fails.
      * <p>
      * The current thread is blocked until the download is finished.
      *
      * @return A local {@link Uri} or null if the download failed
      */
     public static @Nullable Uri fetchMedia(@NonNull Context context, @NonNull Uri mediaUri) {
-        if (MediaUtils.isInMediaStore(mediaUri)) {
+        if (MediaUtils.isInMediaStore(mediaUri) || isReadableFile(mediaUri)) {
             return mediaUri;
         }
 
@@ -593,6 +594,26 @@ public class WPMediaUtils {
             AppLog.e(AppLog.T.UTILS, "Can't access the media at: " + mediaUri + ": ", e);
             return null;
         }
+    }
+
+    /**
+     * A file:// URI is already a local copy, so downloading it again only duplicates it. Worse, the copy loses the
+     * file name: {@link MediaUtils#downloadExternalMedia} reads the name from {@code OpenableColumns.DISPLAY_NAME},
+     * and querying the content resolver for a file:// URI resolves no provider and returns null, which sends the name
+     * to the {@code wp-<timestamp>} fallback. That is what renamed media shared into the app, since
+     * {@link org.wordpress.android.ui.ShareIntentReceiverActivity} hands over the copy it already made.
+     * See https://github.com/wordpress-mobile/WordPress-Android/issues/20468
+     *
+     * @return whether {@code mediaUri} points at a local file that exists, so the caller can use it as it is
+     */
+    private static boolean isReadableFile(@NonNull Uri mediaUri) {
+        if (!MediaUtils.isFile(mediaUri)) {
+            return false;
+        }
+
+        // a missing file must still go down the download path, so that its failure is reported as it is today
+        String path = mediaUri.getPath();
+        return path != null && new File(path).exists();
     }
 
     /**
