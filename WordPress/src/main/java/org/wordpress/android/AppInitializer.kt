@@ -374,7 +374,7 @@ class AppInitializer @Inject constructor(
 
         // drop the optimized copies left behind by uploads of previous sessions
         launchIo(T.MEDIA, "Failed to delete the old processed media") {
-            WPMediaUtils.deleteOldProcessedMedia(application, PROCESSED_MEDIA_MAX_AGE_MS)
+            WPMediaUtils.deleteOldProcessedMedia(application, PROCESSED_MEDIA_MAX_AGE_MS, pendingUploadPaths())
         }
 
         initDebugCookieManager()
@@ -450,6 +450,15 @@ class AppInitializer @Inject constructor(
                 AppLog.e(tag, failureMessage, e)
             }
         }
+
+    /**
+     * Local paths of the media that hasn't been uploaded yet, which the processed media purge has to keep: an
+     * upload can stay pending for as long as the device stays offline or the site keeps rejecting it.
+     */
+    private fun pendingUploadPaths(): List<String> = siteStore.sites
+        .flatMap { mediaStore.getLocalSiteMedia(it) }
+        .mapNotNull { it.filePath }
+        .filter { it.isNotEmpty() }
 
     /**
      * Enqueues our periodic upload work request, which uploads local drafts or published posts with local

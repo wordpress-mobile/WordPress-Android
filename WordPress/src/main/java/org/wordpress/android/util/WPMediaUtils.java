@@ -45,8 +45,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class WPMediaUtils {
@@ -160,16 +163,34 @@ public class WPMediaUtils {
      * Deletes the leftovers of previous sessions from the processed media cache. The app has no single point where
      * it knows an upload is done with its local copy, and a failed optimization leaves its output behind, so the
      * files are dropped once they are old enough not to belong to an upload that is still running.
+     *
+     * @param pathsInUse the local paths of the media that still has to be uploaded. Their directories are kept
+     *                   however old they are, since the processed file is the only copy the upload has left: an
+     *                   upload can stay pending for weeks when it is queued offline or keeps failing, and deleting
+     *                   its file would make it impossible to ever upload.
      */
-    public static void deleteOldProcessedMedia(@NonNull Context context, long maxAgeMs) {
+    public static void deleteOldProcessedMedia(@NonNull Context context, long maxAgeMs,
+                                               @NonNull Collection<String> pathsInUse) {
         File[] dirs = new File(context.getCacheDir(), PROCESSED_MEDIA_CACHE_DIR).listFiles();
         if (dirs == null) {
             return;
         }
 
+        // every processed file has a directory of its own, so its parent is enough to tell the directory is in use
+        Set<String> dirsInUse = new HashSet<>();
+        for (String path : pathsInUse) {
+            File parentDir = new File(path).getParentFile();
+            if (parentDir != null) {
+                dirsInUse.add(parentDir.getAbsolutePath());
+            }
+        }
+
         long oldestAllowed = System.currentTimeMillis() - maxAgeMs;
         for (File dir : dirs) {
-            if (dir.lastModified() < oldestAllowed && !deleteRecursively(dir)) {
+            if (dirsInUse.contains(dir.getAbsolutePath()) || dir.lastModified() >= oldestAllowed) {
+                continue;
+            }
+            if (!deleteRecursively(dir)) {
                 AppLog.w(T.MEDIA, "Couldn't delete the processed media directory " + dir.getName());
             }
         }
