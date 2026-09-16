@@ -794,7 +794,10 @@ class PostRsListViewModel @Inject constructor(
         resolveImageJobs.clear()
         resolveAuthorJobs.values.forEach { it.cancel() }
         resolveAuthorJobs.clear()
-        metricJobs.forEach { it.cancel() }
+        // Snapshot first: each job's completion handler removes it from metricJobs, and a job
+        // parked on the view-count gate completes inline on Main.immediate during cancel(). Iterating
+        // the live set would throw ConcurrentModificationException as soon as a non-last job did.
+        metricJobs.toList().forEach { it.cancel() }
         metricJobs.clear()
         visiblePostIds = emptySet()
         viewCountCache.clear()
@@ -1110,14 +1113,20 @@ class PostRsListViewModel @Inject constructor(
                 )
             }
             // Anything the lookup did not answer for is recorded so its row stops waiting. The
-            // request is a batch, so one unreadable item leaves every id in it unanswered.
+            // request is a batch, so one unreadable item leaves every id in it unanswered. Anything
+            // it did answer for is evicted, so an id that failed once and then resolved is not
+            // still reported as unresolvable on the next reload.
+            unresolvableImageIds.removeAll(urls.keys)
             unresolvableImageIds.addAll(unresolvedIds.filterNot { urls.containsKey(it) })
             updateTabUiState(tab) {
                 copy(
                     posts = this.posts.map { post ->
                         val url = urls[post.featuredImageId]
                         when {
-                            url != null -> post.copy(featuredImageUrl = url)
+                            url != null -> post.copy(
+                                featuredImageUrl = url,
+                                isFeaturedImageUnresolvable = false
+                            )
                             post.featuredImageId in unresolvableImageIds ->
                                 post.copy(isFeaturedImageUnresolvable = true)
                             else -> post
@@ -1220,8 +1229,11 @@ class PostRsListViewModel @Inject constructor(
      */
     @MainThread
     fun onRowsVisible(tab: PostRsListTab, postIds: List<Long>) {
-        if (!expectsMetrics(tab) || isSearching) return
+        // Recorded before the guard, not after: a list opened condensed does not fetch, but it
+        // still has to know what is on screen so that switching to comfortable can ask for it.
+        // Otherwise retryMetricsForVisibleRows finds an empty set and the rows shimmer for good.
         visiblePostIds = postIds.toSet()
+        if (!expectsMetrics(tab) || isSearching) return
         fetchCommentCounts(tab, postIds)
         fetchViewCounts(tab, postIds)
     }

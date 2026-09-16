@@ -13,6 +13,8 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.timeout
+import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
@@ -655,7 +657,31 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         verify(statsDataSource, never()).fetchPostViews(any(), any())
     }
 
+
+    @Test
+    fun `rows seen while condensed are fetched once the list becomes comfortable`() = test {
+        // A condensed list fetches nothing, but it must still remember what is on screen: the
+        // density toggle re-requests for those rows, and nothing else will if the same rows stay
+        // visible after the switch.
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(true)
+        whenever(commentCountFetcher.fetchCommentCounts(any(), any())).thenReturn(emptyMap())
+        val viewModel = createViewModel()
+        viewModel.onRowsVisible(PostRsListTab.PUBLISHED, listOf(1L, 2L))
+        advanceUntilIdle()
+        verify(commentCountFetcher, never()).fetchCommentCounts(any(), any())
+
+        viewModel.onDensityToggled(PostRsListTab.PUBLISHED)
+        advanceUntilIdle()
+
+        // The fetch hops to Dispatchers.IO, which the test scheduler does not drive, so poll for
+        // the interaction rather than asserting it has already happened.
+        verifyBlocking(commentCountFetcher, timeout(FETCH_TIMEOUT_MS)) {
+            fetchCommentCounts(any(), any())
+        }
+    }
+
     // endregion
 }
 
 private const val UPLOADED_POST_ID = 4242L
+private const val FETCH_TIMEOUT_MS = 2_000L
