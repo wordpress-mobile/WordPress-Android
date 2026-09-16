@@ -134,24 +134,6 @@ class DiscoveryFailureAnalyticsTest {
     }
 
     @Test
-    fun `multiple blocking plugins are read from the API details`() {
-        val apiDetails = mock<WpApiDetails>()
-        whenever(apiDetails.applicationPasswordBlockingPlugins())
-            .thenReturn(listOf(plugin("Wordfence"), plugin("Hostinger Tools")))
-        val failure = fetchAndParse(
-            FetchAndParseApiRootFailure.ApplicationPasswordsNotSupported(
-                apiDetails = apiDetails,
-                reason = ApplicationPasswordsNotSupportedReason.ApplicationPasswordBlockedByMultiplePlugins,
-            )
-        )
-
-        assertEquals(
-            mapOf("reason" to "blocked_by_plugin", "plugin" to "Wordfence,Hostinger Tools"),
-            failure.toAnalyticsProps()
-        )
-    }
-
-    @Test
     fun `http-only site`() {
         val failure = fetchAndParse(
             FetchAndParseApiRootFailure.ApplicationPasswordsNotSupported(
@@ -170,6 +152,37 @@ class DiscoveryFailureAnalyticsTest {
         )
 
         assertEquals(mapOf("reason" to "app_passwords_not_supported"), failure.toAnalyticsProps())
+    }
+
+    @Test
+    fun `REST error code that is not a slug is not shipped`() {
+        val failure = fetchAndParse(
+            FetchAndParseApiRootFailure.WpError(
+                errorCode = WpErrorCode.CustomException("blocked: client 203.0.113.7 <script>"),
+                errorMessage = "",
+                statusCode = 403u,
+            )
+        )
+
+        assertEquals(
+            mapOf("reason" to "wp_error", "error_code" to "custom", "status_code" to "403"),
+            failure.toAnalyticsProps()
+        )
+    }
+
+    @Test
+    fun `multiple blocking plugins are sorted so order does not split the bucket`() {
+        val apiDetails = mock<WpApiDetails>()
+        whenever(apiDetails.applicationPasswordBlockingPlugins())
+            .thenReturn(listOf(plugin("Wordfence"), plugin("Hostinger Tools")))
+        val failure = fetchAndParse(
+            FetchAndParseApiRootFailure.ApplicationPasswordsNotSupported(
+                apiDetails = apiDetails,
+                reason = ApplicationPasswordsNotSupportedReason.ApplicationPasswordBlockedByMultiplePlugins,
+            )
+        )
+
+        assertEquals("Hostinger Tools,Wordfence", failure.toAnalyticsProps()["plugin"])
     }
 
     @Test

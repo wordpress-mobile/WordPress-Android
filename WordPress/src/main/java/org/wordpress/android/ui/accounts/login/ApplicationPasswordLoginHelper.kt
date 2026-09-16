@@ -26,9 +26,6 @@ import org.wordpress.android.util.crashlogging.sendReportWithTag
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.DiscoveredAuthenticationMechanism
-import uniffi.wp_api.AutoDiscoveryAttemptFailure
-import uniffi.wp_api.FetchAndParseApiRootFailure
-import uniffi.wp_api.WpErrorCode
 import uniffi.wp_api.applicationPasswordsUrl
 import uniffi.wp_api.localizedDescription
 import java.net.URI
@@ -142,7 +139,6 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                                 source,
                                 "No application-passwords authentication URL advertised",
                                 mapOf(REASON_TAG to REASON_NOT_SUPPORTED),
-                                DiscoveryResult.FailureReason.NotSupported,
                             )
                         }
                         val apiRootUrl = discoverSuccessWrapper.getApiRootUrl(urlDiscoveryResult)
@@ -171,30 +167,9 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                         // discovery attempt) must not be used here.
                         urlDiscoveryResult.failure.localizedDescription(),
                         urlDiscoveryResult.failure.toAnalyticsProps(),
-                        urlDiscoveryResult.failureReason(),
                     )
             }
         }
-
-    /**
-     * Recognise causes worth naming to the user. A [FetchAndParseApiRootFailure.WpError] means we
-     * reached the site and it answered with a REST error envelope, so its `code` is a reliable
-     * signal — WordPress.com sends `private_site` from a site whose Privacy setting hides it.
-     */
-    private fun ApiDiscoveryResult.failureReason(): DiscoveryResult.FailureReason {
-        val wpError = ((this as? ApiDiscoveryResult.Failure)?.failure
-            as? AutoDiscoveryAttemptFailure.FetchAndParseApiRoot)
-            ?.fetchAndParseApiRootFailure as? FetchAndParseApiRootFailure.WpError
-            ?: return DiscoveryResult.FailureReason.Unknown
-        // `private_site` has no dedicated WpErrorCode, so the library surfaces it as a CustomException
-        // carrying the raw code string.
-        val rawCode = (wpError.errorCode as? WpErrorCode.CustomException)?.v1
-        return if (rawCode == PRIVATE_SITE_ERROR_CODE) {
-            DiscoveryResult.FailureReason.PrivateSite
-        } else {
-            DiscoveryResult.FailureReason.Unknown
-        }
-    }
 
     private fun trackDiscoverySuccessful(siteUrl: String, source: DiscoverySource, isWpCom: Boolean) {
         analyticsTracker.track(
@@ -214,9 +189,16 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         source: DiscoverySource,
         message: String,
         analyticsProps: Map<String, String>,
-        reason: DiscoveryResult.FailureReason = DiscoveryResult.FailureReason.Unknown,
     ): DiscoveryResult {
         val trackedReason = analyticsProps[REASON_TAG]
+        // Causes worth naming to the user, read from the same classification the event carries.
+        // A REST error code is only present when the site answered with an error envelope, so
+        // it's a reliable signal: WordPress.com sends `private_site` from a hidden site.
+        val reason = when {
+            trackedReason == REASON_NOT_SUPPORTED -> DiscoveryResult.FailureReason.NotSupported
+            analyticsProps[ERROR_CODE_TAG] == PRIVATE_SITE_ERROR_CODE -> DiscoveryResult.FailureReason.PrivateSite
+            else -> DiscoveryResult.FailureReason.Unknown
+        }
         appLogWrapper.e(
             AppLog.T.API,
             "A_P: Error during API discovery for $siteUrl - $message ($reason, $trackedReason)"
@@ -332,12 +314,9 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         reason: String,
         creationSource: String = ""
     ) {
-        val properties: MutableMap<String, String?> = HashMap()
-        properties[URL_TAG] = maskUrl(siteUrl.orEmpty())
-        properties[REASON_TAG] = reason
         analyticsTracker.track(
             Stat.APPLICATION_PASSWORD_STORING_FAILED,
-            properties
+            mapOf(URL_TAG to maskUrl(siteUrl.orEmpty()), REASON_TAG to reason)
         )
         trackCreated(creationSource, success = false, error = reason)
         // Every post-callback failure funnels through here, user rejection included, so this is
@@ -463,18 +442,23 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             .removePrefix("www.")
     }
 
+    /**
+     * The login screen passes the address as typed while the callback carries it with a scheme, so
+     * the scheme-qualified form is returned either way and one site masks to one value. Anything
+     * whose host can't be split into a domain and TLD is dropped rather than shipped raw.
+     */
     @Suppress("ReturnCount")
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal fun maskUrl(url: String): String {
-        // The login screen passes the address as typed. Without a scheme URI reports no host,
-        // which would send the site name through unmasked.
+        if (url.isEmpty()) return url
+        val withScheme = if (url.contains("://")) url else "https://$url"
         val host = try {
-            URI(UrlUtils.addUrlSchemeIfNeeded(url, true)).host
+            URI(withScheme).host
         } catch (_: Exception) {
             null
-        } ?: return url
+        } ?: return ""
         val dotIndex = host.lastIndexOf('.')
-        if (dotIndex <= 0) return url
+        if (dotIndex <= 0) return ""
         val domain = host.substring(0, dotIndex)
         val tld = host.substring(dotIndex)
         val maskedDomain = when {
@@ -483,7 +467,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 "x".repeat(domain.length - 2) +
                 domain.last()
         }
-        return url.replaceFirst(host, maskedDomain + tld)
+        return withScheme.replaceFirst(host, maskedDomain + tld)
     }
 
     fun siteHasBadCredentials(site: SiteModel) =

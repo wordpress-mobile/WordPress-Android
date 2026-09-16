@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts.login
 
+import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordCreationTracker
 import uniffi.wp_api.ApplicationPasswordsNotSupportedReason
 import uniffi.wp_api.AutoDiscoveryAttemptFailure
 import uniffi.wp_api.FetchAndParseApiRootFailure
@@ -12,27 +13,31 @@ import java.util.Locale
 
 internal const val REASON_TAG = "reason"
 internal const val ERROR_CODE_TAG = "error_code"
-internal const val STATUS_CODE_TAG = "status_code"
-internal const val NETWORK_REASON_TAG = "network_reason"
-internal const val PLUGIN_TAG = "plugin"
-internal const val RESPONSE_BODY_TYPE_TAG = "response_body_type"
-
-internal const val REASON_BLOCKED_BY_PLUGIN = "blocked_by_plugin"
 internal const val REASON_NOT_SUPPORTED = "app_passwords_not_supported"
-internal const val REASON_EXCEPTION = "exception"
 
+private const val STATUS_CODE_TAG = "status_code"
+private const val NETWORK_REASON_TAG = "network_reason"
+private const val PLUGIN_TAG = "plugin"
+private const val RESPONSE_BODY_TYPE_TAG = "response_body_type"
+private const val REASON_BLOCKED_BY_PLUGIN = "blocked_by_plugin"
+private const val REASON_EXCEPTION = "exception"
 private const val WORDFENCE = "Wordfence"
+
+// A REST error `code` is whatever the site's error envelope says, so a plugin or WAF could put
+// anything there. Only a slug-shaped code is worth a bucket of its own.
+private val ERROR_CODE_SLUG = Regex("[A-Za-z0-9_.-]{1,64}")
 
 /**
  * Which flow asked for API discovery. The `background_rest_autodiscovery_*` events fire from the
  * foreground login flows too, so without this a card probe and a real login attempt are one number.
  * Only non-card sources count towards the `*_application_password_login` failure denominator.
+ * Values match the `source` the same flows put on `application_password_created`.
  */
 enum class DiscoverySource(val value: String) {
     MY_SITE_CARD("my_site_card"),
-    LOGIN("login"),
-    REAUTH_DIALOG("reauth_dialog"),
-    AUTO_AUTH_FALLBACK("auto_auth_fallback"),
+    LOGIN(ApplicationPasswordCreationTracker.SOURCE_LOGIN),
+    REAUTH_DIALOG(ApplicationPasswordCreationTracker.SOURCE_REAUTH),
+    AUTO_AUTH_FALLBACK(ApplicationPasswordCreationTracker.SOURCE_MIGRATION),
 }
 
 /**
@@ -77,7 +82,7 @@ private fun FetchAndParseApiRootFailure.toAnalyticsProps(): Map<String, String> 
         // Only the single-plugin variant names its plugin; the site's API details know the rest.
         ApplicationPasswordsNotSupportedReason.ApplicationPasswordBlockedByMultiplePlugins -> props(
             REASON_BLOCKED_BY_PLUGIN,
-            PLUGIN_TAG to apiDetails.applicationPasswordBlockingPlugins().joinToString(",") { it.name },
+            PLUGIN_TAG to apiDetails.applicationPasswordBlockingPlugins().map { it.name }.sorted().joinToString(","),
         )
         ApplicationPasswordsNotSupportedReason.ApplicationPasswordsDisabledForHttpSite -> props("http_site")
         ApplicationPasswordsNotSupportedReason.SiteIsLocalDevelopmentEnvironment -> props("local_dev_environment")
@@ -118,7 +123,7 @@ private fun RequestExecutionErrorReason.analyticsName(): String = when (this) {
  * without a dedicated class arrive as [WpErrorCode.CustomException] carrying the raw string.
  */
 private fun WpErrorCode.analyticsName(): String = when (this) {
-    is WpErrorCode.CustomException -> v1
+    is WpErrorCode.CustomException -> if (ERROR_CODE_SLUG.matches(v1)) v1 else "custom"
     else -> simpleName()
 }
 
