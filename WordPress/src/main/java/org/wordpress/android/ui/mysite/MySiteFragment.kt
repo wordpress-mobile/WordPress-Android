@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -71,6 +72,7 @@ import org.wordpress.android.util.PackageManagerWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.setVisible
@@ -828,11 +830,19 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         options.setToolbarWidgetColor(context.getColorFromAttribute(com.google.android.material.R.attr.colorOnSurface))
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE)
         options.setHideBottomControls(true)
-        UCrop.of(imageUri.uri, Uri.fromFile(File(context.cacheDir, "cropped_for_site_icon.jpg")))
+        UCrop.of(imageUri.uri, Uri.fromFile(createCropDestination(context)))
             .withAspectRatio(1f, 1f)
             .withOptions(options)
             .start(requireActivity(), this)
     }
+
+    /**
+     * The cropped image is uploaded straight from this file, so every crop needs one of its own: changing the icon
+     * again while the previous upload is still running would otherwise overwrite the bytes being sent.
+     */
+    private fun createCropDestination(context: Context) =
+        WPMediaUtils.createProcessedMediaFile(context, SITE_ICON_CROP_FILE_NAME)
+            ?: File(context.cacheDir, SITE_ICON_CROP_FILE_NAME)
 
     companion object {
         @JvmField
@@ -842,6 +852,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         private const val SETTLE_QUIET_MS = 400L
         private const val SETTLE_MAX_HOLD_MS = 1200L
         private const val CARD_SLIDE_MS = 150L
+        private const val SITE_ICON_CROP_FILE_NAME = "cropped_for_site_icon.jpg"
         fun newInstance(): MySiteFragment {
             return MySiteFragment()
         }
