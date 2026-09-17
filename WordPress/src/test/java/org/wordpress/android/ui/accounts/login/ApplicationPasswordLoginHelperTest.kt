@@ -362,19 +362,6 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given proper site, when api discovery is success, then return discovery url`() = runTest {
-        stubDiscovery(authUrl = TEST_URL_AUTH)
-
-        val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.LOGIN)
-
-        assertEquals(
-            ApplicationPasswordLoginHelper.DiscoveryResult.Authorized("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX"),
-            result
-        )
-        verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
-    }
-
-    @Test
     fun `given a WP_com site, when api discovery returns OAuth2, then return WpComSite`() = runTest {
         val oAuth2 = DiscoveredAuthenticationMechanism.OAuth2(
             OAuth2Endpoints(authorizationUrl = TEST_URL, tokenUrl = TEST_URL)
@@ -389,27 +376,6 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
         assertEquals(ApplicationPasswordLoginHelper.DiscoveryResult.WpComSite, result)
         verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
     }
-
-    @Test
-    fun `given login scenario, when api discovery throws, then return Failed`() = runTest {
-        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).doThrow(RuntimeException("API discovery failed"))
-
-        val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.LOGIN)
-
-        assertTrue(result is ApplicationPasswordLoginHelper.DiscoveryResult.Failed)
-        verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
-    }
-
-    @Test
-    fun `given Success result but auth URL extraction fails, then return Failed`() = runTest {
-        stubDiscovery(authUrl = null)
-
-        val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.LOGIN)
-
-        assertTrue(result is ApplicationPasswordLoginHelper.DiscoveryResult.Failed)
-        verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
-    }
-
 
     @Test
     fun `given login scenario, when api discovery is failed, then return Failed with wordpress-rs message`() =
@@ -467,11 +433,11 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
         val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.LOGIN)
 
         assertEquals(
-            mapOf("reason" to "app_passwords_not_supported", "url" to "txxt.com", "source" to "login"),
+            mapOf("reason" to "no_auth_url_advertised", "url" to "txxt.com", "source" to "login"),
             trackedProps(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
         )
         assertEquals(
-            mapOf("url" to "txxt.com", "success" to "false", "error" to "discovery_app_passwords_not_supported"),
+            mapOf("url" to "txxt.com", "success" to "false", "error" to "discovery_no_auth_url_advertised"),
             trackedProps(Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN)
         )
         assertEquals(
@@ -497,8 +463,9 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     fun `given discovery throws, then autodiscovery_failed carries the exception class`() = runTest {
         whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).doThrow(IllegalStateException("boom"))
 
-        applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.REAUTH_DIALOG)
+        val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.REAUTH_DIALOG)
 
+        assertIs<ApplicationPasswordLoginHelper.DiscoveryResult.Failed>(result)
         assertEquals(
             mapOf(
                 "reason" to "exception",
@@ -525,11 +492,15 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     fun `given discovery succeeds, then autodiscovery_successful carries url source and is_wpcom`() = runTest {
         stubDiscovery(authUrl = TEST_URL_AUTH)
 
-        applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.MY_SITE_CARD)
+        val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.MY_SITE_CARD)
 
         assertEquals(
-            mapOf("url" to "txxt.com", "source" to "my_site_card", "is_wpcom" to "false"),
+            mapOf("url" to "txxt.com", "source" to "my_site_card", "is_wpcom" to false),
             trackedProps(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
+        )
+        assertEquals(
+            ApplicationPasswordLoginHelper.DiscoveryResult.Authorized("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX"),
+            result
         )
     }
 
@@ -559,15 +530,19 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     @Test
     fun `maskUrl yields one value per site`() {
         // The login screen passes the address as typed; the callback carries a normalised site_url.
-        // Scheme, case, www, path and trailing slash must not split one site into two.
+        // Scheme, case, www, path, trailing slash or dot and IDN form must not split one site in two.
         assertMasked(
             "mysite.com" to "mxxxxe.com",
             "MySite.com" to "mxxxxe.com",
             "WWW.MySite.com/" to "mxxxxe.com",
             "http://mysite.com" to "mxxxxe.com",
+            "mysite.com." to "mxxxxe.com",
             "mysite.com/wp-admin" to "mxxxxe.com",
             "mysite.com/wp-login.php?redirect_to=https://mysite.com/wp-admin" to "mxxxxe.com",
             "https://test.com:8080" to "txxt.com:8080",
+            "münchen.de" to "xxxxxxxxxxxxxa.de",
+            "https://xn--mnchen-3ya.de" to "xxxxxxxxxxxxxa.de",
+            "my_site.com" to "mxxxxxe.com",
         )
     }
 
@@ -594,18 +569,14 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     @Test
     fun `maskUrl drops a host that is not a domain name`() {
         assertMasked(
+            "" to "",
             "https://localhost" to "",
-            "https://my_site.com" to "",
             "192.168.1.5:8080" to "",
             "http://[fd00::1]/" to "",
+            "http://[::ffff:192.168.1.5]" to "",
             "example.com:abc" to "",
             "not a url" to "",
         )
-    }
-
-    @Test
-    fun `maskUrl leaves an empty value alone`() {
-        assertEquals("", applicationPasswordLoginHelper.maskUrl(""))
     }
 
     private fun assertMasked(vararg cases: Pair<String, String>) {

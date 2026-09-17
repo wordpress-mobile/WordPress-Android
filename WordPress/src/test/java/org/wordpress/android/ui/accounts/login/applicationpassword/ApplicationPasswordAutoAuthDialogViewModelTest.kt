@@ -110,7 +110,8 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
             password = "testpass123"
         }
         whenever(
-            applicationPasswordLoginHelper.getAuthorizationUrlComplete(any(), any())
+            applicationPasswordLoginHelper
+                .getAuthorizationUrlComplete(eq(invalidSite.url), eq(DiscoverySource.AUTO_AUTH_FALLBACK))
         )
             .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.Authorized(testAuthUrl))
 
@@ -138,7 +139,8 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
             password = ""
         }
         whenever(
-            applicationPasswordLoginHelper.getAuthorizationUrlComplete(any(), any())
+            applicationPasswordLoginHelper
+                .getAuthorizationUrlComplete(eq(invalidSite.url), eq(DiscoverySource.AUTO_AUTH_FALLBACK))
         )
             .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.Authorized(testAuthUrl))
 

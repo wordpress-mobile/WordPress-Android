@@ -22,6 +22,7 @@ private const val RESPONSE_BODY_TYPE_TAG = "response_body_type"
 private const val REASON_NETWORK_ERROR = "network_error"
 private const val REASON_BLOCKED_BY_PLUGIN = "blocked_by_plugin"
 private const val REASON_NOT_SUPPORTED = "app_passwords_not_supported"
+private const val REASON_NO_AUTH_URL = "no_auth_url_advertised"
 private const val REASON_EXCEPTION = "exception"
 private const val WORDFENCE = "Wordfence"
 
@@ -54,23 +55,25 @@ enum class DiscoverySource(val value: String, val isLoginAttempt: Boolean) {
  * A discovery failure reduced to what the events and the UI need. [reason] is the slug
  * `background_rest_autodiscovery_failed` groups on, [details] is whatever the variant knew (status
  * code, REST error code, blocking plugin), and [userFacing] is the cause worth naming to the user,
- * when there is one.
+ * when there is one. [isCancellation] marks a request the library reports as cancelled rather than
+ * throwing for: still worth a discovery row, but not a failed login.
  */
 internal data class DiscoveryFailure(
     val reason: String,
     val details: Map<String, String> = emptyMap(),
     val userFacing: FailureReason = FailureReason.Unknown,
+    val isCancellation: Boolean = false,
 ) {
     val props: Map<String, String> get() = details + (REASON_TAG to reason)
 }
 
 /** Discovery succeeded but the site advertises no application-passwords URL. */
 internal fun notSupportedFailure() =
-    DiscoveryFailure(REASON_NOT_SUPPORTED, userFacing = FailureReason.NotSupported)
+    DiscoveryFailure(REASON_NO_AUTH_URL, userFacing = FailureReason.NotSupported)
 
 /** Anything thrown out of discovery rather than reported by it. */
-internal fun Throwable.toDiscoveryFailure() =
-    DiscoveryFailure(REASON_EXCEPTION, mapOf(ERROR_CODE_TAG to simpleName()))
+internal fun unexpectedDiscoveryFailure(throwable: Throwable) =
+    DiscoveryFailure(REASON_EXCEPTION, mapOf(ERROR_CODE_TAG to throwable.simpleName()))
 
 /**
  * Classify a wordpress-rs discovery failure. Deliberately excluded from the details:
@@ -134,11 +137,12 @@ private fun RequestExecutionException.toDiscoveryFailure(): DiscoveryFailure = w
         REASON_NETWORK_ERROR,
         mapOf(NETWORK_REASON_TAG to reason.analyticsName()) +
             listOfNotNull(statusCode?.let { STATUS_CODE_TAG to it.toString() }),
+        isCancellation = reason is RequestExecutionErrorReason.CancellationError,
     )
-    is RequestExecutionException.MediaFileNotFound ->
-        DiscoveryFailure(REASON_NETWORK_ERROR, mapOf(NETWORK_REASON_TAG to "media_file_not_found"))
+    // Upload-only variants that discovery's GETs can't produce; named by class like other surprises.
+    is RequestExecutionException.MediaFileNotFound,
     is RequestExecutionException.MediaFileUnreadable ->
-        DiscoveryFailure(REASON_NETWORK_ERROR, mapOf(NETWORK_REASON_TAG to "media_file_unreadable"))
+        DiscoveryFailure(REASON_NETWORK_ERROR, mapOf(NETWORK_REASON_TAG to simpleName()))
 }
 
 private fun RequestExecutionErrorReason.analyticsName(): String = when (this) {

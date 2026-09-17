@@ -162,15 +162,33 @@ class DiscoveryFailureAnalyticsTest {
     fun `no advertised authentication URL is the not-supported case named to the user`() {
         val failure = notSupportedFailure()
 
-        assertEquals(mapOf("reason" to "app_passwords_not_supported"), failure.props)
+        assertEquals(mapOf("reason" to "no_auth_url_advertised"), failure.props)
         assertEquals(FailureReason.NotSupported, failure.userFacing)
+    }
+
+    @Test
+    fun `a request the library reports as cancelled is not a failed login`() {
+        val cancelled = fetchAndParse(
+            FetchAndParseApiRootFailure.FetchApiRoot(
+                requestFailed(RequestExecutionErrorReason.CancellationError, statusCode = null)
+            )
+        ).toDiscoveryFailure()
+        val timedOut = fetchAndParse(
+            FetchAndParseApiRootFailure.FetchApiRoot(
+                requestFailed(RequestExecutionErrorReason.HttpTimeoutError, statusCode = null)
+            )
+        ).toDiscoveryFailure()
+
+        assertEquals(true, cancelled.isCancellation)
+        assertEquals("cancelled", cancelled.props["network_reason"])
+        assertEquals(false, timedOut.isCancellation)
     }
 
     @Test
     fun `throwable reports its class only`() {
         assertEquals(
             mapOf("reason" to "exception", "error_code" to "IllegalStateException"),
-            IllegalStateException("contains a url").toDiscoveryFailure().props
+            unexpectedDiscoveryFailure(IllegalStateException("contains a url")).props
         )
     }
 

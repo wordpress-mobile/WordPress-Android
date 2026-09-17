@@ -10,8 +10,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
@@ -353,12 +351,9 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             )
         } else {
             val resolvedSite = site ?: return
-            AnalyticsTracker.track(
-                Stat.APPLICATION_PASSWORD_CREATED,
-                mapOf("source" to creationSource, "success" to "true")
-            )
             // A first-time site completes here rather than in the helper, so without this the
             // login event would carry first-time failures but none of their successes.
+            applicationPasswordLoginHelper.trackCreated(creationSource, success = true)
             applicationPasswordLoginHelper.trackLoginSuccessful(currentUrlLogin?.siteUrl)
             _onFinishedEvent.emit(
                 NavigationActionData(
