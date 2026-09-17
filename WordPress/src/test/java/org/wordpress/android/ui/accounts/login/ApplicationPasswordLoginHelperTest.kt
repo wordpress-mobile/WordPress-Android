@@ -515,12 +515,20 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given storing fails, then the login event fires with the storing reason`() {
+    fun `given the callback stores or fails to store, then the login event records the outcome`() = runTest {
+        whenever(siteStore.sites).thenReturn(listOf(SiteModel().apply { url = TEST_URL }))
+
+        applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin, "login")
         applicationPasswordLoginHelper.trackStoringFailed(TEST_URL, "user_rejected", "login")
 
+        val captor = argumentCaptor<Map<String, *>>()
+        verify(analyticsTracker, times(2)).track(eq(Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN), captor.capture())
         assertEquals(
-            mapOf("url" to "txxt.com", "success" to "false", "source" to "login", "error" to "user_rejected"),
-            trackedProps(Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN)
+            listOf(
+                mapOf("url" to "txxt.com", "success" to "true", "source" to "login"),
+                mapOf("url" to "txxt.com", "success" to "false", "source" to "login", "error" to "user_rejected"),
+            ),
+            captor.allValues
         )
     }
 
@@ -542,19 +550,6 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
         )
         assertEquals(
             mapOf("url" to "txxt.com", "success" to "false", "source" to "login", "error" to "bad_data"),
-            trackedProps(Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN)
-        )
-    }
-
-    @Test
-    fun `given storing succeeds, then the login event fires with success`() = runTest {
-        val site = SiteModel().apply { url = TEST_URL }
-        whenever(siteStore.sites).thenReturn(listOf(site))
-
-        applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
-
-        assertEquals(
-            mapOf("url" to "txxt.com", "success" to "true"),
             trackedProps(Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN)
         )
     }

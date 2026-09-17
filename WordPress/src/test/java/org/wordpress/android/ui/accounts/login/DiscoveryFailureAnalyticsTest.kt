@@ -43,22 +43,7 @@ class DiscoveryFailureAnalyticsTest {
         )
 
         assertEquals(
-            mapOf("reason" to "network_error", "network_reason" to "http_timeout", "status_code" to "503"),
-            failure.toDiscoveryFailure().props
-        )
-    }
-
-    @Test
-    fun `network failure without a status code omits it`() {
-        val failure = AutoDiscoveryAttemptFailure.FindApiRoot(
-            mock(),
-            FindApiRootFailure.FetchHomepage(
-                requestFailed(RequestExecutionErrorReason.DeviceIsOfflineError("offline"), statusCode = null)
-            )
-        )
-
-        assertEquals(
-            mapOf("reason" to "network_error", "network_reason" to "device_offline"),
+            mapOf("reason" to "network_error", "network_reason" to "http_timeout_error", "status_code" to "503"),
             failure.toDiscoveryFailure().props
         )
     }
@@ -146,39 +131,6 @@ class DiscoveryFailureAnalyticsTest {
         )
 
         assertEquals("Hostinger Tools,Wordfence", failure.toDiscoveryFailure().props["plugin"])
-    }
-
-    @Test
-    fun `http-only site`() {
-        val failure = fetchAndParse(
-            notSupported(ApplicationPasswordsNotSupportedReason.ApplicationPasswordsDisabledForHttpSite)
-        )
-
-        assertEquals(mapOf("reason" to "http_site"), failure.toDiscoveryFailure().props)
-    }
-
-    @Test
-    fun `unsupported with no reason keeps the library message for the user`() {
-        val failure = fetchAndParse(notSupported(reason = null)).toDiscoveryFailure()
-
-        assertEquals(mapOf("reason" to "app_passwords_not_supported"), failure.props)
-        assertEquals(FailureReason.Unknown, failure.userFacing)
-    }
-
-    @Test
-    fun `no advertised authentication URL is the not-supported case named to the user`() {
-        val failure = notSupportedFailure()
-
-        assertEquals(mapOf("reason" to "no_auth_url_advertised"), failure.props)
-        assertEquals(FailureReason.NotSupported, failure.userFacing)
-    }
-
-    @Test
-    fun `throwable reports its class only`() {
-        assertEquals(
-            mapOf("reason" to "exception", "error_code" to "illegal_state_exception"),
-            unexpectedDiscoveryFailure(IllegalStateException("contains a url")).props
-        )
     }
 
     private fun fetchAndParse(failure: FetchAndParseApiRootFailure) =

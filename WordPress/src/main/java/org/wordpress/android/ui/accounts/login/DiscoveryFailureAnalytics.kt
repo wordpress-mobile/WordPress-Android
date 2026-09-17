@@ -7,7 +7,6 @@ import uniffi.wp_api.AutoDiscoveryAttemptFailure
 import uniffi.wp_api.FetchAndParseApiRootFailure
 import uniffi.wp_api.FindApiRootFailure
 import uniffi.wp_api.ParseApiRootFailureReason
-import uniffi.wp_api.RequestExecutionErrorReason
 import uniffi.wp_api.RequestExecutionException
 import uniffi.wp_api.WpErrorCode
 import java.util.Locale
@@ -138,27 +137,11 @@ private fun FetchAndParseApiRootFailure.toDiscoveryFailure(): DiscoveryFailure =
 private fun RequestExecutionException.toDiscoveryFailure(): DiscoveryFailure = when (this) {
     is RequestExecutionException.RequestExecutionFailed -> DiscoveryFailure(
         REASON_NETWORK_ERROR,
-        mapOf(NETWORK_REASON_TAG to reason.analyticsName()) +
+        mapOf(NETWORK_REASON_TAG to reason.analyticsSlug()) +
             listOfNotNull(statusCode?.let { STATUS_CODE_TAG to it.toString() }),
     )
     // Upload-only variants that discovery's GETs can't produce; named by class like other surprises.
     else -> DiscoveryFailure(REASON_NETWORK_ERROR, mapOf(NETWORK_REASON_TAG to analyticsSlug()))
-}
-
-private fun RequestExecutionErrorReason.analyticsName(): String = when (this) {
-    is RequestExecutionErrorReason.InvalidSslError -> "invalid_ssl"
-    is RequestExecutionErrorReason.NonExistentSiteError -> "non_existent_site"
-    is RequestExecutionErrorReason.HttpAuthenticationRequiredError -> "http_auth_required"
-    is RequestExecutionErrorReason.HttpAuthenticationRejectedError -> "http_auth_rejected"
-    is RequestExecutionErrorReason.HttpForbiddenError -> "http_forbidden"
-    RequestExecutionErrorReason.HttpTimeoutError -> "http_timeout"
-    is RequestExecutionErrorReason.MisconfiguredHttpAuthenticationError -> "misconfigured_http_auth"
-    RequestExecutionErrorReason.MisconfiguredRateLimitError -> "misconfigured_rate_limit"
-    is RequestExecutionErrorReason.DeviceIsOfflineError -> "device_offline"
-    RequestExecutionErrorReason.CancellationError -> "cancelled"
-    is RequestExecutionErrorReason.ConnectionError -> "connection_error"
-    is RequestExecutionErrorReason.HttpError -> "http_error"
-    is RequestExecutionErrorReason.GenericError -> "generic_error"
 }
 
 /** The raw `code` string for codes without a dedicated class; null for the generated ones. */
