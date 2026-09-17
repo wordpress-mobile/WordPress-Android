@@ -22,10 +22,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.TaxonomyStore
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_TAG
@@ -34,6 +31,7 @@ import org.wordpress.android.ui.dataview.LoadingState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.NetworkUtilsWrapper
 import rs.wordpress.api.kotlin.WpApiClient
+import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.AnyTermWithEditContext
 import uniffi.wp_api.RequestMethod
@@ -57,9 +55,6 @@ class TermsViewModelTest : BaseUnitTest() {
     private lateinit var selectedSiteRepository: SelectedSiteRepository
 
     @Mock
-    private lateinit var accountStore: AccountStore
-
-    @Mock
     private lateinit var sharedPrefs: SharedPreferences
 
     @Mock
@@ -72,10 +67,7 @@ class TermsViewModelTest : BaseUnitTest() {
     private lateinit var fluxCDispatcher: Dispatcher
 
     @Mock
-    private lateinit var trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor
-
-    @Mock
-    private lateinit var wpComApiClientProvider: WpComApiClientProvider
+    private lateinit var wpComApiClient: WpComApiClient
 
     @Mock
     private lateinit var wpApiClient: WpApiClient
@@ -96,15 +88,13 @@ class TermsViewModelTest : BaseUnitTest() {
             wpApiClientProvider = wpApiClientProvider,
             appLogWrapper = appLogWrapper,
             selectedSiteRepository = selectedSiteRepository,
-            accountStore = accountStore,
             mainDispatcher = testDispatcher(),
             sharedPrefs = sharedPrefs,
             networkUtilsWrapper = networkUtilsWrapper,
             ioDispatcher = testDispatcher(),
             taxonomyStore = taxonomyStore,
             fluxCDispatcher = fluxCDispatcher,
-            trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor,
-            wpComApiClientProvider = wpComApiClientProvider
+            wpComApiClient = wpComApiClient
         )
     }
 

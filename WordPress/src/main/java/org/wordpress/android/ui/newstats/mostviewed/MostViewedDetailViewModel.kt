@@ -70,7 +70,7 @@ class MostViewedDetailViewModel @Inject constructor(
         hasStartedLoading = true
         _uiState.value = MostViewedDetailUiState.Loading
         viewModelScope.launch {
-            _uiState.value = fetchDetail(source, site.siteId, period, accessToken)
+            _uiState.value = fetchDetail(source, site.siteId, period)
         }
     }
 
@@ -78,11 +78,10 @@ class MostViewedDetailViewModel @Inject constructor(
     private suspend fun fetchDetail(
         source: MostViewedDetailSource,
         siteId: Long,
-        period: StatsPeriod,
-        accessToken: String
+        period: StatsPeriod
     ): MostViewedDetailUiState =
         try {
-            when (val result = detailFetcher.fetch(source, siteId, period, accessToken)) {
+            when (val result = detailFetcher.fetch(source, siteId, period)) {
                 is StatsCardFetchResult.Success -> MostViewedDetailUiState.Loaded(
                     items = result.items,
                     maxViewsForBar = result.items.firstOrNull()?.views ?: 0L,

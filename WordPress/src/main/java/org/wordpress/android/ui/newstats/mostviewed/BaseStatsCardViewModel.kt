@@ -78,7 +78,6 @@ abstract class BaseStatsCardViewModel(
             return
         }
 
-        statsRepository.init(accessToken)
         _uiState.value = MostViewedCardUiState.Loading
 
         fetchJob?.cancel()
@@ -97,7 +96,6 @@ abstract class BaseStatsCardViewModel(
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) return
 
-        statsRepository.init(accessToken)
         loadingPeriod = currentPeriod
         fetchJob?.cancel()
         fetchJob = viewModelScope.launch {

@@ -26,7 +26,6 @@ class StatsLatestPostUseCase @Inject constructor(
         if (token.isNullOrEmpty()) {
             return LatestPostResult.Error("No access token")
         }
-        statsRepository.init(token)
 
         return when (
             val lookup = latestPostDataSource

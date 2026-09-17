@@ -6,8 +6,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
@@ -16,7 +14,6 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ToastUtilsWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.AddSubscribersParams
@@ -29,8 +26,7 @@ class AddSubscribersViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
     private val toastUtilsWrapper: ToastUtilsWrapper,
-    private val trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor,
-    private val wpComApiClientProvider: WpComApiClientProvider,
+    private val wpComApiClient: WpComApiClient,
 ) : ScopedViewModel(bgDispatcher) {
     @Inject
     @Named(IO_THREAD)
@@ -39,18 +35,8 @@ class AddSubscribersViewModel @Inject constructor(
     @Inject
     lateinit var selectedSiteRepository: SelectedSiteRepository
 
-    @Inject
-    lateinit var accountStore: AccountStore
-
     private val _showProgress = MutableStateFlow(false)
     val showProgress = _showProgress.asStateFlow()
-
-    private val wpComApiClient: WpComApiClient by lazy {
-        wpComApiClientProvider.getWpComApiClient(
-            accessToken = accountStore.accessToken!!,
-            interceptors = listOf(trackNetworkRequestsInterceptor),
-        )
-    }
 
     private fun siteId(): Long {
         return selectedSiteRepository.getSelectedSite()?.siteId ?: 0L

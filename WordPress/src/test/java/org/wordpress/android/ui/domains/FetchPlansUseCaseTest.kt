@@ -11,8 +11,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.ui.domains.usecases.FetchPlansUseCase
 import org.wordpress.android.ui.domains.usecases.SitePlansResult
 import org.wordpress.android.ui.domains.usecases.hasDomainCredit
@@ -25,12 +23,6 @@ import uniffi.wp_api.SitePlan
 @RunWith(MockitoJUnitRunner::class)
 class FetchPlansUseCaseTest : BaseUnitTest() {
     @Mock
-    lateinit var wpComApiClientProvider: WpComApiClientProvider
-
-    @Mock
-    lateinit var accountStore: AccountStore
-
-    @Mock
     lateinit var wpComApiClient: WpComApiClient
 
     private lateinit var useCase: FetchPlansUseCase
@@ -39,10 +31,7 @@ class FetchPlansUseCaseTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        whenever(accountStore.accessToken).thenReturn("test-token")
-        whenever(wpComApiClientProvider.getWpComApiClient("test-token"))
-            .thenReturn(wpComApiClient)
-        useCase = FetchPlansUseCase(wpComApiClientProvider, accountStore)
+        useCase = FetchPlansUseCase(wpComApiClient)
     }
 
     @Test
@@ -66,15 +55,6 @@ class FetchPlansUseCaseTest : BaseUnitTest() {
                     RequestMethod.GET
                 )
             )
-
-        val result = useCase.execute(site)
-
-        assertThat(result).isInstanceOf(SitePlansResult.Error::class.java)
-    }
-
-    @Test
-    fun `given no access token, when execute, returns error`() = test {
-        whenever(accountStore.accessToken).thenReturn(null)
 
         val result = useCase.execute(site)
 
@@ -127,15 +107,6 @@ class FetchPlansUseCaseTest : BaseUnitTest() {
         )
 
         assertThat(fetchedCredit()).isTrue()
-    }
-
-    @Test
-    fun `given a blank access token, when execute, returns error`() = test {
-        whenever(accountStore.accessToken).thenReturn("")
-
-        val result = useCase.execute(site)
-
-        assertThat(result).isInstanceOf(SitePlansResult.Error::class.java)
     }
 
     @Suppress("UNCHECKED_CAST")

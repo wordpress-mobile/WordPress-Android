@@ -3,7 +3,6 @@ package org.wordpress.android.ui.dataview
 import android.content.SharedPreferences
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -13,9 +12,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
-import org.wordpress.android.fluxc.store.AccountStore
+import rs.wordpress.api.kotlin.WpComApiClient
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.dataview.DataViewViewModel.Companion.PAGE_SIZE
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -40,13 +37,7 @@ class DataViewViewModelTest : BaseUnitTest() {
     private lateinit var selectedSiteRepository: SelectedSiteRepository
 
     @Mock
-    private lateinit var accountStore: AccountStore
-
-    @Mock
-    private lateinit var trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor
-
-    @Mock
-    private lateinit var wpComApiClientProvider: WpComApiClientProvider
+    private lateinit var wpComApiClient: WpComApiClient
 
     private val testSite = SiteModel().apply {
         id = 1
@@ -54,15 +45,12 @@ class DataViewViewModelTest : BaseUnitTest() {
         name = "Test Site"
     }
 
-    private val testAccessToken = "test_access_token"
-
     @Before
     fun setUp() {
         whenever(sharedPrefs.edit()).thenReturn(sharedPrefsEditor)
         whenever(sharedPrefsEditor.putInt(any(), any())).thenReturn(sharedPrefsEditor)
         whenever(sharedPrefsEditor.putLong(any(), any())).thenReturn(sharedPrefsEditor)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(testSite)
-        whenever(accountStore.accessToken).thenReturn(testAccessToken)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false) // Prevent network calls
         whenever(sharedPrefs.getInt(any(), any())).thenReturn(-1)
         whenever(sharedPrefs.getLong(any(), any())).thenReturn(-1)
@@ -75,10 +63,8 @@ class DataViewViewModelTest : BaseUnitTest() {
             sharedPrefs = sharedPrefs,
             networkUtilsWrapper = networkUtilsWrapper,
             selectedSiteRepository = selectedSiteRepository,
-            accountStore = accountStore,
             ioDispatcher = testDispatcher(),
-            trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor,
-            wpComApiClientProvider = wpComApiClientProvider
+            wpComApiClient = wpComApiClient
         )
     }
 
@@ -222,33 +208,6 @@ class DataViewViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(viewModel.uiState.value.sortOrder).isEqualTo(WpApiParamOrder.DESC)
-    }
-
-    @Test
-    fun `access token null throws exception`() {
-        whenever(accountStore.accessToken).thenReturn(null)
-
-        try {
-            val viewModel = TestDataViewViewModel(
-                mainDispatcher = testDispatcher(),
-                appLogWrapper = appLogWrapper,
-                sharedPrefs = sharedPrefs,
-                networkUtilsWrapper = networkUtilsWrapper,
-                selectedSiteRepository = selectedSiteRepository,
-                accountStore = accountStore,
-                ioDispatcher = testDispatcher(),
-                trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor,
-                wpComApiClientProvider = wpComApiClientProvider
-            )
-            // Access the wpComApiClient property to trigger the lazy initialization
-            viewModel.testAccessWpComApiClient()
-            // If we get here, test should fail
-            Assertions.fail("Access token is required but was null")
-        } catch (e: Exception) {
-            // Check if the exception or its cause contains the expected message
-            val message = e.message ?: e.cause?.message ?: ""
-            assertThat(message).contains("Access token is required but was null")
-        }
     }
 
     @Test
@@ -504,20 +463,16 @@ class DataViewViewModelTest : BaseUnitTest() {
         sharedPrefs: SharedPreferences,
         networkUtilsWrapper: NetworkUtilsWrapper,
         selectedSiteRepository: SelectedSiteRepository,
-        accountStore: AccountStore,
         ioDispatcher: kotlinx.coroutines.CoroutineDispatcher,
-        trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor,
-        wpComApiClientProvider: WpComApiClientProvider
+        wpComApiClient: WpComApiClient
     ) : DataViewViewModel(
         mainDispatcher,
         appLogWrapper,
         sharedPrefs,
         networkUtilsWrapper,
         selectedSiteRepository,
-        accountStore,
         ioDispatcher,
-        trackNetworkRequestsInterceptor,
-        wpComApiClientProvider
+        wpComApiClient
     ) {
         init {
             initialize()
@@ -594,11 +549,6 @@ class DataViewViewModelTest : BaseUnitTest() {
 
         fun testOnSortOrderClick(order: WpApiParamOrder) {
             onSortOrderClick(order)
-        }
-
-        fun testAccessWpComApiClient() {
-            // Access the lazy wpComApiClient to trigger initialization
-            wpComApiClient.toString()
         }
 
         fun initializeForTest() {
