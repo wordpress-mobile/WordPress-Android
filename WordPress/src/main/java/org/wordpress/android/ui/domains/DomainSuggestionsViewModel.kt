@@ -8,11 +8,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
@@ -41,8 +39,7 @@ import javax.inject.Named
 import kotlin.properties.Delegates
 
 class DomainSuggestionsViewModel @Inject constructor(
-    private val wpComApiClientProvider: WpComApiClientProvider,
-    private val accountStore: AccountStore,
+    private val wpComApiClient: WpComApiClient,
     private val domainsRegistrationTracker: DomainsRegistrationTracker,
     private val debouncer: Debouncer,
     private val createCartUseCase: CreateCartUseCase,
@@ -52,7 +49,6 @@ class DomainSuggestionsViewModel @Inject constructor(
     lateinit var site: SiteModel
     lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
 
-    private var wpComApiClient: WpComApiClient? = null
     private var products: List<Product>? = null
 
     private var isStarted = false
@@ -110,21 +106,6 @@ class DomainSuggestionsViewModel @Inject constructor(
         private const val ERROR_CODE_EMPTY_RESULTS = "empty_results"
     }
 
-    /**
-     * Null when there is no WordPress.com account to make the request as.
-     *
-     * `AccountStore.accessToken` is typed nullable but reads `""` when signed
-     * out, and is only null between an in-process sign out and the next
-     * launch, so both have to be treated as no token.
-     */
-    @Synchronized
-    private fun getOrCreateClient(): WpComApiClient? {
-        val token = accountStore.accessToken?.takeIf { it.isNotEmpty() } ?: return null
-        return wpComApiClient
-            ?: wpComApiClientProvider.getWpComApiClient(token)
-                .also { wpComApiClient = it }
-    }
-
     override fun onCleared() {
         debouncer.shutdown()
         super.onCleared()
@@ -155,17 +136,8 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     private fun fetchProducts() {
         launch {
-            val client = getOrCreateClient()
-            if (client == null) {
-                AppLog.e(
-                    T.DOMAIN_REGISTRATION,
-                    "Cannot fetch domain products without a WP.com access token"
-                )
-                initializeDefaultSuggestions()
-                return@launch
-            }
             val params = buildProductsParams()
-            val result = client.request { it.products().list(params).data }
+            val result = wpComApiClient.request { it.products().list(params).data }
             when (result) {
                 is WpRequestResult.Success -> products = result.response.values.toList()
                 else -> AppLog.e(
@@ -195,17 +167,6 @@ class DomainSuggestionsViewModel @Inject constructor(
             return
         }
 
-        val client = getOrCreateClient()
-        if (client == null) {
-            AppLog.e(
-                T.DOMAIN_REGISTRATION,
-                "Cannot fetch domain suggestions without a WP.com access token"
-            )
-            suggestions = ListState.Error(suggestions.transform { emptyList() })
-            onDomainSuggestionSelected(null)
-            return
-        }
-
         suggestions = ListState.Loading(suggestions)
 
         // Reset the selected suggestion, if list is updated
@@ -214,7 +175,7 @@ class DomainSuggestionsViewModel @Inject constructor(
         val params = buildSuggestionsParams(query, SiteUtils.onBloggerPlan(site))
 
         launch {
-            val result = client.request { it.domains().suggestions(params).data }
+            val result = wpComApiClient.request { it.domains().suggestions(params).data }
             // Back onto the thread the rest of the state is written from, as
             // FluxC's `ThreadMode.MAIN` subscription did.
             withContext(uiDispatcher) { onDomainSuggestionsFetched(query, result) }

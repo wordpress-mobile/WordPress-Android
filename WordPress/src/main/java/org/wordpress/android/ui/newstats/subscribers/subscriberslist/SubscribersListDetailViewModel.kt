@@ -89,7 +89,6 @@ class SubscribersListDetailViewModel @Inject constructor(
             .getSelectedSite()?.siteId ?: return
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) return
-        statsRepository.init(accessToken)
 
         val resources =
             contextProvider.getContext().resources

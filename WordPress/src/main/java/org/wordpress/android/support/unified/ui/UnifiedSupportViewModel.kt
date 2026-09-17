@@ -75,8 +75,8 @@ class UnifiedSupportViewModel @Inject constructor(
     private val _videoDownloadState = MutableStateFlow<VideoDownloadState>(VideoDownloadState.Idle)
     val videoDownloadState: StateFlow<VideoDownloadState> = _videoDownloadState.asStateFlow()
 
-    override fun initRepository(accessToken: String) {
-        repository.init(accessToken, accountStore.account.userId)
+    override fun initRepository() {
+        repository.init(accountStore.account.userId)
     }
 
     fun getAuthorizationHeader(): String = "$BEARER_TAG ${accountStore.accessToken}"

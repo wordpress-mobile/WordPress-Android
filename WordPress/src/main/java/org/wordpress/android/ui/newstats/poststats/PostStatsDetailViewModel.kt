@@ -55,7 +55,6 @@ class PostStatsDetailViewModel @Inject constructor(
             showError(R.string.stats_error_no_site)
             return
         }
-        statsRepository.init(token)
 
         _uiState.value = PostStatsDetailUiState.Loading
         viewModelScope.launch {
