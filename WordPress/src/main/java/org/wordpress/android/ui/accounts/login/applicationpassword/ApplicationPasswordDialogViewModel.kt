@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts.login.applicationpassword
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -56,6 +57,8 @@ class ApplicationPasswordDialogViewModel @Inject constructor(
                         _navigationEvent.emit(NavigationEvent.ShowError)
                     }
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Throwable) {
                 appLogWrapper.e(AppLog.T.MAIN, "Error processing authentication URL - ${e.stackTraceToString()}")
                 _navigationEvent.emit(NavigationEvent.ShowError)

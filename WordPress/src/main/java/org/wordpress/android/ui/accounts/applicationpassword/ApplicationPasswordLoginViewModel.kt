@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts.applicationpassword
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -150,6 +151,8 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 .storeApplicationPasswordCredentialsFrom(
                     urlLogin, creationSource
                 )
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             appLogWrapper.e(
                 AppLog.T.DB,
@@ -200,6 +203,8 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                     username, password, siteUrl, apiRootUrl
                 )
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             appLogWrapper.e(
                 AppLog.T.API,

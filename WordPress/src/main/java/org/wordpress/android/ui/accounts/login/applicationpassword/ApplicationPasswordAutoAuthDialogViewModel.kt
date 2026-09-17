@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -131,6 +132,8 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
                         fallbackToManualLogin(site.url)
                     }
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 logCreationError(site.url, e.message.orEmpty())
                 fallbackToManualLogin(site.url)
@@ -167,6 +170,8 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
                     _navigationEvent.emit(NavigationEvent.Error)
                 }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             appLogWrapper.e(
                 AppLog.T.API,

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts.login
 
 import org.junit.Test
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.DiscoveryResult.FailureReason
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import uniffi.wp_api.ApplicationPasswordsNotSupportedReason
@@ -183,6 +184,22 @@ class DiscoveryFailureAnalyticsTest {
         )
 
         assertEquals("Hostinger Tools,Wordfence", failure.toAnalyticsProps()["plugin"])
+    }
+
+    @Test
+    fun `private_site is the one REST error named to the user`() {
+        val privateSite = fetchAndParse(
+            FetchAndParseApiRootFailure.WpError(WpErrorCode.CustomException("private_site"), "", 403u)
+        )
+        val otherError = fetchAndParse(
+            FetchAndParseApiRootFailure.WpError(WpErrorCode.CustomException("rest_forbidden"), "", 403u)
+        )
+        val notAWordPressSite =
+            AutoDiscoveryAttemptFailure.FindApiRoot(mock(), FindApiRootFailure.ProbablyNotAWordPressSite)
+
+        assertEquals(FailureReason.PrivateSite, privateSite.toFailureReason())
+        assertEquals(FailureReason.Unknown, otherError.toFailureReason())
+        assertEquals(FailureReason.Unknown, notAWordPressSite.toFailureReason())
     }
 
     @Test

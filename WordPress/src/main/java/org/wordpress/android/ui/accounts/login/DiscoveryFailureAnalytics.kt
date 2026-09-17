@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts.login
 
 import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordCreationTracker
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.DiscoveryResult.FailureReason
 import uniffi.wp_api.ApplicationPasswordsNotSupportedReason
 import uniffi.wp_api.AutoDiscoveryAttemptFailure
 import uniffi.wp_api.FetchAndParseApiRootFailure
@@ -12,16 +13,21 @@ import uniffi.wp_api.WpErrorCode
 import java.util.Locale
 
 internal const val REASON_TAG = "reason"
-internal const val ERROR_CODE_TAG = "error_code"
-internal const val REASON_NOT_SUPPORTED = "app_passwords_not_supported"
 
+private const val ERROR_CODE_TAG = "error_code"
 private const val STATUS_CODE_TAG = "status_code"
 private const val NETWORK_REASON_TAG = "network_reason"
 private const val PLUGIN_TAG = "plugin"
 private const val RESPONSE_BODY_TYPE_TAG = "response_body_type"
 private const val REASON_BLOCKED_BY_PLUGIN = "blocked_by_plugin"
+private const val REASON_NOT_SUPPORTED = "app_passwords_not_supported"
 private const val REASON_EXCEPTION = "exception"
 private const val WORDFENCE = "Wordfence"
+
+// WordPress.com returns this error code from the REST root of a site whose Privacy setting is
+// Private (or Coming Soon). The gate sits in front of WordPress, so discovery never reaches the
+// API — the site's Application Password support is irrelevant to the failure.
+private const val PRIVATE_SITE_ERROR_CODE = "private_site"
 
 // A REST error `code` is whatever the site's error envelope says, so a plugin or WAF could put
 // anything there. Only a slug-shaped code is worth a bucket of its own.
@@ -30,15 +36,34 @@ private val ERROR_CODE_SLUG = Regex("[A-Za-z0-9_.-]{1,64}")
 /**
  * Which flow asked for API discovery. The `background_rest_autodiscovery_*` events fire from the
  * foreground login flows too, so without this a card probe and a real login attempt are one number.
- * Only non-card sources count towards the `*_application_password_login` failure denominator.
  * Values match the `source` the same flows put on `application_password_created`.
+ *
+ * @property isLoginAttempt whether a failed discovery from this flow is a failed login. A card
+ * probe isn't one: it re-runs on every My Site build, so counting it would inflate the
+ * `*_application_password_login` denominator with every re-probe of a broken site.
  */
-enum class DiscoverySource(val value: String) {
-    MY_SITE_CARD("my_site_card"),
-    LOGIN(ApplicationPasswordCreationTracker.SOURCE_LOGIN),
-    REAUTH_DIALOG(ApplicationPasswordCreationTracker.SOURCE_REAUTH),
-    AUTO_AUTH_FALLBACK(ApplicationPasswordCreationTracker.SOURCE_MIGRATION),
+enum class DiscoverySource(val value: String, val isLoginAttempt: Boolean) {
+    MY_SITE_CARD("my_site_card", isLoginAttempt = false),
+    LOGIN(ApplicationPasswordCreationTracker.SOURCE_LOGIN, isLoginAttempt = true),
+    REAUTH_DIALOG(ApplicationPasswordCreationTracker.SOURCE_REAUTH, isLoginAttempt = true),
+    AUTO_AUTH_FALLBACK(ApplicationPasswordCreationTracker.SOURCE_MIGRATION, isLoginAttempt = true),
 }
+
+/**
+ * Causes worth naming to the user. A [FetchAndParseApiRootFailure.WpError] means we reached the
+ * site and it answered with a REST error envelope, so its `code` is a reliable signal:
+ * WordPress.com sends `private_site` from a site whose Privacy setting hides it.
+ */
+internal fun AutoDiscoveryAttemptFailure.toFailureReason(): FailureReason {
+    val wpError = (this as? AutoDiscoveryAttemptFailure.FetchAndParseApiRoot)
+        ?.fetchAndParseApiRootFailure as? FetchAndParseApiRootFailure.WpError
+    // `private_site` has no dedicated WpErrorCode, so it arrives as a CustomException with the raw code.
+    val rawCode = (wpError?.errorCode as? WpErrorCode.CustomException)?.v1
+    return if (rawCode == PRIVATE_SITE_ERROR_CODE) FailureReason.PrivateSite else FailureReason.Unknown
+}
+
+/** Discovery succeeded but the site advertises no application-passwords URL. */
+internal fun notSupportedProps(): Map<String, String> = props(REASON_NOT_SUPPORTED)
 
 /**
  * Props for `background_rest_autodiscovery_failed`: always a `reason`, plus whatever the variant
