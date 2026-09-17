@@ -457,12 +457,11 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal fun maskUrl(url: String): String {
         val trimmed = url.trim()
-        val parsed = (if (SCHEME_PREFIX.containsMatchIn(trimmed)) trimmed else "https://$trimmed")
-            .toHttpUrlOrNull() ?: return ""
-        val host = parsed.host.removePrefix("www.").trimEnd('.')
+        val parsed = (if (SCHEME_PREFIX.containsMatchIn(trimmed)) trimmed else "https://$trimmed").toHttpUrlOrNull()
+        val host = parsed?.host?.removePrefix("www.")?.trimEnd('.').orEmpty()
         val dotIndex = host.lastIndexOf('.')
         val isDomainName = dotIndex > 0 && ':' !in host && !host.substring(dotIndex + 1).all { it.isDigit() }
-        if (!isDomainName) return ""
+        if (parsed == null || !isDomainName) return ""
         val domain = host.substring(0, dotIndex)
         val maskedDomain = when {
             domain.length <= 2 -> "x".repeat(domain.length)
