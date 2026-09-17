@@ -29,8 +29,8 @@ import uniffi.wp_api.AutoDiscoveryAttemptFailure
 import uniffi.wp_api.DiscoveredAuthenticationMechanism
 import uniffi.wp_api.applicationPasswordsUrl
 import uniffi.wp_api.localizedDescription
-import java.net.IDN
-import java.util.Locale
+import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -41,8 +41,6 @@ private const val ERROR_TAG = "error"
 private const val IS_WPCOM_TAG = "is_wpcom"
 
 private val SCHEME_PREFIX = Regex("^[a-zA-Z][a-zA-Z0-9+.-]*://")
-private val HOST = Regex("[a-z0-9_-]+(\\.[a-z0-9_-]+)*\\.[a-z][a-z0-9-]*")
-private val PORT = Regex("[0-9]*")
 
 class ApplicationPasswordLoginHelper @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -197,15 +195,13 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             "A_P: Error during API discovery for $siteUrl - $message (${failure.userFacing}, ${failure.reason})"
         )
         trackDiscoveryFailed(siteUrl, source, failure)
-        if (source.isLoginAttempt && !failure.isCancellation) {
-            trackLoginFailed(siteUrl, source.value, "discovery_${failure.reason}")
+        if (source.isLoginAttempt) {
+            trackLogin(siteUrl, source.value, success = false, error = "discovery_${failure.reason}")
         }
         return DiscoveryResult.Failed(message, failure.userFacing)
     }
 
     private fun trackDiscoveryFailed(siteUrl: String, source: DiscoverySource, failure: DiscoveryFailure) {
-        // Leaving the screen mid-request is not a failure; the thrown form isn't tracked either.
-        if (failure.isCancellation) return
         analyticsTracker.track(
             Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED,
             failure.props + mapOf(URL_TAG to maskUrl(siteUrl), SOURCE_TAG to source.value)
@@ -263,7 +259,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 }
                 wpApiClientProvider.clearSelfHostedClient(site.id)
                 dispatcherWrapper.updateApplicationPassword(site)
-                trackLoginSuccessful(effectiveUrlLogin.siteUrl, creationSource)
+                trackLogin(effectiveUrlLogin.siteUrl, creationSource, success = true)
                 appLogWrapper.d(
                     AppLog.T.DB,
                     "A_P: Saved application password credentials for: ${effectiveUrlLogin.siteUrl}"
@@ -299,7 +295,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     // The login goes on to fail as bad_data; this row is what says why.
                     trackDiscoveryFailed(
                         siteUrl,
-                        DiscoverySource.CALLBACK_RECOVERY,
+                        DiscoverySource.API_ROOT_RECOVERY,
                         result.failure.toDiscoveryFailure(),
                     )
                     null
@@ -312,7 +308,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 AppLog.T.API,
                 "A_P: Fallback discovery failed for $siteUrl - ${throwable.message}"
             )
-            trackDiscoveryFailed(siteUrl, DiscoverySource.CALLBACK_RECOVERY, unexpectedDiscoveryFailure(throwable))
+            trackDiscoveryFailed(siteUrl, DiscoverySource.API_ROOT_RECOVERY, unexpectedDiscoveryFailure(throwable))
             null
         }
     }
@@ -329,7 +325,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         trackCreated(creationSource, success = false, error = reason)
         // Every post-callback failure funnels through here, user rejection included, so this is
         // the one place that gives the login event its failure rows.
-        trackLoginFailed(siteUrl, creationSource, reason)
+        trackLogin(siteUrl, creationSource, success = false, error = reason)
     }
 
     fun trackCreated(
@@ -398,21 +394,17 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     }
 
     /**
-     * A completed application-password login. Two paths finish one: credentials stored against a
-     * site we already had (here), and a site fetched for the first time (the login ViewModel).
+     * The outcome of an application-password login. Two paths complete one: credentials stored
+     * against a site we already had (here), and a site fetched for the first time (the login
+     * ViewModel). [source] is the flow's `application_password_created` source, or empty when unknown.
      */
-    fun trackLoginSuccessful(siteUrl: String?, source: String) {
-        trackLogin(siteUrl, source, success = true)
-    }
-
-    private fun trackLoginFailed(siteUrl: String?, source: String, error: String) {
-        trackLogin(siteUrl, source, success = false, error = error)
-    }
-
-    /** [source] is the flow's `application_password_created` source, or empty when unknown. */
-    private fun trackLogin(siteUrl: String?, source: String, success: Boolean, error: String? = null) {
+    fun trackLogin(siteUrl: String?, source: String, success: Boolean, error: String? = null) {
         analyticsTracker.track(
-            applicationPasswordLoginStat(),
+            if (buildConfigWrapper.isJetpackApp) {
+                Stat.JP_ANDROID_APPLICATION_PASSWORD_LOGIN
+            } else {
+                Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN
+            },
             buildMap {
                 put(URL_TAG, maskUrl(siteUrl.orEmpty()))
                 put(SUCCESS_TAG, success.toString())
@@ -420,12 +412,6 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 if (error != null) put(ERROR_TAG, error)
             }
         )
-    }
-
-    private fun applicationPasswordLoginStat() = if (buildConfigWrapper.isJetpackApp) {
-        Stat.JP_ANDROID_APPLICATION_PASSWORD_LOGIN
-    } else {
-        Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN
     }
 
     fun getSiteUrlLoginFromRawData(url: String): UriLogin {
@@ -459,27 +445,24 @@ class ApplicationPasswordLoginHelper @Inject constructor(
 
     /**
      * A site identifier for analytics: the host, lowercased and with its domain masked, plus any
-     * port. Scheme, `www.`, a trailing dot, path, userinfo, query and fragment are all dropped, and
-     * an internationalised host is converted to its punycode form, so the address typed on the
-     * login screen and the `site_url` the callback carries collapse to one value per site, and
+     * non-default port. Scheme, `www.`, a trailing dot, path, userinfo, query and fragment are all
+     * dropped, and an internationalised host is converted to its punycode form, so the address typed
+     * on the login screen and the `site_url` the callback carries collapse to one value per site, and
      * nothing typed into the field ships unmasked. A host that isn't a domain name (an IP address,
-     * a single label, a bad port) yields "" rather than the raw input.
+     * a single label, anything that doesn't parse) yields "" rather than the raw input.
      *
-     * Parsed by hand rather than with UrlUtils.getHost, which is backed by android.net.Uri and
-     * throws under the plain-JUnit runner this class is tested with, or java.net.URI, which has no
-     * host for internationalised or underscored names.
+     * Parsed with okhttp's HttpUrl rather than UrlUtils.getHost, which is backed by android.net.Uri
+     * and throws under the plain-JUnit runner this class is tested with.
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal fun maskUrl(url: String): String {
-        val authority = url.trim().replaceFirst(SCHEME_PREFIX, "")
-            .substringBefore('/').substringBefore('?').substringBefore('#')
-            .substringAfterLast('@')
-        // An IPv6 literal's colons land here too, and fail the port check.
-        val port = authority.substringAfter(':', "")
-        val host = runCatching { IDN.toASCII(authority.substringBefore(':').trimEnd('.')) }
-            .getOrDefault("").lowercase(Locale.ROOT).removePrefix("www.")
-        if (!HOST.matches(host) || !PORT.matches(port)) return ""
+        val trimmed = url.trim()
+        val parsed = (if (SCHEME_PREFIX.containsMatchIn(trimmed)) trimmed else "https://$trimmed")
+            .toHttpUrlOrNull() ?: return ""
+        val host = parsed.host.removePrefix("www.").trimEnd('.')
         val dotIndex = host.lastIndexOf('.')
+        val isDomainName = dotIndex > 0 && ':' !in host && !host.substring(dotIndex + 1).all { it.isDigit() }
+        if (!isDomainName) return ""
         val domain = host.substring(0, dotIndex)
         val maskedDomain = when {
             domain.length <= 2 -> "x".repeat(domain.length)
@@ -487,7 +470,8 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 "x".repeat(domain.length - 2) +
                 domain.last()
         }
-        return maskedDomain + host.substring(dotIndex) + if (port.isEmpty()) "" else ":$port"
+        val port = if (parsed.port == HttpUrl.defaultPort(parsed.scheme)) "" else ":${parsed.port}"
+        return maskedDomain + host.substring(dotIndex) + port
     }
 
     fun siteHasBadCredentials(site: SiteModel) =

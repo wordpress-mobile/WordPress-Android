@@ -611,7 +611,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             // A first-time site completes here, not in the helper, so this is the only place the
             // login event can record the success that matches the failures the helper records.
             verify(applicationPasswordLoginHelper).trackCreated("login", success = true)
-            verify(applicationPasswordLoginHelper).trackLoginSuccessful(urlLogin.siteUrl, "login")
+            verify(applicationPasswordLoginHelper).trackLogin(urlLogin.siteUrl, "login", success = true)
             cancelAndIgnoreRemainingEvents()
         }
     }

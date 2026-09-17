@@ -24,7 +24,7 @@ class DiscoveryFailureAnalyticsTest {
     fun `unparseable site url`() {
         val failure = AutoDiscoveryAttemptFailure.ParseSiteUrl(ParseUrlException.EmptyHost())
 
-        assertEquals(mapOf("reason" to "invalid_url", "error_code" to "EmptyHost"), failure.toDiscoveryFailure().props)
+        assertEquals(mapOf("reason" to "invalid_url", "error_code" to "empty_host"), failure.toDiscoveryFailure().props)
     }
 
     @Test
@@ -91,6 +91,13 @@ class DiscoveryFailureAnalyticsTest {
             mapOf("reason" to "wp_error", "error_code" to "rest_forbidden", "status_code" to "403"),
             failure.toDiscoveryFailure().props
         )
+    }
+
+    @Test
+    fun `generated REST error codes are snake-cased back to the code`() {
+        val failure = fetchAndParse(FetchAndParseApiRootFailure.WpError(WpErrorCode.AlreadyTrashed(), "", 410u))
+
+        assertEquals("already_trashed", failure.toDiscoveryFailure().props["error_code"])
     }
 
     @Test
@@ -167,27 +174,9 @@ class DiscoveryFailureAnalyticsTest {
     }
 
     @Test
-    fun `a request the library reports as cancelled is not a failed login`() {
-        val cancelled = fetchAndParse(
-            FetchAndParseApiRootFailure.FetchApiRoot(
-                requestFailed(RequestExecutionErrorReason.CancellationError, statusCode = null)
-            )
-        ).toDiscoveryFailure()
-        val timedOut = fetchAndParse(
-            FetchAndParseApiRootFailure.FetchApiRoot(
-                requestFailed(RequestExecutionErrorReason.HttpTimeoutError, statusCode = null)
-            )
-        ).toDiscoveryFailure()
-
-        assertEquals(true, cancelled.isCancellation)
-        assertEquals("cancelled", cancelled.props["network_reason"])
-        assertEquals(false, timedOut.isCancellation)
-    }
-
-    @Test
     fun `throwable reports its class only`() {
         assertEquals(
-            mapOf("reason" to "exception", "error_code" to "IllegalStateException"),
+            mapOf("reason" to "exception", "error_code" to "illegal_state_exception"),
             unexpectedDiscoveryFailure(IllegalStateException("contains a url")).props
         )
     }

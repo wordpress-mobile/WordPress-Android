@@ -35,6 +35,7 @@ private const val PRIVATE_SITE_ERROR_CODE = "private_site"
 // A REST error `code` is whatever the site's error envelope says, so a plugin or WAF could put
 // anything there. Only a slug-shaped code is worth a bucket of its own.
 private val ERROR_CODE_SLUG = Regex("[A-Za-z0-9_.-]{1,64}")
+private val CAMEL_BOUNDARY = Regex("(?<=[a-z0-9])(?=[A-Z])")
 
 /**
  * Which flow asked for API discovery. The `background_rest_autodiscovery_*` events fire from the
@@ -44,12 +45,12 @@ private val ERROR_CODE_SLUG = Regex("[A-Za-z0-9_.-]{1,64}")
  * @property isLoginAttempt whether a failed discovery from this flow is a failed login. A card
  * probe isn't one: it re-runs on every My Site build, so counting it would inflate the
  * `*_application_password_login` denominator with every re-probe of a broken site. Nor is the
- * re-discovery run when the auth callback arrives with an empty API-root cache: the login it
+ * re-discovery run to recover a missing API root before credentials are stored: the login it
  * belongs to reports its own outcome.
  */
 enum class DiscoverySource(val value: String, val isLoginAttempt: Boolean) {
     MY_SITE_CARD("my_site_card", isLoginAttempt = false),
-    CALLBACK_RECOVERY("callback_recovery", isLoginAttempt = false),
+    API_ROOT_RECOVERY("api_root_recovery", isLoginAttempt = false),
     LOGIN(ApplicationPasswordCreationTracker.SOURCE_LOGIN, isLoginAttempt = true),
     REAUTH_DIALOG(ApplicationPasswordCreationTracker.SOURCE_REAUTH, isLoginAttempt = true),
     AUTO_AUTH_FALLBACK(ApplicationPasswordCreationTracker.SOURCE_MIGRATION, isLoginAttempt = true),
@@ -59,14 +60,12 @@ enum class DiscoverySource(val value: String, val isLoginAttempt: Boolean) {
  * A discovery failure reduced to what the events and the UI need. [reason] is the slug
  * `background_rest_autodiscovery_failed` groups on, [details] is whatever the variant knew (status
  * code, REST error code, blocking plugin), and [userFacing] is the cause worth naming to the user,
- * when there is one. [isCancellation] marks a request the library reports as cancelled rather than
- * throwing for; like a thrown cancellation, it is not tracked at all.
+ * when there is one.
  */
 internal data class DiscoveryFailure(
     val reason: String,
     val details: Map<String, String> = emptyMap(),
     val userFacing: FailureReason = FailureReason.Unknown,
-    val isCancellation: Boolean = false,
 ) {
     val props: Map<String, String> get() = details + (REASON_TAG to reason)
 }
@@ -77,7 +76,7 @@ internal fun notSupportedFailure() =
 
 /** Anything thrown out of discovery rather than reported by it. */
 internal fun unexpectedDiscoveryFailure(throwable: Throwable) =
-    DiscoveryFailure(REASON_EXCEPTION, mapOf(ERROR_CODE_TAG to throwable.simpleName()))
+    DiscoveryFailure(REASON_EXCEPTION, mapOf(ERROR_CODE_TAG to throwable.analyticsSlug()))
 
 /**
  * Classify a wordpress-rs discovery failure. Deliberately excluded from the details:
@@ -86,7 +85,7 @@ internal fun unexpectedDiscoveryFailure(throwable: Throwable) =
  */
 internal fun AutoDiscoveryAttemptFailure.toDiscoveryFailure(): DiscoveryFailure = when (this) {
     is AutoDiscoveryAttemptFailure.ParseSiteUrl ->
-        DiscoveryFailure("invalid_url", mapOf(ERROR_CODE_TAG to error.simpleName()))
+        DiscoveryFailure("invalid_url", mapOf(ERROR_CODE_TAG to error.analyticsSlug()))
     is AutoDiscoveryAttemptFailure.FindApiRoot -> findApiRootFailure.toDiscoveryFailure()
     is AutoDiscoveryAttemptFailure.FetchAndParseApiRoot -> fetchAndParseApiRootFailure.toDiscoveryFailure()
 }
@@ -141,10 +140,9 @@ private fun RequestExecutionException.toDiscoveryFailure(): DiscoveryFailure = w
         REASON_NETWORK_ERROR,
         mapOf(NETWORK_REASON_TAG to reason.analyticsName()) +
             listOfNotNull(statusCode?.let { STATUS_CODE_TAG to it.toString() }),
-        isCancellation = reason is RequestExecutionErrorReason.CancellationError,
     )
     // Upload-only variants that discovery's GETs can't produce; named by class like other surprises.
-    else -> DiscoveryFailure(REASON_NETWORK_ERROR, mapOf(NETWORK_REASON_TAG to simpleName()))
+    else -> DiscoveryFailure(REASON_NETWORK_ERROR, mapOf(NETWORK_REASON_TAG to analyticsSlug()))
 }
 
 private fun RequestExecutionErrorReason.analyticsName(): String = when (this) {
@@ -167,12 +165,15 @@ private fun RequestExecutionErrorReason.analyticsName(): String = when (this) {
 private fun WpErrorCode.rawCode(): String? = (this as? WpErrorCode.CustomException)?.v1
 
 /**
- * The library generates one class per REST error code, so the class name is the code. Codes
- * without a dedicated class arrive as [WpErrorCode.CustomException] carrying the raw string.
+ * The library generates one class per REST error code, named after it in PascalCase; snake-casing
+ * the class name gives the code back (`RestForbidden` is `rest_forbidden`). Codes without a
+ * dedicated class arrive as [WpErrorCode.CustomException] carrying the raw string.
  */
 private fun WpErrorCode.analyticsName(): String {
-    val raw = rawCode() ?: return simpleName()
+    val raw = rawCode() ?: return analyticsSlug()
     return if (ERROR_CODE_SLUG.matches(raw)) raw else "custom"
 }
 
-private fun Any.simpleName(): String = javaClass.simpleName
+/** The runtime class name as a slug, so every `error_code` value shares one casing. */
+private fun Any.analyticsSlug(): String =
+    javaClass.simpleName.replace(CAMEL_BOUNDARY, "_").lowercase(Locale.ROOT)
