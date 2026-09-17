@@ -79,10 +79,9 @@ sealed interface SitePlansResult {
  * that is not there costs a call to action the purchase flow refuses, while
  * missing one that is there would leave the user no way to reach it.
  *
- * A failed fetch reports no credit.
+ * Only a fetched set of plans can answer this. A caller holding a
+ * [SitePlansResult.Error] knows nothing about the credit, which is a different
+ * thing from knowing there is none, so the receiver is the success case alone.
  */
-fun SitePlansResult.hasDomainCredit(): Boolean = when (this) {
-    is SitePlansResult.Success ->
-        plans.values.any { it.currentPlan?.hasDomainCredit == true }
-    is SitePlansResult.Error -> false
-}
+fun SitePlansResult.Success.hasDomainCredit(): Boolean =
+    plans.values.any { it.currentPlan?.hasDomainCredit == true }
