@@ -35,7 +35,9 @@ import uniffi.wp_api.AutoDiscoveryAttemptSuccess
 import uniffi.wp_api.DiscoveredAuthenticationMechanism
 import uniffi.wp_api.OAuth2Endpoints
 import uniffi.wp_api.AutoDiscoveryAttemptFailure
+import uniffi.wp_api.FetchAndParseApiRootFailure
 import uniffi.wp_api.ParseUrlException
+import uniffi.wp_api.WpErrorCode
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
@@ -412,17 +414,50 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     @Test
     fun `given login scenario, when api discovery is failed, then return Failed with wordpress-rs message`() =
         runTest {
-            whenever(wpLoginClient.apiDiscovery(eq(TEST_URL)))
-                .thenReturn(
-                    ApiDiscoveryResult.Failure(
-                        AutoDiscoveryAttemptFailure.ParseSiteUrl(ParseUrlException.Generic(""))
-                    )
-                )
+            val failure = AutoDiscoveryAttemptFailure.ParseSiteUrl(ParseUrlException.Generic(""))
+            whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(ApiDiscoveryResult.Failure(failure))
+            whenever(discoverSuccessWrapper.localizedDescription(failure)).thenReturn("Translated sentence")
 
             val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.LOGIN)
 
-            assertTrue(result is ApplicationPasswordLoginHelper.DiscoveryResult.Failed)
+            assertEquals(ApplicationPasswordLoginHelper.DiscoveryResult.Failed("Translated sentence"), result)
             verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
+        }
+
+    @Test
+    fun `given rs discovery fails, then the one classification feeds the event, the login row and the UI`() =
+        runTest {
+            val failure = AutoDiscoveryAttemptFailure.FetchAndParseApiRoot(
+                mock(),
+                mock(),
+                FetchAndParseApiRootFailure.WpError(WpErrorCode.CustomException("private_site"), "", 403u),
+            )
+            whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(ApiDiscoveryResult.Failure(failure))
+            whenever(discoverSuccessWrapper.localizedDescription(failure)).thenReturn("Translated sentence")
+
+            val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.LOGIN)
+
+            assertEquals(
+                mapOf(
+                    "reason" to "wp_error",
+                    "error_code" to "private_site",
+                    "status_code" to "403",
+                    "url" to "txxt.com",
+                    "source" to "login",
+                ),
+                trackedProps(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
+            )
+            assertEquals(
+                mapOf("url" to "txxt.com", "success" to "false", "error" to "discovery_wp_error"),
+                trackedProps(Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN)
+            )
+            assertEquals(
+                ApplicationPasswordLoginHelper.DiscoveryResult.Failed(
+                    "Translated sentence",
+                    ApplicationPasswordLoginHelper.DiscoveryResult.FailureReason.PrivateSite,
+                ),
+                result
+            )
         }
 
     @Test
@@ -522,29 +557,50 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `maskUrl collapses the typed and callback forms of one site to one value`() {
+    fun `maskUrl yields one value per site`() {
         // The login screen passes the address as typed; the callback carries a normalised site_url.
-        // Scheme, www and trailing slash must not split them into two sites.
-        assertEquals("mxxxxe.com", applicationPasswordLoginHelper.maskUrl("mysite.com"))
-        assertEquals("mxxxxe.com", applicationPasswordLoginHelper.maskUrl("www.mysite.com/"))
-        assertEquals("mxxxxe.com", applicationPasswordLoginHelper.maskUrl("http://mysite.com"))
-        assertEquals("mxxxxe.com/blog", applicationPasswordLoginHelper.maskUrl("mysite.com/blog"))
-        assertEquals("mxxxxe.com//blog", applicationPasswordLoginHelper.maskUrl("mysite.com//blog"))
+        // Scheme, case, www, path and trailing slash must not split one site into two.
+        assertMasked(
+            "mysite.com" to "mxxxxe.com",
+            "MySite.com" to "mxxxxe.com",
+            "WWW.MySite.com/" to "mxxxxe.com",
+            "http://mysite.com" to "mxxxxe.com",
+            "mysite.com/wp-admin" to "mxxxxe.com",
+            "mysite.com/wp-login.php?redirect_to=https://mysite.com/wp-admin" to "mxxxxe.com",
+            "https://test.com:8080" to "txxt.com:8080",
+        )
     }
 
     @Test
-    fun `maskUrl drops userinfo query and fragment`() {
-        assertEquals("exxxxxe.com", applicationPasswordLoginHelper.maskUrl("nick@example.com"))
-        assertEquals("exxxxxe.com", applicationPasswordLoginHelper.maskUrl("https://user:pass@example.com"))
-        assertEquals("txxt.com", applicationPasswordLoginHelper.maskUrl("test.com:x@test.com"))
-        assertEquals("exxxxxe.com/wp-admin", applicationPasswordLoginHelper.maskUrl("example.com/wp-admin?next=x#y"))
+    fun `maskUrl masks the domain and keeps the TLD`() {
+        assertMasked(
+            "https://example.com" to "exxxxxe.com",
+            "https://abc.com" to "axc.com",
+            "https://a.com" to "x.com",
+            "https://ab.com" to "xx.com",
+        )
     }
 
     @Test
-    fun `maskUrl drops a value whose host it cannot mask`() {
-        assertEquals("", applicationPasswordLoginHelper.maskUrl("https://localhost"))
-        assertEquals("", applicationPasswordLoginHelper.maskUrl("https://my_site.com"))
-        assertEquals("", applicationPasswordLoginHelper.maskUrl("not a url"))
+    fun `maskUrl ships nothing but the masked host`() {
+        assertMasked(
+            "nick@example.com" to "exxxxxe.com",
+            "https://user:pass@example.com" to "exxxxxe.com",
+            "test.com:x@test.com" to "txxt.com",
+            "example.com/~nick/blog?next=x#y" to "exxxxxe.com",
+        )
+    }
+
+    @Test
+    fun `maskUrl drops a host that is not a domain name`() {
+        assertMasked(
+            "https://localhost" to "",
+            "https://my_site.com" to "",
+            "192.168.1.5:8080" to "",
+            "http://[fd00::1]/" to "",
+            "example.com:abc" to "",
+            "not a url" to "",
+        )
     }
 
     @Test
@@ -552,41 +608,10 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
         assertEquals("", applicationPasswordLoginHelper.maskUrl(""))
     }
 
-    @Test
-    fun `maskUrl with standard domain masks middle characters`() {
-        val result = applicationPasswordLoginHelper.maskUrl("https://example.com")
-        assertEquals("exxxxxe.com", result)
-    }
-
-    @Test
-    fun `maskUrl with port preserves port`() {
-        val result = applicationPasswordLoginHelper.maskUrl("https://test.com:8080")
-        assertEquals("txxt.com:8080", result)
-    }
-
-    @Test
-    fun `maskUrl with dot in path masks only host`() {
-        val result = applicationPasswordLoginHelper
-            .maskUrl("https://example.com/wp-content/image.jpg")
-        assertEquals("exxxxxe.com/wp-content/image.jpg", result)
-    }
-
-    @Test
-    fun `maskUrl with three char domain masks middle character`() {
-        val result = applicationPasswordLoginHelper.maskUrl("https://abc.com")
-        assertEquals("axc.com", result)
-    }
-
-    @Test
-    fun `maskUrl with single char domain replaces it with x`() {
-        val result = applicationPasswordLoginHelper.maskUrl("https://a.com")
-        assertEquals("x.com", result)
-    }
-
-    @Test
-    fun `maskUrl with two char domain replaces both with x`() {
-        val result = applicationPasswordLoginHelper.maskUrl("https://ab.com")
-        assertEquals("xx.com", result)
+    private fun assertMasked(vararg cases: Pair<String, String>) {
+        cases.forEach { (input, expected) ->
+            assertEquals(expected, applicationPasswordLoginHelper.maskUrl(input), input)
+        }
     }
 
     private fun trackedProps(stat: Stat): Map<String, *> {
@@ -597,9 +622,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
 
     /**
      * A successful rs discovery whose site advertises [authUrl], or no application-passwords URL at
-     * all when null. The rs failure variants themselves are mapped in DiscoveryFailureAnalyticsTest;
-     * through the helper they can't be exercised on the JVM, because localizedDescription() is a
-     * native call and throws UnsatisfiedLinkError, so the failure tests here use the null case.
+     * all when null.
      */
     private suspend fun stubDiscovery(authUrl: String?) {
         val apiDiscoveryResult = ApiDiscoveryResult.Success(

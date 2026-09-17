@@ -25,18 +25,23 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.crashlogging.sendReportWithTag
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
+import uniffi.wp_api.AutoDiscoveryAttemptFailure
 import uniffi.wp_api.DiscoveredAuthenticationMechanism
 import uniffi.wp_api.applicationPasswordsUrl
 import uniffi.wp_api.localizedDescription
 import java.net.URI
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
 private const val URL_TAG = "url"
 private const val SUCCESS_TAG = "success"
 private const val SOURCE_TAG = "source"
+private const val REASON_TAG = "reason"
 private const val ERROR_TAG = "error"
 private const val IS_WPCOM_TAG = "is_wpcom"
+
+private val SCHEME_PREFIX = Regex("^[a-zA-Z][a-zA-Z0-9+.-]*://")
 
 class ApplicationPasswordLoginHelper @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -106,7 +111,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 siteUrl,
                 source,
                 throwable.message ?: throwable::class.simpleName.orEmpty(),
-                throwable.toAnalyticsProps(),
+                throwable.toDiscoveryFailure(),
             )
         }
 
@@ -133,8 +138,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                                 siteUrl,
                                 source,
                                 "No application-passwords authentication URL advertised",
-                                notSupportedProps(),
-                                DiscoveryResult.FailureReason.NotSupported,
+                                notSupportedFailure(),
                             )
                         }
                         val apiRootUrl = discoverSuccessWrapper.getApiRootUrl(urlDiscoveryResult)
@@ -161,9 +165,8 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                         // returns a translated sentence. This message is shown to the user on the
                         // login screen, so the raw Throwable message (an internal debug dump of the
                         // discovery attempt) must not be used here.
-                        urlDiscoveryResult.failure.localizedDescription(),
-                        urlDiscoveryResult.failure.toAnalyticsProps(),
-                        urlDiscoveryResult.failure.toFailureReason(),
+                        discoverSuccessWrapper.localizedDescription(urlDiscoveryResult.failure),
+                        urlDiscoveryResult.failure.toDiscoveryFailure(),
                     )
             }
         }
@@ -185,22 +188,20 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         siteUrl: String,
         source: DiscoverySource,
         message: String,
-        analyticsProps: Map<String, String>,
-        reason: DiscoveryResult.FailureReason = DiscoveryResult.FailureReason.Unknown,
+        failure: DiscoveryFailure,
     ): DiscoveryResult {
-        val trackedReason = analyticsProps.getValue(REASON_TAG)
         appLogWrapper.e(
             AppLog.T.API,
-            "A_P: Error during API discovery for $siteUrl - $message ($reason, $trackedReason)"
+            "A_P: Error during API discovery for $siteUrl - $message (${failure.userFacing}, ${failure.reason})"
         )
         analyticsTracker.track(
             Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED,
-            analyticsProps + mapOf(URL_TAG to maskUrl(siteUrl), SOURCE_TAG to source.value)
+            failure.props + mapOf(URL_TAG to maskUrl(siteUrl), SOURCE_TAG to source.value)
         )
         if (source.isLoginAttempt) {
-            trackLoginFailed(siteUrl, "discovery_$trackedReason")
+            trackLoginFailed(siteUrl, "discovery_${failure.reason}")
         }
-        return DiscoveryResult.Failed(message, reason)
+        return DiscoveryResult.Failed(message, failure.userFacing)
     }
 
     sealed class StoreCredentialsResult {
@@ -433,27 +434,27 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     }
 
     /**
-     * A site identifier for analytics: the host with its domain masked, plus port and path. The
-     * scheme, a leading `www.`, trailing slashes, userinfo, query and fragment are all dropped, so
-     * the address typed on the login screen and the `site_url` the callback carries collapse to
-     * one value per site, and nothing typed into the field ships unmasked. A host that can't be
-     * split into domain and TLD yields "" rather than the raw input.
+     * A site identifier for analytics: the host, lowercased and with its domain masked, plus any
+     * port. Scheme, `www.`, path, userinfo, query and fragment are all dropped, so the address typed
+     * on the login screen and the `site_url` the callback carries collapse to one value per site,
+     * and nothing typed into the field ships unmasked. A host that isn't a domain name (an IP
+     * address, a single label, anything URI rejects) yields "" rather than the raw input.
      *
      * Parsed with java.net.URI rather than UrlUtils.getHost, which is backed by android.net.Uri
-     * and returns null under the plain-JUnit runner this class is tested with.
+     * and throws under the plain-JUnit runner this class is tested with.
      */
     @Suppress("ReturnCount")
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal fun maskUrl(url: String): String {
         if (url.isEmpty()) return url
         val uri = try {
-            URI(if (url.contains("://")) url else "https://$url")
+            URI(if (SCHEME_PREFIX.containsMatchIn(url)) url else "https://$url")
         } catch (_: Exception) {
             null
         } ?: return ""
-        val host = uri.host?.removePrefix("www.") ?: return ""
+        val host = uri.host?.lowercase(Locale.ROOT)?.removePrefix("www.") ?: return ""
         val dotIndex = host.lastIndexOf('.')
-        if (dotIndex <= 0) return ""
+        if (dotIndex <= 0 || host.all { it.isDigit() || it == '.' }) return ""
         val domain = host.substring(0, dotIndex)
         val maskedDomain = when {
             domain.length <= 2 -> "x".repeat(domain.length)
@@ -462,7 +463,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 domain.last()
         }
         val port = if (uri.port == -1) "" else ":${uri.port}"
-        return maskedDomain + host.substring(dotIndex) + port + uri.path.orEmpty().trimEnd('/')
+        return maskedDomain + host.substring(dotIndex) + port
     }
 
     fun siteHasBadCredentials(site: SiteModel) =
@@ -555,5 +556,11 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         fun getApplicationPasswordsAuthenticationUrl(
             successObject: ApiDiscoveryResult.Success
         ): String? = applicationPasswordsUrl(successObject.success.authentication)?.url()
+
+        /**
+         * The library's translated description of a failure, shown on the login screen. Wrapped
+         * because it's a native call, which the helper's plain-JUnit tests can't make.
+         */
+        fun localizedDescription(failure: AutoDiscoveryAttemptFailure): String = failure.localizedDescription()
     }
 }

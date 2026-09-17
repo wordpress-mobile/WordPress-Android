@@ -12,13 +12,14 @@ import uniffi.wp_api.RequestExecutionException
 import uniffi.wp_api.WpErrorCode
 import java.util.Locale
 
-internal const val REASON_TAG = "reason"
-
+private const val REASON_TAG = "reason"
 private const val ERROR_CODE_TAG = "error_code"
 private const val STATUS_CODE_TAG = "status_code"
 private const val NETWORK_REASON_TAG = "network_reason"
 private const val PLUGIN_TAG = "plugin"
 private const val RESPONSE_BODY_TYPE_TAG = "response_body_type"
+
+private const val REASON_NETWORK_ERROR = "network_error"
 private const val REASON_BLOCKED_BY_PLUGIN = "blocked_by_plugin"
 private const val REASON_NOT_SUPPORTED = "app_passwords_not_supported"
 private const val REASON_EXCEPTION = "exception"
@@ -50,81 +51,94 @@ enum class DiscoverySource(val value: String, val isLoginAttempt: Boolean) {
 }
 
 /**
- * Causes worth naming to the user. A [FetchAndParseApiRootFailure.WpError] means we reached the
- * site and it answered with a REST error envelope, so its `code` is a reliable signal:
- * WordPress.com sends `private_site` from a site whose Privacy setting hides it.
+ * A discovery failure reduced to what the events and the UI need. [reason] is the slug
+ * `background_rest_autodiscovery_failed` groups on, [details] is whatever the variant knew (status
+ * code, REST error code, blocking plugin), and [userFacing] is the cause worth naming to the user,
+ * when there is one.
  */
-internal fun AutoDiscoveryAttemptFailure.toFailureReason(): FailureReason {
-    val wpError = (this as? AutoDiscoveryAttemptFailure.FetchAndParseApiRoot)
-        ?.fetchAndParseApiRootFailure as? FetchAndParseApiRootFailure.WpError
-    // `private_site` has no dedicated WpErrorCode, so it arrives as a CustomException with the raw code.
-    val rawCode = (wpError?.errorCode as? WpErrorCode.CustomException)?.v1
-    return if (rawCode == PRIVATE_SITE_ERROR_CODE) FailureReason.PrivateSite else FailureReason.Unknown
+internal data class DiscoveryFailure(
+    val reason: String,
+    val details: Map<String, String> = emptyMap(),
+    val userFacing: FailureReason = FailureReason.Unknown,
+) {
+    val props: Map<String, String> get() = details + (REASON_TAG to reason)
 }
 
 /** Discovery succeeded but the site advertises no application-passwords URL. */
-internal fun notSupportedProps(): Map<String, String> = props(REASON_NOT_SUPPORTED)
-
-/**
- * Props for `background_rest_autodiscovery_failed`: always a `reason`, plus whatever the variant
- * knows. Deliberately excluded: `responseBody` (arbitrary site HTML), `localizedDescription()`
- * (translated, would fragment by locale), request URLs and redirect chains.
- */
-internal fun AutoDiscoveryAttemptFailure.toAnalyticsProps(): Map<String, String> = when (this) {
-    is AutoDiscoveryAttemptFailure.ParseSiteUrl -> props("invalid_url", ERROR_CODE_TAG to error.simpleName())
-    is AutoDiscoveryAttemptFailure.FindApiRoot -> findApiRootFailure.toAnalyticsProps()
-    is AutoDiscoveryAttemptFailure.FetchAndParseApiRoot -> fetchAndParseApiRootFailure.toAnalyticsProps()
-}
+internal fun notSupportedFailure() =
+    DiscoveryFailure(REASON_NOT_SUPPORTED, userFacing = FailureReason.NotSupported)
 
 /** Anything thrown out of discovery rather than reported by it. */
-internal fun Throwable.toAnalyticsProps(): Map<String, String> =
-    props(REASON_EXCEPTION, ERROR_CODE_TAG to simpleName())
+internal fun Throwable.toDiscoveryFailure() =
+    DiscoveryFailure(REASON_EXCEPTION, mapOf(ERROR_CODE_TAG to simpleName()))
 
-private fun FindApiRootFailure.toAnalyticsProps(): Map<String, String> = when (this) {
-    is FindApiRootFailure.FetchHomepage -> error.toNetworkProps()
-    FindApiRootFailure.ProbablyNotAWordPressSite -> props("not_a_wordpress_site")
-    FindApiRootFailure.RestApiDisabled -> props("rest_api_disabled")
+/**
+ * Classify a wordpress-rs discovery failure. Deliberately excluded from the details:
+ * `responseBody` (arbitrary site HTML), `localizedDescription()` (translated, would fragment by
+ * locale), request URLs and redirect chains.
+ */
+internal fun AutoDiscoveryAttemptFailure.toDiscoveryFailure(): DiscoveryFailure = when (this) {
+    is AutoDiscoveryAttemptFailure.ParseSiteUrl ->
+        DiscoveryFailure("invalid_url", mapOf(ERROR_CODE_TAG to error.simpleName()))
+    is AutoDiscoveryAttemptFailure.FindApiRoot -> findApiRootFailure.toDiscoveryFailure()
+    is AutoDiscoveryAttemptFailure.FetchAndParseApiRoot -> fetchAndParseApiRootFailure.toDiscoveryFailure()
 }
 
-private fun FetchAndParseApiRootFailure.toAnalyticsProps(): Map<String, String> = when (this) {
-    is FetchAndParseApiRootFailure.FetchApiRoot -> error.toNetworkProps()
+private fun FindApiRootFailure.toDiscoveryFailure(): DiscoveryFailure = when (this) {
+    is FindApiRootFailure.FetchHomepage -> error.toDiscoveryFailure()
+    FindApiRootFailure.ProbablyNotAWordPressSite -> DiscoveryFailure("not_a_wordpress_site")
+    FindApiRootFailure.RestApiDisabled -> DiscoveryFailure("rest_api_disabled")
+}
+
+private fun FetchAndParseApiRootFailure.toDiscoveryFailure(): DiscoveryFailure = when (this) {
+    is FetchAndParseApiRootFailure.FetchApiRoot -> error.toDiscoveryFailure()
     is FetchAndParseApiRootFailure.ParseApiRoot -> when (reason) {
-        ParseApiRootFailureReason.WORDFENCE_BLOCKING_ACCESS -> props(REASON_BLOCKED_BY_PLUGIN, PLUGIN_TAG to WORDFENCE)
-        ParseApiRootFailureReason.SERVER_FATAL_ERROR -> props("server_fatal_error")
-        null -> props(
+        ParseApiRootFailureReason.WORDFENCE_BLOCKING_ACCESS ->
+            DiscoveryFailure(REASON_BLOCKED_BY_PLUGIN, mapOf(PLUGIN_TAG to WORDFENCE))
+        ParseApiRootFailureReason.SERVER_FATAL_ERROR -> DiscoveryFailure("server_fatal_error")
+        null -> DiscoveryFailure(
             "invalid_api_root_response",
-            RESPONSE_BODY_TYPE_TAG to responseBodyType.name.lowercase(Locale.ROOT),
+            mapOf(RESPONSE_BODY_TYPE_TAG to responseBodyType.name.lowercase(Locale.ROOT)),
         )
     }
-    is FetchAndParseApiRootFailure.WpError -> props(
+    // A REST error envelope means we reached the site, so its `code` is a reliable signal.
+    // `private_site` has no dedicated WpErrorCode and arrives as a CustomException with the raw
+    // code; it is the one cause here worth naming to the user.
+    is FetchAndParseApiRootFailure.WpError -> DiscoveryFailure(
         "wp_error",
-        ERROR_CODE_TAG to errorCode.analyticsName(),
-        STATUS_CODE_TAG to statusCode.toString(),
+        mapOf(ERROR_CODE_TAG to errorCode.analyticsName(), STATUS_CODE_TAG to statusCode.toString()),
+        userFacing = if (errorCode.rawCode() == PRIVATE_SITE_ERROR_CODE) {
+            FailureReason.PrivateSite
+        } else {
+            FailureReason.Unknown
+        },
     )
-    is FetchAndParseApiRootFailure.ApplicationPasswordsNotSupported -> when (val reason = reason) {
+    is FetchAndParseApiRootFailure.ApplicationPasswordsNotSupported -> when (val why = reason) {
         is ApplicationPasswordsNotSupportedReason.ApplicationPasswordBlockedByPlugin ->
-            props(REASON_BLOCKED_BY_PLUGIN, PLUGIN_TAG to reason.plugin.name)
+            DiscoveryFailure(REASON_BLOCKED_BY_PLUGIN, mapOf(PLUGIN_TAG to why.plugin.name))
         // Only the single-plugin variant names its plugin; the site's API details know the rest.
-        ApplicationPasswordsNotSupportedReason.ApplicationPasswordBlockedByMultiplePlugins -> props(
-            REASON_BLOCKED_BY_PLUGIN,
-            PLUGIN_TAG to apiDetails.applicationPasswordBlockingPlugins().map { it.name }.sorted().joinToString(","),
-        )
-        ApplicationPasswordsNotSupportedReason.ApplicationPasswordsDisabledForHttpSite -> props("http_site")
-        ApplicationPasswordsNotSupportedReason.SiteIsLocalDevelopmentEnvironment -> props("local_dev_environment")
-        null -> props(REASON_NOT_SUPPORTED)
+        ApplicationPasswordsNotSupportedReason.ApplicationPasswordBlockedByMultiplePlugins -> {
+            val names = apiDetails.applicationPasswordBlockingPlugins().map { it.name }.sorted()
+            DiscoveryFailure(REASON_BLOCKED_BY_PLUGIN, mapOf(PLUGIN_TAG to names.joinToString(",")))
+        }
+        ApplicationPasswordsNotSupportedReason.ApplicationPasswordsDisabledForHttpSite ->
+            DiscoveryFailure("http_site")
+        ApplicationPasswordsNotSupportedReason.SiteIsLocalDevelopmentEnvironment ->
+            DiscoveryFailure("local_dev_environment")
+        null -> DiscoveryFailure(REASON_NOT_SUPPORTED)
     }
 }
 
-private fun RequestExecutionException.toNetworkProps(): Map<String, String> = when (this) {
-    is RequestExecutionException.RequestExecutionFailed -> props(
-        "network_error",
-        NETWORK_REASON_TAG to reason.analyticsName(),
-        STATUS_CODE_TAG to statusCode?.toString(),
+private fun RequestExecutionException.toDiscoveryFailure(): DiscoveryFailure = when (this) {
+    is RequestExecutionException.RequestExecutionFailed -> DiscoveryFailure(
+        REASON_NETWORK_ERROR,
+        mapOf(NETWORK_REASON_TAG to reason.analyticsName()) +
+            listOfNotNull(statusCode?.let { STATUS_CODE_TAG to it.toString() }),
     )
     is RequestExecutionException.MediaFileNotFound ->
-        props("network_error", NETWORK_REASON_TAG to "media_file_not_found")
+        DiscoveryFailure(REASON_NETWORK_ERROR, mapOf(NETWORK_REASON_TAG to "media_file_not_found"))
     is RequestExecutionException.MediaFileUnreadable ->
-        props("network_error", NETWORK_REASON_TAG to "media_file_unreadable")
+        DiscoveryFailure(REASON_NETWORK_ERROR, mapOf(NETWORK_REASON_TAG to "media_file_unreadable"))
 }
 
 private fun RequestExecutionErrorReason.analyticsName(): String = when (this) {
@@ -143,19 +157,16 @@ private fun RequestExecutionErrorReason.analyticsName(): String = when (this) {
     is RequestExecutionErrorReason.GenericError -> "generic_error"
 }
 
+/** The raw `code` string for codes without a dedicated class; null for the generated ones. */
+private fun WpErrorCode.rawCode(): String? = (this as? WpErrorCode.CustomException)?.v1
+
 /**
  * The library generates one class per REST error code, so the class name is the code. Codes
  * without a dedicated class arrive as [WpErrorCode.CustomException] carrying the raw string.
  */
-private fun WpErrorCode.analyticsName(): String = when (this) {
-    is WpErrorCode.CustomException -> if (ERROR_CODE_SLUG.matches(v1)) v1 else "custom"
-    else -> simpleName()
+private fun WpErrorCode.analyticsName(): String {
+    val raw = rawCode() ?: return simpleName()
+    return if (ERROR_CODE_SLUG.matches(raw)) raw else "custom"
 }
 
 private fun Any.simpleName(): String = javaClass.simpleName
-
-private fun props(reason: String, vararg details: Pair<String, String?>): Map<String, String> =
-    buildMap {
-        put(REASON_TAG, reason)
-        details.forEach { (key, value) -> if (value != null) put(key, value) }
-    }
