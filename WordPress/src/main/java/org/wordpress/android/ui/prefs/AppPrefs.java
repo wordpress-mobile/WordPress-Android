@@ -222,6 +222,8 @@ public class AppPrefs {
         PENDING_LOGIN_FLOW,
         // Whether a share flow is pending (for self-hosted login)
         IS_SHARE_FLOW_PENDING,
+        // Whether the posts/pages lists are shown in their condensed density
+        CONTENT_LIST_CONDENSED,
     }
 
     /**
@@ -577,6 +579,18 @@ public class AppPrefs {
     public static boolean isAztecEditorEnabled() {
         // hardcode Aztec enabled to "true". It's Aztec and Gutenberg that we're going to expose to the user now.
         return true;
+    }
+
+    /**
+     * Whether the redesigned posts and pages lists are shown condensed. Shared by both lists: a user
+     * who wants a dense list of posts wants a dense list of pages.
+     */
+    public static boolean isContentListCondensed() {
+        return getBoolean(DeletablePrefKey.CONTENT_LIST_CONDENSED, false);
+    }
+
+    public static void setContentListCondensed(boolean isCondensed) {
+        setBoolean(DeletablePrefKey.CONTENT_LIST_CONDENSED, isCondensed);
     }
 
     public static boolean isAztecEditorToolbarExpanded() {
