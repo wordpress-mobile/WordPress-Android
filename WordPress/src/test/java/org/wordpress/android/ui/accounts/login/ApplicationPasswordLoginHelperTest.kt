@@ -5,7 +5,6 @@ import com.automattic.android.tracks.crashlogging.CrashLogging
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -36,7 +35,11 @@ import uniffi.wp_api.DiscoveredAuthenticationMechanism
 import uniffi.wp_api.OAuth2Endpoints
 import uniffi.wp_api.AutoDiscoveryAttemptFailure
 import uniffi.wp_api.FetchAndParseApiRootFailure
+import uniffi.wp_api.FindApiRootFailure
 import uniffi.wp_api.ParseUrlException
+import uniffi.wp_api.RequestExecutionErrorReason
+import uniffi.wp_api.RequestExecutionException
+import uniffi.wp_api.RequestMethod
 import uniffi.wp_api.WpErrorCode
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -414,7 +417,12 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
                 trackedProps(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
             )
             assertEquals(
-                mapOf("url" to "txxt.com", "success" to "false", "error" to "discovery_wp_error"),
+                mapOf(
+                    "url" to "txxt.com",
+                    "success" to "false",
+                    "source" to "login",
+                    "error" to "discovery_wp_error",
+                ),
                 trackedProps(Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN)
             )
             assertEquals(
@@ -437,7 +445,12 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             trackedProps(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
         )
         assertEquals(
-            mapOf("url" to "txxt.com", "success" to "false", "error" to "discovery_no_auth_url_advertised"),
+            mapOf(
+                "url" to "txxt.com",
+                "success" to "false",
+                "source" to "login",
+                "error" to "discovery_no_auth_url_advertised",
+            ),
             trackedProps(Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN)
         )
         assertEquals(
@@ -509,9 +522,55 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
         applicationPasswordLoginHelper.trackStoringFailed(TEST_URL, "user_rejected", "login")
 
         assertEquals(
-            mapOf("url" to "txxt.com", "success" to "false", "error" to "user_rejected"),
+            mapOf("url" to "txxt.com", "success" to "false", "source" to "login", "error" to "user_rejected"),
             trackedProps(Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN)
         )
+    }
+
+    @Test
+    fun `given the callback's recovery discovery fails, then its reason is tracked but not as a login`() = runTest {
+        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(
+            ApiDiscoveryResult.Failure(
+                AutoDiscoveryAttemptFailure.FindApiRoot(mock(), FindApiRootFailure.RestApiDisabled)
+            )
+        )
+
+        val result = applicationPasswordLoginHelper
+            .storeApplicationPasswordCredentialsFrom(testUriLogin.copy(apiRootUrl = null), "login")
+
+        assertIs<StoreCredentialsResult.BadData>(result)
+        assertEquals(
+            mapOf("reason" to "rest_api_disabled", "url" to "txxt.com", "source" to "callback_recovery"),
+            trackedProps(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
+        )
+        assertEquals(
+            mapOf("url" to "txxt.com", "success" to "false", "source" to "login", "error" to "bad_data"),
+            trackedProps(Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN)
+        )
+    }
+
+    @Test
+    fun `given a request the library reports as cancelled, then nothing is tracked`() = runTest {
+        val failure = AutoDiscoveryAttemptFailure.FetchAndParseApiRoot(
+            mock(),
+            mock(),
+            FetchAndParseApiRootFailure.FetchApiRoot(
+                RequestExecutionException.RequestExecutionFailed(
+                    statusCode = null,
+                    redirects = null,
+                    reason = RequestExecutionErrorReason.CancellationError,
+                    requestUrl = TEST_URL,
+                    requestMethod = RequestMethod.GET,
+                )
+            ),
+        )
+        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(ApiDiscoveryResult.Failure(failure))
+        whenever(discoverSuccessWrapper.localizedDescription(failure)).thenReturn("Cancelled")
+
+        val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.LOGIN)
+
+        assertEquals(ApplicationPasswordLoginHelper.DiscoveryResult.Failed("Cancelled"), result)
+        verify(analyticsTracker, never()).track(any(), any<Map<String, *>>())
     }
 
     @Test
@@ -537,6 +596,8 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             "WWW.MySite.com/" to "mxxxxe.com",
             "http://mysite.com" to "mxxxxe.com",
             "mysite.com." to "mxxxxe.com",
+            "mysite.com.." to "mxxxxe.com",
+            " https://mysite.com " to "mxxxxe.com",
             "mysite.com/wp-admin" to "mxxxxe.com",
             "mysite.com/wp-login.php?redirect_to=https://mysite.com/wp-admin" to "mxxxxe.com",
             "https://test.com:8080" to "txxt.com:8080",
@@ -575,6 +636,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             "http://[fd00::1]/" to "",
             "http://[::ffff:192.168.1.5]" to "",
             "example.com:abc" to "",
+            "exa\$mple.com" to "",
             "not a url" to "",
         )
     }

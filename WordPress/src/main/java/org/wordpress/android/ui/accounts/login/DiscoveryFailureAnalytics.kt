@@ -12,7 +12,8 @@ import uniffi.wp_api.RequestExecutionException
 import uniffi.wp_api.WpErrorCode
 import java.util.Locale
 
-private const val REASON_TAG = "reason"
+internal const val REASON_TAG = "reason"
+
 private const val ERROR_CODE_TAG = "error_code"
 private const val STATUS_CODE_TAG = "status_code"
 private const val NETWORK_REASON_TAG = "network_reason"
@@ -38,14 +39,17 @@ private val ERROR_CODE_SLUG = Regex("[A-Za-z0-9_.-]{1,64}")
 /**
  * Which flow asked for API discovery. The `background_rest_autodiscovery_*` events fire from the
  * foreground login flows too, so without this a card probe and a real login attempt are one number.
- * Values match the `source` the same flows put on `application_password_created`.
+ * Values match the `source` the same flows put on the `application_password_created` that follows.
  *
  * @property isLoginAttempt whether a failed discovery from this flow is a failed login. A card
  * probe isn't one: it re-runs on every My Site build, so counting it would inflate the
- * `*_application_password_login` denominator with every re-probe of a broken site.
+ * `*_application_password_login` denominator with every re-probe of a broken site. Nor is the
+ * re-discovery run when the auth callback arrives with an empty API-root cache: the login it
+ * belongs to reports its own outcome.
  */
 enum class DiscoverySource(val value: String, val isLoginAttempt: Boolean) {
     MY_SITE_CARD("my_site_card", isLoginAttempt = false),
+    CALLBACK_RECOVERY("callback_recovery", isLoginAttempt = false),
     LOGIN(ApplicationPasswordCreationTracker.SOURCE_LOGIN, isLoginAttempt = true),
     REAUTH_DIALOG(ApplicationPasswordCreationTracker.SOURCE_REAUTH, isLoginAttempt = true),
     AUTO_AUTH_FALLBACK(ApplicationPasswordCreationTracker.SOURCE_MIGRATION, isLoginAttempt = true),
@@ -56,7 +60,7 @@ enum class DiscoverySource(val value: String, val isLoginAttempt: Boolean) {
  * `background_rest_autodiscovery_failed` groups on, [details] is whatever the variant knew (status
  * code, REST error code, blocking plugin), and [userFacing] is the cause worth naming to the user,
  * when there is one. [isCancellation] marks a request the library reports as cancelled rather than
- * throwing for: still worth a discovery row, but not a failed login.
+ * throwing for; like a thrown cancellation, it is not tracked at all.
  */
 internal data class DiscoveryFailure(
     val reason: String,
@@ -140,9 +144,7 @@ private fun RequestExecutionException.toDiscoveryFailure(): DiscoveryFailure = w
         isCancellation = reason is RequestExecutionErrorReason.CancellationError,
     )
     // Upload-only variants that discovery's GETs can't produce; named by class like other surprises.
-    is RequestExecutionException.MediaFileNotFound,
-    is RequestExecutionException.MediaFileUnreadable ->
-        DiscoveryFailure(REASON_NETWORK_ERROR, mapOf(NETWORK_REASON_TAG to simpleName()))
+    else -> DiscoveryFailure(REASON_NETWORK_ERROR, mapOf(NETWORK_REASON_TAG to simpleName()))
 }
 
 private fun RequestExecutionErrorReason.analyticsName(): String = when (this) {

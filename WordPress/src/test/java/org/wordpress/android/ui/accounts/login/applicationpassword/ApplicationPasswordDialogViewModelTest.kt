@@ -48,7 +48,8 @@ class ApplicationPasswordDialogViewModelTest : BaseUnitTest() {
     fun `onDialogConfirmed with valid URL processes successfully and emits NavigateToLogin`() = runTest {
         // Given
         whenever(
-            applicationPasswordLoginHelper.getAuthorizationUrlComplete(eq(testAuthUrl), any())
+            applicationPasswordLoginHelper
+                .getAuthorizationUrlComplete(eq(testAuthUrl), eq(DiscoverySource.REAUTH_DIALOG))
         )
             .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.Authorized(testCompleteAuthUrl))
 
@@ -107,7 +108,8 @@ class ApplicationPasswordDialogViewModelTest : BaseUnitTest() {
     fun `onDialogConfirmed with helper returning empty URL emits ShowError`() = runTest {
         // Given
         whenever(
-            applicationPasswordLoginHelper.getAuthorizationUrlComplete(eq(testAuthUrl), any())
+            applicationPasswordLoginHelper
+                .getAuthorizationUrlComplete(eq(testAuthUrl), eq(DiscoverySource.REAUTH_DIALOG))
         )
             .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.Failed("test failure"))
 
@@ -147,7 +149,8 @@ class ApplicationPasswordDialogViewModelTest : BaseUnitTest() {
         // Given
         val testException = RuntimeException("API discovery failed")
         whenever(
-            applicationPasswordLoginHelper.getAuthorizationUrlComplete(eq(testAuthUrl), any())
+            applicationPasswordLoginHelper
+                .getAuthorizationUrlComplete(eq(testAuthUrl), eq(DiscoverySource.REAUTH_DIALOG))
         )
             .doThrow(testException)
 
