@@ -102,6 +102,14 @@ class ViewsStatsViewModel @Inject constructor(
     private var wholePeriodBottom: BottomStatsUiState = BottomStatsUiState.Loading
 
     private var currentPeriod: StatsPeriod = _selectedPeriod.value
+
+    // The period the user last picked themselves, kept while they page back and forth. Paging turns a
+    // preset into a concrete range, so by the time forward navigation lands back on the present edge
+    // the picked label is gone — several presets can describe that same window and the wrong one would
+    // win. Only an explicit pick (selector, custom range, bar drill-down) redefines it. Persisted with
+    // the period so paging that spans a restart still resolves against the pick.
+    private var periodOrigin: StatsPeriod = restoreOriginFromSavedState() ?: _selectedPeriod.value
+
     private var loadingPeriod: StatsPeriod? = null
     private var loadedPeriod: StatsPeriod? = null
     private var loadJob: Job? = null
@@ -129,10 +137,11 @@ class ViewsStatsViewModel @Inject constructor(
             // Try to restore from persisted preferences if SavedStateHandle didn't have a value
             val savedPeriodType = savedStateHandle.get<String>(KEY_PERIOD_TYPE)
             if (savedPeriodType == null) {
-                val restoredPeriod = restorePeriodFromPreferences()
-                if (restoredPeriod != null) {
-                    currentPeriod = restoredPeriod
-                    _selectedPeriod.value = restoredPeriod
+                val restored = restorePeriodFromPreferences()
+                if (restored != null) {
+                    currentPeriod = restored.period
+                    periodOrigin = restored.origin
+                    _selectedPeriod.value = restored.period
                     updateNavigationState()
                 }
             }
@@ -166,7 +175,12 @@ class ViewsStatsViewModel @Inject constructor(
         loadData()
     }
 
-    fun onPeriodChanged(period: StatsPeriod) {
+    /**
+     * Commits [period] as the screen's range. An explicit pick — the selector, a custom range, a bar
+     * drill-down — also becomes the origin future navigation resolves ties against; paging passes
+     * [keepOrigin] so the ranges it produces don't overwrite the preset the user chose.
+     */
+    fun onPeriodChanged(period: StatsPeriod, keepOrigin: Boolean = false) {
         val hasSoftSelection = _selectedBarPeriod.value != null ||
             (_uiState.value as? ViewsStatsCardUiState.Content)?.selectedBar != null
         if (period == currentPeriod) {
@@ -181,12 +195,13 @@ class ViewsStatsViewModel @Inject constructor(
         // whole-period header/bottom) so no stale overlay survives into the reload.
         clearSoftSelection()
         currentPeriod = period
+        if (!keepOrigin) periodOrigin = period
         // Drop the previous period's cached chart result so a metric switch mid-load can't re-plot from
         // stale data or evaluate availability against the wrong period; it is repopulated on next load.
         lastChartResult = null
         _selectedPeriod.value = period
         updateNavigationState()
-        savePeriod(period)
+        savePeriod(period, periodOrigin)
     }
 
     /**
@@ -196,7 +211,7 @@ class ViewsStatsViewModel @Inject constructor(
      */
     fun onNavigatePrevious() {
         if (!statsRepository.canNavigateBackward(currentPeriod)) return
-        navigateTo(statsRepository.previousPeriod(currentPeriod))
+        navigateTo(statsRepository.previousPeriod(currentPeriod, origin = periodOrigin))
     }
 
     /**
@@ -205,7 +220,7 @@ class ViewsStatsViewModel @Inject constructor(
      */
     fun onNavigateNext() {
         if (!statsRepository.canNavigateForward(currentPeriod)) return
-        navigateTo(statsRepository.nextPeriod(currentPeriod))
+        navigateTo(statsRepository.nextPeriod(currentPeriod, origin = periodOrigin))
     }
 
     /**
@@ -218,7 +233,7 @@ class ViewsStatsViewModel @Inject constructor(
         (_uiState.value as? ViewsStatsCardUiState.Content)?.let { content ->
             _uiState.value = content.copy(isLoadingNewPeriod = true)
         }
-        onPeriodChanged(newPeriod)
+        onPeriodChanged(newPeriod, keepOrigin = true)
         loadingPeriod = newPeriod
         loadData()
     }
@@ -228,12 +243,22 @@ class ViewsStatsViewModel @Inject constructor(
         _canNavigateForward.value = statsRepository.canNavigateForward(currentPeriod)
     }
 
-    private fun savePeriod(period: StatsPeriod) {
+    /**
+     * Persists [period] together with [origin], the pick it was navigated from. Both are needed: the
+     * range alone can't say which preset the user chose, so restoring without the origin would drop
+     * paging back onto the tie-break heuristic and could resume on a different window (CMM-2415).
+     */
+    private fun savePeriod(period: StatsPeriod, origin: StatsPeriod) {
         // Save to SavedStateHandle for immediate restoration
         savedStateHandle[KEY_PERIOD_TYPE] = period.toTypeString()
         if (period is StatsPeriod.Custom) {
             savedStateHandle[KEY_CUSTOM_START_DATE] = period.startDate.toEpochDay()
             savedStateHandle[KEY_CUSTOM_END_DATE] = period.endDate.toEpochDay()
+        }
+        savedStateHandle[KEY_ORIGIN_PERIOD_TYPE] = origin.toTypeString()
+        if (origin is StatsPeriod.Custom) {
+            savedStateHandle[KEY_ORIGIN_CUSTOM_START_DATE] = origin.startDate.toEpochDay()
+            savedStateHandle[KEY_ORIGIN_CUSTOM_END_DATE] = origin.endDate.toEpochDay()
         }
 
         // Persist to preferences for cross-session restoration
@@ -248,7 +273,10 @@ class ViewsStatsViewModel @Inject constructor(
                 config.copy(
                     selectedPeriodType = periodType,
                     customPeriodStartDate = customStart,
-                    customPeriodEndDate = customEnd
+                    customPeriodEndDate = customEnd,
+                    originPeriodType = origin.toTypeString(),
+                    originCustomStartDate = (origin as? StatsPeriod.Custom)?.startDate?.toEpochDay(),
+                    originCustomEndDate = (origin as? StatsPeriod.Custom)?.endDate?.toEpochDay()
                 )
             )
         }
@@ -268,18 +296,42 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     /**
-     * Restores period from persisted preferences asynchronously.
+     * Restores the origin from SavedStateHandle only (fast, no disk I/O), or null when none was saved
+     * — an entry point that seeds only the period keys, or a process that died before the first pick.
+     * Used for property initialization.
+     */
+    private fun restoreOriginFromSavedState(): StatsPeriod? {
+        val savedOriginType = savedStateHandle.get<String>(KEY_ORIGIN_PERIOD_TYPE) ?: return null
+        return StatsPeriod.fromTypeString(
+            type = savedOriginType,
+            customStartEpochDay = savedStateHandle.get<Long>(KEY_ORIGIN_CUSTOM_START_DATE),
+            customEndEpochDay = savedStateHandle.get<Long>(KEY_ORIGIN_CUSTOM_END_DATE)
+        )
+    }
+
+    /**
+     * Restores the period and its origin from persisted preferences asynchronously.
      * Used for app restarts when SavedStateHandle doesn't have the value.
      */
-    private suspend fun restorePeriodFromPreferences(): StatsPeriod? {
+    private suspend fun restorePeriodFromPreferences(): RestoredPeriod? {
         val siteId = selectedSiteRepository.getSelectedSite()?.siteId ?: return null
         val config = cardsConfigurationRepository.getConfiguration(siteId)
         return config.selectedPeriodType?.let { periodType ->
-            StatsPeriod.fromTypeString(
+            val period = StatsPeriod.fromTypeString(
                 type = periodType,
                 customStartEpochDay = config.customPeriodStartDate,
                 customEndEpochDay = config.customPeriodEndDate
             )
+            // Configurations written before the origin was persisted have none; the stored period is
+            // the only stand-in available, and using it reproduces the previous restore behaviour.
+            val origin = config.originPeriodType?.let { originType ->
+                StatsPeriod.fromTypeString(
+                    type = originType,
+                    customStartEpochDay = config.originCustomStartDate,
+                    customEndEpochDay = config.originCustomEndDate
+                )
+            } ?: period
+            RestoredPeriod(period, origin)
         }
     }
 
@@ -1099,6 +1151,12 @@ class ViewsStatsViewModel @Inject constructor(
         loadData()
     }
 
+    /**
+     * A restored period paired with the pick it was navigated from, so both survive a restart
+     * together. See [periodOrigin].
+     */
+    private data class RestoredPeriod(val period: StatsPeriod, val origin: StatsPeriod)
+
     companion object {
         /**
          * Keys used to restore the selected period. They double as Intent extras: Hilt seeds the
@@ -1108,5 +1166,14 @@ class ViewsStatsViewModel @Inject constructor(
         const val KEY_PERIOD_TYPE = "period_type"
         const val KEY_CUSTOM_START_DATE = "custom_start_date"
         const val KEY_CUSTOM_END_DATE = "custom_end_date"
+
+        /**
+         * Keys used to restore [periodOrigin]. Not meant as Intent extras — an entry point that seeds
+         * only the period keys gets that period as its own origin, which is what an explicit pick
+         * would have done.
+         */
+        private const val KEY_ORIGIN_PERIOD_TYPE = "origin_period_type"
+        private const val KEY_ORIGIN_CUSTOM_START_DATE = "origin_custom_start_date"
+        private const val KEY_ORIGIN_CUSTOM_END_DATE = "origin_custom_end_date"
     }
 }

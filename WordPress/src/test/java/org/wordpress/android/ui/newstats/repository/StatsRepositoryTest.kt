@@ -17,6 +17,7 @@ import org.wordpress.android.ui.newstats.datasource.VisitorsDataPoint
 import org.wordpress.android.ui.newstats.datasource.VisitsDataPoint
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDataSource
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -32,10 +33,9 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import java.time.Clock
 import java.time.LocalDate
-import java.time.YearMonth
-import java.time.temporal.TemporalAdjusters
-import java.time.temporal.WeekFields
+import java.time.ZoneId
 import java.util.Locale
 
 @ExperimentalCoroutinesApi
@@ -49,14 +49,34 @@ class StatsRepositoryTest : BaseUnitTest() {
 
     private lateinit var repository: StatsRepository
 
+    private lateinit var previousLocale: Locale
+
     @Before
     fun setUp() {
+        // The navigation tests below pin "today" to days that are a week's last day, the 30th or a leap
+        // day; which weekday starts the week is a locale question, so pin that too.
+        previousLocale = Locale.getDefault()
+        Locale.setDefault(Locale.US)
         repository = StatsRepository(
             statsDataSource = statsDataSource,
             appLogWrapper = appLogWrapper,
+            clock = Clock.systemDefaultZone(),
             ioDispatcher = testDispatcher()
         )
     }
+
+    @After
+    fun tearDown() {
+        Locale.setDefault(previousLocale)
+    }
+
+    /** A repository whose "today" is [today], so navigation can be asserted on exact calendar days. */
+    private fun repositoryAt(today: LocalDate) = StatsRepository(
+        statsDataSource = statsDataSource,
+        appLogWrapper = appLogWrapper,
+        clock = Clock.fixed(today.atStartOfDay(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault()),
+        ioDispatcher = testDispatcher()
+    )
 
     // region init
     @Test
@@ -1207,112 +1227,83 @@ class StatsRepositoryTest : BaseUnitTest() {
     // region navigation
     @Test
     fun `previousPeriod of Today is the single day before, rendered hourly-capable`() {
-        val today = LocalDate.now()
+        val result = repositoryAt(MID_WEEK).previousPeriod(StatsPeriod.Today)
 
-        val result = repository.previousPeriod(StatsPeriod.Today)
-
-        assertThat(result).isEqualTo(StatsPeriod.Custom(today.minusDays(1), today.minusDays(1)))
+        assertThat(result).isEqualTo(StatsPeriod.Custom(LocalDate.of(2026, 9, 15), LocalDate.of(2026, 9, 15)))
     }
 
     @Test
     fun `previousPeriod of Last7Days steps back seven days preserving the span`() {
-        val today = LocalDate.now()
+        val result = repositoryAt(MID_WEEK).previousPeriod(StatsPeriod.Last7Days)
 
-        val result = repository.previousPeriod(StatsPeriod.Last7Days) as StatsPeriod.Custom
-
-        assertThat(result.endDate).isEqualTo(today.minusDays(7))
-        assertThat(result.startDate).isEqualTo(today.minusDays(13))
+        assertThat(result).isEqualTo(StatsPeriod.Custom(LocalDate.of(2026, 9, 3), LocalDate.of(2026, 9, 9)))
     }
 
     @Test
     fun `previousPeriod of Last30Days steps back thirty days preserving the span`() {
-        val today = LocalDate.now()
+        val result = repositoryAt(MID_WEEK).previousPeriod(StatsPeriod.Last30Days)
 
-        val result = repository.previousPeriod(StatsPeriod.Last30Days) as StatsPeriod.Custom
-
-        assertThat(result.endDate).isEqualTo(today.minusDays(30))
-        assertThat(result.startDate).isEqualTo(today.minusDays(59))
+        assertThat(result).isEqualTo(StatsPeriod.Custom(LocalDate.of(2026, 7, 19), LocalDate.of(2026, 8, 17)))
     }
 
     @Test
     fun `previousPeriod of Last12Months steps back twelve calendar months`() {
-        val today = LocalDate.now()
+        val result = repositoryAt(MID_WEEK).previousPeriod(StatsPeriod.Last12Months)
 
-        val result = repository.previousPeriod(StatsPeriod.Last12Months) as StatsPeriod.Custom
-
-        // Month-granularity windows are fetched by calendar month, so only the month matters — the
-        // start day can drift when an intermediate minusMonths clamps to a short month, which is why
-        // we assert the YearMonth here rather than the exact day.
-        assertThat(result.endDate).isEqualTo(today.minusMonths(12))
-        assertThat(YearMonth.from(result.startDate)).isEqualTo(YearMonth.from(today).minusMonths(23))
+        assertThat(result).isEqualTo(StatsPeriod.Custom(LocalDate.of(2024, 10, 16), LocalDate.of(2025, 9, 16)))
     }
 
     @Test
     fun `previousPeriod of ThisWeek is the whole previous calendar week`() {
-        val today = LocalDate.now()
-        val weekStart = today.with(TemporalAdjusters.previousOrSame(WeekFields.of(Locale.getDefault()).firstDayOfWeek))
-
-        val result = repository.previousPeriod(StatsPeriod.ThisWeek) as StatsPeriod.Custom
-
         // Back from a partial "this week" (week start..today) lands on the full previous week, not a
         // same-length mirror ending on the day before the week started.
-        assertThat(result.startDate).isEqualTo(weekStart.minusWeeks(1))
-        assertThat(result.endDate).isEqualTo(weekStart.minusDays(1))
+        val result = repositoryAt(MID_WEEK).previousPeriod(StatsPeriod.ThisWeek)
+
+        assertThat(result).isEqualTo(StatsPeriod.Custom(LocalDate.of(2026, 9, 6), LocalDate.of(2026, 9, 12)))
     }
 
     @Test
     fun `previousPeriod of ThisMonth is the whole previous calendar month`() {
-        val today = LocalDate.now()
-        val previousMonthStart = today.withDayOfMonth(1).minusMonths(1)
+        val result = repositoryAt(MID_WEEK).previousPeriod(StatsPeriod.ThisMonth)
 
-        val result = repository.previousPeriod(StatsPeriod.ThisMonth) as StatsPeriod.Custom
-
-        assertThat(result.startDate).isEqualTo(previousMonthStart)
-        assertThat(result.endDate).isEqualTo(previousMonthStart.withDayOfMonth(previousMonthStart.lengthOfMonth()))
+        assertThat(result).isEqualTo(StatsPeriod.Custom(LocalDate.of(2026, 8, 1), LocalDate.of(2026, 8, 31)))
     }
 
     @Test
     fun `previousPeriod of ThisYear is the whole previous calendar year`() {
-        val previousYear = LocalDate.now().year - 1
+        val result = repositoryAt(MID_WEEK).previousPeriod(StatsPeriod.ThisYear)
 
-        val result = repository.previousPeriod(StatsPeriod.ThisYear) as StatsPeriod.Custom
-
-        assertThat(result.startDate).isEqualTo(LocalDate.of(previousYear, 1, 1))
-        assertThat(result.endDate).isEqualTo(LocalDate.of(previousYear, 12, 31))
+        assertThat(result).isEqualTo(StatsPeriod.Custom(LocalDate.of(2025, 1, 1), LocalDate.of(2025, 12, 31)))
     }
 
     @Test
     fun `previousPeriod paged twice from ThisMonth keeps stepping whole calendar months`() {
-        val twoMonthsAgoStart = LocalDate.now().withDayOfMonth(1).minusMonths(2)
+        val repository = repositoryAt(MID_WEEK)
 
         val once = repository.previousPeriod(StatsPeriod.ThisMonth)
-        val twice = repository.previousPeriod(once) as StatsPeriod.Custom
+        val twice = repository.previousPeriod(once)
 
         // Continued paging on a full-calendar-month window stays aligned to whole months rather than
         // drifting by a fixed day count.
-        assertThat(twice.startDate).isEqualTo(twoMonthsAgoStart)
-        assertThat(twice.endDate).isEqualTo(twoMonthsAgoStart.withDayOfMonth(twoMonthsAgoStart.lengthOfMonth()))
+        assertThat(twice).isEqualTo(StatsPeriod.Custom(LocalDate.of(2026, 7, 1), LocalDate.of(2026, 7, 31)))
     }
 
     @Test
     fun `nextPeriod from the previous full month returns to the current month to date`() {
+        val repository = repositoryAt(MID_WEEK)
         val previous = repository.previousPeriod(StatsPeriod.ThisMonth)
 
-        val result = repository.nextPeriod(previous)
+        val result = repository.nextPeriod(previous, origin = StatsPeriod.ThisMonth)
 
-        // Forward from the whole previous month lands on the current month up to today and restores the
-        // ThisMonth preset. On the 1st that window collapses to a single day, so Today's window matches
-        // it too, but snapToPreset prefers the source's own calendar unit (MONTH) and still returns
-        // ThisMonth.
         assertThat(result).isEqualTo(StatsPeriod.ThisMonth)
     }
 
     @Test
     fun `nextPeriod onto the present edge snaps back to the Today preset`() {
-        val today = LocalDate.now()
-        val yesterday = StatsPeriod.Custom(today.minusDays(1), today.minusDays(1))
+        val repository = repositoryAt(MID_WEEK)
+        val yesterday = StatsPeriod.Custom(LocalDate.of(2026, 9, 15), LocalDate.of(2026, 9, 15))
 
-        val result = repository.nextPeriod(yesterday)
+        val result = repository.nextPeriod(yesterday, origin = StatsPeriod.Today)
 
         // Landing on today's single-day window restores the preset label rather than a Custom range,
         // so Today → back → forward shows "Today" again.
@@ -1320,49 +1311,192 @@ class StatsRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `nextPeriod onto a preset's own window snaps back to that preset`() {
-        val today = LocalDate.now()
-        // One seven-day window before Last 7 Days; forward lands exactly on the Last 7 Days window.
-        val previousWeek = StatsPeriod.Custom(today.minusDays(13), today.minusDays(7))
+    fun `given a mid-week day, when Last7Days is paged back and forward, then Last7Days comes back`() {
+        val repository = repositoryAt(MID_WEEK)
 
-        val result = repository.nextPeriod(previousWeek)
+        val back = repository.previousPeriod(StatsPeriod.Last7Days)
+        val result = repository.nextPeriod(back, origin = StatsPeriod.Last7Days)
 
-        // On the last day of the week that source range is itself a full calendar week, so the step is
-        // a calendar step and the landing window is both Last 7 Days and This Week — snapToPreset then
-        // prefers the source's own calendar unit.
-        val weekStart = today.with(
-            TemporalAdjusters.previousOrSame(WeekFields.of(Locale.getDefault()).firstDayOfWeek)
-        )
-        val expected = if (today == weekStart.plusDays(6)) StatsPeriod.ThisWeek else StatsPeriod.Last7Days
-        assertThat(result).isEqualTo(expected)
+        assertThat(result).isEqualTo(StatsPeriod.Last7Days)
+    }
+
+    @Test
+    fun `given the last day of the week, when Last7Days is paged back and forward, then Last7Days comes back`() {
+        // The back step lands on 6-12 Sep, which is itself a whole calendar week, so the forward step
+        // is a calendar step and its window is both Last 7 Days and This Week. Without the origin the
+        // label silently became This Week, and was persisted for the next session (CMM-2415).
+        val repository = repositoryAt(WEEK_LAST_DAY)
+
+        val back = repository.previousPeriod(StatsPeriod.Last7Days)
+        val result = repository.nextPeriod(back, origin = StatsPeriod.Last7Days)
+
+        assertThat(result).isEqualTo(StatsPeriod.Last7Days)
+    }
+
+    @Test
+    fun `given the last day of the week, when ThisWeek is paged back and forward, then ThisWeek comes back`() {
+        // Same window, other label: the preset the user picked is the one that must come back.
+        val repository = repositoryAt(WEEK_LAST_DAY)
+
+        val back = repository.previousPeriod(StatsPeriod.ThisWeek)
+        val result = repository.nextPeriod(back, origin = StatsPeriod.ThisWeek)
+
+        assertThat(result).isEqualTo(StatsPeriod.ThisWeek)
+    }
+
+    @Test
+    fun `given the first day of the week, when ThisWeek is paged back and forward, then ThisWeek comes back`() {
+        // On the week's first day the "this week" window collapses to a single day, so Today matches it
+        // too; the picked preset keeps its whole-week stepping instead of switching to daily stepping.
+        val repository = repositoryAt(WEEK_FIRST_DAY)
+
+        val back = repository.previousPeriod(StatsPeriod.ThisWeek)
+        val result = repository.nextPeriod(back, origin = StatsPeriod.ThisWeek)
+
+        assertThat(result).isEqualTo(StatsPeriod.ThisWeek)
+    }
+
+    @Test
+    fun `given the 30th, when Last30Days is paged back and forward, then Last30Days comes back`() {
+        // The back step lands on the whole of the preceding 30-day month (1-30 Sep), which turns the
+        // forward step into a calendar-month step onto a window This Month also describes.
+        val repository = repositoryAt(THIRTIETH_AFTER_30_DAY_MONTH)
+
+        val back = repository.previousPeriod(StatsPeriod.Last30Days)
+        assertThat(back).isEqualTo(StatsPeriod.Custom(LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 30)))
+
+        val result = repository.nextPeriod(back, origin = StatsPeriod.Last30Days)
+
+        assertThat(result).isEqualTo(StatsPeriod.Last30Days)
+    }
+
+    @Test
+    fun `given the 30th, when Last30Days is paged back twice and forward twice, then Last30Days comes back`() {
+        val repository = repositoryAt(THIRTIETH_AFTER_30_DAY_MONTH)
+
+        var period = StatsPeriod.Last30Days as StatsPeriod
+        repeat(2) { period = repository.previousPeriod(period, origin = StatsPeriod.Last30Days) }
+        repeat(2) { period = repository.nextPeriod(period, origin = StatsPeriod.Last30Days) }
+
+        assertThat(period).isEqualTo(StatsPeriod.Last30Days)
+    }
+
+    @Test
+    fun `given the 29th, when Last30Days is paged back twice, then it keeps stepping thirty days`() {
+        // Two steps back from the 29th land on the whole of the preceding 30-day month. Judged on shape
+        // alone that window is a calendar month, and paging it would step — and come back — as whole
+        // months, turning the user's thirty days into a 29-day month-to-date window called This Month.
+        val repository = repositoryAt(TWENTY_NINTH_AFTER_30_DAY_MONTH)
+
+        var period = StatsPeriod.Last30Days as StatsPeriod
+        repeat(2) { period = repository.previousPeriod(period, origin = StatsPeriod.Last30Days) }
+        assertThat(period).isEqualTo(StatsPeriod.Custom(LocalDate.of(2025, 11, 1), LocalDate.of(2025, 11, 30)))
+
+        repeat(2) { period = repository.nextPeriod(period, origin = StatsPeriod.Last30Days) }
+
+        assertThat(period).isEqualTo(StatsPeriod.Last30Days)
+    }
+
+    @Test
+    fun `given the 30th, when ThisMonth is paged back and forward, then ThisMonth comes back`() {
+        val repository = repositoryAt(THIRTIETH_AFTER_30_DAY_MONTH)
+
+        val back = repository.previousPeriod(StatsPeriod.ThisMonth)
+        val result = repository.nextPeriod(back, origin = StatsPeriod.ThisMonth)
+
+        assertThat(result).isEqualTo(StatsPeriod.ThisMonth)
+    }
+
+    @Test
+    fun `given a leap day, when Last12Months is paged back and forward, then it returns to the present edge`() {
+        // Stepping back from 29 Feb clamps the window's end to 28 Feb (the year before has no 29th) and
+        // stepping forward cannot recover the day, so the window used to come back one day short of the
+        // present — unlabelled, with the forward arrow still enabled.
+        val repository = repositoryAt(LEAP_DAY)
+
+        val back = repository.previousPeriod(StatsPeriod.Last12Months)
+        val result = repository.nextPeriod(back, origin = StatsPeriod.Last12Months)
+
+        assertThat(result).isEqualTo(StatsPeriod.Last12Months)
+        assertThat(repository.canNavigateForward(result)).isFalse()
+    }
+
+    @Test
+    fun `given a month-end after a leap month, when Last12Months is paged back and forward, then it comes back`() {
+        // Mirror case: here the clamp drifts the window's start (29 Feb 2024 → 28 Feb) instead of its end.
+        val repository = repositoryAt(MONTH_END_AFTER_LEAP_MONTH)
+
+        val back = repository.previousPeriod(StatsPeriod.Last12Months)
+        val result = repository.nextPeriod(back, origin = StatsPeriod.Last12Months)
+
+        assertThat(result).isEqualTo(StatsPeriod.Last12Months)
+    }
+
+    @Test
+    fun `given new year's day, when ThisYear is paged back and forward, then ThisYear comes back`() {
+        // On 1 January the year-to-date window is a single day, matching Today and This Month too.
+        val repository = repositoryAt(NEW_YEARS_DAY)
+
+        val back = repository.previousPeriod(StatsPeriod.ThisYear)
+        val result = repository.nextPeriod(back, origin = StatsPeriod.ThisYear)
+
+        assertThat(result).isEqualTo(StatsPeriod.ThisYear)
+    }
+
+    @Test
+    fun `given a drilled-in single day as origin, when paging forward onto the present, then Today wins`() {
+        // Drilling into a chart bar makes a concrete day the origin: it matches no preset, so the tie
+        // falls back to the navigated window's own unit and the single-day landing is labelled Today.
+        val repository = repositoryAt(WEEK_FIRST_DAY)
+        val drilledDay = StatsPeriod.Custom(LocalDate.of(2026, 9, 19), LocalDate.of(2026, 9, 19))
+
+        val result = repository.nextPeriod(drilledDay, origin = drilledDay)
+
+        assertThat(result).isEqualTo(StatsPeriod.Today)
+    }
+
+    @Test
+    fun `given no origin, when Last7Days is paged back and forward, then the window is unchanged`() {
+        // Callers without an origin (none today) still get the right seven days; only the label is
+        // decided by the fallback tie-break.
+        val repository = repositoryAt(WEEK_LAST_DAY)
+
+        val back = repository.previousPeriod(StatsPeriod.Last7Days)
+        val result = repository.nextPeriod(back)
+
+        assertThat(repository.canNavigateForward(result)).isFalse()
+        assertThat(repository.previousPeriod(result)).isEqualTo(back)
     }
 
     @Test
     fun `nextPeriod clamps so the window never ends after today`() {
-        val today = LocalDate.now()
         // A ten-day range ending today: forward would overshoot into the future and must be clamped
-        // back to end on today. The clamped window may or may not coincide with a preset (on the 10th
-        // of the month it is exactly month-to-date), so assert the window rather than the subtype.
-        val endingToday = StatsPeriod.Custom(today.minusDays(9), today)
+        // back to end on today.
+        val repository = repositoryAt(MID_WEEK)
+        val endingToday = StatsPeriod.Custom(LocalDate.of(2026, 9, 7), MID_WEEK)
 
         val result = repository.nextPeriod(endingToday)
 
-        assertThat(repository.currentPeriodWindow(result)).isEqualTo(today.minusDays(9) to today)
+        assertThat(result).isEqualTo(StatsPeriod.Custom(LocalDate.of(2026, 9, 7), MID_WEEK))
     }
 
     @Test
     fun `canNavigateForward is false at the present edge and true in the past`() {
-        val today = LocalDate.now()
+        val repository = repositoryAt(MID_WEEK)
 
         assertThat(repository.canNavigateForward(StatsPeriod.Today)).isFalse()
         assertThat(repository.canNavigateForward(StatsPeriod.Last7Days)).isFalse()
         assertThat(
-            repository.canNavigateForward(StatsPeriod.Custom(today.minusDays(1), today.minusDays(1)))
+            repository.canNavigateForward(
+                StatsPeriod.Custom(LocalDate.of(2026, 9, 15), LocalDate.of(2026, 9, 15))
+            )
         ).isTrue()
     }
 
     @Test
     fun `canNavigateBackward stops at the year 2000 floor`() {
+        val repository = repositoryAt(MID_WEEK)
+
         assertThat(repository.canNavigateBackward(StatsPeriod.Today)).isTrue()
         assertThat(
             repository.canNavigateBackward(
@@ -1378,6 +1512,19 @@ class StatsRepositoryTest : BaseUnitTest() {
     // endregion
 
     companion object {
+        // Navigation anchors. With a US week (Sunday first) 19 Sep 2026 is a Saturday, so it is the
+        // week's last day and 20 Sep is the next week's first day. September has 30 days, which makes
+        // 30 Oct the day "the last 30 days" is also "this month". 2028 is a leap year, and Jan 2025
+        // reaches back into leap-day February 2024.
+        private val MID_WEEK: LocalDate = LocalDate.of(2026, 9, 16)
+        private val WEEK_LAST_DAY: LocalDate = LocalDate.of(2026, 9, 19)
+        private val WEEK_FIRST_DAY: LocalDate = LocalDate.of(2026, 9, 20)
+        private val THIRTIETH_AFTER_30_DAY_MONTH: LocalDate = LocalDate.of(2026, 10, 30)
+        private val TWENTY_NINTH_AFTER_30_DAY_MONTH: LocalDate = LocalDate.of(2026, 1, 29)
+        private val LEAP_DAY: LocalDate = LocalDate.of(2028, 2, 29)
+        private val MONTH_END_AFTER_LEAP_MONTH: LocalDate = LocalDate.of(2025, 1, 31)
+        private val NEW_YEARS_DAY: LocalDate = LocalDate.of(2026, 1, 1)
+
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN = "test_access_token"
         private val TEST_ERROR_TYPE = StatsErrorType.NETWORK_ERROR
