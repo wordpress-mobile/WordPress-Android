@@ -33,9 +33,6 @@ import org.wordpress.android.ui.compose.unit.Margin
 /**
  * A tab row drawn as a horizontally scrolling row of Material 3 filter chips.
  *
- * Use it where a `PrimaryScrollableTabRow` would go: it scrolls rather than squeezing as tabs are
- * added, and announces itself as a tab strip rather than the checkboxes [FilterChip] describes.
- *
  * @param labels the tab labels in order; a label's index is its selection value
  * @param selectedIndex index of the selected tab, or out of range for no selection
  * @param onSelect called with the index of the tapped tab
@@ -52,9 +49,7 @@ fun FilterChipTabRow(
 ) {
     val listState = rememberLazyListState()
 
-    // Keeps the selected chip on screen when a pager swipe drives the selection. Keyed on the
-    // label count too, for callers whose labels arrive late; on the count rather than the list,
-    // which callers rebuild each composition.
+    // Keeps the selected chip on screen when a pager swipe drives the selection
     LaunchedEffect(selectedIndex, labels.size) {
         if (selectedIndex !in labels.indices) return@LaunchedEffect
         if (listState.layoutInfo.visibleItemsInfo.isEmpty()) {
@@ -67,7 +62,6 @@ fun FilterChipTabRow(
 
     LazyRow(
         state = listState,
-        // selectableGroup() would give the "2 of 4", but it doesn't count lazy collections.
         modifier = modifier
             .fillMaxWidth()
             .semantics {
@@ -82,8 +76,7 @@ fun FilterChipTabRow(
                 selected = selected,
                 onClick = { onSelect(index) },
                 label = { Text(label) },
-                // FilterChip announces as a checkbox; this is a tab strip. The caller's modifier
-                // is outermost, so this role wins.
+                // FilterChip announces as a checkbox; this is a tab strip
                 modifier = Modifier.semantics {
                     role = Role.Tab
                     collectionItemInfo = CollectionItemInfo(
@@ -109,7 +102,7 @@ fun FilterChipTabRow(
 }
 
 object FilterChipTabRowDefaults {
-    /** Lines the chips up with a list padded by [Margin.Medium]. */
+    // Lines the chips up with a list padded by [Margin.Medium]
     val ContentPadding = PaddingValues(
         horizontal = Margin.Medium.value,
         vertical = Margin.Small.value
@@ -118,9 +111,7 @@ object FilterChipTabRowDefaults {
 
 /**
  * Whether [index] is laid out and entirely inside the viewport, so only a clipped chip is scrolled
- * to and the row doesn't jump on every selection change.
- *
- * Content padding isn't subtracted: a LazyRow's items scroll through it, so it doesn't clip.
+ * to and the row doesn't jump on every selection change
  */
 private fun LazyListState.isItemFullyVisible(index: Int): Boolean {
     val item = layoutInfo.visibleItemsInfo.firstOrNull { it.index == index } ?: return false
