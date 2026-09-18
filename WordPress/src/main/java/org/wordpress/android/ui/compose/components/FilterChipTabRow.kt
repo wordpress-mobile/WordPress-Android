@@ -59,7 +59,11 @@ fun FilterChipTabRow(
     // pager swipe. Only scrolls when the chip is actually clipped: scrolling on every change would
     // yank the row sideways once there are enough chips for it to scroll at all.
     var isFirstPass by remember { mutableStateOf(true) }
-    LaunchedEffect(selectedIndex) {
+    // Keyed on the label count as well as the selection: for a caller whose labels arrive after
+    // the first composition, selectedIndex alone does not change when they land, so the initial
+    // selection would never be scrolled into view. Keyed on the count rather than the list because
+    // callers map their labels in the composition, handing over a new instance each time.
+    LaunchedEffect(selectedIndex, labels.size) {
         if (selectedIndex !in labels.indices) return@LaunchedEffect
         if (isFirstPass) {
             // A restored selection should already be in place rather than animating in from the
