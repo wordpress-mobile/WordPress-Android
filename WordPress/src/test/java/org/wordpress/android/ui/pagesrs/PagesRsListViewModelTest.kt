@@ -809,8 +809,37 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
         }
     }
 
+
+    @Test
+    fun `a neighbouring tab's visible rows do not strand the published tab's fetches`() = test {
+        // The pager composes the next tab mid-drag and its visible-row stream reports against that
+        // tab. Held as one set, those ids would replace the published tab's, and the retry below
+        // would then ask for pages that were never on screen.
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(true)
+        whenever(accountStore.accessToken).thenReturn("token")
+        whenever(statsDataSource.fetchPostViews(any(), any()))
+            .thenReturn(PostViewsDataResult.Error(StatsErrorType.NOT_AVAILABLE))
+        site.origin = SiteModel.ORIGIN_WPCOM_REST
+        site.hasCapabilityViewStats = true
+        val viewModel = createViewModel()
+
+        viewModel.onRowsVisible(PageRsListTab.PUBLISHED, listOf(PUBLISHED_ROW_ID))
+        viewModel.onRowsVisible(PageRsListTab.DRAFTS, listOf(DRAFT_ROW_ID))
+        advanceUntilIdle()
+
+        viewModel.onDensityToggled(PageRsListTab.PUBLISHED)
+        advanceUntilIdle()
+
+        verifyBlocking(statsDataSource, timeout(FETCH_TIMEOUT_MS)) {
+            fetchPostViews(any(), eq(PUBLISHED_ROW_ID))
+        }
+        verify(statsDataSource, never()).fetchPostViews(any(), eq(DRAFT_ROW_ID))
+    }
+
     // endregion
 }
 
 private const val UPLOADED_PAGE_ID = 4242L
+private const val PUBLISHED_ROW_ID = 1L
+private const val DRAFT_ROW_ID = 99L
 private const val FETCH_TIMEOUT_MS = 2_000L

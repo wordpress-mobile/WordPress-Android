@@ -135,8 +135,16 @@ internal class PagesRsListViewModel @Inject constructor(
      */
     private val metricJobs = mutableSetOf<Job>()
 
-    /** The rows on screen right now, so work queued for rows scrolled past can be dropped. */
-    private var visiblePageIds = emptySet<Long>()
+    /**
+     * The rows on screen right now, per tab, so work queued for rows scrolled past can be dropped.
+     *
+     * Keyed by tab rather than held as one set: the pager composes the neighbouring tab during a
+     * drag, and its visible-row stream reports against that tab. A single field would be
+     * overwritten by the neighbour, stranding the active tab's queued fetches - they re-check this
+     * set once a permit frees and would find the wrong ids - and would later hand
+     * [retryMetricsForVisibleRows] another tab's ids after a refresh.
+     */
+    private val visiblePageIds = mutableMapOf<PageRsListTab, Set<Long>>()
 
     /**
      * Caps concurrent view-count requests across the whole screen.
@@ -1551,7 +1559,7 @@ internal class PagesRsListViewModel @Inject constructor(
      *
      * Driven by scroll position rather than by the page load because the stats API answers for one
      * page at a time. Volume is held down by debouncing on the caller's side, a single
-     * [viewCountGate] shared across all calls, and re-checking [visiblePageIds] once a permit is
+     * [viewCountGate] shared across all calls, and re-checking the tab's visible rows once a permit is
      * granted - not by cancelling earlier batches, which would strand rows on their skeletons.
      */
     @MainThread
@@ -1559,7 +1567,7 @@ internal class PagesRsListViewModel @Inject constructor(
         // Recorded before the guard, not after: a list opened condensed does not fetch, but it
         // still has to know what is on screen so that switching to comfortable can ask for it.
         // Otherwise retryMetricsForVisibleRows finds an empty set and the rows shimmer for good.
-        visiblePageIds = pageIds.toSet()
+        visiblePageIds[tab] = pageIds.toSet()
         if (!expectsMetrics(tab) || isSearching) return
         fetchViewCounts(tab, pageIds)
     }
@@ -1583,7 +1591,9 @@ internal class PagesRsListViewModel @Inject constructor(
                         // Re-checked after waiting for a permit rather than before queuing: by the
                         // time a slot frees up the user may have scrolled well past this row, and
                         // fetching it would spend a request on something off screen.
-                        if (pageId in visiblePageIds) fetchViewCountFor(tab, siteId, pageId)
+                        if (pageId in visiblePageIds[tab].orEmpty()) {
+                            fetchViewCountFor(tab, siteId, pageId)
+                        }
                     }
                 }
             }
@@ -1636,8 +1646,9 @@ internal class PagesRsListViewModel @Inject constructor(
      */
     @MainThread
     private fun retryMetricsForVisibleRows(tab: PageRsListTab) {
-        if (visiblePageIds.isEmpty()) return
-        onRowsVisible(tab, visiblePageIds.toList())
+        val visible = visiblePageIds[tab].orEmpty()
+        if (visible.isEmpty()) return
+        onRowsVisible(tab, visible.toList())
     }
 
     /** Pushes whatever the cache now holds for [pageIds] onto the tab's rows. */
@@ -1816,7 +1827,7 @@ internal class PagesRsListViewModel @Inject constructor(
         // Iterating the live set would throw as soon as a non-last job did.
         metricJobs.toList().forEach { it.cancel() }
         metricJobs.clear()
-        visiblePageIds = emptySet()
+        visiblePageIds.clear()
         viewCountCache.clear()
         inFlightViewCounts.clear()
         unresolvableImageIds.clear()
