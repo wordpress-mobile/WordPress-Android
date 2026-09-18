@@ -123,13 +123,13 @@ class UnifiedSupportViewModelTest : BaseUnitTest() {
     // region Init tests
 
     @Test
-    fun `init initializes the repository with access token and user id`() = test {
+    fun `init initializes the repository with the user id`() = test {
         whenever(repository.loadConversations()).thenReturn(emptyList())
 
         viewModel.init()
         advanceUntilIdle()
 
-        verify(repository).init(testAccessToken, testUserId)
+        verify(repository).init(testUserId)
     }
 
     @Test

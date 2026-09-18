@@ -8,11 +8,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
-import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.DomainSuggestion
@@ -26,22 +23,13 @@ private const val SEARCH_QUERY = "test"
 @RunWith(MockitoJUnitRunner::class)
 class FetchDomainsUseCaseTest : BaseUnitTest() {
     @Mock
-    lateinit var wpComApiClientProvider: WpComApiClientProvider
-
-    @Mock
-    lateinit var accountStore: AccountStore
-
-    @Mock
     lateinit var wpComApiClient: WpComApiClient
 
     private lateinit var useCase: FetchDomainsUseCase
 
     @Before
     fun setUp() {
-        whenever(accountStore.accessToken).thenReturn("test-token")
-        whenever(wpComApiClientProvider.getWpComApiClient("test-token"))
-            .thenReturn(wpComApiClient)
-        useCase = FetchDomainsUseCase(wpComApiClientProvider, accountStore)
+        useCase = FetchDomainsUseCase(wpComApiClient)
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -137,37 +125,6 @@ class FetchDomainsUseCaseTest : BaseUnitTest() {
             assertThat(result).isEqualTo(
                 FetchDomainsResult.Error(type = "empty_query", message = "Query is empty")
             )
-        }
-
-    @Test
-    fun `given a signed out account, when fetchDomains, then report the missing token`() =
-        test {
-            // What `AccountStore` returns when signed out, despite its nullable type.
-            whenever(accountStore.accessToken).thenReturn("")
-
-            val result = useCase.fetchDomains(
-                SEARCH_QUERY, "vendor", onlyWordpressCom = false
-            )
-
-            assertThat(result).isEqualTo(
-                FetchDomainsResult.Error(type = "NO_ACCESS_TOKEN", message = null)
-            )
-            verifyNoInteractions(wpComApiClient)
-        }
-
-    @Test
-    fun `given a null access token, when fetchDomains, then report it instead of crashing`() =
-        test {
-            whenever(accountStore.accessToken).thenReturn(null)
-
-            val result = useCase.fetchDomains(
-                SEARCH_QUERY, "vendor", onlyWordpressCom = false
-            )
-
-            assertThat(result).isEqualTo(
-                FetchDomainsResult.Error(type = "NO_ACCESS_TOKEN", message = null)
-            )
-            verifyNoInteractions(wpComApiClient)
         }
 
     @Suppress("UNCHECKED_CAST")

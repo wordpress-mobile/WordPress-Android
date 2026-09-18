@@ -40,10 +40,8 @@ class MostViewedDetailFetcher @Inject constructor(
     suspend fun fetch(
         source: MostViewedDetailSource,
         siteId: Long,
-        period: StatsPeriod,
-        accessToken: String
+        period: StatsPeriod
     ): StatsCardFetchResult {
-        statsRepository.init(accessToken)
         return when (source) {
             MostViewedDetailSource.REFERRERS -> statsRepository.fetchReferrersDetail(siteId, period).toFetchResult()
             MostViewedDetailSource.CLICKS -> statsRepository.fetchClicks(siteId, period).toFetchResult()

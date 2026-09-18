@@ -87,7 +87,6 @@ class MostViewedViewModel @Inject constructor(
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) return
 
-        statsRepository.init(accessToken)
         viewModelScope.launch {
             try {
                 _isPostsRefreshing.value = true
@@ -106,7 +105,6 @@ class MostViewedViewModel @Inject constructor(
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) return
 
-        statsRepository.init(accessToken)
         viewModelScope.launch {
             try {
                 _isReferrersRefreshing.value = true
@@ -183,7 +181,6 @@ class MostViewedViewModel @Inject constructor(
             return
         }
 
-        statsRepository.init(accessToken)
         setUiState(dataSource, MostViewedCardUiState.Loading)
 
         viewModelScope.launch {
