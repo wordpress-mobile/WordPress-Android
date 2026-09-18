@@ -437,23 +437,24 @@ private fun AddPageFab(visible: Boolean, isExtended: Boolean, onClick: () -> Uni
         enter = scaleIn() + fadeIn(),
         exit = scaleOut() + fadeOut()
     ) {
-        val tooltip = stringResource(R.string.create_page_fab_tooltip)
+        // Serves as the extended FAB's own label as well as the plain one's tooltip.
+        val label = stringResource(R.string.create_page_fab_tooltip)
         if (isExtended) {
             // The extended form spells the action out, so the tooltip it would otherwise need
             // would only repeat the label already on screen.
             ExtendedFloatingActionButton(
                 onClick = onClick,
                 icon = { Icon(Icons.Default.Add, contentDescription = null) },
-                text = { Text(tooltip) }
+                text = { Text(label) }
             )
         } else {
             TooltipBox(
                 positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
-                tooltip = { PlainTooltip { Text(tooltip) } },
+                tooltip = { PlainTooltip { Text(label) } },
                 state = rememberTooltipState()
             ) {
                 FloatingActionButton(onClick = onClick) {
-                    Icon(Icons.Default.Add, contentDescription = tooltip)
+                    Icon(Icons.Default.Add, contentDescription = label)
                 }
             }
         }

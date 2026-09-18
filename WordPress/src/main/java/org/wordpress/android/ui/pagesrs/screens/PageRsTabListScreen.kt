@@ -192,19 +192,23 @@ private fun PageListContent(
             items = pages,
             key = { it.stableKey }
         ) { item ->
+            val onClick = { onPageClick(item.remotePageId) }
+            val onMenuAction = { action: PageRsMenuAction ->
+                onPageMenuAction(item.remotePageId, action)
+            }
             if (isRedesignEnabled) {
                 PageRsRedesignedRow(
                     item = item,
                     density = density,
-                    onClick = { onPageClick(item.remotePageId) },
-                    onMenuAction = { action -> onPageMenuAction(item.remotePageId, action) },
+                    onClick = onClick,
+                    onMenuAction = onMenuAction,
                     modifier = Modifier.animateItem()
                 )
             } else {
                 PageRsRow(
                     item = item,
-                    onClick = { onPageClick(item.remotePageId) },
-                    onMenuAction = { action -> onPageMenuAction(item.remotePageId, action) },
+                    onClick = onClick,
+                    onMenuAction = onMenuAction,
                     modifier = Modifier.animateItem()
                 )
             }

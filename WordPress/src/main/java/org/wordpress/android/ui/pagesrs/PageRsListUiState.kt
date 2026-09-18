@@ -272,7 +272,7 @@ internal fun PageRsListItem.toContentListRowUiState(
         viewCount = page.viewCount,
         areMetricsPending = page.areMetricsPending,
         badges = buildList {
-            kind?.takeUnless { isSiteEditor }?.let { add(it.labelResId()) }
+            if (kind != null && !isSiteEditor) add(kind.labelResId())
             page.statusLabelResId.takeIf { it != 0 }?.let { add(it) }
             addAll(page.badges)
         },

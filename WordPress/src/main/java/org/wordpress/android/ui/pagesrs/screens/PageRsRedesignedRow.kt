@@ -40,10 +40,9 @@ internal fun PageRsRedesignedRow(
     onMenuAction: (PageRsMenuAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val page = item.page
     // The error row still belongs to the pre-redesign presentation: there is no card shape for
     // "this one would not load", and inventing one would be a design decision of its own.
-    when (page.displayState) {
+    when (item.page.displayState) {
         PageRsDisplayState.PLACEHOLDER -> ContentListPlaceholderRow(modifier)
         PageRsDisplayState.ERROR -> ErrorItem(modifier)
         PageRsDisplayState.NORMAL,
@@ -71,7 +70,6 @@ private fun PageRsContentCard(
         siteEditorTitle = stringResource(R.string.virtual_homepage_title),
         siteEditorSubtitle = stringResource(R.string.virtual_homepage_subtitle)
     )
-    val kind = (item as? PageRsListItem.Virtual)?.kind
     val menu: (@Composable () -> Unit)? = if (page.actions.isEmpty()) {
         null
     } else {
@@ -87,10 +85,10 @@ private fun PageRsContentCard(
             )
         }
     }
-    val leading: (@Composable () -> Unit)? = kind?.let { virtualKind ->
+    val leading: (@Composable () -> Unit)? = (item as? PageRsListItem.Virtual)?.kind?.let { kind ->
         {
             Icon(
-                imageVector = virtualKind.icon(),
+                imageVector = kind.icon(),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(LEADING_ICON_SIZE)
