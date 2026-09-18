@@ -16,6 +16,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.accounts.login.DiscoverySource
 import org.wordpress.android.viewmodel.ResourceProvider
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -45,7 +46,7 @@ class LoginSiteApplicationPasswordViewModelTest : BaseUnitTest() {
         // Given
         val siteUrl = "https.example.com"
         val expectedDiscoveryUrl = "https://example.com/wp-json/wp/v2/application-passwords/authorization"
-        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl))
+        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl, DiscoverySource.LOGIN))
             .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.Authorized(expectedDiscoveryUrl))
 
         // A collector for the discoveryURL SharedFlow
@@ -63,7 +64,7 @@ class LoginSiteApplicationPasswordViewModelTest : BaseUnitTest() {
         testDispatcher.scheduler.advanceUntilIdle()
 
         // Then
-        verify(applicationPasswordLoginHelper).getAuthorizationUrlComplete(siteUrl)
+        verify(applicationPasswordLoginHelper).getAuthorizationUrlComplete(siteUrl, DiscoverySource.LOGIN)
         assertEquals(expectedDiscoveryUrl, collectedUrl)
         assertEquals(false, viewModel.loadingStateFlow.value)
 
@@ -74,7 +75,7 @@ class LoginSiteApplicationPasswordViewModelTest : BaseUnitTest() {
     fun `Given a WP_com site, when running discovery, then wpComDetected emits the url`() = test {
         // Given
         val siteUrl = "https://example.com"
-        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl))
+        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl, DiscoverySource.LOGIN))
             .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.WpComSite)
 
         var detectedUrl: String? = null
@@ -102,7 +103,7 @@ class LoginSiteApplicationPasswordViewModelTest : BaseUnitTest() {
         // Given
         val siteUrl = "https://example.com"
         val errorMessage = "Found a site but failed to read its API configuration."
-        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl))
+        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl, DiscoverySource.LOGIN))
             .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.Failed(errorMessage))
 
         var wpComDetected = false
@@ -133,7 +134,7 @@ class LoginSiteApplicationPasswordViewModelTest : BaseUnitTest() {
         val privateSiteMessage = "This site is private, so we can't read its settings to sign you in."
         whenever(resourceProvider.getString(R.string.application_password_private_site_error))
             .thenReturn(privateSiteMessage)
-        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl))
+        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl, DiscoverySource.LOGIN))
             .thenReturn(
                 ApplicationPasswordLoginHelper.DiscoveryResult.Failed(
                     userFacingMessage = "Found a site but failed to read its API configuration.",
@@ -157,7 +158,7 @@ class LoginSiteApplicationPasswordViewModelTest : BaseUnitTest() {
         val notSupportedMessage = "The provided site does not support Application Password authentication."
         whenever(resourceProvider.getString(R.string.application_password_not_supported_error))
             .thenReturn(notSupportedMessage)
-        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl))
+        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl, DiscoverySource.LOGIN))
             .thenReturn(
                 ApplicationPasswordLoginHelper.DiscoveryResult.Failed(
                     userFacingMessage = "No application-passwords authentication URL advertised",

@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts.applicationpassword
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -9,8 +10,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
@@ -150,6 +149,8 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 .storeApplicationPasswordCredentialsFrom(
                     urlLogin, creationSource
                 )
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             appLogWrapper.e(
                 AppLog.T.DB,
@@ -200,6 +201,8 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                     username, password, siteUrl, apiRootUrl
                 )
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             appLogWrapper.e(
                 AppLog.T.API,
@@ -348,10 +351,10 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             )
         } else {
             val resolvedSite = site ?: return
-            AnalyticsTracker.track(
-                Stat.APPLICATION_PASSWORD_CREATED,
-                mapOf("source" to creationSource, "success" to "true")
-            )
+            // A first-time site completes here rather than in the helper, so without this the
+            // login event would carry first-time failures but none of their successes.
+            applicationPasswordLoginHelper.trackCreated(creationSource, success = true)
+            applicationPasswordLoginHelper.trackLogin(currentUrlLogin?.siteUrl, creationSource, success = true)
             _onFinishedEvent.emit(
                 NavigationActionData(
                     showSiteSelector = siteStore.hasSite() &&
