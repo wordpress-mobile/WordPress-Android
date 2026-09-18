@@ -31,6 +31,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeoutOrNull
@@ -38,7 +40,10 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.pagesrs.PageRsListItem
 import org.wordpress.android.ui.pagesrs.PageRsMenuAction
 import org.wordpress.android.ui.pagesrs.PageTabUiState
+import org.wordpress.android.ui.pagesrs.SITE_EDITOR_PAGE_ID
 import org.wordpress.android.ui.pagesrs.hasRealPages
+import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.rs.contentlist.ContentListPlaceholderRow
 import org.wordpress.android.ui.postsrs.screens.PlaceholderItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,9 +57,12 @@ internal fun PageRsTabListScreen(
     onLoadMore: () -> Unit,
     onPageClick: (Long) -> Unit,
     onPageMenuAction: (Long, PageRsMenuAction) -> Unit,
+    onRowsVisible: (List<Long>) -> Unit,
     modifier: Modifier = Modifier,
     isSearchIdle: Boolean = false,
-    isSearching: Boolean = false
+    isSearching: Boolean = false,
+    isRedesignEnabled: Boolean = false,
+    density: ContentListDensity = ContentListDensity.COMFORTABLE
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -74,7 +82,7 @@ internal fun PageRsTabListScreen(
     ) {
         when {
             isSearchIdle -> Box(Modifier.fillMaxSize())
-            state.isLoading -> ShimmerList()
+            state.isLoading -> ShimmerList(isRedesignEnabled)
             state.error != null && !state.pages.hasRealPages -> {
                 ErrorContent(
                     error = state.error,
@@ -98,12 +106,16 @@ internal fun PageRsTabListScreen(
                 canLoadMore = state.canLoadMore,
                 onLoadMore = onLoadMore,
                 onPageClick = onPageClick,
-                onPageMenuAction = onPageMenuAction
+                onPageMenuAction = onPageMenuAction,
+                onRowsVisible = onRowsVisible,
+                isRedesignEnabled = isRedesignEnabled,
+                density = density
             )
         }
     }
 }
 
+@OptIn(FlowPreview::class)
 @Composable
 private fun PageListContent(
     pages: List<PageRsListItem>,
@@ -113,7 +125,10 @@ private fun PageListContent(
     canLoadMore: Boolean,
     onLoadMore: () -> Unit,
     onPageClick: (Long) -> Unit,
-    onPageMenuAction: (Long, PageRsMenuAction) -> Unit
+    onPageMenuAction: (Long, PageRsMenuAction) -> Unit,
+    onRowsVisible: (List<Long>) -> Unit,
+    isRedesignEnabled: Boolean,
+    density: ContentListDensity
 ) {
     val listState = rememberLazyListState()
 
@@ -136,6 +151,27 @@ private fun PageListContent(
         onRevealHandled()
     }
 
+    // Per-page view counts are one request each, so the ViewModel is told which rows are actually
+    // on screen rather than fetching for the whole loaded page. Rows are keyed by a String, so the
+    // ids come from the entries the visible indexes land on.
+    val currentOnRowsVisible by rememberUpdatedState(onRowsVisible)
+    LaunchedEffect(listState, isRedesignEnabled) {
+        if (!isRedesignEnabled) return@LaunchedEffect
+        snapshotFlow {
+            val entries = currentPages
+            listState.layoutInfo.visibleItemsInfo.mapNotNull { info ->
+                entries.getOrNull(info.index)
+                    ?.remotePageId
+                    ?.takeIf { it != SITE_EDITOR_PAGE_ID }
+            }
+        }
+            // A fling changes the visible set on nearly every frame. Without settling first, each
+            // of those emissions would start fetching for rows already gone from the screen.
+            .debounce(VISIBLE_ROWS_DEBOUNCE_MS)
+            .distinctUntilChanged()
+            .collect { currentOnRowsVisible(it) }
+    }
+
     LaunchedEffect(canLoadMore) {
         if (!canLoadMore) return@LaunchedEffect
         snapshotFlow {
@@ -156,12 +192,22 @@ private fun PageListContent(
             items = pages,
             key = { it.stableKey }
         ) { item ->
-            PageRsRow(
-                item = item,
-                onClick = { onPageClick(item.remotePageId) },
-                onMenuAction = { action -> onPageMenuAction(item.remotePageId, action) },
-                modifier = Modifier.animateItem()
-            )
+            if (isRedesignEnabled) {
+                PageRsRedesignedRow(
+                    item = item,
+                    density = density,
+                    onClick = { onPageClick(item.remotePageId) },
+                    onMenuAction = { action -> onPageMenuAction(item.remotePageId, action) },
+                    modifier = Modifier.animateItem()
+                )
+            } else {
+                PageRsRow(
+                    item = item,
+                    onClick = { onPageClick(item.remotePageId) },
+                    onMenuAction = { action -> onPageMenuAction(item.remotePageId, action) },
+                    modifier = Modifier.animateItem()
+                )
+            }
         }
 
         if (isLoadingMore) {
@@ -183,10 +229,10 @@ private fun PageListContent(
 }
 
 @Composable
-private fun ShimmerList() {
+private fun ShimmerList(isRedesignEnabled: Boolean) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(SHIMMER_ITEM_COUNT) {
-            PlaceholderItem()
+            if (isRedesignEnabled) ContentListPlaceholderRow() else PlaceholderItem()
         }
     }
 }
@@ -238,6 +284,9 @@ private fun EmptyContent(emptyMessageResId: Int) {
         )
     }
 }
+
+/** How long the visible-row set must settle before view counts are fetched for it. */
+private const val VISIBLE_ROWS_DEBOUNCE_MS = 300L
 
 private const val LOAD_MORE_THRESHOLD = 5
 private const val SHIMMER_ITEM_COUNT = 8

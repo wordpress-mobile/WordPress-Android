@@ -14,6 +14,8 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
+import org.mockito.kotlin.timeout
+import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -28,11 +30,15 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.datasource.PostViewsDataResult
+import org.wordpress.android.ui.newstats.datasource.StatsDataSource
+import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.rs.RsPostChangeListener
+import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.SiteEditorMVPFeatureConfig
@@ -55,6 +61,7 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
     @Mock lateinit var editorThemeStore: EditorThemeStore
     @Mock lateinit var siteEditorMVPFeatureConfig: SiteEditorMVPFeatureConfig
+    @Mock lateinit var statsDataSource: StatsDataSource
 
     private lateinit var site: SiteModel
     private lateinit var changeListener: RsPostChangeListener
@@ -94,6 +101,7 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
         editorThemeStore = editorThemeStore,
         siteEditorMVPFeatureConfig = siteEditorMVPFeatureConfig,
         changeListener = changeListener,
+        statsDataSource = statsDataSource,
     ).also { activeViewModel = it }
 
     @Test
@@ -703,6 +711,106 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
         assertThat(state?.error).isNull()
         assertThat(state?.isRefreshing ?: false).isFalse
     }
+
+    // region density
+
+    @Test
+    fun `density starts from the stored preference`() = test {
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(true)
+
+        val viewModel = createViewModel()
+
+        assertThat(viewModel.density.value).isEqualTo(ContentListDensity.CONDENSED)
+    }
+
+    @Test
+    fun `density defaults to comfortable`() = test {
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(false)
+
+        val viewModel = createViewModel()
+
+        assertThat(viewModel.density.value).isEqualTo(ContentListDensity.COMFORTABLE)
+    }
+
+    @Test
+    fun `toggling density persists the new value`() = test {
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(false)
+        val viewModel = createViewModel()
+
+        viewModel.onDensityToggled(PageRsListTab.PUBLISHED)
+        advanceUntilIdle()
+
+        assertThat(viewModel.density.value).isEqualTo(ContentListDensity.CONDENSED)
+        verify(appPrefsWrapper).isContentListCondensed = true
+    }
+
+    @Test
+    fun `a condensed list fetches no view counts for its visible rows`() = test {
+        // The point of condensing: the rows show no views, so nothing is requested.
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(true)
+        val viewModel = createViewModel()
+
+        viewModel.onRowsVisible(PageRsListTab.PUBLISHED, listOf(1L, 2L))
+        advanceUntilIdle()
+
+        verify(statsDataSource, never()).fetchPostViews(any(), any())
+    }
+
+    @Test
+    fun `draft rows fetch no view counts`() = test {
+        // A draft has no view history, so a skeleton there would wait on a fetch never made.
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(false)
+        val viewModel = createViewModel()
+
+        viewModel.onRowsVisible(PageRsListTab.DRAFTS, listOf(1L, 2L))
+        advanceUntilIdle()
+
+        verify(statsDataSource, never()).fetchPostViews(any(), any())
+    }
+
+    @Test
+    fun `self-hosted sites fetch no view counts`() = test {
+        // View counts come from WordPress.com stats, which an application-password site has no
+        // access to; the rest of the row still works.
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(false)
+        whenever(accountStore.accessToken).thenReturn("token")
+        site.origin = SiteModel.ORIGIN_XMLRPC
+        val viewModel = createViewModel()
+
+        viewModel.onRowsVisible(PageRsListTab.PUBLISHED, listOf(1L))
+        advanceUntilIdle()
+
+        verify(statsDataSource, never()).fetchPostViews(any(), any())
+    }
+
+    @Test
+    fun `rows seen while condensed are fetched once the list becomes comfortable`() = test {
+        // A condensed list fetches nothing, but it must still remember what is on screen: the
+        // density toggle re-requests for those rows, and nothing else will if the same rows stay
+        // visible after the switch.
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(true)
+        whenever(accountStore.accessToken).thenReturn("token")
+        whenever(statsDataSource.fetchPostViews(any(), any()))
+            .thenReturn(PostViewsDataResult.Error(StatsErrorType.NOT_AVAILABLE))
+        site.origin = SiteModel.ORIGIN_WPCOM_REST
+        site.hasCapabilityViewStats = true
+        val viewModel = createViewModel()
+        viewModel.onRowsVisible(PageRsListTab.PUBLISHED, listOf(1L))
+        advanceUntilIdle()
+        verify(statsDataSource, never()).fetchPostViews(any(), any())
+
+        viewModel.onDensityToggled(PageRsListTab.PUBLISHED)
+        advanceUntilIdle()
+
+        // The fetch hops to Dispatchers.IO, which the test scheduler does not drive, so poll for
+        // the interaction rather than asserting it has already happened.
+        verifyBlocking(statsDataSource, timeout(FETCH_TIMEOUT_MS)) {
+            fetchPostViews(any(), any())
+        }
+    }
+
+    // endregion
 }
 
 private const val UPLOADED_PAGE_ID = 4242L
+private const val FETCH_TIMEOUT_MS = 2_000L
