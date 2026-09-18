@@ -451,9 +451,13 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                 {
                                     coroutineScope.launch {
                                         val blogId = it.blockedBlogData.blogId
-                                        undoBlockBlogUseCase.undoBlockBlog(it.blockedBlogData, source)
+                                        undoBlockBlogUseCase.undoBlockBlog(
+                                            it.blockedBlogData,
+                                            source
+                                        ) {
+                                            notifyFollowedBlogsChanged()
+                                        }
                                         _refreshPosts.postValue(Event(Unit))
-                                        notifyFollowedBlogsChanged()
                                         _scrollToSiteId.emit(blogId)
                                         _snackbarEvents.postValue(
                                             Event(

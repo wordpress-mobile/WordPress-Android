@@ -14,6 +14,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
@@ -28,6 +29,7 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderEvents.FollowedBlogsFetched
+import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
@@ -776,6 +778,10 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         whenever(blockBlogUseCase.blockBlog(any(), any()))
             .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
         whenever(readerBlogTableWrapper.getFollowedBlogs()).thenReturn(emptyList())
+        doAnswer { invocation ->
+            (invocation.arguments[2] as ReaderActions.ActionListener).onActionResult(true)
+            null
+        }.whenever(undoBlockBlogUseCase).undoBlockBlog(anyOrNull(), any(), anyOrNull())
         val observedValues = startObserving(backgroundScope)
         actionHandler.onAction(
             mock(),
@@ -902,7 +908,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Act
         observedValues.snackbarMsgs[0].buttonAction.invoke()
         // Assert
-        verify(undoBlockBlogUseCase).undoBlockBlog(anyOrNull(), any())
+        verify(undoBlockBlogUseCase).undoBlockBlog(anyOrNull(), any(), anyOrNull())
     }
 
     @Test
