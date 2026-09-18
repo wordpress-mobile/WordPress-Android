@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -58,18 +57,16 @@ fun FilterChipTabRow(
     // Keeps the selected chip on screen when the selection is driven from elsewhere, e.g. by a
     // pager swipe. Only scrolls when the chip is actually clipped: scrolling on every change would
     // yank the row sideways once there are enough chips for it to scroll at all.
-    var isFirstPass by remember { mutableStateOf(true) }
-    // Keyed on the label count as well as the selection: for a caller whose labels arrive after
-    // the first composition, selectedIndex alone does not change when they land, so the initial
+    //
+    // Keyed on the label count as well as the selection: for a caller whose labels arrive after the
+    // first composition, selectedIndex alone does not change when they land, so the initial
     // selection would never be scrolled into view. Keyed on the count rather than the list because
     // callers map their labels in the composition, handing over a new instance each time.
     LaunchedEffect(selectedIndex, labels.size) {
         if (selectedIndex !in labels.indices) return@LaunchedEffect
-        if (isFirstPass) {
-            // A restored selection should already be in place rather than animating in from the
-            // start. requestScrollToItem applies at the next measurement, which is what this needs:
-            // on the first pass the row has not been laid out yet.
-            isFirstPass = false
+        if (listState.layoutInfo.visibleItemsInfo.isEmpty()) {
+            // Not laid out yet, so visibility cannot be judged: place the selection at the next
+            // measurement rather than animating it in from the start.
             listState.requestScrollToItem(selectedIndex)
         } else if (!listState.isItemFullyVisible(selectedIndex)) {
             listState.animateScrollToItem(selectedIndex)
