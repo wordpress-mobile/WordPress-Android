@@ -47,7 +47,6 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     private val dispatcherWrapper: DispatcherWrapper,
     private val siteStore: SiteStore,
     private val uriLoginWrapper: UriLoginWrapper,
-    private val buildConfigWrapper: BuildConfigWrapper,
     private val wpLoginClient: WpLoginClient,
     private val appLogWrapper: AppLogWrapper,
     private val apiRootUrlCache: ApiRootUrlCache,
@@ -397,17 +396,16 @@ class ApplicationPasswordLoginHelper @Inject constructor(
      * The outcome of an application-password login. Two paths complete one: credentials stored
      * against a site we already had (here), and a site fetched for the first time (the login
      * ViewModel). [source] is the flow's `application_password_created` source, or empty when unknown.
+     *
+     * `success` is reported as `"1"`/`"0"` rather than `"true"`/`"false"` so that this event matches
+     * its iOS counterpart and a cross-platform query doesn't have to handle both encodings.
      */
     fun trackLogin(siteUrl: String?, source: String, success: Boolean, error: String? = null) {
         analyticsTracker.track(
-            if (buildConfigWrapper.isJetpackApp) {
-                Stat.JP_ANDROID_APPLICATION_PASSWORD_LOGIN
-            } else {
-                Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN
-            },
+            Stat.APPLICATION_PASSWORD_LOGIN,
             buildMap {
                 put(URL_TAG, maskUrl(siteUrl.orEmpty()))
-                put(SUCCESS_TAG, success.toString())
+                put(SUCCESS_TAG, if (success) "1" else "0")
                 if (source.isNotEmpty()) put(SOURCE_TAG, source)
                 if (error != null) put(ERROR_TAG, error)
             }
