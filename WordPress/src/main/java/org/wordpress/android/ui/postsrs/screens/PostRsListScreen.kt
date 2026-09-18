@@ -21,8 +21,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.DensityLarge
-import androidx.compose.material.icons.filled.DensitySmall
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
@@ -82,6 +80,7 @@ import org.wordpress.android.ui.postsrs.PostRsListViewModel.Companion.MIN_SEARCH
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostTabUiState
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.rs.contentlist.ContentListDensityToggle
 
 @Suppress("CyclomaticComplexMethod")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -222,7 +221,7 @@ fun PostRsListScreen(
                         // end-aligned, so inserting anywhere later would shift both pre-existing
                         // icons left of where they have always been.
                         if (isRedesignEnabled) {
-                            DensityToggleButton(
+                            ContentListDensityToggle(
                                 density = density,
                                 onToggle = { onDensityToggled(activeTab) }
                             )
@@ -382,35 +381,6 @@ fun PostRsListScreen(
         ) {
             CircularProgressIndicator()
         }
-    }
-}
-
-/**
- * Flips between the two list densities. Deliberately a top-bar action rather than an overflow item:
- * a view control the user is expected to find has to be visible.
- */
-@Composable
-private fun DensityToggleButton(
-    density: ContentListDensity,
-    onToggle: () -> Unit
-) {
-    val labelResId = if (density.isCondensed) {
-        R.string.content_list_density_show_comfortable
-    } else {
-        R.string.content_list_density_show_condensed
-    }
-    IconButton(onClick = onToggle) {
-        // Both glyphs come from the same family - bars at different spacing - so the two states
-        // read as one control rather than two unrelated pictures. The icon shows the density the
-        // tap will switch *to*, which is what the content description says.
-        Icon(
-            imageVector = if (density.isCondensed) {
-                Icons.Default.DensityLarge
-            } else {
-                Icons.Default.DensitySmall
-            },
-            contentDescription = stringResource(labelResId)
-        )
     }
 }
 
