@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.rs.contentlist
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+
 /**
  * One row of the redesigned posts/pages list.
  *
@@ -20,4 +23,17 @@ data class ContentListRowUiState(
     val badges: List<Int> = emptyList(),
     val isSyncing: Boolean = false,
     val hasSyncFailed: Boolean = false
+)
+
+/**
+ * One entry in a row's overflow menu.
+ *
+ * The posts and pages lists have their own action enums with nothing in common but these fields,
+ * so each maps its own onto this rather than the menu knowing about either.
+ */
+data class ContentListMenuAction(
+    @StringRes val labelResId: Int,
+    @DrawableRes val iconResId: Int,
+    val isDestructive: Boolean,
+    val onClick: () -> Unit
 )

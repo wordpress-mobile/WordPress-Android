@@ -606,6 +606,11 @@ internal class PagesRsListViewModel @Inject constructor(
                 // on the collection observers, which aren't guaranteed to fire for a refresh.
                 loadItemsForTab(tab)
                 updateTabUiState(tab) { copy(isLoading = false, isRefreshing = false) }
+                // Clearing the cache above puts those rows back into the pending state, and the
+                // list only asks for view counts when its visible rows change - which a refresh in
+                // place does not do. Without this the skeletons would spin with nothing to
+                // resolve them.
+                retryMetricsForVisibleRows(tab)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -1598,6 +1603,10 @@ internal class PagesRsListViewModel @Inject constructor(
      * is allowed to take the screen down.
      */
     private suspend fun fetchViewCountFor(tab: PageRsListTab, siteId: Long, pageId: Long) {
+        // Re-checked here, not just when the batch was queued: ids waiting on [viewCountGate] are
+        // not yet recorded as in flight, so the same page can be queued twice and the first fetch
+        // can land before the second gets its permit.
+        if (viewCountCache.containsKey(pageId)) return
         if (!inFlightViewCounts.add(pageId)) return
         try {
             // A null either way: the fetch failed, or it answered with nothing usable. Both mean

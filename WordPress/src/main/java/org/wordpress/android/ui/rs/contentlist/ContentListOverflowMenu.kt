@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.rs.contentlist
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -22,19 +20,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-
-/**
- * One entry in a row's overflow menu.
- *
- * The posts and pages lists have their own action enums with nothing in common but these fields,
- * so each maps its own onto this rather than the menu knowing about either.
- */
-data class ContentListMenuAction(
-    @StringRes val labelResId: Int,
-    @DrawableRes val iconResId: Int,
-    val isDestructive: Boolean,
-    val onClick: () -> Unit
-)
 
 /** The trailing overflow button on a [ContentListRow] or [ContentListHeroRow], and its menu. */
 @Composable
