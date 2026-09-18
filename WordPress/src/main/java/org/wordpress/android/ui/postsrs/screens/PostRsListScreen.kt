@@ -70,6 +70,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.FilterChipTabRow
 import org.wordpress.android.ui.compose.utils.rsDebugTitle
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.ConfirmationDialogState
@@ -81,7 +82,6 @@ import org.wordpress.android.ui.postsrs.PostRsListViewModel.Companion.MIN_SEARCH
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostTabUiState
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
-import org.wordpress.android.ui.rs.contentlist.ContentListFilterChips
 
 @Suppress("CyclomaticComplexMethod")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -274,7 +274,7 @@ fun PostRsListScreen(
                 if (isRedesignEnabled) {
                     // The pager stays: chips replace the tab row's appearance, not swiping between
                     // tabs, which users of this screen already rely on.
-                    ContentListFilterChips(
+                    FilterChipTabRow(
                         labels = tabs.map { stringResource(it.labelResId) },
                         selectedIndex = pagerState.settledPage,
                         onSelect = { index ->
