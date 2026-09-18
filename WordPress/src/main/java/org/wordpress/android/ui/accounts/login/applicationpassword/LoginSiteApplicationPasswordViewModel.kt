@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.accounts.login.DiscoverySource
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -37,7 +38,8 @@ class LoginSiteApplicationPasswordViewModel @Inject constructor(
         _errorMessage.value = null
         _loadingStateFlow.value = true
         discoveryJob = viewModelScope.launch {
-            when (val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl)) {
+            val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl, DiscoverySource.LOGIN)
+            when (result) {
                 is ApplicationPasswordLoginHelper.DiscoveryResult.Authorized ->
                     _discoveryURL.send(result.authorizationUrl)
                 is ApplicationPasswordLoginHelper.DiscoveryResult.WpComSite ->
