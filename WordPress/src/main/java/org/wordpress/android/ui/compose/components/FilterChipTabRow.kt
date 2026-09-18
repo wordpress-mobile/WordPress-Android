@@ -33,12 +33,10 @@ import org.wordpress.android.ui.compose.unit.Margin
 /**
  * A tab row drawn as a horizontally scrolling row of Material 3 filter chips.
  *
- * Scrolling is the point: unlike a fixed tab row this can take on extra tabs later without
- * squeezing the existing ones. Use it where a `PrimaryScrollableTabRow` would otherwise go - it
- * reports itself to accessibility services as a tab strip rather than as the row of checkboxes
- * that Material's own [FilterChip] describes.
+ * Use it where a `PrimaryScrollableTabRow` would go: it scrolls rather than squeezing as tabs are
+ * added, and announces itself as a tab strip rather than the checkboxes [FilterChip] describes.
  *
- * @param labels the tab labels in order; a label's index into this list is its selection value
+ * @param labels the tab labels in order; a label's index is its selection value
  * @param selectedIndex index of the selected tab, or out of range for no selection
  * @param onSelect called with the index of the tapped tab
  * @param modifier applied to the row itself
@@ -54,19 +52,13 @@ fun FilterChipTabRow(
 ) {
     val listState = rememberLazyListState()
 
-    // Keeps the selected chip on screen when the selection is driven from elsewhere, e.g. by a
-    // pager swipe. Only scrolls when the chip is actually clipped: scrolling on every change would
-    // yank the row sideways once there are enough chips for it to scroll at all.
-    //
-    // Keyed on the label count as well as the selection: for a caller whose labels arrive after the
-    // first composition, selectedIndex alone does not change when they land, so the initial
-    // selection would never be scrolled into view. Keyed on the count rather than the list because
-    // callers map their labels in the composition, handing over a new instance each time.
+    // Keeps the selected chip on screen when a pager swipe drives the selection. Keyed on the
+    // label count too, for callers whose labels arrive late; on the count rather than the list,
+    // which callers rebuild each composition.
     LaunchedEffect(selectedIndex, labels.size) {
         if (selectedIndex !in labels.indices) return@LaunchedEffect
         if (listState.layoutInfo.visibleItemsInfo.isEmpty()) {
-            // Not laid out yet, so visibility cannot be judged: place the selection at the next
-            // measurement rather than animating it in from the start.
+            // Not measured yet, so visibility can't be judged; place it at the next measurement.
             listState.requestScrollToItem(selectedIndex)
         } else if (!listState.isItemFullyVisible(selectedIndex)) {
             listState.animateScrollToItem(selectedIndex)
@@ -75,8 +67,7 @@ fun FilterChipTabRow(
 
     LazyRow(
         state = listState,
-        // selectableGroup() is what gives a real tab row its "2 of 4", but it is documented not to
-        // count the elements of a lazy collection, so the collection info is set by hand instead.
+        // selectableGroup() would give the "2 of 4", but it doesn't count lazy collections.
         modifier = modifier
             .fillMaxWidth()
             .semantics {
@@ -91,9 +82,8 @@ fun FilterChipTabRow(
                 selected = selected,
                 onClick = { onSelect(index) },
                 label = { Text(label) },
-                // FilterChip announces itself as a checkbox. This is a tab strip, so the role is
-                // overridden: semantics within one node are applied tail to head, and the chip
-                // chains its own after the caller's modifier, so this one wins.
+                // FilterChip announces as a checkbox; this is a tab strip. The caller's modifier
+                // is outermost, so this role wins.
                 modifier = Modifier.semantics {
                     role = Role.Tab
                     collectionItemInfo = CollectionItemInfo(
@@ -119,7 +109,7 @@ fun FilterChipTabRow(
 }
 
 object FilterChipTabRowDefaults {
-    /** Lines the chips up with a list that pads its own content by [Margin.Medium]. */
+    /** Lines the chips up with a list padded by [Margin.Medium]. */
     val ContentPadding = PaddingValues(
         horizontal = Margin.Medium.value,
         vertical = Margin.Small.value
@@ -127,11 +117,10 @@ object FilterChipTabRowDefaults {
 }
 
 /**
- * Whether [index] is laid out and lies entirely inside the viewport. A chip clipped by either edge
- * counts as not visible, so it gets scrolled fully into view rather than left half shown.
+ * Whether [index] is laid out and entirely inside the viewport, so only a clipped chip is scrolled
+ * to and the row doesn't jump on every selection change.
  *
- * The content padding is deliberately not subtracted here: a LazyRow's content padding is not a
- * clip region - items scroll through it - so the raw viewport bounds are the honest test.
+ * Content padding isn't subtracted: a LazyRow's items scroll through it, so it doesn't clip.
  */
 private fun LazyListState.isItemFullyVisible(index: Int): Boolean {
     val item = layoutInfo.visibleItemsInfo.firstOrNull { it.index == index } ?: return false
@@ -143,7 +132,7 @@ private fun LazyListState.isItemFullyVisible(index: Int): Boolean {
 @Preview(name = "Dark Mode", showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun FilterChipTabRowPreview() {
-    // More labels than fit the preview width, so the scroll-into-view behaviour is visible here.
+    // More labels than fit, so the scroll-into-view shows here.
     val labels = listOf("All", "Pending", "Unreplied", "Approved", "Spam", "Trashed")
     var selectedIndex by remember { mutableIntStateOf(0) }
     AppThemeM3 {
