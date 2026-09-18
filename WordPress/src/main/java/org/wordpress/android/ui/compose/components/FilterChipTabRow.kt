@@ -102,7 +102,7 @@ fun FilterChipTabRow(
 }
 
 object FilterChipTabRowDefaults {
-    // Lines the chips up with a list padded by [Margin.Medium]
+    /** Lines the chips up with a list padded by [Margin.Medium] */
     val ContentPadding = PaddingValues(
         horizontal = Margin.Medium.value,
         vertical = Margin.Small.value
