@@ -10,8 +10,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.ui.domains.management.testDomainItem
 import org.wordpress.android.ui.domains.usecases.AllDomains
 import org.wordpress.android.ui.domains.usecases.FetchAllDomainsUseCase
@@ -25,22 +23,13 @@ import uniffi.wp_api.RequestMethod
 @RunWith(MockitoJUnitRunner::class)
 class FetchAllDomainsUseCaseTest : BaseUnitTest() {
     @Mock
-    lateinit var wpComApiClientProvider: WpComApiClientProvider
-
-    @Mock
-    lateinit var accountStore: AccountStore
-
-    @Mock
     lateinit var wpComApiClient: WpComApiClient
 
     private lateinit var useCase: FetchAllDomainsUseCase
 
     @Before
     fun setUp() {
-        whenever(accountStore.accessToken).thenReturn("test-token")
-        whenever(wpComApiClientProvider.getWpComApiClient("test-token"))
-            .thenReturn(wpComApiClient)
-        useCase = FetchAllDomainsUseCase(wpComApiClientProvider, accountStore)
+        useCase = FetchAllDomainsUseCase(wpComApiClient)
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -160,22 +149,4 @@ class FetchAllDomainsUseCaseTest : BaseUnitTest() {
 
             assertThat(result).isInstanceOf(AllDomains.Empty::class.java)
         }
-
-    @Test
-    fun `given no access token, when execute, returns error`() = test {
-        whenever(accountStore.accessToken).thenReturn(null)
-
-        val result = useCase.execute()
-
-        assertThat(result).isInstanceOf(AllDomains.Error::class.java)
-    }
-
-    @Test
-    fun `given a blank access token, when execute, returns error`() = test {
-        whenever(accountStore.accessToken).thenReturn("")
-
-        val result = useCase.execute()
-
-        assertThat(result).isInstanceOf(AllDomains.Error::class.java)
-    }
 }
