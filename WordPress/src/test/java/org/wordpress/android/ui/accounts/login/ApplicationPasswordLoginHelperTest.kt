@@ -99,7 +99,6 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             dispatcherWrapper,
             siteStore,
             uriLoginWrapper,
-            buildConfigWrapper,
             wpLoginClient,
             appLogWrapper,
             apiRootUrlCache,
@@ -416,11 +415,11 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             assertEquals(
                 mapOf(
                     "url" to "txxt.com",
-                    "success" to "false",
+                    "success" to "0",
                     "source" to "login",
                     "error" to "discovery_wp_error",
                 ),
-                trackedProps(Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN)
+                trackedProps(Stat.APPLICATION_PASSWORD_LOGIN)
             )
             assertEquals(
                 ApplicationPasswordLoginHelper.DiscoveryResult.Failed(
@@ -444,11 +443,11 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
         assertEquals(
             mapOf(
                 "url" to "txxt.com",
-                "success" to "false",
+                "success" to "0",
                 "source" to "login",
                 "error" to "discovery_no_auth_url_advertised",
             ),
-            trackedProps(Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN)
+            trackedProps(Stat.APPLICATION_PASSWORD_LOGIN)
         )
         assertEquals(
             ApplicationPasswordLoginHelper.DiscoveryResult.Failed(
@@ -466,7 +465,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
         applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.MY_SITE_CARD)
 
         verify(analyticsTracker).track(eq(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED), any<Map<String, *>>())
-        verify(analyticsTracker, never()).track(eq(Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN), any<Map<String, *>>())
+        verify(analyticsTracker, never()).track(eq(Stat.APPLICATION_PASSWORD_LOGIN), any<Map<String, *>>())
     }
 
     @Test
@@ -522,11 +521,11 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
         applicationPasswordLoginHelper.trackStoringFailed(TEST_URL, "user_rejected", "login")
 
         val captor = argumentCaptor<Map<String, *>>()
-        verify(analyticsTracker, times(2)).track(eq(Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN), captor.capture())
+        verify(analyticsTracker, times(2)).track(eq(Stat.APPLICATION_PASSWORD_LOGIN), captor.capture())
         assertEquals(
             listOf(
-                mapOf("url" to "txxt.com", "success" to "true", "source" to "login"),
-                mapOf("url" to "txxt.com", "success" to "false", "source" to "login", "error" to "user_rejected"),
+                mapOf("url" to "txxt.com", "success" to "1", "source" to "login"),
+                mapOf("url" to "txxt.com", "success" to "0", "source" to "login", "error" to "user_rejected"),
             ),
             captor.allValues
         )
@@ -549,8 +548,8 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             trackedProps(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
         )
         assertEquals(
-            mapOf("url" to "txxt.com", "success" to "false", "source" to "login", "error" to "bad_data"),
-            trackedProps(Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN)
+            mapOf("url" to "txxt.com", "success" to "0", "source" to "login", "error" to "bad_data"),
+            trackedProps(Stat.APPLICATION_PASSWORD_LOGIN)
         )
     }
 
