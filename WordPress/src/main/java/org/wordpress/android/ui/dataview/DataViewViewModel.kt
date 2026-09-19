@@ -39,7 +39,6 @@ open class DataViewViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val selectedSiteRepository: SelectedSiteRepository,
     @Named(IO_THREAD) protected val ioDispatcher: CoroutineDispatcher,
-    // TODO this is strictly for wp.com sites, we'll need different auth for self-hosted
     protected val wpComApiClient: WpComApiClient,
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableStateFlow(DataViewUiState())
