@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.preference.PreferenceManager;
 
@@ -31,13 +30,9 @@ import org.wordpress.android.util.audio.VoiceToContentStrategy;
 import org.wordpress.android.util.config.InAppUpdatesFeatureConfig;
 import org.wordpress.android.util.config.RemoteConfigWrapper;
 import org.wordpress.android.util.wizard.WizardManager;
-import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor;
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider;
 import org.wordpress.android.networking.NetworkConnectionMonitor;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
-
-import java.util.Collections;
 
 import javax.inject.Named;
 
@@ -49,7 +44,6 @@ import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
 import kotlinx.coroutines.CoroutineScope;
-import rs.wordpress.api.kotlin.WpLoginClient;
 
 import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
 
@@ -135,16 +129,5 @@ public abstract class ApplicationModule {
     @Provides
     public static RecordingStrategy provideVoiceToContentRecordingStrategy() {
         return new VoiceToContentRecordingStrategy();
-    }
-
-    @Provides
-    public static WpLoginClient provideWpLoginClient(
-            @NonNull TrackNetworkRequestsInterceptor trackNetworkRequestsInterceptor,
-            @NonNull WpNetworkAvailabilityProvider networkAvailabilityProvider
-    ) {
-        return new WpLoginClient(
-                Collections.singletonList(trackNetworkRequestsInterceptor),
-                networkAvailabilityProvider
-        );
     }
 }

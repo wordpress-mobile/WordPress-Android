@@ -6,13 +6,12 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpRsOkHttpClient
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.wpRsErrorLogger
 import org.wordpress.android.networking.restapi.WpComAuthenticationProvider
-import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManagerWrapper
-import rs.wordpress.api.kotlin.DEFAULT_REQUEST_ERROR_LOG_POLICY
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpHttpClient
-import rs.wordpress.api.kotlin.WpRequestErrorLogger
 import rs.wordpress.api.kotlin.WpRequestExecutor
 import rs.wordpress.api.kotlin.fromLocale
 import uniffi.wp_api.WpAuthenticationProvider
@@ -44,15 +43,9 @@ class WpComApiClientModule {
             networkAvailabilityProvider = networkAvailabilityProvider
         ),
         authProvider = WpAuthenticationProvider.dynamic(authenticationProvider),
-        errorLogger = requestErrorLogger(),
+        errorLogger = wpRsErrorLogger(),
         languageProvider = wpComLanguageProvider(localeManagerWrapper)
     )
-
-    /** Logs request failures through the library's redaction policy. */
-    private fun requestErrorLogger() =
-        WpRequestErrorLogger(DEFAULT_REQUEST_ERROR_LOG_POLICY) { message ->
-            AppLog.e(AppLog.T.API, message)
-        }
 
     /**
      * WordPress.com localizes a response when the request carries a locale query parameter. The
