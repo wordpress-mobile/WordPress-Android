@@ -30,8 +30,10 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.PostViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.posts.AuthorFilterSelection
-import org.wordpress.android.ui.postsrs.data.PostRsRestClient
-import org.wordpress.android.ui.postsrs.data.WpServiceProvider
+import org.wordpress.android.ui.rs.RsErrorUtils
+import org.wordpress.android.ui.rs.RsSnackbarMessage
+import org.wordpress.android.ui.rs.data.RsSiteRestClient
+import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.rs.RsCommentCountFetcher
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
@@ -63,7 +65,7 @@ import javax.inject.Inject
 class PostRsListViewModel @Inject constructor(
     selectedSiteRepository: SelectedSiteRepository,
     private val serviceProvider: WpServiceProvider,
-    private val restClient: PostRsRestClient,
+    private val restClient: RsSiteRestClient,
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,
     private val fluxCBridge: PostRsFluxCBridge,
@@ -150,7 +152,7 @@ class PostRsListViewModel @Inject constructor(
     private val _events = Channel<PostRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
-    private val _snackbarMessages = Channel<SnackbarMessage>(Channel.BUFFERED)
+    private val _snackbarMessages = Channel<RsSnackbarMessage>(Channel.BUFFERED)
     val snackbarMessages = _snackbarMessages.receiveAsFlow()
 
     private val _revealRequests = Channel<PostRsReveal>(Channel.BUFFERED)
@@ -327,7 +329,7 @@ class PostRsListViewModel @Inject constructor(
             tabs.forEach { onRefreshFailed(it, e = null, showSnackbar = false) }
             if (anyTabKeepsItsPosts) {
                 _snackbarMessages.trySend(
-                    SnackbarMessage(
+                    RsSnackbarMessage(
                         message = friendlyErrorMessage(null),
                         actionLabel = resourceProvider.getString(R.string.retry),
                         onAction = { refreshAllTabs() }
@@ -550,7 +552,7 @@ class PostRsListViewModel @Inject constructor(
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Move to draft failed", e)
                 _snackbarMessages.trySend(
-                    SnackbarMessage(
+                    RsSnackbarMessage(
                         friendlyErrorMessage(e, R.string.post_rs_error_update_status)
                     )
                 )
@@ -573,7 +575,7 @@ class PostRsListViewModel @Inject constructor(
     } catch (e: Exception) {
         AppLog.e(AppLog.T.POSTS, "Bridge post failed", e)
         _snackbarMessages.trySend(
-            SnackbarMessage(friendlyErrorMessage(e, R.string.post_not_found))
+            RsSnackbarMessage(friendlyErrorMessage(e, R.string.post_not_found))
         )
         null
     }
@@ -611,7 +613,7 @@ class PostRsListViewModel @Inject constructor(
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Duplicate post failed", e)
                 _snackbarMessages.trySend(
-                    SnackbarMessage(
+                    RsSnackbarMessage(
                         friendlyErrorMessage(e, R.string.post_not_found)
                     )
                 )
@@ -624,7 +626,7 @@ class PostRsListViewModel @Inject constructor(
     private fun checkNetwork(): Boolean {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _snackbarMessages.trySend(
-                SnackbarMessage(resourceProvider.getString(R.string.no_network_message))
+                RsSnackbarMessage(resourceProvider.getString(R.string.no_network_message))
             )
             return false
         }
@@ -634,7 +636,7 @@ class PostRsListViewModel @Inject constructor(
     private fun friendlyErrorMessage(
         e: Exception? = null,
         defaultResId: Int? = null,
-    ): String = PostRsErrorUtils.friendlyErrorMessage(
+    ): String = RsErrorUtils.friendlyErrorMessage(
         e, defaultResId, resourceProvider, networkUtilsWrapper
     )
 
@@ -658,14 +660,14 @@ class PostRsListViewModel @Inject constructor(
             try {
                 withContext(Dispatchers.IO) { operation() }
                 _snackbarMessages.trySend(
-                    SnackbarMessage(resourceProvider.getString(successMessageResId))
+                    RsSnackbarMessage(resourceProvider.getString(successMessageResId))
                 )
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "$logTag failed", e)
                 _snackbarMessages.trySend(
-                    SnackbarMessage(friendlyErrorMessage(e, errorMessageResId))
+                    RsSnackbarMessage(friendlyErrorMessage(e, errorMessageResId))
                 )
             }
         }
@@ -715,7 +717,7 @@ class PostRsListViewModel @Inject constructor(
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Bridge post failed", e)
                 _snackbarMessages.trySend(
-                    SnackbarMessage(
+                    RsSnackbarMessage(
                         friendlyErrorMessage(e, R.string.post_not_found)
                     )
                 )
@@ -835,7 +837,7 @@ class PostRsListViewModel @Inject constructor(
                 updateTabUiState(tab) {
                     PostTabUiState(
                         error = friendlyErrorMessage(e),
-                        isAuthError = PostRsErrorUtils.isAuthError(e)
+                        isAuthError = RsErrorUtils.isAuthError(e)
                     )
                 }
             }
@@ -971,14 +973,14 @@ class PostRsListViewModel @Inject constructor(
         e?.let { AppLog.e(AppLog.T.POSTS, "Failed to refresh tab $tab", it) }
         userRefreshingTabs.remove(tab)
         val message = friendlyErrorMessage(e)
-        val authError = PostRsErrorUtils.isAuthError(e)
+        val authError = RsErrorUtils.isAuthError(e)
         if (getTabUiState(tab).posts.isNotEmpty()) {
             updateTabUiState(tab) {
                 copy(isLoading = false, isRefreshing = false, error = null)
             }
             if (showSnackbar) {
                 _snackbarMessages.trySend(
-                    SnackbarMessage(
+                    RsSnackbarMessage(
                         message = message,
                         actionLabel = if (authError) null
                             else resourceProvider.getString(R.string.retry),
@@ -1017,7 +1019,7 @@ class PostRsListViewModel @Inject constructor(
                 AppLog.e(AppLog.T.POSTS, "Failed to load more for tab $tab", e)
                 updateTabUiState(tab) { copy(isLoadingMore = false) }
                 _snackbarMessages.trySend(
-                    SnackbarMessage(friendlyErrorMessage(e))
+                    RsSnackbarMessage(friendlyErrorMessage(e))
                 )
             }
         }
@@ -1410,7 +1412,7 @@ class PostRsListViewModel @Inject constructor(
             // provoked. The state above still syncs either way.
             if (isUserRefresh) {
                 _snackbarMessages.trySend(
-                    SnackbarMessage(
+                    RsSnackbarMessage(
                         message = errorMessage.orEmpty(),
                         actionLabel = if (authError) null
                             else resourceProvider.getString(R.string.retry),

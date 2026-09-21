@@ -45,6 +45,7 @@ import org.wordpress.android.ui.compose.components.ShimmerBox
 import org.wordpress.android.ui.postsrs.PostDisplayState
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostRsUiModel
+import org.wordpress.android.ui.rs.contentlist.LegacyContentListPlaceholderRow
 
 
 @Composable
@@ -56,7 +57,7 @@ fun PostRsListItem(
 ) {
     when (post.displayState) {
         PostDisplayState.PLACEHOLDER ->
-            PlaceholderItem(modifier)
+            LegacyContentListPlaceholderRow(modifier)
         PostDisplayState.ERROR ->
             ErrorItem(modifier)
         PostDisplayState.NORMAL,
@@ -260,43 +261,6 @@ private fun PostMenuButton(
                         )
                     }
                 )
-            }
-        }
-    }
-}
-
-@Composable
-internal fun PlaceholderItem(modifier: Modifier = Modifier) {
-    Card(
-        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            ShimmerBox(
-                modifier = Modifier
-                    .fillMaxWidth(0.25f)
-                    .height(12.dp)
-                    .clip(RoundedCornerShape(4.dp))
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            ShimmerBox(
-                modifier = Modifier
-                    .fillMaxWidth(0.7f)
-                    .height(20.dp)
-                    .clip(RoundedCornerShape(4.dp))
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            repeat(2) { index ->
-                ShimmerBox(
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f)
-                        .height(14.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                )
-                if (index == 0) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                }
             }
         }
     }

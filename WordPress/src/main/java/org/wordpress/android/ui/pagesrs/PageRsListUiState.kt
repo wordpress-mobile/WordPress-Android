@@ -3,11 +3,11 @@ package org.wordpress.android.ui.pagesrs
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
-import org.wordpress.android.ui.postsrs.data.FeaturedImageUrls
-import org.wordpress.android.ui.postsrs.toLabel
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListRowUiState
+import org.wordpress.android.ui.rs.data.FeaturedImageUrls
 import org.wordpress.android.ui.rs.RsDateFormatter
+import org.wordpress.android.ui.rs.toLabel
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
 import uniffi.wp_api.AnyPostWithEditContext

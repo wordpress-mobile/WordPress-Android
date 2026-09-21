@@ -227,6 +227,11 @@ private fun ShimmerList(isRedesignEnabled: Boolean) {
     }
 }
 
+/**
+ * Deliberately not the shared placeholder: a comment row leads with an avatar, so its skeleton
+ * has a shape the posts and pages ones do not. Not a duplicate of
+ * [org.wordpress.android.ui.rs.contentlist.LegacyContentListPlaceholderRow].
+ */
 @Composable
 private fun PlaceholderItem() {
     Row(modifier = Modifier.padding(16.dp)) {

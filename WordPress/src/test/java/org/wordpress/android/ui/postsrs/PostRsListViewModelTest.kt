@@ -28,8 +28,8 @@ import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.posts.AuthorFilterSelection
-import org.wordpress.android.ui.postsrs.data.PostRsRestClient
-import org.wordpress.android.ui.postsrs.data.WpServiceProvider
+import org.wordpress.android.ui.rs.data.RsSiteRestClient
+import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.rs.RsCommentCountFetcher
 import org.wordpress.android.ui.rs.RsPostChangeListener
@@ -43,7 +43,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var serviceProvider: WpServiceProvider
-    @Mock lateinit var restClient: PostRsRestClient
+    @Mock lateinit var restClient: RsSiteRestClient
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var postStore: PostStore
     @Mock lateinit var fluxCBridge: PostRsFluxCBridge

@@ -52,7 +52,7 @@ import org.wordpress.android.ui.pagesrs.PageRsListItem
 import org.wordpress.android.ui.pagesrs.PageRsMenuAction
 import org.wordpress.android.ui.pagesrs.PageRsUiModel
 import org.wordpress.android.ui.pagesrs.labelResId
-import org.wordpress.android.ui.postsrs.screens.PlaceholderItem
+import org.wordpress.android.ui.rs.contentlist.LegacyContentListPlaceholderRow
 
 @Composable
 internal fun PageRsRow(
@@ -65,7 +65,7 @@ internal fun PageRsRow(
     val indentLevel = (item as? PageRsListItem.Real)?.indentLevel ?: 0
     val virtualKind = (item as? PageRsListItem.Virtual)?.kind
     when (page.displayState) {
-        PageRsDisplayState.PLACEHOLDER -> PlaceholderItem(modifier)
+        PageRsDisplayState.PLACEHOLDER -> LegacyContentListPlaceholderRow(modifier)
         PageRsDisplayState.ERROR -> ErrorItem(modifier)
         PageRsDisplayState.NORMAL,
         PageRsDisplayState.FETCHING_WITH_DATA,

@@ -46,11 +46,11 @@ import org.wordpress.android.ui.newstats.datasource.PostViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.posts.AuthorFilterSelection
-import org.wordpress.android.ui.postsrs.PostRsErrorUtils
-import org.wordpress.android.ui.postsrs.SnackbarMessage
-import org.wordpress.android.ui.postsrs.data.FeaturedImageUrls
-import org.wordpress.android.ui.postsrs.data.PostRsRestClient
-import org.wordpress.android.ui.postsrs.data.WpServiceProvider
+import org.wordpress.android.ui.rs.RsErrorUtils
+import org.wordpress.android.ui.rs.RsSnackbarMessage
+import org.wordpress.android.ui.rs.data.FeaturedImageUrls
+import org.wordpress.android.ui.rs.data.RsSiteRestClient
+import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.rs.RsCollectionPrefetch
 import org.wordpress.android.ui.rs.RsPostChangeListener
@@ -87,7 +87,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val serviceProvider: WpServiceProvider,
     private val dispatcher: Dispatcher,
-    private val restClient: PostRsRestClient,
+    private val restClient: RsSiteRestClient,
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,
     private val homepageSettings: PageRsHomepageSettings,
@@ -189,7 +189,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private val _events = Channel<PageRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
-    private val _snackbarMessages = Channel<SnackbarMessage>(Channel.BUFFERED)
+    private val _snackbarMessages = Channel<RsSnackbarMessage>(Channel.BUFFERED)
     val snackbarMessages = _snackbarMessages.receiveAsFlow()
 
     private val _revealRequests = Channel<PageRsReveal>(Channel.BUFFERED)
@@ -441,7 +441,7 @@ internal class PagesRsListViewModel @Inject constructor(
                 updateTabUiState(tab) {
                     PageTabUiState(
                         error = friendlyErrorMessage(e),
-                        isAuthError = PostRsErrorUtils.isAuthError(e)
+                        isAuthError = RsErrorUtils.isAuthError(e)
                     )
                 }
             }
@@ -552,7 +552,7 @@ internal class PagesRsListViewModel @Inject constructor(
             tabs.forEach { onRefreshFailed(it, e = null, showSnackbar = false) }
             if (anyTabKeepsItsPages) {
                 _snackbarMessages.trySend(
-                    SnackbarMessage(
+                    RsSnackbarMessage(
                         message = friendlyErrorMessage(null),
                         actionLabel = resourceProvider.getString(R.string.retry),
                         onAction = { refreshAllTabs() }
@@ -695,12 +695,12 @@ internal class PagesRsListViewModel @Inject constructor(
         val outcome = RsCollectionPrefetch.loadRemainingPages(
             hasMorePages = firstPage.hasMorePages ?: (loaded >= pageSize),
             maxPages = MAX_FILL_PAGES,
-            shouldRetry = { !PostRsErrorUtils.isAuthError(it) }
+            shouldRetry = { !RsErrorUtils.isAuthError(it) }
         ) {
             val next = try {
                 withContext(Dispatchers.IO) { collection.loadNextPage() }
             } catch (e: FetchException) {
-                if (PostRsErrorUtils.isPastLastPage(e)) return@loadRemainingPages false
+                if (RsErrorUtils.isPastLastPage(e)) return@loadRemainingPages false
                 throw e
             }
             val pageWasFull = next.totalItems - loaded >= pageSize
@@ -727,7 +727,7 @@ internal class PagesRsListViewModel @Inject constructor(
         e?.let { AppLog.e(AppLog.T.PAGES, "Failed to refresh tab $tab", it) }
         userRefreshingTabs.remove(tab)
         val message = friendlyErrorMessage(e)
-        val authError = PostRsErrorUtils.isAuthError(e)
+        val authError = RsErrorUtils.isAuthError(e)
         if (getTabUiState(tab).pages.hasRealPages) {
             updateTabUiState(tab) {
                 copy(
@@ -739,7 +739,7 @@ internal class PagesRsListViewModel @Inject constructor(
             }
             if (showSnackbar) {
                 _snackbarMessages.trySend(
-                    SnackbarMessage(
+                    RsSnackbarMessage(
                         message = message,
                         actionLabel = if (authError) null
                             else resourceProvider.getString(R.string.retry),
@@ -780,7 +780,7 @@ internal class PagesRsListViewModel @Inject constructor(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: FetchException) {
-                if (PostRsErrorUtils.isPastLastPage(e)) {
+                if (RsErrorUtils.isPastLastPage(e)) {
                     // The server never said how many pages there are, so the list info kept
                     // offering another; the refusal is the answer, not a failure to report.
                     updateTabUiState(tab) { copy(isLoadingMore = false, canLoadMore = false) }
@@ -796,7 +796,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private fun onLoadMoreFailed(tab: PageRsListTab, e: Exception) {
         AppLog.e(AppLog.T.PAGES, "Failed to load more for tab $tab", e)
         updateTabUiState(tab) { copy(isLoadingMore = false) }
-        _snackbarMessages.trySend(SnackbarMessage(friendlyErrorMessage(e)))
+        _snackbarMessages.trySend(RsSnackbarMessage(friendlyErrorMessage(e)))
     }
 
     /**
@@ -869,7 +869,7 @@ internal class PagesRsListViewModel @Inject constructor(
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.PAGES, "Bridge page failed", e)
                 _snackbarMessages.trySend(
-                    SnackbarMessage(friendlyErrorMessage(e, R.string.page_not_found))
+                    RsSnackbarMessage(friendlyErrorMessage(e, R.string.page_not_found))
                 )
             } finally {
                 _isOpeningPage.value = false
@@ -1088,7 +1088,7 @@ internal class PagesRsListViewModel @Inject constructor(
                 isLoadingMore = listInfo?.state == ListState.FETCHING_NEXT_PAGE,
                 canLoadMore = morePages,
                 error = if (isError && !hasData) {
-                    PostRsErrorUtils.friendlyErrorMessage(
+                    RsErrorUtils.friendlyErrorMessage(
                         null, null, resourceProvider, networkUtilsWrapper
                     )
                 } else null
@@ -1124,7 +1124,7 @@ internal class PagesRsListViewModel @Inject constructor(
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.PAGES, "Failed to load more parents", e)
                 updateParentPicker { copy(isLoadingMore = false) }
-                _snackbarMessages.trySend(SnackbarMessage(friendlyErrorMessage(e)))
+                _snackbarMessages.trySend(RsSnackbarMessage(friendlyErrorMessage(e)))
             }
         }
     }
@@ -1266,7 +1266,7 @@ internal class PagesRsListViewModel @Inject constructor(
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.PAGES, "Move to draft failed", e)
                 _snackbarMessages.trySend(
-                    SnackbarMessage(friendlyErrorMessage(e, R.string.page_status_change_error))
+                    RsSnackbarMessage(friendlyErrorMessage(e, R.string.page_status_change_error))
                 )
             } finally {
                 updateTabUiState(PageRsListTab.TRASHED) { copy(isRefreshing = false) }
@@ -1311,18 +1311,18 @@ internal class PagesRsListViewModel @Inject constructor(
             when (val result = withContext(Dispatchers.IO) { operation() }) {
                 is PageRsHomepageSettings.Result.Success -> {
                     _snackbarMessages.trySend(
-                        SnackbarMessage(resourceProvider.getString(successMessageResId))
+                        RsSnackbarMessage(resourceProvider.getString(successMessageResId))
                     )
                     launchCollectionJob { loadItemsForTab(PageRsListTab.PUBLISHED) }
                 }
                 is PageRsHomepageSettings.Result.StaticHomepageDisabled ->
                     _snackbarMessages.trySend(
-                        SnackbarMessage(resourceProvider.getString(cannotSetMessageResId))
+                        RsSnackbarMessage(resourceProvider.getString(cannotSetMessageResId))
                     )
                 is PageRsHomepageSettings.Result.Error -> {
                     AppLog.w(AppLog.T.PAGES, "Homepage settings update failed: ${result.message}")
                     _snackbarMessages.trySend(
-                        SnackbarMessage(resourceProvider.getString(errorMessageResId))
+                        RsSnackbarMessage(resourceProvider.getString(errorMessageResId))
                     )
                 }
             }
@@ -1359,7 +1359,7 @@ internal class PagesRsListViewModel @Inject constructor(
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.PAGES, "Duplicate page failed", e)
                 _snackbarMessages.trySend(
-                    SnackbarMessage(friendlyErrorMessage(e, R.string.page_not_found))
+                    RsSnackbarMessage(friendlyErrorMessage(e, R.string.page_not_found))
                 )
             } finally {
                 _isOpeningPage.value = false
@@ -1395,7 +1395,7 @@ internal class PagesRsListViewModel @Inject constructor(
     } catch (e: Exception) {
         AppLog.e(AppLog.T.PAGES, "Bridge page failed", e)
         _snackbarMessages.trySend(
-            SnackbarMessage(friendlyErrorMessage(e, R.string.page_not_found))
+            RsSnackbarMessage(friendlyErrorMessage(e, R.string.page_not_found))
         )
         null
     }
@@ -1424,14 +1424,14 @@ internal class PagesRsListViewModel @Inject constructor(
                 withContext(Dispatchers.IO) { operation(serviceProvider.getService(site).posts()) }
                 onSuccess()
                 _snackbarMessages.trySend(
-                    SnackbarMessage(resourceProvider.getString(successMessageResId))
+                    RsSnackbarMessage(resourceProvider.getString(successMessageResId))
                 )
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.PAGES, "$logTag failed", e)
                 _snackbarMessages.trySend(
-                    SnackbarMessage(friendlyErrorMessage(e, errorMessageResId))
+                    RsSnackbarMessage(friendlyErrorMessage(e, errorMessageResId))
                 )
             }
         }
@@ -1454,7 +1454,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private fun checkNetwork(): Boolean {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _snackbarMessages.trySend(
-                SnackbarMessage(resourceProvider.getString(R.string.no_network_message))
+                RsSnackbarMessage(resourceProvider.getString(R.string.no_network_message))
             )
             return false
         }
@@ -1464,7 +1464,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private fun friendlyErrorMessage(
         e: Exception?,
         defaultResId: Int? = null,
-    ): String = PostRsErrorUtils.friendlyErrorMessage(
+    ): String = RsErrorUtils.friendlyErrorMessage(
         e, defaultResId, resourceProvider, networkUtilsWrapper
     )
 
@@ -1873,7 +1873,7 @@ internal class PagesRsListViewModel @Inject constructor(
         val isError = listInfo?.state == ListState.ERROR
         val hasPages = getTabUiState(tab).pages.hasRealPages
         val errorMessage = if (isError) {
-            PostRsErrorUtils.friendlyErrorMessage(null, null, resourceProvider, networkUtilsWrapper)
+            RsErrorUtils.friendlyErrorMessage(null, null, resourceProvider, networkUtilsWrapper)
         } else null
 
         if (isError && hasPages) {

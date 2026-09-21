@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.postsrs.data
+package org.wordpress.android.ui.rs.data
 
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.SiteAccessibilityInfo

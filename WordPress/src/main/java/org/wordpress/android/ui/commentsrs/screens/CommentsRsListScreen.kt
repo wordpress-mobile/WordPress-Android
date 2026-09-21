@@ -68,7 +68,7 @@ import org.wordpress.android.ui.commentsrs.batchActions
 import org.wordpress.android.ui.commentsrs.isEnabledFor
 import org.wordpress.android.ui.compose.components.FilterChipTabRow
 import org.wordpress.android.ui.compose.utils.rsDebugTitle
-import org.wordpress.android.ui.postsrs.SnackbarMessage
+import org.wordpress.android.ui.rs.RsSnackbarMessage
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListDensityToggle
 
@@ -91,7 +91,7 @@ fun CommentsRsListScreen(
     searchQuery: String,
     isQuerySearchable: Boolean,
     onDismissConfirmation: () -> Unit,
-    snackbarMessages: Flow<SnackbarMessage>,
+    snackbarMessages: Flow<RsSnackbarMessage>,
     onSearchOpen: () -> Unit,
     onSearchQueryChanged: (String) -> Unit,
     onSearchClose: (CommentsRsListTab) -> Unit,

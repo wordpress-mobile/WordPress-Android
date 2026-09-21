@@ -92,7 +92,7 @@ import org.wordpress.android.ui.pagesrs.PageRsReveal
 import org.wordpress.android.ui.pagesrs.PageTabUiState
 import org.wordpress.android.ui.pagesrs.PagesRsListViewModel.Companion.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.posts.AuthorFilterSelection
-import org.wordpress.android.ui.postsrs.SnackbarMessage
+import org.wordpress.android.ui.rs.RsSnackbarMessage
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListDensityToggle
 
@@ -109,7 +109,7 @@ internal fun PagesRsListScreen(
     avatarUrl: String?,
     confirmationDialog: PageRsConfirmationDialogState,
     parentPicker: PageRsParentPickerState?,
-    snackbarMessages: Flow<SnackbarMessage> = emptyFlow(),
+    snackbarMessages: Flow<RsSnackbarMessage> = emptyFlow(),
     revealRequests: Flow<PageRsReveal> = emptyFlow(),
     onSearchOpen: () -> Unit,
     onSearchQueryChanged: (String, PageRsListTab) -> Unit,

@@ -3,9 +3,10 @@ package org.wordpress.android.ui.postsrs
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
-import org.wordpress.android.ui.postsrs.data.FeaturedImageUrls
+import org.wordpress.android.ui.rs.data.FeaturedImageUrls
 import org.wordpress.android.ui.rs.RsDateFormatter
 import org.wordpress.android.ui.rs.contentlist.ContentListRowUiState
+import org.wordpress.android.ui.rs.toLabel
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
 import uniffi.wp_api.AnyPostWithEditContext
@@ -13,12 +14,6 @@ import uniffi.wp_api.PostCommentStatus
 import uniffi.wp_api.PostStatus
 import uniffi.wp_mobile.FullEntityAnyPostWithEditContext
 import uniffi.wp_mobile.PostItemState
-
-data class SnackbarMessage(
-    val message: String,
-    val actionLabel: String? = null,
-    val onAction: (() -> Unit)? = null
-)
 
 sealed interface PendingConfirmation {
     data class Trash(val postId: Long) : PendingConfirmation
@@ -234,21 +229,3 @@ fun PostRsUiModel.toContentListRowUiState() = ContentListRowUiState(
     isSyncing = displayState == PostDisplayState.FETCHING_WITH_DATA,
     hasSyncFailed = displayState == PostDisplayState.FAILED_WITH_DATA
 )
-
-@StringRes
-internal fun PostStatus?.toLabel(): Int = when (this) {
-    is PostStatus.Publish ->
-        R.string.post_status_post_published
-    is PostStatus.Draft -> R.string.post_status_draft
-    is PostStatus.Pending ->
-        R.string.post_status_pending_review
-    is PostStatus.Private ->
-        R.string.post_status_post_private
-    is PostStatus.Future ->
-        R.string.post_status_post_scheduled
-    is PostStatus.Trash ->
-        R.string.post_status_post_trashed
-    is PostStatus.Any -> 0
-    is PostStatus.Custom -> 0
-    null -> 0
-}

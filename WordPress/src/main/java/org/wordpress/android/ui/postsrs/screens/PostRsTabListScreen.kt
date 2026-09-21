@@ -59,6 +59,7 @@ import org.wordpress.android.ui.postsrs.PostRsUiModel
 import org.wordpress.android.ui.postsrs.PostDisplayState
 import org.wordpress.android.ui.postsrs.PostTabUiState
 import org.wordpress.android.ui.postsrs.toContentListRowUiState
+import org.wordpress.android.ui.rs.contentlist.LegacyContentListPlaceholderRow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -279,7 +280,7 @@ private fun PostListContent(
 private fun ShimmerList(isRedesignEnabled: Boolean) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(SHIMMER_ITEM_COUNT) {
-            if (isRedesignEnabled) ContentListPlaceholderRow() else PlaceholderItem()
+            if (isRedesignEnabled) ContentListPlaceholderRow() else LegacyContentListPlaceholderRow()
         }
     }
 }
