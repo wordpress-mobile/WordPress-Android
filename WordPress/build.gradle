@@ -598,10 +598,17 @@ configurations.all {
 }
 
 
+def decryptedGoogleServicesJson = new File(gradle.ext.decryptedSecretsDir, "google-services.json")
 def googleServicesJson = [
-        new File(gradle.ext.decryptedSecretsDir, "google-services.json"),
+        decryptedGoogleServicesJson,
         file("google-services.json-example"),
 ].find { it.exists() }
+
+if (googleServicesJson == decryptedGoogleServicesJson) {
+    logger.lifecycle("Using the decrypted ${googleServicesJson.name}.")
+} else {
+    logger.warn("${decryptedGoogleServicesJson} not found. Using ${googleServicesJson.name}.")
+}
 
 // The `afterEvaluate` is load-bearing: AGP registers the task inside its own `afterEvaluate`, so a
 // rule added while this script is evaluated runs first and the plugin overwrites the property.
