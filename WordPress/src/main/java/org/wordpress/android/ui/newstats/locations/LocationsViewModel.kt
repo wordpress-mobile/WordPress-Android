@@ -121,7 +121,6 @@ class LocationsViewModel @Inject constructor(
             return
         }
 
-        statsRepository.init(accessToken)
         setCurrentTypeLoading()
 
         viewModelScope.launch {
@@ -134,7 +133,6 @@ class LocationsViewModel @Inject constructor(
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) return
 
-        statsRepository.init(accessToken)
         viewModelScope.launch {
             try {
                 _isRefreshing.value = true
@@ -176,7 +174,6 @@ class LocationsViewModel @Inject constructor(
             val site = selectedSiteRepository.getSelectedSite() ?: return
             val accessToken = accountStore.accessToken
             if (accessToken.isNullOrEmpty()) return
-            statsRepository.init(accessToken)
 
             setTypeLoading(type)
             viewModelScope.launch {

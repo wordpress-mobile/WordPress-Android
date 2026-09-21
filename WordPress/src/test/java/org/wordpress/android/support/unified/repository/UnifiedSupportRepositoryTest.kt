@@ -11,7 +11,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.support.unified.model.UnifiedConversation
 import org.wordpress.android.support.unified.model.UnifiedMessage
 import rs.wordpress.api.kotlin.WpComApiClient
@@ -32,23 +31,17 @@ class UnifiedSupportRepositoryTest : BaseUnitTest() {
     private lateinit var appLogWrapper: AppLogWrapper
 
     @Mock
-    private lateinit var wpComApiClientProvider: WpComApiClientProvider
-
-    @Mock
     private lateinit var wpComApiClient: WpComApiClient
 
     private lateinit var repository: UnifiedSupportRepository
 
-    private val testAccessToken = "test_access_token"
     private val testUserId = 12345L
 
     @Before
     fun setUp() = test {
-        whenever(wpComApiClientProvider.getWpComApiClient(testAccessToken)).thenReturn(wpComApiClient)
-
         repository = UnifiedSupportRepository(
             appLogWrapper = appLogWrapper,
-            wpComApiClientProvider = wpComApiClientProvider,
+            wpComApiClient = wpComApiClient,
             ioDispatcher = testDispatcher()
         )
     }
@@ -73,7 +66,7 @@ class UnifiedSupportRepositoryTest : BaseUnitTest() {
 
         val successResponse = WpRequestResult.Success(response = response)
 
-        repository.init(testAccessToken, testUserId)
+        repository.init(testUserId)
         whenever(wpComApiClient.request<SupportBotsRequestCreateBotConversationResponse>(any()))
             .thenReturn(successResponse)
 
@@ -103,7 +96,7 @@ class UnifiedSupportRepositoryTest : BaseUnitTest() {
             requestMethod = RequestMethod.GET
         )
 
-        repository.init(testAccessToken, testUserId)
+        repository.init(testUserId)
         whenever(wpComApiClient.request<Any>(any())).thenReturn(errorResponse)
 
         val result = repository.createNewBotConversation("Test message")

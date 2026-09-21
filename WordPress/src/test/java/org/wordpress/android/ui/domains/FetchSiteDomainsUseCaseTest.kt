@@ -11,8 +11,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.ui.domains.usecases.FetchSiteDomainsUseCase
 import org.wordpress.android.ui.domains.usecases.SiteDomainsResult
 import rs.wordpress.api.kotlin.WpComApiClient
@@ -24,12 +22,6 @@ import uniffi.wp_api.SiteDomainsResponse
 @RunWith(MockitoJUnitRunner::class)
 class FetchSiteDomainsUseCaseTest : BaseUnitTest() {
     @Mock
-    lateinit var wpComApiClientProvider: WpComApiClientProvider
-
-    @Mock
-    lateinit var accountStore: AccountStore
-
-    @Mock
     lateinit var wpComApiClient: WpComApiClient
 
     private lateinit var useCase: FetchSiteDomainsUseCase
@@ -38,10 +30,7 @@ class FetchSiteDomainsUseCaseTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        whenever(accountStore.accessToken).thenReturn("test-token")
-        whenever(wpComApiClientProvider.getWpComApiClient("test-token"))
-            .thenReturn(wpComApiClient)
-        useCase = FetchSiteDomainsUseCase(wpComApiClientProvider, accountStore)
+        useCase = FetchSiteDomainsUseCase(wpComApiClient)
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -95,24 +84,6 @@ class FetchSiteDomainsUseCaseTest : BaseUnitTest() {
                     RequestMethod.GET
                 )
             )
-
-        val result = useCase.execute(site)
-
-        assertThat(result).isInstanceOf(SiteDomainsResult.Error::class.java)
-    }
-
-    @Test
-    fun `given no access token, when execute, returns error`() = test {
-        whenever(accountStore.accessToken).thenReturn(null)
-
-        val result = useCase.execute(site)
-
-        assertThat(result).isInstanceOf(SiteDomainsResult.Error::class.java)
-    }
-
-    @Test
-    fun `given a blank access token, when execute, returns error`() = test {
-        whenever(accountStore.accessToken).thenReturn("")
 
         val result = useCase.execute(site)
 

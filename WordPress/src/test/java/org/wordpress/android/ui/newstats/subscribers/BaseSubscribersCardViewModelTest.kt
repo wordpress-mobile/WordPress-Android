@@ -7,9 +7,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.eq
 import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
@@ -204,21 +202,6 @@ class BaseSubscribersCardViewModelTest : BaseUnitTest() {
 
             assertThat(viewModel.isRefreshing.value).isFalse()
             assertThat(viewModel.loadCount).isEqualTo(2)
-        }
-
-    @Test
-    fun `when refresh is called then statsRepository init is called`() =
-        test {
-            createViewModel()
-            viewModel.loadData()
-            advanceUntilIdle()
-
-            viewModel.refresh()
-            advanceUntilIdle()
-
-            // Once from loadData, once from refresh
-            verify(statsRepository, times(2))
-                .init(eq(TEST_ACCESS_TOKEN))
         }
 
     @Test
