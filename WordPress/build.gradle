@@ -598,16 +598,10 @@ configurations.all {
 }
 
 
-def checkoutGoogleServicesJson = file("google-services.json")
 def googleServicesJson = [
         new File(gradle.ext.decryptedSecretsDir, "google-services.json"),
-        checkoutGoogleServicesJson,
         file("google-services.json-example"),
 ].find { it.exists() }
-
-if (checkoutGoogleServicesJson.exists() && googleServicesJson != checkoutGoogleServicesJson) {
-    logger.warn("Ignoring the ${checkoutGoogleServicesJson.name} left in the checkout by earlier builds; delete it.")
-}
 
 // The `afterEvaluate` is load-bearing: AGP registers the task inside its own `afterEvaluate`, so a
 // rule added while this script is evaluated runs first and the plugin overwrites the property.
