@@ -4,17 +4,13 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
+import org.wordpress.android.ui.rs.contentlist.ContentItemUiModel
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListRowUiState
-import org.wordpress.android.ui.rs.RsDateFormatter
 import org.wordpress.android.ui.rs.contentlist.RsMenuAction
-import org.wordpress.android.ui.rs.toLabel
-import org.wordpress.android.util.DateTimeUtils
-import org.wordpress.android.util.HtmlUtils
-import uniffi.wp_api.AnyPostWithEditContext
-import uniffi.wp_api.PostStatus
-import uniffi.wp_mobile.FullEntityAnyPostWithEditContext
-import uniffi.wp_mobile.PostItemState
+
+/** A page as the rs list renders it, carrying the pages menu's own actions. */
+internal typealias PageRsUiModel = ContentItemUiModel<PageRsMenuAction>
 
 /** A destructive or status-changing action awaiting user confirmation in a dialog. */
 internal sealed interface PageRsListConfirmation {
@@ -46,13 +42,13 @@ internal data class PageRsParentCandidate(
 internal sealed interface PageRsListItem {
     val page: PageRsUiModel
     val stableKey: String
-    val remotePageId: Long get() = page.remotePageId
+    val remotePageId: Long get() = page.remoteId
 
     data class Real(
         override val page: PageRsUiModel,
         val indentLevel: Int = 0
     ) : PageRsListItem {
-        override val stableKey: String get() = "real:${page.remotePageId}"
+        override val stableKey: String get() = "real:${page.remoteId}"
     }
 
     data class Virtual(
@@ -68,7 +64,7 @@ internal sealed interface PageRsListItem {
 }
 
 /**
- * Sentinel [PageRsUiModel.remotePageId] for the synthetic SITE_EDITOR virtual row, which has no real
+ * Sentinel [PageRsListItem.remotePageId] for the synthetic SITE_EDITOR virtual row, which has no real
  * page behind it. Real remote page ids are always positive, so a negative value can't collide.
  */
 internal const val SITE_EDITOR_PAGE_ID = -1L
@@ -83,33 +79,6 @@ internal const val SITE_EDITOR_PAGE_ID = -1L
  */
 internal val List<PageRsListItem>.hasRealPages: Boolean
     get() = any { it.remotePageId != SITE_EDITOR_PAGE_ID }
-
-internal data class PageRsUiModel(
-    val remotePageId: Long,
-    val parentId: Long = 0L,
-    val title: String,
-    val excerpt: String,
-    val date: String,
-    val lastModified: String = "",
-    val link: String = "",
-    val hasPassword: Boolean = false,
-    val status: PostStatus? = null,
-    @StringRes val statusLabelResId: Int = 0,
-    val authorId: Long = 0L,
-    val authorDisplayName: String? = null,
-    val featuredImageId: Long = 0L,
-    val featuredImageUrl: String? = null,
-    /** True when the media lookup answered without a URL, so the row should stop waiting for one. */
-    val isFeaturedImageUnresolvable: Boolean = false,
-    /** All-time views, or null when stats are unavailable or not fetched yet. */
-    val viewCount: Long? = null,
-    /** True while this row's view count is expected but has not arrived, so it shows a skeleton. */
-    val areMetricsPending: Boolean = false,
-    val isTrashed: Boolean = false,
-    val actions: List<PageRsMenuAction> = emptyList(),
-    val badges: List<Int> = emptyList(),
-    val displayState: ContentDisplayState = ContentDisplayState.NORMAL
-)
 
 internal enum class PageRsMenuAction(
     @StringRes override val labelResId: Int,
@@ -134,77 +103,6 @@ internal enum class PageRsMenuAction(
     ),
 }
 
-internal fun PostItemState.toPageUiModel(
-    pageId: Long,
-    nowLabel: String,
-    showStatus: Boolean = false
-): PageRsUiModel = when (this) {
-    is PostItemState.Fresh -> data.toPageUiModel(showStatus, nowLabel)
-    is PostItemState.Stale -> data.toPageUiModel(showStatus, nowLabel)
-    is PostItemState.FetchingWithData ->
-        data.toPageUiModel(showStatus, nowLabel, ContentDisplayState.FETCHING_WITH_DATA)
-    is PostItemState.FailedWithData ->
-        data.toPageUiModel(showStatus, nowLabel, ContentDisplayState.FAILED_WITH_DATA)
-    is PostItemState.Missing,
-    is PostItemState.Fetching -> PageRsUiModel(
-        remotePageId = pageId,
-        title = "",
-        excerpt = "",
-        date = "",
-        displayState = ContentDisplayState.PLACEHOLDER
-    )
-    is PostItemState.Failed -> PageRsUiModel(
-        remotePageId = pageId,
-        title = "",
-        excerpt = "",
-        date = "",
-        displayState = ContentDisplayState.ERROR
-    )
-}
-
-private fun FullEntityAnyPostWithEditContext.toPageUiModel(
-    showStatus: Boolean,
-    nowLabel: String,
-    displayState: ContentDisplayState = ContentDisplayState.NORMAL
-): PageRsUiModel {
-    val page: AnyPostWithEditContext = data
-    return PageRsUiModel(
-        remotePageId = page.id,
-        parentId = page.parent ?: 0L,
-        title = page.title?.raw?.takeIf { it.isNotBlank() }
-            ?: page.title?.rendered
-            ?: "",
-        excerpt = (
-            page.excerpt?.raw?.takeIf { it.isNotBlank() }
-                ?: page.excerpt?.rendered
-                ?: ""
-            ).let { HtmlUtils.fastStripHtml(it).trim() },
-        date = RsDateFormatter.format(page.dateGmt, nowLabel, isScheduled = page.status is PostStatus.Future),
-        lastModified = DateTimeUtils.iso8601UTCFromDate(page.modifiedGmt),
-        link = page.link,
-        hasPassword = !page.password.isNullOrEmpty(),
-        status = page.status,
-        statusLabelResId = if (showStatus) page.status.toLabel() else 0,
-        authorId = page.author ?: 0L,
-        featuredImageId = page.featuredMedia ?: 0L,
-        isTrashed = page.status is PostStatus.Trash,
-        badges = buildList {
-            if (page.status is PostStatus.Private) {
-                add(R.string.post_status_post_private)
-            }
-            if (page.status is PostStatus.Pending) {
-                add(R.string.post_status_pending_review)
-            }
-        },
-        displayState = displayState
-    )
-}
-
-/**
- * The label the Homepage and Posts page rows carry.
- *
- * SITE_EDITOR renders its own title from string resources, so it never shows this alongside one.
- */
 @StringRes
 internal fun PageRsListItem.Virtual.Kind.labelResId(): Int = when (this) {
     PageRsListItem.Virtual.Kind.HOMEPAGE -> R.string.site_settings_homepage
@@ -233,7 +131,7 @@ internal fun PageRsListItem.toContentListRowUiState(
     val kind = (this as? PageRsListItem.Virtual)?.kind
     val isSiteEditor = kind == PageRsListItem.Virtual.Kind.SITE_EDITOR
     return ContentListRowUiState(
-        id = page.remotePageId,
+        id = page.remoteId,
         title = if (isSiteEditor) siteEditorTitle else page.title,
         excerpt = if (isSiteEditor) siteEditorSubtitle else page.excerpt,
         dateLabel = page.date,

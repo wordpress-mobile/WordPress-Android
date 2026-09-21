@@ -20,6 +20,8 @@ import androidx.compose.runtime.rememberUpdatedState
 import kotlinx.coroutines.FlowPreview
 import androidx.compose.ui.Modifier
 import org.wordpress.android.R
+import org.wordpress.android.ui.postsrs.PostRsMenuAction
+import org.wordpress.android.ui.postsrs.PostRsUiModel
 import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.contentlist.ContentDateGroup
 import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
@@ -34,8 +36,6 @@ import org.wordpress.android.ui.rs.contentlist.ContentListHeroRow
 import org.wordpress.android.ui.rs.contentlist.ContentListPlaceholderRow
 import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
 import org.wordpress.android.ui.rs.contentlist.ContentListRow
-import org.wordpress.android.ui.postsrs.PostRsMenuAction
-import org.wordpress.android.ui.postsrs.PostRsUiModel
 import org.wordpress.android.ui.postsrs.toContentListRowUiState
 import org.wordpress.android.ui.rs.contentlist.LegacyContentListPlaceholderRow
 import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
@@ -177,9 +177,9 @@ private fun PostListContent(
                         // The pre-redesign row still owns the error presentation.
                         PostRsListItem(
                             post = entry.post,
-                            onClick = { onPostClick(entry.post.remotePostId) },
+                            onClick = { onPostClick(entry.post.remoteId) },
                             onMenuAction = { action ->
-                                onPostMenuAction(entry.post.remotePostId, action)
+                                onPostMenuAction(entry.post.remoteId, action)
                             },
                             modifier = Modifier.animateItem()
                         )
@@ -248,8 +248,8 @@ private sealed interface PostListEntry {
     }
 
     data class Row(val post: PostRsUiModel, val isHero: Boolean) : PostListEntry {
-        override val key get() = post.remotePostId
-        override val postId get() = post.remotePostId
+        override val key get() = post.remoteId
+        override val postId get() = post.remoteId
     }
 
     /**
@@ -257,8 +257,8 @@ private sealed interface PostListEntry {
      * the post's own [PostRsUiModel.displayState] at render time.
      */
     data class NonContent(val post: PostRsUiModel) : PostListEntry {
-        override val key get() = post.remotePostId
-        override val postId get() = post.remotePostId
+        override val key get() = post.remoteId
+        override val postId get() = post.remoteId
     }
 }
 
@@ -312,14 +312,14 @@ private fun RedesignedRow(
 ) {
     val post = entry.post
     val state = post.toContentListRowUiState()
-    val onClick = { onPostClick(post.remotePostId) }
+    val onClick = { onPostClick(post.remoteId) }
     val menu: (@Composable () -> Unit)? = if (post.actions.isEmpty()) {
         null
     } else {
         {
             ContentListOverflowMenu(
                 actions = post.actions.toContentListMenuActions { action ->
-                    onPostMenuAction(post.remotePostId, action)
+                    onPostMenuAction(post.remoteId, action)
                 }
             )
         }

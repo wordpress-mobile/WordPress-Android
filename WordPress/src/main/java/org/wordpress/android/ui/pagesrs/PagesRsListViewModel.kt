@@ -51,6 +51,7 @@ import org.wordpress.android.ui.rs.RsSnackbarMessage
 import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.RsViewCounts
 import org.wordpress.android.ui.rs.RsVisibleRows
+import org.wordpress.android.ui.rs.contentlist.toContentItemUiModel
 import org.wordpress.android.ui.rs.data.RsSiteRestClient
 import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -838,7 +839,7 @@ internal class PagesRsListViewModel @Inject constructor(
         // reached through a draft intermediate must still be excluded to prevent a cycle.
         val allPages = _tabStates.value.values
             .flatMap { state -> state.items.map { it.page } }
-            .distinctBy { it.remotePageId }
+            .distinctBy { it.remoteId }
         parentPickerExcludedIds = collectDescendantIds(remotePageId, allPages) + remotePageId
         _parentPickerQuery.value = ""
         _parentPicker.value = PageRsParentPickerState(
@@ -919,12 +920,14 @@ internal class PagesRsListViewModel @Inject constructor(
         try {
             val nowLabel = resourceProvider.getString(R.string.rs_date_now)
             val (items, listInfo) = withContext(Dispatchers.IO) {
-                collection.loadItems().map { it.state.toPageUiModel(it.id, nowLabel) } to collection.listInfo()
+                val candidates = collection.loadItems()
+                    .map { it.state.toContentItemUiModel<PageRsMenuAction>(it.id, nowLabel) }
+                candidates to collection.listInfo()
             }
             val candidates = items
-                .filter { it.remotePageId !in parentPickerExcludedIds }
+                .filter { it.remoteId !in parentPickerExcludedIds }
                 .filter { it.status is PostStatus.Publish || it.status is PostStatus.Private }
-                .map { PageRsParentCandidate(it.remotePageId, it.title) }
+                .map { PageRsParentCandidate(it.remoteId, it.title) }
             // Don't publish an empty result while a load is still in progress: loadItems() emits
             // transient empty/partial sets during a refresh (and once before it starts), and
             // flipping to the "no results" / spinner state on each of those makes the list blink.
@@ -1060,7 +1063,7 @@ internal class PagesRsListViewModel @Inject constructor(
         while (queue.isNotEmpty()) {
             val parentId = queue.removeFirst()
             childrenByParent[parentId]?.forEach { child ->
-                if (descendants.add(child.remotePageId)) queue.addLast(child.remotePageId)
+                if (descendants.add(child.remoteId)) queue.addLast(child.remoteId)
             }
         }
         return descendants
@@ -1351,7 +1354,7 @@ internal class PagesRsListViewModel @Inject constructor(
             val nowLabel = resourceProvider.getString(R.string.rs_date_now)
             val items = withContext(Dispatchers.IO) {
                 collection.loadItems().map { item ->
-                    item.state.toPageUiModel(item.id, nowLabel, showStatus = isSearch)
+                    item.state.toContentItemUiModel<PageRsMenuAction>(item.id, nowLabel, showStatus = isSearch)
                 }
             }
             val uiModels = mergeCachedFields(tab, items, isSearch)
@@ -1402,7 +1405,7 @@ internal class PagesRsListViewModel @Inject constructor(
         val existingById = getTabUiState(tab).items
             .associate { it.remotePageId to it.page }
         return items.map { model ->
-            val existing = existingById[model.remotePageId]
+            val existing = existingById[model.remoteId]
             var resolved = model
             if (model.authorId != 0L && model.authorId == existing?.authorId) {
                 resolved = resolved.copy(authorDisplayName = existing.authorDisplayName)
@@ -1414,12 +1417,12 @@ internal class PagesRsListViewModel @Inject constructor(
                 isFeaturedImageUnresolvable = model.featuredImageId in unresolvableImageIds,
                 // Read straight from the metrics cache: rebuilding from the collection would
                 // otherwise blank out numbers already fetched on every change it reports.
-                viewCount = viewCounts.countFor(model.remotePageId),
+                viewCount = viewCounts.countFor(model.remoteId),
                 // Search mixes statuses into one list and view counts are only fetched for
                 // published pages, so skeletons there would never resolve.
                 areMetricsPending = expectsMetrics(tab) &&
                     !isSearch &&
-                    isMetricOutstanding(model.remotePageId)
+                    isMetricOutstanding(model.remoteId)
             )
         }
     }
@@ -1618,8 +1621,8 @@ internal class PagesRsListViewModel @Inject constructor(
         } else {
             computePageMenuActions(
                 status = page.status,
-                isHomepage = pageOnFront != 0L && page.remotePageId == pageOnFront,
-                isPostsPage = pageForPosts != 0L && page.remotePageId == pageForPosts,
+                isHomepage = pageOnFront != 0L && page.remoteId == pageOnFront,
+                isPostsPage = pageForPosts != 0L && page.remoteId == pageForPosts,
                 hasPassword = page.hasPassword,
                 isBlazeEligibleSite = site != null && blazeFeatureUtils.isSiteBlazeEligible(site),
                 canManageHomepage = canManageHomepage

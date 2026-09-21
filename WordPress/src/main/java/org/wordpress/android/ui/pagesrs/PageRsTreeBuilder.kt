@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.pagesrs
 
+import org.wordpress.android.ui.rs.contentlist.ContentItemUiModel
+
 internal const val MAX_INDENT_LEVEL = 3
 
 /**
@@ -27,11 +29,11 @@ internal fun buildRows(
     if (!applyHierarchy) {
         return pages.map { PageRsListItem.Real(it) }
     }
-    val byId = pages.associateBy { it.remotePageId }
+    val byId = pages.associateBy { it.remoteId }
     val homepage = pageOnFront.takeIf { it != 0L }?.let { byId[it] }
     val postsPage = pageForPosts.takeIf { it != 0L }?.let { byId[it] }
-    val hiddenIds = setOfNotNull(homepage?.remotePageId, postsPage?.remotePageId)
-    val visible = pages.filterNot { it.remotePageId in hiddenIds }
+    val hiddenIds = setOfNotNull(homepage?.remoteId, postsPage?.remoteId)
+    val visible = pages.filterNot { it.remoteId in hiddenIds }
     val tree = flattenToTree(visible)
     return buildList {
         if (showSiteEditorHomepage) {
@@ -50,8 +52,8 @@ internal fun buildRows(
  */
 private fun siteEditorHomepageRow() = PageRsListItem.Virtual(
     kind = PageRsListItem.Virtual.Kind.SITE_EDITOR,
-    page = PageRsUiModel(
-        remotePageId = SITE_EDITOR_PAGE_ID,
+    page = ContentItemUiModel(
+        remoteId = SITE_EDITOR_PAGE_ID,
         title = "",
         excerpt = "",
         date = ""
@@ -59,7 +61,7 @@ private fun siteEditorHomepageRow() = PageRsListItem.Virtual(
 )
 
 internal fun flattenToTree(pages: List<PageRsUiModel>): List<PageRsListItem.Real> {
-    val byId = pages.associateBy { it.remotePageId }
+    val byId = pages.associateBy { it.remoteId }
     val childrenByParent = pages
         .filter { it.parentId != 0L && it.parentId in byId }
         .groupBy { it.parentId }
@@ -71,15 +73,15 @@ internal fun flattenToTree(pages: List<PageRsUiModel>): List<PageRsListItem.Real
     roots.asReversed().forEach { stack.addLast(it to 0) }
     while (stack.isNotEmpty()) {
         val (page, depth) = stack.removeLast()
-        if (!visited.add(page.remotePageId)) continue
+        if (!visited.add(page.remoteId)) continue
         result.add(PageRsListItem.Real(page, minOf(depth, MAX_INDENT_LEVEL)))
-        childrenByParent[page.remotePageId]?.asReversed()?.forEach { child ->
+        childrenByParent[page.remoteId]?.asReversed()?.forEach { child ->
             stack.addLast(child to depth + 1)
         }
     }
     // Pages caught in a parent cycle (self-parented, or in a loop of parent references) are
     // unreachable from any root; append them as flat rows so corrupt data can't drop pages.
-    pages.filterNot { it.remotePageId in visited }
+    pages.filterNot { it.remoteId in visited }
         .mapTo(result) { PageRsListItem.Real(it) }
     return result
 }
