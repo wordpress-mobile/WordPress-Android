@@ -4,6 +4,8 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.postsrs.toLabel
+import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.rs.contentlist.ContentListRowUiState
 import org.wordpress.android.ui.rs.RsDateFormatter
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
@@ -125,6 +127,12 @@ internal data class PageRsUiModel(
     val authorDisplayName: String? = null,
     val featuredImageId: Long = 0L,
     val featuredImageUrl: String? = null,
+    /** True when the media lookup answered without a URL, so the row should stop waiting for one. */
+    val isFeaturedImageUnresolvable: Boolean = false,
+    /** All-time views, or null when stats are unavailable or not fetched yet. */
+    val viewCount: Long? = null,
+    /** True while this row's view count is expected but has not arrived, so it shows a skeleton. */
+    val areMetricsPending: Boolean = false,
     val isTrashed: Boolean = false,
     val actions: List<PageRsMenuAction> = emptyList(),
     val badges: List<Int> = emptyList(),
@@ -219,3 +227,75 @@ private fun FullEntityAnyPostWithEditContext.toPageUiModel(
         displayState = displayState
     )
 }
+
+/**
+ * The label the Homepage and Posts page rows carry.
+ *
+ * SITE_EDITOR renders its own title from string resources, so it never shows this alongside one.
+ */
+@StringRes
+internal fun PageRsListItem.Virtual.Kind.labelResId(): Int = when (this) {
+    PageRsListItem.Virtual.Kind.HOMEPAGE -> R.string.site_settings_homepage
+    PageRsListItem.Virtual.Kind.POSTS_PAGE -> R.string.site_settings_posts_page
+    PageRsListItem.Virtual.Kind.SITE_EDITOR -> R.string.virtual_homepage_title
+}
+
+/** Replaces the row's page, keeping whichever kind of row it is. */
+internal fun PageRsListItem.withPage(page: PageRsUiModel): PageRsListItem = when (this) {
+    is PageRsListItem.Real -> copy(page = page)
+    is PageRsListItem.Virtual -> copy(page = page)
+}
+
+/**
+ * Projects a row onto the shared model the redesigned list renders.
+ *
+ * The SITE_EDITOR row has no backing page, so its text comes from the caller's already-resolved
+ * strings. Everything the pre-redesign row spelled out in its own coloured header line - the
+ * Homepage / Posts page label, and the status shown while searching - rides along as a badge
+ * instead, which is where the redesigned card puts short qualifiers.
+ */
+internal fun PageRsListItem.toContentListRowUiState(
+    siteEditorTitle: String,
+    siteEditorSubtitle: String
+): ContentListRowUiState {
+    val kind = (this as? PageRsListItem.Virtual)?.kind
+    val isSiteEditor = kind == PageRsListItem.Virtual.Kind.SITE_EDITOR
+    return ContentListRowUiState(
+        id = page.remotePageId,
+        title = if (isSiteEditor) siteEditorTitle else page.title,
+        excerpt = if (isSiteEditor) siteEditorSubtitle else page.excerpt,
+        dateLabel = page.date,
+        imageUrl = page.featuredImageUrl,
+        isImagePending = page.featuredImageId != 0L &&
+            page.featuredImageUrl == null &&
+            !page.isFeaturedImageUnresolvable,
+        viewCount = page.viewCount,
+        areMetricsPending = page.areMetricsPending,
+        badges = buildList {
+            if (kind != null && !isSiteEditor) add(kind.labelResId())
+            page.statusLabelResId.takeIf { it != 0 }?.let { add(it) }
+            addAll(page.badges)
+        },
+        isSyncing = page.displayState == PageRsDisplayState.FETCHING_WITH_DATA,
+        hasSyncFailed = page.displayState == PageRsDisplayState.FAILED_WITH_DATA
+    )
+}
+
+/**
+ * Whether the row is drawn image-led rather than compact.
+ *
+ * Top-level rows only. The published tab is a tree, and an indented full-width image reads as a
+ * broken card rather than a lead item; virtual rows are excluded by the same token, since they are
+ * a fixed block at the top of the list carrying a leading icon.
+ *
+ * Keyed off the featured image *id*, which is present as soon as the page loads, rather than the
+ * resolved URL, which arrives a network call later - keying off the URL would pop rows from compact
+ * to hero as their images resolved. A page whose media could not be resolved falls back to the
+ * compact shape, since an image-led card with no image is just a compact card with wrong padding.
+ */
+internal fun PageRsListItem.isHeroRow(density: ContentListDensity): Boolean =
+    this is PageRsListItem.Real &&
+        indentLevel == 0 &&
+        !density.isCondensed &&
+        page.featuredImageId != 0L &&
+        !page.isFeaturedImageUnresolvable

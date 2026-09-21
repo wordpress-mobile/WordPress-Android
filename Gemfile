@@ -3,12 +3,12 @@
 source 'https://rubygems.org'
 
 gem 'danger-dangermattic', '~> 1.4'
-gem 'fastlane', '~> 2.239'
+gem 'fastlane', '~> 2.240'
 
 ### Fastlane Plugins
 
 gem 'fastlane-plugin-firebase_app_distribution', '~> 1.0'
-gem 'fastlane-plugin-sentry', '~> 2.6'
+gem 'fastlane-plugin-sentry', '~> 2.7'
 gem 'fastlane-plugin-wpmreleasetoolkit', '~> 15.0.0'
 # gem 'fastlane-plugin-wpmreleasetoolkit', path: '../../release-toolkit'
 # gem 'fastlane-plugin-wpmreleasetoolkit', git: 'https://github.com/wordpress-mobile/release-toolkit', branch: ''

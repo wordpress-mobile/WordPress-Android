@@ -20,7 +20,8 @@ plugins {
 gradle.ext {
     isCi = System.getenv('CI')?.toBoolean() ?: false
 
-    secretPath = "${System.getProperty("user.home")}/.configure/wordpress-android/secrets/secrets.properties"
+    decryptedSecretsDir = file("${System.getProperty("user.home")}/.configure/wordpress-android/secrets")
+    secretPath = new File(decryptedSecretsDir, "secrets.properties").path
     secretProperties = loadSecrets(
             logger,
             file("${rootDir}/defaults.properties"),

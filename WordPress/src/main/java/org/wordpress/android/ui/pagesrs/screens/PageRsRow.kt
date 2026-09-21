@@ -51,6 +51,7 @@ import org.wordpress.android.ui.pagesrs.PageRsDisplayState
 import org.wordpress.android.ui.pagesrs.PageRsListItem
 import org.wordpress.android.ui.pagesrs.PageRsMenuAction
 import org.wordpress.android.ui.pagesrs.PageRsUiModel
+import org.wordpress.android.ui.pagesrs.labelResId
 import org.wordpress.android.ui.postsrs.screens.PlaceholderItem
 
 @Composable
@@ -268,7 +269,7 @@ private fun BadgeRow(badges: List<Int>, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun ErrorItem(modifier: Modifier = Modifier) {
+internal fun ErrorItem(modifier: Modifier = Modifier) {
     Card(
         modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
@@ -314,17 +315,10 @@ private fun pageRowText(
     return PageRowText(title, subtitle, headerLabel)
 }
 
-private fun PageRsListItem.Virtual.Kind.icon(): ImageVector = when (this) {
+internal fun PageRsListItem.Virtual.Kind.icon(): ImageVector = when (this) {
     PageRsListItem.Virtual.Kind.HOMEPAGE,
     PageRsListItem.Virtual.Kind.SITE_EDITOR -> Icons.Filled.Home
     PageRsListItem.Virtual.Kind.POSTS_PAGE -> Icons.AutoMirrored.Filled.Article
-}
-
-// SITE_EDITOR renders its own title from string resources and has no header label.
-private fun PageRsListItem.Virtual.Kind.labelResId(): Int = when (this) {
-    PageRsListItem.Virtual.Kind.HOMEPAGE -> R.string.site_settings_homepage
-    PageRsListItem.Virtual.Kind.POSTS_PAGE -> R.string.site_settings_posts_page
-    PageRsListItem.Virtual.Kind.SITE_EDITOR -> R.string.virtual_homepage_title
 }
 
 private const val INDENT_STEP_DP = 16
