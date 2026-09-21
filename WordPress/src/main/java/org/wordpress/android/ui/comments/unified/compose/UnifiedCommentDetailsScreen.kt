@@ -54,7 +54,7 @@ import org.wordpress.android.ui.suggestion.Suggestion
 /**
  * The unified (wordpress-rs) comment detail screen: comment content in a weighted scrollable
  * region so the action footer and reply box stay pinned to the bottom while loading, plus the
- * trash/delete confirmation dialogs and the full-screen reply editor.
+ * trash/delete confirmation dialogs and the reply editor.
  */
 @Composable
 @Suppress("LongParameterList")
@@ -72,14 +72,14 @@ fun UnifiedCommentDetailsScreen(
 ) {
     var showTrashConfirm by rememberSaveable { mutableStateOf(false) }
     var showDeleteConfirm by rememberSaveable { mutableStateOf(false) }
-    var showFullScreenReply by rememberSaveable { mutableStateOf(false) }
+    var showReplyEditor by rememberSaveable { mutableStateOf(false) }
 
     // Opened from a notification's reply action. The redesign has no pinned field to focus, so
-    // "start replying" means opening the reply screen. The host recomputes
+    // "start replying" means opening the reply sheet. The host recomputes
     // focusReplyFieldOnLaunch as false after a config change, so this does not fire again on
     // rotation or re-open a screen the user dismissed.
     LaunchedEffect(Unit) {
-        if (isRedesignEnabled && focusReplyFieldOnLaunch) showFullScreenReply = true
+        if (isRedesignEnabled && focusReplyFieldOnLaunch) showReplyEditor = true
     }
 
     val replyHint = if (uiState.authorName.isNotBlank()) {
@@ -107,7 +107,7 @@ fun UnifiedCommentDetailsScreen(
                                 uiState = uiState,
                                 showLikeButton = showLikeButton,
                                 actions = actions,
-                                onReplyClick = { showFullScreenReply = true },
+                                onReplyClick = { showReplyEditor = true },
                                 modifier = Modifier.fillMaxSize()
                             )
                         } else {
@@ -170,7 +170,7 @@ fun UnifiedCommentDetailsScreen(
                         isReplyInProgress = uiState.isReplyInProgress,
                         focusOnLaunch = focusReplyFieldOnLaunch,
                         onSendClick = { actions.onSendReply(replyText.text) },
-                        onExpandClick = { showFullScreenReply = true }
+                        onExpandClick = { showReplyEditor = true }
                     )
                 }
             }
@@ -204,20 +204,36 @@ fun UnifiedCommentDetailsScreen(
         )
     }
 
-    if (showFullScreenReply) {
-        FullScreenReplyDialog(
-            replyText = replyText,
-            onReplyTextChange = onReplyTextChange,
-            suggestions = suggestions,
-            hint = replyHint,
-            isReplyInProgress = uiState.isReplyInProgress,
-            onSendClick = {
-                showFullScreenReply = false
-                actions.onSendReply(replyText.text)
-            },
-            onCollapseClick = { showFullScreenReply = false },
-            isStandalone = isRedesignEnabled
-        )
+    if (showReplyEditor) {
+        // The redesign replies in a bottom sheet, which keeps the comment being answered visible
+        // behind it; the pre-redesign box expands to the full-screen editor as before.
+        if (isRedesignEnabled) {
+            CommentReplySheet(
+                replyText = replyText,
+                onReplyTextChange = onReplyTextChange,
+                suggestions = suggestions,
+                hint = replyHint,
+                isReplyInProgress = uiState.isReplyInProgress,
+                onSendClick = {
+                    showReplyEditor = false
+                    actions.onSendReply(replyText.text)
+                },
+                onDismiss = { showReplyEditor = false }
+            )
+        } else {
+            FullScreenReplyDialog(
+                replyText = replyText,
+                onReplyTextChange = onReplyTextChange,
+                suggestions = suggestions,
+                hint = replyHint,
+                isReplyInProgress = uiState.isReplyInProgress,
+                onSendClick = {
+                    showReplyEditor = false
+                    actions.onSendReply(replyText.text)
+                },
+                onCollapseClick = { showReplyEditor = false }
+            )
+        }
     }
 }
 

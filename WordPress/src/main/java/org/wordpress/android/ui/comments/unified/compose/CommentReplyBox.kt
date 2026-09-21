@@ -5,27 +5,29 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -143,8 +145,7 @@ fun FullScreenReplyDialog(
     hint: String,
     isReplyInProgress: Boolean,
     onSendClick: () -> Unit,
-    onCollapseClick: () -> Unit,
-    isStandalone: Boolean = false
+    onCollapseClick: () -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
     var isReplyFieldFocused by remember { mutableStateOf(false) }
@@ -156,24 +157,13 @@ fun FullScreenReplyDialog(
         Surface(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
                 TopAppBar(
-                    // Opened from the redesigned detail's Reply action this is a screen in its own
-                    // right, not an expanded panel, so it closes rather than collapsing back.
-                    title = {
-                        Text(stringResource(if (isStandalone) R.string.reply else R.string.comment))
-                    },
+                    title = { Text(stringResource(R.string.comment)) },
                     navigationIcon = {
                         IconButton(onClick = onCollapseClick) {
-                            if (isStandalone) {
-                                Icon(
-                                    imageVector = Icons.Default.Close,
-                                    contentDescription = stringResource(R.string.close)
-                                )
-                            } else {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_chevron_down_white_24dp),
-                                    contentDescription = stringResource(R.string.description_collapse)
-                                )
-                            }
+                            Icon(
+                                painter = painterResource(R.drawable.ic_chevron_down_white_24dp),
+                                contentDescription = stringResource(R.string.description_collapse)
+                            )
                         }
                     },
                     actions = {
@@ -331,3 +321,92 @@ internal fun applyMentionSuggestion(
     val newText = value.text.replaceRange(token.start, value.selection.end, replacement)
     return value.copy(text = newText, selection = TextRange(token.start + replacement.length))
 }
+
+/**
+ * The redesigned detail's reply editor, presented as a modal bottom sheet from the Reply action
+ * under the comment.
+ *
+ * A sheet rather than a full screen because a reply is a short, contextual act: the comment being
+ * answered stays visible behind it, which a full-screen editor hides. Send lives in the sheet's
+ * own header so it is reachable without dismissing the keyboard.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+@Suppress("LongParameterList")
+fun CommentReplySheet(
+    replyText: TextFieldValue,
+    onReplyTextChange: (TextFieldValue) -> Unit,
+    suggestions: List<Suggestion>,
+    hint: String,
+    isReplyInProgress: Boolean,
+    onSendClick: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val focusRequester = remember { FocusRequester() }
+    var isReplyFieldFocused by remember { mutableStateOf(false) }
+    val canSend = replyText.text.isNotBlank() && !isReplyInProgress
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+        // The sheet hosts a text field, so it has to ride above the keyboard rather than sit
+        // behind it; the inset is applied to the content below instead.
+        contentWindowInsets = { WindowInsets(0) }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .imePadding()
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = SHEET_H_PADDING, end = SHEET_ACTION_PADDING)
+            ) {
+                Text(
+                    text = stringResource(R.string.reply),
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.weight(1f)
+                )
+                if (isReplyInProgress) {
+                    CircularProgressIndicator(
+                        strokeWidth = SHEET_PROGRESS_STROKE,
+                        modifier = Modifier.size(SHEET_PROGRESS_SIZE)
+                    )
+                } else {
+                    TextButton(onClick = onSendClick, enabled = canSend) {
+                        Text(stringResource(R.string.send))
+                    }
+                }
+            }
+            ReplyTextField(
+                replyText = replyText,
+                onReplyTextChange = onReplyTextChange,
+                hint = hint,
+                enabled = !isReplyInProgress,
+                singleLineHeight = false,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = SHEET_FIELD_MIN_HEIGHT)
+                    .focusRequester(focusRequester)
+                    .onFocusChanged { isReplyFieldFocused = it.isFocused }
+            )
+            if (isReplyFieldFocused) {
+                MentionSuggestionPanel(replyText, suggestions, onReplyTextChange)
+            }
+        }
+    }
+
+    // Opening the sheet is an explicit request to type, so raise the keyboard with it.
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+}
+
+private val SHEET_H_PADDING = 16.dp
+private val SHEET_ACTION_PADDING = 8.dp
+private val SHEET_FIELD_MIN_HEIGHT = 120.dp
+private val SHEET_PROGRESS_SIZE = 20.dp
+private val SHEET_PROGRESS_STROKE = 2.dp
