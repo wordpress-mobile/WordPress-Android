@@ -8,6 +8,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -112,8 +113,16 @@ class PostRsListViewModel @Inject constructor(
      */
     private val metricJobs = mutableSetOf<Job>()
 
-    /** The rows on screen right now, so work queued for rows scrolled past can be dropped. */
-    private var visiblePostIds = emptySet<Long>()
+    /**
+     * The rows on screen right now, per tab, so work queued for rows scrolled past can be dropped.
+     *
+     * Keyed by tab rather than held as one set: the pager composes the neighbouring tab during a
+     * drag, and its visible-row stream reports against that tab. A single field would be
+     * overwritten by the neighbour, stranding the active tab's queued fetches - they re-check this
+     * set once a permit frees and would find the wrong ids - and would later hand
+     * [retryMetricsForVisibleRows] another tab's ids after a refresh.
+     */
+    private val visiblePostIds = mutableMapOf<PostRsListTab, Set<Long>>()
 
     /**
      * Caps concurrent view-count requests across the whole screen.
@@ -801,7 +810,7 @@ class PostRsListViewModel @Inject constructor(
         // the live set would throw ConcurrentModificationException as soon as a non-last job did.
         metricJobs.toList().forEach { it.cancel() }
         metricJobs.clear()
-        visiblePostIds = emptySet()
+        visiblePostIds.clear()
         viewCountCache.clear()
         commentCountCache.clear()
         unresolvableImageIds.clear()
@@ -819,6 +828,8 @@ class PostRsListViewModel @Inject constructor(
         if (collections.containsKey(tab) || initializingTabs.contains(tab)) return
 
         initializingTabs.add(tab)
+        // Reset to a loading state so a retry after a failed init clears the prior error UI.
+        updateTabUiState(tab) { PostTabUiState(isLoading = true) }
 
         viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
@@ -829,6 +840,8 @@ class PostRsListViewModel @Inject constructor(
                 registerObservers(tab, collection)
                 loadItemsForTab(tab)
                 refreshTab(tab)
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Failed to init RS post list tab", e)
                 initializingTabs.remove(tab)
@@ -850,26 +863,36 @@ class PostRsListViewModel @Inject constructor(
     private suspend fun createCollection(
         site: SiteModel,
         tab: PostRsListTab
-    ): ObservableMetadataCollection = withContext(Dispatchers.IO) {
-        val service = serviceProvider.getService(site)
-        val query = _searchQuery.value
-        val authorIds = if (_authorFilter.value == AuthorFilterSelection.ME) {
-            accountStore.account?.userId?.let { listOf(it) } ?: emptyList()
-        } else {
-            emptyList()
+    ): ObservableMetadataCollection {
+        var created: ObservableMetadataCollection? = null
+        try {
+            return withContext(Dispatchers.IO) {
+                val service = serviceProvider.getService(site)
+                val query = _searchQuery.value
+                val authorIds = if (_authorFilter.value == AuthorFilterSelection.ME) {
+                    accountStore.account?.userId?.let { listOf(it) } ?: emptyList()
+                } else {
+                    emptyList()
+                }
+                val filter = PostListFilter(
+                    status = if (query.isNotBlank()) ALL_STATUSES else tab.statuses,
+                    order = tab.order,
+                    orderby = WpApiParamPostsOrderBy.DATE,
+                    search = query.ifBlank { null },
+                    author = authorIds
+                )
+                service.posts().getObservablePostMetadataCollectionWithEditContext(
+                    endpointType = PostEndpointType.Posts,
+                    filter = filter,
+                    perPage = PAGE_SIZE.toUInt()
+                ).also { created = it }
+            }
+        } catch (e: CancellationException) {
+            // The collection exists on the rs side even though nothing here holds it, so it has to
+            // be closed on a context that cancellation cannot interrupt.
+            withContext(NonCancellable + Dispatchers.IO) { created?.close() }
+            throw e
         }
-        val filter = PostListFilter(
-            status = if (query.isNotBlank()) ALL_STATUSES else tab.statuses,
-            order = tab.order,
-            orderby = WpApiParamPostsOrderBy.DATE,
-            search = query.ifBlank { null },
-            author = authorIds
-        )
-        service.posts().getObservablePostMetadataCollectionWithEditContext(
-            endpointType = PostEndpointType.Posts,
-            filter = filter,
-            perPage = PAGE_SIZE.toUInt()
-        )
     }
 
     private fun registerObservers(tab: PostRsListTab, collection: ObservableMetadataCollection) {
@@ -887,7 +910,12 @@ class PostRsListViewModel @Inject constructor(
      */
     @MainThread
     fun refreshTab(tab: PostRsListTab, isUserRefresh: Boolean = false) {
-        val collection = collections[tab] ?: return
+        val collection = collections[tab] ?: run {
+            // The collection wasn't created (init failed or hasn't run). Re-attempt init so
+            // a Retry tap from the error UI can recover instead of silently doing nothing.
+            initTab(tab)
+            return
+        }
 
         if (isUserRefresh) {
             restClient.clearCaches()
@@ -1104,6 +1132,7 @@ class PostRsListViewModel @Inject constructor(
         val unresolvedIds = posts
             .filter { it.featuredImageId != 0L && it.featuredImageUrl == null }
             .map { it.featuredImageId }
+            .distinct()
         if (unresolvedIds.isEmpty()) return
 
         resolveImageJobs[tab]?.cancel()
@@ -1234,7 +1263,7 @@ class PostRsListViewModel @Inject constructor(
         // Recorded before the guard, not after: a list opened condensed does not fetch, but it
         // still has to know what is on screen so that switching to comfortable can ask for it.
         // Otherwise retryMetricsForVisibleRows finds an empty set and the rows shimmer for good.
-        visiblePostIds = postIds.toSet()
+        visiblePostIds[tab] = postIds.toSet()
         if (!expectsMetrics(tab) || isSearching) return
         fetchCommentCounts(tab, postIds)
         fetchViewCounts(tab, postIds)
@@ -1301,7 +1330,9 @@ class PostRsListViewModel @Inject constructor(
                         // Re-checked after waiting for a permit rather than before queuing: by the
                         // time a slot frees up the user may have scrolled well past this row, and
                         // fetching it would spend a request on something off screen.
-                        if (postId in visiblePostIds) fetchViewCountFor(tab, postId)
+                        if (postId in visiblePostIds[tab].orEmpty()) {
+                            fetchViewCountFor(tab, postId)
+                        }
                     }
                 }
             }
@@ -1321,6 +1352,10 @@ class PostRsListViewModel @Inject constructor(
      * is allowed to take the screen down.
      */
     private suspend fun fetchViewCountFor(tab: PostRsListTab, postId: Long) {
+        // Re-checked here, not just when the batch was queued: ids waiting on [viewCountGate] are
+        // not yet recorded as in flight, so the same post can be queued twice and the first fetch
+        // can land before the second gets its permit.
+        if (viewCountCache.containsKey(postId)) return
         if (!inFlightViewCounts.add(postId)) return
         try {
             // A null either way: the fetch failed, or it answered with nothing usable. Both mean
@@ -1350,8 +1385,9 @@ class PostRsListViewModel @Inject constructor(
      */
     @MainThread
     private fun retryMetricsForVisibleRows(tab: PostRsListTab) {
-        if (visiblePostIds.isEmpty()) return
-        onRowsVisible(tab, visiblePostIds.toList())
+        val visible = visiblePostIds[tab].orEmpty()
+        if (visible.isEmpty()) return
+        onRowsVisible(tab, visible.toList())
     }
 
     /** Pushes whatever the caches now hold for [postIds] onto the tab's rows. */
@@ -1385,7 +1421,18 @@ class PostRsListViewModel @Inject constructor(
     private suspend fun updateListInfoForTab(tab: PostRsListTab) {
         val collection = collections[tab] ?: return
 
-        val listInfo = withContext(Dispatchers.IO) { collection.listInfo() }
+        // Guard the Rust-backed call: an unhandled failure here (e.g. a late observer firing
+        // against a collection mid-teardown) would otherwise crash the app, since this runs in
+        // a scope with no exception handler.
+        @Suppress("TooGenericExceptionCaught")
+        val listInfo = try {
+            withContext(Dispatchers.IO) { collection.listInfo() }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            AppLog.e(AppLog.T.POSTS, "Failed to read list info for tab $tab", e)
+            return
+        }
         val morePages = listInfo?.hasMorePages ?: false
         val fetchingFirstPage = listInfo?.state == ListState.FETCHING_FIRST_PAGE
         val isUserRefresh = userRefreshingTabs.contains(tab)
