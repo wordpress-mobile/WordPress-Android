@@ -599,15 +599,19 @@ configurations.all {
 
 
 def decryptedGoogleServicesJson = new File(gradle.ext.decryptedSecretsDir, "google-services.json")
+def exampleGoogleServicesJson = file("google-services.json-example")
 def googleServicesJson = [
         decryptedGoogleServicesJson,
-        file("google-services.json-example"),
+        exampleGoogleServicesJson,
 ].find { it.exists() }
 
 if (googleServicesJson == decryptedGoogleServicesJson) {
     logger.lifecycle("Using the decrypted ${googleServicesJson.name}.")
-} else {
+} else if (googleServicesJson == exampleGoogleServicesJson) {
     logger.warn("${decryptedGoogleServicesJson} not found. Using ${googleServicesJson.name}.")
+} else {
+    throw new GradleException("Neither ${decryptedGoogleServicesJson} nor ${exampleGoogleServicesJson} exists. " +
+            "Run `bundle exec fastlane run configure_apply`.")
 }
 
 // The `afterEvaluate` is load-bearing: AGP registers the task inside its own `afterEvaluate`, so a
