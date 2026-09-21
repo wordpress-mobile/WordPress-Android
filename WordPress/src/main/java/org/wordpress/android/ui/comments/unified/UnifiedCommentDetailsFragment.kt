@@ -39,6 +39,7 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel.
 import org.wordpress.android.ui.comments.unified.compose.CommentDetailsActions
 import org.wordpress.android.ui.comments.unified.compose.UnifiedCommentDetailsScreen
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.compose.utils.showMessage
 import org.wordpress.android.ui.notifications.NotificationsListFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -63,6 +64,9 @@ class UnifiedCommentDetailsFragment : Fragment() {
 
     @Inject
     lateinit var uiHelpers: UiHelpers
+
+    @Inject
+    lateinit var experimentalFeatures: ExperimentalFeatures
 
     private lateinit var viewModel: UnifiedCommentDetailsViewModel
 
@@ -114,6 +118,9 @@ class UnifiedCommentDetailsFragment : Fragment() {
         // legacy detail. Only on the first creation — not again after a rotation.
         val focusReplyField =
             savedInstanceState == null && arguments?.getBoolean(KEY_FOCUS_REPLY_FIELD) == true
+        val isRedesignEnabled = experimentalFeatures.isEnabled(
+            ExperimentalFeatures.Feature.CONTENT_LIST_REDESIGN
+        )
         return ComposeView(requireContext()).apply {
             // A stable id (not View.generateViewId()) lets the fragment restore the ComposeView's
             // saved state across rotation, so rememberSaveable dialog flags survive config changes.
@@ -135,7 +142,11 @@ class UnifiedCommentDetailsFragment : Fragment() {
                         showLikeButton = SiteUtils.isAccessedViaWPComRest(site),
                         focusReplyFieldOnLaunch = focusReplyField,
                         snackbarHostState = snackbarHostState,
-                        actions = actions
+                        actions = actions,
+                        // Read here rather than in each host Activity: this fragment is the one
+                        // thing the comments-list pager and the notification detail share, so one
+                        // read covers both entry points.
+                        isRedesignEnabled = isRedesignEnabled
                     )
                 }
             }

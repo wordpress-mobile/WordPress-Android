@@ -3,6 +3,7 @@ package org.wordpress.android.ui.commentsrs.screens
 import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -65,8 +66,11 @@ import org.wordpress.android.ui.commentsrs.CommentsTabUiState
 import org.wordpress.android.ui.commentsrs.PendingConfirmation
 import org.wordpress.android.ui.commentsrs.batchActions
 import org.wordpress.android.ui.commentsrs.isEnabledFor
+import org.wordpress.android.ui.compose.components.FilterChipTabRow
 import org.wordpress.android.ui.compose.utils.rsDebugTitle
 import org.wordpress.android.ui.postsrs.SnackbarMessage
+import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.rs.contentlist.ContentListDensityToggle
 
 // Material's disabled-content alpha, used to dim batch-action icons that can't apply to the
 // current selection while keeping them visible.
@@ -75,7 +79,7 @@ private const val DISABLED_ICON_ALPHA = 0.38f
 /** Which of the mutually exclusive top bars is showing: selection wins over search. */
 private enum class TopBarMode { SELECTION, SEARCH, NORMAL }
 
-@Suppress("LongMethod")
+@Suppress("LongMethod", "CyclomaticComplexMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentsRsListScreen(
@@ -100,7 +104,10 @@ fun CommentsRsListScreen(
     onCommentLongClick: (Long) -> Unit,
     onClearSelection: () -> Unit,
     onBatchAction: (CommentsRsBatchAction, CommentsRsListTab) -> Unit,
-    onConfirmPendingAction: (CommentsRsListTab) -> Unit
+    onConfirmPendingAction: (CommentsRsListTab) -> Unit,
+    onDensityToggled: () -> Unit,
+    density: ContentListDensity = ContentListDensity.COMFORTABLE,
+    isRedesignEnabled: Boolean = false
 ) {
     val tabs = CommentsRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
@@ -181,6 +188,14 @@ fun CommentsRsListScreen(
     }
 
     Scaffold(
+        // Cards are drawn on `surface`, so the page behind them has to sit one step recessed or
+        // they read as a flat sheet - and which role that is differs by mode, exactly as on the
+        // posts and pages lists. The pre-redesign list keeps the theme background.
+        containerColor = when {
+            !isRedesignEnabled -> MaterialTheme.colorScheme.background
+            isSystemInDarkTheme() -> MaterialTheme.colorScheme.surfaceContainerLowest
+            else -> MaterialTheme.colorScheme.surfaceContainerLow
+        },
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             AnimatedContent(targetState = topBarMode, label = "topBar") { mode ->
@@ -219,6 +234,14 @@ fun CommentsRsListScreen(
                             }
                         },
                         actions = {
+                            // Ahead of search, so the pre-existing icon keeps its position -
+                            // the same placement rule the posts list follows.
+                            if (isRedesignEnabled) {
+                                ContentListDensityToggle(
+                                    density = density,
+                                    onToggle = onDensityToggled
+                                )
+                            }
                             IconButton(onClick = {
                                 searchFocusPending = true
                                 onSearchOpen()
@@ -239,26 +262,45 @@ fun CommentsRsListScreen(
             // single status per request (unlike posts, which search across all statuses), so a
             // search is always scoped to one tab — keeping the tabs on screen makes that scope
             // visible and lets the user re-run the query against another status.
-            PrimaryScrollableTabRow(
-                selectedTabIndex = pagerState.settledPage,
-                edgePadding = 0.dp
-            ) {
-                tabs.forEachIndexed { index, tab ->
-                    Tab(
-                        selected = pagerState.settledPage == index,
-                        onClick = {
-                            coroutineScope.launch {
-                                if (pagerState.settledPage == index) {
-                                    // Re-tapping the active tab scrolls its list back to the top.
-                                    listStates.getValue(tab).animateScrollToItem(0)
-                                } else {
-                                    pagerState.animateScrollToPage(index)
-                                }
+            if (isRedesignEnabled) {
+                // The pager stays: chips replace the tab row's appearance, not swiping between
+                // tabs, which users of this screen already rely on.
+                FilterChipTabRow(
+                    labels = tabs.map { stringResource(it.labelResId) },
+                    selectedIndex = pagerState.settledPage,
+                    onSelect = { index ->
+                        coroutineScope.launch {
+                            if (pagerState.settledPage == index) {
+                                // Re-tapping the active chip scrolls its list back to the top.
+                                listStates.getValue(tabs[index]).animateScrollToItem(0)
+                            } else {
+                                pagerState.animateScrollToPage(index)
                             }
-                        },
-                        unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        text = { Text(text = stringResource(tab.labelResId)) }
-                    )
+                        }
+                    }
+                )
+            } else {
+                PrimaryScrollableTabRow(
+                    selectedTabIndex = pagerState.settledPage,
+                    edgePadding = 0.dp
+                ) {
+                    tabs.forEachIndexed { index, tab ->
+                        Tab(
+                            selected = pagerState.settledPage == index,
+                            onClick = {
+                                coroutineScope.launch {
+                                    if (pagerState.settledPage == index) {
+                                        // Re-tapping the active tab scrolls its list back to the top.
+                                        listStates.getValue(tab).animateScrollToItem(0)
+                                    } else {
+                                        pagerState.animateScrollToPage(index)
+                                    }
+                                }
+                            },
+                            unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            text = { Text(text = stringResource(tab.labelResId)) }
+                        )
+                    }
                 }
             }
 
@@ -285,7 +327,9 @@ fun CommentsRsListScreen(
                     onRefresh = { onRefreshTab(tab) },
                     onLoadMore = { onLoadMore(tab) },
                     onCommentClick = onCommentClick,
-                    onCommentLongClick = onCommentLongClick
+                    onCommentLongClick = onCommentLongClick,
+                    isRedesignEnabled = isRedesignEnabled,
+                    density = density
                 )
             }
         }

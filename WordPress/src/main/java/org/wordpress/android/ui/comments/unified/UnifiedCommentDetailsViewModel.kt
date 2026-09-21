@@ -35,6 +35,7 @@ import org.wordpress.android.ui.rs.RsDateFormatter
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
@@ -173,7 +174,12 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                 } else {
                     false
                 }
-                CommentLoadResult(rs, local, fallbackTitle, likedFallback)
+                // The comment this one replies to, for the redesigned detail's context strip. Best
+                // effort: a failure here must not take down a comment that loaded fine.
+                val parent = rs?.parentId
+                    ?.takeIf { it > 0 }
+                    ?.let { commentsRsDataSource.getComment(site, it) }
+                CommentLoadResult(rs, local, fallbackTitle, likedFallback, parent)
             }
             when {
                 loaded.rsComment != null -> {
@@ -181,7 +187,8 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                     _uiState.value = loaded.rsComment.toUiState(
                         loaded.cached,
                         loaded.fallbackPostTitle,
-                        loaded.fallbackIsLiked
+                        loaded.fallbackIsLiked,
+                        loaded.parent
                     )
                 }
                 isRefresh -> showSnackbar(R.string.error_load_comment)
@@ -462,7 +469,8 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     private fun RsComment.toUiState(
         cached: CommentEntity?,
         fallbackPostTitle: String,
-        fallbackIsLiked: Boolean
+        fallbackIsLiked: Boolean,
+        parent: RsComment?
     ) = CommentDetailsUiState(
         showProgress = false,
         contentVisible = true,
@@ -475,14 +483,17 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         commentUrl = url,
         status = status,
         isLiked = cached?.iLike ?: fallbackIsLiked,
-        canModerate = canModerate
+        canModerate = canModerate,
+        parentAuthorName = parent?.authorName.orEmpty(),
+        parentSnippet = parent?.contentHtml?.let { HtmlUtils.fastStripHtml(it).trim() }.orEmpty()
     )
 
     private data class CommentLoadResult(
         val rsComment: RsComment?,
         val cached: CommentEntity?,
         val fallbackPostTitle: String,
-        val fallbackIsLiked: Boolean
+        val fallbackIsLiked: Boolean,
+        val parent: RsComment? = null
     )
 
     data class CommentDetailsUiState(
@@ -497,7 +508,14 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         val status: CommentStatus = CommentStatus.ALL,
         val isLiked: Boolean = false,
         val isReplyInProgress: Boolean = false,
-        val canModerate: Boolean = false
+        val canModerate: Boolean = false,
+        /**
+         * The comment this one replies to, for the redesigned detail's "in reply to" strip. Blank
+         * for a top-level comment, and also when the parent couldn't be fetched - the strip is
+         * context, so a failure drops it rather than surfacing an error.
+         */
+        val parentAuthorName: String = "",
+        val parentSnippet: String = ""
     )
 }
 

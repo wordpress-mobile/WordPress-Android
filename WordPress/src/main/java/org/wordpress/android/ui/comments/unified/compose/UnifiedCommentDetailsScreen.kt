@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,6 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -63,7 +65,8 @@ fun UnifiedCommentDetailsScreen(
     focusReplyFieldOnLaunch: Boolean,
     snackbarHostState: SnackbarHostState,
     actions: CommentDetailsActions,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isRedesignEnabled: Boolean = false
 ) {
     var showTrashConfirm by rememberSaveable { mutableStateOf(false) }
     var showDeleteConfirm by rememberSaveable { mutableStateOf(false) }
@@ -89,35 +92,62 @@ fun UnifiedCommentDetailsScreen(
                 // footer and reply box to the bottom (the XML layout used INVISIBLE for this).
                 Box(modifier = Modifier.weight(1f)) {
                     if (uiState.contentVisible) {
-                        CommentDetailsContent(
-                            uiState = uiState,
-                            onPostTitleClick = actions.onPostTitleClick,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .nestedScroll(rememberNestedScrollInteropConnection())
-                                .verticalScroll(rememberScrollState())
-                        )
+                        if (isRedesignEnabled) {
+                            RedesignedCommentDetailsContent(
+                                uiState = uiState,
+                                showLikeButton = showLikeButton,
+                                actions = actions,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        } else {
+                            CommentDetailsContent(
+                                uiState = uiState,
+                                onPostTitleClick = actions.onPostTitleClick,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .nestedScroll(rememberNestedScrollInteropConnection())
+                                    .verticalScroll(rememberScrollState())
+                            )
+                        }
                     }
                 }
-                CommentActionFooter(
-                    status = uiState.status,
-                    isLiked = uiState.isLiked,
-                    showLikeButton = showLikeButton,
-                    showCommentUrlActions = uiState.commentUrl.isNotEmpty(),
-                    canModerate = uiState.canModerate,
-                    onModerateClick = actions.onModerateClick,
-                    onSpamClick = actions.onSpamClick,
-                    onLikeClick = actions.onLikeClick,
-                    onEditClick = actions.onEditClick,
-                    // Trashing is committed server-side immediately (no undo affordance like the
-                    // legacy list flow), so confirm it first; restoring needs no confirmation.
-                    onTrashClick = {
-                        if (uiState.status == TRASH) actions.onTrashClick() else showTrashConfirm = true
-                    },
-                    onCopyLinkClick = actions.onCopyLinkClick,
-                    onShareLinkClick = actions.onShareLinkClick,
-                    onDeletePermanentlyClick = { showDeleteConfirm = true }
-                )
+                if (isRedesignEnabled) {
+                    CommentModerationToolbar(
+                        status = uiState.status,
+                        canModerate = uiState.canModerate,
+                        onApproveClick = actions.onModerateClick,
+                        onSpamClick = actions.onSpamClick,
+                        // Trashing is committed server-side immediately, so confirm it first.
+                        onTrashClick = { showTrashConfirm = true },
+                        // Restore is the inverse of however the comment got here: un-spam for a
+                        // spam comment, untrash for a trashed one. Both ViewModel actions toggle
+                        // back to approved, but only from their own status.
+                        onRestoreClick = {
+                            if (uiState.status == SPAM) actions.onSpamClick() else actions.onTrashClick()
+                        },
+                        onDeletePermanentlyClick = { showDeleteConfirm = true }
+                    )
+                } else {
+                    CommentActionFooter(
+                        status = uiState.status,
+                        isLiked = uiState.isLiked,
+                        showLikeButton = showLikeButton,
+                        showCommentUrlActions = uiState.commentUrl.isNotEmpty(),
+                        canModerate = uiState.canModerate,
+                        onModerateClick = actions.onModerateClick,
+                        onSpamClick = actions.onSpamClick,
+                        onLikeClick = actions.onLikeClick,
+                        onEditClick = actions.onEditClick,
+                        // Trashing is committed server-side immediately (no undo affordance like
+                        // the legacy list flow), so confirm it first; restoring needs none.
+                        onTrashClick = {
+                            if (uiState.status == TRASH) actions.onTrashClick() else showTrashConfirm = true
+                        },
+                        onCopyLinkClick = actions.onCopyLinkClick,
+                        onShareLinkClick = actions.onShareLinkClick,
+                        onDeletePermanentlyClick = { showDeleteConfirm = true }
+                    )
+                }
                 CommentReplyBox(
                     replyText = replyText,
                     onReplyTextChange = onReplyTextChange,
@@ -171,6 +201,79 @@ fun UnifiedCommentDetailsScreen(
                 actions.onSendReply(replyText.text)
             },
             onCollapseClick = { showFullScreenReply = false }
+        )
+    }
+}
+
+/**
+ * The redesigned content region, matching iOS's `CommentDetailView`: a fixed block of status pill,
+ * author header and optional "in reply to" strip, then the comment body scrolling on its own below
+ * a divider. The moderation toolbar and reply box are pinned by the caller.
+ *
+ * Keeping the header fixed rather than scrolling it away is the point of the design - who wrote
+ * the comment and what state it's in are what the moderation decision is made on, so they stay put
+ * however long the comment runs.
+ */
+@Composable
+private fun RedesignedCommentDetailsContent(
+    uiState: CommentDetailsUiState,
+    showLikeButton: Boolean,
+    actions: CommentDetailsActions,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier) {
+        Column(
+            modifier = Modifier.padding(
+                start = REDESIGN_H_PADDING,
+                end = REDESIGN_H_PADDING,
+                top = REDESIGN_V_PADDING,
+                bottom = REDESIGN_V_PADDING
+            )
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                CommentStatusPill(status = uiState.status)
+                Spacer(modifier = Modifier.weight(1f))
+                CommentDetailOverflowMenu(
+                    status = uiState.status,
+                    isLiked = uiState.isLiked,
+                    showLikeButton = showLikeButton,
+                    showCommentUrlActions = uiState.commentUrl.isNotEmpty(),
+                    canModerate = uiState.canModerate,
+                    onLikeClick = actions.onLikeClick,
+                    onUnapproveClick = actions.onModerateClick,
+                    onEditClick = actions.onEditClick,
+                    onCopyLinkClick = actions.onCopyLinkClick,
+                    onShareLinkClick = actions.onShareLinkClick
+                )
+            }
+            CommentAuthorHeader(
+                authorName = uiState.authorName,
+                authorAvatarUrl = uiState.authorAvatarUrl,
+                postTitle = uiState.postTitle,
+                datePublished = uiState.datePublished,
+                onPostTitleClick = actions.onPostTitleClick,
+                modifier = Modifier.padding(top = REDESIGN_HEADER_GAP)
+            )
+        }
+        if (uiState.parentAuthorName.isNotBlank()) {
+            HorizontalDivider()
+            CommentParentStrip(
+                parentAuthorName = uiState.parentAuthorName,
+                parentSnippet = uiState.parentSnippet,
+                modifier = Modifier.padding(
+                    horizontal = REDESIGN_H_PADDING,
+                    vertical = REDESIGN_STRIP_V_PADDING
+                )
+            )
+        }
+        HorizontalDivider()
+        CommentHtmlBody(
+            html = uiState.commentText,
+            modifier = Modifier
+                .fillMaxSize()
+                .nestedScroll(rememberNestedScrollInteropConnection())
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = REDESIGN_H_PADDING, vertical = REDESIGN_V_PADDING)
         )
     }
 }
@@ -229,6 +332,11 @@ private fun CommentDetailsContent(
         )
     }
 }
+
+private val REDESIGN_H_PADDING = 16.dp
+private val REDESIGN_V_PADDING = 12.dp
+private val REDESIGN_HEADER_GAP = 12.dp
+private val REDESIGN_STRIP_V_PADDING = 10.dp
 
 @Composable
 private fun CommentStatusLabel(status: CommentStatus) {

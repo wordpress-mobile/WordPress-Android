@@ -4,7 +4,9 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.ui.commentsrs.CommentsRsListRow.DateHeader
+import org.wordpress.android.ui.commentsrs.CommentsRsListRow.GroupHeader
 import org.wordpress.android.ui.commentsrs.CommentsRsListRow.Item
+import org.wordpress.android.ui.rs.contentlist.ContentDateGroup
 
 class CommentsRsListRowTest {
     @Test
@@ -82,16 +84,90 @@ class CommentsRsListRowTest {
         assertThat(headers.map { it.key }).doesNotHaveDuplicates()
     }
 
+    @Test
+    fun `date groups bucket comments from the same week under one header`() {
+        val a = comment(id = 1, date = "Today", millis = now())
+        val b = comment(id = 2, date = "Yesterday", millis = now() - DAY_MILLIS)
+
+        val rows = withDateGroups(listOf(a, b))
+
+        assertThat(rows).containsExactly(
+            GroupHeader(ContentDateGroup.ThisWeek, "header_0_this_week"),
+            Item(a),
+            Item(b)
+        )
+    }
+
+    @Test
+    fun `date groups open a new header when the bucket changes`() {
+        val recent = comment(id = 1, date = "Today", millis = now())
+        val old = comment(id = 2, date = "March 3", millis = now() - (365L * DAY_MILLIS))
+
+        val headers = withDateGroups(listOf(recent, old)).filterIsInstance<GroupHeader>()
+
+        assertThat(headers).hasSize(2)
+        assertThat(headers.first().group).isEqualTo(ContentDateGroup.ThisWeek)
+        assertThat(headers.map { it.key }).doesNotHaveDuplicates()
+    }
+
+    @Test
+    fun `a comment with no timestamp is kept but opens no bucket`() {
+        // dateGmtMillis defaults to 0 for anything built before the raw date was carried; such a
+        // row must still render rather than being dropped or filed under a wrong bucket.
+        val undated = comment(id = 1, date = "Today", millis = 0L)
+
+        val rows = withDateGroups(listOf(undated))
+
+        assertThat(rows).containsExactly(Item(undated))
+    }
+
+    @Test
+    fun `date group headers never share a key when a bucket reopens`() {
+        // Defensive, as for the pre-redesign headers: a list that is not strictly date-ordered can
+        // reopen a bucket, and a duplicate LazyColumn key is a hard crash.
+        val rows = withDateGroups(
+            listOf(
+                comment(id = 1, date = "Today", millis = now()),
+                comment(id = 2, date = "March 3", millis = now() - (365L * DAY_MILLIS)),
+                comment(id = 3, date = "Today", millis = now())
+            )
+        )
+
+        val headers = rows.filterIsInstance<GroupHeader>()
+        assertThat(headers).hasSize(3)
+        assertThat(headers.map { it.key }).doesNotHaveDuplicates()
+    }
+
+    @Test
+    fun `only non-approved statuses carry a row badge`() {
+        assertThat(comment(id = 1, date = "Today", status = CommentStatus.APPROVED).statusBadgeResId).isNull()
+        assertThat(comment(id = 2, date = "Today", status = CommentStatus.UNAPPROVED).statusBadgeResId).isNotNull()
+        assertThat(comment(id = 3, date = "Today", status = CommentStatus.SPAM).statusBadgeResId).isNotNull()
+        assertThat(comment(id = 4, date = "Today", status = CommentStatus.TRASH).statusBadgeResId).isNotNull()
+    }
+
     /** A header as it appears in the normal (contiguous) case: key derived directly from the label. */
     private fun header(label: String) = DateHeader(label, "header_$label")
 
-    private fun comment(id: Long, date: String) = CommentRsUiModel(
+    private fun now() = System.currentTimeMillis()
+
+    private fun comment(
+        id: Long,
+        date: String,
+        millis: Long = 0L,
+        status: CommentStatus = CommentStatus.APPROVED
+    ) = CommentRsUiModel(
         remoteCommentId = id,
         authorName = "Jane",
         avatarUrl = "",
         snippet = "hello",
         relativeDate = date,
-        status = CommentStatus.APPROVED,
-        postId = 99L
+        status = status,
+        postId = 99L,
+        dateGmtMillis = millis
     )
+
+    companion object {
+        private const val DAY_MILLIS = 24L * 60L * 60L * 1000L
+    }
 }

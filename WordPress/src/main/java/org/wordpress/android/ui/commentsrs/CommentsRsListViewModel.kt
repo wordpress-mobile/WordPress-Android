@@ -38,7 +38,9 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
 import org.wordpress.android.ui.postsrs.PostRsErrorUtils
 import org.wordpress.android.ui.postsrs.SnackbarMessage
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.rs.RsDateFormatter
+import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WPAvatarUtilsWrapper
@@ -65,10 +67,20 @@ class CommentsRsListViewModel @Inject constructor(
     private val avatarUtilsWrapper: WPAvatarUtilsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val commentBrowsingSession: CommentBrowsingSession,
+    private val appPrefsWrapper: AppPrefsWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private val _tabStates = MutableStateFlow<Map<CommentsRsListTab, CommentsTabUiState>>(emptyMap())
     val tabStates: StateFlow<Map<CommentsRsListTab, CommentsTabUiState>> = _tabStates.asStateFlow()
+
+    /**
+     * Row density, shared app-wide with the posts and pages lists through one pref - the three
+     * redesigned lists deliberately read as one setting. Read once at construction, like they do.
+     */
+    private val _density = MutableStateFlow(
+        ContentListDensity.of(appPrefsWrapper.isContentListCondensed)
+    )
+    val density: StateFlow<ContentListDensity> = _density.asStateFlow()
 
     private val _isSearchActive = MutableStateFlow(false)
     val isSearchActive: StateFlow<Boolean> = _isSearchActive.asStateFlow()
@@ -730,8 +742,21 @@ class CommentsRsListViewModel @Inject constructor(
         snippet = HtmlUtils.fastStripHtml(contentHtml).trim(),
         relativeDate = RsDateFormatter.format(dateGmt, nowLabel),
         status = status,
-        postId = postId
+        postId = postId,
+        dateGmtMillis = dateGmt.time
     )
+
+    /**
+     * Flips the list between its two densities. Unlike posts and pages there are no per-row
+     * metrics to re-fetch, so nothing but the pref and the flow needs updating - the rows re-read
+     * the snippet rule at render time.
+     */
+    @MainThread
+    fun onDensityToggled() {
+        val next = ContentListDensity.of(!_density.value.isCondensed)
+        _density.value = next
+        appPrefsWrapper.isContentListCondensed = next.isCondensed
+    }
 
     private fun isSearchable(query: String) = query.trim().length >= MIN_SEARCH_QUERY_LENGTH
 
