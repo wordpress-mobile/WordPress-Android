@@ -32,7 +32,7 @@ internal object RsCollectionPrefetch {
         data object Capped : Outcome
 
         /** A page failed every attempt, or with an error not worth retrying. */
-        data class GaveUp(val cause: Exception, val pagesLoaded: Int) : Outcome
+        data class GaveUp(val cause: Throwable, val pagesLoaded: Int) : Outcome
     }
 
     /**
@@ -46,7 +46,7 @@ internal object RsCollectionPrefetch {
      *
      * Cancellation propagates: a caller that tears the collection down cancels the loop with it.
      */
-    @Suppress("TooGenericExceptionCaught", "LongParameterList")
+    @Suppress("LongParameterList")
     suspend fun loadRemainingPages(
         hasMorePages: Boolean?,
         maxPages: Int,
@@ -55,29 +55,46 @@ internal object RsCollectionPrefetch {
         backoff: suspend (attempt: Int) -> Unit = { delay(BASE_BACKOFF_MS shl (it - 1)) },
         loadNextPage: suspend () -> Boolean?
     ): Outcome {
-        var more = hasMorePages
         var pagesLoaded = 0
-        while (true) {
-            when (more) {
-                false -> return Outcome.Complete
-                null -> return Outcome.Unknown
-                true -> if (pagesLoaded >= maxPages) return Outcome.Capped
-            }
-            var attempt = 0
-            while (true) {
-                attempt++
-                try {
-                    more = loadNextPage()
+        var outcome = stopReason(hasMorePages, pagesLoaded, maxPages)
+        while (outcome == null) {
+            outcome = loadPage(maxAttemptsPerPage, shouldRetry, backoff, loadNextPage).fold(
+                onSuccess = { more ->
                     pagesLoaded++
-                    break
-                } catch (e: CancellationException) {
-                    throw e
-                } catch (e: Exception) {
-                    if (!shouldRetry(e) || attempt >= maxAttemptsPerPage) {
-                        return Outcome.GaveUp(e, pagesLoaded)
-                    }
-                    backoff(attempt)
-                }
+                    stopReason(more, pagesLoaded, maxPages)
+                },
+                onFailure = { Outcome.GaveUp(it, pagesLoaded) }
+            )
+        }
+        return outcome
+    }
+
+    /** Why the loop should stop given the latest `hasMorePages`, or null to keep going. */
+    private fun stopReason(hasMorePages: Boolean?, pagesLoaded: Int, maxPages: Int): Outcome? = when {
+        hasMorePages == false -> Outcome.Complete
+        hasMorePages == null -> Outcome.Unknown
+        pagesLoaded >= maxPages -> Outcome.Capped
+        else -> null
+    }
+
+    /** Loads one page under the retry policy; the failure carries the error that ended the retries. */
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun loadPage(
+        maxAttempts: Int,
+        shouldRetry: (Exception) -> Boolean,
+        backoff: suspend (attempt: Int) -> Unit,
+        loadNextPage: suspend () -> Boolean?
+    ): Result<Boolean?> {
+        var attempt = 0
+        while (true) {
+            attempt++
+            try {
+                return Result.success(loadNextPage())
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                if (!shouldRetry(e) || attempt >= maxAttempts) return Result.failure(e)
+                backoff(attempt)
             }
         }
     }

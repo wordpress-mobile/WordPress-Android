@@ -731,11 +731,11 @@ internal class PagesRsListViewModel @Inject constructor(
     @MainThread
     fun loadMorePages(tab: PageRsListTab) {
         val collection = collections[tab] ?: return
-        // A refresh is already paging this tab to the end, and the observers that would say so
-        // through isLoadingMore are held off while it does.
-        if (tab in fillingTabs) return
         val current = getTabUiState(tab)
-        if (current.isLoadingMore || current.isRefreshing || !current.canLoadMore) return
+        // A tab in fillingTabs is already being paged to the end by its refresh, and the observers
+        // that would say so through isLoadingMore are held off while it is.
+        val isBusy = tab in fillingTabs || current.isLoadingMore || current.isRefreshing
+        if (isBusy || !current.canLoadMore) return
 
         updateTabUiState(tab) { copy(isLoadingMore = true) }
 
@@ -1795,10 +1795,10 @@ internal class PagesRsListViewModel @Inject constructor(
     }
 
     private suspend fun updateListInfoForTab(tab: PageRsListTab) {
-        val collection = collections[tab] ?: return
+        val collection = collections[tab]
         // Mid-fill the paging state flickers page by page under rows that aren't changing, and
         // its errors are the refresh's to report.
-        if (tab in fillingTabs) return
+        if (collection == null || tab in fillingTabs) return
 
         // Guard the Rust-backed call: an unhandled failure here (e.g. a late observer firing
         // against a collection mid-teardown) would otherwise crash the app, since this runs in
