@@ -29,5 +29,7 @@ Language: ru
     <string name="sign_out_wpcom_confirm_with_no_changes">Выйти из учётной записи WordPress.com?</string>
     <string name="me_disconnect_from_wordpress_com">Выход из учётной записи WordPress.com</string>
     <string name="support_ticket_subject">Поддержка Jetpack для Android</string>
+    <string name="login_magic_links_sent_label">Проверьте почту на этом устройстве и нажмите ссылку в письме от Jetpack.com.</string>
     <string name="continue_with_wpcom_no_signup">Продолжить с WordPress.com</string>
+    <string name="post_signup_interstitial_title">Jetpack приветствует вас!</string>
 </resources>
