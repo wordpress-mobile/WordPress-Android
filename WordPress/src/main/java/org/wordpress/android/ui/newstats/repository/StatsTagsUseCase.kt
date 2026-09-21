@@ -35,7 +35,6 @@ class StatsTagsUseCase @Inject constructor(
         if (token.isNullOrEmpty()) {
             return TagsResult.Error("No access token")
         }
-        statsRepository.init(token)
 
         val key = siteId to max
 

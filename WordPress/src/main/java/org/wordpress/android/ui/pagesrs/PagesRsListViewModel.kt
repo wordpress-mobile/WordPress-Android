@@ -1580,17 +1580,15 @@ internal class PagesRsListViewModel @Inject constructor(
 
     @MainThread
     private fun fetchViewCounts(tab: PageRsListTab, pageIds: List<Long>) {
-        // The stats data source authenticates with the WP.com bearer token and throws if it is
-        // asked for data before being given one.
-        val accessToken = accountStore.accessToken.takeUnless { it.isNullOrEmpty() }
+        // The counts come from WordPress.com, so there is nothing to ask for without a bearer token.
+        val hasAccessToken = !accountStore.accessToken.isNullOrEmpty()
         val siteId = site?.siteId ?: return
         val wanted = pageIds.filter {
             !viewCountCache.containsKey(it) && it !in inFlightViewCounts
         }
-        if (!canFetchViewCounts || accessToken == null || wanted.isEmpty()) return
+        if (!canFetchViewCounts || !hasAccessToken || wanted.isEmpty()) return
 
         track(viewModelScope.launch {
-            statsDataSource.init(accessToken)
             wanted.forEach { pageId ->
                 launch {
                     viewCountGate.withPermit {

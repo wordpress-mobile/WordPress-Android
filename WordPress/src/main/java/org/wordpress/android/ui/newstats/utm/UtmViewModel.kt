@@ -110,7 +110,6 @@ class UtmViewModel @Inject constructor(
             )
             return
         }
-        statsRepository.init(accessToken)
         val cat = _selectedCategory.value
         loadingPeriods[cat] = currentPeriod
         setCurrentCategoryState(UtmCardUiState.Loading)
@@ -130,7 +129,6 @@ class UtmViewModel @Inject constructor(
             .getSelectedSite() ?: return
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) return
-        statsRepository.init(accessToken)
         viewModelScope.launch {
             try {
                 _isRefreshing.value = true
@@ -177,7 +175,6 @@ class UtmViewModel @Inject constructor(
         if (loadedPeriods[category] != currentPeriod) {
             val accessToken = accountStore.accessToken
             if (accessToken.isNullOrEmpty()) return
-            statsRepository.init(accessToken)
             loadingPeriods[category] = currentPeriod
             setCurrentCategoryState(
                 UtmCardUiState.Loading

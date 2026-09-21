@@ -57,7 +57,6 @@ class AuthorsViewModel @Inject constructor(
             return
         }
 
-        statsRepository.init(accessToken)
         _uiState.value = AuthorsCardUiState.Loading
 
         viewModelScope.launch {
@@ -74,7 +73,6 @@ class AuthorsViewModel @Inject constructor(
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) return
 
-        statsRepository.init(accessToken)
         viewModelScope.launch {
             try {
                 _isRefreshing.value = true
