@@ -6,6 +6,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListRowUiState
 import org.wordpress.android.ui.rs.RsDateFormatter
+import org.wordpress.android.ui.rs.contentlist.RsMenuAction
 import org.wordpress.android.ui.rs.toLabel
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
@@ -140,10 +141,10 @@ internal data class PageRsUiModel(
 )
 
 internal enum class PageRsMenuAction(
-    @StringRes val labelResId: Int,
-    @DrawableRes val iconResId: Int,
-    val isDestructive: Boolean = false
-) {
+    @StringRes override val labelResId: Int,
+    @DrawableRes override val iconResId: Int,
+    override val isDestructive: Boolean = false
+) : RsMenuAction {
     VIEW(R.string.pages_view, R.drawable.gb_ic_external),
     SET_PARENT(R.string.set_parent, R.drawable.gb_ic_pages_set_as_parent),
     SET_AS_HOMEPAGE(R.string.pages_set_as_homepage, R.drawable.gb_ic_home_page_24dp),

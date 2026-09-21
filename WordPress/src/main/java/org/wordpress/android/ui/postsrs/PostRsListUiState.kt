@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.rs.RsDateFormatter
 import org.wordpress.android.ui.rs.contentlist.ContentListRowUiState
+import org.wordpress.android.ui.rs.contentlist.RsMenuAction
 import org.wordpress.android.ui.rs.toLabel
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
@@ -82,10 +83,10 @@ data class PostRsUiModel(
 )
 
 enum class PostRsMenuAction(
-    @StringRes val labelResId: Int,
-    @DrawableRes val iconResId: Int,
-    val isDestructive: Boolean = false
-) {
+    @StringRes override val labelResId: Int,
+    @DrawableRes override val iconResId: Int,
+    override val isDestructive: Boolean = false
+) : RsMenuAction {
     SETTINGS(
         R.string.post_settings,
         R.drawable.ic_settings_white_24dp

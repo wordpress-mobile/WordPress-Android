@@ -20,10 +20,10 @@ import org.wordpress.android.ui.pagesrs.isHeroRow
 import org.wordpress.android.ui.pagesrs.toContentListRowUiState
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListHeroRow
-import org.wordpress.android.ui.rs.contentlist.ContentListMenuAction
 import org.wordpress.android.ui.rs.contentlist.ContentListOverflowMenu
 import org.wordpress.android.ui.rs.contentlist.ContentListPlaceholderRow
 import org.wordpress.android.ui.rs.contentlist.ContentListRow
+import org.wordpress.android.ui.rs.contentlist.toContentListMenuActions
 
 /**
  * One row of the redesigned pages list.
@@ -74,15 +74,7 @@ private fun PageRsContentCard(
         null
     } else {
         {
-            ContentListOverflowMenu(
-                actions = page.actions.map { action ->
-                    ContentListMenuAction(
-                        labelResId = action.labelResId,
-                        iconResId = action.iconResId,
-                        isDestructive = action.isDestructive
-                    ) { onMenuAction(action) }
-                }
-            )
+            ContentListOverflowMenu(actions = page.actions.toContentListMenuActions(onMenuAction))
         }
     }
     val leading: (@Composable () -> Unit)? = (item as? PageRsListItem.Virtual)?.kind?.let { kind ->

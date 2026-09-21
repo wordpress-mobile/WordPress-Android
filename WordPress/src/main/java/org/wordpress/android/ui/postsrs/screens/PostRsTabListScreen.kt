@@ -7,24 +7,13 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -41,12 +30,14 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeoutOrNull
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.rs.contentlist.ContentDateGroup
-import org.wordpress.android.ui.rs.contentlist.ContentListMenuAction
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.LOAD_MORE_THRESHOLD
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.REVEAL_TIMEOUT_MS
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.SHIMMER_ITEM_COUNT
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.VISIBLE_ROWS_DEBOUNCE_MS
+import org.wordpress.android.ui.rs.contentlist.ContentListEmptyState
+import org.wordpress.android.ui.rs.contentlist.ContentListErrorState
 import org.wordpress.android.ui.rs.contentlist.ContentListOverflowMenu
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentDateGrouper
@@ -60,6 +51,8 @@ import org.wordpress.android.ui.postsrs.PostDisplayState
 import org.wordpress.android.ui.postsrs.PostTabUiState
 import org.wordpress.android.ui.postsrs.toContentListRowUiState
 import org.wordpress.android.ui.rs.contentlist.LegacyContentListPlaceholderRow
+import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
+import org.wordpress.android.ui.rs.contentlist.toContentListMenuActions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -101,24 +94,22 @@ fun PostRsTabListScreen(
             isSearchIdle -> Box(Modifier.fillMaxSize())
             state.isLoading -> ShimmerList(isRedesignEnabled)
             state.error != null && state.posts.isEmpty() -> FadeInOnAppear {
-                ErrorContent(
+                ContentListErrorState(
                     error = state.error,
                     onRetry = if (state.isAuthError) null else onRefresh
                 )
             }
             state.posts.isEmpty() && !state.isRefreshing -> FadeInOnAppear {
-                EmptyContent(
-                    emptyMessageResId = if (isSearching) {
-                        R.string
-                            .post_list_search_nothing_found
+                ContentListEmptyState(
+                    messageResId = if (isSearching) {
+                        R.string.post_list_search_nothing_found
                     } else {
                         emptyMessageResId
                     },
-                    onCreatePost = if (isSearching) {
-                        null
-                    } else {
-                        onCreatePost
-                    }
+                    // A search that found nothing is not an empty list, so it offers no shortcut
+                    // to write one more post.
+                    actionLabelResId = R.string.posts_empty_list_button.takeIf { !isSearching },
+                    onAction = if (isSearching) null else onCreatePost
                 )
             }
             else -> PostListContent(
@@ -258,21 +249,7 @@ private fun PostListContent(
             }
         }
 
-        if (isLoadingMore) {
-            item(key = "loading_more") {
-                Box(
-                    modifier = Modifier
-                        .fillParentMaxWidth()
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        strokeWidth = 2.dp
-                    )
-                }
-            }
-        }
+        if (isLoadingMore) contentListLoadingMoreItem()
     }
 }
 
@@ -302,67 +279,6 @@ private fun FadeInOnAppear(content: @Composable () -> Unit) {
         enter = fadeIn(animationSpec = tween(STATE_FADE_MS))
     ) {
         content()
-    }
-}
-
-@Composable
-private fun ErrorContent(error: String, onRetry: (() -> Unit)?) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = stringResource(R.string.error_generic),
-            style = MaterialTheme.typography.titleMedium
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = error,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center
-        )
-        if (onRetry != null) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = onRetry) {
-                Text(text = stringResource(R.string.retry))
-            }
-        }
-    }
-}
-
-@Composable
-private fun EmptyContent(
-    emptyMessageResId: Int,
-    onCreatePost: (() -> Unit)?
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = stringResource(emptyMessageResId),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        if (onCreatePost != null) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = onCreatePost) {
-                Text(
-                    text = stringResource(
-                        R.string.posts_empty_list_button
-                    )
-                )
-            }
-        }
     }
 }
 
@@ -457,12 +373,8 @@ private fun RedesignedRow(
     } else {
         {
             ContentListOverflowMenu(
-                actions = post.actions.map { action ->
-                    ContentListMenuAction(
-                        labelResId = action.labelResId,
-                        iconResId = action.iconResId,
-                        isDestructive = action.isDestructive
-                    ) { onPostMenuAction(post.remotePostId, action) }
+                actions = post.actions.toContentListMenuActions { action ->
+                    onPostMenuAction(post.remotePostId, action)
                 }
             )
         }
@@ -488,13 +400,5 @@ private fun RedesignedRow(
 /** Long enough to read as a fade rather than a flicker, short enough not to feel sluggish. */
 private const val STATE_FADE_MS = 300
 
-/** How long the visible-row set must settle before metrics are fetched for it. */
-private const val VISIBLE_ROWS_DEBOUNCE_MS = 300L
 
-private const val LOAD_MORE_THRESHOLD = 5
-private const val SHIMMER_ITEM_COUNT = 8
 
-/**
- * How long a reveal waits for the refresh carrying the post to land before giving up.
- */
-private const val REVEAL_TIMEOUT_MS = 15_000L

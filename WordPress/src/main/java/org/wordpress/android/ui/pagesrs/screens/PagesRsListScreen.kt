@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.pagesrs.screens
 
 import androidx.activity.compose.BackHandler
-import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -18,20 +17,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
@@ -46,7 +39,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TooltipAnchorPosition
@@ -64,17 +56,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
@@ -93,6 +81,8 @@ import org.wordpress.android.ui.pagesrs.PageTabUiState
 import org.wordpress.android.ui.pagesrs.PagesRsListViewModel.Companion.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.rs.RsSnackbarMessage
+import org.wordpress.android.ui.rs.contentlist.ContentListAuthorFilterButton
+import org.wordpress.android.ui.rs.contentlist.ContentListConfirmationDialog
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListDensityToggle
 
@@ -254,7 +244,7 @@ internal fun PagesRsListScreen(
                             )
                         }
                         if (isAuthorFilterSupported) {
-                            AuthorFilterButton(
+                            ContentListAuthorFilterButton(
                                 authorFilter = authorFilter,
                                 avatarUrl = avatarUrl,
                                 onSelectionChanged = { selection ->
@@ -371,13 +361,13 @@ internal fun PagesRsListScreen(
 @Composable
 private fun PageConfirmationDialogHost(confirmationDialog: PageRsConfirmationDialogState) {
     when (val pending = confirmationDialog.pending) {
-        is PageRsListConfirmation.Trash -> ConfirmationDialog(
+        is PageRsListConfirmation.Trash -> ContentListConfirmationDialog(
             titleResId = R.string.trash,
             message = stringResource(R.string.page_rs_confirm_trash_message),
             onConfirm = confirmationDialog.onConfirm,
             onDismiss = confirmationDialog.onDismiss
         )
-        is PageRsListConfirmation.Delete -> ConfirmationDialog(
+        is PageRsListConfirmation.Delete -> ContentListConfirmationDialog(
             titleResId = R.string.delete_page,
             message = stringResource(R.string.page_delete_dialog_message, pending.pageTitle),
             confirmTextResId = R.string.delete,
@@ -385,7 +375,7 @@ private fun PageConfirmationDialogHost(confirmationDialog: PageRsConfirmationDia
             onConfirm = confirmationDialog.onConfirm,
             onDismiss = confirmationDialog.onDismiss
         )
-        is PageRsListConfirmation.MoveToDraft -> ConfirmationDialog(
+        is PageRsListConfirmation.MoveToDraft -> ContentListConfirmationDialog(
             titleResId = R.string.page_rs_move_trashed_page_to_draft_dialog_title,
             message = stringResource(R.string.page_rs_move_trashed_page_to_draft_dialog_message),
             confirmTextResId = R.string.pages_move_to_draft,
@@ -394,39 +384,6 @@ private fun PageConfirmationDialogHost(confirmationDialog: PageRsConfirmationDia
         )
         null -> {}
     }
-}
-
-@Composable
-private fun ConfirmationDialog(
-    @StringRes titleResId: Int,
-    message: String,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit,
-    @StringRes confirmTextResId: Int = titleResId,
-    isDestructive: Boolean = false
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(stringResource(titleResId)) },
-        text = { Text(message) },
-        confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text(
-                    stringResource(confirmTextResId),
-                    color = if (isDestructive) {
-                        MaterialTheme.colorScheme.error
-                    } else {
-                        Color.Unspecified
-                    }
-                )
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
-            }
-        }
-    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -461,87 +418,3 @@ private fun AddPageFab(visible: Boolean, isExtended: Boolean, onClick: () -> Uni
     }
 }
 
-@Composable
-private fun AuthorFilterButton(
-    authorFilter: AuthorFilterSelection,
-    avatarUrl: String?,
-    onSelectionChanged: (AuthorFilterSelection) -> Unit
-) {
-    var expanded by remember { mutableStateOf(false) }
-    val contentDesc = stringResource(R.string.post_list_toggle_author_filter)
-
-    Box {
-        IconButton(onClick = { expanded = true }) {
-            AuthorFilterIcon(
-                selection = authorFilter,
-                avatarUrl = avatarUrl,
-                contentDescription = contentDesc
-            )
-        }
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            AuthorFilterSelection.entries.forEach { selection ->
-                val label = when (selection) {
-                    AuthorFilterSelection.ME -> stringResource(R.string.me)
-                    AuthorFilterSelection.EVERYONE ->
-                        stringResource(R.string.everyone)
-                }
-                DropdownMenuItem(
-                    text = {
-                        Text(
-                            text = label,
-                            color = if (selection == authorFilter) {
-                                MaterialTheme.colorScheme.primary
-                            } else {
-                                Color.Unspecified
-                            }
-                        )
-                    },
-                    leadingIcon = {
-                        AuthorFilterIcon(
-                            selection = selection,
-                            avatarUrl = avatarUrl,
-                            contentDescription = null
-                        )
-                    },
-                    onClick = {
-                        expanded = false
-                        onSelectionChanged(selection)
-                    }
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun AuthorFilterIcon(
-    selection: AuthorFilterSelection,
-    avatarUrl: String?,
-    contentDescription: String?
-) {
-    val personIcon = if (selection == AuthorFilterSelection.ME) {
-        Icons.Filled.Person
-    } else {
-        Icons.Outlined.Person
-    }
-    if (selection == AuthorFilterSelection.ME && !avatarUrl.isNullOrBlank()) {
-        AsyncImage(
-            model = avatarUrl,
-            contentDescription = contentDescription,
-            contentScale = ContentScale.Crop,
-            fallback = rememberVectorPainter(personIcon),
-            error = rememberVectorPainter(personIcon),
-            modifier = Modifier
-                .size(24.dp)
-                .clip(CircleShape)
-        )
-    } else {
-        Icon(
-            personIcon,
-            contentDescription = contentDescription
-        )
-    }
-}
