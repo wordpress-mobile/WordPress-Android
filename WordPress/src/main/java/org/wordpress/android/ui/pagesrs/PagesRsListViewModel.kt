@@ -12,6 +12,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,6 +52,7 @@ import org.wordpress.android.ui.postsrs.SnackbarMessage
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.rs.RsCollectionPrefetch
 import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.ui.rs.RsTabLoading
 import org.wordpress.android.ui.rs.RsTabRefreshJobs
@@ -114,6 +116,9 @@ internal class PagesRsListViewModel @Inject constructor(
     private val initializingTabs = mutableSetOf<PageRsListTab>()
     private val userRefreshingTabs = mutableSetOf<PageRsListTab>()
     private val refreshJobs = RsTabRefreshJobs<PageRsListTab>()
+
+    /** Background page-through of a tab that renders as a tree; see [startPrefetch]. */
+    private val prefetchJobs = mutableMapOf<PageRsListTab, Job>()
 
     private var isScreenVisible = false
     private var hasDeferredChange = false
@@ -603,7 +608,11 @@ internal class PagesRsListViewModel @Inject constructor(
         val job = launchCollectionJob {
             @Suppress("TooGenericExceptionCaught")
             try {
-                withContext(Dispatchers.IO) { collection.refresh() }
+                // A refresh resets the collection to page 1, so a prefetch still paging it would
+                // only be superseded. Join rather than just cancel: the Rust future behind a
+                // cancelled uniffi call is only dropped once the coroutine resumes.
+                prefetchJobs.remove(tab)?.cancelAndJoin()
+                val sync = withContext(Dispatchers.IO) { collection.refresh() }
                 fetchedTabs.add(tab)
                 // Drop only the "nothing to show" entries so a transient failure is retried,
                 // while numbers already fetched stay put.
@@ -619,14 +628,61 @@ internal class PagesRsListViewModel @Inject constructor(
                 // place does not do. Without this the skeletons would spin with nothing to
                 // resolve them.
                 retryMetricsForVisibleRows(tab)
+                if (needsCompleteSet(tab)) startPrefetch(tab, collection, sync.hasMorePages)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 onRefreshFailed(tab, e, showSnackbar = isUserRefresh)
             }
+            // A replayed refresh cancels the prefetch just started and begins another once it
+            // lands. That is the intent: rs only refetches entities whose metadata changed, so
+            // walking the pages again costs one light request per page.
             if (refreshJobs.onFinished(tab)) refreshTab(tab)
         }
         refreshJobs.onStarted(tab, job)
+    }
+
+    /**
+     * Whether [tab] is rendered as a tree, and so needs every page loaded before it can be right:
+     * [flattenToTree] can only nest a child under a parent that has arrived, and a list sorted by
+     * title delivers the two in unrelated pages.
+     */
+    private fun needsCompleteSet(tab: PageRsListTab) =
+        tab == PageRsListTab.PUBLISHED &&
+            _searchQuery.value.isBlank() &&
+            _authorFilter.value != AuthorFilterSelection.ME
+
+    /**
+     * Pages [collection] through to the end in the background, so the tree converges within
+     * seconds rather than only as far as the user scrolls.
+     *
+     * Writes no tab state of its own. The list info observer already derives the load-more
+     * spinner from the collection's state and clears it on error, whereas a flag set here could
+     * outlive a loop cancelled mid-backoff. Failure is logged and not reported either - the user
+     * did not ask for this fetch, and the scroll-driven load-more remains as the fallback.
+     */
+    private fun startPrefetch(
+        tab: PageRsListTab,
+        collection: ObservableMetadataCollection,
+        hasMorePages: Boolean?
+    ) {
+        prefetchJobs[tab] = launchCollectionJob {
+            val self = coroutineContext.job
+            try {
+                val outcome = RsCollectionPrefetch.loadRemainingPages(
+                    hasMorePages = hasMorePages,
+                    maxPages = MAX_PREFETCH_PAGES,
+                    shouldRetry = { !PostRsErrorUtils.isAuthError(it) }
+                ) {
+                    withContext(Dispatchers.IO) { collection.loadNextPage() }.hasMorePages
+                }
+                AppLog.d(AppLog.T.PAGES, "Prefetch of tab $tab ended: $outcome")
+            } finally {
+                // A cancelled loop unwinds only after its in-flight call returns, by which time a
+                // later refresh may have put its own job here. Only ever remove this one.
+                if (prefetchJobs[tab] === self) prefetchJobs.remove(tab)
+            }
+        }
     }
 
     /**
@@ -684,6 +740,9 @@ internal class PagesRsListViewModel @Inject constructor(
     @MainThread
     fun loadMorePages(tab: PageRsListTab) {
         val collection = collections[tab] ?: return
+        // The prefetch is already paging this tab. isLoadingMore alone can't say so: it is set by
+        // the list info observer, a beat after the prefetch's first request goes out.
+        if (prefetchJobs[tab]?.isActive == true) return
         val current = getTabUiState(tab)
         if (current.isLoadingMore || current.isRefreshing || !current.canLoadMore) return
 
@@ -1381,9 +1440,7 @@ internal class PagesRsListViewModel @Inject constructor(
                 }
             }
             val uiModels = mergeCachedFields(tab, items, isSearch)
-            val applyHierarchy = tab == PageRsListTab.PUBLISHED &&
-                !isSearch &&
-                _authorFilter.value != AuthorFilterSelection.ME
+            val applyHierarchy = needsCompleteSet(tab)
             // Re-read the site here: homepage settings can change while this screen is alive,
             // and the construction-time [site] snapshot would pin stale pageOnFront /
             // pageForPosts values onto the virtual rows.
@@ -1823,6 +1880,7 @@ internal class PagesRsListViewModel @Inject constructor(
         initializingTabs.clear()
         userRefreshingTabs.clear()
         refreshJobs.clear()
+        prefetchJobs.clear()
         fetchedTabs.clear()
         resolveImageJobs.values.forEach { it.cancel() }
         resolveImageJobs.clear()
@@ -1852,7 +1910,14 @@ internal class PagesRsListViewModel @Inject constructor(
     }
 
     companion object {
-        private const val PAGE_SIZE = 20
+        /** The REST maximum, and what iOS uses for pages. */
+        private const val PAGE_SIZE = 100
+
+        /**
+         * A bound on the published tab's background page-through, not a product limit: it only
+         * exists so a server that always reports another page can't keep the loop going.
+         */
+        private const val MAX_PREFETCH_PAGES = 50
         private const val SEARCH_DEBOUNCE_MS = 250L
         private const val SITE_EDITOR_LAUNCH_DEBOUNCE_MS = 1000L
         internal const val MIN_SEARCH_QUERY_LENGTH = 3

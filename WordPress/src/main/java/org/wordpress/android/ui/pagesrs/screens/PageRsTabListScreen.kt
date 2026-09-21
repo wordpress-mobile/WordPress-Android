@@ -133,21 +133,29 @@ private fun PageListContent(
     val listState = rememberLazyListState()
 
     val currentPages by rememberUpdatedState(pages)
+    val currentIsLoadingMore by rememberUpdatedState(isLoadingMore)
 
     // Scrolls to a page the user just saved, once the refresh carrying it lands. The published and
     // draft tabs sort by title, so it can be anywhere in the list. requestScrollToItem applies at
     // the next measurement rather than to the content currently laid out, which a plain
     // scrollToItem would, leaving a just-added row short of the viewport.
+    //
+    // The published tab pages itself through to the end after a refresh, so the page may arrive
+    // seconds after the screen comes back rather than with page 1. The scroll waits for that
+    // paging to finish: each page that lands re-sorts the tree, and an index captured mid-fill
+    // would point at a neighbour by the time the scroll applied.
     LaunchedEffect(revealPageId) {
         if (revealPageId == null) return@LaunchedEffect
         val index = withTimeoutOrNull(REVEAL_TIMEOUT_MS) {
-            snapshotFlow { currentPages.indexOfFirst { it.remotePageId == revealPageId } }
-                .first { it >= 0 }
+            snapshotFlow {
+                currentPages.indexOfFirst { it.remotePageId == revealPageId } to currentIsLoadingMore
+            }
+                .first { (index, loadingMore) -> index >= 0 && !loadingMore }
+                .first
         }
         if (index != null) listState.requestScrollToItem(index)
-        // Disarm either way. A refresh replaces the list with page 1 only, so a page that sorts
-        // beyond it never arrives here; leaving the request armed would fire it much later, when
-        // load-more finally paged the page in and the user was reading something else.
+        // Disarm either way. A page the fill never reached within the timeout would otherwise
+        // fire the scroll much later, when the user was reading something else.
         onRevealHandled()
     }
 
@@ -172,13 +180,16 @@ private fun PageListContent(
             .collect { currentOnRowsVisible(it) }
     }
 
+    // Only a change in the answer triggers a load, so "near the end" has to become false while a
+    // page is loading: a user parked at the bottom through the published tab's background fill
+    // would otherwise never ask for more once it stopped short.
     LaunchedEffect(canLoadMore) {
         if (!canLoadMore) return@LaunchedEffect
         snapshotFlow {
             val lastVisible = listState.layoutInfo
                 .visibleItemsInfo.lastOrNull()?.index ?: 0
             val total = listState.layoutInfo.totalItemsCount
-            lastVisible >= total - LOAD_MORE_THRESHOLD
+            !currentIsLoadingMore && lastVisible >= total - LOAD_MORE_THRESHOLD
         }.distinctUntilChanged().collect { shouldLoad ->
             if (shouldLoad) onLoadMore()
         }
