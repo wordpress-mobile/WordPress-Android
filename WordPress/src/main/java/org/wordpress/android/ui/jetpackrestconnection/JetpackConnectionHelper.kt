@@ -1,11 +1,14 @@
 package org.wordpress.android.ui.jetpackrestconnection
 
+import okhttp3.OkHttpClient
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpRsOkHttpClient
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.wpRsErrorLogger
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpApiClient
+import rs.wordpress.api.kotlin.WpHttpClient
 import rs.wordpress.api.kotlin.WpRequestExecutor
 import uniffi.wp_api.JetpackConnectionClient
 import uniffi.wp_api.ParsedUrl
@@ -18,7 +21,7 @@ import javax.inject.Inject
 
 class JetpackConnectionHelper @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
-    private val trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor,
+    @WpRsOkHttpClient private val okHttpClient: OkHttpClient,
     private val networkAvailabilityProvider: WpNetworkAvailabilityProvider,
 ) {
     /**
@@ -43,10 +46,7 @@ class JetpackConnectionHelper @Inject constructor(
         return WpApiClient(
             apiUrlResolver = WpOrgSiteApiUrlResolver(ParsedUrl.parse(resolveRestApiUrl(site))),
             authProvider = createRestAuthProvider(site),
-            requestExecutor = WpRequestExecutor(
-                interceptors = listOf(trackNetworkRequestsInterceptor),
-                networkAvailabilityProvider = networkAvailabilityProvider
-            ),
+            requestExecutor = requestExecutor(),
             appNotifier = object : WpAppNotifier {
                 private var handled = false
                 override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {
@@ -56,6 +56,7 @@ class JetpackConnectionHelper @Inject constructor(
                     onInvalidAuth()
                 }
             },
+            errorLogger = wpRsErrorLogger(),
         )
     }
 
@@ -64,10 +65,7 @@ class JetpackConnectionHelper @Inject constructor(
 
         val delegate = WpApiClientDelegate(
             authProvider = createRestAuthProvider(site),
-            requestExecutor = WpRequestExecutor(
-                interceptors = listOf(trackNetworkRequestsInterceptor),
-                networkAvailabilityProvider = networkAvailabilityProvider
-            ),
+            requestExecutor = requestExecutor(),
             middlewarePipeline = WpApiMiddlewarePipeline(emptyList()),
             appNotifier = InvalidAuthNotifier()
         )
@@ -77,6 +75,11 @@ class JetpackConnectionHelper @Inject constructor(
             delegate = delegate
         )
     }
+
+    private fun requestExecutor() = WpRequestExecutor(
+        httpClient = WpHttpClient.CustomOkHttpClient(okHttpClient),
+        networkAvailabilityProvider = networkAvailabilityProvider
+    )
 
     private fun createRestAuthProvider(site: SiteModel) =
         WpAuthenticationProvider.staticWithUsernameAndPassword(

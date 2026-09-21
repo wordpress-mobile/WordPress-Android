@@ -2,11 +2,14 @@ package org.wordpress.android.ui.postsrs.data
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
+import okhttp3.OkHttpClient
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpRsOkHttpClient
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.createWpComAuthProvider
 import org.wordpress.android.fluxc.store.AccountStore
+import rs.wordpress.api.kotlin.WpHttpClient
 import rs.wordpress.api.kotlin.WpRequestExecutor
 import rs.wordpress.cache.kotlin.DatabaseChangeNotifier
 import rs.wordpress.cache.kotlin.WordPressApiCache
@@ -32,6 +35,7 @@ class WpServiceProvider @Inject constructor(
     @ApplicationContext private val context: Context,
     private val wpAppNotifierHandler: WpAppNotifierHandler,
     private val accountStore: AccountStore,
+    @WpRsOkHttpClient private val okHttpClient: OkHttpClient,
     private val networkAvailabilityProvider: WpNetworkAvailabilityProvider,
 ) {
     private val services = mutableMapOf<Int, CachedService>()
@@ -86,7 +90,7 @@ class WpServiceProvider @Inject constructor(
         return WpApiClientDelegate(
             authProvider = authProvider,
             requestExecutor = WpRequestExecutor(
-                interceptors = emptyList(),
+                httpClient = WpHttpClient.CustomOkHttpClient(okHttpClient),
                 networkAvailabilityProvider = networkAvailabilityProvider
             ),
             middlewarePipeline = WpApiMiddlewarePipeline(emptyList()),
