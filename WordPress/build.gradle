@@ -113,7 +113,8 @@ base {
 
 def uploadKeystore = new File(gradle.ext.decryptedSecretsDir, "upload.jks")
 def uploadCredentials = ["uploadStorePassword", "uploadKeyAlias", "uploadKeyPassword"]
-def uploadKeyAvailable = uploadKeystore.exists() && uploadCredentials.every { gradle.ext.secretProperties.containsKey(it) }
+def uploadKeyAvailable = uploadKeystore.exists() &&
+        uploadCredentials.every { gradle.ext.secretProperties.containsKey(it) }
 
 android {
     useLibrary 'android.test.runner'
