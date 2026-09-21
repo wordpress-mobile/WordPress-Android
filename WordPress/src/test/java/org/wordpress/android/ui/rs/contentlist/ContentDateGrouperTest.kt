@@ -20,8 +20,30 @@ class ContentDateGrouperTest {
     private val now = utcMillis(year = 2026, month = Calendar.SEPTEMBER, day = 10)
 
     @Test
-    fun `today is this week`() {
-        assertThat(groupOf(now)).isEqualTo(ContentDateGroup.ThisWeek)
+    fun `today is its own bucket`() {
+        assertThat(groupOf(now)).isEqualTo(ContentDateGroup.Today)
+    }
+
+    @Test
+    fun `earlier today is still today`() {
+        assertThat(groupOf(now - TimeUnit.HOURS.toMillis(6))).isEqualTo(ContentDateGroup.Today)
+    }
+
+    @Test
+    fun `a day ago is yesterday`() {
+        assertThat(groupOf(now - days(1))).isEqualTo(ContentDateGroup.Yesterday)
+    }
+
+    @Test
+    fun `buckets follow calendar days rather than elapsed hours`() {
+        // 23 hours before midday is late *yesterday*, not "today" as a 24-hour window would have
+        // it. This is the case that makes a comment posted last night read correctly this morning.
+        assertThat(groupOf(now - TimeUnit.HOURS.toMillis(23))).isEqualTo(ContentDateGroup.Yesterday)
+    }
+
+    @Test
+    fun `two days ago falls through to this week`() {
+        assertThat(groupOf(now - days(2))).isEqualTo(ContentDateGroup.ThisWeek)
     }
 
     @Test
@@ -32,6 +54,11 @@ class ContentDateGrouperTest {
     @Test
     fun `a future date groups with this week rather than falling through`() {
         assertThat(groupOf(now + days(3))).isEqualTo(ContentDateGroup.ThisWeek)
+    }
+
+    @Test
+    fun `later the same day is today, not a future bucket`() {
+        assertThat(groupOf(now + TimeUnit.HOURS.toMillis(6))).isEqualTo(ContentDateGroup.Today)
     }
 
     @Test
@@ -65,6 +92,8 @@ class ContentDateGrouperTest {
     @Test
     fun `each bucket has its own key so headers do not collide`() {
         val keys = listOf(
+            ContentDateGroup.Today,
+            ContentDateGroup.Yesterday,
             ContentDateGroup.ThisWeek,
             ContentDateGroup.EarlierThisMonth("September"),
             ContentDateGroup.SpecificMonth("September")

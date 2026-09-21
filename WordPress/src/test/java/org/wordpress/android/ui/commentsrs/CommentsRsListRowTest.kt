@@ -7,6 +7,7 @@ import org.wordpress.android.ui.commentsrs.CommentsRsListRow.DateHeader
 import org.wordpress.android.ui.commentsrs.CommentsRsListRow.GroupHeader
 import org.wordpress.android.ui.commentsrs.CommentsRsListRow.Item
 import org.wordpress.android.ui.rs.contentlist.ContentDateGroup
+import java.util.Calendar
 
 class CommentsRsListRowTest {
     @Test
@@ -85,28 +86,39 @@ class CommentsRsListRowTest {
     }
 
     @Test
-    fun `date groups bucket comments from the same week under one header`() {
-        val a = comment(id = 1, date = "Today", millis = now())
-        val b = comment(id = 2, date = "Yesterday", millis = now() - DAY_MILLIS)
+    fun `comments from today share one Today header`() {
+        val a = comment(id = 1, date = "4 minutes ago", millis = todayAt(hour = 14))
+        val b = comment(id = 2, date = "2 hours ago", millis = todayAt(hour = 9))
 
         val rows = withDateGroups(listOf(a, b))
 
         assertThat(rows).containsExactly(
-            GroupHeader(ContentDateGroup.ThisWeek, "header_0_this_week"),
+            GroupHeader(ContentDateGroup.Today, "header_0_today"),
             Item(a),
             Item(b)
         )
     }
 
     @Test
+    fun `today and yesterday get separate headers`() {
+        val today = comment(id = 1, date = "4 minutes ago", millis = todayAt(hour = 14))
+        val yesterday = comment(id = 2, date = "Yesterday", millis = daysAgoAt(days = 1, hour = 14))
+
+        val headers = withDateGroups(listOf(today, yesterday)).filterIsInstance<GroupHeader>()
+
+        assertThat(headers.map { it.group })
+            .containsExactly(ContentDateGroup.Today, ContentDateGroup.Yesterday)
+    }
+
+    @Test
     fun `date groups open a new header when the bucket changes`() {
-        val recent = comment(id = 1, date = "Today", millis = now())
-        val old = comment(id = 2, date = "March 3", millis = now() - (365L * DAY_MILLIS))
+        val recent = comment(id = 1, date = "4 minutes ago", millis = todayAt(hour = 14))
+        val old = comment(id = 2, date = "March 3", millis = daysAgoAt(days = 365, hour = 14))
 
         val headers = withDateGroups(listOf(recent, old)).filterIsInstance<GroupHeader>()
 
         assertThat(headers).hasSize(2)
-        assertThat(headers.first().group).isEqualTo(ContentDateGroup.ThisWeek)
+        assertThat(headers.first().group).isEqualTo(ContentDateGroup.Today)
         assertThat(headers.map { it.key }).doesNotHaveDuplicates()
     }
 
@@ -127,9 +139,9 @@ class CommentsRsListRowTest {
         // reopen a bucket, and a duplicate LazyColumn key is a hard crash.
         val rows = withDateGroups(
             listOf(
-                comment(id = 1, date = "Today", millis = now()),
-                comment(id = 2, date = "March 3", millis = now() - (365L * DAY_MILLIS)),
-                comment(id = 3, date = "Today", millis = now())
+                comment(id = 1, date = "Today", millis = todayAt(hour = 14)),
+                comment(id = 2, date = "March 3", millis = daysAgoAt(days = 365, hour = 14)),
+                comment(id = 3, date = "Today", millis = todayAt(hour = 14))
             )
         )
 
@@ -149,7 +161,20 @@ class CommentsRsListRowTest {
     /** A header as it appears in the normal (contiguous) case: key derived directly from the label. */
     private fun header(label: String) = DateHeader(label, "header_$label")
 
-    private fun now() = System.currentTimeMillis()
+    /**
+     * A timestamp at [hour] on today's date. Built from the calendar rather than offset from the
+     * clock so the bucket a test expects does not depend on the time of day the suite runs at -
+     * "two hours ago" is yesterday if you run it at 00:30.
+     */
+    private fun todayAt(hour: Int) = daysAgoAt(days = 0, hour = hour)
+
+    private fun daysAgoAt(days: Int, hour: Int): Long = Calendar.getInstance().apply {
+        add(Calendar.DAY_OF_YEAR, -days)
+        set(Calendar.HOUR_OF_DAY, hour)
+        set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
+    }.timeInMillis
 
     private fun comment(
         id: Long,
@@ -166,8 +191,4 @@ class CommentsRsListRowTest {
         postId = 99L,
         dateGmtMillis = millis
     )
-
-    companion object {
-        private const val DAY_MILLIS = 24L * 60L * 60L * 1000L
-    }
 }

@@ -4983,6 +4983,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="about_automattic_app_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">App icon</string>
 
     <!-- Redesigned posts/pages list -->
+    <string name="content_list_group_today">Today</string>
+    <string name="content_list_group_yesterday">Yesterday</string>
     <string name="content_list_group_this_week">This week</string>
     <string name="content_list_group_earlier_in">Earlier in %1$s</string>
     <string name="content_list_fab_write">Write</string>
