@@ -29,6 +29,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.rs.RsErrorUtils
+import org.wordpress.android.ui.rs.RsFluxCBridge
 import org.wordpress.android.ui.rs.RsMetricJobs
 import org.wordpress.android.ui.rs.RsSnackbarMessage
 import org.wordpress.android.ui.rs.RsViewCounts
@@ -67,7 +68,7 @@ class PostRsListViewModel @Inject constructor(
     private val restClient: RsSiteRestClient,
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,
-    private val fluxCBridge: PostRsFluxCBridge,
+    private val fluxCBridge: RsFluxCBridge,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val accountStore: AccountStore,
@@ -555,7 +556,7 @@ class PostRsListViewModel @Inject constructor(
     private suspend fun bridgePostOrNull(remotePostId: Long) = try {
         val lastModified = findPost(remotePostId)?.lastModified
         withContext(Dispatchers.IO) {
-            fluxCBridge.fetchAndBridge(remotePostId, site, lastModified)
+            fluxCBridge.fetchAndBridgePost(remotePostId, site, lastModified)
         }
     } catch (e: CancellationException) {
         throw e
@@ -580,7 +581,7 @@ class PostRsListViewModel @Inject constructor(
             try {
                 val lastModified = findPost(remotePostId)?.lastModified
                 val postToCopy = withContext(Dispatchers.IO) {
-                    fluxCBridge.fetchAndBridge(
+                    fluxCBridge.fetchAndBridgePost(
                         remotePostId, site, lastModified
                     )
                 }
@@ -686,7 +687,7 @@ class PostRsListViewModel @Inject constructor(
             try {
                 val lastModified = findPost(remotePostId)?.lastModified
                 val post = withContext(Dispatchers.IO) {
-                    fluxCBridge.fetchAndBridge(
+                    fluxCBridge.fetchAndBridgePost(
                         remotePostId, site, lastModified
                     )
                 }

@@ -31,6 +31,7 @@ import org.wordpress.android.ui.newstats.datasource.PostViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.ui.posts.AuthorFilterSelection
+import org.wordpress.android.ui.rs.RsFluxCBridge
 import org.wordpress.android.ui.rs.data.RsSiteRestClient
 import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -49,7 +50,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var restClient: RsSiteRestClient
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var postStore: PostStore
-    @Mock lateinit var fluxCBridge: PostRsFluxCBridge
+    @Mock lateinit var fluxCBridge: RsFluxCBridge
     @Mock lateinit var blazeFeatureUtils: BlazeFeatureUtils
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var accountStore: AccountStore
@@ -386,7 +387,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Test
     fun `openPost emits EditPost when bridge succeeds`() = test {
         val postModel = PostModel()
-        whenever(fluxCBridge.fetchAndBridge(42L, site))
+        whenever(fluxCBridge.fetchAndBridgePost(42L, site))
             .thenReturn(postModel)
         val viewModel = createViewModel()
 
@@ -406,7 +407,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
 
     @Test
     fun `openPost shows snackbar when bridge fails`() = test {
-        whenever(fluxCBridge.fetchAndBridge(42L, site))
+        whenever(fluxCBridge.fetchAndBridgePost(42L, site))
             .thenAnswer { throw IllegalStateException("not found") }
         val viewModel = createViewModel()
 
