@@ -1528,9 +1528,15 @@ internal class PagesRsListViewModel @Inject constructor(
         val next = ContentListDensity.of(!_density.value.isCondensed)
         _density.value = next
         appPrefsWrapper.isContentListCondensed = next.isCondensed
-        viewModelScope.launch {
+        launchCollectionJob {
             // Re-map the rows so their pending flags match the new density before anything fetches.
             loadItemsForTab(tab)
+            // Published is the only tab whose mapping depends on density, because it is the only
+            // one that shows metrics - so it is re-mapped too when the toggle was tapped from
+            // somewhere else, or its rows keep pending flags computed under the old density.
+            // Costs nothing when Published was never opened: loadItemsForTab has no collection to
+            // read and returns.
+            if (tab != PageRsListTab.PUBLISHED) loadItemsForTab(PageRsListTab.PUBLISHED)
             if (!next.isCondensed) retryMetricsForVisibleRows(tab)
         }
     }
