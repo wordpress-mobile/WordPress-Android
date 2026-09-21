@@ -13,7 +13,9 @@ import java.util.concurrent.TimeUnit
  * Date bucket a row falls into, used to draw the group headers in the redesigned content list
  * ("Today", "Yesterday", "This week", "Earlier in July", "March 2025").
  *
- * Shared by the posts, pages and comments rs screens - nothing here is post-specific.
+ * Shared by the posts and comments rs screens - nothing here is post-specific. The pages list
+ * draws no date headers at all: it sorts alphabetically by title, so date buckets would be
+ * meaningless there.
  */
 sealed interface ContentDateGroup {
     /** Stable identity for the header's LazyColumn key. */
