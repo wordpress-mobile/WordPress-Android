@@ -20,7 +20,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.postsrs.data.PostRsRestClient
+import org.wordpress.android.ui.rs.data.RsSiteRestClient
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import uniffi.wp_api.AnyTermWithViewContext
@@ -33,7 +33,7 @@ class TermSelectionViewModelTest : BaseUnitTest(
     StandardTestDispatcher()
 ) {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Mock lateinit var restClient: PostRsRestClient
+    @Mock lateinit var restClient: RsSiteRestClient
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
@@ -68,7 +68,7 @@ class TermSelectionViewModelTest : BaseUnitTest(
                 nextPageParams = null,
             )
         ).thenReturn(
-            PostRsRestClient.TermsPageResult(
+            RsSiteRestClient.TermsPageResult(
                 listOf(firstTerm),
                 secondPageParams,
             )
@@ -80,7 +80,7 @@ class TermSelectionViewModelTest : BaseUnitTest(
                 nextPageParams = secondPageParams,
             )
         ).thenReturn(
-            PostRsRestClient.TermsPageResult(
+            RsSiteRestClient.TermsPageResult(
                 listOf(secondTerm),
                 null,
             )
@@ -105,7 +105,7 @@ class TermSelectionViewModelTest : BaseUnitTest(
                 nextPageParams = null,
             )
         ).thenReturn(
-            PostRsRestClient.TermsPageResult(
+            RsSiteRestClient.TermsPageResult(
                 listOf(firstTerm),
                 secondPageParams,
             )
@@ -117,7 +117,7 @@ class TermSelectionViewModelTest : BaseUnitTest(
                 nextPageParams = secondPageParams,
             )
         ).thenAnswer {
-            throw PostRsRestClient.TermsFetchException("failure")
+            throw RsSiteRestClient.TermsFetchException("failure")
         }
 
         val viewModel = createViewModel()
@@ -139,7 +139,7 @@ class TermSelectionViewModelTest : BaseUnitTest(
                 nextPageParams = null,
             )
         ).thenAnswer {
-            throw PostRsRestClient.TermsFetchException("failure")
+            throw RsSiteRestClient.TermsFetchException("failure")
         }
 
         val viewModel = createViewModel()
@@ -165,12 +165,12 @@ class TermSelectionViewModelTest : BaseUnitTest(
             requestCount++
             if (requestCount == 1) {
                 delay(60_000)
-                PostRsRestClient.TermsPageResult(
+                RsSiteRestClient.TermsPageResult(
                     listOf(staleTerm),
                     null,
                 )
             } else {
-                PostRsRestClient.TermsPageResult(
+                RsSiteRestClient.TermsPageResult(
                     listOf(freshTerm),
                     null,
                 )

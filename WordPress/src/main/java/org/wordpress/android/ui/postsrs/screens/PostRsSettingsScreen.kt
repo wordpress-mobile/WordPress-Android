@@ -104,13 +104,13 @@ import kotlinx.coroutines.flow.emptyFlow
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ShimmerBox
 import org.wordpress.android.ui.compose.components.SingleChoiceAlertDialog
-import org.wordpress.android.ui.postsrs.AuthorInfo
+import org.wordpress.android.ui.rs.RsSnackbarMessage
+import org.wordpress.android.ui.rs.data.AuthorInfo
 import org.wordpress.android.ui.postsrs.DialogState
-import org.wordpress.android.ui.postsrs.SnackbarMessage
 import org.wordpress.android.ui.postsrs.FieldState
 import org.wordpress.android.ui.postsrs.PostRsSettingsUiState
 import org.wordpress.android.ui.postsrs.RetryableField
-import org.wordpress.android.ui.postsrs.toLabel
+import org.wordpress.android.ui.rs.toLabel
 import uniffi.wp_api.PostFormat
 import uniffi.wp_api.PostStatus
 import java.util.Calendar
@@ -121,7 +121,7 @@ import java.util.TimeZone
 @Suppress("LongParameterList")
 fun PostRsSettingsScreen(
     uiState: PostRsSettingsUiState,
-    snackbarMessages: Flow<SnackbarMessage> = emptyFlow(),
+    snackbarMessages: Flow<RsSnackbarMessage> = emptyFlow(),
     onNavigateBack: () -> Unit,
     onRetry: () -> Unit = {},
     onRefresh: () -> Unit = {},

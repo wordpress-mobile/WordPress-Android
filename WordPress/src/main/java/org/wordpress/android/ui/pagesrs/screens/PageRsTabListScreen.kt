@@ -44,7 +44,7 @@ import org.wordpress.android.ui.pagesrs.SITE_EDITOR_PAGE_ID
 import org.wordpress.android.ui.pagesrs.hasRealPages
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListPlaceholderRow
-import org.wordpress.android.ui.postsrs.screens.PlaceholderItem
+import org.wordpress.android.ui.rs.contentlist.LegacyContentListPlaceholderRow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -236,7 +236,7 @@ private fun PageListContent(
 private fun ShimmerList(isRedesignEnabled: Boolean) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(SHIMMER_ITEM_COUNT) {
-            if (isRedesignEnabled) ContentListPlaceholderRow() else PlaceholderItem()
+            if (isRedesignEnabled) ContentListPlaceholderRow() else LegacyContentListPlaceholderRow()
         }
     }
 }

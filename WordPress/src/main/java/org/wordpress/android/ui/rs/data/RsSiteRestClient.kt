@@ -1,10 +1,9 @@
-package org.wordpress.android.ui.postsrs.data
+package org.wordpress.android.ui.rs.data
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
-import org.wordpress.android.ui.postsrs.AuthorInfo
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.SiteAccessibilityInfo
 import org.wordpress.android.util.AppLog
@@ -31,6 +30,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
 
+/** A site user who can be assigned as an author, as the author pickers show them. */
+data class AuthorInfo(val id: Long, val name: String)
+
 data class AuthorPage(
     val authors: List<AuthorInfo>,
     val nextPageParams: UserListParams?,
@@ -52,7 +54,7 @@ private data class MediaImage(
 )
 
 @Singleton
-class PostRsRestClient @Inject constructor(
+class RsSiteRestClient @Inject constructor(
     @ApplicationContext private val context: Context,
     private val wpApiClientProvider: WpApiClientProvider,
 ) {

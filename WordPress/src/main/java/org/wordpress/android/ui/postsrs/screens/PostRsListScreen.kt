@@ -75,10 +75,10 @@ import org.wordpress.android.ui.postsrs.ConfirmationDialogState
 import org.wordpress.android.ui.postsrs.PendingConfirmation
 import org.wordpress.android.ui.postsrs.PostRsListTab
 import org.wordpress.android.ui.postsrs.PostRsReveal
-import org.wordpress.android.ui.postsrs.SnackbarMessage
 import org.wordpress.android.ui.postsrs.PostRsListViewModel.Companion.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostTabUiState
+import org.wordpress.android.ui.rs.RsSnackbarMessage
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListDensityToggle
 
@@ -94,7 +94,7 @@ fun PostRsListScreen(
     isAuthorFilterSupported: Boolean,
     avatarUrl: String?,
     confirmationDialog: ConfirmationDialogState,
-    snackbarMessages: Flow<SnackbarMessage> = emptyFlow(),
+    snackbarMessages: Flow<RsSnackbarMessage> = emptyFlow(),
     revealRequests: Flow<PostRsReveal> = emptyFlow(),
     onSearchOpen: () -> Unit,
     onSearchQueryChanged: (String, PostRsListTab) -> Unit,

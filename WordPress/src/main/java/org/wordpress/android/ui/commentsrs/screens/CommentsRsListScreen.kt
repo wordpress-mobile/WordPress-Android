@@ -66,7 +66,7 @@ import org.wordpress.android.ui.commentsrs.PendingConfirmation
 import org.wordpress.android.ui.commentsrs.batchActions
 import org.wordpress.android.ui.commentsrs.isEnabledFor
 import org.wordpress.android.ui.compose.utils.rsDebugTitle
-import org.wordpress.android.ui.postsrs.SnackbarMessage
+import org.wordpress.android.ui.rs.RsSnackbarMessage
 
 // Material's disabled-content alpha, used to dim batch-action icons that can't apply to the
 // current selection while keeping them visible.
@@ -87,7 +87,7 @@ fun CommentsRsListScreen(
     searchQuery: String,
     isQuerySearchable: Boolean,
     onDismissConfirmation: () -> Unit,
-    snackbarMessages: Flow<SnackbarMessage>,
+    snackbarMessages: Flow<RsSnackbarMessage>,
     onSearchOpen: () -> Unit,
     onSearchQueryChanged: (String) -> Unit,
     onSearchClose: (CommentsRsListTab) -> Unit,

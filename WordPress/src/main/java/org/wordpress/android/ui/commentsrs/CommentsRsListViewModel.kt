@@ -36,9 +36,9 @@ import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsComments
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
-import org.wordpress.android.ui.postsrs.PostRsErrorUtils
-import org.wordpress.android.ui.postsrs.SnackbarMessage
+import org.wordpress.android.ui.rs.RsErrorUtils
 import org.wordpress.android.ui.rs.RsDateFormatter
+import org.wordpress.android.ui.rs.RsSnackbarMessage
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WPAvatarUtilsWrapper
@@ -88,7 +88,7 @@ class CommentsRsListViewModel @Inject constructor(
     private val _events = Channel<CommentsRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
-    private val _snackbarMessages = Channel<SnackbarMessage>(Channel.BUFFERED)
+    private val _snackbarMessages = Channel<RsSnackbarMessage>(Channel.BUFFERED)
     val snackbarMessages = _snackbarMessages.receiveAsFlow()
 
     // Selection mode is active while this is non-empty.
@@ -452,7 +452,7 @@ class CommentsRsListViewModel @Inject constructor(
                         R.string.comments_rs_moderation_failed_multiple, failedIds.size, ids.size
                     )
                 }
-                _snackbarMessages.trySend(SnackbarMessage(message))
+                _snackbarMessages.trySend(RsSnackbarMessage(message))
                 // Failed comments kept their status and place in the list, so re-selecting them
                 // lets the user retry immediately instead of hunting them down again — unless
                 // clearTabs() ran while the batch was in flight (search opened, closed, or query
@@ -483,7 +483,7 @@ class CommentsRsListViewModel @Inject constructor(
     private fun checkNetwork(): Boolean {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _snackbarMessages.trySend(
-                SnackbarMessage(resourceProvider.getString(R.string.no_network_message))
+                RsSnackbarMessage(resourceProvider.getString(R.string.no_network_message))
             )
             return false
         }
@@ -630,10 +630,10 @@ class CommentsRsListViewModel @Inject constructor(
         reason: RequestExecutionErrorReason?,
         errorCode: WpErrorCode? = null
     ) {
-        val authError = PostRsErrorUtils.isAuthError(reason, errorCode)
+        val authError = RsErrorUtils.isAuthError(reason, errorCode)
         updateTabUiState(tab) { copy(isLoadingMore = false) }
         _snackbarMessages.trySend(
-            SnackbarMessage(
+            RsSnackbarMessage(
                 message = errorMessage(message, reason, errorCode),
                 actionLabel = if (authError) null else resourceProvider.getString(R.string.retry),
                 onAction = if (authError) null else ({ loadMore(tab) })
@@ -655,7 +655,7 @@ class CommentsRsListViewModel @Inject constructor(
         showErrorSnackbar: Boolean
     ) {
         val friendly = errorMessage(message, reason, errorCode)
-        val authError = PostRsErrorUtils.isAuthError(reason, errorCode)
+        val authError = RsErrorUtils.isAuthError(reason, errorCode)
         if (getTabUiState(tab).comments.isNotEmpty()) {
             updateTabUiState(tab) {
                 copy(isLoading = false, isRefreshing = false, error = null, isAuthError = authError)
@@ -664,7 +664,7 @@ class CommentsRsListViewModel @Inject constructor(
                 // Retrying an auth failure just fails again, so offer the message without
                 // the action.
                 _snackbarMessages.trySend(
-                    SnackbarMessage(
+                    RsSnackbarMessage(
                         message = friendly,
                         actionLabel = if (authError) null
                             else resourceProvider.getString(R.string.retry),
@@ -715,8 +715,8 @@ class CommentsRsListViewModel @Inject constructor(
         reason: RequestExecutionErrorReason? = null,
         errorCode: WpErrorCode? = null
     ): String =
-        serverMessage?.takeIf { it.isNotBlank() && !PostRsErrorUtils.isAuthError(reason, errorCode) }
-            ?: PostRsErrorUtils.friendlyErrorMessage(
+        serverMessage?.takeIf { it.isNotBlank() && !RsErrorUtils.isAuthError(reason, errorCode) }
+            ?: RsErrorUtils.friendlyErrorMessage(
                 resourceProvider = resourceProvider,
                 networkUtilsWrapper = networkUtilsWrapper,
                 reason = reason,

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.postsrs.data
+package org.wordpress.android.ui.rs.data
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext

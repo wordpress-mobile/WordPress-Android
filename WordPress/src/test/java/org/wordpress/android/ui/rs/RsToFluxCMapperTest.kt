@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.postsrs
+package org.wordpress.android.ui.rs
 
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
@@ -6,14 +6,14 @@ import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.postsrs.data.PostRsRestClient
+import org.wordpress.android.ui.rs.data.RsSiteRestClient
 import uniffi.wp_api.AnyPostWithEditContext
 import uniffi.wp_api.PostContentWithEditContext
 import uniffi.wp_api.SparsePostExcerpt
 
-class PostRsToFluxCMapperTest {
-    private val restClient: PostRsRestClient = mock()
-    private val mapper = PostRsToFluxCMapper(restClient)
+class RsToFluxCMapperTest {
+    private val restClient: RsSiteRestClient = mock()
+    private val mapper = RsToFluxCMapper(restClient)
     private val site = SiteModel()
 
     /**

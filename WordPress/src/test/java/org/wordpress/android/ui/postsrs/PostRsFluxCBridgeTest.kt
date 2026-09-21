@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.ui.rs.RsToFluxCMapper
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.AnyPostWithEditContext
@@ -27,7 +28,7 @@ class PostRsFluxCBridgeTest {
     private val wpApiClientProvider: WpApiClientProvider = mock()
     private val postStore: PostStore = mock()
     private val postSqlUtils: PostSqlUtils = mock()
-    private val postMapper: PostRsToFluxCMapper = mock()
+    private val postMapper: RsToFluxCMapper = mock()
     private val bridge = PostRsFluxCBridge(
         wpApiClientProvider, postStore, postSqlUtils, postMapper
     )
