@@ -469,10 +469,11 @@ internal class PagesRsListViewModel @Inject constructor(
                     search = query.ifBlank { null },
                     author = authorIds
                 )
+                val perPage = if (needsCompleteSet(tab)) FILL_PAGE_SIZE else PAGE_SIZE
                 service.posts().getObservablePostMetadataCollectionWithEditContext(
                     endpointType = PostEndpointType.Pages,
                     filter = filter,
-                    perPage = PAGE_SIZE.toUInt()
+                    perPage = perPage.toUInt()
                 ).also { created = it }
             }
         } catch (e: CancellationException) {
@@ -634,7 +635,9 @@ internal class PagesRsListViewModel @Inject constructor(
             } catch (e: Exception) {
                 onRefreshFailed(tab, e, showSnackbar = isUserRefresh)
             } finally {
-                fillingTabs.remove(tab)
+                // A job cancelled by clearCollections unwinds here after the tab has been rebuilt,
+                // so only release the guard while it is still this collection's to release.
+                if (collections[tab] === collection) fillingTabs.remove(tab)
             }
             if (refreshJobs.onFinished(tab)) refreshTab(tab)
         }
@@ -658,8 +661,9 @@ internal class PagesRsListViewModel @Inject constructor(
      * it landed would render the children as roots and then re-nest them a moment later. What
      * was on screen before the refresh stays put - the placeholders on a cold start, otherwise
      * the previously loaded tree - and the complete set replaces it in one go, as it did in the
-     * legacy list. A fill that stops short is logged, not reported: the user asked for a refresh,
-     * not for this, and whatever did load is shown with the scroll-driven load-more as fallback.
+     * legacy list. A page that fails past its retries throws, and the refresh reports it exactly
+     * as it would a failed first page: the user asked for the whole tab, and a partial tree with
+     * children shown as roots would look complete when it is not.
      */
     private suspend fun loadRemainingPages(
         tab: PageRsListTab,
@@ -1906,8 +1910,14 @@ internal class PagesRsListViewModel @Inject constructor(
     }
 
     companion object {
-        /** The REST maximum, and what iOS uses for pages. */
-        private const val PAGE_SIZE = 100
+        private const val PAGE_SIZE = 20
+
+        /**
+         * The REST maximum, used only by the collection that is paged to the end: the other tabs,
+         * the search collection and the parent picker are read a screen at a time, and each page
+         * also fetches the entities behind it.
+         */
+        private const val FILL_PAGE_SIZE = 100
 
         /**
          * A bound on the published tab's page-through, not a product limit: it only exists so a

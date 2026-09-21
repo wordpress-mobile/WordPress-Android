@@ -113,7 +113,7 @@ class RsCollectionPrefetchTest {
     }
 
     @Test
-    fun `gives up on a page that fails every attempt`() = runTest {
+    fun `rethrows the error of a page that fails every attempt`() = runTest {
         val cause = IOException("500")
         val answers = ArrayDeque<() -> Boolean?>(
             listOf(
@@ -126,37 +126,41 @@ class RsCollectionPrefetchTest {
         )
         var calls = 0
 
-        val outcome = RsCollectionPrefetch.loadRemainingPages(
-            hasMorePages = true,
-            maxPages = MAX_PAGES,
-            maxAttemptsPerPage = 3,
-            backoff = noBackoff
-        ) {
-            calls++
-            answers.removeFirst()()
-        }
+        val thrown = runCatching {
+            RsCollectionPrefetch.loadRemainingPages(
+                hasMorePages = true,
+                maxPages = MAX_PAGES,
+                maxAttemptsPerPage = 3,
+                backoff = noBackoff
+            ) {
+                calls++
+                answers.removeFirst()()
+            }
+        }.exceptionOrNull()
 
-        assertThat(outcome).isEqualTo(Outcome.GaveUp(cause, pagesLoaded = 1))
+        assertThat(thrown).isSameAs(cause)
         assertThat(calls).isEqualTo(4)
         assertThat(backoffs).containsExactly(1, 2)
     }
 
     @Test
-    fun `gives up at once on an error not worth retrying`() = runTest {
+    fun `rethrows at once an error not worth retrying`() = runTest {
         val cause = IOException("401")
         var calls = 0
 
-        val outcome = RsCollectionPrefetch.loadRemainingPages(
-            hasMorePages = true,
-            maxPages = MAX_PAGES,
-            shouldRetry = { false },
-            backoff = noBackoff
-        ) {
-            calls++
-            throw cause
-        }
+        val thrown = runCatching {
+            RsCollectionPrefetch.loadRemainingPages(
+                hasMorePages = true,
+                maxPages = MAX_PAGES,
+                shouldRetry = { false },
+                backoff = noBackoff
+            ) {
+                calls++
+                throw cause
+            }
+        }.exceptionOrNull()
 
-        assertThat(outcome).isEqualTo(Outcome.GaveUp(cause, pagesLoaded = 0))
+        assertThat(thrown).isSameAs(cause)
         assertThat(calls).isEqualTo(1)
         assertThat(backoffs).isEmpty()
     }

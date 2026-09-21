@@ -30,9 +30,6 @@ internal object RsCollectionPrefetch {
 
         /** [loadRemainingPages]'s `maxPages` was reached with more still reported. */
         data object Capped : Outcome
-
-        /** A page failed every attempt, or with an error not worth retrying. */
-        data class GaveUp(val cause: Throwable, val pagesLoaded: Int) : Outcome
     }
 
     /**
@@ -42,9 +39,11 @@ internal object RsCollectionPrefetch {
      * [loadNextPage] returns the value from each page it fetches. A page that throws is retried
      * up to [maxAttemptsPerPage] times, waiting on [backoff] in between, unless [shouldRetry]
      * rules the error out - a rejected credential, for instance, is not going to pass on the
-     * third try.
+     * third try. Once retries are spent, the error propagates, so the caller reports a fill that
+     * fails the same way as the refresh that started it.
      *
-     * Cancellation propagates: a caller that tears the collection down cancels the loop with it.
+     * Cancellation propagates too: a caller that tears the collection down cancels the loop with
+     * it.
      */
     @Suppress("LongParameterList")
     suspend fun loadRemainingPages(
@@ -58,13 +57,9 @@ internal object RsCollectionPrefetch {
         var pagesLoaded = 0
         var outcome = stopReason(hasMorePages, pagesLoaded, maxPages)
         while (outcome == null) {
-            outcome = loadPage(maxAttemptsPerPage, shouldRetry, backoff, loadNextPage).fold(
-                onSuccess = { more ->
-                    pagesLoaded++
-                    stopReason(more, pagesLoaded, maxPages)
-                },
-                onFailure = { Outcome.GaveUp(it, pagesLoaded) }
-            )
+            val more = loadPage(maxAttemptsPerPage, shouldRetry, backoff, loadNextPage)
+            pagesLoaded++
+            outcome = stopReason(more, pagesLoaded, maxPages)
         }
         return outcome
     }
@@ -77,23 +72,23 @@ internal object RsCollectionPrefetch {
         else -> null
     }
 
-    /** Loads one page under the retry policy; the failure carries the error that ended the retries. */
+    /** Loads one page under the retry policy, rethrowing the error that ended the retries. */
     @Suppress("TooGenericExceptionCaught")
     private suspend fun loadPage(
         maxAttempts: Int,
         shouldRetry: (Exception) -> Boolean,
         backoff: suspend (attempt: Int) -> Unit,
         loadNextPage: suspend () -> Boolean?
-    ): Result<Boolean?> {
+    ): Boolean? {
         var attempt = 0
         while (true) {
             attempt++
             try {
-                return Result.success(loadNextPage())
+                return loadNextPage()
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                if (!shouldRetry(e) || attempt >= maxAttempts) return Result.failure(e)
+                if (!shouldRetry(e) || attempt >= maxAttempts) throw e
                 backoff(attempt)
             }
         }
