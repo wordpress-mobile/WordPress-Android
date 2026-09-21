@@ -42,9 +42,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ShimmerBox
-import org.wordpress.android.ui.postsrs.PostDisplayState
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostRsUiModel
+import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
 import org.wordpress.android.ui.rs.contentlist.LegacyContentListPlaceholderRow
 
 
@@ -56,13 +56,13 @@ fun PostRsListItem(
     modifier: Modifier = Modifier
 ) {
     when (post.displayState) {
-        PostDisplayState.PLACEHOLDER ->
+        ContentDisplayState.PLACEHOLDER ->
             LegacyContentListPlaceholderRow(modifier)
-        PostDisplayState.ERROR ->
+        ContentDisplayState.ERROR ->
             ErrorItem(modifier)
-        PostDisplayState.NORMAL,
-        PostDisplayState.FETCHING_WITH_DATA,
-        PostDisplayState.FAILED_WITH_DATA ->
+        ContentDisplayState.NORMAL,
+        ContentDisplayState.FETCHING_WITH_DATA,
+        ContentDisplayState.FAILED_WITH_DATA ->
             PostContentItem(
                 post, onClick, onMenuAction, modifier
             )
@@ -120,7 +120,7 @@ private fun PostContentItem(
                             )
                         )
                         if (post.displayState ==
-                            PostDisplayState.FAILED_WITH_DATA
+                            ContentDisplayState.FAILED_WITH_DATA
                         ) {
                             Spacer(
                                 modifier =
@@ -200,7 +200,7 @@ private fun PostContentItem(
             }
         }
         if (post.displayState ==
-            PostDisplayState.FETCHING_WITH_DATA
+            ContentDisplayState.FETCHING_WITH_DATA
         ) {
             LinearProgressIndicator(
                 modifier = Modifier
@@ -286,7 +286,7 @@ private val FEATURED_IMAGE_SIZE = 64.dp
 // region Previews
 
 private fun samplePost(
-    displayState: PostDisplayState = PostDisplayState.NORMAL
+    displayState: ContentDisplayState = ContentDisplayState.NORMAL
 ) = PostRsUiModel(
     remotePostId = 1L,
     title = "Welcome to the Flavor Journey",
@@ -315,7 +315,7 @@ private fun PreviewFetchingWithData() {
     MaterialTheme {
         PostRsListItem(
             post = samplePost(
-                PostDisplayState.FETCHING_WITH_DATA
+                ContentDisplayState.FETCHING_WITH_DATA
             ),
             onClick = {},
             onMenuAction = {}
@@ -329,7 +329,7 @@ private fun PreviewFailedWithData() {
     MaterialTheme {
         PostRsListItem(
             post = samplePost(
-                PostDisplayState.FAILED_WITH_DATA
+                ContentDisplayState.FAILED_WITH_DATA
             ),
             onClick = {},
             onMenuAction = {}
@@ -342,7 +342,7 @@ private fun PreviewFailedWithData() {
 private fun PreviewPlaceholder() {
     MaterialTheme {
         PostRsListItem(
-            post = samplePost(PostDisplayState.PLACEHOLDER),
+            post = samplePost(ContentDisplayState.PLACEHOLDER),
             onClick = {},
             onMenuAction = {}
         )
@@ -354,7 +354,7 @@ private fun PreviewPlaceholder() {
 private fun PreviewError() {
     MaterialTheme {
         PostRsListItem(
-            post = samplePost(PostDisplayState.ERROR),
+            post = samplePost(ContentDisplayState.ERROR),
             onClick = {},
             onMenuAction = {}
         )

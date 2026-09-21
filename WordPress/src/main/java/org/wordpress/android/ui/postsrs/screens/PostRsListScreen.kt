@@ -53,14 +53,15 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.utils.rsDebugTitle
 import org.wordpress.android.ui.posts.AuthorFilterSelection
-import org.wordpress.android.ui.postsrs.ConfirmationDialogState
-import org.wordpress.android.ui.postsrs.PendingConfirmation
+import org.wordpress.android.ui.postsrs.PostRsConfirmation
 import org.wordpress.android.ui.postsrs.PostRsListTab
-import org.wordpress.android.ui.postsrs.PostRsReveal
 import org.wordpress.android.ui.postsrs.PostRsListViewModel.Companion.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
-import org.wordpress.android.ui.postsrs.PostTabUiState
+import org.wordpress.android.ui.postsrs.PostRsUiModel
+import org.wordpress.android.ui.rs.RsConfirmationDialogState
+import org.wordpress.android.ui.rs.RsReveal
 import org.wordpress.android.ui.rs.RsSnackbarMessage
+import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.contentlist.ContentListAuthorFilterButton
 import org.wordpress.android.ui.rs.contentlist.ContentListConfirmationDialog
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
@@ -73,16 +74,16 @@ import org.wordpress.android.ui.rs.contentlist.ShowRsSnackbars
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostRsListScreen(
-    tabStates: Map<PostRsListTab, PostTabUiState>,
+    tabStates: Map<PostRsListTab, RsTabUiState<PostRsUiModel>>,
     isSearchActive: Boolean,
     isOpeningPost: Boolean,
     searchQuery: String,
     authorFilter: AuthorFilterSelection,
     isAuthorFilterSupported: Boolean,
     avatarUrl: String?,
-    confirmationDialog: ConfirmationDialogState,
+    confirmationDialog: RsConfirmationDialogState<PostRsConfirmation>,
     snackbarMessages: Flow<RsSnackbarMessage> = emptyFlow(),
-    revealRequests: Flow<PostRsReveal> = emptyFlow(),
+    revealRequests: Flow<RsReveal<PostRsListTab>> = emptyFlow(),
     onSearchOpen: () -> Unit,
     onSearchQueryChanged: (String, PostRsListTab) -> Unit,
     onSearchClose: (PostRsListTab) -> Unit,
@@ -110,7 +111,7 @@ fun PostRsListScreen(
     // A post the user just saved, to be scrolled to once the tab showing it has it. Held here
     // rather than acted on in the collector below so that the tab switch, which the user can win,
     // can be cancelled without taking the collector down with it.
-    var pendingReveal by remember { mutableStateOf<PostRsReveal?>(null) }
+    var pendingReveal by remember { mutableStateOf<RsReveal<PostRsListTab>?>(null) }
 
     LaunchedEffect(revealRequests) {
         revealRequests.collect { pendingReveal = it }
@@ -269,12 +270,12 @@ fun PostRsListScreen(
                 userScrollEnabled = !isSearchActive
             ) { page ->
                 val tab = tabs[page]
-                val tabState = tabStates[tab] ?: PostTabUiState(isLoading = true)
+                val tabState = tabStates[tab] ?: RsTabUiState(isLoading = true)
 
                 PostRsTabListScreen(
                     state = tabState,
                     emptyMessageResId = tab.emptyMessageResId,
-                    revealPostId = pendingReveal?.takeIf { it.tab == tab }?.remotePostId,
+                    revealPostId = pendingReveal?.takeIf { it.tab == tab }?.remoteId,
                     onRevealHandled = { pendingReveal = null },
                     isSearchIdle = isSearchActive && searchQuery.length < MIN_SEARCH_QUERY_LENGTH,
                     isSearching = isSearchActive && searchQuery.length >= MIN_SEARCH_QUERY_LENGTH,
@@ -293,20 +294,20 @@ fun PostRsListScreen(
     }
 
     when (confirmationDialog.pending) {
-        is PendingConfirmation.Trash -> ContentListConfirmationDialog(
+        is PostRsConfirmation.Trash -> ContentListConfirmationDialog(
             titleResId = R.string.trash,
             message = stringResource(R.string.post_rs_confirm_trash_message),
             onConfirm = confirmationDialog.onConfirm,
             onDismiss = confirmationDialog.onDismiss
         )
-        is PendingConfirmation.Delete -> ContentListConfirmationDialog(
+        is PostRsConfirmation.Delete -> ContentListConfirmationDialog(
             titleResId = R.string.delete,
             message = stringResource(R.string.post_rs_confirm_delete_message),
             onConfirm = confirmationDialog.onConfirm,
             onDismiss = confirmationDialog.onDismiss,
             isDestructive = true
         )
-        is PendingConfirmation.MoveToDraft -> ContentListConfirmationDialog(
+        is PostRsConfirmation.MoveToDraft -> ContentListConfirmationDialog(
             titleResId =
                 R.string.post_list_move_trashed_post_to_draft_dialog_title,
             message = stringResource(

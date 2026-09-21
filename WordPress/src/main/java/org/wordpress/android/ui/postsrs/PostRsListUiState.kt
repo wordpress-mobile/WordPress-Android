@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.rs.RsDateFormatter
+import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
 import org.wordpress.android.ui.rs.contentlist.ContentListRowUiState
 import org.wordpress.android.ui.rs.contentlist.RsMenuAction
 import org.wordpress.android.ui.rs.toLabel
@@ -15,40 +16,10 @@ import uniffi.wp_api.PostStatus
 import uniffi.wp_mobile.FullEntityAnyPostWithEditContext
 import uniffi.wp_mobile.PostItemState
 
-sealed interface PendingConfirmation {
-    data class Trash(val postId: Long) : PendingConfirmation
-    data class Delete(val postId: Long) : PendingConfirmation
-    data class MoveToDraft(val postId: Long) : PendingConfirmation
-}
-
-/** A request to select [tab] and scroll to [remotePostId] within it. */
-data class PostRsReveal(
-    val tab: PostRsListTab,
-    val remotePostId: Long
-)
-
-data class ConfirmationDialogState(
-    val pending: PendingConfirmation? = null,
-    val onConfirm: () -> Unit = {},
-    val onDismiss: () -> Unit = {}
-)
-
-data class PostTabUiState(
-    val posts: List<PostRsUiModel> = emptyList(),
-    val isLoading: Boolean = false,
-    val isRefreshing: Boolean = false,
-    val isLoadingMore: Boolean = false,
-    val canLoadMore: Boolean = false,
-    val error: String? = null,
-    val isAuthError: Boolean = false
-)
-
-enum class PostDisplayState {
-    NORMAL,
-    FETCHING_WITH_DATA,
-    FAILED_WITH_DATA,
-    PLACEHOLDER,
-    ERROR
+sealed interface PostRsConfirmation {
+    data class Trash(val postId: Long) : PostRsConfirmation
+    data class Delete(val postId: Long) : PostRsConfirmation
+    data class MoveToDraft(val postId: Long) : PostRsConfirmation
 }
 
 data class PostRsUiModel(
@@ -78,8 +49,8 @@ data class PostRsUiModel(
     val isFeaturedImageUnresolvable: Boolean = false,
     val actions: List<PostRsMenuAction> = emptyList(),
     val badges: List<Int> = emptyList(),
-    val displayState: PostDisplayState =
-        PostDisplayState.NORMAL
+    val displayState: ContentDisplayState =
+        ContentDisplayState.NORMAL
 )
 
 enum class PostRsMenuAction(
@@ -138,23 +109,23 @@ fun PostItemState.toUiModel(
         is PostItemState.Stale ->
             data.toUiModel(showStatus, nowLabel)
         is PostItemState.FetchingWithData ->
-            data.toUiModel(showStatus, nowLabel, PostDisplayState.FETCHING_WITH_DATA)
+            data.toUiModel(showStatus, nowLabel, ContentDisplayState.FETCHING_WITH_DATA)
         is PostItemState.FailedWithData ->
-            data.toUiModel(showStatus, nowLabel, PostDisplayState.FAILED_WITH_DATA)
+            data.toUiModel(showStatus, nowLabel, ContentDisplayState.FAILED_WITH_DATA)
         is PostItemState.Missing,
         is PostItemState.Fetching -> PostRsUiModel(
             remotePostId = postId,
             title = "",
             excerpt = "",
             date = "",
-            displayState = PostDisplayState.PLACEHOLDER
+            displayState = ContentDisplayState.PLACEHOLDER
         )
         is PostItemState.Failed -> PostRsUiModel(
             remotePostId = postId,
             title = "",
             excerpt = "",
             date = "",
-            displayState = PostDisplayState.ERROR
+            displayState = ContentDisplayState.ERROR
         )
     }
 }
@@ -162,7 +133,7 @@ fun PostItemState.toUiModel(
 private fun FullEntityAnyPostWithEditContext.toUiModel(
     showStatus: Boolean,
     nowLabel: String,
-    displayState: PostDisplayState = PostDisplayState.NORMAL
+    displayState: ContentDisplayState = ContentDisplayState.NORMAL
 ): PostRsUiModel {
     val post: AnyPostWithEditContext = data
     return PostRsUiModel(
@@ -225,6 +196,6 @@ fun PostRsUiModel.toContentListRowUiState() = ContentListRowUiState(
     commentCount = commentCount,
     areMetricsPending = areMetricsPending,
     badges = badges,
-    isSyncing = displayState == PostDisplayState.FETCHING_WITH_DATA,
-    hasSyncFailed = displayState == PostDisplayState.FAILED_WITH_DATA
+    isSyncing = displayState == ContentDisplayState.FETCHING_WITH_DATA,
+    hasSyncFailed = displayState == ContentDisplayState.FAILED_WITH_DATA
 )

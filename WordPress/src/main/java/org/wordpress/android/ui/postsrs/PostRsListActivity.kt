@@ -21,6 +21,7 @@ import org.wordpress.android.ui.postsrs.screens.PostRsListScreen
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
+import org.wordpress.android.ui.rs.RsConfirmationDialogState
 import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity
 import org.wordpress.android.util.ToastUtils
@@ -69,7 +70,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
                     authorFilter = authorFilter,
                     isAuthorFilterSupported = viewModel.isAuthorFilterSupported,
                     avatarUrl = viewModel.avatarUrl,
-                    confirmationDialog = ConfirmationDialogState(
+                    confirmationDialog = RsConfirmationDialogState(
                         pending = confirmation,
                         onConfirm = viewModel::onConfirmPendingAction,
                         onDismiss = viewModel::onDismissPendingAction

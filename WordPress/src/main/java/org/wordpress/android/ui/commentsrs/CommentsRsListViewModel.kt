@@ -39,6 +39,7 @@ import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
 import org.wordpress.android.ui.rs.RsErrorUtils
 import org.wordpress.android.ui.rs.RsDateFormatter
 import org.wordpress.android.ui.rs.RsSnackbarMessage
+import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WPAvatarUtilsWrapper
@@ -67,8 +68,8 @@ class CommentsRsListViewModel @Inject constructor(
     private val commentBrowsingSession: CommentBrowsingSession,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel() {
-    private val _tabStates = MutableStateFlow<Map<CommentsRsListTab, CommentsTabUiState>>(emptyMap())
-    val tabStates: StateFlow<Map<CommentsRsListTab, CommentsTabUiState>> = _tabStates.asStateFlow()
+    private val _tabStates = MutableStateFlow<Map<CommentsRsListTab, RsTabUiState<CommentRsUiModel>>>(emptyMap())
+    val tabStates: StateFlow<Map<CommentsRsListTab, RsTabUiState<CommentRsUiModel>>> = _tabStates.asStateFlow()
 
     private val _isSearchActive = MutableStateFlow(false)
     val isSearchActive: StateFlow<Boolean> = _isSearchActive.asStateFlow()
@@ -333,7 +334,7 @@ class CommentsRsListViewModel @Inject constructor(
             }
             when (result) {
                 is RsCommentsPageResult.Success -> {
-                    val sizeBefore = getTabUiState(tab).comments.size
+                    val sizeBefore = getTabUiState(tab).items.size
                     applyPage(tab, result, append = true)
                     // When a page doesn't grow the visible list, the scroll position hasn't moved
                     // so the load-more trigger won't re-fire; advance to the next page directly.
@@ -342,7 +343,7 @@ class CommentsRsListViewModel @Inject constructor(
                     // count to zero — with no rows there's no scroll trigger left to resume paging.
                     // The depth cap keeps a pathological cursor chain (e.g. a proxy ignoring the
                     // page param) from firing unbounded unattended requests.
-                    if (getTabUiState(tab).comments.size <= sizeBefore &&
+                    if (getTabUiState(tab).items.size <= sizeBefore &&
                         nextPageParams[tab] != null &&
                         autoAdvanceDepth < CommentBrowsingSession.MAX_AUTO_ADVANCE_PAGES
                     ) {
@@ -364,7 +365,7 @@ class CommentsRsListViewModel @Inject constructor(
             // Seed the detail's swipe pager with the current tab's comments and paging cursor so
             // it can swipe between them and keep loading more (the cursor can't cross an Intent).
             val tab = currentTab ?: CommentsRsListTab.ALL
-            val ids = _tabStates.value[tab]?.comments?.map { it.remoteCommentId } ?: listOf(remoteCommentId)
+            val ids = _tabStates.value[tab]?.items?.map { it.remoteCommentId } ?: listOf(remoteCommentId)
             // Unreplied's rows are a client-side-threaded subset of the raw stream; the session
             // pages the raw stream, so handing it the cursor would let the pager swipe into the
             // replied-to and own comments the tab hides. Seed only the visible ids, no cursor.
@@ -561,7 +562,7 @@ class CommentsRsListViewModel @Inject constructor(
         rawComments[tab] = raw
         updateTabUiState(tab) {
             copy(
-                comments = displayRows(tab, raw),
+                items = displayRows(tab, raw),
                 isLoading = false,
                 isRefreshing = false,
                 // A replacing page must clear isLoadingMore too: a load-more in flight when the
@@ -585,7 +586,7 @@ class CommentsRsListViewModel @Inject constructor(
         // resolved for the tab (keyed by post — a title is the same for every comment on a post).
         // Without this, each rebuild (load-more, re-thread) would blank titles until resolvePostTitles
         // re-fetches them, and re-thread — which never re-resolves — would lose them for good.
-        val knownTitles = getTabUiState(tab).comments
+        val knownTitles = getTabUiState(tab).items
             .filter { it.postTitle != null }
             .associate { it.postId to it.postTitle }
         val visible = if (tab == CommentsRsListTab.UNREPLIED) filterUnreplied(raw, currentUserId) else raw
@@ -598,7 +599,7 @@ class CommentsRsListViewModel @Inject constructor(
         val tab = CommentsRsListTab.UNREPLIED
         val raw = rawComments[tab] ?: return
         val rows = displayRows(tab, raw)
-        updateTabUiState(tab) { copy(comments = rows) }
+        updateTabUiState(tab) { copy(items = rows) }
         // Re-threading can drop rows that were over-reported while currentUserId was still null;
         // clear any selection for comments no longer shown so an off-screen id can't intercept
         // back presses or target a batch action (the same hazard refreshTab guards against).
@@ -615,7 +616,7 @@ class CommentsRsListViewModel @Inject constructor(
      * rows are on screen. Bounded by the same auto-advance cap as load-more.
      */
     private fun advanceIfFilteredEmpty(tab: CommentsRsListTab) {
-        if (getTabUiState(tab).comments.isEmpty() && nextPageParams[tab] != null) {
+        if (getTabUiState(tab).items.isEmpty() && nextPageParams[tab] != null) {
             loadMoreInternal(tab, autoAdvanceDepth = 0)
         }
     }
@@ -656,7 +657,7 @@ class CommentsRsListViewModel @Inject constructor(
     ) {
         val friendly = errorMessage(message, reason, errorCode)
         val authError = RsErrorUtils.isAuthError(reason, errorCode)
-        if (getTabUiState(tab).comments.isNotEmpty()) {
+        if (getTabUiState(tab).items.isNotEmpty()) {
             updateTabUiState(tab) {
                 copy(isLoading = false, isRefreshing = false, error = null, isAuthError = authError)
             }
@@ -685,7 +686,7 @@ class CommentsRsListViewModel @Inject constructor(
      * batched request per tab. Rows keep an author-only title until (or if ever) resolved.
      */
     private fun resolvePostTitles(tab: CommentsRsListTab) {
-        val unresolvedIds = getTabUiState(tab).comments
+        val unresolvedIds = getTabUiState(tab).items
             .filter { it.postTitle == null && it.postId > 0 }
             .map { it.postId }
             .distinct()
@@ -698,7 +699,7 @@ class CommentsRsListViewModel @Inject constructor(
             val titles = withContext(bgDispatcher) { commentsRsDataSource.fetchPostTitles(site, unresolvedIds) }
             if (titles.isEmpty()) return@launch
             updateTabUiState(tab) {
-                copy(comments = comments.map { it.copy(postTitle = titles[it.postId] ?: it.postTitle) })
+                copy(items = items.map { it.copy(postTitle = titles[it.postId] ?: it.postTitle) })
             }
         }
     }
@@ -735,10 +736,13 @@ class CommentsRsListViewModel @Inject constructor(
 
     private fun isSearchable(query: String) = query.trim().length >= MIN_SEARCH_QUERY_LENGTH
 
-    private fun getTabUiState(tab: CommentsRsListTab): CommentsTabUiState =
-        _tabStates.value[tab] ?: CommentsTabUiState(isLoading = true)
+    private fun getTabUiState(tab: CommentsRsListTab): RsTabUiState<CommentRsUiModel> =
+        _tabStates.value[tab] ?: RsTabUiState(isLoading = true)
 
-    private fun updateTabUiState(tab: CommentsRsListTab, update: CommentsTabUiState.() -> CommentsTabUiState) {
+    private fun updateTabUiState(
+        tab: CommentsRsListTab,
+        update: RsTabUiState<CommentRsUiModel>.() -> RsTabUiState<CommentRsUiModel>
+    ) {
         _tabStates.value += (tab to getTabUiState(tab).update())
     }
 

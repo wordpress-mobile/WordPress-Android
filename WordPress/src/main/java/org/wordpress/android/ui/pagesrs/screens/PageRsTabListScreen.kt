@@ -14,9 +14,9 @@ import kotlinx.coroutines.FlowPreview
 import org.wordpress.android.R
 import org.wordpress.android.ui.pagesrs.PageRsListItem
 import org.wordpress.android.ui.pagesrs.PageRsMenuAction
-import org.wordpress.android.ui.pagesrs.PageTabUiState
 import org.wordpress.android.ui.pagesrs.SITE_EDITOR_PAGE_ID
 import org.wordpress.android.ui.pagesrs.hasRealPages
+import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.SHIMMER_ITEM_COUNT
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListEmptyState
@@ -32,7 +32,7 @@ import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun PageRsTabListScreen(
-    state: PageTabUiState,
+    state: RsTabUiState<PageRsListItem>,
     emptyMessageResId: Int,
     revealPageId: Long?,
     onRevealHandled: () -> Unit,
@@ -55,13 +55,13 @@ internal fun PageRsTabListScreen(
         when {
             isSearchIdle -> Box(Modifier.fillMaxSize())
             state.isLoading -> ShimmerList(isRedesignEnabled)
-            state.error != null && !state.pages.hasRealPages -> {
+            state.error != null && !state.items.hasRealPages -> {
                 ContentListErrorState(
                     error = state.error,
                     onRetry = if (state.isAuthError) null else onRefresh
                 )
             }
-            state.pages.isEmpty() && !state.isRefreshing -> {
+            state.items.isEmpty() && !state.isRefreshing -> {
                 ContentListEmptyState(
                     messageResId = if (isSearching) {
                         R.string.pages_empty_search_result
@@ -71,7 +71,7 @@ internal fun PageRsTabListScreen(
                 )
             }
             else -> PageListContent(
-                pages = state.pages,
+                pages = state.items,
                 revealPageId = revealPageId,
                 onRevealHandled = onRevealHandled,
                 isLoadingMore = state.isLoadingMore,

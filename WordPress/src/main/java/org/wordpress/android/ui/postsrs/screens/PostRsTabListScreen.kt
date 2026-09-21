@@ -20,7 +20,9 @@ import androidx.compose.runtime.rememberUpdatedState
 import kotlinx.coroutines.FlowPreview
 import androidx.compose.ui.Modifier
 import org.wordpress.android.R
+import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.contentlist.ContentDateGroup
+import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
 import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.SHIMMER_ITEM_COUNT
 import org.wordpress.android.ui.rs.contentlist.ContentListEmptyState
 import org.wordpress.android.ui.rs.contentlist.ContentListErrorState
@@ -34,8 +36,6 @@ import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
 import org.wordpress.android.ui.rs.contentlist.ContentListRow
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostRsUiModel
-import org.wordpress.android.ui.postsrs.PostDisplayState
-import org.wordpress.android.ui.postsrs.PostTabUiState
 import org.wordpress.android.ui.postsrs.toContentListRowUiState
 import org.wordpress.android.ui.rs.contentlist.LegacyContentListPlaceholderRow
 import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
@@ -47,7 +47,7 @@ import org.wordpress.android.ui.rs.contentlist.toContentListMenuActions
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostRsTabListScreen(
-    state: PostTabUiState,
+    state: RsTabUiState<PostRsUiModel>,
     emptyMessageResId: Int,
     revealPostId: Long?,
     onRevealHandled: () -> Unit,
@@ -72,13 +72,13 @@ fun PostRsTabListScreen(
         when {
             isSearchIdle -> Box(Modifier.fillMaxSize())
             state.isLoading -> ShimmerList(isRedesignEnabled)
-            state.error != null && state.posts.isEmpty() -> FadeInOnAppear {
+            state.error != null && state.items.isEmpty() -> FadeInOnAppear {
                 ContentListErrorState(
                     error = state.error,
                     onRetry = if (state.isAuthError) null else onRefresh
                 )
             }
-            state.posts.isEmpty() && !state.isRefreshing -> FadeInOnAppear {
+            state.items.isEmpty() && !state.isRefreshing -> FadeInOnAppear {
                 ContentListEmptyState(
                     messageResId = if (isSearching) {
                         R.string.post_list_search_nothing_found
@@ -92,7 +92,7 @@ fun PostRsTabListScreen(
                 )
             }
             else -> PostListContent(
-                posts = state.posts,
+                posts = state.items,
                 revealPostId = revealPostId,
                 onRevealHandled = onRevealHandled,
                 isLoadingMore = state.isLoadingMore,
@@ -170,7 +170,7 @@ private fun PostListContent(
                     // The redesigned placeholder only belongs to the redesigned list; with the flag
                     // off every row, placeholder included, goes through the pre-redesign item.
                     if (isRedesignEnabled &&
-                        entry.post.displayState == PostDisplayState.PLACEHOLDER
+                        entry.post.displayState == ContentDisplayState.PLACEHOLDER
                     ) {
                         ContentListPlaceholderRow(modifier = Modifier.animateItem())
                     } else {
@@ -272,8 +272,8 @@ private fun buildEntries(
     var headerCount = 0
 
     posts.forEach { post ->
-        if (post.displayState == PostDisplayState.PLACEHOLDER ||
-            post.displayState == PostDisplayState.ERROR
+        if (post.displayState == ContentDisplayState.PLACEHOLDER ||
+            post.displayState == ContentDisplayState.ERROR
         ) {
             entries += PostListEntry.NonContent(post)
             return@forEach

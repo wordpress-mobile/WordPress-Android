@@ -141,10 +141,10 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
 
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
         assertThat(state.isLoading).isFalse()
-        assertThat(state.comments).hasSize(2)
-        assertThat(state.comments.first().remoteCommentId).isEqualTo(1)
-        assertThat(state.comments.first().authorName).isEqualTo("Jane")
-        assertThat(state.comments.first().snippet).isEqualTo("hello")
+        assertThat(state.items).hasSize(2)
+        assertThat(state.items.first().remoteCommentId).isEqualTo(1)
+        assertThat(state.items.first().authorName).isEqualTo("Jane")
+        assertThat(state.items.first().snippet).isEqualTo("hello")
         assertThat(state.canLoadMore).isTrue()
     }
 
@@ -277,7 +277,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         advanceUntilIdle()
 
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
-        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(1L, 2L, 3L)
+        assertThat(state.items.map { it.remoteCommentId }).containsExactly(1L, 2L, 3L)
         assertThat(state.canLoadMore).isFalse()
     }
 
@@ -299,7 +299,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         advanceUntilIdle()
 
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
-        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(10L, 11L)
+        assertThat(state.items.map { it.remoteCommentId }).containsExactly(10L, 11L)
         assertThat(state.isLoadingMore).isFalse()
         assertThat(state.canLoadMore).isTrue()
     }
@@ -342,7 +342,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         advanceUntilIdle()
 
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
-        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(1L, 2L, 3L)
+        assertThat(state.items.map { it.remoteCommentId }).containsExactly(1L, 2L, 3L)
         assertThat(state.canLoadMore).isFalse()
     }
 
@@ -363,7 +363,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         advanceUntilIdle()
 
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
-        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(1L, 2L, 3L)
+        assertThat(state.items.map { it.remoteCommentId }).containsExactly(1L, 2L, 3L)
         assertThat(state.canLoadMore).isFalse()
     }
 
@@ -420,7 +420,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         // Without the cancel, the identical-ids guard defers to the hung pre-refresh job and
         // the fresh title is never fetched.
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
-        assertThat(state.comments.first().postTitle).isEqualTo("Fresh title")
+        assertThat(state.items.first().postTitle).isEqualTo("Fresh title")
         verify(commentsRsDataSource, times(2)).fetchPostTitles(eq(site), any())
     }
 
@@ -456,7 +456,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             cancelAndIgnoreRemainingEvents()
         }
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
-        assertThat(state.comments).hasSize(1)
+        assertThat(state.items).hasSize(1)
         assertThat(state.error).isNull()
     }
 
@@ -495,7 +495,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             cancelAndIgnoreRemainingEvents()
         }
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
-        assertThat(state.comments).hasSize(1)
+        assertThat(state.items).hasSize(1)
         assertThat(state.error).isNull()
     }
 
@@ -519,7 +519,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         // discarded by the generation check, so nothing else resets it promptly.
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
         assertThat(state.isLoadingMore).isFalse()
-        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(10L)
+        assertThat(state.items.map { it.remoteCommentId }).containsExactly(10L)
     }
 
     @Test
@@ -581,7 +581,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         advanceUntilIdle()
 
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
-        assertThat(state.comments.map { it.postTitle }).containsExactly("First post", "Second post")
+        assertThat(state.items.map { it.postTitle }).containsExactly("First post", "Second post")
     }
 
     @Test
@@ -643,7 +643,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         advanceUntilIdle()
 
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.UNREPLIED)
-        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(3L)
+        assertThat(state.items.map { it.remoteCommentId }).containsExactly(3L)
     }
 
     @Test
@@ -676,7 +676,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         advanceUntilIdle()
 
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.UNREPLIED)
-        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(2L)
+        assertThat(state.items.map { it.remoteCommentId }).containsExactly(2L)
     }
 
     @Test
@@ -698,7 +698,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         advanceUntilIdle()
 
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.UNREPLIED)
-        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(3L)
+        assertThat(state.items.map { it.remoteCommentId }).containsExactly(3L)
     }
 
     @Test

@@ -46,7 +46,9 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.rs.RsErrorUtils
 import org.wordpress.android.ui.rs.RsFluxCBridge
 import org.wordpress.android.ui.rs.RsMetricJobs
+import org.wordpress.android.ui.rs.RsReveal
 import org.wordpress.android.ui.rs.RsSnackbarMessage
+import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.RsViewCounts
 import org.wordpress.android.ui.rs.RsVisibleRows
 import org.wordpress.android.ui.rs.data.RsSiteRestClient
@@ -97,8 +99,8 @@ internal class PagesRsListViewModel @Inject constructor(
     private val changeListener: RsPostChangeListener,
     private val statsDataSource: StatsDataSource,
 ) : ViewModel() {
-    private val _tabStates = MutableStateFlow<Map<PageRsListTab, PageTabUiState>>(emptyMap())
-    val tabStates: StateFlow<Map<PageRsListTab, PageTabUiState>> = _tabStates.asStateFlow()
+    private val _tabStates = MutableStateFlow<Map<PageRsListTab, RsTabUiState<PageRsListItem>>>(emptyMap())
+    val tabStates: StateFlow<Map<PageRsListTab, RsTabUiState<PageRsListItem>>> = _tabStates.asStateFlow()
 
     private val _isOpeningPage = MutableStateFlow(false)
     val isOpeningPage: StateFlow<Boolean> = _isOpeningPage.asStateFlow()
@@ -118,7 +120,7 @@ internal class PagesRsListViewModel @Inject constructor(
 
     private var isScreenVisible = false
     private var hasDeferredChange = false
-    private var pendingReveal: PageRsReveal? = null
+    private var pendingReveal: RsReveal<PageRsListTab>? = null
 
     /** Tabs whose collection has completed at least one fetch, so an empty list means empty. */
     private val fetchedTabs = mutableSetOf<PageRsListTab>()
@@ -155,7 +157,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private val _snackbarMessages = Channel<RsSnackbarMessage>(Channel.BUFFERED)
     val snackbarMessages = _snackbarMessages.receiveAsFlow()
 
-    private val _revealRequests = Channel<PageRsReveal>(Channel.BUFFERED)
+    private val _revealRequests = Channel<RsReveal<PageRsListTab>>(Channel.BUFFERED)
     val revealRequests = _revealRequests.receiveAsFlow()
 
     private val _pendingConfirmation = MutableStateFlow<PageRsListConfirmation?>(null)
@@ -287,7 +289,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private fun onPageUploaded(upload: RsUploadedPost) {
         val status = upload.status.toRsPostStatus() ?: return
         val tab = PageRsListTab.entries.firstOrNull { status in it.statuses } ?: return
-        pendingReveal = PageRsReveal(tab, upload.remotePostId)
+        pendingReveal = RsReveal(tab, upload.remotePostId)
         emitPendingReveal()
     }
 
@@ -385,7 +387,7 @@ internal class PagesRsListViewModel @Inject constructor(
 
         initializingTabs.add(tab)
         // Reset to a loading state so a retry after a failed init clears the prior error UI.
-        updateTabUiState(tab) { PageTabUiState(isLoading = true) }
+        updateTabUiState(tab) { RsTabUiState(isLoading = true) }
 
         launchCollectionJob {
             @Suppress("TooGenericExceptionCaught")
@@ -402,7 +404,7 @@ internal class PagesRsListViewModel @Inject constructor(
                 AppLog.e(AppLog.T.PAGES, "Failed to init RS page list tab", e)
                 initializingTabs.remove(tab)
                 updateTabUiState(tab) {
-                    PageTabUiState(
+                    RsTabUiState(
                         error = friendlyErrorMessage(e),
                         isAuthError = RsErrorUtils.isAuthError(e)
                     )
@@ -510,7 +512,7 @@ internal class PagesRsListViewModel @Inject constructor(
             // and send one message for the whole fan-out. It has to be sent here rather than by
             // a nominated tab: a tab only offers a snackbar when it has content to keep, so
             // picking one that turned out to be empty would swallow the message entirely.
-            val anyTabKeepsItsPages = tabs.any { getTabUiState(it).pages.hasRealPages }
+            val anyTabKeepsItsPages = tabs.any { getTabUiState(it).items.hasRealPages }
             tabs.forEach { onRefreshFailed(it, e = null, showSnackbar = false) }
             if (anyTabKeepsItsPages) {
                 _snackbarMessages.trySend(
@@ -545,7 +547,7 @@ internal class PagesRsListViewModel @Inject constructor(
             updateTabUiState(tab) {
                 copy(
                     isLoading = RsTabLoading.onRefreshStarted(
-                        hasItems = pages.hasRealPages,
+                        hasItems = items.hasRealPages,
                         hasFetched = tab in fetchedTabs
                     ),
                     error = null
@@ -619,7 +621,7 @@ internal class PagesRsListViewModel @Inject constructor(
         userRefreshingTabs.remove(tab)
         val message = friendlyErrorMessage(e)
         val authError = RsErrorUtils.isAuthError(e)
-        if (getTabUiState(tab).pages.hasRealPages) {
+        if (getTabUiState(tab).items.hasRealPages) {
             updateTabUiState(tab) {
                 copy(
                     isLoading = false,
@@ -693,7 +695,7 @@ internal class PagesRsListViewModel @Inject constructor(
         }
 
         val page = _tabStates.value[tab]
-            ?.pages
+            ?.items
             ?.firstOrNull { it.remotePageId == remotePageId }
             ?.page
         when {
@@ -835,7 +837,7 @@ internal class PagesRsListViewModel @Inject constructor(
         // Descendants are collected across pages of every status: a published descendant
         // reached through a draft intermediate must still be excluded to prevent a cycle.
         val allPages = _tabStates.value.values
-            .flatMap { state -> state.pages.map { it.page } }
+            .flatMap { state -> state.items.map { it.page } }
             .distinctBy { it.remotePageId }
         parentPickerExcludedIds = collectDescendantIds(remotePageId, allPages) + remotePageId
         _parentPickerQuery.value = ""
@@ -1312,7 +1314,7 @@ internal class PagesRsListViewModel @Inject constructor(
     /** Searches all tab states for a [PageRsUiModel] matching [remotePageId]. */
     private fun findPage(remotePageId: Long): PageRsUiModel? {
         for (state in _tabStates.value.values) {
-            for (item in state.pages) {
+            for (item in state.items) {
                 if (item.remotePageId == remotePageId) return item.page
             }
         }
@@ -1370,7 +1372,7 @@ internal class PagesRsListViewModel @Inject constructor(
             ).map { row -> row.withMenuActions(currentSite) }
             updateTabUiState(tab) {
                 copy(
-                    pages = rows,
+                    items = rows,
                     isLoading = RsTabLoading.onItemsLoaded(
                         wasLoading = isLoading,
                         hasItems = rows.hasRealPages
@@ -1397,7 +1399,7 @@ internal class PagesRsListViewModel @Inject constructor(
         items: List<PageRsUiModel>,
         isSearch: Boolean
     ): List<PageRsUiModel> {
-        val existingById = getTabUiState(tab).pages
+        val existingById = getTabUiState(tab).items
             .associate { it.remotePageId to it.page }
         return items.map { model ->
             val existing = existingById[model.remotePageId]
@@ -1452,7 +1454,7 @@ internal class PagesRsListViewModel @Inject constructor(
             unresolvableImageIds.removeAll(urls.keys)
             unresolvableImageIds.addAll(unresolvedIds.filterNot { urls.containsKey(it) })
             updateTabUiState(tab) {
-                copy(pages = this.pages.map { item -> item.withResolvedFeaturedImage(urls) })
+                copy(items = this.items.map { item -> item.withResolvedFeaturedImage(urls) })
             }
         }
     }
@@ -1483,7 +1485,7 @@ internal class PagesRsListViewModel @Inject constructor(
             }
             if (names.isEmpty()) return@launch
             updateTabUiState(tab) {
-                copy(pages = this.pages.map { item -> item.withResolvedAuthor(names) })
+                copy(items = this.items.map { item -> item.withResolvedAuthor(names) })
             }
         }
     }
@@ -1575,7 +1577,7 @@ internal class PagesRsListViewModel @Inject constructor(
         val touched = pageIds.toSet()
         updateTabUiState(tab) {
             copy(
-                pages = pages.map { item ->
+                items = items.map { item ->
                     if (item.remotePageId in touched) {
                         item.withPage(
                             item.page.copy(
@@ -1678,7 +1680,7 @@ internal class PagesRsListViewModel @Inject constructor(
         if (!fetchingFirstPage) userRefreshingTabs.remove(tab)
 
         val isError = listInfo?.state == ListState.ERROR
-        val hasPages = getTabUiState(tab).pages.hasRealPages
+        val hasPages = getTabUiState(tab).items.hasRealPages
         val errorMessage = if (isError) {
             RsErrorUtils.friendlyErrorMessage(null, null, resourceProvider, networkUtilsWrapper)
         } else null
@@ -1702,7 +1704,7 @@ internal class PagesRsListViewModel @Inject constructor(
                     isLoading = RsTabLoading.onListInfoChanged(
                         wasLoading = isLoading,
                         isFetchingFirstPage = fetchingFirstPage,
-                        hasItems = pages.hasRealPages,
+                        hasItems = items.hasRealPages,
                         hasFetched = tab in fetchedTabs
                     ),
                     isRefreshing = isUserRefresh && fetchingFirstPage,
@@ -1714,11 +1716,14 @@ internal class PagesRsListViewModel @Inject constructor(
         }
     }
 
-    private fun getTabUiState(tab: PageRsListTab): PageTabUiState {
-        return _tabStates.value[tab] ?: PageTabUiState(isLoading = true)
+    private fun getTabUiState(tab: PageRsListTab): RsTabUiState<PageRsListItem> {
+        return _tabStates.value[tab] ?: RsTabUiState(isLoading = true)
     }
 
-    private fun updateTabUiState(tab: PageRsListTab, update: PageTabUiState.() -> PageTabUiState) {
+    private fun updateTabUiState(
+        tab: PageRsListTab,
+        update: RsTabUiState<PageRsListItem>.() -> RsTabUiState<PageRsListItem>
+    ) {
         val current = getTabUiState(tab)
         val next = current.update()
         if (next == current) return

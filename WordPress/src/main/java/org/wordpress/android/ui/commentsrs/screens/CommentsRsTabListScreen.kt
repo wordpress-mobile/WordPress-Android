@@ -38,15 +38,15 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import org.wordpress.android.R
 import org.wordpress.android.ui.commentsrs.CommentRsUiModel
 import org.wordpress.android.ui.commentsrs.CommentsRsListRow
-import org.wordpress.android.ui.commentsrs.CommentsTabUiState
 import org.wordpress.android.ui.commentsrs.withDateHeaders
 import org.wordpress.android.ui.compose.components.ShimmerBox
+import org.wordpress.android.ui.rs.RsTabUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentsRsTabListScreen(
     /** Null when the tab isn't initialized: first composition, or cleared awaiting a search. */
-    state: CommentsTabUiState?,
+    state: RsTabUiState<CommentRsUiModel>?,
     emptyMessageResId: Int,
     selectedIds: Set<Long>,
     listState: LazyListState,
@@ -64,7 +64,7 @@ fun CommentsRsTabListScreen(
     // keystroke. Outside search, a missing state is the pre-init first composition: shimmer.
     val isSearchIdle = isSearchActive && (!isQuerySearchable || state == null)
     val isSearching = isSearchActive && isQuerySearchable
-    val tabState = state ?: CommentsTabUiState(isLoading = true)
+    val tabState = state ?: RsTabUiState(isLoading = true)
     val pullToRefreshState = rememberPullToRefreshState()
 
     PullToRefreshBox(
@@ -86,14 +86,14 @@ fun CommentsRsTabListScreen(
             // rather than a misleading "no comments" state.
             isSearchIdle -> Box(Modifier.fillMaxSize())
             tabState.isLoading -> ShimmerList()
-            tabState.error != null && tabState.comments.isEmpty() -> ErrorContent(
+            tabState.error != null && tabState.items.isEmpty() -> ErrorContent(
                 error = tabState.error,
                 onRetry = if (tabState.isAuthError) null else onRefresh
             )
             // isLoadingMore matters here because the Unreplied tab auto-advances: a page can
             // thread away to nothing and the next one is already on its way, so an empty list
             // mid-walk isn't an empty tab.
-            tabState.comments.isEmpty() && !tabState.isRefreshing && !tabState.isLoadingMore -> EmptyContent(
+            tabState.items.isEmpty() && !tabState.isRefreshing && !tabState.isLoadingMore -> EmptyContent(
                 emptyMessageResId = if (isSearching) {
                     R.string.comments_rs_search_nothing_found
                 } else {
@@ -101,7 +101,7 @@ fun CommentsRsTabListScreen(
                 }
             )
             else -> CommentListContent(
-                comments = tabState.comments,
+                comments = tabState.items,
                 selectedIds = selectedIds,
                 listState = listState,
                 isLoadingMore = tabState.isLoadingMore,

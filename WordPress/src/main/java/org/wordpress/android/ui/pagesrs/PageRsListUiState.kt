@@ -3,6 +3,7 @@ package org.wordpress.android.ui.pagesrs
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
+import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListRowUiState
 import org.wordpress.android.ui.rs.RsDateFormatter
@@ -22,18 +23,6 @@ internal sealed interface PageRsListConfirmation {
     data class MoveToDraft(val pageId: Long) : PageRsListConfirmation
 }
 
-/** A request to select [tab] and scroll to [remotePageId] within it. */
-internal data class PageRsReveal(
-    val tab: PageRsListTab,
-    val remotePageId: Long
-)
-
-internal data class PageRsConfirmationDialogState(
-    val pending: PageRsListConfirmation? = null,
-    val onConfirm: () -> Unit = {},
-    val onDismiss: () -> Unit = {}
-)
-
 /**
  * State for the "Set Parent" bottom sheet. [candidates] is a paged, optionally search-filtered
  * list of eligible published pages, excluding the page itself and its known descendants.
@@ -52,16 +41,6 @@ internal data class PageRsParentPickerState(
 internal data class PageRsParentCandidate(
     val id: Long,
     val title: String
-)
-
-internal data class PageTabUiState(
-    val pages: List<PageRsListItem> = emptyList(),
-    val isLoading: Boolean = false,
-    val isRefreshing: Boolean = false,
-    val isLoadingMore: Boolean = false,
-    val canLoadMore: Boolean = false,
-    val error: String? = null,
-    val isAuthError: Boolean = false
 )
 
 internal sealed interface PageRsListItem {
@@ -105,14 +84,6 @@ internal const val SITE_EDITOR_PAGE_ID = -1L
 internal val List<PageRsListItem>.hasRealPages: Boolean
     get() = any { it.remotePageId != SITE_EDITOR_PAGE_ID }
 
-internal enum class PageRsDisplayState {
-    NORMAL,
-    FETCHING_WITH_DATA,
-    FAILED_WITH_DATA,
-    PLACEHOLDER,
-    ERROR
-}
-
 internal data class PageRsUiModel(
     val remotePageId: Long,
     val parentId: Long = 0L,
@@ -137,7 +108,7 @@ internal data class PageRsUiModel(
     val isTrashed: Boolean = false,
     val actions: List<PageRsMenuAction> = emptyList(),
     val badges: List<Int> = emptyList(),
-    val displayState: PageRsDisplayState = PageRsDisplayState.NORMAL
+    val displayState: ContentDisplayState = ContentDisplayState.NORMAL
 )
 
 internal enum class PageRsMenuAction(
@@ -171,30 +142,30 @@ internal fun PostItemState.toPageUiModel(
     is PostItemState.Fresh -> data.toPageUiModel(showStatus, nowLabel)
     is PostItemState.Stale -> data.toPageUiModel(showStatus, nowLabel)
     is PostItemState.FetchingWithData ->
-        data.toPageUiModel(showStatus, nowLabel, PageRsDisplayState.FETCHING_WITH_DATA)
+        data.toPageUiModel(showStatus, nowLabel, ContentDisplayState.FETCHING_WITH_DATA)
     is PostItemState.FailedWithData ->
-        data.toPageUiModel(showStatus, nowLabel, PageRsDisplayState.FAILED_WITH_DATA)
+        data.toPageUiModel(showStatus, nowLabel, ContentDisplayState.FAILED_WITH_DATA)
     is PostItemState.Missing,
     is PostItemState.Fetching -> PageRsUiModel(
         remotePageId = pageId,
         title = "",
         excerpt = "",
         date = "",
-        displayState = PageRsDisplayState.PLACEHOLDER
+        displayState = ContentDisplayState.PLACEHOLDER
     )
     is PostItemState.Failed -> PageRsUiModel(
         remotePageId = pageId,
         title = "",
         excerpt = "",
         date = "",
-        displayState = PageRsDisplayState.ERROR
+        displayState = ContentDisplayState.ERROR
     )
 }
 
 private fun FullEntityAnyPostWithEditContext.toPageUiModel(
     showStatus: Boolean,
     nowLabel: String,
-    displayState: PageRsDisplayState = PageRsDisplayState.NORMAL
+    displayState: ContentDisplayState = ContentDisplayState.NORMAL
 ): PageRsUiModel {
     val page: AnyPostWithEditContext = data
     return PageRsUiModel(
@@ -277,8 +248,8 @@ internal fun PageRsListItem.toContentListRowUiState(
             page.statusLabelResId.takeIf { it != 0 }?.let { add(it) }
             addAll(page.badges)
         },
-        isSyncing = page.displayState == PageRsDisplayState.FETCHING_WITH_DATA,
-        hasSyncFailed = page.displayState == PageRsDisplayState.FAILED_WITH_DATA
+        isSyncing = page.displayState == ContentDisplayState.FETCHING_WITH_DATA,
+        hasSyncFailed = page.displayState == ContentDisplayState.FAILED_WITH_DATA
     )
 }
 
