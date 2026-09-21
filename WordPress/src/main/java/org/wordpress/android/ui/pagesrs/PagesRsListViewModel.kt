@@ -73,6 +73,7 @@ import uniffi.wp_api.PostUpdateParams
 import uniffi.wp_mobile.FetchException
 import uniffi.wp_mobile.PostListFilter
 import uniffi.wp_mobile.PostService
+import uniffi.wp_mobile.SyncResult
 import uniffi.wp_mobile_cache.ListState
 import javax.inject.Inject
 
@@ -611,7 +612,7 @@ internal class PagesRsListViewModel @Inject constructor(
             @Suppress("TooGenericExceptionCaught")
             try {
                 val sync = withContext(Dispatchers.IO) { collection.refresh() }
-                if (fill) loadRemainingPages(tab, collection, sync.hasMorePages)
+                if (fill) fillTab(tab, collection, sync)
                 fetchedTabs.add(tab)
                 // Drop only the "nothing to show" entries so a transient failure is retried,
                 // while numbers already fetched stay put.
@@ -633,6 +634,15 @@ internal class PagesRsListViewModel @Inject constructor(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
+                if (fill) {
+                    // A fill that fails part-way leaves the collection holding the pages it did
+                    // load, and the next rebuild for any other reason would render those as a
+                    // complete-looking tree. Show them now instead, with the paging state that
+                    // lets scrolling finish the job, so the error below explains what is seen.
+                    fillingTabs.remove(tab)
+                    loadItemsForTab(tab)
+                    updateListInfoForTab(tab)
+                }
                 onRefreshFailed(tab, e, showSnackbar = isUserRefresh)
             } finally {
                 // A job cancelled by clearCollections unwinds here after the tab has been rebuilt,
@@ -664,18 +674,34 @@ internal class PagesRsListViewModel @Inject constructor(
      * legacy list. A page that fails past its retries throws, and the refresh reports it exactly
      * as it would a failed first page: the user asked for the whole tab, and a partial tree with
      * children shown as roots would look complete when it is not.
+     *
+     * Whether another page follows normally comes from the server's page count. When that is
+     * missing - a proxy or plugin that strips `X-WP-TotalPages` - the page itself answers, as the
+     * legacy list did: a full page may be followed by another, a short one is the last. A site
+     * whose last page is exactly full then costs one request past the end, which the API refuses
+     * as an invalid page number; that refusal is the answer, not an error.
      */
-    private suspend fun loadRemainingPages(
+    private suspend fun fillTab(
         tab: PageRsListTab,
         collection: ObservableMetadataCollection,
-        hasMorePages: Boolean?
+        firstPage: SyncResult
     ) {
+        val pageSize = FILL_PAGE_SIZE.toULong()
+        var loaded = firstPage.totalItems
         val outcome = RsCollectionPrefetch.loadRemainingPages(
-            hasMorePages = hasMorePages,
+            hasMorePages = firstPage.hasMorePages ?: (loaded >= pageSize),
             maxPages = MAX_FILL_PAGES,
             shouldRetry = { !PostRsErrorUtils.isAuthError(it) }
         ) {
-            withContext(Dispatchers.IO) { collection.loadNextPage() }.hasMorePages
+            val next = try {
+                withContext(Dispatchers.IO) { collection.loadNextPage() }
+            } catch (e: FetchException) {
+                if (PostRsErrorUtils.isPastLastPage(e)) return@loadRemainingPages false
+                throw e
+            }
+            val pageWasFull = next.totalItems - loaded >= pageSize
+            loaded = next.totalItems
+            next.hasMorePages ?: pageWasFull
         }
         AppLog.d(AppLog.T.PAGES, "Fill of tab $tab ended: $outcome")
     }

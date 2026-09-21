@@ -53,42 +53,8 @@ class RsCollectionPrefetchTest {
     }
 
     @Test
-    fun `stops when the server stops reporting a total`() = runTest {
-        var calls = 0
-
-        val outcome = RsCollectionPrefetch.loadRemainingPages(
-            hasMorePages = true,
-            maxPages = MAX_PAGES,
-            backoff = noBackoff
-        ) {
-            calls++
-            null
-        }
-
-        assertThat(outcome).isEqualTo(Outcome.Unknown)
-        assertThat(calls).isEqualTo(1)
-    }
-
-    @Test
-    fun `does nothing when the refresh reported no total`() = runTest {
-        var calls = 0
-
-        val outcome = RsCollectionPrefetch.loadRemainingPages(
-            hasMorePages = null,
-            maxPages = MAX_PAGES,
-            backoff = noBackoff
-        ) {
-            calls++
-            true
-        }
-
-        assertThat(outcome).isEqualTo(Outcome.Unknown)
-        assertThat(calls).isZero()
-    }
-
-    @Test
     fun `retries a failed page after backing off and carries on`() = runTest {
-        val answers = ArrayDeque<() -> Boolean?>(
+        val answers = ArrayDeque<() -> Boolean>(
             listOf(
                 { throw IOException("500") },
                 { throw IOException("500") },
@@ -115,7 +81,7 @@ class RsCollectionPrefetchTest {
     @Test
     fun `rethrows the error of a page that fails every attempt`() = runTest {
         val cause = IOException("500")
-        val answers = ArrayDeque<() -> Boolean?>(
+        val answers = ArrayDeque<() -> Boolean>(
             listOf(
                 { true },
                 { throw cause },
@@ -184,7 +150,7 @@ class RsCollectionPrefetchTest {
 
     @Test
     fun `cancellation while a page is in flight stops the loop`() = runTest {
-        val inFlight = CompletableDeferred<Boolean?>()
+        val inFlight = CompletableDeferred<Boolean>()
         var calls = 0
         val job = launch {
             RsCollectionPrefetch.loadRemainingPages(
