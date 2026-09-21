@@ -9,7 +9,6 @@ Language: ko_KR
     <string name="support_screen_unified_support_description">언제든지 지원팀의 답변 받기</string>
     <string name="support_screen_unified_support_title">도움말 이용</string>
     <string name="unified_support_attachment_match_score">%1$d%% 일치</string>
-    <string name="unified_support_status_bot">Oddie 봇</string>
     <string name="unified_support_bot_typing_content_description">지원 봇이 입력 중</string>
     <string name="unified_support_message_input_placeholder">메시지 입력…</string>
     <string name="unified_support_conversations_title">도움말 이용</string>
@@ -91,7 +90,6 @@ Language: ko_KR
     <string name="gutenberg_kit_announcement_learn_more">더 알아보기</string>
     <string name="gutenberg_kit_announcement_maybe_later">나중에</string>
     <string name="gutenberg_kit_announcement_activate">활성화</string>
-    <string name="gutenberg_kit_announcement_body_deadline">2026년 6월 말까지 모든 사람의 기본 편집기가 될 것입니다. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">차세대 블록 편집기가 준비되었으며, 추가 새 기능이 제공됩니다.</string>
     <string name="gutenberg_kit_announcement_title">더 나은 블록 편집기 공개 예정</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">새 편집기를 사용해 보려면 먼저 블록 편집기로 전환하세요.</string>
@@ -234,7 +232,6 @@ Language: ko_KR
     <string name="stats_period_selector_content_description">통계 기간 선택</string>
     <string name="stats_period_custom">사용자 정의</string>
     <string name="stats_period_last_12_months">최근 12개월</string>
-    <string name="stats_period_last_6_months">최근 6개월</string>
     <string name="stats_period_last_30_days">최근 30일</string>
     <string name="stats_period_last_7_days">최근 7일</string>
     <string name="stats_period_today">오늘</string>
@@ -251,8 +248,6 @@ Language: ko_KR
     <string name="post_rs_confirm_delete_message">이 글은 영구적으로 삭제됩니다. 이 작업은 취소할 수 없습니다.</string>
     <string name="post_rs_confirm_trash_message">이 글을 휴지통으로 옮기시겠습니까?</string>
     <string name="post_rs_failed_to_load">글 로드 실패</string>
-    <string name="experimental_rs_pages_list_description">더 현대적인 UI로 페이지 목록을 표시하여 WordPress.com 및 애플리케이션 비밀번호가 있는 독립 호스트 사이트를 지원합니다</string>
-    <string name="experimental_rs_pages_list">새 페이지 목록</string>
     <string name="stats_error_admin_url_unavailable">이 사이트의 WP 관리자를 열 수 없습니다.</string>
     <string name="stats_error_parsing">데이터를 로드하는 데 문제가 발생했습니다. 다시 시도하세요.</string>
     <string name="stats_error_network">네트워크 오류가 발생했습니다. 연결을 확인하고 다시 시도하세요.</string>
@@ -313,8 +308,6 @@ Language: ko_KR
     <string name="he_support_status_unknown">알 수 없음</string>
     <string name="he_support_status_closed">닫힘</string>
     <string name="he_support_status_solved">해결됨</string>
-    <string name="he_support_status_waiting_for_user">사용자 대기 중</string>
-    <string name="he_support_status_waiting_for_support">지원 대기 중</string>
     <string name="he_support_select_attachments">첨부 파일 선택</string>
     <string name="he_support_download_attachment">첨부 파일 다운로드</string>
     <string name="he_support_include_logs_description">로그를 포함하면 팀에서 문제를 조사하는 데 도움이 될 수 있습니다. 로그에 최근 앱 활동이 포함될 수 있습니다.</string>
@@ -484,7 +477,6 @@ Language: ko_KR
     <string name="experimental_block_editor_note">실험 버전 블록 편집기가 향후 릴리스에서 기본값이 되며 비활성화하는 기능은 제거될 예정입니다.</string>
     <string name="avatar_update_email_unverified">아바타를 업데이트하려면 먼저 이메일 주소를 확인해야 합니다.</string>
     <string name="feedback_form_note_link_wordpress">커뮤니티 포럼\"을 사용해 주세요.</string>
-    <string name="default_web_client_id">플레이스홀더</string>
     <string name="personalization_screen_shortcuts_accessibility_label">%s 단축키 설정/해제</string>
     <string name="personalization_screen_card_accessibility_label">%s 카드 설정/해제</string>
     <string name="user_avatar_content_description">사용자 %s의 아바타</string>
@@ -751,13 +743,8 @@ Language: ko_KR
     <string name="barcode_scanning_alert_dialog_rationale_message">바코드를 스캔하려면 카메라 권한이 필요합니다.</string>
     <string name="barcode_scanning_alert_dialog_title">카메라 권한 부여</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%d 레벨보다 깊숙이 중첩된 블록은 모바일 편집기에서 올바르게 렌더링되지 않을 수 있습니다.</string>
-    <string name="jp_migration_lets_go_button">지금 시작</string>
-    <string name="jp_migration_done_no_sites_message">젯팩 앱에서 워드프레스 여정을 계속하실 때가 되었습니다.</string>
     <string name="domain_management_clear_search">검색 지우기</string>
     <string name="media_encoder_quality_very_high">매우 높음</string>
-    <string name="notification_security_key_needed">계속하려면 보안 키를 입력하세요.</string>
-    <string name="login_error_security_key">보안 키 로그인 문제 발생</string>
-    <string name="login_text_security_key">보안 키 사용</string>
     <string name="new_domain_search_screen_error_title">도메인을 검색할 수 없음</string>
     <string name="new_domain_search_screen_list_item_sale_price">첫 1년 동안 %s</string>
     <string name="new_domain_search_screen_list_item_regular_price">%s/년</string>
@@ -937,22 +924,16 @@ Language: ko_KR
     <string name="sharing_twitter_deprecation_notice_find_out_more">더 알아보기</string>
     <string name="sharing_twitter_deprecation_notice_description">Twitter의 약관 및 가격 변경으로 인해 Twitter 자동 공유를 더 이상 사용할 수 없습니다.</string>
     <string name="sharing_twitter_deprecation_notice_title">Twitter 자동 공유를 더 이상 사용할 수 없습니다.</string>
-    <string name="jp_migration_notifications_allow_title">알림이 사이트에 계속 표시되도록 허용</string>
-    <string name="wp_jp_static_poster_message">젯팩 앱에서는 워드프레스 앱의 모든 기능을 보유하며, 이제 통계, 리더, 알림 등에 독점적으로 접근할 수 있습니다.</string>
-    <string name="wp_jp_static_poster_title_plural">젯팩\u00A0앱에서 %s과(와) 함께 워드프레스를 사용하세요.</string>
-    <string name="wp_jp_static_poster_title">젯팩\u00A0앱에서 %s과(와) 함께 워드프레스를 사용하세요.</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">레이블이 없는 색상입니다. %s</string>
     <string name="dashboard_activity_card_title">최근 활동</string>
     <string name="site_creation_search_domain_example_body">위의 예와 같이 사용자가 웹 브라우저에서 도메인을 통해 사이트를 찾고 방문할 수 있습니다.</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_domain_search_input_hint">키워드로 검색</string>
     <string name="site_creation_domain_header_subtitle">사용자가 사이트를 찾고 방문하는 데 도움이 되는 짧고 기억하기 쉬운 도메인을 검색하세요.</string>
-    <string name="site_creation_domain_cost_sale">첫해 동안</string>
     <string name="site_creation_error_cart_subtitle">웹사이트가 생성되었지만, 체크아웃용 사용자 정의 도메인을 준비하는 동안 문제가 발생했습니다. 다시 시도하거나 지원팀에 도움을 문의하세요.</string>
     <string name="new_site_creation_preview_caption_paid">사용자 정의 도메인이 작동하기 시작하려면 30분 정도 걸릴 수 있습니다.</string>
     <string name="new_site_creation_preview_subtitle_paid">영수증을 이메일로 보내드렸습니다. %s</string>
     <string name="notifications_disabled_permission_dialog">앱 알림이 비활성화되었습니다. 활성화하려면 여기를 누르세요.</string>
-    <string name="jp_migration_done_delete_wp_message">데이터가 충돌하지 않도록 기기에서 &lt;b&gt;워드프레스 앱을 제거&lt;/b&gt;하는 것이 좋습니다.</string>
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">블록 제거</string>
     <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">개인정보 보호 및 평점</string>
     <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">재생 설정</string>
@@ -995,9 +976,6 @@ Language: ko_KR
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">이 사이트</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s에서는 %2$s을(를) 사용하고 있으며 여기에서는 아직 앱의 모든 기능이 지원되지 않습니다. %3$s을(를) 설치하세요.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s에서는 %2$s을(를) 사용하고 있으며 여기에서는 아직 앱의 모든 기능이 지원되지 않습니다. %3$s을(를) 설치하세요.</string>
-    <string name="wp_jp_static_poster_footnote">전환은 무료이며 1분밖에 걸리지 않습니다.</string>
-    <string name="wp_jp_static_poster_button_secondary">Jetpack.com에서 더 알아보기</string>
-    <string name="wp_jp_static_poster_button_primary">젯팩 앱으로 전환</string>
     <string name="my_site_btn_wp_admin">WP 관리자</string>
     <string name="my_site_header_manage">관리</string>
     <string name="my_site_header_traffic">트래픽</string>
@@ -1014,11 +992,8 @@ Language: ko_KR
     <string name="blaze_promotional_text">Blaze를 통해 사이트에 더 많은 트래픽 유도</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="site_creation_domain_tag_unavailable">이 도메인은 이미 등록되었습니다.</string>
-    <string name="site_creation_domain_tag_sale">세일</string>
     <string name="site_creation_domain_tag_recommended">권장</string>
     <string name="site_creation_domain_tag_best_alternative">최선의 대안</string>
-    <string name="support_faq_caption">궁금할 수도 있는 일반적인 질문에 대한 답변은 FAQ를 참조하세요.</string>
-    <string name="support_faq_title">젯팩 앱으로 전환해 주셔서 감사합니다!</string>
     <string name="logs_button">로그</string>
     <string name="tickets">티켓</string>
     <string name="free">무료</string>
@@ -1054,12 +1029,6 @@ Language: ko_KR
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">사이트의 전체 잠재력을 잠금 해제하세요. 젯팩으로 통계, 알림 등을 이용하세요.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">사이트에 젯팩 플러그인 있음</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">젯팩 모바일 앱은 젯팩 플러그인과 연동하도록 설계되었습니다. 지금 전환하여 통계, 알림, 리더 등에 대한 접근 권한을 받으세요.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">새 댓글, 좋아요, 조회수 등에 대한 알림을 받으세요.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">즐겨 찾는 사이트와 커뮤니티를 찾아서 팔로우하고, 자신의 콘텐츠를 공유하세요.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">유용한 인사이트와 포괄적인 통계를 통해 트래픽 증가를 지켜보세요.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">통계 및 인사이트</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">젯팩을 통해 워드프레스 사이트에서 더 많은 작업을 수행할 수 있습니다. 전환은 무료이며 1분밖에 걸리지 않습니다.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">젯팩으로 워드프레스 성능 향상</string>
     <string name="blogging_prompts_onboarding_content_note_content">언제든지 내 사이트 &gt; 설정 &gt; 블로깅에서 블로깅 프롬프트와 알림을 관리할 수 있습니다.</string>
     <string name="blogging_reminders_prompt_subtitle">영감을 주는 단어 또는 짧은 구문이 알림에 포함됩니다.</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">&lt;b&gt;사이트 설정&lt;/b&gt;으로 이동하여 다시 켜기</string>
@@ -1071,15 +1040,6 @@ Language: ko_KR
     <string name="site_settings_blogging_prompts_title">프롬프트 표시</string>
     <string name="site_settings_blogging">블로깅</string>
     <string name="install_play_store_to_get_jetpack">젯팩 앱을 이용하려면 Google Play 스토어를 설치하세요.</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">나중에 하겠습니다.</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">젯팩으로 전환 </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">통계, 리더, 알림 및 기타 젯팩에서 제공되는 기능이 워드프레스 앱에서 제거되었습니다.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">젯팩 기능이 제거되었습니다.</string>
-    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%2$s에 %1$s 이동</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%2$s에 %1$s 이동</string>
-    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">곧 %1$s 이동 예정</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">곧 %1$s 이동 예정</string>
-    <string name="wp_jetpack_powered_phase_2">젯팩 앱 받기</string>
     <string name="my_site_blogging_prompt_card_view_answers">모든 응답 보기</string>
     <string name="stats_insights_total_stats_seven_days_negative">이전 7일보다 %1$s 적음</string>
     <string name="stats_insights_total_stats_seven_days_positive">이전 7일보다 %1$s 많음</string>
@@ -1089,21 +1049,10 @@ Language: ko_KR
     <string name="stats_insights_views_and_visitors_seven_days_views_positive">최근 7일의 조회수가 이전 7일보다 %1$s 많습니다.</string>
     <string name="stats_timeframe_previous_seven_days">이전 7일</string>
     <string name="stats_timeframe_last_seven_days">최근 7일</string>
-    <string name="weeks_quantity_other">%d주</string>
-    <string name="weeks_quantity_one">1주</string>
     <string name="my_site_blogging_prompt_card_attribution_day_one">출처: &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">나중에 다시 알림</string>
-    <string name="jetpack_feature_card_content_phase_three">곧 통계, 리더, 알림 및 기타 기능이 젯팩 모바일 앱으로 이동됩니다.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">젯팩 앱으로 전환</string>
-    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">jetpack.com에서 더 알아보기</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">전환은 무료이며 1분밖에 걸리지 않습니다.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">통계, 리더, 알림 및 기타 젯팩에서 제공되는 기능이 조만간 워드프레스 앱에서 제거됩니다.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">통계, 리더, 알림 및 기타 젯팩에서 제공되는 기능이 %s에 워드프레스 앱에서 제거됩니다.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">젯팩 기능이 곧 이동합니다.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">젯팩으로 알림 이동 중</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">젯팩 앱으로 리더 이동 중</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">젯팩 앱으로 통계 이동 중</string>
-    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">새 젯팩 앱으로 전환</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">프롬프트 로드 중 오류가 발생했습니다.</string>
     <string name="blogging_prompts_list_error_fetch_title">죄송합니다.</string>
     <string name="blogging_prompts_list_no_prompts">아직 프롬프트 없음</string>
@@ -1129,39 +1078,11 @@ Language: ko_KR
     <string name="wp_jetpack_continue_without_jetpack">젯팩 없이 계속</string>
     <string name="deep_linking_weblinks_alias_label">웹 링크</string>
     <string name="deep_linking_urilinks_alias_label">URL 링크</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">젯팩 앱으로 전환하여 계속  기기에서 실시간 알림을 받으세요.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">젯팩 앱으로 전환하여 리더를 통해 좋아하는 모든 사이트와 글을 찾고, 팔로우하고, 좋아요를 표시하세요.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">젯팩 앱으로 전환하여 통계와 인사이트를 통해 사이트의 트래픽 증가를 지켜보세요.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">젯팩 앱으로 알림 받기</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">젯팩 앱으로 사이트 팔로우</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">새 젯팩 앱을 사용하여 통계 받기</string>
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">젯팩에서 링크 열기를 비활성화할 수 없음</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">젯팩에서 링크 여기를 활성화할 수 없음</string>
     <string name="preference_open_links_in_jetpack">젯팩에서 링크 열기</string>
-    <string name="jp_migration_network_error_message">네트워크 연결 없이 데이터와 설정을 이전할 수 없습니다.</string>
-    <string name="jp_migration_network_error_subtitle">네트워크 연결이 작동하도록 점검하고 다시 시도하세요.</string>
-    <string name="jp_migration_network_error_title">인터넷에 연결할 수 없습니다.</string>
-    <string name="jp_migration_generic_error_message">지원팀에 문의하거나 나중에 다시 시도하세요.</string>
-    <string name="jp_migration_generic_error_subtitle">죄송합니다. 계획대로 진행되지 않았습니다. 데이터는 안전하지만, 지금은 이전할 수 없습니다.</string>
     <string name="jp_migration_generic_error_title">죄송합니다. 문제가 발생했습니다…</string>
-    <string name="jp_migration_try_again_button">다시 시도</string>
-    <string name="jp_migration_finish_button">마침</string>
-    <string name="jp_migration_remove_wp_app_icon_content_description">워드프레스 앱 아이콘 제거</string>
-    <string name="jp_migration_done_subtitle">모든 데이터와 설정을 이전했습니다. 모든 것이 그대로 다 남아 있습니다.</string>
-    <string name="jp_migration_done_title">젯팩으로 전환해 주셔서 감사합니다!</string>
-    <string name="jp_migration_notifications_disabled_in_wp_message">워드프레스 앱의 알림을 해제하겠습니다.</string>
-    <string name="jp_migration_notifications_subtitle">동일한 알림을 모두 받겠지만, 이제는 젯팩 앱에서 알림을 보냅니다.</string>
-    <string name="wordpress_help_center_button">워드프레스 도움말 센터</string>
     <string name="support_title">지원</string>
-    <string name="notification_disable_broadcast_permission_desc">앱에 워드프레스 알림 비활성화를 허용하세요.</string>
-    <string name="notification_disable_broadcast_permission_label">워드프레스 알림 비활성화</string>
-    <string name="jp_migration_help_button">도움말이 필요하신가요?</string>
-    <string name="jp_migration_continue_button">계속</string>
-    <string name="jp_migration_welcome_site_found_message">사이트를 찾았습니다. 자동으로 모든 데이터를 계속 이전하고 젯팩에 로그인합니다.</string>
-    <string name="jp_migration_welcome_sites_found_message">사이트를 찾았습니다. 자동으로 모든 데이터를 계속 이전하고 젯팩에 로그인합니다.</string>
-    <string name="jp_migration_avatar_content_description">프로필 사진</string>
-    <string name="jp_migration_welcome_subtitle">워드프레스 앱에서 전환 중이신 것 같습니다.</string>
-    <string name="jp_migration_welcome_title">젯팩에 오신 것을 환영합니다!</string>
     <string name="icon_desc">아이콘</string>
     <string name="post_settings_parent">상위 페이지</string>
     <string name="post_settings_page_attributes">페이지 속성</string>
@@ -1197,7 +1118,6 @@ Language: ko_KR
     <string name="weekly_roundup_notification_text_views_only">지난주에는 조회수 %1$s개가 있습니다.</string>
     <string name="weekly_roundup_notification_text_all">지난주에는 조회수 %1$s개, 좋아요 %2$s개 및 댓글 %3$s개가 있습니다.</string>
     <string name="stats_insights_like_guide_card">⭐️ 최신 글 %1$s에 좋아요 %2$s개가 있습니다.</string>
-    <string name="wp_jetpack_powered">Jetpack powered</string>
     <string name="qrcode_auth_flow_content_description">진행 중인 로그인 코드 스캔을 나타내는 이미지</string>
     <string name="qrcode_auth_flow_error_content_description">오류를 나타내는 이미지</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">인증 실패</string>
@@ -1372,11 +1292,6 @@ Language: ko_KR
     <string name="notification_channel_weekly_roundup_title">주간 총정리</string>
     <string name="my_site_dashboard_tab_title">홈</string>
     <string name="adding_cat">카테고리 추가하기</string>
-    <string name="login_select_email_client">어떤 이메일 앱을 사용하시나요?</string>
-    <string name="login_error_xml_rpc_auth_error_communicating">사이트와 통신하는 중 문제가 발생했습니다. HTTP 오류 코드 401이 반환되었습니다.</string>
-    <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC 호출이 이 사이트에서 차단된 것 같습니다(오류 코드 401). 로그인 시도가 실패하면 도움말 아이콘을 눌러 FAQ를 확인하세요.</string>
-    <string name="login_error_xml_rpc_cannot_read_site">해당 URL에서 워드프레스 사이트를 읽을 수 없습니다. 도움말 아이콘을 눌러 FAQ를 확인하세요.</string>
-    <string name="login_error_xml_rpc_services_disabled">XML-RPC 서비스가 이 사이트에서 비활성화되었습니다.</string>
     <string name="my_site_menu_tab_title">메뉴</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">검색어에 워드프레스닷컴 도메인에 지원되지 않는 문자가 있습니다. 허용되는 문자는 A–Z, a–z, 0–9입니다.</string>
     <string name="my_site_error_within_card_subtitle">인터넷 연결을 확인하고 페이지를 새로 고치세요.</string>
@@ -1619,11 +1534,6 @@ Language: ko_KR
     <string name="threat_fix_enter_server_creds_msg_plural">위협을 해결하려면 &lt;a href=\"%1$s\"&gt;서버 자격 증명을 입력하세요&lt;/a&gt;.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">위협을 해결하려면 &lt;a href=\"%1$s\"&gt;서버 자격 증명을 입력하세요&lt;/a&gt;.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">링크를 두 번 눌러 추가하세요.</string>
-    <string name="login_empty_view_try_another_account">다른 계정으로 시도</string>
-    <string name="login_empty_view_see_instructions">지침 참조</string>
-    <string name="login_no_jetpack_sites_error_message">이미 사이트가 있으면 무료 젯팩 플러그인을 설치하고 워드프레스닷컴 계정에 연결해야 합니다.</string>
-    <string name="login_empty_view_avatar_content_description">프로필 사진</string>
-    <string name="login_not_a_jetpack_site">%1$s에 이 앱을 사용하려면 설치되고 워드프레스닷컴 계정에 연결된 젯팩 플러그인이 있어야 합니다.</string>
     <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">폭 설정</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">링크 관계</string>
     <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">열 설정</string>
@@ -1659,7 +1569,6 @@ Language: ko_KR
     <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">더 보기</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">화면 리더 사용자에게 도움이 되도록 간략하게 링크 설명</string>
     <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">블록 추가</string>
-    <string name="login_no_jetpack_sites">젯팩 사이트를 찾을 수 없음</string>
     <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">대체 텍스트란 무엇인가요?</string>
     <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">다음으로 %s 변형</string>
     <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">블록 변형…</string>
@@ -1706,7 +1615,6 @@ Language: ko_KR
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">이미지를 편집, 교체 또는 지울 작업 시트를 두 번 눌러 열기</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="new_site_creation_search_domain_input_hint">사이트의 이름 입력</string>
-    <string name="magic_link_not_meaning_to_create_account">새 계정을 만들 계획이 없으신가요? 뒤로 이동하여 이메일 주소를 다시 입력하세요.</string>
     <string name="invite_links_disable_dialog_message">초대 링크를 비활성화하면 아무도 이 링크를 사용해서 이 팀에 참여할 수 없습니다. 계속할까요?</string>
     <string name="invite_links_disable_dialog_title">초대 링크 비활성화</string>
     <string name="invite_links_bad_format_response">유효하지 않은 반응을 받았습니다</string>
@@ -1968,8 +1876,6 @@ Language: ko_KR
     <string name="hpp_retry_error">인터넷 연결을 확인하고 재시도하시기 바랍니다.</string>
     <string name="hpp_error_subtitle">온라인으로 돌아오면 재시도를 누르세요.</string>
     <string name="hpp_error_title">레이아웃은 오프라인에서 사용할 수 없습니다</string>
-    <string name="continue_site_credentials">상점 자격증명으로 계속하기</string>
-    <string name="login_find_your_connected_email">연결한 이메일 찾기</string>
     <string name="reader_discover_no_posts_follow_subtitle">검색 범위가 넓어지도록 추가 태그를 팔로우해 보세요.</string>
     <string name="reader_discover_no_posts_title">최근 글이 없습니다</string>
     <string name="reader_discover_empty_title">환영합니다!</string>
@@ -2010,8 +1916,6 @@ Language: ko_KR
     <string name="suggestion_no_connection">인터넷에 연결되지 않았습니다.\n제안을 사용할 수 없습니다.</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s 선택했습니다</string>
-    <string name="login_get_link_by_email">이메일로 로그인 링크 얻기</string>
-    <string name="email_not_registered_wpcom">음, 이 이메일 주소와 연결된 워드프레스닷컴 계정을 찾을 수 없습니다.</string>
     <string name="permission_microphone">마이크</string>
     <string name="comment_unable_to_show_error">이 댓글을 볼 수 없습니다</string>
     <string name="media_browse_for_items">항목 탐색하기</string>
@@ -2048,26 +1952,7 @@ Language: ko_KR
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">이미지 고르기</string>
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">블록을 제거했습니다</string>
     <string name="enter_your_site_address">이미 있는 사이트 주소 입력하기</string>
-    <string name="signup_confirmation_title">등록 확인</string>
-    <string name="continue_with_google_terms_of_service_text">워드프레스닷컴 계정이 없는 상태에서 Google로 계속하기를 선택하는 경우, 계정을 만들고 %1$s서비스 약관%2$s에 동의하는 것으로 간주됩니다.</string>
-    <string name="continue_terms_of_service_text">계속하면 %1$s서비스 약관%2$s에 동의하는 것입니다.</string>
-    <string name="signup_confirmation_message">이 이메일 주소를 사용하여 새 워드프레스닷컴 계정을 만들 것입니다.</string>
-    <string name="signup_magic_link_message">워드프레스닷컴 계정을 만드는 등록 링크를 이메일 하였습니다. 이 장치에서 이메일을 확인하고, 워드프레스닷컴에서 받은 이메일에 있는 링크를 누르세요.</string>
-    <string name="enter_account_info_for_site">%1$s에 대한 계정 정보를 입력합니다.</string>
-    <string name="login_or">또는</string>
-    <string name="continue_google_button_suffix">Google로 계속하기</string>
-    <string name="login_find_your_site_adress">사이트 주소 찾기</string>
-    <string name="login_done">완료</string>
-    <string name="magic_link_not_seeing_email_message">이메일이 보이지 않으세요? 스팸이나 정크 메일 폴더를 확인하세요.</string>
-    <string name="login_magic_links_sent_label">이 장치에서 이메일을 확인하여 워드프레스닷컴에서 받은 이메일의 링크를 누르세요.</string>
-    <string name="login_magic_links_label">비밀번호가 필요하지 않고 바로 로그인할 수 있는 링크를 이메일 할 것입니다.</string>
-    <string name="check_email">이메일 확인하기</string>
     <string name="get_started" a8c-src-lib="module:login">시작하기</string>
-    <string name="enter_email_to_continue_wordpress_com">이메일 주소를 입력하여 로그인하거나 워드프레스닷컴 계정을 만드세요.</string>
-    <string name="or_type_your_password">또는 비밀번호 입력하기</string>
-    <string name="create_account">계정 만들기</string>
-    <string name="send_link_by_email">이메일로 링크 보내기</string>
-    <string name="reset_your_password">비밀번호 재설정하기</string>
     <string name="reader_error_request_failed_title">요청을 처리하는 중에 문제가 있었습니다. 나중에 다시 시도하시기 바랍니다.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">이 글을 휴지통에 버리면 로컬 변경사항도 취소될 것입니다. 계속하기 원하시는게 맞나요?</string>
     <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s 블록 옵션</string>
@@ -2290,9 +2175,6 @@ Language: ko_KR
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">갤러리 캡션. %s</string>
     <string name="create_post_page_fab_tooltip">글 또는 페이지 만들기</string>
     <string name="content_description_person_building_website">사람 건물 웹사이트</string>
-    <string name="post_signup_interstitial_not_right_now">나중에</string>
-    <string name="post_signup_interstitial_subtitle">무엇을 만들거나 공유하려는 경우 지금 바로 도와드리겠습니다.</string>
-    <string name="post_signup_interstitial_title">워드프레스에 오신 것을 환영합니다.</string>
     <string name="stock_media_picker_list_content_description">사진 라이브러리</string>
     <string name="photo_picker_image_thumbnail_unselected">이미지가 선택되지 않음</string>
     <string name="photo_picker_image_selected">,선택됨</string>
@@ -2306,12 +2188,6 @@ Language: ko_KR
     <string name="dialog_confirm_scheduled_post_sync_title">동기화할 준비가 되셨습니까?</string>
     <string name="new_site_creation_unavailable_domain">이 도메인을 사용할 수 없습니다.</string>
     <string name="negative_prefix">-%s</string>
-    <string name="login_discovery_error_generic">사이트에 액세스할 수 없습니다. 이 문제를 해결하려면 호스트에게 연락해야 합니다.</string>
-    <string name="login_discovery_error_ssl">&lt;b&gt;SSL 인증서&lt;/b&gt; 문제로 인해 사이트에 액세스할 수 없습니다. 이 문제를 해결하려면 호스트에게 연락해야 합니다.</string>
-    <string name="login_discovery_error_http_auth">&lt;b&gt;HTTP 인증&lt;/b&gt;이 필요하므로 사이트에 액세스할 수 없습니다. 이 문제를 해결하려면 호스트에게 연락해야 합니다.</string>
-    <string name="login_discovery_error_xmlrpc">사이트에서 &lt;b&gt;XMLRPC 파일&lt;/b&gt;에 액세스할 수 없습니다. 이 문제를 해결하려면 호스트에게 연락해야 합니다.</string>
-    <string name="login_site_credentials_magic_link_label">마지막 부분입니다! 젯팩에 연결된 이메일 주소 &lt;b&gt;%1$s&lt;/b&gt;만 확인하면 됩니다.</string>
-    <string name="enter_credentials_for_site">%1$s 사이트 자격 증명으로 로그인</string>
     <string name="my_site_bottom_sheet_add_page">사이트 페이지</string>
     <string name="reader_my_likes_display_name">좋아요</string>
     <string name="reader_discover_display_name">검색</string>
@@ -2469,8 +2345,6 @@ Language: ko_KR
     <string name="post_settings_add_to_calendar">달력에 추가</string>
     <string name="post_settings_notification">알림</string>
     <string name="post_settings_time_and_date">날짜 및 시각</string>
-    <string name="login_invalid_site_url">example.com과 같은 완전한 웹사이트 주소를 입력하세요.</string>
-    <string name="enter_email_for_site">%1$s에 연결하려면 워드프레스닷컴에 로그인하세요.</string>
     <string name="stats_post_views_label">조회수</string>
     <string name="stats_post_label">글</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -2576,8 +2450,6 @@ Language: ko_KR
     <string name="posts_draft_empty">임시글이 없습니다.</string>
     <string name="posts_scheduled_empty">예약한 글이 없습니다.</string>
     <string name="posts_published_empty">아직 글을 공개하지 않았습니다!</string>
-    <string name="notification_wpcom_username_needed">사용자 이름과 비밀번호를 사용하여 로그인하세요.</string>
-    <string name="error_user_username_instead_of_email">이메일 주소가 아닌 워드프레스닷컴 사용자 이름을 사용하여 로그인하세요.</string>
     <string name="stats_insights_average_words">평균 단어 수/글 수</string>
     <string name="stats_insights_total_words">총 단어 수</string>
     <string name="stats_insights_average_likes">평균 좋아요 클릭 수/글 수</string>
@@ -2587,7 +2459,6 @@ Language: ko_KR
     <string name="stats_insights_posts">글</string>
     <string name="stats_insights_year">년</string>
     <string name="stats_insights_this_year_site_stats">올해</string>
-    <string name="no_site_error">이 주소의 사이트는 워드프레스 사이트가 아닙니다. 연결하려면 사이트에서 워드프레스를 사용해야 합니다.</string>
     <string name="plugin_check_domain_credit_error">사용 가능한 도메인 크레딧을 확인하지 못함</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">도메인 크레딧 확인 중</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">도메인 등록</string>
@@ -2720,7 +2591,6 @@ Language: ko_KR
     <string name="history_detail_button_previous">이전</string>
     <string name="history_detail_button_next">다음</string>
     <string name="media_space_used">%1$s 사용</string>
-    <string name="enter_wpcom_or_jetpack_site">워드프레스닷컴 또는 젯팩에 연결된 독립 호스트 워드프레스 사이트를 입력하세요.</string>
     <string name="history_loading_revision">리비전 로드하는 중</string>
     <string name="history_loaded_revision">리비전 로드됨</string>
     <string name="history_load_dialog_button_positive">로드</string>
@@ -2749,8 +2619,6 @@ Language: ko_KR
     <string name="pages_scheduled">예약됨</string>
     <string name="pages_drafts">임시글</string>
     <string name="pages_published">발행됨</string>
-    <string name="login_error_sms_throttled">SMS 확인 코드를 보내려는 시도가 너무 많았습니다. 잠시 후 다시 요청하세요.</string>
-    <string name="login_error_email_not_found_v2">이 Google 계정과 일치하는 워드프레스닷컴 계정이 없습니다.</string>
     <string name="site_picker_remove_site_empty">검색어와 일치하는 사이트 없음</string>
     <string name="reader_no_followed_blogs_search_title">검색과 일치하는 블로그 없음</string>
     <string name="page_parent_changed">페이지 상위 항목이 변경되었습니다.</string>
@@ -2769,7 +2637,6 @@ Language: ko_KR
     <string name="content_description_more">더 보기</string>
     <string name="my_site_create_new_site_title">사이트가 없습니다</string>
     <string name="reader_empty_subscribed_tags_subtitle">즐겨 찾는 주제에 대한 글을 찾으려면 여기에 태그 추가</string>
-    <string name="login_to_to_connect_jetpack">젯팩에 연결하는 데 사용한 워드프레스닷컴 계정으로 로그인하세요.</string>
     <string name="jetpack">젯팩</string>
     <string name="stats_jetpack_connection_faq">젯팩 자주 찾는 질문</string>
     <string name="stats_jetpack_connection_setup_info">워드프레스 사이트에서 통계를 사용하려면 젯팩 플러그인을 설치해야 합니다.</string>
@@ -2822,13 +2689,7 @@ Language: ko_KR
     <string name="reader_empty_search_title">일치하는 결과 없음</string>
     <string name="comment_read_source_post">원글 읽기</string>
     <string name="sites">사이트</string>
-    <string name="signup_magic_link_title">매직 링크가 전송됨</string>
-    <string name="verification_2fa_screen_title">코드 확인</string>
-    <string name="selfhosted_site_login_title">로그인 자격 증명</string>
-    <string name="magic_link_sent_login_title">매직 링크가 전송됨</string>
-    <string name="magic_link_login_title">매직 링크 로그인</string>
     <string name="site_address_login_title" a8c-src-lib="module:login">사이트 주소 로그인</string>
-    <string name="email_address_login_title">이메일 주소 로그인</string>
     <string name="reader_empty_saved_posts_description">%s을(를) 탭하여 목록에 글을 저장합니다.</string>
     <string name="reader_empty_saved_posts_title">글이 아직 저장되지 않았습니다!</string>
     <string name="reader_bookmark_snack_title">글이 저장됨</string>
@@ -2930,7 +2791,6 @@ Language: ko_KR
     <string name="invite_user_delete_desc">%s 제거</string>
     <string name="profile_picture">%s의 프로필 사진</string>
     <string name="comment_checkmark_desc">확인 표시</string>
-    <string name="signup_with_google_progress">Google로 가입하는 중…</string>
     <string name="jetpack_connection_failed_with_reason">젯팩에 연결 실패: %s</string>
     <string name="jetpack_already_connected_toast">이미 젯팩에 연결되어 있습니다.</string>
     <string name="menu_visual_mode">비주얼 편집기</string>
@@ -2957,7 +2817,6 @@ Language: ko_KR
     <string name="notif_detail_screen_title">알림 세부정보 %s</string>
     <string name="edit_photo_screen_title">사진 편집</string>
     <string name="share_intent_screen_title">사이트 선택</string>
-    <string name="signup_epilogue_screen_title">새 계정</string>
     <string name="person_detail_screen_title">사용자 세부정보</string>
     <string name="media_settings_screen_title">파일 세부정보</string>
     <string name="publicize_buttons_screen_title">공유 버튼</string>
@@ -3008,7 +2867,6 @@ Language: ko_KR
     <string name="site_creation_domain_finish_button">사이트 생성</string>
     <string name="notification_site_creation_created">계속하려면 누르세요.</string>
     <string name="notification_site_creation_title_success">사이트를 생성했습니다!</string>
-    <string name="google_error_timeout">Google에서 응답하는 데 너무 오래 걸립니다. 더 강한 인터넷 연결이 있을 때까지 기다려야 할 수 있습니다.</string>
     <string name="username_changer_title">사용자 이름 변경</string>
     <string name="username_changer_hint">더 많은 제안을 받으려면 입력하세요.</string>
     <string name="username_changer_header">회원님의 현재 사용자명은 %1$s%2$s%3$s입니다. 몇 가지 예외가 있지만 다른 사람들은 회원님의 공개 이름, %4$s%5$s%6$s만 볼 수 있습니다.</string>
@@ -3018,18 +2876,6 @@ Language: ko_KR
     <string name="username_changer_dismiss_button_positive">취소</string>
     <string name="username_changer_action">저장</string>
     <string name="content_description_add_avatar">아바타 추가</string>
-    <string name="signup_user_exists">이메일이 이미 워드프레스닷컴에 있습니다.\n로그인을 통해 진행 중입니다.</string>
-    <string name="signup_updating_account">계정 업데이트 중…</string>
-    <string name="signup_magic_link_progress">이메일 전송 중</string>
-    <string name="signup_magic_link_error_button_positive">다시 시도</string>
-    <string name="signup_magic_link_error_button_negative">닫기</string>
-    <string name="signup_magic_link_error">이메일을 보내는 중에 문제가 발생했습니다. 지금 다시 시도하거나 닫고 나중에 다시 시도할 수 있습니다.</string>
-    <string name="signup_epilogue_hint_username">사용자 이름</string>
-    <string name="signup_epilogue_hint_password_detail">방금 사용한 것과 같은 링크로 항상 로그인할 수 있지만, 원하는 경우 비밀번호를 설정할 수도 있습니다.</string>
-    <string name="signup_epilogue_hint_password">암호(옵션)</string>
-    <string name="signup_epilogue_hint_display">대화명</string>
-    <string name="signup_epilogue_error_button_positive">다시 시도</string>
-    <string name="signup_epilogue_error_button_negative">되돌리기</string>
     <string name="signup_epilogue_error_generic">계정을 업데이트하는 중에 문제가 발생했습니다. 다시 시도하거나 변경 내용을 되돌려 계속할 수 있습니다.</string>
     <string name="plugin_needs_update">업데이트 필요</string>
     <string name="plugin_caption_search">플러그인 검색</string>
@@ -3117,18 +2963,6 @@ Language: ko_KR
     <string name="my_site_btn_plugins">플러그인</string>
     <string name="media_edit_link_hint">새 창/탭에 링크 열기</string>
     <string name="media_edit_link_text">링크 연결 대상:</string>
-    <string name="notification_login_failed">오류가 발생했습니다.</string>
-    <string name="notification_2fa_needed">계속하려면 인증 코드를 입력하세요.</string>
-    <string name="notification_error_wrong_password">계속하려면 비밀번호를 다시 확인하세요.</string>
-    <string name="notification_login_title_stopped">로그인 중지됨</string>
-    <string name="notification_logging_in">로그인하는 동안 잠시 기다려 주세요.</string>
-    <string name="notification_login_title_in_progress">로그인 진행 중…</string>
-    <string name="notification_logged_in">계속하려면 누르세요.</string>
-    <string name="notification_login_title_success">로그인됨!</string>
-    <string name="login_error_generic_start">Google 로그인을 시작할 수 없습니다.</string>
-    <string name="login_empty_password">비밀번호를 입력하세요.</string>
-    <string name="login_text_otp_another">대신 다른 코드를 문자로 받습니다.</string>
-    <string name="enter_verification_code_sms">%s(으)로 끝나는 전화 번호로 문자 메시지를 보냈습니다. SMS의 확인 코드를 입력하세요.</string>
     <string name="image_size">크기</string>
     <string name="uploading_subtitle_media_only_one">1개 파일 남음</string>
     <string name="uploading_subtitle_media_only">%1$d/%2$d개 파일 남음</string>
@@ -3145,15 +2979,10 @@ Language: ko_KR
     <string name="confirm_remove_media_image">글에서 이 이미지를 제거할까요?</string>
     <string name="media_edit_customize_card_caption">사용자 정의</string>
     <string name="media_edit_file_details_card_caption">파일 세부정보</string>
-    <string name="login_error_suffix">\n다른 계정을 사용해 보세요.</string>
-    <string name="login_error_generic">Google 계정과 연결하는 데 문제가 발생했습니다.</string>
     <string name="login_error_button">닫기</string>
-    <string name="enter_wpcom_password_google">이 Google 계정으로 진행하려면 일치하는 워드프레스닷컴 비밀번호를 제공하세요. 이 메시지는 한 번만 표시됩니다.</string>
     <string name="error_generic_network">네트워크 오류가 발생했습니다. 연결을 확인하고 다시 시도하세요.</string>
     <string name="post_settings_remove_featured_image">특성 이미지 제거</string>
     <string name="post_settings_choose_featured_image">특성 이미지 선택</string>
-    <string name="login_log_in_for_share_intent">콘텐츠를 공유하려면 워드프레스닷컴에 로그인하세요.</string>
-    <string name="enter_site_address_share_intent">콘텐츠를 공유하려는 워드프레스 사이트의 주소를 입력하세요.</string>
     <string name="jetpack_disconnect_error_toast">사이트 연결 해제 중 오류 발생</string>
     <string name="jetpack_disconnect_success_toast">사이트 연결이 해제됨</string>
     <string name="jetpack_disconnect_confirm">연결 해제</string>
@@ -3234,28 +3063,13 @@ Language: ko_KR
     <string name="post_queued">대기 중인 글</string>
     <string name="uploading_post">\"%s\" 업로드 중</string>
     <string name="connection_to_server_lost">서버와의 연결이 끊겼습니다</string>
-    <string name="login_email_client_not_found">이메일 클라이언트 앱을 감지할 수 없습니다.</string>
-    <string name="login_empty_2fa">확인 코드를 입력하세요.</string>
-    <string name="login_empty_username">사용자명을 입력하세요.</string>
-    <string name="login_log_in_for_deeplink">글에 액세스하려면 워드프레스닷컴에 로그인하세요.</string>
-    <string name="login_error_while_adding_site">사이트를 추가하는 동안 오류가 발생했습니다. 에러 코드: %s</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">사이트 주소 확인 중</string>
-    <string name="login_site_address_more_help">더 많은 도움이 필요하세요?</string>
-    <string name="login_site_address_help_content">Chrome에서 사이트를 방문할 때 화면 위쪽의 표시줄에 사이트 주소가 표시됩니다.</string>
-    <string name="login_site_address_help_title">내 사이트 주소는 무엇인가요?</string>
     <string name="login_site_address" a8c-src-lib="module:login">사이트 주소</string>
     <string name="enter_site_address" a8c-src-lib="module:login">연결하려는 워드프레스 사이트의 주소를 입력하세요.</string>
     <string name="login_already_logged_in_wpcom">워드프레스닷컴에 이미 로그인되어 있습니다.</string>
     <string name="login_continue" a8c-src-lib="module:login">계속</string>
     <string name="connect_more">다른 사이트 연결하기</string>
-    <string name="enter_wpcom_password">워드프레스닷컴 비밀번호를 입력합니다.</string>
-    <string name="login_magic_link_email_requesting">로그인 이메일 요청 중</string>
-    <string name="password_incorrect">이 비밀번호가 올바르지 않은 것 같습니다. 정보를 확인하고 다시 시도하세요.</string>
-    <string name="requesting_otp">SMS를 통해 확인 코드를 요청 중입니다.</string>
-    <string name="login_text_otp">대신 코드를 문자로 받기</string>
-    <string name="enter_verification_code">마무리 단계입니다! 인증 앱의 워드프레스닷컴 확인 코드를 입력하세요.</string>
     <string name="next">다음</string>
-    <string name="enter_email_wordpress_com">이메일 주소를 입력하여 워드프레스닷컴에 로그인하고 회원님의 모든 WordPress 사이트를 관리하세요.</string>
     <string name="me_profile_photo">프로필 사진</string>
     <string name="error_media_parse_error">서버에서 예기치 않은 응답을 받았습니다</string>
     <string name="upload_finished_toast">업로드가 이미 완료되었기 때문에 업로드를 중지할 수 있습니다</string>
@@ -3404,8 +3218,6 @@ Language: ko_KR
     <string name="error_unknown_post_type">알 수 없는 글 형식입니다.</string>
     <string name="submit_for_review">제출하기</string>
     <string name="title_subscriber">구독자</string>
-    <string name="duplicate_site_detected">중복 사이트가 감지되었습니다.</string>
-    <string name="cannot_add_duplicate_site">이 사이트가 이미 앱에 있으므로, 추가할 수 없습니다.</string>
     <string name="already_logged_in_wpcom">이미 워드프레스닷컴 계정에 로그인되어 있으므로 다른 계정에 연결된 워드프레스닷컴 사이트를 추가할 수 없습니다.</string>
     <string name="error_media_load">미디어를 로드할 수 없음</string>
     <string name="error_media_refresh_no_connection">라이브러리를 새로 고치려면 연결해야 함</string>
@@ -3416,8 +3228,6 @@ Language: ko_KR
     <string name="media_generic_error">미디어 오류가 발생했습니다.</string>
     <string name="retry">다시 시도</string>
     <string name="confirm">확인</string>
-    <string name="xmlrpc_endpoint_forbidden_error">연결할 수 없습니다. 사이트\n XMLRPC 엔드포인트에 액세스를 시도할 때 403 오류가 발생했습니다. 사이트와 통신하려면 이 앱에 필요합니다. 호스트에 문의하여\n 이 문제를 해결하세요.</string>
-    <string name="xmlrpc_post_blocked_error">연결할 수 없습니다. 호스트가 POST 요청을 차단하고 있으므로, 사이트와 통신하려면 이 앱에\n 필요합니다. 호스트에 문의하여 이 문제를 해결하세요.</string>
     <string name="pending_draft_one_generic">중단된 상태로 두지 마세요! \'%1$s\'이(가) 발행될 때까지 기다리는 중입니다.</string>
     <string name="pending_draft_one_month">중단된 상태로 두지 마세요! \'%1$s\'이(가) 발행될 때까지 기다리는 중입니다.</string>
     <string name="pending_draft_one_week_2">\'%1$s\'이(가) 임시글로 남아 있습니다. 발행하는 것을 잊지 마세요!</string>
@@ -3500,8 +3310,6 @@ Language: ko_KR
     <string name="error_refreshing_gravatar">Gravatar를 다시 로드하는 중 오류가 발생했습니다.</string>
     <string name="error_locating_image">잘린 이미지를 찾는 중 오류가 발생했습니다.</string>
     <string name="error_cropping_image">이미지를 자르는 중 오류가 발생했습니다.</string>
-    <string name="checking_email">이메일 확인 중</string>
-    <string name="magic_link_unavailable_error_message">현재 사용할 수 없습니다. 비밀번호를 입력하세요.</string>
     <string name="logging_in">로그인 중</string>
     <string name="web_address_dialog_hint">댓글을 달 때 공개적으로 표시합니다.</string>
     <string name="export_your_content_message">글, 페이지, 설정을 %s로 발송할 것입니다.</string>
@@ -3534,7 +3342,6 @@ Language: ko_KR
     <string name="comments_empty_list_filtered_pending">대기중인 댓글 없음</string>
     <string name="comments_empty_list_filtered_approved">승인한 댓글 없음</string>
     <string name="button_skip">넘어가기</string>
-    <string name="xmlrpc_missing_method_error">연결할 수 없습니다. 필수 XML-RPC 함수가 서버에 없습니다.</string>
     <string name="alignment_center">가운데</string>
     <string name="post_format_video">비디오</string>
     <string name="post_format_status">상태</string>
@@ -3594,7 +3401,6 @@ Language: ko_KR
     <string name="about_the_app">앱 정보</string>
     <string name="error_post_account_settings">계정 설정을 저장할 수 없습니다.</string>
     <string name="error_fetch_account_settings">계정 설정을 검색할 수 없습니다.</string>
-    <string name="error_fetch_my_profile">프로필을 검색할 수 없습니다.</string>
     <string name="site_settings_unknown_language_code_error">언어 코드가 인식되지 않음</string>
     <string name="site_settings_threading_dialog_description">스레드에서 댓글이 계층화되도록 허용합니다.</string>
     <string name="site_settings_threading_dialog_header">최대 스레드</string>
@@ -3783,9 +3589,6 @@ Language: ko_KR
     <string name="my_site_btn_blog_posts">글</string>
     <string name="reader_label_new_posts_subtitle">눌러서 표시</string>
     <string name="select_all">모두 선택</string>
-    <string name="auth_required">계속하려면 다시 로그인하세요.</string>
-    <string name="invalid_verification_code">잘못된 확인 코드</string>
-    <string name="verification_code">확인 코드</string>
     <string name="language">언어</string>
     <string name="reader_empty_posts_request_failed">글을 가져올 수 없음</string>
     <string name="error_notification_open">알림을 열 수 없음</string>
@@ -3849,7 +3652,6 @@ Language: ko_KR
     <string name="ssl_certificate_error">잘못된 SSL 인증서</string>
     <string name="help">도우미</string>
     <string name="username_or_password_incorrect">입력된 사용자 이름이나 암호가 잘못되었습니다.</string>
-    <string name="email_invalid">유효한 이메일 주소를 입력 하십시오.</string>
     <string name="invalid_email_message">잘못된 이메일 주소입니다.</string>
     <string name="error_downloading_image">이미지를 다운로드하는 중에 오류가 발생했습니다. 다시 시도하십시오.</string>
     <string name="error_load_comment">코멘트 를 로드 할 수 없습니다. 다시 시도 하십시오.</string>
@@ -3873,14 +3675,12 @@ Language: ko_KR
     <string name="reader_toast_err_removing_tag">이 태그를 제거할 수 없음</string>
     <string name="reader_toast_err_adding_tag">이 태그를 추가할 수 없음</string>
     <string name="reader_title_applog">응용 프로그램 로그</string>
-    <string name="fatal_db_error">앱 데이터베이스를 생성하는 동안 에러가 발생했습니다. 앱을 다시 설치하시기 바랍니다.</string>
     <string name="error_refresh_media">현재 미디어를 새로 고칠 수 없습니다</string>
     <string name="wordpress_blog">WordPress 블로그</string>
     <string name="local_changes">로컬 변경</string>
     <string name="new_media">새 미디어</string>
     <string name="new_post">새 게시물</string>
     <string name="notifications_empty_all">아직… 알림이 없습니다!</string>
-    <string name="http_authorization_required">인증이 필요합니다</string>
     <string name="invalid_site_url_message">입력한 사이트 URL이 올바른지 확인합니다.</string>
     <string name="file_error_create">미디어 업로드시에 임시 파일을 만들 수 없습니다 . 장치에 여유 공간이 있는지 확인 하십시오.</string>
     <string name="category_name">카테고리 이름</string>
@@ -3925,7 +3725,6 @@ Language: ko_KR
     <string name="reader_likes_you_and_one">당신과 다른 1명이 \"좋아요\"를 눌렀습니다.</string>
     <string name="pick_video">동영상을 선택</string>
     <string name="pick_photo">이미지를 선택</string>
-    <string name="sign_up_label">가입</string>
     <string name="reader_toast_err_url_intent">%s를 열 수 없습니다</string>
     <string name="reader_toast_err_view_image">이미지를 표시 할 수 없습니다</string>
     <string name="reader_toast_err_share_intent">공유에 실패</string>
@@ -3968,8 +3767,6 @@ Language: ko_KR
     <string name="note_reply_successful">답장을 공개했습니다</string>
     <string name="sign_in">로그인</string>
     <string name="loading">로드 중입니다…</string>
-    <string name="httppassword">HTTP 암호</string>
-    <string name="httpuser">HTTP 사용자 이름</string>
     <string name="error_media_upload">미디어를 업로드할때 오류가 발생했습니다</string>
     <string name="incorrect_credentials">사용자 이름이나 암호가 올바르지 않습니다 .</string>
     <string name="log_in" a8c-src-lib="module:login">로그인</string>
