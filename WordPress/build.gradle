@@ -338,8 +338,9 @@ android {
 // fails once something tries to upload it. AGP creates `validateSigning*` only for variants that
 // are already signed, so the guard hangs off the packaging tasks — always present, and reached
 // before the artifact is written. Checked at execution time so contributors without the secrets
-// keep their debug builds.
-tasks.matching { it.name.startsWith("package") && it.name.contains("Release") }.configureEach {
+// keep their debug builds. Only the APK and AAB tasks match: release lint depends on
+// `package*ReleaseResources` and runs on CI without secrets.
+tasks.matching { it.name ==~ /package\w+Release(Bundle|UniversalApk)?/ }.configureEach {
     doFirst {
         if (!uploadKeyAvailable) {
             throw new GradleException(
