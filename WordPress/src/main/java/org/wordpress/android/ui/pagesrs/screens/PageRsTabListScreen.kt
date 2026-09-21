@@ -133,7 +133,6 @@ private fun PageListContent(
     val listState = rememberLazyListState()
 
     val currentPages by rememberUpdatedState(pages)
-    val currentIsLoadingMore by rememberUpdatedState(isLoadingMore)
 
     // Scrolls to a page the user just saved, once the refresh carrying it lands. The published and
     // draft tabs sort by title, so it can be anywhere in the list. requestScrollToItem applies at
@@ -174,16 +173,13 @@ private fun PageListContent(
             .collect { currentOnRowsVisible(it) }
     }
 
-    // Only a change in the answer triggers a load, so "near the end" has to become false while a
-    // page is loading: a user parked at the bottom when a load fails would otherwise never ask
-    // for more again until they scrolled away and back.
     LaunchedEffect(canLoadMore) {
         if (!canLoadMore) return@LaunchedEffect
         snapshotFlow {
             val lastVisible = listState.layoutInfo
                 .visibleItemsInfo.lastOrNull()?.index ?: 0
             val total = listState.layoutInfo.totalItemsCount
-            !currentIsLoadingMore && lastVisible >= total - LOAD_MORE_THRESHOLD
+            lastVisible >= total - LOAD_MORE_THRESHOLD
         }.distinctUntilChanged().collect { shouldLoad ->
             if (shouldLoad) onLoadMore()
         }

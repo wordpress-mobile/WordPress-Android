@@ -10,7 +10,6 @@ import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.wordpress.android.ui.rs.RsCollectionPrefetch.Outcome
-import uniffi.wp_mobile.FetchException
 import java.io.IOException
 
 @ExperimentalCoroutinesApi
@@ -158,24 +157,6 @@ class RsCollectionPrefetchTest {
         }
 
         assertThat(outcome).isEqualTo(Outcome.GaveUp(cause, pagesLoaded = 0))
-        assertThat(calls).isEqualTo(1)
-        assertThat(backoffs).isEmpty()
-    }
-
-    @Test
-    fun `stops quietly when a refresh supersedes the page request`() = runTest {
-        var calls = 0
-
-        val outcome = RsCollectionPrefetch.loadRemainingPages(
-            hasMorePages = true,
-            maxPages = MAX_PAGES,
-            backoff = noBackoff
-        ) {
-            calls++
-            throw FetchException.StaleLoadMore()
-        }
-
-        assertThat(outcome).isEqualTo(Outcome.Superseded)
         assertThat(calls).isEqualTo(1)
         assertThat(backoffs).isEmpty()
     }

@@ -2,10 +2,9 @@ package org.wordpress.android.ui.rs
 
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
-import uniffi.wp_mobile.FetchException
 
 /**
- * Pages an rs observable collection through to the end in the background.
+ * Pages an rs observable collection through to the end.
  *
  * A list that is rendered as a tree can only nest a child once its parent has loaded, and a
  * collection sorted by title delivers parents and children in unrelated pages. Legacy solved
@@ -31,9 +30,6 @@ internal object RsCollectionPrefetch {
 
         /** [loadRemainingPages]'s `maxPages` was reached with more still reported. */
         data object Capped : Outcome
-
-        /** A refresh superseded the page request; the refresh starts its own loop. */
-        data object Superseded : Outcome
 
         /** A page failed every attempt, or with an error not worth retrying. */
         data class GaveUp(val cause: Exception, val pagesLoaded: Int) : Outcome
@@ -76,8 +72,6 @@ internal object RsCollectionPrefetch {
                     break
                 } catch (e: CancellationException) {
                     throw e
-                } catch (e: FetchException.StaleLoadMore) {
-                    return Outcome.Superseded
                 } catch (e: Exception) {
                     if (!shouldRetry(e) || attempt >= maxAttemptsPerPage) {
                         return Outcome.GaveUp(e, pagesLoaded)

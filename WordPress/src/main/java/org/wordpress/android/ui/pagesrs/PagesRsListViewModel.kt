@@ -668,7 +668,7 @@ internal class PagesRsListViewModel @Inject constructor(
     ) {
         val outcome = RsCollectionPrefetch.loadRemainingPages(
             hasMorePages = hasMorePages,
-            maxPages = MAX_PREFETCH_PAGES,
+            maxPages = MAX_FILL_PAGES,
             shouldRetry = { !PostRsErrorUtils.isAuthError(it) }
         ) {
             withContext(Dispatchers.IO) { collection.loadNextPage() }.hasMorePages
@@ -1913,7 +1913,7 @@ internal class PagesRsListViewModel @Inject constructor(
          * A bound on the published tab's page-through, not a product limit: it only exists so a
          * server that always reports another page can't keep the loop going.
          */
-        private const val MAX_PREFETCH_PAGES = 50
+        private const val MAX_FILL_PAGES = 50
         private const val SEARCH_DEBOUNCE_MS = 250L
         private const val SITE_EDITOR_LAUNCH_DEBOUNCE_MS = 1000L
         internal const val MIN_SEARCH_QUERY_LENGTH = 3
