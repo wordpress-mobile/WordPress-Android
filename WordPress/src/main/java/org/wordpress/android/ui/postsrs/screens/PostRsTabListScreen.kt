@@ -13,29 +13,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.snapshotFlow
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.withTimeoutOrNull
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import org.wordpress.android.R
 import org.wordpress.android.ui.rs.contentlist.ContentDateGroup
-import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.LOAD_MORE_THRESHOLD
-import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.REVEAL_TIMEOUT_MS
 import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.SHIMMER_ITEM_COUNT
-import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.VISIBLE_ROWS_DEBOUNCE_MS
 import org.wordpress.android.ui.rs.contentlist.ContentListEmptyState
 import org.wordpress.android.ui.rs.contentlist.ContentListErrorState
 import org.wordpress.android.ui.rs.contentlist.ContentListOverflowMenu
@@ -44,6 +30,7 @@ import org.wordpress.android.ui.rs.contentlist.ContentDateGrouper
 import org.wordpress.android.ui.rs.contentlist.ContentListGroupHeader
 import org.wordpress.android.ui.rs.contentlist.ContentListHeroRow
 import org.wordpress.android.ui.rs.contentlist.ContentListPlaceholderRow
+import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
 import org.wordpress.android.ui.rs.contentlist.ContentListRow
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostRsUiModel
@@ -51,6 +38,9 @@ import org.wordpress.android.ui.postsrs.PostDisplayState
 import org.wordpress.android.ui.postsrs.PostTabUiState
 import org.wordpress.android.ui.postsrs.toContentListRowUiState
 import org.wordpress.android.ui.rs.contentlist.LegacyContentListPlaceholderRow
+import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
+import org.wordpress.android.ui.rs.contentlist.ReportVisibleRows
+import org.wordpress.android.ui.rs.contentlist.RevealRow
 import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
 import org.wordpress.android.ui.rs.contentlist.toContentListMenuActions
 
@@ -74,21 +64,10 @@ fun PostRsTabListScreen(
     showDateGroups: Boolean = true,
     density: ContentListDensity = ContentListDensity.COMFORTABLE
 ) {
-    val pullToRefreshState = rememberPullToRefreshState()
-
-    PullToRefreshBox(
-        modifier = modifier.fillMaxSize(),
+    ContentListPullToRefreshBox(
         isRefreshing = state.isRefreshing,
-        state = pullToRefreshState,
         onRefresh = onRefresh,
-        indicator = {
-            PullToRefreshDefaults.Indicator(
-                state = pullToRefreshState,
-                isRefreshing = state.isRefreshing,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.align(Alignment.TopCenter)
-            )
-        }
+        modifier = modifier,
     ) {
         when {
             isSearchIdle -> Box(Modifier.fillMaxSize())
@@ -159,53 +138,19 @@ private fun PostListContent(
     }
     val currentEntries by rememberUpdatedState(entries)
 
-    // Scrolls to a post the user just saved, once the refresh carrying it lands - until then this
-    // list either isn't composed or doesn't contain it yet. requestScrollToItem applies at the next
-    // measurement rather than to the content currently laid out, which matters because a keyed
-    // LazyColumn re-anchors on its old first item when one is prepended: a plain scrollToItem here
-    // would leave a newly published post just above the viewport.
-    LaunchedEffect(revealPostId) {
-        if (revealPostId == null) return@LaunchedEffect
-        // Indexes the rendered entries rather than the posts: group headers are list items too, so
-        // a post's position in `posts` is not its position in the LazyColumn.
-        val index = withTimeoutOrNull(REVEAL_TIMEOUT_MS) {
-            snapshotFlow { currentEntries.indexOfFirst { it.postId == revealPostId } }
-                .first { it >= 0 }
-        }
-        if (index != null) listState.requestScrollToItem(index)
-        // Disarm either way. A refresh replaces the list with page 1 only, so a post that sorts
-        // beyond it never arrives here; leaving the request armed would fire it much later, when
-        // load-more finally paged the post in and the user was reading something else.
-        onRevealHandled()
+    // Indexes the rendered entries rather than the posts: group headers are list items too, so a
+    // post's position in `posts` is not its position in the LazyColumn.
+    RevealRow(revealPostId, listState, onRevealHandled) { id ->
+        currentEntries.indexOfFirst { it.postId == id }
     }
 
-    // Per-post metrics are one request each, so the ViewModel is told which rows are actually on
-    // screen rather than fetching for the whole loaded page. Post entries key on their remote id;
-    // group headers key on a String, so filtering by type drops them.
-    val currentOnRowsVisible by rememberUpdatedState(onRowsVisible)
-    LaunchedEffect(listState, isRedesignEnabled) {
-        if (!isRedesignEnabled) return@LaunchedEffect
-        snapshotFlow {
-            listState.layoutInfo.visibleItemsInfo.mapNotNull { it.key as? Long }
-        }
-            // A fling changes the visible set on nearly every frame. Without settling first, each
-            // of those emissions would start fetching for rows already gone from the screen.
-            .debounce(VISIBLE_ROWS_DEBOUNCE_MS)
-            .distinctUntilChanged()
-            .collect { currentOnRowsVisible(it) }
+    // Post entries key on their remote id; group headers key on a String, so filtering by type
+    // drops them.
+    ReportVisibleRows(listState, enabled = isRedesignEnabled, onRowsVisible = onRowsVisible) {
+        listState.layoutInfo.visibleItemsInfo.mapNotNull { it.key as? Long }
     }
 
-    LaunchedEffect(canLoadMore) {
-        if (!canLoadMore) return@LaunchedEffect
-        snapshotFlow {
-            val lastVisible = listState.layoutInfo
-                .visibleItemsInfo.lastOrNull()?.index ?: 0
-            val total = listState.layoutInfo.totalItemsCount
-            lastVisible >= total - LOAD_MORE_THRESHOLD
-        }.distinctUntilChanged().collect { shouldLoad ->
-            if (shouldLoad) onLoadMore()
-        }
-    }
+    LoadMoreOnScrollToEnd(listState, canLoadMore, onLoadMore)
 
     LazyColumn(
         state = listState,
