@@ -12,6 +12,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -141,7 +143,8 @@ fun FullScreenReplyDialog(
     hint: String,
     isReplyInProgress: Boolean,
     onSendClick: () -> Unit,
-    onCollapseClick: () -> Unit
+    onCollapseClick: () -> Unit,
+    isStandalone: Boolean = false
 ) {
     val focusRequester = remember { FocusRequester() }
     var isReplyFieldFocused by remember { mutableStateOf(false) }
@@ -153,13 +156,24 @@ fun FullScreenReplyDialog(
         Surface(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
                 TopAppBar(
-                    title = { Text(stringResource(R.string.comment)) },
+                    // Opened from the redesigned detail's Reply action this is a screen in its own
+                    // right, not an expanded panel, so it closes rather than collapsing back.
+                    title = {
+                        Text(stringResource(if (isStandalone) R.string.reply else R.string.comment))
+                    },
                     navigationIcon = {
                         IconButton(onClick = onCollapseClick) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_chevron_down_white_24dp),
-                                contentDescription = stringResource(R.string.description_collapse)
-                            )
+                            if (isStandalone) {
+                                Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = stringResource(R.string.close)
+                                )
+                            } else {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_chevron_down_white_24dp),
+                                    contentDescription = stringResource(R.string.description_collapse)
+                                )
+                            }
                         }
                     },
                     actions = {

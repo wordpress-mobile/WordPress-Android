@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -22,6 +23,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -72,6 +74,14 @@ fun UnifiedCommentDetailsScreen(
     var showDeleteConfirm by rememberSaveable { mutableStateOf(false) }
     var showFullScreenReply by rememberSaveable { mutableStateOf(false) }
 
+    // Opened from a notification's reply action. The redesign has no pinned field to focus, so
+    // "start replying" means opening the reply screen. The host recomputes
+    // focusReplyFieldOnLaunch as false after a config change, so this does not fire again on
+    // rotation or re-open a screen the user dismissed.
+    LaunchedEffect(Unit) {
+        if (isRedesignEnabled && focusReplyFieldOnLaunch) showFullScreenReply = true
+    }
+
     val replyHint = if (uiState.authorName.isNotBlank()) {
         stringResource(R.string.comment_reply_to_user, uiState.authorName)
     } else {
@@ -97,6 +107,7 @@ fun UnifiedCommentDetailsScreen(
                                 uiState = uiState,
                                 showLikeButton = showLikeButton,
                                 actions = actions,
+                                onReplyClick = { showFullScreenReply = true },
                                 modifier = Modifier.fillMaxSize()
                             )
                         } else {
@@ -148,16 +159,20 @@ fun UnifiedCommentDetailsScreen(
                         onDeletePermanentlyClick = { showDeleteConfirm = true }
                     )
                 }
-                CommentReplyBox(
-                    replyText = replyText,
-                    onReplyTextChange = onReplyTextChange,
-                    suggestions = suggestions,
-                    hint = replyHint,
-                    isReplyInProgress = uiState.isReplyInProgress,
-                    focusOnLaunch = focusReplyFieldOnLaunch,
-                    onSendClick = { actions.onSendReply(replyText.text) },
-                    onExpandClick = { showFullScreenReply = true }
-                )
+                // The redesign replies on a separate screen, reached from the Reply action under
+                // the comment, so it has no pinned reply field.
+                if (!isRedesignEnabled) {
+                    CommentReplyBox(
+                        replyText = replyText,
+                        onReplyTextChange = onReplyTextChange,
+                        suggestions = suggestions,
+                        hint = replyHint,
+                        isReplyInProgress = uiState.isReplyInProgress,
+                        focusOnLaunch = focusReplyFieldOnLaunch,
+                        onSendClick = { actions.onSendReply(replyText.text) },
+                        onExpandClick = { showFullScreenReply = true }
+                    )
+                }
             }
             if (uiState.showProgress) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
@@ -200,7 +215,8 @@ fun UnifiedCommentDetailsScreen(
                 showFullScreenReply = false
                 actions.onSendReply(replyText.text)
             },
-            onCollapseClick = { showFullScreenReply = false }
+            onCollapseClick = { showFullScreenReply = false },
+            isStandalone = isRedesignEnabled
         )
     }
 }
@@ -219,6 +235,7 @@ private fun RedesignedCommentDetailsContent(
     uiState: CommentDetailsUiState,
     showLikeButton: Boolean,
     actions: CommentDetailsActions,
+    onReplyClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
@@ -235,11 +252,8 @@ private fun RedesignedCommentDetailsContent(
                 Spacer(modifier = Modifier.weight(1f))
                 CommentDetailOverflowMenu(
                     status = uiState.status,
-                    isLiked = uiState.isLiked,
-                    showLikeButton = showLikeButton,
                     showCommentUrlActions = uiState.commentUrl.isNotEmpty(),
                     canModerate = uiState.canModerate,
-                    onLikeClick = actions.onLikeClick,
                     onUnapproveClick = actions.onModerateClick,
                     onEditClick = actions.onEditClick,
                     onCopyLinkClick = actions.onCopyLinkClick,
@@ -267,14 +281,28 @@ private fun RedesignedCommentDetailsContent(
             )
         }
         HorizontalDivider()
-        CommentHtmlBody(
-            html = uiState.commentText,
+        // The reactions scroll with the comment rather than being pinned, as on iOS: they belong
+        // to the comment above them, and pinning them would stack a second action bar directly on
+        // top of the moderation toolbar.
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .nestedScroll(rememberNestedScrollInteropConnection())
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = REDESIGN_H_PADDING, vertical = REDESIGN_V_PADDING)
-        )
+        ) {
+            CommentHtmlBody(html = uiState.commentText)
+            CommentReactionRow(
+                isLiked = uiState.isLiked,
+                showLikeButton = showLikeButton,
+                onReplyClick = onReplyClick,
+                onLikeClick = actions.onLikeClick,
+                // Pulled back by the action's own padding so it lines up with the body text.
+                modifier = Modifier
+                    .padding(top = REDESIGN_REACTIONS_GAP)
+                    .offset(x = -REACTION_ROW_INSET)
+            )
+        }
     }
 }
 
@@ -337,6 +365,11 @@ private val REDESIGN_H_PADDING = 16.dp
 private val REDESIGN_V_PADDING = 12.dp
 private val REDESIGN_HEADER_GAP = 12.dp
 private val REDESIGN_STRIP_V_PADDING = 10.dp
+private val REDESIGN_REACTIONS_GAP = 8.dp
+
+// Matches CommentReactionRow's own horizontal action padding, so the Reply icon sits flush with
+// the comment text rather than indented by the tap target's padding.
+private val REACTION_ROW_INSET = 8.dp
 
 @Composable
 private fun CommentStatusLabel(status: CommentStatus) {

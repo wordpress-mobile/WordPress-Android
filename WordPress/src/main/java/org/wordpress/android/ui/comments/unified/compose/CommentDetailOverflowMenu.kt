@@ -4,8 +4,6 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.StarOutline
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -27,8 +25,9 @@ import org.wordpress.android.fluxc.model.CommentStatus.SPAM
 import org.wordpress.android.fluxc.model.CommentStatus.TRASH
 
 /**
- * The secondary comment actions on the redesigned detail screen: like, edit, copy/share link and
- * the "move to pending" counterpart of Approve.
+ * The secondary comment actions on the redesigned detail screen: edit, copy/share link and the
+ * "move to pending" counterpart of Approve. Reply and like are not here - they sit in
+ * [CommentReactionRow] directly under the comment, as on iOS.
  *
  * iOS puts these in the navigation bar. Android can't: this screen renders inside two different
  * hosts (the comments-list pager and the notification detail), each owning its own toolbar, so the
@@ -38,11 +37,8 @@ import org.wordpress.android.fluxc.model.CommentStatus.TRASH
 @Suppress("LongParameterList")
 fun CommentDetailOverflowMenu(
     status: CommentStatus,
-    isLiked: Boolean,
-    showLikeButton: Boolean,
     showCommentUrlActions: Boolean,
     canModerate: Boolean,
-    onLikeClick: () -> Unit,
     onUnapproveClick: () -> Unit,
     onEditClick: () -> Unit,
     onCopyLinkClick: () -> Unit,
@@ -60,27 +56,6 @@ fun CommentDetailOverflowMenu(
             )
         }
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-            if (showLikeButton) {
-                val likeTint = if (isLiked) {
-                    MaterialTheme.colorScheme.secondary
-                } else {
-                    MaterialTheme.colorScheme.onSurfaceVariant
-                }
-                MenuItem(
-                    labelResId = if (isLiked) R.string.mnu_comment_liked else R.string.like,
-                    onClick = {
-                        expanded = false
-                        onLikeClick()
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = if (isLiked) Icons.Filled.Star else Icons.Filled.StarOutline,
-                            contentDescription = null,
-                            tint = likeTint
-                        )
-                    }
-                )
-            }
             // The counterpart to the toolbar's Approve: with the comment already approved there is
             // no prominent button for it, so unapproving lives here - as it does on iOS.
             if (canModerate && status == APPROVED) {
