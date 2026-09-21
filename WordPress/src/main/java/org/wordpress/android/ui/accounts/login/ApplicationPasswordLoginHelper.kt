@@ -6,9 +6,9 @@ import androidx.core.net.toUri
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import org.wordpress.android.R
 import org.wordpress.android.util.DeviceUtils
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
@@ -21,42 +21,39 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPUrlUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.crashlogging.sendReportWithTag
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
-import uniffi.wp_api.DiscoveredAuthenticationMechanism
 import uniffi.wp_api.AutoDiscoveryAttemptFailure
-import uniffi.wp_api.FetchAndParseApiRootFailure
-import uniffi.wp_api.WpErrorCode
+import uniffi.wp_api.DiscoveredAuthenticationMechanism
 import uniffi.wp_api.applicationPasswordsUrl
 import uniffi.wp_api.localizedDescription
-import java.net.URI
+import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import javax.inject.Inject
 import javax.inject.Named
 
 private const val URL_TAG = "url"
 private const val SUCCESS_TAG = "success"
-private const val REASON_TAG = "reason"
 private const val SOURCE_TAG = "source"
 private const val ERROR_TAG = "error"
+private const val IS_WPCOM_TAG = "is_wpcom"
 
-// WordPress.com returns this error code from the REST root of a site whose Privacy setting is
-// Private (or Coming Soon). The gate sits in front of WordPress, so discovery never reaches the
-// API — the site's Application Password support is irrelevant to the failure.
-private const val PRIVATE_SITE_ERROR_CODE = "private_site"
+private val SCHEME_PREFIX = Regex("^[a-zA-Z][a-zA-Z0-9+.-]*://")
 
 class ApplicationPasswordLoginHelper @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val dispatcherWrapper: DispatcherWrapper,
     private val siteStore: SiteStore,
     private val uriLoginWrapper: UriLoginWrapper,
-    private val buildConfigWrapper: BuildConfigWrapper,
     private val wpLoginClient: WpLoginClient,
     private val appLogWrapper: AppLogWrapper,
     private val apiRootUrlCache: ApiRootUrlCache,
     private val discoverSuccessWrapper: DiscoverSuccessWrapper,
     private val crashLogging: CrashLogging,
     private val wpApiClientProvider: WpApiClientProvider,
+    private val analyticsTracker: AnalyticsTrackerWrapper,
 ) {
     private var processedAppPasswordData: String? = null
 
@@ -100,14 +97,26 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     }
 
     @Suppress("TooGenericExceptionCaught")
-    suspend fun getAuthorizationUrlComplete(siteUrl: String): DiscoveryResult =
+    suspend fun getAuthorizationUrlComplete(siteUrl: String, source: DiscoverySource): DiscoveryResult =
         try {
-            getAuthorizationUrlCompleteInternal(siteUrl)
+            getAuthorizationUrlCompleteInternal(siteUrl, source)
+        } catch (cancellation: CancellationException) {
+            // Leaving the login screen or switching sites cancels discovery mid-flight. Counting
+            // that as a failure would inflate exactly the rate these events exist to measure.
+            throw cancellation
         } catch (throwable: Throwable) {
-            handleAuthenticationDiscoveryError(siteUrl, throwable.message ?: throwable::class.simpleName.orEmpty())
+            handleAuthenticationDiscoveryError(
+                siteUrl,
+                source,
+                throwable.message ?: throwable::class.simpleName.orEmpty(),
+                unexpectedDiscoveryFailure(throwable),
+            )
         }
 
-    private suspend fun getAuthorizationUrlCompleteInternal(siteUrl: String): DiscoveryResult =
+    private suspend fun getAuthorizationUrlCompleteInternal(
+        siteUrl: String,
+        source: DiscoverySource,
+    ): DiscoveryResult =
         withContext(bgDispatcher) {
             when (val urlDiscoveryResult = wpLoginClient.apiDiscovery(siteUrl)) {
                 is ApiDiscoveryResult.Success -> {
@@ -115,7 +124,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                         // WordPress.com sites report OAuth2 as the authentication mechanism; they
                         // can't use Application Passwords and must log in via WordPress.com.
                         appLogWrapper.d(AppLog.T.API, "A_P: $siteUrl is a WordPress.com site (OAuth2)")
-                        AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
+                        trackDiscoverySuccessful(siteUrl, source, isWpCom = true)
                         DiscoveryResult.WpComSite
                     } else {
                         val authorizationUrl =
@@ -125,8 +134,9 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                             // is the one case the old blanket "not supported" message was right about.
                             return@withContext handleAuthenticationDiscoveryError(
                                 siteUrl,
+                                source,
                                 "No application-passwords authentication URL advertised",
-                                DiscoveryResult.FailureReason.NotSupported,
+                                notSupportedFailure(),
                             )
                         }
                         val apiRootUrl = discoverSuccessWrapper.getApiRootUrl(urlDiscoveryResult)
@@ -140,7 +150,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                             AppLog.T.API,
                             "A_P: Found authorization for $siteUrl URL: $authorizationUrlComplete " +
                                     "API_ROOT_URL $apiRootUrl")
-                        AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
+                        trackDiscoverySuccessful(siteUrl, source, isWpCom = false)
                         DiscoveryResult.Authorized(authorizationUrlComplete)
                     }
                 }
@@ -148,44 +158,53 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 is ApiDiscoveryResult.Failure ->
                     handleAuthenticationDiscoveryError(
                         siteUrl,
+                        source,
                         // 0.8.0 replaced userFacingErrorMessage() with localizedDescription(), which
                         // returns a translated sentence. This message is shown to the user on the
                         // login screen, so the raw Throwable message (an internal debug dump of the
                         // discovery attempt) must not be used here.
-                        urlDiscoveryResult.failure.localizedDescription(),
-                        urlDiscoveryResult.failureReason(),
+                        discoverSuccessWrapper.localizedDescription(urlDiscoveryResult.failure),
+                        urlDiscoveryResult.failure.toDiscoveryFailure(),
                     )
             }
         }
 
-    /**
-     * Recognise causes worth naming to the user. A [FetchAndParseApiRootFailure.WpError] means we
-     * reached the site and it answered with a REST error envelope, so its `code` is a reliable
-     * signal — WordPress.com sends `private_site` from a site whose Privacy setting hides it.
-     */
-    private fun ApiDiscoveryResult.failureReason(): DiscoveryResult.FailureReason {
-        val wpError = ((this as? ApiDiscoveryResult.Failure)?.failure
-            as? AutoDiscoveryAttemptFailure.FetchAndParseApiRoot)
-            ?.fetchAndParseApiRootFailure as? FetchAndParseApiRootFailure.WpError
-            ?: return DiscoveryResult.FailureReason.Unknown
-        // `private_site` has no dedicated WpErrorCode, so the library surfaces it as a CustomException
-        // carrying the raw code string.
-        val rawCode = (wpError.errorCode as? WpErrorCode.CustomException)?.v1
-        return if (rawCode == PRIVATE_SITE_ERROR_CODE) {
-            DiscoveryResult.FailureReason.PrivateSite
-        } else {
-            DiscoveryResult.FailureReason.Unknown
-        }
+    private fun trackDiscoverySuccessful(siteUrl: String, source: DiscoverySource, isWpCom: Boolean) {
+        analyticsTracker.track(
+            Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL,
+            mapOf(
+                URL_TAG to maskUrl(siteUrl),
+                SOURCE_TAG to source.value,
+                // A WordPress.com site counts as a successful discovery even though it can't use
+                // application passwords; without this it's indistinguishable from a real success.
+                // A Boolean, like the login screen's own is_wpcom on the site-info event.
+                IS_WPCOM_TAG to isWpCom,
+            )
+        )
     }
 
     private fun handleAuthenticationDiscoveryError(
         siteUrl: String,
+        source: DiscoverySource,
         message: String,
-        reason: DiscoveryResult.FailureReason = DiscoveryResult.FailureReason.Unknown,
+        failure: DiscoveryFailure,
     ): DiscoveryResult {
-        appLogWrapper.e(AppLog.T.API, "A_P: Error during API discovery for $siteUrl - $message ($reason)")
-        AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
-        return DiscoveryResult.Failed(message, reason)
+        appLogWrapper.e(
+            AppLog.T.API,
+            "A_P: Error during API discovery for $siteUrl - $message (${failure.userFacing}, ${failure.reason})"
+        )
+        trackDiscoveryFailed(siteUrl, source, failure)
+        if (source.isLoginAttempt) {
+            trackLogin(siteUrl, source.value, success = false, error = "discovery_${failure.reason}")
+        }
+        return DiscoveryResult.Failed(message, failure.userFacing)
+    }
+
+    private fun trackDiscoveryFailed(siteUrl: String, source: DiscoverySource, failure: DiscoveryFailure) {
+        analyticsTracker.track(
+            Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED,
+            failure.props + mapOf(URL_TAG to maskUrl(siteUrl), SOURCE_TAG to source.value)
+        )
     }
 
     sealed class StoreCredentialsResult {
@@ -239,7 +258,11 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 }
                 wpApiClientProvider.clearSelfHostedClient(site.id)
                 dispatcherWrapper.updateApplicationPassword(site)
-                trackSuccessful(effectiveUrlLogin.siteUrl)
+                trackLogin(effectiveUrlLogin.siteUrl, creationSource, success = true)
+                appLogWrapper.d(
+                    AppLog.T.DB,
+                    "A_P: Saved application password credentials for: ${effectiveUrlLogin.siteUrl}"
+                )
                 trackCreated(creationSource, success = true)
                 processedAppPasswordData = effectiveUrlLogin.siteUrl
                 StoreCredentialsResult.Success
@@ -253,27 +276,38 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     private suspend fun recoverApiRootUrl(siteUrl: String): String? = withContext(bgDispatcher) {
         try {
-            val result = wpLoginClient.apiDiscovery(siteUrl)
-            if (result is ApiDiscoveryResult.Success) {
-                val apiRootUrl = discoverSuccessWrapper.getApiRootUrl(result)
-                if (apiRootUrl.isNotEmpty()) {
-                    apiRootUrlCache.put(UrlUtils.normalizeUrl(siteUrl).orEmpty(), apiRootUrl)
-                    appLogWrapper.d(
-                        AppLog.T.API,
-                        "A_P: Recovered apiRootUrl via fallback discovery for $siteUrl"
+            when (val result = wpLoginClient.apiDiscovery(siteUrl)) {
+                is ApiDiscoveryResult.Success -> {
+                    val apiRootUrl = discoverSuccessWrapper.getApiRootUrl(result)
+                    if (apiRootUrl.isNotEmpty()) {
+                        apiRootUrlCache.put(UrlUtils.normalizeUrl(siteUrl).orEmpty(), apiRootUrl)
+                        appLogWrapper.d(
+                            AppLog.T.API,
+                            "A_P: Recovered apiRootUrl via fallback discovery for $siteUrl"
+                        )
+                        apiRootUrl
+                    } else {
+                        null
+                    }
+                }
+                is ApiDiscoveryResult.Failure -> {
+                    // The login goes on to fail as bad_data; this row is what says why.
+                    trackDiscoveryFailed(
+                        siteUrl,
+                        DiscoverySource.API_ROOT_RECOVERY,
+                        result.failure.toDiscoveryFailure(),
                     )
-                    apiRootUrl
-                } else {
                     null
                 }
-            } else {
-                null
             }
+        } catch (cancellation: CancellationException) {
+            throw cancellation
         } catch (throwable: Throwable) {
             appLogWrapper.e(
                 AppLog.T.API,
                 "A_P: Fallback discovery failed for $siteUrl - ${throwable.message}"
             )
+            trackDiscoveryFailed(siteUrl, DiscoverySource.API_ROOT_RECOVERY, unexpectedDiscoveryFailure(throwable))
             null
         }
     }
@@ -283,17 +317,17 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         reason: String,
         creationSource: String = ""
     ) {
-        val properties: MutableMap<String, String?> = HashMap()
-        properties[URL_TAG] = maskUrl(siteUrl.orEmpty())
-        properties[REASON_TAG] = reason
-        AnalyticsTracker.track(
+        analyticsTracker.track(
             Stat.APPLICATION_PASSWORD_STORING_FAILED,
-            properties
+            mapOf(URL_TAG to maskUrl(siteUrl.orEmpty()), REASON_TAG to reason)
         )
         trackCreated(creationSource, success = false, error = reason)
+        // Every post-callback failure funnels through here, user rejection included, so this is
+        // the one place that gives the login event its failure rows.
+        trackLogin(siteUrl, creationSource, success = false, error = reason)
     }
 
-    private fun trackCreated(
+    fun trackCreated(
         creationSource: String,
         success: Boolean,
         error: String? = null
@@ -306,7 +340,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         if (!success && !error.isNullOrEmpty()) {
             properties[ERROR_TAG] = error
         }
-        AnalyticsTracker.track(
+        analyticsTracker.track(
             Stat.APPLICATION_PASSWORD_CREATED,
             properties
         )
@@ -358,19 +392,24 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         )
     }
 
-    private fun trackSuccessful(siteUrl: String) {
-        val properties: MutableMap<String, String?> = HashMap()
-        properties[URL_TAG] = maskUrl(siteUrl)
-        properties[SUCCESS_TAG] = "true"
-        AnalyticsTracker.track(
-            if (buildConfigWrapper.isJetpackApp) {
-                Stat.JP_ANDROID_APPLICATION_PASSWORD_LOGIN
-            } else {
-                Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN
-            },
-            properties
+    /**
+     * The outcome of an application-password login. Two paths complete one: credentials stored
+     * against a site we already had (here), and a site fetched for the first time (the login
+     * ViewModel). [source] is the flow's `application_password_created` source, or empty when unknown.
+     *
+     * `success` is reported as `"1"`/`"0"` rather than `"true"`/`"false"` so that this event matches
+     * its iOS counterpart and a cross-platform query doesn't have to handle both encodings.
+     */
+    fun trackLogin(siteUrl: String?, source: String, success: Boolean, error: String? = null) {
+        analyticsTracker.track(
+            Stat.APPLICATION_PASSWORD_LOGIN,
+            buildMap {
+                put(URL_TAG, maskUrl(siteUrl.orEmpty()))
+                put(SUCCESS_TAG, if (success) "1" else "0")
+                if (source.isNotEmpty()) put(SOURCE_TAG, source)
+                if (error != null) put(ERROR_TAG, error)
+            }
         )
-        appLogWrapper.d(AppLog.T.DB, "A_P: Saved application password credentials for: $siteUrl")
     }
 
     fun getSiteUrlLoginFromRawData(url: String): UriLogin {
@@ -402,25 +441,34 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             .removePrefix("www.")
     }
 
-    @Suppress("ReturnCount")
+    /**
+     * A site identifier for analytics: the host, lowercased and with its domain masked, plus any
+     * non-default port. Scheme, `www.`, a trailing dot, path, userinfo, query and fragment are all
+     * dropped, and an internationalised host is converted to its punycode form, so the address typed
+     * on the login screen and the `site_url` the callback carries collapse to one value per site, and
+     * nothing typed into the field ships unmasked. A host that isn't a domain name (an IP address,
+     * a single label, anything that doesn't parse) yields "" rather than the raw input.
+     *
+     * Parsed with okhttp's HttpUrl rather than UrlUtils.getHost, which is backed by android.net.Uri
+     * and throws under the plain-JUnit runner this class is tested with.
+     */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal fun maskUrl(url: String): String {
-        val host = try {
-            URI(url).host
-        } catch (_: Exception) {
-            null
-        } ?: return url
+        val trimmed = url.trim()
+        val parsed = (if (SCHEME_PREFIX.containsMatchIn(trimmed)) trimmed else "https://$trimmed").toHttpUrlOrNull()
+        val host = parsed?.host?.removePrefix("www.")?.trimEnd('.').orEmpty()
         val dotIndex = host.lastIndexOf('.')
-        if (dotIndex <= 0) return url
+        val isDomainName = dotIndex > 0 && ':' !in host && !host.substring(dotIndex + 1).all { it.isDigit() }
+        if (parsed == null || !isDomainName) return ""
         val domain = host.substring(0, dotIndex)
-        val tld = host.substring(dotIndex)
         val maskedDomain = when {
             domain.length <= 2 -> "x".repeat(domain.length)
             else -> domain.first() +
                 "x".repeat(domain.length - 2) +
                 domain.last()
         }
-        return url.replaceFirst(host, maskedDomain + tld)
+        val port = if (parsed.port == HttpUrl.defaultPort(parsed.scheme)) "" else ":${parsed.port}"
+        return maskedDomain + host.substring(dotIndex) + port
     }
 
     fun siteHasBadCredentials(site: SiteModel) =
@@ -513,5 +561,11 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         fun getApplicationPasswordsAuthenticationUrl(
             successObject: ApiDiscoveryResult.Success
         ): String? = applicationPasswordsUrl(successObject.success.authentication)?.url()
+
+        /**
+         * The library's translated description of a failure, shown on the login screen. Wrapped
+         * because it's a native call, which the helper's plain-JUnit tests can't make.
+         */
+        fun localizedDescription(failure: AutoDiscoveryAttemptFailure): String = failure.localizedDescription()
     }
 }

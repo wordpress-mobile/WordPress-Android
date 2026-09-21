@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -13,8 +14,9 @@ import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropActivity
 import org.wordpress.android.R
@@ -70,12 +72,14 @@ import org.wordpress.android.util.PackageManagerWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
+import org.wordpress.android.util.settle
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.viewmodel.pages.PageListViewModel
@@ -312,6 +316,16 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
 
         recyclerView.layoutManager = layoutManager
+        // The slowest sources - Blaze especially, which has no cache to read - can land a second or
+        // two after the rest, so let the list slide to make room for a late card and then fade it in
+        // rather than having it appear from nowhere. Change animations stay off: a card that refines
+        // in place, like quick links picking up backup and scan, would cross-fade and read as a flicker.
+        // The fade only starts once the slide has finished, so a shorter slide is what makes a late
+        // card show up promptly.
+        recyclerView.itemAnimator = DefaultItemAnimator().apply {
+            supportsChangeAnimations = false
+            moveDuration = CARD_SLIDE_MS
+        }
         recyclerView.addItemDecoration(
             MySiteCardAndItemDecoration(
                 horizontalMargin = resources.getDimensionPixelSize(R.dimen.margin_extra_large),
@@ -329,15 +343,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             { viewModel.onBloggingPromptsLearnMoreClicked() },
             { viewModel.onBloggingPromptsAttributionClicked() }
         )
-
-        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                super.onItemRangeInserted(positionStart, itemCount)
-                if (positionStart == FIRST_ITEM) {
-                    recyclerView.smoothScrollToPosition(0)
-                }
-            }
-        })
 
         savedInstanceState?.getBundle(KEY_NESTED_LISTS_STATES)?.let {
             adapter.onRestoreInstanceState(it)
@@ -362,7 +367,14 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     @Suppress("LongMethod")
     private fun MySiteFragmentBinding.setupObservers() {
-        viewModel.uiModel.observe(viewLifecycleOwner) { uiModel ->
+        // The dashboard is assembled from a dozen or so sources that each report at their own pace,
+        // so rendering every state as it arrives makes the screen build itself in front of the user.
+        // Settling paints the first state straight away - that gets the site header up - then holds
+        // the rest of the burst so the cards land together. A state arriving on its own, like a card
+        // the user just hid, is still painted at once.
+        viewModel.uiModel.settle(
+            viewLifecycleOwner.lifecycleScope, SETTLE_QUIET_MS, SETTLE_MAX_HOLD_MS
+        ).observe(viewLifecycleOwner) { uiModel ->
             when (uiModel) {
                 is State.SiteSelected -> loadData(uiModel)
                 is State.NoSites -> loadEmptyView(uiModel)
@@ -413,7 +425,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 .show(parentFragmentManager, GutenbergKitAnnouncementBottomSheetFragment.TAG)
         }
 
-        viewModel.refresh.observe(viewLifecycleOwner) {
+        // observed as an event, or the last refresh is replayed - and the whole dashboard rebuilt -
+        // every time this view is recreated
+        viewModel.refresh.observeEvent(viewLifecycleOwner) {
             viewModel.refresh()
         }
 
@@ -816,18 +830,29 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         options.setToolbarWidgetColor(context.getColorFromAttribute(com.google.android.material.R.attr.colorOnSurface))
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE)
         options.setHideBottomControls(true)
-        UCrop.of(imageUri.uri, Uri.fromFile(File(context.cacheDir, "cropped_for_site_icon.jpg")))
+        UCrop.of(imageUri.uri, Uri.fromFile(createCropDestination(context)))
             .withAspectRatio(1f, 1f)
             .withOptions(options)
             .start(requireActivity(), this)
     }
+
+    /**
+     * The cropped image is uploaded straight from this file, so every crop needs one of its own: changing the icon
+     * again while the previous upload is still running would otherwise overwrite the bytes being sent.
+     */
+    private fun createCropDestination(context: Context) =
+        WPMediaUtils.createProcessedMediaFile(context, SITE_ICON_CROP_FILE_NAME)
+            ?: File(context.cacheDir, SITE_ICON_CROP_FILE_NAME)
 
     companion object {
         @JvmField
         var TAG: String = MySiteFragment::class.java.simpleName
         private const val KEY_LIST_STATE = "key_list_state"
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
-        private const val FIRST_ITEM = 0
+        private const val SETTLE_QUIET_MS = 400L
+        private const val SETTLE_MAX_HOLD_MS = 1200L
+        private const val CARD_SLIDE_MS = 150L
+        private const val SITE_ICON_CROP_FILE_NAME = "cropped_for_site_icon.jpg"
         fun newInstance(): MySiteFragment {
             return MySiteFragment()
         }

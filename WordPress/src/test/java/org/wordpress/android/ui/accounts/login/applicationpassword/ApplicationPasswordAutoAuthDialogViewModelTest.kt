@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordCreationTracker
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.accounts.login.DiscoverySource
 import org.wordpress.android.util.BuildConfigWrapper
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -67,7 +68,9 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
 
     @Test
     fun `createApplicationPassword with exception during API call falls back to manual login`() = runTest {
-        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(testSite.url))
+        whenever(
+            applicationPasswordLoginHelper.getAuthorizationUrlComplete(testSite.url, DiscoverySource.AUTO_AUTH_FALLBACK)
+        )
             .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.Authorized(testAuthUrl))
         val testException = RuntimeException("API client creation failed")
         whenever(wpApiClientProvider.getWpApiClientCookiesNonceAuthentication(eq(testSite)))
@@ -106,7 +109,10 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
             username = ""
             password = "testpass123"
         }
-        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(invalidSite.url))
+        whenever(
+            applicationPasswordLoginHelper
+                .getAuthorizationUrlComplete(eq(invalidSite.url), eq(DiscoverySource.AUTO_AUTH_FALLBACK))
+        )
             .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.Authorized(testAuthUrl))
 
         viewModel.navigationEvent.test {
@@ -132,7 +138,10 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
             username = "testuser"
             password = ""
         }
-        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(invalidSite.url))
+        whenever(
+            applicationPasswordLoginHelper
+                .getAuthorizationUrlComplete(eq(invalidSite.url), eq(DiscoverySource.AUTO_AUTH_FALLBACK))
+        )
             .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.Authorized(testAuthUrl))
 
         viewModel.navigationEvent.test {
@@ -158,7 +167,7 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
             username = ""
             password = "testpass123"
         }
-        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(any()))
+        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(any(), any()))
             .doThrow(RuntimeException("Failed to get auth URL"))
 
         viewModel.navigationEvent.test {

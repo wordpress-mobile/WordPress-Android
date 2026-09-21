@@ -408,9 +408,6 @@ public final class AnalyticsTracker {
         CREATE_ACCOUNT_EMAIL_EXISTS("account_create_email_exists"),
         CREATE_ACCOUNT_USERNAME_EXISTS("account_create_username_exists"),
         CREATE_ACCOUNT_FAILED("account_create_failed"),
-        // This stat is part of a funnel that provides critical information.  Before
-        // making ANY modification to this stat please refer to: p4qSXL-35X-p2
-        CREATED_ACCOUNT("account_created"),
         CLOSE_ACCOUNT_FAILED,
         CLOSED_ACCOUNT,
         ACCOUNT_LOGOUT,
@@ -586,6 +583,7 @@ public final class AnalyticsTracker {
         AUTOMATED_TRANSFER_FLOW_COMPLETE,
         AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASED,
         AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_FAILED,
+        AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_UNCONFIRMED,
         PUBLICIZE_SERVICE_CONNECTED,
         PUBLICIZE_SERVICE_DISCONNECTED,
         SUPPORT_OPENED,
@@ -1013,8 +1011,7 @@ public final class AnalyticsTracker {
         VOICE_TO_CONTENT_BUTTON_RECORDING_LIMIT_REACHED,
         BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL,
         BACKGROUND_REST_AUTODISCOVERY_FAILED,
-        WP_ANDROID_APPLICATION_PASSWORD_LOGIN,
-        JP_ANDROID_APPLICATION_PASSWORD_LOGIN,
+        APPLICATION_PASSWORD_LOGIN,
         APPLICATION_PASSWORD_SET_OFF,
         APPLICATION_PASSWORD_STORING_FAILED,
         APPLICATION_PASSWORD_MIGRATION_PROMPTED,

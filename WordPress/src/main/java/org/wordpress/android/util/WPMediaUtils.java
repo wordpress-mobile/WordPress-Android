@@ -45,8 +45,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class WPMediaUtils {
     public interface LaunchCameraCallback {
@@ -60,6 +64,12 @@ public class WPMediaUtils {
     public static final int OPTIMIZE_IMAGE_ENCODER_QUALITY = 80;
     public static final int OPTIMIZE_VIDEO_MAX_WIDTH = 1280;
     public static final int OPTIMIZE_VIDEO_ENCODER_BITRATE_KB = 3000;
+
+    // Directory holding the images produced by optimization/rotation, one sub directory per image so that every
+    // image can keep the name of the file it was created from.
+    private static final String PROCESSED_MEDIA_CACHE_DIR = "processed-media";
+    private static final int MAX_PROCESSED_MEDIA_DIR_ATTEMPTS = 10;
+    private static final AtomicLong PROCESSED_MEDIA_DIR_COUNTER = new AtomicLong(System.currentTimeMillis());
 
     public static Uri getOptimizedMedia(Context context, String path, boolean isVideo) {
         if (isVideo) {
@@ -92,7 +102,7 @@ public class WPMediaUtils {
             ExifUtils.writeExifData(exifData, optimizedPath);
 
             AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PHOTO_OPTIMIZED);
-            return Uri.parse(optimizedPath);
+            return Uri.parse(retainOriginalFileName(context, path, optimizedPath));
         }
         return null;
     }
@@ -104,9 +114,122 @@ public class WPMediaUtils {
 
         String rotatedPath = ImageUtils.rotateImageIfNecessary(context, path);
         if (rotatedPath != null) {
-            return Uri.parse(rotatedPath);
+            return Uri.parse(retainOriginalFileName(context, path, rotatedPath));
         }
 
+        return null;
+    }
+
+    /**
+     * Both {@link ImageUtils#optimizeImage} and {@link ImageUtils#rotateImageIfNecessary} write their result with
+     * {@link File#createTempFile}, which appends a random number to the file name. Since the uploaded media is named
+     * after the file we send to the server, that random number would end up in the media library. Move the processed
+     * file to a directory of its own so it can be given the original file name back.
+     * See https://github.com/wordpress-mobile/WordPress-Android/issues/20468
+     *
+     * @return the path of the renamed file, or {@code processedPath} when the file couldn't be renamed
+     */
+    @NonNull
+    private static String retainOriginalFileName(@NonNull Context context, @NonNull String originalPath,
+                                                 @NonNull String processedPath) {
+        // the processing steps return the original path when there was nothing to do
+        if (originalPath.equals(processedPath)) {
+            return processedPath;
+        }
+
+        File processedFile = new File(processedPath);
+        String targetName = MediaFileNameUtils
+                .buildProcessedFileName(new File(originalPath).getName(), processedFile.getName());
+        if (targetName == null || targetName.equals(processedFile.getName())) {
+            return processedPath;
+        }
+
+        File targetDir = createProcessedMediaDir(context);
+        if (targetDir == null) {
+            return processedPath;
+        }
+
+        File targetFile = new File(targetDir, targetName);
+        if (!processedFile.renameTo(targetFile)) {
+            AppLog.w(T.MEDIA, "Couldn't restore the original file name of " + processedPath);
+            targetDir.delete();
+            return processedPath;
+        }
+
+        return targetFile.getPath();
+    }
+
+    /**
+     * Deletes the leftovers of previous sessions from the processed media cache. The app has no single point where
+     * it knows an upload is done with its local copy, and a failed optimization leaves its output behind, so the
+     * files are dropped once they are old enough not to belong to an upload that is still running.
+     *
+     * @param pathsInUse the local paths of the media that still has to be uploaded. Their directories are kept
+     *                   however old they are, since the processed file is the only copy the upload has left: an
+     *                   upload can stay pending for weeks when it is queued offline or keeps failing, and deleting
+     *                   its file would make it impossible to ever upload.
+     */
+    public static void deleteOldProcessedMedia(@NonNull Context context, long maxAgeMs,
+                                               @NonNull Collection<String> pathsInUse) {
+        File[] dirs = new File(context.getCacheDir(), PROCESSED_MEDIA_CACHE_DIR).listFiles();
+        if (dirs == null) {
+            return;
+        }
+
+        // every processed file has a directory of its own, so its parent is enough to tell the directory is in use
+        Set<String> dirsInUse = new HashSet<>();
+        for (String path : pathsInUse) {
+            File parentDir = new File(path).getParentFile();
+            if (parentDir != null) {
+                dirsInUse.add(parentDir.getAbsolutePath());
+            }
+        }
+
+        long oldestAllowed = System.currentTimeMillis() - maxAgeMs;
+        for (File dir : dirs) {
+            if (dirsInUse.contains(dir.getAbsolutePath()) || dir.lastModified() >= oldestAllowed) {
+                continue;
+            }
+            if (!deleteRecursively(dir)) {
+                AppLog.w(T.MEDIA, "Couldn't delete the processed media directory " + dir.getName());
+            }
+        }
+    }
+
+    private static boolean deleteRecursively(@NonNull File file) {
+        File[] children = file.listFiles();
+        if (children != null) {
+            for (File child : children) {
+                deleteRecursively(child);
+            }
+        }
+        return file.delete();
+    }
+
+    /**
+     * Creates a {@link File} the app can write processed media to without having to alter {@code fileName} to keep it
+     * unique, so that the media keeps that name once uploaded.
+     *
+     * @return the file to write to, or null when its parent directory couldn't be created
+     */
+    @Nullable
+    public static File createProcessedMediaFile(@NonNull Context context, @NonNull String fileName) {
+        File dir = createProcessedMediaDir(context);
+        return dir == null ? null : new File(dir, fileName);
+    }
+
+    @Nullable
+    private static File createProcessedMediaDir(@NonNull Context context) {
+        File parentDir = new File(context.getCacheDir(), PROCESSED_MEDIA_CACHE_DIR);
+        for (int attempt = 0; attempt < MAX_PROCESSED_MEDIA_DIR_ATTEMPTS; attempt++) {
+            // mkdirs() returns false when the directory already exists, which keeps the names unique
+            File dir = new File(parentDir, String.valueOf(PROCESSED_MEDIA_DIR_COUNTER.getAndIncrement()));
+            if (dir.mkdirs()) {
+                return dir;
+            }
+        }
+
+        AppLog.w(T.MEDIA, "Couldn't create a cache directory for the processed media");
         return null;
     }
 
@@ -462,15 +585,16 @@ public class WPMediaUtils {
     /**
      * Downloads the {@code mediaUri} and returns the {@link Uri} for the downloaded file
      * <p>
-     * If the {@code mediaUri} is already in the the local store, no download will be done and the given
-     * {@code mediaUri} will be returned instead. This may return null if the download fails.
+     * If the {@code mediaUri} is already in the the local store, or already points at a readable local file, no
+     * download will be done and the given {@code mediaUri} will be returned instead. This may return null if the
+     * download fails.
      * <p>
      * The current thread is blocked until the download is finished.
      *
      * @return A local {@link Uri} or null if the download failed
      */
     public static @Nullable Uri fetchMedia(@NonNull Context context, @NonNull Uri mediaUri) {
-        if (MediaUtils.isInMediaStore(mediaUri)) {
+        if (MediaUtils.isInMediaStore(mediaUri) || isReadableFile(mediaUri)) {
             return mediaUri;
         }
 
@@ -491,6 +615,26 @@ public class WPMediaUtils {
             AppLog.e(AppLog.T.UTILS, "Can't access the media at: " + mediaUri + ": ", e);
             return null;
         }
+    }
+
+    /**
+     * A file:// URI is already a local copy, so downloading it again only duplicates it. Worse, the copy loses the
+     * file name: {@link MediaUtils#downloadExternalMedia} reads the name from {@code OpenableColumns.DISPLAY_NAME},
+     * and querying the content resolver for a file:// URI resolves no provider and returns null, which sends the name
+     * to the {@code wp-<timestamp>} fallback. That is what renamed media shared into the app, since
+     * {@link org.wordpress.android.ui.ShareIntentReceiverActivity} hands over the copy it already made.
+     * See https://github.com/wordpress-mobile/WordPress-Android/issues/20468
+     *
+     * @return whether {@code mediaUri} points at a local file that exists, so the caller can use it as it is
+     */
+    private static boolean isReadableFile(@NonNull Uri mediaUri) {
+        if (!MediaUtils.isFile(mediaUri)) {
+            return false;
+        }
+
+        // a missing file must still go down the download path, so that its failure is reported as it is today
+        String path = mediaUri.getPath();
+        return path != null && new File(path).exists();
     }
 
     /**

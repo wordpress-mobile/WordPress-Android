@@ -3044,6 +3044,8 @@
     <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style="color:#B26200;"&gt;%1$s for the first year &lt;/span&gt;&lt;span style="color:#50575e;"&gt;&lt;s&gt;%2$s /year&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_fetch_error">Domain suggestions couldn\'t be loaded</string>
     <string name="domain_registration_contact_form_input_error">Please enter a valid %s</string>
+    <string name="domain_registration_purchase_incomplete">Your domain credit was used, but %s could not be registered. Please contact support.</string>
+    <string name="domain_registration_purchase_unconfirmed">Your domain credit was used, but we could not confirm the result. Check your domains before trying again, and contact support if %s is missing.</string>
     <string name="domain_registration_privacy_protection_title">Privacy Protection</string>
     <string name="domain_registration_privacy_protection_description">Domain owners have to share contact information in a public database of all domains.
         With Privacy Protection, we publish our own information instead of yours and privately forward any communication to you.</string>
@@ -4979,4 +4981,13 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="about_automattic_logo_description" tools:ignore="UnusedResources" a8c-src-lib="about">Automattic logo</string>
     <string name="about_automattic_back_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">Back icon</string>
     <string name="about_automattic_app_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">App icon</string>
+
+    <!-- Redesigned posts/pages list -->
+    <string name="content_list_group_this_week">This week</string>
+    <string name="content_list_group_earlier_in">Earlier in %1$s</string>
+    <string name="content_list_fab_write">Write</string>
+    <string name="content_list_density_show_condensed">Show condensed list</string>
+    <string name="content_list_density_show_comfortable">Show expanded list</string>
+    <string name="experimental_content_list_redesign">Posts list redesign</string>
+    <string name="experimental_content_list_redesign_description">Show the redesigned posts list: featured-image cards, date groups and filter chips.</string>
 </resources>

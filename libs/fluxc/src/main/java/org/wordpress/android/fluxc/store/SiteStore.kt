@@ -18,15 +18,12 @@ import org.wordpress.android.fluxc.action.SiteAction.CREATE_NEW_SITE
 import org.wordpress.android.fluxc.action.SiteAction.DELETED_SITE
 import org.wordpress.android.fluxc.action.SiteAction.DELETE_SITE
 import org.wordpress.android.fluxc.action.SiteAction.DESIGNATED_MOBILE_EDITOR_FOR_ALL_SITES
-import org.wordpress.android.fluxc.action.SiteAction.DESIGNATED_PRIMARY_DOMAIN
 import org.wordpress.android.fluxc.action.SiteAction.DESIGNATE_MOBILE_EDITOR
 import org.wordpress.android.fluxc.action.SiteAction.DESIGNATE_MOBILE_EDITOR_FOR_ALL_SITES
-import org.wordpress.android.fluxc.action.SiteAction.DESIGNATE_PRIMARY_DOMAIN
 import org.wordpress.android.fluxc.action.SiteAction.EXPORTED_SITE
 import org.wordpress.android.fluxc.action.SiteAction.EXPORT_SITE
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_BLOCK_LAYOUTS
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_CONNECT_SITE_INFO
-import org.wordpress.android.fluxc.action.SiteAction.FETCHED_DOMAIN_SUPPORTED_STATES
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_JETPACK_CAPABILITIES
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_PLANS
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_PRIVATE_ATOMIC_COOKIE
@@ -36,7 +33,6 @@ import org.wordpress.android.fluxc.action.SiteAction.FETCHED_USER_ROLES
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_WPCOM_SITE_BY_URL
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_BLOCK_LAYOUTS
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_CONNECT_SITE_INFO
-import org.wordpress.android.fluxc.action.SiteAction.FETCH_DOMAIN_SUPPORTED_STATES
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_JETPACK_CAPABILITIES
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_PLANS
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_POST_FORMATS
@@ -59,8 +55,6 @@ import org.wordpress.android.fluxc.action.SiteAction.REMOVE_ALL_SITES
 import org.wordpress.android.fluxc.action.SiteAction.REMOVE_SITE
 import org.wordpress.android.fluxc.action.SiteAction.REMOVE_WPCOM_AND_JETPACK_SITES
 import org.wordpress.android.fluxc.action.SiteAction.SHOW_SITES
-import org.wordpress.android.fluxc.action.SiteAction.SUGGESTED_DOMAINS
-import org.wordpress.android.fluxc.action.SiteAction.SUGGEST_DOMAINS
 import org.wordpress.android.fluxc.action.SiteAction.UPDATE_SITE
 import org.wordpress.android.fluxc.action.SiteAction.UPDATE_SITES
 import org.wordpress.android.fluxc.action.SiteAction.UPDATE_APPLICATION_PASSWORD
@@ -86,7 +80,6 @@ import org.wordpress.android.fluxc.network.rest.wpapi.site.SiteWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayout
 import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCategory
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
@@ -97,7 +90,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.Export
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.FetchWPComSiteResponsePayload
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPComResponsePayload
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedStateResponse
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
 import org.wordpress.android.fluxc.persistence.JetpackCPConnectedSiteModel
 import org.wordpress.android.fluxc.persistence.JetpackCPConnectedSitesDao
@@ -110,7 +102,6 @@ import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType.INVALID
 import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType.NON_PRIVATE_AT_SITE
 import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType.SITE_MISSING_FROM_STORE
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteErrorType.INVALID_SITE
-import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType.INVALID_COUNTRY_CODE
 import org.wordpress.android.fluxc.store.SiteStore.ExportSiteErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.SiteStore.LaunchSiteErrorType.ALREADY_LAUNCHED
 import org.wordpress.android.fluxc.store.SiteStore.PlansErrorType.NOT_AVAILABLE
@@ -329,79 +320,6 @@ open class SiteStore @Inject constructor(
         @JvmField val error: JetpackCapabilitiesError? = null
     ) : OnChanged<JetpackCapabilitiesError>()
 
-    data class SuggestDomainsPayload(
-        @JvmField val query: String,
-        @JvmField val quantity: Int,
-        @JvmField val vendor: String? = null,
-        @JvmField val onlyWordpressCom: Boolean? = null,
-        @JvmField val includeWordpressCom: Boolean? = null,
-        @JvmField val includeDotBlogSubdomain: Boolean? = null,
-        @JvmField val tlds: String? = null,
-        @JvmField val segmentId: Long? = null
-    ) : Payload<BaseNetworkError>() {
-        @Deprecated(
-            "Replace with primary constructor " +
-                "which accepts 'vendor = \"dot\"' instead of 'includeVendorDot = true' " +
-                "or 'vendor = null' instead of 'includeVendorDot = false'.",
-            replaceWith = ReplaceWith(
-                expression = "SiteStore.SuggestDomainsPayload(" +
-                    "query = query, " +
-                    "onlyWordpressCom = onlyWordpressCom, " +
-                    "includeWordpressCom = includeWordpressCom, " +
-                    "includeDotBlogSubdomain = includeDotBlogSubdomain, " +
-                    "quantity = quantity, " +
-                    "vendor = null)"
-            )
-        )
-        constructor(
-            query: String,
-            onlyWordpressCom: Boolean,
-            includeWordpressCom: Boolean,
-            includeDotBlogSubdomain: Boolean,
-            quantity: Int,
-            includeVendorDot: Boolean
-        ) : this(
-            query = query,
-            quantity = quantity,
-            vendor = if (includeVendorDot) "dot" else null,
-            onlyWordpressCom = onlyWordpressCom,
-            includeWordpressCom = includeWordpressCom,
-            includeDotBlogSubdomain = includeDotBlogSubdomain
-        )
-
-        constructor(
-            query: String,
-            onlyWordpressCom: Boolean,
-            includeWordpressCom: Boolean,
-            includeDotBlogSubdomain: Boolean,
-            quantity: Int,
-            vendor: String? = null,
-        ) : this(
-            query,
-            quantity,
-            vendor,
-            onlyWordpressCom,
-            includeWordpressCom,
-            includeDotBlogSubdomain
-        )
-
-        constructor(query: String, quantity: Int, tlds: String?) : this(
-            query,
-            quantity,
-            vendor = null, // Avoids error: "There's a cycle in the delegation calls chain"
-            tlds = tlds
-        )
-    }
-
-    data class SuggestDomainsResponsePayload(
-        @JvmField val query: String,
-        @JvmField val suggestions: List<DomainSuggestionResponse> = listOf()
-    ) : Payload<SuggestDomainError>() {
-        constructor(query: String, error: SuggestDomainError?) : this(query) {
-            this.error = error
-        }
-    }
-
     data class ConnectSiteInfoPayload
     @JvmOverloads constructor(
         @JvmField val url: String,
@@ -425,11 +343,6 @@ open class SiteStore @Inject constructor(
             )
         }
     }
-
-    data class DesignatePrimaryDomainPayload(
-        @JvmField val site: SiteModel,
-        @JvmField val domain: String
-    ) : Payload<DesignatePrimaryDomainError>()
 
     data class InitiateAutomatedTransferPayload(
         @JvmField val site: SiteModel,
@@ -461,14 +374,6 @@ open class SiteStore @Inject constructor(
         @JvmField val totalSteps: Int = 0
     ) : Payload<AutomatedTransferError>() {
         constructor(site: SiteModel, error: AutomatedTransferError?) : this(site) {
-            this.error = error
-        }
-    }
-
-    data class DomainSupportedStatesResponsePayload(
-        @JvmField val supportedStates: List<SupportedStateResponse>? = null
-    ) : Payload<DomainSupportedStatesError>() {
-        constructor(error: DomainSupportedStatesError) : this() {
             this.error = error
         }
     }
@@ -512,18 +417,7 @@ open class SiteStore @Inject constructor(
         constructor(type: String, message: String) : this(AutomatedTransferErrorType.fromString(type), message)
     }
 
-    data class DomainSupportedStatesError
-    @JvmOverloads
-    constructor(
-        @JvmField val type: DomainSupportedStatesErrorType,
-        @JvmField val message: String? = null
-    ) : OnChangedError
-
     data class QuickStartError(@JvmField val type: QuickStartErrorType, @JvmField val message: String?) : OnChangedError
-    data class DesignatePrimaryDomainError(
-        @JvmField val type: DesignatePrimaryDomainErrorType,
-        @JvmField val message: String?
-    ) : OnChangedError
 
     // OnChanged Events
     data class OnProfileFetched(@JvmField val site: SiteModel) : OnChanged<SiteError>()
@@ -639,30 +533,6 @@ open class SiteStore @Inject constructor(
         @JvmField val checkedUrl: String? = null,
         @JvmField val site: SiteModel? = null
     ) : OnChanged<SiteError>()
-
-    data class SuggestDomainError(@JvmField val type: SuggestDomainErrorType, @JvmField val message: String) :
-            OnChangedError {
-        constructor(apiErrorType: String, message: String) : this(
-                SuggestDomainErrorType.fromString(apiErrorType),
-                message
-        )
-    }
-
-    data class OnSuggestedDomains(
-        val query: String,
-        @JvmField val suggestions: List<DomainSuggestionResponse>
-    ) : OnChanged<SuggestDomainError>()
-
-    data class OnDomainSupportedStatesFetched(
-        @JvmField val supportedStates: List<SupportedStateResponse>?
-    ) : OnChanged<DomainSupportedStatesError>() {
-        constructor(
-            supportedStates: List<SupportedStateResponse>?,
-            error: DomainSupportedStatesError?
-        ) : this(supportedStates) {
-            this.error = error
-        }
-    }
 
     data class OnApplicationPasswordDeleted(val site: SiteModel) : OnChanged<OnApplicationPasswordDeleteError>() {
         constructor(site: SiteModel, error: BaseNetworkError): this(site) {
@@ -790,16 +660,6 @@ open class SiteStore @Inject constructor(
         @JvmField val success: Boolean
     ) : OnChanged<QuickStartError>()
 
-    class DesignatedPrimaryDomainPayload(
-        @JvmField val site: SiteModel,
-        @JvmField val success: Boolean
-    ) : OnChanged<DesignatePrimaryDomainError>()
-
-    class OnPrimaryDomainDesignated(
-        @JvmField val site: SiteModel,
-        @JvmField val success: Boolean
-    ) : OnChanged<DesignatePrimaryDomainError>()
-
     data class UpdateSitesResult(
         @JvmField val rowsAffected: Int = 0,
         @JvmField val updatedSites: List<SiteModel> = emptyList(),
@@ -808,23 +668,6 @@ open class SiteStore @Inject constructor(
 
     enum class SiteErrorType {
         INVALID_SITE, UNKNOWN_SITE, DUPLICATE_SITE, INVALID_RESPONSE, UNAUTHORIZED, NOT_AUTHENTICATED, GENERIC_ERROR
-    }
-
-    enum class SuggestDomainErrorType {
-        EMPTY_RESULTS, EMPTY_QUERY, INVALID_MINIMUM_QUANTITY, INVALID_MAXIMUM_QUANTITY, INVALID_QUERY, GENERIC_ERROR;
-
-        companion object {
-            fun fromString(string: String): SuggestDomainErrorType {
-                if (!TextUtils.isEmpty(string)) {
-                    for (v in values()) {
-                        if (string.equals(v.name, ignoreCase = true)) {
-                            return v
-                        }
-                    }
-                }
-                return GENERIC_ERROR
-            }
-        }
     }
 
     enum class PostFormatsErrorType {
@@ -949,28 +792,7 @@ open class SiteStore @Inject constructor(
         }
     }
 
-    enum class DomainSupportedStatesErrorType {
-        INVALID_COUNTRY_CODE, INVALID_QUERY, GENERIC_ERROR;
-
-        companion object {
-            @JvmStatic fun fromString(type: String): DomainSupportedStatesErrorType {
-                if (!TextUtils.isEmpty(type)) {
-                    for (v in values()) {
-                        if (type.equals(v.name, ignoreCase = true)) {
-                            return v
-                        }
-                    }
-                }
-                return GENERIC_ERROR
-            }
-        }
-    }
-
     enum class QuickStartErrorType {
-        GENERIC_ERROR
-    }
-
-    enum class DesignatePrimaryDomainErrorType {
         GENERIC_ERROR
     }
 
@@ -1309,14 +1131,8 @@ open class SiteStore @Inject constructor(
             FETCHED_WPCOM_SITE_BY_URL -> handleFetchedWPComSiteByUrl(action.payload as FetchWPComSiteResponsePayload)
             IS_WPCOM_URL -> checkUrlIsWPCom(action.payload as String)
             CHECKED_IS_WPCOM_URL -> handleCheckedIsWPComUrl(action.payload as IsWPComResponsePayload)
-            SUGGEST_DOMAINS -> suggestDomains(action.payload as SuggestDomainsPayload)
-            SUGGESTED_DOMAINS -> handleSuggestedDomains(action.payload as SuggestDomainsResponsePayload)
             FETCH_PLANS -> fetchPlans(action.payload as SiteModel)
             FETCHED_PLANS -> handleFetchedPlans(action.payload as FetchedPlansPayload)
-            FETCH_DOMAIN_SUPPORTED_STATES -> fetchSupportedStates(action.payload as String)
-            FETCHED_DOMAIN_SUPPORTED_STATES -> handleFetchedSupportedStates(
-                    action.payload as DomainSupportedStatesResponsePayload
-            )
             CHECK_AUTOMATED_TRANSFER_ELIGIBILITY -> checkAutomatedTransferEligibility(action.payload as SiteModel)
             INITIATE_AUTOMATED_TRANSFER -> initiateAutomatedTransfer(action.payload as InitiateAutomatedTransferPayload)
             CHECK_AUTOMATED_TRANSFER_STATUS -> checkAutomatedTransferStatus(action.payload as SiteModel)
@@ -1331,8 +1147,6 @@ open class SiteStore @Inject constructor(
             )
             COMPLETE_QUICK_START -> completeQuickStart(action.payload as CompleteQuickStartPayload)
             COMPLETED_QUICK_START -> handleQuickStartCompleted(action.payload as QuickStartCompletedResponsePayload)
-            DESIGNATE_PRIMARY_DOMAIN -> designatePrimaryDomain(action.payload as DesignatePrimaryDomainPayload)
-            DESIGNATED_PRIMARY_DOMAIN -> handleDesignatedPrimaryDomain(action.payload as DesignatedPrimaryDomainPayload)
             FETCH_PRIVATE_ATOMIC_COOKIE -> fetchPrivateAtomicCookie(action.payload as FetchPrivateAtomicCookiePayload)
             FETCHED_PRIVATE_ATOMIC_COOKIE -> handleFetchedPrivateAtomicCookie(
                     action.payload as FetchedPrivateAtomicCookiePayload
@@ -2047,27 +1861,6 @@ open class SiteStore @Inject constructor(
         emitChange(OnURLChecked(payload.url ?: "", payload.isWPCom, error))
     }
 
-    private fun suggestDomains(payload: SuggestDomainsPayload) {
-        siteRestClient.suggestDomains(
-            payload.query,
-            payload.quantity,
-            payload.vendor,
-            payload.onlyWordpressCom,
-            payload.includeWordpressCom,
-            payload.includeDotBlogSubdomain,
-            payload.segmentId,
-            payload.tlds
-        )
-    }
-
-    private fun handleSuggestedDomains(payload: SuggestDomainsResponsePayload) {
-        val event = OnSuggestedDomains(payload.query, payload.suggestions)
-        if (payload.isError) {
-            event.error = payload.error
-        }
-        emitChange(event)
-    }
-
     private fun fetchPrivateAtomicCookie(payload: FetchPrivateAtomicCookiePayload) {
         val site = getSiteBySiteId(payload.siteId)
         if (site == null) {
@@ -2126,19 +1919,6 @@ open class SiteStore @Inject constructor(
 
     private fun handleFetchedPlans(payload: FetchedPlansPayload) {
         emitChange(OnPlansFetched(payload.site, payload.plans, payload.error))
-    }
-
-    private fun fetchSupportedStates(countryCode: String) {
-        if (TextUtils.isEmpty(countryCode)) {
-            val error = DomainSupportedStatesError(INVALID_COUNTRY_CODE)
-            handleFetchedSupportedStates(DomainSupportedStatesResponsePayload(error))
-        } else {
-            siteRestClient.fetchSupportedStates(countryCode)
-        }
-    }
-
-    private fun handleFetchedSupportedStates(payload: DomainSupportedStatesResponsePayload) {
-        emitChange(OnDomainSupportedStatesFetched(payload.supportedStates, payload.error))
     }
 
     private fun handleFetchedBlockLayouts(payload: FetchedBlockLayoutsResponsePayload) {
@@ -2215,16 +1995,6 @@ open class SiteStore @Inject constructor(
 
     private fun handleQuickStartCompleted(payload: QuickStartCompletedResponsePayload) {
         val event = OnQuickStartCompleted(payload.site, payload.success)
-        event.error = payload.error
-        emitChange(event)
-    }
-
-    private fun designatePrimaryDomain(payload: DesignatePrimaryDomainPayload) {
-        siteRestClient.designatePrimaryDomain(payload.site, payload.domain)
-    }
-
-    private fun handleDesignatedPrimaryDomain(payload: DesignatedPrimaryDomainPayload) {
-        val event = OnPrimaryDomainDesignated(payload.site, payload.success)
         event.error = payload.error
         emitChange(event)
     }

@@ -61,20 +61,15 @@ class QuickLinksItemViewModelSlice @Inject constructor(
     }
 
     private fun buildQuickLinks(site: SiteModel) {
-        scope.launch {
+        scope.launch(bgDispatcher) {
             _uiState.postValue(
                 convertToQuickLinkRibbonItem(
                     site,
-                    siteItemsBuilder.build(
-                        MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
-                            site = site,
-                            enableFocusPoints = false,
-                            onClick = this@QuickLinksItemViewModelSlice::onClick,
-                            isBlazeEligible = isSiteBlazeEligible(site),
-                            backupAvailable = true,
-                            scanAvailable = (!site.isWPCom && !site.isWPComAtomic)
-                        )
-                    ),
+                    buildSiteItems(
+                        site,
+                        backupAvailable = true,
+                        scanAvailable = (!site.isWPCom && !site.isWPComAtomic)
+                    )
                 )
             )
         }
@@ -86,22 +81,26 @@ class QuickLinksItemViewModelSlice @Inject constructor(
                 _uiState.postValue(
                     convertToQuickLinkRibbonItem(
                         site,
-                        siteItemsBuilder.build(
-                            MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
-                                site = site,
-                                enableFocusPoints = false,
-                                onClick = this@QuickLinksItemViewModelSlice::onClick,
-                                isBlazeEligible = isSiteBlazeEligible(site),
-                                backupAvailable = it.backup,
-                                scanAvailable = it.scan
-                            )
-                        ),
+                        buildSiteItems(site, backupAvailable = it.backup, scanAvailable = it.scan),
                         capabilitiesFetched = true
                     ),
                 )
             }
         }
     }
+
+    private suspend fun buildSiteItems(site: SiteModel, backupAvailable: Boolean, scanAvailable: Boolean) =
+        siteItemsBuilder.build(
+            MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
+                site = site,
+                enableFocusPoints = false,
+                onClick = this::onClick,
+                isBlazeEligible = isSiteBlazeEligible(site),
+                backupAvailable = backupAvailable,
+                scanAvailable = scanAvailable,
+                includeMenusItem = isActiveQuickLink(ListItemAction.MENUS, site.siteId)
+            )
+        )
 
     private fun convertToQuickLinkRibbonItem(
         site: SiteModel,

@@ -7,7 +7,6 @@ import uniffi.wp_api.SitePlanCurrentPlanInfo
  * Builds a [SitePlan] for tests. Only the credit group is exposed, because that
  * is all the domains dashboard reads; the rest are given empty or zero values.
  */
-@Suppress("LongMethod")
 fun testSitePlan(
     productId: ULong = 0u,
     currentPlan: SitePlanCurrentPlanInfo? = null,

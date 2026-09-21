@@ -26,23 +26,21 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.DomainRegistrationDetailsFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedStateResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.transactions.SupportedDomainCountry
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.ADDRESS_1
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.ADDRESS_2
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.CITY
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.COUNTRY_CODE
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.EMAIL
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.FIRST_NAME
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.LAST_NAME
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.ORGANIZATION
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.PHONE
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.POSTAL_CODE
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.STATE
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel.DomainContactFormModel
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel.DomainRegistrationDetailsUiState
+import org.wordpress.android.ui.domains.usecases.DomainContactField.ADDRESS_1
+import org.wordpress.android.ui.domains.usecases.DomainContactField.ADDRESS_2
+import org.wordpress.android.ui.domains.usecases.DomainContactField.CITY
+import org.wordpress.android.ui.domains.usecases.DomainContactField.COUNTRY_CODE
+import org.wordpress.android.ui.domains.usecases.DomainContactField.EMAIL
+import org.wordpress.android.ui.domains.usecases.DomainContactField.FIRST_NAME
+import org.wordpress.android.ui.domains.usecases.DomainContactField.LAST_NAME
+import org.wordpress.android.ui.domains.usecases.DomainContactField.ORGANIZATION
+import org.wordpress.android.ui.domains.usecases.DomainContactField.PHONE
+import org.wordpress.android.ui.domains.usecases.DomainContactField.POSTAL_CODE
+import org.wordpress.android.ui.domains.usecases.DomainContactField.STATE
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPUrlUtils
@@ -201,14 +199,14 @@ class DomainRegistrationDetailsFragment : Fragment() {
         viewModel.showCountryPickerDialog.observe(viewLifecycleOwner,
             {
                 if (it != null && it.isNotEmpty()) {
-                    showCountryPicker(it)
+                    showCountryPicker()
                 }
             })
 
         viewModel.showStatePickerDialog.observe(viewLifecycleOwner,
             {
                 if (it != null && it.isNotEmpty()) {
-                    showStatePicker(it)
+                    showStatePicker()
                 }
             })
 
@@ -262,31 +260,27 @@ class DomainRegistrationDetailsFragment : Fragment() {
     ) {
         viewModel.formError.observe(viewLifecycleOwner,
             { error ->
-                var affectedInputFields: Array<TextInputEditText>? = null
-
-                when (error?.type) {
-                    FIRST_NAME -> affectedInputFields = arrayOf(firstNameInput)
-                    LAST_NAME -> affectedInputFields = arrayOf(lastNameInput)
-                    ORGANIZATION -> affectedInputFields = arrayOf(organizationInput)
-                    ADDRESS_1 -> affectedInputFields = arrayOf(addressFirstLineInput)
-                    ADDRESS_2 -> affectedInputFields = arrayOf(addressSecondLineInput)
-                    POSTAL_CODE -> affectedInputFields = arrayOf(postalCodeInput)
-                    CITY -> affectedInputFields = arrayOf(cityInput)
-                    STATE -> affectedInputFields = arrayOf(stateInput)
-                    COUNTRY_CODE -> affectedInputFields = arrayOf(countryInput)
-                    EMAIL -> affectedInputFields = arrayOf(emailInput)
-                    PHONE -> affectedInputFields = arrayOf(
+                val affectedInputFields: Array<TextInputEditText> = when (error.field) {
+                    FIRST_NAME -> arrayOf(firstNameInput)
+                    LAST_NAME -> arrayOf(lastNameInput)
+                    ORGANIZATION -> arrayOf(organizationInput)
+                    ADDRESS_1 -> arrayOf(addressFirstLineInput)
+                    ADDRESS_2 -> arrayOf(addressSecondLineInput)
+                    POSTAL_CODE -> arrayOf(postalCodeInput)
+                    CITY -> arrayOf(cityInput)
+                    STATE -> arrayOf(stateInput)
+                    COUNTRY_CODE -> arrayOf(countryInput)
+                    EMAIL -> arrayOf(emailInput)
+                    PHONE -> arrayOf(
                         countryCodeInput,
                         phoneNumberInput
                     )
-                    else -> {
-                    } // Something else, will just show a Toast with an error message
                 }
-                affectedInputFields?.forEach {
+                affectedInputFields.forEach {
                     @Suppress("DEPRECATION")
-                    showFieldError(it, StringEscapeUtils.unescapeHtml4(error?.message))
+                    showFieldError(it, StringEscapeUtils.unescapeHtml4(error.message))
                 }
-                affectedInputFields?.firstOrNull { it.requestFocus() }
+                affectedInputFields.firstOrNull { it.requestFocus() }
             })
     }
 
@@ -379,17 +373,13 @@ class DomainRegistrationDetailsFragment : Fragment() {
         )
     }
 
-    private fun showStatePicker(states: List<SupportedStateResponse>) {
-        val dialogFragment = StatePickerDialogFragment.newInstance(states.toCollection(ArrayList()))
+    private fun showStatePicker() {
+        val dialogFragment = StatePickerDialogFragment()
         dialogFragment.show(childFragmentManager, StatePickerDialogFragment.TAG)
     }
 
-    private fun showCountryPicker(countries: List<SupportedDomainCountry>) {
-        val dialogFragment = CountryPickerDialogFragment.newInstance(
-            countries.toCollection(
-                ArrayList()
-            )
-        )
+    private fun showCountryPicker() {
+        val dialogFragment = CountryPickerDialogFragment()
         dialogFragment.show(childFragmentManager, CountryPickerDialogFragment.TAG)
     }
 
@@ -443,35 +433,19 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
     @AndroidEntryPoint
     class StatePickerDialogFragment : DialogFragment() {
-        private lateinit var states: ArrayList<SupportedStateResponse>
-
         @Inject
         lateinit var viewModelFactory: ViewModelProvider.Factory
         private lateinit var viewModel: DomainRegistrationDetailsViewModel
 
         companion object {
-            private const val EXTRA_STATES = "EXTRA_STATES"
             const val TAG = "STATE_PICKER_DIALOG_FRAGMENT"
-
-            fun newInstance(states: ArrayList<SupportedStateResponse>): StatePickerDialogFragment {
-                val fragment = StatePickerDialogFragment()
-                val bundle = Bundle()
-                bundle.putParcelableArrayList(EXTRA_STATES, states)
-                fragment.arguments = bundle
-                return fragment
-            }
-        }
-
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            states = requireArguments().getParcelableArrayList<SupportedStateResponse>(EXTRA_STATES)
-                    as ArrayList<SupportedStateResponse>
         }
 
         @Suppress("UseCheckOrError")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             viewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
                 .get(DomainRegistrationDetailsViewModel::class.java)
+            val states = viewModel.statesForPicker
             val builder = MaterialAlertDialogBuilder(requireContext())
             builder.setTitle(R.string.domain_registration_state_picker_dialog_title)
             builder.setItems(states.map { it.name }.toTypedArray()) { _, which ->
@@ -488,35 +462,19 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
     @AndroidEntryPoint
     class CountryPickerDialogFragment : DialogFragment() {
-        private lateinit var countries: ArrayList<SupportedDomainCountry>
-
         @Inject
         lateinit var viewModelFactory: ViewModelProvider.Factory
         private lateinit var viewModel: DomainRegistrationDetailsViewModel
 
         companion object {
-            private const val EXTRA_COUNTRIES = "EXTRA_COUNTRIES"
             const val TAG = "COUNTRY_PICKER_DIALOG_FRAGMENT"
-
-            fun newInstance(countries: ArrayList<SupportedDomainCountry>): CountryPickerDialogFragment {
-                val fragment = CountryPickerDialogFragment()
-                val bundle = Bundle()
-                bundle.putParcelableArrayList(EXTRA_COUNTRIES, countries)
-                fragment.arguments = bundle
-                return fragment
-            }
-        }
-
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            countries = arguments?.getParcelableArrayList<SupportedDomainCountry>(EXTRA_COUNTRIES)
-                    as ArrayList<SupportedDomainCountry>
         }
 
         @Suppress("UseCheckOrError")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             viewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
                 .get(DomainRegistrationDetailsViewModel::class.java)
+            val countries = viewModel.countriesForPicker
             val builder = MaterialAlertDialogBuilder(requireContext())
             builder.setTitle(R.string.domain_registration_country_picker_dialog_title)
             builder.setItems(countries.map { it.name }.toTypedArray()) { _, which ->
