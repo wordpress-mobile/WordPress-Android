@@ -3,10 +3,8 @@ package org.wordpress.android.fluxc.network.rest.wpapi.rs
 import okhttp3.Cookie
 import okhttp3.CookieJar
 import okhttp3.HttpUrl
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.store.AccountStore
 import rs.wordpress.api.kotlin.WpApiClient
@@ -23,14 +21,13 @@ import uniffi.wp_api.WpDynamicAuthenticationProvider
 import uniffi.wp_api.WpOrgSiteApiUrlResolver
 import java.net.URL
 import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
 class WpApiClientProvider @Inject constructor(
     private val wpAppNotifierHandler: WpAppNotifierHandler,
     private val accountStore: AccountStore,
-    @Named(OkHttpClientQualifiers.INTERCEPTORS) private val interceptors: Set<@JvmSuppressWildcards Interceptor>,
+    @WpRsOkHttpClient private val okHttpClient: OkHttpClient,
     private val networkAvailabilityProvider: WpNetworkAvailabilityProvider,
 ) {
     private val wpComClients = mutableMapOf<Long, WpApiClient>()
@@ -100,12 +97,7 @@ class WpApiClientProvider @Inject constructor(
         return WpApiClient(
             apiUrlResolver = urlResolver,
             authProvider = authProvider,
-            requestExecutor = WpRequestExecutor(
-                interceptors = interceptors.toList(),
-                networkAvailabilityProvider =
-                    networkAvailabilityProvider,
-                uploadListener = uploadListener,
-            ),
+            requestExecutor = requestExecutor(uploadListener),
             appNotifier = object : WpAppNotifier {
                 override suspend fun requestedWithInvalidAuthentication(
                     requestUrl: String
@@ -116,12 +108,21 @@ class WpApiClientProvider @Inject constructor(
                         )
                 }
             },
+            errorLogger = wpRsErrorLogger(),
         )
     }
 
+    private fun requestExecutor(
+        uploadListener: WpRequestExecutor.UploadListener? = null
+    ) = WpRequestExecutor(
+        httpClient = WpHttpClient.CustomOkHttpClient(okHttpClient),
+        networkAvailabilityProvider = networkAvailabilityProvider,
+        uploadListener = uploadListener,
+    )
+
     fun getWpApiClientCookiesNonceAuthentication(site: SiteModel): WpApiClient {
-        // Create OkHttpClient with cookie jar for cookies/nonce authentication
-        val okHttpClient = OkHttpClient.Builder()
+        // newBuilder() carries over the pool, the interceptors and the timeouts.
+        val cookieAwareClient = okHttpClient.newBuilder()
             .cookieJar(object : CookieJar {
                 // We are storing the cookie in memory as this is a one-time call and there is no need to persist it
                 private val cookieStore = mutableMapOf<String, List<Cookie>>()
@@ -134,11 +135,9 @@ class WpApiClientProvider @Inject constructor(
                     return cookieStore[url.host] ?: emptyList()
                 }
             })
-            .apply { interceptors.forEach { addInterceptor(it) } }
-            .applyWpRsTimeouts()
             .build()
 
-        val httpClient = WpHttpClient.CustomOkHttpClient(okHttpClient)
+        val httpClient = WpHttpClient.CustomOkHttpClient(cookieAwareClient)
         val requestExecutor = WpRequestExecutor(httpClient, networkAvailabilityProvider)
 
         val cookiesNonceProvider = CookiesNonceAuthenticationProvider.withSiteUrl(
@@ -156,7 +155,8 @@ class WpApiClientProvider @Inject constructor(
                 override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {
                     wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
                 }
-            }
+            },
+            errorLogger = wpRsErrorLogger(),
         )
         return client
     }
@@ -171,13 +171,14 @@ class WpApiClientProvider @Inject constructor(
             WpApiClient(
                 apiUrlResolver = urlResolver,
                 authProvider = createWpComAuthProvider(accountStore),
-                requestExecutor = WpRequestExecutor(emptyList(), networkAvailabilityProvider),
+                requestExecutor = requestExecutor(),
                 // WpAppNotifierHandler listeners respond with application-password
                 // reauthentication, which can't fix a bearer-token 401; the screens surface
                 // WP.com auth errors themselves. So bearer clients don't report to the handler.
                 appNotifier = object : WpAppNotifier {
                     override suspend fun requestedWithInvalidAuthentication(requestUrl: String) = Unit
-                }
+                },
+                errorLogger = wpRsErrorLogger(),
             )
         }
     }

@@ -7,25 +7,22 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpRsOkHttpClient
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.applyWpRsTimeouts
 import javax.inject.Named
-import javax.inject.Qualifier
 import javax.inject.Singleton
 
-/** The [OkHttpClient] that carries wordpress-rs traffic. */
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class WpRsOkHttpClient
-
 /**
- * The OkHttp clients wordpress-rs talks through.
+ * The OkHttp client wordpress-rs talks through.
  *
  * Every transport decision for wordpress-rs is made here, and only here: timeouts, interceptors,
- * and what is shared between clients. The API clients built on top take one of these rather than
+ * and what is shared between clients. The API clients built on top take this one rather than
  * building their own, so a change to how wordpress-rs reaches the network is a change to this file.
  *
- * A caller that needs different transport gets another binding in this module, derived from
- * [provideWpRsOkHttpClient] with `newBuilder()` so it keeps the shared connection pool.
+ * A caller needing transport of its own derives it with `newBuilder()`, which carries over the
+ * connection pool, the interceptors and the timeouts. `WpApiClientProvider` does that for the
+ * cookies-and-nonce client, whose cookie jar lasts one authentication attempt and so cannot be
+ * shared.
  */
 @InstallIn(SingletonComponent::class)
 @Module

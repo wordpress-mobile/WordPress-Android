@@ -1,11 +1,12 @@
 package org.wordpress.android.fluxc.network.rest.wpapi.jetpack
 
-import okhttp3.Interceptor
-import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
+import okhttp3.OkHttpClient
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpRsOkHttpClient
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.EmptyAppNotifier
+import rs.wordpress.api.kotlin.WpHttpClient
 import rs.wordpress.api.kotlin.WpRequestExecutor
 import uniffi.wp_api.JetpackConnectionClient
 import uniffi.wp_api.JetpackConnectionStatus
@@ -14,7 +15,6 @@ import uniffi.wp_api.WpApiClientDelegate
 import uniffi.wp_api.WpApiMiddlewarePipeline
 import uniffi.wp_api.WpAuthenticationProvider
 import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -34,14 +34,13 @@ data class JetpackConnectionState(val wpComSiteId: Long?) {
  */
 @Singleton
 class JetpackConnectionStatusFetcher @Inject constructor(
-    @Named(OkHttpClientQualifiers.INTERCEPTORS) interceptors: Set<@JvmSuppressWildcards Interceptor>,
+    @WpRsOkHttpClient okHttpClient: OkHttpClient,
     networkAvailabilityProvider: WpNetworkAvailabilityProvider,
     private val appLogWrapper: AppLogWrapper
 ) {
-    // One executor for the singleton: each WpRequestExecutor builds its own OkHttpClient (with its own
-    // connection pool), and the executor is site-independent -- auth lives in the per-call delegate.
+    // One executor for the singleton: it's site-independent -- auth lives in the per-call delegate.
     private val requestExecutor = WpRequestExecutor(
-        interceptors = interceptors.toList(),
+        httpClient = WpHttpClient.CustomOkHttpClient(okHttpClient),
         networkAvailabilityProvider = networkAvailabilityProvider
     )
 
