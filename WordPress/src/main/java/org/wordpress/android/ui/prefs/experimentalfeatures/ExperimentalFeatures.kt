@@ -42,8 +42,8 @@ class ExperimentalFeatures @Inject constructor(
         ),
         CONTENT_LIST_REDESIGN(
             "content_list_redesign",
-            R.string.experimental_content_list_redesign,
-            R.string.experimental_content_list_redesign_description
+            R.string.experimental_posts_pages_redesign,
+            R.string.experimental_posts_pages_redesign_description
         )
     }
 }

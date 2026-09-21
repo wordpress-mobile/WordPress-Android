@@ -4988,6 +4988,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="content_list_fab_write">Write</string>
     <string name="content_list_density_show_condensed">Show condensed list</string>
     <string name="content_list_density_show_comfortable">Show expanded list</string>
-    <string name="experimental_content_list_redesign">Posts list redesign</string>
-    <string name="experimental_content_list_redesign_description">Show the redesigned posts list: featured-image cards, date groups and filter chips.</string>
+    <string name="experimental_posts_pages_redesign">Posts and Pages list redesign</string>
+    <string name="experimental_posts_pages_redesign_description">Show the redesigned posts and pages lists: featured-image cards, filter chips and a condensed view.</string>
 </resources>

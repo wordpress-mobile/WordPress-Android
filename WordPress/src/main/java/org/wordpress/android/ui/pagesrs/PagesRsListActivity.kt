@@ -25,6 +25,7 @@ import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment.Companion.MODAL_LAYOUT_PICKER_TAG
 import org.wordpress.android.ui.pagesrs.screens.PagesRsListScreen
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.clipboardManager
@@ -38,6 +39,7 @@ import javax.inject.Inject
 class PagesRsListActivity : BaseAppCompatActivity() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var buildConfigWrapper: BuildConfigWrapper
+    @Inject lateinit var experimentalFeatures: ExperimentalFeatures
 
     private val viewModel: PagesRsListViewModel by viewModels()
     private lateinit var mlpViewModel: ModalLayoutPickerViewModel
@@ -49,6 +51,10 @@ class PagesRsListActivity : BaseAppCompatActivity() {
         observeEvents()
         observeMlp()
 
+        val isRedesignEnabled = experimentalFeatures.isEnabled(
+            ExperimentalFeatures.Feature.CONTENT_LIST_REDESIGN
+        )
+
         setContent {
             val tabStates by viewModel.tabStates.collectAsState()
             val isSearchActive by viewModel.isSearchActive.collectAsState()
@@ -57,6 +63,7 @@ class PagesRsListActivity : BaseAppCompatActivity() {
             val authorFilter by viewModel.authorFilter.collectAsState()
             val pendingConfirmation by viewModel.pendingConfirmation.collectAsState()
             val parentPicker by viewModel.parentPicker.collectAsState()
+            val density by viewModel.density.collectAsState()
             AppThemeM3 {
                 PagesRsListScreen(
                     tabStates = tabStates,
@@ -89,7 +96,11 @@ class PagesRsListActivity : BaseAppCompatActivity() {
                     onParentSearchChanged = viewModel::onParentSearchChanged,
                     onLoadMoreParents = viewModel::onLoadMoreParents,
                     onParentPickerDismissed = viewModel::onParentPickerDismissed,
-                    onAddNewPage = viewModel::onAddNewPage
+                    onAddNewPage = viewModel::onAddNewPage,
+                    onRowsVisible = viewModel::onRowsVisible,
+                    onDensityToggled = viewModel::onDensityToggled,
+                    density = density,
+                    isRedesignEnabled = isRedesignEnabled
                 )
             }
         }

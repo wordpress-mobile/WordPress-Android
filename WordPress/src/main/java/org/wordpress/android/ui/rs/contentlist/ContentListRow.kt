@@ -47,6 +47,9 @@ import java.text.NumberFormat
  *
  * Rows without a featured image let the text span the full card rather than reserving an empty
  * placeholder square, so a text-only blog does not read as a column of grey boxes.
+ *
+ * [leading] draws ahead of the text, for rows that stand for something other than a plain entry -
+ * the pages list marks its homepage and posts-page rows that way.
  */
 @Composable
 fun ContentListRow(
@@ -54,7 +57,8 @@ fun ContentListRow(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     density: ContentListDensity = ContentListDensity.COMFORTABLE,
-    menu: (@Composable () -> Unit)? = null
+    menu: (@Composable () -> Unit)? = null,
+    leading: (@Composable () -> Unit)? = null
 ) {
     val padding = if (density.isCondensed) CONDENSED_CARD_PADDING else CARD_PADDING
     ContentListCard(onClick = onClick, isSyncing = state.isSyncing, modifier = modifier) {
@@ -64,7 +68,8 @@ fun ContentListRow(
             titleLineHeight = TITLE_LINE_HEIGHT,
             density = density,
             padding = padding,
-            menu = menu
+            menu = menu,
+            leading = leading
         ) {
             FeaturedImage(
                 imageUrl = state.imageUrl,
@@ -89,7 +94,8 @@ fun ContentListHeroRow(
     state: ContentListRowUiState,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    menu: (@Composable () -> Unit)? = null
+    menu: (@Composable () -> Unit)? = null,
+    leading: (@Composable () -> Unit)? = null
 ) {
     ContentListCard(onClick = onClick, isSyncing = state.isSyncing, modifier = modifier) {
         Column {
@@ -106,7 +112,8 @@ fun ContentListHeroRow(
                 titleLineHeight = HERO_TITLE_LINE_HEIGHT,
                 density = ContentListDensity.COMFORTABLE,
                 padding = CARD_PADDING,
-                menu = menu
+                menu = menu,
+                leading = leading
             )
         }
     }
@@ -241,8 +248,12 @@ private fun RowBody(
     if (!density.isCondensed) {
         RowExcerpt(state.excerpt)
     }
-    Spacer(modifier = Modifier.height(TITLE_META_GAP))
-    RowMetaLine(state = state, showMetrics = !density.isCondensed)
+    // Everything else on the metadata line is separator-prefixed, so a row with no date - the
+    // pages list's synthetic Site Editor entry - drops the line rather than leading with a bullet.
+    if (state.dateLabel.isNotBlank()) {
+        Spacer(modifier = Modifier.height(TITLE_META_GAP))
+        RowMetaLine(state = state, showMetrics = !density.isCondensed)
+    }
 }
 
 @Composable
@@ -429,6 +440,7 @@ private fun RowTextAndMenu(
     density: ContentListDensity,
     padding: Dp,
     menu: (@Composable () -> Unit)?,
+    leading: (@Composable () -> Unit)? = null,
     trailing: @Composable () -> Unit = {}
 ) {
     Row(
@@ -442,6 +454,10 @@ private fun RowTextAndMenu(
         ),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        if (leading != null) {
+            leading()
+            Spacer(modifier = Modifier.width(LEADING_GAP))
+        }
         Column(modifier = Modifier.weight(1f)) {
             RowBody(
                 state = state,
@@ -468,6 +484,7 @@ private val CONDENSED_THUMBNAIL_SIZE = 56.dp
 private val CONDENSED_CARD_PADDING = 12.dp
 private val THUMBNAIL_RADIUS = 10.dp
 private val HERO_IMAGE_HEIGHT = 130.dp
+private val LEADING_GAP = 12.dp
 private val TITLE_META_GAP = 6.dp
 private val SYNC_BAR_HEIGHT = 2.dp
 private const val SYNC_BAR_ALPHA = 0.5f

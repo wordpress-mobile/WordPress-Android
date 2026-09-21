@@ -23,6 +23,8 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -40,6 +42,8 @@ import org.wordpress.android.fluxc.store.EditorThemeStore.OnEditorThemeChanged
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.datasource.PostViewsDataResult
+import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.PostRsErrorUtils
@@ -52,8 +56,10 @@ import org.wordpress.android.ui.rs.RsTabLoading
 import org.wordpress.android.ui.rs.RsTabRefreshJobs
 import org.wordpress.android.ui.rs.RsUploadedPost
 import org.wordpress.android.ui.rs.toRsPostStatus
+import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.SiteEditorMVPFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -88,6 +94,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private val editorThemeStore: EditorThemeStore,
     private val siteEditorMVPFeatureConfig: SiteEditorMVPFeatureConfig,
     private val changeListener: RsPostChangeListener,
+    private val statsDataSource: StatsDataSource,
 ) : ViewModel() {
     private val _tabStates = MutableStateFlow<Map<PageRsListTab, PageTabUiState>>(emptyMap())
     val tabStates: StateFlow<Map<PageRsListTab, PageTabUiState>> = _tabStates.asStateFlow()
@@ -117,6 +124,58 @@ internal class PagesRsListViewModel @Inject constructor(
     private val resolveImageJobs = mutableMapOf<PageRsListTab, Job>()
     private val resolveAuthorJobs = mutableMapOf<PageRsListTab, Job>()
     private var lastTrackedTab: PageRsListTab? = null
+
+    /**
+     * Outstanding view-count fetches, cancelled only at teardown.
+     *
+     * Deliberately not cancelled when the visible rows change: a cancelled fetch releases its
+     * in-flight claim without filling the cache, and the next visible set would skip those ids as
+     * "already in flight", stranding their rows on the loading skeleton with nothing left to
+     * resolve them. Volume is bounded by [visiblePageIds] instead.
+     */
+    private val metricJobs = mutableSetOf<Job>()
+
+    /**
+     * The rows on screen right now, per tab, so work queued for rows scrolled past can be dropped.
+     *
+     * Keyed by tab rather than held as one set: the pager composes the neighbouring tab during a
+     * drag, and its visible-row stream reports against that tab. A single field would be
+     * overwritten by the neighbour, stranding the active tab's queued fetches - they re-check this
+     * set once a permit frees and would find the wrong ids - and would later hand
+     * [retryMetricsForVisibleRows] another tab's ids after a refresh.
+     */
+    private val visiblePageIds = mutableMapOf<PageRsListTab, Set<Long>>()
+
+    /**
+     * Caps concurrent view-count requests across the whole screen.
+     *
+     * Shared rather than created per call: [onRowsVisible] fires on every visible-set change, so a
+     * per-call semaphore would cap each emission separately and a fling could still put a request
+     * in flight for every row it passed.
+     */
+    private val viewCountGate = Semaphore(MAX_CONCURRENT_VIEW_FETCHES)
+
+    /**
+     * View counts keyed by remote page id, so scrolling back to a row does not refetch it and a
+     * cache reload does not blank the number out. Only touched from the main dispatcher.
+     *
+     * A present key means "fetched"; a null value means the fetch came back with nothing usable.
+     * Rows distinguish the two so a failure clears the loading skeleton rather than pinning it.
+     */
+    private val viewCountCache = mutableMapOf<Long, Long?>()
+    private val inFlightViewCounts = mutableSetOf<Long>()
+
+    /**
+     * Featured media ids whose lookup came back without a URL. Rows use this to stop waiting: the
+     * fetch is not retried on its own, so without it they shimmer indefinitely. Cleared by a
+     * refresh, which is what gives a failed lookup another go.
+     */
+    private val unresolvableImageIds = mutableSetOf<Long>()
+
+    private val _density = MutableStateFlow(
+        ContentListDensity.of(appPrefsWrapper.isContentListCondensed)
+    )
+    val density: StateFlow<ContentListDensity> = _density.asStateFlow()
 
     private val _events = Channel<PageRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
@@ -148,6 +207,18 @@ internal class PagesRsListViewModel @Inject constructor(
         site.isUsingWpComRestApi &&
         site.hasCapabilityEditOthersPages &&
         site.isSingleUserSite == false
+
+    /**
+     * View counts come from the WordPress.com stats endpoint, so they need a WordPress.com site ID
+     * and the capability to read stats. Self-hosted sites reached over application passwords have
+     * neither and show no view counts; the rest of the row is unaffected.
+     */
+    private val canFetchViewCounts: Boolean by lazy {
+        site != null &&
+            site.siteId > 0 &&
+            SiteUtils.isAccessedViaWPComRest(site) &&
+            site.hasCapabilityViewStats
+    }
 
     private val _authorFilter = MutableStateFlow(
         if (isAuthorFilterSupported) {
@@ -534,11 +605,20 @@ internal class PagesRsListViewModel @Inject constructor(
             try {
                 withContext(Dispatchers.IO) { collection.refresh() }
                 fetchedTabs.add(tab)
+                // Drop only the "nothing to show" entries so a transient failure is retried,
+                // while numbers already fetched stay put.
+                viewCountCache.entries.removeAll { it.value == null }
+                unresolvableImageIds.clear()
                 userRefreshingTabs.remove(tab)
                 // Read the fetched items and end both progress states here rather than relying
                 // on the collection observers, which aren't guaranteed to fire for a refresh.
                 loadItemsForTab(tab)
                 updateTabUiState(tab) { copy(isLoading = false, isRefreshing = false) }
+                // Clearing the cache above puts those rows back into the pending state, and the
+                // list only asks for view counts when its visible rows change - which a refresh in
+                // place does not do. Without this the skeletons would spin with nothing to
+                // resolve them.
+                retryMetricsForVisibleRows(tab)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -1300,7 +1380,7 @@ internal class PagesRsListViewModel @Inject constructor(
                     item.state.toPageUiModel(item.id, nowLabel, showStatus = isSearch)
                 }
             }
-            val uiModels = mergeCachedFields(tab, items)
+            val uiModels = mergeCachedFields(tab, items, isSearch)
             val applyHierarchy = tab == PageRsListTab.PUBLISHED &&
                 !isSearch &&
                 _authorFilter.value != AuthorFilterSelection.ME
@@ -1342,7 +1422,8 @@ internal class PagesRsListViewModel @Inject constructor(
      */
     private fun mergeCachedFields(
         tab: PageRsListTab,
-        items: List<PageRsUiModel>
+        items: List<PageRsUiModel>,
+        isSearch: Boolean
     ): List<PageRsUiModel> {
         val existingById = getTabUiState(tab).pages
             .associate { it.remotePageId to it.page }
@@ -1355,7 +1436,17 @@ internal class PagesRsListViewModel @Inject constructor(
             if (model.featuredImageId != 0L && model.featuredImageId == existing?.featuredImageId) {
                 resolved = resolved.copy(featuredImageUrl = existing.featuredImageUrl)
             }
-            resolved
+            resolved.copy(
+                isFeaturedImageUnresolvable = model.featuredImageId in unresolvableImageIds,
+                // Read straight from the metrics cache: rebuilding from the collection would
+                // otherwise blank out numbers already fetched on every change it reports.
+                viewCount = viewCountCache[model.remotePageId],
+                // Search mixes statuses into one list and view counts are only fetched for
+                // published pages, so skeletons there would never resolve.
+                areMetricsPending = expectsMetrics(tab) &&
+                    !isSearch &&
+                    isMetricOutstanding(model.remotePageId)
+            )
         }
     }
 
@@ -1382,7 +1473,12 @@ internal class PagesRsListViewModel @Inject constructor(
                     site, unresolvedIds, THUMBNAIL_SIZE_DP, THUMBNAIL_ASPECT
                 )
             }
-            if (urls.isEmpty()) return@launch
+            // Anything the lookup did not answer for is recorded so its row stops waiting. The
+            // request is a batch, so one unreadable item leaves every id in it unanswered. Anything
+            // it did answer for is evicted, so an id that failed once and then resolved is not
+            // still reported as unresolvable on the next reload.
+            unresolvableImageIds.removeAll(urls.keys)
+            unresolvableImageIds.addAll(unresolvedIds.filterNot { urls.containsKey(it) })
             updateTabUiState(tab) {
                 copy(pages = this.pages.map { item -> item.withResolvedFeaturedImage(urls) })
             }
@@ -1417,6 +1513,172 @@ internal class PagesRsListViewModel @Inject constructor(
             updateTabUiState(tab) {
                 copy(pages = this.pages.map { item -> item.withResolvedAuthor(names) })
             }
+        }
+    }
+
+    /**
+     * Flips the list between its two densities, persisting the choice for the posts list too.
+     *
+     * Condensed shows no metrics and so fetches none; returning to comfortable has to ask for them,
+     * because the rows on screen have not changed and the visible-row stream is what normally
+     * triggers a fetch.
+     */
+    @MainThread
+    fun onDensityToggled(tab: PageRsListTab) {
+        val next = ContentListDensity.of(!_density.value.isCondensed)
+        _density.value = next
+        appPrefsWrapper.isContentListCondensed = next.isCondensed
+        launchCollectionJob {
+            // Re-map the rows so their pending flags match the new density before anything fetches.
+            loadItemsForTab(tab)
+            // Published is the only tab whose mapping depends on density, because it is the only
+            // one that shows metrics - so it is re-mapped too when the toggle was tapped from
+            // somewhere else, or its rows keep pending flags computed under the old density.
+            // Costs nothing when Published was never opened: loadItemsForTab has no collection to
+            // read and returns.
+            if (tab != PageRsListTab.PUBLISHED) loadItemsForTab(PageRsListTab.PUBLISHED)
+            if (!next.isCondensed) retryMetricsForVisibleRows(tab)
+        }
+    }
+
+    /**
+     * Whether rows on [tab] should expect a view count at all, and so whether to show a skeleton.
+     *
+     * Published pages only, and only at comfortable density - a condensed row shows no metrics, so
+     * it does not fetch them either. A draft or trashed page has no view history to report.
+     */
+    private fun expectsMetrics(tab: PageRsListTab) =
+        tab == PageRsListTab.PUBLISHED && !_density.value.isCondensed
+
+    /**
+     * Search results mix statuses into one list and view counts are only fetched for published
+     * pages, so anything shown while searching would wait on a fetch that never comes.
+     */
+    private val isSearching: Boolean get() = _searchQuery.value.isNotBlank()
+
+    /** Whether a view count is still expected for [pageId] but has not arrived. */
+    private fun isMetricOutstanding(pageId: Long) =
+        canFetchViewCounts && !viewCountCache.containsKey(pageId)
+
+    /**
+     * Fetches view counts for the rows currently on screen.
+     *
+     * Driven by scroll position rather than by the page load because the stats API answers for one
+     * page at a time. Volume is held down by debouncing on the caller's side, a single
+     * [viewCountGate] shared across all calls, and re-checking the tab's visible rows once a permit is
+     * granted - not by cancelling earlier batches, which would strand rows on their skeletons.
+     */
+    @MainThread
+    fun onRowsVisible(tab: PageRsListTab, pageIds: List<Long>) {
+        // Recorded before the guard, not after: a list opened condensed does not fetch, but it
+        // still has to know what is on screen so that switching to comfortable can ask for it.
+        // Otherwise retryMetricsForVisibleRows finds an empty set and the rows shimmer for good.
+        visiblePageIds[tab] = pageIds.toSet()
+        if (!expectsMetrics(tab) || isSearching) return
+        fetchViewCounts(tab, pageIds)
+    }
+
+    @MainThread
+    private fun fetchViewCounts(tab: PageRsListTab, pageIds: List<Long>) {
+        // The stats data source authenticates with the WP.com bearer token and throws if it is
+        // asked for data before being given one.
+        val accessToken = accountStore.accessToken.takeUnless { it.isNullOrEmpty() }
+        val siteId = site?.siteId ?: return
+        val wanted = pageIds.filter {
+            !viewCountCache.containsKey(it) && it !in inFlightViewCounts
+        }
+        if (!canFetchViewCounts || accessToken == null || wanted.isEmpty()) return
+
+        track(viewModelScope.launch {
+            statsDataSource.init(accessToken)
+            wanted.forEach { pageId ->
+                launch {
+                    viewCountGate.withPermit {
+                        // Re-checked after waiting for a permit rather than before queuing: by the
+                        // time a slot frees up the user may have scrolled well past this row, and
+                        // fetching it would spend a request on something off screen.
+                        if (pageId in visiblePageIds[tab].orEmpty()) {
+                            fetchViewCountFor(tab, siteId, pageId)
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    /** Keeps a job around so teardown can cancel it, and forgets it once it finishes. */
+    private fun track(job: Job) {
+        metricJobs.add(job)
+        job.invokeOnCompletion { metricJobs.remove(job) }
+    }
+
+    /**
+     * Fetches one page's view count.
+     *
+     * Metrics decorate the rows; the list is perfectly usable without them, so nothing in this path
+     * is allowed to take the screen down.
+     */
+    private suspend fun fetchViewCountFor(tab: PageRsListTab, siteId: Long, pageId: Long) {
+        // Re-checked here, not just when the batch was queued: ids waiting on [viewCountGate] are
+        // not yet recorded as in flight, so the same page can be queued twice and the first fetch
+        // can land before the second gets its permit.
+        if (viewCountCache.containsKey(pageId)) return
+        if (!inFlightViewCounts.add(pageId)) return
+        try {
+            // A null either way: the fetch failed, or it answered with nothing usable. Both mean
+            // the row has no number to show and should stop waiting for one.
+            @Suppress("TooGenericExceptionCaught")
+            val views = try {
+                val result = withContext(Dispatchers.IO) {
+                    statsDataSource.fetchPostViews(siteId = siteId, postId = pageId)
+                }
+                (result as? PostViewsDataResult.Success)?.data?.totalViews
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.PAGES, "Failed to fetch view count for page $pageId", e)
+                null
+            }
+            viewCountCache[pageId] = views
+            applyMetrics(tab, listOf(pageId))
+        } finally {
+            inFlightViewCounts.remove(pageId)
+        }
+    }
+
+    /**
+     * Re-requests view counts for the rows already on screen, for when something other than
+     * scrolling put them back into the pending state.
+     */
+    @MainThread
+    private fun retryMetricsForVisibleRows(tab: PageRsListTab) {
+        val visible = visiblePageIds[tab].orEmpty()
+        if (visible.isEmpty()) return
+        onRowsVisible(tab, visible.toList())
+    }
+
+    /** Pushes whatever the cache now holds for [pageIds] onto the tab's rows. */
+    @MainThread
+    private fun applyMetrics(tab: PageRsListTab, pageIds: List<Long>) {
+        val touched = pageIds.toSet()
+        updateTabUiState(tab) {
+            copy(
+                pages = pages.map { item ->
+                    if (item.remotePageId in touched) {
+                        item.withPage(
+                            item.page.copy(
+                                viewCount = viewCountCache[item.remotePageId],
+                                // Mirrors the guard in loadItemsForTab: without it a late-landing
+                                // fetch could raise a skeleton over a search result.
+                                areMetricsPending = !isSearching &&
+                                    isMetricOutstanding(item.remotePageId)
+                            )
+                        )
+                    } else {
+                        item
+                    }
+                }
+            )
         }
     }
 
@@ -1467,12 +1729,19 @@ internal class PagesRsListViewModel @Inject constructor(
     }
 
     private fun PageRsListItem.withResolvedFeaturedImage(urls: Map<Long, String>): PageRsListItem {
-        val url = urls[page.featuredImageId] ?: return this
-        val updated = page.copy(featuredImageUrl = url)
-        return when (this) {
-            is PageRsListItem.Real -> copy(page = updated)
-            is PageRsListItem.Virtual -> copy(page = updated)
+        val url = urls[page.featuredImageId]
+        val updated = when {
+            url != null -> page.copy(
+                featuredImageUrl = url,
+                isFeaturedImageUnresolvable = false
+            )
+            // A row whose image the batch could not answer for stops shimmering rather than
+            // waiting on a lookup that is not retried until the next refresh.
+            page.featuredImageId in unresolvableImageIds ->
+                page.copy(isFeaturedImageUnresolvable = true)
+            else -> return this
         }
+        return withPage(updated)
     }
 
     private suspend fun updateListInfoForTab(tab: PageRsListTab) {
@@ -1559,6 +1828,15 @@ internal class PagesRsListViewModel @Inject constructor(
         resolveImageJobs.clear()
         resolveAuthorJobs.values.forEach { it.cancel() }
         resolveAuthorJobs.clear()
+        // Snapshot first: each job's completion handler removes it from metricJobs, and a job
+        // parked on the view-count gate completes inline on Main.immediate during cancel().
+        // Iterating the live set would throw as soon as a non-last job did.
+        metricJobs.toList().forEach { it.cancel() }
+        metricJobs.clear()
+        visiblePageIds.clear()
+        viewCountCache.clear()
+        inFlightViewCounts.clear()
+        unresolvableImageIds.clear()
         closeParentPickerCollection()
         parentPickerExcludedIds = emptySet()
         _parentPicker.value = null
@@ -1579,6 +1857,12 @@ internal class PagesRsListViewModel @Inject constructor(
         private const val SITE_EDITOR_LAUNCH_DEBOUNCE_MS = 1000L
         internal const val MIN_SEARCH_QUERY_LENGTH = 3
         private const val THUMBNAIL_SIZE_DP = 64
+
+        /**
+         * View counts are one request each, so a screenful is fetched a few at a time rather than
+         * all at once.
+         */
+        private const val MAX_CONCURRENT_VIEW_FETCHES = 4
 
         /** Rows show the thumbnail in a square slot, cropped to fill. */
         private const val THUMBNAIL_ASPECT = 1f
