@@ -60,15 +60,16 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.CommentStatus
+import org.wordpress.android.ui.commentsrs.CommentRsUiModel
 import org.wordpress.android.ui.commentsrs.CommentsRsBatchAction
 import org.wordpress.android.ui.commentsrs.CommentsRsListTab
-import org.wordpress.android.ui.commentsrs.CommentsTabUiState
 import org.wordpress.android.ui.commentsrs.PendingConfirmation
 import org.wordpress.android.ui.commentsrs.batchActions
 import org.wordpress.android.ui.commentsrs.isEnabledFor
 import org.wordpress.android.ui.compose.components.FilterChipTabRow
 import org.wordpress.android.ui.compose.utils.rsDebugTitle
 import org.wordpress.android.ui.rs.RsSnackbarMessage
+import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListDensityToggle
 
@@ -83,7 +84,7 @@ private enum class TopBarMode { SELECTION, SEARCH, NORMAL }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentsRsListScreen(
-    tabStates: Map<CommentsRsListTab, CommentsTabUiState>,
+    tabStates: Map<CommentsRsListTab, RsTabUiState<CommentRsUiModel>>,
     selectedIds: Set<Long>,
     canModerate: Boolean,
     pendingConfirmation: PendingConfirmation?,
@@ -128,7 +129,7 @@ fun CommentsRsListScreen(
     // Statuses of the selected comments that live on the active tab. This is empty during a tab
     // swipe (the selection still belongs to the previous tab and is about to be cleared), so gating
     // the contextual bar on it keeps it from flashing the next tab's actions mid-transition.
-    val selectedStatuses = tabStates[activeTab]?.comments
+    val selectedStatuses = tabStates[activeTab]?.items
         .orEmpty()
         .filter { it.remoteCommentId in selectedIds }
         .map { it.status }

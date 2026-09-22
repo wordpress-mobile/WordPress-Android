@@ -63,16 +63,17 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.utils.rsDebugTitle
-import org.wordpress.android.ui.pagesrs.PageRsConfirmationDialogState
 import org.wordpress.android.ui.pagesrs.PageRsListConfirmation
+import org.wordpress.android.ui.pagesrs.PageRsListItem
 import org.wordpress.android.ui.pagesrs.PageRsListTab
 import org.wordpress.android.ui.pagesrs.PageRsMenuAction
 import org.wordpress.android.ui.pagesrs.PageRsParentPickerState
-import org.wordpress.android.ui.pagesrs.PageRsReveal
-import org.wordpress.android.ui.pagesrs.PageTabUiState
 import org.wordpress.android.ui.pagesrs.PagesRsListViewModel.Companion.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.posts.AuthorFilterSelection
+import org.wordpress.android.ui.rs.RsConfirmationDialogState
+import org.wordpress.android.ui.rs.RsReveal
 import org.wordpress.android.ui.rs.RsSnackbarMessage
+import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.contentlist.ContentListAuthorFilterButton
 import org.wordpress.android.ui.rs.contentlist.ContentListConfirmationDialog
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
@@ -85,17 +86,17 @@ import org.wordpress.android.ui.rs.contentlist.ShowRsSnackbars
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun PagesRsListScreen(
-    tabStates: Map<PageRsListTab, PageTabUiState>,
+    tabStates: Map<PageRsListTab, RsTabUiState<PageRsListItem>>,
     isSearchActive: Boolean,
     isOpeningPage: Boolean,
     searchQuery: String,
     authorFilter: AuthorFilterSelection,
     isAuthorFilterSupported: Boolean,
     avatarUrl: String?,
-    confirmationDialog: PageRsConfirmationDialogState,
+    confirmationDialog: RsConfirmationDialogState<PageRsListConfirmation>,
     parentPicker: PageRsParentPickerState?,
     snackbarMessages: Flow<RsSnackbarMessage> = emptyFlow(),
-    revealRequests: Flow<PageRsReveal> = emptyFlow(),
+    revealRequests: Flow<RsReveal<PageRsListTab>> = emptyFlow(),
     onSearchOpen: () -> Unit,
     onSearchQueryChanged: (String, PageRsListTab) -> Unit,
     onSearchClose: (PageRsListTab) -> Unit,
@@ -127,7 +128,7 @@ internal fun PagesRsListScreen(
     // A page the user just saved, to be scrolled to once the tab showing it has it. Held here
     // rather than acted on in the collector below so that the tab switch, which the user can win,
     // can be cancelled without taking the collector down with it.
-    var pendingReveal by remember { mutableStateOf<PageRsReveal?>(null) }
+    var pendingReveal by remember { mutableStateOf<RsReveal<PageRsListTab>?>(null) }
 
     LaunchedEffect(revealRequests) {
         revealRequests.collect { pendingReveal = it }
@@ -272,12 +273,12 @@ internal fun PagesRsListScreen(
                 userScrollEnabled = !isSearchActive
             ) { page ->
                 val tab = tabs[page]
-                val tabState = tabStates[tab] ?: PageTabUiState(isLoading = true)
+                val tabState = tabStates[tab] ?: RsTabUiState(isLoading = true)
 
                 PageRsTabListScreen(
                     state = tabState,
                     emptyMessageResId = tab.emptyMessageResId,
-                    revealPageId = pendingReveal?.takeIf { it.tab == tab }?.remotePageId,
+                    revealPageId = pendingReveal?.takeIf { it.tab == tab }?.remoteId,
                     onRevealHandled = { pendingReveal = null },
                     isSearchIdle = isSearchActive && searchQuery.length < MIN_SEARCH_QUERY_LENGTH,
                     isSearching = isSearchActive && searchQuery.length >= MIN_SEARCH_QUERY_LENGTH,
@@ -321,7 +322,7 @@ internal fun PagesRsListScreen(
 }
 
 @Composable
-private fun PageConfirmationDialogHost(confirmationDialog: PageRsConfirmationDialogState) {
+private fun PageConfirmationDialogHost(confirmationDialog: RsConfirmationDialogState<PageRsListConfirmation>) {
     when (val pending = confirmationDialog.pending) {
         is PageRsListConfirmation.Trash -> ContentListConfirmationDialog(
             titleResId = R.string.trash,

@@ -31,7 +31,9 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.rs.RsErrorUtils
 import org.wordpress.android.ui.rs.RsFluxCBridge
 import org.wordpress.android.ui.rs.RsMetricJobs
+import org.wordpress.android.ui.rs.RsReveal
 import org.wordpress.android.ui.rs.RsSnackbarMessage
+import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.RsViewCounts
 import org.wordpress.android.ui.rs.RsVisibleRows
 import org.wordpress.android.ui.rs.data.RsSiteRestClient
@@ -80,8 +82,8 @@ class PostRsListViewModel @Inject constructor(
     private val statsDataSource: StatsDataSource,
     private val commentCountFetcher: RsCommentCountFetcher,
 ) : ViewModel() {
-    private val _tabStates = MutableStateFlow<Map<PostRsListTab, PostTabUiState>>(emptyMap())
-    val tabStates: StateFlow<Map<PostRsListTab, PostTabUiState>> = _tabStates.asStateFlow()
+    private val _tabStates = MutableStateFlow<Map<PostRsListTab, RsTabUiState<PostRsUiModel>>>(emptyMap())
+    val tabStates: StateFlow<Map<PostRsListTab, RsTabUiState<PostRsUiModel>>> = _tabStates.asStateFlow()
 
     private val _isOpeningPost = MutableStateFlow(false)
     val isOpeningPost: StateFlow<Boolean> = _isOpeningPost.asStateFlow()
@@ -100,7 +102,7 @@ class PostRsListViewModel @Inject constructor(
 
     private var isScreenVisible = false
     private var hasDeferredChange = false
-    private var pendingReveal: PostRsReveal? = null
+    private var pendingReveal: RsReveal<PostRsListTab>? = null
 
     /** Tabs whose collection has completed at least one fetch, so an empty list means empty. */
     private val fetchedTabs = mutableSetOf<PostRsListTab>()
@@ -145,11 +147,11 @@ class PostRsListViewModel @Inject constructor(
     private val _snackbarMessages = Channel<RsSnackbarMessage>(Channel.BUFFERED)
     val snackbarMessages = _snackbarMessages.receiveAsFlow()
 
-    private val _revealRequests = Channel<PostRsReveal>(Channel.BUFFERED)
+    private val _revealRequests = Channel<RsReveal<PostRsListTab>>(Channel.BUFFERED)
     val revealRequests = _revealRequests.receiveAsFlow()
 
-    private val _pendingConfirmation = MutableStateFlow<PendingConfirmation?>(null)
-    val pendingConfirmation: StateFlow<PendingConfirmation?> = _pendingConfirmation.asStateFlow()
+    private val _pendingConfirmation = MutableStateFlow<PostRsConfirmation?>(null)
+    val pendingConfirmation: StateFlow<PostRsConfirmation?> = _pendingConfirmation.asStateFlow()
 
     private val _site: SiteModel? = selectedSiteRepository.getSelectedSite()
     private val site: SiteModel
@@ -205,7 +207,7 @@ class PostRsListViewModel @Inject constructor(
                     .collect {
                         clearCollections()
                         _tabStates.value = PostRsListTab.entries.associateWith {
-                            PostTabUiState(isLoading = true)
+                            RsTabUiState(isLoading = true)
                         }
                         initTab(activeSearchTab)
                     }
@@ -259,7 +261,7 @@ class PostRsListViewModel @Inject constructor(
      */
     private fun onPostUploaded(upload: RsUploadedPost) {
         val status = upload.status.toRsPostStatus() ?: return
-        pendingReveal = PostRsReveal(tabForStatus(status), upload.remotePostId)
+        pendingReveal = RsReveal(tabForStatus(status), upload.remotePostId)
         emitPendingReveal()
     }
 
@@ -288,7 +290,7 @@ class PostRsListViewModel @Inject constructor(
                 )
             )
             _pendingConfirmation.value =
-                PendingConfirmation.MoveToDraft(remotePostId)
+                PostRsConfirmation.MoveToDraft(remotePostId)
             return
         }
         analyticsTracker.track(
@@ -315,7 +317,7 @@ class PostRsListViewModel @Inject constructor(
             // and send one message for the whole fan-out. It has to be sent here rather than by
             // a nominated tab: a tab only offers a snackbar when it has content to keep, so
             // picking one that turned out to be empty would swallow the message entirely.
-            val anyTabKeepsItsPosts = tabs.any { getTabUiState(it).posts.isNotEmpty() }
+            val anyTabKeepsItsPosts = tabs.any { getTabUiState(it).items.isNotEmpty() }
             tabs.forEach { onRefreshFailed(it, e = null, showSnackbar = false) }
             if (anyTabKeepsItsPosts) {
                 _snackbarMessages.trySend(
@@ -453,9 +455,9 @@ class PostRsListViewModel @Inject constructor(
             PostRsMenuAction.COMMENTS ->
                 _events.trySend(PostRsListEvent.ViewComments(site.siteId, remotePostId))
             PostRsMenuAction.TRASH ->
-                _pendingConfirmation.value = PendingConfirmation.Trash(remotePostId)
+                _pendingConfirmation.value = PostRsConfirmation.Trash(remotePostId)
             PostRsMenuAction.DELETE_PERMANENTLY ->
-                _pendingConfirmation.value = PendingConfirmation.Delete(remotePostId)
+                _pendingConfirmation.value = PostRsConfirmation.Delete(remotePostId)
             PostRsMenuAction.PUBLISH -> publishPost(remotePostId)
             PostRsMenuAction.MOVE_TO_DRAFT -> moveToDraft(remotePostId)
             PostRsMenuAction.DUPLICATE -> duplicatePost(remotePostId)
@@ -465,9 +467,9 @@ class PostRsListViewModel @Inject constructor(
     @MainThread
     fun onConfirmPendingAction() {
         when (val confirmation = _pendingConfirmation.value) {
-            is PendingConfirmation.Trash -> trashPost(confirmation.postId)
-            is PendingConfirmation.Delete -> deletePost(confirmation.postId)
-            is PendingConfirmation.MoveToDraft ->
+            is PostRsConfirmation.Trash -> trashPost(confirmation.postId)
+            is PostRsConfirmation.Delete -> deletePost(confirmation.postId)
+            is PostRsConfirmation.MoveToDraft ->
                 moveToDraftAndEdit(confirmation.postId)
             null -> Unit
         }
@@ -666,7 +668,7 @@ class PostRsListViewModel @Inject constructor(
     /** Searches all tab states for a [PostRsUiModel] matching [remotePostId]. */
     private fun findPost(remotePostId: Long): PostRsUiModel? {
         for (state in _tabStates.value.values) {
-            for (post in state.posts) {
+            for (post in state.items) {
                 if (post.remotePostId == remotePostId) return post
             }
         }
@@ -807,7 +809,7 @@ class PostRsListViewModel @Inject constructor(
 
         initializingTabs.add(tab)
         // Reset to a loading state so a retry after a failed init clears the prior error UI.
-        updateTabUiState(tab) { PostTabUiState(isLoading = true) }
+        updateTabUiState(tab) { RsTabUiState(isLoading = true) }
 
         viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
@@ -824,7 +826,7 @@ class PostRsListViewModel @Inject constructor(
                 AppLog.e(AppLog.T.POSTS, "Failed to init RS post list tab", e)
                 initializingTabs.remove(tab)
                 updateTabUiState(tab) {
-                    PostTabUiState(
+                    RsTabUiState(
                         error = friendlyErrorMessage(e),
                         isAuthError = RsErrorUtils.isAuthError(e)
                     )
@@ -903,7 +905,7 @@ class PostRsListViewModel @Inject constructor(
             updateTabUiState(tab) {
                 copy(
                     isLoading = RsTabLoading.onRefreshStarted(
-                        hasItems = posts.isNotEmpty(),
+                        hasItems = items.isNotEmpty(),
                         hasFetched = tab in fetchedTabs
                     ),
                     error = null
@@ -978,7 +980,7 @@ class PostRsListViewModel @Inject constructor(
         userRefreshingTabs.remove(tab)
         val message = friendlyErrorMessage(e)
         val authError = RsErrorUtils.isAuthError(e)
-        if (getTabUiState(tab).posts.isNotEmpty()) {
+        if (getTabUiState(tab).items.isNotEmpty()) {
             updateTabUiState(tab) {
                 copy(isLoading = false, isRefreshing = false, error = null)
             }
@@ -1044,7 +1046,7 @@ class PostRsListViewModel @Inject constructor(
                     item.state.toUiModel(item.id, nowLabel, showStatus = isSearch)
                 }
             }
-            val existingPosts = getTabUiState(tab).posts
+            val existingPosts = getTabUiState(tab).items
             val uiModels = items.map { model ->
                 val effectiveTab = if (isSearch) tabForStatus(model.status) else tab
                 val existing = existingPosts
@@ -1083,7 +1085,7 @@ class PostRsListViewModel @Inject constructor(
             }
             updateTabUiState(tab) {
                 copy(
-                    posts = uiModels,
+                    items = uiModels,
                     isLoading = RsTabLoading.onItemsLoaded(
                         wasLoading = isLoading,
                         hasItems = uiModels.isNotEmpty()
@@ -1127,7 +1129,7 @@ class PostRsListViewModel @Inject constructor(
             unresolvableImageIds.addAll(unresolvedIds.filterNot(images::containsKey))
             updateTabUiState(tab) {
                 copy(
-                    posts = this.posts.map { post ->
+                    items = this.items.map { post ->
                         val image = images[post.featuredImageId]
                         when {
                             image != null -> post.copy(
@@ -1170,7 +1172,7 @@ class PostRsListViewModel @Inject constructor(
             if (names.isEmpty()) return@launch
             updateTabUiState(tab) {
                 copy(
-                    posts = this.posts.map { post ->
+                    items = this.items.map { post ->
                         val name = names[post.authorId]
                         if (name != null) {
                             post.copy(authorDisplayName = name)
@@ -1304,7 +1306,7 @@ class PostRsListViewModel @Inject constructor(
         val touched = postIds.toSet()
         updateTabUiState(tab) {
             copy(
-                posts = posts.map { post ->
+                items = items.map { post ->
                     if (post.remotePostId in touched) {
                         post.copy(
                             viewCount = viewCounts.countFor(post.remotePostId),
@@ -1348,7 +1350,7 @@ class PostRsListViewModel @Inject constructor(
         if (!fetchingFirstPage) userRefreshingTabs.remove(tab)
 
         val isError = listInfo?.state == ListState.ERROR
-        val hasPosts = getTabUiState(tab).posts.isNotEmpty()
+        val hasPosts = getTabUiState(tab).items.isNotEmpty()
         val errorMessage = if (isError) friendlyErrorMessage() else null
 
         if (isError && hasPosts) {
@@ -1384,7 +1386,7 @@ class PostRsListViewModel @Inject constructor(
                     isLoading = RsTabLoading.onListInfoChanged(
                         wasLoading = isLoading,
                         isFetchingFirstPage = fetchingFirstPage,
-                        hasItems = posts.isNotEmpty(),
+                        hasItems = items.isNotEmpty(),
                         hasFetched = tab in fetchedTabs
                     ),
                     isRefreshing = isUserRefresh && fetchingFirstPage,
@@ -1398,12 +1400,15 @@ class PostRsListViewModel @Inject constructor(
     }
 
     /** Returns the current UI state for [tab], or a default loading state. */
-    private fun getTabUiState(tab: PostRsListTab): PostTabUiState {
-        return _tabStates.value[tab] ?: PostTabUiState(isLoading = true)
+    private fun getTabUiState(tab: PostRsListTab): RsTabUiState<PostRsUiModel> {
+        return _tabStates.value[tab] ?: RsTabUiState(isLoading = true)
     }
 
     /** Updates the UI state for [tab] by applying [update] to the current state. */
-    private fun updateTabUiState(tab: PostRsListTab, update: PostTabUiState.() -> PostTabUiState) {
+    private fun updateTabUiState(
+        tab: PostRsListTab,
+        update: RsTabUiState<PostRsUiModel>.() -> RsTabUiState<PostRsUiModel>
+    ) {
         _tabStates.value += (tab to getTabUiState(tab).update())
     }
 

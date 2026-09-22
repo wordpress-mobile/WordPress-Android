@@ -35,6 +35,7 @@ import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.rs.RsFluxCBridge
+import org.wordpress.android.ui.rs.RsReveal
 import org.wordpress.android.ui.rs.data.RsSiteRestClient
 import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -459,7 +460,7 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
 
         viewModel.revealRequests.test {
             assertThat(awaitItem())
-                .isEqualTo(PageRsReveal(PageRsListTab.PUBLISHED, UPLOADED_PAGE_ID))
+                .isEqualTo(RsReveal(PageRsListTab.PUBLISHED, UPLOADED_PAGE_ID))
         }
     }
 
@@ -474,7 +475,7 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
 
         viewModel.revealRequests.test {
             assertThat(awaitItem())
-                .isEqualTo(PageRsReveal(PageRsListTab.DRAFTS, UPLOADED_PAGE_ID))
+                .isEqualTo(RsReveal(PageRsListTab.DRAFTS, UPLOADED_PAGE_ID))
         }
     }
 
@@ -494,7 +495,7 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
             viewModel.onScreenVisible()
 
             assertThat(awaitItem())
-                .isEqualTo(PageRsReveal(PageRsListTab.PUBLISHED, UPLOADED_PAGE_ID))
+                .isEqualTo(RsReveal(PageRsListTab.PUBLISHED, UPLOADED_PAGE_ID))
         }
     }
 

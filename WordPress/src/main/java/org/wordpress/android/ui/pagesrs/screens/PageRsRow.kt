@@ -47,11 +47,11 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ShimmerBox
-import org.wordpress.android.ui.pagesrs.PageRsDisplayState
 import org.wordpress.android.ui.pagesrs.PageRsListItem
 import org.wordpress.android.ui.pagesrs.PageRsMenuAction
 import org.wordpress.android.ui.pagesrs.PageRsUiModel
 import org.wordpress.android.ui.pagesrs.labelResId
+import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
 import org.wordpress.android.ui.rs.contentlist.LegacyContentListPlaceholderRow
 
 @Composable
@@ -65,11 +65,11 @@ internal fun PageRsRow(
     val indentLevel = (item as? PageRsListItem.Real)?.indentLevel ?: 0
     val virtualKind = (item as? PageRsListItem.Virtual)?.kind
     when (page.displayState) {
-        PageRsDisplayState.PLACEHOLDER -> LegacyContentListPlaceholderRow(modifier)
-        PageRsDisplayState.ERROR -> ErrorItem(modifier)
-        PageRsDisplayState.NORMAL,
-        PageRsDisplayState.FETCHING_WITH_DATA,
-        PageRsDisplayState.FAILED_WITH_DATA -> PageContentItem(
+        ContentDisplayState.PLACEHOLDER -> LegacyContentListPlaceholderRow(modifier)
+        ContentDisplayState.ERROR -> ErrorItem(modifier)
+        ContentDisplayState.NORMAL,
+        ContentDisplayState.FETCHING_WITH_DATA,
+        ContentDisplayState.FAILED_WITH_DATA -> PageContentItem(
             page = page,
             indentLevel = indentLevel,
             virtualKind = virtualKind,
@@ -182,7 +182,7 @@ private fun PageContentItem(
                 }
             }
         }
-        if (page.displayState == PageRsDisplayState.FETCHING_WITH_DATA) {
+        if (page.displayState == ContentDisplayState.FETCHING_WITH_DATA) {
             LinearProgressIndicator(
                 modifier = Modifier
                     .fillMaxWidth()

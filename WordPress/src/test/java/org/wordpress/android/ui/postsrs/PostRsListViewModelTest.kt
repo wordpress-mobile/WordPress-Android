@@ -32,6 +32,7 @@ import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.rs.RsFluxCBridge
+import org.wordpress.android.ui.rs.RsReveal
 import org.wordpress.android.ui.rs.data.RsSiteRestClient
 import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -191,7 +192,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
 
         viewModel.revealRequests.test {
             assertThat(awaitItem())
-                .isEqualTo(PostRsReveal(PostRsListTab.PUBLISHED, UPLOADED_POST_ID))
+                .isEqualTo(RsReveal(PostRsListTab.PUBLISHED, UPLOADED_POST_ID))
         }
     }
 
@@ -206,7 +207,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
 
         viewModel.revealRequests.test {
             assertThat(awaitItem())
-                .isEqualTo(PostRsReveal(PostRsListTab.DRAFTS, UPLOADED_POST_ID))
+                .isEqualTo(RsReveal(PostRsListTab.DRAFTS, UPLOADED_POST_ID))
         }
     }
 
@@ -226,7 +227,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             viewModel.onScreenVisible()
 
             assertThat(awaitItem())
-                .isEqualTo(PostRsReveal(PostRsListTab.PUBLISHED, UPLOADED_POST_ID))
+                .isEqualTo(RsReveal(PostRsListTab.PUBLISHED, UPLOADED_POST_ID))
         }
     }
 
@@ -381,7 +382,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         viewModel.openPost(42L, PostRsListTab.TRASHED)
 
         assertThat(viewModel.pendingConfirmation.value)
-            .isEqualTo(PendingConfirmation.MoveToDraft(42L))
+            .isEqualTo(PostRsConfirmation.MoveToDraft(42L))
     }
 
     @Test
@@ -450,7 +451,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         viewModel.onPostMenuAction(42L, PostRsMenuAction.TRASH)
 
         assertThat(viewModel.pendingConfirmation.value)
-            .isEqualTo(PendingConfirmation.Trash(42L))
+            .isEqualTo(PostRsConfirmation.Trash(42L))
     }
 
     @Test
@@ -462,7 +463,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         )
 
         assertThat(viewModel.pendingConfirmation.value)
-            .isEqualTo(PendingConfirmation.Delete(42L))
+            .isEqualTo(PostRsConfirmation.Delete(42L))
     }
 
     @Test
