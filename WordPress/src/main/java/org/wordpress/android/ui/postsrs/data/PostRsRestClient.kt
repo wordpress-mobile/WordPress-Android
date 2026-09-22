@@ -172,11 +172,18 @@ class PostRsRestClient @Inject constructor(
         return emptyMap()
     }
 
+    /**
+     * Four variants carry an HTTP status, and a 429 can arrive as any of them - as a WpError when
+     * the limiter answers with a REST error body, and as the others when it does not. Which
+     * variant wrapped it says nothing about whether retrying is welcome.
+     */
     private fun WpRequestResult<*>.isRateLimited(): Boolean = when (this) {
-        is WpRequestResult.UnknownError -> statusCode == HTTP_TOO_MANY_REQUESTS
-        is WpRequestResult.InvalidHttpStatusCode -> statusCode == HTTP_TOO_MANY_REQUESTS
-        else -> false
-    }
+        is WpRequestResult.WpError -> statusCode
+        is WpRequestResult.RequestExecutionFailed -> statusCode
+        is WpRequestResult.InvalidHttpStatusCode -> statusCode
+        is WpRequestResult.UnknownError -> statusCode
+        else -> null
+    } == HTTP_TOO_MANY_REQUESTS
 
     /**
      * Fetches display names for the given [userIds] in one network call
