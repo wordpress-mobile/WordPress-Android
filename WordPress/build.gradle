@@ -291,7 +291,7 @@ android {
             android.buildTypes.release.signingConfig = android.signingConfigs.release
         }
 
-        def debugKeystore = new File(gradle.ext.decryptedSecretsDir, "debug.keystore")
+        def debugKeystore = new File(gradle.ext.a8cSecretsDir, "debug.keystore")
         if (debugKeystore.exists()) {
             logger.info("Shared debug keystore found, configuring signing for debug builds.")
             debug {

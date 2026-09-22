@@ -2,12 +2,6 @@
   "project_name": "WordPress-Android",
   "branch": "trunk",
   "pinned_hash": "0577a8e9e54297cccb061a0a44963cd42c7349cc",
-  "files_to_copy": [
-    {
-      "file": "android/debug.keystore",
-      "destination": "~/.configure/wordpress-android/secrets/debug.keystore",
-      "encrypt": true
-    }
-  ],
+  "files_to_copy": [],
   "file_dependencies": []
 }
