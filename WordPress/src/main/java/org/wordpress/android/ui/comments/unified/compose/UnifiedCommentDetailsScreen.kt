@@ -4,8 +4,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -13,6 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -20,6 +23,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -50,7 +54,7 @@ import org.wordpress.android.ui.suggestion.Suggestion
 /**
  * The unified (wordpress-rs) comment detail screen: comment content in a weighted scrollable
  * region so the action footer and reply box stay pinned to the bottom while loading, plus the
- * trash/delete confirmation dialogs and the full-screen reply editor.
+ * trash/delete confirmation dialogs and the reply editor.
  */
 @Composable
 @Suppress("LongParameterList")
@@ -63,11 +67,20 @@ fun UnifiedCommentDetailsScreen(
     focusReplyFieldOnLaunch: Boolean,
     snackbarHostState: SnackbarHostState,
     actions: CommentDetailsActions,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isRedesignEnabled: Boolean = false
 ) {
     var showTrashConfirm by rememberSaveable { mutableStateOf(false) }
     var showDeleteConfirm by rememberSaveable { mutableStateOf(false) }
-    var showFullScreenReply by rememberSaveable { mutableStateOf(false) }
+    var showReplyEditor by rememberSaveable { mutableStateOf(false) }
+
+    // Opened from a notification's reply action. The redesign has no pinned field to focus, so
+    // "start replying" means opening the reply sheet. The host recomputes
+    // focusReplyFieldOnLaunch as false after a config change, so this does not fire again on
+    // rotation or re-open a screen the user dismissed.
+    LaunchedEffect(Unit) {
+        if (isRedesignEnabled && focusReplyFieldOnLaunch) showReplyEditor = true
+    }
 
     val replyHint = if (uiState.authorName.isNotBlank()) {
         stringResource(R.string.comment_reply_to_user, uiState.authorName)
@@ -89,44 +102,39 @@ fun UnifiedCommentDetailsScreen(
                 // footer and reply box to the bottom (the XML layout used INVISIBLE for this).
                 Box(modifier = Modifier.weight(1f)) {
                     if (uiState.contentVisible) {
-                        CommentDetailsContent(
-                            uiState = uiState,
-                            onPostTitleClick = actions.onPostTitleClick,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .nestedScroll(rememberNestedScrollInteropConnection())
-                                .verticalScroll(rememberScrollState())
-                        )
+                        if (isRedesignEnabled) {
+                            RedesignedCommentDetailsContent(
+                                uiState = uiState,
+                                showLikeButton = showLikeButton,
+                                actions = actions,
+                                onReplyClick = { showReplyEditor = true },
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        } else {
+                            CommentDetailsContent(
+                                uiState = uiState,
+                                onPostTitleClick = actions.onPostTitleClick,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .nestedScroll(rememberNestedScrollInteropConnection())
+                                    .verticalScroll(rememberScrollState())
+                            )
+                        }
                     }
                 }
-                CommentActionFooter(
-                    status = uiState.status,
-                    isLiked = uiState.isLiked,
-                    showLikeButton = showLikeButton,
-                    showCommentUrlActions = uiState.commentUrl.isNotEmpty(),
-                    canModerate = uiState.canModerate,
-                    onModerateClick = actions.onModerateClick,
-                    onSpamClick = actions.onSpamClick,
-                    onLikeClick = actions.onLikeClick,
-                    onEditClick = actions.onEditClick,
-                    // Trashing is committed server-side immediately (no undo affordance like the
-                    // legacy list flow), so confirm it first; restoring needs no confirmation.
-                    onTrashClick = {
-                        if (uiState.status == TRASH) actions.onTrashClick() else showTrashConfirm = true
-                    },
-                    onCopyLinkClick = actions.onCopyLinkClick,
-                    onShareLinkClick = actions.onShareLinkClick,
-                    onDeletePermanentlyClick = { showDeleteConfirm = true }
-                )
-                CommentReplyBox(
+                CommentDetailsBottomBar(
+                    uiState = uiState,
                     replyText = replyText,
                     onReplyTextChange = onReplyTextChange,
                     suggestions = suggestions,
-                    hint = replyHint,
-                    isReplyInProgress = uiState.isReplyInProgress,
-                    focusOnLaunch = focusReplyFieldOnLaunch,
-                    onSendClick = { actions.onSendReply(replyText.text) },
-                    onExpandClick = { showFullScreenReply = true }
+                    replyHint = replyHint,
+                    showLikeButton = showLikeButton,
+                    focusReplyFieldOnLaunch = focusReplyFieldOnLaunch,
+                    actions = actions,
+                    isRedesignEnabled = isRedesignEnabled,
+                    onConfirmTrash = { showTrashConfirm = true },
+                    onConfirmDelete = { showDeleteConfirm = true },
+                    onExpandReply = { showReplyEditor = true }
                 )
             }
             if (uiState.showProgress) {
@@ -137,7 +145,13 @@ fun UnifiedCommentDetailsScreen(
 
     if (showTrashConfirm) {
         ConfirmDialog(
-            messageRes = R.string.dlg_confirm_trash_comments,
+            // A comment with replies warns that they are left behind; an unknown count falls back
+            // to the generic wording rather than claiming something it cannot know.
+            messageRes = if ((uiState.replyCount ?: 0) > 0) {
+                R.string.comment_trash_has_replies
+            } else {
+                R.string.dlg_confirm_trash_comments
+            },
             confirmRes = R.string.dlg_confirm_action_trash,
             onConfirm = {
                 showTrashConfirm = false
@@ -159,19 +173,222 @@ fun UnifiedCommentDetailsScreen(
         )
     }
 
-    if (showFullScreenReply) {
+    if (showReplyEditor) {
+        CommentReplyEditor(
+            replyText = replyText,
+            onReplyTextChange = onReplyTextChange,
+            suggestions = suggestions,
+            replyHint = replyHint,
+            isReplyInProgress = uiState.isReplyInProgress,
+            isRedesignEnabled = isRedesignEnabled,
+            onSendReply = actions.onSendReply,
+            onClose = { showReplyEditor = false }
+        )
+    }
+}
+
+/**
+ * Whatever sits below the comment: the moderation toolbar or the pre-redesign action footer, plus
+ * the pinned reply field the redesign does without.
+ */
+@Composable
+@Suppress("LongParameterList")
+private fun CommentDetailsBottomBar(
+    uiState: CommentDetailsUiState,
+    replyText: TextFieldValue,
+    onReplyTextChange: (TextFieldValue) -> Unit,
+    suggestions: List<Suggestion>,
+    replyHint: String,
+    showLikeButton: Boolean,
+    focusReplyFieldOnLaunch: Boolean,
+    actions: CommentDetailsActions,
+    isRedesignEnabled: Boolean,
+    onConfirmTrash: () -> Unit,
+    onConfirmDelete: () -> Unit,
+    onExpandReply: () -> Unit
+) {
+    if (isRedesignEnabled) {
+        CommentModerationToolbar(
+            status = uiState.status,
+            canModerate = uiState.canModerate,
+            onApproveClick = actions.onModerateClick,
+            onSpamClick = actions.onSpamClick,
+            // Trashing is committed server-side immediately, so it normally confirms first - but
+            // a comment with no replies loses nothing recoverable, so that case goes straight
+            // through, as on iOS. An unknown count still confirms.
+            onTrashClick = if (uiState.replyCount == 0) actions.onTrashClick else onConfirmTrash,
+            // Restore is the inverse of however the comment got here: un-spam for a spam comment,
+            // untrash for a trashed one. Both ViewModel actions toggle back to approved, but only
+            // from their own status.
+            onRestoreClick = actions.onRestoreClick,
+            onDeletePermanentlyClick = onConfirmDelete,
+            pendingAction = uiState.pendingAction
+        )
+        // The redesign replies in a sheet, reached from the Reply action under the comment, so it
+        // has no pinned reply field.
+        return
+    }
+
+    CommentActionFooter(
+        status = uiState.status,
+        isLiked = uiState.isLiked,
+        showLikeButton = showLikeButton,
+        showCommentUrlActions = uiState.commentUrl.isNotEmpty(),
+        canModerate = uiState.canModerate,
+        onModerateClick = actions.onModerateClick,
+        onSpamClick = actions.onSpamClick,
+        onLikeClick = actions.onLikeClick,
+        onEditClick = actions.onEditClick,
+        // Trashing is committed server-side immediately (no undo affordance like the legacy list
+        // flow), so confirm it first; restoring needs none.
+        onTrashClick = {
+            if (uiState.status == TRASH) actions.onTrashClick() else onConfirmTrash()
+        },
+        onCopyLinkClick = actions.onCopyLinkClick,
+        onShareLinkClick = actions.onShareLinkClick,
+        onDeletePermanentlyClick = onConfirmDelete
+    )
+    CommentReplyBox(
+        replyText = replyText,
+        onReplyTextChange = onReplyTextChange,
+        suggestions = suggestions,
+        hint = replyHint,
+        isReplyInProgress = uiState.isReplyInProgress,
+        focusOnLaunch = focusReplyFieldOnLaunch,
+        onSendClick = { actions.onSendReply(replyText.text) },
+        onExpandClick = onExpandReply
+    )
+}
+
+/**
+ * The redesign replies in a bottom sheet, which keeps the comment being answered visible behind
+ * it; the pre-redesign box expands to the full-screen editor as before.
+ */
+@Composable
+@Suppress("LongParameterList")
+private fun CommentReplyEditor(
+    replyText: TextFieldValue,
+    onReplyTextChange: (TextFieldValue) -> Unit,
+    suggestions: List<Suggestion>,
+    replyHint: String,
+    isReplyInProgress: Boolean,
+    isRedesignEnabled: Boolean,
+    onSendReply: (String) -> Unit,
+    onClose: () -> Unit
+) {
+    if (isRedesignEnabled) {
+        CommentReplySheet(
+            replyText = replyText,
+            onReplyTextChange = onReplyTextChange,
+            suggestions = suggestions,
+            hint = replyHint,
+            isReplyInProgress = isReplyInProgress,
+            onSendClick = {
+                onClose()
+                onSendReply(replyText.text)
+            },
+            // Clearing the field is what deletes the draft: the host's onPause save sees blank
+            // text and removes the stored entry.
+            onDeleteDraft = { onReplyTextChange(TextFieldValue("")) },
+            onDismiss = onClose
+        )
+    } else {
         FullScreenReplyDialog(
             replyText = replyText,
             onReplyTextChange = onReplyTextChange,
             suggestions = suggestions,
             hint = replyHint,
-            isReplyInProgress = uiState.isReplyInProgress,
+            isReplyInProgress = isReplyInProgress,
             onSendClick = {
-                showFullScreenReply = false
-                actions.onSendReply(replyText.text)
+                onClose()
+                onSendReply(replyText.text)
             },
-            onCollapseClick = { showFullScreenReply = false }
+            onCollapseClick = onClose
         )
+    }
+}
+
+/**
+ * The redesigned content region, following iOS's `CommentDetailView`: status pill, author header
+ * and optional "in reply to" strip above the comment body. The moderation toolbar is pinned by the
+ * caller.
+ *
+ * Unlike iOS the header scrolls with the body rather than staying pinned. With large text on a
+ * short screen a pinned header can take all the height the toolbar leaves, measuring the body to
+ * 0dp and making the comment unreachable - a pinned header is not worth losing the content to.
+ */
+@Composable
+private fun RedesignedCommentDetailsContent(
+    uiState: CommentDetailsUiState,
+    showLikeButton: Boolean,
+    actions: CommentDetailsActions,
+    onReplyClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .nestedScroll(rememberNestedScrollInteropConnection())
+            .verticalScroll(rememberScrollState())
+    ) {
+        Column(
+            modifier = Modifier.padding(
+                start = REDESIGN_H_PADDING,
+                end = REDESIGN_H_PADDING,
+                top = REDESIGN_V_PADDING,
+                bottom = REDESIGN_V_PADDING
+            )
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                CommentStatusPill(status = uiState.status, customLabel = uiState.customStatusLabel)
+                Spacer(modifier = Modifier.weight(1f))
+                CommentDetailOverflowMenu(
+                    status = uiState.status,
+                    showCommentUrlActions = uiState.commentUrl.isNotEmpty(),
+                    canModerate = uiState.canModerate,
+                    onUnapproveClick = actions.onModerateClick,
+                    onEditClick = actions.onEditClick,
+                    onCopyLinkClick = actions.onCopyLinkClick,
+                    onShareLinkClick = actions.onShareLinkClick
+                )
+            }
+            CommentAuthorHeader(
+                authorName = uiState.authorName,
+                authorAvatarUrl = uiState.authorAvatarUrl,
+                postTitle = uiState.postTitle,
+                datePublished = uiState.datePublished,
+                onPostTitleClick = actions.onPostTitleClick,
+                modifier = Modifier.padding(top = REDESIGN_HEADER_GAP)
+            )
+        }
+        if (uiState.parentAuthorName.isNotBlank()) {
+            HorizontalDivider()
+            CommentParentStrip(
+                parentAuthorName = uiState.parentAuthorName,
+                parentSnippet = uiState.parentSnippet,
+                modifier = Modifier.padding(
+                    horizontal = REDESIGN_H_PADDING,
+                    vertical = REDESIGN_STRIP_V_PADDING
+                )
+            )
+        }
+        HorizontalDivider()
+        // The reactions scroll with the comment rather than being pinned, as on iOS: they belong
+        // to the comment above them, and pinning them would stack a second action bar directly on
+        // top of the moderation toolbar.
+        Column(
+            modifier = Modifier.padding(horizontal = REDESIGN_H_PADDING, vertical = REDESIGN_V_PADDING)
+        ) {
+            CommentHtmlBody(html = uiState.commentText)
+            CommentReactionRow(
+                isLiked = uiState.isLiked,
+                showLikeButton = showLikeButton,
+                onReplyClick = onReplyClick,
+                onLikeClick = actions.onLikeClick,
+                modifier = Modifier
+                    .padding(top = REDESIGN_REACTIONS_GAP)
+                    .offset(x = -REACTION_ROW_INSET)
+            )
+        }
     }
 }
 
@@ -229,6 +446,15 @@ private fun CommentDetailsContent(
         )
     }
 }
+
+private val REDESIGN_H_PADDING = 16.dp
+private val REDESIGN_V_PADDING = 12.dp
+private val REDESIGN_HEADER_GAP = 12.dp
+private val REDESIGN_STRIP_V_PADDING = 10.dp
+private val REDESIGN_REACTIONS_GAP = 8.dp
+
+// Cancels CommentReactionRow's own action padding so Reply lines up with the body text.
+private val REACTION_ROW_INSET = 8.dp
 
 @Composable
 private fun CommentStatusLabel(status: CommentStatus) {
@@ -297,6 +523,7 @@ private fun UnifiedCommentDetailsScreenPreview() {
                 onLikeClick = {},
                 onEditClick = {},
                 onTrashClick = {},
+                onRestoreClick = {},
                 onDeletePermanentlyClick = {},
                 onCopyLinkClick = {},
                 onShareLinkClick = {},
