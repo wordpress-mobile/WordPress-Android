@@ -34,6 +34,7 @@ import org.wordpress.android.ui.newstats.datasource.PostViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.ui.posts.AuthorFilterSelection
+import org.wordpress.android.ui.rs.RsFluxCBridge
 import org.wordpress.android.ui.rs.data.RsSiteRestClient
 import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -54,7 +55,7 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     @Mock lateinit var postStore: PostStore
     @Mock lateinit var homepageSettings: PageRsHomepageSettings
     @Mock lateinit var blazeFeatureUtils: BlazeFeatureUtils
-    @Mock lateinit var fluxCBridge: PageRsFluxCBridge
+    @Mock lateinit var fluxCBridge: RsFluxCBridge
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper

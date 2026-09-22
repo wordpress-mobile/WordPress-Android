@@ -44,6 +44,7 @@ import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.rs.RsErrorUtils
+import org.wordpress.android.ui.rs.RsFluxCBridge
 import org.wordpress.android.ui.rs.RsMetricJobs
 import org.wordpress.android.ui.rs.RsSnackbarMessage
 import org.wordpress.android.ui.rs.data.FeaturedImageUrls
@@ -92,7 +93,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private val postStore: PostStore,
     private val homepageSettings: PageRsHomepageSettings,
     private val blazeFeatureUtils: BlazeFeatureUtils,
-    private val fluxCBridge: PageRsFluxCBridge,
+    private val fluxCBridge: RsFluxCBridge,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val accountStore: AccountStore,
     private val appPrefsWrapper: AppPrefsWrapper,
@@ -832,7 +833,7 @@ internal class PagesRsListViewModel @Inject constructor(
             @Suppress("TooGenericExceptionCaught")
             try {
                 val page = withContext(Dispatchers.IO) {
-                    fluxCBridge.fetchAndBridge(remotePageId, site, lastModified)
+                    fluxCBridge.fetchAndBridgePage(remotePageId, site, lastModified)
                 }
                 _events.trySend(PageRsListEvent.EditPage(site, page))
             } catch (e: CancellationException) {
@@ -1312,7 +1313,7 @@ internal class PagesRsListViewModel @Inject constructor(
             try {
                 val lastModified = findPage(remotePageId)?.lastModified
                 val pageToCopy = withContext(Dispatchers.IO) {
-                    fluxCBridge.fetchAndBridge(remotePageId, site, lastModified)
+                    fluxCBridge.fetchAndBridgePage(remotePageId, site, lastModified)
                 }
                 val newPage = postStore.instantiatePostModel(
                     site,
@@ -1359,7 +1360,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private suspend fun bridgePageOrNull(site: SiteModel, remotePageId: Long) = try {
         val lastModified = findPage(remotePageId)?.lastModified
         withContext(Dispatchers.IO) {
-            fluxCBridge.fetchAndBridge(remotePageId, site, lastModified)
+            fluxCBridge.fetchAndBridgePage(remotePageId, site, lastModified)
         }
     } catch (e: CancellationException) {
         throw e
