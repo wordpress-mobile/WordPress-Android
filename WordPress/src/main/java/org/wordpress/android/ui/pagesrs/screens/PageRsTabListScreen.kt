@@ -6,37 +6,27 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.withTimeoutOrNull
 import org.wordpress.android.R
 import org.wordpress.android.ui.pagesrs.PageRsListItem
 import org.wordpress.android.ui.pagesrs.PageRsMenuAction
 import org.wordpress.android.ui.pagesrs.PageTabUiState
 import org.wordpress.android.ui.pagesrs.SITE_EDITOR_PAGE_ID
 import org.wordpress.android.ui.pagesrs.hasRealPages
-import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.LOAD_MORE_THRESHOLD
-import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.REVEAL_TIMEOUT_MS
 import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.SHIMMER_ITEM_COUNT
-import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.VISIBLE_ROWS_DEBOUNCE_MS
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListEmptyState
 import org.wordpress.android.ui.rs.contentlist.ContentListErrorState
 import org.wordpress.android.ui.rs.contentlist.ContentListPlaceholderRow
+import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
 import org.wordpress.android.ui.rs.contentlist.LegacyContentListPlaceholderRow
+import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
+import org.wordpress.android.ui.rs.contentlist.ReportVisibleRows
+import org.wordpress.android.ui.rs.contentlist.RevealRow
 import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,21 +47,10 @@ internal fun PageRsTabListScreen(
     isRedesignEnabled: Boolean = false,
     density: ContentListDensity = ContentListDensity.COMFORTABLE
 ) {
-    val pullToRefreshState = rememberPullToRefreshState()
-
-    PullToRefreshBox(
-        modifier = modifier.fillMaxSize(),
+    ContentListPullToRefreshBox(
         isRefreshing = state.isRefreshing,
-        state = pullToRefreshState,
         onRefresh = onRefresh,
-        indicator = {
-            PullToRefreshDefaults.Indicator(
-                state = pullToRefreshState,
-                isRefreshing = state.isRefreshing,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.align(Alignment.TopCenter)
-            )
-        }
+        modifier = modifier,
     ) {
         when {
             isSearchIdle -> Box(Modifier.fillMaxSize())
@@ -131,52 +110,23 @@ private fun PageListContent(
     // draft tabs sort by title, so it can be anywhere in the list. requestScrollToItem applies at
     // the next measurement rather than to the content currently laid out, which a plain
     // scrollToItem would, leaving a just-added row short of the viewport.
-    LaunchedEffect(revealPageId) {
-        if (revealPageId == null) return@LaunchedEffect
-        val index = withTimeoutOrNull(REVEAL_TIMEOUT_MS) {
-            snapshotFlow { currentPages.indexOfFirst { it.remotePageId == revealPageId } }
-                .first { it >= 0 }
-        }
-        if (index != null) listState.requestScrollToItem(index)
-        // Disarm either way. The published tab refreshes to its complete set, but the others
-        // refresh to page 1 only, so a page that sorts beyond it never arrives here; leaving the
-        // request armed would fire it much later, when load-more finally paged the page in and
-        // the user was reading something else.
-        onRevealHandled()
+    // The published and draft tabs sort by title, so a new page can land anywhere in the list.
+    RevealRow(revealPageId, listState, onRevealHandled) { id ->
+        currentPages.indexOfFirst { it.remotePageId == id }
     }
 
-    // Per-page view counts are one request each, so the ViewModel is told which rows are actually
-    // on screen rather than fetching for the whole loaded page. Rows are keyed by a String, so the
-    // ids come from the entries the visible indexes land on.
-    val currentOnRowsVisible by rememberUpdatedState(onRowsVisible)
-    LaunchedEffect(listState, isRedesignEnabled) {
-        if (!isRedesignEnabled) return@LaunchedEffect
-        snapshotFlow {
-            val entries = currentPages
-            listState.layoutInfo.visibleItemsInfo.mapNotNull { info ->
-                entries.getOrNull(info.index)
-                    ?.remotePageId
-                    ?.takeIf { it != SITE_EDITOR_PAGE_ID }
-            }
+    // Rows are keyed by a String, so the ids come from the entries the visible indexes land on.
+    // The Site Editor row has no page behind it and so no view count to ask for.
+    ReportVisibleRows(listState, enabled = isRedesignEnabled, onRowsVisible = onRowsVisible) {
+        val entries = currentPages
+        listState.layoutInfo.visibleItemsInfo.mapNotNull { info ->
+            entries.getOrNull(info.index)
+                ?.remotePageId
+                ?.takeIf { it != SITE_EDITOR_PAGE_ID }
         }
-            // A fling changes the visible set on nearly every frame. Without settling first, each
-            // of those emissions would start fetching for rows already gone from the screen.
-            .debounce(VISIBLE_ROWS_DEBOUNCE_MS)
-            .distinctUntilChanged()
-            .collect { currentOnRowsVisible(it) }
     }
 
-    LaunchedEffect(canLoadMore) {
-        if (!canLoadMore) return@LaunchedEffect
-        snapshotFlow {
-            val lastVisible = listState.layoutInfo
-                .visibleItemsInfo.lastOrNull()?.index ?: 0
-            val total = listState.layoutInfo.totalItemsCount
-            lastVisible >= total - LOAD_MORE_THRESHOLD
-        }.distinctUntilChanged().collect { shouldLoad ->
-            if (shouldLoad) onLoadMore()
-        }
-    }
+    LoadMoreOnScrollToEnd(listState, canLoadMore, onLoadMore)
 
     LazyColumn(
         state = listState,

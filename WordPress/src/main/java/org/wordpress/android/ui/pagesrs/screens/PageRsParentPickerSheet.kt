@@ -25,18 +25,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.flow.distinctUntilChanged
 import org.wordpress.android.R
 import org.wordpress.android.ui.pagesrs.PageRsParentPickerState
-import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.LOAD_MORE_THRESHOLD
+import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
 import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
 
 /**
@@ -55,16 +52,7 @@ internal fun PageRsParentPickerSheet(
 ) {
     val listState = rememberLazyListState()
 
-    LaunchedEffect(state.canLoadMore) {
-        if (!state.canLoadMore) return@LaunchedEffect
-        snapshotFlow {
-            val lastVisible = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
-            val total = listState.layoutInfo.totalItemsCount
-            lastVisible >= total - LOAD_MORE_THRESHOLD
-        }.distinctUntilChanged().collect { shouldLoad ->
-            if (shouldLoad) onLoadMoreParents()
-        }
-    }
+    LoadMoreOnScrollToEnd(listState, state.canLoadMore, onLoadMoreParents)
 
     ModalBottomSheet(onDismissRequest = onDismiss) {
         // Pin the sheet to a fixed fraction of the screen so it doesn't resize as the content

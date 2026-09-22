@@ -25,12 +25,9 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -42,7 +39,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -51,12 +47,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.components.FilterChipTabRow
 import org.wordpress.android.ui.compose.utils.rsDebugTitle
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.ConfirmationDialogState
@@ -71,6 +65,9 @@ import org.wordpress.android.ui.rs.contentlist.ContentListAuthorFilterButton
 import org.wordpress.android.ui.rs.contentlist.ContentListConfirmationDialog
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListDensityToggle
+import org.wordpress.android.ui.rs.contentlist.ContentListTabRow
+import org.wordpress.android.ui.rs.contentlist.ReportSettledTab
+import org.wordpress.android.ui.rs.contentlist.ShowRsSnackbars
 
 @Suppress("CyclomaticComplexMethod")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -131,17 +128,7 @@ fun PostRsListScreen(
         if (pagerState.settledPage != page) pagerState.animateScrollToPage(page)
     }
 
-    LaunchedEffect(snackbarMessages) {
-        snackbarMessages.collect { msg ->
-            val result = snackbarHostState.showSnackbar(
-                message = msg.message,
-                actionLabel = msg.actionLabel
-            )
-            if (result == SnackbarResult.ActionPerformed) {
-                msg.onAction?.invoke()
-            }
-        }
-    }
+    ShowRsSnackbars(snackbarMessages, snackbarHostState)
 
     Scaffold(
         // Cards are drawn on `surface`, so the page behind them has to sit one step recessed or
@@ -260,46 +247,21 @@ fun PostRsListScreen(
     ) { contentPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
             if (!isSearchActive) {
-                if (isRedesignEnabled) {
-                    // The pager stays: chips replace the tab row's appearance, not swiping between
-                    // tabs, which users of this screen already rely on.
-                    FilterChipTabRow(
-                        labels = tabs.map { stringResource(it.labelResId) },
-                        selectedIndex = pagerState.settledPage,
-                        onSelect = { index ->
-                            coroutineScope.launch { pagerState.animateScrollToPage(index) }
-                        }
-                    )
-                } else {
-                    PrimaryScrollableTabRow(
-                        selectedTabIndex = pagerState.settledPage,
-                        edgePadding = 0.dp
-                    ) {
-                        tabs.forEachIndexed { index, tab ->
-                            Tab(
-                                selected = pagerState.settledPage == index,
-                                onClick = {
-                                    coroutineScope.launch { pagerState.animateScrollToPage(index) }
-                                },
-                                unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                                text = { Text(text = stringResource(tab.labelResId)) }
-                            )
-                        }
+                ContentListTabRow(
+                    labels = tabs.map { stringResource(it.labelResId) },
+                    selectedIndex = pagerState.settledPage,
+                    isRedesignEnabled = isRedesignEnabled,
+                    onSelect = { index ->
+                        coroutineScope.launch { pagerState.animateScrollToPage(index) }
                     }
-                }
+                )
             }
 
-            LaunchedEffect(pagerState) {
-                var isFirstEmission = true
-                snapshotFlow { pagerState.settledPage }.collect { page ->
-                    onInitTab(tabs[page])
-                    if (isFirstEmission) {
-                        isFirstEmission = false
-                    } else {
-                        onTabChanged(tabs[page])
-                    }
-                }
-            }
+            ReportSettledTab(
+                pagerState = pagerState,
+                onTabSettled = { page -> onInitTab(tabs[page]) },
+                onTabChanged = { page -> onTabChanged(tabs[page]) },
+            )
 
             HorizontalPager(
                 state = pagerState,
