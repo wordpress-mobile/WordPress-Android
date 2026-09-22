@@ -27,20 +27,22 @@ internal data class MediaImage(
 
 /**
  * A URL for this image at [widthPx] by [heightPx], or by nothing if [heightPx] is 0. Photon
- * resizes the original; everywhere else picks a pre-generated render, never one narrower.
+ * resizes the original; everywhere else picks a pre-generated render, never one narrower, and
+ * looks no wider than [maxRenderWidthPx].
  */
 internal fun MediaImage.toDisplayUrl(
     accessibilityInfo: SiteAccessibilityInfo,
     isWpComRest: Boolean,
     widthPx: Int,
     heightPx: Int,
+    maxRenderWidthPx: Int = Int.MAX_VALUE,
 ): String {
     // Float division: 1024/390 as ints is 2, which would admit crops of the wrong shape.
     val displayAspect = if (heightPx > 0) widthPx.toFloat() / heightPx else null
     val url = if (accessibilityInfo.isPhotonCapable) {
         sourceUrl
     } else {
-        renderAtLeast(widthPx.coerceAtMost(MAX_RENDER_WIDTH_PX), displayAspect) ?: sourceUrl
+        renderAtLeast(widthPx.coerceAtMost(maxRenderWidthPx), displayAspect) ?: sourceUrl
     }
     // Rewriting a self-hosted URL would drop any signed or CDN query string it carries.
     if (!isWpComRest) return url
@@ -83,7 +85,8 @@ private fun ScaledSize.matchesRatio(ratio: Float): Boolean =
 private const val ASPECT_TOLERANCE = 0.05f
 
 /**
- * Widest render to look for. `large` is 1024 and every stock install has one; aiming past it risks
- * matching nothing and pulling the original, at the cost of sharper renders where they exist.
+ * Widest render a list hero looks for. `large` is 1024 and every stock install has one; aiming past
+ * it risks matching nothing and pulling the original, at the cost of sharper renders where they
+ * exist.
  */
-private const val MAX_RENDER_WIDTH_PX = 1024
+internal const val MAX_HERO_RENDER_WIDTH_PX = 1024

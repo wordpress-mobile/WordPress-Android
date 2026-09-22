@@ -38,7 +38,10 @@ class MediaDisplayUrlTest {
     @Test
     fun `the two shapes of one image resolve to different renders`() {
         val thumbnail = PHOTO.toDisplayUrl(SELF_HOSTED, false, widthPx = 216, heightPx = 216)
-        val hero = PHOTO.toDisplayUrl(SELF_HOSTED, false, widthPx = 1080, heightPx = 390)
+        val hero = PHOTO.toDisplayUrl(
+            SELF_HOSTED, false, widthPx = 1080, heightPx = 390,
+            maxRenderWidthPx = MAX_HERO_RENDER_WIDTH_PX
+        )
 
         // 300x225 gives a square slot 225px, enough for 216. The hero asks wider than any render,
         // but the search caps at 1024, so it settles on `large` instead of the full-size upload.

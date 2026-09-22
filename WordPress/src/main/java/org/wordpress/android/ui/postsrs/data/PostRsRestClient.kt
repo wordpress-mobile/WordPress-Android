@@ -103,7 +103,8 @@ class PostRsRestClient @Inject constructor(
                     accessibilityInfo, isWpComRest, thumbnailPx, thumbnailPx
                 ),
                 hero = image.toDisplayUrl(
-                    accessibilityInfo, isWpComRest, heroWidthPx, heroHeightPx
+                    accessibilityInfo, isWpComRest, heroWidthPx, heroHeightPx,
+                    maxRenderWidthPx = MAX_HERO_RENDER_WIDTH_PX,
                 ),
             )
         }
@@ -170,13 +171,16 @@ class PostRsRestClient @Inject constructor(
     }
 
     /**
-     * Whether a second attempt could plausibly succeed: a 5xx, a timeout or a dropped connection.
-     * Auth, permission, not-found, parse and rate-limit failures come back the same every time.
+     * Whether a second attempt could plausibly succeed: a 5xx, a timeout or a network failure -
+     * wordpress-rs reports a connection dropped mid-response as `GenericError` and an unreachable
+     * route as `HttpError`. Auth, permission, not-found, parse and rate-limit failures don't clear.
      */
     private fun WpRequestResult<*>.isTransient(): Boolean = when (this) {
         is WpRequestResult.RequestExecutionFailed ->
             reason is RequestExecutionErrorReason.ConnectionError ||
                 reason is RequestExecutionErrorReason.HttpTimeoutError ||
+                reason is RequestExecutionErrorReason.GenericError ||
+                reason is RequestExecutionErrorReason.HttpError ||
                 statusCode.isServerError()
         is WpRequestResult.WpError -> statusCode.isServerError()
         is WpRequestResult.InvalidHttpStatusCode -> statusCode.isServerError()
