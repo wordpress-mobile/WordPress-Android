@@ -5,6 +5,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.ui.postsrs.AuthorInfo
+import org.wordpress.android.ui.postsrs.PostRsErrorUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.SiteUtils
 import rs.wordpress.api.kotlin.WpRequestResult
@@ -155,15 +156,11 @@ class PostRsRestClient @Inject constructor(
                     // an id that is not an image - rather than unasked.
                     for (id in chunk) result.putIfAbsent(id, null)
                 }
-                else -> {
-                    val msg =
-                        (response as? WpRequestResult.WpError<*>)
-                            ?.errorMessage
-                    AppLog.w(
-                        AppLog.T.POSTS,
-                        "fetchMediaImages failed: $msg"
-                    )
-                }
+                else -> AppLog.w(
+                    AppLog.T.POSTS,
+                    "fetchMediaImages failed: " +
+                        PostRsErrorUtils.describeFailure(response)
+                )
             }
         }
         return result

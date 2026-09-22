@@ -3,6 +3,7 @@ package org.wordpress.android.ui.postsrs
 import org.wordpress.android.R
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
+import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.RequestExecutionErrorReason
 import uniffi.wp_api.WpApiException
 import uniffi.wp_api.WpErrorCode
@@ -59,6 +60,29 @@ internal object PostRsErrorUtils {
      */
     fun isPastLastPage(e: Exception?): Boolean =
         errorCode(e) is WpErrorCode.PostInvalidPageNumber
+
+    /**
+     * A short description of a failed [WpRequestResult], for logging.
+     *
+     * Only the `WpError` variant carries an `errorMessage`, so logging that alone reports "null"
+     * for the six other ways a request can fail - which is exactly when you most need to know
+     * which one it was. Deliberately reports codes and reasons only: the AppLog buffer is attached
+     * to support tickets, so response bodies and request URLs stay out of it.
+     */
+    fun describeFailure(result: WpRequestResult<*>): String = when (result) {
+        is WpRequestResult.WpError ->
+            "WpError ${result.errorCode} (HTTP ${result.statusCode}): ${result.errorMessage}"
+        is WpRequestResult.RequestExecutionFailed ->
+            "RequestExecutionFailed ${result.reason} (HTTP ${result.statusCode})"
+        is WpRequestResult.InvalidHttpStatusCode ->
+            "InvalidHttpStatusCode ${result.statusCode}"
+        is WpRequestResult.ResponseParsingError ->
+            "ResponseParsingError ${result.reason}"
+        is WpRequestResult.SiteUrlParsingError -> "SiteUrlParsingError ${result.reason}"
+        is WpRequestResult.UnknownError -> "UnknownError (HTTP ${result.statusCode})"
+        // Anything else - including variants a later wordpress-rs adds - at least names itself.
+        else -> result::class.simpleName.orEmpty()
+    }
 
     private fun failureReason(e: Exception?): RequestExecutionErrorReason? =
         (unwrapException(e) as? WpApiException.RequestExecutionFailed)
