@@ -10,7 +10,7 @@
     },
     {
       "file": "android/WPAndroid/google-services.json",
-      "destination": "WordPress/google-services.json",
+      "destination": "~/.configure/wordpress-android/secrets/google-services.json",
       "encrypt": true
     },
     {

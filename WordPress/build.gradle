@@ -1,3 +1,4 @@
+import com.google.gms.googleservices.GoogleServicesTask
 import io.sentry.android.gradle.extensions.InstrumentationFeature
 import io.sentry.android.gradle.tasks.SentryCliExecTask
 
@@ -598,13 +599,42 @@ configurations.all {
 }
 
 
-// If Google services file doesn't exist, copy example file
-if (!file("google-services.json").exists()) {
-    copy {
-        from(".")
-        into(".")
-        include("google-services.json-example")
-        rename('google-services.json-example', 'google-services.json')
+def decryptedGoogleServicesJson = new File(gradle.ext.decryptedSecretsDir, "google-services.json")
+def exampleGoogleServicesJson = file("google-services.json-example")
+def staleGoogleServicesJson = file("google-services.json")
+
+def googleServicesJson
+if (decryptedGoogleServicesJson.exists()) {
+    googleServicesJson = decryptedGoogleServicesJson
+    logger.lifecycle("Using the decrypted ${googleServicesJson}.")
+} else if (exampleGoogleServicesJson.exists()) {
+    googleServicesJson = exampleGoogleServicesJson
+    logger.warn("${decryptedGoogleServicesJson} not found. Using ${exampleGoogleServicesJson}.")
+} else {
+    throw new GradleException("No google-services.json to read. " +
+            "Run `bundle exec fastlane run configure_apply` to decrypt ${decryptedGoogleServicesJson}, " +
+            "or `git restore WordPress/google-services.json-example` to restore the example fallback.")
+}
+
+if (staleGoogleServicesJson.exists()) {
+    def message = "${staleGoogleServicesJson} predates the move out of the checkout. " +
+            "It is no longer read; delete it."
+    // CI checkouts grow one of their own whenever a job builds a base revision that predates this
+    // change, and nobody is there to delete it. Drop this branch once no supported base copies it.
+    if (gradle.ext.isCi) {
+        logger.warn(message)
+    } else {
+        throw new GradleException(message)
+    }
+}
+
+// The google-services plugin registers the task from an `onVariants` callback that AGP fires during
+// its own `afterEvaluate`. Configuration actions run in attachment order, so a rule attached while
+// this script evaluates runs before the plugin's and has its value overwritten; `afterEvaluate` puts
+// ours last.
+afterEvaluate {
+    tasks.withType(GoogleServicesTask).configureEach {
+        googleServicesJsonFiles.set([googleServicesJson])
     }
 }
 
