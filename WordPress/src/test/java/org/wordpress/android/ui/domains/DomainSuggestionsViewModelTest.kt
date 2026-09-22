@@ -18,9 +18,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.networkresource.ListState
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
@@ -41,12 +39,6 @@ import uniffi.wp_api.WpErrorCode
 
 @ExperimentalCoroutinesApi
 class DomainSuggestionsViewModelTest : BaseUnitTest() {
-    @Mock
-    lateinit var wpComApiClientProvider: WpComApiClientProvider
-
-    @Mock
-    lateinit var accountStore: AccountStore
-
     @Mock
     lateinit var wpComApiClient: WpComApiClient
 
@@ -70,10 +62,6 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
         site = SiteModel().also { it.name = "Test Site" }
         domainRegistrationPurpose = CTA_DOMAIN_CREDIT_REDEMPTION
 
-        whenever(accountStore.accessToken).thenReturn("test-token")
-        whenever(wpComApiClientProvider.getWpComApiClient("test-token"))
-            .thenReturn(wpComApiClient)
-
         whenever(debouncer.debounce(any(), any(), any(), any())).thenAnswer { invocation ->
             val delayedRunnable = invocation.arguments[1] as Runnable
             delayedRunnable.run()
@@ -87,8 +75,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
 
     private fun createViewModel(dispatcher: CoroutineDispatcher): DomainSuggestionsViewModel {
         val created = DomainSuggestionsViewModel(
-            wpComApiClientProvider,
-            accountStore,
+            wpComApiClient,
             tracker,
             debouncer,
             createCartUseCase,
@@ -399,29 +386,6 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
         // The products request and the one real search, and nothing for the
         // blank query the emptied field falls back to.
         verify(wpComApiClient, times(2)).request<Any>(any())
-    }
-
-    @Test
-    fun `a signed out account reports an error instead of searching`() = test {
-        // What `AccountStore` returns when signed out, despite its nullable type.
-        whenever(accountStore.accessToken).thenReturn("")
-
-        viewModel.start(site, domainRegistrationPurpose)
-        advanceUntilIdle()
-
-        assertThat(suggestionStates.last()).isInstanceOf(ListState.Error::class.java)
-        verifyNoInteractions(wpComApiClient)
-    }
-
-    @Test
-    fun `a null access token reports an error instead of crashing`() = test {
-        whenever(accountStore.accessToken).thenReturn(null)
-
-        viewModel.start(site, domainRegistrationPurpose)
-        advanceUntilIdle()
-
-        assertThat(suggestionStates.last()).isInstanceOf(ListState.Error::class.java)
-        verifyNoInteractions(wpComApiClient)
     }
 
     @Test

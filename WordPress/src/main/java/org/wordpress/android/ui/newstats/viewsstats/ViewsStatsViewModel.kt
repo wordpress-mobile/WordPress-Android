@@ -686,7 +686,6 @@ class ViewsStatsViewModel @Inject constructor(
             return
         }
 
-        statsRepository.init(accessToken)
         val current = _uiState.value
         // While switching to a new period we keep the previous content on screen (dimmed, with a
         // spinner) instead of resetting to placeholders; otherwise show per-region placeholders.

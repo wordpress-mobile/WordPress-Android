@@ -136,10 +136,6 @@ class StatsRepository @Inject constructor(
      */
     private fun today(): LocalDate = LocalDate.now(clock)
 
-    fun init(accessToken: String) {
-        statsDataSource.init(accessToken)
-    }
-
     /**
      * The concrete range immediately before [period], stepped by the period's own length.
      *

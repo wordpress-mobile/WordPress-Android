@@ -27,7 +27,6 @@ class StatsInsightsUseCase @Inject constructor(
                 "No access token"
             )
         }
-        statsRepository.init(token)
         mutex.withLock {
             val cached = cachedInsights
             if (!forceRefresh &&

@@ -380,21 +380,6 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when loadData is called, then repository is initialized with access token`() = test {
-        val aggregates = createTodayAggregates()
-
-        whenever(statsRepository.fetchTodayAggregates(any()))
-            .thenReturn(TodayAggregatesResult.Success(aggregates))
-        whenever(statsRepository.fetchHourlyViews(any(), any()))
-            .thenReturn(createHourlyViewsResult())
-
-        initViewModel()
-        advanceUntilIdle()
-
-        verify(statsRepository).init(eq(TEST_ACCESS_TOKEN))
-    }
-
-    @Test
     fun `when chart data has labels, then they are formatted correctly`() = test {
         val aggregates = createTodayAggregates()
 

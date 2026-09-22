@@ -11,8 +11,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.ui.domains.usecases.DesignatePrimaryDomainResult
 import org.wordpress.android.ui.domains.usecases.DesignatePrimaryDomainUseCase
 import org.wordpress.android.ui.domains.usecases.setPrimaryDomainParams
@@ -28,12 +26,6 @@ import uniffi.wp_api.WpErrorCode
 @RunWith(MockitoJUnitRunner::class)
 class DesignatePrimaryDomainUseCaseTest : BaseUnitTest() {
     @Mock
-    lateinit var wpComApiClientProvider: WpComApiClientProvider
-
-    @Mock
-    lateinit var accountStore: AccountStore
-
-    @Mock
     lateinit var wpComApiClient: WpComApiClient
 
     private lateinit var useCase: DesignatePrimaryDomainUseCase
@@ -42,10 +34,7 @@ class DesignatePrimaryDomainUseCaseTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        whenever(accountStore.accessToken).thenReturn("test-token")
-        whenever(wpComApiClientProvider.getWpComApiClient("test-token"))
-            .thenReturn(wpComApiClient)
-        useCase = DesignatePrimaryDomainUseCase(wpComApiClientProvider, accountStore)
+        useCase = DesignatePrimaryDomainUseCase(wpComApiClient)
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -111,24 +100,6 @@ class DesignatePrimaryDomainUseCaseTest : BaseUnitTest() {
         val result = useCase.execute(site, DOMAIN_NAME)
 
         assertThat(result).isEqualTo(DesignatePrimaryDomainResult.Error(isDeviceOffline = true))
-    }
-
-    @Test
-    fun `given no access token, when execute, returns error`() = test {
-        whenever(accountStore.accessToken).thenReturn(null)
-
-        val result = useCase.execute(site, DOMAIN_NAME)
-
-        assertThat(result).isEqualTo(DesignatePrimaryDomainResult.Error())
-    }
-
-    @Test
-    fun `given a blank access token, when execute, returns error`() = test {
-        whenever(accountStore.accessToken).thenReturn("")
-
-        val result = useCase.execute(site, DOMAIN_NAME)
-
-        assertThat(result).isEqualTo(DesignatePrimaryDomainResult.Error())
     }
 
     @Test

@@ -20,13 +20,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -37,10 +31,8 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
@@ -49,12 +41,13 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeoutOrNull
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.rs.contentlist.ContentDateGroup
+import org.wordpress.android.ui.rs.contentlist.ContentListMenuAction
+import org.wordpress.android.ui.rs.contentlist.ContentListOverflowMenu
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentDateGrouper
 import org.wordpress.android.ui.rs.contentlist.ContentListGroupHeader
@@ -462,9 +455,14 @@ private fun RedesignedRow(
         null
     } else {
         {
-            PostRsOverflowMenu(
-                actions = post.actions,
-                onAction = { action -> onPostMenuAction(post.remotePostId, action) }
+            ContentListOverflowMenu(
+                actions = post.actions.map { action ->
+                    ContentListMenuAction(
+                        labelResId = action.labelResId,
+                        iconResId = action.iconResId,
+                        isDestructive = action.isDestructive
+                    ) { onPostMenuAction(post.remotePostId, action) }
+                }
             )
         }
     }
@@ -485,50 +483,6 @@ private fun RedesignedRow(
         }
     }
 }
-
-@Composable
-private fun PostRsOverflowMenu(
-    actions: List<PostRsMenuAction>,
-    onAction: (PostRsMenuAction) -> Unit
-) {
-    var expanded by remember { mutableStateOf(false) }
-
-    Box {
-        IconButton(onClick = { expanded = true }) {
-            Icon(
-                Icons.Default.MoreVert,
-                contentDescription = stringResource(R.string.more),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-            actions.forEach { action ->
-                val color = if (action.isDestructive) {
-                    MaterialTheme.colorScheme.error
-                } else {
-                    MaterialTheme.colorScheme.onSurface
-                }
-                DropdownMenuItem(
-                    text = { Text(text = stringResource(action.labelResId), color = color) },
-                    onClick = {
-                        expanded = false
-                        onAction(action)
-                    },
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(action.iconResId),
-                            contentDescription = null,
-                            modifier = Modifier.size(MENU_ICON_SIZE),
-                            tint = color
-                        )
-                    }
-                )
-            }
-        }
-    }
-}
-
-private val MENU_ICON_SIZE = 20.dp
 
 /** Long enough to read as a fade rather than a flicker, short enough not to feel sluggish. */
 private const val STATE_FADE_MS = 300

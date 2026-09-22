@@ -65,7 +65,6 @@ class AuthorsDetailViewModel @Inject constructor(
             return
         }
         hasStartedLoading = true
-        statsRepository.init(accessToken)
         _uiState.value = AuthorsDetailUiState.Loading
         viewModelScope.launch {
             _uiState.value = fetchAuthors(site.siteId, period)

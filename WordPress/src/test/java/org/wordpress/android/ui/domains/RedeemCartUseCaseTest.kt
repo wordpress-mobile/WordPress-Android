@@ -10,8 +10,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.ui.domains.usecases.DomainContactField
 import org.wordpress.android.ui.domains.usecases.RedeemCartResult
 import org.wordpress.android.ui.domains.usecases.RedeemCartUseCase
@@ -28,12 +26,6 @@ import uniffi.wp_api.WpErrorCode
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class RedeemCartUseCaseTest : BaseUnitTest() {
-    @Mock
-    lateinit var wpComApiClientProvider: WpComApiClientProvider
-
-    @Mock
-    lateinit var accountStore: AccountStore
-
     @Mock
     lateinit var wpComApiClient: WpComApiClient
 
@@ -59,10 +51,7 @@ class RedeemCartUseCaseTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        whenever(accountStore.accessToken).thenReturn("test-token")
-        whenever(wpComApiClientProvider.getWpComApiClient("test-token"))
-            .thenReturn(wpComApiClient)
-        useCase = RedeemCartUseCase(wpComApiClientProvider, accountStore)
+        useCase = RedeemCartUseCase(wpComApiClient)
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -162,24 +151,6 @@ class RedeemCartUseCaseTest : BaseUnitTest() {
         val result = useCase.execute(cart, contact)
 
         assertThat(result).isEqualTo(RedeemCartResult.Error(isDeviceOffline = true))
-    }
-
-    @Test
-    fun `given no access token, when execute, returns error`() = test {
-        whenever(accountStore.accessToken).thenReturn(null)
-
-        val result = useCase.execute(cart, contact)
-
-        assertThat(result).isEqualTo(RedeemCartResult.Error())
-    }
-
-    @Test
-    fun `given a blank access token, when execute, returns error`() = test {
-        whenever(accountStore.accessToken).thenReturn("")
-
-        val result = useCase.execute(cart, contact)
-
-        assertThat(result).isEqualTo(RedeemCartResult.Error())
     }
 
     @Test

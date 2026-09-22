@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.domains.usecases
 
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
@@ -14,26 +12,8 @@ import uniffi.wp_api.ShoppingCart
 import javax.inject.Inject
 
 class CreateCartUseCase @Inject constructor(
-    private val wpComApiClientProvider: WpComApiClientProvider,
-    private val accountStore: AccountStore,
+    private val wpComApiClient: WpComApiClient,
 ) {
-    private var wpComApiClient: WpComApiClient? = null
-
-    /**
-     * Null when there is no WordPress.com account to make the request as.
-     *
-     * `AccountStore.accessToken` is typed nullable but reads `""` when signed
-     * out, and is only null between an in-process sign out and the next
-     * launch, so both have to be treated as no token.
-     */
-    @Synchronized
-    private fun getOrCreateClient(): WpComApiClient? {
-        val token = accountStore.accessToken?.takeIf { it.isNotEmpty() } ?: return null
-        return wpComApiClient
-            ?: wpComApiClientProvider.getWpComApiClient(token)
-                .also { wpComApiClient = it }
-    }
-
     /**
      * Creates a shopping cart holding a domain, and optionally a plan to bundle
      * it with.
@@ -48,13 +28,6 @@ class CreateCartUseCase @Inject constructor(
         isTemporary: Boolean,
         planProductId: Int? = null
     ): CreateCartResult {
-        val client = getOrCreateClient() ?: run {
-            AppLog.e(
-                AppLog.T.API,
-                "Cannot create a shopping cart without a WP.com access token"
-            )
-            return CreateCartResult.Error()
-        }
         val cartKey = cartKeyFor(site)
         val params = createShoppingCartParams(
             domainProductId = domainProductId,
@@ -63,7 +36,7 @@ class CreateCartUseCase @Inject constructor(
             isTemporary = isTemporary,
             planProductId = planProductId
         )
-        val result = client.request { it.shoppingCart().create(cartKey, params).data }
+        val result = wpComApiClient.request { it.shoppingCart().create(cartKey, params).data }
         return when (result) {
             is WpRequestResult.Success -> CreateCartResult.Success(result.response)
             else -> {
