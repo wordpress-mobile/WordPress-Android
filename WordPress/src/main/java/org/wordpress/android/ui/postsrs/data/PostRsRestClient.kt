@@ -16,6 +16,7 @@ import uniffi.wp_api.MediaDetailsPayload
 import uniffi.wp_api.MediaListParams
 import uniffi.wp_api.MediaWithEditContext
 import uniffi.wp_api.PostFormat
+import uniffi.wp_api.RequestExecutionErrorReason
 import uniffi.wp_api.TermCreateParams
 import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.TermListParams
@@ -135,11 +136,8 @@ class PostRsRestClient @Inject constructor(
     }
 
     /**
-     * One chunk's media, or empty if the request could not be answered.
-     *
-     * Retried once: a 5xx or a dropped connection is usually a blip, and losing the chunk costs
-     * every image in it until the list reloads. Not retried for a rate limiter, which is already
-     * asking us to send less.
+     * One chunk's media, or empty if the request could not be answered. Retried once if the failure
+     * looks transient, since losing the chunk costs every image in it until the list reloads.
      */
     private suspend fun fetchMediaChunk(
         site: SiteModel,
@@ -165,25 +163,28 @@ class PostRsRestClient @Inject constructor(
             // The wordpress-rs client already logged the status, method and URL through
             // wpRsErrorLogger; this only names which call it was.
             AppLog.w(AppLog.T.POSTS, "fetchMediaImages failed")
-            // A rate limiter is already asking us to send less; anything else is worth one retry.
-            attemptsLeft = if (response.isRateLimited()) 0 else attemptsLeft - 1
+            attemptsLeft = if (response.isTransient()) attemptsLeft - 1 else 0
             if (attemptsLeft > 0) delay(MEDIA_RETRY_DELAY_MS)
         }
         return emptyMap()
     }
 
     /**
-     * Four variants carry an HTTP status, and a 429 can arrive as any of them - as a WpError when
-     * the limiter answers with a REST error body, and as the others when it does not. Which
-     * variant wrapped it says nothing about whether retrying is welcome.
+     * Whether a second attempt could plausibly succeed: a 5xx, a timeout or a dropped connection.
+     * Auth, permission, not-found, parse and rate-limit failures come back the same every time.
      */
-    private fun WpRequestResult<*>.isRateLimited(): Boolean = when (this) {
-        is WpRequestResult.WpError -> statusCode
-        is WpRequestResult.RequestExecutionFailed -> statusCode
-        is WpRequestResult.InvalidHttpStatusCode -> statusCode
-        is WpRequestResult.UnknownError -> statusCode
-        else -> null
-    } == HTTP_TOO_MANY_REQUESTS
+    private fun WpRequestResult<*>.isTransient(): Boolean = when (this) {
+        is WpRequestResult.RequestExecutionFailed ->
+            reason is RequestExecutionErrorReason.ConnectionError ||
+                reason is RequestExecutionErrorReason.HttpTimeoutError ||
+                statusCode.isServerError()
+        is WpRequestResult.WpError -> statusCode.isServerError()
+        is WpRequestResult.InvalidHttpStatusCode -> statusCode.isServerError()
+        is WpRequestResult.UnknownError -> statusCode.isServerError()
+        else -> false
+    }
+
+    private fun UInt?.isServerError(): Boolean = this != null && this in HTTP_SERVER_ERRORS
 
     /**
      * Fetches display names for the given [userIds] in one network call
@@ -539,7 +540,7 @@ class PostRsRestClient @Inject constructor(
 
         private const val MEDIA_ATTEMPTS = 2
         private const val MEDIA_RETRY_DELAY_MS = 500L
-        private const val HTTP_TOO_MANY_REQUESTS = 429u
+        private val HTTP_SERVER_ERRORS = 500u..599u
 
         private val SLUG_TO_FORMAT = mapOf(
             "standard" to PostFormat.Standard,

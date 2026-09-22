@@ -1554,8 +1554,8 @@ internal class PagesRsListViewModel @Inject constructor(
 
     /**
      * Fetches featured image URLs for pages that have a non-zero
-     * [PageRsUiModel.featuredImageId] but no resolved URL yet.
-     * All URLs are fetched in a single batched network call.
+     * [PageRsUiModel.featuredImageId] but no resolved URL yet, sized for
+     * both row shapes.
      */
     private fun resolveFeaturedImages(
         tab: PageRsListTab,
