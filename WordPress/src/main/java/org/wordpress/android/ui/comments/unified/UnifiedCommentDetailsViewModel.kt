@@ -174,13 +174,11 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                 } else {
                     false
                 }
-                // The comment this one replies to, for the redesigned detail's context strip. Best
-                // effort: a failure here must not take down a comment that loaded fine.
+                // Best effort: a failure here must not take down a comment that loaded fine.
                 val parent = rs?.parentId
                     ?.takeIf { it > 0 }
                     ?.let { commentsRsDataSource.getComment(site, it) }
-                // Drives whether trashing has to warn about replies being left behind. Best
-                // effort: a failed count leaves it null and the dialog falls back to generic copy.
+                // Null when unknown; the trash dialog then falls back to generic copy.
                 val replies = rs?.let { commentsRsDataSource.fetchReplyCount(site, remoteCommentId) }
                 CommentLoadResult(rs, local, fallbackTitle, likedFallback, parent, replies)
             }
@@ -212,10 +210,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         moderateComment(if (approving) APPROVED else UNAPPROVED, action)
     }
 
-    // Spamming and trashing leave the comment on screen: it still exists, the status updates in
-    // place, and the actions offered become its inverse, so the user can undo a mis-tap without
-    // hunting for the comment again in another filter. Only a permanent delete closes the screen,
-    // because there is then nothing left to show.
+    // Only a permanent delete closes the screen; spam and trash leave the comment on screen.
     fun onSpamClicked() {
         if (currentStatus() == SPAM) restoreComment() else moderateComment(SPAM, CommentModerationAction.SPAM)
     }
@@ -224,7 +219,6 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         if (currentStatus() == TRASH) restoreComment() else moderateComment(TRASH, CommentModerationAction.TRASH)
     }
 
-    /** Un-spams or un-bins, letting the server decide the status it returns to. */
     fun onRestoreClicked() = restoreComment()
 
     fun onDeletePermanentlyClicked() {
@@ -351,11 +345,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     }
 
     @Suppress("ReturnCount")
-    /**
-     * Restores a spammed or binned comment. The resulting status comes from the server rather
-     * than being assumed: core returns the comment to whatever it was before, so this must not
-     * optimistically paint "approved".
-     */
+    /** See [CommentsRsDataSource.restore] for why the resulting status is not assumed. */
     private fun restoreComment() {
         if (!canStartModeration()) return
         val previousStatus = currentStatus()
@@ -385,15 +375,8 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     }
 
     /**
-     * Whether a moderation request may start now.
-     *
-     * - The action bar stays visible while the comment loads, so taps before it arrives are
-     *   ignored: the ui state still holds a default status and the toggles would compute (and
-     *   apply server-side) the wrong target.
-     * - Moderation controls are hidden or disabled without the capability, but a stale
-     *   recomposition could still fire one, which the server would only reject with a 403.
-     * - One at a time: the target status is derived from the current ui state, so racing requests
-     *   could apply conflicting statuses and leave the UI and server out of sync.
+     * Whether a moderation request may start now. One at a time matters: the target status is
+     * derived from the current ui state, so racing requests could apply conflicting statuses.
      */
     private fun canStartModeration(): Boolean {
         val hasModeratableComment = loadedComment != null && canModerate
@@ -577,24 +560,13 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         val isLiked: Boolean = false,
         val isReplyInProgress: Boolean = false,
         val canModerate: Boolean = false,
-        /**
-         * The comment this one replies to, for the redesigned detail's "in reply to" strip. Blank
-         * for a top-level comment, and also when the parent couldn't be fetched - the strip is
-         * context, so a failure drops it rather than surfacing an error.
-         */
+        /** Blank for a top-level comment, and when the parent could not be fetched. */
         val parentAuthorName: String = "",
         val parentSnippet: String = "",
-        /**
-         * The server's own word for a status the app does not model, shown verbatim rather than
-         * collapsed onto "All". Empty for every status the app does model.
-         */
+        /** Set only for a status the app does not model; see [CommentsRsDataSource.RsComment]. */
         val customStatusLabel: String = "",
         /** The action currently in flight, so its own button can show progress. */
         val pendingAction: CommentModerationAction? = null,
-        /**
-         * How many replies this comment has; null while unknown. Drives whether trashing needs to
-         * warn that replies are left behind.
-         */
         val replyCount: Int? = null
     )
 }

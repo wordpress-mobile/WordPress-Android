@@ -29,9 +29,6 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
  * The Reply and Like actions shown directly under the comment body, matching the reaction row on
  * iOS's comment detail.
  *
- * Both are leading-aligned rather than spread across the width: they are reactions to the comment
- * above them, not screen-level actions like the moderation toolbar pinned below.
- *
  * Unlike iOS there is no like *count* - the comment cache carries only whether the current user
  * liked it (`iLike`), with no total - so the label toggles between "Like" and "Liked" the way the
  * pre-redesign action footer did.

@@ -67,9 +67,9 @@ class CommentsRsDataSource @Inject constructor(
         val postId: Long,
         val status: CommentStatus,
         /**
-         * The status exactly as the server sent it. [status] collapses anything the app does not
-         * model onto [CommentStatus.ALL], which would otherwise be shown to the user as the word
-         * "All"; this keeps the real value so a custom status can be displayed verbatim.
+         * The status as the server sent it. [status] collapses anything the app does not model
+         * onto [CommentStatus.ALL], whose label is the word "All"; this keeps the real value so
+         * a custom status can be shown verbatim.
          */
         val rawStatus: String = ""
     )
@@ -429,7 +429,6 @@ internal fun CommentStatus.toRsCommentStatus(): RsCommentStatus = when (this) {
     else -> RsCommentStatus.Approved
 }
 
-/** The wire value of a status, including one the app does not model. */
 internal fun RsCommentStatus.rawValue(): String = when (this) {
     is RsCommentStatus.Approved -> "approved"
     is RsCommentStatus.Hold -> "hold"

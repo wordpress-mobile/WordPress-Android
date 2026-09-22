@@ -312,10 +312,6 @@ private fun CommentReplyEditor(
  * The redesigned content region, matching iOS's `CommentDetailView`: a fixed block of status pill,
  * author header and optional "in reply to" strip, then the comment body scrolling on its own below
  * a divider. The moderation toolbar and reply box are pinned by the caller.
- *
- * Keeping the header fixed rather than scrolling it away is the point of the design - who wrote
- * the comment and what state it's in are what the moderation decision is made on, so they stay put
- * however long the comment runs.
  */
 @Composable
 private fun RedesignedCommentDetailsContent(
@@ -384,7 +380,6 @@ private fun RedesignedCommentDetailsContent(
                 showLikeButton = showLikeButton,
                 onReplyClick = onReplyClick,
                 onLikeClick = actions.onLikeClick,
-                // Pulled back by the action's own padding so it lines up with the body text.
                 modifier = Modifier
                     .padding(top = REDESIGN_REACTIONS_GAP)
                     .offset(x = -REACTION_ROW_INSET)
@@ -454,8 +449,7 @@ private val REDESIGN_HEADER_GAP = 12.dp
 private val REDESIGN_STRIP_V_PADDING = 10.dp
 private val REDESIGN_REACTIONS_GAP = 8.dp
 
-// Matches CommentReactionRow's own horizontal action padding, so the Reply icon sits flush with
-// the comment text rather than indented by the tap target's padding.
+// Cancels CommentReactionRow's own action padding so Reply lines up with the body text.
 private val REACTION_ROW_INSET = 8.dp
 
 @Composable

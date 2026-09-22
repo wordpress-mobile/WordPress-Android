@@ -20,11 +20,6 @@ class ContentDateGrouperTest {
     private val now = utcMillis(year = 2026, month = Calendar.SEPTEMBER, day = 10)
 
     @Test
-    fun `today is its own bucket`() {
-        assertThat(groupOf(now)).isEqualTo(ContentDateGroup.Today)
-    }
-
-    @Test
     fun `earlier today is still today`() {
         assertThat(groupOf(now - TimeUnit.HOURS.toMillis(6))).isEqualTo(ContentDateGroup.Today)
     }

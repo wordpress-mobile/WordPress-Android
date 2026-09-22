@@ -46,10 +46,6 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
  * `CommentModerationToolbar`: full-width buttons whose shape is driven by the comment's status
  * rather than a fixed row of every action.
  *
- * - pending: a prominent **Approve**, over a Spam | Trash row
- * - approved: just the Spam | Trash row
- * - spam or trashed: **Restore**, over **Delete Permanently**
- *
  * Renders nothing when the user can't moderate - unlike the pre-redesign footer, which showed the
  * actions disabled. There is nothing else on this bar to keep, so an all-disabled row would be a
  * strip of dead controls; reply and the overflow actions live elsewhere and stay reachable.
@@ -67,8 +63,7 @@ fun CommentModerationToolbar(
     pendingAction: CommentModerationAction? = null
 ) {
     if (!canModerate) return
-    // Every button goes inert while any action is running: the ViewModel already refuses a second
-    // moderation, so leaving them tappable would just swallow the taps silently.
+    // The ViewModel refuses a second moderation anyway, so live buttons would only swallow taps.
     val isEnabled = pendingAction == null
 
     Column(
@@ -171,11 +166,8 @@ private fun OutlinedToolbarButton(
 }
 
 /**
- * The label, or a spinner in its place while this button's own request is in flight.
- *
- * The label stays in the layout at zero opacity so the button keeps its width and the toolbar does
- * not jump, and the spinner carries the action's name so a screen reader still says which action
- * is running.
+ * The label is kept in the layout at zero opacity behind the spinner so the button holds its width
+ * and the toolbar does not jump; the spinner carries the action's name for screen readers.
  */
 @Composable
 private fun ButtonContent(
@@ -219,50 +211,22 @@ private val BUTTON_ICON_SIZE = 18.dp
 private val BUTTON_ICON_GAP = 8.dp
 private val BUSY_STROKE = 2.dp
 
-@Preview(showBackground = true, name = "Pending")
+@Preview(showBackground = true)
 @Composable
-private fun CommentModerationToolbarPendingPreview() {
+private fun CommentModerationToolbarPreview() {
     AppThemeM3 {
-        CommentModerationToolbar(
-            status = UNAPPROVED,
-            canModerate = true,
-            onApproveClick = {},
-            onSpamClick = {},
-            onTrashClick = {},
-            onRestoreClick = {},
-            onDeletePermanentlyClick = {}
-        )
-    }
-}
-
-@Preview(showBackground = true, name = "Approved")
-@Composable
-private fun CommentModerationToolbarApprovedPreview() {
-    AppThemeM3 {
-        CommentModerationToolbar(
-            status = APPROVED,
-            canModerate = true,
-            onApproveClick = {},
-            onSpamClick = {},
-            onTrashClick = {},
-            onRestoreClick = {},
-            onDeletePermanentlyClick = {}
-        )
-    }
-}
-
-@Preview(showBackground = true, name = "Trashed")
-@Composable
-private fun CommentModerationToolbarTrashedPreview() {
-    AppThemeM3 {
-        CommentModerationToolbar(
-            status = TRASH,
-            canModerate = true,
-            onApproveClick = {},
-            onSpamClick = {},
-            onTrashClick = {},
-            onRestoreClick = {},
-            onDeletePermanentlyClick = {}
-        )
+        Column {
+            listOf(UNAPPROVED, APPROVED, TRASH).forEach { status ->
+                CommentModerationToolbar(
+                    status = status,
+                    canModerate = true,
+                    onApproveClick = {},
+                    onSpamClick = {},
+                    onTrashClick = {},
+                    onRestoreClick = {},
+                    onDeletePermanentlyClick = {}
+                )
+            }
+        }
     }
 }

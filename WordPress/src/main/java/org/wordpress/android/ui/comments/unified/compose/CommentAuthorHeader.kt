@@ -70,8 +70,7 @@ fun CommentAuthorHeader(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    // The inner padding sits inside the clickable, so the tap target is taller
-                    // than the 12sp line it wraps; the outer one is just the gap above.
+                    // Inner padding is inside the clickable, so the tap target clears the line.
                     modifier = Modifier
                         .padding(top = LINE_GAP)
                         .clickable(onClick = onPostTitleClick)
@@ -89,9 +88,8 @@ fun CommentAuthorHeader(
 }
 
 /**
- * "on {post title}" with the title styled as a hyperlink - the app's link colour plus an underline
- * - so it is visibly tappable. The "on" prefix stays in the surrounding secondary colour, which is
- * what makes the title read as the link rather than the whole line.
+ * "on {post title}", with only the title link-styled - the secondary "on" prefix is what makes the
+ * title read as the link rather than the whole line.
  */
 @Composable
 private fun onPostLink(postTitle: String): AnnotatedString {

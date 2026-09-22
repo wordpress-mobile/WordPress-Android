@@ -327,11 +327,7 @@ internal fun applyMentionSuggestion(
 
 /**
  * The redesigned detail's reply editor, presented as a modal bottom sheet from the Reply action
- * under the comment.
- *
- * A sheet rather than a full screen because a reply is a short, contextual act: the comment being
- * answered stays visible behind it, which a full-screen editor hides. Send lives in the sheet's
- * own header so it is reachable without dismissing the keyboard.
+ * under the comment, so the comment being answered stays visible behind it.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -409,7 +405,6 @@ fun CommentReplySheet(
         }
     }
 
-    // Opening the sheet is an explicit request to type, so raise the keyboard with it.
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }

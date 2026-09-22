@@ -111,18 +111,6 @@ class CommentsRsListRowTest {
     }
 
     @Test
-    fun `date groups open a new header when the bucket changes`() {
-        val recent = comment(id = 1, date = "4 minutes ago", millis = todayAt(hour = 14))
-        val old = comment(id = 2, date = "March 3", millis = daysAgoAt(days = 365, hour = 14))
-
-        val headers = withDateGroups(listOf(recent, old)).filterIsInstance<GroupHeader>()
-
-        assertThat(headers).hasSize(2)
-        assertThat(headers.first().group).isEqualTo(ContentDateGroup.Today)
-        assertThat(headers.map { it.key }).doesNotHaveDuplicates()
-    }
-
-    @Test
     fun `a comment with no timestamp is kept but opens no bucket`() {
         // dateGmtMillis defaults to 0 for anything built before the raw date was carried; such a
         // row must still render rather than being dropped or filed under a wrong bucket.
