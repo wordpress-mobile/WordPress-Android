@@ -2,6 +2,7 @@ package org.wordpress.android.ui.comments.viewmodels
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.test.runCurrent
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -39,6 +40,7 @@ import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.OpenP
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.ReplySent
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier
+import org.wordpress.android.ui.comments.unified.CommentModerationAction
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsComment
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsRestoreResult
@@ -55,6 +57,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
+@Suppress("LargeClass")
 @ExperimentalCoroutinesApi
 class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     @Mock
@@ -628,6 +631,64 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `a moderation keeps the old status until the server confirms, so its button can spin`() = test {
+        // Flipping the status first redrew the toolbar for the destination status in the same
+        // frame, removing the tapped button before its spinner could ever show.
+        viewModel.start(site, REMOTE_COMMENT_ID)
+        whenever(commentsRsDataSource.updateStatus(site, REMOTE_COMMENT_ID, SPAM)).doSuspendableAnswer {
+            delay(LOAD_DELAY_MS)
+            RsResult.Success
+        }
+
+        viewModel.onSpamClicked()
+        runCurrent()
+
+        assertThat(uiStates.last().status).isEqualTo(APPROVED)
+        assertThat(uiStates.last().pendingAction).isEqualTo(CommentModerationAction.SPAM)
+
+        advanceUntilIdle()
+
+        assertThat(uiStates.last().status).isEqualTo(SPAM)
+        assertThat(uiStates.last().pendingAction).isNull()
+    }
+
+    @Test
+    fun `a failed moderation never shows the destination status`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID)
+        whenever(commentsRsDataSource.updateStatus(site, REMOTE_COMMENT_ID, SPAM)).thenReturn(RsResult.Error(null))
+
+        viewModel.onSpamClicked()
+        advanceUntilIdle()
+
+        assertThat(uiStates.map { it.status }).doesNotContain(SPAM)
+        assertThat(uiStates.last().pendingAction).isNull()
+    }
+
+    @Test
+    fun `the parent and reply count are not fetched when the redesign is off`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID))
+            .thenReturn(RS_COMMENT.copy(parentId = PARENT_COMMENT_ID))
+
+        viewModel.start(site, REMOTE_COMMENT_ID)
+        advanceUntilIdle()
+
+        verify(commentsRsDataSource, never()).getComment(site, PARENT_COMMENT_ID)
+        verify(commentsRsDataSource, never()).fetchReplyCount(any(), any())
+    }
+
+    @Test
+    fun `the redesign fetches the parent and reply count`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID))
+            .thenReturn(RS_COMMENT.copy(parentId = PARENT_COMMENT_ID))
+
+        viewModel.start(site, REMOTE_COMMENT_ID, isRedesignEnabled = true)
+        advanceUntilIdle()
+
+        verify(commentsRsDataSource).getComment(site, PARENT_COMMENT_ID)
+        verify(commentsRsDataSource).fetchReplyCount(site, REMOTE_COMMENT_ID)
+    }
+
+    @Test
     fun `restoring to pending still tracks UNTRASHED, not UNAPPROVED`() = test {
         // The stat reports where the comment came from; core can return it to pending, and
         // matching on APPROVED alone would file that as a plain unapprove.
@@ -854,6 +915,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         private const val REMOTE_COMMENT_ID = 4321L
         private const val REMOTE_POST_ID = 99L
         private const val LOAD_DELAY_MS = 1000L
+        private const val PARENT_COMMENT_ID = 777L
         private const val NOTE_ID = "note_5555"
 
         private val RS_COMMENT = RsComment(

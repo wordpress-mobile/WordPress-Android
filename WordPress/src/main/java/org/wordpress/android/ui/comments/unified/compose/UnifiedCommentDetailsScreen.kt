@@ -309,9 +309,13 @@ private fun CommentReplyEditor(
 }
 
 /**
- * The redesigned content region, matching iOS's `CommentDetailView`: a fixed block of status pill,
- * author header and optional "in reply to" strip, then the comment body scrolling on its own below
- * a divider. The moderation toolbar and reply box are pinned by the caller.
+ * The redesigned content region, following iOS's `CommentDetailView`: status pill, author header
+ * and optional "in reply to" strip above the comment body. The moderation toolbar is pinned by the
+ * caller.
+ *
+ * Unlike iOS the header scrolls with the body rather than staying pinned. With large text on a
+ * short screen a pinned header can take all the height the toolbar leaves, measuring the body to
+ * 0dp and making the comment unreachable - a pinned header is not worth losing the content to.
  */
 @Composable
 private fun RedesignedCommentDetailsContent(
@@ -321,7 +325,11 @@ private fun RedesignedCommentDetailsContent(
     onReplyClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier
+            .nestedScroll(rememberNestedScrollInteropConnection())
+            .verticalScroll(rememberScrollState())
+    ) {
         Column(
             modifier = Modifier.padding(
                 start = REDESIGN_H_PADDING,
@@ -368,11 +376,7 @@ private fun RedesignedCommentDetailsContent(
         // to the comment above them, and pinning them would stack a second action bar directly on
         // top of the moderation toolbar.
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .nestedScroll(rememberNestedScrollInteropConnection())
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = REDESIGN_H_PADDING, vertical = REDESIGN_V_PADDING)
+            modifier = Modifier.padding(horizontal = REDESIGN_H_PADDING, vertical = REDESIGN_V_PADDING)
         ) {
             CommentHtmlBody(html = uiState.commentText)
             CommentReactionRow(

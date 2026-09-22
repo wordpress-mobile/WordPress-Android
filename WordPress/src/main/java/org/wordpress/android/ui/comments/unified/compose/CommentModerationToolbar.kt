@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
+import org.wordpress.android.fluxc.model.CommentStatus.DELETED
 import org.wordpress.android.fluxc.model.CommentStatus.SPAM
 import org.wordpress.android.fluxc.model.CommentStatus.TRASH
 import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
@@ -62,7 +63,7 @@ fun CommentModerationToolbar(
     modifier: Modifier = Modifier,
     pendingAction: CommentModerationAction? = null
 ) {
-    if (!canModerate) return
+    if (!canModerate || status == DELETED) return
     // The ViewModel refuses a second moderation anyway, so live buttons would only swallow taps.
     val isEnabled = pendingAction == null
 

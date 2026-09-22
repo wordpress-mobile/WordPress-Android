@@ -3,6 +3,8 @@ package org.wordpress.android.ui.comments.unified
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -106,17 +108,27 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     private var isLikeInProgress = false
     private var isModerationInProgress = false
 
+    // The parent strip and the reply-aware trash prompt only exist in the redesigned detail, so
+    // their fetches are skipped entirely when it is off - the pre-redesign screen loads as before.
+    private var isRedesignEnabled = false
+
     // Whether the current user may moderate comments on this site (moderate_comments capability).
     // Fetched asynchronously in [start]; false until it resolves so the moderation controls start
     // disabled and enable once confirmed, rather than flashing enabled then greying out.
     private var canModerate = false
 
-    fun start(site: SiteModel, remoteCommentId: Long, noteId: String? = null) {
+    fun start(
+        site: SiteModel,
+        remoteCommentId: Long,
+        noteId: String? = null,
+        isRedesignEnabled: Boolean = false
+    ) {
         if (isStarted) return
         isStarted = true
         this.site = site
         this.remoteCommentId = remoteCommentId
         this.noteId = noteId
+        this.isRedesignEnabled = isRedesignEnabled
         loadComment()
         loadModerationCapability()
     }
@@ -150,6 +162,9 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
             }
             val loaded = withContext(bgDispatcher) {
                 val rs = commentsRsDataSource.getComment(site, remoteCommentId)
+                // Independent of the cache lookups below, so it runs alongside them rather than
+                // adding its round trips to the first paint.
+                val extras = async { fetchRedesignExtras(rs) }
                 var local = commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId).firstOrNull()
                 // Opened from the rs list the FluxC cache may not have this comment at all (the
                 // legacy list guaranteed a row before the detail could open). Fetch it so the
@@ -174,12 +189,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                 } else {
                     false
                 }
-                // Best effort: a failure here must not take down a comment that loaded fine.
-                val parent = rs?.parentId
-                    ?.takeIf { it > 0 }
-                    ?.let { commentsRsDataSource.getComment(site, it) }
-                // Null when unknown; the trash dialog then falls back to generic copy.
-                val replies = rs?.let { commentsRsDataSource.fetchReplyCount(site, remoteCommentId) }
+                val (parent, replies) = extras.await()
                 CommentLoadResult(rs, local, fallbackTitle, likedFallback, parent, replies)
             }
             when {
@@ -201,6 +211,21 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                     )
                 )
             }
+        }
+    }
+
+    /**
+     * The parent comment and reply count, which only the redesigned detail shows. Fetched together
+     * and best effort: a failure leaves the strip hidden and the trash prompt on generic copy.
+     */
+    private suspend fun fetchRedesignExtras(rs: RsComment?): Pair<RsComment?, Int?> {
+        if (!isRedesignEnabled || rs == null) return null to null
+        return coroutineScope {
+            val parent = async {
+                rs.parentId.takeIf { it > 0 }?.let { commentsRsDataSource.getComment(site, it) }
+            }
+            val replies = async { commentsRsDataSource.fetchReplyCount(site, remoteCommentId) }
+            parent.await() to replies.await()
         }
     }
 
@@ -404,14 +429,17 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         if (!canStartModeration()) return
         val previousStatus = currentStatus()
         isModerationInProgress = true
+        // The status changes only once the server confirms, as restore does. Flipping it first
+        // would redraw the toolbar for the destination status in the same frame, so the tapped
+        // button would be gone before its spinner could show.
+        setPendingAction(action)
         launch {
             try {
-                _uiState.value = _uiState.value?.withStatus(newStatus)?.copy(pendingAction = action)
                 val result = withContext(bgDispatcher) { moderate(newStatus) }
                 if (result is RsResult.Error) {
-                    _uiState.value = _uiState.value?.withStatus(previousStatus)
                     showError(result.message, R.string.error_moderate_comment)
                 } else {
+                    _uiState.value = _uiState.value?.withStatus(newStatus)
                     moderationStat(previousStatus, newStatus)?.let { trackCommentAction(it) }
                     _commentChanged.value = Event(Unit)
                     if (noteId != null) {
