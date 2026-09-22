@@ -33,8 +33,6 @@ APP_SPECIFIC_VALUES = {
   }
 }.freeze
 
-UPLOAD_TO_PLAY_STORE_JSON_KEY = File.join(Dir.home, '.configure', 'wordpress-android', 'secrets', 'google-upload-credentials.json')
-
 # Legacy version code pinned in the Play Store — it must never drop from a track, so every path that
 # writes a track release (AAB upload or beta promotion) keeps it in the release's version codes.
 PLAY_STORE_VERSION_CODES_TO_RETAIN = [1440].freeze
@@ -52,6 +50,10 @@ PROTOTYPE_BUILD_TYPE = 'Debug'
 PROJECT_ROOT_FOLDER = File.dirname(File.expand_path(__dir__))
 FASTLANE_FOLDER = File.join(PROJECT_ROOT_FOLDER, 'fastlane')
 RELEASE_NOTES_SOURCE_PATH = File.join(PROJECT_ROOT_FOLDER, 'RELEASE-NOTES.txt')
+
+# Mirrors `a8c-secrets which`, without spawning the command
+A8C_SECRETS_FOLDER = File.join(Dir.home, '.a8c-secrets', File.read(File.join(PROJECT_ROOT_FOLDER, '.a8c-secrets', 'repo-id')).strip)
+UPLOAD_TO_PLAY_STORE_JSON_KEY = File.join(A8C_SECRETS_FOLDER, 'google-upload-credentials.json')
 
 VERSION_PROPERTIES_PATH = File.join(PROJECT_ROOT_FOLDER, 'version.properties')
 

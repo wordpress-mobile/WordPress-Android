@@ -9,11 +9,6 @@
       "encrypt": true
     },
     {
-      "file": "android/WPAndroid/google-upload-credentials.json",
-      "destination": "~/.configure/wordpress-android/secrets/google-upload-credentials.json",
-      "encrypt": true
-    },
-    {
       "file": "android/automattic_upload.jks",
       "destination": "~/.configure/wordpress-android/secrets/upload.jks",
       "encrypt": true
