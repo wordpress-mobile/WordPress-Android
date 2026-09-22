@@ -21,7 +21,8 @@ gradle.ext {
     isCi = System.getenv('CI')?.toBoolean() ?: false
 
     decryptedSecretsDir = file("${System.getProperty("user.home")}/.configure/wordpress-android/secrets")
-    secretPath = new File(decryptedSecretsDir, "secrets.properties").path
+    a8cSecretsDir = resolveA8cSecretsDir(file("${rootDir}/.a8c-secrets/repo-id"))
+    secretPath = new File(a8cSecretsDir, "secrets.properties").path
     secretProperties = loadSecrets(
             logger,
             file("${rootDir}/defaults.properties"),
@@ -31,12 +32,17 @@ gradle.ext {
     developerProperties = loadPropertiesFromFile(file("$rootDir/developer.properties"))
 }
 
+// Mirrors `a8c-secrets which`, without spawning the command
+static def resolveA8cSecretsDir(File repoIdFile) {
+    new File("${System.getProperty("user.home")}/.a8c-secrets/${repoIdFile.text.trim()}")
+}
+
 static def loadSecrets(Logger logger, File defaultsFile, File secretsFile, File localSecretsFile) {
     def properties
     if (secretsFile.exists()) {
         properties = loadPropertiesFromFile(secretsFile)
     } else {
-        logger.warn("Secrets file not found. Using defaults.")
+        logger.warn("${secretsFile} not found. Using defaults.")
         properties = loadPropertiesFromFile(defaultsFile)
     }
 
@@ -173,7 +179,7 @@ def assertDeveloperPropertiesMatch(String developerPropertiesPath) {
 
 def assertSecretsApplied() {
     if (!file(gradle.ext.secretPath).exists()) {
-        throw new GradleException("The build requested remote build cache, but secrets file is not found. Please run `bundle exec fastlane run configure_apply` to apply secrets.")
+        throw new GradleException("The build requested remote build cache, but ${gradle.ext.secretPath} is not found. Please run `a8c-secrets decrypt` to apply secrets.")
     }
 }
 

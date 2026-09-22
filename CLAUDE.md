@@ -123,7 +123,7 @@ WordPress/src/main/java/org/wordpress/android/
 - Default development variant: `jetpackDebug`
 - Remote build cache available for faster builds (requires setup)
 - Fastlane used for release automation and testing
-- Secrets managed via `secrets.properties` file (not in repo)
+- Secrets managed via `secrets.properties`, decrypted outside the checkout by `a8c-secrets decrypt`
 - Pre-commit hooks may modify files during commit
 
 ### Git Operations Checklist
