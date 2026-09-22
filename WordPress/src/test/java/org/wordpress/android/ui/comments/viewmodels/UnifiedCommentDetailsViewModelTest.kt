@@ -628,6 +628,50 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `restoring to pending still tracks UNTRASHED, not UNAPPROVED`() = test {
+        // The stat reports where the comment came from; core can return it to pending, and
+        // matching on APPROVED alone would file that as a plain unapprove.
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).thenReturn(RS_COMMENT.copy(status = TRASH))
+        whenever(commentsRsDataSource.restore(site, REMOTE_COMMENT_ID))
+            .thenReturn(RsRestoreResult.Success(UNAPPROVED))
+        val trashed = createViewModel()
+        trashed.start(site, REMOTE_COMMENT_ID)
+
+        trashed.onRestoreClicked()
+
+        verify(analyticsUtilsWrapper).trackCommentActionWithSiteDetails(
+            Stat.COMMENT_UNTRASHED, AnalyticsCommentActionSource.SITE_COMMENTS, site
+        )
+    }
+
+    @Test
+    fun `deleting from the bin still tracks DELETED, not UNTRASHED`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).thenReturn(RS_COMMENT.copy(status = TRASH))
+        val trashed = createViewModel()
+        trashed.start(site, REMOTE_COMMENT_ID)
+
+        trashed.onDeletePermanentlyClicked()
+
+        verify(analyticsUtilsWrapper).trackCommentActionWithSiteDetails(
+            Stat.COMMENT_DELETED, AnalyticsCommentActionSource.SITE_COMMENTS, site
+        )
+    }
+
+    @Test
+    fun `a custom status label does not outlive the status it described`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID))
+            .thenReturn(RS_COMMENT.copy(status = CommentStatus.ALL, rawStatus = "archived"))
+        val custom = createViewModel()
+        val states = custom.observeStates()
+        custom.start(site, REMOTE_COMMENT_ID)
+
+        custom.onSpamClicked()
+
+        assertThat(states.last().status).isEqualTo(SPAM)
+        assertThat(states.last().customStatusLabel).isEmpty()
+    }
+
+    @Test
     fun `a status the app does not model is carried through for display`() = test {
         whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID))
             .thenReturn(RS_COMMENT.copy(status = CommentStatus.ALL, rawStatus = "archived"))

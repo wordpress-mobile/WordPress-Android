@@ -327,10 +327,10 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         if (isModerationInProgress) return
         isModerationInProgress = true
         try {
-            _uiState.value = _uiState.value?.copy(status = APPROVED)
+            _uiState.value = _uiState.value?.withStatus(APPROVED)
             val result = withContext(bgDispatcher) { moderate(APPROVED) }
             if (result is RsResult.Error) {
-                _uiState.value = _uiState.value?.copy(status = UNAPPROVED)
+                _uiState.value = _uiState.value?.withStatus(UNAPPROVED)
             } else {
                 // Match the legacy screen, which tracks the implicit approve when replying to an
                 // unapproved comment (this path is only reached from an unapproved comment).
@@ -360,7 +360,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                         showError(result.message, R.string.error_moderate_comment)
                     }
                     is CommentsRsDataSource.RsRestoreResult.Success -> {
-                        _uiState.value = _uiState.value?.copy(status = result.status)
+                        _uiState.value = _uiState.value?.withStatus(result.status)
                         withContext(bgDispatcher) { mirrorStatusToCache(result.status) }
                         moderationStat(previousStatus, result.status)?.let { trackCommentAction(it) }
                         _commentChanged.value = Event(Unit)
@@ -383,6 +383,15 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         return hasModeratableComment && !isOffline() && !isModerationInProgress
     }
 
+    /**
+     * Applies [status], dropping any custom-status label the previous status carried - the label
+     * only describes a status the app does not model, so it must not outlive one.
+     */
+    private fun CommentDetailsUiState.withStatus(status: CommentStatus) = copy(
+        status = status,
+        customStatusLabel = if (status == CommentStatus.ALL) customStatusLabel else ""
+    )
+
     private fun setPendingAction(action: CommentModerationAction?) {
         _uiState.value = _uiState.value?.copy(pendingAction = action)
     }
@@ -397,10 +406,10 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         isModerationInProgress = true
         launch {
             try {
-                _uiState.value = _uiState.value?.copy(status = newStatus, pendingAction = action)
+                _uiState.value = _uiState.value?.withStatus(newStatus)?.copy(pendingAction = action)
                 val result = withContext(bgDispatcher) { moderate(newStatus) }
                 if (result is RsResult.Error) {
-                    _uiState.value = _uiState.value?.copy(status = previousStatus)
+                    _uiState.value = _uiState.value?.withStatus(previousStatus)
                     showError(result.message, R.string.error_moderate_comment)
                 } else {
                     moderationStat(previousStatus, newStatus)?.let { trackCommentAction(it) }
@@ -487,8 +496,12 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
      * a generic approve.
      */
     private fun moderationStat(previousStatus: CommentStatus, newStatus: CommentStatus): Stat? = when {
-        previousStatus == SPAM && newStatus == APPROVED -> Stat.COMMENT_UNSPAMMED
-        previousStatus == TRASH && newStatus == APPROVED -> Stat.COMMENT_UNTRASHED
+        // A restore is reported by where the comment came from, not where it landed: core returns
+        // it to its pre-spam/pre-bin status, which is pending as often as approved. Matching on
+        // APPROVED alone would file a restored-to-pending comment as a plain unapprove. Deleting
+        // from spam or the bin is not a restore, so those land on COMMENT_DELETED below.
+        previousStatus == SPAM && newStatus in RESTORED_STATUSES -> Stat.COMMENT_UNSPAMMED
+        previousStatus == TRASH && newStatus in RESTORED_STATUSES -> Stat.COMMENT_UNTRASHED
         newStatus == APPROVED -> Stat.COMMENT_APPROVED
         newStatus == UNAPPROVED -> Stat.COMMENT_UNAPPROVED
         newStatus == SPAM -> Stat.COMMENT_SPAMMED
@@ -569,6 +582,11 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         val pendingAction: CommentModerationAction? = null,
         val replyCount: Int? = null
     )
+
+    companion object {
+        /** Where a restore can land: core returns a comment to its pre-spam/pre-bin status. */
+        private val RESTORED_STATUSES = setOf(APPROVED, UNAPPROVED)
+    }
 }
 
 sealed class CommentDetailsActionEvent {
