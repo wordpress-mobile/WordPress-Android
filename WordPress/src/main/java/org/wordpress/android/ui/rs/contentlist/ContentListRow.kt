@@ -3,7 +3,9 @@ package org.wordpress.android.ui.rs.contentlist
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -191,24 +193,61 @@ fun ContentListPlaceholderRow(modifier: Modifier = Modifier) {
     }
 }
 
+/**
+ * The card chrome every redesigned content row sits in: a flat `surface` card with a hairline
+ * border, used by the posts, pages and comments lists so all three read as one list style.
+ *
+ * [isSelected] tints the container and border, for lists with a multi-select mode (comments).
+ * [onLongClick] is what enters that mode; supplying it swaps the Card's own click handling for a
+ * `combinedClickable`, so lists that don't need it keep the plain clickable Card unchanged.
+ */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun ContentListCard(
+fun ContentListCard(
     onClick: () -> Unit,
-    isSyncing: Boolean,
     modifier: Modifier = Modifier,
+    isSyncing: Boolean = false,
+    isSelected: Boolean = false,
+    onLongClick: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
+    val containerColor = if (isSelected) {
+        MaterialTheme.colorScheme.secondaryContainer
+    } else {
+        MaterialTheme.colorScheme.surface
+    }
+    val borderColor = if (isSelected) {
+        MaterialTheme.colorScheme.secondary
+    } else {
+        MaterialTheme.colorScheme.outlineVariant
+    }
+    val cardModifier = modifier
+        .fillMaxWidth()
+        .padding(horizontal = LIST_HORIZONTAL_PADDING, vertical = CARD_VERTICAL_SPACING)
+    val colors = CardDefaults.cardColors(containerColor = containerColor)
+    val border = BorderStroke(CARD_BORDER_WIDTH, borderColor)
+    val shape = RoundedCornerShape(CARD_RADIUS)
+
     // The design leans on a hairline border rather than a shadow, so elevation stays flat.
-    Card(
-        onClick = onClick,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = LIST_HORIZONTAL_PADDING, vertical = CARD_VERTICAL_SPACING),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        border = BorderStroke(CARD_BORDER_WIDTH, MaterialTheme.colorScheme.outlineVariant),
-        shape = RoundedCornerShape(CARD_RADIUS)
-    ) {
-        CardBody(isSyncing = isSyncing, content = content)
+    if (onLongClick == null) {
+        Card(
+            onClick = onClick,
+            modifier = cardModifier,
+            colors = colors,
+            border = border,
+            shape = shape
+        ) {
+            CardBody(isSyncing = isSyncing, content = content)
+        }
+    } else {
+        Card(
+            modifier = cardModifier.combinedClickable(onClick = onClick, onLongClick = onLongClick),
+            colors = colors,
+            border = border,
+            shape = shape
+        ) {
+            CardBody(isSyncing = isSyncing, content = content)
+        }
     }
 }
 
@@ -243,7 +282,7 @@ private fun RowBody(
     titleLineHeight: TextUnit,
     density: ContentListDensity
 ) {
-    RowBadges(state.badges)
+    ContentListBadges(state.badges)
     RowTitle(title = state.title, fontSize = titleSize, lineHeight = titleLineHeight)
     if (!density.isCondensed) {
         RowExcerpt(state.excerpt)
@@ -375,11 +414,18 @@ private fun MetaSeparator() {
     )
 }
 
+/**
+ * The short outlined qualifiers that sit above a row's title - a page's "Homepage", a comment's
+ * "Pending". Public so every redesigned list labels the same way; [badges] are string resource ids.
+ */
 @Composable
-private fun RowBadges(@StringRes badges: List<Int>) {
+fun ContentListBadges(
+    @StringRes badges: List<Int>,
+    modifier: Modifier = Modifier
+) {
     if (badges.isEmpty()) return
     FlowRow(
-        modifier = Modifier.padding(bottom = BADGE_BOTTOM_PADDING),
+        modifier = modifier.padding(bottom = BADGE_BOTTOM_PADDING),
         horizontalArrangement = Arrangement.spacedBy(BADGE_SPACING)
     ) {
         badges.forEach { labelResId ->

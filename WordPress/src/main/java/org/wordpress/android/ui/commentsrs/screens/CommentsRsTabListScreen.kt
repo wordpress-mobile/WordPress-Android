@@ -39,8 +39,11 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.commentsrs.CommentRsUiModel
 import org.wordpress.android.ui.commentsrs.CommentsRsListRow
 import org.wordpress.android.ui.commentsrs.CommentsTabUiState
+import org.wordpress.android.ui.commentsrs.withDateGroups
 import org.wordpress.android.ui.commentsrs.withDateHeaders
 import org.wordpress.android.ui.compose.components.ShimmerBox
+import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.rs.contentlist.ContentListGroupHeader
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,7 +59,9 @@ fun CommentsRsTabListScreen(
     onCommentLongClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
     isSearchActive: Boolean = false,
-    isQuerySearchable: Boolean = false
+    isQuerySearchable: Boolean = false,
+    isRedesignEnabled: Boolean = false,
+    density: ContentListDensity = ContentListDensity.COMFORTABLE
 ) {
     // While searching, a missing tab state means "cleared, waiting for the debounced fetch"
     // (initTab inserts an isLoading state the moment it actually fetches) — show the same blank
@@ -85,7 +90,7 @@ fun CommentsRsTabListScreen(
             // Search is open but the query is still below the minimum length: show nothing
             // rather than a misleading "no comments" state.
             isSearchIdle -> Box(Modifier.fillMaxSize())
-            tabState.isLoading -> ShimmerList()
+            tabState.isLoading -> ShimmerList(isRedesignEnabled)
             tabState.error != null && tabState.comments.isEmpty() -> ErrorContent(
                 error = tabState.error,
                 onRetry = if (tabState.isAuthError) null else onRefresh
@@ -108,7 +113,9 @@ fun CommentsRsTabListScreen(
                 canLoadMore = tabState.canLoadMore,
                 onLoadMore = onLoadMore,
                 onCommentClick = onCommentClick,
-                onCommentLongClick = onCommentLongClick
+                onCommentLongClick = onCommentLongClick,
+                isRedesignEnabled = isRedesignEnabled,
+                density = density
             )
         }
     }
@@ -123,7 +130,9 @@ private fun CommentListContent(
     canLoadMore: Boolean,
     onLoadMore: () -> Unit,
     onCommentClick: (Long) -> Unit,
-    onCommentLongClick: (Long) -> Unit
+    onCommentLongClick: (Long) -> Unit,
+    isRedesignEnabled: Boolean,
+    density: ContentListDensity
 ) {
     // Also keyed on the list size: a refresh that truncates the list (or an appended page) restarts
     // the flow, so a `true` latched by distinctUntilChanged before the change can't suppress the
@@ -141,8 +150,11 @@ private fun CommentListContent(
         }
     }
 
-    // Interleave date subheaders once per comment-list change, like the legacy list.
-    val rows = remember(comments) { withDateHeaders(comments) }
+    // Interleave date subheaders once per comment-list change. The redesigned list buckets them
+    // the way the posts list does; the pre-redesign one keeps its header-per-day.
+    val rows = remember(comments, isRedesignEnabled) {
+        if (isRedesignEnabled) withDateGroups(comments) else withDateHeaders(comments)
+    }
     LazyColumn(
         state = listState,
         modifier = Modifier.fillMaxSize()
@@ -152,6 +164,7 @@ private fun CommentListContent(
             key = { row ->
                 when (row) {
                     is CommentsRsListRow.DateHeader -> row.key
+                    is CommentsRsListRow.GroupHeader -> row.key
                     is CommentsRsListRow.Item -> row.comment.remoteCommentId
                 }
             },
@@ -162,13 +175,28 @@ private fun CommentListContent(
                     label = row.label,
                     modifier = Modifier.animateItem()
                 )
-                is CommentsRsListRow.Item -> CommentsRsListItem(
-                    comment = row.comment,
-                    isSelected = row.comment.remoteCommentId in selectedIds,
-                    onClick = { onCommentClick(row.comment.remoteCommentId) },
-                    onLongClick = { onCommentLongClick(row.comment.remoteCommentId) },
+                is CommentsRsListRow.GroupHeader -> ContentListGroupHeader(
+                    group = row.group,
                     modifier = Modifier.animateItem()
                 )
+                is CommentsRsListRow.Item -> if (isRedesignEnabled) {
+                    CommentsRsRedesignedRow(
+                        comment = row.comment,
+                        isSelected = row.comment.remoteCommentId in selectedIds,
+                        onClick = { onCommentClick(row.comment.remoteCommentId) },
+                        onLongClick = { onCommentLongClick(row.comment.remoteCommentId) },
+                        modifier = Modifier.animateItem(),
+                        density = density
+                    )
+                } else {
+                    CommentsRsListItem(
+                        comment = row.comment,
+                        isSelected = row.comment.remoteCommentId in selectedIds,
+                        onClick = { onCommentClick(row.comment.remoteCommentId) },
+                        onLongClick = { onCommentLongClick(row.comment.remoteCommentId) },
+                        modifier = Modifier.animateItem()
+                    )
+                }
             }
         }
 
@@ -191,10 +219,10 @@ private fun CommentListContent(
 }
 
 @Composable
-private fun ShimmerList() {
+private fun ShimmerList(isRedesignEnabled: Boolean) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(SHIMMER_ITEM_COUNT) {
-            PlaceholderItem()
+            if (isRedesignEnabled) CommentsRsPlaceholderRow() else PlaceholderItem()
         }
     }
 }

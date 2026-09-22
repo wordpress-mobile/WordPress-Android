@@ -39,6 +39,7 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel.
 import org.wordpress.android.ui.comments.unified.compose.CommentDetailsActions
 import org.wordpress.android.ui.comments.unified.compose.UnifiedCommentDetailsScreen
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.compose.utils.showMessage
 import org.wordpress.android.ui.notifications.NotificationsListFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -64,6 +65,9 @@ class UnifiedCommentDetailsFragment : Fragment() {
     @Inject
     lateinit var uiHelpers: UiHelpers
 
+    @Inject
+    lateinit var experimentalFeatures: ExperimentalFeatures
+
     private lateinit var viewModel: UnifiedCommentDetailsViewModel
 
     private lateinit var site: SiteModel
@@ -88,6 +92,12 @@ class UnifiedCommentDetailsFragment : Fragment() {
     // Key drafts by the local site id: siteId (the WP.com blog id) is 0 for all self-hosted
     // application-password sites, which would collide drafts across sites.
     private val draftKey get() = "unified_comment_details_${site.id}-$remoteCommentId"
+
+    // Read here rather than in each host Activity: this fragment is the one thing the comments-list
+    // pager and the notification detail share, so one read covers both entry points.
+    private val isRedesignEnabled by lazy {
+        experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.CONTENT_LIST_REDESIGN)
+    }
 
     private val editCommentLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(StartActivityForResult()) { result ->
@@ -135,7 +145,8 @@ class UnifiedCommentDetailsFragment : Fragment() {
                         showLikeButton = SiteUtils.isAccessedViaWPComRest(site),
                         focusReplyFieldOnLaunch = focusReplyField,
                         snackbarHostState = snackbarHostState,
-                        actions = actions
+                        actions = actions,
+                        isRedesignEnabled = isRedesignEnabled
                     )
                 }
             }
@@ -150,7 +161,7 @@ class UnifiedCommentDetailsFragment : Fragment() {
         // Lets the notifications host lift its app bar with the comment's scroll position;
         // the rs comments list host doesn't implement the listener, so this is a no-op there.
         (activity as? ScrollableViewInitializedListener)?.onScrollableViewInitialized(view.id)
-        viewModel.start(site, remoteCommentId, noteId)
+        viewModel.start(site, remoteCommentId, noteId, isRedesignEnabled)
     }
 
     // A single instance for the fragment's lifetime, so recompositions see a stable parameter
@@ -161,6 +172,7 @@ class UnifiedCommentDetailsFragment : Fragment() {
             onLikeClick = { viewModel.onLikeClicked() },
             onEditClick = { viewModel.onEditClicked() },
             onTrashClick = { viewModel.onTrashClicked() },
+            onRestoreClick = { viewModel.onRestoreClicked() },
             onDeletePermanentlyClick = { viewModel.onDeletePermanentlyClicked() },
             onCopyLinkClick = { copyLink(viewModel.uiState.value?.commentUrl.orEmpty()) },
             onShareLinkClick = { shareLink(viewModel.uiState.value?.commentUrl.orEmpty()) },
