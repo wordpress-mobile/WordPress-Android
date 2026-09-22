@@ -5,8 +5,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.ui.postsrs.AuthorInfo
-import org.wordpress.android.ui.postsrs.PostRsErrorUtils
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.SiteUtils
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.AnyTermWithViewContext
@@ -67,23 +67,16 @@ class PostRsRestClient @Inject constructor(
     }
 
     /**
-     * Fetches the given [mediaIds] in one network call per page-sized batch, returning a map of
-     * media ID to a URL sized to fill the screen's width.
+     * A URL for [mediaId] sized to fill the screen's width, or null if it could not be resolved.
+     * A cached id is answered without a network round-trip.
      */
-    suspend fun fetchMediaUrls(
-        site: SiteModel,
-        mediaIds: List<Long>,
-    ): Map<Long, String> {
-        val accessibilityInfo = SiteUtils.getAccessibilityInfoFromSite(site)
-        val isWpComRest = SiteUtils.isAccessedViaWPComRest(site)
-        return fetchMediaImages(site, mediaIds).mapNotNull { (id, image) ->
-            image?.let {
-                id to it.toDisplayUrl(
-                    accessibilityInfo, isWpComRest, displayMetrics.widthPixels, heightPx = 0
-                )
-            }
-        }.toMap()
-    }
+    suspend fun fetchMediaUrl(site: SiteModel, mediaId: Long): String? =
+        fetchMediaImages(site, listOf(mediaId)).resolved[mediaId]?.toDisplayUrl(
+            SiteUtils.getAccessibilityInfoFromSite(site),
+            SiteUtils.isAccessedViaWPComRest(site),
+            displayMetrics.widthPixels,
+            heightPx = 0,
+        )
 
     /**
      * URLs for both shapes a list row can draw a featured image at - a [thumbnailDp] square and a
@@ -95,45 +88,41 @@ class PostRsRestClient @Inject constructor(
         mediaIds: List<Long>,
         thumbnailDp: Int,
         heroHeightDp: Int,
-    ): Map<Long, FeaturedImageUrls?> {
+    ): MediaLookup<FeaturedImageUrls> {
         val accessibilityInfo = SiteUtils.getAccessibilityInfoFromSite(site)
         val isWpComRest = SiteUtils.isAccessedViaWPComRest(site)
-        val thumbnailPx = (thumbnailDp * displayMetrics.density).toInt()
-        val heroHeightPx = (heroHeightDp * displayMetrics.density).toInt()
-        val heroWidthPx = displayMetrics.widthPixels.coerceAtMost(HERO_MAX_WIDTH_PX)
-        return fetchMediaImages(site, mediaIds).mapValues { (_, image) ->
-            image?.let {
+        val thumbnailPx = DisplayUtils.dpToPx(context, thumbnailDp)
+        val heroHeightPx = DisplayUtils.dpToPx(context, heroHeightDp)
+        val heroWidthPx = displayMetrics.widthPixels
+        val lookup = fetchMediaImages(site, mediaIds)
+        return MediaLookup(
+            absentIds = lookup.absentIds,
+            resolved = lookup.resolved.mapValues { (_, image) ->
                 FeaturedImageUrls(
-                    thumbnail = it.toDisplayUrl(
+                    thumbnail = image.toDisplayUrl(
                         accessibilityInfo, isWpComRest, thumbnailPx, thumbnailPx
                     ),
-                    hero = it.toDisplayUrl(
+                    hero = image.toDisplayUrl(
                         accessibilityInfo, isWpComRest, heroWidthPx, heroHeightPx
                     ),
                 )
             }
-        }
+        )
     }
 
-    /**
-     * Resolves [mediaIds] to their media objects, hitting the network only for uncached ones.
-     *
-     * Three outcomes, and callers need all three: a non-null value is the media, a null value means
-     * the server answered without it, and a *missing* key means the request failed. Only the middle
-     * one is settled - a failed request has to be retried, not written off, or a single 5xx blanks
-     * every image it asked about.
-     */
+    /** Resolves [mediaIds] to their media objects, hitting the network only for uncached ones. */
     private suspend fun fetchMediaImages(
         site: SiteModel,
         mediaIds: List<Long>,
-    ): Map<Long, MediaImage?> {
-        val result = mutableMapOf<Long, MediaImage?>()
+    ): MediaLookup<MediaImage> {
+        val resolved = mutableMapOf<Long, MediaImage>()
+        val absent = mutableSetOf<Long>()
         val uncached = mutableListOf<Long>()
         for (id in mediaIds) {
             val cached = mediaImageCache[mediaCacheKey(site, id)]
-            if (cached != null) result[id] = cached else uncached.add(id)
+            if (cached != null) resolved[id] = cached else uncached.add(id)
         }
-        if (uncached.isEmpty()) return result
+        if (uncached.isEmpty()) return MediaLookup(resolved, absent)
 
         val client = wpApiClientProvider.getWpApiClient(site)
         // `include` doesn't lift the page size (default 10), so a batch bigger than a page is
@@ -150,20 +139,18 @@ class PostRsRestClient @Inject constructor(
                     for (media in response.response.data) {
                         val image = media.toMediaImage()
                         mediaImageCache[mediaCacheKey(site, media.id)] = image
-                        result[media.id] = image
+                        resolved[media.id] = image
                     }
                     // The rest of a chunk that came back is genuinely absent - deleted media, or
                     // an id that is not an image - rather than unasked.
-                    for (id in chunk) result.putIfAbsent(id, null)
+                    absent += chunk.filterNot(resolved::containsKey)
                 }
-                else -> AppLog.w(
-                    AppLog.T.POSTS,
-                    "fetchMediaImages failed: " +
-                        PostRsErrorUtils.describeFailure(response)
-                )
+                // The wordpress-rs client already logged the status, method and URL through
+                // wpRsErrorLogger; this only names which call it was.
+                else -> AppLog.w(AppLog.T.POSTS, "fetchMediaImages failed")
             }
         }
-        return result
+        return MediaLookup(resolved, absent)
     }
 
     /**
@@ -517,12 +504,6 @@ class PostRsRestClient @Inject constructor(
         private const val MEDIA_CACHE_MAX_ENTRIES = 500
         private const val MEDIA_CACHE_CAPACITY = 64
         private const val MEDIA_CACHE_LOAD_FACTOR = 0.75f
-
-        /**
-         * WordPress's widest default render is `large` at 1024px, so asking a self-hosted site for
-         * more than that skips every registered size and pulls the full-size upload instead.
-         */
-        private const val HERO_MAX_WIDTH_PX = 1024
 
         private val SLUG_TO_FORMAT = mapOf(
             "standard" to PostFormat.Standard,

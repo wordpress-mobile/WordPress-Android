@@ -1090,12 +1090,9 @@ class PostRsSettingsViewModel @Inject constructor(
         viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
-                val urls = withContext(Dispatchers.IO) {
-                    restClient.fetchMediaUrls(
-                        site, listOf(mediaId)
-                    )
+                val url = withContext(Dispatchers.IO) {
+                    restClient.fetchMediaUrl(site, mediaId)
                 }
-                val url = urls[mediaId]
                 _uiState.update {
                     it.copy(
                         featuredImage = if (url != null) {

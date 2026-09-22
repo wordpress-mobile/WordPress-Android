@@ -127,7 +127,6 @@ internal data class PageRsUiModel(
     val authorId: Long = 0L,
     val authorDisplayName: String? = null,
     val featuredImageId: Long = 0L,
-    /** The featured image sized for each shape a row can draw it at. */
     val featuredImage: FeaturedImageUrls? = null,
     /** True when the media lookup answered without a URL, so the row should stop waiting for one. */
     val isFeaturedImageUnresolvable: Boolean = false,
@@ -267,7 +266,7 @@ internal fun PageRsListItem.toContentListRowUiState(
         title = if (isSiteEditor) siteEditorTitle else page.title,
         excerpt = if (isSiteEditor) siteEditorSubtitle else page.excerpt,
         dateLabel = page.date,
-        imageUrl = page.featuredImage?.thumbnail,
+        thumbnailImageUrl = page.featuredImage?.thumbnail,
         heroImageUrl = page.featuredImage?.hero,
         isImagePending = page.featuredImageId != 0L &&
             page.featuredImage == null &&

@@ -78,7 +78,6 @@ data class PostRsUiModel(
     val authorId: Long = 0L,
     val authorDisplayName: String? = null,
     val featuredImageId: Long = 0L,
-    /** The featured image sized for each shape a row can draw it at. */
     val featuredImage: FeaturedImageUrls? = null,
     /** True when the media lookup answered without a URL, so the row should stop waiting for one. */
     val isFeaturedImageUnresolvable: Boolean = false,
@@ -223,7 +222,7 @@ fun PostRsUiModel.toContentListRowUiState() = ContentListRowUiState(
     title = title,
     excerpt = excerpt,
     dateLabel = date,
-    imageUrl = featuredImage?.thumbnail,
+    thumbnailImageUrl = featuredImage?.thumbnail,
     heroImageUrl = featuredImage?.hero,
     isImagePending = featuredImageId != 0L &&
         featuredImage == null &&

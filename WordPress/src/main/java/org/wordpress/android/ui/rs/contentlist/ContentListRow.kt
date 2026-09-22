@@ -72,7 +72,7 @@ fun ContentListRow(
             leading = leading
         ) {
             FeaturedImage(
-                imageUrl = state.imageUrl,
+                imageUrl = state.thumbnailImageUrl,
                 isImagePending = state.isImagePending,
                 modifier = Modifier
                     .padding(start = padding)

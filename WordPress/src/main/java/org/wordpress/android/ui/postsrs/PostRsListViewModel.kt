@@ -1113,23 +1113,17 @@ class PostRsListViewModel @Inject constructor(
                     site, unresolvedIds, THUMBNAIL_SIZE_DP, HERO_IMAGE_HEIGHT_DP
                 )
             }
-            // Only ids the server actually answered for are settled here: resolved ones stop
-            // being reported as unresolvable, and ones it answered without stop their row waiting.
-            // Ids whose request failed are absent from the map entirely and are left pending, so a
-            // 5xx on the batch does not blank every image it asked about until the next refresh.
-            unresolvableImageIds.removeAll(images.filterValues { it != null }.keys)
-            unresolvableImageIds.addAll(images.filterValues { it == null }.keys)
+            unresolvableImageIds.removeAll(images.resolved.keys)
+            unresolvableImageIds.addAll(images.absentIds)
             updateTabUiState(tab) {
                 copy(
                     posts = this.posts.map { post ->
-                        val image = images[post.featuredImageId]
+                        val image = images.resolved[post.featuredImageId]
                         when {
                             image != null -> post.copy(
                                 featuredImage = image,
                                 isFeaturedImageUnresolvable = false
                             )
-                            // Answered without an image. A failed request leaves the id out of
-                            // the set, so its row stays pending and is retried.
                             post.featuredImageId in unresolvableImageIds ->
                                 post.copy(isFeaturedImageUnresolvable = true)
                             else -> post

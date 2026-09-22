@@ -49,6 +49,7 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.PostRsErrorUtils
 import org.wordpress.android.ui.postsrs.SnackbarMessage
 import org.wordpress.android.ui.postsrs.data.FeaturedImageUrls
+import org.wordpress.android.ui.postsrs.data.MediaLookup
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -1575,12 +1576,8 @@ internal class PagesRsListViewModel @Inject constructor(
                     site, unresolvedIds, THUMBNAIL_SIZE_DP, HERO_IMAGE_HEIGHT_DP
                 )
             }
-            // Only ids the server actually answered for are settled here: resolved ones stop
-            // being reported as unresolvable, and ones it answered without stop their row waiting.
-            // Ids whose request failed are absent from the map entirely and are left pending, so a
-            // 5xx on the batch does not blank every image it asked about until the next refresh.
-            unresolvableImageIds.removeAll(images.filterValues { it != null }.keys)
-            unresolvableImageIds.addAll(images.filterValues { it == null }.keys)
+            unresolvableImageIds.removeAll(images.resolved.keys)
+            unresolvableImageIds.addAll(images.absentIds)
             updateTabUiState(tab) {
                 copy(pages = this.pages.map { item -> item.withResolvedFeaturedImage(images) })
             }
@@ -1832,16 +1829,14 @@ internal class PagesRsListViewModel @Inject constructor(
     }
 
     private fun PageRsListItem.withResolvedFeaturedImage(
-        images: Map<Long, FeaturedImageUrls?>
+        images: MediaLookup<FeaturedImageUrls>
     ): PageRsListItem {
-        val image = images[page.featuredImageId]
+        val image = images.resolved[page.featuredImageId]
         val updated = when {
             image != null -> page.copy(
                 featuredImage = image,
                 isFeaturedImageUnresolvable = false
             )
-            // A row the server answered without an image for stops shimmering. One whose request
-            // failed is not in the set, so it stays pending and is retried.
             page.featuredImageId in unresolvableImageIds ->
                 page.copy(isFeaturedImageUnresolvable = true)
             else -> return this

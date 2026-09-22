@@ -40,9 +40,10 @@ class MediaDisplayUrlTest {
         val thumbnail = PHOTO.toDisplayUrl(SELF_HOSTED, false, widthPx = 216, heightPx = 216)
         val hero = PHOTO.toDisplayUrl(SELF_HOSTED, false, widthPx = 1080, heightPx = 390)
 
-        // 300x225 gives a square slot 225px, enough for 216; no render is wide enough for the hero.
+        // 300x225 gives a square slot 225px, enough for 216. The hero asks wider than any render,
+        // but the search caps at 1024, so it settles on `large` instead of the full-size upload.
         assertThat(thumbnail).isEqualTo(MEDIUM_URL)
-        assertThat(hero).isEqualTo(SOURCE_URL)
+        assertThat(hero).isEqualTo(LARGE_URL)
     }
 
     @Test
