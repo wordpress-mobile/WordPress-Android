@@ -40,24 +40,20 @@ internal fun MediaImage.toDisplayUrl(
     val url = if (accessibilityInfo.isPhotonCapable) {
         sourceUrl
     } else {
-        // A self-hosted site only has the renders it registered at upload, and asking wider than
-        // all of them falls back to the full-size original - so the search is capped even when the
-        // slot is wider. Photon needs no cap; it generates whatever size is asked for.
         renderAtLeast(widthPx.coerceAtMost(MAX_RENDER_WIDTH_PX), displayAspect) ?: sourceUrl
     }
     // Rewriting a self-hosted URL would drop any signed or CDN query string it carries.
     if (!isWpComRest) return url
-    // Photon reads `resize=W,H` as the same centre crop the row does. Without it the pair becomes
-    // `?w=&h=`, which files.wordpress.com bounds by rather than crops to, returning something
-    // narrower than the slot - so non-Photon sites get width only.
+    // Photon crops with `resize=W,H`. Elsewhere the pair becomes `?w=&h=`, which
+    // files.wordpress.com treats as a bounding box, so non-Photon sites get width only.
     val photonHeight = if (accessibilityInfo.isPhotonCapable) heightPx else 0
     return ReaderUtils.getResizedImageUrl(url, widthPx, photonHeight, accessibilityInfo)
 }
 
 /**
- * The smallest render at least [targetWidth] wide. Themes register hard-cropped sizes (core crops
- * `thumbnail`), and cropping one again cuts the image down twice - so a render qualifies only if
- * it matches the original's proportions, or the [displayAspect] it will be drawn at.
+ * The smallest render at least [targetWidth] wide. Core hard-crops `thumbnail`, and cropping a crop
+ * cuts twice - so a render must match the original's proportions, or the [displayAspect] it's drawn
+ * at.
  */
 private fun MediaImage.renderAtLeast(targetWidth: Int, displayAspect: Float?): String? {
     if (sourceWidth <= 0 || sourceHeight <= 0) return null
@@ -70,10 +66,7 @@ private fun MediaImage.renderAtLeast(targetWidth: Int, displayAspect: Float?): S
     }?.url
 }
 
-/**
- * How much of this render's width survives a crop to [displayAspect]: a 300x169 render only has
- * 169px to give a square slot.
- */
+/** Width surviving a crop to [displayAspect]: a 300x169 render gives a square slot only 169. */
 private fun ScaledSize.usableWidthFor(displayAspect: Float?): Int {
     if (displayAspect == null || height <= 0) return width
     return if (width.toFloat() / height > displayAspect) {
@@ -90,9 +83,7 @@ private fun ScaledSize.matchesRatio(ratio: Float): Boolean =
 private const val ASPECT_TOLERANCE = 0.05f
 
 /**
- * Widest render to look for. `large` is 1024 and every stock install has one; the bigger default
- * sizes only exist when the upload was big enough, so aiming past `large` risks matching nothing
- * and pulling the original instead. Costs a render sharper than `large` on the sites that do have
- * one.
+ * Widest render to look for. `large` is 1024 and every stock install has one; aiming past it risks
+ * matching nothing and pulling the original, at the cost of sharper renders where they exist.
  */
 private const val MAX_RENDER_WIDTH_PX = 1024
