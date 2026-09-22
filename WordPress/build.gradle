@@ -112,7 +112,7 @@ base {
     archivesName = "org.wordpress.android"
 }
 
-def uploadKeystore = new File(gradle.ext.decryptedSecretsDir, "upload.jks")
+def uploadKeystore = new File(gradle.ext.a8cSecretsDir, "upload.jks")
 def uploadCredentials = ["uploadStorePassword", "uploadKeyAlias", "uploadKeyPassword"]
 def uploadKeyAvailable = uploadKeystore.exists() &&
         uploadCredentials.every { gradle.ext.secretProperties.containsKey(it) }
@@ -345,8 +345,7 @@ tasks.matching { it.name.startsWith("package") && it.name.contains("Release") }.
         if (!uploadKeyAvailable) {
             throw new GradleException(
                 "The upload signing credentials are missing, so this release build would not be signed. " +
-                    "Please run `bundle exec fastlane run configure_apply` for the keystore " +
-                    "and `a8c-secrets decrypt` for its passwords."
+                    "Please run `a8c-secrets decrypt` to apply secrets."
             )
         }
     }
