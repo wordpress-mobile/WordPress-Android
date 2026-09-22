@@ -600,6 +600,7 @@ configurations.all {
 
 def decryptedGoogleServicesJson = new File(gradle.ext.decryptedSecretsDir, "google-services.json")
 def exampleGoogleServicesJson = file("google-services.json-example")
+def staleGoogleServicesJson = file("google-services.json")
 def googleServicesJson
 if (decryptedGoogleServicesJson.exists()) {
     googleServicesJson = decryptedGoogleServicesJson
@@ -611,6 +612,13 @@ if (decryptedGoogleServicesJson.exists()) {
     throw new GradleException("No google-services.json to read. " +
             "Run `bundle exec fastlane run configure_apply` to decrypt ${decryptedGoogleServicesJson}, " +
             "or `git restore WordPress/google-services.json-example` to restore the example fallback.")
+}
+
+if (staleGoogleServicesJson.exists()) {
+    def yellow = "\u001B[33m"
+    def reset = "\u001B[0m"
+    logger.warn("${yellow}\u26A0\uFE0F ${staleGoogleServicesJson} predates the move out of the checkout. " +
+            "It is no longer read and can be deleted.${reset}")
 }
 
 // The `afterEvaluate` is load-bearing: AGP registers the task inside its own `afterEvaluate`, so a
