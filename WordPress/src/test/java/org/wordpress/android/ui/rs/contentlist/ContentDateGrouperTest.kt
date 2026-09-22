@@ -37,6 +37,20 @@ class ContentDateGrouperTest {
     }
 
     @Test
+    fun `yesterday survives a DST fall-back day`() {
+        // On the evening a clock goes back the day is 25 hours long, so `now - 24h` lands back
+        // inside today and the Yesterday bucket can never match. US DST ends 2026-11-01.
+        withTimeZone("America/New_York") {
+            val evening = localMillis(year = 2026, month = Calendar.NOVEMBER, day = 1, hour = 23)
+            val dayBefore = localMillis(year = 2026, month = Calendar.OCTOBER, day = 31, hour = 12)
+
+            val group = ContentDateGrouper.groupOf(dayBefore, evening, locale)
+
+            assertThat(group).isEqualTo(ContentDateGroup.Yesterday)
+        }
+    }
+
+    @Test
     fun `two days ago falls through to this week`() {
         assertThat(groupOf(now - days(2))).isEqualTo(ContentDateGroup.ThisWeek)
     }
@@ -100,6 +114,23 @@ class ContentDateGrouperTest {
     private fun groupOf(millis: Long) = ContentDateGrouper.groupOf(millis, now, locale)
 
     private fun days(count: Long) = TimeUnit.DAYS.toMillis(count)
+
+    /** Runs [block] with [zoneId] as the default zone, which is what [ContentDateGrouper] reads. */
+    private fun withTimeZone(zoneId: String, block: () -> Unit) {
+        val original = TimeZone.getDefault()
+        TimeZone.setDefault(TimeZone.getTimeZone(zoneId))
+        try {
+            block()
+        } finally {
+            TimeZone.setDefault(original)
+        }
+    }
+
+    private fun localMillis(year: Int, month: Int, day: Int, hour: Int): Long =
+        Calendar.getInstance(locale).apply {
+            clear()
+            set(year, month, day, hour, 0, 0)
+        }.timeInMillis
 
     private fun utcMillis(year: Int, month: Int, day: Int): Long =
         Calendar.getInstance(TimeZone.getTimeZone("UTC"), locale).apply {

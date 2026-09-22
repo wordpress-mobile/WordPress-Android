@@ -55,7 +55,6 @@ sealed interface ContentDateGroup {
  */
 object ContentDateGrouper {
     private val WEEK_MILLIS = TimeUnit.DAYS.toMillis(7)
-    private val DAY_MILLIS = TimeUnit.DAYS.toMillis(1)
 
     fun groupOf(
         millis: Long,
@@ -64,7 +63,9 @@ object ContentDateGrouper {
     ): ContentDateGroup {
         val then = Calendar.getInstance().apply { timeInMillis = millis }
         val today = Calendar.getInstance().apply { timeInMillis = now }
-        val yesterday = Calendar.getInstance().apply { timeInMillis = now - DAY_MILLIS }
+        // Stepped back a calendar day rather than 24 hours: on a DST fall-back day the day is 25
+        // hours long, so `now - 24h` lands back inside today and the Yesterday bucket never matches.
+        val yesterday = (today.clone() as Calendar).apply { add(Calendar.DAY_OF_YEAR, -1) }
         val sameYear = then.get(Calendar.YEAR) == today.get(Calendar.YEAR)
         val sameMonth = sameYear && then.get(Calendar.MONTH) == today.get(Calendar.MONTH)
 
