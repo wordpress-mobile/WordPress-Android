@@ -52,6 +52,14 @@ internal object PostRsErrorUtils {
             errorCode is WpErrorCode
                 .NoAuthenticatedAppPassword
 
+    /**
+     * Returns true when the server refused a page number past
+     * the end of a list. A caller paging without a known total
+     * reads this as "no more pages", not as a failure.
+     */
+    fun isPastLastPage(e: Exception?): Boolean =
+        errorCode(e) is WpErrorCode.PostInvalidPageNumber
+
     private fun failureReason(e: Exception?): RequestExecutionErrorReason? =
         (unwrapException(e) as? WpApiException.RequestExecutionFailed)
             ?.reason

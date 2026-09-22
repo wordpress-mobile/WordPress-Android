@@ -910,7 +910,7 @@ class PostRsListViewModel @Inject constructor(
 
             // The tab is already refreshing. Its progress state is set above either way, and
             // the request is replayed by [startRefresh] once the running one finishes.
-            refreshJobs.deferIfRunning(tab) -> Unit
+            refreshJobs.deferIfRunning(tab, isUserRefresh) -> Unit
 
             else -> startRefresh(tab, collection, isUserRefresh)
         }
@@ -947,7 +947,7 @@ class PostRsListViewModel @Inject constructor(
             } catch (e: Exception) {
                 onRefreshFailed(tab, e, showSnackbar = isUserRefresh)
             }
-            if (refreshJobs.onFinished(tab)) refreshTab(tab)
+            refreshJobs.onFinished(tab)?.let { replayAsUser -> refreshTab(tab, replayAsUser) }
         }
         refreshJobs.onStarted(tab, job)
     }

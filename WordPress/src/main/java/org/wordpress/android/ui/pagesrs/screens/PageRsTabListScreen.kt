@@ -145,9 +145,10 @@ private fun PageListContent(
                 .first { it >= 0 }
         }
         if (index != null) listState.requestScrollToItem(index)
-        // Disarm either way. A refresh replaces the list with page 1 only, so a page that sorts
-        // beyond it never arrives here; leaving the request armed would fire it much later, when
-        // load-more finally paged the page in and the user was reading something else.
+        // Disarm either way. The published tab refreshes to its complete set, but the others
+        // refresh to page 1 only, so a page that sorts beyond it never arrives here; leaving the
+        // request armed would fire it much later, when load-more finally paged the page in and
+        // the user was reading something else.
         onRevealHandled()
     }
 

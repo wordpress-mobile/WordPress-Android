@@ -82,8 +82,8 @@ class PostRsRestClient @Inject constructor(
     }
 
     /**
-     * Fetches the given [mediaIds] in a single network call using the
-     * `include` parameter, returning a map of media ID to a URL sized
+     * Fetches the given [mediaIds] in one network call per page-sized
+     * batch, returning a map of media ID to a URL sized
      * for display. IDs already in the local cache are returned
      * immediately without a network round-trip.
      *
@@ -126,39 +126,44 @@ class PostRsRestClient @Inject constructor(
         if (uncached.isEmpty()) return result
 
         val client = wpApiClientProvider.getWpApiClient(site)
-        val response = client.request {
-            it.media().listWithEditContext(
-                MediaListParams(include = uncached)
-            )
-        }
-        when (response) {
-            is WpRequestResult.Success -> {
-                for (media in response.response.data) {
-                    val image = media.toMediaImage()
-                    mediaImageCache[mediaCacheKey(site, media.id)] =
-                        image
-                    result[media.id] = toDisplayUrl(
-                        accessibilityInfo, isWpComRest, image, widthPx,
-                        displayAspect
+        // `include` doesn't lift the page size (default 10), so a batch bigger than a page is
+        // sent in page-sized chunks. Without this the ids beyond the first page would come back
+        // unanswered and be recorded as unresolvable.
+        for (chunk in uncached.chunked(PER_PAGE.toInt())) {
+            val response = client.request {
+                it.media().listWithEditContext(
+                    MediaListParams(include = chunk, perPage = PER_PAGE)
+                )
+            }
+            when (response) {
+                is WpRequestResult.Success -> {
+                    for (media in response.response.data) {
+                        val image = media.toMediaImage()
+                        mediaImageCache[mediaCacheKey(site, media.id)] =
+                            image
+                        result[media.id] = toDisplayUrl(
+                            accessibilityInfo, isWpComRest, image, widthPx,
+                            displayAspect
+                        )
+                    }
+                }
+                else -> {
+                    val msg =
+                        (response as? WpRequestResult.WpError<*>)
+                            ?.errorMessage
+                    AppLog.w(
+                        AppLog.T.POSTS,
+                        "fetchMediaUrls failed: $msg"
                     )
                 }
-            }
-            else -> {
-                val msg =
-                    (response as? WpRequestResult.WpError<*>)
-                        ?.errorMessage
-                AppLog.w(
-                    AppLog.T.POSTS,
-                    "fetchMediaUrls failed: $msg"
-                )
             }
         }
         return result
     }
 
     /**
-     * Fetches display names for the given [userIds] in a single network
-     * call using the `include` parameter, returning a map of user ID to
+     * Fetches display names for the given [userIds] in one network call
+     * per page-sized batch, returning a map of user ID to
      * display name. IDs already in the local cache are returned
      * immediately without a network round-trip.
      */
@@ -175,26 +180,29 @@ class PostRsRestClient @Inject constructor(
         if (uncached.isEmpty()) return result
 
         val client = wpApiClientProvider.getWpApiClient(site)
-        val response = client.request {
-            it.users().listWithViewContext(
-                UserListParams(include = uncached)
-            )
-        }
-        when (response) {
-            is WpRequestResult.Success -> {
-                for (user in response.response.data) {
-                    userNameCache[user.id] = user.name
-                    result[user.id] = user.name
-                }
-            }
-            else -> {
-                val msg =
-                    (response as? WpRequestResult.WpError<*>)
-                        ?.errorMessage
-                AppLog.w(
-                    AppLog.T.POSTS,
-                    "fetchUserDisplayNames failed: $msg"
+        // Chunked for the same reason as fetchMediaUrls: `include` doesn't lift the page size.
+        for (chunk in uncached.chunked(PER_PAGE.toInt())) {
+            val response = client.request {
+                it.users().listWithViewContext(
+                    UserListParams(include = chunk, perPage = PER_PAGE)
                 )
+            }
+            when (response) {
+                is WpRequestResult.Success -> {
+                    for (user in response.response.data) {
+                        userNameCache[user.id] = user.name
+                        result[user.id] = user.name
+                    }
+                }
+                else -> {
+                    val msg =
+                        (response as? WpRequestResult.WpError<*>)
+                            ?.errorMessage
+                    AppLog.w(
+                        AppLog.T.POSTS,
+                        "fetchUserDisplayNames failed: $msg"
+                    )
+                }
             }
         }
         return result
