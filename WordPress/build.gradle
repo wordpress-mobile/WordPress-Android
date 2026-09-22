@@ -42,7 +42,7 @@ fladle {
             smartFlankGcsPath.set(pathForSmartFlankGcsPath(app))
         }
     }
-    serviceAccountCredentials = new File(System.getProperty("user.home"), ".configure/wordpress-android/secrets/firebase.secrets.json")
+    serviceAccountCredentials = new File(gradle.ext.a8cSecretsDir, "firebase.secrets.json")
     devices = [
             ["model": "Pixel2.arm", "version": "30"]
     ]

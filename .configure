@@ -7,11 +7,6 @@
       "file": "android/debug.keystore",
       "destination": "~/.configure/wordpress-android/secrets/debug.keystore",
       "encrypt": true
-    },
-    {
-      "file": "android/WPAndroid/firebase.secrets.json",
-      "destination": "~/.configure/wordpress-android/secrets/firebase.secrets.json",
-      "encrypt": true
     }
   ],
   "file_dependencies": []
