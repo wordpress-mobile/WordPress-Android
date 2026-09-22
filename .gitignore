@@ -70,9 +70,6 @@ WordPress/src/main/res/values/com_crashlytics_export_strings.xml
 # Windows Backup
 *.bak
 
-# Google services configuration
-google-services.json
-
 # Fastlane
 fastlane/.env*
 fastlane/report.xml
@@ -96,15 +93,23 @@ WordPress/*.jks
 
 local-builds.gradle
 
+# These are leftovers from when secrets were not managed by a8c-secrets.
+# Remove once enough time has passed since the tool's
+# introduction to trust no copies are left in dev machines (or
+# that leaks are harmless because rotations already occurred)
+# See also https://linear.app/a8c/issue/AINFRA-3220/remove-legacy-in-repo-secret-files-allowances-from-wordpress-android
+#
 # Currently, the configure tool stores the encrypted files under
 # .configure-files. Everything in that folder without a .enc extension should
 # be ignored.
 .configure-files/*
 !.configure-files/*.enc
-# This secret is not part of the repository anymore, but we keep it in the
+# These secrets are not part of the repository anymore, but we keep it in the
 # gitignore for retrocompatibility, so that it won't appear as a new file and
 # be accidentally checked in the repository.
 google-upload-credentials.json
+google-services.json
+# /end of pre-a8c-secrets rules
 
 # Kotlin
 .kotlin/
