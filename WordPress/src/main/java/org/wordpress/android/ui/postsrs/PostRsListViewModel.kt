@@ -35,6 +35,8 @@ import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.rs.RsCommentCountFetcher
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.rs.contentlist.HERO_IMAGE_HEIGHT_DP
+import org.wordpress.android.ui.rs.contentlist.THUMBNAIL_SIZE_DP
 import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.ui.rs.RsTabLoading
 import org.wordpress.android.ui.rs.RsTabRefreshJobs
@@ -1043,11 +1045,11 @@ class PostRsListViewModel @Inject constructor(
                     .firstOrNull { it.remotePostId == model.remotePostId }
                 model.copy(
                     actions = getMenuActions(effectiveTab, model.hasPassword, model.commentsOpen),
-                    featuredImageUrl = if (
+                    featuredImage = if (
                         model.featuredImageId != 0L &&
                         model.featuredImageId == existing?.featuredImageId
                     ) {
-                        existing.featuredImageUrl
+                        existing.featuredImage
                     } else {
                         null
                     },
@@ -1100,31 +1102,30 @@ class PostRsListViewModel @Inject constructor(
         posts: List<PostRsUiModel>
     ) {
         val unresolvedIds = posts
-            .filter { it.featuredImageId != 0L && it.featuredImageUrl == null }
+            .filter { it.featuredImageId != 0L && it.featuredImage == null }
             .map { it.featuredImageId }
         if (unresolvedIds.isEmpty()) return
 
         resolveImageJobs[tab]?.cancel()
         resolveImageJobs[tab] = viewModelScope.launch {
-            val urls = withContext(Dispatchers.IO) {
-                restClient.fetchMediaUrls(
-                    site, unresolvedIds, THUMBNAIL_SIZE_DP,
-                    THUMBNAIL_ASPECT
+            val images = withContext(Dispatchers.IO) {
+                restClient.fetchFeaturedImageUrls(
+                    site, unresolvedIds, THUMBNAIL_SIZE_DP, HERO_IMAGE_HEIGHT_DP
                 )
             }
             // Anything the lookup did not answer for is recorded so its row stops waiting. The
             // request is a batch, so one unreadable item leaves every id in it unanswered. Anything
             // it did answer for is evicted, so an id that failed once and then resolved is not
             // still reported as unresolvable on the next reload.
-            unresolvableImageIds.removeAll(urls.keys)
-            unresolvableImageIds.addAll(unresolvedIds.filterNot { urls.containsKey(it) })
+            unresolvableImageIds.removeAll(images.keys)
+            unresolvableImageIds.addAll(unresolvedIds.filterNot { images.containsKey(it) })
             updateTabUiState(tab) {
                 copy(
                     posts = this.posts.map { post ->
-                        val url = urls[post.featuredImageId]
+                        val image = images[post.featuredImageId]
                         when {
-                            url != null -> post.copy(
-                                featuredImageUrl = url,
+                            image != null -> post.copy(
+                                featuredImage = image,
                                 isFeaturedImageUnresolvable = false
                             )
                             post.featuredImageId in unresolvableImageIds ->
@@ -1458,7 +1459,6 @@ class PostRsListViewModel @Inject constructor(
         private const val PAGE_SIZE = 20
         private const val SEARCH_DEBOUNCE_MS = 250L
         internal const val MIN_SEARCH_QUERY_LENGTH = 3
-        private const val THUMBNAIL_SIZE_DP = 64
 
         /**
          * View counts are one request each, so a screenful is fetched a few at a time rather than
@@ -1466,8 +1466,6 @@ class PostRsListViewModel @Inject constructor(
          */
         private const val MAX_CONCURRENT_VIEW_FETCHES = 4
 
-        /** Rows show the thumbnail in a square slot, cropped to fill. */
-        private const val THUMBNAIL_ASPECT = 1f
         private val ALL_STATUSES = PostRsListTab.entries.flatMap { it.statuses }.distinct()
 
         private const val TRACKS_SELECTED_TAB = "selected_tab"

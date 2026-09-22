@@ -15,7 +15,10 @@ data class ContentListRowUiState(
     val title: String,
     val excerpt: String = "",
     val dateLabel: String,
+    /** Sized for the compact row's square thumbnail. */
     val imageUrl: String? = null,
+    /** The same image sized for the hero banner. */
+    val heroImageUrl: String? = null,
     val isImagePending: Boolean = false,
     val viewCount: Long? = null,
     val commentCount: Long? = null,

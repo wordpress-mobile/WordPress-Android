@@ -5,8 +5,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.ui.postsrs.AuthorInfo
-import org.wordpress.android.ui.reader.utils.ReaderUtils
-import org.wordpress.android.ui.reader.utils.SiteAccessibilityInfo
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.SiteUtils
 import rs.wordpress.api.kotlin.WpRequestResult
@@ -29,26 +27,10 @@ import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.math.abs
 
 data class AuthorPage(
     val authors: List<AuthorInfo>,
     val nextPageParams: UserListParams?,
-)
-
-/** One of the renders WordPress generated for an image at upload time. */
-private data class ScaledSize(
-    val width: Int,
-    val height: Int,
-    val url: String,
-)
-
-private data class MediaImage(
-    val sourceUrl: String,
-    val sourceWidth: Int,
-    val sourceHeight: Int,
-    /** Renders from `media_details.sizes`, ascending by width. Empty for non-images. */
-    val sizes: List<ScaledSize>,
 )
 
 @Singleton
@@ -74,6 +56,8 @@ class PostRsRestClient @Inject constructor(
     private val categoryNameCache = ConcurrentHashMap<Long, String>()
     private val tagNameCache = ConcurrentHashMap<Long, String>()
 
+    private val displayMetrics get() = context.resources.displayMetrics
+
     fun clearCaches() {
         mediaImageCache.clear()
         userNameCache.clear()
@@ -82,46 +66,62 @@ class PostRsRestClient @Inject constructor(
     }
 
     /**
-     * Fetches the given [mediaIds] in one network call per page-sized
-     * batch, returning a map of media ID to a URL sized
-     * for display. IDs already in the local cache are returned
-     * immediately without a network round-trip.
-     *
-     * @param widthDp target display width in dp. Pass 0 to use the
-     *     full screen width.
-     * @param displayAspect width/height the image will be displayed
-     *     at, when the caller crops to a fixed shape. Lets a render
-     *     WordPress cropped to that same shape be used - a square
-     *     thumbnail for a square slot, say. Leave null to accept only
-     *     renders that still match the original's proportions.
+     * Fetches the given [mediaIds] in one network call per page-sized batch, returning a map of
+     * media ID to a URL sized to fill the screen's width.
      */
     suspend fun fetchMediaUrls(
         site: SiteModel,
         mediaIds: List<Long>,
-        widthDp: Int = 0,
-        displayAspect: Float? = null,
     ): Map<Long, String> {
-        val widthPx = if (widthDp > 0) {
-            (widthDp * context.resources.displayMetrics.density)
-                .toInt()
-        } else {
-            context.resources.displayMetrics.widthPixels
-        }
-        val accessibilityInfo =
-            SiteUtils.getAccessibilityInfoFromSite(site)
+        val accessibilityInfo = SiteUtils.getAccessibilityInfoFromSite(site)
         val isWpComRest = SiteUtils.isAccessedViaWPComRest(site)
-        val result = mutableMapOf<Long, String>()
+        return fetchMediaImages(site, mediaIds).mapValues { (_, image) ->
+            image.toDisplayUrl(
+                accessibilityInfo, isWpComRest, displayMetrics.widthPixels, heightPx = 0
+            )
+        }
+    }
+
+    /**
+     * URLs for both shapes a list row can draw a featured image at - a [thumbnailDp] square and a
+     * hero banner [heroHeightDp] tall across the full width. Both come off the same media object,
+     * so the row can pick its shape at draw time without the second one costing a request.
+     */
+    suspend fun fetchFeaturedImageUrls(
+        site: SiteModel,
+        mediaIds: List<Long>,
+        thumbnailDp: Int,
+        heroHeightDp: Int,
+    ): Map<Long, FeaturedImageUrls> {
+        val accessibilityInfo = SiteUtils.getAccessibilityInfoFromSite(site)
+        val isWpComRest = SiteUtils.isAccessedViaWPComRest(site)
+        val thumbnailPx = (thumbnailDp * displayMetrics.density).toInt()
+        val heroHeightPx = (heroHeightDp * displayMetrics.density).toInt()
+        return fetchMediaImages(site, mediaIds).mapValues { (_, image) ->
+            FeaturedImageUrls(
+                thumbnail = image.toDisplayUrl(
+                    accessibilityInfo, isWpComRest, thumbnailPx, thumbnailPx
+                ),
+                hero = image.toDisplayUrl(
+                    accessibilityInfo, isWpComRest, displayMetrics.widthPixels, heroHeightPx
+                ),
+            )
+        }
+    }
+
+    /**
+     * Resolves [mediaIds] to their media objects, hitting the network only for uncached ones. IDs
+     * the server does not answer for are left out of the result; callers read that as unresolvable.
+     */
+    private suspend fun fetchMediaImages(
+        site: SiteModel,
+        mediaIds: List<Long>,
+    ): Map<Long, MediaImage> {
+        val result = mutableMapOf<Long, MediaImage>()
         val uncached = mutableListOf<Long>()
         for (id in mediaIds) {
             val cached = mediaImageCache[mediaCacheKey(site, id)]
-            if (cached != null) {
-                result[id] = toDisplayUrl(
-                    accessibilityInfo, isWpComRest, cached, widthPx,
-                    displayAspect
-                )
-            } else {
-                uncached.add(id)
-            }
+            if (cached != null) result[id] = cached else uncached.add(id)
         }
         if (uncached.isEmpty()) return result
 
@@ -139,12 +139,8 @@ class PostRsRestClient @Inject constructor(
                 is WpRequestResult.Success -> {
                     for (media in response.response.data) {
                         val image = media.toMediaImage()
-                        mediaImageCache[mediaCacheKey(site, media.id)] =
-                            image
-                        result[media.id] = toDisplayUrl(
-                            accessibilityInfo, isWpComRest, image, widthPx,
-                            displayAspect
-                        )
+                        mediaImageCache[mediaCacheKey(site, media.id)] = image
+                        result[media.id] = image
                     }
                 }
                 else -> {
@@ -153,7 +149,7 @@ class PostRsRestClient @Inject constructor(
                             ?.errorMessage
                     AppLog.w(
                         AppLog.T.POSTS,
-                        "fetchMediaUrls failed: $msg"
+                        "fetchMediaImages failed: $msg"
                     )
                 }
             }
@@ -180,7 +176,7 @@ class PostRsRestClient @Inject constructor(
         if (uncached.isEmpty()) return result
 
         val client = wpApiClientProvider.getWpApiClient(site)
-        // Chunked for the same reason as fetchMediaUrls: `include` doesn't lift the page size.
+        // Chunked for the same reason as fetchMediaImages: `include` doesn't lift the page size.
         for (chunk in uncached.chunked(PER_PAGE.toInt())) {
             val response = client.request {
                 it.users().listWithViewContext(
@@ -496,85 +492,6 @@ class PostRsRestClient @Inject constructor(
         )
     }
 
-    /**
-     * The smallest render at least [targetWidth] wide that we can use
-     * without losing content. Themes register hard-cropped sizes
-     * (WordPress crops `thumbnail` by default), and handing one of
-     * those to a screen that crops again would quietly cut the image
-     * down twice - so a render only qualifies if it still matches the
-     * original's proportions, or if it was cropped to the very shape
-     * the caller is about to display it at ([displayAspect]).
-     */
-    private fun MediaImage.renderAtLeast(
-        targetWidth: Int,
-        displayAspect: Float?,
-    ): String? {
-        if (sourceWidth <= 0 || sourceHeight <= 0) return null
-        val sourceRatio = sourceWidth.toFloat() / sourceHeight
-        return sizes.firstOrNull {
-            it.usableWidthFor(displayAspect) >= targetWidth && (
-                it.matchesRatio(sourceRatio) ||
-                    (displayAspect != null && it.matchesRatio(displayAspect))
-                )
-        }?.url
-    }
-
-    /**
-     * How much of this render's width survives being cropped to
-     * [displayAspect]. Cropping to a shape narrower than the render
-     * is limited by its height, so a wide render carries far less
-     * detail into a square slot than its own width suggests - a
-     * 300x169 thumbnail of a 16:9 photo only has 169px to give.
-     */
-    private fun ScaledSize.usableWidthFor(displayAspect: Float?): Int {
-        if (displayAspect == null || height <= 0) return width
-        return if (width.toFloat() / height > displayAspect) {
-            (height * displayAspect).toInt()
-        } else {
-            width
-        }
-    }
-
-    private fun ScaledSize.matchesRatio(ratio: Float): Boolean =
-        height > 0 &&
-            abs(width.toFloat() / height - ratio) <=
-            ratio * ASPECT_TOLERANCE
-
-    /**
-     * Picks a URL to display [image] at [widthPx]. Photon-capable
-     * sites resize the original server-side. Everywhere else - self
-     * hosted sites in particular - we ask for the smallest render
-     * WordPress already generated that's at least as wide as we need,
-     * so a 64dp thumbnail doesn't pull down the full-size upload.
-     * Never picks a render narrower than the target, so images can't
-     * end up pixelated.
-     */
-    private fun toDisplayUrl(
-        accessibilityInfo: SiteAccessibilityInfo,
-        isWpComRest: Boolean,
-        image: MediaImage,
-        widthPx: Int,
-        displayAspect: Float?,
-    ): String {
-        val url = if (accessibilityInfo.isPhotonCapable) {
-            image.sourceUrl
-        } else {
-            image.renderAtLeast(widthPx, displayAspect)
-                ?: image.sourceUrl
-        }
-        // Only WP.com-hosted media honors ?w=, and only Photon needs
-        // the rewrite. Self-hosted ignores the param, and rewriting
-        // the URL there would drop any signed or CDN query string it
-        // carries, breaking the image outright.
-        return if (isWpComRest) {
-            ReaderUtils.getResizedImageUrl(
-                url, widthPx, 0, accessibilityInfo
-            )
-        } else {
-            url
-        }
-    }
-
     private fun termCache(
         endpointType: TermEndpointType,
     ): ConcurrentHashMap<Long, String> =
@@ -591,13 +508,6 @@ class PostRsRestClient @Inject constructor(
         private const val MEDIA_CACHE_MAX_ENTRIES = 500
         private const val MEDIA_CACHE_CAPACITY = 64
         private const val MEDIA_CACHE_LOAD_FACTOR = 0.75f
-
-        /**
-         * How far a render's aspect ratio may drift from the original
-         * before we treat it as cropped rather than scaled. Generous
-         * enough for rounding, far tighter than any real crop.
-         */
-        private const val ASPECT_TOLERANCE = 0.05f
 
         private val SLUG_TO_FORMAT = mapOf(
             "standard" to PostFormat.Standard,

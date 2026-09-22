@@ -3,6 +3,7 @@ package org.wordpress.android.ui.pagesrs
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
+import org.wordpress.android.ui.postsrs.data.FeaturedImageUrls
 import org.wordpress.android.ui.postsrs.toLabel
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListRowUiState
@@ -126,7 +127,8 @@ internal data class PageRsUiModel(
     val authorId: Long = 0L,
     val authorDisplayName: String? = null,
     val featuredImageId: Long = 0L,
-    val featuredImageUrl: String? = null,
+    /** The featured image sized for each shape a row can draw it at. */
+    val featuredImage: FeaturedImageUrls? = null,
     /** True when the media lookup answered without a URL, so the row should stop waiting for one. */
     val isFeaturedImageUnresolvable: Boolean = false,
     /** All-time views, or null when stats are unavailable or not fetched yet. */
@@ -265,9 +267,10 @@ internal fun PageRsListItem.toContentListRowUiState(
         title = if (isSiteEditor) siteEditorTitle else page.title,
         excerpt = if (isSiteEditor) siteEditorSubtitle else page.excerpt,
         dateLabel = page.date,
-        imageUrl = page.featuredImageUrl,
+        imageUrl = page.featuredImage?.thumbnail,
+        heroImageUrl = page.featuredImage?.hero,
         isImagePending = page.featuredImageId != 0L &&
-            page.featuredImageUrl == null &&
+            page.featuredImage == null &&
             !page.isFeaturedImageUnresolvable,
         viewCount = page.viewCount,
         areMetricsPending = page.areMetricsPending,
