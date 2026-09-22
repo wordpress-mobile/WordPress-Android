@@ -97,13 +97,14 @@ class PostRsRestClient @Inject constructor(
         val isWpComRest = SiteUtils.isAccessedViaWPComRest(site)
         val thumbnailPx = (thumbnailDp * displayMetrics.density).toInt()
         val heroHeightPx = (heroHeightDp * displayMetrics.density).toInt()
+        val heroWidthPx = displayMetrics.widthPixels.coerceAtMost(HERO_MAX_WIDTH_PX)
         return fetchMediaImages(site, mediaIds).mapValues { (_, image) ->
             FeaturedImageUrls(
                 thumbnail = image.toDisplayUrl(
                     accessibilityInfo, isWpComRest, thumbnailPx, thumbnailPx
                 ),
                 hero = image.toDisplayUrl(
-                    accessibilityInfo, isWpComRest, displayMetrics.widthPixels, heroHeightPx
+                    accessibilityInfo, isWpComRest, heroWidthPx, heroHeightPx
                 ),
             )
         }
@@ -508,6 +509,12 @@ class PostRsRestClient @Inject constructor(
         private const val MEDIA_CACHE_MAX_ENTRIES = 500
         private const val MEDIA_CACHE_CAPACITY = 64
         private const val MEDIA_CACHE_LOAD_FACTOR = 0.75f
+
+        /**
+         * WordPress's widest default render is `large` at 1024px, so asking a self-hosted site for
+         * more than that skips every registered size and pulls the full-size upload instead.
+         */
+        private const val HERO_MAX_WIDTH_PX = 1024
 
         private val SLUG_TO_FORMAT = mapOf(
             "standard" to PostFormat.Standard,
