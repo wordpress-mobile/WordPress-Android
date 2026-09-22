@@ -11,6 +11,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.timeout
@@ -26,7 +27,9 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.datasource.PostViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
+import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.rs.data.RsSiteRestClient
 import org.wordpress.android.ui.rs.data.WpServiceProvider
@@ -680,8 +683,52 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         }
     }
 
+    @Test
+    fun `refreshTab triggers init when collection not initialized`() {
+        val viewModel = createViewModel()
+
+        viewModel.refreshTab(PostRsListTab.PUBLISHED, isUserRefresh = true)
+
+        // No collection exists, so refreshTab falls back to initTab rather than returning. Without
+        // that fallback the tab keeps whatever state the failed init left and a Retry tap is a
+        // no-op, so the loading state is the observable evidence init was re-attempted.
+        val state = viewModel.tabStates.value[PostRsListTab.PUBLISHED]
+        assertThat(state).isNotNull
+        assertThat(state?.isLoading).isTrue
+        assertThat(state?.error).isNull()
+    }
+
+    @Test
+    fun `a neighbouring tab's visible rows do not strand the published tab's fetches`() = test {
+        // The pager composes the next tab mid-drag and its visible-row stream reports against that
+        // tab. Held as one set, those ids would replace the published tab's, and the retry below
+        // would then ask for posts that were never on screen.
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(true)
+        whenever(accountStore.accessToken).thenReturn("token")
+        whenever(commentCountFetcher.fetchCommentCounts(any(), any())).thenReturn(emptyMap())
+        whenever(statsDataSource.fetchPostViews(any(), any()))
+            .thenReturn(PostViewsDataResult.Error(StatsErrorType.NOT_AVAILABLE))
+        site.origin = SiteModel.ORIGIN_WPCOM_REST
+        site.hasCapabilityViewStats = true
+        val viewModel = createViewModel()
+
+        viewModel.onRowsVisible(PostRsListTab.PUBLISHED, listOf(PUBLISHED_ROW_ID))
+        viewModel.onRowsVisible(PostRsListTab.DRAFTS, listOf(DRAFT_ROW_ID))
+        advanceUntilIdle()
+
+        viewModel.onDensityToggled(PostRsListTab.PUBLISHED)
+        advanceUntilIdle()
+
+        verifyBlocking(statsDataSource, timeout(FETCH_TIMEOUT_MS)) {
+            fetchPostViews(any(), eq(PUBLISHED_ROW_ID))
+        }
+        verify(statsDataSource, never()).fetchPostViews(any(), eq(DRAFT_ROW_ID))
+    }
+
     // endregion
 }
 
 private const val UPLOADED_POST_ID = 4242L
+private const val PUBLISHED_ROW_ID = 1L
+private const val DRAFT_ROW_ID = 99L
 private const val FETCH_TIMEOUT_MS = 2_000L
