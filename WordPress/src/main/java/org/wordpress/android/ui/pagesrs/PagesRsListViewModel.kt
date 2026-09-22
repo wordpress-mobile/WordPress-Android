@@ -70,6 +70,7 @@ import rs.wordpress.cache.kotlin.hasMorePages
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostStatus
 import uniffi.wp_api.PostUpdateParams
+import uniffi.wp_api.WpApiParamPostsSearchColumn
 import uniffi.wp_mobile.FetchException
 import uniffi.wp_mobile.PostListFilter
 import uniffi.wp_mobile.PostService
@@ -594,7 +595,7 @@ internal class PagesRsListViewModel @Inject constructor(
 
             // The tab is already refreshing. Its progress state is set above either way, and
             // the request is replayed by [startRefresh] once the running one finishes.
-            refreshJobs.deferIfRunning(tab) -> Unit
+            refreshJobs.deferIfRunning(tab, isUserRefresh) -> Unit
 
             else -> startRefresh(tab, collection, isUserRefresh)
         }
@@ -649,7 +650,7 @@ internal class PagesRsListViewModel @Inject constructor(
                 // so only release the guard while it is still this collection's to release.
                 if (collections[tab] === collection) fillingTabs.remove(tab)
             }
-            if (refreshJobs.onFinished(tab)) refreshTab(tab)
+            refreshJobs.onFinished(tab)?.let { replayAsUser -> refreshTab(tab, replayAsUser) }
         }
         refreshJobs.onStarted(tab, job)
     }
@@ -775,14 +776,24 @@ internal class PagesRsListViewModel @Inject constructor(
                 withContext(Dispatchers.IO) { collection.loadNextPage() }
             } catch (e: CancellationException) {
                 throw e
+            } catch (e: FetchException) {
+                if (PostRsErrorUtils.isPastLastPage(e)) {
+                    // The server never said how many pages there are, so the list info kept
+                    // offering another; the refusal is the answer, not a failure to report.
+                    updateTabUiState(tab) { copy(isLoadingMore = false, canLoadMore = false) }
+                } else {
+                    onLoadMoreFailed(tab, e)
+                }
             } catch (e: Exception) {
-                AppLog.e(AppLog.T.PAGES, "Failed to load more for tab $tab", e)
-                updateTabUiState(tab) { copy(isLoadingMore = false) }
-                _snackbarMessages.trySend(
-                    SnackbarMessage(friendlyErrorMessage(e))
-                )
+                onLoadMoreFailed(tab, e)
             }
         }
+    }
+
+    private fun onLoadMoreFailed(tab: PageRsListTab, e: Exception) {
+        AppLog.e(AppLog.T.PAGES, "Failed to load more for tab $tab", e)
+        updateTabUiState(tab) { copy(isLoadingMore = false) }
+        _snackbarMessages.trySend(SnackbarMessage(friendlyErrorMessage(e)))
     }
 
     /**
@@ -982,6 +993,11 @@ internal class PagesRsListViewModel @Inject constructor(
      * Creates the parent picker's observable collection (published + private pages, ordered by
      * title). Mirrors [createCollection]'s cancellation-safe cleanup so a collection created
      * after the job was cancelled is closed instead of leaking.
+     *
+     * The filter searches titles only. That is what a parent picker should match, and it also
+     * keeps the picker off the published tab's stored list: rs keys a list by its filter alone,
+     * not its page size, and without this the two would share one list - each refresh resetting
+     * the other's paging, and the differing page sizes making rs delete the list outright.
      */
     private suspend fun createParentPickerCollection(
         site: SiteModel,
@@ -996,6 +1012,7 @@ internal class PagesRsListViewModel @Inject constructor(
                     order = PageRsListTab.PUBLISHED.order,
                     orderby = PageRsListTab.PUBLISHED.orderBy,
                     search = query.ifBlank { null },
+                    searchColumns = listOf(WpApiParamPostsSearchColumn.POST_TITLE),
                     author = emptyList()
                 )
                 service.posts().getObservablePostMetadataCollectionWithEditContext(
@@ -1469,13 +1486,15 @@ internal class PagesRsListViewModel @Inject constructor(
             // pageForPosts values onto the virtual rows.
             val currentSite = selectedSiteRepository.getSelectedSite() ?: site
             val showSiteEditorHomepage = siteEditorMVPFeatureConfig.isEnabled() && isBlockBasedTheme
+            // Site-wide, so decided once rather than once per row of a list that can be long.
+            val isBlazeEligibleSite = currentSite != null && blazeFeatureUtils.isSiteBlazeEligible(currentSite)
             val rows = buildRows(
                 pages = uiModels,
                 applyHierarchy = applyHierarchy,
                 pageOnFront = currentSite?.pageOnFront ?: 0L,
                 pageForPosts = currentSite?.pageForPosts ?: 0L,
                 showSiteEditorHomepage = showSiteEditorHomepage
-            ).map { row -> row.withMenuActions(currentSite) }
+            ).map { row -> row.withMenuActions(currentSite, isBlazeEligibleSite) }
             updateTabUiState(tab) {
                 copy(
                     pages = rows,
@@ -1760,7 +1779,10 @@ internal class PagesRsListViewModel @Inject constructor(
         }
     }
 
-    private fun PageRsListItem.withMenuActions(site: SiteModel?): PageRsListItem {
+    private fun PageRsListItem.withMenuActions(
+        site: SiteModel?,
+        isBlazeEligibleSite: Boolean
+    ): PageRsListItem {
         val pageOnFront = site?.pageOnFront ?: 0L
         val pageForPosts = site?.pageForPosts ?: 0L
         // WP.com capabilities and showOnFront are synced reliably, so the homepage actions
@@ -1785,7 +1807,7 @@ internal class PagesRsListViewModel @Inject constructor(
                 isHomepage = pageOnFront != 0L && page.remotePageId == pageOnFront,
                 isPostsPage = pageForPosts != 0L && page.remotePageId == pageForPosts,
                 hasPassword = page.hasPassword,
-                isBlazeEligibleSite = site != null && blazeFeatureUtils.isSiteBlazeEligible(site),
+                isBlazeEligibleSite = isBlazeEligibleSite,
                 canManageHomepage = canManageHomepage
             )
         }
