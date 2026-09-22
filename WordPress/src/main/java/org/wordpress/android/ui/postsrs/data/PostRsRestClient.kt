@@ -2,6 +2,7 @@ package org.wordpress.android.ui.postsrs.data
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.delay
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.ui.postsrs.AuthorInfo
@@ -71,7 +72,7 @@ class PostRsRestClient @Inject constructor(
      * A cached id is answered without a network round-trip.
      */
     suspend fun fetchMediaUrl(site: SiteModel, mediaId: Long): String? =
-        fetchMediaImages(site, listOf(mediaId)).resolved[mediaId]?.toDisplayUrl(
+        fetchMediaImages(site, listOf(mediaId))[mediaId]?.toDisplayUrl(
             SiteUtils.getAccessibilityInfoFromSite(site),
             SiteUtils.isAccessedViaWPComRest(site),
             displayMetrics.widthPixels,
@@ -88,69 +89,78 @@ class PostRsRestClient @Inject constructor(
         mediaIds: List<Long>,
         thumbnailDp: Int,
         heroHeightDp: Int,
-    ): MediaLookup<FeaturedImageUrls> {
+    ): Map<Long, FeaturedImageUrls> {
         val accessibilityInfo = SiteUtils.getAccessibilityInfoFromSite(site)
         val isWpComRest = SiteUtils.isAccessedViaWPComRest(site)
         val thumbnailPx = DisplayUtils.dpToPx(context, thumbnailDp)
         val heroHeightPx = DisplayUtils.dpToPx(context, heroHeightDp)
         val heroWidthPx = displayMetrics.widthPixels
-        val lookup = fetchMediaImages(site, mediaIds)
-        return MediaLookup(
-            absentIds = lookup.absentIds,
-            resolved = lookup.resolved.mapValues { (_, image) ->
-                FeaturedImageUrls(
-                    thumbnail = image.toDisplayUrl(
-                        accessibilityInfo, isWpComRest, thumbnailPx, thumbnailPx
-                    ),
-                    hero = image.toDisplayUrl(
-                        accessibilityInfo, isWpComRest, heroWidthPx, heroHeightPx
-                    ),
-                )
-            }
-        )
+        return fetchMediaImages(site, mediaIds).mapValues { (_, image) ->
+            FeaturedImageUrls(
+                thumbnail = image.toDisplayUrl(
+                    accessibilityInfo, isWpComRest, thumbnailPx, thumbnailPx
+                ),
+                hero = image.toDisplayUrl(
+                    accessibilityInfo, isWpComRest, heroWidthPx, heroHeightPx
+                ),
+            )
+        }
     }
 
-    /** Resolves [mediaIds] to their media objects, hitting the network only for uncached ones. */
+    /**
+     * Resolves [mediaIds] to their media objects, hitting the network only for uncached ones. Ids
+     * left out of the result could not be resolved and the caller should stop waiting on them.
+     */
     private suspend fun fetchMediaImages(
         site: SiteModel,
         mediaIds: List<Long>,
-    ): MediaLookup<MediaImage> {
+    ): Map<Long, MediaImage> {
         val resolved = mutableMapOf<Long, MediaImage>()
-        val absent = mutableSetOf<Long>()
         val uncached = mutableListOf<Long>()
         for (id in mediaIds) {
             val cached = mediaImageCache[mediaCacheKey(site, id)]
             if (cached != null) resolved[id] = cached else uncached.add(id)
         }
-        if (uncached.isEmpty()) return MediaLookup(resolved, absent)
+        if (uncached.isEmpty()) return resolved
 
         val client = wpApiClientProvider.getWpApiClient(site)
         // `include` doesn't lift the page size (default 10), so a batch bigger than a page is
         // sent in page-sized chunks. Without this the ids beyond the first page would come back
         // unanswered and be recorded as unresolvable.
         for (chunk in uncached.chunked(PER_PAGE.toInt())) {
-            val response = client.request {
-                it.media().listWithEditContext(
-                    MediaListParams(include = chunk, perPage = PER_PAGE)
-                )
-            }
-            when (response) {
-                is WpRequestResult.Success -> {
+            var attempts = 0
+            while (true) {
+                val response = client.request {
+                    it.media().listWithEditContext(
+                        MediaListParams(include = chunk, perPage = PER_PAGE)
+                    )
+                }
+                attempts++
+                if (response is WpRequestResult.Success) {
                     for (media in response.response.data) {
                         val image = media.toMediaImage()
                         mediaImageCache[mediaCacheKey(site, media.id)] = image
                         resolved[media.id] = image
                     }
-                    // The rest of a chunk that came back is genuinely absent - deleted media, or
-                    // an id that is not an image - rather than unasked.
-                    absent += chunk.filterNot(resolved::containsKey)
+                    break
                 }
                 // The wordpress-rs client already logged the status, method and URL through
                 // wpRsErrorLogger; this only names which call it was.
-                else -> AppLog.w(AppLog.T.POSTS, "fetchMediaImages failed")
+                AppLog.w(AppLog.T.POSTS, "fetchMediaImages failed")
+                // One retry, because a 5xx or a dropped connection is usually a blip and losing
+                // the chunk costs every image in it until the list reloads. Not for a rate
+                // limiter, which is already asking us to send less.
+                if (attempts >= MEDIA_ATTEMPTS || response.isRateLimited()) break
+                delay(MEDIA_RETRY_DELAY_MS)
             }
         }
-        return MediaLookup(resolved, absent)
+        return resolved
+    }
+
+    private fun WpRequestResult<*>.isRateLimited(): Boolean = when (this) {
+        is WpRequestResult.UnknownError -> statusCode == HTTP_TOO_MANY_REQUESTS
+        is WpRequestResult.InvalidHttpStatusCode -> statusCode == HTTP_TOO_MANY_REQUESTS
+        else -> false
     }
 
     /**
@@ -504,6 +514,10 @@ class PostRsRestClient @Inject constructor(
         private const val MEDIA_CACHE_MAX_ENTRIES = 500
         private const val MEDIA_CACHE_CAPACITY = 64
         private const val MEDIA_CACHE_LOAD_FACTOR = 0.75f
+
+        private const val MEDIA_ATTEMPTS = 2
+        private const val MEDIA_RETRY_DELAY_MS = 500L
+        private val HTTP_TOO_MANY_REQUESTS = 429u
 
         private val SLUG_TO_FORMAT = mapOf(
             "standard" to PostFormat.Standard,

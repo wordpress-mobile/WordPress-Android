@@ -49,7 +49,6 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.PostRsErrorUtils
 import org.wordpress.android.ui.postsrs.SnackbarMessage
 import org.wordpress.android.ui.postsrs.data.FeaturedImageUrls
-import org.wordpress.android.ui.postsrs.data.MediaLookup
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -1576,8 +1575,11 @@ internal class PagesRsListViewModel @Inject constructor(
                     site, unresolvedIds, THUMBNAIL_SIZE_DP, HERO_IMAGE_HEIGHT_DP
                 )
             }
-            unresolvableImageIds.removeAll(images.resolved.keys)
-            unresolvableImageIds.addAll(images.absentIds)
+            // Ids the lookup could not resolve stop their row waiting; ones that did resolve are
+            // no longer reported as unresolvable, so an id that failed once and later came back
+            // is not still written off.
+            unresolvableImageIds.removeAll(images.keys)
+            unresolvableImageIds.addAll(unresolvedIds.filterNot(images::containsKey))
             updateTabUiState(tab) {
                 copy(pages = this.pages.map { item -> item.withResolvedFeaturedImage(images) })
             }
@@ -1829,9 +1831,9 @@ internal class PagesRsListViewModel @Inject constructor(
     }
 
     private fun PageRsListItem.withResolvedFeaturedImage(
-        images: MediaLookup<FeaturedImageUrls>
+        images: Map<Long, FeaturedImageUrls>
     ): PageRsListItem {
-        val image = images.resolved[page.featuredImageId]
+        val image = images[page.featuredImageId]
         val updated = when {
             image != null -> page.copy(
                 featuredImage = image,

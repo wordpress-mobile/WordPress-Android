@@ -1113,12 +1113,15 @@ class PostRsListViewModel @Inject constructor(
                     site, unresolvedIds, THUMBNAIL_SIZE_DP, HERO_IMAGE_HEIGHT_DP
                 )
             }
-            unresolvableImageIds.removeAll(images.resolved.keys)
-            unresolvableImageIds.addAll(images.absentIds)
+            // Ids the lookup could not resolve stop their row waiting; ones that did resolve are
+            // no longer reported as unresolvable, so an id that failed once and later came back
+            // is not still written off.
+            unresolvableImageIds.removeAll(images.keys)
+            unresolvableImageIds.addAll(unresolvedIds.filterNot(images::containsKey))
             updateTabUiState(tab) {
                 copy(
                     posts = this.posts.map { post ->
-                        val image = images.resolved[post.featuredImageId]
+                        val image = images[post.featuredImageId]
                         when {
                             image != null -> post.copy(
                                 featuredImage = image,

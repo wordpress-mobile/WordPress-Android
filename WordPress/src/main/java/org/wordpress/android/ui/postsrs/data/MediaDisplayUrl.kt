@@ -4,16 +4,6 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.SiteAccessibilityInfo
 import kotlin.math.abs
 
-/**
- * What a media lookup found: [resolved] is what came back, [absentIds] the ids the server answered
- * without. Ids in neither were never successfully asked for, so they are retried rather than
- * written off.
- */
-data class MediaLookup<T>(
-    val resolved: Map<Long, T> = emptyMap(),
-    val absentIds: Set<Long> = emptySet(),
-)
-
 /** A featured image sized for each of the shapes a list row can draw it at. */
 data class FeaturedImageUrls(
     val thumbnail: String,
