@@ -1,3 +1,4 @@
+import com.google.gms.googleservices.GoogleServicesTask
 import io.sentry.android.gradle.extensions.InstrumentationFeature
 import io.sentry.android.gradle.tasks.SentryCliExecTask
 
@@ -601,6 +602,7 @@ configurations.all {
 def decryptedGoogleServicesJson = new File(gradle.ext.decryptedSecretsDir, "google-services.json")
 def exampleGoogleServicesJson = file("google-services.json-example")
 def staleGoogleServicesJson = file("google-services.json")
+
 def googleServicesJson
 if (decryptedGoogleServicesJson.exists()) {
     googleServicesJson = decryptedGoogleServicesJson
@@ -621,10 +623,11 @@ if (staleGoogleServicesJson.exists()) {
             "It is no longer read and can be deleted.${reset}")
 }
 
-// The `afterEvaluate` is load-bearing: AGP registers the task inside its own `afterEvaluate`, so a
-// rule added while this script is evaluated runs first and the plugin overwrites the property.
+// The `afterEvaluate` is load-bearing. The google-services plugin registers the task from an
+// `onVariants` callback that AGP fires during its own `afterEvaluate`, so a rule added while this
+// script is evaluated is registered first, runs first, and the plugin then overwrites the property.
 afterEvaluate {
-    tasks.withType(com.google.gms.googleservices.GoogleServicesTask).configureEach {
+    tasks.withType(GoogleServicesTask).configureEach {
         googleServicesJsonFiles.set([googleServicesJson])
     }
 }
