@@ -218,6 +218,9 @@ fun UnifiedCommentDetailsScreen(
                     showReplyEditor = false
                     actions.onSendReply(replyText.text)
                 },
+                // Clearing the field is what deletes the draft: the host's onPause save sees
+                // blank text and removes the stored entry.
+                onDeleteDraft = { onReplyTextChange(TextFieldValue("")) },
                 onDismiss = { showReplyEditor = false }
             )
         } else {
