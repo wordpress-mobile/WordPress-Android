@@ -16,7 +16,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.CommentStatus
@@ -97,15 +96,9 @@ fun CommentDetailOverflowMenu(
 }
 
 @Composable
-private fun MenuItem(
-    @StringRes labelResId: Int,
-    onClick: () -> Unit,
-    color: Color = Color.Unspecified,
-    icon: (@Composable () -> Unit)? = null
-) {
+private fun MenuItem(@StringRes labelResId: Int, onClick: () -> Unit) {
     DropdownMenuItem(
-        text = { Text(text = stringResource(labelResId), color = color) },
-        onClick = onClick,
-        leadingIcon = icon
+        text = { Text(stringResource(labelResId)) },
+        onClick = onClick
     )
 }

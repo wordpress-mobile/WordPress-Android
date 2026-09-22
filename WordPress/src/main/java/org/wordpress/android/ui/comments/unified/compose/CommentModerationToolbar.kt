@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -118,45 +117,32 @@ fun CommentModerationToolbar(
                     }
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(BUTTON_GAP)) {
-                    SpamAndTrashButtons(
-                        status = status,
-                        onSpamClick = onSpamClick,
-                        onTrashClick = onTrashClick,
+                    OutlinedToolbarButton(
+                        labelResId = if (status == SPAM) {
+                            R.string.mnu_comment_unspam
+                        } else {
+                            R.string.mnu_comment_spam
+                        },
+                        icon = Icons.Filled.Block,
+                        onClick = onSpamClick,
+                        isDestructive = true,
+                        modifier = Modifier.weight(1f),
                         isEnabled = isEnabled,
-                        pendingAction = pendingAction
+                        isBusy = pendingAction == CommentModerationAction.SPAM
+                    )
+                    OutlinedToolbarButton(
+                        labelResId = R.string.mnu_comment_trash,
+                        icon = Icons.Filled.Delete,
+                        onClick = onTrashClick,
+                        isDestructive = true,
+                        modifier = Modifier.weight(1f),
+                        isEnabled = isEnabled,
+                        isBusy = pendingAction == CommentModerationAction.TRASH
                     )
                 }
             }
         }
     }
-}
-
-@Composable
-private fun RowScope.SpamAndTrashButtons(
-    status: CommentStatus,
-    onSpamClick: () -> Unit,
-    onTrashClick: () -> Unit,
-    isEnabled: Boolean,
-    pendingAction: CommentModerationAction?
-) {
-    OutlinedToolbarButton(
-        labelResId = if (status == SPAM) R.string.mnu_comment_unspam else R.string.mnu_comment_spam,
-        icon = Icons.Filled.Block,
-        onClick = onSpamClick,
-        isDestructive = true,
-        modifier = Modifier.weight(1f),
-        isEnabled = isEnabled,
-        isBusy = pendingAction == CommentModerationAction.SPAM
-    )
-    OutlinedToolbarButton(
-        labelResId = R.string.mnu_comment_trash,
-        icon = Icons.Filled.Delete,
-        onClick = onTrashClick,
-        isDestructive = true,
-        modifier = Modifier.weight(1f),
-        isEnabled = isEnabled,
-        isBusy = pendingAction == CommentModerationAction.TRASH
-    )
 }
 
 @Composable

@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,7 +58,7 @@ fun CommentReactionRow(
                 labelResId = if (isLiked) R.string.mnu_comment_liked else R.string.like,
                 icon = if (isLiked) Icons.Filled.Star else Icons.Filled.StarOutline,
                 onClick = onLikeClick,
-                tint = if (isLiked) MaterialTheme.colorScheme.secondary else Color.Unspecified,
+                isHighlighted = isLiked,
                 modifier = Modifier.padding(start = ACTION_GAP)
             )
         }
@@ -72,10 +71,13 @@ private fun ReactionAction(
     icon: ImageVector,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    tint: Color = Color.Unspecified
+    isHighlighted: Boolean = false
 ) {
-    val contentColor = tint.takeIf { it != Color.Unspecified }
-        ?: MaterialTheme.colorScheme.onSurfaceVariant
+    val contentColor = if (isHighlighted) {
+        MaterialTheme.colorScheme.secondary
+    } else {
+        MaterialTheme.colorScheme.onSurfaceVariant
+    }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
