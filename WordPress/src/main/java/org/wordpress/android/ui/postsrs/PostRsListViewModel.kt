@@ -1104,6 +1104,7 @@ class PostRsListViewModel @Inject constructor(
         val unresolvedIds = posts
             .filter { it.featuredImageId != 0L && it.featuredImage == null }
             .map { it.featuredImageId }
+            .distinct()
         if (unresolvedIds.isEmpty()) return
 
         resolveImageJobs[tab]?.cancel()
