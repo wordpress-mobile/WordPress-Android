@@ -145,7 +145,13 @@ fun UnifiedCommentDetailsScreen(
 
     if (showTrashConfirm) {
         ConfirmDialog(
-            messageRes = R.string.dlg_confirm_trash_comments,
+            // A comment with replies warns that they are left behind; an unknown count falls back
+            // to the generic wording rather than claiming something it cannot know.
+            messageRes = if ((uiState.replyCount ?: 0) > 0) {
+                R.string.comment_trash_has_replies
+            } else {
+                R.string.dlg_confirm_trash_comments
+            },
             confirmRes = R.string.dlg_confirm_action_trash,
             onConfirm = {
                 showTrashConfirm = false
@@ -207,15 +213,16 @@ private fun CommentDetailsBottomBar(
             canModerate = uiState.canModerate,
             onApproveClick = actions.onModerateClick,
             onSpamClick = actions.onSpamClick,
-            // Trashing is committed server-side immediately, so confirm it first.
-            onTrashClick = onConfirmTrash,
+            // Trashing is committed server-side immediately, so it normally confirms first - but
+            // a comment with no replies loses nothing recoverable, so that case goes straight
+            // through, as on iOS. An unknown count still confirms.
+            onTrashClick = if (uiState.replyCount == 0) actions.onTrashClick else onConfirmTrash,
             // Restore is the inverse of however the comment got here: un-spam for a spam comment,
             // untrash for a trashed one. Both ViewModel actions toggle back to approved, but only
             // from their own status.
-            onRestoreClick = {
-                if (uiState.status == SPAM) actions.onSpamClick() else actions.onTrashClick()
-            },
-            onDeletePermanentlyClick = onConfirmDelete
+            onRestoreClick = actions.onRestoreClick,
+            onDeletePermanentlyClick = onConfirmDelete,
+            pendingAction = uiState.pendingAction
         )
         // The redesign replies in a sheet, reached from the Reply action under the comment, so it
         // has no pinned reply field.
@@ -328,7 +335,7 @@ private fun RedesignedCommentDetailsContent(
             )
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                CommentStatusPill(status = uiState.status)
+                CommentStatusPill(status = uiState.status, customLabel = uiState.customStatusLabel)
                 Spacer(modifier = Modifier.weight(1f))
                 CommentDetailOverflowMenu(
                     status = uiState.status,
@@ -518,6 +525,7 @@ private fun UnifiedCommentDetailsScreenPreview() {
                 onLikeClick = {},
                 onEditClick = {},
                 onTrashClick = {},
+                onRestoreClick = {},
                 onDeletePermanentlyClick = {},
                 onCopyLinkClick = {},
                 onShareLinkClick = {},

@@ -4992,6 +4992,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="content_list_density_show_comfortable">Show expanded list</string>
     <string name="experimental_content_redesign">Posts, Pages and Comments redesign</string>
     <string name="experimental_content_redesign_description">Show the redesigned posts, pages and comments lists — cards, filter chips and a condensed view — plus the redesigned comment detail.</string>
+    <string name="comment_trash_has_replies">This comment has replies. They won’t be moved to the trash with it.</string>
     <string name="comment_reply_unsent">You have an unsent reply.</string>
     <string name="comment_reply_keep_editing">Keep Editing</string>
     <string name="comment_reply_delete_draft">Delete Draft</string>

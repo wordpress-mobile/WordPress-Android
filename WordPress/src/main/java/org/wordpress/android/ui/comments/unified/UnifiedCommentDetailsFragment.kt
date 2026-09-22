@@ -172,6 +172,7 @@ class UnifiedCommentDetailsFragment : Fragment() {
             onLikeClick = { viewModel.onLikeClicked() },
             onEditClick = { viewModel.onEditClicked() },
             onTrashClick = { viewModel.onTrashClicked() },
+            onRestoreClick = { viewModel.onRestoreClicked() },
             onDeletePermanentlyClick = { viewModel.onDeletePermanentlyClicked() },
             onCopyLinkClick = { copyLink(viewModel.uiState.value?.commentUrl.orEmpty()) },
             onShareLinkClick = { shareLink(viewModel.uiState.value?.commentUrl.orEmpty()) },

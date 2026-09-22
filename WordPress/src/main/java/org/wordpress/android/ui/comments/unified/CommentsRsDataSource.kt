@@ -65,7 +65,13 @@ class CommentsRsDataSource @Inject constructor(
         val contentHtml: String,
         val url: String,
         val postId: Long,
-        val status: CommentStatus
+        val status: CommentStatus,
+        /**
+         * The status exactly as the server sent it. [status] collapses anything the app does not
+         * model onto [CommentStatus.ALL], which would otherwise be shown to the user as the word
+         * "All"; this keeps the real value so a custom status can be displayed verbatim.
+         */
+        val rawStatus: String = ""
     )
 
     /** Result of a write request, carrying the server error message when one is available. */
@@ -312,6 +318,59 @@ class CommentsRsDataSource @Inject constructor(
         it.comments().create(CommentCreateParams(post = postId, parent = parentCommentId, content = content))
     }
 
+    /** Result of a restore, carrying the status the comment actually came back as. */
+    sealed interface RsRestoreResult {
+        data class Success(val status: CommentStatus) : RsRestoreResult
+        data class Error(val message: String?) : RsRestoreResult
+    }
+
+    /**
+     * Lifts a comment out of spam or the bin, returning the status it came back as.
+     *
+     * Deliberately not a plain `status=approve` write: core restores a comment to whatever it was
+     * before it was spammed or binned, so forcing "approve" would silently publish a comment that
+     * was only ever pending. Sending `unspam`/`untrash` lets core decide, and fires the hooks a
+     * bare status write skips.
+     *
+     * The action is not idempotent - untrashing something already out of the bin would downgrade
+     * it - so the current status is probed first and a comment that has already moved on is
+     * reported rather than written to.
+     */
+    suspend fun restore(site: SiteModel, commentId: Long): RsRestoreResult =
+        safe(errorValue = RsRestoreResult.Error(null)) {
+            val current = getComment(site, commentId)
+                ?: return@safe RsRestoreResult.Error(null)
+            val restoreValue = when (current.status) {
+                CommentStatus.SPAM -> UNSPAM_STATUS
+                CommentStatus.TRASH -> UNTRASH_STATUS
+                // Someone else already restored it; report where it landed and write nothing.
+                else -> return@safe RsRestoreResult.Success(current.status)
+            }
+            val params = CommentUpdateParams(status = RsCommentStatus.Custom(restoreValue))
+            when (val result = wpApiClientProvider.getWpApiClient(site)
+                .request { it.comments().update(commentId, params) }) {
+                is WpRequestResult.Success ->
+                    RsRestoreResult.Success(result.response.data.status.toAppCommentStatus())
+                is WpRequestResult.WpError -> RsRestoreResult.Error(result.errorMessage)
+                else -> RsRestoreResult.Error(null)
+            }
+        }
+
+    /**
+     * How many replies a comment has, or null when the count could not be determined. Read from
+     * the `X-WP-Total` header rather than the body, so only one row is transferred.
+     */
+    suspend fun fetchReplyCount(site: SiteModel, commentId: Long): Int? = safe(errorValue = null) {
+        val params = CommentListParams(
+            perPage = REPLY_COUNT_PAGE_SIZE,
+            parent = listOf(commentId),
+            status = WpApiParamCommentsStatus.Any
+        )
+        val result = wpApiClientProvider.getWpApiClient(site)
+            .request { it.comments().listWithViewContext(params) }
+        (result as? WpRequestResult.Success)?.response?.headerMap?.wpTotal()?.toInt()
+    }
+
     private suspend fun write(site: SiteModel, request: suspend (UniffiWpApiClient) -> Any): RsResult =
         safe(errorValue = RsResult.Error(null)) {
             val client = wpApiClientProvider.getWpApiClient(site)
@@ -334,6 +393,9 @@ class CommentsRsDataSource @Inject constructor(
 
     companion object {
         internal const val COMMENTS_PAGE_SIZE = 30u
+        private const val REPLY_COUNT_PAGE_SIZE = 1u
+        private const val UNSPAM_STATUS = "unspam"
+        private const val UNTRASH_STATUS = "untrash"
         private const val MAX_TITLES_PER_REQUEST = 100
     }
 }
@@ -352,7 +414,8 @@ internal fun CommentWithViewContext.toRsComment() = CommentsRsDataSource.RsComme
     contentHtml = content.rendered,
     url = link,
     postId = post,
-    status = status.toAppCommentStatus()
+    status = status.toAppCommentStatus(),
+    rawStatus = status.rawValue()
 )
 
 internal fun CommentWithViewContext.pickAvatarUrl(): String =
@@ -364,6 +427,15 @@ internal fun CommentStatus.toRsCommentStatus(): RsCommentStatus = when (this) {
     CommentStatus.SPAM -> RsCommentStatus.Spam
     CommentStatus.TRASH -> RsCommentStatus.Trash
     else -> RsCommentStatus.Approved
+}
+
+/** The wire value of a status, including one the app does not model. */
+internal fun RsCommentStatus.rawValue(): String = when (this) {
+    is RsCommentStatus.Approved -> "approved"
+    is RsCommentStatus.Hold -> "hold"
+    is RsCommentStatus.Spam -> "spam"
+    is RsCommentStatus.Trash -> "trash"
+    is RsCommentStatus.Custom -> v1
 }
 
 internal fun RsCommentStatus.toAppCommentStatus(): CommentStatus = when (this) {

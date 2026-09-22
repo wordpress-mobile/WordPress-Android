@@ -179,7 +179,10 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                 val parent = rs?.parentId
                     ?.takeIf { it > 0 }
                     ?.let { commentsRsDataSource.getComment(site, it) }
-                CommentLoadResult(rs, local, fallbackTitle, likedFallback, parent)
+                // Drives whether trashing has to warn about replies being left behind. Best
+                // effort: a failed count leaves it null and the dialog falls back to generic copy.
+                val replies = rs?.let { commentsRsDataSource.fetchReplyCount(site, remoteCommentId) }
+                CommentLoadResult(rs, local, fallbackTitle, likedFallback, parent, replies)
             }
             when {
                 loaded.rsComment != null -> {
@@ -188,7 +191,8 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                         loaded.cached,
                         loaded.fallbackPostTitle,
                         loaded.fallbackIsLiked,
-                        loaded.parent
+                        loaded.parent,
+                        loaded.replyCount
                     )
                 }
                 isRefresh -> showSnackbar(R.string.error_load_comment)
@@ -203,8 +207,9 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     }
 
     fun onApproveClicked() {
-        val newStatus = if (currentStatus() == APPROVED) UNAPPROVED else APPROVED
-        moderateComment(newStatus, closeOnSuccess = false)
+        val approving = currentStatus() != APPROVED
+        val action = if (approving) CommentModerationAction.APPROVE else CommentModerationAction.UNAPPROVE
+        moderateComment(if (approving) APPROVED else UNAPPROVED, action)
     }
 
     // Spamming and trashing leave the comment on screen: it still exists, the status updates in
@@ -212,17 +217,18 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     // hunting for the comment again in another filter. Only a permanent delete closes the screen,
     // because there is then nothing left to show.
     fun onSpamClicked() {
-        val newStatus = if (currentStatus() == SPAM) APPROVED else SPAM
-        moderateComment(newStatus, closeOnSuccess = false)
+        if (currentStatus() == SPAM) restoreComment() else moderateComment(SPAM, CommentModerationAction.SPAM)
     }
 
     fun onTrashClicked() {
-        val newStatus = if (currentStatus() == TRASH) APPROVED else TRASH
-        moderateComment(newStatus, closeOnSuccess = false)
+        if (currentStatus() == TRASH) restoreComment() else moderateComment(TRASH, CommentModerationAction.TRASH)
     }
 
+    /** Un-spams or un-bins, letting the server decide the status it returns to. */
+    fun onRestoreClicked() = restoreComment()
+
     fun onDeletePermanentlyClicked() {
-        moderateComment(DELETED, closeOnSuccess = true)
+        moderateComment(DELETED, CommentModerationAction.DELETE, closeOnSuccess = true)
     }
 
     @Suppress("ReturnCount")
@@ -345,24 +351,70 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     }
 
     @Suppress("ReturnCount")
-    private fun moderateComment(newStatus: CommentStatus, closeOnSuccess: Boolean) {
-        // The action footer stays visible while the comment loads, so ignore taps until then:
-        // before the load completes the ui state holds a default status and the toggle handlers
-        // would compute (and apply server-side) the wrong target status.
-        if (loadedComment == null) return
-        // Moderation controls are disabled without the capability; guard the action too so a stale
-        // recomposition can't fire a request the server would only reject with a 403.
-        if (!canModerate) return
-        if (isOffline()) return
-        // Guard against a second moderation while one is in flight (fast double-tap): the target
-        // status is derived from the optimistic ui state, so racing requests could compute (and
-        // apply server-side) conflicting statuses and leave the UI and server out of sync.
-        if (isModerationInProgress) return
+    /**
+     * Restores a spammed or binned comment. The resulting status comes from the server rather
+     * than being assumed: core returns the comment to whatever it was before, so this must not
+     * optimistically paint "approved".
+     */
+    private fun restoreComment() {
+        if (!canStartModeration()) return
+        val previousStatus = currentStatus()
+        isModerationInProgress = true
+        setPendingAction(CommentModerationAction.RESTORE)
+        launch {
+            try {
+                when (val result = withContext(bgDispatcher) {
+                    commentsRsDataSource.restore(site, remoteCommentId)
+                }) {
+                    is CommentsRsDataSource.RsRestoreResult.Error -> {
+                        showError(result.message, R.string.error_moderate_comment)
+                    }
+                    is CommentsRsDataSource.RsRestoreResult.Success -> {
+                        _uiState.value = _uiState.value?.copy(status = result.status)
+                        withContext(bgDispatcher) { mirrorStatusToCache(result.status) }
+                        moderationStat(previousStatus, result.status)?.let { trackCommentAction(it) }
+                        _commentChanged.value = Event(Unit)
+                        if (noteId != null) _commentModerated.value = Event(result.status)
+                    }
+                }
+            } finally {
+                isModerationInProgress = false
+                setPendingAction(null)
+            }
+        }
+    }
+
+    /**
+     * Whether a moderation request may start now.
+     *
+     * - The action bar stays visible while the comment loads, so taps before it arrives are
+     *   ignored: the ui state still holds a default status and the toggles would compute (and
+     *   apply server-side) the wrong target.
+     * - Moderation controls are hidden or disabled without the capability, but a stale
+     *   recomposition could still fire one, which the server would only reject with a 403.
+     * - One at a time: the target status is derived from the current ui state, so racing requests
+     *   could apply conflicting statuses and leave the UI and server out of sync.
+     */
+    private fun canStartModeration(): Boolean {
+        val hasModeratableComment = loadedComment != null && canModerate
+        return hasModeratableComment && !isOffline() && !isModerationInProgress
+    }
+
+    private fun setPendingAction(action: CommentModerationAction?) {
+        _uiState.value = _uiState.value?.copy(pendingAction = action)
+    }
+
+    private fun moderateComment(
+        newStatus: CommentStatus,
+        action: CommentModerationAction,
+        closeOnSuccess: Boolean = false
+    ) {
+        if (!canStartModeration()) return
         val previousStatus = currentStatus()
         isModerationInProgress = true
         launch {
             try {
-                _uiState.value = _uiState.value?.copy(status = newStatus)
+                _uiState.value = _uiState.value?.copy(status = newStatus, pendingAction = action)
                 val result = withContext(bgDispatcher) { moderate(newStatus) }
                 if (result is RsResult.Error) {
                     _uiState.value = _uiState.value?.copy(status = previousStatus)
@@ -379,6 +431,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                 }
             } finally {
                 isModerationInProgress = false
+                setPendingAction(null)
             }
         }
     }
@@ -406,6 +459,13 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
             refreshNote()
         }
         return result
+    }
+
+    /** Mirrors a server-decided status into the FluxC cache, as [moderate] does for its own writes. */
+    private suspend fun mirrorStatusToCache(newStatus: CommentStatus) {
+        commentsStore.moderateCommentLocally(site, remoteCommentId, newStatus)
+        localCommentCacheUpdateHandler.requestCommentsUpdate()
+        refreshNote()
     }
 
     /**
@@ -474,7 +534,8 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         cached: CommentEntity?,
         fallbackPostTitle: String,
         fallbackIsLiked: Boolean,
-        parent: RsComment?
+        parent: RsComment?,
+        replyCount: Int?
     ) = CommentDetailsUiState(
         showProgress = false,
         contentVisible = true,
@@ -488,8 +549,10 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         status = status,
         isLiked = cached?.iLike ?: fallbackIsLiked,
         canModerate = canModerate,
+        customStatusLabel = if (status == CommentStatus.ALL) rawStatus else "",
         parentAuthorName = parent?.authorName.orEmpty(),
-        parentSnippet = parent?.contentHtml?.let { HtmlUtils.fastStripHtml(it).trim() }.orEmpty()
+        parentSnippet = parent?.contentHtml?.let { HtmlUtils.fastStripHtml(it).trim() }.orEmpty(),
+        replyCount = replyCount
     )
 
     private data class CommentLoadResult(
@@ -497,7 +560,8 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         val cached: CommentEntity?,
         val fallbackPostTitle: String,
         val fallbackIsLiked: Boolean,
-        val parent: RsComment? = null
+        val parent: RsComment? = null,
+        val replyCount: Int? = null
     )
 
     data class CommentDetailsUiState(
@@ -519,7 +583,19 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
          * context, so a failure drops it rather than surfacing an error.
          */
         val parentAuthorName: String = "",
-        val parentSnippet: String = ""
+        val parentSnippet: String = "",
+        /**
+         * The server's own word for a status the app does not model, shown verbatim rather than
+         * collapsed onto "All". Empty for every status the app does model.
+         */
+        val customStatusLabel: String = "",
+        /** The action currently in flight, so its own button can show progress. */
+        val pendingAction: CommentModerationAction? = null,
+        /**
+         * How many replies this comment has; null while unknown. Drives whether trashing needs to
+         * warn that replies are left behind.
+         */
+        val replyCount: Int? = null
     )
 }
 

@@ -38,7 +38,8 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 @Composable
 fun CommentStatusPill(
     status: CommentStatus,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    customLabel: String = ""
 ) {
     val tint = status.pillTint()
     Row(
@@ -54,7 +55,9 @@ fun CommentStatusPill(
             modifier = Modifier.size(PILL_ICON_SIZE)
         )
         Text(
-            text = stringResource(status.pillLabelResId()),
+            // A status the app does not model arrives as CommentStatus.ALL, whose own label is
+            // the word "All" - meaningless here. Show the server's own word for it instead.
+            text = customLabel.ifBlank { stringResource(status.pillLabelResId()) },
             style = MaterialTheme.typography.labelLarge,
             fontWeight = FontWeight.SemiBold,
             color = tint,
