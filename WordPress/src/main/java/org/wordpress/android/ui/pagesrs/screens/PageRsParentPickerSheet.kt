@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -37,6 +36,8 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.distinctUntilChanged
 import org.wordpress.android.R
 import org.wordpress.android.ui.pagesrs.PageRsParentPickerState
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.LOAD_MORE_THRESHOLD
+import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
 
 /**
  * Bottom sheet for choosing a page's parent: a "Top level" entry followed by the eligible
@@ -135,21 +136,7 @@ private fun CandidateList(
                 onClick = { onParentSelected(candidate.id) }
             )
         }
-        if (state.isLoadingMore) {
-            item(key = "loading_more") {
-                Box(
-                    modifier = Modifier
-                        .fillParentMaxWidth()
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        strokeWidth = 2.dp
-                    )
-                }
-            }
-        }
+        if (state.isLoadingMore) contentListLoadingMoreItem()
     }
 }
 
@@ -199,7 +186,6 @@ private fun ParentCandidateRow(
     )
 }
 
-private const val LOAD_MORE_THRESHOLD = 5
 
 // Fraction of the screen height the sheet occupies, kept fixed so it doesn't resize while searching.
 private const val SHEET_HEIGHT_FRACTION = 0.75f
