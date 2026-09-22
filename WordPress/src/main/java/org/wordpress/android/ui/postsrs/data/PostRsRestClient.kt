@@ -9,6 +9,7 @@ import org.wordpress.android.ui.postsrs.AuthorInfo
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.SiteUtils
+import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.AnyTermWithViewContext
 import uniffi.wp_api.MediaDetailsPayload
@@ -128,33 +129,47 @@ class PostRsRestClient @Inject constructor(
         // sent in page-sized chunks. Without this the ids beyond the first page would come back
         // unanswered and be recorded as unresolvable.
         for (chunk in uncached.chunked(PER_PAGE.toInt())) {
-            var attempts = 0
-            while (true) {
-                val response = client.request {
-                    it.media().listWithEditContext(
-                        MediaListParams(include = chunk, perPage = PER_PAGE)
-                    )
-                }
-                attempts++
-                if (response is WpRequestResult.Success) {
-                    for (media in response.response.data) {
-                        val image = media.toMediaImage()
-                        mediaImageCache[mediaCacheKey(site, media.id)] = image
-                        resolved[media.id] = image
-                    }
-                    break
-                }
-                // The wordpress-rs client already logged the status, method and URL through
-                // wpRsErrorLogger; this only names which call it was.
-                AppLog.w(AppLog.T.POSTS, "fetchMediaImages failed")
-                // One retry, because a 5xx or a dropped connection is usually a blip and losing
-                // the chunk costs every image in it until the list reloads. Not for a rate
-                // limiter, which is already asking us to send less.
-                if (attempts >= MEDIA_ATTEMPTS || response.isRateLimited()) break
-                delay(MEDIA_RETRY_DELAY_MS)
-            }
+            resolved += fetchMediaChunk(site, client, chunk)
         }
         return resolved
+    }
+
+    /**
+     * One chunk's media, or empty if the request could not be answered.
+     *
+     * Retried once: a 5xx or a dropped connection is usually a blip, and losing the chunk costs
+     * every image in it until the list reloads. Not retried for a rate limiter, which is already
+     * asking us to send less.
+     */
+    private suspend fun fetchMediaChunk(
+        site: SiteModel,
+        client: WpApiClient,
+        chunk: List<Long>,
+    ): Map<Long, MediaImage> {
+        var attemptsLeft = MEDIA_ATTEMPTS
+        while (attemptsLeft > 0) {
+            val response = client.request {
+                it.media().listWithEditContext(
+                    MediaListParams(include = chunk, perPage = PER_PAGE)
+                )
+            }
+            // Mapped here rather than returned raw: the mediaDetails handle belongs to the
+            // response and has to be read while it is still alive.
+            if (response is WpRequestResult.Success) {
+                return response.response.data.associate { media ->
+                    val image = media.toMediaImage()
+                    mediaImageCache[mediaCacheKey(site, media.id)] = image
+                    media.id to image
+                }
+            }
+            // The wordpress-rs client already logged the status, method and URL through
+            // wpRsErrorLogger; this only names which call it was.
+            AppLog.w(AppLog.T.POSTS, "fetchMediaImages failed")
+            // A rate limiter is already asking us to send less; anything else is worth one retry.
+            attemptsLeft = if (response.isRateLimited()) 0 else attemptsLeft - 1
+            if (attemptsLeft > 0) delay(MEDIA_RETRY_DELAY_MS)
+        }
+        return emptyMap()
     }
 
     private fun WpRequestResult<*>.isRateLimited(): Boolean = when (this) {
@@ -517,7 +532,7 @@ class PostRsRestClient @Inject constructor(
 
         private const val MEDIA_ATTEMPTS = 2
         private const val MEDIA_RETRY_DELAY_MS = 500L
-        private val HTTP_TOO_MANY_REQUESTS = 429u
+        private const val HTTP_TOO_MANY_REQUESTS = 429u
 
         private val SLUG_TO_FORMAT = mapOf(
             "standard" to PostFormat.Standard,
