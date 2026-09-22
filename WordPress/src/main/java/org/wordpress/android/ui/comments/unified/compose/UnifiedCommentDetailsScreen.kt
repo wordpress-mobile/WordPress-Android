@@ -122,57 +122,20 @@ fun UnifiedCommentDetailsScreen(
                         }
                     }
                 }
-                if (isRedesignEnabled) {
-                    CommentModerationToolbar(
-                        status = uiState.status,
-                        canModerate = uiState.canModerate,
-                        onApproveClick = actions.onModerateClick,
-                        onSpamClick = actions.onSpamClick,
-                        // Trashing is committed server-side immediately, so confirm it first.
-                        onTrashClick = { showTrashConfirm = true },
-                        // Restore is the inverse of however the comment got here: un-spam for a
-                        // spam comment, untrash for a trashed one. Both ViewModel actions toggle
-                        // back to approved, but only from their own status.
-                        onRestoreClick = {
-                            if (uiState.status == SPAM) actions.onSpamClick() else actions.onTrashClick()
-                        },
-                        onDeletePermanentlyClick = { showDeleteConfirm = true }
-                    )
-                } else {
-                    CommentActionFooter(
-                        status = uiState.status,
-                        isLiked = uiState.isLiked,
-                        showLikeButton = showLikeButton,
-                        showCommentUrlActions = uiState.commentUrl.isNotEmpty(),
-                        canModerate = uiState.canModerate,
-                        onModerateClick = actions.onModerateClick,
-                        onSpamClick = actions.onSpamClick,
-                        onLikeClick = actions.onLikeClick,
-                        onEditClick = actions.onEditClick,
-                        // Trashing is committed server-side immediately (no undo affordance like
-                        // the legacy list flow), so confirm it first; restoring needs none.
-                        onTrashClick = {
-                            if (uiState.status == TRASH) actions.onTrashClick() else showTrashConfirm = true
-                        },
-                        onCopyLinkClick = actions.onCopyLinkClick,
-                        onShareLinkClick = actions.onShareLinkClick,
-                        onDeletePermanentlyClick = { showDeleteConfirm = true }
-                    )
-                }
-                // The redesign replies on a separate screen, reached from the Reply action under
-                // the comment, so it has no pinned reply field.
-                if (!isRedesignEnabled) {
-                    CommentReplyBox(
-                        replyText = replyText,
-                        onReplyTextChange = onReplyTextChange,
-                        suggestions = suggestions,
-                        hint = replyHint,
-                        isReplyInProgress = uiState.isReplyInProgress,
-                        focusOnLaunch = focusReplyFieldOnLaunch,
-                        onSendClick = { actions.onSendReply(replyText.text) },
-                        onExpandClick = { showReplyEditor = true }
-                    )
-                }
+                CommentDetailsBottomBar(
+                    uiState = uiState,
+                    replyText = replyText,
+                    onReplyTextChange = onReplyTextChange,
+                    suggestions = suggestions,
+                    replyHint = replyHint,
+                    showLikeButton = showLikeButton,
+                    focusReplyFieldOnLaunch = focusReplyFieldOnLaunch,
+                    actions = actions,
+                    isRedesignEnabled = isRedesignEnabled,
+                    onConfirmTrash = { showTrashConfirm = true },
+                    onConfirmDelete = { showDeleteConfirm = true },
+                    onExpandReply = { showReplyEditor = true }
+                )
             }
             if (uiState.showProgress) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
@@ -205,38 +168,136 @@ fun UnifiedCommentDetailsScreen(
     }
 
     if (showReplyEditor) {
-        // The redesign replies in a bottom sheet, which keeps the comment being answered visible
-        // behind it; the pre-redesign box expands to the full-screen editor as before.
-        if (isRedesignEnabled) {
-            CommentReplySheet(
-                replyText = replyText,
-                onReplyTextChange = onReplyTextChange,
-                suggestions = suggestions,
-                hint = replyHint,
-                isReplyInProgress = uiState.isReplyInProgress,
-                onSendClick = {
-                    showReplyEditor = false
-                    actions.onSendReply(replyText.text)
-                },
-                // Clearing the field is what deletes the draft: the host's onPause save sees
-                // blank text and removes the stored entry.
-                onDeleteDraft = { onReplyTextChange(TextFieldValue("")) },
-                onDismiss = { showReplyEditor = false }
-            )
-        } else {
-            FullScreenReplyDialog(
-                replyText = replyText,
-                onReplyTextChange = onReplyTextChange,
-                suggestions = suggestions,
-                hint = replyHint,
-                isReplyInProgress = uiState.isReplyInProgress,
-                onSendClick = {
-                    showReplyEditor = false
-                    actions.onSendReply(replyText.text)
-                },
-                onCollapseClick = { showReplyEditor = false }
-            )
-        }
+        CommentReplyEditor(
+            replyText = replyText,
+            onReplyTextChange = onReplyTextChange,
+            suggestions = suggestions,
+            replyHint = replyHint,
+            isReplyInProgress = uiState.isReplyInProgress,
+            isRedesignEnabled = isRedesignEnabled,
+            onSendReply = actions.onSendReply,
+            onClose = { showReplyEditor = false }
+        )
+    }
+}
+
+/**
+ * Whatever sits below the comment: the moderation toolbar or the pre-redesign action footer, plus
+ * the pinned reply field the redesign does without.
+ */
+@Composable
+@Suppress("LongParameterList")
+private fun CommentDetailsBottomBar(
+    uiState: CommentDetailsUiState,
+    replyText: TextFieldValue,
+    onReplyTextChange: (TextFieldValue) -> Unit,
+    suggestions: List<Suggestion>,
+    replyHint: String,
+    showLikeButton: Boolean,
+    focusReplyFieldOnLaunch: Boolean,
+    actions: CommentDetailsActions,
+    isRedesignEnabled: Boolean,
+    onConfirmTrash: () -> Unit,
+    onConfirmDelete: () -> Unit,
+    onExpandReply: () -> Unit
+) {
+    if (isRedesignEnabled) {
+        CommentModerationToolbar(
+            status = uiState.status,
+            canModerate = uiState.canModerate,
+            onApproveClick = actions.onModerateClick,
+            onSpamClick = actions.onSpamClick,
+            // Trashing is committed server-side immediately, so confirm it first.
+            onTrashClick = onConfirmTrash,
+            // Restore is the inverse of however the comment got here: un-spam for a spam comment,
+            // untrash for a trashed one. Both ViewModel actions toggle back to approved, but only
+            // from their own status.
+            onRestoreClick = {
+                if (uiState.status == SPAM) actions.onSpamClick() else actions.onTrashClick()
+            },
+            onDeletePermanentlyClick = onConfirmDelete
+        )
+        // The redesign replies in a sheet, reached from the Reply action under the comment, so it
+        // has no pinned reply field.
+        return
+    }
+
+    CommentActionFooter(
+        status = uiState.status,
+        isLiked = uiState.isLiked,
+        showLikeButton = showLikeButton,
+        showCommentUrlActions = uiState.commentUrl.isNotEmpty(),
+        canModerate = uiState.canModerate,
+        onModerateClick = actions.onModerateClick,
+        onSpamClick = actions.onSpamClick,
+        onLikeClick = actions.onLikeClick,
+        onEditClick = actions.onEditClick,
+        // Trashing is committed server-side immediately (no undo affordance like the legacy list
+        // flow), so confirm it first; restoring needs none.
+        onTrashClick = {
+            if (uiState.status == TRASH) actions.onTrashClick() else onConfirmTrash()
+        },
+        onCopyLinkClick = actions.onCopyLinkClick,
+        onShareLinkClick = actions.onShareLinkClick,
+        onDeletePermanentlyClick = onConfirmDelete
+    )
+    CommentReplyBox(
+        replyText = replyText,
+        onReplyTextChange = onReplyTextChange,
+        suggestions = suggestions,
+        hint = replyHint,
+        isReplyInProgress = uiState.isReplyInProgress,
+        focusOnLaunch = focusReplyFieldOnLaunch,
+        onSendClick = { actions.onSendReply(replyText.text) },
+        onExpandClick = onExpandReply
+    )
+}
+
+/**
+ * The redesign replies in a bottom sheet, which keeps the comment being answered visible behind
+ * it; the pre-redesign box expands to the full-screen editor as before.
+ */
+@Composable
+@Suppress("LongParameterList")
+private fun CommentReplyEditor(
+    replyText: TextFieldValue,
+    onReplyTextChange: (TextFieldValue) -> Unit,
+    suggestions: List<Suggestion>,
+    replyHint: String,
+    isReplyInProgress: Boolean,
+    isRedesignEnabled: Boolean,
+    onSendReply: (String) -> Unit,
+    onClose: () -> Unit
+) {
+    if (isRedesignEnabled) {
+        CommentReplySheet(
+            replyText = replyText,
+            onReplyTextChange = onReplyTextChange,
+            suggestions = suggestions,
+            hint = replyHint,
+            isReplyInProgress = isReplyInProgress,
+            onSendClick = {
+                onClose()
+                onSendReply(replyText.text)
+            },
+            // Clearing the field is what deletes the draft: the host's onPause save sees blank
+            // text and removes the stored entry.
+            onDeleteDraft = { onReplyTextChange(TextFieldValue("")) },
+            onDismiss = onClose
+        )
+    } else {
+        FullScreenReplyDialog(
+            replyText = replyText,
+            onReplyTextChange = onReplyTextChange,
+            suggestions = suggestions,
+            hint = replyHint,
+            isReplyInProgress = isReplyInProgress,
+            onSendClick = {
+                onClose()
+                onSendReply(replyText.text)
+            },
+            onCollapseClick = onClose
+        )
     }
 }
 
