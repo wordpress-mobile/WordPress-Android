@@ -36,6 +36,7 @@ import org.wordpress.android.ui.rs.RsSnackbarMessage
 import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.RsViewCounts
 import org.wordpress.android.ui.rs.RsVisibleRows
+import org.wordpress.android.ui.rs.contentlist.toContentItemUiModel
 import org.wordpress.android.ui.rs.data.RsSiteRestClient
 import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -669,7 +670,7 @@ class PostRsListViewModel @Inject constructor(
     private fun findPost(remotePostId: Long): PostRsUiModel? {
         for (state in _tabStates.value.values) {
             for (post in state.items) {
-                if (post.remotePostId == remotePostId) return post
+                if (post.remoteId == remotePostId) return post
             }
         }
         return null
@@ -1043,14 +1044,14 @@ class PostRsListViewModel @Inject constructor(
             val nowLabel = resourceProvider.getString(R.string.rs_date_now)
             val items = withContext(Dispatchers.IO) {
                 collection.loadItems().map { item ->
-                    item.state.toUiModel(item.id, nowLabel, showStatus = isSearch)
+                    item.state.toContentItemUiModel<PostRsMenuAction>(item.id, nowLabel, showStatus = isSearch)
                 }
             }
             val existingPosts = getTabUiState(tab).items
             val uiModels = items.map { model ->
                 val effectiveTab = if (isSearch) tabForStatus(model.status) else tab
                 val existing = existingPosts
-                    .firstOrNull { it.remotePostId == model.remotePostId }
+                    .firstOrNull { it.remoteId == model.remoteId }
                 model.copy(
                     actions = getMenuActions(effectiveTab, model.hasPassword, model.commentsOpen),
                     featuredImage = if (
@@ -1073,13 +1074,13 @@ class PostRsListViewModel @Inject constructor(
                         model.featuredImageId in unresolvableImageIds,
                     // Read straight from the metrics cache: rebuilding from the collection would
                     // otherwise blank out numbers already fetched on every change it reports.
-                    viewCount = viewCounts.countFor(model.remotePostId),
-                    commentCount = commentCountCache[model.remotePostId],
+                    viewCount = viewCounts.countFor(model.remoteId),
+                    commentCount = commentCountCache[model.remoteId],
                     // Search mixes statuses into one list, and metrics are only fetched for
                     // published posts, so skeletons there would never resolve.
                     areMetricsPending = expectsMetrics(tab) &&
                         !isSearch &&
-                        isAnyMetricOutstanding(model.remotePostId)
+                        isAnyMetricOutstanding(model.remoteId)
 
                 )
             }
@@ -1307,14 +1308,14 @@ class PostRsListViewModel @Inject constructor(
         updateTabUiState(tab) {
             copy(
                 items = items.map { post ->
-                    if (post.remotePostId in touched) {
+                    if (post.remoteId in touched) {
                         post.copy(
-                            viewCount = viewCounts.countFor(post.remotePostId),
-                            commentCount = commentCountCache[post.remotePostId],
+                            viewCount = viewCounts.countFor(post.remoteId),
+                            commentCount = commentCountCache[post.remoteId],
                             // Mirrors the guard in loadItemsForTab: without it a late-landing
                             // fetch could raise a skeleton over a search result.
                             areMetricsPending = !isSearching &&
-                                isAnyMetricOutstanding(post.remotePostId)
+                                isAnyMetricOutstanding(post.remoteId)
                         )
                     } else {
                         post

@@ -137,7 +137,7 @@ internal class PageRsRedesignedRowMappingTest {
         statusLabelResId: Int = 0,
         badges: List<Int> = emptyList()
     ) = PageRsUiModel(
-        remotePageId = remotePageId,
+        remoteId = remotePageId,
         title = title,
         excerpt = excerpt,
         date = date,

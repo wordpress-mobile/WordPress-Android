@@ -52,6 +52,7 @@ import org.wordpress.android.ui.pagesrs.PageRsMenuAction
 import org.wordpress.android.ui.pagesrs.PageRsUiModel
 import org.wordpress.android.ui.pagesrs.labelResId
 import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
+import org.wordpress.android.ui.rs.contentlist.ContentItemUiModel
 import org.wordpress.android.ui.rs.contentlist.LegacyContentListPlaceholderRow
 
 @Composable
@@ -331,8 +332,8 @@ private fun PreviewPageItem() {
     MaterialTheme {
         PageRsRow(
             item = PageRsListItem.Real(
-                PageRsUiModel(
-                    remotePageId = 1L,
+                ContentItemUiModel(
+                    remoteId = 1L,
                     title = "About",
                     excerpt = "Learn more about our journey and what we do.",
                     date = "Dec 15, 2025",

@@ -288,7 +288,7 @@ private val FEATURED_IMAGE_SIZE = 64.dp
 private fun samplePost(
     displayState: ContentDisplayState = ContentDisplayState.NORMAL
 ) = PostRsUiModel(
-    remotePostId = 1L,
+    remoteId = 1L,
     title = "Welcome to the Flavor Journey",
     excerpt = "Exploring the rich world of seasonal "
         + "ingredients and traditional techniques.",

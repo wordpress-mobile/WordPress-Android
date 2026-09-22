@@ -3,56 +3,19 @@ package org.wordpress.android.ui.postsrs
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
-import org.wordpress.android.ui.rs.data.FeaturedImageUrls
-import org.wordpress.android.ui.rs.RsDateFormatter
 import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
+import org.wordpress.android.ui.rs.contentlist.ContentItemUiModel
 import org.wordpress.android.ui.rs.contentlist.ContentListRowUiState
 import org.wordpress.android.ui.rs.contentlist.RsMenuAction
-import org.wordpress.android.ui.rs.toLabel
-import org.wordpress.android.util.DateTimeUtils
-import org.wordpress.android.util.HtmlUtils
-import uniffi.wp_api.AnyPostWithEditContext
-import uniffi.wp_api.PostCommentStatus
-import uniffi.wp_api.PostStatus
-import uniffi.wp_mobile.FullEntityAnyPostWithEditContext
-import uniffi.wp_mobile.PostItemState
+
+/** A post as the rs list renders it, carrying the posts menu's own actions. */
+internal typealias PostRsUiModel = ContentItemUiModel<PostRsMenuAction>
 
 sealed interface PostRsConfirmation {
     data class Trash(val postId: Long) : PostRsConfirmation
     data class Delete(val postId: Long) : PostRsConfirmation
     data class MoveToDraft(val postId: Long) : PostRsConfirmation
 }
-
-data class PostRsUiModel(
-    val remotePostId: Long,
-    val title: String,
-    val excerpt: String,
-    val date: String,
-    /** Raw publish date, used to bucket rows into the redesigned list's date groups. */
-    val dateGmtMillis: Long = 0L,
-    /** All-time views, or null when stats are unavailable or not fetched yet. */
-    val viewCount: Long? = null,
-    /** All-time comment count, or null when stats are unavailable or not fetched yet. */
-    val commentCount: Long? = null,
-    /** True while this row's metrics are expected but have not arrived, so it shows a skeleton. */
-    val areMetricsPending: Boolean = false,
-    val lastModified: String = "",
-    val link: String = "",
-    val hasPassword: Boolean = false,
-    val commentsOpen: Boolean = false,
-    val status: PostStatus? = null,
-    @StringRes val statusLabelResId: Int = 0,
-    val authorId: Long = 0L,
-    val authorDisplayName: String? = null,
-    val featuredImageId: Long = 0L,
-    val featuredImage: FeaturedImageUrls? = null,
-    /** True when the media lookup answered without a URL, so the row should stop waiting for one. */
-    val isFeaturedImageUnresolvable: Boolean = false,
-    val actions: List<PostRsMenuAction> = emptyList(),
-    val badges: List<Int> = emptyList(),
-    val displayState: ContentDisplayState =
-        ContentDisplayState.NORMAL
-)
 
 enum class PostRsMenuAction(
     @StringRes override val labelResId: Int,
@@ -99,93 +62,13 @@ enum class PostRsMenuAction(
     ),
 }
 
-fun PostItemState.toUiModel(
-    postId: Long,
-    nowLabel: String,
-    showStatus: Boolean = false
-): PostRsUiModel {
-    return when (this) {
-        is PostItemState.Fresh ->
-            data.toUiModel(showStatus, nowLabel)
-        is PostItemState.Stale ->
-            data.toUiModel(showStatus, nowLabel)
-        is PostItemState.FetchingWithData ->
-            data.toUiModel(showStatus, nowLabel, ContentDisplayState.FETCHING_WITH_DATA)
-        is PostItemState.FailedWithData ->
-            data.toUiModel(showStatus, nowLabel, ContentDisplayState.FAILED_WITH_DATA)
-        is PostItemState.Missing,
-        is PostItemState.Fetching -> PostRsUiModel(
-            remotePostId = postId,
-            title = "",
-            excerpt = "",
-            date = "",
-            displayState = ContentDisplayState.PLACEHOLDER
-        )
-        is PostItemState.Failed -> PostRsUiModel(
-            remotePostId = postId,
-            title = "",
-            excerpt = "",
-            date = "",
-            displayState = ContentDisplayState.ERROR
-        )
-    }
-}
-
-private fun FullEntityAnyPostWithEditContext.toUiModel(
-    showStatus: Boolean,
-    nowLabel: String,
-    displayState: ContentDisplayState = ContentDisplayState.NORMAL
-): PostRsUiModel {
-    val post: AnyPostWithEditContext = data
-    return PostRsUiModel(
-        remotePostId = post.id,
-        title = post.title?.raw?.takeIf { it.isNotBlank() }
-            ?: post.title?.rendered
-            ?: "",
-        excerpt = (
-            post.excerpt?.raw?.takeIf { it.isNotBlank() }
-                ?: post.excerpt?.rendered
-                ?: ""
-            ).let { HtmlUtils.fastStripHtml(it).trim() },
-        date = RsDateFormatter.format(post.dateGmt, nowLabel, isScheduled = post.status is PostStatus.Future),
-        dateGmtMillis = post.dateGmt.time,
-        lastModified = DateTimeUtils.iso8601UTCFromDate(
-            post.modifiedGmt
-        ),
-        link = post.link,
-        authorId = post.author ?: 0L,
-        featuredImageId = post.featuredMedia ?: 0L,
-        hasPassword = !post.password.isNullOrEmpty(),
-        commentsOpen =
-            post.commentStatus is PostCommentStatus.Open,
-        status = post.status,
-        statusLabelResId = if (showStatus) {
-            post.status.toLabel()
-        } else {
-            0
-        },
-        badges = buildList {
-            if (post.status is PostStatus.Private) {
-                add(R.string.post_status_post_private)
-            }
-            if (post.status is PostStatus.Pending) {
-                add(R.string.post_status_pending_review)
-            }
-            if (post.sticky == true) {
-                add(R.string.post_status_sticky)
-            }
-        },
-        displayState = displayState
-    )
-}
-
 /**
  * Projects a post onto the shared row model the redesigned list renders. Keeping the projection
  * here means the row component itself stays free of anything post-specific, so the pages screen
  * can supply its own equivalent.
  */
 fun PostRsUiModel.toContentListRowUiState() = ContentListRowUiState(
-    id = remotePostId,
+    id = remoteId,
     title = title,
     excerpt = excerpt,
     dateLabel = date,
