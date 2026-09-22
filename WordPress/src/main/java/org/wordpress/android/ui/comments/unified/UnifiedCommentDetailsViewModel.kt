@@ -207,14 +207,18 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         moderateComment(newStatus, closeOnSuccess = false)
     }
 
+    // Spamming and trashing leave the comment on screen: it still exists, the status updates in
+    // place, and the actions offered become its inverse, so the user can undo a mis-tap without
+    // hunting for the comment again in another filter. Only a permanent delete closes the screen,
+    // because there is then nothing left to show.
     fun onSpamClicked() {
         val newStatus = if (currentStatus() == SPAM) APPROVED else SPAM
-        moderateComment(newStatus, closeOnSuccess = newStatus == SPAM)
+        moderateComment(newStatus, closeOnSuccess = false)
     }
 
     fun onTrashClicked() {
         val newStatus = if (currentStatus() == TRASH) APPROVED else TRASH
-        moderateComment(newStatus, closeOnSuccess = newStatus == TRASH)
+        moderateComment(newStatus, closeOnSuccess = false)
     }
 
     fun onDeletePermanentlyClicked() {

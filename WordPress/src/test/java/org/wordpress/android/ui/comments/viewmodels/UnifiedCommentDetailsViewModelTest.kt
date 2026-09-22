@@ -176,23 +176,27 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onSpamClicked marks comment as spam via rs and closes screen`() = test {
+    fun `onSpamClicked marks comment as spam via rs and keeps the screen open`() = test {
+        // The comment still exists, so it stays on screen with its status updated in place;
+        // only a permanent delete closes the detail.
         viewModel.start(site, REMOTE_COMMENT_ID)
 
         viewModel.onSpamClicked()
 
         verify(commentsRsDataSource).updateStatus(site, REMOTE_COMMENT_ID, SPAM)
-        assertThat(uiActionEvents).contains(Close)
+        assertThat(uiActionEvents).doesNotContain(Close)
+        assertThat(uiStates.last().status).isEqualTo(SPAM)
     }
 
     @Test
-    fun `onTrashClicked trashes comment via the update endpoint and closes screen`() = test {
+    fun `onTrashClicked trashes comment via the update endpoint and keeps the screen open`() = test {
         viewModel.start(site, REMOTE_COMMENT_ID)
 
         viewModel.onTrashClicked()
 
         verify(commentsRsDataSource).updateStatus(site, REMOTE_COMMENT_ID, TRASH)
-        assertThat(uiActionEvents).contains(Close)
+        assertThat(uiActionEvents).doesNotContain(Close)
+        assertThat(uiStates.last().status).isEqualTo(TRASH)
     }
 
     @Test
