@@ -617,10 +617,15 @@ if (decryptedGoogleServicesJson.exists()) {
 }
 
 if (staleGoogleServicesJson.exists()) {
-    def yellow = "\u001B[33m"
-    def reset = "\u001B[0m"
-    logger.warn("${yellow}\u26A0\uFE0F ${staleGoogleServicesJson} predates the move out of the checkout. " +
-            "It is no longer read and can be deleted.${reset}")
+    def message = "${staleGoogleServicesJson} predates the move out of the checkout. " +
+            "It is no longer read; delete it."
+    // CI checkouts grow one of their own whenever a job builds a base revision that predates this
+    // change, and nobody is there to delete it. Drop this branch once no supported base copies it.
+    if (gradle.ext.isCi) {
+        logger.warn(message)
+    } else {
+        throw new GradleException(message)
+    }
 }
 
 // The `afterEvaluate` is load-bearing. The google-services plugin registers the task from an
