@@ -3,6 +3,7 @@ package org.wordpress.android.ui.postsrs
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
+import org.wordpress.android.ui.postsrs.data.FeaturedImageUrls
 import org.wordpress.android.ui.rs.RsDateFormatter
 import org.wordpress.android.ui.rs.contentlist.ContentListRowUiState
 import org.wordpress.android.util.DateTimeUtils
@@ -77,7 +78,7 @@ data class PostRsUiModel(
     val authorId: Long = 0L,
     val authorDisplayName: String? = null,
     val featuredImageId: Long = 0L,
-    val featuredImageUrl: String? = null,
+    val featuredImage: FeaturedImageUrls? = null,
     /** True when the media lookup answered without a URL, so the row should stop waiting for one. */
     val isFeaturedImageUnresolvable: Boolean = false,
     val actions: List<PostRsMenuAction> = emptyList(),
@@ -221,9 +222,10 @@ fun PostRsUiModel.toContentListRowUiState() = ContentListRowUiState(
     title = title,
     excerpt = excerpt,
     dateLabel = date,
-    imageUrl = featuredImageUrl,
+    thumbnailImageUrl = featuredImage?.thumbnail,
+    heroImageUrl = featuredImage?.hero,
     isImagePending = featuredImageId != 0L &&
-        featuredImageUrl == null &&
+        featuredImage == null &&
         !isFeaturedImageUnresolvable,
     viewCount = viewCount,
     commentCount = commentCount,

@@ -48,6 +48,7 @@ import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.PostRsErrorUtils
 import org.wordpress.android.ui.postsrs.SnackbarMessage
+import org.wordpress.android.ui.postsrs.data.FeaturedImageUrls
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -58,6 +59,8 @@ import org.wordpress.android.ui.rs.RsTabRefreshJobs
 import org.wordpress.android.ui.rs.RsUploadedPost
 import org.wordpress.android.ui.rs.toRsPostStatus
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.rs.contentlist.HERO_IMAGE_HEIGHT_DP
+import org.wordpress.android.ui.rs.contentlist.THUMBNAIL_SIZE_DP
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -1533,7 +1536,7 @@ internal class PagesRsListViewModel @Inject constructor(
                 resolved = resolved.copy(authorDisplayName = existing.authorDisplayName)
             }
             if (model.featuredImageId != 0L && model.featuredImageId == existing?.featuredImageId) {
-                resolved = resolved.copy(featuredImageUrl = existing.featuredImageUrl)
+                resolved = resolved.copy(featuredImage = existing.featuredImage)
             }
             resolved.copy(
                 isFeaturedImageUnresolvable = model.featuredImageId in unresolvableImageIds,
@@ -1551,8 +1554,8 @@ internal class PagesRsListViewModel @Inject constructor(
 
     /**
      * Fetches featured image URLs for pages that have a non-zero
-     * [PageRsUiModel.featuredImageId] but no resolved URL yet.
-     * All URLs are fetched in a single batched network call.
+     * [PageRsUiModel.featuredImageId] but no resolved URL yet, sized for
+     * both row shapes.
      */
     private fun resolveFeaturedImages(
         tab: PageRsListTab,
@@ -1560,26 +1563,25 @@ internal class PagesRsListViewModel @Inject constructor(
     ) {
         val site = this.site ?: return
         val unresolvedIds = pages
-            .filter { it.featuredImageId != 0L && it.featuredImageUrl == null }
+            .filter { it.featuredImageId != 0L && it.featuredImage == null }
             .map { it.featuredImageId }
             .distinct()
         if (unresolvedIds.isEmpty()) return
 
         resolveImageJobs[tab]?.cancel()
         resolveImageJobs[tab] = viewModelScope.launch {
-            val urls = withContext(Dispatchers.IO) {
-                restClient.fetchMediaUrls(
-                    site, unresolvedIds, THUMBNAIL_SIZE_DP, THUMBNAIL_ASPECT
+            val images = withContext(Dispatchers.IO) {
+                restClient.fetchFeaturedImageUrls(
+                    site, unresolvedIds, THUMBNAIL_SIZE_DP, HERO_IMAGE_HEIGHT_DP
                 )
             }
-            // Anything the lookup did not answer for is recorded so its row stops waiting. The
-            // request is a batch, so one unreadable item leaves every id in it unanswered. Anything
-            // it did answer for is evicted, so an id that failed once and then resolved is not
-            // still reported as unresolvable on the next reload.
-            unresolvableImageIds.removeAll(urls.keys)
-            unresolvableImageIds.addAll(unresolvedIds.filterNot { urls.containsKey(it) })
+            // Ids the lookup could not resolve stop their row waiting; ones that did resolve are
+            // no longer reported as unresolvable, so an id that failed once and later came back
+            // is not still written off.
+            unresolvableImageIds.removeAll(images.keys)
+            unresolvableImageIds.addAll(unresolvedIds.filterNot(images::containsKey))
             updateTabUiState(tab) {
-                copy(pages = this.pages.map { item -> item.withResolvedFeaturedImage(urls) })
+                copy(pages = this.pages.map { item -> item.withResolvedFeaturedImage(images) })
             }
         }
     }
@@ -1828,15 +1830,15 @@ internal class PagesRsListViewModel @Inject constructor(
         }
     }
 
-    private fun PageRsListItem.withResolvedFeaturedImage(urls: Map<Long, String>): PageRsListItem {
-        val url = urls[page.featuredImageId]
+    private fun PageRsListItem.withResolvedFeaturedImage(
+        images: Map<Long, FeaturedImageUrls>
+    ): PageRsListItem {
+        val image = images[page.featuredImageId]
         val updated = when {
-            url != null -> page.copy(
-                featuredImageUrl = url,
+            image != null -> page.copy(
+                featuredImage = image,
                 isFeaturedImageUnresolvable = false
             )
-            // A row whose image the batch could not answer for stops shimmering rather than
-            // waiting on a lookup that is not retried until the next refresh.
             page.featuredImageId in unresolvableImageIds ->
                 page.copy(isFeaturedImageUnresolvable = true)
             else -> return this
@@ -1973,7 +1975,6 @@ internal class PagesRsListViewModel @Inject constructor(
         private const val SEARCH_DEBOUNCE_MS = 250L
         private const val SITE_EDITOR_LAUNCH_DEBOUNCE_MS = 1000L
         internal const val MIN_SEARCH_QUERY_LENGTH = 3
-        private const val THUMBNAIL_SIZE_DP = 64
 
         /**
          * View counts are one request each, so a screenful is fetched a few at a time rather than
@@ -1981,8 +1982,6 @@ internal class PagesRsListViewModel @Inject constructor(
          */
         private const val MAX_CONCURRENT_VIEW_FETCHES = 4
 
-        /** Rows show the thumbnail in a square slot, cropped to fill. */
-        private const val THUMBNAIL_ASPECT = 1f
         private val ALL_STATUSES = PageRsListTab.entries.flatMap { it.statuses }.distinct()
 
         private const val TRACKS_SELECTED_TAB = "selected_tab"

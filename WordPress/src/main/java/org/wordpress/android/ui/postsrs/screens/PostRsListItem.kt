@@ -175,10 +175,10 @@ private fun PostContentItem(
                         onAction = onMenuAction
                     )
                 }
-                if (post.featuredImageUrl != null) {
+                if (post.featuredImage != null) {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(post.featuredImageUrl)
+                            .data(post.featuredImage.thumbnail)
                             .crossfade(true)
                             .build(),
                         contentDescription = stringResource(

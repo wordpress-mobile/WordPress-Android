@@ -74,7 +74,7 @@ fun ContentListRow(
             leading = leading
         ) {
             FeaturedImage(
-                imageUrl = state.imageUrl,
+                imageUrl = state.thumbnailImageUrl,
                 isImagePending = state.isImagePending,
                 modifier = Modifier
                     .padding(start = padding)
@@ -102,7 +102,7 @@ fun ContentListHeroRow(
     ContentListCard(onClick = onClick, isSyncing = state.isSyncing, modifier = modifier) {
         Column {
             FeaturedImage(
-                imageUrl = state.imageUrl,
+                imageUrl = state.heroImageUrl,
                 isImagePending = state.isImagePending,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -523,13 +523,17 @@ private val LIST_HORIZONTAL_PADDING = 8.dp
 private val CARD_VERTICAL_SPACING = 2.dp
 private val CARD_PADDING = 14.dp
 
+// Internal so the view models request images at the size the row draws them.
+internal const val THUMBNAIL_SIZE_DP = 72
+internal const val HERO_IMAGE_HEIGHT_DP = 130
+
 private val CARD_RADIUS = 14.dp
 private val CARD_BORDER_WIDTH = 1.dp
-private val THUMBNAIL_SIZE = 72.dp
+private val THUMBNAIL_SIZE = THUMBNAIL_SIZE_DP.dp
 private val CONDENSED_THUMBNAIL_SIZE = 56.dp
 private val CONDENSED_CARD_PADDING = 12.dp
 private val THUMBNAIL_RADIUS = 10.dp
-private val HERO_IMAGE_HEIGHT = 130.dp
+private val HERO_IMAGE_HEIGHT = HERO_IMAGE_HEIGHT_DP.dp
 private val LEADING_GAP = 12.dp
 private val TITLE_META_GAP = 6.dp
 private val SYNC_BAR_HEIGHT = 2.dp
