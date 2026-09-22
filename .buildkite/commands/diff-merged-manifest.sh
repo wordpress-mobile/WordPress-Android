@@ -8,9 +8,6 @@ fi
 
 BUILD_VARIANT=$1
 
-echo "--- :rubygems: Setting up Gems"
-install_gems
-
 "$(dirname "${BASH_SOURCE[0]}")/install-secrets.sh"
 
 echo "--- 💾 Diff Merged Manifest (Module: WordPress, Build Variant: ${BUILD_VARIANT})"
