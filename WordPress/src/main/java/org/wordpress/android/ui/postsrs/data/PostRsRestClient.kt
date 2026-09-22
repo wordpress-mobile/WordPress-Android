@@ -75,11 +75,13 @@ class PostRsRestClient @Inject constructor(
     ): Map<Long, String> {
         val accessibilityInfo = SiteUtils.getAccessibilityInfoFromSite(site)
         val isWpComRest = SiteUtils.isAccessedViaWPComRest(site)
-        return fetchMediaImages(site, mediaIds).mapValues { (_, image) ->
-            image.toDisplayUrl(
-                accessibilityInfo, isWpComRest, displayMetrics.widthPixels, heightPx = 0
-            )
-        }
+        return fetchMediaImages(site, mediaIds).mapNotNull { (id, image) ->
+            image?.let {
+                id to it.toDisplayUrl(
+                    accessibilityInfo, isWpComRest, displayMetrics.widthPixels, heightPx = 0
+                )
+            }
+        }.toMap()
     }
 
     /**
@@ -92,33 +94,39 @@ class PostRsRestClient @Inject constructor(
         mediaIds: List<Long>,
         thumbnailDp: Int,
         heroHeightDp: Int,
-    ): Map<Long, FeaturedImageUrls> {
+    ): Map<Long, FeaturedImageUrls?> {
         val accessibilityInfo = SiteUtils.getAccessibilityInfoFromSite(site)
         val isWpComRest = SiteUtils.isAccessedViaWPComRest(site)
         val thumbnailPx = (thumbnailDp * displayMetrics.density).toInt()
         val heroHeightPx = (heroHeightDp * displayMetrics.density).toInt()
         val heroWidthPx = displayMetrics.widthPixels.coerceAtMost(HERO_MAX_WIDTH_PX)
         return fetchMediaImages(site, mediaIds).mapValues { (_, image) ->
-            FeaturedImageUrls(
-                thumbnail = image.toDisplayUrl(
-                    accessibilityInfo, isWpComRest, thumbnailPx, thumbnailPx
-                ),
-                hero = image.toDisplayUrl(
-                    accessibilityInfo, isWpComRest, heroWidthPx, heroHeightPx
-                ),
-            )
+            image?.let {
+                FeaturedImageUrls(
+                    thumbnail = it.toDisplayUrl(
+                        accessibilityInfo, isWpComRest, thumbnailPx, thumbnailPx
+                    ),
+                    hero = it.toDisplayUrl(
+                        accessibilityInfo, isWpComRest, heroWidthPx, heroHeightPx
+                    ),
+                )
+            }
         }
     }
 
     /**
-     * Resolves [mediaIds] to their media objects, hitting the network only for uncached ones. IDs
-     * the server does not answer for are left out of the result; callers read that as unresolvable.
+     * Resolves [mediaIds] to their media objects, hitting the network only for uncached ones.
+     *
+     * Three outcomes, and callers need all three: a non-null value is the media, a null value means
+     * the server answered without it, and a *missing* key means the request failed. Only the middle
+     * one is settled - a failed request has to be retried, not written off, or a single 5xx blanks
+     * every image it asked about.
      */
     private suspend fun fetchMediaImages(
         site: SiteModel,
         mediaIds: List<Long>,
-    ): Map<Long, MediaImage> {
-        val result = mutableMapOf<Long, MediaImage>()
+    ): Map<Long, MediaImage?> {
+        val result = mutableMapOf<Long, MediaImage?>()
         val uncached = mutableListOf<Long>()
         for (id in mediaIds) {
             val cached = mediaImageCache[mediaCacheKey(site, id)]
@@ -143,6 +151,9 @@ class PostRsRestClient @Inject constructor(
                         mediaImageCache[mediaCacheKey(site, media.id)] = image
                         result[media.id] = image
                     }
+                    // The rest of a chunk that came back is genuinely absent - deleted media, or
+                    // an id that is not an image - rather than unasked.
+                    for (id in chunk) result.putIfAbsent(id, null)
                 }
                 else -> {
                     val msg =

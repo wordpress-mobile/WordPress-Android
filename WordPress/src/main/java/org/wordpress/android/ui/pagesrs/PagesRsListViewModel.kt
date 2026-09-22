@@ -1575,12 +1575,12 @@ internal class PagesRsListViewModel @Inject constructor(
                     site, unresolvedIds, THUMBNAIL_SIZE_DP, HERO_IMAGE_HEIGHT_DP
                 )
             }
-            // Anything the lookup did not answer for is recorded so its row stops waiting. The
-            // request is a batch, so one unreadable item leaves every id in it unanswered. Anything
-            // it did answer for is evicted, so an id that failed once and then resolved is not
-            // still reported as unresolvable on the next reload.
-            unresolvableImageIds.removeAll(images.keys)
-            unresolvableImageIds.addAll(unresolvedIds.filterNot { images.containsKey(it) })
+            // Only ids the server actually answered for are settled here: resolved ones stop
+            // being reported as unresolvable, and ones it answered without stop their row waiting.
+            // Ids whose request failed are absent from the map entirely and are left pending, so a
+            // 5xx on the batch does not blank every image it asked about until the next refresh.
+            unresolvableImageIds.removeAll(images.filterValues { it != null }.keys)
+            unresolvableImageIds.addAll(images.filterValues { it == null }.keys)
             updateTabUiState(tab) {
                 copy(pages = this.pages.map { item -> item.withResolvedFeaturedImage(images) })
             }
@@ -1832,7 +1832,7 @@ internal class PagesRsListViewModel @Inject constructor(
     }
 
     private fun PageRsListItem.withResolvedFeaturedImage(
-        images: Map<Long, FeaturedImageUrls>
+        images: Map<Long, FeaturedImageUrls?>
     ): PageRsListItem {
         val image = images[page.featuredImageId]
         val updated = when {
@@ -1840,8 +1840,8 @@ internal class PagesRsListViewModel @Inject constructor(
                 featuredImage = image,
                 isFeaturedImageUnresolvable = false
             )
-            // A row whose image the batch could not answer for stops shimmering rather than
-            // waiting on a lookup that is not retried until the next refresh.
+            // A row the server answered without an image for stops shimmering. One whose request
+            // failed is not in the set, so it stays pending and is retried.
             page.featuredImageId in unresolvableImageIds ->
                 page.copy(isFeaturedImageUnresolvable = true)
             else -> return this
