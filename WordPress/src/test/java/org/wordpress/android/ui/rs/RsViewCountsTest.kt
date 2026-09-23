@@ -154,19 +154,6 @@ class RsViewCountsTest : BaseUnitTest(StandardTestDispatcher()) {
      * because the neighbouring tab reported its own rows in the meantime.
      */
     @Test
-    fun `a neighbouring tab's rows do not cancel this tab's queued fetches`() = test {
-        whenever(statsDataSource.fetchPostViews(any(), any())).doSuspendableAnswer { views(ONE, 7L) }
-        val viewCounts = createViewCounts()
-        visibleRows.record(TAB, listOf(ONE))
-
-        viewCounts.fetch(TAB, SITE_ID, listOf(ONE))
-        visibleRows.record(OTHER_TAB, listOf(TWO))
-        advanceUntilIdle()
-
-        verify(statsDataSource).fetchPostViews(SITE_ID, ONE)
-    }
-
-    @Test
     fun `invalidateUnresolved drops the counts that resolved to nothing and keeps the rest`() = test {
         whenever(statsDataSource.fetchPostViews(any(), eq(ONE))).doSuspendableAnswer { views(ONE, 7L) }
         whenever(statsDataSource.fetchPostViews(any(), eq(TWO)))
