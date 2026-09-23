@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.rs
 
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import org.assertj.core.api.Assertions.assertThat
@@ -10,6 +11,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -75,6 +77,36 @@ class RsFeaturedImagesTest : BaseUnitTest(StandardTestDispatcher()) {
 
         assertThat(featuredImages.withImage(model(ONE), emptyMap()).isFeaturedImageUnresolvable).isTrue
         assertThat(featuredImages.carryOver(model(ONE), null).isFeaturedImageUnresolvable).isTrue
+    }
+
+    @Test
+    fun `an id that already failed is not looked up again until a refresh`() = test {
+        answer(emptyMap())
+        val featuredImages = createFeaturedImages()
+        featuredImages.resolve(TAB, site, listOf(model(ONE)))
+        advanceUntilIdle()
+
+        featuredImages.resolve(TAB, site, listOf(model(ONE)))
+        advanceUntilIdle()
+
+        verify(restClient, times(1)).fetchFeaturedImageUrls(anyOrNull(), any(), any(), any())
+    }
+
+    @Test
+    fun `a running lookup that covers the ids is not restarted`() = test {
+        val gate = CompletableDeferred<Map<Long, FeaturedImageUrls>>()
+        whenever(restClient.fetchFeaturedImageUrls(anyOrNull(), any(), any(), any()))
+            .doSuspendableAnswer { gate.await() }
+        val featuredImages = createFeaturedImages()
+        featuredImages.resolve(TAB, site, listOf(model(ONE), model(TWO)))
+        advanceUntilIdle()
+
+        featuredImages.resolve(TAB, site, listOf(model(ONE)))
+        gate.complete(mapOf(ONE to IMAGE))
+        advanceUntilIdle()
+
+        verify(restClient, times(1)).fetchFeaturedImageUrls(anyOrNull(), any(), any(), any())
+        assertThat(resolved).containsExactly(TAB to mapOf(ONE to IMAGE))
     }
 
     @Test

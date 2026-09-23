@@ -27,18 +27,27 @@ internal class RsFeaturedImages<TAB>(
 ) {
     private val jobs = mutableMapOf<TAB, Job>()
 
+    /** The ids each tab's running lookup is fetching. */
+    private val pendingIds = mutableMapOf<TAB, Set<Long>>()
+
     /** Media ids the lookup couldn't resolve, so their rows stop waiting. Cleared by a refresh. */
     private val unresolvable = mutableSetOf<Long>()
 
-    /** Looks up the images [items] still lack, replacing any lookup already running for [tab]. */
+    /**
+     * Looks up the images [items] still lack. Ids that already failed wait for a refresh, and a
+     * lookup already running for [tab] is only replaced when it doesn't cover them all.
+     */
     fun resolve(tab: TAB, site: SiteModel, items: List<ContentItemUiModel<*>>) {
         val unresolvedIds = items
-            .filter { it.featuredImageId != 0L && it.featuredImage == null }
+            .filter { it.featuredImage == null }
             .map { it.featuredImageId }
+            .filter { it != 0L && it !in unresolvable }
             .distinct()
         if (unresolvedIds.isEmpty()) return
+        if (jobs[tab]?.isActive == true && pendingIds[tab].orEmpty().containsAll(unresolvedIds)) return
 
         jobs[tab]?.cancel()
+        pendingIds[tab] = unresolvedIds.toSet()
         jobs[tab] = scope.launch {
             val images = withContext(ioDispatcher) {
                 restClient.fetchFeaturedImageUrls(
@@ -84,6 +93,7 @@ internal class RsFeaturedImages<TAB>(
     fun clear() {
         jobs.values.forEach { it.cancel() }
         jobs.clear()
+        pendingIds.clear()
         unresolvable.clear()
     }
 }
