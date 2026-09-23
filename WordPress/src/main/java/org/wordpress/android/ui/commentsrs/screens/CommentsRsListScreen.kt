@@ -4,13 +4,10 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
@@ -22,14 +19,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -44,12 +37,8 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
@@ -61,7 +50,6 @@ import org.wordpress.android.ui.commentsrs.CommentsRsListTab
 import org.wordpress.android.ui.commentsrs.PendingConfirmation
 import org.wordpress.android.ui.commentsrs.batchActions
 import org.wordpress.android.ui.commentsrs.isEnabledFor
-import org.wordpress.android.ui.compose.components.FilterChipTabRow
 import org.wordpress.android.ui.compose.utils.rsDebugTitle
 import org.wordpress.android.ui.rs.RsSnackbarMessage
 import org.wordpress.android.ui.rs.RsTabUiState
@@ -69,6 +57,9 @@ import org.wordpress.android.ui.rs.contentlist.ContentListConfirmationDialog
 import org.wordpress.android.ui.rs.contentlist.ContentListDefaults
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListDensityToggle
+import org.wordpress.android.ui.rs.contentlist.ContentListSearchClearButton
+import org.wordpress.android.ui.rs.contentlist.ContentListSearchField
+import org.wordpress.android.ui.rs.contentlist.ContentListTabRow
 import org.wordpress.android.ui.rs.contentlist.ShowRsSnackbars
 
 // Material's disabled-content alpha, used to dim batch-action icons that can't apply to the
@@ -244,47 +235,21 @@ fun CommentsRsListScreen(
             // single status per request (unlike posts, which search across all statuses), so a
             // search is always scoped to one tab — keeping the tabs on screen makes that scope
             // visible and lets the user re-run the query against another status.
-            if (isRedesignEnabled) {
-                // The pager stays: chips replace the tab row's appearance, not swiping between
-                // tabs, which users of this screen already rely on.
-                FilterChipTabRow(
-                    labels = tabs.map { stringResource(it.labelResId) },
-                    selectedIndex = pagerState.settledPage,
-                    onSelect = { index ->
-                        coroutineScope.launch {
-                            if (pagerState.settledPage == index) {
-                                // Re-tapping the active chip scrolls its list back to the top.
-                                listStates.getValue(tabs[index]).animateScrollToItem(0)
-                            } else {
-                                pagerState.animateScrollToPage(index)
-                            }
+            ContentListTabRow(
+                labels = tabs.map { stringResource(it.labelResId) },
+                selectedIndex = pagerState.settledPage,
+                isRedesignEnabled = isRedesignEnabled,
+                onSelect = { index ->
+                    coroutineScope.launch {
+                        if (pagerState.settledPage == index) {
+                            // Re-tapping the active tab scrolls its list back to the top.
+                            listStates.getValue(tabs[index]).animateScrollToItem(0)
+                        } else {
+                            pagerState.animateScrollToPage(index)
                         }
                     }
-                )
-            } else {
-                PrimaryScrollableTabRow(
-                    selectedTabIndex = pagerState.settledPage,
-                    edgePadding = 0.dp
-                ) {
-                    tabs.forEachIndexed { index, tab ->
-                        Tab(
-                            selected = pagerState.settledPage == index,
-                            onClick = {
-                                coroutineScope.launch {
-                                    if (pagerState.settledPage == index) {
-                                        // Re-tapping the active tab scrolls its list back to the top.
-                                        listStates.getValue(tab).animateScrollToItem(0)
-                                    } else {
-                                        pagerState.animateScrollToPage(index)
-                                    }
-                                }
-                            },
-                            unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            text = { Text(text = stringResource(tab.labelResId)) }
-                        )
-                    }
                 }
-            }
+            )
 
             LaunchedEffect(pagerState) {
                 snapshotFlow { pagerState.settledPage }.collect { page ->
@@ -415,23 +380,13 @@ private fun SearchTopBar(
     onQueryChanged: (String) -> Unit,
     onClose: () -> Unit
 ) {
-    val focusManager = LocalFocusManager.current
     TopAppBar(
         title = {
-            TextField(
-                value = searchQuery,
-                onValueChange = onQueryChanged,
-                placeholder = { Text(stringResource(R.string.comments_rs_search_prompt)) },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
-                keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() }),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                ),
-                modifier = Modifier.fillMaxWidth().focusRequester(focusRequester)
+            ContentListSearchField(
+                query = searchQuery,
+                onQueryChange = onQueryChanged,
+                placeholderResId = R.string.comments_rs_search_prompt,
+                modifier = Modifier.focusRequester(focusRequester)
             )
         },
         navigationIcon = {
@@ -443,14 +398,7 @@ private fun SearchTopBar(
             }
         },
         actions = {
-            if (searchQuery.isNotEmpty()) {
-                IconButton(onClick = { onQueryChanged("") }) {
-                    Icon(
-                        Icons.Default.Close,
-                        contentDescription = stringResource(R.string.clear)
-                    )
-                }
-            }
+            ContentListSearchClearButton(searchQuery) { onQueryChanged("") }
         }
     )
 }

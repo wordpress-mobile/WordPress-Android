@@ -150,7 +150,7 @@ private fun PostListContent(
         listState.layoutInfo.visibleItemsInfo.mapNotNull { it.key as? Long }
     }
 
-    LoadMoreOnScrollToEnd(listState, canLoadMore, onLoadMore)
+    LoadMoreOnScrollToEnd(listState, posts.size, canLoadMore, onLoadMore)
 
     LazyColumn(
         state = listState,

@@ -107,10 +107,7 @@ private fun PageListContent(
     val currentPages by rememberUpdatedState(pages)
 
     // Scrolls to a page the user just saved, once the refresh carrying it lands. The published and
-    // draft tabs sort by title, so it can be anywhere in the list. requestScrollToItem applies at
-    // the next measurement rather than to the content currently laid out, which a plain
-    // scrollToItem would, leaving a just-added row short of the viewport.
-    // The published and draft tabs sort by title, so a new page can land anywhere in the list.
+    // draft tabs sort by title, so it can be anywhere in the list.
     RevealRow(revealPageId, listState, onRevealHandled) { id ->
         currentPages.indexOfFirst { it.remotePageId == id }
     }
@@ -126,7 +123,7 @@ private fun PageListContent(
         }
     }
 
-    LoadMoreOnScrollToEnd(listState, canLoadMore, onLoadMore)
+    LoadMoreOnScrollToEnd(listState, pages.size, canLoadMore, onLoadMore)
 
     LazyColumn(
         state = listState,

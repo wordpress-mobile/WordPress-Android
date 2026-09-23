@@ -20,19 +20,26 @@ import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.VISIBLE_ROWS_
  *
  * Keyed on [canLoadMore] so the flow is torn down rather than filtered when there is nothing left
  * to fetch, and de-duplicated so a scroll that stays inside the threshold asks only once.
+ *
+ * Also keyed on [itemCount]: a refresh that truncates the list, or an appended page, restarts the
+ * flow, so a `true` latched by the de-duplication before the change can't suppress the re-fire
+ * needed to resume paging. The view models' busy guards make those re-fires safe.
  */
 @Composable
 fun LoadMoreOnScrollToEnd(
     listState: LazyListState,
+    itemCount: Int,
     canLoadMore: Boolean,
     onLoadMore: () -> Unit,
 ) {
-    LaunchedEffect(listState, canLoadMore) {
+    LaunchedEffect(listState, canLoadMore, itemCount) {
         if (!canLoadMore) return@LaunchedEffect
         snapshotFlow {
+            // total > 0 keeps the pre-layout pass (empty layoutInfo, 0 >= -threshold) from asking
+            // for the next page before the user has scrolled at all.
             val lastVisible = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
             val total = listState.layoutInfo.totalItemsCount
-            lastVisible >= total - LOAD_MORE_THRESHOLD
+            total > 0 && lastVisible >= total - LOAD_MORE_THRESHOLD
         }.distinctUntilChanged().collect { shouldLoad ->
             if (shouldLoad) onLoadMore()
         }

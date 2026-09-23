@@ -14,13 +14,10 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.flow.distinctUntilChanged
 import org.wordpress.android.R
 import org.wordpress.android.ui.commentsrs.CommentRsUiModel
 import org.wordpress.android.ui.commentsrs.CommentsRsListRow
@@ -28,13 +25,13 @@ import org.wordpress.android.ui.commentsrs.withDateGroups
 import org.wordpress.android.ui.commentsrs.withDateHeaders
 import org.wordpress.android.ui.compose.components.ShimmerBox
 import org.wordpress.android.ui.rs.RsTabUiState
-import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.LOAD_MORE_THRESHOLD
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListEmptyState
 import org.wordpress.android.ui.rs.contentlist.ContentListErrorState
 import org.wordpress.android.ui.rs.contentlist.ContentListGroupHeader
 import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
 import org.wordpress.android.ui.rs.contentlist.ContentListShimmer
+import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
 import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
 
 @Composable
@@ -116,21 +113,7 @@ private fun CommentListContent(
     isRedesignEnabled: Boolean,
     density: ContentListDensity
 ) {
-    // Also keyed on the list size: a refresh that truncates the list (or an appended page) restarts
-    // the flow, so a `true` latched by distinctUntilChanged before the change can't suppress the
-    // re-fire needed to resume paging. The ViewModel's busy/cursor guards make re-fires safe.
-    LaunchedEffect(canLoadMore, comments.size) {
-        if (!canLoadMore) return@LaunchedEffect
-        snapshotFlow {
-            // total > 0 keeps the pre-layout pass (empty layoutInfo, 0 >= -threshold) from
-            // triggering a load of the next page before the user has scrolled at all.
-            val lastVisible = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
-            val total = listState.layoutInfo.totalItemsCount
-            total > 0 && lastVisible >= total - LOAD_MORE_THRESHOLD
-        }.distinctUntilChanged().collect { shouldLoad ->
-            if (shouldLoad) onLoadMore()
-        }
-    }
+    LoadMoreOnScrollToEnd(listState, comments.size, canLoadMore, onLoadMore)
 
     // Interleave date subheaders once per comment-list change. The redesigned list buckets them
     // the way the posts list does; the pre-redesign one keeps its header-per-day.

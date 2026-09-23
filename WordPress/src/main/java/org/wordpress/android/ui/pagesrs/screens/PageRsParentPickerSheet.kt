@@ -52,7 +52,7 @@ internal fun PageRsParentPickerSheet(
 ) {
     val listState = rememberLazyListState()
 
-    LoadMoreOnScrollToEnd(listState, state.canLoadMore, onLoadMoreParents)
+    LoadMoreOnScrollToEnd(listState, state.candidates.size, state.canLoadMore, onLoadMoreParents)
 
     ModalBottomSheet(onDismissRequest = onDismiss) {
         // Pin the sheet to a fixed fraction of the screen so it doesn't resize as the content
