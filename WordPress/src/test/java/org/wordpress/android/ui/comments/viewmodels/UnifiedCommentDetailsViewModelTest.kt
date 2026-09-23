@@ -20,7 +20,6 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.R
 import org.wordpress.android.datasets.wrappers.NotificationsTableWrapper
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
@@ -731,7 +730,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         val state = uiStates.last()
         assertThat(state.authorCommentCount).isEqualTo(12)
         assertThat(state.authorBio).isEqualTo("Photographer")
-        assertThat(state.authorAccountRes).isEqualTo(R.string.comment_author_info_registered)
+        assertThat(state.authorIsRegistered).isTrue
         verify(commentsRsDataSource, times(1)).fetchAuthorCommentCount(site, "a@b.c")
     }
 
@@ -745,7 +744,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         viewModel.onAuthorInfoShown()
         advanceUntilIdle()
 
-        assertThat(uiStates.last().authorAccountRes).isEqualTo(R.string.comment_author_info_guest)
+        assertThat(uiStates.last().authorIsRegistered).isFalse
         verify(commentsRsDataSource, never()).fetchUserBio(any(), any())
 
         whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID, withEditContext = true))
@@ -753,7 +752,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         viewModel.onCommentEdited()
         advanceUntilIdle()
 
-        assertThat(uiStates.last().authorAccountRes).isNull()
+        assertThat(uiStates.last().authorIsRegistered).isNull()
     }
 
     @Test

@@ -614,11 +614,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         authorUrl = authorUrl,
         authorEmail = authorEmail,
         authorIp = authorIp,
-        authorAccountRes = when {
-            isPingback -> null
-            authorId > 0 -> R.string.comment_author_info_registered
-            else -> R.string.comment_author_info_guest
-        },
+        authorIsRegistered = if (isPingback) null else authorId > 0,
         authorCommentCount = authorExtras?.commentCount,
         authorBio = authorExtras?.bio.orEmpty(),
         commentText = contentHtml,
@@ -655,8 +651,8 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         val authorUrl: String = "",
         val authorEmail: String = "",
         val authorIp: String = "",
-        /** "Registered user" or "Guest"; null for a pingback, whose author is a site. */
-        val authorAccountRes: Int? = null,
+        /** Whether the author has an account on the site; null for a pingback, whose author is a site. */
+        val authorIsRegistered: Boolean? = null,
         /** Loaded when the author sheet first opens; see [onAuthorInfoShown]. */
         val authorCommentCount: Int? = null,
         val authorBio: String = "",

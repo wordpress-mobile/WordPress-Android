@@ -399,7 +399,7 @@ private fun RedesignedCommentDetailsContent(
         CommentAuthorInfoSheet(
             authorName = uiState.authorName,
             authorAvatarUrl = uiState.authorAvatarUrl,
-            accountRes = uiState.authorAccountRes,
+            isRegistered = uiState.authorIsRegistered,
             date = uiState.dateFull,
             website = uiState.authorUrl,
             email = uiState.authorEmail,
