@@ -65,6 +65,7 @@ import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostStatus
 import uniffi.wp_api.PostUpdateParams
 import uniffi.wp_api.WpApiParamPostsOrderBy
+import uniffi.wp_mobile.FetchException
 import uniffi.wp_mobile.PostListFilter
 import uniffi.wp_mobile_cache.ListState
 import javax.inject.Inject
@@ -1002,14 +1003,23 @@ class PostRsListViewModel @Inject constructor(
                 withContext(Dispatchers.IO) { collection.loadNextPage() }
             } catch (e: CancellationException) {
                 throw e
+            } catch (e: FetchException) {
+                if (RsErrorUtils.isPastLastPage(e)) {
+                    // The server never said how many pages there are; the refusal is the answer.
+                    updateTabUiState(tab) { copy(isLoadingMore = false, canLoadMore = false) }
+                } else {
+                    onLoadMoreFailed(tab, e)
+                }
             } catch (e: Exception) {
-                AppLog.e(AppLog.T.POSTS, "Failed to load more for tab $tab", e)
-                updateTabUiState(tab) { copy(isLoadingMore = false) }
-                _snackbarMessages.trySend(
-                    RsSnackbarMessage(friendlyErrorMessage(e))
-                )
+                onLoadMoreFailed(tab, e)
             }
         }
+    }
+
+    private fun onLoadMoreFailed(tab: PostRsListTab, e: Exception) {
+        AppLog.e(AppLog.T.POSTS, "Failed to load more for tab $tab", e)
+        updateTabUiState(tab) { copy(isLoadingMore = false) }
+        _snackbarMessages.trySend(RsSnackbarMessage(friendlyErrorMessage(e)))
     }
 
     /** Reads cached items from the collection and maps them to [PostRsUiModel] instances. */
@@ -1129,7 +1139,7 @@ class PostRsListViewModel @Inject constructor(
         val next = ContentListDensity.of(!_density.value.isCondensed)
         _density.value = next
         appPrefsWrapper.isContentListCondensed = next.isCondensed
-        viewModelScope.launch {
+        collectionScope.launch {
             // Re-map the rows so their pending flags match the new density before anything fetches.
             loadItemsForTab(tab)
             if (!next.isCondensed) retryMetricsForVisibleRows(tab)
@@ -1285,7 +1295,7 @@ class PostRsListViewModel @Inject constructor(
         val errorMessage = if (isError) friendlyErrorMessage() else null
 
         if (isError && hasPosts) {
-            val authError = getTabUiState(tab).isAuthError
+            // Just sync state; the refresh or load-more that failed reports it.
             updateTabUiState(tab) {
                 copy(
                     isLoading = false,
@@ -1294,16 +1304,6 @@ class PostRsListViewModel @Inject constructor(
                     canLoadMore = morePages,
                     error = null
                 )
-            }
-            // This observer reports the same failure the refresh's catch block does, so it needs
-            // the same rule: stay quiet unless the user asked for the refresh. Otherwise a
-            // background one (initTab, as the pager settles) interrupts with an error nobody
-            // provoked. The state above still syncs either way.
-            if (isUserRefresh) {
-                // As above: the user asked, so a second failure has to be reported.
-                _snackbarMessages.sendWithRetry(errorMessage.orEmpty(), authError, resourceProvider) {
-                    refreshTab(tab, isUserRefresh = true)
-                }
             }
         } else {
             updateTabUiState(tab) {
