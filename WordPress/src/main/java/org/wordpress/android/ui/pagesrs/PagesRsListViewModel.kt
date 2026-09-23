@@ -703,6 +703,7 @@ internal class PagesRsListViewModel @Inject constructor(
         userRefreshingTabs.remove(tab)
         val message = friendlyErrorMessage(e)
         val authError = RsErrorUtils.isAuthError(e)
+        val failedCollection = collections[tab]
         if (getTabUiState(tab).items.hasRealPages) {
             updateTabUiState(tab) {
                 copy(
@@ -716,7 +717,9 @@ internal class PagesRsListViewModel @Inject constructor(
                 // Tapping retry is the user asking, so the result has to be reported -
                 // a silent second failure looks like the button did nothing.
                 _snackbarMessages.sendWithRetry(message, authError, resourceProvider) {
-                    refreshTab(tab, isUserRefresh = true)
+                    // The snackbar can outlive the collection it is about - a filter or search
+                    // change rebuilds the tabs - and retrying then would init a tab out of context.
+                    if (collections[tab] === failedCollection) refreshTab(tab, isUserRefresh = true)
                 }
             }
         } else {

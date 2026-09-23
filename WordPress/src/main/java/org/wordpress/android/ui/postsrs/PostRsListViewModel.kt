@@ -5,10 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,6 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -101,6 +105,7 @@ class PostRsListViewModel @Inject constructor(
     private var activeSearchTab = PostRsListTab.PUBLISHED
 
     private val collections = mutableMapOf<PostRsListTab, ObservableMetadataCollection>()
+    private var collectionsScope = createCollectionsScope()
     private val initializingTabs = mutableSetOf<PostRsListTab>()
     private val userRefreshingTabs = mutableSetOf<PostRsListTab>()
     private val refreshJobs = RsTabRefreshJobs<PostRsListTab>()
@@ -776,6 +781,10 @@ class PostRsListViewModel @Inject constructor(
     }
 
     private fun clearCollections() {
+        // Cancel in-flight collection work first so nothing can write stale state
+        // (or touch a closed collection) after the teardown below.
+        collectionsScope.cancel()
+        collectionsScope = createCollectionsScope()
         collections.values.forEach { it.close() }
         collections.clear()
         initializingTabs.clear()
@@ -805,7 +814,7 @@ class PostRsListViewModel @Inject constructor(
         // Reset to a loading state so a retry after a failed init clears the prior error UI.
         updateTabUiState(tab) { RsTabUiState(isLoading = true) }
 
-        viewModelScope.launch {
+        launchCollectionJob {
             @Suppress("TooGenericExceptionCaught")
             try {
                 val collection = createCollection(site, tab)
@@ -871,12 +880,29 @@ class PostRsListViewModel @Inject constructor(
 
     private fun registerObservers(tab: PostRsListTab, collection: ObservableMetadataCollection) {
         collection.addDataObserver {
-            viewModelScope.launch { loadItemsForTab(tab) }
+            launchCollectionJob { loadItemsForTab(tab) }
         }
         collection.addListInfoObserver {
-            viewModelScope.launch { updateListInfoForTab(tab) }
+            launchCollectionJob { updateListInfoForTab(tab) }
         }
     }
+
+    /**
+     * Launches collection-scoped work in [collectionsScope] so [clearCollections] can cancel
+     * anything in flight before closing the underlying collections. Without this, an init or
+     * refresh that outlives a filter or search change could install a collection nothing closes,
+     * or write stale state into the freshly rebuilt tabs.
+     */
+    private fun launchCollectionJob(block: suspend CoroutineScope.() -> Unit): Job =
+        collectionsScope.launch(block = block)
+
+    /**
+     * A child scope of [viewModelScope] (so it is torn down with the ViewModel) that can
+     * also be cancelled independently when the collections it serves are closed.
+     */
+    private fun createCollectionsScope() = CoroutineScope(
+        viewModelScope.coroutineContext + SupervisorJob(viewModelScope.coroutineContext.job)
+    )
 
     /**
      * Triggers a refresh for the given tab's collection. The PTR indicator is only shown
@@ -926,7 +952,7 @@ class PostRsListViewModel @Inject constructor(
         collection: ObservableMetadataCollection,
         isUserRefresh: Boolean
     ) {
-        val job = viewModelScope.launch {
+        val job = launchCollectionJob {
             @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) { collection.refresh() }
@@ -974,6 +1000,7 @@ class PostRsListViewModel @Inject constructor(
         userRefreshingTabs.remove(tab)
         val message = friendlyErrorMessage(e)
         val authError = RsErrorUtils.isAuthError(e)
+        val failedCollection = collections[tab]
         if (getTabUiState(tab).items.isNotEmpty()) {
             updateTabUiState(tab) {
                 copy(isLoading = false, isRefreshing = false, error = null)
@@ -982,7 +1009,9 @@ class PostRsListViewModel @Inject constructor(
                 // Tapping retry is the user asking, so the result has to be reported -
                 // a silent second failure looks like the button did nothing.
                 _snackbarMessages.sendWithRetry(message, authError, resourceProvider) {
-                    refreshTab(tab, isUserRefresh = true)
+                    // The snackbar can outlive the collection it is about - a filter or search
+                    // change rebuilds the tabs - and retrying then would init a tab out of context.
+                    if (collections[tab] === failedCollection) refreshTab(tab, isUserRefresh = true)
                 }
             }
         } else {
@@ -1005,10 +1034,12 @@ class PostRsListViewModel @Inject constructor(
 
         updateTabUiState(tab) { copy(isLoadingMore = true) }
 
-        viewModelScope.launch {
+        launchCollectionJob {
             @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) { collection.loadNextPage() }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Failed to load more for tab $tab", e)
                 updateTabUiState(tab) { copy(isLoadingMore = false) }
@@ -1073,6 +1104,8 @@ class PostRsListViewModel @Inject constructor(
             }
             featuredImages.resolve(tab, site, uiModels)
             resolveAuthorNames(tab, uiModels)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             AppLog.e(AppLog.T.POSTS, "Failed to load items for tab $tab", e)
         }
@@ -1347,7 +1380,7 @@ class PostRsListViewModel @Inject constructor(
     public override fun onCleared() {
         super.onCleared()
         changeListener.stop()
-        collections.values.forEach { it.close() }
+        clearCollections()
     }
 
     companion object {
