@@ -1340,6 +1340,57 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given a fresh single-day period, when a bar is tapped before its day totals land, then the row waits`() =
+        test {
+            // Last 7 Days fills its bottom row from the chart, so the card is holding that row when the
+            // user switches away from it.
+            whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+                .thenReturn(createPeriodStatsResult(currentVisitors = STALE_VISITORS))
+            initViewModel()
+            advanceUntilIdle()
+            assertThat(viewModel.uiState.value.bottomStatsOrNull()!!.first { it.metric == StatsMetric.VISITORS }.value)
+                .isEqualTo(STALE_VISITORS)
+
+            // Switching to Today: its chart is hourly and its row comes from a separate call, gated here
+            // so the tap lands in the window where the chart is up but the day totals are not.
+            val hourly = listOf(
+                ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
+                ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
+            )
+            whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(
+                createPeriodStatsResult(
+                    currentPeriodData = hourly,
+                    previousPeriodData = hourly,
+                    unit = StatsUnit.HOUR
+                )
+            )
+            val bottomGate = CompletableDeferred<Unit>()
+            whenever(statsRepository.fetchBottomStats(any(), any())).doSuspendableAnswer {
+                bottomGate.await()
+                createBottomStatsResult()
+            }
+            viewModel.onPeriodChanged(StatsPeriod.Today)
+            viewModel.loadDataIfNeeded()
+            advanceUntilIdle()
+
+            viewModel.onChartTypeChanged(ChartType.BAR)
+            viewModel.onBarTapped(0)
+            advanceUntilIdle()
+
+            // The hour has no series of its own for Visitors and friends, and Last 7 Days' totals are
+            // not today's, so the row keeps its placeholder instead of borrowing them.
+            assertThat(viewModel.uiState.value.bottomStatsOrNull()).isNull()
+            assertThat(viewModel.uiState.value.selectedBar()).isNotNull
+
+            bottomGate.complete(Unit)
+            advanceUntilIdle()
+
+            val stats = viewModel.uiState.value.bottomStatsOrNull()!!
+            assertThat(stats.first { it.metric == StatsMetric.VIEWS }.value).isEqualTo(100L)
+            assertThat(stats.first { it.metric == StatsMetric.VISITORS }.value).isEqualTo(TEST_CURRENT_PERIOD_VISITORS)
+        }
+
+    @Test
     fun `when loadData reloads while a bar is selected, then the selection and effective period reset`() = test {
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenReturn(createPeriodStatsResult())
@@ -2075,6 +2126,9 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         private const val TEST_ACCESS_TOKEN = "test_access_token"
         private const val TEST_CURRENT_PERIOD_VIEWS = 7000L
         private const val TEST_CURRENT_PERIOD_VISITORS = 700L
+
+        // Deliberately unlike every other total, so a row carried over from the period before shows up.
+        private const val STALE_VISITORS = 4242L
         private const val TEST_CURRENT_PERIOD_LIKES = 50L
         private const val TEST_CURRENT_PERIOD_COMMENTS = 25L
         private const val TEST_CURRENT_PERIOD_POSTS = 5L

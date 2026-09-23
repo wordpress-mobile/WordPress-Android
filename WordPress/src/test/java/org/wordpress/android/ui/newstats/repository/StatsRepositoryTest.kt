@@ -1352,6 +1352,64 @@ class StatsRepositoryTest : BaseUnitTest() {
         assertThat(success.currentPeriodData).noneMatch { it.isUpcoming }
     }
 
+    @Test
+    fun `given ThisYear mid-year, when fetchStatsForPeriod, then the totals compare the elapsed span`() = test {
+        // The chart's previous window is the whole of 2025 -- twelve whole month buckets. The totals
+        // can't be carved out of those: September 2026 has only partly happened, and a month bucket
+        // can't be split, so they come from their own request ending on the equivalent day of 2025.
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), eq(MONTHS_IN_YEAR), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(monthlyVisits(LocalDate.of(2025, 1, 1), MONTHS_IN_YEAR, WHOLE_MONTH_VIEWS))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), eq(9), eq("2025-09-23"), anyOrNull(), anyOrNull()))
+            .thenReturn(monthlyVisits(LocalDate.of(2025, 1, 1), 9, PART_MONTH_VIEWS))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), eq(9), eq("2026-09-23"), anyOrNull(), anyOrNull()))
+            .thenReturn(monthlyVisits(LocalDate.of(2026, 1, 1), 9, PART_MONTH_VIEWS))
+
+        val result = repositoryAt(LATE_SEPTEMBER).fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.ThisYear)
+
+        verify(statsDataSource).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = eq(StatsUnit.MONTH),
+            quantity = eq(9),
+            endDate = eq("2025-09-23"),
+            startDate = isNull(),
+            statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+        )
+        // Nine months of 2025 truncated at the 23rd, not nine whole ones: a flat site must not read as
+        // a collapse just because this month is only three weeks old.
+        val success = result as PeriodStatsResult.Success
+        assertThat(success.previousAggregates.views).isEqualTo(9 * PART_MONTH_VIEWS)
+        assertThat(success.previousAggregates.endDate).isEqualTo("2025-09-23")
+        // The chart still spans the whole of both years, so the months still to come keep a comparison.
+        assertThat(success.currentPeriodData).hasSize(MONTHS_IN_YEAR)
+        assertThat(success.previousPeriodData).hasSize(MONTHS_IN_YEAR)
+    }
+
+    @Test
+    fun `given a day-bucket calendar period, when fetchStatsForPeriod, then no extra totals call runs`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+        repositoryAt(WEDNESDAY).fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.ThisWeek)
+
+        // A day bucket is indivisible, so trimming whole buckets off the previous week is already
+        // exact and the card stays at two requests.
+        verify(statsDataSource, times(2)).fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull())
+    }
+
+    /** [count] consecutive month buckets from [start]'s month, each worth [views] of every metric. */
+    private fun monthlyVisits(start: LocalDate, count: Int, views: Long): StatsVisitsDataResult.Success {
+        val periods = (0 until count).map { start.plusMonths(it.toLong()).withDayOfMonth(1).toString() }
+        return StatsVisitsDataResult.Success(
+            StatsVisitsData(
+                visits = periods.map { VisitsDataPoint(it, views) },
+                visitors = periods.map { VisitorsDataPoint(it, views) },
+                likes = periods.map { LikesDataPoint(it, views) },
+                comments = periods.map { CommentsDataPoint(it, views) },
+                posts = periods.map { PostsDataPoint(it, views) }
+            )
+        )
+    }
+
     /** [count] consecutive day buckets from [start], each worth [DAILY_VIEWS] views. */
     private fun createDailyVisitsData(start: LocalDate, count: Int): StatsVisitsData {
         val periods = (0 until count).map { start.plusDays(it.toLong()).toString() }
@@ -1671,9 +1729,14 @@ class StatsRepositoryTest : BaseUnitTest() {
         // in the year that the elapsed part of it would otherwise be charted in days.
         private val WEDNESDAY: LocalDate = LocalDate.of(2026, 3, 11)
         private val EARLY_JANUARY: LocalDate = LocalDate.of(2026, 1, 5)
+        // Nine months into 2026, with September only part-elapsed -- the case where comparing whole
+        // month buckets against the previous year would overstate the previous total.
+        private val LATE_SEPTEMBER: LocalDate = LocalDate.of(2026, 9, 23)
         private const val DAYS_IN_WEEK = 7
         private const val MONTHS_IN_YEAR = 12
         private const val DAILY_VIEWS = 10L
+        private const val WHOLE_MONTH_VIEWS = 300L
+        private const val PART_MONTH_VIEWS = 230L
 
         private const val TEST_SITE_ID = 123L
         private val TEST_ERROR_TYPE = StatsErrorType.NETWORK_ERROR

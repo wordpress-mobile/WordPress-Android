@@ -627,8 +627,9 @@ private fun ViewsStatsChart(
             val hasPreviousPeriod = chartData.previousPeriod.isNotEmpty()
             // The two series can differ in length -- an unfinished calendar period compares its whole
             // span against a previous period of a different bucket count (March's 31 days against
-            // February's 28) -- so align on the current period's slots and read the comparison by
-            // index, leaving the tail without one at zero.
+            // February's 28). The bars align on the current period's slots and read the comparison by
+            // index, leaving the tail without one at zero; the line instead keeps each series at its
+            // own length, so neither dives to the axis over buckets it simply has no data for.
             val currentValues = chartData.currentPeriod.map { it.value }
             val previousValues = chartData.currentPeriod.indices.map {
                 chartData.previousPeriod.getOrNull(it)?.value ?: 0L
@@ -643,7 +644,10 @@ private fun ViewsStatsChart(
                             .map { it.value }
                         series(elapsedValues.ifEmpty { currentValues })
                         if (hasPreviousPeriod) {
-                            series(previousValues)
+                            // Clamped to the current period's slots but never padded out to them: a
+                            // shorter previous period (February against March) ends where its own data
+                            // ends, instead of reading as three days of zero views.
+                            series(chartData.previousPeriod.take(currentValues.size).map { it.value })
                         }
                     }
                 }

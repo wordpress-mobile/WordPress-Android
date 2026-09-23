@@ -101,6 +101,12 @@ class ViewsStatsViewModel @Inject constructor(
     // own totals and then restore the whole-period row when the selection is cleared.
     private var wholePeriodBottom: BottomStatsUiState = BottomStatsUiState.Loading
 
+    // The period [wholePeriodBottom] holds the row for. It outlives a period change, and a single-day
+    // period loads its row from a separate call that can land well after the chart, so without this
+    // an hourly selection made in between would borrow the *previous* period's totals for the metrics
+    // an hourly response carries no series for — see [wholePeriodItemsForCurrentPeriod].
+    private var wholePeriodBottomPeriod: StatsPeriod? = null
+
     private var currentPeriod: StatsPeriod = _selectedPeriod.value
 
     // The period the user last picked themselves, kept while they page back and forth. Paging turns a
@@ -585,14 +591,19 @@ class ViewsStatsViewModel @Inject constructor(
      * the metrics it has no data for fall back to the whole day's own totals (matching iOS) rather than
      * reading a misleading zero for the selected hour — see [hasPerBucketSeries].
      */
+    @Suppress("ReturnCount")
     private fun buildSelectedBarBottom(index: Int): BottomStatsUiState? {
         val result = lastChartResult ?: return null
         val current = result.currentPeriodData.getOrNull(index) ?: return null
         val previous = result.previousPeriodData.getOrNull(index)?.toBottomAggregates()
             ?: EMPTY_BOTTOM_AGGREGATES
         val barItems = buildStatItems(current.toBottomAggregates(), previous)
-        val wholePeriodItems = (wholePeriodBottom as? BottomStatsUiState.Loaded)?.stats
-            ?: return BottomStatsUiState.Loaded(barItems)
+        if (barItems.all { hasPerBucketSeries(result, it.metric) }) return BottomStatsUiState.Loaded(barItems)
+        // Something has to be borrowed from the day's own row, and until that row has landed for *this*
+        // period there is nothing honest to borrow. Returning null keeps whatever the row already shows
+        // — the loading placeholder on a fresh period — rather than another period's totals or a zero
+        // that reads as "none this hour". The caller reapplies this once the day totals arrive.
+        val wholePeriodItems = wholePeriodItemsForCurrentPeriod() ?: return null
         return BottomStatsUiState.Loaded(
             barItems.map { item ->
                 if (hasPerBucketSeries(result, item.metric)) {
@@ -605,6 +616,16 @@ class ViewsStatsViewModel @Inject constructor(
             }
         )
     }
+
+    /**
+     * The committed period's bottom-row items, but only when they belong to the period now on screen.
+     * [wholePeriodBottom] survives a period change, so without the guard a single-day period could
+     * dress its hourly selection in the row the period before it left behind.
+     */
+    private fun wholePeriodItemsForCurrentPeriod(): List<StatItem>? =
+        (wholePeriodBottom as? BottomStatsUiState.Loaded)
+            ?.takeIf { wholePeriodBottomPeriod == currentPeriod }
+            ?.stats
 
     /**
      * Whether [metric] has a per-bucket series of its own in [result], so a selected bucket can show
@@ -920,9 +941,10 @@ class ViewsStatsViewModel @Inject constructor(
 
     /** Applies a bottom-row update, preserving the current chart state. */
     private fun updateBottom(bottom: BottomStatsUiState) {
-        // This is always the committed period's row; remember it so a soft bar selection can restore
-        // it after overlaying the selected bar's own totals.
+        // This is always the committed period's row; remember it, and which period it belongs to, so a
+        // soft bar selection can restore it after overlaying the selected bar's own totals.
         wholePeriodBottom = bottom
+        wholePeriodBottomPeriod = currentPeriod
         _uiState.update { current ->
             when (current) {
                 // When a bar is soft-selected the visible row holds that bar's overlaid totals. A
