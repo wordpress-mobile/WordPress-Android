@@ -54,7 +54,7 @@ class ContactSupportScreen {
 
     companion object {
         // "Contact Support" screen looks differently depending on whether the
-        // Zendesk credentials come from `defaults.properties` or the real secrets.
+        // Zendesk credentials come from the real secrets or the default fallback.
         // But the elements tree always contains all elements, some are
         // just hidden. Locators below attempt to support both variants.
         var textInput = Espresso.onView(

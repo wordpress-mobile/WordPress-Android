@@ -104,7 +104,7 @@ local-builds.gradle
 # be ignored.
 .configure-files/*
 !.configure-files/*.enc
-# These secrets are not part of the repository anymore, but we keep it in the
+# These secrets are not part of the repository anymore, but we keep them in the
 # gitignore for retrocompatibility, so that it won't appear as a new file and
 # be accidentally checked in the repository.
 google-upload-credentials.json
