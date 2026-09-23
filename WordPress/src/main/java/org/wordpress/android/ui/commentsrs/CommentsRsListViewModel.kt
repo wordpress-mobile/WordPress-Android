@@ -41,7 +41,11 @@ import org.wordpress.android.ui.rs.RsDateFormatter
 import org.wordpress.android.ui.rs.RsErrorUtils
 import org.wordpress.android.ui.rs.RsSnackbarMessage
 import org.wordpress.android.ui.rs.RsTabUiState
+import org.wordpress.android.ui.rs.checkNetwork
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.MIN_SEARCH_QUERY_LENGTH
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.SEARCH_DEBOUNCE_MS
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.rs.sendWithRetry
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WPAvatarUtilsWrapper
@@ -493,15 +497,8 @@ class CommentsRsListViewModel @Inject constructor(
         analyticsTracker.track(stat)
     }
 
-    private fun checkNetwork(): Boolean {
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            _snackbarMessages.trySend(
-                RsSnackbarMessage(resourceProvider.getString(R.string.no_network_message))
-            )
-            return false
-        }
-        return true
-    }
+    private fun checkNetwork(): Boolean =
+        _snackbarMessages.checkNetwork(networkUtilsWrapper, resourceProvider)
 
     /**
      * The pager settled on a new tab: clears any active selection (like the legacy action mode)
@@ -645,13 +642,8 @@ class CommentsRsListViewModel @Inject constructor(
     ) {
         val authError = RsErrorUtils.isAuthError(reason, errorCode)
         updateTabUiState(tab) { copy(isLoadingMore = false) }
-        _snackbarMessages.trySend(
-            RsSnackbarMessage(
-                message = errorMessage(message, reason, errorCode),
-                actionLabel = if (authError) null else resourceProvider.getString(R.string.retry),
-                onAction = if (authError) null else ({ loadMore(tab) })
-            )
-        )
+        val text = errorMessage(message, reason, errorCode)
+        _snackbarMessages.sendWithRetry(text, authError, resourceProvider) { loadMore(tab) }
     }
 
     /**
@@ -674,17 +666,9 @@ class CommentsRsListViewModel @Inject constructor(
                 copy(isLoading = false, isRefreshing = false, error = null, isAuthError = authError)
             }
             if (showErrorSnackbar) {
-                // Retrying an auth failure just fails again, so offer the message without
-                // the action.
-                _snackbarMessages.trySend(
-                    RsSnackbarMessage(
-                        message = friendly,
-                        actionLabel = if (authError) null
-                            else resourceProvider.getString(R.string.retry),
-                        onAction = if (authError) null
-                            else ({ refreshTab(tab, isUserRefresh = true) })
-                    )
-                )
+                _snackbarMessages.sendWithRetry(friendly, authError, resourceProvider) {
+                    refreshTab(tab, isUserRefresh = true)
+                }
             }
         } else {
             updateTabUiState(tab) {
@@ -774,9 +758,6 @@ class CommentsRsListViewModel @Inject constructor(
     companion object {
         // Same property key as the legacy list's tracking (UnifiedCommentsActivity).
         private const val SELECTED_FILTER_PROPERTY = "selected_filter"
-
-        private const val SEARCH_DEBOUNCE_MS = 250L
-        private const val MIN_SEARCH_QUERY_LENGTH = 3
 
         // Larger page for the Unreplied tab (matching the legacy list) to offset the rows that
         // client-side threading filters out.

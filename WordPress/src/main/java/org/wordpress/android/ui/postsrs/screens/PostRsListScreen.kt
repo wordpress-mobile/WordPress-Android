@@ -44,7 +44,6 @@ import org.wordpress.android.ui.compose.utils.rsDebugTitle
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.PostRsConfirmation
 import org.wordpress.android.ui.postsrs.PostRsListTab
-import org.wordpress.android.ui.postsrs.PostRsListViewModel.Companion.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostRsUiModel
 import org.wordpress.android.ui.rs.RsConfirmationDialogState
@@ -54,6 +53,7 @@ import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.contentlist.ContentListAuthorFilterButton
 import org.wordpress.android.ui.rs.contentlist.ContentListConfirmationDialog
 import org.wordpress.android.ui.rs.contentlist.ContentListDefaults
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListDensityToggle
 import org.wordpress.android.ui.rs.contentlist.ContentListSearchClearButton

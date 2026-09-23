@@ -57,7 +57,6 @@ import org.wordpress.android.ui.pagesrs.PageRsListItem
 import org.wordpress.android.ui.pagesrs.PageRsListTab
 import org.wordpress.android.ui.pagesrs.PageRsMenuAction
 import org.wordpress.android.ui.pagesrs.PageRsParentPickerState
-import org.wordpress.android.ui.pagesrs.PagesRsListViewModel.Companion.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.rs.RsConfirmationDialogState
 import org.wordpress.android.ui.rs.RsReveal
@@ -66,6 +65,7 @@ import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.contentlist.ContentListAuthorFilterButton
 import org.wordpress.android.ui.rs.contentlist.ContentListConfirmationDialog
 import org.wordpress.android.ui.rs.contentlist.ContentListDefaults
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListDensityToggle
 import org.wordpress.android.ui.rs.contentlist.ContentListSearchClearButton

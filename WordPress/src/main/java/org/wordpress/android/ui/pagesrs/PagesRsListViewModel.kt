@@ -43,27 +43,31 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.posts.AuthorFilterSelection
+import org.wordpress.android.ui.rs.RsCollectionPrefetch
 import org.wordpress.android.ui.rs.RsErrorUtils
+import org.wordpress.android.ui.rs.RsFeaturedImages
 import org.wordpress.android.ui.rs.RsFluxCBridge
 import org.wordpress.android.ui.rs.RsMetricJobs
+import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.ui.rs.RsReveal
 import org.wordpress.android.ui.rs.RsSnackbarMessage
-import org.wordpress.android.ui.rs.RsTabUiState
-import org.wordpress.android.ui.rs.data.FeaturedImageUrls
-import org.wordpress.android.ui.rs.RsFeaturedImages
-import org.wordpress.android.ui.rs.RsViewCounts
-import org.wordpress.android.ui.rs.RsVisibleRows
-import org.wordpress.android.ui.rs.contentlist.toContentItemUiModel
-import org.wordpress.android.ui.rs.data.RsSiteRestClient
-import org.wordpress.android.ui.rs.data.WpServiceProvider
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.rs.RsCollectionPrefetch
-import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.ui.rs.RsTabLoading
 import org.wordpress.android.ui.rs.RsTabRefreshJobs
+import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.RsUploadedPost
-import org.wordpress.android.ui.rs.toRsPostStatus
+import org.wordpress.android.ui.rs.RsViewCounts
+import org.wordpress.android.ui.rs.RsVisibleRows
+import org.wordpress.android.ui.rs.checkNetwork
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.MIN_SEARCH_QUERY_LENGTH
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.SEARCH_DEBOUNCE_MS
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.rs.contentlist.toContentItemUiModel
+import org.wordpress.android.ui.rs.data.FeaturedImageUrls
+import org.wordpress.android.ui.rs.data.RsSiteRestClient
+import org.wordpress.android.ui.rs.data.WpServiceProvider
+import org.wordpress.android.ui.rs.sendWithRetry
+import org.wordpress.android.ui.rs.toRsPostStatus
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -709,17 +713,11 @@ internal class PagesRsListViewModel @Inject constructor(
                 )
             }
             if (showSnackbar) {
-                _snackbarMessages.trySend(
-                    RsSnackbarMessage(
-                        message = message,
-                        actionLabel = if (authError) null
-                            else resourceProvider.getString(R.string.retry),
-                        // Tapping retry is the user asking, so the result has to be reported -
-                        // a silent second failure looks like the button did nothing.
-                        onAction = if (authError) null
-                            else ({ refreshTab(tab, isUserRefresh = true) })
-                    )
-                )
+                // Tapping retry is the user asking, so the result has to be reported -
+                // a silent second failure looks like the button did nothing.
+                _snackbarMessages.sendWithRetry(message, authError, resourceProvider) {
+                    refreshTab(tab, isUserRefresh = true)
+                }
             }
         } else {
             updateTabUiState(tab) {
@@ -1424,15 +1422,8 @@ internal class PagesRsListViewModel @Inject constructor(
         AppLog.w(AppLog.T.PAGES, "No link for page $remotePageId")
     }
 
-    private fun checkNetwork(): Boolean {
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            _snackbarMessages.trySend(
-                RsSnackbarMessage(resourceProvider.getString(R.string.no_network_message))
-            )
-            return false
-        }
-        return true
-    }
+    private fun checkNetwork(): Boolean =
+        _snackbarMessages.checkNetwork(networkUtilsWrapper, resourceProvider)
 
     private fun friendlyErrorMessage(
         e: Exception?,
@@ -1841,9 +1832,7 @@ internal class PagesRsListViewModel @Inject constructor(
          * server that always reports another page can't keep the loop going.
          */
         private const val MAX_FILL_PAGES = 50
-        private const val SEARCH_DEBOUNCE_MS = 250L
         private const val SITE_EDITOR_LAUNCH_DEBOUNCE_MS = 1000L
-        internal const val MIN_SEARCH_QUERY_LENGTH = 3
 
         /**
          * View counts are one request each, so a screenful is fetched a few at a time rather than

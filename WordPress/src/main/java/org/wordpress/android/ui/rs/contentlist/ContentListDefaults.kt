@@ -19,6 +19,12 @@ object ContentListDefaults {
     /** How close to the end of the list the user has to scroll before the next page is asked for. */
     const val LOAD_MORE_THRESHOLD = 5
 
+    /** Search waits this long after the last keystroke, so a word being typed is one request. */
+    const val SEARCH_DEBOUNCE_MS = 250L
+
+    /** Shorter queries match too much to be useful, so the lists don't search until this length. */
+    const val MIN_SEARCH_QUERY_LENGTH = 3
+
     /** Roughly a screenful, so the skeleton fills the list rather than leaving a gap below it. */
     const val SHIMMER_ITEM_COUNT = 8
 

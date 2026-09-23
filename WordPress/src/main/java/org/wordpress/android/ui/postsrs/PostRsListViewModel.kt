@@ -28,27 +28,31 @@ import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.posts.AuthorFilterSelection
+import org.wordpress.android.ui.rs.RsCommentCountFetcher
 import org.wordpress.android.ui.rs.RsErrorUtils
+import org.wordpress.android.ui.rs.RsFeaturedImages
 import org.wordpress.android.ui.rs.RsFluxCBridge
 import org.wordpress.android.ui.rs.RsMetricJobs
+import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.ui.rs.RsReveal
 import org.wordpress.android.ui.rs.RsSnackbarMessage
+import org.wordpress.android.ui.rs.RsTabLoading
+import org.wordpress.android.ui.rs.RsTabRefreshJobs
 import org.wordpress.android.ui.rs.RsTabUiState
-import org.wordpress.android.ui.rs.RsFeaturedImages
+import org.wordpress.android.ui.rs.RsUploadedPost
 import org.wordpress.android.ui.rs.RsViewCounts
 import org.wordpress.android.ui.rs.RsVisibleRows
+import org.wordpress.android.ui.rs.checkNetwork
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.MIN_SEARCH_QUERY_LENGTH
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.SEARCH_DEBOUNCE_MS
+import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.toContentItemUiModel
 import org.wordpress.android.ui.rs.data.FeaturedImageUrls
 import org.wordpress.android.ui.rs.data.RsSiteRestClient
 import org.wordpress.android.ui.rs.data.WpServiceProvider
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.rs.RsCommentCountFetcher
-import org.wordpress.android.ui.rs.contentlist.ContentListDensity
-import org.wordpress.android.ui.rs.RsPostChangeListener
-import org.wordpress.android.ui.rs.RsTabLoading
-import org.wordpress.android.ui.rs.RsTabRefreshJobs
-import org.wordpress.android.ui.rs.RsUploadedPost
+import org.wordpress.android.ui.rs.sendWithRetry
 import org.wordpress.android.ui.rs.toRsPostStatus
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -614,15 +618,8 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
-    private fun checkNetwork(): Boolean {
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            _snackbarMessages.trySend(
-                RsSnackbarMessage(resourceProvider.getString(R.string.no_network_message))
-            )
-            return false
-        }
-        return true
-    }
+    private fun checkNetwork(): Boolean =
+        _snackbarMessages.checkNetwork(networkUtilsWrapper, resourceProvider)
 
     private fun friendlyErrorMessage(
         e: Exception? = null,
@@ -982,17 +979,11 @@ class PostRsListViewModel @Inject constructor(
                 copy(isLoading = false, isRefreshing = false, error = null)
             }
             if (showSnackbar) {
-                _snackbarMessages.trySend(
-                    RsSnackbarMessage(
-                        message = message,
-                        actionLabel = if (authError) null
-                            else resourceProvider.getString(R.string.retry),
-                        // Tapping retry is the user asking, so the result has to be reported -
-                        // a silent second failure looks like the button did nothing.
-                        onAction = if (authError) null
-                            else ({ refreshTab(tab, isUserRefresh = true) })
-                    )
-                )
+                // Tapping retry is the user asking, so the result has to be reported -
+                // a silent second failure looks like the button did nothing.
+                _snackbarMessages.sendWithRetry(message, authError, resourceProvider) {
+                    refreshTab(tab, isUserRefresh = true)
+                }
             }
         } else {
             updateTabUiState(tab) {
@@ -1316,16 +1307,10 @@ class PostRsListViewModel @Inject constructor(
             // background one (initTab, as the pager settles) interrupts with an error nobody
             // provoked. The state above still syncs either way.
             if (isUserRefresh) {
-                _snackbarMessages.trySend(
-                    RsSnackbarMessage(
-                        message = errorMessage.orEmpty(),
-                        actionLabel = if (authError) null
-                            else resourceProvider.getString(R.string.retry),
-                        // As above: the user asked, so a second failure has to be reported.
-                        onAction = if (authError) null
-                            else ({ refreshTab(tab, isUserRefresh = true) })
-                    )
-                )
+                // As above: the user asked, so a second failure has to be reported.
+                _snackbarMessages.sendWithRetry(errorMessage.orEmpty(), authError, resourceProvider) {
+                    refreshTab(tab, isUserRefresh = true)
+                }
             }
         } else {
             updateTabUiState(tab) {
@@ -1367,8 +1352,6 @@ class PostRsListViewModel @Inject constructor(
 
     companion object {
         private const val PAGE_SIZE = 20
-        private const val SEARCH_DEBOUNCE_MS = 250L
-        internal const val MIN_SEARCH_QUERY_LENGTH = 3
 
         /**
          * View counts are one request each, so a screenful is fetched a few at a time rather than
