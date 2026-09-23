@@ -50,6 +50,7 @@ import org.wordpress.android.ui.rs.RsReveal
 import org.wordpress.android.ui.rs.RsSnackbarMessage
 import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.data.FeaturedImageUrls
+import org.wordpress.android.ui.rs.RsFeaturedImages
 import org.wordpress.android.ui.rs.RsViewCounts
 import org.wordpress.android.ui.rs.RsVisibleRows
 import org.wordpress.android.ui.rs.contentlist.toContentItemUiModel
@@ -63,8 +64,6 @@ import org.wordpress.android.ui.rs.RsTabRefreshJobs
 import org.wordpress.android.ui.rs.RsUploadedPost
 import org.wordpress.android.ui.rs.toRsPostStatus
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
-import org.wordpress.android.ui.rs.contentlist.HERO_IMAGE_HEIGHT_DP
-import org.wordpress.android.ui.rs.contentlist.THUMBNAIL_SIZE_DP
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -134,7 +133,6 @@ internal class PagesRsListViewModel @Inject constructor(
 
     /** Tabs whose collection has completed at least one fetch, so an empty list means empty. */
     private val fetchedTabs = mutableSetOf<PageRsListTab>()
-    private val resolveImageJobs = mutableMapOf<PageRsListTab, Job>()
     private val resolveAuthorJobs = mutableMapOf<PageRsListTab, Job>()
     private var lastTrackedTab: PageRsListTab? = null
 
@@ -148,13 +146,11 @@ internal class PagesRsListViewModel @Inject constructor(
         logTag = AppLog.T.PAGES,
         onCountsChanged = ::applyMetrics,
     )
-
-    /**
-     * Featured media ids whose lookup came back without a URL. Rows use this to stop waiting: the
-     * fetch is not retried on its own, so without it they shimmer indefinitely. Cleared by a
-     * refresh, which is what gives a failed lookup another go.
-     */
-    private val unresolvableImageIds = mutableSetOf<Long>()
+    private val featuredImages = RsFeaturedImages(
+        scope = viewModelScope,
+        restClient = restClient,
+        onImagesResolved = ::applyFeaturedImages,
+    )
 
     private val _density = MutableStateFlow(
         ContentListDensity.of(appPrefsWrapper.isContentListCondensed)
@@ -596,7 +592,7 @@ internal class PagesRsListViewModel @Inject constructor(
                 // Drop only the "nothing to show" entries so a transient failure is retried,
                 // while numbers already fetched stay put.
                 viewCounts.invalidateUnresolved()
-                unresolvableImageIds.clear()
+                featuredImages.invalidateUnresolved()
                 userRefreshingTabs.remove(tab)
                 fillingTabs.remove(tab)
                 // Read the fetched items and end both progress states here rather than relying
@@ -1487,7 +1483,7 @@ internal class PagesRsListViewModel @Inject constructor(
                 )
             }
             resolveAuthorNames(tab, uiModels)
-            resolveFeaturedImages(tab, uiModels)
+            site?.let { featuredImages.resolve(tab, it, uiModels) }
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
@@ -1508,15 +1504,11 @@ internal class PagesRsListViewModel @Inject constructor(
             .associate { it.remotePageId to it.page }
         return items.map { model ->
             val existing = existingById[model.remoteId]
-            var resolved = model
+            var resolved = featuredImages.carryOver(model, existing)
             if (model.authorId != 0L && model.authorId == existing?.authorId) {
                 resolved = resolved.copy(authorDisplayName = existing.authorDisplayName)
             }
-            if (model.featuredImageId != 0L && model.featuredImageId == existing?.featuredImageId) {
-                resolved = resolved.copy(featuredImage = existing.featuredImage)
-            }
             resolved.copy(
-                isFeaturedImageUnresolvable = model.featuredImageId in unresolvableImageIds,
                 // Read straight from the metrics cache: rebuilding from the collection would
                 // otherwise blank out numbers already fetched on every change it reports.
                 viewCount = viewCounts.countFor(model.remoteId),
@@ -1529,37 +1521,9 @@ internal class PagesRsListViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Fetches featured image URLs for pages that have a non-zero
-     * [PageRsUiModel.featuredImageId] but no resolved URL yet, sized for
-     * both row shapes.
-     */
-    private fun resolveFeaturedImages(
-        tab: PageRsListTab,
-        pages: List<PageRsUiModel>
-    ) {
-        val site = this.site ?: return
-        val unresolvedIds = pages
-            .filter { it.featuredImageId != 0L && it.featuredImage == null }
-            .map { it.featuredImageId }
-            .distinct()
-        if (unresolvedIds.isEmpty()) return
-
-        resolveImageJobs[tab]?.cancel()
-        resolveImageJobs[tab] = viewModelScope.launch {
-            val images = withContext(Dispatchers.IO) {
-                restClient.fetchFeaturedImageUrls(
-                    site, unresolvedIds, THUMBNAIL_SIZE_DP, HERO_IMAGE_HEIGHT_DP
-                )
-            }
-            // Ids the lookup could not resolve stop their row waiting; ones that did resolve are
-            // no longer reported as unresolvable, so an id that failed once and later came back
-            // is not still written off.
-            unresolvableImageIds.removeAll(images.keys)
-            unresolvableImageIds.addAll(unresolvedIds.filterNot(images::containsKey))
-            updateTabUiState(tab) {
-                copy(items = this.items.map { item -> item.withResolvedFeaturedImage(images) })
-            }
+    private fun applyFeaturedImages(tab: PageRsListTab, images: Map<Long, FeaturedImageUrls>) {
+        updateTabUiState(tab) {
+            copy(items = items.map { it.withResolvedFeaturedImage(images) })
         }
     }
 
@@ -1751,17 +1715,8 @@ internal class PagesRsListViewModel @Inject constructor(
     private fun PageRsListItem.withResolvedFeaturedImage(
         images: Map<Long, FeaturedImageUrls>
     ): PageRsListItem {
-        val image = images[page.featuredImageId]
-        val updated = when {
-            image != null -> page.copy(
-                featuredImage = image,
-                isFeaturedImageUnresolvable = false
-            )
-            page.featuredImageId in unresolvableImageIds ->
-                page.copy(isFeaturedImageUnresolvable = true)
-            else -> return this
-        }
-        return withPage(updated)
+        val updated = featuredImages.withImage(page, images)
+        return if (updated === page) this else withPage(updated)
     }
 
     private suspend fun updateListInfoForTab(tab: PageRsListTab) {
@@ -1851,14 +1806,12 @@ internal class PagesRsListViewModel @Inject constructor(
         refreshJobs.clear()
         fillingTabs.clear()
         fetchedTabs.clear()
-        resolveImageJobs.values.forEach { it.cancel() }
-        resolveImageJobs.clear()
         resolveAuthorJobs.values.forEach { it.cancel() }
         resolveAuthorJobs.clear()
         metricJobs.cancelAll()
         visiblePageIds.clear()
         viewCounts.clear()
-        unresolvableImageIds.clear()
+        featuredImages.clear()
         closeParentPickerCollection()
         parentPickerExcludedIds = emptySet()
         _parentPicker.value = null

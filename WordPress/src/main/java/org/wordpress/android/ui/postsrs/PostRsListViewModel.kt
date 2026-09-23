@@ -34,16 +34,16 @@ import org.wordpress.android.ui.rs.RsMetricJobs
 import org.wordpress.android.ui.rs.RsReveal
 import org.wordpress.android.ui.rs.RsSnackbarMessage
 import org.wordpress.android.ui.rs.RsTabUiState
+import org.wordpress.android.ui.rs.RsFeaturedImages
 import org.wordpress.android.ui.rs.RsViewCounts
 import org.wordpress.android.ui.rs.RsVisibleRows
 import org.wordpress.android.ui.rs.contentlist.toContentItemUiModel
+import org.wordpress.android.ui.rs.data.FeaturedImageUrls
 import org.wordpress.android.ui.rs.data.RsSiteRestClient
 import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.rs.RsCommentCountFetcher
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
-import org.wordpress.android.ui.rs.contentlist.HERO_IMAGE_HEIGHT_DP
-import org.wordpress.android.ui.rs.contentlist.THUMBNAIL_SIZE_DP
 import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.ui.rs.RsTabLoading
 import org.wordpress.android.ui.rs.RsTabRefreshJobs
@@ -107,7 +107,6 @@ class PostRsListViewModel @Inject constructor(
 
     /** Tabs whose collection has completed at least one fetch, so an empty list means empty. */
     private val fetchedTabs = mutableSetOf<PostRsListTab>()
-    private val resolveImageJobs = mutableMapOf<PostRsListTab, Job>()
     private val resolveAuthorJobs = mutableMapOf<PostRsListTab, Job>()
     private val metricJobs = RsMetricJobs()
     private val visiblePostIds = RsVisibleRows<PostRsListTab>()
@@ -118,6 +117,11 @@ class PostRsListViewModel @Inject constructor(
         jobs = metricJobs,
         logTag = AppLog.T.POSTS,
         onCountsChanged = ::applyMetrics,
+    )
+    private val featuredImages = RsFeaturedImages(
+        scope = viewModelScope,
+        restClient = restClient,
+        onImagesResolved = ::applyFeaturedImages,
     )
 
     /**
@@ -134,12 +138,6 @@ class PostRsListViewModel @Inject constructor(
     private val commentCountCache = mutableMapOf<Long, Long?>()
     private val inFlightCommentCounts = mutableSetOf<Long>()
 
-    /**
-     * Featured media ids whose lookup came back without a URL. Rows use this to stop waiting: the
-     * fetch is not retried on its own, so without it they shimmer indefinitely. Cleared by a
-     * refresh, which is what gives a failed lookup another go.
-     */
-    private val unresolvableImageIds = mutableSetOf<Long>()
     private var lastTrackedTab: PostRsListTab? = null
 
     private val _events = Channel<PostRsListEvent>(Channel.BUFFERED)
@@ -787,15 +785,13 @@ class PostRsListViewModel @Inject constructor(
         userRefreshingTabs.clear()
         refreshJobs.clear()
         fetchedTabs.clear()
-        resolveImageJobs.values.forEach { it.cancel() }
-        resolveImageJobs.clear()
         resolveAuthorJobs.values.forEach { it.cancel() }
         resolveAuthorJobs.clear()
         metricJobs.cancelAll()
         visiblePostIds.clear()
         viewCounts.clear()
         commentCountCache.clear()
-        unresolvableImageIds.clear()
+        featuredImages.clear()
         inFlightCommentCounts.clear()
         _tabStates.value = emptyMap()
     }
@@ -942,7 +938,7 @@ class PostRsListViewModel @Inject constructor(
                 // while numbers already fetched stay put.
                 viewCounts.invalidateUnresolved()
                 commentCountCache.entries.removeAll { it.value == null }
-                unresolvableImageIds.clear()
+                featuredImages.invalidateUnresolved()
                 userRefreshingTabs.remove(tab)
                 // Read the fetched items and end both progress states here rather than relying
                 // on the collection observers, which aren't guaranteed to fire for a refresh.
@@ -1052,16 +1048,8 @@ class PostRsListViewModel @Inject constructor(
                 val effectiveTab = if (isSearch) tabForStatus(model.status) else tab
                 val existing = existingPosts
                     .firstOrNull { it.remoteId == model.remoteId }
-                model.copy(
+                featuredImages.carryOver(model, existing).copy(
                     actions = getMenuActions(effectiveTab, model.hasPassword, model.commentsOpen),
-                    featuredImage = if (
-                        model.featuredImageId != 0L &&
-                        model.featuredImageId == existing?.featuredImageId
-                    ) {
-                        existing.featuredImage
-                    } else {
-                        null
-                    },
                     authorDisplayName = if (
                         model.authorId != 0L &&
                         model.authorId == existing?.authorId
@@ -1070,8 +1058,6 @@ class PostRsListViewModel @Inject constructor(
                     } else {
                         null
                     },
-                    isFeaturedImageUnresolvable =
-                        model.featuredImageId in unresolvableImageIds,
                     // Read straight from the metrics cache: rebuilding from the collection would
                     // otherwise blank out numbers already fetched on every change it reports.
                     viewCount = viewCounts.countFor(model.remoteId),
@@ -1094,56 +1080,16 @@ class PostRsListViewModel @Inject constructor(
                     error = null
                 )
             }
-            resolveFeaturedImages(tab, uiModels)
+            featuredImages.resolve(tab, site, uiModels)
             resolveAuthorNames(tab, uiModels)
         } catch (e: Exception) {
             AppLog.e(AppLog.T.POSTS, "Failed to load items for tab $tab", e)
         }
     }
 
-    /**
-     * Fetches featured image URLs for posts that have a non-zero
-     * [PostRsUiModel.featuredImageId] but no resolved URL yet, sized for
-     * both row shapes.
-     */
-    private fun resolveFeaturedImages(
-        tab: PostRsListTab,
-        posts: List<PostRsUiModel>
-    ) {
-        val unresolvedIds = posts
-            .filter { it.featuredImageId != 0L && it.featuredImage == null }
-            .map { it.featuredImageId }
-            .distinct()
-        if (unresolvedIds.isEmpty()) return
-
-        resolveImageJobs[tab]?.cancel()
-        resolveImageJobs[tab] = viewModelScope.launch {
-            val images = withContext(Dispatchers.IO) {
-                restClient.fetchFeaturedImageUrls(
-                    site, unresolvedIds, THUMBNAIL_SIZE_DP, HERO_IMAGE_HEIGHT_DP
-                )
-            }
-            // Ids the lookup could not resolve stop their row waiting; ones that did resolve are
-            // no longer reported as unresolvable, so an id that failed once and later came back
-            // is not still written off.
-            unresolvableImageIds.removeAll(images.keys)
-            unresolvableImageIds.addAll(unresolvedIds.filterNot(images::containsKey))
-            updateTabUiState(tab) {
-                copy(
-                    items = this.items.map { post ->
-                        val image = images[post.featuredImageId]
-                        when {
-                            image != null -> post.copy(
-                                featuredImage = image,
-                                isFeaturedImageUnresolvable = false
-                            )
-                            post.featuredImageId in unresolvableImageIds ->
-                                post.copy(isFeaturedImageUnresolvable = true)
-                            else -> post
-                        }
-                    }
-                )
-            }
+    private fun applyFeaturedImages(tab: PostRsListTab, images: Map<Long, FeaturedImageUrls>) {
+        updateTabUiState(tab) {
+            copy(items = items.map { featuredImages.withImage(it, images) })
         }
     }
 
