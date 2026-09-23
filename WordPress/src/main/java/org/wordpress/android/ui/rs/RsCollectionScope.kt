@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
  * are torn down. A child of [parent], so it also dies with the view model.
  */
 internal class RsCollectionScope(private val parent: CoroutineScope) {
+    @Volatile
     private var scope = createScope()
 
     fun launch(block: suspend CoroutineScope.() -> Unit): Job = scope.launch(block = block)
