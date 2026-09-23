@@ -37,7 +37,7 @@ object RsDateFormatter {
         val secondsSince = abs((now - millis) / MILLIS_PER_SECOND)
 
         return when {
-            isScheduled -> formatAbbrDateTime(millis)
+            isScheduled -> formatDateTime(dateGmt)
             secondsSince < SECONDS_PER_MINUTE -> nowLabel
             secondsSince < SECONDS_PER_WEEK ->
                 DateUtils.getRelativeTimeSpanString(millis, now, DateUtils.MINUTE_IN_MILLIS).toString()
@@ -48,6 +48,7 @@ object RsDateFormatter {
     private fun formatAbbrDate(millis: Long) =
         DateFormat.getDateInstance(DateFormat.MEDIUM).format(Date(millis))
 
-    private fun formatAbbrDateTime(millis: Long) =
-        DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(millis))
+    /** An abbreviated absolute date with the time of day, e.g. "Dec 15, 2025, 9:00 AM". */
+    fun formatDateTime(dateGmt: Date): String =
+        DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(dateGmt)
 }

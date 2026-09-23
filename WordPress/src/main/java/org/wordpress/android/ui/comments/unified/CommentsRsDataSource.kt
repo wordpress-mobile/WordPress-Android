@@ -71,7 +71,11 @@ class CommentsRsDataSource @Inject constructor(
          * onto [CommentStatus.ALL], whose label is the word "All"; this keeps the real value so
          * a custom status can be shown verbatim.
          */
-        val rawStatus: String = ""
+        val rawStatus: String = "",
+        val authorUrl: String = "",
+        // Edit context only (see [getComment]); blank otherwise.
+        val authorEmail: String = "",
+        val authorIp: String = ""
     )
 
     /** Result of a write request, carrying the server error message when one is available. */
@@ -101,8 +105,28 @@ class CommentsRsDataSource @Inject constructor(
         ) : RsCommentsPageResult
     }
 
-    suspend fun getComment(site: SiteModel, commentId: Long): RsComment? = safe(errorValue = null) {
+    /**
+     * Fetches one comment. [withEditContext] asks for the edit context, which adds the author's
+     * email and IP; pass it only when the user can moderate. A server refusal (a capability that
+     * went stale mid-session) falls back to the view context rather than failing the load.
+     */
+    suspend fun getComment(
+        site: SiteModel,
+        commentId: Long,
+        withEditContext: Boolean = false
+    ): RsComment? = safe(errorValue = null) {
         val client = wpApiClientProvider.getWpApiClient(site)
+        if (withEditContext) {
+            when (
+                val result = client.request {
+                    it.comments().retrieveWithEditContext(commentId, CommentRetrieveParams())
+                }
+            ) {
+                is WpRequestResult.Success -> return@safe result.response.data.toRsComment()
+                is WpRequestResult.WpError -> Unit
+                else -> return@safe null
+            }
+        }
         when (
             val result = client.request {
                 it.comments().retrieveWithViewContext(commentId, CommentRetrieveParams())
@@ -415,11 +439,32 @@ internal fun CommentWithViewContext.toRsComment() = CommentsRsDataSource.RsComme
     url = link,
     postId = post,
     status = status.toAppCommentStatus(),
-    rawStatus = status.rawValue()
+    rawStatus = status.rawValue(),
+    authorUrl = authorUrl
 )
 
-internal fun CommentWithViewContext.pickAvatarUrl(): String =
-    (authorAvatarUrls[UserAvatarSize.Size96] ?: authorAvatarUrls.values.firstOrNull { !it.isNullOrEmpty() }).orEmpty()
+/** As the view-context mapping, plus the author's email and IP, which only edit context carries. */
+private fun CommentWithEditContext.toRsComment() = CommentsRsDataSource.RsComment(
+    remoteCommentId = id,
+    authorId = author,
+    parentId = parent,
+    authorName = authorName,
+    authorAvatarUrl = authorAvatarUrls.pickAvatarUrl(),
+    dateGmt = dateGmt ?: Date(0),
+    contentHtml = content.rendered,
+    url = link,
+    postId = post,
+    status = status.toAppCommentStatus(),
+    rawStatus = status.rawValue(),
+    authorUrl = authorUrl,
+    authorEmail = authorEmail,
+    authorIp = authorIp
+)
+
+internal fun CommentWithViewContext.pickAvatarUrl(): String = authorAvatarUrls.pickAvatarUrl()
+
+private fun Map<UserAvatarSize, String?>.pickAvatarUrl(): String =
+    (this[UserAvatarSize.Size96] ?: values.firstOrNull { !it.isNullOrEmpty() }).orEmpty()
 
 internal fun CommentStatus.toRsCommentStatus(): RsCommentStatus = when (this) {
     CommentStatus.APPROVED -> RsCommentStatus.Approved

@@ -4998,5 +4998,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="comment_reply_delete_draft">Delete Draft</string>
     <string name="comment_reply_save_draft">Save Draft</string>
     <string name="comment_detail_on_post">on %1$s</string>
+    <string name="comment_author_info_show">Show author details</string>
+    <string name="comment_author_info_date">Date</string>
+    <string name="comment_author_info_website">Website</string>
+    <string name="comment_author_info_email">Email</string>
+    <string name="comment_author_info_send_email">Send email</string>
+    <string name="comment_author_info_ip_address">IP address</string>
     <string name="comment_detail_in_reply_to">In reply to %1$s:</string>
 </resources>

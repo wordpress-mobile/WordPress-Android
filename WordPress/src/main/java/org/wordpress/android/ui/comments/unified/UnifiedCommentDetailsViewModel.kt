@@ -161,7 +161,10 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                 _uiState.value = CommentDetailsUiState(showProgress = true)
             }
             val loaded = withContext(bgDispatcher) {
-                val rs = commentsRsDataSource.getComment(site, remoteCommentId)
+                // The redesign's author sheet shows the email and IP, which need the edit context.
+                // The capability is session-cached, so this rarely costs a request.
+                val withEditContext = isRedesignEnabled && siteCapabilityChecker.canModerateComments(site)
+                val rs = commentsRsDataSource.getComment(site, remoteCommentId, withEditContext)
                 // Independent of the cache lookups below, so it runs alongside them rather than
                 // adding its round trips to the first paint.
                 val extras = async { fetchRedesignExtras(rs) }
@@ -567,6 +570,10 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         authorAvatarUrl = authorAvatarUrl,
         // Same formatter as the rs comments list, so the date doesn't change when you open a comment.
         datePublished = RsDateFormatter.format(dateGmt, resourceProvider.getString(R.string.rs_date_now)),
+        dateFull = RsDateFormatter.formatDateTime(dateGmt),
+        authorUrl = authorUrl,
+        authorEmail = authorEmail,
+        authorIp = authorIp,
         commentText = contentHtml,
         postTitle = cached?.postTitle?.takeIf { it.isNotBlank() } ?: fallbackPostTitle,
         commentUrl = url,
@@ -594,6 +601,11 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         val authorName: String = "",
         val authorAvatarUrl: String = "",
         val datePublished: String = "",
+        /** The author sheet's rows; each is hidden when blank. Email and IP need edit context. */
+        val dateFull: String = "",
+        val authorUrl: String = "",
+        val authorEmail: String = "",
+        val authorIp: String = "",
         val commentText: String = "",
         val postTitle: String = "",
         val commentUrl: String = "",

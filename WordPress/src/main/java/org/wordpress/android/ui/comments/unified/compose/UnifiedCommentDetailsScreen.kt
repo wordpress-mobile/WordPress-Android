@@ -325,6 +325,7 @@ private fun RedesignedCommentDetailsContent(
     onReplyClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var showAuthorInfo by rememberSaveable { mutableStateOf(false) }
     Column(
         modifier = modifier
             .nestedScroll(rememberNestedScrollInteropConnection())
@@ -357,6 +358,7 @@ private fun RedesignedCommentDetailsContent(
                 postTitle = uiState.postTitle,
                 datePublished = uiState.datePublished,
                 onPostTitleClick = actions.onPostTitleClick,
+                onAuthorClick = { showAuthorInfo = true },
                 modifier = Modifier.padding(top = REDESIGN_HEADER_GAP)
             )
         }
@@ -389,6 +391,17 @@ private fun RedesignedCommentDetailsContent(
                     .offset(x = -REACTION_ROW_INSET)
             )
         }
+    }
+    if (showAuthorInfo) {
+        CommentAuthorInfoSheet(
+            authorName = uiState.authorName,
+            authorAvatarUrl = uiState.authorAvatarUrl,
+            date = uiState.dateFull,
+            website = uiState.authorUrl,
+            email = uiState.authorEmail,
+            ipAddress = uiState.authorIp,
+            onDismiss = { showAuthorInfo = false }
+        )
     }
 }
 

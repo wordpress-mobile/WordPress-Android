@@ -7,6 +7,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,9 +35,8 @@ import org.wordpress.android.ui.dataview.compose.RemoteImage
  * `CommentAuthorHeader`: a 40dp circular avatar beside the author name, the post the comment was
  * left on, and the relative date.
  *
- * The post line is the tappable part (it opens the post in the Reader), rather than iOS's
- * whole-row tap, because the row's only other action there is an author-info sheet that Android
- * does not have.
+ * As on iOS the whole row opens the author-info sheet, with a trailing info icon as the cue. The
+ * post line is the exception: its own tap opens the post in the Reader.
  */
 @Composable
 fun CommentAuthorHeader(
@@ -43,11 +45,17 @@ fun CommentAuthorHeader(
     postTitle: String,
     datePublished: String,
     onPostTitleClick: () -> Unit,
+    onAuthorClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
         verticalAlignment = Alignment.Top,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable(
+                onClickLabel = stringResource(R.string.comment_author_info_show),
+                onClick = onAuthorClick
+            )
     ) {
         RemoteImage(
             imageUrl = authorAvatarUrl,
@@ -56,7 +64,11 @@ fun CommentAuthorHeader(
                 .size(AVATAR_SIZE)
                 .clip(CircleShape)
         )
-        Column(modifier = Modifier.padding(start = AVATAR_GAP)) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = AVATAR_GAP)
+        ) {
             Text(
                 text = authorName,
                 style = MaterialTheme.typography.titleSmall,
@@ -84,6 +96,13 @@ fun CommentAuthorHeader(
                 modifier = Modifier.padding(top = LINE_GAP)
             )
         }
+        // Decorative: the row's click label already announces the action.
+        Icon(
+            imageVector = Icons.Outlined.Info,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(start = AVATAR_GAP)
+        )
     }
 }
 
@@ -124,7 +143,8 @@ private fun CommentAuthorHeaderPreview() {
             authorAvatarUrl = "",
             postTitle = "My first post",
             datePublished = "2 hours ago",
-            onPostTitleClick = {}
+            onPostTitleClick = {},
+            onAuthorClick = {}
         )
     }
 }
