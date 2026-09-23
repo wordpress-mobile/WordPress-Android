@@ -12,14 +12,9 @@ import uniffi.wp_mobile.FullEntityAnyPostWithEditContext
 import uniffi.wp_mobile.PostItemState
 
 /**
- * Maps what the rs collection reports for one row onto [ContentItemUiModel].
- *
- * A collection reports a row before it has the data for it, so the states without data map to a
- * placeholder or an error row carrying only [remoteId] - the list still has to render something
- * in that position.
- *
- * [showStatus] is set while searching, where results mix statuses and the row has to say which one
- * it is. [nowLabel] is the word a date within the last day is shown as.
+ * Maps one row of an rs collection onto [ContentItemUiModel]. Rows without data yet map to a
+ * placeholder or error row carrying only [remoteId]. [showStatus] is set while searching, where
+ * results mix statuses.
  */
 fun <A : RsMenuAction> PostItemState.toContentItemUiModel(
     remoteId: Long,
@@ -80,8 +75,7 @@ private fun <A : RsMenuAction> FullEntityAnyPostWithEditContext.toContentItemUiM
             if (item.status is PostStatus.Pending) {
                 add(R.string.post_status_pending_review)
             }
-            // Pages have no sticky flag - WordPress does not return one for them, so this is
-            // inert there rather than conditional on the post type. ContentItemMapperTest pins it.
+            // Pages have no sticky flag, so this is inert for them.
             if (item.sticky == true) {
                 add(R.string.post_status_sticky)
             }

@@ -8,13 +8,8 @@ import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 
 /**
- * Where an rs list runs the work that belongs to its current set of collections - init, observers,
- * refresh, paging and the per-row metrics - so [reset] can cancel all of it at once when those
- * collections are torn down. Without that, an init or refresh that outlives a filter or search
- * change could install a collection nothing closes, or write stale state into the rebuilt tabs.
- *
- * A child of [parent], so it is also torn down with the view model. One stable object rather than
- * a scope that gets swapped, so collaborators can hold it for the view model's lifetime.
+ * Runs the work tied to an rs list's current collections, so [reset] can cancel all of it when they
+ * are torn down. A child of [parent], so it also dies with the view model.
  */
 internal class RsCollectionScope(private val parent: CoroutineScope) {
     private var scope = createScope()

@@ -15,13 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.ui.compose.components.ShimmerBox
 
-/**
- * The loading skeleton of a pre-redesign posts or pages row.
- *
- * Kept apart from [ContentListPlaceholderRow], which is the redesigned list's skeleton and draws a
- * different shape - each list picks the one matching the row it is standing in for. This one goes
- * when the CONTENT_LIST_REDESIGN flag and the rows it belongs to do.
- */
+/** The loading skeleton of a pre-redesign posts or pages row; goes with the CONTENT_LIST_REDESIGN flag. */
 @Composable
 internal fun LegacyContentListPlaceholderRow(modifier: Modifier = Modifier) {
     Card(

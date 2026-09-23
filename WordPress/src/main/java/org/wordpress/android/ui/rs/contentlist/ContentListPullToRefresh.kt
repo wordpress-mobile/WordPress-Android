@@ -11,10 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
-/**
- * Pull-to-refresh around an rs content list, with the app's primary colour on the indicator rather
- * than the Material default.
- */
+/** Pull-to-refresh around an rs content list, with the indicator in the primary colour. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContentListPullToRefreshBox(

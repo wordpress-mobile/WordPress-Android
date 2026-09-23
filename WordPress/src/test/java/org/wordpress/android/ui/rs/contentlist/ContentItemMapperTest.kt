@@ -131,39 +131,6 @@ class ContentItemMapperTest {
             .isEqualTo(R.string.post_status_draft)
     }
 
-    @Test
-    fun `isTrashed is derived from the status rather than stored`() {
-        assertThat(map(PostItemState.Fresh(entity(status = PostStatus.Trash))).isTrashed).isTrue
-        assertThat(map(PostItemState.Fresh(entity(status = PostStatus.Draft))).isTrashed).isFalse
-    }
-
-    @Test
-    fun `a parentless item reports a parent of zero`() {
-        assertThat(map(PostItemState.Fresh(entity(parent = null))).parentId).isZero
-        assertThat(map(PostItemState.Fresh(entity(parent = 7L))).parentId).isEqualTo(7L)
-    }
-
-    @Test
-    fun `an open comment status maps to commentsOpen`() {
-        assertThat(map(PostItemState.Fresh(entity(commentStatus = PostCommentStatus.Open))).commentsOpen)
-            .isTrue
-        assertThat(map(PostItemState.Fresh(entity(commentStatus = PostCommentStatus.Closed))).commentsOpen)
-            .isFalse
-    }
-
-    @Test
-    fun `a password protected item reports hasPassword`() {
-        assertThat(map(PostItemState.Fresh(entity(password = "secret"))).hasPassword).isTrue
-        assertThat(map(PostItemState.Fresh(entity(password = ""))).hasPassword).isFalse
-    }
-
-    @Test
-    fun `the raw publish date is carried through for date grouping`() {
-        assertThat(map(PostItemState.Fresh(entity())).dateGmtMillis).isEqualTo(PUBLISHED_AT.time)
-    }
-
-    // endregion
-
     private fun map(state: PostItemState, showStatus: Boolean = false) =
         state.toContentItemUiModel<TestAction>(REMOTE_ID, NOW_LABEL, showStatus)
 

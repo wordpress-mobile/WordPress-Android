@@ -15,11 +15,8 @@ import org.wordpress.android.ui.rs.data.FeaturedImageUrls
 import org.wordpress.android.ui.rs.data.RsSiteRestClient
 
 /**
- * Featured image URLs for the rows of an rs list, sized for both row shapes.
- *
- * Owns the per-tab lookup jobs and the ids the lookup could not resolve, so a row stops showing a
- * placeholder once there is nothing to wait for. Pushing the result onto the rows is the caller's,
- * because the pages list wraps its models in tree items and the posts list does not.
+ * Featured image URLs for the rows of an rs list, sized for both row shapes. The caller applies the
+ * result, because pages wrap their models in tree items and posts don't.
  */
 internal class RsFeaturedImages<TAB>(
     private val scope: CoroutineScope,
@@ -30,11 +27,7 @@ internal class RsFeaturedImages<TAB>(
 ) {
     private val jobs = mutableMapOf<TAB, Job>()
 
-    /**
-     * Featured media ids whose lookup came back without a URL. Rows use this to stop waiting: the
-     * fetch is not retried on its own, so without it they shimmer indefinitely. Cleared by a
-     * refresh, which is what gives a failed lookup another go.
-     */
+    /** Media ids the lookup couldn't resolve, so their rows stop waiting. Cleared by a refresh. */
     private val unresolvable = mutableSetOf<Long>()
 
     /** Looks up the images [items] still lack, replacing any lookup already running for [tab]. */
@@ -52,19 +45,14 @@ internal class RsFeaturedImages<TAB>(
                     site, unresolvedIds, THUMBNAIL_SIZE_DP, HERO_IMAGE_HEIGHT_DP
                 )
             }
-            // Ids the lookup could not resolve stop their row waiting; ones that did resolve are
-            // no longer reported as unresolvable, so an id that failed once and later came back
-            // is not still written off.
+            // An id that failed once and later resolved is no longer written off.
             unresolvable.removeAll(images.keys)
             unresolvable.addAll(unresolvedIds.filterNot(images::containsKey))
             onImagesResolved(tab, images)
         }
     }
 
-    /**
-     * Carries an image already resolved for [existing] onto a freshly loaded [model], so the row
-     * doesn't visibly re-resolve every time its collection reports a change.
-     */
+    /** Keeps [existing]'s resolved image on a reloaded [model], so the row doesn't re-resolve. */
     fun <A : RsMenuAction> carryOver(
         model: ContentItemUiModel<A>,
         existing: ContentItemUiModel<*>?

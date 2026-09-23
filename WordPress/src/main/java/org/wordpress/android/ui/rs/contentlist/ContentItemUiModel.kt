@@ -5,33 +5,15 @@ import org.wordpress.android.ui.rs.data.FeaturedImageUrls
 import uniffi.wp_api.PostStatus
 
 /**
- * One post or page, projected onto what the rs list screens need.
- *
- * This is the subset of wordpress-rs' `AnyPostWithEditContext` the lists read, and that is one
- * type for both post types - so a field one screen ignores is not a field that doesn't apply to
- * it. Posts never read [parentId] and pages never read [commentsOpen], but both are real fields of
- * the entity and both are populated.
- *
- * Generic over the screen's own menu-action enum. Those are not merged - they offer different
- * actions and word the shared ones differently - so carrying the type here is what keeps the
- * screens' `when` blocks exhaustive without a cast.
- *
- * Screen-specific decoration lives outside this type: the pages hierarchy and its synthetic rows
- * are on PageRsListItem, and the projection onto a rendered row is each screen's own
- * `toContentListRowUiState`.
+ * One post or page as the rs list screens need it. Generic over the screen's own menu-action enum
+ * so each screen's `when` stays exhaustive without a cast.
  */
 data class ContentItemUiModel<A : RsMenuAction>(
     val remoteId: Long,
     val title: String,
     val excerpt: String,
     val date: String,
-    /**
-     * Raw publish date, for bucketing rows into date groups.
-     *
-     * Populated for pages too, though only the posts list groups by date - pages sort by title, so
-     * date buckets there would be meaningless. Anything that later shares the grouping must take
-     * "should this group?" as an explicit argument rather than inferring it from this being set.
-     */
+    /** Raw publish date, for date groups (posts only; pages sort by title). */
     val dateGmtMillis: Long = 0L,
     /** Parent page id, 0 when top-level. Read by the pages tree and parent picker only. */
     val parentId: Long = 0L,
@@ -58,6 +40,5 @@ data class ContentItemUiModel<A : RsMenuAction>(
     val badges: List<Int> = emptyList(),
     val displayState: ContentDisplayState = ContentDisplayState.NORMAL
 ) {
-    /** Derived rather than stored, so it cannot go stale against an updated [status]. */
     val isTrashed: Boolean get() = status is PostStatus.Trash
 }

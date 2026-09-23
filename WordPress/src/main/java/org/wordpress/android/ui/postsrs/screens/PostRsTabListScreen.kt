@@ -79,8 +79,7 @@ fun PostRsTabListScreen(
                     } else {
                         emptyMessageResId
                     },
-                    // A search that found nothing is not an empty list, so it offers no shortcut
-                    // to write one more post.
+                    // No "write a post" shortcut on an empty search result.
                     actionLabelResId = R.string.posts_empty_list_button.takeIf { !isSearching },
                     onAction = if (isSearching) null else onCreatePost
                 )
@@ -130,14 +129,12 @@ private fun PostListContent(
         }
     }
 
-    // Indexes the rendered entries rather than the posts: group headers are list items too, so a
-    // post's position in `posts` is not its position in the LazyColumn.
+    // Indexes the rendered entries, since group headers are list items too.
     RevealRow(revealPostId, listState, onRevealHandled) { id ->
         entries.indexOfFirst { it.postId == id }
     }
 
-    // Post entries key on their remote id; group headers key on a String, so filtering by type
-    // drops them.
+    // Post entries key on their remote id; group headers key on a String and drop out.
     ReportVisibleRows(listState, enabled = isRedesignEnabled, onRowsVisible = onRowsVisible) {
         listState.layoutInfo.visibleItemsInfo.mapNotNull { it.key as? Long }
     }

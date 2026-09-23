@@ -28,12 +28,7 @@ import coil.compose.AsyncImage
 import org.wordpress.android.R
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 
-/**
- * The "mine or everyone's" filter in an rs content list's app bar.
- *
- * Only offered on WordPress.com-backed sites: [AuthorFilterSelection.ME] matches on the account's
- * user id, which is in a different id space from a self-hosted site's authors.
- */
+/** The "mine or everyone's" filter in an rs content list's app bar (WordPress.com sites only). */
 @Composable
 fun ContentListAuthorFilterButton(
     authorFilter: AuthorFilterSelection,

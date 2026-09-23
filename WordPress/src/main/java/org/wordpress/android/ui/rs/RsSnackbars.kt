@@ -5,10 +5,7 @@ import org.wordpress.android.R
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
-/**
- * Sends [message] with a Retry action that runs [onRetry], unless [isAuthError]: retrying an auth
- * failure just fails again, so that one goes out as the message alone.
- */
+/** Sends [message] with a Retry action, unless [isAuthError] - retrying that just fails again. */
 internal fun SendChannel<RsSnackbarMessage>.sendWithRetry(
     message: String,
     isAuthError: Boolean = false,

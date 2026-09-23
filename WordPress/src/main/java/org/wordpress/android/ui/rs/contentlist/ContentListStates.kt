@@ -25,11 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 
-/**
- * The full-screen states an rs content list can be in instead of showing rows, plus the spinner it
- * appends while paging. Shared by the posts, pages and comments lists, which draw all of them
- * identically.
- */
+/** The full-screen states an rs content list shows instead of rows, plus its paging spinner. */
 @Composable
 fun ContentListErrorState(
     error: String,
@@ -57,10 +53,7 @@ fun ContentListErrorState(
     }
 }
 
-/**
- * [actionLabelResId] and [onAction] go together: the posts list offers to create a post from its
- * empty state and the pages list offers nothing, so both are null there.
- */
+/** [actionLabelResId] and [onAction] go together; the button shows only when both are set. */
 @Composable
 fun ContentListEmptyState(
     @StringRes messageResId: Int,
@@ -83,10 +76,7 @@ fun ContentListEmptyState(
     }
 }
 
-/**
- * A screenful of [placeholder] rows while a tab's first page loads. The row is the caller's because
- * a comment's skeleton leads with an avatar where a post's and a page's lead with text.
- */
+/** A screenful of [placeholder] rows while a tab's first page loads. */
 @Composable
 fun ContentListShimmer(placeholder: @Composable () -> Unit) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
@@ -144,5 +134,4 @@ private val BUTTON_GAP = 16.dp
 private val SPINNER_SIZE = 24.dp
 private val SPINNER_STROKE = 2.dp
 
-/** Roughly a screenful, so the skeleton fills the list rather than leaving a gap below it. */
 private const val SHIMMER_ITEM_COUNT = 8

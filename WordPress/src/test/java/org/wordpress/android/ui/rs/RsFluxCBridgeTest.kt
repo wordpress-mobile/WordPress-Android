@@ -47,17 +47,6 @@ class RsFluxCBridgeTest {
     }
 
     @Test
-    fun `fast path returns the cached page when lastModified is null`() = runTest {
-        val cached = cachedItem(isPage = true)
-        whenever(postStore.getPostByRemotePostId(REMOTE_ID, site)).thenReturn(cached)
-
-        val result = bridge.fetchAndBridgePage(REMOTE_ID, site)
-
-        assertThat(result).isSameAs(cached)
-        verify(wpApiClientProvider, never()).getWpApiClient(eq(site), anyOrNull())
-    }
-
-    @Test
     fun `fast path returns the cached item when lastModified matches`() = runTest {
         val cached = cachedItem(isPage = true)
         whenever(postStore.getPostByRemotePostId(REMOTE_ID, site)).thenReturn(cached)

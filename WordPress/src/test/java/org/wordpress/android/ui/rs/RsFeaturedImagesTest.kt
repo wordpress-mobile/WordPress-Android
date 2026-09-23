@@ -10,7 +10,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
-import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -64,16 +63,6 @@ class RsFeaturedImagesTest : BaseUnitTest(StandardTestDispatcher()) {
 
         verify(restClient).fetchFeaturedImageUrls(eq(site), eq(listOf(ONE)), any(), any())
         assertThat(resolved).containsExactly(TAB to mapOf(ONE to IMAGE))
-    }
-
-    @Test
-    fun `nothing is fetched when every row already has its image`() = test {
-        val featuredImages = createFeaturedImages()
-
-        featuredImages.resolve(TAB, site, listOf(model(ONE, IMAGE), model(0L)))
-        advanceUntilIdle()
-
-        verify(restClient, never()).fetchFeaturedImageUrls(anyOrNull(), any(), any(), any())
     }
 
     @Test

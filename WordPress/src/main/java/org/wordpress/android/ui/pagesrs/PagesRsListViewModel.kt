@@ -417,11 +417,7 @@ internal class PagesRsListViewModel @Inject constructor(
         }
     }
 
-    /**
-     * While search is open only the tab the query is scoped to has a collection, and only once the
-     * query is long enough to search. Anything else asking - a Retry snackbar that outlived the
-     * tabs it was about, say - would build one behind the search screen.
-     */
+    /** While searching, only the searched tab gets a collection, and only once the query is long enough. */
     private fun isOutsideSearch(tab: PageRsListTab): Boolean = _isSearchActive.value &&
         (tab != activeSearchTab || _searchQuery.value.length < MIN_SEARCH_QUERY_LENGTH)
 
@@ -694,8 +690,7 @@ internal class PagesRsListViewModel @Inject constructor(
                 )
             }
             if (showSnackbar) {
-                // Tapping retry is the user asking, so the result has to be reported -
-                // a silent second failure looks like the button did nothing.
+                // The user asked, so a second failure has to be reported.
                 _snackbarMessages.sendWithRetry(message, authError, resourceProvider) {
                     refreshTab(tab, isUserRefresh = true)
                 }
@@ -1767,8 +1762,7 @@ internal class PagesRsListViewModel @Inject constructor(
     }
 
     private fun clearCollections() {
-        // Cancel in-flight collection work first so nothing can write stale state
-        // (or touch a closed collection) after the teardown below.
+        // Cancel in-flight work first so nothing touches the collections closed below.
         collectionScope.reset()
         collections.values.forEach { it.close() }
         collections.clear()

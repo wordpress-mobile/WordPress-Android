@@ -3,14 +3,7 @@ package org.wordpress.android.ui.rs.contentlist
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 
-/**
- * What the shared overflow menu needs from a screen's own action enum.
- *
- * The posts and pages enums are deliberately not merged - they offer different actions, and the
- * ones that overlap use different wording ("Move to trash" against a page, "Trash" against a post).
- * This is the shape they share, so neither the menu nor [toContentListMenuActions] has to know
- * about either.
- */
+/** What the shared overflow menu needs from a screen's own action enum. */
 interface RsMenuAction {
     @get:StringRes val labelResId: Int
 

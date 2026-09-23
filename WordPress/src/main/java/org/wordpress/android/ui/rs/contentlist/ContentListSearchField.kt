@@ -20,11 +20,8 @@ import androidx.compose.ui.text.input.ImeAction
 import org.wordpress.android.R
 
 /**
- * The query field an rs content list puts in its top bar while searching.
- *
- * Only the field: each screen builds its own top bar around it, and each owns its focus request,
- * because when to raise the keyboard differs - the comments list must not raise it again when its
- * selection bar hands back to search. Pass a `focusRequester` in through [modifier].
+ * The search query field for an rs content list's top bar. Focus stays with the caller (pass a
+ * `focusRequester` via [modifier]) because when to raise the keyboard differs per screen.
  */
 @Composable
 fun ContentListSearchField(

@@ -7,12 +7,7 @@ import androidx.compose.runtime.LaunchedEffect
 import kotlinx.coroutines.flow.Flow
 import org.wordpress.android.ui.rs.RsSnackbarMessage
 
-/**
- * Shows each [RsSnackbarMessage] the view model emits, and runs its action if the user taps it.
- *
- * Collected from a flow rather than read from state so a repeat of the same message still shows -
- * "Post trashed" twice in a row is two events, not one unchanged value.
- */
+/** Shows each [RsSnackbarMessage] the view model emits, and runs its action if tapped. */
 @Composable
 fun ShowRsSnackbars(messages: Flow<RsSnackbarMessage>, hostState: SnackbarHostState) {
     LaunchedEffect(messages) {

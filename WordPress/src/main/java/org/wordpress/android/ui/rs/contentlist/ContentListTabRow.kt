@@ -13,12 +13,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.withIndex
 import org.wordpress.android.ui.compose.components.FilterChipTabRow
 
-/**
- * The tab strip above an rs content list's pager.
- *
- * The pager stays either way: the chips replace the tab row's appearance, not swiping between
- * tabs, which users of these screens already rely on.
- */
+/** The tab strip above an rs content list's pager: filter chips when redesigned, tabs otherwise. */
 @Composable
 fun ContentListTabRow(
     labels: List<String>,
@@ -43,11 +38,8 @@ fun ContentListTabRow(
 }
 
 /**
- * Reports the settled page, separating the first emission from later ones.
- *
- * [onTabSettled] initialises the tab, including the one the screen opens on. [onTabChanged] is for
- * what only a real switch should do - tracking, mainly - so it skips that first emission, which is
- * the pager reporting where it already was.
+ * Reports the settled page. [onTabSettled] runs for every settle, including the first; [onTabChanged]
+ * skips the first, which is the pager reporting where it already was.
  */
 @Composable
 fun ReportSettledTab(

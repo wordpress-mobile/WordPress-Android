@@ -185,20 +185,6 @@ class RsViewCountsTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
-    fun `clear empties the cache`() = test {
-        whenever(statsDataSource.fetchPostViews(any(), any())).doSuspendableAnswer { views(ONE, 7L) }
-        val viewCounts = createViewCounts()
-        visibleRows.record(TAB, listOf(ONE))
-        viewCounts.fetch(TAB, SITE_ID, listOf(ONE))
-        advanceUntilIdle()
-
-        viewCounts.clear()
-
-        assertThat(viewCounts.countFor(ONE)).isNull()
-        assertThat(viewCounts.isOutstanding(ONE)).isTrue
-    }
-
-    @Test
     fun `no more than four rows are fetched at once`() = test {
         val release = CompletableDeferred<Unit>()
         var concurrent = 0

@@ -128,15 +128,8 @@ class PostRsListViewModel @Inject constructor(
     )
 
     /**
-     * Comment counts keyed by remote post id, so scrolling back to a row does not refetch it and a
-     * cache reload does not blank the number out. Only touched from the main dispatcher.
-     *
-     * A present key means "fetched"; a null value means the fetch came back with nothing usable.
-     * Rows distinguish the two so a failure clears the loading skeleton rather than pinning it.
-     *
-     * Kept apart from the view counts in [viewCounts] because the two do not reach equally far:
-     * comment counts come from the site's own REST API and work everywhere, while view counts need
-     * WordPress.com stats.
+     * Comment counts by remote post id; null means "fetched, nothing to show". Kept apart from
+     * [viewCounts] because these come from the site's own REST API and work on every site.
      */
     private val commentCountCache = mutableMapOf<Long, Long?>()
     private val inFlightCommentCounts = mutableSetOf<Long>()
@@ -771,8 +764,7 @@ class PostRsListViewModel @Inject constructor(
     }
 
     private fun clearCollections() {
-        // Cancel in-flight collection work first so nothing can write stale state
-        // (or touch a closed collection) after the teardown below.
+        // Cancel in-flight work first so nothing touches the collections closed below.
         collectionScope.reset()
         collections.values.forEach { it.close() }
         collections.clear()
@@ -826,11 +818,7 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
-    /**
-     * While search is open only the tab the query is scoped to has a collection, and only once the
-     * query is long enough to search. Anything else asking - a Retry snackbar that outlived the
-     * tabs it was about, say - would build one behind the search screen.
-     */
+    /** While searching, only the searched tab gets a collection, and only once the query is long enough. */
     private fun isOutsideSearch(tab: PostRsListTab): Boolean = _isSearchActive.value &&
         (tab != activeSearchTab || _searchQuery.value.length < MIN_SEARCH_QUERY_LENGTH)
 
@@ -890,8 +878,7 @@ class PostRsListViewModel @Inject constructor(
     @MainThread
     fun refreshTab(tab: PostRsListTab, isUserRefresh: Boolean = false) {
         val collection = collections[tab] ?: run {
-            // The collection wasn't created (init failed or hasn't run). Re-attempt init so
-            // a Retry tap from the error UI can recover instead of silently doing nothing.
+            // No collection yet (init failed or hasn't run), so Retry re-attempts the init.
             initTab(tab)
             return
         }
@@ -984,8 +971,7 @@ class PostRsListViewModel @Inject constructor(
                 copy(isLoading = false, isRefreshing = false, error = null)
             }
             if (showSnackbar) {
-                // Tapping retry is the user asking, so the result has to be reported -
-                // a silent second failure looks like the button did nothing.
+                // The user asked, so a second failure has to be reported.
                 _snackbarMessages.sendWithRetry(message, authError, resourceProvider) {
                     refreshTab(tab, isUserRefresh = true)
                 }
@@ -1278,9 +1264,7 @@ class PostRsListViewModel @Inject constructor(
     private suspend fun updateListInfoForTab(tab: PostRsListTab) {
         val collection = collections[tab] ?: return
 
-        // Guard the Rust-backed call: an unhandled failure here (e.g. a late observer firing
-        // against a collection mid-teardown) would otherwise crash the app, since this runs in
-        // a scope with no exception handler.
+        // A late observer can hit a collection mid-teardown, and this scope has no handler.
         @Suppress("TooGenericExceptionCaught")
         val listInfo = try {
             withContext(Dispatchers.IO) { collection.listInfo() }
