@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -23,10 +24,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.SHIMMER_ITEM_COUNT
 
 /**
  * The full-screen states an rs content list can be in instead of showing rows, plus the spinner it
- * appends while paging. Shared by the posts and pages lists, which draw all of them identically.
+ * appends while paging. Shared by the posts, pages and comments lists, which draw all of them
+ * identically.
  */
 @Composable
 fun ContentListErrorState(
@@ -78,6 +81,17 @@ fun ContentListEmptyState(
                 Text(text = stringResource(actionLabelResId))
             }
         }
+    }
+}
+
+/**
+ * A screenful of [placeholder] rows while a tab's first page loads. The row is the caller's because
+ * a comment's skeleton leads with an avatar where a post's and a page's lead with text.
+ */
+@Composable
+fun ContentListShimmer(placeholder: @Composable () -> Unit) {
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        items(SHIMMER_ITEM_COUNT) { placeholder() }
     }
 }
 

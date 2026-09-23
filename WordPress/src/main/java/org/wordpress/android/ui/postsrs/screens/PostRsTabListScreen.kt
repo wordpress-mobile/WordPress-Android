@@ -25,7 +25,6 @@ import org.wordpress.android.ui.postsrs.PostRsUiModel
 import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.contentlist.ContentDateGroup
 import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
-import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.SHIMMER_ITEM_COUNT
 import org.wordpress.android.ui.rs.contentlist.ContentListEmptyState
 import org.wordpress.android.ui.rs.contentlist.ContentListErrorState
 import org.wordpress.android.ui.rs.contentlist.ContentListOverflowMenu
@@ -34,6 +33,7 @@ import org.wordpress.android.ui.rs.contentlist.ContentDateGrouper
 import org.wordpress.android.ui.rs.contentlist.ContentListGroupHeader
 import org.wordpress.android.ui.rs.contentlist.ContentListHeroRow
 import org.wordpress.android.ui.rs.contentlist.ContentListPlaceholderRow
+import org.wordpress.android.ui.rs.contentlist.ContentListShimmer
 import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
 import org.wordpress.android.ui.rs.contentlist.ContentListRow
 import org.wordpress.android.ui.postsrs.toContentListRowUiState
@@ -200,10 +200,8 @@ private fun PostListContent(
 
 @Composable
 private fun ShimmerList(isRedesignEnabled: Boolean) {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(SHIMMER_ITEM_COUNT) {
-            if (isRedesignEnabled) ContentListPlaceholderRow() else LegacyContentListPlaceholderRow()
-        }
+    ContentListShimmer {
+        if (isRedesignEnabled) ContentListPlaceholderRow() else LegacyContentListPlaceholderRow()
     }
 }
 

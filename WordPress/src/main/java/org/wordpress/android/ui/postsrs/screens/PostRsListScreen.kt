@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.postsrs.screens
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,7 +23,6 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -64,6 +62,7 @@ import org.wordpress.android.ui.rs.RsSnackbarMessage
 import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.contentlist.ContentListAuthorFilterButton
 import org.wordpress.android.ui.rs.contentlist.ContentListConfirmationDialog
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListDensityToggle
 import org.wordpress.android.ui.rs.contentlist.ContentListTabRow
@@ -132,15 +131,7 @@ fun PostRsListScreen(
     ShowRsSnackbars(snackbarMessages, snackbarHostState)
 
     Scaffold(
-        // Cards are drawn on `surface`, so the page behind them has to sit one step recessed or
-        // they read as a flat sheet. Which role that is differs by mode: this app's dark scheme
-        // makes `surface` darker than `surfaceContainerLow`, so reusing the light-mode role there
-        // would put the page *above* the cards. The pre-redesign list keeps the theme background.
-        containerColor = when {
-            !isRedesignEnabled -> MaterialTheme.colorScheme.background
-            isSystemInDarkTheme() -> MaterialTheme.colorScheme.surfaceContainerLowest
-            else -> MaterialTheme.colorScheme.surfaceContainerLow
-        },
+        containerColor = ContentListDefaults.containerColor(isRedesignEnabled),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(

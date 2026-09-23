@@ -1,5 +1,10 @@
 package org.wordpress.android.ui.rs.contentlist
 
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+
 /**
  * The scroll-driven timings and thresholds the rs content lists share.
  *
@@ -23,4 +28,18 @@ object ContentListDefaults {
      * who has moved on.
      */
     const val REVEAL_TIMEOUT_MS = 15_000L
+
+    /**
+     * The colour behind the list. Redesigned cards are drawn on `surface`, so the page behind them
+     * has to sit one step recessed or they read as a flat sheet. Which role that is differs by mode:
+     * this app's dark scheme makes `surface` darker than `surfaceContainerLow`, so reusing the
+     * light-mode role there would put the page *above* the cards. The pre-redesign list keeps the
+     * theme background.
+     */
+    @Composable
+    fun containerColor(isRedesignEnabled: Boolean): Color = when {
+        !isRedesignEnabled -> MaterialTheme.colorScheme.background
+        isSystemInDarkTheme() -> MaterialTheme.colorScheme.surfaceContainerLowest
+        else -> MaterialTheme.colorScheme.surfaceContainerLow
+    }
 }

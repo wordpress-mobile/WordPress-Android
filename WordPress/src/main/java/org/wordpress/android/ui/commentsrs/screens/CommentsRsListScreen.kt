@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.commentsrs.screens
 
 import androidx.activity.compose.BackHandler
-import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,7 +16,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,10 +26,8 @@ import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
@@ -70,8 +65,11 @@ import org.wordpress.android.ui.compose.components.FilterChipTabRow
 import org.wordpress.android.ui.compose.utils.rsDebugTitle
 import org.wordpress.android.ui.rs.RsSnackbarMessage
 import org.wordpress.android.ui.rs.RsTabUiState
+import org.wordpress.android.ui.rs.contentlist.ContentListConfirmationDialog
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListDensityToggle
+import org.wordpress.android.ui.rs.contentlist.ShowRsSnackbars
 
 // Material's disabled-content alpha, used to dim batch-action icons that can't apply to the
 // current selection while keeping them visible.
@@ -176,27 +174,10 @@ fun CommentsRsListScreen(
         onSearchClose(activeTab)
     }
 
-    LaunchedEffect(snackbarMessages) {
-        snackbarMessages.collect { msg ->
-            val result = snackbarHostState.showSnackbar(
-                message = msg.message,
-                actionLabel = msg.actionLabel
-            )
-            if (result == SnackbarResult.ActionPerformed) {
-                msg.onAction?.invoke()
-            }
-        }
-    }
+    ShowRsSnackbars(snackbarMessages, snackbarHostState)
 
     Scaffold(
-        // Cards are drawn on `surface`, so the page behind them has to sit one step recessed or
-        // they read as a flat sheet - and which role that is differs by mode, exactly as on the
-        // posts and pages lists. The pre-redesign list keeps the theme background.
-        containerColor = when {
-            !isRedesignEnabled -> MaterialTheme.colorScheme.background
-            isSystemInDarkTheme() -> MaterialTheme.colorScheme.surfaceContainerLowest
-            else -> MaterialTheme.colorScheme.surfaceContainerLow
-        },
+        containerColor = ContentListDefaults.containerColor(isRedesignEnabled),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             AnimatedContent(targetState = topBarMode, label = "topBar") { mode ->
@@ -355,7 +336,7 @@ private fun BatchConfirmationDialogs(
     // destructive action renders a dialog rather than silently stranding the selection.
     val copy = pending?.action?.confirmation ?: return
     val messageResId = if (pending.commentIds.size > 1) copy.messagePluralResId else copy.messageResId
-    ConfirmationDialog(
+    ContentListConfirmationDialog(
         titleResId = copy.titleResId,
         message = stringResource(messageResId),
         confirmTextResId = copy.confirmButtonResId,
@@ -513,37 +494,4 @@ private fun BatchActionsOverflowMenu(
             )
         }
     }
-}
-
-@Composable
-private fun ConfirmationDialog(
-    @StringRes titleResId: Int,
-    message: String,
-    @StringRes confirmTextResId: Int,
-    isDestructive: Boolean = false,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(stringResource(titleResId)) },
-        text = { Text(message) },
-        confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text(
-                    stringResource(confirmTextResId),
-                    color = if (isDestructive) {
-                        MaterialTheme.colorScheme.error
-                    } else {
-                        Color.Unspecified
-                    }
-                )
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
-            }
-        }
-    )
 }

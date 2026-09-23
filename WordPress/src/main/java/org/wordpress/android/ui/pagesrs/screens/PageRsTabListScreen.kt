@@ -17,11 +17,11 @@ import org.wordpress.android.ui.pagesrs.PageRsMenuAction
 import org.wordpress.android.ui.pagesrs.SITE_EDITOR_PAGE_ID
 import org.wordpress.android.ui.pagesrs.hasRealPages
 import org.wordpress.android.ui.rs.RsTabUiState
-import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.SHIMMER_ITEM_COUNT
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListEmptyState
 import org.wordpress.android.ui.rs.contentlist.ContentListErrorState
 import org.wordpress.android.ui.rs.contentlist.ContentListPlaceholderRow
+import org.wordpress.android.ui.rs.contentlist.ContentListShimmer
 import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
 import org.wordpress.android.ui.rs.contentlist.LegacyContentListPlaceholderRow
 import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
@@ -164,10 +164,8 @@ private fun PageListContent(
 
 @Composable
 private fun ShimmerList(isRedesignEnabled: Boolean) {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(SHIMMER_ITEM_COUNT) {
-            if (isRedesignEnabled) ContentListPlaceholderRow() else LegacyContentListPlaceholderRow()
-        }
+    ContentListShimmer {
+        if (isRedesignEnabled) ContentListPlaceholderRow() else LegacyContentListPlaceholderRow()
     }
 }
 
