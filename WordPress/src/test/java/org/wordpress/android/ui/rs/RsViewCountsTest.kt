@@ -198,7 +198,6 @@ class RsViewCountsTest : BaseUnitTest(StandardTestDispatcher()) {
 
     companion object {
         private const val TAB = "published"
-        private const val OTHER_TAB = "drafts"
         private const val SITE_ID = 12L
         private const val ONE = 1L
         private const val GATE_SIZE = 4
