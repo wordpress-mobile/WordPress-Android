@@ -11,7 +11,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
  */
 internal fun SendChannel<RsSnackbarMessage>.sendWithRetry(
     message: String,
-    isAuthError: Boolean,
+    isAuthError: Boolean = false,
     resourceProvider: ResourceProvider,
     onRetry: () -> Unit
 ) {

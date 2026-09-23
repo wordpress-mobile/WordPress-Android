@@ -3,7 +3,6 @@ package org.wordpress.android.ui.rs
 import androidx.annotation.MainThread
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Semaphore
@@ -23,13 +22,12 @@ import org.wordpress.android.util.AppLog
  *
  * Whether a tab expects counts at all is the caller's business: this knows how to fetch them, not
  * when it is worth doing. The posts list layers comment counts on top of the same [visibleRows] and
- * [jobs], which is why those are collaborators rather than private state.
+ * [scope], which is why those are collaborators rather than private state.
  */
 internal class RsViewCounts<TAB>(
-    private val scope: CoroutineScope,
+    private val scope: RsCollectionScope,
     private val statsDataSource: StatsDataSource,
     private val visibleRows: RsVisibleRows<TAB>,
-    private val jobs: RsMetricJobs,
     private val logTag: AppLog.T,
     /** Pushes whatever the cache now holds for these ids onto the tab's rows. */
     private val onCountsChanged: (TAB, List<Long>) -> Unit,
@@ -65,20 +63,18 @@ internal class RsViewCounts<TAB>(
         val wanted = ids.filter { !cache.containsKey(it) && it !in inFlight }
         if (wanted.isEmpty()) return
 
-        jobs.track(
-            scope.launch {
-                wanted.forEach { id ->
-                    launch {
-                        gate.withPermit {
-                            // Re-checked after waiting for a permit rather than before queuing: by
-                            // the time a slot frees up the user may have scrolled well past this
-                            // row, and fetching it would spend a request on something off screen.
-                            if (id in visibleRows.visible(tab)) fetchOne(tab, siteId, id)
-                        }
+        scope.launch {
+            wanted.forEach { id ->
+                launch {
+                    gate.withPermit {
+                        // Re-checked after waiting for a permit rather than before queuing: by the
+                        // time a slot frees up the user may have scrolled well past this row, and
+                        // fetching it would spend a request on something off screen.
+                        if (id in visibleRows.visible(tab)) fetchOne(tab, siteId, id)
                     }
                 }
             }
-        )
+        }
     }
 
     /**

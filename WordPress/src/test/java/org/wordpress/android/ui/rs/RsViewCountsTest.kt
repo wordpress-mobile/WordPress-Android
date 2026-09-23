@@ -25,21 +25,18 @@ class RsViewCountsTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var statsDataSource: StatsDataSource
 
     private lateinit var visibleRows: RsVisibleRows<String>
-    private lateinit var jobs: RsMetricJobs
     private val applied = mutableListOf<Pair<String, List<Long>>>()
 
     @Before
     fun setUp() {
         visibleRows = RsVisibleRows()
-        jobs = RsMetricJobs()
         applied.clear()
     }
 
     private fun createViewCounts() = RsViewCounts(
-        scope = testScope(),
+        scope = RsCollectionScope(testScope()),
         statsDataSource = statsDataSource,
         visibleRows = visibleRows,
-        jobs = jobs,
         logTag = AppLog.T.POSTS,
         onCountsChanged = { tab, ids -> applied.add(tab to ids) },
         ioDispatcher = testDispatcher(),

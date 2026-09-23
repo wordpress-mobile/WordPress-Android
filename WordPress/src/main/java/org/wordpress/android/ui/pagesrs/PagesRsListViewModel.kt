@@ -5,13 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +18,6 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
@@ -44,10 +40,10 @@ import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.rs.RsCollectionPrefetch
+import org.wordpress.android.ui.rs.RsCollectionScope
 import org.wordpress.android.ui.rs.RsErrorUtils
 import org.wordpress.android.ui.rs.RsFeaturedImages
 import org.wordpress.android.ui.rs.RsFluxCBridge
-import org.wordpress.android.ui.rs.RsMetricJobs
 import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.ui.rs.RsReveal
 import org.wordpress.android.ui.rs.RsSnackbarMessage
@@ -123,7 +119,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private var activeSearchTab = PageRsListTab.PUBLISHED
 
     private val collections = mutableMapOf<PageRsListTab, ObservableMetadataCollection>()
-    private var collectionsScope = createCollectionsScope()
+    private val collectionScope = RsCollectionScope(viewModelScope)
     private val initializingTabs = mutableSetOf<PageRsListTab>()
     private val userRefreshingTabs = mutableSetOf<PageRsListTab>()
     private val refreshJobs = RsTabRefreshJobs<PageRsListTab>()
@@ -140,13 +136,11 @@ internal class PagesRsListViewModel @Inject constructor(
     private val resolveAuthorJobs = mutableMapOf<PageRsListTab, Job>()
     private var lastTrackedTab: PageRsListTab? = null
 
-    private val metricJobs = RsMetricJobs()
     private val visiblePageIds = RsVisibleRows<PageRsListTab>()
     private val viewCounts = RsViewCounts(
-        scope = viewModelScope,
+        scope = collectionScope,
         statsDataSource = statsDataSource,
         visibleRows = visiblePageIds,
-        jobs = metricJobs,
         logTag = AppLog.T.PAGES,
         onCountsChanged = ::applyMetrics,
     )
@@ -393,13 +387,13 @@ internal class PagesRsListViewModel @Inject constructor(
     @MainThread
     fun initTab(tab: PageRsListTab) {
         val site = this.site ?: return
-        if (collections.containsKey(tab) || initializingTabs.contains(tab)) return
+        if (collections.containsKey(tab) || initializingTabs.contains(tab) || isOutsideSearch(tab)) return
 
         initializingTabs.add(tab)
         // Reset to a loading state so a retry after a failed init clears the prior error UI.
         updateTabUiState(tab) { RsTabUiState(isLoading = true) }
 
-        launchCollectionJob {
+        collectionScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
                 val collection = createCollection(site, tab)
@@ -422,6 +416,14 @@ internal class PagesRsListViewModel @Inject constructor(
             }
         }
     }
+
+    /**
+     * While search is open only the tab the query is scoped to has a collection, and only once the
+     * query is long enough to search. Anything else asking - a Retry snackbar that outlived the
+     * tabs it was about, say - would build one behind the search screen.
+     */
+    private fun isOutsideSearch(tab: PageRsListTab): Boolean = _isSearchActive.value &&
+        (tab != activeSearchTab || _searchQuery.value.length < MIN_SEARCH_QUERY_LENGTH)
 
     /**
      * Creates the observable collection for [tab]. If the calling job is cancelled while the
@@ -464,29 +466,12 @@ internal class PagesRsListViewModel @Inject constructor(
 
     private fun registerObservers(tab: PageRsListTab, collection: ObservableMetadataCollection) {
         collection.addDataObserver {
-            launchCollectionJob { loadItemsForTab(tab) }
+            collectionScope.launch { loadItemsForTab(tab) }
         }
         collection.addListInfoObserver {
-            launchCollectionJob { updateListInfoForTab(tab) }
+            collectionScope.launch { updateListInfoForTab(tab) }
         }
     }
-
-    /**
-     * Launches collection-scoped work in [collectionsScope] so [clearCollections] can cancel
-     * anything in flight before closing the underlying collections. Without this, a late
-     * failure (e.g. a refresh resuming on an already-closed collection) could write stale
-     * error state into the freshly rebuilt tabs.
-     */
-    private fun launchCollectionJob(block: suspend CoroutineScope.() -> Unit): Job =
-        collectionsScope.launch(block = block)
-
-    /**
-     * A child scope of [viewModelScope] (so it is torn down with the ViewModel) that can
-     * also be cancelled independently when the collections it serves are closed.
-     */
-    private fun createCollectionsScope() = CoroutineScope(
-        viewModelScope.coroutineContext + SupervisorJob(viewModelScope.coroutineContext.job)
-    )
 
     /** Seeds [isBlockBasedTheme] from the local cache and dispatches a remote refresh. */
     private fun refreshEditorTheme(site: SiteModel) {
@@ -526,13 +511,9 @@ internal class PagesRsListViewModel @Inject constructor(
             val anyTabKeepsItsPages = tabs.any { getTabUiState(it).items.hasRealPages }
             tabs.forEach { onRefreshFailed(it, e = null, showSnackbar = false) }
             if (anyTabKeepsItsPages) {
-                _snackbarMessages.trySend(
-                    RsSnackbarMessage(
-                        message = friendlyErrorMessage(null),
-                        actionLabel = resourceProvider.getString(R.string.retry),
-                        onAction = { refreshAllTabs() }
-                    )
-                )
+                _snackbarMessages.sendWithRetry(friendlyErrorMessage(null), resourceProvider = resourceProvider) {
+                    refreshAllTabs()
+                }
             }
             return
         }
@@ -585,7 +566,7 @@ internal class PagesRsListViewModel @Inject constructor(
         collection: ObservableMetadataCollection,
         isUserRefresh: Boolean
     ) {
-        val job = launchCollectionJob {
+        val job = collectionScope.launch {
             val fill = needsCompleteSet(tab)
             if (fill) fillingTabs.add(tab)
             @Suppress("TooGenericExceptionCaught")
@@ -703,7 +684,6 @@ internal class PagesRsListViewModel @Inject constructor(
         userRefreshingTabs.remove(tab)
         val message = friendlyErrorMessage(e)
         val authError = RsErrorUtils.isAuthError(e)
-        val failedCollection = collections[tab]
         if (getTabUiState(tab).items.hasRealPages) {
             updateTabUiState(tab) {
                 copy(
@@ -717,9 +697,7 @@ internal class PagesRsListViewModel @Inject constructor(
                 // Tapping retry is the user asking, so the result has to be reported -
                 // a silent second failure looks like the button did nothing.
                 _snackbarMessages.sendWithRetry(message, authError, resourceProvider) {
-                    // The snackbar can outlive the collection it is about - a filter or search
-                    // change rebuilds the tabs - and retrying then would init a tab out of context.
-                    if (collections[tab] === failedCollection) refreshTab(tab, isUserRefresh = true)
+                    refreshTab(tab, isUserRefresh = true)
                 }
             }
         } else {
@@ -745,7 +723,7 @@ internal class PagesRsListViewModel @Inject constructor(
 
         updateTabUiState(tab) { copy(isLoadingMore = true) }
 
-        launchCollectionJob {
+        collectionScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) { collection.loadNextPage() }
@@ -947,7 +925,7 @@ internal class PagesRsListViewModel @Inject constructor(
         // collection assigned for the latest query (see createParentPickerCollection for the
         // cancellation-safe cleanup that closes the half-built collection).
         parentPickerJob?.cancel()
-        parentPickerJob = launchCollectionJob {
+        parentPickerJob = collectionScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
                 val collection = createParentPickerCollection(site, query)
@@ -1004,10 +982,10 @@ internal class PagesRsListViewModel @Inject constructor(
 
     private fun registerParentPickerObservers(collection: ObservableMetadataCollection) {
         collection.addDataObserver {
-            launchCollectionJob { loadParentPickerItems() }
+            collectionScope.launch { loadParentPickerItems() }
         }
         collection.addListInfoObserver {
-            launchCollectionJob { updateParentPickerListInfo() }
+            collectionScope.launch { updateParentPickerListInfo() }
         }
     }
 
@@ -1084,7 +1062,7 @@ internal class PagesRsListViewModel @Inject constructor(
         if (current == null || current.isLoadingMore || !current.canLoadMore) return
 
         updateParentPicker { copy(isLoadingMore = true) }
-        launchCollectionJob {
+        collectionScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) { collection.loadNextPage() }
@@ -1287,7 +1265,7 @@ internal class PagesRsListViewModel @Inject constructor(
                     _snackbarMessages.trySend(
                         RsSnackbarMessage(resourceProvider.getString(successMessageResId))
                     )
-                    launchCollectionJob { loadItemsForTab(PageRsListTab.PUBLISHED) }
+                    collectionScope.launch { loadItemsForTab(PageRsListTab.PUBLISHED) }
                 }
                 is PageRsHomepageSettings.Result.StaticHomepageDisabled ->
                     _snackbarMessages.trySend(
@@ -1564,7 +1542,7 @@ internal class PagesRsListViewModel @Inject constructor(
         val next = ContentListDensity.of(!_density.value.isCondensed)
         _density.value = next
         appPrefsWrapper.isContentListCondensed = next.isCondensed
-        launchCollectionJob {
+        collectionScope.launch {
             // Re-map the rows so their pending flags match the new density before anything fetches.
             loadItemsForTab(tab)
             // Published is the only tab whose mapping depends on density, because it is the only
@@ -1791,8 +1769,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private fun clearCollections() {
         // Cancel in-flight collection work first so nothing can write stale state
         // (or touch a closed collection) after the teardown below.
-        collectionsScope.cancel()
-        collectionsScope = createCollectionsScope()
+        collectionScope.reset()
         collections.values.forEach { it.close() }
         collections.clear()
         initializingTabs.clear()
@@ -1802,7 +1779,6 @@ internal class PagesRsListViewModel @Inject constructor(
         fetchedTabs.clear()
         resolveAuthorJobs.values.forEach { it.cancel() }
         resolveAuthorJobs.clear()
-        metricJobs.cancelAll()
         visiblePageIds.clear()
         viewCounts.clear()
         featuredImages.clear()
