@@ -39,8 +39,7 @@ import java.util.Date
 /**
  * Tests for [CommentsRsDataSource.fetchPostTitles] — the per-site title cache, the posts→pages
  * endpoint fallback, negative caching of unresolvable ids, and request chunking — and for
- * [CommentsRsDataSource.getCommentForEdit]'s edit-context mapping and error handling, and
- * [CommentsRsDataSource.getComment]'s edit-context fetch with its view-context fallback.
+ * [CommentsRsDataSource.getCommentForEdit]'s edit-context mapping and error handling.
  *
  * The [wpApiClient] stub executes each request's builder lambda against a mocked
  * [UniffiWpApiClient], recording the endpoint and paging params actually sent — so the tests

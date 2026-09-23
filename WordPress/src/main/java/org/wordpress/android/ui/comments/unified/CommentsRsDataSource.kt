@@ -109,9 +109,8 @@ class CommentsRsDataSource @Inject constructor(
     }
 
     /**
-     * Fetches one comment. [withEditContext] asks for the edit context, which adds the author's
-     * email and IP; pass it only when the user can moderate. A server refusal (a capability that
-     * went stale mid-session) falls back to the view context rather than failing the load.
+     * [withEditContext] (moderators only) adds the author's email and IP; if the server refuses it, this
+     * falls back to the view context rather than failing the load.
      */
     suspend fun getComment(
         site: SiteModel,
@@ -391,17 +390,11 @@ class CommentsRsDataSource @Inject constructor(
         CommentListParams(perPage = COUNT_PAGE_SIZE, parent = listOf(commentId), status = WpApiParamCommentsStatus.Any)
     )
 
-    /**
-     * How many approved comments the site has from [authorEmail] - the count wp-admin shows beside
-     * each comment. Filtering by email needs moderation rights, as does knowing the email.
-     */
+    /** Approved comments from [authorEmail], as wp-admin counts them; filtering by email needs moderation. */
     suspend fun fetchAuthorCommentCount(site: SiteModel, authorEmail: String): Int? =
         countComments(site, CommentListParams(perPage = COUNT_PAGE_SIZE, authorEmail = authorEmail))
 
-    /**
-     * A registered user's bio, or null when it can't be read: core only exposes users who have
-     * published posts unless the caller can list users.
-     */
+    /** Null when unreadable: core only exposes users with published posts unless the caller can list users. */
     suspend fun fetchUserBio(site: SiteModel, userId: Long): String? = safe(errorValue = null) {
         val result = wpApiClientProvider.getWpApiClient(site)
             .request { it.users().retrieveWithViewContext(userId) }
