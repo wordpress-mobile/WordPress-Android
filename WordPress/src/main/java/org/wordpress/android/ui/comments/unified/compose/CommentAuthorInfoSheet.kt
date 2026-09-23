@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.comments.unified.compose
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,9 +37,11 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.dataview.compose.RemoteImage
 
 /**
- * The author details iOS's `CommentAuthorInfoSheet` shows when the author header is tapped: the
- * full date, website, email and IP, each omitted when blank. Email and IP only arrive when the
- * comment was fetched with edit context, i.e. when the user can moderate.
+ * The author details iOS's `CommentAuthorInfoSheet` shows when the author header is tapped - the
+ * full date, website, email and IP - plus whether the author is registered, their approved comment
+ * count and their bio. Each row is omitted when blank. Email, IP and the count need moderation
+ * rights; the count and bio arrive after the sheet opens, so they sit last where appearing late
+ * doesn't push the other rows around.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,10 +49,13 @@ import org.wordpress.android.ui.dataview.compose.RemoteImage
 fun CommentAuthorInfoSheet(
     authorName: String,
     authorAvatarUrl: String,
+    accountRes: Int?,
     date: String,
     website: String,
     email: String,
     ipAddress: String,
+    commentCount: Int?,
+    bio: String,
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
@@ -57,7 +63,11 @@ fun CommentAuthorInfoSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ) {
-        Column(modifier = Modifier.padding(bottom = SHEET_BOTTOM_PADDING)) {
+        Column(
+            modifier = Modifier
+                .padding(bottom = SHEET_BOTTOM_PADDING)
+                .animateContentSize()
+        ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -71,11 +81,16 @@ fun CommentAuthorInfoSheet(
                         .size(AVATAR_SIZE)
                         .clip(CircleShape)
                 )
-                Text(
-                    text = authorName,
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(start = AVATAR_GAP)
-                )
+                Column(modifier = Modifier.padding(start = AVATAR_GAP)) {
+                    Text(text = authorName, style = MaterialTheme.typography.titleMedium)
+                    accountRes?.let {
+                        Text(
+                            text = stringResource(it),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
             }
             InfoRow(R.string.comment_author_info_date, date)
             InfoRow(
@@ -105,6 +120,8 @@ fun CommentAuthorInfoSheet(
                     InfoRow(R.string.comment_author_info_ip_address, ipAddress)
                 }
             }
+            InfoRow(R.string.comment_author_info_comment_count, commentCount?.toString().orEmpty())
+            InfoRow(R.string.comment_author_info_bio, bio)
         }
     }
 }
@@ -143,10 +160,13 @@ private fun CommentAuthorInfoSheetPreview() {
         CommentAuthorInfoSheet(
             authorName = "Priya Nair",
             authorAvatarUrl = "",
+            accountRes = R.string.comment_author_info_registered,
             date = "Nov 14, 2023, 10:13 PM",
             website = "https://example.com",
             email = "priya@example.com",
             ipAddress = "203.0.113.4",
+            commentCount = 12,
+            bio = "Photographer and occasional writer.",
             onDismiss = {}
         )
     }

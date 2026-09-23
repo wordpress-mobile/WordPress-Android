@@ -117,6 +117,11 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     // disabled and enable once confirmed, rather than flashing enabled then greying out.
     private var canModerate = false
 
+    // Fetched the first time the author sheet opens rather than with the comment: few people open
+    // it, and the detail pager would otherwise pay for it on every comment it pages past.
+    private var authorExtras: AuthorExtras? = null
+    private var isAuthorExtrasLoading = false
+
     fun start(
         site: SiteModel,
         remoteCommentId: Long,
@@ -147,7 +152,42 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     fun onCommentEdited() {
         if (!isStarted) return
         _commentChanged.value = Event(Unit)
+        // The edit may have changed the author's email, which the comment count is keyed on.
+        authorExtras = null
         loadComment()
+    }
+
+    fun onAuthorInfoShown() {
+        val comment = loadedComment ?: return
+        if (authorExtras != null || isAuthorExtrasLoading) return
+        isAuthorExtrasLoading = true
+        launch {
+            try {
+                val extras = withContext(bgDispatcher) { fetchAuthorExtras(comment) }
+                authorExtras = extras
+                _uiState.value = _uiState.value?.copy(
+                    authorCommentCount = extras.commentCount,
+                    authorBio = extras.bio
+                )
+            } finally {
+                isAuthorExtrasLoading = false
+            }
+        }
+    }
+
+    /**
+     * Both halves are best effort and hide their row on failure. The count needs the author's
+     * email, which only a moderator's edit-context fetch has; the bio needs a registered author.
+     */
+    private suspend fun fetchAuthorExtras(comment: RsComment): AuthorExtras = coroutineScope {
+        val count = async {
+            comment.authorEmail.takeIf { it.isNotBlank() }
+                ?.let { commentsRsDataSource.fetchAuthorCommentCount(site, it) }
+        }
+        val bio = async {
+            comment.authorId.takeIf { it > 0 }?.let { commentsRsDataSource.fetchUserBio(site, it) }
+        }
+        AuthorExtras(count.await(), bio.await()?.let { HtmlUtils.fastStripHtml(it).trim() }.orEmpty())
     }
 
     private fun loadComment() {
@@ -574,6 +614,13 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         authorUrl = authorUrl,
         authorEmail = authorEmail,
         authorIp = authorIp,
+        authorAccountRes = when {
+            isPingback -> null
+            authorId > 0 -> R.string.comment_author_info_registered
+            else -> R.string.comment_author_info_guest
+        },
+        authorCommentCount = authorExtras?.commentCount,
+        authorBio = authorExtras?.bio.orEmpty(),
         commentText = contentHtml,
         postTitle = cached?.postTitle?.takeIf { it.isNotBlank() } ?: fallbackPostTitle,
         commentUrl = url,
@@ -585,6 +632,8 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         parentSnippet = parent?.contentHtml?.let { HtmlUtils.fastStripHtml(it).trim() }.orEmpty(),
         replyCount = replyCount
     )
+
+    private data class AuthorExtras(val commentCount: Int?, val bio: String)
 
     private data class CommentLoadResult(
         val rsComment: RsComment?,
@@ -606,6 +655,11 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         val authorUrl: String = "",
         val authorEmail: String = "",
         val authorIp: String = "",
+        /** "Registered user" or "Guest"; null for a pingback, whose author is a site. */
+        val authorAccountRes: Int? = null,
+        /** Loaded when the author sheet first opens; see [onAuthorInfoShown]. */
+        val authorCommentCount: Int? = null,
+        val authorBio: String = "",
         val commentText: String = "",
         val postTitle: String = "",
         val commentUrl: String = "",

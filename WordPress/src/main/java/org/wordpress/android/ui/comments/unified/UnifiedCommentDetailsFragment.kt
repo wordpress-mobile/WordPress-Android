@@ -177,6 +177,7 @@ class UnifiedCommentDetailsFragment : Fragment() {
             onCopyLinkClick = { copyLink(viewModel.uiState.value?.commentUrl.orEmpty()) },
             onShareLinkClick = { shareLink(viewModel.uiState.value?.commentUrl.orEmpty()) },
             onPostTitleClick = { viewModel.onPostTitleClicked() },
+            onAuthorInfoShown = { viewModel.onAuthorInfoShown() },
             onSendReply = { viewModel.onReplyClicked(it) }
         )
     }

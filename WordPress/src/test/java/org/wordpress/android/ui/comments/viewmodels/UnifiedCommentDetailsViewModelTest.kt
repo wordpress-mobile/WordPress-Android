@@ -20,6 +20,7 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.R
 import org.wordpress.android.datasets.wrappers.NotificationsTableWrapper
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
@@ -714,6 +715,48 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `opening the author sheet loads the comment count and bio once`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID, withEditContext = true))
+            .thenReturn(RS_COMMENT.copy(authorId = AUTHOR_USER_ID, authorEmail = "a@b.c"))
+        whenever(commentsRsDataSource.fetchAuthorCommentCount(site, "a@b.c")).thenReturn(12)
+        whenever(commentsRsDataSource.fetchUserBio(site, AUTHOR_USER_ID)).thenReturn("<p>Photographer</p>")
+        viewModel.start(site, REMOTE_COMMENT_ID, isRedesignEnabled = true)
+        advanceUntilIdle()
+
+        viewModel.onAuthorInfoShown()
+        advanceUntilIdle()
+        viewModel.onAuthorInfoShown()
+        advanceUntilIdle()
+
+        val state = uiStates.last()
+        assertThat(state.authorCommentCount).isEqualTo(12)
+        assertThat(state.authorBio).isEqualTo("Photographer")
+        assertThat(state.authorAccountRes).isEqualTo(R.string.comment_author_info_registered)
+        verify(commentsRsDataSource, times(1)).fetchAuthorCommentCount(site, "a@b.c")
+    }
+
+    @Test
+    fun `a guest author gets no bio request and a pingback no account label`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID, withEditContext = true))
+            .thenReturn(RS_COMMENT)
+        viewModel.start(site, REMOTE_COMMENT_ID, isRedesignEnabled = true)
+        advanceUntilIdle()
+
+        viewModel.onAuthorInfoShown()
+        advanceUntilIdle()
+
+        assertThat(uiStates.last().authorAccountRes).isEqualTo(R.string.comment_author_info_guest)
+        verify(commentsRsDataSource, never()).fetchUserBio(any(), any())
+
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID, withEditContext = true))
+            .thenReturn(RS_COMMENT.copy(isPingback = true))
+        viewModel.onCommentEdited()
+        advanceUntilIdle()
+
+        assertThat(uiStates.last().authorAccountRes).isNull()
+    }
+
+    @Test
     fun `restoring to pending still tracks UNTRASHED, not UNAPPROVED`() = test {
         // The stat reports where the comment came from; core can return it to pending, and
         // matching on APPROVED alone would file that as a plain unapprove.
@@ -953,6 +996,8 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
             postId = REMOTE_POST_ID,
             status = APPROVED
         )
+
+        private const val AUTHOR_USER_ID = 5L
 
         private val UNAPPROVED_RS_COMMENT = RS_COMMENT.copy(status = UNAPPROVED)
 

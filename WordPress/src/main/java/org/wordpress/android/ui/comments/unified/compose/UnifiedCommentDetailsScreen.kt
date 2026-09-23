@@ -393,13 +393,19 @@ private fun RedesignedCommentDetailsContent(
         }
     }
     if (showAuthorInfo) {
+        // Keyed on the sheet being shown rather than the tap, so a sheet restored after process
+        // death still loads its count and bio.
+        LaunchedEffect(Unit) { actions.onAuthorInfoShown() }
         CommentAuthorInfoSheet(
             authorName = uiState.authorName,
             authorAvatarUrl = uiState.authorAvatarUrl,
+            accountRes = uiState.authorAccountRes,
             date = uiState.dateFull,
             website = uiState.authorUrl,
             email = uiState.authorEmail,
             ipAddress = uiState.authorIp,
+            commentCount = uiState.authorCommentCount,
+            bio = uiState.authorBio,
             onDismiss = { showAuthorInfo = false }
         )
     }
@@ -541,6 +547,7 @@ private fun UnifiedCommentDetailsScreenPreview() {
                 onCopyLinkClick = {},
                 onShareLinkClick = {},
                 onPostTitleClick = {},
+                onAuthorInfoShown = {},
                 onSendReply = {}
             )
         )
