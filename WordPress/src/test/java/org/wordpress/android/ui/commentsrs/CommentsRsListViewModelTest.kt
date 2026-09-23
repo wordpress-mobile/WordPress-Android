@@ -32,6 +32,7 @@ import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsComment
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsCommentsPageResult
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WPAvatarUtilsWrapper
@@ -51,6 +52,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var avatarUtilsWrapper: WPAvatarUtilsWrapper
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
+    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
 
     private lateinit var site: SiteModel
     private lateinit var commentBrowsingSession: CommentBrowsingSession
@@ -88,6 +90,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         avatarUtilsWrapper = avatarUtilsWrapper,
         analyticsTracker = analyticsTracker,
         commentBrowsingSession = commentBrowsingSession,
+        appPrefsWrapper = appPrefsWrapper,
         bgDispatcher = testDispatcher()
     ).also { activeViewModel = it }
 

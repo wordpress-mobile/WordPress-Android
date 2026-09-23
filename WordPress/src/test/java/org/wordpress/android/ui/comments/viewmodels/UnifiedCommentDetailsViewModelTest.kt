@@ -2,6 +2,7 @@ package org.wordpress.android.ui.comments.viewmodels
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.test.runCurrent
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -12,6 +13,7 @@ import org.mockito.kotlin.check
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
@@ -38,8 +40,10 @@ import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.OpenP
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.ReplySent
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier
+import org.wordpress.android.ui.comments.unified.CommentModerationAction
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsComment
+import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsRestoreResult
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
 import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel.CommentDetailsUiState
@@ -53,6 +57,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
+@Suppress("LargeClass")
 @ExperimentalCoroutinesApi
 class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     @Mock
@@ -102,6 +107,9 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
             .thenReturn(listOf(CACHED_COMMENT))
         whenever(commentsRsDataSource.updateStatus(eq(site), eq(REMOTE_COMMENT_ID), any())).thenReturn(RsResult.Success)
         whenever(commentsRsDataSource.delete(site, REMOTE_COMMENT_ID)).thenReturn(RsResult.Success)
+        // Restoring reports the status the server decided on; approved is the common case.
+        whenever(commentsRsDataSource.restore(site, REMOTE_COMMENT_ID))
+            .thenReturn(RsRestoreResult.Success(APPROVED))
         whenever(commentsRsDataSource.createReply(eq(site), any(), any(), any())).thenReturn(RsResult.Success)
         whenever(commentsStore.likeComment(eq(site), eq(REMOTE_COMMENT_ID), eq(null), any()))
             .thenReturn(successPayload())
@@ -176,23 +184,27 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onSpamClicked marks comment as spam via rs and closes screen`() = test {
+    fun `onSpamClicked marks comment as spam via rs and keeps the screen open`() = test {
+        // The comment still exists, so it stays on screen with its status updated in place;
+        // only a permanent delete closes the detail.
         viewModel.start(site, REMOTE_COMMENT_ID)
 
         viewModel.onSpamClicked()
 
         verify(commentsRsDataSource).updateStatus(site, REMOTE_COMMENT_ID, SPAM)
-        assertThat(uiActionEvents).contains(Close)
+        assertThat(uiActionEvents).doesNotContain(Close)
+        assertThat(uiStates.last().status).isEqualTo(SPAM)
     }
 
     @Test
-    fun `onTrashClicked trashes comment via the update endpoint and closes screen`() = test {
+    fun `onTrashClicked trashes comment via the update endpoint and keeps the screen open`() = test {
         viewModel.start(site, REMOTE_COMMENT_ID)
 
         viewModel.onTrashClicked()
 
         verify(commentsRsDataSource).updateStatus(site, REMOTE_COMMENT_ID, TRASH)
-        assertThat(uiActionEvents).contains(Close)
+        assertThat(uiActionEvents).doesNotContain(Close)
+        assertThat(uiStates.last().status).isEqualTo(TRASH)
     }
 
     @Test
@@ -578,6 +590,161 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `un-spamming restores rather than writing approved directly`() = test {
+        // A bare status=approve write would publish a comment that was only ever pending; the
+        // restore endpoint lets the server return it to whatever it was.
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).thenReturn(RS_COMMENT.copy(status = SPAM))
+        val spammed = createViewModel()
+        spammed.start(site, REMOTE_COMMENT_ID)
+
+        spammed.onSpamClicked()
+
+        verify(commentsRsDataSource).restore(site, REMOTE_COMMENT_ID)
+        verify(commentsRsDataSource, never()).updateStatus(eq(site), eq(REMOTE_COMMENT_ID), eq(APPROVED))
+    }
+
+    @Test
+    fun `restore applies the status the server reports, not an assumed approved`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).thenReturn(RS_COMMENT.copy(status = TRASH))
+        whenever(commentsRsDataSource.restore(site, REMOTE_COMMENT_ID))
+            .thenReturn(RsRestoreResult.Success(UNAPPROVED))
+        val trashed = createViewModel()
+        val states = trashed.observeStates()
+        trashed.start(site, REMOTE_COMMENT_ID)
+
+        trashed.onRestoreClicked()
+
+        assertThat(states.last().status).isEqualTo(UNAPPROVED)
+    }
+
+    @Test
+    fun `a failed restore leaves the comment where it was`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).thenReturn(RS_COMMENT.copy(status = TRASH))
+        whenever(commentsRsDataSource.restore(site, REMOTE_COMMENT_ID)).thenReturn(RsRestoreResult.Error(null))
+        val trashed = createViewModel()
+        val states = trashed.observeStates()
+        trashed.start(site, REMOTE_COMMENT_ID)
+
+        trashed.onRestoreClicked()
+
+        assertThat(states.last().status).isEqualTo(TRASH)
+    }
+
+    @Test
+    fun `a moderation keeps the old status until the server confirms, so its button can spin`() = test {
+        // Flipping the status first redrew the toolbar for the destination status in the same
+        // frame, removing the tapped button before its spinner could ever show.
+        viewModel.start(site, REMOTE_COMMENT_ID)
+        whenever(commentsRsDataSource.updateStatus(site, REMOTE_COMMENT_ID, SPAM)).doSuspendableAnswer {
+            delay(LOAD_DELAY_MS)
+            RsResult.Success
+        }
+
+        viewModel.onSpamClicked()
+        runCurrent()
+
+        assertThat(uiStates.last().status).isEqualTo(APPROVED)
+        assertThat(uiStates.last().pendingAction).isEqualTo(CommentModerationAction.SPAM)
+
+        advanceUntilIdle()
+
+        assertThat(uiStates.last().status).isEqualTo(SPAM)
+        assertThat(uiStates.last().pendingAction).isNull()
+    }
+
+    @Test
+    fun `a failed moderation never shows the destination status`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID)
+        whenever(commentsRsDataSource.updateStatus(site, REMOTE_COMMENT_ID, SPAM)).thenReturn(RsResult.Error(null))
+
+        viewModel.onSpamClicked()
+        advanceUntilIdle()
+
+        assertThat(uiStates.map { it.status }).doesNotContain(SPAM)
+        assertThat(uiStates.last().pendingAction).isNull()
+    }
+
+    @Test
+    fun `the parent and reply count are not fetched when the redesign is off`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID))
+            .thenReturn(RS_COMMENT.copy(parentId = PARENT_COMMENT_ID))
+
+        viewModel.start(site, REMOTE_COMMENT_ID)
+        advanceUntilIdle()
+
+        verify(commentsRsDataSource, never()).getComment(site, PARENT_COMMENT_ID)
+        verify(commentsRsDataSource, never()).fetchReplyCount(any(), any())
+    }
+
+    @Test
+    fun `the redesign fetches the parent and reply count`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID))
+            .thenReturn(RS_COMMENT.copy(parentId = PARENT_COMMENT_ID))
+
+        viewModel.start(site, REMOTE_COMMENT_ID, isRedesignEnabled = true)
+        advanceUntilIdle()
+
+        verify(commentsRsDataSource).getComment(site, PARENT_COMMENT_ID)
+        verify(commentsRsDataSource).fetchReplyCount(site, REMOTE_COMMENT_ID)
+    }
+
+    @Test
+    fun `restoring to pending still tracks UNTRASHED, not UNAPPROVED`() = test {
+        // The stat reports where the comment came from; core can return it to pending, and
+        // matching on APPROVED alone would file that as a plain unapprove.
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).thenReturn(RS_COMMENT.copy(status = TRASH))
+        whenever(commentsRsDataSource.restore(site, REMOTE_COMMENT_ID))
+            .thenReturn(RsRestoreResult.Success(UNAPPROVED))
+        val trashed = createViewModel()
+        trashed.start(site, REMOTE_COMMENT_ID)
+
+        trashed.onRestoreClicked()
+
+        verify(analyticsUtilsWrapper).trackCommentActionWithSiteDetails(
+            Stat.COMMENT_UNTRASHED, AnalyticsCommentActionSource.SITE_COMMENTS, site
+        )
+    }
+
+    @Test
+    fun `deleting from the bin still tracks DELETED, not UNTRASHED`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).thenReturn(RS_COMMENT.copy(status = TRASH))
+        val trashed = createViewModel()
+        trashed.start(site, REMOTE_COMMENT_ID)
+
+        trashed.onDeletePermanentlyClicked()
+
+        verify(analyticsUtilsWrapper).trackCommentActionWithSiteDetails(
+            Stat.COMMENT_DELETED, AnalyticsCommentActionSource.SITE_COMMENTS, site
+        )
+    }
+
+    @Test
+    fun `a custom status label does not outlive the status it described`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID))
+            .thenReturn(RS_COMMENT.copy(status = CommentStatus.ALL, rawStatus = "archived"))
+        val custom = createViewModel()
+        val states = custom.observeStates()
+        custom.start(site, REMOTE_COMMENT_ID)
+
+        custom.onSpamClicked()
+
+        assertThat(states.last().status).isEqualTo(SPAM)
+        assertThat(states.last().customStatusLabel).isEmpty()
+    }
+
+    @Test
+    fun `a status the app does not model is carried through for display`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID))
+            .thenReturn(RS_COMMENT.copy(status = CommentStatus.ALL, rawStatus = "archived"))
+
+        val custom = createViewModel()
+        val states = custom.observeStates()
+        custom.start(site, REMOTE_COMMENT_ID)
+
+        assertThat(states.last().customStatusLabel).isEqualTo("archived")
+    }
+
+    @Test
     fun `spamming tracks COMMENT_SPAMMED and un-spamming tracks COMMENT_UNSPAMMED`() = test {
         viewModel.start(site, REMOTE_COMMENT_ID)
         viewModel.onSpamClicked()
@@ -720,6 +887,13 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         analyticsUtilsWrapper = analyticsUtilsWrapper
     )
 
+    /** Collects ui states from a ViewModel created inside a test, which [setupObservers] misses. */
+    private fun UnifiedCommentDetailsViewModel.observeStates(): List<CommentDetailsUiState> {
+        val states = mutableListOf<CommentDetailsUiState>()
+        uiState.observeForever { states.add(it) }
+        return states
+    }
+
     private fun setupObservers() {
         uiStates.clear()
         uiActionEvents.clear()
@@ -741,6 +915,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         private const val REMOTE_COMMENT_ID = 4321L
         private const val REMOTE_POST_ID = 99L
         private const val LOAD_DELAY_MS = 1000L
+        private const val PARENT_COMMENT_ID = 777L
         private const val NOTE_ID = "note_5555"
 
         private val RS_COMMENT = RsComment(

@@ -160,10 +160,10 @@ private fun PageContentItem(
                     if (page.actions.isNotEmpty()) {
                         PageMenuButton(actions = page.actions, onAction = onMenuAction)
                     }
-                    if (page.featuredImageUrl != null) {
+                    if (page.featuredImage != null) {
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
-                                .data(page.featuredImageUrl)
+                                .data(page.featuredImage.thumbnail)
                                 .crossfade(true)
                                 .build(),
                             contentDescription = stringResource(R.string.featured_image_desc),

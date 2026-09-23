@@ -121,7 +121,7 @@ fun CommentsRsListItem(
 }
 
 @Composable
-private fun CommentAvatar(comment: CommentRsUiModel, isSelected: Boolean, onClick: () -> Unit) {
+internal fun CommentAvatar(comment: CommentRsUiModel, isSelected: Boolean, onClick: () -> Unit) {
     Crossfade(targetState = isSelected, label = "avatar") { selected ->
         if (selected) {
             Icon(
@@ -153,10 +153,10 @@ private fun CommentAvatar(comment: CommentRsUiModel, isSelected: Boolean, onClic
 /**
  * The row title: "{author} on {post title}" via the shared [R.string.comment_title] template with
  * both parts bold (like legacy `CommentListUiUtils.formatCommentTitle`), or just the bold author
- * name while the post title is unresolved.
+ * name while the post title is unresolved. Shared with the redesigned row.
  */
 @Composable
-private fun commentTitle(comment: CommentRsUiModel): AnnotatedString {
+internal fun commentTitle(comment: CommentRsUiModel): AnnotatedString {
     val postTitle = comment.postTitle?.trim().orEmpty()
     val formatted = if (postTitle.isEmpty()) {
         comment.authorName

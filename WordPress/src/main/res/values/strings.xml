@@ -4983,11 +4983,20 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="about_automattic_app_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">App icon</string>
 
     <!-- Redesigned posts/pages list -->
+    <string name="content_list_group_today">Today</string>
+    <string name="content_list_group_yesterday">Yesterday</string>
     <string name="content_list_group_this_week">This week</string>
     <string name="content_list_group_earlier_in">Earlier in %1$s</string>
     <string name="content_list_fab_write">Write</string>
     <string name="content_list_density_show_condensed">Show condensed list</string>
     <string name="content_list_density_show_comfortable">Show expanded list</string>
-    <string name="experimental_posts_pages_redesign">Posts and Pages list redesign</string>
-    <string name="experimental_posts_pages_redesign_description">Show the redesigned posts and pages lists: featured-image cards, filter chips and a condensed view.</string>
+    <string name="experimental_content_redesign">Posts, Pages and Comments redesign</string>
+    <string name="experimental_content_redesign_description">Show the redesigned posts, pages and comments lists — cards, filter chips and a condensed view — plus the redesigned comment detail.</string>
+    <string name="comment_trash_has_replies">This comment has replies. They won’t be moved to the trash with it.</string>
+    <string name="comment_reply_unsent">You have an unsent reply.</string>
+    <string name="comment_reply_keep_editing">Keep Editing</string>
+    <string name="comment_reply_delete_draft">Delete Draft</string>
+    <string name="comment_reply_save_draft">Save Draft</string>
+    <string name="comment_detail_on_post">on %1$s</string>
+    <string name="comment_detail_in_reply_to">In reply to %1$s:</string>
 </resources>
