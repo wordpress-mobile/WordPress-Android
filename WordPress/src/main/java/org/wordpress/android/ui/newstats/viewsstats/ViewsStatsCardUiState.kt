@@ -142,11 +142,16 @@ data class ViewsStatsChartData(
  * A single data point for the chart.
  * @param label The formatted label for this time unit (e.g., "14:00", "Jan 15", "Jan")
  * @param value The value of the currently selected metric for this time unit
+ * @param isUpcoming Whether this bucket of the selected period hasn't happened yet. An unfinished
+ * calendar period is charted over its whole span (Monday to Sunday on a Wednesday), so the buckets
+ * still to come hold their slot on the axis with no value of their own — only the previous period's
+ * comparison is drawn there, and they can't be selected or averaged over.
  */
 data class ChartDataPoint(
     val label: String,
     val value: Long,
-    val rawPeriod: String = ""
+    val rawPeriod: String = "",
+    val isUpcoming: Boolean = false
 )
 
 /**

@@ -494,6 +494,9 @@ class ViewsStatsViewModel @Inject constructor(
         if (content.isLoadingNewPeriod) return
         val loaded = content.chart as? ChartUiState.Loaded ?: return
         val dataPoint = loaded.chartData.currentPeriod.getOrNull(index) ?: return
+        // A bucket that hasn't happened yet has nothing to show or drill into: it only holds a slot on
+        // the axis for the previous period's comparison bar.
+        if (dataPoint.isUpcoming) return
 
         // Tapping the selected bar again reverts to the whole period.
         if (content.selectedBar?.index == index) {
@@ -931,7 +934,8 @@ class ViewsStatsViewModel @Inject constructor(
                 ChartDataPoint(
                     formatDataPointLabel(it.period, result.unit),
                     it.valueFor(metric),
-                    it.period
+                    it.period,
+                    it.isUpcoming
                 )
             }
         val previousDataPoints = result.previousPeriodData
@@ -943,8 +947,11 @@ class ViewsStatsViewModel @Inject constructor(
                 )
             }
 
-        val average = if (currentDataPoints.isNotEmpty()) {
-            currentValue / currentDataPoints.size
+        // The average is per elapsed bucket: the placeholders an unfinished calendar period is padded
+        // with carry no data, so averaging over them would drag the line down as the period fills up.
+        val elapsedPointCount = currentDataPoints.count { !it.isUpcoming }
+        val average = if (elapsedPointCount > 0) {
+            currentValue / elapsedPointCount
         } else {
             if (currentValue > 0) {
                 AppLog.w(

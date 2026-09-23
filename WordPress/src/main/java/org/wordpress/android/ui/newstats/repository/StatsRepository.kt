@@ -776,9 +776,13 @@ class StatsRepository @Inject constructor(
         val previousAggregates = buildPeriodAggregates(
             previousData,
             periodRange.previousStart.format(dateFormatter),
-            previousDisplayDateString
+            previousDisplayDateString,
+            bucketLimit = periodRange.previousComparisonBuckets
         )
-        val currentPeriodData = currentData.toMetricDataPoints()
+        // An unfinished calendar period is charted over its whole span, so the current series is padded
+        // out to the end of the week/month/year. The previous window keeps every bucket it fetched even
+        // when its totals were trimmed above: those buckets are what the padded slots compare against.
+        val currentPeriodData = currentData.toMetricDataPoints() + upcomingPoints(periodRange)
         val previousPeriodData = previousData.toMetricDataPoints()
 
         return PeriodStatsResult.Success(
@@ -851,21 +855,33 @@ class StatsRepository @Inject constructor(
         }
     }
 
+    /**
+     * Sums [data] into the totals shown in the header and the bottom row. [bucketLimit] keeps only the
+     * window's first N buckets (null keeps all of them), which is how an unfinished calendar period
+     * compares its elapsed days against the same opening stretch of the previous period even though the
+     * whole previous period was fetched for the chart — see [calculateCalendarPeriodDates].
+     */
     private fun buildPeriodAggregates(
         data: StatsVisitsData,
         startDate: String,
-        endDate: String
+        endDate: String,
+        bucketLimit: Int? = null
     ): PeriodAggregates {
+        val limit = bucketLimit ?: Int.MAX_VALUE
         return PeriodAggregates(
-            views = data.visits.sumOf { it.visits },
-            visitors = data.visitors.sumOf { it.visitors },
-            likes = data.likes.sumOf { it.likes },
-            comments = data.comments.sumOf { it.comments },
-            posts = data.posts.sumOf { it.posts },
+            views = data.visits.take(limit).sumOf { it.visits },
+            visitors = data.visitors.take(limit).sumOf { it.visitors },
+            likes = data.likes.take(limit).sumOf { it.likes },
+            comments = data.comments.take(limit).sumOf { it.comments },
+            posts = data.posts.take(limit).sumOf { it.posts },
             startDate = startDate,
             endDate = endDate
         )
     }
+
+    /** The current series' trailing placeholders for [periodRange], or empty when it is complete. */
+    private fun upcomingPoints(periodRange: PeriodDateRange): List<ViewsDataPoint> =
+        periodRange.upcomingEnd?.let { upcomingDataPoints(periodRange.currentEnd, it, periodRange.unit) }.orEmpty()
 
     /**
      * The two windows a card region compares, and the API bucket [unit] both are fetched at.
@@ -886,7 +902,21 @@ class StatsRepository @Inject constructor(
         val unit: StatsUnit,
         // Display dates for the legend (may differ from API dates for hourly queries)
         val currentDisplayDate: LocalDate = currentEnd,
-        val previousDisplayDate: LocalDate = previousEnd
+        val previousDisplayDate: LocalDate = previousEnd,
+        /**
+         * How many of the previous window's buckets the totals compare against, or null for all of
+         * them. Only the unfinished calendar periods set it: they fetch the *whole* previous
+         * week/month/year so the chart can show a comparison for the part of the period that hasn't
+         * happened yet, but the header and bottom-row totals must still compare like for like — the
+         * elapsed part of this week against the same opening stretch of last week.
+         */
+        val previousComparisonBuckets: Int? = null,
+        /**
+         * The end of the whole calendar period when it runs past [currentEnd], or null when the window
+         * is already complete. The buckets between [currentEnd] and it have not happened yet; they are
+         * appended to the current series as empty placeholders so the chart spans the whole period.
+         */
+        val upcomingEnd: LocalDate? = null
     )
 
     private enum class DateUnit { DAY, MONTH }
@@ -938,20 +968,31 @@ class StatsRepository @Inject constructor(
      * falls before the start's (Jan 15..Mar 5 elapses 1 whole month but spans 3: Jan, Feb, Mar).
      */
     private fun unitAndQuantityFor(start: LocalDate, end: LocalDate): Pair<StatsUnit, Int> {
+        val unit = unitFor(start, end)
+        return unit to quantityFor(start, end, unit)
+    }
+
+    /** The bucket [StatsUnit] the inclusive [start]..[end] window is charted at. See [unitAndQuantityFor]. */
+    private fun unitFor(start: LocalDate, end: LocalDate): StatsUnit {
         val daysBetween = ChronoUnit.DAYS.between(start, end).toInt() + 1
-        val unit = when {
+        return when {
             daysBetween <= MAX_DAYS_IN_MONTH -> StatsUnit.DAY
             daysBetween > MAX_DAYS_IN_2_YEARS -> StatsUnit.YEAR
             else -> StatsUnit.MONTH
         }
-        val quantity = when (unit) {
-            StatsUnit.MONTH ->
-                (ChronoUnit.MONTHS.between(start.withDayOfMonth(1), end.withDayOfMonth(1)).toInt() + 1)
-                    .coerceAtLeast(1)
-            StatsUnit.YEAR -> (end.year - start.year + 1).coerceAtLeast(1)
-            else -> daysBetween
-        }
-        return unit to quantity
+    }
+
+    /**
+     * How many [unit] buckets the inclusive [start]..[end] window spans. Split from [unitFor] so a
+     * window can be measured at a unit chosen elsewhere — the calendar-aligned periods pick their unit
+     * from the whole calendar week/month/year but request only the buckets up to today.
+     */
+    private fun quantityFor(start: LocalDate, end: LocalDate, unit: StatsUnit): Int = when (unit) {
+        StatsUnit.MONTH ->
+            (ChronoUnit.MONTHS.between(start.withDayOfMonth(1), end.withDayOfMonth(1)).toInt() + 1)
+                .coerceAtLeast(1)
+        StatsUnit.YEAR -> (end.year - start.year + 1).coerceAtLeast(1)
+        else -> (ChronoUnit.DAYS.between(start, end).toInt() + 1).coerceAtLeast(1)
     }
 
     /**
@@ -988,6 +1029,7 @@ class StatsRepository @Inject constructor(
     private fun calculatePeriodDates(period: StatsPeriod): PeriodDateRange {
         if (period is StatsPeriod.Today) return calculateTodayPeriodDates()
         if (period is StatsPeriod.Custom) return calculateCustomPeriodDates(period.startDate, period.endDate)
+        fullCalendarWindow(period)?.let { return calculateCalendarPeriodDates(period, it) }
 
         val config = getPeriodConfig(period)
         val (currentStart, currentEnd) = currentPeriodWindow(period)
@@ -1004,6 +1046,119 @@ class StatsRepository @Inject constructor(
             previousQuantity = config.quantity,
             unit = config.unit
         )
+    }
+
+    /**
+     * The chart windows for an unfinished calendar period ([StatsPeriod.ThisWeek]/[StatsPeriod.ThisMonth]/
+     * [StatsPeriod.ThisYear]), whose whole calendar week/month/year is [fullWindow].
+     *
+     * The chart spans the *whole* period rather than stopping at today — matching iOS — so on a
+     * Wednesday "This Week" plots Monday through Sunday, with the days still to come carrying only the
+     * previous period's bars. Three things follow from that:
+     *
+     * - The bucket unit comes from the whole period, not from the part of it that has elapsed, so the
+     *   granularity doesn't change as the period fills up: "This Year" is twelve month buckets on 5
+     *   January just as it is in December, rather than five day buckets.
+     * - The current window is still only fetched up to today (the API has nothing for days that haven't
+     *   happened); [PeriodDateRange.upcomingEnd] carries the rest of the period so
+     *   [buildPeriodStatsSuccess] can append the empty buckets the chart draws.
+     * - The previous window is the whole preceding calendar week/month/year, so the comparison series
+     *   covers the part of the period that is still to come. Its totals are trimmed back to the same
+     *   number of elapsed buckets ([PeriodDateRange.previousComparisonBuckets]) so the header and the
+     *   bottom row still compare three days against three days.
+     */
+    private fun calculateCalendarPeriodDates(
+        period: StatsPeriod,
+        fullWindow: Pair<LocalDate, LocalDate>
+    ): PeriodDateRange {
+        val (currentStart, fullEnd) = fullWindow
+        val (_, currentEnd) = currentPeriodWindow(period)
+        val unit = unitFor(currentStart, fullEnd)
+        val currentQuantity = quantityFor(currentStart, currentEnd, unit)
+
+        val previousEnd = currentStart.minusDays(1)
+        val previousStart = previousCalendarStart(currentStart, calendarUnitOf(period))
+        val previousQuantity = quantityFor(previousStart, previousEnd, unit)
+
+        // Compare against the same opening stretch of the previous period, never past its own end (a
+        // 31-day month's elapsed days can outnumber the previous month's buckets).
+        val comparisonBuckets = minOf(currentQuantity, previousQuantity)
+        val previousDisplayDate = minOf(advanceBuckets(previousStart, comparisonBuckets - 1, unit), previousEnd)
+
+        return PeriodDateRange(
+            currentStart = currentStart,
+            currentEnd = currentEnd,
+            previousStart = previousStart,
+            previousEnd = previousEnd,
+            currentQuantity = currentQuantity,
+            previousQuantity = previousQuantity,
+            unit = unit,
+            previousDisplayDate = previousDisplayDate,
+            previousComparisonBuckets = comparisonBuckets,
+            upcomingEnd = fullEnd.takeIf { it > currentEnd }
+        )
+    }
+
+    /**
+     * The whole calendar week/month/year a calendar-aligned period belongs to — the future part of it
+     * included — or null for every other period. [currentPeriodWindow] stops at today; this is the
+     * window the chart spans.
+     */
+    private fun fullCalendarWindow(period: StatsPeriod): Pair<LocalDate, LocalDate>? {
+        val (start, _) = currentPeriodWindow(period)
+        return when (period) {
+            is StatsPeriod.ThisWeek -> start to start.plusDays((DAYS_IN_7_DAYS - 1).toLong())
+            is StatsPeriod.ThisMonth -> start to start.withDayOfMonth(start.lengthOfMonth())
+            is StatsPeriod.ThisYear -> start to start.withDayOfYear(start.lengthOfYear())
+            else -> null
+        }
+    }
+
+    /** The first day of the calendar [unit] immediately before the one starting at [start]. */
+    private fun previousCalendarStart(start: LocalDate, unit: CalendarUnit?): LocalDate = when (unit) {
+        CalendarUnit.WEEK -> start.minusWeeks(1)
+        CalendarUnit.MONTH -> start.minusMonths(1)
+        CalendarUnit.YEAR -> start.minusYears(1)
+        null -> start.minusDays(1)
+    }
+
+    /** [start] moved forward by [buckets] whole [unit] buckets. */
+    private fun advanceBuckets(start: LocalDate, buckets: Int, unit: StatsUnit): LocalDate {
+        val amount = buckets.toLong()
+        return when (unit) {
+            StatsUnit.YEAR -> start.plusYears(amount)
+            StatsUnit.MONTH -> start.plusMonths(amount)
+            else -> start.plusDays(amount)
+        }
+    }
+
+    /**
+     * The empty buckets between [currentEnd] and [upcomingEnd] — the part of a calendar period that
+     * hasn't happened yet. Appended to the current series so the chart spans the whole period, with
+     * only the previous period's bars drawn over the days still to come.
+     *
+     * The placeholders are keyed by their own bucket start date in the API's own ISO format, so they
+     * label themselves exactly like the buckets the API returns.
+     */
+    private fun upcomingDataPoints(
+        currentEnd: LocalDate,
+        upcomingEnd: LocalDate,
+        unit: StatsUnit
+    ): List<ViewsDataPoint> {
+        val points = mutableListOf<ViewsDataPoint>()
+        var bucket = advanceBuckets(bucketStart(currentEnd, unit), 1, unit)
+        while (!bucket.isAfter(upcomingEnd)) {
+            points.add(ViewsDataPoint(period = bucket.format(dateFormatter), views = 0L, isUpcoming = true))
+            bucket = advanceBuckets(bucket, 1, unit)
+        }
+        return points
+    }
+
+    /** The first day of the [unit] bucket holding [date]. */
+    private fun bucketStart(date: LocalDate, unit: StatsUnit): LocalDate = when (unit) {
+        StatsUnit.YEAR -> date.withDayOfYear(1)
+        StatsUnit.MONTH -> date.withDayOfMonth(1)
+        else -> date
     }
 
     /**
@@ -1037,20 +1192,14 @@ class StatsRepository @Inject constructor(
         }
     }
 
+    /**
+     * The fixed-span presets' window shape. The calendar-aligned periods never reach here — they take
+     * their unit and windows from the whole calendar period, in [calculateCalendarPeriodDates].
+     */
     private fun getPeriodConfig(period: StatsPeriod): PeriodConfig = when (period) {
         is StatsPeriod.Last7Days -> PeriodConfig(DAYS_IN_7_DAYS, StatsUnit.DAY, DateUnit.DAY)
         is StatsPeriod.Last30Days -> PeriodConfig(DAYS_IN_30_DAYS, StatsUnit.DAY, DateUnit.DAY)
         is StatsPeriod.Last12Months -> PeriodConfig(MONTHS_IN_12_MONTHS, StatsUnit.MONTH, DateUnit.MONTH)
-        // Calendar-aligned windows have a variable length, so their granularity and quantity are
-        // derived from the actual window (day up to a month, month beyond) via [unitAndQuantityFor].
-        is StatsPeriod.ThisWeek,
-        is StatsPeriod.ThisMonth,
-        is StatsPeriod.ThisYear -> {
-            val (start, end) = currentPeriodWindow(period)
-            val (unit, quantity) = unitAndQuantityFor(start, end)
-            val dateUnit = if (unit == StatsUnit.MONTH) DateUnit.MONTH else DateUnit.DAY
-            PeriodConfig(quantity, unit, dateUnit)
-        }
         else -> PeriodConfig(DAYS_IN_7_DAYS, StatsUnit.DAY, DateUnit.DAY) // Fallback to 7 days
     }
 
@@ -2463,6 +2612,11 @@ sealed class DailyViewsResult {
  * metric per bucket, so the chart can plot any of them without a new network call. An hourly
  * (single-day) response only populates [views]; the other four default to 0 and are never charted
  * (the ViewModel disables non-views selection on single-day periods).
+ *
+ * [isUpcoming] marks a bucket of the selected period that hasn't happened yet: an unfinished calendar
+ * period ("This Week" on a Wednesday) is charted over its whole span, so the days still to come are
+ * carried as empty placeholders that hold their slot on the axis and show only the previous period's
+ * comparison.
  */
 data class ViewsDataPoint(
     val period: String,
@@ -2470,7 +2624,8 @@ data class ViewsDataPoint(
     val visitors: Long = 0L,
     val likes: Long = 0L,
     val comments: Long = 0L,
-    val posts: Long = 0L
+    val posts: Long = 0L,
+    val isUpcoming: Boolean = false
 )
 
 /**

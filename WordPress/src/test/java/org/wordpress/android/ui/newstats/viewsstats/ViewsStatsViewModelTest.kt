@@ -619,6 +619,49 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given a period that hasn't finished, then the average only counts the buckets that elapsed`() = test {
+        val result = createPeriodStatsResult(
+            currentViews = 7000L,
+            currentPeriodData = createDefaultDataPoints() + listOf(
+                ViewsDataPoint(period = "2024-01-16", views = 0L, isUpcoming = true),
+                ViewsDataPoint(period = "2024-01-17", views = 0L, isUpcoming = true)
+            )
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value.chartLoaded()
+        // Still 7000 views / 2 elapsed buckets: averaging over the days still to come would drag the
+        // line down as the period fills up.
+        assertThat(state.periodAverage).isEqualTo(3500L)
+        assertThat(state.chartData.currentPeriod.map { it.isUpcoming })
+            .containsExactly(false, false, true, true)
+    }
+
+    @Test
+    fun `when a bucket that hasn't happened yet is tapped, then nothing is selected`() = test {
+        val result = createPeriodStatsResult(
+            currentPeriodData = createDefaultDataPoints() +
+                ViewsDataPoint(period = "2024-01-16", views = 0L, isUpcoming = true)
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(2)
+        advanceUntilIdle()
+
+        // That slot only holds the previous period's comparison bar: there is nothing to put in the
+        // header and nothing to drill into.
+        assertThat(viewModel.uiState.value.selectedBar()).isNull()
+        assertThat(viewModel.effectivePeriod.value).isEqualTo(viewModel.selectedPeriod.value)
+    }
+
+    @Test
     fun `when exception is thrown during chart fetch, then chart region shows an error`() = test {
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenThrow(RuntimeException("Test exception"))

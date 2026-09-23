@@ -625,12 +625,25 @@ private fun ViewsStatsChart(
         if (chartData.currentPeriod.isNotEmpty()) {
             // Check hasPreviousPeriod inside the effect to avoid capturing stale values
             val hasPreviousPeriod = chartData.previousPeriod.isNotEmpty()
+            // The two series can differ in length -- an unfinished calendar period compares its whole
+            // span against a previous period of a different bucket count (March's 31 days against
+            // February's 28) -- so align on the current period's slots and read the comparison by
+            // index, leaving the tail without one at zero.
+            val currentValues = chartData.currentPeriod.map { it.value }
+            val previousValues = chartData.currentPeriod.indices.map {
+                chartData.previousPeriod.getOrNull(it)?.value ?: 0L
+            }
             when (chartType) {
                 ChartType.LINE -> modelProducer.runTransaction {
                     lineModel {
-                        series(chartData.currentPeriod.map { it.value })
+                        // The line stops at the last elapsed bucket rather than dropping to zero over
+                        // the part of the period that hasn't happened yet.
+                        val elapsedValues = chartData.currentPeriod
+                            .dropLastWhile { it.isUpcoming }
+                            .map { it.value }
+                        series(elapsedValues.ifEmpty { currentValues })
                         if (hasPreviousPeriod) {
-                            series(chartData.previousPeriod.map { it.value })
+                            series(previousValues)
                         }
                     }
                 }
@@ -640,42 +653,25 @@ private fun ViewsStatsChart(
                             // Series 1: current value when no
                             // delta (rounded top)
                             series(
-                                chartData.currentPeriod.zip(
-                                    chartData.previousPeriod
-                                ) { current, previous ->
-                                    if (previous.value <= current.value)
-                                        current.value
-                                    else 0L
+                                currentValues.zip(previousValues) { current, previous ->
+                                    if (previous <= current) current else 0L
                                 }
                             )
                             // Series 2: current value when there
                             // is a delta (flat top)
                             series(
-                                chartData.currentPeriod.zip(
-                                    chartData.previousPeriod
-                                ) { current, previous ->
-                                    if (previous.value > current.value)
-                                        current.value
-                                    else 0L
+                                currentValues.zip(previousValues) { current, previous ->
+                                    if (previous > current) current else 0L
                                 }
                             )
                             // Series 3: delta (rounded top)
                             series(
-                                chartData.currentPeriod.zip(
-                                    chartData.previousPeriod
-                                ) { current, previous ->
-                                    maxOf(
-                                        0L,
-                                        previous.value - current.value
-                                    )
+                                currentValues.zip(previousValues) { current, previous ->
+                                    maxOf(0L, previous - current)
                                 }
                             )
                         } else {
-                            series(
-                                chartData.currentPeriod.map {
-                                    it.value
-                                }
-                            )
+                            series(currentValues)
                         }
                     }
                 }
@@ -1265,7 +1261,8 @@ private class ChartMarkerValueFormatter(
     }
 
     private fun formatBothPeriods(x: Int): String {
-        val hasCurrent = x in currentPeriodData.indices
+        // A bucket that hasn't happened yet has no value to report -- only the previous period's.
+        val hasCurrent = x in currentPeriodData.indices && !currentPeriodData[x].isUpcoming
         val hasPrevious = x in previousPeriodData.indices
 
         if (!hasCurrent && !hasPrevious) return ""
