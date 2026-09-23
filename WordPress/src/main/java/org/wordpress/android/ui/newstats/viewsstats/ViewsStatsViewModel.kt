@@ -579,17 +579,45 @@ class ViewsStatsViewModel @Inject constructor(
     /**
      * Builds the bottom-row items for the bar at [index] from the cached per-bucket data, so the row
      * reflects the selected bar with no network call. Returns null when there's no cached result or the
-     * index is out of range (the caller keeps the existing row). Non-hourly buckets carry all five
-     * metrics; hourly buckets carry only views, so the other metrics read zero.
+     * index is out of range (the caller keeps the existing row).
+     *
+     * Non-hourly buckets carry all five metrics. An hourly response carries only the views series, so
+     * the metrics it has no data for fall back to the whole day's own totals (matching iOS) rather than
+     * reading a misleading zero for the selected hour — see [hasPerBucketSeries].
      */
     private fun buildSelectedBarBottom(index: Int): BottomStatsUiState? {
         val result = lastChartResult ?: return null
-        return result.currentPeriodData.getOrNull(index)?.let { current ->
-            val previous = result.previousPeriodData.getOrNull(index)?.toBottomAggregates()
-                ?: EMPTY_BOTTOM_AGGREGATES
-            BottomStatsUiState.Loaded(buildStatItems(current.toBottomAggregates(), previous))
-        }
+        val current = result.currentPeriodData.getOrNull(index) ?: return null
+        val previous = result.previousPeriodData.getOrNull(index)?.toBottomAggregates()
+            ?: EMPTY_BOTTOM_AGGREGATES
+        val barItems = buildStatItems(current.toBottomAggregates(), previous)
+        val wholePeriodItems = (wholePeriodBottom as? BottomStatsUiState.Loaded)?.stats
+            ?: return BottomStatsUiState.Loaded(barItems)
+        return BottomStatsUiState.Loaded(
+            barItems.map { item ->
+                if (hasPerBucketSeries(result, item.metric)) {
+                    item
+                } else {
+                    // The whole item, not just its value: a day-level total must be shown with the
+                    // day's own change, never with one computed from the selected bucket.
+                    wholePeriodItems.firstOrNull { it.metric == item.metric } ?: item
+                }
+            }
+        )
     }
+
+    /**
+     * Whether [metric] has a per-bucket series of its own in [result], so a selected bucket can show
+     * its own value for it.
+     *
+     * Only the hourly (single-day) response is ever missing one: it populates views alone, leaving the
+     * other four metrics at zero in every bucket. Reading that as "no series" rather than hard-coding
+     * which metrics are hourly keeps the row correct if the API starts returning more of them — a
+     * metric that really is zero all day has an equally zero day total, so the fallback shows the same
+     * number either way.
+     */
+    private fun hasPerBucketSeries(result: PeriodStatsResult.Success, metric: StatsMetric): Boolean =
+        result.unit != StatsUnit.HOUR || result.currentPeriodData.any { it.valueFor(metric) > 0L }
 
     private fun ViewsDataPoint.toBottomAggregates() = BottomStatsAggregates(
         views = views,
@@ -900,10 +928,14 @@ class ViewsStatsViewModel @Inject constructor(
                 // When a bar is soft-selected the visible row holds that bar's overlaid totals. A
                 // late-arriving whole-period bottom load (single-day periods fetch it separately, and it
                 // can land after the chart) must not clobber the overlay and desync it from the header;
-                // it's kept in wholePeriodBottom above and restored on clear.
+                // it's kept in wholePeriodBottom above and restored on clear. The overlay is rebuilt
+                // rather than kept as-is, because an hourly selection borrows the day's totals for the
+                // metrics its own response has no series for — those arrive with this very load.
                 is ViewsStatsCardUiState.Content ->
                     current.copy(
-                        bottomStats = if (current.selectedBar != null) current.bottomStats else bottom,
+                        bottomStats = current.selectedBar
+                            ?.let { buildSelectedBarBottom(it.index) ?: current.bottomStats }
+                            ?: bottom,
                         selectedMetric = currentSelectedMetric
                     )
                 else -> ViewsStatsCardUiState.Content(

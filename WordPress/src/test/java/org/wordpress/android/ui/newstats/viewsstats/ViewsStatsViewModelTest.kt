@@ -1272,6 +1272,74 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given an hourly bar, when it is selected, then metrics with no hourly series show the day totals`() = test {
+        val hourly = listOf(
+            ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
+            ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(
+            createPeriodStatsResult(
+                currentPeriodData = hourly,
+                previousPeriodData = hourly,
+                unit = StatsUnit.HOUR
+            )
+        )
+        whenever(statsRepository.fetchBottomStats(any(), any())).thenReturn(createBottomStatsResult())
+
+        initViewModel(periodType = "today")
+        advanceUntilIdle()
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        val stats = viewModel.uiState.value.bottomStatsOrNull()!!
+        // Views comes from the selected hour...
+        assertThat(stats.first { it.metric == StatsMetric.VIEWS }.value).isEqualTo(100L)
+        // ...while the metrics an hourly response carries no series for show the whole day's totals,
+        // matching iOS, rather than a zero that reads as "no visitors this hour".
+        assertThat(stats.first { it.metric == StatsMetric.VISITORS }.value).isEqualTo(TEST_CURRENT_PERIOD_VISITORS)
+        assertThat(stats.first { it.metric == StatsMetric.LIKES }.value).isEqualTo(TEST_CURRENT_PERIOD_LIKES)
+        assertThat(stats.first { it.metric == StatsMetric.COMMENTS }.value).isEqualTo(TEST_CURRENT_PERIOD_COMMENTS)
+        assertThat(stats.first { it.metric == StatsMetric.POSTS }.value).isEqualTo(TEST_CURRENT_PERIOD_POSTS)
+    }
+
+    @Test
+    fun `given an hourly selection, when the day totals land late, then they fill the missing metrics`() = test {
+        val hourly = listOf(
+            ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
+            ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(
+            createPeriodStatsResult(
+                currentPeriodData = hourly,
+                previousPeriodData = hourly,
+                unit = StatsUnit.HOUR
+            )
+        )
+        // The day-level row is fetched separately and can land after the user has tapped a bar.
+        val bottomGate = CompletableDeferred<Unit>()
+        whenever(statsRepository.fetchBottomStats(any(), any())).doSuspendableAnswer {
+            bottomGate.await()
+            createBottomStatsResult()
+        }
+
+        initViewModel(periodType = "today")
+        advanceUntilIdle()
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        bottomGate.complete(Unit)
+        advanceUntilIdle()
+
+        val stats = viewModel.uiState.value.bottomStatsOrNull()!!
+        assertThat(stats.first { it.metric == StatsMetric.VISITORS }.value).isEqualTo(TEST_CURRENT_PERIOD_VISITORS)
+        // The selected hour's own views survive the late load.
+        assertThat(stats.first { it.metric == StatsMetric.VIEWS }.value).isEqualTo(100L)
+        assertThat(viewModel.uiState.value.selectedBar()).isNotNull
+    }
+
+    @Test
     fun `when loadData reloads while a bar is selected, then the selection and effective period reset`() = test {
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenReturn(createPeriodStatsResult())
