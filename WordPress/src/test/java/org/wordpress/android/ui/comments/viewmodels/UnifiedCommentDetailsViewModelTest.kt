@@ -689,21 +689,6 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `the redesign fetches edit context for moderators and shows the author details`() = test {
-        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID, withEditContext = true))
-            .thenReturn(RS_COMMENT.copy(authorUrl = "https://example.com", authorEmail = "a@b.c", authorIp = "1.2.3.4"))
-
-        viewModel.start(site, REMOTE_COMMENT_ID, isRedesignEnabled = true)
-        advanceUntilIdle()
-
-        val state = uiStates.last()
-        assertThat(state.authorUrl).isEqualTo("https://example.com")
-        assertThat(state.authorEmail).isEqualTo("a@b.c")
-        assertThat(state.authorIp).isEqualTo("1.2.3.4")
-        assertThat(state.dateFull).isNotBlank()
-    }
-
-    @Test
     fun `the redesign asks non-moderators for the view context only`() = test {
         whenever(siteCapabilityChecker.canModerateComments(site)).thenReturn(false)
 

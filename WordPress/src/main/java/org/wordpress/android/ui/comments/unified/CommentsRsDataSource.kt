@@ -464,7 +464,6 @@ internal fun CommentWithViewContext.toRsComment() = CommentsRsDataSource.RsComme
     isPingback = commentType.isPingback()
 )
 
-/** As the view-context mapping, plus the author's email and IP, which only edit context carries. */
 private fun CommentWithEditContext.toRsComment() = CommentsRsDataSource.RsComment(
     remoteCommentId = id,
     authorId = author,

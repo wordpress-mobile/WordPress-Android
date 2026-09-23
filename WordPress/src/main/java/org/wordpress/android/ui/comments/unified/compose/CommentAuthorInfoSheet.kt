@@ -57,13 +57,8 @@ import org.wordpress.android.ui.dataview.compose.RemoteImage
 import java.text.NumberFormat
 
 /**
- * The author details iOS's `CommentAuthorInfoSheet` shows when the author header is tapped, in the
- * "tonal header band" layout from design: the avatar straddles a primaryContainer band that also
- * carries the comment count, the name sits under it with registered/guest, then the bio card and
- * the detail rows. Anything blank is omitted. Email, IP and the count need moderation rights.
- *
- * The count and bio arrive after the sheet opens. The count sits in the band, so it appears without
- * moving anything; the bio pushes the rows down, which [animateContentSize] smooths over.
+ * The author info sheet iOS opens from the author header; blank rows are omitted. The count and bio
+ * load after it opens, so the count sits in the band (no layout shift) and the bio's arrival animates.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -107,7 +102,6 @@ fun CommentAuthorInfoSheet(
     }
 }
 
-/** Everything below the band. Animated because the bio arrives late and pushes the rows down. */
 @Composable
 @Suppress("LongParameterList")
 private fun AnimatedDetails(
@@ -137,7 +131,7 @@ private fun AnimatedDetails(
                 valueColor = MaterialTheme.colorScheme.primary,
                 onClick = { ActivityLauncher.openUrlExternal(context, website) }
             )
-            // Selectable so the address can be copied, which is what a moderator usually wants.
+            // Selectable so a moderator can copy the address.
             SelectionContainer {
                 Column(verticalArrangement = Arrangement.spacedBy(ROW_GAP)) {
                     InfoRow(Icons.Outlined.AlternateEmail, R.string.comment_author_info_email, email) {
@@ -156,10 +150,6 @@ private fun AnimatedDetails(
     }
 }
 
-/**
- * The rest of the band below the drag handle, with the avatar centred on its bottom edge and the
- * comment count chip beside it. The avatar reaches up over the handle's part of the band.
- */
 @Composable
 private fun HeaderBand(avatarUrl: String, commentCount: Int?, containerColor: Color) {
     Box(
@@ -173,8 +163,7 @@ private fun HeaderBand(avatarUrl: String, commentCount: Int?, containerColor: Co
                 .height(BAND_EXTENSION)
                 .background(MaterialTheme.colorScheme.primaryContainer)
         )
-        // The ring is the sheet's own colour, so the avatar reads as cut out of the band. It is taller
-        // than this box (it reaches up behind the handle), so it opts out of the height constraint,
+        // Taller than this box (it reaches up behind the handle), so it opts out of the height constraint,
         // pinned to the top so the offset lines it up.
         Box(
             contentAlignment = Alignment.Center,
@@ -279,7 +268,6 @@ private fun NameBlock(authorName: String, isRegistered: Boolean?) {
     }
 }
 
-/** Clamped to [BIO_COLLAPSED_LINES] with a "More" toggle that only appears when it overflows. */
 @Composable
 private fun BioCard(bio: String) {
     var isExpanded by rememberSaveable { mutableStateOf(false) }

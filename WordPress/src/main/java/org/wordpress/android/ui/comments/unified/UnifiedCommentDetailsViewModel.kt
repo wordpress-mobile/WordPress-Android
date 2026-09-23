@@ -175,10 +175,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Both halves are best effort and hide their row on failure. The count needs the author's
-     * email, which only a moderator's edit-context fetch has; the bio needs a registered author.
-     */
+    /** Best effort: a failed half just hides its row in the sheet. */
     private suspend fun fetchAuthorExtras(comment: RsComment): AuthorExtras = coroutineScope {
         val count = async {
             comment.authorEmail.takeIf { it.isNotBlank() }
