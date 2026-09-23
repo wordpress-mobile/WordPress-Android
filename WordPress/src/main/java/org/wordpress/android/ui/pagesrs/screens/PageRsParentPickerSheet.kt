@@ -174,6 +174,5 @@ private fun ParentCandidateRow(
     )
 }
 
-
 // Fraction of the screen height the sheet occupies, kept fixed so it doesn't resize while searching.
 private const val SHEET_HEIGHT_FRACTION = 0.75f

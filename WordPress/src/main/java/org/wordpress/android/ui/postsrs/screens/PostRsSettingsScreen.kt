@@ -53,7 +53,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -105,6 +104,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ShimmerBox
 import org.wordpress.android.ui.compose.components.SingleChoiceAlertDialog
 import org.wordpress.android.ui.rs.RsSnackbarMessage
+import org.wordpress.android.ui.rs.contentlist.ShowRsSnackbars
 import org.wordpress.android.ui.rs.data.AuthorInfo
 import org.wordpress.android.ui.postsrs.DialogState
 import org.wordpress.android.ui.postsrs.FieldState
@@ -159,17 +159,7 @@ fun PostRsSettingsScreen(
         SnackbarHostState()
     }
 
-    LaunchedEffect(snackbarMessages) {
-        snackbarMessages.collect { msg ->
-            val result = snackbarHostState.showSnackbar(
-                message = msg.message,
-                actionLabel = msg.actionLabel
-            )
-            if (result == SnackbarResult.ActionPerformed) {
-                msg.onAction?.invoke()
-            }
-        }
-    }
+    ShowRsSnackbars(snackbarMessages, snackbarHostState)
 
     Box(
         modifier = Modifier

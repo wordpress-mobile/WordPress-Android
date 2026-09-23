@@ -273,13 +273,10 @@ fun PostRsListScreen(
         is PostRsConfirmation.MoveToDraft -> ContentListConfirmationDialog(
             titleResId =
                 R.string.post_list_move_trashed_post_to_draft_dialog_title,
-            message = stringResource(
-                R.string.post_list_move_trashed_post_to_draft_dialog_message
-            ),
+            message = stringResource(R.string.post_list_move_trashed_post_to_draft_dialog_message),
             onConfirm = confirmationDialog.onConfirm,
             onDismiss = confirmationDialog.onDismiss,
-            confirmTextResId =
-                R.string.post_list_move_trashed_post_to_draft_dialog_positive
+            confirmTextResId = R.string.post_list_move_trashed_post_to_draft_dialog_positive
         )
         null -> {}
     }
@@ -300,4 +297,3 @@ fun PostRsListScreen(
         }
     }
 }
-

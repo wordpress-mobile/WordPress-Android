@@ -12,12 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
-import kotlinx.coroutines.FlowPreview
 import androidx.compose.ui.Modifier
 import org.wordpress.android.R
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
@@ -37,14 +33,12 @@ import org.wordpress.android.ui.rs.contentlist.ContentListShimmer
 import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
 import org.wordpress.android.ui.rs.contentlist.ContentListRow
 import org.wordpress.android.ui.postsrs.toContentListRowUiState
-import org.wordpress.android.ui.rs.contentlist.LegacyContentListPlaceholderRow
 import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
 import org.wordpress.android.ui.rs.contentlist.ReportVisibleRows
 import org.wordpress.android.ui.rs.contentlist.RevealRow
 import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
 import org.wordpress.android.ui.rs.contentlist.toContentListMenuActions
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostRsTabListScreen(
     state: RsTabUiState<PostRsUiModel>,
@@ -71,7 +65,7 @@ fun PostRsTabListScreen(
     ) {
         when {
             isSearchIdle -> Box(Modifier.fillMaxSize())
-            state.isLoading -> ShimmerList(isRedesignEnabled)
+            state.isLoading -> ContentListShimmer(isRedesignEnabled)
             state.error != null && state.items.isEmpty() -> FadeInOnAppear {
                 ContentListErrorState(
                     error = state.error,
@@ -111,7 +105,6 @@ fun PostRsTabListScreen(
     }
 }
 
-@OptIn(FlowPreview::class)
 @Composable
 private fun PostListContent(
     posts: List<PostRsUiModel>,
@@ -136,12 +129,11 @@ private fun PostListContent(
             posts.map { PostListEntry.NonContent(it) }
         }
     }
-    val currentEntries by rememberUpdatedState(entries)
 
     // Indexes the rendered entries rather than the posts: group headers are list items too, so a
     // post's position in `posts` is not its position in the LazyColumn.
     RevealRow(revealPostId, listState, onRevealHandled) { id ->
-        currentEntries.indexOfFirst { it.postId == id }
+        entries.indexOfFirst { it.postId == id }
     }
 
     // Post entries key on their remote id; group headers key on a String, so filtering by type
@@ -195,13 +187,6 @@ private fun PostListContent(
         }
 
         if (isLoadingMore) contentListLoadingMoreItem()
-    }
-}
-
-@Composable
-private fun ShimmerList(isRedesignEnabled: Boolean) {
-    ContentListShimmer {
-        if (isRedesignEnabled) ContentListPlaceholderRow() else LegacyContentListPlaceholderRow()
     }
 }
 
@@ -342,6 +327,3 @@ private fun RedesignedRow(
 
 /** Long enough to read as a fade rather than a flicker, short enough not to feel sluggish. */
 private const val STATE_FADE_MS = 300
-
-
-

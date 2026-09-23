@@ -11,9 +11,6 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeoutOrNull
-import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.LOAD_MORE_THRESHOLD
-import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.REVEAL_TIMEOUT_MS
-import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.VISIBLE_ROWS_DEBOUNCE_MS
 
 /**
  * Asks for the next page once the user scrolls within [LOAD_MORE_THRESHOLD] rows of the end.
@@ -109,3 +106,20 @@ fun RevealRow(
         onRevealHandled()
     }
 }
+
+/**
+ * How long the visible-row set must settle before metrics are fetched for it. Tuned against
+ * [LOAD_MORE_THRESHOLD]: short enough that a stopped scroll fetches promptly, long enough that a
+ * fling does not fetch for every row it passes, and the next page has to be asked for first.
+ */
+private const val VISIBLE_ROWS_DEBOUNCE_MS = 300L
+
+/** How close to the end of the list the user has to scroll before the next page is asked for. */
+private const val LOAD_MORE_THRESHOLD = 5
+
+/**
+ * How long a reveal waits for the refresh carrying the new post or page to land before giving up.
+ * Long enough for a slow site, short enough that it cannot scroll the list under someone who has
+ * moved on.
+ */
+private const val REVEAL_TIMEOUT_MS = 15_000L

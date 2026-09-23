@@ -5,7 +5,7 @@ package org.wordpress.android.ui.rs
  *
  * Generic in the only dimension the screens actually differ in - what a row is. Posts hold their
  * model directly, pages wrap theirs to carry hierarchy and the synthetic Homepage / Posts page /
- * Site Editor rows, and comments hold their own model. The other seven fields are the same
+ * Site Editor rows, and comments hold their own model. The other six fields are the same
  * everywhere, which is what makes this worth sharing rather than three coincidentally-alike types.
  *
  * Deliberately has no `isEmpty`: "this tab has nothing in it" is not the same question on every

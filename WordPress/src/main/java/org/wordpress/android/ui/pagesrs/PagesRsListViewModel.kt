@@ -1834,11 +1834,6 @@ internal class PagesRsListViewModel @Inject constructor(
         private const val MAX_FILL_PAGES = 50
         private const val SITE_EDITOR_LAUNCH_DEBOUNCE_MS = 1000L
 
-        /**
-         * View counts are one request each, so a screenful is fetched a few at a time rather than
-         * all at once.
-         */
-
         private val ALL_STATUSES = PageRsListTab.entries.flatMap { it.statuses }.distinct()
 
         private const val TRACKS_SELECTED_TAB = "selected_tab"

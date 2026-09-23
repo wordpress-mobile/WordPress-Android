@@ -10,8 +10,6 @@ import kotlinx.coroutines.Job
  * claim without filling the cache, and the next visible set would skip those ids as "already in
  * flight", stranding their rows on the loading skeleton with nothing left to resolve them. Volume
  * is bounded by [RsVisibleRows] instead.
- *
- * Lives outside the view models so it can be tested on its own, like [RsTabLoading].
  */
 internal class RsMetricJobs {
     private val jobs = mutableSetOf<Job>()

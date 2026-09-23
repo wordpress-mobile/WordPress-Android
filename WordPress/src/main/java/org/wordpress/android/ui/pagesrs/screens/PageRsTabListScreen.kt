@@ -5,12 +5,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
-import kotlinx.coroutines.FlowPreview
 import org.wordpress.android.R
 import org.wordpress.android.ui.pagesrs.PageRsListItem
 import org.wordpress.android.ui.pagesrs.PageRsMenuAction
@@ -20,16 +16,13 @@ import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListEmptyState
 import org.wordpress.android.ui.rs.contentlist.ContentListErrorState
-import org.wordpress.android.ui.rs.contentlist.ContentListPlaceholderRow
 import org.wordpress.android.ui.rs.contentlist.ContentListShimmer
 import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
-import org.wordpress.android.ui.rs.contentlist.LegacyContentListPlaceholderRow
 import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
 import org.wordpress.android.ui.rs.contentlist.ReportVisibleRows
 import org.wordpress.android.ui.rs.contentlist.RevealRow
 import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun PageRsTabListScreen(
     state: RsTabUiState<PageRsListItem>,
@@ -54,7 +47,7 @@ internal fun PageRsTabListScreen(
     ) {
         when {
             isSearchIdle -> Box(Modifier.fillMaxSize())
-            state.isLoading -> ShimmerList(isRedesignEnabled)
+            state.isLoading -> ContentListShimmer(isRedesignEnabled)
             state.error != null && !state.items.hasRealPages -> {
                 ContentListErrorState(
                     error = state.error,
@@ -87,7 +80,6 @@ internal fun PageRsTabListScreen(
     }
 }
 
-@OptIn(FlowPreview::class)
 @Composable
 private fun PageListContent(
     pages: List<PageRsListItem>,
@@ -104,20 +96,17 @@ private fun PageListContent(
 ) {
     val listState = rememberLazyListState()
 
-    val currentPages by rememberUpdatedState(pages)
-
     // Scrolls to a page the user just saved, once the refresh carrying it lands. The published and
     // draft tabs sort by title, so it can be anywhere in the list.
     RevealRow(revealPageId, listState, onRevealHandled) { id ->
-        currentPages.indexOfFirst { it.remotePageId == id }
+        pages.indexOfFirst { it.remotePageId == id }
     }
 
     // Rows are keyed by a String, so the ids come from the entries the visible indexes land on.
     // The Site Editor row has no page behind it and so no view count to ask for.
     ReportVisibleRows(listState, enabled = isRedesignEnabled, onRowsVisible = onRowsVisible) {
-        val entries = currentPages
         listState.layoutInfo.visibleItemsInfo.mapNotNull { info ->
-            entries.getOrNull(info.index)
+            pages.getOrNull(info.index)
                 ?.remotePageId
                 ?.takeIf { it != SITE_EDITOR_PAGE_ID }
         }
@@ -158,13 +147,3 @@ private fun PageListContent(
         if (isLoadingMore) contentListLoadingMoreItem()
     }
 }
-
-@Composable
-private fun ShimmerList(isRedesignEnabled: Boolean) {
-    ContentListShimmer {
-        if (isRedesignEnabled) ContentListPlaceholderRow() else LegacyContentListPlaceholderRow()
-    }
-}
-
-
-

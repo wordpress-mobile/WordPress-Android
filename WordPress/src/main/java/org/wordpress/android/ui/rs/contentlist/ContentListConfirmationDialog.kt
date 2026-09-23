@@ -11,7 +11,7 @@ import androidx.compose.ui.res.stringResource
 import org.wordpress.android.R
 
 /**
- * Asks before a destructive action on a post or page.
+ * Asks before a destructive action on a post, page or comment.
  *
  * [message] is a resolved string rather than a resource id because the pages list interpolates the
  * page's title into its delete prompt. A caller with a plain message passes `stringResource(id)`.

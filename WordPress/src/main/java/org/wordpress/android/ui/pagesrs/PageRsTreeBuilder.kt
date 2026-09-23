@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.pagesrs
 
-import org.wordpress.android.ui.rs.contentlist.ContentItemUiModel
-
 internal const val MAX_INDENT_LEVEL = 3
 
 /**
@@ -52,7 +50,7 @@ internal fun buildRows(
  */
 private fun siteEditorHomepageRow() = PageRsListItem.Virtual(
     kind = PageRsListItem.Virtual.Kind.SITE_EDITOR,
-    page = ContentItemUiModel(
+    page = PageRsUiModel(
         remoteId = SITE_EDITOR_PAGE_ID,
         title = "",
         excerpt = "",

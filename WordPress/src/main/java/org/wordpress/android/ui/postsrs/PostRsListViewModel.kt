@@ -1353,11 +1353,6 @@ class PostRsListViewModel @Inject constructor(
     companion object {
         private const val PAGE_SIZE = 20
 
-        /**
-         * View counts are one request each, so a screenful is fetched a few at a time rather than
-         * all at once. Comment counts need no such cap - they come back in one batched request.
-         */
-
         private val ALL_STATUSES = PostRsListTab.entries.flatMap { it.statuses }.distinct()
 
         private const val TRACKS_SELECTED_TAB = "selected_tab"

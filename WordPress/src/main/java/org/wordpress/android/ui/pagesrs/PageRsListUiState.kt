@@ -103,6 +103,11 @@ internal enum class PageRsMenuAction(
     ),
 }
 
+/**
+ * The label the Homepage and Posts page rows carry.
+ *
+ * SITE_EDITOR renders its own title from string resources, so it never shows this alongside one.
+ */
 @StringRes
 internal fun PageRsListItem.Virtual.Kind.labelResId(): Int = when (this) {
     PageRsListItem.Virtual.Kind.HOMEPAGE -> R.string.site_settings_homepage

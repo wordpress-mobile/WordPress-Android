@@ -345,4 +345,3 @@ private fun AddPageFab(visible: Boolean, isExtended: Boolean, onClick: () -> Uni
         }
     }
 }
-

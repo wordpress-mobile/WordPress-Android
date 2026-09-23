@@ -24,7 +24,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.SHIMMER_ITEM_COUNT
 
 /**
  * The full-screen states an rs content list can be in instead of showing rows, plus the spinner it
@@ -95,6 +94,14 @@ fun ContentListShimmer(placeholder: @Composable () -> Unit) {
     }
 }
 
+/** The post and page skeleton, in whichever row style is showing. */
+@Composable
+fun ContentListShimmer(isRedesignEnabled: Boolean) {
+    ContentListShimmer {
+        if (isRedesignEnabled) ContentListPlaceholderRow() else LegacyContentListPlaceholderRow()
+    }
+}
+
 /** The spinner a list appends while it pages in more rows. */
 fun LazyListScope.contentListLoadingMoreItem() {
     item(key = "loading_more") {
@@ -136,3 +143,6 @@ private val TEXT_GAP = 8.dp
 private val BUTTON_GAP = 16.dp
 private val SPINNER_SIZE = 24.dp
 private val SPINNER_STROKE = 2.dp
+
+/** Roughly a screenful, so the skeleton fills the list rather than leaving a gap below it. */
+private const val SHIMMER_ITEM_COUNT = 8
