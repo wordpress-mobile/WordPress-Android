@@ -581,6 +581,23 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     }
 
     @Test
+    fun `onPageMenuAction STATS with no loaded page tracks stats but emits nothing`() = test {
+        val viewModel = createViewModel()
+
+        viewModel.events.test {
+            viewModel.onPageMenuAction(42L, PageRsMenuAction.STATS)
+
+            expectNoEvents()
+            cancelAndIgnoreRemainingEvents()
+        }
+        verify(analyticsTracker).track(
+            eq(Stat.PAGES_OPTIONS_PRESSED),
+            eq(site),
+            eq(mapOf("option_name" to "stats"))
+        )
+    }
+
+    @Test
     fun `onPageMenuAction VIEW with no loaded page emits nothing`() = test {
         val viewModel = createViewModel()
 

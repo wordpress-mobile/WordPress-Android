@@ -10,7 +10,8 @@ import uniffi.wp_api.PostStatus
  * (for WP.com sites that means manage-options capability plus a static page on front; for
  * self-hosted sites those fields aren't synced, so the actions are offered and verified at
  * execution time), and Blaze requires an eligible site and a non-password-protected
- * published page.
+ * published page. Stats has no legacy counterpart: it is offered on published and private pages
+ * when [canViewStats], i.e. the site's WordPress.com stats are reachable.
  */
 @Suppress("LongParameterList")
 internal fun computePageMenuActions(

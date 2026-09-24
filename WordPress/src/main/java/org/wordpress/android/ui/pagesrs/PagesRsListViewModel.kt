@@ -861,14 +861,10 @@ internal class PagesRsListViewModel @Inject constructor(
             PageRsMenuAction.MOVE_TO_DRAFT -> movePageToDraft(remotePageId)
             PageRsMenuAction.DUPLICATE -> duplicatePage(site, remotePageId)
             PageRsMenuAction.BLAZE -> bridgeAndPromote(site, remotePageId)
-            PageRsMenuAction.STATS -> _events.trySend(
-                PageRsListEvent.ViewStats(
-                    site = site,
-                    pageId = remotePageId,
-                    title = page?.title.orEmpty(),
-                    url = page?.link.orEmpty()
-                )
-            )
+            PageRsMenuAction.STATS -> {
+                val url = page?.link?.takeIf { it.isNotBlank() } ?: return logMissingLink(remotePageId)
+                _events.trySend(PageRsListEvent.ViewStats(site, remotePageId, page.title, url))
+            }
             PageRsMenuAction.TRASH ->
                 _pendingConfirmation.value = PageRsListConfirmation.Trash(remotePageId)
             PageRsMenuAction.DELETE_PERMANENTLY ->
