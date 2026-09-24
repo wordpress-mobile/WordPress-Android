@@ -53,8 +53,8 @@ class ContactSupportScreen {
     }
 
     companion object {
-        // "Contact Support" screen looks differently depending on
-        // "gradle.properties" content (default or from Mobile Secrets).
+        // "Contact Support" screen looks differently depending on whether the
+        // Zendesk credentials come from the real secrets or the default fallback.
         // But the elements tree always contains all elements, some are
         // just hidden. Locators below attempt to support both variants.
         var textInput = Espresso.onView(
