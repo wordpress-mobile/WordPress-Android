@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
 import org.wordpress.android.ui.rs.contentlist.ContentItemUiModel
+import org.wordpress.android.ui.rs.contentlist.ContentListQuickActionType
 import org.wordpress.android.ui.rs.contentlist.ContentListRowUiState
 import org.wordpress.android.ui.rs.contentlist.RsMenuAction
 
@@ -20,13 +21,18 @@ sealed interface PostRsConfirmation {
 enum class PostRsMenuAction(
     @StringRes override val labelResId: Int,
     @DrawableRes override val iconResId: Int,
-    override val isDestructive: Boolean = false
+    override val isDestructive: Boolean = false,
+    override val quickActionType: ContentListQuickActionType? = null
 ) : RsMenuAction {
     SETTINGS(
         R.string.post_settings,
         R.drawable.ic_settings_white_24dp
     ),
-    VIEW(R.string.button_view, R.drawable.gb_ic_external),
+    VIEW(
+        R.string.button_view,
+        R.drawable.gb_ic_external,
+        quickActionType = ContentListQuickActionType.VIEW
+    ),
     READ(
         R.string.button_read,
         R.drawable.ic_reader_glasses_white_24dp
@@ -45,7 +51,11 @@ enum class PostRsMenuAction(
         R.string.button_promote_with_blaze,
         R.drawable.ic_blaze_flame_24dp
     ),
-    STATS(R.string.button_stats, R.drawable.gb_ic_chart_bar),
+    STATS(
+        R.string.button_stats,
+        R.drawable.gb_ic_chart_bar,
+        quickActionType = ContentListQuickActionType.STATS
+    ),
     COMMENTS(
         R.string.button_comments,
         R.drawable.gb_ic_comment

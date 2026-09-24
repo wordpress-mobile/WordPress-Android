@@ -7,6 +7,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -19,6 +20,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -52,6 +55,9 @@ import java.text.NumberFormat
  *
  * [leading] draws ahead of the text, for rows that stand for something other than a plain entry -
  * the pages list marks its homepage and posts-page rows that way.
+ *
+ * Supplying [quickActions] moves the metadata line and the overflow button into a footer beneath the
+ * text, with the actions as icon buttons between them.
  */
 @Composable
 fun ContentListRow(
@@ -60,7 +66,8 @@ fun ContentListRow(
     modifier: Modifier = Modifier,
     density: ContentListDensity = ContentListDensity.COMFORTABLE,
     menu: (@Composable () -> Unit)? = null,
-    leading: (@Composable () -> Unit)? = null
+    leading: (@Composable () -> Unit)? = null,
+    quickActions: List<ContentListQuickAction> = emptyList()
 ) {
     val padding = if (density.isCondensed) CONDENSED_CARD_PADDING else CARD_PADDING
     ContentListCard(onClick = onClick, isSyncing = state.isSyncing, modifier = modifier) {
@@ -71,7 +78,8 @@ fun ContentListRow(
             density = density,
             padding = padding,
             menu = menu,
-            leading = leading
+            leading = leading,
+            quickActions = quickActions
         ) {
             FeaturedImage(
                 imageUrl = state.thumbnailImageUrl,
@@ -97,7 +105,8 @@ fun ContentListHeroRow(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     menu: (@Composable () -> Unit)? = null,
-    leading: (@Composable () -> Unit)? = null
+    leading: (@Composable () -> Unit)? = null,
+    quickActions: List<ContentListQuickAction> = emptyList()
 ) {
     ContentListCard(onClick = onClick, isSyncing = state.isSyncing, modifier = modifier) {
         Column {
@@ -115,7 +124,8 @@ fun ContentListHeroRow(
                 density = ContentListDensity.COMFORTABLE,
                 padding = CARD_PADDING,
                 menu = menu,
-                leading = leading
+                leading = leading,
+                quickActions = quickActions
             )
         }
     }
@@ -274,13 +284,16 @@ private fun CardBody(isSyncing: Boolean, content: @Composable () -> Unit) {
  *
  * Condensed drops the excerpt, which is what actually shortens the row, and the metrics, which the
  * ViewModel then does not fetch.
+ *
+ * [showMetaLine] is false when the row has a footer, which carries the metadata line instead.
  */
 @Composable
 private fun RowBody(
     state: ContentListRowUiState,
     titleSize: TextUnit,
     titleLineHeight: TextUnit,
-    density: ContentListDensity
+    density: ContentListDensity,
+    showMetaLine: Boolean
 ) {
     ContentListBadges(state.badges)
     RowTitle(title = state.title, fontSize = titleSize, lineHeight = titleLineHeight)
@@ -289,7 +302,7 @@ private fun RowBody(
     }
     // Everything else on the metadata line is separator-prefixed, so a row with no date - the
     // pages list's synthetic Site Editor entry - drops the line rather than leading with a bullet.
-    if (state.dateLabel.isNotBlank()) {
+    if (showMetaLine && state.dateLabel.isNotBlank()) {
         Spacer(modifier = Modifier.height(TITLE_META_GAP))
         RowMetaLine(state = state, showMetrics = !density.isCondensed)
     }
@@ -473,7 +486,8 @@ private fun FeaturedImage(
 
 /**
  * The text column with the overflow button beside it, and an optional [trailing] slot between them
- * for the compact row's thumbnail.
+ * for the compact row's thumbnail. With [quickActions] the button moves down into [RowFooter]
+ * instead.
  *
  * Shared by both row shapes so the button lands the same distance from the card edge on every row -
  * they drifted apart once already, which is how the hero's button ended up 14dp further in.
@@ -487,32 +501,82 @@ private fun RowTextAndMenu(
     padding: Dp,
     menu: (@Composable () -> Unit)?,
     leading: (@Composable () -> Unit)? = null,
+    quickActions: List<ContentListQuickAction> = emptyList(),
     trailing: @Composable () -> Unit = {}
 ) {
-    Row(
-        modifier = Modifier.padding(
-            start = padding,
-            top = padding,
-            // The overflow button carries its own inset, so the card supplies none on that edge;
-            // without a menu the card pads itself as usual.
-            end = if (menu == null) padding else 0.dp,
-            bottom = padding
-        ),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (leading != null) {
-            leading()
-            Spacer(modifier = Modifier.width(LEADING_GAP))
+    val hasFooter = quickActions.isNotEmpty()
+    Column {
+        Row(
+            modifier = Modifier.padding(
+                start = padding,
+                top = padding,
+                // The overflow button carries its own inset, so the card supplies none on that edge;
+                // without a menu beside the text the card pads itself as usual.
+                end = if (menu == null || hasFooter) padding else 0.dp,
+                // The footer's buttons carry their own inset too.
+                bottom = if (hasFooter) 0.dp else padding
+            ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (leading != null) {
+                leading()
+                Spacer(modifier = Modifier.width(LEADING_GAP))
+            }
+            Column(modifier = Modifier.weight(1f)) {
+                RowBody(
+                    state = state,
+                    titleSize = titleSize,
+                    titleLineHeight = titleLineHeight,
+                    density = density,
+                    showMetaLine = !hasFooter
+                )
+            }
+            trailing()
+            if (!hasFooter) menu?.invoke()
         }
-        Column(modifier = Modifier.weight(1f)) {
-            RowBody(
+        if (hasFooter) {
+            RowFooter(
                 state = state,
-                titleSize = titleSize,
-                titleLineHeight = titleLineHeight,
-                density = density
+                density = density,
+                padding = padding,
+                quickActions = quickActions,
+                menu = menu
             )
         }
-        trailing()
+    }
+}
+
+/**
+ * The metadata line, then the quick actions and the overflow button pinned to the trailing edge.
+ * A long metadata line ellipsizes rather than pushing the buttons off the card.
+ */
+@Composable
+private fun RowFooter(
+    state: ContentListRowUiState,
+    density: ContentListDensity,
+    padding: Dp,
+    quickActions: List<ContentListQuickAction>,
+    menu: (@Composable () -> Unit)?
+) {
+    Row(
+        modifier = Modifier.padding(start = padding),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(modifier = Modifier.weight(1f)) {
+            if (state.dateLabel.isNotBlank()) {
+                RowMetaLine(state = state, showMetrics = !density.isCondensed)
+            }
+        }
+        quickActions.forEach { action ->
+            IconButton(onClick = action.onClick) {
+                Icon(
+                    imageVector = action.type.icon,
+                    contentDescription = stringResource(action.type.labelResId),
+                    modifier = Modifier.size(QUICK_ACTION_ICON_SIZE),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
         menu?.invoke()
     }
 }
@@ -535,6 +599,7 @@ private val CONDENSED_CARD_PADDING = 12.dp
 private val THUMBNAIL_RADIUS = 10.dp
 private val HERO_IMAGE_HEIGHT = HERO_IMAGE_HEIGHT_DP.dp
 private val LEADING_GAP = 12.dp
+private val QUICK_ACTION_ICON_SIZE = 20.dp
 private val TITLE_META_GAP = 6.dp
 private val SYNC_BAR_HEIGHT = 2.dp
 private const val SYNC_BAR_ALPHA = 0.5f

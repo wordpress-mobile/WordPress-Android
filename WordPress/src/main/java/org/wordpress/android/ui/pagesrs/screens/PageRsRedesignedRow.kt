@@ -20,10 +20,9 @@ import org.wordpress.android.ui.pagesrs.toContentListRowUiState
 import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListHeroRow
-import org.wordpress.android.ui.rs.contentlist.ContentListOverflowMenu
 import org.wordpress.android.ui.rs.contentlist.ContentListPlaceholderRow
 import org.wordpress.android.ui.rs.contentlist.ContentListRow
-import org.wordpress.android.ui.rs.contentlist.toContentListMenuActions
+import org.wordpress.android.ui.rs.contentlist.toContentListRowActions
 
 /**
  * One row of the redesigned pages list.
@@ -70,13 +69,9 @@ private fun PageRsContentCard(
         siteEditorTitle = stringResource(R.string.virtual_homepage_title),
         siteEditorSubtitle = stringResource(R.string.virtual_homepage_subtitle)
     )
-    val menu: (@Composable () -> Unit)? = if (page.actions.isEmpty()) {
-        null
-    } else {
-        {
-            ContentListOverflowMenu(actions = page.actions.toContentListMenuActions(onMenuAction))
-        }
-    }
+    // No page action is a footer button yet and pages pass no Edit, so every action stays in the
+    // menu and the row keeps its footer-less layout.
+    val actions = page.actions.toContentListRowActions(onEdit = null, onAction = onMenuAction)
     val leading: (@Composable () -> Unit)? = (item as? PageRsListItem.Virtual)?.kind?.let { kind ->
         {
             Icon(
@@ -98,14 +93,21 @@ private fun PageRsContentCard(
         label = "pages list row density"
     ) { isHero ->
         if (isHero) {
-            ContentListHeroRow(state = state, onClick = onClick, menu = menu, leading = leading)
+            ContentListHeroRow(
+                state = state,
+                onClick = onClick,
+                menu = actions.menu,
+                leading = leading,
+                quickActions = actions.quickActions
+            )
         } else {
             ContentListRow(
                 state = state,
                 onClick = onClick,
                 density = density,
-                menu = menu,
-                leading = leading
+                menu = actions.menu,
+                leading = leading,
+                quickActions = actions.quickActions
             )
         }
     }
