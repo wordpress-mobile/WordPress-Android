@@ -104,7 +104,7 @@ class ViewsStatsViewModel @Inject constructor(
     // The period [wholePeriodBottom] holds the row for. It outlives a period change, and a single-day
     // period loads its row from a separate call that can land well after the chart, so without this
     // an hourly selection made in between would borrow the *previous* period's totals for the metrics
-    // an hourly response carries no series for — see [wholePeriodItemsForCurrentPeriod].
+    // an hourly response carries no series for — see [wholePeriodRowForCurrentPeriod].
     private var wholePeriodBottomPeriod: StatsPeriod? = null
 
     private var currentPeriod: StatsPeriod = _selectedPeriod.value
@@ -599,11 +599,18 @@ class ViewsStatsViewModel @Inject constructor(
             ?: EMPTY_BOTTOM_AGGREGATES
         val barItems = buildStatItems(current.toBottomAggregates(), previous)
         if (barItems.all { hasPerBucketSeries(result, it.metric) }) return BottomStatsUiState.Loaded(barItems)
-        // Something has to be borrowed from the day's own row, and until that row has landed for *this*
-        // period there is nothing honest to borrow. Returning null keeps whatever the row already shows
-        // — the loading placeholder on a fresh period — rather than another period's totals or a zero
-        // that reads as "none this hour". The caller reapplies this once the day totals arrive.
-        val wholePeriodItems = wholePeriodItemsForCurrentPeriod() ?: return null
+        // Something has to be borrowed from the day's own row, so what happens next depends on whether
+        // that row has landed for *this* period.
+        val wholePeriodItems = when (val dayRow = wholePeriodRowForCurrentPeriod()) {
+            is BottomStatsUiState.Loaded -> dayRow.stats
+            // It landed and failed: there is nothing to borrow and never will be, so drop the row the
+            // same way the unselected card does instead of leaving its placeholder shimmering.
+            is BottomStatsUiState.Hidden -> return BottomStatsUiState.Hidden
+            // Still in flight, or belonging to the period before this one. Keep whatever the row shows
+            // rather than another period's totals or a zero that reads as "none this hour"; the caller
+            // reapplies this once the day totals arrive.
+            else -> return null
+        }
         return BottomStatsUiState.Loaded(
             barItems.map { item ->
                 if (hasPerBucketSeries(result, item.metric)) {
@@ -618,14 +625,13 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     /**
-     * The committed period's bottom-row items, but only when they belong to the period now on screen.
-     * [wholePeriodBottom] survives a period change, so without the guard a single-day period could
-     * dress its hourly selection in the row the period before it left behind.
+     * The committed period's bottom-row state, but only when it belongs to the period now on screen —
+     * null while it still belongs to the one before. [wholePeriodBottom] survives a period change, so
+     * without the guard a single-day period could dress its hourly selection in the row the period
+     * before it left behind.
      */
-    private fun wholePeriodItemsForCurrentPeriod(): List<StatItem>? =
-        (wholePeriodBottom as? BottomStatsUiState.Loaded)
-            ?.takeIf { wholePeriodBottomPeriod == currentPeriod }
-            ?.stats
+    private fun wholePeriodRowForCurrentPeriod(): BottomStatsUiState? =
+        wholePeriodBottom.takeIf { wholePeriodBottomPeriod == currentPeriod }
 
     /**
      * Whether [metric] has a per-bucket series of its own in [result], so a selected bucket can show
@@ -650,10 +656,10 @@ class ViewsStatsViewModel @Inject constructor(
 
     @Suppress("ReturnCount", "TooGenericExceptionCaught")
     private fun drillDownPeriod(rawPeriod: String): StatsPeriod? {
-        // The chart's actual bucket unit is the source of truth for granularity: a period like
-        // ThisYear renders month buckets for most of the year but day buckets early in January (when
-        // its window is short), and the rawPeriod string alone can't tell a day bucket from a month
-        // one. Falling back to day-level drill when no chart is loaded is the safe default.
+        // The chart's actual bucket unit is the source of truth for granularity: a Custom range is
+        // charted in days, months or years depending on its span, and the rawPeriod string alone can't
+        // tell a day bucket from a month one -- the API returns a full ISO date for both. Falling back
+        // to day-level drill when no chart is loaded is the safe default.
         val isMonthlyGranularity = lastChartResult?.unit?.let {
             it == StatsUnit.MONTH || it == StatsUnit.YEAR
         } ?: false
@@ -1144,11 +1150,9 @@ class ViewsStatsViewModel @Inject constructor(
         return when (period) {
             is StatsPeriod.Today -> formatSingleDayRange(endDate)
             is StatsPeriod.Last12Months -> formatMonthRange(startDate, endDate)
-            // ThisYear renders day buckets early in January and month buckets otherwise, so let the
-            // actual unit decide the label rather than assuming a month range.
-            is StatsPeriod.ThisYear ->
-                if (unit == StatsUnit.MONTH) formatMonthRange(startDate, endDate)
-                else formatDayRange(startDate, endDate)
+            // ThisYear takes its granularity from the whole calendar year, so it is always charted in
+            // month buckets -- twelve of them on 5 January just as in December.
+            is StatsPeriod.ThisYear -> formatMonthRange(startDate, endDate)
             is StatsPeriod.Custom -> {
                 if (isCustomPeriodMonthly(period)) formatMonthRange(startDate, endDate)
                 else formatDayRange(startDate, endDate)

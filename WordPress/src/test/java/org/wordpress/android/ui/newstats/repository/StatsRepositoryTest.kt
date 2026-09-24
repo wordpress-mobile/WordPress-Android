@@ -6,6 +6,7 @@ import org.wordpress.android.ui.newstats.datasource.CommentsDataPoint
 import org.wordpress.android.ui.newstats.datasource.LikesDataPoint
 import org.wordpress.android.ui.newstats.datasource.PostsDataPoint
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
+import org.wordpress.android.ui.newstats.datasource.StatsDateRange
 import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.datasource.StatsVisitField
@@ -1261,7 +1262,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given ThisWeek mid-week, when fetchStatsForPeriod, then totals compare the elapsed days only`() = test {
+    fun `given ThisWeek mid-week, when fetchStatsForPeriod, then totals compare the whole previous week`() = test {
         // The previous call (the whole week) returns seven buckets; the current one (four days so far)
         // returns four.
         whenever(statsDataSource.fetchStatsVisits(any(), any(), eq(DAYS_IN_WEEK), any(), anyOrNull(), anyOrNull()))
@@ -1271,12 +1272,14 @@ class StatsRepositoryTest : BaseUnitTest() {
 
         val result = repositoryAt(WEDNESDAY).fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.ThisWeek)
 
-        // The header and the bottom row compare four days against four days, so the still-unfinished
-        // week isn't shown as a collapse against a full previous week -- even though all seven of the
-        // previous week's buckets stay in the chart series.
+        // Whole period against whole period, the way iOS compares: this week so far against all of last
+        // week. Carving the elapsed stretch out of the previous window instead is only exact while a
+        // bucket is a day, and the API can't express it for the coarser units (it truncates a bucket's
+        // additive metrics at the requested end date but returns whole-bucket visitor uniques).
         val success = result as PeriodStatsResult.Success
-        assertThat(success.previousAggregates.views).isEqualTo(4 * DAILY_VIEWS)
-        assertThat(success.previousAggregates.endDate).isEqualTo("2026-03-04")
+        assertThat(success.previousAggregates.views).isEqualTo(DAYS_IN_WEEK * DAILY_VIEWS)
+        assertThat(success.previousAggregates.startDate).isEqualTo("2026-03-01")
+        assertThat(success.previousAggregates.endDate).isEqualTo("2026-03-07")
         assertThat(success.previousPeriodData).hasSize(DAYS_IN_WEEK)
     }
 
@@ -1353,46 +1356,39 @@ class StatsRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given ThisYear mid-year, when fetchStatsForPeriod, then the totals compare the elapsed span`() = test {
-        // The chart's previous window is the whole of 2025 -- twelve whole month buckets. The totals
-        // can't be carved out of those: September 2026 has only partly happened, and a month bucket
-        // can't be split, so they come from their own request ending on the equivalent day of 2025.
+    fun `given ThisYear mid-year, when fetchStatsForPeriod, then totals compare the whole previous year`() = test {
+        // The previous window is the whole of 2025 -- twelve whole month buckets -- and the totals use
+        // all of them, including the months of 2026 that haven't happened yet.
         whenever(statsDataSource.fetchStatsVisits(any(), any(), eq(MONTHS_IN_YEAR), any(), anyOrNull(), anyOrNull()))
             .thenReturn(monthlyVisits(LocalDate.of(2025, 1, 1), MONTHS_IN_YEAR, WHOLE_MONTH_VIEWS))
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), eq(9), eq("2025-09-23"), anyOrNull(), anyOrNull()))
-            .thenReturn(monthlyVisits(LocalDate.of(2025, 1, 1), 9, PART_MONTH_VIEWS))
         whenever(statsDataSource.fetchStatsVisits(any(), any(), eq(9), eq("2026-09-23"), anyOrNull(), anyOrNull()))
             .thenReturn(monthlyVisits(LocalDate.of(2026, 1, 1), 9, PART_MONTH_VIEWS))
 
         val result = repositoryAt(LATE_SEPTEMBER).fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.ThisYear)
 
-        verify(statsDataSource).fetchStatsVisits(
-            siteId = eq(TEST_SITE_ID),
-            unit = eq(StatsUnit.MONTH),
-            quantity = eq(9),
-            endDate = eq("2025-09-23"),
-            startDate = isNull(),
-            statFields = eq(EXPECTED_CARD_STAT_FIELDS)
-        )
-        // Nine months of 2025 truncated at the 23rd, not nine whole ones: a flat site must not read as
-        // a collapse just because this month is only three weeks old.
+        // Whole year against whole year, as iOS does. The elapsed stretch is deliberately not carved
+        // out of the previous window: a month bucket can't be split, and re-requesting the year ending
+        // on the equivalent day of 2025 doesn't work either -- the API truncates a bucket's additive
+        // metrics at the requested end date but returns whole-bucket visitor uniques, so views would be
+        // right and visitors wrong.
         val success = result as PeriodStatsResult.Success
-        assertThat(success.previousAggregates.views).isEqualTo(9 * PART_MONTH_VIEWS)
-        assertThat(success.previousAggregates.endDate).isEqualTo("2025-09-23")
+        assertThat(success.previousAggregates.views).isEqualTo(MONTHS_IN_YEAR * WHOLE_MONTH_VIEWS)
+        assertThat(success.previousAggregates.startDate).isEqualTo("2025-01-01")
+        assertThat(success.previousAggregates.endDate).isEqualTo("2025-12-31")
         // The chart still spans the whole of both years, so the months still to come keep a comparison.
         assertThat(success.currentPeriodData).hasSize(MONTHS_IN_YEAR)
         assertThat(success.previousPeriodData).hasSize(MONTHS_IN_YEAR)
     }
 
     @Test
-    fun `given a day-bucket calendar period, when fetchStatsForPeriod, then no extra totals call runs`() = test {
+    fun `given a calendar period, when fetchStatsForPeriod, then only the two chart windows are fetched`() = test {
         whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
-        repositoryAt(WEDNESDAY).fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.ThisWeek)
+        repositoryAt(LATE_SEPTEMBER).fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.ThisYear)
 
-        // A day bucket is indivisible, so trimming whole buckets off the previous week is already
-        // exact and the card stays at two requests.
+        // Comparing whole period against whole period needs no window beyond the two the chart already
+        // draws, so even the month-bucket periods stay at two requests.
         verify(statsDataSource, times(2)).fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull())
     }
 
@@ -1407,6 +1403,32 @@ class StatsRepositoryTest : BaseUnitTest() {
                 comments = periods.map { CommentsDataPoint(it, views) },
                 posts = periods.map { PostsDataPoint(it, views) }
             )
+        )
+    }
+
+    @Test
+    fun `given ThisWeek, when another card fetches, then it compares the same window as the chart`() = test {
+        whenever(statsDataSource.fetchTopPostsAndPages(any(), any(), any()))
+            .thenReturn(TopPostsDataResult.Success(createTopPostsData()))
+
+        repositoryAt(WEDNESDAY).fetchMostViewed(
+            TEST_SITE_ID,
+            StatsPeriod.ThisWeek,
+            MostViewedDataSource.POSTS_AND_PAGES
+        )
+
+        // Every card on the screen compares a calendar period against the whole preceding calendar
+        // one, exactly as the Views chart does. A same-length mirror of the elapsed days would put this
+        // card on last Thursday-to-Saturday while the chart above it used the whole of last week.
+        verify(statsDataSource).fetchTopPostsAndPages(
+            eq(TEST_SITE_ID),
+            eq(StatsDateRange.Custom(startDate = "2026-03-08", date = "2026-03-11")),
+            any()
+        )
+        verify(statsDataSource).fetchTopPostsAndPages(
+            eq(TEST_SITE_ID),
+            eq(StatsDateRange.Custom(startDate = "2026-03-01", date = "2026-03-07")),
+            any()
         )
     }
 
