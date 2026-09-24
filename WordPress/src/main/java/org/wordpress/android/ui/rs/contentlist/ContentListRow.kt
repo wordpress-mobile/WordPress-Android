@@ -285,7 +285,8 @@ private fun CardBody(isSyncing: Boolean, content: @Composable () -> Unit) {
  * Condensed drops the excerpt, which is what actually shortens the row, and the metrics, which the
  * ViewModel then does not fetch.
  *
- * [showMetaLine] is false when the row has a footer, which carries the metadata line instead.
+ * [showMetaLine] is false when the row has a footer, which carries the metrics instead. The date
+ * then moves to the end of the title, leaving the footer's narrower line room for both metrics.
  */
 @Composable
 private fun RowBody(
@@ -296,7 +297,12 @@ private fun RowBody(
     showMetaLine: Boolean
 ) {
     ContentListBadges(state.badges)
-    RowTitle(title = state.title, fontSize = titleSize, lineHeight = titleLineHeight)
+    RowTitle(
+        title = state.title,
+        fontSize = titleSize,
+        lineHeight = titleLineHeight,
+        date = state.dateLabel.takeIf { !showMetaLine && it.isNotBlank() }
+    )
     if (!density.isCondensed) {
         RowExcerpt(state.excerpt)
     }
@@ -304,27 +310,38 @@ private fun RowBody(
     // pages list's synthetic Site Editor entry - drops the line rather than leading with a bullet.
     if (showMetaLine && state.dateLabel.isNotBlank()) {
         Spacer(modifier = Modifier.height(TITLE_META_GAP))
-        RowMetaLine(state = state, showMetrics = !density.isCondensed)
+        RowMetaLine(state = state, showDate = true, showMetrics = !density.isCondensed)
     }
 }
 
+/** The title, with [date] trailing it on the first line's baseline when given. */
 @Composable
 private fun RowTitle(
     title: String,
     fontSize: TextUnit,
-    lineHeight: TextUnit
+    lineHeight: TextUnit,
+    date: String? = null
 ) {
-    Text(
-        text = title.ifBlank { stringResource(R.string.untitled_in_parentheses) },
-        style = MaterialTheme.typography.titleMedium,
-        fontFamily = FontFamily.Serif,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = fontSize,
-        lineHeight = lineHeight,
-        color = MaterialTheme.colorScheme.onSurface,
-        maxLines = TITLE_MAX_LINES,
-        overflow = TextOverflow.Ellipsis
-    )
+    Row {
+        Text(
+            text = title.ifBlank { stringResource(R.string.untitled_in_parentheses) },
+            style = MaterialTheme.typography.titleMedium,
+            fontFamily = FontFamily.Serif,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = fontSize,
+            lineHeight = lineHeight,
+            color = MaterialTheme.colorScheme.onSurface,
+            maxLines = TITLE_MAX_LINES,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier
+                .weight(1f)
+                .alignByBaseline()
+        )
+        if (date != null) {
+            Spacer(modifier = Modifier.width(TITLE_DATE_GAP))
+            MetaText(text = date, modifier = Modifier.alignByBaseline())
+        }
+    }
 }
 
 @Composable
@@ -341,7 +358,7 @@ private fun RowExcerpt(excerpt: String) {
 }
 
 /**
- * "2d ago · 1,204 views", with the overflow menu pinned to the trailing edge.
+ * "2d ago · 1,204 views", or just the metrics when the date sits beside the title instead.
  *
  * The separator is drawn as its own [Text] so it can take the dimmer outline colour without
  * splitting the line into something a screen reader announces piecemeal.
@@ -349,29 +366,34 @@ private fun RowExcerpt(excerpt: String) {
 @Composable
 private fun RowMetaLine(
     state: ContentListRowUiState,
+    showDate: Boolean,
     showMetrics: Boolean
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        MetaText(state.dateLabel)
+    val segments = buildList<@Composable () -> Unit> {
+        if (showDate) add { MetaText(state.dateLabel) }
         // A condensed list does not fetch metrics, so it shows neither them nor a skeleton
         // waiting on a request that is never made.
-        if (showMetrics) {
-            RowMetrics(state)
-        }
+        if (showMetrics) addMetrics(state)
         if (state.hasSyncFailed) {
-            MetaSeparator()
-            MetaText(
-                text = stringResource(R.string.post_rs_sync_failed),
-                color = MaterialTheme.colorScheme.error
-            )
+            add {
+                MetaText(
+                    text = stringResource(R.string.post_rs_sync_failed),
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        }
+    }
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        segments.forEachIndexed { index, segment ->
+            if (index > 0) MetaSeparator()
+            segment()
         }
     }
 }
 
-/** A separator followed by one metric, e.g. "· 1,204 views". */
+/** One metric, e.g. "1,204 views". */
 @Composable
 private fun MetricText(@PluralsRes pluralResId: Int, count: Long) {
-    MetaSeparator()
     MetaText(
         pluralStringResource(
             pluralResId,
@@ -382,33 +404,35 @@ private fun MetricText(@PluralsRes pluralResId: Int, count: Long) {
 }
 
 /** Views and comments, or a single bar standing in for both while they are still being fetched. */
-@Composable
-private fun RowMetrics(state: ContentListRowUiState) {
+private fun MutableList<@Composable () -> Unit>.addMetrics(state: ContentListRowUiState) {
     if (state.areMetricsPending) {
         // Views and comments arrive together, so one bar stands in for both rather than two that
         // would resolve on the same frame anyway.
-        MetaSeparator()
-        ShimmerBox(
-            modifier = Modifier
-                .width(METRICS_SKELETON_WIDTH)
-                .height(METRICS_SKELETON_HEIGHT)
-                .clip(RoundedCornerShape(PLACEHOLDER_RADIUS))
-        )
+        add {
+            ShimmerBox(
+                modifier = Modifier
+                    .width(METRICS_SKELETON_WIDTH)
+                    .height(METRICS_SKELETON_HEIGHT)
+                    .clip(RoundedCornerShape(PLACEHOLDER_RADIUS))
+            )
+        }
         return
     }
-    state.viewCount?.let { MetricText(R.plurals.content_list_view_count, it) }
+    state.viewCount?.let { count -> add { MetricText(R.plurals.content_list_view_count, count) } }
     // A post with no comments still says so; unlike views, zero is meaningful here and the number
     // arrives in the same response, so hiding it would look like a gap.
-    state.commentCount?.let { MetricText(R.plurals.content_list_comment_count, it) }
+    state.commentCount?.let { count -> add { MetricText(R.plurals.content_list_comment_count, count) } }
 }
 
 @Composable
 private fun MetaText(
     text: String,
+    modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.onSurfaceVariant
 ) {
     Text(
         text = text,
+        modifier = modifier,
         style = MaterialTheme.typography.bodySmall,
         fontSize = META_SIZE,
         color = color,
@@ -547,8 +571,8 @@ private fun RowTextAndMenu(
 }
 
 /**
- * The metadata line, then the quick actions and the overflow button pinned to the trailing edge.
- * A long metadata line ellipsizes rather than pushing the buttons off the card.
+ * The metrics, then the quick actions and the overflow button pinned to the trailing edge. A long
+ * metrics line ellipsizes rather than pushing the buttons off the card.
  */
 @Composable
 private fun RowFooter(
@@ -563,9 +587,8 @@ private fun RowFooter(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(modifier = Modifier.weight(1f)) {
-            if (state.dateLabel.isNotBlank()) {
-                RowMetaLine(state = state, showMetrics = !density.isCondensed)
-            }
+            // The date is beside the title, so this line carries only the metrics.
+            RowMetaLine(state = state, showDate = false, showMetrics = !density.isCondensed)
         }
         quickActions.forEach { action ->
             IconButton(onClick = action.onClick) {
@@ -599,6 +622,7 @@ private val CONDENSED_CARD_PADDING = 12.dp
 private val THUMBNAIL_RADIUS = 10.dp
 private val HERO_IMAGE_HEIGHT = HERO_IMAGE_HEIGHT_DP.dp
 private val LEADING_GAP = 12.dp
+private val TITLE_DATE_GAP = 8.dp
 private val QUICK_ACTION_ICON_SIZE = 20.dp
 private val TITLE_META_GAP = 6.dp
 private val SYNC_BAR_HEIGHT = 2.dp
