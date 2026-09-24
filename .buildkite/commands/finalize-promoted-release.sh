@@ -30,8 +30,7 @@ source use-bot-for-git
 echo "--- :rubygems: Setting up Gems"
 install_gems
 
-echo "--- :closed_lock_with_key: Installing Secrets"
-bundle exec fastlane run configure_apply
+"$(dirname "${BASH_SOURCE[0]}")/install-secrets.sh"
 
 echo "--- :checkered_flag: Finalizing promoted release for ${VERSION_CODE}"
 bundle exec fastlane finalize_promoted_release version_code:"${VERSION_CODE}"
