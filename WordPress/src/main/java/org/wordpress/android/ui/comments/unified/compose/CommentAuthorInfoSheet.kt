@@ -52,6 +52,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel.AuthorInfoUiState
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.dataview.compose.RemoteImage
 import java.text.NumberFormat
@@ -62,25 +63,16 @@ import java.text.NumberFormat
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Suppress("LongParameterList")
 fun CommentAuthorInfoSheet(
     authorName: String,
     authorAvatarUrl: String,
-    /** Null for a pingback, whose author is a site rather than a person. */
-    isRegistered: Boolean?,
-    date: String,
-    website: String,
-    email: String,
-    ipAddress: String,
-    commentCount: Int?,
-    bio: String,
+    info: AuthorInfoUiState,
     onDismiss: () -> Unit
 ) {
-    val containerColor = MaterialTheme.colorScheme.surfaceContainerLow
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-        containerColor = containerColor,
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         // The band starts behind the handle, keeping the stock handle and its accessibility actions.
         dragHandle = {
             Box(
@@ -96,46 +88,36 @@ fun CommentAuthorInfoSheet(
         Column(modifier = Modifier.padding(bottom = SHEET_BOTTOM_PADDING)) {
             // Outside the animated column: animateContentSize clips, and the avatar draws above
             // this column's top edge.
-            HeaderBand(authorAvatarUrl, commentCount, containerColor)
-            AnimatedDetails(authorName, isRegistered, bio, date, website, email, ipAddress)
+            HeaderBand(authorAvatarUrl, info.commentCount)
+            AnimatedDetails(authorName, info)
         }
     }
 }
 
 @Composable
-@Suppress("LongParameterList")
-private fun AnimatedDetails(
-    authorName: String,
-    isRegistered: Boolean?,
-    bio: String,
-    date: String,
-    website: String,
-    email: String,
-    ipAddress: String
-) {
+private fun AnimatedDetails(authorName: String, info: AuthorInfoUiState) {
     val context = LocalContext.current
     Column(modifier = Modifier.animateContentSize()) {
-        NameBlock(authorName, isRegistered)
-        if (bio.isNotBlank()) {
-            BioCard(bio)
+        NameBlock(authorName, info.isRegistered)
+        if (info.bio.isNotBlank()) {
+            BioCard(info.bio)
         }
         Column(
             verticalArrangement = Arrangement.spacedBy(ROW_GAP),
             modifier = Modifier.padding(horizontal = ROWS_H_PADDING)
         ) {
-            InfoRow(Icons.Outlined.Schedule, R.string.comment_author_info_posted_at, date)
+            InfoRow(Icons.Outlined.Schedule, R.string.comment_author_info_posted_at, info.date)
             InfoRow(
                 icon = Icons.Outlined.Language,
                 labelRes = R.string.comment_author_info_website,
-                value = website,
-                valueColor = MaterialTheme.colorScheme.primary,
-                onClick = { ActivityLauncher.openUrlExternal(context, website) }
+                value = info.website,
+                onClick = { ActivityLauncher.openUrlExternal(context, info.website) }
             )
             // Selectable so a moderator can copy the address.
             SelectionContainer {
                 Column(verticalArrangement = Arrangement.spacedBy(ROW_GAP)) {
-                    InfoRow(Icons.Outlined.AlternateEmail, R.string.comment_author_info_email, email) {
-                        IconButton(onClick = { ActivityLauncher.openUrlExternal(context, "mailto:$email") }) {
+                    InfoRow(Icons.Outlined.AlternateEmail, R.string.comment_author_info_email, info.email) {
+                        IconButton(onClick = { ActivityLauncher.openUrlExternal(context, "mailto:${info.email}") }) {
                             Icon(
                                 imageVector = Icons.Outlined.Mail,
                                 contentDescription = stringResource(R.string.comment_author_info_send_email),
@@ -143,7 +125,7 @@ private fun AnimatedDetails(
                             )
                         }
                     }
-                    InfoRow(Icons.Outlined.Lan, R.string.comment_author_info_posted_from, ipAddress)
+                    InfoRow(Icons.Outlined.Lan, R.string.comment_author_info_posted_from, info.ipAddress)
                 }
             }
         }
@@ -151,7 +133,7 @@ private fun AnimatedDetails(
 }
 
 @Composable
-private fun HeaderBand(avatarUrl: String, commentCount: Int?, containerColor: Color) {
+private fun HeaderBand(avatarUrl: String, commentCount: Int?) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -172,7 +154,7 @@ private fun HeaderBand(avatarUrl: String, commentCount: Int?, containerColor: Co
                 .offset(y = BAND_EXTENSION - AVATAR_RING_SIZE / 2)
                 .wrapContentSize(align = Alignment.TopStart, unbounded = true)
                 .size(AVATAR_RING_SIZE)
-                .background(containerColor, CircleShape)
+                .background(MaterialTheme.colorScheme.surfaceContainerLow, CircleShape)
         ) {
             RemoteImage(
                 imageUrl = avatarUrl,
@@ -185,7 +167,6 @@ private fun HeaderBand(avatarUrl: String, commentCount: Int?, containerColor: Co
         commentCount?.let {
             CommentCountChip(
                 count = it,
-                containerColor = containerColor,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(end = CHIP_END_PADDING)
@@ -196,13 +177,13 @@ private fun HeaderBand(avatarUrl: String, commentCount: Int?, containerColor: Co
 }
 
 @Composable
-private fun CommentCountChip(count: Int, containerColor: Color, modifier: Modifier = Modifier) {
+private fun CommentCountChip(count: Int, modifier: Modifier = Modifier) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(CHIP_ICON_GAP),
         modifier = modifier
             .height(CHIP_HEIGHT)
-            .background(containerColor, CircleShape)
+            .background(MaterialTheme.colorScheme.surfaceContainerLow, CircleShape)
             .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape)
             .padding(start = CHIP_START_PADDING, end = CHIP_END_INNER_PADDING)
     ) {
@@ -307,12 +288,10 @@ private fun BioCard(bio: String) {
 }
 
 @Composable
-@Suppress("LongParameterList")
 private fun InfoRow(
     icon: ImageVector,
     labelRes: Int,
     value: String,
-    valueColor: Color = Color.Unspecified,
     onClick: (() -> Unit)? = null,
     trailingContent: (@Composable () -> Unit)? = null
 ) {
@@ -343,7 +322,8 @@ private fun InfoRow(
             Text(
                 text = value,
                 style = MaterialTheme.typography.bodyLarge,
-                color = valueColor,
+                // Only the link-like rows are clickable.
+                color = if (onClick != null) MaterialTheme.colorScheme.primary else Color.Unspecified,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -399,14 +379,16 @@ private fun CommentAuthorInfoSheetPreview() {
         CommentAuthorInfoSheet(
             authorName = "nick_tester",
             authorAvatarUrl = "",
-            isRegistered = true,
-            date = "Sep 22, 2026, 6:44 AM",
-            website = "https://nbradburytest.wordpress.com",
-            email = "nbradbury.test@gmail.com",
-            ipAddress = "192.0.81.205",
-            commentCount = 12,
-            bio = "Mobile developer testing things so you don't have to. Writes about Android, coffee, " +
-                "and the occasional rubber duck. Based in Colorado, usually replying from a trailhead.",
+            info = AuthorInfoUiState(
+                date = "Sep 22, 2026, 6:44 AM",
+                website = "https://nbradburytest.wordpress.com",
+                email = "nbradbury.test@gmail.com",
+                ipAddress = "192.0.81.205",
+                isRegistered = true,
+                commentCount = 12,
+                bio = "Mobile developer testing things so you don't have to. Writes about Android, coffee, " +
+                    "and the occasional rubber duck. Based in Colorado, usually replying from a trailhead."
+            ),
             onDismiss = {}
         )
     }

@@ -399,13 +399,7 @@ private fun RedesignedCommentDetailsContent(
         CommentAuthorInfoSheet(
             authorName = uiState.authorName,
             authorAvatarUrl = uiState.authorAvatarUrl,
-            isRegistered = uiState.authorIsRegistered,
-            date = uiState.dateFull,
-            website = uiState.authorUrl,
-            email = uiState.authorEmail,
-            ipAddress = uiState.authorIp,
-            commentCount = uiState.authorCommentCount,
-            bio = uiState.authorBio,
+            info = uiState.authorInfo,
             onDismiss = { showAuthorInfo = false }
         )
     }

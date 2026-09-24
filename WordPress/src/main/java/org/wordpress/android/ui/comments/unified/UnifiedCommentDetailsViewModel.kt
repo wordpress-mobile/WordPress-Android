@@ -3,6 +3,7 @@ package org.wordpress.android.ui.comments.unified
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
@@ -119,8 +120,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
 
     // Fetched the first time the author sheet opens rather than with the comment: few people open
     // it, and the detail pager would otherwise pay for it on every comment it pages past.
-    private var authorExtras: AuthorExtras? = null
-    private var isAuthorExtrasLoading = false
+    private var authorExtrasJob: Job? = null
 
     fun start(
         site: SiteModel,
@@ -153,30 +153,24 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         if (!isStarted) return
         _commentChanged.value = Event(Unit)
         // The edit may have changed the author's email, which the comment count is keyed on.
-        authorExtras = null
+        authorExtrasJob?.cancel()
+        authorExtrasJob = null
         loadComment()
     }
 
     fun onAuthorInfoShown() {
         val comment = loadedComment ?: return
-        if (authorExtras != null || isAuthorExtrasLoading) return
-        isAuthorExtrasLoading = true
-        launch {
-            try {
-                val extras = withContext(bgDispatcher) { fetchAuthorExtras(comment) }
-                authorExtras = extras
-                _uiState.value = _uiState.value?.copy(
-                    authorCommentCount = extras.commentCount,
-                    authorBio = extras.bio
-                )
-            } finally {
-                isAuthorExtrasLoading = false
+        if (authorExtrasJob != null) return
+        authorExtrasJob = launch {
+            val (count, bio) = withContext(bgDispatcher) { fetchAuthorExtras(comment) }
+            _uiState.value = _uiState.value?.let {
+                it.copy(authorInfo = it.authorInfo.copy(commentCount = count, bio = bio))
             }
         }
     }
 
     /** Best effort: a failed half just hides its row in the sheet. */
-    private suspend fun fetchAuthorExtras(comment: RsComment): AuthorExtras = coroutineScope {
+    private suspend fun fetchAuthorExtras(comment: RsComment): Pair<Int?, String> = coroutineScope {
         val count = async {
             comment.authorEmail.takeIf { it.isNotBlank() }
                 ?.let { commentsRsDataSource.fetchAuthorCommentCount(site, it) }
@@ -184,7 +178,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         val bio = async {
             comment.authorId.takeIf { it > 0 }?.let { commentsRsDataSource.fetchUserBio(site, it) }
         }
-        AuthorExtras(count.await(), bio.await()?.let { HtmlUtils.fastStripHtml(it).trim() }.orEmpty())
+        count.await() to bio.await()?.let { HtmlUtils.fastStripHtml(it).trim() }.orEmpty()
     }
 
     private fun loadComment() {
@@ -607,13 +601,13 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         authorAvatarUrl = authorAvatarUrl,
         // Same formatter as the rs comments list, so the date doesn't change when you open a comment.
         datePublished = RsDateFormatter.format(dateGmt, resourceProvider.getString(R.string.rs_date_now)),
-        dateFull = RsDateFormatter.formatDateTime(dateGmt),
-        authorUrl = authorUrl,
-        authorEmail = authorEmail,
-        authorIp = authorIp,
-        authorIsRegistered = if (isPingback) null else authorId > 0,
-        authorCommentCount = authorExtras?.commentCount,
-        authorBio = authorExtras?.bio.orEmpty(),
+        authorInfo = AuthorInfoUiState(
+            date = RsDateFormatter.formatDateTime(dateGmt),
+            website = authorUrl,
+            email = authorEmail,
+            ipAddress = authorIp,
+            isRegistered = if (isPingback) null else authorId > 0
+        ),
         commentText = contentHtml,
         postTitle = cached?.postTitle?.takeIf { it.isNotBlank() } ?: fallbackPostTitle,
         commentUrl = url,
@@ -625,8 +619,6 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         parentSnippet = parent?.contentHtml?.let { HtmlUtils.fastStripHtml(it).trim() }.orEmpty(),
         replyCount = replyCount
     )
-
-    private data class AuthorExtras(val commentCount: Int?, val bio: String)
 
     private data class CommentLoadResult(
         val rsComment: RsComment?,
@@ -643,16 +635,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         val authorName: String = "",
         val authorAvatarUrl: String = "",
         val datePublished: String = "",
-        /** The author sheet's rows; each is hidden when blank. Email and IP need edit context. */
-        val dateFull: String = "",
-        val authorUrl: String = "",
-        val authorEmail: String = "",
-        val authorIp: String = "",
-        /** Whether the author has an account on the site; null for a pingback, whose author is a site. */
-        val authorIsRegistered: Boolean? = null,
-        /** Loaded when the author sheet first opens; see [onAuthorInfoShown]. */
-        val authorCommentCount: Int? = null,
-        val authorBio: String = "",
+        val authorInfo: AuthorInfoUiState = AuthorInfoUiState(),
         val commentText: String = "",
         val postTitle: String = "",
         val commentUrl: String = "",
@@ -668,6 +651,19 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         /** The action currently in flight, so its own button can show progress. */
         val pendingAction: CommentModerationAction? = null,
         val replyCount: Int? = null
+    )
+
+    /** The author sheet's rows; each is hidden when blank. Email and IP need edit context. */
+    data class AuthorInfoUiState(
+        val date: String = "",
+        val website: String = "",
+        val email: String = "",
+        val ipAddress: String = "",
+        /** Whether the author has an account on the site; null for a pingback, whose author is a site. */
+        val isRegistered: Boolean? = null,
+        /** Loaded when the sheet first opens; see [onAuthorInfoShown]. */
+        val commentCount: Int? = null,
+        val bio: String = ""
     )
 
     companion object {

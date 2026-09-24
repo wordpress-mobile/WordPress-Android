@@ -713,9 +713,9 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = uiStates.last()
-        assertThat(state.authorCommentCount).isEqualTo(12)
-        assertThat(state.authorBio).isEqualTo("Photographer")
-        assertThat(state.authorIsRegistered).isTrue
+        assertThat(state.authorInfo.commentCount).isEqualTo(12)
+        assertThat(state.authorInfo.bio).isEqualTo("Photographer")
+        assertThat(state.authorInfo.isRegistered).isTrue
         verify(commentsRsDataSource, times(1)).fetchAuthorCommentCount(site, "a@b.c")
     }
 
@@ -729,7 +729,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         viewModel.onAuthorInfoShown()
         advanceUntilIdle()
 
-        assertThat(uiStates.last().authorIsRegistered).isFalse
+        assertThat(uiStates.last().authorInfo.isRegistered).isFalse
         verify(commentsRsDataSource, never()).fetchUserBio(any(), any())
 
         whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID, withEditContext = true))
@@ -737,7 +737,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         viewModel.onCommentEdited()
         advanceUntilIdle()
 
-        assertThat(uiStates.last().authorIsRegistered).isNull()
+        assertThat(uiStates.last().authorInfo.isRegistered).isNull()
     }
 
     @Test
