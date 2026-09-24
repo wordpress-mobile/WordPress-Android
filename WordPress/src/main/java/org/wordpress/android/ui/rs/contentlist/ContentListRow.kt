@@ -58,7 +58,7 @@ import java.text.NumberFormat
  *
  * [actions] supplies the overflow menu. When it also has quick actions, the metrics and the menu
  * move into a footer beneath the text with the actions as icon buttons between them, and the date
- * moves beside the title.
+ * moves up under the title.
  */
 @Composable
 fun ContentListRow(
@@ -283,7 +283,7 @@ private fun CardBody(isSyncing: Boolean, content: @Composable () -> Unit) {
  * ViewModel then does not fetch.
  *
  * [showMetaLine] is false when the row has a footer, which carries the metrics instead. The date
- * then moves to the end of the title, leaving the footer's narrower line room for both metrics.
+ * then sits under the title, leaving the footer's narrower line room for both metrics.
  */
 @Composable
 private fun RowBody(
@@ -294,12 +294,11 @@ private fun RowBody(
     showMetaLine: Boolean
 ) {
     ContentListBadges(state.badges)
-    RowTitle(
-        title = state.title,
-        fontSize = titleSize,
-        lineHeight = titleLineHeight,
-        date = state.dateLabel.takeIf { !showMetaLine && it.isNotBlank() }
-    )
+    RowTitle(title = state.title, fontSize = titleSize, lineHeight = titleLineHeight)
+    if (!showMetaLine && state.dateLabel.isNotBlank()) {
+        Spacer(modifier = Modifier.height(TITLE_DATE_GAP))
+        MetaText(state.dateLabel)
+    }
     if (!density.isCondensed) {
         RowExcerpt(state.excerpt)
     }
@@ -311,34 +310,23 @@ private fun RowBody(
     }
 }
 
-/** The title, with [date] trailing it on the first line's baseline when given. */
 @Composable
 private fun RowTitle(
     title: String,
     fontSize: TextUnit,
-    lineHeight: TextUnit,
-    date: String?
+    lineHeight: TextUnit
 ) {
-    Row {
-        Text(
-            text = title.ifBlank { stringResource(R.string.untitled_in_parentheses) },
-            style = MaterialTheme.typography.titleMedium,
-            fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = fontSize,
-            lineHeight = lineHeight,
-            color = MaterialTheme.colorScheme.onSurface,
-            maxLines = TITLE_MAX_LINES,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier
-                .weight(1f)
-                .alignByBaseline()
-        )
-        if (date != null) {
-            Spacer(modifier = Modifier.width(TITLE_DATE_GAP))
-            MetaText(text = date, modifier = Modifier.alignByBaseline())
-        }
-    }
+    Text(
+        text = title.ifBlank { stringResource(R.string.untitled_in_parentheses) },
+        style = MaterialTheme.typography.titleMedium,
+        fontFamily = FontFamily.Serif,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = fontSize,
+        lineHeight = lineHeight,
+        color = MaterialTheme.colorScheme.onSurface,
+        maxLines = TITLE_MAX_LINES,
+        overflow = TextOverflow.Ellipsis
+    )
 }
 
 @Composable
@@ -355,7 +343,7 @@ private fun RowExcerpt(excerpt: String) {
 }
 
 /**
- * "2d ago · 1,204 views", or just the metrics when the date sits beside the title instead.
+ * "2d ago · 1,204 views", or just the metrics when the date sits under the title instead.
  *
  * The separator is drawn as its own [Text] so it can take the dimmer outline colour without
  * splitting the line into something a screen reader announces piecemeal.
@@ -424,12 +412,10 @@ private fun MutableList<@Composable () -> Unit>.addMetrics(state: ContentListRow
 @Composable
 private fun MetaText(
     text: String,
-    modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.onSurfaceVariant
 ) {
     Text(
         text = text,
-        modifier = modifier,
         style = MaterialTheme.typography.bodySmall,
         fontSize = META_SIZE,
         color = color,
@@ -581,7 +567,7 @@ private fun RowFooter(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(modifier = Modifier.weight(1f)) {
-            // The date is beside the title, so this line carries only the metrics.
+            // The date is under the title, so this line carries only the metrics.
             RowMetaLine(state = state, showDate = false, showMetrics = !density.isCondensed)
         }
         actions.quickActions.forEach { action ->
@@ -616,7 +602,7 @@ private val CONDENSED_CARD_PADDING = 12.dp
 private val THUMBNAIL_RADIUS = 10.dp
 private val HERO_IMAGE_HEIGHT = HERO_IMAGE_HEIGHT_DP.dp
 private val LEADING_GAP = 12.dp
-private val TITLE_DATE_GAP = 8.dp
+private val TITLE_DATE_GAP = 2.dp
 private val QUICK_ACTION_ICON_SIZE = 20.dp
 private val TITLE_META_GAP = 6.dp
 private val SYNC_BAR_HEIGHT = 2.dp
