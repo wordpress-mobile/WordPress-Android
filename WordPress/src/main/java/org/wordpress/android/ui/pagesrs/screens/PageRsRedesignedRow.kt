@@ -74,7 +74,11 @@ private fun PageRsContentCard(
     val virtualKind = (item as? PageRsListItem.Virtual)?.kind
     val isSiteEditor = virtualKind == PageRsListItem.Virtual.Kind.SITE_EDITOR
     val onEdit = if (page.isTrashed || isSiteEditor) null else onClick
-    val actions = page.actions.toContentListRowActions(onEdit = onEdit, onAction = onMenuAction)
+    val actions = page.actions.toContentListRowActions(
+        onEdit = onEdit,
+        showQuickActions = !density.isCondensed,
+        onAction = onMenuAction
+    )
     val leading: (@Composable () -> Unit)? = virtualKind?.let { kind ->
         {
             Icon(

@@ -283,7 +283,8 @@ private fun CardBody(isSyncing: Boolean, content: @Composable () -> Unit) {
  * ViewModel then does not fetch.
  *
  * [showMetaLine] is false when the row has a footer, which carries the metrics instead. The date
- * then sits under the title, leaving the footer's narrower line room for both metrics.
+ * then sits under the title with the sync-failed warning, leaving the footer's narrower line room
+ * for both metrics.
  */
 @Composable
 private fun RowBody(
@@ -297,7 +298,7 @@ private fun RowBody(
     RowTitle(title = state.title, fontSize = titleSize, lineHeight = titleLineHeight)
     if (!showMetaLine && state.dateLabel.isNotBlank()) {
         Spacer(modifier = Modifier.height(TITLE_DATE_GAP))
-        MetaText(state.dateLabel)
+        RowMetaLine(state = state, showDate = true, showMetrics = false, showSyncFailed = true)
     }
     if (!density.isCondensed) {
         RowExcerpt(state.excerpt)
@@ -306,7 +307,12 @@ private fun RowBody(
     // state either, so it drops the line altogether.
     if (showMetaLine && state.dateLabel.isNotBlank()) {
         Spacer(modifier = Modifier.height(TITLE_META_GAP))
-        RowMetaLine(state = state, showDate = true, showMetrics = !density.isCondensed)
+        RowMetaLine(
+            state = state,
+            showDate = true,
+            showMetrics = !density.isCondensed,
+            showSyncFailed = true
+        )
     }
 }
 
@@ -352,14 +358,15 @@ private fun RowExcerpt(excerpt: String) {
 private fun RowMetaLine(
     state: ContentListRowUiState,
     showDate: Boolean,
-    showMetrics: Boolean
+    showMetrics: Boolean,
+    showSyncFailed: Boolean
 ) {
     val segments = buildList<@Composable () -> Unit> {
         if (showDate) add { MetaText(state.dateLabel) }
         // A condensed list does not fetch metrics, so it shows neither them nor a skeleton
         // waiting on a request that is never made.
         if (showMetrics) addMetrics(state)
-        if (state.hasSyncFailed) {
+        if (showSyncFailed && state.hasSyncFailed) {
             add {
                 MetaText(
                     text = stringResource(R.string.post_rs_sync_failed),
@@ -430,7 +437,8 @@ private fun MetaSeparator() {
         text = stringResource(R.string.bullet_with_spaces),
         style = MaterialTheme.typography.bodySmall,
         fontSize = META_SIZE,
-        color = MaterialTheme.colorScheme.outlineVariant
+        color = MaterialTheme.colorScheme.outlineVariant,
+        maxLines = 1
     )
 }
 
@@ -567,8 +575,14 @@ private fun RowFooter(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(modifier = Modifier.weight(1f)) {
-            // The date is under the title, so this line carries only the metrics.
-            RowMetaLine(state = state, showDate = false, showMetrics = !density.isCondensed)
+            // The date and any sync failure are under the title, so this line carries only the
+            // metrics - a failure placed after them would be the first thing squeezed out.
+            RowMetaLine(
+                state = state,
+                showDate = false,
+                showMetrics = !density.isCondensed,
+                showSyncFailed = false
+            )
         }
         actions.quickActions.forEach { action ->
             IconButton(onClick = action.onClick) {

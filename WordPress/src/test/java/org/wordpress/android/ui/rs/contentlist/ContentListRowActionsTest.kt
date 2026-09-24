@@ -6,8 +6,7 @@ import org.junit.Test
 class ContentListRowActionsTest {
     @Test
     fun `tagged actions become buttons in type order with edit first`() {
-        val actions = listOf(TestAction.STATS, TestAction.SHARE, TestAction.VIEW)
-            .toContentListRowActions(onEdit = {}, onAction = {})
+        val actions = split(TestAction.STATS, TestAction.SHARE, TestAction.VIEW, onEdit = {})
 
         assertThat(actions.quickActions.map { it.type }).containsExactly(
             ContentListQuickActionType.EDIT,
@@ -18,7 +17,7 @@ class ContentListRowActionsTest {
 
     @Test
     fun `no edit button without an edit handler`() {
-        val actions = listOf(TestAction.VIEW).toContentListRowActions(onEdit = null, onAction = {})
+        val actions = split(TestAction.VIEW)
 
         assertThat(actions.quickActions.map { it.type }).containsExactly(ContentListQuickActionType.VIEW)
     }
@@ -26,8 +25,7 @@ class ContentListRowActionsTest {
     @Test
     fun `a button invokes its own action`() {
         val invoked = mutableListOf<TestAction>()
-        val actions = listOf(TestAction.VIEW, TestAction.STATS)
-            .toContentListRowActions(onEdit = null, onAction = { invoked += it })
+        val actions = split(TestAction.VIEW, TestAction.STATS, onAction = { invoked += it })
 
         actions.quickActions.forEach { it.onClick() }
 
@@ -36,18 +34,33 @@ class ContentListRowActionsTest {
 
     @Test
     fun `no menu when every action is a button`() {
-        val actions = listOf(TestAction.VIEW, TestAction.STATS).toContentListRowActions(onEdit = {}, onAction = {})
+        val actions = split(TestAction.VIEW, TestAction.STATS, onEdit = {})
 
         assertThat(actions.menu).isNull()
     }
 
     @Test
     fun `untagged actions keep the menu`() {
-        val actions = listOf(TestAction.SHARE).toContentListRowActions(onEdit = null, onAction = {})
+        val actions = split(TestAction.SHARE)
 
         assertThat(actions.quickActions).isEmpty()
         assertThat(actions.menu).isNotNull
     }
+
+    @Test
+    fun `without quick actions every action stays in the menu`() {
+        val actions = split(TestAction.VIEW, TestAction.SHARE, onEdit = {}, showQuickActions = false)
+
+        assertThat(actions.quickActions).isEmpty()
+        assertThat(actions.menu).isNotNull
+    }
+
+    private fun split(
+        vararg actions: TestAction,
+        onEdit: (() -> Unit)? = null,
+        showQuickActions: Boolean = true,
+        onAction: (TestAction) -> Unit = {}
+    ) = actions.toList().toContentListRowActions(onEdit, showQuickActions, onAction)
 
     private enum class TestAction(
         override val quickActionType: ContentListQuickActionType? = null

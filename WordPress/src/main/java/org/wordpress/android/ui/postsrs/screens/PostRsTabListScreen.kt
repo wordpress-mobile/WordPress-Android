@@ -292,8 +292,12 @@ private fun RedesignedRow(
     val post = entry.post
     val state = post.toContentListRowUiState()
     val onClick = { onPostClick(post.remoteId) }
-    // A trashed post's row tap offers to restore it rather than opening the editor.
-    val actions = post.actions.toContentListRowActions(onEdit = if (post.isTrashed) null else onClick) { action ->
+    // Trashed posts get no Edit button: in the Trashed tab a row tap offers to restore the post
+    // rather than opening the editor.
+    val actions = post.actions.toContentListRowActions(
+        onEdit = if (post.isTrashed) null else onClick,
+        showQuickActions = !density.isCondensed
+    ) { action ->
         onPostMenuAction(post.remoteId, action)
     }
 

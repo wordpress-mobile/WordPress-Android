@@ -47,22 +47,33 @@ class ContentListRowActions(
  *
  * Edit is not a menu action - it is what tapping the row does - so the caller supplies [onEdit], or
  * null for a row that can't be edited, such as a trashed one.
+ *
+ * With [showQuickActions] false - a condensed row, which a 48dp footer would make taller rather
+ * than shorter - there are no buttons and every action stays in the menu.
  */
 fun <A : RsMenuAction> List<A>.toContentListRowActions(
     onEdit: (() -> Unit)?,
+    showQuickActions: Boolean,
     onAction: (A) -> Unit
 ): ContentListRowActions {
+    if (!showQuickActions) return ContentListRowActions(menu = overflowMenu(this, onAction))
     val editAction = onEdit?.let { ContentListQuickAction(ContentListQuickActionType.EDIT, it) }
     val quickActions = mapNotNull { action ->
         action.quickActionType?.let { type -> ContentListQuickAction(type) { onAction(action) } }
     }.plus(listOfNotNull(editAction)).sortedBy { it.type }
-    val menuActions = filter { it.quickActionType == null }
-    val menu: (@Composable () -> Unit)? = if (menuActions.isEmpty()) {
-        null
-    } else {
-        { ContentListOverflowMenu(actions = menuActions.toContentListMenuActions(onAction)) }
-    }
-    return ContentListRowActions(quickActions = quickActions, menu = menu)
+    return ContentListRowActions(
+        quickActions = quickActions,
+        menu = overflowMenu(filter { it.quickActionType == null }, onAction)
+    )
+}
+
+private fun <A : RsMenuAction> overflowMenu(
+    actions: List<A>,
+    onAction: (A) -> Unit
+): (@Composable () -> Unit)? = if (actions.isEmpty()) {
+    null
+} else {
+    { ContentListOverflowMenu(actions = actions.toContentListMenuActions(onAction)) }
 }
 
 /** Projects a row's actions onto what [ContentListOverflowMenu] renders. */
