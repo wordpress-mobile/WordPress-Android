@@ -9,12 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import org.wordpress.android.R
 
-/**
- * The buttons a redesigned row can show in its footer, declared in the order they appear. Shared
- * so the posts and pages lists draw the same icon and label for the same action.
- *
- * Edit leads because it is also what tapping the card does.
- */
+/** Footer buttons, in display order. Edit leads because it is also what tapping the card does. */
 enum class ContentListQuickActionType(@StringRes val labelResId: Int) {
     EDIT(R.string.button_edit),
     VIEW(R.string.button_view),
@@ -29,27 +24,20 @@ enum class ContentListQuickActionType(@StringRes val labelResId: Int) {
         }
 }
 
-/** One footer button on a [ContentListRow] or [ContentListHeroRow]. */
 class ContentListQuickAction(
     val type: ContentListQuickActionType,
     val onClick: () -> Unit
 )
 
-/** A row's actions, split between its footer buttons and its overflow menu. */
 class ContentListRowActions(
     val quickActions: List<ContentListQuickAction> = emptyList(),
     val menu: (@Composable () -> Unit)? = null
 )
 
 /**
- * Splits a row's actions: those with a [RsMenuAction.quickActionType] become footer buttons and
- * leave the overflow menu, the rest stay in it.
- *
- * Edit is not a menu action - it is what tapping the row does - so the caller supplies [onEdit], or
- * null for a row that can't be edited, such as a trashed one.
- *
- * With [showQuickActions] false - a condensed row, which a 48dp footer would make taller rather
- * than shorter - there are no buttons and every action stays in the menu.
+ * Splits a row's actions into footer buttons (those with a [RsMenuAction.quickActionType]) and the
+ * overflow menu. Edit is the row tap rather than a menu action, so callers pass [onEdit] or null.
+ * Condensed rows pass [showQuickActions] false, since a 48dp footer would make them taller.
  */
 fun <A : RsMenuAction> List<A>.toContentListRowActions(
     onEdit: (() -> Unit)?,

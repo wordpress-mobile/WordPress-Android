@@ -282,9 +282,7 @@ private fun CardBody(isSyncing: Boolean, content: @Composable () -> Unit) {
  * Condensed drops the excerpt, which is what actually shortens the row, and the metrics, which the
  * ViewModel then does not fetch.
  *
- * [showMetaLine] is false when the row has a footer, which carries the metrics instead. The date
- * then sits under the title with the sync-failed warning, leaving the footer's narrower line room
- * for both metrics.
+ * [showMetaLine] is false when a footer carries the metrics; the date and any sync failure then sit under the title.
  */
 @Composable
 private fun RowBody(
@@ -559,10 +557,6 @@ private fun RowTextAndMenu(
     }
 }
 
-/**
- * The metrics, then the quick actions and the overflow button pinned to the trailing edge. A long
- * metrics line ellipsizes rather than pushing the buttons off the card.
- */
 @Composable
 private fun RowFooter(
     state: ContentListRowUiState,

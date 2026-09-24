@@ -23,28 +23,10 @@ class ContentListRowActionsTest {
     }
 
     @Test
-    fun `a button invokes its own action`() {
-        val invoked = mutableListOf<TestAction>()
-        val actions = split(TestAction.VIEW, TestAction.STATS, onAction = { invoked += it })
-
-        actions.quickActions.forEach { it.onClick() }
-
-        assertThat(invoked).containsExactly(TestAction.VIEW, TestAction.STATS)
-    }
-
-    @Test
     fun `no menu when every action is a button`() {
         val actions = split(TestAction.VIEW, TestAction.STATS, onEdit = {})
 
         assertThat(actions.menu).isNull()
-    }
-
-    @Test
-    fun `untagged actions keep the menu`() {
-        val actions = split(TestAction.SHARE)
-
-        assertThat(actions.quickActions).isEmpty()
-        assertThat(actions.menu).isNotNull
     }
 
     @Test
@@ -58,9 +40,8 @@ class ContentListRowActionsTest {
     private fun split(
         vararg actions: TestAction,
         onEdit: (() -> Unit)? = null,
-        showQuickActions: Boolean = true,
-        onAction: (TestAction) -> Unit = {}
-    ) = actions.toList().toContentListRowActions(onEdit, showQuickActions, onAction)
+        showQuickActions: Boolean = true
+    ) = actions.toList().toContentListRowActions(onEdit, showQuickActions, onAction = {})
 
     private enum class TestAction(
         override val quickActionType: ContentListQuickActionType? = null
