@@ -123,7 +123,7 @@ private fun AnimatedDetails(
             verticalArrangement = Arrangement.spacedBy(ROW_GAP),
             modifier = Modifier.padding(horizontal = ROWS_H_PADDING)
         ) {
-            InfoRow(Icons.Outlined.Schedule, R.string.comment_author_info_date, date)
+            InfoRow(Icons.Outlined.Schedule, R.string.comment_author_info_posted_at, date)
             InfoRow(
                 icon = Icons.Outlined.Language,
                 labelRes = R.string.comment_author_info_website,
@@ -143,7 +143,7 @@ private fun AnimatedDetails(
                             )
                         }
                     }
-                    InfoRow(Icons.Outlined.Lan, R.string.comment_author_info_ip_address, ipAddress)
+                    InfoRow(Icons.Outlined.Lan, R.string.comment_author_info_posted_from, ipAddress)
                 }
             }
         }
