@@ -2,7 +2,9 @@ package org.wordpress.android.ui.comments.unified
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -118,6 +120,10 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     // disabled and enable once confirmed, rather than flashing enabled then greying out.
     private var canModerate = false
 
+    // Resolved once and shared by the moderation controls and the edit-context fetch: separate calls
+    // would each fetch on a cold cache, and could disagree if only one of those fetches failed.
+    private lateinit var canModerateResult: Deferred<Boolean>
+
     // Fetched the first time the author sheet opens rather than with the comment: few people open
     // it, and the detail pager would otherwise pay for it on every comment it pages past.
     private var authorExtrasJob: Job? = null
@@ -134,13 +140,14 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         this.remoteCommentId = remoteCommentId
         this.noteId = noteId
         this.isRedesignEnabled = isRedesignEnabled
+        canModerateResult = viewModelScope.async(bgDispatcher) { siteCapabilityChecker.canModerateComments(site) }
         loadComment()
         loadModerationCapability()
     }
 
     private fun loadModerationCapability() {
         launch {
-            canModerate = withContext(bgDispatcher) { siteCapabilityChecker.canModerateComments(site) }
+            canModerate = canModerateResult.await()
             _uiState.value?.let { _uiState.value = it.copy(canModerate = canModerate) }
         }
     }
@@ -194,7 +201,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
             val loaded = withContext(bgDispatcher) {
                 // The redesign's author sheet shows the email and IP, which need the edit context.
                 // The capability is session-cached, so this rarely costs a request.
-                val withEditContext = isRedesignEnabled && siteCapabilityChecker.canModerateComments(site)
+                val withEditContext = isRedesignEnabled && canModerateResult.await()
                 val rs = commentsRsDataSource.getComment(site, remoteCommentId, withEditContext)
                 // Independent of the cache lookups below, so it runs alongside them rather than
                 // adding its round trips to the first paint.

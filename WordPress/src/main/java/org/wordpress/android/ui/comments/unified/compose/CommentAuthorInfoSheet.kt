@@ -13,10 +13,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AlternateEmail
 import androidx.compose.material.icons.outlined.Forum
@@ -73,21 +74,16 @@ fun CommentAuthorInfoSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
         containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-        // The band starts behind the handle, keeping the stock handle and its accessibility actions.
-        dragHandle = {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.primaryContainer)
-            ) {
-                BottomSheetDefaults.DragHandle(color = MaterialTheme.colorScheme.onPrimaryContainer)
-            }
-        }
+        // HeaderBand draws the handle. In the slot, the avatar straddling the band's edge would have to
+        // reach above this scrolling column, and a scroll container clips anything that does.
+        dragHandle = null
     ) {
-        Column(modifier = Modifier.padding(bottom = SHEET_BOTTOM_PADDING)) {
-            // Outside the animated column: animateContentSize clips, and the avatar draws above
-            // this column's top edge.
+        // Scrolls because a long bio, large fonts or landscape can make the sheet taller than the window.
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(bottom = SHEET_BOTTOM_PADDING)
+        ) {
             HeaderBand(authorAvatarUrl, info.commentCount)
             AnimatedDetails(authorName, info)
         }
@@ -132,27 +128,28 @@ private fun AnimatedDetails(authorName: String, info: AuthorInfoUiState) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HeaderBand(avatarUrl: String, commentCount: Int?) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(BAND_EXTENSION + AVATAR_RING_SIZE / 2)
+            .height(BAND_HEIGHT + AVATAR_RING_SIZE / 2)
     ) {
         Box(
+            contentAlignment = Alignment.TopCenter,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(BAND_EXTENSION)
+                .height(BAND_HEIGHT)
                 .background(MaterialTheme.colorScheme.primaryContainer)
-        )
-        // Taller than this box (it reaches up behind the handle), so it opts out of the height constraint,
-        // pinned to the top so the offset lines it up.
+        ) {
+            BottomSheetDefaults.DragHandle(color = MaterialTheme.colorScheme.onPrimaryContainer)
+        }
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .padding(start = SHEET_H_PADDING)
-                .offset(y = BAND_EXTENSION - AVATAR_RING_SIZE / 2)
-                .wrapContentSize(align = Alignment.TopStart, unbounded = true)
+                .offset(y = BAND_HEIGHT - AVATAR_RING_SIZE / 2)
                 .size(AVATAR_RING_SIZE)
                 .background(MaterialTheme.colorScheme.surfaceContainerLow, CircleShape)
         ) {
@@ -170,7 +167,7 @@ private fun HeaderBand(avatarUrl: String, commentCount: Int?) {
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(end = CHIP_END_PADDING)
-                    .offset(y = BAND_EXTENSION - CHIP_HEIGHT / 2)
+                    .offset(y = BAND_HEIGHT - CHIP_HEIGHT / 2)
             )
         }
     }
@@ -340,8 +337,7 @@ private fun InfoRow(
 private val SHEET_H_PADDING = 24.dp
 private val SHEET_BOTTOM_PADDING = 24.dp
 
-// The drag handle slot is 48dp, so this brings the band to the design's 64dp.
-private val BAND_EXTENSION = 16.dp
+private val BAND_HEIGHT = 64.dp
 private val AVATAR_SIZE = 72.dp
 private val AVATAR_RING_SIZE = 80.dp
 
