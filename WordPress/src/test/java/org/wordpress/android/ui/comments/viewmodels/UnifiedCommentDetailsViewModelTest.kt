@@ -678,7 +678,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `the redesign fetches the parent and reply count`() = test {
-        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID))
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID, withEditContext = true))
             .thenReturn(RS_COMMENT.copy(parentId = PARENT_COMMENT_ID))
 
         viewModel.start(site, REMOTE_COMMENT_ID, isRedesignEnabled = true)
@@ -686,6 +686,58 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
 
         verify(commentsRsDataSource).getComment(site, PARENT_COMMENT_ID)
         verify(commentsRsDataSource).fetchReplyCount(site, REMOTE_COMMENT_ID)
+    }
+
+    @Test
+    fun `the redesign asks non-moderators for the view context only`() = test {
+        whenever(siteCapabilityChecker.canModerateComments(site)).thenReturn(false)
+
+        viewModel.start(site, REMOTE_COMMENT_ID, isRedesignEnabled = true)
+        advanceUntilIdle()
+
+        verify(commentsRsDataSource).getComment(site, REMOTE_COMMENT_ID, withEditContext = false)
+    }
+
+    @Test
+    fun `opening the author sheet loads the comment count and bio once`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID, withEditContext = true))
+            .thenReturn(RS_COMMENT.copy(authorId = AUTHOR_USER_ID, authorEmail = "a@b.c"))
+        whenever(commentsRsDataSource.fetchAuthorCommentCount(site, "a@b.c")).thenReturn(12)
+        whenever(commentsRsDataSource.fetchUserBio(site, AUTHOR_USER_ID)).thenReturn("<p>Photographer</p>")
+        viewModel.start(site, REMOTE_COMMENT_ID, isRedesignEnabled = true)
+        advanceUntilIdle()
+
+        viewModel.onAuthorInfoShown()
+        advanceUntilIdle()
+        viewModel.onAuthorInfoShown()
+        advanceUntilIdle()
+
+        val state = uiStates.last()
+        assertThat(state.authorInfo.commentCount).isEqualTo(12)
+        assertThat(state.authorInfo.bio).isEqualTo("Photographer")
+        assertThat(state.authorInfo.isRegistered).isTrue
+        verify(commentsRsDataSource, times(1)).fetchAuthorCommentCount(site, "a@b.c")
+    }
+
+    @Test
+    fun `a guest author gets no bio request and a pingback no account label`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID, withEditContext = true))
+            .thenReturn(RS_COMMENT)
+        viewModel.start(site, REMOTE_COMMENT_ID, isRedesignEnabled = true)
+        advanceUntilIdle()
+
+        viewModel.onAuthorInfoShown()
+        advanceUntilIdle()
+
+        assertThat(uiStates.last().authorInfo.isRegistered).isFalse
+        verify(commentsRsDataSource, never()).fetchUserBio(any(), any())
+
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID, withEditContext = true))
+            .thenReturn(RS_COMMENT.copy(isPingback = true))
+        viewModel.onCommentEdited()
+        advanceUntilIdle()
+
+        assertThat(uiStates.last().authorInfo.isRegistered).isNull()
     }
 
     @Test
@@ -928,6 +980,8 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
             postId = REMOTE_POST_ID,
             status = APPROVED
         )
+
+        private const val AUTHOR_USER_ID = 5L
 
         private val UNAPPROVED_RS_COMMENT = RS_COMMENT.copy(status = UNAPPROVED)
 

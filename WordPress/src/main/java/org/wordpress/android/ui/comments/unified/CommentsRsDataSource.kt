@@ -27,6 +27,7 @@ import java.util.Date
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
+import uniffi.wp_api.CommentType
 import uniffi.wp_api.CommentStatus as RsCommentStatus
 
 /**
@@ -71,7 +72,13 @@ class CommentsRsDataSource @Inject constructor(
          * onto [CommentStatus.ALL], whose label is the word "All"; this keeps the real value so
          * a custom status can be shown verbatim.
          */
-        val rawStatus: String = ""
+        val rawStatus: String = "",
+        val authorUrl: String = "",
+        // Edit context only (see [getComment]); blank otherwise.
+        val authorEmail: String = "",
+        val authorIp: String = "",
+        /** A pingback or trackback, whose "author" is the linking site rather than a person. */
+        val isPingback: Boolean = false
     )
 
     /** Result of a write request, carrying the server error message when one is available. */
@@ -101,8 +108,27 @@ class CommentsRsDataSource @Inject constructor(
         ) : RsCommentsPageResult
     }
 
-    suspend fun getComment(site: SiteModel, commentId: Long): RsComment? = safe(errorValue = null) {
+    /**
+     * [withEditContext] (moderators only) adds the author's email and IP; if the server refuses it, this
+     * falls back to the view context rather than failing the load.
+     */
+    suspend fun getComment(
+        site: SiteModel,
+        commentId: Long,
+        withEditContext: Boolean = false
+    ): RsComment? = safe(errorValue = null) {
         val client = wpApiClientProvider.getWpApiClient(site)
+        if (withEditContext) {
+            when (
+                val result = client.request {
+                    it.comments().retrieveWithEditContext(commentId, CommentRetrieveParams())
+                }
+            ) {
+                is WpRequestResult.Success -> return@safe result.response.data.toRsComment()
+                is WpRequestResult.WpError -> Unit
+                else -> return@safe null
+            }
+        }
         when (
             val result = client.request {
                 it.comments().retrieveWithViewContext(commentId, CommentRetrieveParams())
@@ -357,15 +383,26 @@ class CommentsRsDataSource @Inject constructor(
         }
 
     /**
-     * How many replies a comment has, or null when the count could not be determined. Read from
-     * the `X-WP-Total` header rather than the body, so only one row is transferred.
+     * How many replies a comment has, or null when the count could not be determined.
      */
-    suspend fun fetchReplyCount(site: SiteModel, commentId: Long): Int? = safe(errorValue = null) {
-        val params = CommentListParams(
-            perPage = REPLY_COUNT_PAGE_SIZE,
-            parent = listOf(commentId),
-            status = WpApiParamCommentsStatus.Any
-        )
+    suspend fun fetchReplyCount(site: SiteModel, commentId: Long): Int? = countComments(
+        site,
+        CommentListParams(perPage = COUNT_PAGE_SIZE, parent = listOf(commentId), status = WpApiParamCommentsStatus.Any)
+    )
+
+    /** Approved comments from [authorEmail], as wp-admin counts them; filtering by email needs moderation. */
+    suspend fun fetchAuthorCommentCount(site: SiteModel, authorEmail: String): Int? =
+        countComments(site, CommentListParams(perPage = COUNT_PAGE_SIZE, authorEmail = authorEmail))
+
+    /** Null when unreadable: core only exposes users with published posts unless the caller can list users. */
+    suspend fun fetchUserBio(site: SiteModel, userId: Long): String? = safe(errorValue = null) {
+        val result = wpApiClientProvider.getWpApiClient(site)
+            .request { it.users().retrieveWithViewContext(userId) }
+        (result as? WpRequestResult.Success)?.response?.data?.description
+    }
+
+    /** Reads the `X-WP-Total` header rather than the body, so only one row is transferred. */
+    private suspend fun countComments(site: SiteModel, params: CommentListParams): Int? = safe(errorValue = null) {
         val result = wpApiClientProvider.getWpApiClient(site)
             .request { it.comments().listWithViewContext(params) }
         (result as? WpRequestResult.Success)?.response?.headerMap?.wpTotal()?.toInt()
@@ -393,7 +430,7 @@ class CommentsRsDataSource @Inject constructor(
 
     companion object {
         internal const val COMMENTS_PAGE_SIZE = 30u
-        private const val REPLY_COUNT_PAGE_SIZE = 1u
+        private const val COUNT_PAGE_SIZE = 1u
         private const val UNSPAM_STATUS = "unspam"
         private const val UNTRASH_STATUS = "untrash"
         private const val MAX_TITLES_PER_REQUEST = 100
@@ -415,11 +452,35 @@ internal fun CommentWithViewContext.toRsComment() = CommentsRsDataSource.RsComme
     url = link,
     postId = post,
     status = status.toAppCommentStatus(),
-    rawStatus = status.rawValue()
+    rawStatus = status.rawValue(),
+    authorUrl = authorUrl,
+    isPingback = commentType.isPingback()
 )
 
-internal fun CommentWithViewContext.pickAvatarUrl(): String =
-    (authorAvatarUrls[UserAvatarSize.Size96] ?: authorAvatarUrls.values.firstOrNull { !it.isNullOrEmpty() }).orEmpty()
+private fun CommentWithEditContext.toRsComment() = CommentsRsDataSource.RsComment(
+    remoteCommentId = id,
+    authorId = author,
+    parentId = parent,
+    authorName = authorName,
+    authorAvatarUrl = authorAvatarUrls.pickAvatarUrl(),
+    dateGmt = dateGmt ?: Date(0),
+    contentHtml = content.rendered,
+    url = link,
+    postId = post,
+    status = status.toAppCommentStatus(),
+    rawStatus = status.rawValue(),
+    authorUrl = authorUrl,
+    authorEmail = authorEmail,
+    authorIp = authorIp,
+    isPingback = commentType.isPingback()
+)
+
+private fun CommentType.isPingback() = this == CommentType.Pingback || this == CommentType.Trackback
+
+internal fun CommentWithViewContext.pickAvatarUrl(): String = authorAvatarUrls.pickAvatarUrl()
+
+private fun Map<UserAvatarSize, String?>.pickAvatarUrl(): String =
+    (this[UserAvatarSize.Size96] ?: values.firstOrNull { !it.isNullOrEmpty() }).orEmpty()
 
 internal fun CommentStatus.toRsCommentStatus(): RsCommentStatus = when (this) {
     CommentStatus.APPROVED -> RsCommentStatus.Approved

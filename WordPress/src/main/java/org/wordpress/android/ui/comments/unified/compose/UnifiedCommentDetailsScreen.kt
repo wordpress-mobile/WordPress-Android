@@ -325,6 +325,7 @@ private fun RedesignedCommentDetailsContent(
     onReplyClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var showAuthorInfo by rememberSaveable { mutableStateOf(false) }
     Column(
         modifier = modifier
             .nestedScroll(rememberNestedScrollInteropConnection())
@@ -357,6 +358,7 @@ private fun RedesignedCommentDetailsContent(
                 postTitle = uiState.postTitle,
                 datePublished = uiState.datePublished,
                 onPostTitleClick = actions.onPostTitleClick,
+                onAuthorClick = { showAuthorInfo = true },
                 modifier = Modifier.padding(top = REDESIGN_HEADER_GAP)
             )
         }
@@ -389,6 +391,17 @@ private fun RedesignedCommentDetailsContent(
                     .offset(x = -REACTION_ROW_INSET)
             )
         }
+    }
+    if (showAuthorInfo) {
+        // Keyed on the sheet being shown rather than the tap, so a sheet restored after process
+        // death still loads its count and bio.
+        LaunchedEffect(Unit) { actions.onAuthorInfoShown() }
+        CommentAuthorInfoSheet(
+            authorName = uiState.authorName,
+            authorAvatarUrl = uiState.authorAvatarUrl,
+            info = uiState.authorInfo,
+            onDismiss = { showAuthorInfo = false }
+        )
     }
 }
 
@@ -528,6 +541,7 @@ private fun UnifiedCommentDetailsScreenPreview() {
                 onCopyLinkClick = {},
                 onShareLinkClick = {},
                 onPostTitleClick = {},
+                onAuthorInfoShown = {},
                 onSendReply = {}
             )
         )
