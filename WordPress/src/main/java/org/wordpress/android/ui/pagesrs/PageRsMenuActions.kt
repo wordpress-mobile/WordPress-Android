@@ -19,7 +19,8 @@ internal fun computePageMenuActions(
     isPostsPage: Boolean,
     hasPassword: Boolean,
     isBlazeEligibleSite: Boolean,
-    canManageHomepage: Boolean
+    canManageHomepage: Boolean,
+    canViewStats: Boolean
 ): List<PageRsMenuAction> = when (status) {
     is PostStatus.Publish, is PostStatus.Private -> buildList {
         add(PageRsMenuAction.VIEW)
@@ -33,6 +34,7 @@ internal fun computePageMenuActions(
         if (isBlazeEligibleSite && !hasPassword && status is PostStatus.Publish) {
             add(PageRsMenuAction.BLAZE)
         }
+        if (canViewStats) add(PageRsMenuAction.STATS)
         if (!isHomepage) add(PageRsMenuAction.TRASH)
     }
     is PostStatus.Draft, is PostStatus.Pending -> buildList {

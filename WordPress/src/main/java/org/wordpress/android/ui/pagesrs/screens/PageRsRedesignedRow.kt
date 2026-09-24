@@ -69,9 +69,11 @@ private fun PageRsContentCard(
         siteEditorTitle = stringResource(R.string.virtual_homepage_title),
         siteEditorSubtitle = stringResource(R.string.virtual_homepage_subtitle)
     )
-    // No page action is a footer button yet and pages pass no Edit, so every action stays in the
-    // menu and the row keeps its footer-less layout.
-    val actions = page.actions.toContentListRowActions(onEdit = null, onAction = onMenuAction)
+    // Tapping a trashed page offers to restore it and the Site Editor row opens the Site Editor, so
+    // neither gets an Edit button.
+    val isSiteEditor = (item as? PageRsListItem.Virtual)?.kind == PageRsListItem.Virtual.Kind.SITE_EDITOR
+    val onEdit = if (page.isTrashed || isSiteEditor) null else onClick
+    val actions = page.actions.toContentListRowActions(onEdit = onEdit, onAction = onMenuAction)
     val leading: (@Composable () -> Unit)? = (item as? PageRsListItem.Virtual)?.kind?.let { kind ->
         {
             Icon(

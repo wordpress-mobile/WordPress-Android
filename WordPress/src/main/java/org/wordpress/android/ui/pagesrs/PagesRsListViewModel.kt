@@ -861,6 +861,14 @@ internal class PagesRsListViewModel @Inject constructor(
             PageRsMenuAction.MOVE_TO_DRAFT -> movePageToDraft(remotePageId)
             PageRsMenuAction.DUPLICATE -> duplicatePage(site, remotePageId)
             PageRsMenuAction.BLAZE -> bridgeAndPromote(site, remotePageId)
+            PageRsMenuAction.STATS -> _events.trySend(
+                PageRsListEvent.ViewStats(
+                    site = site,
+                    pageId = remotePageId,
+                    title = page?.title.orEmpty(),
+                    url = page?.link.orEmpty()
+                )
+            )
             PageRsMenuAction.TRASH ->
                 _pendingConfirmation.value = PageRsListConfirmation.Trash(remotePageId)
             PageRsMenuAction.DELETE_PERMANENTLY ->
@@ -1659,7 +1667,9 @@ internal class PagesRsListViewModel @Inject constructor(
                 isPostsPage = pageForPosts != 0L && page.remoteId == pageForPosts,
                 hasPassword = page.hasPassword,
                 isBlazeEligibleSite = isBlazeEligibleSite,
-                canManageHomepage = canManageHomepage
+                canManageHomepage = canManageHomepage,
+                // Per-page stats come from the same WordPress.com endpoint as the view counts.
+                canViewStats = canFetchViewCounts
             )
         }
         if (actions == page.actions) return this
@@ -1831,6 +1841,7 @@ private fun PageRsMenuAction.toAnalyticsAction(): String = when (this) {
     PageRsMenuAction.SHARE -> "share"
     PageRsMenuAction.COPY_URL -> "copy_url"
     PageRsMenuAction.BLAZE -> "promote_with_blaze"
+    PageRsMenuAction.STATS -> "stats"
     PageRsMenuAction.TRASH -> "move_to_bin"
     PageRsMenuAction.DELETE_PERMANENTLY -> "delete_permanently"
 }
