@@ -30,7 +30,7 @@ enum class ContentListQuickActionType(@StringRes val labelResId: Int) {
 }
 
 /** One footer button on a [ContentListRow] or [ContentListHeroRow]. */
-data class ContentListQuickAction(
+class ContentListQuickAction(
     val type: ContentListQuickActionType,
     val onClick: () -> Unit
 )
@@ -63,4 +63,15 @@ fun <A : RsMenuAction> List<A>.toContentListRowActions(
         { ContentListOverflowMenu(actions = menuActions.toContentListMenuActions(onAction)) }
     }
     return ContentListRowActions(quickActions = quickActions, menu = menu)
+}
+
+/** Projects a row's actions onto what [ContentListOverflowMenu] renders. */
+private fun <A : RsMenuAction> List<A>.toContentListMenuActions(
+    onAction: (A) -> Unit
+): List<ContentListMenuAction> = map { action ->
+    ContentListMenuAction(
+        labelResId = action.labelResId,
+        iconResId = action.iconResId,
+        isDestructive = action.isDestructive
+    ) { onAction(action) }
 }

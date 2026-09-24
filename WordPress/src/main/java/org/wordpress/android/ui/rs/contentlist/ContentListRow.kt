@@ -507,8 +507,8 @@ private fun FeaturedImage(
 
 /**
  * The text column with the overflow button beside it, and an optional [trailing] slot between them
- * for the compact row's thumbnail. With [quickActions] the button moves down into [RowFooter]
- * instead.
+ * for the compact row's thumbnail. When [actions] has quick actions, the button moves down into
+ * [RowFooter] instead.
  *
  * Shared by both row shapes so the button lands the same distance from the card edge on every row -
  * they drifted apart once already, which is how the hero's button ended up 14dp further in.
@@ -524,7 +524,6 @@ private fun RowTextAndMenu(
     leading: (@Composable () -> Unit)?,
     trailing: @Composable () -> Unit = {}
 ) {
-    val menu = actions.menu
     val hasFooter = actions.quickActions.isNotEmpty()
     Column {
         Row(
@@ -533,7 +532,7 @@ private fun RowTextAndMenu(
                 top = padding,
                 // The overflow button carries its own inset, so the card supplies none on that edge;
                 // without a menu beside the text the card pads itself as usual.
-                end = if (menu == null || hasFooter) padding else 0.dp,
+                end = if (actions.menu == null || hasFooter) padding else 0.dp,
                 // The footer's buttons carry their own inset too.
                 bottom = if (hasFooter) 0.dp else padding
             ),
@@ -553,7 +552,7 @@ private fun RowTextAndMenu(
                 )
             }
             trailing()
-            if (!hasFooter) menu?.invoke()
+            if (!hasFooter) actions.menu?.invoke()
         }
         if (hasFooter) {
             RowFooter(

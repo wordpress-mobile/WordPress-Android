@@ -71,10 +71,11 @@ private fun PageRsContentCard(
     )
     // Tapping a trashed page offers to restore it and the Site Editor row opens the Site Editor, so
     // neither gets an Edit button.
-    val isSiteEditor = (item as? PageRsListItem.Virtual)?.kind == PageRsListItem.Virtual.Kind.SITE_EDITOR
+    val virtualKind = (item as? PageRsListItem.Virtual)?.kind
+    val isSiteEditor = virtualKind == PageRsListItem.Virtual.Kind.SITE_EDITOR
     val onEdit = if (page.isTrashed || isSiteEditor) null else onClick
     val actions = page.actions.toContentListRowActions(onEdit = onEdit, onAction = onMenuAction)
-    val leading: (@Composable () -> Unit)? = (item as? PageRsListItem.Virtual)?.kind?.let { kind ->
+    val leading: (@Composable () -> Unit)? = virtualKind?.let { kind ->
         {
             Icon(
                 imageVector = kind.icon(),

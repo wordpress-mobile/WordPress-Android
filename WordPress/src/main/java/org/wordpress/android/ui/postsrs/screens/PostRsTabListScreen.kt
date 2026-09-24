@@ -307,11 +307,7 @@ private fun RedesignedRow(
         label = "content list row density"
     ) { isHero ->
         if (isHero) {
-            ContentListHeroRow(
-                state = state,
-                onClick = onClick,
-                actions = actions
-            )
+            ContentListHeroRow(state = state, onClick = onClick, actions = actions)
         } else {
             ContentListRow(
                 state = state,
