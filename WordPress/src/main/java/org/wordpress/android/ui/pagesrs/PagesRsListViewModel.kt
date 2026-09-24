@@ -5,13 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,10 +18,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Semaphore
-import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -42,25 +36,34 @@ import org.wordpress.android.fluxc.store.EditorThemeStore.OnEditorThemeChanged
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.newstats.datasource.PostViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.posts.AuthorFilterSelection
-import org.wordpress.android.ui.postsrs.PostRsErrorUtils
-import org.wordpress.android.ui.postsrs.SnackbarMessage
-import org.wordpress.android.ui.postsrs.data.FeaturedImageUrls
-import org.wordpress.android.ui.postsrs.data.PostRsRestClient
-import org.wordpress.android.ui.postsrs.data.WpServiceProvider
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.rs.RsCollectionPrefetch
+import org.wordpress.android.ui.rs.RsCollectionScope
+import org.wordpress.android.ui.rs.RsErrorUtils
+import org.wordpress.android.ui.rs.RsFeaturedImages
+import org.wordpress.android.ui.rs.RsFluxCBridge
 import org.wordpress.android.ui.rs.RsPostChangeListener
+import org.wordpress.android.ui.rs.RsReveal
+import org.wordpress.android.ui.rs.RsSnackbarMessage
 import org.wordpress.android.ui.rs.RsTabLoading
 import org.wordpress.android.ui.rs.RsTabRefreshJobs
+import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.RsUploadedPost
-import org.wordpress.android.ui.rs.toRsPostStatus
+import org.wordpress.android.ui.rs.RsViewCounts
+import org.wordpress.android.ui.rs.RsVisibleRows
+import org.wordpress.android.ui.rs.checkNetwork
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.MIN_SEARCH_QUERY_LENGTH
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.SEARCH_DEBOUNCE_MS
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
-import org.wordpress.android.ui.rs.contentlist.HERO_IMAGE_HEIGHT_DP
-import org.wordpress.android.ui.rs.contentlist.THUMBNAIL_SIZE_DP
+import org.wordpress.android.ui.rs.contentlist.toContentItemUiModel
+import org.wordpress.android.ui.rs.data.FeaturedImageUrls
+import org.wordpress.android.ui.rs.data.RsSiteRestClient
+import org.wordpress.android.ui.rs.data.WpServiceProvider
+import org.wordpress.android.ui.rs.sendWithRetry
+import org.wordpress.android.ui.rs.toRsPostStatus
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -87,12 +90,12 @@ internal class PagesRsListViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val serviceProvider: WpServiceProvider,
     private val dispatcher: Dispatcher,
-    private val restClient: PostRsRestClient,
+    private val restClient: RsSiteRestClient,
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,
     private val homepageSettings: PageRsHomepageSettings,
     private val blazeFeatureUtils: BlazeFeatureUtils,
-    private val fluxCBridge: PageRsFluxCBridge,
+    private val fluxCBridge: RsFluxCBridge,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val accountStore: AccountStore,
     private val appPrefsWrapper: AppPrefsWrapper,
@@ -102,8 +105,8 @@ internal class PagesRsListViewModel @Inject constructor(
     private val changeListener: RsPostChangeListener,
     private val statsDataSource: StatsDataSource,
 ) : ViewModel() {
-    private val _tabStates = MutableStateFlow<Map<PageRsListTab, PageTabUiState>>(emptyMap())
-    val tabStates: StateFlow<Map<PageRsListTab, PageTabUiState>> = _tabStates.asStateFlow()
+    private val _tabStates = MutableStateFlow<Map<PageRsListTab, RsTabUiState<PageRsListItem>>>(emptyMap())
+    val tabStates: StateFlow<Map<PageRsListTab, RsTabUiState<PageRsListItem>>> = _tabStates.asStateFlow()
 
     private val _isOpeningPage = MutableStateFlow(false)
     val isOpeningPage: StateFlow<Boolean> = _isOpeningPage.asStateFlow()
@@ -116,7 +119,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private var activeSearchTab = PageRsListTab.PUBLISHED
 
     private val collections = mutableMapOf<PageRsListTab, ObservableMetadataCollection>()
-    private var collectionsScope = createCollectionsScope()
+    private val collectionScope = RsCollectionScope(viewModelScope)
     private val initializingTabs = mutableSetOf<PageRsListTab>()
     private val userRefreshingTabs = mutableSetOf<PageRsListTab>()
     private val refreshJobs = RsTabRefreshJobs<PageRsListTab>()
@@ -126,60 +129,26 @@ internal class PagesRsListViewModel @Inject constructor(
 
     private var isScreenVisible = false
     private var hasDeferredChange = false
-    private var pendingReveal: PageRsReveal? = null
+    private var pendingReveal: RsReveal<PageRsListTab>? = null
 
     /** Tabs whose collection has completed at least one fetch, so an empty list means empty. */
     private val fetchedTabs = mutableSetOf<PageRsListTab>()
-    private val resolveImageJobs = mutableMapOf<PageRsListTab, Job>()
     private val resolveAuthorJobs = mutableMapOf<PageRsListTab, Job>()
     private var lastTrackedTab: PageRsListTab? = null
 
-    /**
-     * Outstanding view-count fetches, cancelled only at teardown.
-     *
-     * Deliberately not cancelled when the visible rows change: a cancelled fetch releases its
-     * in-flight claim without filling the cache, and the next visible set would skip those ids as
-     * "already in flight", stranding their rows on the loading skeleton with nothing left to
-     * resolve them. Volume is bounded by [visiblePageIds] instead.
-     */
-    private val metricJobs = mutableSetOf<Job>()
-
-    /**
-     * The rows on screen right now, per tab, so work queued for rows scrolled past can be dropped.
-     *
-     * Keyed by tab rather than held as one set: the pager composes the neighbouring tab during a
-     * drag, and its visible-row stream reports against that tab. A single field would be
-     * overwritten by the neighbour, stranding the active tab's queued fetches - they re-check this
-     * set once a permit frees and would find the wrong ids - and would later hand
-     * [retryMetricsForVisibleRows] another tab's ids after a refresh.
-     */
-    private val visiblePageIds = mutableMapOf<PageRsListTab, Set<Long>>()
-
-    /**
-     * Caps concurrent view-count requests across the whole screen.
-     *
-     * Shared rather than created per call: [onRowsVisible] fires on every visible-set change, so a
-     * per-call semaphore would cap each emission separately and a fling could still put a request
-     * in flight for every row it passed.
-     */
-    private val viewCountGate = Semaphore(MAX_CONCURRENT_VIEW_FETCHES)
-
-    /**
-     * View counts keyed by remote page id, so scrolling back to a row does not refetch it and a
-     * cache reload does not blank the number out. Only touched from the main dispatcher.
-     *
-     * A present key means "fetched"; a null value means the fetch came back with nothing usable.
-     * Rows distinguish the two so a failure clears the loading skeleton rather than pinning it.
-     */
-    private val viewCountCache = mutableMapOf<Long, Long?>()
-    private val inFlightViewCounts = mutableSetOf<Long>()
-
-    /**
-     * Featured media ids whose lookup came back without a URL. Rows use this to stop waiting: the
-     * fetch is not retried on its own, so without it they shimmer indefinitely. Cleared by a
-     * refresh, which is what gives a failed lookup another go.
-     */
-    private val unresolvableImageIds = mutableSetOf<Long>()
+    private val visiblePageIds = RsVisibleRows<PageRsListTab>()
+    private val viewCounts = RsViewCounts(
+        scope = collectionScope,
+        statsDataSource = statsDataSource,
+        visibleRows = visiblePageIds,
+        logTag = AppLog.T.PAGES,
+        onCountsChanged = ::applyMetrics,
+    )
+    private val featuredImages = RsFeaturedImages(
+        scope = viewModelScope,
+        restClient = restClient,
+        onImagesResolved = ::applyFeaturedImages,
+    )
 
     private val _density = MutableStateFlow(
         ContentListDensity.of(appPrefsWrapper.isContentListCondensed)
@@ -189,10 +158,10 @@ internal class PagesRsListViewModel @Inject constructor(
     private val _events = Channel<PageRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
-    private val _snackbarMessages = Channel<SnackbarMessage>(Channel.BUFFERED)
+    private val _snackbarMessages = Channel<RsSnackbarMessage>(Channel.BUFFERED)
     val snackbarMessages = _snackbarMessages.receiveAsFlow()
 
-    private val _revealRequests = Channel<PageRsReveal>(Channel.BUFFERED)
+    private val _revealRequests = Channel<RsReveal<PageRsListTab>>(Channel.BUFFERED)
     val revealRequests = _revealRequests.receiveAsFlow()
 
     private val _pendingConfirmation = MutableStateFlow<PageRsListConfirmation?>(null)
@@ -324,7 +293,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private fun onPageUploaded(upload: RsUploadedPost) {
         val status = upload.status.toRsPostStatus() ?: return
         val tab = PageRsListTab.entries.firstOrNull { status in it.statuses } ?: return
-        pendingReveal = PageRsReveal(tab, upload.remotePostId)
+        pendingReveal = RsReveal(tab, upload.remotePostId)
         emitPendingReveal()
     }
 
@@ -418,13 +387,13 @@ internal class PagesRsListViewModel @Inject constructor(
     @MainThread
     fun initTab(tab: PageRsListTab) {
         val site = this.site ?: return
-        if (collections.containsKey(tab) || initializingTabs.contains(tab)) return
+        if (collections.containsKey(tab) || initializingTabs.contains(tab) || isOutsideSearch(tab)) return
 
         initializingTabs.add(tab)
         // Reset to a loading state so a retry after a failed init clears the prior error UI.
-        updateTabUiState(tab) { PageTabUiState(isLoading = true) }
+        updateTabUiState(tab) { RsTabUiState(isLoading = true) }
 
-        launchCollectionJob {
+        collectionScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
                 val collection = createCollection(site, tab)
@@ -439,14 +408,18 @@ internal class PagesRsListViewModel @Inject constructor(
                 AppLog.e(AppLog.T.PAGES, "Failed to init RS page list tab", e)
                 initializingTabs.remove(tab)
                 updateTabUiState(tab) {
-                    PageTabUiState(
+                    RsTabUiState(
                         error = friendlyErrorMessage(e),
-                        isAuthError = PostRsErrorUtils.isAuthError(e)
+                        isAuthError = RsErrorUtils.isAuthError(e)
                     )
                 }
             }
         }
     }
+
+    /** While searching, only the searched tab gets a collection, and only once the query is long enough. */
+    private fun isOutsideSearch(tab: PageRsListTab): Boolean = _isSearchActive.value &&
+        (tab != activeSearchTab || _searchQuery.value.length < MIN_SEARCH_QUERY_LENGTH)
 
     /**
      * Creates the observable collection for [tab]. If the calling job is cancelled while the
@@ -489,29 +462,12 @@ internal class PagesRsListViewModel @Inject constructor(
 
     private fun registerObservers(tab: PageRsListTab, collection: ObservableMetadataCollection) {
         collection.addDataObserver {
-            launchCollectionJob { loadItemsForTab(tab) }
+            collectionScope.launch { loadItemsForTab(tab) }
         }
         collection.addListInfoObserver {
-            launchCollectionJob { updateListInfoForTab(tab) }
+            collectionScope.launch { updateListInfoForTab(tab) }
         }
     }
-
-    /**
-     * Launches collection-scoped work in [collectionsScope] so [clearCollections] can cancel
-     * anything in flight before closing the underlying collections. Without this, a late
-     * failure (e.g. a refresh resuming on an already-closed collection) could write stale
-     * error state into the freshly rebuilt tabs.
-     */
-    private fun launchCollectionJob(block: suspend CoroutineScope.() -> Unit): Job =
-        collectionsScope.launch(block = block)
-
-    /**
-     * A child scope of [viewModelScope] (so it is torn down with the ViewModel) that can
-     * also be cancelled independently when the collections it serves are closed.
-     */
-    private fun createCollectionsScope() = CoroutineScope(
-        viewModelScope.coroutineContext + SupervisorJob(viewModelScope.coroutineContext.job)
-    )
 
     /** Seeds [isBlockBasedTheme] from the local cache and dispatches a remote refresh. */
     private fun refreshEditorTheme(site: SiteModel) {
@@ -548,16 +504,12 @@ internal class PagesRsListViewModel @Inject constructor(
             // and send one message for the whole fan-out. It has to be sent here rather than by
             // a nominated tab: a tab only offers a snackbar when it has content to keep, so
             // picking one that turned out to be empty would swallow the message entirely.
-            val anyTabKeepsItsPages = tabs.any { getTabUiState(it).pages.hasRealPages }
+            val anyTabKeepsItsPages = tabs.any { getTabUiState(it).items.hasRealPages }
             tabs.forEach { onRefreshFailed(it, e = null, showSnackbar = false) }
             if (anyTabKeepsItsPages) {
-                _snackbarMessages.trySend(
-                    SnackbarMessage(
-                        message = friendlyErrorMessage(null),
-                        actionLabel = resourceProvider.getString(R.string.retry),
-                        onAction = { refreshAllTabs() }
-                    )
-                )
+                _snackbarMessages.sendWithRetry(friendlyErrorMessage(null), resourceProvider = resourceProvider) {
+                    refreshAllTabs()
+                }
             }
             return
         }
@@ -583,7 +535,7 @@ internal class PagesRsListViewModel @Inject constructor(
             updateTabUiState(tab) {
                 copy(
                     isLoading = RsTabLoading.onRefreshStarted(
-                        hasItems = pages.hasRealPages,
+                        hasItems = items.hasRealPages,
                         hasFetched = tab in fetchedTabs
                     ),
                     error = null
@@ -610,7 +562,7 @@ internal class PagesRsListViewModel @Inject constructor(
         collection: ObservableMetadataCollection,
         isUserRefresh: Boolean
     ) {
-        val job = launchCollectionJob {
+        val job = collectionScope.launch {
             val fill = needsCompleteSet(tab)
             if (fill) fillingTabs.add(tab)
             @Suppress("TooGenericExceptionCaught")
@@ -620,8 +572,8 @@ internal class PagesRsListViewModel @Inject constructor(
                 fetchedTabs.add(tab)
                 // Drop only the "nothing to show" entries so a transient failure is retried,
                 // while numbers already fetched stay put.
-                viewCountCache.entries.removeAll { it.value == null }
-                unresolvableImageIds.clear()
+                viewCounts.invalidateUnresolved()
+                featuredImages.invalidateUnresolved()
                 userRefreshingTabs.remove(tab)
                 fillingTabs.remove(tab)
                 // Read the fetched items and end both progress states here rather than relying
@@ -695,12 +647,12 @@ internal class PagesRsListViewModel @Inject constructor(
         val outcome = RsCollectionPrefetch.loadRemainingPages(
             hasMorePages = firstPage.hasMorePages ?: (loaded >= pageSize),
             maxPages = MAX_FILL_PAGES,
-            shouldRetry = { !PostRsErrorUtils.isAuthError(it) }
+            shouldRetry = { !RsErrorUtils.isAuthError(it) }
         ) {
             val next = try {
                 withContext(Dispatchers.IO) { collection.loadNextPage() }
             } catch (e: FetchException) {
-                if (PostRsErrorUtils.isPastLastPage(e)) return@loadRemainingPages false
+                if (RsErrorUtils.isPastLastPage(e)) return@loadRemainingPages false
                 throw e
             }
             val pageWasFull = next.totalItems - loaded >= pageSize
@@ -727,8 +679,8 @@ internal class PagesRsListViewModel @Inject constructor(
         e?.let { AppLog.e(AppLog.T.PAGES, "Failed to refresh tab $tab", it) }
         userRefreshingTabs.remove(tab)
         val message = friendlyErrorMessage(e)
-        val authError = PostRsErrorUtils.isAuthError(e)
-        if (getTabUiState(tab).pages.hasRealPages) {
+        val authError = RsErrorUtils.isAuthError(e)
+        if (getTabUiState(tab).items.hasRealPages) {
             updateTabUiState(tab) {
                 copy(
                     isLoading = false,
@@ -738,17 +690,10 @@ internal class PagesRsListViewModel @Inject constructor(
                 )
             }
             if (showSnackbar) {
-                _snackbarMessages.trySend(
-                    SnackbarMessage(
-                        message = message,
-                        actionLabel = if (authError) null
-                            else resourceProvider.getString(R.string.retry),
-                        // Tapping retry is the user asking, so the result has to be reported -
-                        // a silent second failure looks like the button did nothing.
-                        onAction = if (authError) null
-                            else ({ refreshTab(tab, isUserRefresh = true) })
-                    )
-                )
+                // The user asked, so a second failure has to be reported.
+                _snackbarMessages.sendWithRetry(message, authError, resourceProvider) {
+                    refreshTab(tab, isUserRefresh = true)
+                }
             }
         } else {
             updateTabUiState(tab) {
@@ -773,14 +718,14 @@ internal class PagesRsListViewModel @Inject constructor(
 
         updateTabUiState(tab) { copy(isLoadingMore = true) }
 
-        launchCollectionJob {
+        collectionScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) { collection.loadNextPage() }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: FetchException) {
-                if (PostRsErrorUtils.isPastLastPage(e)) {
+                if (RsErrorUtils.isPastLastPage(e)) {
                     // The server never said how many pages there are, so the list info kept
                     // offering another; the refusal is the answer, not a failure to report.
                     updateTabUiState(tab) { copy(isLoadingMore = false, canLoadMore = false) }
@@ -796,7 +741,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private fun onLoadMoreFailed(tab: PageRsListTab, e: Exception) {
         AppLog.e(AppLog.T.PAGES, "Failed to load more for tab $tab", e)
         updateTabUiState(tab) { copy(isLoadingMore = false) }
-        _snackbarMessages.trySend(SnackbarMessage(friendlyErrorMessage(e)))
+        _snackbarMessages.trySend(RsSnackbarMessage(friendlyErrorMessage(e)))
     }
 
     /**
@@ -815,7 +760,7 @@ internal class PagesRsListViewModel @Inject constructor(
         }
 
         val page = _tabStates.value[tab]
-            ?.pages
+            ?.items
             ?.firstOrNull { it.remotePageId == remotePageId }
             ?.page
         when {
@@ -861,7 +806,7 @@ internal class PagesRsListViewModel @Inject constructor(
             @Suppress("TooGenericExceptionCaught")
             try {
                 val page = withContext(Dispatchers.IO) {
-                    fluxCBridge.fetchAndBridge(remotePageId, site, lastModified)
+                    fluxCBridge.fetchAndBridgePage(remotePageId, site, lastModified)
                 }
                 _events.trySend(PageRsListEvent.EditPage(site, page))
             } catch (e: CancellationException) {
@@ -869,7 +814,7 @@ internal class PagesRsListViewModel @Inject constructor(
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.PAGES, "Bridge page failed", e)
                 _snackbarMessages.trySend(
-                    SnackbarMessage(friendlyErrorMessage(e, R.string.page_not_found))
+                    RsSnackbarMessage(friendlyErrorMessage(e, R.string.page_not_found))
                 )
             } finally {
                 _isOpeningPage.value = false
@@ -957,8 +902,8 @@ internal class PagesRsListViewModel @Inject constructor(
         // Descendants are collected across pages of every status: a published descendant
         // reached through a draft intermediate must still be excluded to prevent a cycle.
         val allPages = _tabStates.value.values
-            .flatMap { state -> state.pages.map { it.page } }
-            .distinctBy { it.remotePageId }
+            .flatMap { state -> state.items.map { it.page } }
+            .distinctBy { it.remoteId }
         parentPickerExcludedIds = collectDescendantIds(remotePageId, allPages) + remotePageId
         _parentPickerQuery.value = ""
         _parentPicker.value = PageRsParentPickerState(
@@ -975,7 +920,7 @@ internal class PagesRsListViewModel @Inject constructor(
         // collection assigned for the latest query (see createParentPickerCollection for the
         // cancellation-safe cleanup that closes the half-built collection).
         parentPickerJob?.cancel()
-        parentPickerJob = launchCollectionJob {
+        parentPickerJob = collectionScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
                 val collection = createParentPickerCollection(site, query)
@@ -1032,10 +977,10 @@ internal class PagesRsListViewModel @Inject constructor(
 
     private fun registerParentPickerObservers(collection: ObservableMetadataCollection) {
         collection.addDataObserver {
-            launchCollectionJob { loadParentPickerItems() }
+            collectionScope.launch { loadParentPickerItems() }
         }
         collection.addListInfoObserver {
-            launchCollectionJob { updateParentPickerListInfo() }
+            collectionScope.launch { updateParentPickerListInfo() }
         }
     }
 
@@ -1045,12 +990,14 @@ internal class PagesRsListViewModel @Inject constructor(
         try {
             val nowLabel = resourceProvider.getString(R.string.rs_date_now)
             val (items, listInfo) = withContext(Dispatchers.IO) {
-                collection.loadItems().map { it.state.toPageUiModel(it.id, nowLabel) } to collection.listInfo()
+                val candidates = collection.loadItems()
+                    .map { it.state.toContentItemUiModel<PageRsMenuAction>(it.id, nowLabel) }
+                candidates to collection.listInfo()
             }
             val candidates = items
-                .filter { it.remotePageId !in parentPickerExcludedIds }
+                .filter { it.remoteId !in parentPickerExcludedIds }
                 .filter { it.status is PostStatus.Publish || it.status is PostStatus.Private }
-                .map { PageRsParentCandidate(it.remotePageId, it.title) }
+                .map { PageRsParentCandidate(it.remoteId, it.title) }
             // Don't publish an empty result while a load is still in progress: loadItems() emits
             // transient empty/partial sets during a refresh (and once before it starts), and
             // flipping to the "no results" / spinner state on each of those makes the list blink.
@@ -1088,7 +1035,7 @@ internal class PagesRsListViewModel @Inject constructor(
                 isLoadingMore = listInfo?.state == ListState.FETCHING_NEXT_PAGE,
                 canLoadMore = morePages,
                 error = if (isError && !hasData) {
-                    PostRsErrorUtils.friendlyErrorMessage(
+                    RsErrorUtils.friendlyErrorMessage(
                         null, null, resourceProvider, networkUtilsWrapper
                     )
                 } else null
@@ -1110,7 +1057,7 @@ internal class PagesRsListViewModel @Inject constructor(
         if (current == null || current.isLoadingMore || !current.canLoadMore) return
 
         updateParentPicker { copy(isLoadingMore = true) }
-        launchCollectionJob {
+        collectionScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) { collection.loadNextPage() }
@@ -1124,7 +1071,7 @@ internal class PagesRsListViewModel @Inject constructor(
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.PAGES, "Failed to load more parents", e)
                 updateParentPicker { copy(isLoadingMore = false) }
-                _snackbarMessages.trySend(SnackbarMessage(friendlyErrorMessage(e)))
+                _snackbarMessages.trySend(RsSnackbarMessage(friendlyErrorMessage(e)))
             }
         }
     }
@@ -1186,7 +1133,7 @@ internal class PagesRsListViewModel @Inject constructor(
         while (queue.isNotEmpty()) {
             val parentId = queue.removeFirst()
             childrenByParent[parentId]?.forEach { child ->
-                if (descendants.add(child.remotePageId)) queue.addLast(child.remotePageId)
+                if (descendants.add(child.remoteId)) queue.addLast(child.remoteId)
             }
         }
         return descendants
@@ -1266,7 +1213,7 @@ internal class PagesRsListViewModel @Inject constructor(
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.PAGES, "Move to draft failed", e)
                 _snackbarMessages.trySend(
-                    SnackbarMessage(friendlyErrorMessage(e, R.string.page_status_change_error))
+                    RsSnackbarMessage(friendlyErrorMessage(e, R.string.page_status_change_error))
                 )
             } finally {
                 updateTabUiState(PageRsListTab.TRASHED) { copy(isRefreshing = false) }
@@ -1311,18 +1258,18 @@ internal class PagesRsListViewModel @Inject constructor(
             when (val result = withContext(Dispatchers.IO) { operation() }) {
                 is PageRsHomepageSettings.Result.Success -> {
                     _snackbarMessages.trySend(
-                        SnackbarMessage(resourceProvider.getString(successMessageResId))
+                        RsSnackbarMessage(resourceProvider.getString(successMessageResId))
                     )
-                    launchCollectionJob { loadItemsForTab(PageRsListTab.PUBLISHED) }
+                    collectionScope.launch { loadItemsForTab(PageRsListTab.PUBLISHED) }
                 }
                 is PageRsHomepageSettings.Result.StaticHomepageDisabled ->
                     _snackbarMessages.trySend(
-                        SnackbarMessage(resourceProvider.getString(cannotSetMessageResId))
+                        RsSnackbarMessage(resourceProvider.getString(cannotSetMessageResId))
                     )
                 is PageRsHomepageSettings.Result.Error -> {
                     AppLog.w(AppLog.T.PAGES, "Homepage settings update failed: ${result.message}")
                     _snackbarMessages.trySend(
-                        SnackbarMessage(resourceProvider.getString(errorMessageResId))
+                        RsSnackbarMessage(resourceProvider.getString(errorMessageResId))
                     )
                 }
             }
@@ -1341,7 +1288,7 @@ internal class PagesRsListViewModel @Inject constructor(
             try {
                 val lastModified = findPage(remotePageId)?.lastModified
                 val pageToCopy = withContext(Dispatchers.IO) {
-                    fluxCBridge.fetchAndBridge(remotePageId, site, lastModified)
+                    fluxCBridge.fetchAndBridgePage(remotePageId, site, lastModified)
                 }
                 val newPage = postStore.instantiatePostModel(
                     site,
@@ -1359,7 +1306,7 @@ internal class PagesRsListViewModel @Inject constructor(
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.PAGES, "Duplicate page failed", e)
                 _snackbarMessages.trySend(
-                    SnackbarMessage(friendlyErrorMessage(e, R.string.page_not_found))
+                    RsSnackbarMessage(friendlyErrorMessage(e, R.string.page_not_found))
                 )
             } finally {
                 _isOpeningPage.value = false
@@ -1388,14 +1335,14 @@ internal class PagesRsListViewModel @Inject constructor(
     private suspend fun bridgePageOrNull(site: SiteModel, remotePageId: Long) = try {
         val lastModified = findPage(remotePageId)?.lastModified
         withContext(Dispatchers.IO) {
-            fluxCBridge.fetchAndBridge(remotePageId, site, lastModified)
+            fluxCBridge.fetchAndBridgePage(remotePageId, site, lastModified)
         }
     } catch (e: CancellationException) {
         throw e
     } catch (e: Exception) {
         AppLog.e(AppLog.T.PAGES, "Bridge page failed", e)
         _snackbarMessages.trySend(
-            SnackbarMessage(friendlyErrorMessage(e, R.string.page_not_found))
+            RsSnackbarMessage(friendlyErrorMessage(e, R.string.page_not_found))
         )
         null
     }
@@ -1424,14 +1371,14 @@ internal class PagesRsListViewModel @Inject constructor(
                 withContext(Dispatchers.IO) { operation(serviceProvider.getService(site).posts()) }
                 onSuccess()
                 _snackbarMessages.trySend(
-                    SnackbarMessage(resourceProvider.getString(successMessageResId))
+                    RsSnackbarMessage(resourceProvider.getString(successMessageResId))
                 )
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.PAGES, "$logTag failed", e)
                 _snackbarMessages.trySend(
-                    SnackbarMessage(friendlyErrorMessage(e, errorMessageResId))
+                    RsSnackbarMessage(friendlyErrorMessage(e, errorMessageResId))
                 )
             }
         }
@@ -1440,7 +1387,7 @@ internal class PagesRsListViewModel @Inject constructor(
     /** Searches all tab states for a [PageRsUiModel] matching [remotePageId]. */
     private fun findPage(remotePageId: Long): PageRsUiModel? {
         for (state in _tabStates.value.values) {
-            for (item in state.pages) {
+            for (item in state.items) {
                 if (item.remotePageId == remotePageId) return item.page
             }
         }
@@ -1451,20 +1398,13 @@ internal class PagesRsListViewModel @Inject constructor(
         AppLog.w(AppLog.T.PAGES, "No link for page $remotePageId")
     }
 
-    private fun checkNetwork(): Boolean {
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            _snackbarMessages.trySend(
-                SnackbarMessage(resourceProvider.getString(R.string.no_network_message))
-            )
-            return false
-        }
-        return true
-    }
+    private fun checkNetwork(): Boolean =
+        _snackbarMessages.checkNetwork(networkUtilsWrapper, resourceProvider)
 
     private fun friendlyErrorMessage(
         e: Exception?,
         defaultResId: Int? = null,
-    ): String = PostRsErrorUtils.friendlyErrorMessage(
+    ): String = RsErrorUtils.friendlyErrorMessage(
         e, defaultResId, resourceProvider, networkUtilsWrapper
     )
 
@@ -1479,7 +1419,7 @@ internal class PagesRsListViewModel @Inject constructor(
             val nowLabel = resourceProvider.getString(R.string.rs_date_now)
             val items = withContext(Dispatchers.IO) {
                 collection.loadItems().map { item ->
-                    item.state.toPageUiModel(item.id, nowLabel, showStatus = isSearch)
+                    item.state.toContentItemUiModel<PageRsMenuAction>(item.id, nowLabel, showStatus = isSearch)
                 }
             }
             val uiModels = mergeCachedFields(tab, items, isSearch)
@@ -1500,7 +1440,7 @@ internal class PagesRsListViewModel @Inject constructor(
             ).map { row -> row.withMenuActions(currentSite, isBlazeEligibleSite) }
             updateTabUiState(tab) {
                 copy(
-                    pages = rows,
+                    items = rows,
                     isLoading = RsTabLoading.onItemsLoaded(
                         wasLoading = isLoading,
                         hasItems = rows.hasRealPages
@@ -1510,7 +1450,7 @@ internal class PagesRsListViewModel @Inject constructor(
                 )
             }
             resolveAuthorNames(tab, uiModels)
-            resolveFeaturedImages(tab, uiModels)
+            site?.let { featuredImages.resolve(tab, it, uiModels) }
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
@@ -1527,62 +1467,30 @@ internal class PagesRsListViewModel @Inject constructor(
         items: List<PageRsUiModel>,
         isSearch: Boolean
     ): List<PageRsUiModel> {
-        val existingById = getTabUiState(tab).pages
+        val existingById = getTabUiState(tab).items
             .associate { it.remotePageId to it.page }
         return items.map { model ->
-            val existing = existingById[model.remotePageId]
-            var resolved = model
+            val existing = existingById[model.remoteId]
+            var resolved = featuredImages.carryOver(model, existing)
             if (model.authorId != 0L && model.authorId == existing?.authorId) {
                 resolved = resolved.copy(authorDisplayName = existing.authorDisplayName)
             }
-            if (model.featuredImageId != 0L && model.featuredImageId == existing?.featuredImageId) {
-                resolved = resolved.copy(featuredImage = existing.featuredImage)
-            }
             resolved.copy(
-                isFeaturedImageUnresolvable = model.featuredImageId in unresolvableImageIds,
                 // Read straight from the metrics cache: rebuilding from the collection would
                 // otherwise blank out numbers already fetched on every change it reports.
-                viewCount = viewCountCache[model.remotePageId],
+                viewCount = viewCounts.countFor(model.remoteId),
                 // Search mixes statuses into one list and view counts are only fetched for
                 // published pages, so skeletons there would never resolve.
                 areMetricsPending = expectsMetrics(tab) &&
                     !isSearch &&
-                    isMetricOutstanding(model.remotePageId)
+                    isMetricOutstanding(model.remoteId)
             )
         }
     }
 
-    /**
-     * Fetches featured image URLs for pages that have a non-zero
-     * [PageRsUiModel.featuredImageId] but no resolved URL yet, sized for
-     * both row shapes.
-     */
-    private fun resolveFeaturedImages(
-        tab: PageRsListTab,
-        pages: List<PageRsUiModel>
-    ) {
-        val site = this.site ?: return
-        val unresolvedIds = pages
-            .filter { it.featuredImageId != 0L && it.featuredImage == null }
-            .map { it.featuredImageId }
-            .distinct()
-        if (unresolvedIds.isEmpty()) return
-
-        resolveImageJobs[tab]?.cancel()
-        resolveImageJobs[tab] = viewModelScope.launch {
-            val images = withContext(Dispatchers.IO) {
-                restClient.fetchFeaturedImageUrls(
-                    site, unresolvedIds, THUMBNAIL_SIZE_DP, HERO_IMAGE_HEIGHT_DP
-                )
-            }
-            // Ids the lookup could not resolve stop their row waiting; ones that did resolve are
-            // no longer reported as unresolvable, so an id that failed once and later came back
-            // is not still written off.
-            unresolvableImageIds.removeAll(images.keys)
-            unresolvableImageIds.addAll(unresolvedIds.filterNot(images::containsKey))
-            updateTabUiState(tab) {
-                copy(pages = this.pages.map { item -> item.withResolvedFeaturedImage(images) })
-            }
+    private fun applyFeaturedImages(tab: PageRsListTab, images: Map<Long, FeaturedImageUrls>) {
+        updateTabUiState(tab) {
+            copy(items = items.map { it.withResolvedFeaturedImage(images) })
         }
     }
 
@@ -1612,7 +1520,7 @@ internal class PagesRsListViewModel @Inject constructor(
             }
             if (names.isEmpty()) return@launch
             updateTabUiState(tab) {
-                copy(pages = this.pages.map { item -> item.withResolvedAuthor(names) })
+                copy(items = this.items.map { item -> item.withResolvedAuthor(names) })
             }
         }
     }
@@ -1629,7 +1537,7 @@ internal class PagesRsListViewModel @Inject constructor(
         val next = ContentListDensity.of(!_density.value.isCondensed)
         _density.value = next
         appPrefsWrapper.isContentListCondensed = next.isCondensed
-        launchCollectionJob {
+        collectionScope.launch {
             // Re-map the rows so their pending flags match the new density before anything fetches.
             loadItemsForTab(tab)
             // Published is the only tab whose mapping depends on density, because it is the only
@@ -1659,22 +1567,20 @@ internal class PagesRsListViewModel @Inject constructor(
 
     /** Whether a view count is still expected for [pageId] but has not arrived. */
     private fun isMetricOutstanding(pageId: Long) =
-        canFetchViewCounts && !viewCountCache.containsKey(pageId)
+        canFetchViewCounts && viewCounts.isOutstanding(pageId)
 
     /**
-     * Fetches view counts for the rows currently on screen.
+     * Records the rows on screen and asks [RsViewCounts] for the counts they are missing.
      *
      * Driven by scroll position rather than by the page load because the stats API answers for one
-     * page at a time. Volume is held down by debouncing on the caller's side, a single
-     * [viewCountGate] shared across all calls, and re-checking the tab's visible rows once a permit is
-     * granted - not by cancelling earlier batches, which would strand rows on their skeletons.
+     * page at a time.
      */
     @MainThread
     fun onRowsVisible(tab: PageRsListTab, pageIds: List<Long>) {
         // Recorded before the guard, not after: a list opened condensed does not fetch, but it
         // still has to know what is on screen so that switching to comfortable can ask for it.
         // Otherwise retryMetricsForVisibleRows finds an empty set and the rows shimmer for good.
-        visiblePageIds[tab] = pageIds.toSet()
+        visiblePageIds.record(tab, pageIds)
         if (!expectsMetrics(tab) || isSearching) return
         fetchViewCounts(tab, pageIds)
     }
@@ -1683,66 +1589,9 @@ internal class PagesRsListViewModel @Inject constructor(
     private fun fetchViewCounts(tab: PageRsListTab, pageIds: List<Long>) {
         // The counts come from WordPress.com, so there is nothing to ask for without a bearer token.
         val hasAccessToken = !accountStore.accessToken.isNullOrEmpty()
-        val siteId = site?.siteId ?: return
-        val wanted = pageIds.filter {
-            !viewCountCache.containsKey(it) && it !in inFlightViewCounts
-        }
-        if (!canFetchViewCounts || !hasAccessToken || wanted.isEmpty()) return
-
-        track(viewModelScope.launch {
-            wanted.forEach { pageId ->
-                launch {
-                    viewCountGate.withPermit {
-                        // Re-checked after waiting for a permit rather than before queuing: by the
-                        // time a slot frees up the user may have scrolled well past this row, and
-                        // fetching it would spend a request on something off screen.
-                        if (pageId in visiblePageIds[tab].orEmpty()) {
-                            fetchViewCountFor(tab, siteId, pageId)
-                        }
-                    }
-                }
-            }
-        })
-    }
-
-    /** Keeps a job around so teardown can cancel it, and forgets it once it finishes. */
-    private fun track(job: Job) {
-        metricJobs.add(job)
-        job.invokeOnCompletion { metricJobs.remove(job) }
-    }
-
-    /**
-     * Fetches one page's view count.
-     *
-     * Metrics decorate the rows; the list is perfectly usable without them, so nothing in this path
-     * is allowed to take the screen down.
-     */
-    private suspend fun fetchViewCountFor(tab: PageRsListTab, siteId: Long, pageId: Long) {
-        // Re-checked here, not just when the batch was queued: ids waiting on [viewCountGate] are
-        // not yet recorded as in flight, so the same page can be queued twice and the first fetch
-        // can land before the second gets its permit.
-        if (viewCountCache.containsKey(pageId)) return
-        if (!inFlightViewCounts.add(pageId)) return
-        try {
-            // A null either way: the fetch failed, or it answered with nothing usable. Both mean
-            // the row has no number to show and should stop waiting for one.
-            @Suppress("TooGenericExceptionCaught")
-            val views = try {
-                val result = withContext(Dispatchers.IO) {
-                    statsDataSource.fetchPostViews(siteId = siteId, postId = pageId)
-                }
-                (result as? PostViewsDataResult.Success)?.data?.totalViews
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                AppLog.e(AppLog.T.PAGES, "Failed to fetch view count for page $pageId", e)
-                null
-            }
-            viewCountCache[pageId] = views
-            applyMetrics(tab, listOf(pageId))
-        } finally {
-            inFlightViewCounts.remove(pageId)
-        }
+        val siteId = site?.siteId
+        if (!canFetchViewCounts || !hasAccessToken || siteId == null) return
+        viewCounts.fetch(tab, siteId, pageIds)
     }
 
     /**
@@ -1751,7 +1600,7 @@ internal class PagesRsListViewModel @Inject constructor(
      */
     @MainThread
     private fun retryMetricsForVisibleRows(tab: PageRsListTab) {
-        val visible = visiblePageIds[tab].orEmpty()
+        val visible = visiblePageIds.visible(tab)
         if (visible.isEmpty()) return
         onRowsVisible(tab, visible.toList())
     }
@@ -1762,11 +1611,11 @@ internal class PagesRsListViewModel @Inject constructor(
         val touched = pageIds.toSet()
         updateTabUiState(tab) {
             copy(
-                pages = pages.map { item ->
+                items = items.map { item ->
                     if (item.remotePageId in touched) {
                         item.withPage(
                             item.page.copy(
-                                viewCount = viewCountCache[item.remotePageId],
+                                viewCount = viewCounts.countFor(item.remotePageId),
                                 // Mirrors the guard in loadItemsForTab: without it a late-landing
                                 // fetch could raise a skeleton over a search result.
                                 areMetricsPending = !isSearching &&
@@ -1806,8 +1655,8 @@ internal class PagesRsListViewModel @Inject constructor(
         } else {
             computePageMenuActions(
                 status = page.status,
-                isHomepage = pageOnFront != 0L && page.remotePageId == pageOnFront,
-                isPostsPage = pageForPosts != 0L && page.remotePageId == pageForPosts,
+                isHomepage = pageOnFront != 0L && page.remoteId == pageOnFront,
+                isPostsPage = pageForPosts != 0L && page.remoteId == pageForPosts,
                 hasPassword = page.hasPassword,
                 isBlazeEligibleSite = isBlazeEligibleSite,
                 canManageHomepage = canManageHomepage
@@ -1833,17 +1682,8 @@ internal class PagesRsListViewModel @Inject constructor(
     private fun PageRsListItem.withResolvedFeaturedImage(
         images: Map<Long, FeaturedImageUrls>
     ): PageRsListItem {
-        val image = images[page.featuredImageId]
-        val updated = when {
-            image != null -> page.copy(
-                featuredImage = image,
-                isFeaturedImageUnresolvable = false
-            )
-            page.featuredImageId in unresolvableImageIds ->
-                page.copy(isFeaturedImageUnresolvable = true)
-            else -> return this
-        }
-        return withPage(updated)
+        val updated = featuredImages.withImage(page, images)
+        return if (updated === page) this else withPage(updated)
     }
 
     private suspend fun updateListInfoForTab(tab: PageRsListTab) {
@@ -1871,9 +1711,9 @@ internal class PagesRsListViewModel @Inject constructor(
         if (!fetchingFirstPage) userRefreshingTabs.remove(tab)
 
         val isError = listInfo?.state == ListState.ERROR
-        val hasPages = getTabUiState(tab).pages.hasRealPages
+        val hasPages = getTabUiState(tab).items.hasRealPages
         val errorMessage = if (isError) {
-            PostRsErrorUtils.friendlyErrorMessage(null, null, resourceProvider, networkUtilsWrapper)
+            RsErrorUtils.friendlyErrorMessage(null, null, resourceProvider, networkUtilsWrapper)
         } else null
 
         if (isError && hasPages) {
@@ -1895,7 +1735,7 @@ internal class PagesRsListViewModel @Inject constructor(
                     isLoading = RsTabLoading.onListInfoChanged(
                         wasLoading = isLoading,
                         isFetchingFirstPage = fetchingFirstPage,
-                        hasItems = pages.hasRealPages,
+                        hasItems = items.hasRealPages,
                         hasFetched = tab in fetchedTabs
                     ),
                     isRefreshing = isUserRefresh && fetchingFirstPage,
@@ -1907,11 +1747,14 @@ internal class PagesRsListViewModel @Inject constructor(
         }
     }
 
-    private fun getTabUiState(tab: PageRsListTab): PageTabUiState {
-        return _tabStates.value[tab] ?: PageTabUiState(isLoading = true)
+    private fun getTabUiState(tab: PageRsListTab): RsTabUiState<PageRsListItem> {
+        return _tabStates.value[tab] ?: RsTabUiState(isLoading = true)
     }
 
-    private fun updateTabUiState(tab: PageRsListTab, update: PageTabUiState.() -> PageTabUiState) {
+    private fun updateTabUiState(
+        tab: PageRsListTab,
+        update: RsTabUiState<PageRsListItem>.() -> RsTabUiState<PageRsListItem>
+    ) {
         val current = getTabUiState(tab)
         val next = current.update()
         if (next == current) return
@@ -1919,10 +1762,8 @@ internal class PagesRsListViewModel @Inject constructor(
     }
 
     private fun clearCollections() {
-        // Cancel in-flight collection work first so nothing can write stale state
-        // (or touch a closed collection) after the teardown below.
-        collectionsScope.cancel()
-        collectionsScope = createCollectionsScope()
+        // Cancel in-flight work first so nothing touches the collections closed below.
+        collectionScope.reset()
         collections.values.forEach { it.close() }
         collections.clear()
         initializingTabs.clear()
@@ -1930,19 +1771,11 @@ internal class PagesRsListViewModel @Inject constructor(
         refreshJobs.clear()
         fillingTabs.clear()
         fetchedTabs.clear()
-        resolveImageJobs.values.forEach { it.cancel() }
-        resolveImageJobs.clear()
         resolveAuthorJobs.values.forEach { it.cancel() }
         resolveAuthorJobs.clear()
-        // Snapshot first: each job's completion handler removes it from metricJobs, and a job
-        // parked on the view-count gate completes inline on Main.immediate during cancel().
-        // Iterating the live set would throw as soon as a non-last job did.
-        metricJobs.toList().forEach { it.cancel() }
-        metricJobs.clear()
         visiblePageIds.clear()
-        viewCountCache.clear()
-        inFlightViewCounts.clear()
-        unresolvableImageIds.clear()
+        viewCounts.clear()
+        featuredImages.clear()
         closeParentPickerCollection()
         parentPickerExcludedIds = emptySet()
         _parentPicker.value = null
@@ -1972,15 +1805,7 @@ internal class PagesRsListViewModel @Inject constructor(
          * server that always reports another page can't keep the loop going.
          */
         private const val MAX_FILL_PAGES = 50
-        private const val SEARCH_DEBOUNCE_MS = 250L
         private const val SITE_EDITOR_LAUNCH_DEBOUNCE_MS = 1000L
-        internal const val MIN_SEARCH_QUERY_LENGTH = 3
-
-        /**
-         * View counts are one request each, so a screenful is fetched a few at a time rather than
-         * all at once.
-         */
-        private const val MAX_CONCURRENT_VIEW_FETCHES = 4
 
         private val ALL_STATUSES = PageRsListTab.entries.flatMap { it.statuses }.distinct()
 

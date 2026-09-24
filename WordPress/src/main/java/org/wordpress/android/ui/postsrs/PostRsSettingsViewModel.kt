@@ -22,8 +22,10 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.postsrs.data.PostRsRestClient
-import org.wordpress.android.ui.postsrs.data.PostRsRestClient.Companion.AUTHORS_PER_PAGE
+import org.wordpress.android.ui.rs.RsErrorUtils
+import org.wordpress.android.ui.rs.RsSnackbarMessage
+import org.wordpress.android.ui.rs.data.RsSiteRestClient
+import org.wordpress.android.ui.rs.data.RsSiteRestClient.Companion.AUTHORS_PER_PAGE
 import org.wordpress.android.ui.posts.trackPostSettings
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -52,7 +54,7 @@ class PostRsSettingsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     selectedSiteRepository: SelectedSiteRepository,
     private val wpApiClientProvider: WpApiClientProvider,
-    private val restClient: PostRsRestClient,
+    private val restClient: RsSiteRestClient,
     private val resourceProvider: ResourceProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val uriToFileMapper: UriToFileMapper,
@@ -75,7 +77,7 @@ class PostRsSettingsViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
     private val _snackbarMessages =
-        Channel<SnackbarMessage>(Channel.BUFFERED)
+        Channel<RsSnackbarMessage>(Channel.BUFFERED)
     val snackbarMessages = _snackbarMessages.receiveAsFlow()
 
     private val fieldError: String
@@ -104,7 +106,7 @@ class PostRsSettingsViewModel @Inject constructor(
         if (site == null) return
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _snackbarMessages.trySend(
-                SnackbarMessage(
+                RsSnackbarMessage(
                     resourceProvider.getString(
                         R.string.error_generic_network
                     )
@@ -133,8 +135,8 @@ class PostRsSettingsViewModel @Inject constructor(
                     it.copy(isRefreshing = false)
                 }
                 _snackbarMessages.trySend(
-                    SnackbarMessage(
-                        message = PostRsErrorUtils
+                    RsSnackbarMessage(
+                        message = RsErrorUtils
                             .friendlyErrorMessage(
                                 e = e,
                                 resourceProvider =
@@ -378,7 +380,7 @@ class PostRsSettingsViewModel @Inject constructor(
         val currentSite = site ?: return
         if (!_uiState.value.canEditAuthor) {
             _snackbarMessages.trySend(
-                SnackbarMessage(
+                RsSnackbarMessage(
                     resourceProvider.getString(
                         R.string
                             .post_rs_settings_author_no_permission
@@ -584,7 +586,7 @@ class PostRsSettingsViewModel @Inject constructor(
                     )
                 }
                 _snackbarMessages.trySend(
-                    SnackbarMessage(
+                    RsSnackbarMessage(
                         message = resourceProvider.getString(
                             R.string.error_media_upload
                         ),
@@ -670,7 +672,7 @@ class PostRsSettingsViewModel @Inject constructor(
                     )
                 }
                 _snackbarMessages.trySend(
-                    SnackbarMessage(
+                    RsSnackbarMessage(
                         e.message?.takeIf {
                             it.isNotBlank()
                         } ?: fieldError
@@ -777,8 +779,8 @@ class PostRsSettingsViewModel @Inject constructor(
                 it.copy(isSearchingAuthors = false)
             }
             _snackbarMessages.trySend(
-                SnackbarMessage(
-                    PostRsErrorUtils.friendlyErrorMessage(
+                RsSnackbarMessage(
+                    RsErrorUtils.friendlyErrorMessage(
                         e = e,
                         resourceProvider =
                             resourceProvider,
@@ -889,8 +891,8 @@ class PostRsSettingsViewModel @Inject constructor(
                 )
                 _uiState.update { it.copy(isSaving = false) }
                 _snackbarMessages.trySend(
-                    SnackbarMessage(
-                        message = PostRsErrorUtils
+                    RsSnackbarMessage(
+                        message = RsErrorUtils
                             .friendlyErrorMessage(
                                 e = e,
                                 defaultResId = R.string
@@ -940,7 +942,7 @@ class PostRsSettingsViewModel @Inject constructor(
                 )
                 _uiState.value = PostRsSettingsUiState(
                     isLoading = false,
-                    error = PostRsErrorUtils
+                    error = RsErrorUtils
                         .friendlyErrorMessage(
                             e = e,
                             resourceProvider =

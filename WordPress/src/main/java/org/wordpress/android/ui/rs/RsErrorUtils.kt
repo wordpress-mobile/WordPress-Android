@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.postsrs
+package org.wordpress.android.ui.rs
 
 import org.wordpress.android.R
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -9,9 +9,9 @@ import uniffi.wp_api.WpErrorCode
 import uniffi.wp_mobile.FetchException
 
 /**
- * Shared error-handling helpers for the RS post screens.
+ * Shared error-handling helpers for the rs screens.
  */
-internal object PostRsErrorUtils {
+internal object RsErrorUtils {
     /**
      * Extracts the underlying [WpApiException] from a
      * [FetchException.Api] wrapper so callers can inspect
