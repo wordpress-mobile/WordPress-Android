@@ -101,6 +101,12 @@ class ViewsStatsViewModel @Inject constructor(
     // own totals and then restore the whole-period row when the selection is cleared.
     private var wholePeriodBottom: BottomStatsUiState = BottomStatsUiState.Loading
 
+    // The period [wholePeriodBottom] holds the row for. It outlives a period change, and a single-day
+    // period loads its row from a separate call that can land well after the chart, so without this
+    // an hourly selection made in between would borrow the *previous* period's totals for the metrics
+    // an hourly response carries no series for — see [wholePeriodRowForCurrentPeriod].
+    private var wholePeriodBottomPeriod: StatsPeriod? = null
+
     private var currentPeriod: StatsPeriod = _selectedPeriod.value
 
     // The period the user last picked themselves, kept while they page back and forth. Paging turns a
@@ -446,7 +452,7 @@ class ViewsStatsViewModel @Inject constructor(
                 current.copy(
                     chart = chart,
                     selectedMetric = metric,
-                    bottomStats = if (selectedBar != null) wholePeriodBottom else current.bottomStats,
+                    bottomStats = if (selectedBar != null) restoredWholePeriodBottom() else current.bottomStats,
                     selectedBar = null
                 )
             }
@@ -494,6 +500,9 @@ class ViewsStatsViewModel @Inject constructor(
         if (content.isLoadingNewPeriod) return
         val loaded = content.chart as? ChartUiState.Loaded ?: return
         val dataPoint = loaded.chartData.currentPeriod.getOrNull(index) ?: return
+        // A bucket that hasn't happened yet has nothing to show or drill into: it only holds a slot on
+        // the axis for the previous period's comparison bar.
+        if (dataPoint.isUpcoming) return
 
         // Tapping the selected bar again reverts to the whole period.
         if (content.selectedBar?.index == index) {
@@ -548,7 +557,7 @@ class ViewsStatsViewModel @Inject constructor(
             } else {
                 current.chart
             }
-            current.copy(chart = restoredChart, bottomStats = wholePeriodBottom, selectedBar = null)
+            current.copy(chart = restoredChart, bottomStats = restoredWholePeriodBottom(), selectedBar = null)
         }
     }
 
@@ -576,17 +585,75 @@ class ViewsStatsViewModel @Inject constructor(
     /**
      * Builds the bottom-row items for the bar at [index] from the cached per-bucket data, so the row
      * reflects the selected bar with no network call. Returns null when there's no cached result or the
-     * index is out of range (the caller keeps the existing row). Non-hourly buckets carry all five
-     * metrics; hourly buckets carry only views, so the other metrics read zero.
+     * index is out of range (the caller keeps the existing row).
+     *
+     * Non-hourly buckets carry all five metrics. An hourly response carries only the views series, so
+     * the metrics it has no data for fall back to the whole day's own totals (matching iOS) rather than
+     * reading a misleading zero for the selected hour — see [hasPerBucketSeries].
      */
+    @Suppress("ReturnCount")
     private fun buildSelectedBarBottom(index: Int): BottomStatsUiState? {
         val result = lastChartResult ?: return null
-        return result.currentPeriodData.getOrNull(index)?.let { current ->
-            val previous = result.previousPeriodData.getOrNull(index)?.toBottomAggregates()
-                ?: EMPTY_BOTTOM_AGGREGATES
-            BottomStatsUiState.Loaded(buildStatItems(current.toBottomAggregates(), previous))
+        val current = result.currentPeriodData.getOrNull(index) ?: return null
+        val previous = result.previousPeriodData.getOrNull(index)?.toBottomAggregates()
+            ?: EMPTY_BOTTOM_AGGREGATES
+        val barItems = buildStatItems(current.toBottomAggregates(), previous)
+        if (barItems.all { hasPerBucketSeries(result, it.metric) }) return BottomStatsUiState.Loaded(barItems)
+        // Something has to be borrowed from the day's own row, so what happens next depends on whether
+        // that row has landed for *this* period.
+        val wholePeriodItems = when (val dayRow = wholePeriodRowForCurrentPeriod()) {
+            is BottomStatsUiState.Loaded -> dayRow.stats
+            // It landed and failed: there is nothing to borrow and never will be, so drop the row the
+            // same way the unselected card does instead of leaving its placeholder shimmering.
+            is BottomStatsUiState.Hidden -> return BottomStatsUiState.Hidden
+            // Still in flight, or belonging to the period before this one. Keep whatever the row shows
+            // rather than another period's totals or a zero that reads as "none this hour"; the caller
+            // reapplies this once the day totals arrive.
+            else -> return null
         }
+        return BottomStatsUiState.Loaded(
+            barItems.map { item ->
+                if (hasPerBucketSeries(result, item.metric)) {
+                    item
+                } else {
+                    // The whole item, not just its value: a day-level total must be shown with the
+                    // day's own change, never with one computed from the selected bucket.
+                    wholePeriodItems.firstOrNull { it.metric == item.metric } ?: item
+                }
+            }
+        )
     }
+
+    /**
+     * The committed period's bottom-row state, but only when it belongs to the period now on screen —
+     * null while it still belongs to the one before. [wholePeriodBottom] survives a period change, so
+     * without the guard a single-day period could dress its hourly selection in the row the period
+     * before it left behind.
+     */
+    private fun wholePeriodRowForCurrentPeriod(): BottomStatsUiState? =
+        wholePeriodBottom.takeIf { wholePeriodBottomPeriod == currentPeriod }
+
+    /**
+     * The row to show when a soft bar selection is dropped: the committed period's own row, or the
+     * loading placeholder while [wholePeriodBottom] still belongs to the period before this one. A
+     * single-day period fetches its row separately and can be cleared before that call lands, and
+     * showing the previous period's totals there is worse than showing the placeholder they replace.
+     */
+    private fun restoredWholePeriodBottom(): BottomStatsUiState =
+        wholePeriodRowForCurrentPeriod() ?: BottomStatsUiState.Loading
+
+    /**
+     * Whether [metric] has a per-bucket series of its own in [result], so a selected bucket can show
+     * its own value for it.
+     *
+     * Only the hourly (single-day) response is ever missing one: it populates views alone, leaving the
+     * other four metrics at zero in every bucket. Reading that as "no series" rather than hard-coding
+     * which metrics are hourly keeps the row correct if the API starts returning more of them — a
+     * metric that really is zero all day has an equally zero day total, so the fallback shows the same
+     * number either way.
+     */
+    private fun hasPerBucketSeries(result: PeriodStatsResult.Success, metric: StatsMetric): Boolean =
+        result.unit != StatsUnit.HOUR || result.currentPeriodData.any { it.valueFor(metric) > 0L }
 
     private fun ViewsDataPoint.toBottomAggregates() = BottomStatsAggregates(
         views = views,
@@ -598,10 +665,10 @@ class ViewsStatsViewModel @Inject constructor(
 
     @Suppress("ReturnCount", "TooGenericExceptionCaught")
     private fun drillDownPeriod(rawPeriod: String): StatsPeriod? {
-        // The chart's actual bucket unit is the source of truth for granularity: a period like
-        // ThisYear renders month buckets for most of the year but day buckets early in January (when
-        // its window is short), and the rawPeriod string alone can't tell a day bucket from a month
-        // one. Falling back to day-level drill when no chart is loaded is the safe default.
+        // The chart's actual bucket unit is the source of truth for granularity: a Custom range is
+        // charted in days, months or years depending on its span, and the rawPeriod string alone can't
+        // tell a day bucket from a month one -- the API returns a full ISO date for both. Falling back
+        // to day-level drill when no chart is loaded is the safe default.
         val isMonthlyGranularity = lastChartResult?.unit?.let {
             it == StatsUnit.MONTH || it == StatsUnit.YEAR
         } ?: false
@@ -722,14 +789,14 @@ class ViewsStatsViewModel @Inject constructor(
                 // Every non-hourly period uses a daily/monthly/yearly chart whose response already
                 // carries all five bottom-row metrics per bucket, so the bottom row is filled from that
                 // same fetch. This makes the card issue 2 network calls instead of 4.
-                loadChart(site, fillBottomFromChart = true)
+                loadChart(site, targetPeriod, fillBottomFromChart = true)
             } else {
                 // Single-day periods fetch the bottom row from a dedicated day-level call (run in
                 // parallel with the chart), the same way the web app does it: their chart is hourly and
                 // an hourly response only populates `views`, so it can't fill the row.
                 coroutineScope {
-                    val chart = async { loadChart(site, fillBottomFromChart = false) }
-                    val bottom = async { loadBottomStats(site) }
+                    val chart = async { loadChart(site, targetPeriod, fillBottomFromChart = false) }
+                    val bottom = async { loadBottomStats(site, targetPeriod) }
                     val chartLoaded = chart.await()
                     val bottomLoaded = bottom.await()
                     chartLoaded && bottomLoaded
@@ -768,38 +835,50 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     /**
-     * Loads the chart for [currentPeriod]. When [fillBottomFromChart] is true the bottom row is filled
+     * Loads the chart for [period]. When [fillBottomFromChart] is true the bottom row is filled
      * from the same response (its per-bucket data already carries all five metrics); when false the
      * bottom row is left untouched here because a dedicated call populates it (Today and Custom).
      */
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadChart(site: SiteModel, fillBottomFromChart: Boolean): Boolean {
-        var success = false
-        val chartState = try {
-            when (val result = statsRepository.fetchStatsForPeriod(site.siteId, currentPeriod)) {
-                is PeriodStatsResult.Success -> {
-                    success = true
-                    lastChartResult = result
-                    if (fillBottomFromChart) {
-                        updateBottom(BottomStatsUiState.Loaded(result.toBottomStatItems()))
-                    }
-                    buildChartState(result)
-                }
-                is PeriodStatsResult.Error -> {
-                    if (fillBottomFromChart) updateBottom(BottomStatsUiState.Hidden)
-                    ChartUiState.Error
-                }
-            }
+    private suspend fun loadChart(site: SiteModel, period: StatsPeriod, fillBottomFromChart: Boolean): Boolean {
+        // Fetch first and apply afterwards, so the staleness check sits between the two and every write
+        // below it is known to belong to the period still on screen.
+        val result = try {
+            statsRepository.fetchStatsForPeriod(site.siteId, period)
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
             AppLog.e(AppLog.T.STATS, "Error loading views chart", e)
-            if (fillBottomFromChart) updateBottom(BottomStatsUiState.Hidden)
-            ChartUiState.Error
+            null
+        }
+        if (isStale(period)) return false
+        val chartState = when (result) {
+            is PeriodStatsResult.Success -> {
+                lastChartResult = result
+                if (fillBottomFromChart) {
+                    updateBottom(BottomStatsUiState.Loaded(result.toBottomStatItems()), period)
+                }
+                buildChartState(result)
+            }
+            // An API error or a thrown call: both show the error state and drop the row rather than
+            // leaving the previous period's numbers under a new range.
+            else -> {
+                if (fillBottomFromChart) updateBottom(BottomStatsUiState.Hidden, period)
+                ChartUiState.Error
+            }
         }
         updateChart(chartState)
-        return success
+        return result is PeriodStatsResult.Success
     }
+
+    /**
+     * Whether a load started for [period] has been overtaken by a period change and must not write to
+     * the card. [loadData] cancels the load it supersedes, but [refresh] launches outside that job and
+     * so survives a period change: without this its response would repaint the chart with the previous
+     * range's data and, worse, stamp that data as the new period's in [updateBottom] — which is exactly
+     * the confusion [wholePeriodBottomPeriod] exists to prevent.
+     */
+    private fun isStale(period: StatsPeriod): Boolean = period != currentPeriod
 
     /**
      * Whether the bottom row can be filled from the chart's own response, which is true whenever the
@@ -841,10 +920,10 @@ class ViewsStatsViewModel @Inject constructor(
 
     /** Fetches the bottom row from a dedicated call. Used for Today and Custom (see [fillsBottomFromChart]). */
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadBottomStats(site: SiteModel): Boolean {
+    private suspend fun loadBottomStats(site: SiteModel, period: StatsPeriod): Boolean {
         var success = false
         val bottomState = try {
-            when (val result = statsRepository.fetchBottomStats(site.siteId, currentPeriod)) {
+            when (val result = statsRepository.fetchBottomStats(site.siteId, period)) {
                 is BottomStatsResult.Success -> {
                     success = true
                     BottomStatsUiState.Loaded(buildStatItems(result.current, result.previous))
@@ -857,7 +936,8 @@ class ViewsStatsViewModel @Inject constructor(
             AppLog.e(AppLog.T.STATS, "Error loading bottom stats", e)
             BottomStatsUiState.Hidden
         }
-        updateBottom(bottomState)
+        if (isStale(period)) return false
+        updateBottom(bottomState, period)
         return success
     }
 
@@ -887,20 +967,29 @@ class ViewsStatsViewModel @Inject constructor(
         }
     }
 
-    /** Applies a bottom-row update, preserving the current chart state. */
-    private fun updateBottom(bottom: BottomStatsUiState) {
-        // This is always the committed period's row; remember it so a soft bar selection can restore
-        // it after overlaying the selected bar's own totals.
+    /**
+     * Applies a bottom-row update, preserving the current chart state. [period] is the period the load
+     * that produced [bottom] was started for — taken from the load rather than read from
+     * [currentPeriod] here, so the row can never be stamped with a period it doesn't describe.
+     */
+    private fun updateBottom(bottom: BottomStatsUiState, period: StatsPeriod) {
+        // This is always the committed period's row; remember it, and which period it belongs to, so a
+        // soft bar selection can restore it after overlaying the selected bar's own totals.
         wholePeriodBottom = bottom
+        wholePeriodBottomPeriod = period
         _uiState.update { current ->
             when (current) {
                 // When a bar is soft-selected the visible row holds that bar's overlaid totals. A
                 // late-arriving whole-period bottom load (single-day periods fetch it separately, and it
                 // can land after the chart) must not clobber the overlay and desync it from the header;
-                // it's kept in wholePeriodBottom above and restored on clear.
+                // it's kept in wholePeriodBottom above and restored on clear. The overlay is rebuilt
+                // rather than kept as-is, because an hourly selection borrows the day's totals for the
+                // metrics its own response has no series for — those arrive with this very load.
                 is ViewsStatsCardUiState.Content ->
                     current.copy(
-                        bottomStats = if (current.selectedBar != null) current.bottomStats else bottom,
+                        bottomStats = current.selectedBar
+                            ?.let { buildSelectedBarBottom(it.index) ?: current.bottomStats }
+                            ?: bottom,
                         selectedMetric = currentSelectedMetric
                     )
                 else -> ViewsStatsCardUiState.Content(
@@ -931,7 +1020,8 @@ class ViewsStatsViewModel @Inject constructor(
                 ChartDataPoint(
                     formatDataPointLabel(it.period, result.unit),
                     it.valueFor(metric),
-                    it.period
+                    it.period,
+                    it.isUpcoming
                 )
             }
         val previousDataPoints = result.previousPeriodData
@@ -943,8 +1033,11 @@ class ViewsStatsViewModel @Inject constructor(
                 )
             }
 
-        val average = if (currentDataPoints.isNotEmpty()) {
-            currentValue / currentDataPoints.size
+        // The average is per elapsed bucket: the placeholders an unfinished calendar period is padded
+        // with carry no data, so averaging over them would drag the line down as the period fills up.
+        val elapsedPointCount = currentDataPoints.count { !it.isUpcoming }
+        val average = if (elapsedPointCount > 0) {
+            currentValue / elapsedPointCount
         } else {
             if (currentValue > 0) {
                 AppLog.w(
@@ -1083,11 +1176,9 @@ class ViewsStatsViewModel @Inject constructor(
         return when (period) {
             is StatsPeriod.Today -> formatSingleDayRange(endDate)
             is StatsPeriod.Last12Months -> formatMonthRange(startDate, endDate)
-            // ThisYear renders day buckets early in January and month buckets otherwise, so let the
-            // actual unit decide the label rather than assuming a month range.
-            is StatsPeriod.ThisYear ->
-                if (unit == StatsUnit.MONTH) formatMonthRange(startDate, endDate)
-                else formatDayRange(startDate, endDate)
+            // ThisYear takes its granularity from the whole calendar year, so it is always charted in
+            // month buckets -- twelve of them on 5 January just as in December.
+            is StatsPeriod.ThisYear -> formatMonthRange(startDate, endDate)
             is StatsPeriod.Custom -> {
                 if (isCustomPeriodMonthly(period)) formatMonthRange(startDate, endDate)
                 else formatDayRange(startDate, endDate)

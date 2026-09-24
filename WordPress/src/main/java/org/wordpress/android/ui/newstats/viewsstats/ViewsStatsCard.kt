@@ -64,6 +64,7 @@ import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianLayerRangeProvider
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.compose.cartesian.data.ColumnCartesianLayerModel
 import com.patrykandpatrick.vico.compose.cartesian.data.columnModel
@@ -625,12 +626,29 @@ private fun ViewsStatsChart(
         if (chartData.currentPeriod.isNotEmpty()) {
             // Check hasPreviousPeriod inside the effect to avoid capturing stale values
             val hasPreviousPeriod = chartData.previousPeriod.isNotEmpty()
+            // The two series can differ in length -- an unfinished calendar period compares its whole
+            // span against a previous period of a different bucket count (March's 31 days against
+            // February's 28). The bars align on the current period's slots and read the comparison by
+            // index, leaving the tail without one at zero; the line instead keeps each series at its
+            // own length, so neither dives to the axis over buckets it simply has no data for.
+            val currentValues = chartData.currentPeriod.map { it.value }
+            val previousValues = chartData.currentPeriod.indices.map {
+                chartData.previousPeriod.getOrNull(it)?.value ?: 0L
+            }
             when (chartType) {
                 ChartType.LINE -> modelProducer.runTransaction {
                     lineModel {
-                        series(chartData.currentPeriod.map { it.value })
+                        // The line stops at the last elapsed bucket rather than dropping to zero over
+                        // the part of the period that hasn't happened yet.
+                        val elapsedValues = chartData.currentPeriod
+                            .dropLastWhile { it.isUpcoming }
+                            .map { it.value }
+                        series(elapsedValues.ifEmpty { currentValues })
                         if (hasPreviousPeriod) {
-                            series(chartData.previousPeriod.map { it.value })
+                            // Clamped to the current period's slots but never padded out to them: a
+                            // shorter previous period (February against March) ends where its own data
+                            // ends, instead of reading as three days of zero views.
+                            series(chartData.previousPeriod.take(currentValues.size).map { it.value })
                         }
                     }
                 }
@@ -640,42 +658,25 @@ private fun ViewsStatsChart(
                             // Series 1: current value when no
                             // delta (rounded top)
                             series(
-                                chartData.currentPeriod.zip(
-                                    chartData.previousPeriod
-                                ) { current, previous ->
-                                    if (previous.value <= current.value)
-                                        current.value
-                                    else 0L
+                                currentValues.zip(previousValues) { current, previous ->
+                                    if (previous <= current) current else 0L
                                 }
                             )
                             // Series 2: current value when there
                             // is a delta (flat top)
                             series(
-                                chartData.currentPeriod.zip(
-                                    chartData.previousPeriod
-                                ) { current, previous ->
-                                    if (previous.value > current.value)
-                                        current.value
-                                    else 0L
+                                currentValues.zip(previousValues) { current, previous ->
+                                    if (previous > current) current else 0L
                                 }
                             )
                             // Series 3: delta (rounded top)
                             series(
-                                chartData.currentPeriod.zip(
-                                    chartData.previousPeriod
-                                ) { current, previous ->
-                                    maxOf(
-                                        0L,
-                                        previous.value - current.value
-                                    )
+                                currentValues.zip(previousValues) { current, previous ->
+                                    maxOf(0L, previous - current)
                                 }
                             )
                         } else {
-                            series(
-                                chartData.currentPeriod.map {
-                                    it.value
-                                }
-                            )
+                            series(currentValues)
                         }
                     }
                 }
@@ -705,18 +706,22 @@ private fun ViewsStatsChart(
     val primaryColor = metricColor(selectedMetric)
     val secondaryColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
 
-    // X-axis labels from both series so the formatter covers the
-    // full range even when the previous period has more data points
-    val currentLabels = chartData.currentPeriod.map { it.label }
-    val previousLabels = chartData.previousPeriod.map { it.label }
-    val dateLabels = if (previousLabels.size > currentLabels.size) {
-        currentLabels + previousLabels.drop(currentLabels.size)
-    } else {
-        currentLabels
-    }
+    // The x axis is the current period's own slots, one label each, in both chart types: the comparison
+    // series is read by index into those slots and never extends past them (see the model above). A
+    // previous period with more buckets therefore has its tail drawn nowhere — February against January
+    // shows no bar for Jan 29-31 — while the header's previous total, which is the whole preceding
+    // calendar period, still counts them. That is deliberate: those buckets have no slot of their own to
+    // sit in, and hanging "Jan 29-31" off the end of a February axis would read as February days.
+    val dateLabels = chartData.currentPeriod.map { it.label }
     val bottomAxisValueFormatter = CartesianValueFormatter { _, value, _ ->
         dateLabels.getOrElse(value.toInt()) { value.toInt().toString() }
     }
+    // Both series are shorter than the period whenever it hasn't finished: the current one stops at the
+    // last elapsed bucket in LINE mode, and the comparison one stops wherever its own data ends. Vico
+    // would then size the axis to the longer of the two and cut the chart short of the period -- on 5
+    // March, February's 28 points would end "This Month" at the 28th and hide 29-31 entirely. Pin the
+    // range to the slots instead, so the chart always spans the whole period.
+    val slotRangeProvider = remember(dateLabels.size) { SlotCountRangeProvider(dateLabels.size) }
 
     // Marker value formatter to show date and views on touch
     val markerValueFormatter = remember(chartData) {
@@ -780,7 +785,8 @@ private fun ViewsStatsChart(
                                 stroke = LineCartesianLayer.LineStroke.Dashed(),
                                 interpolator = LineCartesianLayer.Interpolator.Sharp
                             )
-                        )
+                        ),
+                        rangeProvider = slotRangeProvider
                     ),
                     startAxis = VerticalAxis.rememberStart(line = null),
                     bottomAxis = HorizontalAxis.rememberBottom(
@@ -1110,6 +1116,30 @@ private class HighlightColumnProvider(
     ): LineComponent = base[seriesIndex]
 }
 
+/**
+ * Holds the x axis at [slotCount] slots however short the plotted series are.
+ *
+ * An unfinished calendar period plots fewer points than it spans — the current line stops at the last
+ * elapsed bucket, and the comparison series stops wherever its own data ends — and Vico's intrinsic
+ * range would shrink the chart to the longer of the two, dropping the rest of the period off the axis.
+ *
+ * The y range is delegated to [CartesianLayerRangeProvider.auto], whose dynamic rounding picks the
+ * axis's top value; overriding x alone via `fixed()` would silently swap that for the plain unrounded
+ * maximum and change every chart's vertical scale.
+ */
+private class SlotCountRangeProvider(private val slotCount: Int) : CartesianLayerRangeProvider {
+    private val yRange = CartesianLayerRangeProvider.auto()
+
+    override fun getMaxX(minX: Double, maxX: Double, extraStore: ExtraStore): Double =
+        (slotCount - 1).toDouble().coerceAtLeast(maxX)
+
+    override fun getMinY(minY: Double, maxY: Double, extraStore: ExtraStore): Double =
+        yRange.getMinY(minY, maxY, extraStore)
+
+    override fun getMaxY(minY: Double, maxY: Double, extraStore: ExtraStore): Double =
+        yRange.getMaxY(minY, maxY, extraStore)
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun ViewsStatsCardLoadingPreview() {
@@ -1265,7 +1295,8 @@ private class ChartMarkerValueFormatter(
     }
 
     private fun formatBothPeriods(x: Int): String {
-        val hasCurrent = x in currentPeriodData.indices
+        // A bucket that hasn't happened yet has no value to report -- only the previous period's.
+        val hasCurrent = x in currentPeriodData.indices && !currentPeriodData[x].isUpcoming
         val hasPrevious = x in previousPeriodData.indices
 
         if (!hasCurrent && !hasPrevious) return ""
