@@ -878,11 +878,17 @@ class StatsRepository @Inject constructor(
     /**
      * The two windows a card region compares, and the API bucket [unit] both are fetched at.
      *
-     * Each window carries its own quantity. They are equal for every period except a Custom range
-     * coarsened to MONTH or YEAR: the previous window mirrors the current one's exact *day* span (see
-     * [previousWindowMirror]), which always resolves to the same unit but not always to the same number
-     * of calendar buckets. Sending the current window's quantity on the previous request would make the
-     * API return an extra leading bucket and fold it into the previous total, skewing the % change.
+     * Each window carries its own quantity, and the two are *not* interchangeable — never send
+     * [currentQuantity] on the previous request. Two kinds of period make them differ:
+     *
+     * - An unfinished calendar period ([calculateCalendarPeriodDates]): the current window stops at
+     *   today while the previous one is the whole preceding week/month/year, so on a Wednesday
+     *   "This Week" asks for 4 buckets and 7. Reusing the current quantity would truncate the
+     *   comparison window and skew every % change on the card.
+     * - A Custom range coarsened to MONTH or YEAR: the previous window mirrors the current one's exact
+     *   *day* span (see [previousWindowMirror]), which always resolves to the same unit but not always
+     *   to the same number of calendar buckets. Reusing the current quantity would make the API return
+     *   an extra leading bucket and fold it into the previous total.
      */
     private data class PeriodDateRange(
         val currentStart: LocalDate,
@@ -1013,10 +1019,17 @@ class StatsRepository @Inject constructor(
     private fun calculatePeriodDates(period: StatsPeriod): PeriodDateRange {
         if (period is StatsPeriod.Today) return calculateTodayPeriodDates()
         if (period is StatsPeriod.Custom) return calculateCustomPeriodDates(period.startDate, period.endDate)
-        fullCalendarWindow(period)?.let { return calculateCalendarPeriodDates(period, it) }
+
+        // One read of today() for the whole computation. The calendar path derives both the elapsed end
+        // and the whole period's span from it, and reading the clock twice lets a load that straddles
+        // midnight pair a window from one day with an end from the next (an 8-bucket "This Week").
+        val currentWindow = currentPeriodWindow(period)
+        fullCalendarWindow(period, currentWindow)?.let {
+            return calculateCalendarPeriodDates(period, currentWindow.second, it)
+        }
 
         val config = getPeriodConfig(period)
-        val (currentStart, currentEnd) = currentPeriodWindow(period)
+        val (currentStart, currentEnd) = currentWindow
         val (previousStart, previousEnd) = previousWindowForConfig(currentStart, config)
 
         // [previousWindowForConfig] spans exactly config.quantity units back, so both windows request
@@ -1034,7 +1047,8 @@ class StatsRepository @Inject constructor(
 
     /**
      * The chart windows for an unfinished calendar period ([StatsPeriod.ThisWeek]/[StatsPeriod.ThisMonth]/
-     * [StatsPeriod.ThisYear]), whose whole calendar week/month/year is [fullWindow].
+     * [StatsPeriod.ThisYear]), whose whole calendar week/month/year is [fullWindow] and whose elapsed
+     * part ends at [currentEnd] (today). Both are passed in, from one read of the clock.
      *
      * The chart spans the *whole* period rather than stopping at today — matching iOS — so on a
      * Wednesday "This Week" plots Monday through Sunday, with the days still to come carrying only the
@@ -1061,10 +1075,10 @@ class StatsRepository @Inject constructor(
      */
     private fun calculateCalendarPeriodDates(
         period: StatsPeriod,
+        currentEnd: LocalDate,
         fullWindow: Pair<LocalDate, LocalDate>
     ): PeriodDateRange {
         val (currentStart, fullEnd) = fullWindow
-        val (_, currentEnd) = currentPeriodWindow(period)
         val unit = unitFor(currentStart, fullEnd)
 
         val (previousStart, previousEnd) = previousCalendarWindow(currentStart, calendarUnitOf(period))
@@ -1083,11 +1097,15 @@ class StatsRepository @Inject constructor(
 
     /**
      * The whole calendar week/month/year a calendar-aligned period belongs to — the future part of it
-     * included — or null for every other period. [currentPeriodWindow] stops at today; this is the
-     * window the chart spans.
+     * included — or null for every other period. [currentWindow] (from [currentPeriodWindow]) stops at
+     * today; this is the window the chart spans. Takes the current window rather than re-deriving it so
+     * the whole computation rests on a single read of the clock.
      */
-    private fun fullCalendarWindow(period: StatsPeriod): Pair<LocalDate, LocalDate>? {
-        val (start, _) = currentPeriodWindow(period)
+    private fun fullCalendarWindow(
+        period: StatsPeriod,
+        currentWindow: Pair<LocalDate, LocalDate>
+    ): Pair<LocalDate, LocalDate>? {
+        val (start, _) = currentWindow
         return when (period) {
             is StatsPeriod.ThisWeek -> start to start.plusDays((DAYS_IN_7_DAYS - 1).toLong())
             is StatsPeriod.ThisMonth -> start to start.withDayOfMonth(start.lengthOfMonth())

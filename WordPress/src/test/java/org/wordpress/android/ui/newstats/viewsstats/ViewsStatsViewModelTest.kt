@@ -1392,6 +1392,116 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         }
 
     @Test
+    fun `given a single-day row still in flight, when the selection is cleared, then no other period's row shows`() =
+        test {
+            // Same window as the test above: Last 7 Days' row is what the card is holding when the user
+            // switches to Today, whose own row hasn't landed yet.
+            whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+                .thenReturn(createPeriodStatsResult(currentVisitors = STALE_VISITORS))
+            initViewModel()
+            advanceUntilIdle()
+
+            val hourly = listOf(
+                ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
+                ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
+            )
+            whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(
+                createPeriodStatsResult(
+                    currentPeriodData = hourly,
+                    previousPeriodData = hourly,
+                    unit = StatsUnit.HOUR
+                )
+            )
+            val bottomGate = CompletableDeferred<Unit>()
+            whenever(statsRepository.fetchBottomStats(any(), any())).doSuspendableAnswer {
+                bottomGate.await()
+                createBottomStatsResult()
+            }
+            viewModel.onPeriodChanged(StatsPeriod.Today)
+            viewModel.loadDataIfNeeded()
+            advanceUntilIdle()
+
+            viewModel.onChartTypeChanged(ChartType.BAR)
+            viewModel.onBarTapped(0)
+            advanceUntilIdle()
+
+            // Tapping the same bar again drops the selection, which restores the committed period's row
+            // -- but Today's row is still in flight, so there is nothing of Today's to restore.
+            viewModel.onBarTapped(0)
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.selectedBar()).isNull()
+            // The placeholder, not Last 7 Days' totals dressed up as today's.
+            assertThat(viewModel.uiState.value.bottomState()).isEqualTo(BottomStatsUiState.Loading)
+
+            bottomGate.complete(Unit)
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.bottomStatsOrNull()!!.first { it.metric == StatsMetric.VISITORS }.value)
+                .isEqualTo(TEST_CURRENT_PERIOD_VISITORS)
+        }
+
+    @Test
+    fun `given a refresh that lands after a period change, then its row is dropped rather than re-stamped`() = test {
+        // refresh() loads outside the job loadData() cancels, so its response can arrive after the user
+        // has already moved to another period.
+        val staleResult = createPeriodStatsResult(currentVisitors = STALE_VISITORS)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(staleResult)
+        initViewModel()
+        advanceUntilIdle()
+
+        // Gate the refresh's own fetch so it is still in flight when the period changes.
+        val refreshGate = CompletableDeferred<Unit>()
+        whenever(statsRepository.fetchStatsForPeriod(any(), eq(StatsPeriod.Last7Days))).doSuspendableAnswer {
+            refreshGate.await()
+            staleResult
+        }
+        val hourly = listOf(
+            ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
+            ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), eq(StatsPeriod.Today))).thenReturn(
+            createPeriodStatsResult(
+                currentPeriodData = hourly,
+                previousPeriodData = hourly,
+                unit = StatsUnit.HOUR
+            )
+        )
+        val bottomGate = CompletableDeferred<Unit>()
+        whenever(statsRepository.fetchBottomStats(any(), any())).doSuspendableAnswer {
+            bottomGate.await()
+            createBottomStatsResult()
+        }
+
+        viewModel.refresh()
+        advanceUntilIdle()
+        viewModel.onPeriodChanged(StatsPeriod.Today)
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        // Last 7 Days' data arrives while Today is on screen: it must not repaint the card, and above all
+        // must not be filed as Today's row.
+        refreshGate.complete(Unit)
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        // The hour still has no series of its own for Visitors and friends, and the only row available to
+        // borrow from belongs to Last 7 Days, so the placeholder stays.
+        assertThat(viewModel.uiState.value.bottomStatsOrNull()).isNull()
+        assertThat(viewModel.uiState.value.selectedBar()).isNotNull
+
+        bottomGate.complete(Unit)
+        advanceUntilIdle()
+
+        val stats = viewModel.uiState.value.bottomStatsOrNull()!!
+        assertThat(stats.first { it.metric == StatsMetric.VIEWS }.value).isEqualTo(100L)
+        assertThat(stats.first { it.metric == StatsMetric.VISITORS }.value).isEqualTo(TEST_CURRENT_PERIOD_VISITORS)
+    }
+
+    @Test
     fun `given an hourly selection, when the day totals fail, then the row is hidden rather than left loading`() =
         test {
             val hourly = listOf(

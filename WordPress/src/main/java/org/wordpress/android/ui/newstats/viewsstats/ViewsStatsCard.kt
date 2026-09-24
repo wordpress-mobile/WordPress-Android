@@ -64,6 +64,7 @@ import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianLayerRangeProvider
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.compose.cartesian.data.ColumnCartesianLayerModel
 import com.patrykandpatrick.vico.compose.cartesian.data.columnModel
@@ -705,18 +706,22 @@ private fun ViewsStatsChart(
     val primaryColor = metricColor(selectedMetric)
     val secondaryColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
 
-    // X-axis labels from both series so the formatter covers the
-    // full range even when the previous period has more data points
-    val currentLabels = chartData.currentPeriod.map { it.label }
-    val previousLabels = chartData.previousPeriod.map { it.label }
-    val dateLabels = if (previousLabels.size > currentLabels.size) {
-        currentLabels + previousLabels.drop(currentLabels.size)
-    } else {
-        currentLabels
-    }
+    // The x axis is the current period's own slots, one label each, in both chart types: the comparison
+    // series is read by index into those slots and never extends past them (see the model above). A
+    // previous period with more buckets therefore has its tail drawn nowhere — February against January
+    // shows no bar for Jan 29-31 — while the header's previous total, which is the whole preceding
+    // calendar period, still counts them. That is deliberate: those buckets have no slot of their own to
+    // sit in, and hanging "Jan 29-31" off the end of a February axis would read as February days.
+    val dateLabels = chartData.currentPeriod.map { it.label }
     val bottomAxisValueFormatter = CartesianValueFormatter { _, value, _ ->
         dateLabels.getOrElse(value.toInt()) { value.toInt().toString() }
     }
+    // Both series are shorter than the period whenever it hasn't finished: the current one stops at the
+    // last elapsed bucket in LINE mode, and the comparison one stops wherever its own data ends. Vico
+    // would then size the axis to the longer of the two and cut the chart short of the period -- on 5
+    // March, February's 28 points would end "This Month" at the 28th and hide 29-31 entirely. Pin the
+    // range to the slots instead, so the chart always spans the whole period.
+    val slotRangeProvider = remember(dateLabels.size) { SlotCountRangeProvider(dateLabels.size) }
 
     // Marker value formatter to show date and views on touch
     val markerValueFormatter = remember(chartData) {
@@ -780,7 +785,8 @@ private fun ViewsStatsChart(
                                 stroke = LineCartesianLayer.LineStroke.Dashed(),
                                 interpolator = LineCartesianLayer.Interpolator.Sharp
                             )
-                        )
+                        ),
+                        rangeProvider = slotRangeProvider
                     ),
                     startAxis = VerticalAxis.rememberStart(line = null),
                     bottomAxis = HorizontalAxis.rememberBottom(
@@ -1108,6 +1114,30 @@ private class HighlightColumnProvider(
         seriesIndex: Int,
         extraStore: ExtraStore
     ): LineComponent = base[seriesIndex]
+}
+
+/**
+ * Holds the x axis at [slotCount] slots however short the plotted series are.
+ *
+ * An unfinished calendar period plots fewer points than it spans — the current line stops at the last
+ * elapsed bucket, and the comparison series stops wherever its own data ends — and Vico's intrinsic
+ * range would shrink the chart to the longer of the two, dropping the rest of the period off the axis.
+ *
+ * The y range is delegated to [CartesianLayerRangeProvider.auto], whose dynamic rounding picks the
+ * axis's top value; overriding x alone via `fixed()` would silently swap that for the plain unrounded
+ * maximum and change every chart's vertical scale.
+ */
+private class SlotCountRangeProvider(private val slotCount: Int) : CartesianLayerRangeProvider {
+    private val yRange = CartesianLayerRangeProvider.auto()
+
+    override fun getMaxX(minX: Double, maxX: Double, extraStore: ExtraStore): Double =
+        (slotCount - 1).toDouble().coerceAtLeast(maxX)
+
+    override fun getMinY(minY: Double, maxY: Double, extraStore: ExtraStore): Double =
+        yRange.getMinY(minY, maxY, extraStore)
+
+    override fun getMaxY(minY: Double, maxY: Double, extraStore: ExtraStore): Double =
+        yRange.getMaxY(minY, maxY, extraStore)
 }
 
 @Preview(showBackground = true)

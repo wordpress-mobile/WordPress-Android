@@ -452,7 +452,7 @@ class ViewsStatsViewModel @Inject constructor(
                 current.copy(
                     chart = chart,
                     selectedMetric = metric,
-                    bottomStats = if (selectedBar != null) wholePeriodBottom else current.bottomStats,
+                    bottomStats = if (selectedBar != null) restoredWholePeriodBottom() else current.bottomStats,
                     selectedBar = null
                 )
             }
@@ -557,7 +557,7 @@ class ViewsStatsViewModel @Inject constructor(
             } else {
                 current.chart
             }
-            current.copy(chart = restoredChart, bottomStats = wholePeriodBottom, selectedBar = null)
+            current.copy(chart = restoredChart, bottomStats = restoredWholePeriodBottom(), selectedBar = null)
         }
     }
 
@@ -632,6 +632,15 @@ class ViewsStatsViewModel @Inject constructor(
      */
     private fun wholePeriodRowForCurrentPeriod(): BottomStatsUiState? =
         wholePeriodBottom.takeIf { wholePeriodBottomPeriod == currentPeriod }
+
+    /**
+     * The row to show when a soft bar selection is dropped: the committed period's own row, or the
+     * loading placeholder while [wholePeriodBottom] still belongs to the period before this one. A
+     * single-day period fetches its row separately and can be cleared before that call lands, and
+     * showing the previous period's totals there is worse than showing the placeholder they replace.
+     */
+    private fun restoredWholePeriodBottom(): BottomStatsUiState =
+        wholePeriodRowForCurrentPeriod() ?: BottomStatsUiState.Loading
 
     /**
      * Whether [metric] has a per-bucket series of its own in [result], so a selected bucket can show
@@ -780,14 +789,14 @@ class ViewsStatsViewModel @Inject constructor(
                 // Every non-hourly period uses a daily/monthly/yearly chart whose response already
                 // carries all five bottom-row metrics per bucket, so the bottom row is filled from that
                 // same fetch. This makes the card issue 2 network calls instead of 4.
-                loadChart(site, fillBottomFromChart = true)
+                loadChart(site, targetPeriod, fillBottomFromChart = true)
             } else {
                 // Single-day periods fetch the bottom row from a dedicated day-level call (run in
                 // parallel with the chart), the same way the web app does it: their chart is hourly and
                 // an hourly response only populates `views`, so it can't fill the row.
                 coroutineScope {
-                    val chart = async { loadChart(site, fillBottomFromChart = false) }
-                    val bottom = async { loadBottomStats(site) }
+                    val chart = async { loadChart(site, targetPeriod, fillBottomFromChart = false) }
+                    val bottom = async { loadBottomStats(site, targetPeriod) }
                     val chartLoaded = chart.await()
                     val bottomLoaded = bottom.await()
                     chartLoaded && bottomLoaded
@@ -826,38 +835,50 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     /**
-     * Loads the chart for [currentPeriod]. When [fillBottomFromChart] is true the bottom row is filled
+     * Loads the chart for [period]. When [fillBottomFromChart] is true the bottom row is filled
      * from the same response (its per-bucket data already carries all five metrics); when false the
      * bottom row is left untouched here because a dedicated call populates it (Today and Custom).
      */
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadChart(site: SiteModel, fillBottomFromChart: Boolean): Boolean {
-        var success = false
-        val chartState = try {
-            when (val result = statsRepository.fetchStatsForPeriod(site.siteId, currentPeriod)) {
-                is PeriodStatsResult.Success -> {
-                    success = true
-                    lastChartResult = result
-                    if (fillBottomFromChart) {
-                        updateBottom(BottomStatsUiState.Loaded(result.toBottomStatItems()))
-                    }
-                    buildChartState(result)
-                }
-                is PeriodStatsResult.Error -> {
-                    if (fillBottomFromChart) updateBottom(BottomStatsUiState.Hidden)
-                    ChartUiState.Error
-                }
-            }
+    private suspend fun loadChart(site: SiteModel, period: StatsPeriod, fillBottomFromChart: Boolean): Boolean {
+        // Fetch first and apply afterwards, so the staleness check sits between the two and every write
+        // below it is known to belong to the period still on screen.
+        val result = try {
+            statsRepository.fetchStatsForPeriod(site.siteId, period)
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
             AppLog.e(AppLog.T.STATS, "Error loading views chart", e)
-            if (fillBottomFromChart) updateBottom(BottomStatsUiState.Hidden)
-            ChartUiState.Error
+            null
+        }
+        if (isStale(period)) return false
+        val chartState = when (result) {
+            is PeriodStatsResult.Success -> {
+                lastChartResult = result
+                if (fillBottomFromChart) {
+                    updateBottom(BottomStatsUiState.Loaded(result.toBottomStatItems()), period)
+                }
+                buildChartState(result)
+            }
+            // An API error or a thrown call: both show the error state and drop the row rather than
+            // leaving the previous period's numbers under a new range.
+            else -> {
+                if (fillBottomFromChart) updateBottom(BottomStatsUiState.Hidden, period)
+                ChartUiState.Error
+            }
         }
         updateChart(chartState)
-        return success
+        return result is PeriodStatsResult.Success
     }
+
+    /**
+     * Whether a load started for [period] has been overtaken by a period change and must not write to
+     * the card. [loadData] cancels the load it supersedes, but [refresh] launches outside that job and
+     * so survives a period change: without this its response would repaint the chart with the previous
+     * range's data and, worse, stamp that data as the new period's in [updateBottom] — which is exactly
+     * the confusion [wholePeriodBottomPeriod] exists to prevent.
+     */
+    private fun isStale(period: StatsPeriod): Boolean = period != currentPeriod
 
     /**
      * Whether the bottom row can be filled from the chart's own response, which is true whenever the
@@ -899,10 +920,10 @@ class ViewsStatsViewModel @Inject constructor(
 
     /** Fetches the bottom row from a dedicated call. Used for Today and Custom (see [fillsBottomFromChart]). */
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadBottomStats(site: SiteModel): Boolean {
+    private suspend fun loadBottomStats(site: SiteModel, period: StatsPeriod): Boolean {
         var success = false
         val bottomState = try {
-            when (val result = statsRepository.fetchBottomStats(site.siteId, currentPeriod)) {
+            when (val result = statsRepository.fetchBottomStats(site.siteId, period)) {
                 is BottomStatsResult.Success -> {
                     success = true
                     BottomStatsUiState.Loaded(buildStatItems(result.current, result.previous))
@@ -915,7 +936,8 @@ class ViewsStatsViewModel @Inject constructor(
             AppLog.e(AppLog.T.STATS, "Error loading bottom stats", e)
             BottomStatsUiState.Hidden
         }
-        updateBottom(bottomState)
+        if (isStale(period)) return false
+        updateBottom(bottomState, period)
         return success
     }
 
@@ -945,12 +967,16 @@ class ViewsStatsViewModel @Inject constructor(
         }
     }
 
-    /** Applies a bottom-row update, preserving the current chart state. */
-    private fun updateBottom(bottom: BottomStatsUiState) {
+    /**
+     * Applies a bottom-row update, preserving the current chart state. [period] is the period the load
+     * that produced [bottom] was started for — taken from the load rather than read from
+     * [currentPeriod] here, so the row can never be stamped with a period it doesn't describe.
+     */
+    private fun updateBottom(bottom: BottomStatsUiState, period: StatsPeriod) {
         // This is always the committed period's row; remember it, and which period it belongs to, so a
         // soft bar selection can restore it after overlaying the selected bar's own totals.
         wholePeriodBottom = bottom
-        wholePeriodBottomPeriod = currentPeriod
+        wholePeriodBottomPeriod = period
         _uiState.update { current ->
             when (current) {
                 // When a bar is soft-selected the visible row holds that bar's overlaid totals. A
