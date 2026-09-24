@@ -317,8 +317,6 @@ platform :android do
     UI.important("Finalizing release: #{current_release_version}")
     UI.user_error!('Aborted by user request') unless skip_confirm || UI.confirm('Do you want to continue?')
 
-    configure_apply(force: is_ci)
-
     # Don't check translation coverage for now since we are finalizing the release in CI
     # check_translations_coverage
     download_translations

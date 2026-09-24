@@ -42,9 +42,10 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ShimmerBox
-import org.wordpress.android.ui.postsrs.PostDisplayState
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostRsUiModel
+import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
+import org.wordpress.android.ui.rs.contentlist.LegacyContentListPlaceholderRow
 
 
 @Composable
@@ -55,13 +56,13 @@ fun PostRsListItem(
     modifier: Modifier = Modifier
 ) {
     when (post.displayState) {
-        PostDisplayState.PLACEHOLDER ->
-            PlaceholderItem(modifier)
-        PostDisplayState.ERROR ->
+        ContentDisplayState.PLACEHOLDER ->
+            LegacyContentListPlaceholderRow(modifier)
+        ContentDisplayState.ERROR ->
             ErrorItem(modifier)
-        PostDisplayState.NORMAL,
-        PostDisplayState.FETCHING_WITH_DATA,
-        PostDisplayState.FAILED_WITH_DATA ->
+        ContentDisplayState.NORMAL,
+        ContentDisplayState.FETCHING_WITH_DATA,
+        ContentDisplayState.FAILED_WITH_DATA ->
             PostContentItem(
                 post, onClick, onMenuAction, modifier
             )
@@ -119,7 +120,7 @@ private fun PostContentItem(
                             )
                         )
                         if (post.displayState ==
-                            PostDisplayState.FAILED_WITH_DATA
+                            ContentDisplayState.FAILED_WITH_DATA
                         ) {
                             Spacer(
                                 modifier =
@@ -199,7 +200,7 @@ private fun PostContentItem(
             }
         }
         if (post.displayState ==
-            PostDisplayState.FETCHING_WITH_DATA
+            ContentDisplayState.FETCHING_WITH_DATA
         ) {
             LinearProgressIndicator(
                 modifier = Modifier
@@ -266,43 +267,6 @@ private fun PostMenuButton(
 }
 
 @Composable
-internal fun PlaceholderItem(modifier: Modifier = Modifier) {
-    Card(
-        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            ShimmerBox(
-                modifier = Modifier
-                    .fillMaxWidth(0.25f)
-                    .height(12.dp)
-                    .clip(RoundedCornerShape(4.dp))
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            ShimmerBox(
-                modifier = Modifier
-                    .fillMaxWidth(0.7f)
-                    .height(20.dp)
-                    .clip(RoundedCornerShape(4.dp))
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            repeat(2) { index ->
-                ShimmerBox(
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f)
-                        .height(14.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                )
-                if (index == 0) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                }
-            }
-        }
-    }
-}
-
-@Composable
 private fun ErrorItem(modifier: Modifier = Modifier) {
     Card(
         modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
@@ -322,9 +286,9 @@ private val FEATURED_IMAGE_SIZE = 64.dp
 // region Previews
 
 private fun samplePost(
-    displayState: PostDisplayState = PostDisplayState.NORMAL
+    displayState: ContentDisplayState = ContentDisplayState.NORMAL
 ) = PostRsUiModel(
-    remotePostId = 1L,
+    remoteId = 1L,
     title = "Welcome to the Flavor Journey",
     excerpt = "Exploring the rich world of seasonal "
         + "ingredients and traditional techniques.",
@@ -351,7 +315,7 @@ private fun PreviewFetchingWithData() {
     MaterialTheme {
         PostRsListItem(
             post = samplePost(
-                PostDisplayState.FETCHING_WITH_DATA
+                ContentDisplayState.FETCHING_WITH_DATA
             ),
             onClick = {},
             onMenuAction = {}
@@ -365,7 +329,7 @@ private fun PreviewFailedWithData() {
     MaterialTheme {
         PostRsListItem(
             post = samplePost(
-                PostDisplayState.FAILED_WITH_DATA
+                ContentDisplayState.FAILED_WITH_DATA
             ),
             onClick = {},
             onMenuAction = {}
@@ -378,7 +342,7 @@ private fun PreviewFailedWithData() {
 private fun PreviewPlaceholder() {
     MaterialTheme {
         PostRsListItem(
-            post = samplePost(PostDisplayState.PLACEHOLDER),
+            post = samplePost(ContentDisplayState.PLACEHOLDER),
             onClick = {},
             onMenuAction = {}
         )
@@ -390,7 +354,7 @@ private fun PreviewPlaceholder() {
 private fun PreviewError() {
     MaterialTheme {
         PostRsListItem(
-            post = samplePost(PostDisplayState.ERROR),
+            post = samplePost(ContentDisplayState.ERROR),
             onClick = {},
             onMenuAction = {}
         )

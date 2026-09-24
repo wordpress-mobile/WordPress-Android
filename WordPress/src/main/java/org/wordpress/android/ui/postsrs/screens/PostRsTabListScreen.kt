@@ -7,63 +7,41 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.snapshotFlow
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.withTimeoutOrNull
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.ui.postsrs.PostRsMenuAction
+import org.wordpress.android.ui.postsrs.PostRsUiModel
+import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.contentlist.ContentDateGroup
-import org.wordpress.android.ui.rs.contentlist.ContentListMenuAction
+import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
+import org.wordpress.android.ui.rs.contentlist.ContentListEmptyState
+import org.wordpress.android.ui.rs.contentlist.ContentListErrorState
 import org.wordpress.android.ui.rs.contentlist.ContentListOverflowMenu
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentDateGrouper
 import org.wordpress.android.ui.rs.contentlist.ContentListGroupHeader
 import org.wordpress.android.ui.rs.contentlist.ContentListHeroRow
 import org.wordpress.android.ui.rs.contentlist.ContentListPlaceholderRow
+import org.wordpress.android.ui.rs.contentlist.ContentListShimmer
+import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
 import org.wordpress.android.ui.rs.contentlist.ContentListRow
-import org.wordpress.android.ui.postsrs.PostRsMenuAction
-import org.wordpress.android.ui.postsrs.PostRsUiModel
-import org.wordpress.android.ui.postsrs.PostDisplayState
-import org.wordpress.android.ui.postsrs.PostTabUiState
 import org.wordpress.android.ui.postsrs.toContentListRowUiState
+import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
+import org.wordpress.android.ui.rs.contentlist.ReportVisibleRows
+import org.wordpress.android.ui.rs.contentlist.RevealRow
+import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
+import org.wordpress.android.ui.rs.contentlist.toContentListMenuActions
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostRsTabListScreen(
-    state: PostTabUiState,
+    state: RsTabUiState<PostRsUiModel>,
     emptyMessageResId: Int,
     revealPostId: Long?,
     onRevealHandled: () -> Unit,
@@ -80,48 +58,34 @@ fun PostRsTabListScreen(
     showDateGroups: Boolean = true,
     density: ContentListDensity = ContentListDensity.COMFORTABLE
 ) {
-    val pullToRefreshState = rememberPullToRefreshState()
-
-    PullToRefreshBox(
-        modifier = modifier.fillMaxSize(),
+    ContentListPullToRefreshBox(
         isRefreshing = state.isRefreshing,
-        state = pullToRefreshState,
         onRefresh = onRefresh,
-        indicator = {
-            PullToRefreshDefaults.Indicator(
-                state = pullToRefreshState,
-                isRefreshing = state.isRefreshing,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.align(Alignment.TopCenter)
-            )
-        }
+        modifier = modifier,
     ) {
         when {
             isSearchIdle -> Box(Modifier.fillMaxSize())
-            state.isLoading -> ShimmerList(isRedesignEnabled)
-            state.error != null && state.posts.isEmpty() -> FadeInOnAppear {
-                ErrorContent(
+            state.isLoading -> ContentListShimmer(isRedesignEnabled)
+            state.error != null && state.items.isEmpty() -> FadeInOnAppear {
+                ContentListErrorState(
                     error = state.error,
                     onRetry = if (state.isAuthError) null else onRefresh
                 )
             }
-            state.posts.isEmpty() && !state.isRefreshing -> FadeInOnAppear {
-                EmptyContent(
-                    emptyMessageResId = if (isSearching) {
-                        R.string
-                            .post_list_search_nothing_found
+            state.items.isEmpty() && !state.isRefreshing -> FadeInOnAppear {
+                ContentListEmptyState(
+                    messageResId = if (isSearching) {
+                        R.string.post_list_search_nothing_found
                     } else {
                         emptyMessageResId
                     },
-                    onCreatePost = if (isSearching) {
-                        null
-                    } else {
-                        onCreatePost
-                    }
+                    // No "write a post" shortcut on an empty search result.
+                    actionLabelResId = R.string.posts_empty_list_button.takeIf { !isSearching },
+                    onAction = if (isSearching) null else onCreatePost
                 )
             }
             else -> PostListContent(
-                posts = state.posts,
+                posts = state.items,
                 revealPostId = revealPostId,
                 onRevealHandled = onRevealHandled,
                 isLoadingMore = state.isLoadingMore,
@@ -140,7 +104,6 @@ fun PostRsTabListScreen(
     }
 }
 
-@OptIn(FlowPreview::class)
 @Composable
 private fun PostListContent(
     posts: List<PostRsUiModel>,
@@ -165,55 +128,18 @@ private fun PostListContent(
             posts.map { PostListEntry.NonContent(it) }
         }
     }
-    val currentEntries by rememberUpdatedState(entries)
 
-    // Scrolls to a post the user just saved, once the refresh carrying it lands - until then this
-    // list either isn't composed or doesn't contain it yet. requestScrollToItem applies at the next
-    // measurement rather than to the content currently laid out, which matters because a keyed
-    // LazyColumn re-anchors on its old first item when one is prepended: a plain scrollToItem here
-    // would leave a newly published post just above the viewport.
-    LaunchedEffect(revealPostId) {
-        if (revealPostId == null) return@LaunchedEffect
-        // Indexes the rendered entries rather than the posts: group headers are list items too, so
-        // a post's position in `posts` is not its position in the LazyColumn.
-        val index = withTimeoutOrNull(REVEAL_TIMEOUT_MS) {
-            snapshotFlow { currentEntries.indexOfFirst { it.postId == revealPostId } }
-                .first { it >= 0 }
-        }
-        if (index != null) listState.requestScrollToItem(index)
-        // Disarm either way. A refresh replaces the list with page 1 only, so a post that sorts
-        // beyond it never arrives here; leaving the request armed would fire it much later, when
-        // load-more finally paged the post in and the user was reading something else.
-        onRevealHandled()
+    // Indexes the rendered entries, since group headers are list items too.
+    RevealRow(revealPostId, listState, onRevealHandled) { id ->
+        entries.indexOfFirst { it.postId == id }
     }
 
-    // Per-post metrics are one request each, so the ViewModel is told which rows are actually on
-    // screen rather than fetching for the whole loaded page. Post entries key on their remote id;
-    // group headers key on a String, so filtering by type drops them.
-    val currentOnRowsVisible by rememberUpdatedState(onRowsVisible)
-    LaunchedEffect(listState, isRedesignEnabled) {
-        if (!isRedesignEnabled) return@LaunchedEffect
-        snapshotFlow {
-            listState.layoutInfo.visibleItemsInfo.mapNotNull { it.key as? Long }
-        }
-            // A fling changes the visible set on nearly every frame. Without settling first, each
-            // of those emissions would start fetching for rows already gone from the screen.
-            .debounce(VISIBLE_ROWS_DEBOUNCE_MS)
-            .distinctUntilChanged()
-            .collect { currentOnRowsVisible(it) }
+    // Post entries key on their remote id; group headers key on a String and drop out.
+    ReportVisibleRows(listState, enabled = isRedesignEnabled, onRowsVisible = onRowsVisible) {
+        listState.layoutInfo.visibleItemsInfo.mapNotNull { it.key as? Long }
     }
 
-    LaunchedEffect(canLoadMore) {
-        if (!canLoadMore) return@LaunchedEffect
-        snapshotFlow {
-            val lastVisible = listState.layoutInfo
-                .visibleItemsInfo.lastOrNull()?.index ?: 0
-            val total = listState.layoutInfo.totalItemsCount
-            lastVisible >= total - LOAD_MORE_THRESHOLD
-        }.distinctUntilChanged().collect { shouldLoad ->
-            if (shouldLoad) onLoadMore()
-        }
-    }
+    LoadMoreOnScrollToEnd(listState, posts.size, canLoadMore, onLoadMore)
 
     LazyColumn(
         state = listState,
@@ -233,16 +159,16 @@ private fun PostListContent(
                     // The redesigned placeholder only belongs to the redesigned list; with the flag
                     // off every row, placeholder included, goes through the pre-redesign item.
                     if (isRedesignEnabled &&
-                        entry.post.displayState == PostDisplayState.PLACEHOLDER
+                        entry.post.displayState == ContentDisplayState.PLACEHOLDER
                     ) {
                         ContentListPlaceholderRow(modifier = Modifier.animateItem())
                     } else {
                         // The pre-redesign row still owns the error presentation.
                         PostRsListItem(
                             post = entry.post,
-                            onClick = { onPostClick(entry.post.remotePostId) },
+                            onClick = { onPostClick(entry.post.remoteId) },
                             onMenuAction = { action ->
-                                onPostMenuAction(entry.post.remotePostId, action)
+                                onPostMenuAction(entry.post.remoteId, action)
                             },
                             modifier = Modifier.animateItem()
                         )
@@ -257,30 +183,7 @@ private fun PostListContent(
             }
         }
 
-        if (isLoadingMore) {
-            item(key = "loading_more") {
-                Box(
-                    modifier = Modifier
-                        .fillParentMaxWidth()
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        strokeWidth = 2.dp
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun ShimmerList(isRedesignEnabled: Boolean) {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(SHIMMER_ITEM_COUNT) {
-            if (isRedesignEnabled) ContentListPlaceholderRow() else PlaceholderItem()
-        }
+        if (isLoadingMore) contentListLoadingMoreItem()
     }
 }
 
@@ -301,67 +204,6 @@ private fun FadeInOnAppear(content: @Composable () -> Unit) {
         enter = fadeIn(animationSpec = tween(STATE_FADE_MS))
     ) {
         content()
-    }
-}
-
-@Composable
-private fun ErrorContent(error: String, onRetry: (() -> Unit)?) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = stringResource(R.string.error_generic),
-            style = MaterialTheme.typography.titleMedium
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = error,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center
-        )
-        if (onRetry != null) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = onRetry) {
-                Text(text = stringResource(R.string.retry))
-            }
-        }
-    }
-}
-
-@Composable
-private fun EmptyContent(
-    emptyMessageResId: Int,
-    onCreatePost: (() -> Unit)?
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = stringResource(emptyMessageResId),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        if (onCreatePost != null) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = onCreatePost) {
-                Text(
-                    text = stringResource(
-                        R.string.posts_empty_list_button
-                    )
-                )
-            }
-        }
     }
 }
 
@@ -386,8 +228,8 @@ private sealed interface PostListEntry {
     }
 
     data class Row(val post: PostRsUiModel, val isHero: Boolean) : PostListEntry {
-        override val key get() = post.remotePostId
-        override val postId get() = post.remotePostId
+        override val key get() = post.remoteId
+        override val postId get() = post.remoteId
     }
 
     /**
@@ -395,8 +237,8 @@ private sealed interface PostListEntry {
      * the post's own [PostRsUiModel.displayState] at render time.
      */
     data class NonContent(val post: PostRsUiModel) : PostListEntry {
-        override val key get() = post.remotePostId
-        override val postId get() = post.remotePostId
+        override val key get() = post.remoteId
+        override val postId get() = post.remoteId
     }
 }
 
@@ -410,8 +252,8 @@ private fun buildEntries(
     var headerCount = 0
 
     posts.forEach { post ->
-        if (post.displayState == PostDisplayState.PLACEHOLDER ||
-            post.displayState == PostDisplayState.ERROR
+        if (post.displayState == ContentDisplayState.PLACEHOLDER ||
+            post.displayState == ContentDisplayState.ERROR
         ) {
             entries += PostListEntry.NonContent(post)
             return@forEach
@@ -450,18 +292,14 @@ private fun RedesignedRow(
 ) {
     val post = entry.post
     val state = post.toContentListRowUiState()
-    val onClick = { onPostClick(post.remotePostId) }
+    val onClick = { onPostClick(post.remoteId) }
     val menu: (@Composable () -> Unit)? = if (post.actions.isEmpty()) {
         null
     } else {
         {
             ContentListOverflowMenu(
-                actions = post.actions.map { action ->
-                    ContentListMenuAction(
-                        labelResId = action.labelResId,
-                        iconResId = action.iconResId,
-                        isDestructive = action.isDestructive
-                    ) { onPostMenuAction(post.remotePostId, action) }
+                actions = post.actions.toContentListMenuActions { action ->
+                    onPostMenuAction(post.remoteId, action)
                 }
             )
         }
@@ -486,14 +324,3 @@ private fun RedesignedRow(
 
 /** Long enough to read as a fade rather than a flicker, short enough not to feel sluggish. */
 private const val STATE_FADE_MS = 300
-
-/** How long the visible-row set must settle before metrics are fetched for it. */
-private const val VISIBLE_ROWS_DEBOUNCE_MS = 300L
-
-private const val LOAD_MORE_THRESHOLD = 5
-private const val SHIMMER_ITEM_COUNT = 8
-
-/**
- * How long a reveal waits for the refresh carrying the post to land before giving up.
- */
-private const val REVEAL_TIMEOUT_MS = 15_000L

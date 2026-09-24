@@ -26,6 +26,7 @@ import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment.Companion.MODAL_LAYOUT_PICKER_TAG
 import org.wordpress.android.ui.pagesrs.screens.PagesRsListScreen
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.rs.RsConfirmationDialogState
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.clipboardManager
@@ -73,7 +74,7 @@ class PagesRsListActivity : BaseAppCompatActivity() {
                     authorFilter = authorFilter,
                     isAuthorFilterSupported = viewModel.isAuthorFilterSupported,
                     avatarUrl = viewModel.avatarUrl,
-                    confirmationDialog = PageRsConfirmationDialogState(
+                    confirmationDialog = RsConfirmationDialogState(
                         pending = pendingConfirmation,
                         onConfirm = viewModel::onConfirmPendingAction,
                         onDismiss = viewModel::onDismissPendingAction

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.commentsrs.screens
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,44 +11,33 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.flow.distinctUntilChanged
 import org.wordpress.android.R
 import org.wordpress.android.ui.commentsrs.CommentRsUiModel
 import org.wordpress.android.ui.commentsrs.CommentsRsListRow
-import org.wordpress.android.ui.commentsrs.CommentsTabUiState
 import org.wordpress.android.ui.commentsrs.withDateGroups
 import org.wordpress.android.ui.commentsrs.withDateHeaders
 import org.wordpress.android.ui.compose.components.ShimmerBox
+import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.rs.contentlist.ContentListEmptyState
+import org.wordpress.android.ui.rs.contentlist.ContentListErrorState
 import org.wordpress.android.ui.rs.contentlist.ContentListGroupHeader
+import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
+import org.wordpress.android.ui.rs.contentlist.ContentListShimmer
+import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
+import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentsRsTabListScreen(
     /** Null when the tab isn't initialized: first composition, or cleared awaiting a search. */
-    state: CommentsTabUiState?,
+    state: RsTabUiState<CommentRsUiModel>?,
     emptyMessageResId: Int,
     selectedIds: Set<Long>,
     listState: LazyListState,
@@ -69,44 +57,35 @@ fun CommentsRsTabListScreen(
     // keystroke. Outside search, a missing state is the pre-init first composition: shimmer.
     val isSearchIdle = isSearchActive && (!isQuerySearchable || state == null)
     val isSearching = isSearchActive && isQuerySearchable
-    val tabState = state ?: CommentsTabUiState(isLoading = true)
-    val pullToRefreshState = rememberPullToRefreshState()
+    val tabState = state ?: RsTabUiState(isLoading = true)
 
-    PullToRefreshBox(
-        modifier = modifier.fillMaxSize(),
+    ContentListPullToRefreshBox(
         isRefreshing = tabState.isRefreshing,
-        state = pullToRefreshState,
         onRefresh = onRefresh,
-        indicator = {
-            PullToRefreshDefaults.Indicator(
-                state = pullToRefreshState,
-                isRefreshing = tabState.isRefreshing,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.align(Alignment.TopCenter)
-            )
-        }
+        modifier = modifier
     ) {
         when {
             // Search is open but the query is still below the minimum length: show nothing
             // rather than a misleading "no comments" state.
             isSearchIdle -> Box(Modifier.fillMaxSize())
             tabState.isLoading -> ShimmerList(isRedesignEnabled)
-            tabState.error != null && tabState.comments.isEmpty() -> ErrorContent(
+            tabState.error != null && tabState.items.isEmpty() -> ContentListErrorState(
                 error = tabState.error,
                 onRetry = if (tabState.isAuthError) null else onRefresh
             )
             // isLoadingMore matters here because the Unreplied tab auto-advances: a page can
             // thread away to nothing and the next one is already on its way, so an empty list
             // mid-walk isn't an empty tab.
-            tabState.comments.isEmpty() && !tabState.isRefreshing && !tabState.isLoadingMore -> EmptyContent(
-                emptyMessageResId = if (isSearching) {
-                    R.string.comments_rs_search_nothing_found
-                } else {
-                    emptyMessageResId
-                }
-            )
+            tabState.items.isEmpty() && !tabState.isRefreshing && !tabState.isLoadingMore ->
+                ContentListEmptyState(
+                    messageResId = if (isSearching) {
+                        R.string.comments_rs_search_nothing_found
+                    } else {
+                        emptyMessageResId
+                    }
+                )
             else -> CommentListContent(
-                comments = tabState.comments,
+                comments = tabState.items,
                 selectedIds = selectedIds,
                 listState = listState,
                 isLoadingMore = tabState.isLoadingMore,
@@ -134,21 +113,7 @@ private fun CommentListContent(
     isRedesignEnabled: Boolean,
     density: ContentListDensity
 ) {
-    // Also keyed on the list size: a refresh that truncates the list (or an appended page) restarts
-    // the flow, so a `true` latched by distinctUntilChanged before the change can't suppress the
-    // re-fire needed to resume paging. The ViewModel's busy/cursor guards make re-fires safe.
-    LaunchedEffect(canLoadMore, comments.size) {
-        if (!canLoadMore) return@LaunchedEffect
-        snapshotFlow {
-            // total > 0 keeps the pre-layout pass (empty layoutInfo, 0 >= -threshold) from
-            // triggering a load of the next page before the user has scrolled at all.
-            val lastVisible = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
-            val total = listState.layoutInfo.totalItemsCount
-            total > 0 && lastVisible >= total - LOAD_MORE_THRESHOLD
-        }.distinctUntilChanged().collect { shouldLoad ->
-            if (shouldLoad) onLoadMore()
-        }
-    }
+    LoadMoreOnScrollToEnd(listState, comments.size, canLoadMore, onLoadMore)
 
     // Interleave date subheaders once per comment-list change. The redesigned list buckets them
     // the way the posts list does; the pre-redesign one keeps its header-per-day.
@@ -200,33 +165,18 @@ private fun CommentListContent(
             }
         }
 
-        if (isLoadingMore) {
-            item(key = "loading_more") {
-                Box(
-                    modifier = Modifier
-                        .fillParentMaxWidth()
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        strokeWidth = 2.dp
-                    )
-                }
-            }
-        }
+        if (isLoadingMore) contentListLoadingMoreItem()
     }
 }
 
 @Composable
 private fun ShimmerList(isRedesignEnabled: Boolean) {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(SHIMMER_ITEM_COUNT) {
-            if (isRedesignEnabled) CommentsRsPlaceholderRow() else PlaceholderItem()
-        }
+    ContentListShimmer {
+        if (isRedesignEnabled) CommentsRsPlaceholderRow() else PlaceholderItem()
     }
 }
 
+/** Not the shared placeholder: a comment row leads with an avatar. */
 @Composable
 private fun PlaceholderItem() {
     Row(modifier = Modifier.padding(16.dp)) {
@@ -250,54 +200,3 @@ private fun PlaceholderItem() {
         }
     }
 }
-
-@Composable
-private fun ErrorContent(error: String, onRetry: (() -> Unit)?) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = stringResource(R.string.error_generic),
-            style = MaterialTheme.typography.titleMedium
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = error,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center
-        )
-        if (onRetry != null) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = onRetry) {
-                Text(text = stringResource(R.string.retry))
-            }
-        }
-    }
-}
-
-@Composable
-private fun EmptyContent(emptyMessageResId: Int) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = stringResource(emptyMessageResId),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}
-
-private const val LOAD_MORE_THRESHOLD = 5
-private const val SHIMMER_ITEM_COUNT = 8
