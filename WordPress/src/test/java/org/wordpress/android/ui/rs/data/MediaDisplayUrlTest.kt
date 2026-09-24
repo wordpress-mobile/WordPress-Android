@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.postsrs.data
+package org.wordpress.android.ui.rs.data
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test

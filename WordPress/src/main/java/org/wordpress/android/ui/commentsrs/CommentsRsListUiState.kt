@@ -39,16 +39,6 @@ data class CommentRsUiModel(
         }
 }
 
-data class CommentsTabUiState(
-    val comments: List<CommentRsUiModel> = emptyList(),
-    val isLoading: Boolean = false,
-    val isRefreshing: Boolean = false,
-    val isLoadingMore: Boolean = false,
-    val canLoadMore: Boolean = false,
-    val error: String? = null,
-    val isAuthError: Boolean = false
-)
-
 /** A destructive batch [action] awaiting user confirmation, to be applied to [commentIds]. */
 data class PendingConfirmation(val action: CommentsRsBatchAction, val commentIds: List<Long>)
 

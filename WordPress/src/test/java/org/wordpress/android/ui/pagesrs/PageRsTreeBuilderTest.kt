@@ -11,7 +11,7 @@ class PageRsTreeBuilderTest {
         val rows = buildRows(pages, applyHierarchy = true, pageOnFront = 0L, pageForPosts = 0L)
 
         assertThat(rows).hasSize(3)
-        assertThat(rows.map { (it as PageRsListItem.Real).page.remotePageId })
+        assertThat(rows.map { (it as PageRsListItem.Real).page.remoteId })
             .containsExactly(1L, 2L, 3L)
         assertThat(rows.map { (it as PageRsListItem.Real).indentLevel })
             .containsOnly(0)
@@ -29,7 +29,7 @@ class PageRsTreeBuilderTest {
 
         val rows = flattenToTree(pages)
 
-        assertThat(rows.map { it.page.remotePageId }).containsExactly(1L, 2L, 3L, 4L)
+        assertThat(rows.map { it.page.remoteId }).containsExactly(1L, 2L, 3L, 4L)
         assertThat(rows.map { it.indentLevel }).containsExactly(0, 1, 2, 1)
     }
 
@@ -44,7 +44,7 @@ class PageRsTreeBuilderTest {
 
         val rows = flattenToTree(pages)
 
-        assertThat(rows.map { it.page.remotePageId }).containsExactly(10L, 11L, 20L, 21L)
+        assertThat(rows.map { it.page.remoteId }).containsExactly(10L, 11L, 20L, 21L)
         assertThat(rows.map { it.indentLevel }).containsExactly(0, 1, 0, 1)
     }
 
@@ -57,7 +57,7 @@ class PageRsTreeBuilderTest {
 
         val rows = flattenToTree(pages)
 
-        assertThat(rows.map { it.page.remotePageId }).containsExactly(1L, 2L)
+        assertThat(rows.map { it.page.remoteId }).containsExactly(1L, 2L)
         assertThat(rows.map { it.indentLevel }).containsExactly(0, 0)
     }
 
@@ -100,9 +100,9 @@ class PageRsTreeBuilderTest {
         assertThat(rows).hasSize(3)
         assertThat(rows[0]).isInstanceOfSatisfying(PageRsListItem.Virtual::class.java) { virtual ->
             assertThat(virtual.kind).isEqualTo(PageRsListItem.Virtual.Kind.HOMEPAGE)
-            assertThat(virtual.page.remotePageId).isEqualTo(2L)
+            assertThat(virtual.page.remoteId).isEqualTo(2L)
         }
-        assertThat(rows.drop(1).map { (it as PageRsListItem.Real).page.remotePageId })
+        assertThat(rows.drop(1).map { (it as PageRsListItem.Real).page.remoteId })
             .containsExactly(1L, 3L)
     }
 
@@ -114,9 +114,9 @@ class PageRsTreeBuilderTest {
 
         assertThat(rows[0]).isInstanceOfSatisfying(PageRsListItem.Virtual::class.java) { virtual ->
             assertThat(virtual.kind).isEqualTo(PageRsListItem.Virtual.Kind.POSTS_PAGE)
-            assertThat(virtual.page.remotePageId).isEqualTo(3L)
+            assertThat(virtual.page.remoteId).isEqualTo(3L)
         }
-        assertThat(rows.drop(1).map { (it as PageRsListItem.Real).page.remotePageId })
+        assertThat(rows.drop(1).map { (it as PageRsListItem.Real).page.remoteId })
             .containsExactly(1L, 2L)
     }
 
@@ -128,11 +128,11 @@ class PageRsTreeBuilderTest {
 
         assertThat((rows[0] as PageRsListItem.Virtual).kind)
             .isEqualTo(PageRsListItem.Virtual.Kind.HOMEPAGE)
-        assertThat((rows[0] as PageRsListItem.Virtual).page.remotePageId).isEqualTo(2L)
+        assertThat((rows[0] as PageRsListItem.Virtual).page.remoteId).isEqualTo(2L)
         assertThat((rows[1] as PageRsListItem.Virtual).kind)
             .isEqualTo(PageRsListItem.Virtual.Kind.POSTS_PAGE)
-        assertThat((rows[1] as PageRsListItem.Virtual).page.remotePageId).isEqualTo(3L)
-        assertThat(rows.drop(2).map { (it as PageRsListItem.Real).page.remotePageId })
+        assertThat((rows[1] as PageRsListItem.Virtual).page.remoteId).isEqualTo(3L)
+        assertThat(rows.drop(2).map { (it as PageRsListItem.Real).page.remoteId })
             .containsExactly(1L, 4L)
     }
 
@@ -143,7 +143,7 @@ class PageRsTreeBuilderTest {
         val rows = buildRows(pages, applyHierarchy = true, pageOnFront = 999L, pageForPosts = 0L)
 
         assertThat(rows).allMatch { it is PageRsListItem.Real }
-        assertThat(rows.map { (it as PageRsListItem.Real).page.remotePageId })
+        assertThat(rows.map { (it as PageRsListItem.Real).page.remoteId })
             .containsExactly(1L, 2L)
     }
 
@@ -161,7 +161,7 @@ class PageRsTreeBuilderTest {
 
         // Virtual homepage first, then page 3 (orphaned by hidden parent) and page 1 as roots.
         assertThat(rows[0]).isInstanceOf(PageRsListItem.Virtual::class.java)
-        val realIds = rows.drop(1).map { (it as PageRsListItem.Real).page.remotePageId }
+        val realIds = rows.drop(1).map { (it as PageRsListItem.Real).page.remoteId }
         assertThat(realIds).containsExactly(1L, 3L)
         assertThat(rows.drop(1).map { (it as PageRsListItem.Real).indentLevel })
             .containsOnly(0)
@@ -182,9 +182,9 @@ class PageRsTreeBuilderTest {
         assertThat(rows).hasSize(4)
         assertThat(rows[0]).isInstanceOfSatisfying(PageRsListItem.Virtual::class.java) { virtual ->
             assertThat(virtual.kind).isEqualTo(PageRsListItem.Virtual.Kind.SITE_EDITOR)
-            assertThat(virtual.page.remotePageId).isEqualTo(SITE_EDITOR_PAGE_ID)
+            assertThat(virtual.page.remoteId).isEqualTo(SITE_EDITOR_PAGE_ID)
         }
-        assertThat(rows.drop(1).map { (it as PageRsListItem.Real).page.remotePageId })
+        assertThat(rows.drop(1).map { (it as PageRsListItem.Real).page.remoteId })
             .containsExactly(1L, 2L, 3L)
     }
 
@@ -242,7 +242,7 @@ class PageRsTreeBuilderTest {
         assertThat(rows).hasSize(3)
         assertThat((rows[0] as PageRsListItem.Virtual).kind)
             .isEqualTo(PageRsListItem.Virtual.Kind.SITE_EDITOR)
-        assertThat(rows.drop(1).map { (it as PageRsListItem.Real).page.remotePageId })
+        assertThat(rows.drop(1).map { (it as PageRsListItem.Real).page.remoteId })
             .containsExactly(1L, 3L)
     }
 
@@ -262,8 +262,8 @@ class PageRsTreeBuilderTest {
             .isEqualTo(PageRsListItem.Virtual.Kind.SITE_EDITOR)
         assertThat((rows[1] as PageRsListItem.Virtual).kind)
             .isEqualTo(PageRsListItem.Virtual.Kind.POSTS_PAGE)
-        assertThat((rows[1] as PageRsListItem.Virtual).page.remotePageId).isEqualTo(3L)
-        assertThat(rows.drop(2).map { (it as PageRsListItem.Real).page.remotePageId })
+        assertThat((rows[1] as PageRsListItem.Virtual).page.remoteId).isEqualTo(3L)
+        assertThat(rows.drop(2).map { (it as PageRsListItem.Real).page.remoteId })
             .containsExactly(1L, 2L)
     }
 
@@ -280,7 +280,7 @@ class PageRsTreeBuilderTest {
         )
 
         assertThat(rows).allMatch { it is PageRsListItem.Real }
-        assertThat(rows.map { (it as PageRsListItem.Real).page.remotePageId })
+        assertThat(rows.map { (it as PageRsListItem.Real).page.remoteId })
             .containsExactly(1L, 2L)
     }
 
@@ -293,7 +293,7 @@ class PageRsTreeBuilderTest {
 
         val rows = flattenToTree(pages)
 
-        assertThat(rows.map { it.page.remotePageId }).containsExactly(1L, 2L)
+        assertThat(rows.map { it.page.remoteId }).containsExactly(1L, 2L)
         assertThat(rows.map { it.indentLevel }).containsOnly(0)
     }
 
@@ -309,12 +309,12 @@ class PageRsTreeBuilderTest {
 
         val rows = flattenToTree(pages)
 
-        assertThat(rows.map { it.page.remotePageId }).containsExactly(1L, 2L, 3L, 4L)
+        assertThat(rows.map { it.page.remoteId }).containsExactly(1L, 2L, 3L, 4L)
         assertThat(rows.map { it.indentLevel }).containsOnly(0)
     }
 
     private fun page(id: Long, parentId: Long = 0L) = PageRsUiModel(
-        remotePageId = id,
+        remoteId = id,
         parentId = parentId,
         title = "Page $id",
         excerpt = "",

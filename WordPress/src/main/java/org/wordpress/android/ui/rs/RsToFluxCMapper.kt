@@ -1,8 +1,8 @@
-package org.wordpress.android.ui.postsrs
+package org.wordpress.android.ui.rs
 
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.postsrs.data.PostRsRestClient
+import org.wordpress.android.ui.rs.data.RsSiteRestClient
 import org.wordpress.android.util.DateTimeUtils
 import uniffi.wp_api.AnyPostWithEditContext
 import uniffi.wp_api.PostFormat
@@ -14,8 +14,8 @@ import javax.inject.Inject
  * Maps a wordpress-rs [AnyPostWithEditContext] to a FluxC [PostModel]
  * so the editor can load it from FluxC's local database.
  */
-class PostRsToFluxCMapper @Inject constructor(
-    private val restClient: PostRsRestClient,
+class RsToFluxCMapper @Inject constructor(
+    private val restClient: RsSiteRestClient,
 ) {
     suspend fun map(
         post: AnyPostWithEditContext,
