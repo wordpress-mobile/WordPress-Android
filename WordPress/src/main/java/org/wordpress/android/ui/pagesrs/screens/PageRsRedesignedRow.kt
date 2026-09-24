@@ -98,18 +98,16 @@ private fun PageRsContentCard(
             ContentListHeroRow(
                 state = state,
                 onClick = onClick,
-                menu = actions.menu,
-                leading = leading,
-                quickActions = actions.quickActions
+                actions = actions,
+                leading = leading
             )
         } else {
             ContentListRow(
                 state = state,
                 onClick = onClick,
                 density = density,
-                menu = actions.menu,
-                leading = leading,
-                quickActions = actions.quickActions
+                actions = actions,
+                leading = leading
             )
         }
     }

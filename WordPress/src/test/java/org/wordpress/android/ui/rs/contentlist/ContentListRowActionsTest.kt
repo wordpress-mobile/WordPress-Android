@@ -5,13 +5,13 @@ import org.junit.Test
 
 class ContentListRowActionsTest {
     @Test
-    fun `tagged actions become buttons in type order with edit between them`() {
+    fun `tagged actions become buttons in type order with edit first`() {
         val actions = listOf(TestAction.STATS, TestAction.SHARE, TestAction.VIEW)
             .toContentListRowActions(onEdit = {}, onAction = {})
 
         assertThat(actions.quickActions.map { it.type }).containsExactly(
-            ContentListQuickActionType.VIEW,
             ContentListQuickActionType.EDIT,
+            ContentListQuickActionType.VIEW,
             ContentListQuickActionType.STATS
         )
     }

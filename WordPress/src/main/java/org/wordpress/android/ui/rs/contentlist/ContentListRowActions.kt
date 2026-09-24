@@ -12,10 +12,12 @@ import org.wordpress.android.R
 /**
  * The buttons a redesigned row can show in its footer, declared in the order they appear. Shared
  * so the posts and pages lists draw the same icon and label for the same action.
+ *
+ * Edit leads because it is also what tapping the card does.
  */
 enum class ContentListQuickActionType(@StringRes val labelResId: Int) {
-    VIEW(R.string.button_view),
     EDIT(R.string.button_edit),
+    VIEW(R.string.button_view),
     STATS(R.string.button_stats);
 
     // A getter rather than a constructor argument, so the vectors are only built when drawn.
@@ -35,8 +37,8 @@ data class ContentListQuickAction(
 
 /** A row's actions, split between its footer buttons and its overflow menu. */
 class ContentListRowActions(
-    val quickActions: List<ContentListQuickAction>,
-    val menu: (@Composable () -> Unit)?
+    val quickActions: List<ContentListQuickAction> = emptyList(),
+    val menu: (@Composable () -> Unit)? = null
 )
 
 /**

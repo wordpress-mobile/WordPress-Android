@@ -56,8 +56,9 @@ import java.text.NumberFormat
  * [leading] draws ahead of the text, for rows that stand for something other than a plain entry -
  * the pages list marks its homepage and posts-page rows that way.
  *
- * Supplying [quickActions] moves the metadata line and the overflow button into a footer beneath the
- * text, with the actions as icon buttons between them.
+ * [actions] supplies the overflow menu. When it also has quick actions, the metrics and the menu
+ * move into a footer beneath the text with the actions as icon buttons between them, and the date
+ * moves beside the title.
  */
 @Composable
 fun ContentListRow(
@@ -65,9 +66,8 @@ fun ContentListRow(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     density: ContentListDensity = ContentListDensity.COMFORTABLE,
-    menu: (@Composable () -> Unit)? = null,
-    leading: (@Composable () -> Unit)? = null,
-    quickActions: List<ContentListQuickAction> = emptyList()
+    actions: ContentListRowActions = ContentListRowActions(),
+    leading: (@Composable () -> Unit)? = null
 ) {
     val padding = if (density.isCondensed) CONDENSED_CARD_PADDING else CARD_PADDING
     ContentListCard(onClick = onClick, isSyncing = state.isSyncing, modifier = modifier) {
@@ -77,9 +77,8 @@ fun ContentListRow(
             titleLineHeight = TITLE_LINE_HEIGHT,
             density = density,
             padding = padding,
-            menu = menu,
-            leading = leading,
-            quickActions = quickActions
+            actions = actions,
+            leading = leading
         ) {
             FeaturedImage(
                 imageUrl = state.thumbnailImageUrl,
@@ -104,9 +103,8 @@ fun ContentListHeroRow(
     state: ContentListRowUiState,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    menu: (@Composable () -> Unit)? = null,
-    leading: (@Composable () -> Unit)? = null,
-    quickActions: List<ContentListQuickAction> = emptyList()
+    actions: ContentListRowActions = ContentListRowActions(),
+    leading: (@Composable () -> Unit)? = null
 ) {
     ContentListCard(onClick = onClick, isSyncing = state.isSyncing, modifier = modifier) {
         Column {
@@ -123,9 +121,8 @@ fun ContentListHeroRow(
                 titleLineHeight = HERO_TITLE_LINE_HEIGHT,
                 density = ContentListDensity.COMFORTABLE,
                 padding = CARD_PADDING,
-                menu = menu,
-                leading = leading,
-                quickActions = quickActions
+                actions = actions,
+                leading = leading
             )
         }
     }
@@ -306,8 +303,8 @@ private fun RowBody(
     if (!density.isCondensed) {
         RowExcerpt(state.excerpt)
     }
-    // Everything else on the metadata line is separator-prefixed, so a row with no date - the
-    // pages list's synthetic Site Editor entry - drops the line rather than leading with a bullet.
+    // A row with no date - the pages list's synthetic Site Editor entry - has no metrics or sync
+    // state either, so it drops the line altogether.
     if (showMetaLine && state.dateLabel.isNotBlank()) {
         Spacer(modifier = Modifier.height(TITLE_META_GAP))
         RowMetaLine(state = state, showDate = true, showMetrics = !density.isCondensed)
@@ -320,7 +317,7 @@ private fun RowTitle(
     title: String,
     fontSize: TextUnit,
     lineHeight: TextUnit,
-    date: String? = null
+    date: String?
 ) {
     Row {
         Text(
@@ -523,12 +520,12 @@ private fun RowTextAndMenu(
     titleLineHeight: TextUnit,
     density: ContentListDensity,
     padding: Dp,
-    menu: (@Composable () -> Unit)?,
-    leading: (@Composable () -> Unit)? = null,
-    quickActions: List<ContentListQuickAction> = emptyList(),
+    actions: ContentListRowActions,
+    leading: (@Composable () -> Unit)?,
     trailing: @Composable () -> Unit = {}
 ) {
-    val hasFooter = quickActions.isNotEmpty()
+    val menu = actions.menu
+    val hasFooter = actions.quickActions.isNotEmpty()
     Column {
         Row(
             modifier = Modifier.padding(
@@ -563,8 +560,7 @@ private fun RowTextAndMenu(
                 state = state,
                 density = density,
                 padding = padding,
-                quickActions = quickActions,
-                menu = menu
+                actions = actions
             )
         }
     }
@@ -579,8 +575,7 @@ private fun RowFooter(
     state: ContentListRowUiState,
     density: ContentListDensity,
     padding: Dp,
-    quickActions: List<ContentListQuickAction>,
-    menu: (@Composable () -> Unit)?
+    actions: ContentListRowActions
 ) {
     Row(
         modifier = Modifier.padding(start = padding),
@@ -590,7 +585,7 @@ private fun RowFooter(
             // The date is beside the title, so this line carries only the metrics.
             RowMetaLine(state = state, showDate = false, showMetrics = !density.isCondensed)
         }
-        quickActions.forEach { action ->
+        actions.quickActions.forEach { action ->
             IconButton(onClick = action.onClick) {
                 Icon(
                     imageVector = action.type.icon,
@@ -600,7 +595,7 @@ private fun RowFooter(
                 )
             }
         }
-        menu?.invoke()
+        actions.menu?.invoke()
     }
 }
 

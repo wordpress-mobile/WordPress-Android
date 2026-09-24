@@ -310,16 +310,14 @@ private fun RedesignedRow(
             ContentListHeroRow(
                 state = state,
                 onClick = onClick,
-                menu = actions.menu,
-                quickActions = actions.quickActions
+                actions = actions
             )
         } else {
             ContentListRow(
                 state = state,
                 onClick = onClick,
                 density = density,
-                menu = actions.menu,
-                quickActions = actions.quickActions
+                actions = actions
             )
         }
     }
