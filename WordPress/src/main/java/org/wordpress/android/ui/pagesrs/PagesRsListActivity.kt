@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.PAGE_FROM_PAGES_LIST
@@ -43,6 +44,7 @@ class PagesRsListActivity : BaseAppCompatActivity() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var buildConfigWrapper: BuildConfigWrapper
     @Inject lateinit var experimentalFeatures: ExperimentalFeatures
+    @Inject lateinit var activityNavigator: ActivityNavigator
 
     private val viewModel: PagesRsListViewModel by viewModels()
     private lateinit var mlpViewModel: ModalLayoutPickerViewModel
@@ -132,7 +134,7 @@ class PagesRsListActivity : BaseAppCompatActivity() {
             is PageRsListEvent.EditPage ->
                 ActivityLauncher.editPostOrPageForResult(this, event.site, event.page)
             is PageRsListEvent.CreateNewPage -> startCreatePageFlow()
-            is PageRsListEvent.ViewPage -> ActivityLauncher.openUrlExternal(this, event.url)
+            is PageRsListEvent.ViewPage -> activityNavigator.openInCustomTab(this, event.url)
             is PageRsListEvent.SharePage ->
                 ActivityLauncher.openShareIntent(this, event.url, event.title)
             is PageRsListEvent.CopyPageUrl -> copyUrlToClipboard(event.url)
