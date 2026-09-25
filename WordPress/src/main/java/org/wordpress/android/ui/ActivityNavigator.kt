@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import androidx.browser.customtabs.CustomTabsClient
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.app.TaskStackBuilder
 import androidx.core.net.toUri
@@ -276,6 +277,8 @@ class ActivityNavigator @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     fun openInCustomTab(activity: Activity, url: String) {
         val intent = getCustomTabsIntent(activity)
+        // Target the browser directly, otherwise our own deep-link aliases can claim WP.com post URLs
+        CustomTabsClient.getPackageName(activity, null)?.let { intent.intent.setPackage(it) }
         try {
             intent.launchUrl(activity, url.toUri())
         } catch (e: RuntimeException) {
