@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -32,6 +33,9 @@ import javax.inject.Inject
 class PostRsListActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var experimentalFeatures: ExperimentalFeatures
+
+    @Inject
+    lateinit var activityNavigator: ActivityNavigator
 
     private val viewModel: PostRsListViewModel by viewModels()
 
@@ -126,7 +130,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
                     this, event.site, false,
                     PagePostCreationSourcesDetail.POST_FROM_POSTS_LIST, -1, null
                 )
-            is PostRsListEvent.ViewPost -> ActivityLauncher.openUrlExternal(this, event.url)
+            is PostRsListEvent.ViewPost -> activityNavigator.openInCustomTab(this, event.url)
             is PostRsListEvent.ReadPost ->
                 ReaderActivityLauncher.showReaderPostDetail(this, event.blogId, event.postId)
             is PostRsListEvent.SharePost ->
