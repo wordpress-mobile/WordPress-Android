@@ -10,15 +10,7 @@ interface RsMenuAction {
     @get:DrawableRes val iconResId: Int
 
     val isDestructive: Boolean
-}
 
-/** Projects a row's actions onto what [ContentListOverflowMenu] renders. */
-fun <A : RsMenuAction> List<A>.toContentListMenuActions(
-    onAction: (A) -> Unit
-): List<ContentListMenuAction> = map { action ->
-    ContentListMenuAction(
-        labelResId = action.labelResId,
-        iconResId = action.iconResId,
-        isDestructive = action.isDestructive
-    ) { onAction(action) }
+    /** Set for actions a redesigned row shows as a footer button instead of in its overflow menu. */
+    val quickActionType: ContentListQuickActionType? get() = null
 }

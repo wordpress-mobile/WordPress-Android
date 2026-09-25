@@ -20,10 +20,9 @@ import org.wordpress.android.ui.pagesrs.toContentListRowUiState
 import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListHeroRow
-import org.wordpress.android.ui.rs.contentlist.ContentListOverflowMenu
 import org.wordpress.android.ui.rs.contentlist.ContentListPlaceholderRow
 import org.wordpress.android.ui.rs.contentlist.ContentListRow
-import org.wordpress.android.ui.rs.contentlist.toContentListMenuActions
+import org.wordpress.android.ui.rs.contentlist.toContentListRowActions
 
 /**
  * One row of the redesigned pages list.
@@ -70,14 +69,17 @@ private fun PageRsContentCard(
         siteEditorTitle = stringResource(R.string.virtual_homepage_title),
         siteEditorSubtitle = stringResource(R.string.virtual_homepage_subtitle)
     )
-    val menu: (@Composable () -> Unit)? = if (page.actions.isEmpty()) {
-        null
-    } else {
-        {
-            ContentListOverflowMenu(actions = page.actions.toContentListMenuActions(onMenuAction))
-        }
-    }
-    val leading: (@Composable () -> Unit)? = (item as? PageRsListItem.Virtual)?.kind?.let { kind ->
+    // Tapping a trashed page offers to restore it and the Site Editor row opens the Site Editor, so
+    // neither gets an Edit button.
+    val virtualKind = (item as? PageRsListItem.Virtual)?.kind
+    val isSiteEditor = virtualKind == PageRsListItem.Virtual.Kind.SITE_EDITOR
+    val onEdit = if (page.isTrashed || isSiteEditor) null else onClick
+    val actions = page.actions.toContentListRowActions(
+        onEdit = onEdit,
+        showQuickActions = !density.isCondensed,
+        onAction = onMenuAction
+    )
+    val leading: (@Composable () -> Unit)? = virtualKind?.let { kind ->
         {
             Icon(
                 imageVector = kind.icon(),
@@ -98,13 +100,18 @@ private fun PageRsContentCard(
         label = "pages list row density"
     ) { isHero ->
         if (isHero) {
-            ContentListHeroRow(state = state, onClick = onClick, menu = menu, leading = leading)
+            ContentListHeroRow(
+                state = state,
+                onClick = onClick,
+                actions = actions,
+                leading = leading
+            )
         } else {
             ContentListRow(
                 state = state,
                 onClick = onClick,
                 density = density,
-                menu = menu,
+                actions = actions,
                 leading = leading
             )
         }

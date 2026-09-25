@@ -10,7 +10,8 @@ import uniffi.wp_api.PostStatus
  * (for WP.com sites that means manage-options capability plus a static page on front; for
  * self-hosted sites those fields aren't synced, so the actions are offered and verified at
  * execution time), and Blaze requires an eligible site and a non-password-protected
- * published page.
+ * published page. Stats has no legacy counterpart: it is offered on published and private pages
+ * when [canViewStats], i.e. the site's WordPress.com stats are reachable.
  */
 @Suppress("LongParameterList")
 internal fun computePageMenuActions(
@@ -19,7 +20,8 @@ internal fun computePageMenuActions(
     isPostsPage: Boolean,
     hasPassword: Boolean,
     isBlazeEligibleSite: Boolean,
-    canManageHomepage: Boolean
+    canManageHomepage: Boolean,
+    canViewStats: Boolean
 ): List<PageRsMenuAction> = when (status) {
     is PostStatus.Publish, is PostStatus.Private -> buildList {
         add(PageRsMenuAction.VIEW)
@@ -33,6 +35,7 @@ internal fun computePageMenuActions(
         if (isBlazeEligibleSite && !hasPassword && status is PostStatus.Publish) {
             add(PageRsMenuAction.BLAZE)
         }
+        if (canViewStats) add(PageRsMenuAction.STATS)
         if (!isHomepage) add(PageRsMenuAction.TRASH)
     }
     is PostStatus.Draft, is PostStatus.Pending -> buildList {

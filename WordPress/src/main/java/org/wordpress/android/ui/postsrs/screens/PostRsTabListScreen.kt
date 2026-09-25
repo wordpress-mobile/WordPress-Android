@@ -23,7 +23,6 @@ import org.wordpress.android.ui.rs.contentlist.ContentDateGroup
 import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
 import org.wordpress.android.ui.rs.contentlist.ContentListEmptyState
 import org.wordpress.android.ui.rs.contentlist.ContentListErrorState
-import org.wordpress.android.ui.rs.contentlist.ContentListOverflowMenu
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentDateGrouper
 import org.wordpress.android.ui.rs.contentlist.ContentListGroupHeader
@@ -37,7 +36,7 @@ import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
 import org.wordpress.android.ui.rs.contentlist.ReportVisibleRows
 import org.wordpress.android.ui.rs.contentlist.RevealRow
 import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
-import org.wordpress.android.ui.rs.contentlist.toContentListMenuActions
+import org.wordpress.android.ui.rs.contentlist.toContentListRowActions
 
 @Composable
 fun PostRsTabListScreen(
@@ -293,16 +292,13 @@ private fun RedesignedRow(
     val post = entry.post
     val state = post.toContentListRowUiState()
     val onClick = { onPostClick(post.remoteId) }
-    val menu: (@Composable () -> Unit)? = if (post.actions.isEmpty()) {
-        null
-    } else {
-        {
-            ContentListOverflowMenu(
-                actions = post.actions.toContentListMenuActions { action ->
-                    onPostMenuAction(post.remoteId, action)
-                }
-            )
-        }
+    // Trashed posts get no Edit button: their row tap offers to restore the post rather than
+    // opening the editor.
+    val actions = post.actions.toContentListRowActions(
+        onEdit = if (post.isTrashed) null else onClick,
+        showQuickActions = !density.isCondensed
+    ) { action ->
+        onPostMenuAction(post.remoteId, action)
     }
 
     // The two shapes are different layouts, not one layout resized, so the swap is crossfaded
@@ -315,9 +311,14 @@ private fun RedesignedRow(
         label = "content list row density"
     ) { isHero ->
         if (isHero) {
-            ContentListHeroRow(state = state, onClick = onClick, menu = menu)
+            ContentListHeroRow(state = state, onClick = onClick, actions = actions)
         } else {
-            ContentListRow(state = state, onClick = onClick, density = density, menu = menu)
+            ContentListRow(
+                state = state,
+                onClick = onClick,
+                density = density,
+                actions = actions
+            )
         }
     }
 }

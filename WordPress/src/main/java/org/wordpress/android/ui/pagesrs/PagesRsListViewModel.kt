@@ -763,8 +763,10 @@ internal class PagesRsListViewModel @Inject constructor(
             ?.items
             ?.firstOrNull { it.remotePageId == remotePageId }
             ?.page
+        // Search lists every status inside whichever tab it was opened from, so the page's own
+        // status decides; the tab only stands in when the page isn't loaded.
         when {
-            tab == PageRsListTab.TRASHED || page?.isTrashed == true ->
+            page?.isTrashed ?: (tab == PageRsListTab.TRASHED) ->
                 _pendingConfirmation.value = PageRsListConfirmation.MoveToDraft(remotePageId)
             checkNetwork() -> proceedOpenPage(site, remotePageId, page?.lastModified)
         }
@@ -861,6 +863,10 @@ internal class PagesRsListViewModel @Inject constructor(
             PageRsMenuAction.MOVE_TO_DRAFT -> movePageToDraft(remotePageId)
             PageRsMenuAction.DUPLICATE -> duplicatePage(site, remotePageId)
             PageRsMenuAction.BLAZE -> bridgeAndPromote(site, remotePageId)
+            PageRsMenuAction.STATS -> {
+                val url = page?.link?.takeIf { it.isNotBlank() } ?: return logMissingLink(remotePageId)
+                _events.trySend(PageRsListEvent.ViewStats(site, remotePageId, page.title, url))
+            }
             PageRsMenuAction.TRASH ->
                 _pendingConfirmation.value = PageRsListConfirmation.Trash(remotePageId)
             PageRsMenuAction.DELETE_PERMANENTLY ->
@@ -1659,7 +1665,9 @@ internal class PagesRsListViewModel @Inject constructor(
                 isPostsPage = pageForPosts != 0L && page.remoteId == pageForPosts,
                 hasPassword = page.hasPassword,
                 isBlazeEligibleSite = isBlazeEligibleSite,
-                canManageHomepage = canManageHomepage
+                canManageHomepage = canManageHomepage,
+                // Per-page stats come from the same WordPress.com endpoint as the view counts.
+                canViewStats = canFetchViewCounts
             )
         }
         if (actions == page.actions) return this
@@ -1831,6 +1839,7 @@ private fun PageRsMenuAction.toAnalyticsAction(): String = when (this) {
     PageRsMenuAction.SHARE -> "share"
     PageRsMenuAction.COPY_URL -> "copy_url"
     PageRsMenuAction.BLAZE -> "promote_with_blaze"
+    PageRsMenuAction.STATS -> "stats"
     PageRsMenuAction.TRASH -> "move_to_bin"
     PageRsMenuAction.DELETE_PERMANENTLY -> "delete_permanently"
 }

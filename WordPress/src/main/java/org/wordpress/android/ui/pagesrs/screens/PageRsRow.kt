@@ -89,6 +89,8 @@ private fun PageContentItem(
     onMenuAction: (PageRsMenuAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // Stats is only reachable from the redesigned row's footer; this list's menu stays as it was.
+    val menuActions = page.actions - PageRsMenuAction.STATS
     Card(
         onClick = onClick,
         modifier = modifier
@@ -154,11 +156,11 @@ private fun PageContentItem(
                     )
                 }
             }
-            if (page.actions.isNotEmpty() || page.featuredImageId != 0L) {
+            if (menuActions.isNotEmpty() || page.featuredImageId != 0L) {
                 Spacer(modifier = Modifier.width(8.dp))
                 Column(horizontalAlignment = Alignment.End) {
-                    if (page.actions.isNotEmpty()) {
-                        PageMenuButton(actions = page.actions, onAction = onMenuAction)
+                    if (menuActions.isNotEmpty()) {
+                        PageMenuButton(actions = menuActions, onAction = onMenuAction)
                     }
                     if (page.featuredImage != null) {
                         AsyncImage(

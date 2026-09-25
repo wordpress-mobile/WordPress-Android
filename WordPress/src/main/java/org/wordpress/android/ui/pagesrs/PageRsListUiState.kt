@@ -6,6 +6,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
 import org.wordpress.android.ui.rs.contentlist.ContentItemUiModel
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.rs.contentlist.ContentListQuickActionType
 import org.wordpress.android.ui.rs.contentlist.ContentListRowUiState
 import org.wordpress.android.ui.rs.contentlist.RsMenuAction
 
@@ -83,9 +84,10 @@ internal val List<PageRsListItem>.hasRealPages: Boolean
 internal enum class PageRsMenuAction(
     @StringRes override val labelResId: Int,
     @DrawableRes override val iconResId: Int,
-    override val isDestructive: Boolean = false
+    override val isDestructive: Boolean = false,
+    override val quickActionType: ContentListQuickActionType? = null
 ) : RsMenuAction {
-    VIEW(R.string.pages_view, R.drawable.gb_ic_external),
+    VIEW(R.string.pages_view, R.drawable.gb_ic_external, quickActionType = ContentListQuickActionType.VIEW),
     SET_PARENT(R.string.set_parent, R.drawable.gb_ic_pages_set_as_parent),
     SET_AS_HOMEPAGE(R.string.pages_set_as_homepage, R.drawable.gb_ic_home_page_24dp),
     SET_AS_POSTS_PAGE(R.string.pages_set_as_posts_page, R.drawable.ic_posts_white_24dp),
@@ -95,6 +97,7 @@ internal enum class PageRsMenuAction(
     SHARE(R.string.button_share, R.drawable.gb_ic_share),
     COPY_URL(R.string.page_rs_copy_url, R.drawable.ic_attachment_link),
     BLAZE(R.string.pages_promote_with_blaze, R.drawable.ic_blaze_flame_24dp),
+    STATS(R.string.button_stats, R.drawable.gb_ic_chart_bar, quickActionType = ContentListQuickActionType.STATS),
     TRASH(R.string.pages_move_to_trash, R.drawable.gb_ic_trash, isDestructive = true),
     DELETE_PERMANENTLY(
         R.string.pages_delete_permanently,

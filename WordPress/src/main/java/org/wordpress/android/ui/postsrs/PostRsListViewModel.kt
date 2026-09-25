@@ -276,7 +276,11 @@ class PostRsListViewModel @Inject constructor(
     @MainThread
     fun openPost(remotePostId: Long, tab: PostRsListTab) {
         if (_isOpeningPost.value) return
-        if (tab == PostRsListTab.TRASHED) {
+        // Search lists every status inside whichever tab it was opened from, so the post's own
+        // status decides; the tab only stands in when the post isn't loaded.
+        val post = _tabStates.value[tab]?.items?.firstOrNull { it.remoteId == remotePostId }
+        val isTrashed = post?.isTrashed ?: (tab == PostRsListTab.TRASHED)
+        if (isTrashed) {
             analyticsTracker.track(
                 Stat.POST_LIST_ITEM_SELECTED,
                 site,

@@ -7,6 +7,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -19,6 +20,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -52,6 +55,10 @@ import java.text.NumberFormat
  *
  * [leading] draws ahead of the text, for rows that stand for something other than a plain entry -
  * the pages list marks its homepage and posts-page rows that way.
+ *
+ * [actions] supplies the overflow menu. When it also has quick actions, the metrics and the menu
+ * move into a footer beneath the text with the actions as icon buttons between them, and the date
+ * moves up under the title.
  */
 @Composable
 fun ContentListRow(
@@ -59,7 +66,7 @@ fun ContentListRow(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     density: ContentListDensity = ContentListDensity.COMFORTABLE,
-    menu: (@Composable () -> Unit)? = null,
+    actions: ContentListRowActions = ContentListRowActions(),
     leading: (@Composable () -> Unit)? = null
 ) {
     val padding = if (density.isCondensed) CONDENSED_CARD_PADDING else CARD_PADDING
@@ -70,7 +77,7 @@ fun ContentListRow(
             titleLineHeight = TITLE_LINE_HEIGHT,
             density = density,
             padding = padding,
-            menu = menu,
+            actions = actions,
             leading = leading
         ) {
             FeaturedImage(
@@ -96,7 +103,7 @@ fun ContentListHeroRow(
     state: ContentListRowUiState,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    menu: (@Composable () -> Unit)? = null,
+    actions: ContentListRowActions = ContentListRowActions(),
     leading: (@Composable () -> Unit)? = null
 ) {
     ContentListCard(onClick = onClick, isSyncing = state.isSyncing, modifier = modifier) {
@@ -114,7 +121,7 @@ fun ContentListHeroRow(
                 titleLineHeight = HERO_TITLE_LINE_HEIGHT,
                 density = ContentListDensity.COMFORTABLE,
                 padding = CARD_PADDING,
-                menu = menu,
+                actions = actions,
                 leading = leading
             )
         }
@@ -274,24 +281,36 @@ private fun CardBody(isSyncing: Boolean, content: @Composable () -> Unit) {
  *
  * Condensed drops the excerpt, which is what actually shortens the row, and the metrics, which the
  * ViewModel then does not fetch.
+ *
+ * [showMetaLine] is false when a footer carries the metrics; the date and any sync failure then sit under the title.
  */
 @Composable
 private fun RowBody(
     state: ContentListRowUiState,
     titleSize: TextUnit,
     titleLineHeight: TextUnit,
-    density: ContentListDensity
+    density: ContentListDensity,
+    showMetaLine: Boolean
 ) {
     ContentListBadges(state.badges)
     RowTitle(title = state.title, fontSize = titleSize, lineHeight = titleLineHeight)
+    if (!showMetaLine && state.dateLabel.isNotBlank()) {
+        Spacer(modifier = Modifier.height(TITLE_DATE_GAP))
+        RowMetaLine(state = state, showDate = true, showMetrics = false, showSyncFailed = true)
+    }
     if (!density.isCondensed) {
         RowExcerpt(state.excerpt)
     }
-    // Everything else on the metadata line is separator-prefixed, so a row with no date - the
-    // pages list's synthetic Site Editor entry - drops the line rather than leading with a bullet.
-    if (state.dateLabel.isNotBlank()) {
+    // A row with no date - the pages list's synthetic Site Editor entry - has no metrics or sync
+    // state either, so it drops the line altogether.
+    if (showMetaLine && state.dateLabel.isNotBlank()) {
         Spacer(modifier = Modifier.height(TITLE_META_GAP))
-        RowMetaLine(state = state, showMetrics = !density.isCondensed)
+        RowMetaLine(
+            state = state,
+            showDate = true,
+            showMetrics = !density.isCondensed,
+            showSyncFailed = true
+        )
     }
 }
 
@@ -328,7 +347,7 @@ private fun RowExcerpt(excerpt: String) {
 }
 
 /**
- * "2d ago · 1,204 views", with the overflow menu pinned to the trailing edge.
+ * "2d ago · 1,204 views", or just the metrics when the date sits under the title instead.
  *
  * The separator is drawn as its own [Text] so it can take the dimmer outline colour without
  * splitting the line into something a screen reader announces piecemeal.
@@ -336,29 +355,35 @@ private fun RowExcerpt(excerpt: String) {
 @Composable
 private fun RowMetaLine(
     state: ContentListRowUiState,
-    showMetrics: Boolean
+    showDate: Boolean,
+    showMetrics: Boolean,
+    showSyncFailed: Boolean
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        MetaText(state.dateLabel)
+    val segments = buildList<@Composable () -> Unit> {
+        if (showDate) add { MetaText(state.dateLabel) }
         // A condensed list does not fetch metrics, so it shows neither them nor a skeleton
         // waiting on a request that is never made.
-        if (showMetrics) {
-            RowMetrics(state)
+        if (showMetrics) addMetrics(state)
+        if (showSyncFailed && state.hasSyncFailed) {
+            add {
+                MetaText(
+                    text = stringResource(R.string.post_rs_sync_failed),
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
         }
-        if (state.hasSyncFailed) {
-            MetaSeparator()
-            MetaText(
-                text = stringResource(R.string.post_rs_sync_failed),
-                color = MaterialTheme.colorScheme.error
-            )
+    }
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        segments.forEachIndexed { index, segment ->
+            if (index > 0) MetaSeparator()
+            segment()
         }
     }
 }
 
-/** A separator followed by one metric, e.g. "· 1,204 views". */
+/** One metric, e.g. "1,204 views". */
 @Composable
 private fun MetricText(@PluralsRes pluralResId: Int, count: Long) {
-    MetaSeparator()
     MetaText(
         pluralStringResource(
             pluralResId,
@@ -369,24 +394,24 @@ private fun MetricText(@PluralsRes pluralResId: Int, count: Long) {
 }
 
 /** Views and comments, or a single bar standing in for both while they are still being fetched. */
-@Composable
-private fun RowMetrics(state: ContentListRowUiState) {
+private fun MutableList<@Composable () -> Unit>.addMetrics(state: ContentListRowUiState) {
     if (state.areMetricsPending) {
         // Views and comments arrive together, so one bar stands in for both rather than two that
         // would resolve on the same frame anyway.
-        MetaSeparator()
-        ShimmerBox(
-            modifier = Modifier
-                .width(METRICS_SKELETON_WIDTH)
-                .height(METRICS_SKELETON_HEIGHT)
-                .clip(RoundedCornerShape(PLACEHOLDER_RADIUS))
-        )
+        add {
+            ShimmerBox(
+                modifier = Modifier
+                    .width(METRICS_SKELETON_WIDTH)
+                    .height(METRICS_SKELETON_HEIGHT)
+                    .clip(RoundedCornerShape(PLACEHOLDER_RADIUS))
+            )
+        }
         return
     }
-    state.viewCount?.let { MetricText(R.plurals.content_list_view_count, it) }
+    state.viewCount?.let { count -> add { MetricText(R.plurals.content_list_view_count, count) } }
     // A post with no comments still says so; unlike views, zero is meaningful here and the number
     // arrives in the same response, so hiding it would look like a gap.
-    state.commentCount?.let { MetricText(R.plurals.content_list_comment_count, it) }
+    state.commentCount?.let { count -> add { MetricText(R.plurals.content_list_comment_count, count) } }
 }
 
 @Composable
@@ -410,7 +435,8 @@ private fun MetaSeparator() {
         text = stringResource(R.string.bullet_with_spaces),
         style = MaterialTheme.typography.bodySmall,
         fontSize = META_SIZE,
-        color = MaterialTheme.colorScheme.outlineVariant
+        color = MaterialTheme.colorScheme.outlineVariant,
+        maxLines = 1
     )
 }
 
@@ -473,7 +499,8 @@ private fun FeaturedImage(
 
 /**
  * The text column with the overflow button beside it, and an optional [trailing] slot between them
- * for the compact row's thumbnail.
+ * for the compact row's thumbnail. When [actions] has quick actions, the button moves down into
+ * [RowFooter] instead.
  *
  * Shared by both row shapes so the button lands the same distance from the card edge on every row -
  * they drifted apart once already, which is how the hero's button ended up 14dp further in.
@@ -485,35 +512,83 @@ private fun RowTextAndMenu(
     titleLineHeight: TextUnit,
     density: ContentListDensity,
     padding: Dp,
-    menu: (@Composable () -> Unit)?,
-    leading: (@Composable () -> Unit)? = null,
+    actions: ContentListRowActions,
+    leading: (@Composable () -> Unit)?,
     trailing: @Composable () -> Unit = {}
 ) {
-    Row(
-        modifier = Modifier.padding(
-            start = padding,
-            top = padding,
-            // The overflow button carries its own inset, so the card supplies none on that edge;
-            // without a menu the card pads itself as usual.
-            end = if (menu == null) padding else 0.dp,
-            bottom = padding
-        ),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (leading != null) {
-            leading()
-            Spacer(modifier = Modifier.width(LEADING_GAP))
+    val hasFooter = actions.quickActions.isNotEmpty()
+    Column {
+        Row(
+            modifier = Modifier.padding(
+                start = padding,
+                top = padding,
+                // The overflow button carries its own inset, so the card supplies none on that edge;
+                // without a menu beside the text the card pads itself as usual.
+                end = if (actions.menu == null || hasFooter) padding else 0.dp,
+                // The footer's buttons carry their own inset too.
+                bottom = if (hasFooter) 0.dp else padding
+            ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (leading != null) {
+                leading()
+                Spacer(modifier = Modifier.width(LEADING_GAP))
+            }
+            Column(modifier = Modifier.weight(1f)) {
+                RowBody(
+                    state = state,
+                    titleSize = titleSize,
+                    titleLineHeight = titleLineHeight,
+                    density = density,
+                    showMetaLine = !hasFooter
+                )
+            }
+            trailing()
+            if (!hasFooter) actions.menu?.invoke()
         }
-        Column(modifier = Modifier.weight(1f)) {
-            RowBody(
+        if (hasFooter) {
+            RowFooter(
                 state = state,
-                titleSize = titleSize,
-                titleLineHeight = titleLineHeight,
-                density = density
+                density = density,
+                padding = padding,
+                actions = actions
             )
         }
-        trailing()
-        menu?.invoke()
+    }
+}
+
+@Composable
+private fun RowFooter(
+    state: ContentListRowUiState,
+    density: ContentListDensity,
+    padding: Dp,
+    actions: ContentListRowActions
+) {
+    Row(
+        modifier = Modifier.padding(start = padding),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(modifier = Modifier.weight(1f)) {
+            // The date and any sync failure are under the title, so this line carries only the
+            // metrics - a failure placed after them would be the first thing squeezed out.
+            RowMetaLine(
+                state = state,
+                showDate = false,
+                showMetrics = !density.isCondensed,
+                showSyncFailed = false
+            )
+        }
+        actions.quickActions.forEach { action ->
+            IconButton(onClick = action.onClick) {
+                Icon(
+                    imageVector = action.type.icon,
+                    contentDescription = stringResource(action.type.labelResId),
+                    modifier = Modifier.size(QUICK_ACTION_ICON_SIZE),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+        actions.menu?.invoke()
     }
 }
 
@@ -535,6 +610,8 @@ private val CONDENSED_CARD_PADDING = 12.dp
 private val THUMBNAIL_RADIUS = 10.dp
 private val HERO_IMAGE_HEIGHT = HERO_IMAGE_HEIGHT_DP.dp
 private val LEADING_GAP = 12.dp
+private val TITLE_DATE_GAP = 2.dp
+private val QUICK_ACTION_ICON_SIZE = 20.dp
 private val TITLE_META_GAP = 6.dp
 private val SYNC_BAR_HEIGHT = 2.dp
 private const val SYNC_BAR_ALPHA = 0.5f
