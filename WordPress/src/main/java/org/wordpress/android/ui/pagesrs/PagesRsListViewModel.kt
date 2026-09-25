@@ -763,8 +763,10 @@ internal class PagesRsListViewModel @Inject constructor(
             ?.items
             ?.firstOrNull { it.remotePageId == remotePageId }
             ?.page
+        // Search lists every status inside whichever tab it was opened from, so the page's own
+        // status decides; the tab only stands in when the page isn't loaded.
         when {
-            tab == PageRsListTab.TRASHED || page?.isTrashed == true ->
+            page?.isTrashed ?: (tab == PageRsListTab.TRASHED) ->
                 _pendingConfirmation.value = PageRsListConfirmation.MoveToDraft(remotePageId)
             checkNetwork() -> proceedOpenPage(site, remotePageId, page?.lastModified)
         }
