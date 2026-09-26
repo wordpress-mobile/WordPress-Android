@@ -14,6 +14,8 @@ Language: bg
     <string name="he_support_status_unknown">Неизвестно</string>
     <string name="he_support_status_closed">Затворено</string>
     <string name="he_support_status_solved">Разрешено</string>
+    <string name="he_support_status_waiting_for_user">Изчаква потребителя</string>
+    <string name="he_support_status_waiting_for_support">Изчаква поддръжката</string>
     <string name="he_support_select_attachments">Избор на прикачени файлове</string>
     <string name="he_support_download_attachment">Изтегляне на прикачен файл</string>
     <string name="he_support_include_logs_description">Включването на дневници ще помогне на екипа ни да разреши проблема. Дневниците могат да съдържат скорошна дейност.</string>
@@ -140,6 +142,7 @@ Language: bg
     <string name="history_footer_post">Публикацията е създадена на %1$s в %2$s</string>
     <string name="history_empty_title">Още няма история</string>
     <string name="history_footer_page">Страницата е създадена на %1$s в %2$s</string>
+    <string name="enter_wpcom_or_jetpack_site">Въведете сайт на WordPress.com или самостоятелно хостван такъв, сръзан с Jetpack.</string>
     <string name="description_user">Потребителски аватар</string>
     <string name="image_size_full_label">Пълен размер</string>
     <string name="image_size_large_label">Голям</string>
@@ -160,6 +163,8 @@ Language: bg
     <string name="pages_drafts">Чернови</string>
     <string name="pages_scheduled">Планирана</string>
     <string name="pages_published">Публикувана</string>
+    <string name="login_error_sms_throttled">Направихте прекалено много опити да изпратите SMS кода за потвърждение - спрете за кратко и подайте нова заявка след минута.</string>
+    <string name="login_error_email_not_found_v2">Няма профил в WordPress.com, съответстващ на този профил в Google.</string>
     <string name="site_picker_remove_site_empty">Няма сайтове, съответстващи на търсенето ви</string>
     <string name="page_parent_changed">Родителската страница е сменена</string>
     <string name="reader_no_followed_blogs_search_title">Няма блогове, съответстващи на търсенето ви</string>
@@ -176,6 +181,7 @@ Language: bg
     <string name="page_moved_to_scheduled">Насрочено е публикуване на страницата</string>
     <string name="dismiss">Затваряне</string>
     <string name="my_site_create_new_site_title">Нямате сайтове</string>
+    <string name="login_to_to_connect_jetpack">Влезте в профила на WordPress.com, който сте използвали за свързването на Jetpack.</string>
     <string name="stats_jetpack_connection_setup_info">За да използвате Статистики в сайта си, ще трябва да инсталирате разширението Jetpack .</string>
     <string name="themes_empty_list">Няма теми, съответстващи на търсенето ви</string>
     <string name="reader_label_post_search_explainer">Какво бихте искали да намерите?</string>
@@ -199,6 +205,9 @@ Language: bg
     <string name="support_identity_input_dialog_enter_email_and_name">За да продължите, въведете своя имейл адрес и име</string>
     <string name="support_contact_email">Имейл за връзка</string>
     <string name="reader_empty_search_title">Няма намерени резултати</string>
+    <string name="email_address_login_title">Имейл адрес за вход</string>
+    <string name="login_error_suffix">\nЗащо не пробвате с друг профил?</string>
+    <string name="login_error_generic">Възникна проблем при опит за връзка с Google профила.</string>
     <string name="login_error_button">Затваряне</string>
     <string name="post_settings_remove_featured_image">Премахване картинката на публикацията</string>
     <string name="post_settings_choose_featured_image">Избор на картинка за публикацията</string>
@@ -249,11 +258,19 @@ Language: bg
     <string name="post_queued">Публикацията е добавена в опашката</string>
     <string name="uploading_post">Качване на \"%s\"</string>
     <string name="connection_to_server_lost">Връзката със сървъра бе прекъсната</string>
+    <string name="login_empty_2fa">Моля въведете потвърждаващия код</string>
+    <string name="login_email_client_not_found">Не можахме да засечем вашия имейл клиент</string>
+    <string name="login_empty_username">Въведете име</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">Проверяване на адреса на сайта</string>
+    <string name="login_site_address_more_help">Имате нужда от помощ?</string>
+    <string name="login_site_address_help_title">Какъв е адресът на сайта ми?</string>
     <string name="login_site_address" a8c-src-lib="module:login">Адрес на сайта</string>
     <string name="login_already_logged_in_wpcom">Вече сте влезли в WordPress.com</string>
+    <string name="enter_wpcom_password">Въведете вашата WordPress.com парола.</string>
     <string name="login_continue" a8c-src-lib="module:login">Напред</string>
     <string name="connect_more">Свързване на друг сайт</string>
+    <string name="password_incorrect">Изглежда вашата парола е грешна. Моля проверете информацията повторно и пробвайте отново.</string>
+    <string name="enter_verification_code">Моля, въведете кода за потвърждение от вашето приложение Authenticator.</string>
     <string name="next">Следващ</string>
     <string name="me_profile_photo">Снимка на профила</string>
     <string name="error_media_parse_error">Неочакван отговор от сървъра</string>
@@ -362,6 +379,8 @@ Language: bg
     <string name="error_all_media_upload_canceled">Качването на всички файлове беше прекъснато по неизвестна причина. Моля повторете качването</string>
     <string name="error_unknown_post_type">Непознат формат на публикацията</string>
     <string name="submit_for_review">Изпращане</string>
+    <string name="cannot_add_duplicate_site">Сайтът вече съществува в приложението и не може да го добавите</string>
+    <string name="duplicate_site_detected">Сайт - дубликат беше засечен.</string>
     <string name="error_media_unauthorized">Нямате разрешение да преглеждате или редактирате файловете</string>
     <string name="error_media_not_found">Файлът не може да бъде намерен</string>
     <string name="error_media_insufficient_fs_permissions">Нужно е разрешение за четене на медийни файлове.</string>
@@ -438,6 +457,8 @@ Language: bg
     <string name="error_locating_image">Неуспешно откриване на изрязаното изображение</string>
     <string name="error_refreshing_gravatar">Грешка при презареждането на вашия аватар в Gravatar</string>
     <string name="error_cropping_image">Грешка при изрязване на изображението</string>
+    <string name="checking_email">Проверяване на имейл</string>
+    <string name="magic_link_unavailable_error_message">В момента не е налично. Въведете вашата парола</string>
     <string name="logging_in">Влизане</string>
     <string name="web_address_dialog_hint">Ще се показва когато коментирате.</string>
     <string name="export_your_content_message">Публикациите, страниците и настройките ви ще ви бъдат изпратени по имейл на %s.</string>
@@ -465,6 +486,7 @@ Language: bg
     <string name="editor_remove_failed_uploads">Премахване на неуспешно качените файлове</string>
     <string name="site_settings_advanced_header">Разширени</string>
     <string name="button_skip">Пропускане</string>
+    <string name="xmlrpc_missing_method_error">Грешка при свързването. Задължителни XML-RPC методи липсват на този сървър.</string>
     <string name="post_format_status">Състояние</string>
     <string name="post_format_video">Видео клип</string>
     <string name="alignment_center">В средата</string>
@@ -522,6 +544,7 @@ Language: bg
     <string name="about_the_app">За приложението</string>
     <string name="error_post_account_settings">Грешка при запазване на вашите профилни настройки</string>
     <string name="error_fetch_account_settings">Грешка при зареждане на вашите профилни настройки</string>
+    <string name="error_fetch_my_profile">Грешка при зареждане на вашия профил</string>
     <string name="site_settings_unknown_language_code_error">Неразпознат код на езика</string>
     <string name="site_settings_threading_dialog_description">Позволяване на подреждането на коментарите дървовидно.</string>
     <string name="site_settings_threading_dialog_header">Подкоментари до</string>
@@ -693,7 +716,10 @@ Language: bg
     <string name="my_site_btn_switch_site">Превключване на сайта</string>
     <string name="reader_label_new_posts_subtitle">Натиснете за да ги прегледате</string>
     <string name="select_all">Избор на всичко</string>
+    <string name="invalid_verification_code">Невалиден верификационен код</string>
     <string name="language">Език</string>
+    <string name="verification_code">Верификационен код</string>
+    <string name="auth_required">За да продължите, влезте отново.</string>
     <string name="stats_view_authors">Автори</string>
     <string name="media_fetching">Извличане на файлове…</string>
     <string name="pages_fetching">Извличане на страници…</string>
@@ -770,6 +796,7 @@ Language: bg
     <string name="error_refresh_posts">Публикациите не могат да бъдат обновени в момента</string>
     <string name="error_moderate_comment">Възникна грешка по време на модерирането</string>
     <string name="invalid_email_message">Адресът на електронната поща не е валиден</string>
+    <string name="email_invalid">Добавете валидна електронна поща</string>
     <string name="username_or_password_incorrect">Името или паролата, които зададохте, са грешни</string>
     <string name="error_deleting_post">Грешка при изтриване на публикацията</string>
     <string name="comment_status_spam">Спам</string>
@@ -790,6 +817,7 @@ Language: bg
     <string name="local_draft">Локална чернова</string>
     <string name="new_media">Нов файл</string>
     <string name="link_enter_url_text">Текст на връзката (по избор)</string>
+    <string name="fatal_db_error">Възникна грешка при създаване на базата от данни на приложението. Моля преинсталирайте приложението.</string>
     <string name="comment_status_unapproved">Предстоящ</string>
     <string name="post_not_found">Възникна грешка при зареждане на тази плубликация. Опреснете Вашите публикации и опитайте отново.</string>
     <string name="trash">Кошче</string>
@@ -804,6 +832,7 @@ Language: bg
     <string name="view_in_browser">Преглед в браузър</string>
     <string name="add_new_category">Добавяне на нова категория</string>
     <string name="file_error_create">Грешка при създаване на временния файл. Уверете се че има достатъчно свободно място на вашето устройство.</string>
+    <string name="http_authorization_required">Нужна е оторизация</string>
     <string name="wordpress_blog">Блог от вида WordPress</string>
     <string name="reader_title_applog">Дневник на приложението</string>
     <string name="invalid_site_url_message">Уверете се че въведения URL адрес на сайт е валиден</string>
@@ -830,6 +859,7 @@ Language: bg
     <string name="reader_toast_err_share_intent">Споделянето е неуспешно</string>
     <string name="reader_toast_err_view_image">Преглеждането на изображението е неуспешно</string>
     <string name="comments_empty_list">Все още няма коментари</string>
+    <string name="sign_up_label">Регистрация</string>
     <string name="reader_view_reblog">Реблог</string>
     <string name="themes">Теми</string>
     <string name="media_edit_title_text">Заглавие</string>
@@ -858,6 +888,8 @@ Language: bg
     <string name="note_reply_successful">Отговорът е публикуван</string>
     <string name="sign_in">Влизане</string>
     <string name="loading">Зареждане…</string>
+    <string name="httppassword">HTTP Парола</string>
+    <string name="httpuser">Потребител за HTTP</string>
     <string name="error_media_upload">Грешка при качването на медийния файл</string>
     <string name="incorrect_credentials">Грешно име и/или парола</string>
     <string name="password">Парола</string>
