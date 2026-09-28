@@ -24,6 +24,7 @@ import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -442,7 +443,15 @@ private fun MessageBubble(
                 )
 
                 if (message.attachments.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(8.dp))
+                    // Bot replies cite the articles they used to answer. A divider plus a label
+                    // makes it clear where the answer ends and the extra reading starts. Only
+                    // shown when the attachments are nothing but links.
+                    val linksOnly = !message.isUser &&
+                            message.attachments.all { it.type == AttachmentType.Link }
+                    Spacer(modifier = Modifier.height(if (linksOnly) 12.dp else 8.dp))
+                    if (linksOnly) {
+                        RelatedLinksHeader()
+                    }
                     message.attachments.forEach { attachment ->
                         AttachmentRow(attachment, onLinkClick)
                     }
@@ -461,6 +470,20 @@ private fun MessageBubble(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun RelatedLinksHeader() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        HorizontalDivider(color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = DIVIDER_ALPHA))
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = stringResource(R.string.unified_support_related_label),
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
 
@@ -881,6 +904,7 @@ private fun UnifiedMessageItem(
                 Spacer(modifier = Modifier.height(12.dp))
                 UnifiedAttachmentsList(
                     attachments = message.attachments,
+                    isUser = message.isUser,
                     onPreviewAttachment = onPreviewAttachment,
                     onDownloadAttachment = onDownloadAttachment,
                     onLinkClick = onLinkClick,
@@ -895,6 +919,7 @@ private fun UnifiedMessageItem(
 @Composable
 private fun UnifiedAttachmentsList(
     attachments: List<UnifiedAttachment>,
+    isUser: Boolean,
     onPreviewAttachment: (UnifiedAttachment) -> Unit,
     onDownloadAttachment: (UnifiedAttachment) -> Unit,
     onLinkClick: (String) -> Unit,
@@ -905,6 +930,11 @@ private fun UnifiedAttachmentsList(
     val (links, files) = attachments.partition { it.type == AttachmentType.Link }
 
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        // Same divider as the bot chat, shown only when the reply carries nothing but links.
+        if (!isUser && links.isNotEmpty() && files.isEmpty()) {
+            RelatedLinksHeader()
+        }
+
         links.forEach { attachment ->
             UnifiedAttachmentLink(attachment, onLinkClick)
         }
@@ -1126,6 +1156,7 @@ private fun replyCtaLabelRes(conversation: UnifiedConversation): Int {
 }
 
 private const val PERCENT_MULTIPLIER = 100
+private const val DIVIDER_ALPHA = 0.3f
 private const val TYPING_DOT_DELAY_STEP = 150
 private const val TYPING_DOT_PULSE_MS = 600L
 private const val TYPING_DOT_MIN_ALPHA = 0.3f
