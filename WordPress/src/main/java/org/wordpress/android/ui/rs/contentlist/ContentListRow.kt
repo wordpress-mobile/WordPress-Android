@@ -349,8 +349,7 @@ private fun RowExcerpt(excerpt: String) {
 
 /**
  * "2d ago · Jane Doe · 1,204 views", or just the metrics when the date and author sit under the
- * title instead. The author is the one segment allowed to shrink, so a long name ellipsizes rather
- * than pushing the metrics off the line.
+ * title instead. A long author name ellipsizes rather than pushing the metrics off the line.
  *
  * The separator is drawn as its own [Text] so it can take the dimmer outline colour without
  * splitting the line into something a screen reader announces piecemeal.

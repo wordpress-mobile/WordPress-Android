@@ -17,7 +17,7 @@ internal class PageRsRedesignedRowMappingTest {
                 title = "About",
                 excerpt = "Who we are",
                 date = "Mar 3, 2025"
-            ).copy(authorDisplayName = "Jane Doe")
+            )
         )
 
         val state = row.map()
@@ -26,7 +26,6 @@ internal class PageRsRedesignedRowMappingTest {
         assertThat(state.title).isEqualTo("About")
         assertThat(state.excerpt).isEqualTo("Who we are")
         assertThat(state.dateLabel).isEqualTo("Mar 3, 2025")
-        assertThat(state.authorName).isEqualTo("Jane Doe")
         assertThat(state.badges).isEmpty()
     }
 

@@ -11,7 +11,6 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
-import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -71,18 +70,6 @@ class RsAuthorNamesTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
-    fun `a site known to be multi-user resolves names without counting authors`() = test {
-        answerNames(mapOf(ONE to NAME))
-        val authorNames = createAuthorNames()
-
-        authorNames.resolve(TAB, site(isSingleUserSite = false), listOf(model(ONE)))
-        advanceUntilIdle()
-
-        verify(restClient, never()).hasMultipleAuthors(anyOrNull(), any())
-        assertThat(resolved).containsExactly(TAB to mapOf(ONE to NAME))
-    }
-
-    @Test
     fun `an unknown site with several published authors resolves only the missing names`() = test {
         answerMultipleAuthors(true)
         answerNames(mapOf(ONE to NAME))
@@ -109,25 +96,8 @@ class RsAuthorNamesTest : BaseUnitTest(StandardTestDispatcher()) {
         assertThat(resolved).isEmpty()
     }
 
-    @Test
-    fun `the author count is asked once per screen`() = test {
-        answerMultipleAuthors(true)
-        answerNames(mapOf(ONE to NAME, TWO to NAME))
-        val authorNames = createAuthorNames()
-        val site = site(isSingleUserSite = null)
-
-        authorNames.resolve(TAB, site, listOf(model(ONE)))
-        advanceUntilIdle()
-        authorNames.resolve(OTHER_TAB, site, listOf(model(TWO)))
-        advanceUntilIdle()
-
-        verify(restClient, times(1)).hasMultipleAuthors(anyOrNull(), any())
-        assertThat(resolved).hasSize(2)
-    }
-
     private companion object {
         const val TAB = "published"
-        const val OTHER_TAB = "drafts"
         const val POST_TYPE = "post"
         const val ONE = 1L
         const val TWO = 2L

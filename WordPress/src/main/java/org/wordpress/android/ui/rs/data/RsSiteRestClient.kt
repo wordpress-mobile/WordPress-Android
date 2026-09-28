@@ -348,10 +348,7 @@ class RsSiteRestClient @Inject constructor(
         }
     }
 
-    /**
-     * Whether more than one user has published content of [postType] ("post" or "page"). Only
-     * the total header is read, so a single id-only row is requested. A failure reads as false.
-     */
+    /** Whether more than one user has published [postType]. A failure reads as false. */
     suspend fun hasMultipleAuthors(site: SiteModel, postType: String): Boolean {
         val client = wpApiClientProvider.getWpApiClient(site)
         val response = client.request {
