@@ -25,40 +25,74 @@ internal class RsAuthorNames<TAB>(
 ) {
     private val jobs = mutableMapOf<TAB, Job>()
 
-    /** Kept for the screen's lifetime once answered; a failed check is asked again on the next load. */
-    private var isMultiAuthor: Deferred<Boolean?>? = null
+    /** The ids each tab's running lookup is fetching. */
+    private val pendingIds = mutableMapOf<TAB, Set<Long>>()
 
+    /** Author ids the users endpoint didn't return, so they aren't asked for again until a refresh. */
+    private val unresolvable = mutableSetOf<Long>()
+
+    /** Kept for the screen's lifetime once answered; a failed lookup is asked again after a refresh. */
+    private var publishedAuthors: Deferred<List<Long>?>? = null
+    private var hasPublishedAuthorsFailed = false
+
+    /**
+     * Looks up the names [items] still lack. Ids that already failed wait for a refresh, and a lookup
+     * already running for [tab] is only replaced when it doesn't cover them all.
+     */
     fun resolve(tab: TAB, site: SiteModel, items: List<ContentItemUiModel<*>>) {
         val unresolvedIds = items
             .filter { it.authorId != 0L && it.authorDisplayName == null }
             .map { it.authorId }
+            .filter { it !in unresolvable }
             .distinct()
         if (unresolvedIds.isEmpty()) return
-        // Rows by two authors settle it locally - and catch authors who haven't published yet, whom the
-        // site's count leaves out, as on a Drafts tab.
-        val hasSeveralAuthors = items.map { it.authorId }.filter { it != 0L }.distinct().size > 1
+        if (jobs[tab]?.isActive == true && pendingIds[tab].orEmpty().containsAll(unresolvedIds)) return
+        val loadedAuthorIds = items.map { it.authorId }.filter { it != 0L }.toSet()
 
         jobs[tab]?.cancel()
+        pendingIds[tab] = unresolvedIds.toSet()
         jobs[tab] = scope.launch {
-            if (!hasSeveralAuthors && isMultiAuthor(site) != true) return@launch
+            if (!isMultiAuthor(site, loadedAuthorIds)) return@launch
             val names = withContext(ioDispatcher) {
                 restClient.fetchUserDisplayNames(site, unresolvedIds)
             }
+            unresolvable.addAll(unresolvedIds.filterNot(names::containsKey))
             if (names.isNotEmpty()) onNamesResolved(tab, names)
         }
     }
 
-    // isSingleUserSite is only set for WP.com sites; app-password sites have to ask.
-    private suspend fun isMultiAuthor(site: SiteModel): Boolean? {
-        val check = isMultiAuthor ?: scope.async {
-            site.isSingleUserSite?.let { !it }
-                ?: withContext(ioDispatcher) { restClient.hasMultipleAuthors(site, postType) }
-        }.also { isMultiAuthor = it }
-        return check.await().also { if (it == null && isMultiAuthor === check) isMultiAuthor = null }
+    /**
+     * WP.com sites know whether they're single-user. Elsewhere the rows on screen are combined with the
+     * site's published authors, so a draft by someone who has never published still counts as a second
+     * author.
+     */
+    private suspend fun isMultiAuthor(site: SiteModel, loadedAuthorIds: Set<Long>): Boolean {
+        if (loadedAuthorIds.size > 1) return true
+        site.isSingleUserSite?.let { return !it }
+        val published = publishedAuthorIds(site) ?: return false
+        return (loadedAuthorIds + published).size > 1
+    }
+
+    private suspend fun publishedAuthorIds(site: SiteModel): List<Long>? {
+        val lookup = publishedAuthors ?: scope.async {
+            withContext(ioDispatcher) { restClient.fetchPublishedAuthorIds(site, postType) }
+        }.also { publishedAuthors = it }
+        return lookup.await().also { if (it == null) hasPublishedAuthorsFailed = true }
+    }
+
+    /** Forgets the failures, so a refresh asks for them again. */
+    fun invalidateUnresolved() {
+        unresolvable.clear()
+        if (hasPublishedAuthorsFailed) {
+            publishedAuthors = null
+            hasPublishedAuthorsFailed = false
+        }
     }
 
     fun clear() {
         jobs.values.forEach { it.cancel() }
         jobs.clear()
+        pendingIds.clear()
+        unresolvable.clear()
     }
 }

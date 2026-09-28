@@ -2,6 +2,7 @@ package org.wordpress.android.ui.rs.data
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
@@ -349,23 +350,33 @@ class RsSiteRestClient @Inject constructor(
         }
     }
 
-    /** Whether more than one user has published [postType], or null if the site couldn't say. */
-    suspend fun hasMultipleAuthors(site: SiteModel, postType: String): Boolean? {
-        val client = wpApiClientProvider.getWpApiClient(site)
-        val response = client.request {
-            it.users().filterListWithViewContext(
-                UserListParams(
-                    perPage = 1u,
-                    hasPublishedPosts = WpApiParamUsersHasPublishedPosts.PostTypes(listOf(postType))
-                ),
-                listOf(SparseUserFieldWithViewContext.ID)
-            )
+    /**
+     * Up to two users who have published [postType] - enough to tell one author from several - or null
+     * if the site couldn't say.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    suspend fun fetchPublishedAuthorIds(site: SiteModel, postType: String): List<Long>? {
+        val response = try {
+            wpApiClientProvider.getWpApiClient(site).request {
+                it.users().filterListWithViewContext(
+                    UserListParams(
+                        perPage = 2u,
+                        hasPublishedPosts = WpApiParamUsersHasPublishedPosts.PostTypes(listOf(postType))
+                    ),
+                    listOf(SparseUserFieldWithViewContext.ID)
+                )
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            AppLog.e(AppLog.T.POSTS, "fetchPublishedAuthorIds failed for $postType", e)
+            return null
         }
-        val total = (response as? WpRequestResult.Success)?.response?.headerMap?.wpTotal()
-        if (total == null) {
-            AppLog.w(AppLog.T.POSTS, "hasMultipleAuthors failed for $postType")
+        if (response !is WpRequestResult.Success) {
+            AppLog.w(AppLog.T.POSTS, "fetchPublishedAuthorIds failed for $postType")
+            return null
         }
-        return total?.let { it > 1u }
+        return response.response.data.mapNotNull { it.id }
     }
 
     /**

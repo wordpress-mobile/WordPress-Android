@@ -39,6 +39,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.posts.AuthorFilterSelection
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.rs.RsCollectionPrefetch
 import org.wordpress.android.ui.rs.RsCollectionScope
 import org.wordpress.android.ui.rs.RsErrorUtils
@@ -92,6 +93,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private val serviceProvider: WpServiceProvider,
     private val dispatcher: Dispatcher,
     private val restClient: RsSiteRestClient,
+    private val experimentalFeatures: ExperimentalFeatures,
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,
     private val homepageSettings: PageRsHomepageSettings,
@@ -191,6 +193,15 @@ internal class PagesRsListViewModel @Inject constructor(
         site.isUsingWpComRestApi &&
         site.hasCapabilityEditOthersPages &&
         site.isSingleUserSite == false
+
+    /**
+     * The legacy rows only ever named authors on WP.com multi-author sites; the redesigned rows name
+     * them on any multi-author site.
+     */
+    private val canShowAuthorNames: Boolean by lazy {
+        isAuthorFilterSupported ||
+            experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.CONTENT_LIST_REDESIGN)
+    }
 
     /**
      * View counts come from the WordPress.com stats endpoint, so they need a WordPress.com site ID
@@ -580,6 +591,7 @@ internal class PagesRsListViewModel @Inject constructor(
                 // while numbers already fetched stay put.
                 viewCounts.invalidateUnresolved()
                 featuredImages.invalidateUnresolved()
+                authorNames.invalidateUnresolved()
                 userRefreshingTabs.remove(tab)
                 fillingTabs.remove(tab)
                 // Read the fetched items and end both progress states here rather than relying
@@ -1464,7 +1476,9 @@ internal class PagesRsListViewModel @Inject constructor(
             site?.let {
                 featuredImages.resolve(tab, it, uiModels)
                 // A "Me" list is all the user's own, so naming the author on every row adds nothing.
-                if (_authorFilter.value != AuthorFilterSelection.ME) authorNames.resolve(tab, it, uiModels)
+                if (canShowAuthorNames && _authorFilter.value != AuthorFilterSelection.ME) {
+                    authorNames.resolve(tab, it, uiModels)
+                }
             }
         } catch (e: CancellationException) {
             throw e

@@ -54,8 +54,8 @@ class RsAuthorNamesTest : BaseUnitTest(StandardTestDispatcher()) {
         whenever(restClient.fetchUserDisplayNames(anyOrNull(), any())).doSuspendableAnswer { names }
     }
 
-    private suspend fun answerMultipleAuthors(isMultiple: Boolean?) {
-        whenever(restClient.hasMultipleAuthors(anyOrNull(), any())).doSuspendableAnswer { isMultiple }
+    private suspend fun answerPublishedAuthors(ids: List<Long>?) {
+        whenever(restClient.fetchPublishedAuthorIds(anyOrNull(), any())).doSuspendableAnswer { ids }
     }
 
     @Test
@@ -65,14 +65,14 @@ class RsAuthorNamesTest : BaseUnitTest(StandardTestDispatcher()) {
         authorNames.resolve(TAB, site(isSingleUserSite = true), listOf(model(ONE)))
         advanceUntilIdle()
 
-        verify(restClient, never()).hasMultipleAuthors(anyOrNull(), any())
+        verify(restClient, never()).fetchPublishedAuthorIds(anyOrNull(), any())
         verify(restClient, never()).fetchUserDisplayNames(anyOrNull(), any())
         assertThat(resolved).isEmpty()
     }
 
     @Test
     fun `an unknown site with several published authors resolves only the missing names`() = test {
-        answerMultipleAuthors(true)
+        answerPublishedAuthors(listOf(ONE, TWO))
         answerNames(mapOf(ONE to NAME))
         val authorNames = createAuthorNames()
         val site = site(isSingleUserSite = null)
@@ -80,14 +80,14 @@ class RsAuthorNamesTest : BaseUnitTest(StandardTestDispatcher()) {
         authorNames.resolve(TAB, site, listOf(model(ONE), model(ONE), model(0L)))
         advanceUntilIdle()
 
-        verify(restClient).hasMultipleAuthors(site, POST_TYPE)
+        verify(restClient).fetchPublishedAuthorIds(site, POST_TYPE)
         verify(restClient).fetchUserDisplayNames(eq(site), eq(listOf(ONE)))
         assertThat(resolved).containsExactly(TAB to mapOf(ONE to NAME))
     }
 
     @Test
-    fun `an unknown site with one published author resolves nothing`() = test {
-        answerMultipleAuthors(false)
+    fun `rows by the site's only published author resolve nothing`() = test {
+        answerPublishedAuthors(listOf(ONE))
         val authorNames = createAuthorNames()
 
         authorNames.resolve(TAB, site(isSingleUserSite = null), listOf(model(ONE)))
@@ -98,8 +98,19 @@ class RsAuthorNamesTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
-    fun `rows by two authors resolve names even when the site counts one published author`() = test {
-        answerMultipleAuthors(false)
+    fun `a draft by someone who has never published counts as a second author`() = test {
+        answerPublishedAuthors(listOf(ONE))
+        answerNames(mapOf(TWO to NAME))
+        val authorNames = createAuthorNames()
+
+        authorNames.resolve(TAB, site(isSingleUserSite = null), listOf(model(TWO)))
+        advanceUntilIdle()
+
+        assertThat(resolved).containsExactly(TAB to mapOf(TWO to NAME))
+    }
+
+    @Test
+    fun `rows by two authors resolve names without asking the site`() = test {
         answerNames(mapOf(ONE to NAME))
         val authorNames = createAuthorNames()
         val site = site(isSingleUserSite = null)
@@ -107,25 +118,48 @@ class RsAuthorNamesTest : BaseUnitTest(StandardTestDispatcher()) {
         authorNames.resolve(TAB, site, listOf(model(ONE), model(TWO, "Known")))
         advanceUntilIdle()
 
-        verify(restClient, never()).hasMultipleAuthors(anyOrNull(), any())
+        verify(restClient, never()).fetchPublishedAuthorIds(anyOrNull(), any())
         verify(restClient).fetchUserDisplayNames(eq(site), eq(listOf(ONE)))
     }
 
     @Test
-    fun `a failed author count is asked again on the next load`() = test {
-        answerMultipleAuthors(null)
+    fun `a failed author lookup is asked again only after a refresh`() = test {
+        answerPublishedAuthors(null)
         val authorNames = createAuthorNames()
         val site = site(isSingleUserSite = null)
         authorNames.resolve(TAB, site, listOf(model(ONE)))
         advanceUntilIdle()
+        authorNames.resolve(TAB, site, listOf(model(ONE)))
+        advanceUntilIdle()
+        verify(restClient, times(1)).fetchPublishedAuthorIds(site, POST_TYPE)
 
-        answerMultipleAuthors(true)
+        answerPublishedAuthors(listOf(ONE, TWO))
         answerNames(mapOf(ONE to NAME))
+        authorNames.invalidateUnresolved()
         authorNames.resolve(TAB, site, listOf(model(ONE)))
         advanceUntilIdle()
 
-        verify(restClient, times(2)).hasMultipleAuthors(site, POST_TYPE)
+        verify(restClient, times(2)).fetchPublishedAuthorIds(site, POST_TYPE)
         assertThat(resolved).containsExactly(TAB to mapOf(ONE to NAME))
+    }
+
+    @Test
+    fun `an author the site didn't return is not asked for again until a refresh`() = test {
+        answerPublishedAuthors(listOf(ONE, TWO))
+        answerNames(emptyMap())
+        val authorNames = createAuthorNames()
+        val site = site(isSingleUserSite = null)
+        authorNames.resolve(TAB, site, listOf(model(ONE)))
+        advanceUntilIdle()
+        authorNames.resolve(TAB, site, listOf(model(ONE)))
+        advanceUntilIdle()
+        verify(restClient, times(1)).fetchUserDisplayNames(site, listOf(ONE))
+
+        authorNames.invalidateUnresolved()
+        authorNames.resolve(TAB, site, listOf(model(ONE)))
+        advanceUntilIdle()
+
+        verify(restClient, times(2)).fetchUserDisplayNames(site, listOf(ONE))
     }
 
     private companion object {

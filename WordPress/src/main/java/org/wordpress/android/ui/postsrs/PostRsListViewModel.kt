@@ -27,6 +27,7 @@ import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.posts.AuthorFilterSelection
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.rs.RsCollectionScope
 import org.wordpress.android.ui.rs.RsCommentCountFetcher
 import org.wordpress.android.ui.rs.RsErrorUtils
@@ -76,6 +77,7 @@ class PostRsListViewModel @Inject constructor(
     selectedSiteRepository: SelectedSiteRepository,
     private val serviceProvider: WpServiceProvider,
     private val restClient: RsSiteRestClient,
+    private val experimentalFeatures: ExperimentalFeatures,
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,
     private val fluxCBridge: RsFluxCBridge,
@@ -166,6 +168,15 @@ class PostRsListViewModel @Inject constructor(
             _site.isUsingWpComRestApi &&
             _site.hasCapabilityEditOthersPosts &&
             _site.isSingleUserSite == false
+    }
+
+    /**
+     * The legacy rows only ever named authors on WP.com multi-author sites; the redesigned rows name
+     * them on any multi-author site.
+     */
+    private val canShowAuthorNames: Boolean by lazy {
+        isAuthorFilterSupported ||
+            experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.CONTENT_LIST_REDESIGN)
     }
 
     /**
@@ -937,6 +948,7 @@ class PostRsListViewModel @Inject constructor(
                 viewCounts.invalidateUnresolved()
                 commentCountCache.entries.removeAll { it.value == null }
                 featuredImages.invalidateUnresolved()
+                authorNames.invalidateUnresolved()
                 userRefreshingTabs.remove(tab)
                 // Read the fetched items and end both progress states here rather than relying
                 // on the collection observers, which aren't guaranteed to fire for a refresh.
@@ -1084,7 +1096,9 @@ class PostRsListViewModel @Inject constructor(
             }
             featuredImages.resolve(tab, site, uiModels)
             // A "Me" list is all the user's own, so naming the author on every row adds nothing.
-            if (_authorFilter.value != AuthorFilterSelection.ME) authorNames.resolve(tab, site, uiModels)
+            if (canShowAuthorNames && _authorFilter.value != AuthorFilterSelection.ME) {
+                authorNames.resolve(tab, site, uiModels)
+            }
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
