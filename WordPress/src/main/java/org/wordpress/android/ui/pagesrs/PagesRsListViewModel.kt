@@ -42,6 +42,7 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.rs.RsCollectionPrefetch
 import org.wordpress.android.ui.rs.RsCollectionScope
 import org.wordpress.android.ui.rs.RsErrorUtils
+import org.wordpress.android.ui.rs.RsAuthorNames
 import org.wordpress.android.ui.rs.RsFeaturedImages
 import org.wordpress.android.ui.rs.RsFluxCBridge
 import org.wordpress.android.ui.rs.RsPostChangeListener
@@ -133,7 +134,6 @@ internal class PagesRsListViewModel @Inject constructor(
 
     /** Tabs whose collection has completed at least one fetch, so an empty list means empty. */
     private val fetchedTabs = mutableSetOf<PageRsListTab>()
-    private val resolveAuthorJobs = mutableMapOf<PageRsListTab, Job>()
     private var lastTrackedTab: PageRsListTab? = null
 
     private val visiblePageIds = RsVisibleRows<PageRsListTab>()
@@ -148,6 +148,12 @@ internal class PagesRsListViewModel @Inject constructor(
         scope = viewModelScope,
         restClient = restClient,
         onImagesResolved = ::applyFeaturedImages,
+    )
+    private val authorNames = RsAuthorNames(
+        scope = viewModelScope,
+        restClient = restClient,
+        postType = POST_TYPE,
+        onNamesResolved = ::applyAuthorNames,
     )
 
     private val _density = MutableStateFlow(
@@ -1455,8 +1461,11 @@ internal class PagesRsListViewModel @Inject constructor(
                     isAuthError = false
                 )
             }
-            resolveAuthorNames(tab, uiModels)
-            site?.let { featuredImages.resolve(tab, it, uiModels) }
+            site?.let {
+                featuredImages.resolve(tab, it, uiModels)
+                // A "Me" list is all the user's own, so naming the author on every row adds nothing.
+                if (_authorFilter.value != AuthorFilterSelection.ME) authorNames.resolve(tab, it, uiModels)
+            }
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
@@ -1500,34 +1509,9 @@ internal class PagesRsListViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Fetches display names for pages that have a non-zero
-     * [PageRsUiModel.authorId] but no resolved name yet.
-     * Skipped when filtering by "Me" since the user already
-     * knows their own name.
-     */
-    private fun resolveAuthorNames(
-        tab: PageRsListTab,
-        pages: List<PageRsUiModel>
-    ) {
-        val site = this.site
-        if (site == null || !isAuthorFilterSupported || _authorFilter.value == AuthorFilterSelection.ME) return
-
-        val unresolvedIds = pages
-            .filter { it.authorId != 0L && it.authorDisplayName == null }
-            .map { it.authorId }
-            .distinct()
-        if (unresolvedIds.isEmpty()) return
-
-        resolveAuthorJobs[tab]?.cancel()
-        resolveAuthorJobs[tab] = viewModelScope.launch {
-            val names = withContext(Dispatchers.IO) {
-                restClient.fetchUserDisplayNames(site, unresolvedIds)
-            }
-            if (names.isEmpty()) return@launch
-            updateTabUiState(tab) {
-                copy(items = this.items.map { item -> item.withResolvedAuthor(names) })
-            }
+    private fun applyAuthorNames(tab: PageRsListTab, names: Map<Long, String>) {
+        updateTabUiState(tab) {
+            copy(items = items.map { item -> item.withResolvedAuthor(names) })
         }
     }
 
@@ -1779,8 +1763,7 @@ internal class PagesRsListViewModel @Inject constructor(
         refreshJobs.clear()
         fillingTabs.clear()
         fetchedTabs.clear()
-        resolveAuthorJobs.values.forEach { it.cancel() }
-        resolveAuthorJobs.clear()
+        authorNames.clear()
         visiblePageIds.clear()
         viewCounts.clear()
         featuredImages.clear()
@@ -1800,6 +1783,7 @@ internal class PagesRsListViewModel @Inject constructor(
 
     companion object {
         private const val PAGE_SIZE = 20
+        private const val POST_TYPE = "page"
 
         /**
          * The REST maximum, used only by the collection that is paged to the end: the other tabs,

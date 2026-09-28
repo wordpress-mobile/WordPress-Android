@@ -7,7 +7,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +30,7 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.rs.RsCollectionScope
 import org.wordpress.android.ui.rs.RsCommentCountFetcher
 import org.wordpress.android.ui.rs.RsErrorUtils
+import org.wordpress.android.ui.rs.RsAuthorNames
 import org.wordpress.android.ui.rs.RsFeaturedImages
 import org.wordpress.android.ui.rs.RsFluxCBridge
 import org.wordpress.android.ui.rs.RsPostChangeListener
@@ -113,7 +113,6 @@ class PostRsListViewModel @Inject constructor(
 
     /** Tabs whose collection has completed at least one fetch, so an empty list means empty. */
     private val fetchedTabs = mutableSetOf<PostRsListTab>()
-    private val resolveAuthorJobs = mutableMapOf<PostRsListTab, Job>()
     private val visiblePostIds = RsVisibleRows<PostRsListTab>()
     private val viewCounts = RsViewCounts(
         scope = collectionScope,
@@ -126,6 +125,12 @@ class PostRsListViewModel @Inject constructor(
         scope = viewModelScope,
         restClient = restClient,
         onImagesResolved = ::applyFeaturedImages,
+    )
+    private val authorNames = RsAuthorNames(
+        scope = viewModelScope,
+        restClient = restClient,
+        postType = POST_TYPE,
+        onNamesResolved = ::applyAuthorNames,
     )
 
     /**
@@ -777,8 +782,7 @@ class PostRsListViewModel @Inject constructor(
         userRefreshingTabs.clear()
         refreshJobs.clear()
         fetchedTabs.clear()
-        resolveAuthorJobs.values.forEach { it.cancel() }
-        resolveAuthorJobs.clear()
+        authorNames.clear()
         visiblePostIds.clear()
         viewCounts.clear()
         commentCountCache.clear()
@@ -1079,7 +1083,8 @@ class PostRsListViewModel @Inject constructor(
                 )
             }
             featuredImages.resolve(tab, site, uiModels)
-            resolveAuthorNames(tab, uiModels)
+            // A "Me" list is all the user's own, so naming the author on every row adds nothing.
+            if (_authorFilter.value != AuthorFilterSelection.ME) authorNames.resolve(tab, site, uiModels)
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
@@ -1093,42 +1098,9 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Fetches display names for posts that have a non-zero
-     * [PostRsUiModel.authorId] but no resolved name yet.
-     * Skipped when filtering by "Me" since the user already
-     * knows their own name.
-     */
-    private fun resolveAuthorNames(
-        tab: PostRsListTab,
-        posts: List<PostRsUiModel>
-    ) {
-        if (!isAuthorFilterSupported || _authorFilter.value == AuthorFilterSelection.ME) return
-
-        val unresolvedIds = posts
-            .filter { it.authorId != 0L && it.authorDisplayName == null }
-            .map { it.authorId }
-            .distinct()
-        if (unresolvedIds.isEmpty()) return
-
-        resolveAuthorJobs[tab]?.cancel()
-        resolveAuthorJobs[tab] = viewModelScope.launch {
-            val names = withContext(Dispatchers.IO) {
-                restClient.fetchUserDisplayNames(site, unresolvedIds)
-            }
-            if (names.isEmpty()) return@launch
-            updateTabUiState(tab) {
-                copy(
-                    items = this.items.map { post ->
-                        val name = names[post.authorId]
-                        if (name != null) {
-                            post.copy(authorDisplayName = name)
-                        } else {
-                            post
-                        }
-                    }
-                )
-            }
+    private fun applyAuthorNames(tab: PostRsListTab, names: Map<Long, String>) {
+        updateTabUiState(tab) {
+            copy(items = items.map { post -> names[post.authorId]?.let { post.copy(authorDisplayName = it) } ?: post })
         }
     }
 
@@ -1349,6 +1321,7 @@ class PostRsListViewModel @Inject constructor(
 
     companion object {
         private const val PAGE_SIZE = 20
+        private const val POST_TYPE = "post"
 
         private val ALL_STATUSES = PostRsListTab.entries.flatMap { it.statuses }.distinct()
 

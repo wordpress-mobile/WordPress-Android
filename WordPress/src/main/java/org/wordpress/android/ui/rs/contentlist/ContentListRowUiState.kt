@@ -15,6 +15,8 @@ data class ContentListRowUiState(
     val title: String,
     val excerpt: String = "",
     val dateLabel: String,
+    /** Shown beside the date; null except on sites with more than one author. */
+    val authorName: String? = null,
     val thumbnailImageUrl: String? = null,
     val heroImageUrl: String? = null,
     val isImagePending: Boolean = false,

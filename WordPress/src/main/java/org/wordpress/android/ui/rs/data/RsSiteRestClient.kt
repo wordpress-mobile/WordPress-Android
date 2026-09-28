@@ -21,11 +21,13 @@ import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.TermListParams
 import uniffi.wp_api.SparseThemeFieldWithViewContext
 import uniffi.wp_api.SparseThemeWithViewContext
+import uniffi.wp_api.SparseUserFieldWithViewContext
 import uniffi.wp_api.ThemeListParams
 import uniffi.wp_api.ThemeStatus
 import uniffi.wp_api.ThemeSupports
 import uniffi.wp_api.ThemeSupportsData
 import uniffi.wp_api.UserListParams
+import uniffi.wp_api.WpApiParamUsersHasPublishedPosts
 import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
@@ -344,6 +346,28 @@ class RsSiteRestClient @Inject constructor(
                 )
             }
         }
+    }
+
+    /**
+     * Whether more than one user has published content of [postType] ("post" or "page"). Only
+     * the total header is read, so a single id-only row is requested. A failure reads as false.
+     */
+    suspend fun hasMultipleAuthors(site: SiteModel, postType: String): Boolean {
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val response = client.request {
+            it.users().filterListWithViewContext(
+                UserListParams(
+                    perPage = 1u,
+                    hasPublishedPosts = WpApiParamUsersHasPublishedPosts.PostTypes(listOf(postType))
+                ),
+                listOf(SparseUserFieldWithViewContext.ID)
+            )
+        }
+        val total = (response as? WpRequestResult.Success)?.response?.headerMap?.wpTotal()
+        if (total == null) {
+            AppLog.w(AppLog.T.POSTS, "hasMultipleAuthors failed for $postType")
+        }
+        return (total ?: 0u) > 1u
     }
 
     /**
