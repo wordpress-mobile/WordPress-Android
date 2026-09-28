@@ -370,13 +370,13 @@ class RsSiteRestClient @Inject constructor(
             throw e
         } catch (e: Exception) {
             AppLog.e(AppLog.T.POSTS, "fetchPublishedAuthorIds failed for $postType", e)
-            return null
+            null
         }
-        if (response !is WpRequestResult.Success) {
+        val ids = (response as? WpRequestResult.Success)?.response?.data?.mapNotNull { it.id }
+        if (response != null && ids == null) {
             AppLog.w(AppLog.T.POSTS, "fetchPublishedAuthorIds failed for $postType")
-            return null
         }
-        return response.response.data.mapNotNull { it.id }
+        return ids
     }
 
     /**

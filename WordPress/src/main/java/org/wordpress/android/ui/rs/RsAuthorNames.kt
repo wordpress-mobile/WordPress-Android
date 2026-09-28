@@ -42,14 +42,17 @@ internal class RsAuthorNames<TAB>(
      * already running for [tab] is only replaced when it doesn't cover them all.
      */
     fun resolve(tab: TAB, site: SiteModel, items: List<ContentItemUiModel<*>>) {
-        if (!isEnabled()) return
-        val unresolvedIds = items
-            .filter { it.authorId != 0L && it.authorDisplayName == null }
-            .map { it.authorId }
-            .filter { it !in unresolvable }
-            .distinct()
-        if (unresolvedIds.isEmpty()) return
-        if (jobs[tab]?.isActive == true && pendingIds[tab].orEmpty().containsAll(unresolvedIds)) return
+        val unresolvedIds = if (isEnabled()) {
+            items
+                .filter { it.authorId != 0L && it.authorDisplayName == null }
+                .map { it.authorId }
+                .filter { it !in unresolvable }
+                .distinct()
+        } else {
+            emptyList()
+        }
+        val isAlreadyPending = jobs[tab]?.isActive == true && pendingIds[tab].orEmpty().containsAll(unresolvedIds)
+        if (unresolvedIds.isEmpty() || isAlreadyPending) return
         val loadedAuthorIds = items.map { it.authorId }.filter { it != 0L }.toSet()
 
         jobs[tab]?.cancel()
@@ -70,10 +73,12 @@ internal class RsAuthorNames<TAB>(
      * author.
      */
     private suspend fun isMultiAuthor(site: SiteModel, loadedAuthorIds: Set<Long>): Boolean {
-        if (loadedAuthorIds.size > 1) return true
-        site.isSingleUserSite?.let { return !it }
-        val published = publishedAuthorIds(site) ?: return false
-        return (loadedAuthorIds + published).size > 1
+        val isSingleUserSite: Boolean? = site.isSingleUserSite
+        return when {
+            loadedAuthorIds.size > 1 -> true
+            isSingleUserSite != null -> !isSingleUserSite
+            else -> publishedAuthorIds(site)?.let { (loadedAuthorIds + it).size > 1 } ?: false
+        }
     }
 
     private suspend fun publishedAuthorIds(site: SiteModel): List<Long>? {

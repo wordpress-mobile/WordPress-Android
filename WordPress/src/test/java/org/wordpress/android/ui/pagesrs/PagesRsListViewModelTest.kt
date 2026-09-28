@@ -48,6 +48,7 @@ import org.wordpress.android.util.config.SiteEditorMVPFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
+@Suppress("LargeClass")
 internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var experimentalFeatures: ExperimentalFeatures
