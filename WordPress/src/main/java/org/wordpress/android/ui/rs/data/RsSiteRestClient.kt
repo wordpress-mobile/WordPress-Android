@@ -60,7 +60,8 @@ class RsSiteRestClient @Inject constructor(
             ): Boolean = size > MEDIA_CACHE_MAX_ENTRIES
         }
     )
-    private val userNameCache = ConcurrentHashMap<Long, String>()
+    /** Keyed by site and user ID, since self-hosted user IDs are per site (user 1 is every admin). */
+    private val userNameCache = ConcurrentHashMap<String, String>()
     private val categoryNameCache = ConcurrentHashMap<Long, String>()
     private val tagNameCache = ConcurrentHashMap<Long, String>()
 
@@ -207,7 +208,7 @@ class RsSiteRestClient @Inject constructor(
         val result = mutableMapOf<Long, String>()
         val uncached = mutableListOf<Long>()
         for (id in userIds) {
-            val cached = userNameCache[id]
+            val cached = userNameCache[userCacheKey(site, id)]
             if (cached != null) result[id] = cached else uncached.add(id)
         }
         if (uncached.isEmpty()) return result
@@ -223,7 +224,7 @@ class RsSiteRestClient @Inject constructor(
             when (response) {
                 is WpRequestResult.Success -> {
                     for (user in response.response.data) {
-                        userNameCache[user.id] = user.name
+                        userNameCache[userCacheKey(site, user.id)] = user.name
                         result[user.id] = user.name
                     }
                 }
@@ -320,7 +321,7 @@ class RsSiteRestClient @Inject constructor(
             is WpRequestResult.Success -> {
                 val authors =
                     response.response.data.map { user ->
-                        userNameCache[user.id] = user.name
+                        userNameCache[userCacheKey(site, user.id)] = user.name
                         AuthorInfo(
                             id = user.id,
                             name = user.name
@@ -348,8 +349,8 @@ class RsSiteRestClient @Inject constructor(
         }
     }
 
-    /** Whether more than one user has published [postType]. A failure reads as false. */
-    suspend fun hasMultipleAuthors(site: SiteModel, postType: String): Boolean {
+    /** Whether more than one user has published [postType], or null if the site couldn't say. */
+    suspend fun hasMultipleAuthors(site: SiteModel, postType: String): Boolean? {
         val client = wpApiClientProvider.getWpApiClient(site)
         val response = client.request {
             it.users().filterListWithViewContext(
@@ -364,7 +365,7 @@ class RsSiteRestClient @Inject constructor(
         if (total == null) {
             AppLog.w(AppLog.T.POSTS, "hasMultipleAuthors failed for $postType")
         }
-        return (total ?: 0u) > 1u
+        return total?.let { it > 1u }
     }
 
     /**
@@ -522,6 +523,8 @@ class RsSiteRestClient @Inject constructor(
 
     private fun mediaCacheKey(site: SiteModel, mediaId: Long): String =
         "${site.id}:$mediaId"
+
+    private fun userCacheKey(site: SiteModel, userId: Long): String = "${site.id}:$userId"
 
     /**
      * Reads the source URL and the available renders off the media

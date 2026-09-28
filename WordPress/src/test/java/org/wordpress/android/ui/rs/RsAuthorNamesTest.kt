@@ -11,6 +11,7 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -53,7 +54,7 @@ class RsAuthorNamesTest : BaseUnitTest(StandardTestDispatcher()) {
         whenever(restClient.fetchUserDisplayNames(anyOrNull(), any())).doSuspendableAnswer { names }
     }
 
-    private suspend fun answerMultipleAuthors(isMultiple: Boolean) {
+    private suspend fun answerMultipleAuthors(isMultiple: Boolean?) {
         whenever(restClient.hasMultipleAuthors(anyOrNull(), any())).doSuspendableAnswer { isMultiple }
     }
 
@@ -76,7 +77,7 @@ class RsAuthorNamesTest : BaseUnitTest(StandardTestDispatcher()) {
         val authorNames = createAuthorNames()
         val site = site(isSingleUserSite = null)
 
-        authorNames.resolve(TAB, site, listOf(model(ONE), model(ONE), model(TWO, "Known"), model(0L)))
+        authorNames.resolve(TAB, site, listOf(model(ONE), model(ONE), model(0L)))
         advanceUntilIdle()
 
         verify(restClient).hasMultipleAuthors(site, POST_TYPE)
@@ -94,6 +95,37 @@ class RsAuthorNamesTest : BaseUnitTest(StandardTestDispatcher()) {
 
         verify(restClient, never()).fetchUserDisplayNames(anyOrNull(), any())
         assertThat(resolved).isEmpty()
+    }
+
+    @Test
+    fun `rows by two authors resolve names even when the site counts one published author`() = test {
+        answerMultipleAuthors(false)
+        answerNames(mapOf(ONE to NAME))
+        val authorNames = createAuthorNames()
+        val site = site(isSingleUserSite = null)
+
+        authorNames.resolve(TAB, site, listOf(model(ONE), model(TWO, "Known")))
+        advanceUntilIdle()
+
+        verify(restClient, never()).hasMultipleAuthors(anyOrNull(), any())
+        verify(restClient).fetchUserDisplayNames(eq(site), eq(listOf(ONE)))
+    }
+
+    @Test
+    fun `a failed author count is asked again on the next load`() = test {
+        answerMultipleAuthors(null)
+        val authorNames = createAuthorNames()
+        val site = site(isSingleUserSite = null)
+        authorNames.resolve(TAB, site, listOf(model(ONE)))
+        advanceUntilIdle()
+
+        answerMultipleAuthors(true)
+        answerNames(mapOf(ONE to NAME))
+        authorNames.resolve(TAB, site, listOf(model(ONE)))
+        advanceUntilIdle()
+
+        verify(restClient, times(2)).hasMultipleAuthors(site, POST_TYPE)
+        assertThat(resolved).containsExactly(TAB to mapOf(ONE to NAME))
     }
 
     private companion object {

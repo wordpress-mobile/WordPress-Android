@@ -25,8 +25,8 @@ internal class RsAuthorNames<TAB>(
 ) {
     private val jobs = mutableMapOf<TAB, Job>()
 
-    /** Asked once and kept for the screen's lifetime; a refresh doesn't change the answer. */
-    private var isMultiAuthor: Deferred<Boolean>? = null
+    /** Kept for the screen's lifetime once answered; a failed check is asked again on the next load. */
+    private var isMultiAuthor: Deferred<Boolean?>? = null
 
     fun resolve(tab: TAB, site: SiteModel, items: List<ContentItemUiModel<*>>) {
         val unresolvedIds = items
@@ -34,10 +34,13 @@ internal class RsAuthorNames<TAB>(
             .map { it.authorId }
             .distinct()
         if (unresolvedIds.isEmpty()) return
+        // Rows by two authors settle it locally - and catch authors who haven't published yet, whom the
+        // site's count leaves out, as on a Drafts tab.
+        val hasSeveralAuthors = items.map { it.authorId }.filter { it != 0L }.distinct().size > 1
 
         jobs[tab]?.cancel()
         jobs[tab] = scope.launch {
-            if (!isMultiAuthor(site).await()) return@launch
+            if (!hasSeveralAuthors && isMultiAuthor(site) != true) return@launch
             val names = withContext(ioDispatcher) {
                 restClient.fetchUserDisplayNames(site, unresolvedIds)
             }
@@ -46,11 +49,13 @@ internal class RsAuthorNames<TAB>(
     }
 
     // isSingleUserSite is only set for WP.com sites; app-password sites have to ask.
-    private fun isMultiAuthor(site: SiteModel): Deferred<Boolean> =
-        isMultiAuthor ?: scope.async {
+    private suspend fun isMultiAuthor(site: SiteModel): Boolean? {
+        val check = isMultiAuthor ?: scope.async {
             site.isSingleUserSite?.let { !it }
                 ?: withContext(ioDispatcher) { restClient.hasMultipleAuthors(site, postType) }
         }.also { isMultiAuthor = it }
+        return check.await().also { if (it == null && isMultiAuthor === check) isMultiAuthor = null }
+    }
 
     fun clear() {
         jobs.values.forEach { it.cancel() }
