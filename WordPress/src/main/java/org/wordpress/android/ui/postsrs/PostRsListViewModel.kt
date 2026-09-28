@@ -28,10 +28,10 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.rs.RsAuthorNames
 import org.wordpress.android.ui.rs.RsCollectionScope
 import org.wordpress.android.ui.rs.RsCommentCountFetcher
 import org.wordpress.android.ui.rs.RsErrorUtils
-import org.wordpress.android.ui.rs.RsAuthorNames
 import org.wordpress.android.ui.rs.RsFeaturedImages
 import org.wordpress.android.ui.rs.RsFluxCBridge
 import org.wordpress.android.ui.rs.RsPostChangeListener
@@ -133,6 +133,8 @@ class PostRsListViewModel @Inject constructor(
         restClient = restClient,
         postType = POST_TYPE,
         onNamesResolved = ::applyAuthorNames,
+        // A "Me" list is all the user's own, so naming the author on every row adds nothing.
+        isEnabled = { canShowAuthorNames && _authorFilter.value != AuthorFilterSelection.ME },
     )
 
     /**
@@ -1095,10 +1097,7 @@ class PostRsListViewModel @Inject constructor(
                 )
             }
             featuredImages.resolve(tab, site, uiModels)
-            // A "Me" list is all the user's own, so naming the author on every row adds nothing.
-            if (canShowAuthorNames && _authorFilter.value != AuthorFilterSelection.ME) {
-                authorNames.resolve(tab, site, uiModels)
-            }
+            authorNames.resolve(tab, site, uiModels)
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {

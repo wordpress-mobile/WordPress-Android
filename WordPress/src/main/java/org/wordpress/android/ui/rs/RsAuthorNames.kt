@@ -21,6 +21,8 @@ internal class RsAuthorNames<TAB>(
     private val restClient: RsSiteRestClient,
     private val postType: String,
     private val onNamesResolved: (TAB, Map<Long, String>) -> Unit,
+    /** Read on each [resolve]; while false no names are looked up. */
+    private val isEnabled: () -> Boolean = { true },
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     private val jobs = mutableMapOf<TAB, Job>()
@@ -40,6 +42,7 @@ internal class RsAuthorNames<TAB>(
      * already running for [tab] is only replaced when it doesn't cover them all.
      */
     fun resolve(tab: TAB, site: SiteModel, items: List<ContentItemUiModel<*>>) {
+        if (!isEnabled()) return
         val unresolvedIds = items
             .filter { it.authorId != 0L && it.authorDisplayName == null }
             .map { it.authorId }

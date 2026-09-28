@@ -40,10 +40,10 @@ import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.rs.RsAuthorNames
 import org.wordpress.android.ui.rs.RsCollectionPrefetch
 import org.wordpress.android.ui.rs.RsCollectionScope
 import org.wordpress.android.ui.rs.RsErrorUtils
-import org.wordpress.android.ui.rs.RsAuthorNames
 import org.wordpress.android.ui.rs.RsFeaturedImages
 import org.wordpress.android.ui.rs.RsFluxCBridge
 import org.wordpress.android.ui.rs.RsPostChangeListener
@@ -156,6 +156,8 @@ internal class PagesRsListViewModel @Inject constructor(
         restClient = restClient,
         postType = POST_TYPE,
         onNamesResolved = ::applyAuthorNames,
+        // A "Me" list is all the user's own, so naming the author on every row adds nothing.
+        isEnabled = { canShowAuthorNames && _authorFilter.value != AuthorFilterSelection.ME },
     )
 
     private val _density = MutableStateFlow(
@@ -1475,10 +1477,7 @@ internal class PagesRsListViewModel @Inject constructor(
             }
             site?.let {
                 featuredImages.resolve(tab, it, uiModels)
-                // A "Me" list is all the user's own, so naming the author on every row adds nothing.
-                if (canShowAuthorNames && _authorFilter.value != AuthorFilterSelection.ME) {
-                    authorNames.resolve(tab, it, uiModels)
-                }
+                authorNames.resolve(tab, it, uiModels)
             }
         } catch (e: CancellationException) {
             throw e
