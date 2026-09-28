@@ -255,6 +255,7 @@ fun UnifiedConversationDetailScreen(
                         UnifiedMessageItem(
                             message = message,
                             timestamp = formatRelativeTime(message.createdAt, resources),
+                            currentUserName = userName,
                             onPreviewAttachment = { previewAttachment = it },
                             onDownloadAttachment = onDownloadAttachment,
                             onLinkClick = onLinkClick,
@@ -487,18 +488,34 @@ private fun AttachmentRow(attachment: UnifiedAttachment, onLinkClick: (String) -
             Spacer(modifier = Modifier.height(4.dp))
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = attachment.filename,
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.Medium,
-                color = if (isLink) MaterialTheme.colorScheme.primary else Color.Unspecified,
-                textDecoration = if (isLink) TextDecoration.Underline else null,
+            // Links are styled like the ones in an escalated conversation (see
+            // UnifiedAttachmentLink) so the same source link doesn't change appearance once the
+            // conversation is handed over to a Happiness Engineer.
+            Row(
                 modifier = Modifier
                     .weight(1f, fill = false)
                     .then(linkModifier),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                if (isLink) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
+                Text(
+                    text = attachment.filename,
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Medium,
+                    color = if (isLink) MaterialTheme.colorScheme.primary else Color.Unspecified,
+                    textDecoration = if (isLink) TextDecoration.Underline else null,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
             attachment.botCitationScore?.let { score ->
                 Text(
                     text = stringResource(
@@ -821,12 +838,14 @@ private fun UnifiedConversationTitleCard(title: String) {
 private fun UnifiedMessageItem(
     message: UnifiedMessage,
     timestamp: String,
+    currentUserName: String,
     onPreviewAttachment: (UnifiedAttachment) -> Unit,
     onDownloadAttachment: (UnifiedAttachment) -> Unit,
     onLinkClick: (String) -> Unit,
     authorizationHeader: String,
 ) {
-    val messageDescription = "${message.authorName}, $timestamp. ${message.formattedText}"
+    val authorName = messageAuthorName(message, currentUserName)
+    val messageDescription = "$authorName, $timestamp. ${message.formattedText}"
 
     Box(
         modifier = Modifier
@@ -851,7 +870,7 @@ private fun UnifiedMessageItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = message.authorName,
+                    text = authorName,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = if (message.isUser) FontWeight.Bold else FontWeight.Normal,
                     color = if (message.isUser) {
@@ -929,6 +948,19 @@ private fun UnifiedAttachmentsList(
             }
         }
     }
+}
+
+/**
+ * The name shown above a message in an escalated (Happiness Engineer) conversation. The unified
+ * conversations endpoint labels the author with raw backend values — "bot" for the assistant and the
+ * hashed WP.com login for the current user — so both are replaced with the same names the bot chat
+ * uses before escalation, and only Happiness Engineers keep the name the API returns.
+ */
+@Composable
+private fun messageAuthorName(message: UnifiedMessage, currentUserName: String): String = when {
+    message.isUser -> currentUserName.ifEmpty { message.authorName }
+    message.isBot -> stringResource(R.string.unified_support_status_ai_assistant)
+    else -> message.authorName
 }
 
 @Composable

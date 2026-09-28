@@ -15,6 +15,15 @@ data class UnifiedMessage(
 ) {
     val isUser: Boolean get() = authorRole == AUTHOR_ROLE_USER
 
+    /**
+     * True for the bot's own messages. Once a conversation is escalated to Happiness Engineers, the
+     * unified conversations endpoint returns the bot's earlier messages with the raw "bot" author
+     * role/name, which the UI replaces with the user-facing assistant name.
+     */
+    val isBot: Boolean
+        get() = authorRole.equals(AUTHOR_ROLE_BOT, ignoreCase = true) ||
+                authorName.equals(AUTHOR_ROLE_BOT, ignoreCase = true)
+
     companion object {
         const val AUTHOR_ROLE_USER = "user"
         const val AUTHOR_ROLE_BOT = "bot"
