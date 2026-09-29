@@ -53,8 +53,7 @@ fun CommentsRsRedesignedRow(
         onLongClick = onLongClick
     ) {
         Row(modifier = Modifier.padding(CARD_PADDING)) {
-            // Tapping the avatar toggles selection - the discoverable path into selection mode,
-            // kept from the pre-redesign row so the gesture does not change with the flag.
+            // Tapping the avatar toggles selection - the discoverable path into selection mode.
             CommentAvatar(comment = comment, isSelected = isSelected, onClick = onLongClick)
             Column(
                 modifier = Modifier

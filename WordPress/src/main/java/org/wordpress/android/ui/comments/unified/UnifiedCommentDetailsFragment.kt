@@ -135,8 +135,7 @@ class UnifiedCommentDetailsFragment : Fragment() {
                         showLikeButton = SiteUtils.isAccessedViaWPComRest(site),
                         focusReplyFieldOnLaunch = focusReplyField,
                         snackbarHostState = snackbarHostState,
-                        actions = actions,
-                        isRedesignEnabled = true
+                        actions = actions
                     )
                 }
             }
@@ -151,7 +150,7 @@ class UnifiedCommentDetailsFragment : Fragment() {
         // Lets the notifications host lift its app bar with the comment's scroll position;
         // the rs comments list host doesn't implement the listener, so this is a no-op there.
         (activity as? ScrollableViewInitializedListener)?.onScrollableViewInitialized(view.id)
-        viewModel.start(site, remoteCommentId, noteId, isRedesignEnabled = true)
+        viewModel.start(site, remoteCommentId, noteId)
     }
 
     // A single instance for the fragment's lifetime, so recompositions see a stable parameter

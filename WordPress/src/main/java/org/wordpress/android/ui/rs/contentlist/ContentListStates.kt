@@ -76,19 +76,11 @@ fun ContentListEmptyState(
     }
 }
 
-/** A screenful of [placeholder] rows while a tab's first page loads. */
+/** A screenful of [placeholder] rows while a tab's first page loads; the post and page skeleton by default. */
 @Composable
-fun ContentListShimmer(placeholder: @Composable () -> Unit) {
+fun ContentListShimmer(placeholder: @Composable () -> Unit = { ContentListPlaceholderRow() }) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(SHIMMER_ITEM_COUNT) { placeholder() }
-    }
-}
-
-/** The post and page skeleton, in whichever row style is showing. */
-@Composable
-fun ContentListShimmer(isRedesignEnabled: Boolean) {
-    ContentListShimmer {
-        if (isRedesignEnabled) ContentListPlaceholderRow() else LegacyContentListPlaceholderRow()
     }
 }
 

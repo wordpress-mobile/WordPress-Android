@@ -73,8 +73,7 @@ class CommentsRsListActivity : BaseAppCompatActivity() {
                     onBatchAction = viewModel::onBatchAction,
                     onConfirmPendingAction = viewModel::onConfirmPendingAction,
                     onDensityToggled = viewModel::onDensityToggled,
-                    density = density,
-                    isRedesignEnabled = true
+                    density = density
                 )
             }
         }

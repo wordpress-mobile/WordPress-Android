@@ -16,7 +16,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -90,8 +89,7 @@ fun PostRsListScreen(
     onCreatePost: () -> Unit,
     onRowsVisible: (PostRsListTab, List<Long>) -> Unit,
     onDensityToggled: (PostRsListTab) -> Unit,
-    density: ContentListDensity = ContentListDensity.COMFORTABLE,
-    isRedesignEnabled: Boolean = false
+    density: ContentListDensity = ContentListDensity.COMFORTABLE
 ) {
     val tabs = PostRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
@@ -123,7 +121,7 @@ fun PostRsListScreen(
     ShowRsSnackbars(snackbarMessages, snackbarHostState)
 
     Scaffold(
-        containerColor = ContentListDefaults.containerColor(isRedesignEnabled),
+        containerColor = ContentListDefaults.containerColor(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
@@ -161,12 +159,10 @@ fun PostRsListScreen(
                         // Ahead of the author filter, not between it and search: these actions are
                         // end-aligned, so inserting anywhere later would shift both pre-existing
                         // icons left of where they have always been.
-                        if (isRedesignEnabled) {
-                            ContentListDensityToggle(
-                                density = density,
-                                onToggle = { onDensityToggled(activeTab) }
-                            )
-                        }
+                        ContentListDensityToggle(
+                            density = density,
+                            onToggle = { onDensityToggled(activeTab) }
+                        )
                         if (isAuthorFilterSupported) {
                             ContentListAuthorFilterButton(
                                 authorFilter = authorFilter,
@@ -191,22 +187,11 @@ fun PostRsListScreen(
             }
         },
         floatingActionButton = {
-            if (isRedesignEnabled) {
-                ExtendedFloatingActionButton(
-                    onClick = onCreatePost,
-                    icon = { Icon(Icons.Default.Add, contentDescription = null) },
-                    text = { Text(stringResource(R.string.content_list_fab_write)) }
-                )
-            } else {
-                FloatingActionButton(
-                    onClick = onCreatePost,
-                ) {
-                    Icon(
-                        Icons.Default.Add,
-                        contentDescription = stringResource(R.string.posts_empty_list_button)
-                    )
-                }
-            }
+            ExtendedFloatingActionButton(
+                onClick = onCreatePost,
+                icon = { Icon(Icons.Default.Add, contentDescription = null) },
+                text = { Text(stringResource(R.string.content_list_fab_write)) }
+            )
         }
     ) { contentPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
@@ -214,7 +199,6 @@ fun PostRsListScreen(
                 ContentListTabRow(
                     labels = tabs.map { stringResource(it.labelResId) },
                     selectedIndex = pagerState.settledPage,
-                    isRedesignEnabled = isRedesignEnabled,
                     onSelect = { index ->
                         coroutineScope.launch { pagerState.animateScrollToPage(index) }
                     }
@@ -249,7 +233,6 @@ fun PostRsListScreen(
                     onCreatePost = onCreatePost,
                     onRowsVisible = { ids -> onRowsVisible(tab, ids) },
                     density = density,
-                    isRedesignEnabled = isRedesignEnabled,
                     showDateGroups = tab != PostRsListTab.SCHEDULED
                 )
             }

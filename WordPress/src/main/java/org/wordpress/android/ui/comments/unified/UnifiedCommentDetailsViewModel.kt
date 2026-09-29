@@ -111,10 +111,6 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     private var isLikeInProgress = false
     private var isModerationInProgress = false
 
-    // The parent strip and the reply-aware trash prompt only exist in the redesigned detail, so
-    // their fetches are skipped entirely when it is off - the pre-redesign screen loads as before.
-    private var isRedesignEnabled = false
-
     // Whether the current user may moderate comments on this site (moderate_comments capability).
     // Fetched asynchronously in [start]; false until it resolves so the moderation controls start
     // disabled and enable once confirmed, rather than flashing enabled then greying out.
@@ -128,18 +124,12 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     // it, and the detail pager would otherwise pay for it on every comment it pages past.
     private var authorExtrasJob: Job? = null
 
-    fun start(
-        site: SiteModel,
-        remoteCommentId: Long,
-        noteId: String? = null,
-        isRedesignEnabled: Boolean = false
-    ) {
+    fun start(site: SiteModel, remoteCommentId: Long, noteId: String? = null) {
         if (isStarted) return
         isStarted = true
         this.site = site
         this.remoteCommentId = remoteCommentId
         this.noteId = noteId
-        this.isRedesignEnabled = isRedesignEnabled
         canModerateResult = viewModelScope.async(bgDispatcher) { siteCapabilityChecker.canModerateComments(site) }
         loadComment()
         loadModerationCapability()
@@ -199,13 +189,13 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                 _uiState.value = CommentDetailsUiState(showProgress = true)
             }
             val loaded = withContext(bgDispatcher) {
-                // The redesign's author sheet shows the email and IP, which need the edit context.
+                // The author sheet shows the email and IP, which need the edit context.
                 // The capability is session-cached, so this rarely costs a request.
-                val withEditContext = isRedesignEnabled && canModerateResult.await()
+                val withEditContext = canModerateResult.await()
                 val rs = commentsRsDataSource.getComment(site, remoteCommentId, withEditContext)
                 // Independent of the cache lookups below, so it runs alongside them rather than
                 // adding its round trips to the first paint.
-                val extras = async { fetchRedesignExtras(rs) }
+                val extras = async { fetchParentAndReplyCount(rs) }
                 var local = commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId).firstOrNull()
                 // Opened from the rs list the FluxC cache may not have this comment at all (the
                 // legacy list guaranteed a row before the detail could open). Fetch it so the
@@ -255,12 +245,9 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         }
     }
 
-    /**
-     * The parent comment and reply count, which only the redesigned detail shows. Fetched together
-     * and best effort: a failure leaves the strip hidden and the trash prompt on generic copy.
-     */
-    private suspend fun fetchRedesignExtras(rs: RsComment?): Pair<RsComment?, Int?> {
-        if (!isRedesignEnabled || rs == null) return null to null
+    /** Best effort: a failure leaves the parent strip hidden and the trash prompt on generic copy. */
+    private suspend fun fetchParentAndReplyCount(rs: RsComment?): Pair<RsComment?, Int?> {
+        if (rs == null) return null to null
         return coroutineScope {
             val parent = async {
                 rs.parentId.takeIf { it > 0 }?.let { commentsRsDataSource.getComment(site, it) }

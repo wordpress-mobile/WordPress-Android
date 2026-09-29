@@ -96,8 +96,7 @@ fun CommentsRsListScreen(
     onBatchAction: (CommentsRsBatchAction, CommentsRsListTab) -> Unit,
     onConfirmPendingAction: (CommentsRsListTab) -> Unit,
     onDensityToggled: () -> Unit,
-    density: ContentListDensity = ContentListDensity.COMFORTABLE,
-    isRedesignEnabled: Boolean = false
+    density: ContentListDensity = ContentListDensity.COMFORTABLE
 ) {
     val tabs = CommentsRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
@@ -168,7 +167,7 @@ fun CommentsRsListScreen(
     ShowRsSnackbars(snackbarMessages, snackbarHostState)
 
     Scaffold(
-        containerColor = ContentListDefaults.containerColor(isRedesignEnabled),
+        containerColor = ContentListDefaults.containerColor(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             AnimatedContent(targetState = topBarMode, label = "topBar") { mode ->
@@ -209,12 +208,10 @@ fun CommentsRsListScreen(
                         actions = {
                             // Ahead of search, so the pre-existing icon keeps its position -
                             // the same placement rule the posts list follows.
-                            if (isRedesignEnabled) {
-                                ContentListDensityToggle(
-                                    density = density,
-                                    onToggle = onDensityToggled
-                                )
-                            }
+                            ContentListDensityToggle(
+                                density = density,
+                                onToggle = onDensityToggled
+                            )
                             IconButton(onClick = {
                                 searchFocusPending = true
                                 onSearchOpen()
@@ -238,7 +235,6 @@ fun CommentsRsListScreen(
             ContentListTabRow(
                 labels = tabs.map { stringResource(it.labelResId) },
                 selectedIndex = pagerState.settledPage,
-                isRedesignEnabled = isRedesignEnabled,
                 onSelect = { index ->
                     coroutineScope.launch {
                         if (pagerState.settledPage == index) {
@@ -275,7 +271,6 @@ fun CommentsRsListScreen(
                     onLoadMore = { onLoadMore(tab) },
                     onCommentClick = onCommentClick,
                     onCommentLongClick = onCommentLongClick,
-                    isRedesignEnabled = isRedesignEnabled,
                     density = density
                 )
             }
