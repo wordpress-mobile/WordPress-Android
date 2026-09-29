@@ -662,6 +662,13 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
     public void onPostUploaded(OnPostUploaded event) {
         // check if the event is related to the PostModel that is being uploaded by PostUploadHandler
         if (!isPostUploading(event.post)) {
+            AppLog.w(T.POSTS, "PostUploadHandler > onPostUploaded: ignoring event for post "
+                              + (event.post != null ? event.post.getId() : "null")
+                              + " because it is not the currently uploading post"
+                              + " (current=" + (sCurrentUploadingPost != null
+                              ? sCurrentUploadingPost.getId() : "null") + ")"
+                              + (event.isError() ? " error: " + event.error.type
+                              + " " + event.error.message : ""));
             return;
         }
         SiteModel site = mSiteStore.getSiteByLocalId(event.post.getLocalSiteId());
