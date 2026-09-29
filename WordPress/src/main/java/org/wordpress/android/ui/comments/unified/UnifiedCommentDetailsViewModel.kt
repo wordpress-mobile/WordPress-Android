@@ -207,6 +207,10 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                 _uiState.value = CommentDetailsUiState(showProgress = true)
             }
             val rs = withContext(bgDispatcher) { commentsRsDataSource.getComment(site, remoteCommentId) }
+            if (rs == null) {
+                showLoadError(isRefresh)
+                return@launch
+            }
             // Independent of the cache lookups below, so it runs alongside them, and the comment is
             // shown without waiting for it.
             val extras = async(bgDispatcher) { fetchParentAndReplyCount(rs) }
@@ -223,7 +227,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                 // Still no title (self-hosted application-password site, or the fetch failed):
                 // resolve it the way the rs list does — usually a free hit on the shared title
                 // cache the list populated moments earlier.
-                val fallbackTitle = if (local?.postTitle.isNullOrBlank() && rs != null && rs.postId > 0) {
+                val fallbackTitle = if (local?.postTitle.isNullOrBlank() && rs.postId > 0) {
                     commentsRsDataSource.fetchPostTitles(site, listOf(rs.postId))[rs.postId].orEmpty()
                 } else {
                     ""
@@ -237,60 +241,57 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                 }
                 CommentLoadResult(local, fallbackTitle, likedFallback)
             }
-            when {
-                rs != null -> {
-                    loadedComment = rs
-                    val previous = _uiState.value
-                    val state = rs.toUiState(loaded.cached, loaded.fallbackPostTitle, loaded.fallbackIsLiked)
-                    // A refresh keeps the current parent strip and reply count until the new ones
-                    // land, rather than flashing the strip away. It also keeps the author sheet's
-                    // extras, which the view-context load lacks and the sheet may have fetched
-                    // while the refresh was in flight.
-                    _uiState.value = if (isRefresh && previous != null) {
-                        state.copy(
-                            parentAuthorName = previous.parentAuthorName,
-                            parentSnippet = previous.parentSnippet,
-                            replyCount = previous.replyCount,
-                            authorInfo = state.authorInfo.copy(
-                                email = previous.authorInfo.email,
-                                ipAddress = previous.authorInfo.ipAddress,
-                                commentCount = previous.authorInfo.commentCount,
-                                bio = previous.authorInfo.bio
-                            )
-                        )
-                    } else {
-                        state
-                    }
-                }
-                isRefresh -> showSnackbar(R.string.error_load_comment)
-                else -> _onSnackbarMessage.value = Event(
-                    SnackbarMessageHolder(
-                        message = UiStringRes(R.string.error_load_comment),
-                        onDismissAction = { _uiActionEvent.value = Event(Close) }
+            loadedComment = rs
+            val previous = _uiState.value
+            val state = rs.toUiState(loaded.cached, loaded.fallbackPostTitle, loaded.fallbackIsLiked)
+            // A refresh keeps the current parent strip and reply count until the new ones land,
+            // rather than flashing the strip away. It also keeps the author sheet's extras, which the
+            // view-context load lacks and the sheet may have fetched while the refresh was in flight.
+            _uiState.value = if (isRefresh && previous != null) {
+                state.copy(
+                    parentAuthorName = previous.parentAuthorName,
+                    parentSnippet = previous.parentSnippet,
+                    replyCount = previous.replyCount,
+                    authorInfo = state.authorInfo.copy(
+                        email = previous.authorInfo.email,
+                        ipAddress = previous.authorInfo.ipAddress,
+                        commentCount = previous.authorInfo.commentCount,
+                        bio = previous.authorInfo.bio
                     )
                 )
+            } else {
+                state
             }
-            if (rs != null) {
-                val (parent, replies) = extras.await()
-                _uiState.value = _uiState.value?.copy(
-                    parentAuthorName = parent?.authorName.orEmpty(),
-                    parentSnippet = parent?.contentHtml?.let { HtmlUtils.fastStripHtml(it).trim() }.orEmpty(),
-                    replyCount = replies
+            val (parent, replies) = extras.await()
+            _uiState.value = _uiState.value?.copy(
+                parentAuthorName = parent?.authorName.orEmpty(),
+                parentSnippet = parent?.contentHtml?.let { HtmlUtils.fastStripHtml(it).trim() }.orEmpty(),
+                replyCount = replies
+            )
+        }
+    }
+
+    /** A failed refresh keeps the comment on screen; a failed first load closes the screen. */
+    private fun showLoadError(isRefresh: Boolean) {
+        if (isRefresh) {
+            showSnackbar(R.string.error_load_comment)
+        } else {
+            _onSnackbarMessage.value = Event(
+                SnackbarMessageHolder(
+                    message = UiStringRes(R.string.error_load_comment),
+                    onDismissAction = { _uiActionEvent.value = Event(Close) }
                 )
-            }
+            )
         }
     }
 
     /** Best effort: a failure leaves the parent strip hidden and the trash prompt on generic copy. */
-    private suspend fun fetchParentAndReplyCount(rs: RsComment?): Pair<RsComment?, Int?> {
-        if (rs == null) return null to null
-        return coroutineScope {
-            val parent = async {
-                rs.parentId.takeIf { it > 0 }?.let { commentsRsDataSource.getComment(site, it) }
-            }
-            val replies = async { commentsRsDataSource.fetchReplyCount(site, remoteCommentId) }
-            parent.await() to replies.await()
+    private suspend fun fetchParentAndReplyCount(rs: RsComment): Pair<RsComment?, Int?> = coroutineScope {
+        val parent = async {
+            rs.parentId.takeIf { it > 0 }?.let { commentsRsDataSource.getComment(site, it) }
         }
+        val replies = async { commentsRsDataSource.fetchReplyCount(site, remoteCommentId) }
+        parent.await() to replies.await()
     }
 
     fun onApproveClicked() {

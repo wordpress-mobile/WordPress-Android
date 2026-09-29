@@ -45,6 +45,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.FilterChipTabRow
 import org.wordpress.android.ui.compose.utils.rsDebugTitle
 import org.wordpress.android.ui.pagesrs.PageRsListConfirmation
 import org.wordpress.android.ui.pagesrs.PageRsListItem
@@ -64,11 +65,10 @@ import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListDensityToggle
 import org.wordpress.android.ui.rs.contentlist.ContentListSearchClearButton
 import org.wordpress.android.ui.rs.contentlist.ContentListSearchField
-import org.wordpress.android.ui.rs.contentlist.ContentListTabRow
 import org.wordpress.android.ui.rs.contentlist.ReportSettledTab
 import org.wordpress.android.ui.rs.contentlist.ShowRsSnackbars
 
-@Suppress("CyclomaticComplexMethod", "LongMethod")
+@Suppress("CyclomaticComplexMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun PagesRsListScreen(
@@ -203,7 +203,7 @@ internal fun PagesRsListScreen(
     ) { contentPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
             if (!isSearchActive) {
-                ContentListTabRow(
+                FilterChipTabRow(
                     labels = tabs.map { stringResource(it.labelResId) },
                     selectedIndex = pagerState.settledPage,
                     onSelect = { index ->

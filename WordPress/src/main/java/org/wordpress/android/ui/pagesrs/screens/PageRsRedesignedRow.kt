@@ -4,17 +4,13 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Article
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -27,6 +23,7 @@ import org.wordpress.android.ui.pagesrs.isHeroRow
 import org.wordpress.android.ui.pagesrs.toContentListRowUiState
 import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.rs.contentlist.ContentListErrorRow
 import org.wordpress.android.ui.rs.contentlist.ContentListHeroRow
 import org.wordpress.android.ui.rs.contentlist.ContentListPlaceholderRow
 import org.wordpress.android.ui.rs.contentlist.ContentListRow
@@ -49,7 +46,7 @@ internal fun PageRsRedesignedRow(
 ) {
     when (item.page.displayState) {
         ContentDisplayState.PLACEHOLDER -> ContentListPlaceholderRow(modifier)
-        ContentDisplayState.ERROR -> ErrorItem(modifier)
+        ContentDisplayState.ERROR -> ContentListErrorRow(R.string.page_rs_failed_to_load, modifier)
         ContentDisplayState.NORMAL,
         ContentDisplayState.FETCHING_WITH_DATA,
         ContentDisplayState.FAILED_WITH_DATA -> PageRsContentCard(
@@ -121,21 +118,6 @@ private fun PageRsContentCard(
                 leading = leading
             )
         }
-    }
-}
-
-@Composable
-private fun ErrorItem(modifier: Modifier = Modifier) {
-    Card(
-        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
-    ) {
-        Text(
-            text = stringResource(R.string.page_rs_failed_to_load),
-            modifier = Modifier.padding(16.dp),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onErrorContainer
-        )
     }
 }
 

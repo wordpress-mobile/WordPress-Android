@@ -9,20 +9,12 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostRsUiModel
@@ -30,6 +22,7 @@ import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.contentlist.ContentDateGroup
 import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
 import org.wordpress.android.ui.rs.contentlist.ContentListEmptyState
+import org.wordpress.android.ui.rs.contentlist.ContentListErrorRow
 import org.wordpress.android.ui.rs.contentlist.ContentListErrorState
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentDateGrouper
@@ -159,7 +152,7 @@ private fun PostListContent(
                     if (entry.post.displayState == ContentDisplayState.PLACEHOLDER) {
                         ContentListPlaceholderRow(modifier = Modifier.animateItem())
                     } else {
-                        ErrorRow(modifier = Modifier.animateItem())
+                        ContentListErrorRow(R.string.post_rs_failed_to_load, Modifier.animateItem())
                     }
                 is PostListEntry.Row -> RedesignedRow(
                     entry = entry,
@@ -309,21 +302,6 @@ private fun RedesignedRow(
                 actions = actions
             )
         }
-    }
-}
-
-@Composable
-private fun ErrorRow(modifier: Modifier = Modifier) {
-    Card(
-        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
-    ) {
-        Text(
-            text = stringResource(R.string.post_rs_failed_to_load),
-            modifier = Modifier.padding(16.dp),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onErrorContainer
-        )
     }
 }
 
