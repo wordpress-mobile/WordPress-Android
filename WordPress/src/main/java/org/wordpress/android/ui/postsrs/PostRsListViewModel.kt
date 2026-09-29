@@ -7,7 +7,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +27,8 @@ import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.posts.AuthorFilterSelection
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.rs.RsAuthorNames
 import org.wordpress.android.ui.rs.RsCollectionScope
 import org.wordpress.android.ui.rs.RsCommentCountFetcher
 import org.wordpress.android.ui.rs.RsErrorUtils
@@ -76,6 +77,7 @@ class PostRsListViewModel @Inject constructor(
     selectedSiteRepository: SelectedSiteRepository,
     private val serviceProvider: WpServiceProvider,
     private val restClient: RsSiteRestClient,
+    private val experimentalFeatures: ExperimentalFeatures,
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,
     private val fluxCBridge: RsFluxCBridge,
@@ -113,7 +115,6 @@ class PostRsListViewModel @Inject constructor(
 
     /** Tabs whose collection has completed at least one fetch, so an empty list means empty. */
     private val fetchedTabs = mutableSetOf<PostRsListTab>()
-    private val resolveAuthorJobs = mutableMapOf<PostRsListTab, Job>()
     private val visiblePostIds = RsVisibleRows<PostRsListTab>()
     private val viewCounts = RsViewCounts(
         scope = collectionScope,
@@ -126,6 +127,14 @@ class PostRsListViewModel @Inject constructor(
         scope = viewModelScope,
         restClient = restClient,
         onImagesResolved = ::applyFeaturedImages,
+    )
+    private val authorNames = RsAuthorNames(
+        scope = viewModelScope,
+        restClient = restClient,
+        postType = POST_TYPE,
+        onNamesResolved = ::applyAuthorNames,
+        // A "Me" list is all the user's own, so naming the author on every row adds nothing.
+        isEnabled = { canShowAuthorNames && _authorFilter.value != AuthorFilterSelection.ME },
     )
 
     /**
@@ -161,6 +170,15 @@ class PostRsListViewModel @Inject constructor(
             _site.isUsingWpComRestApi &&
             _site.hasCapabilityEditOthersPosts &&
             _site.isSingleUserSite == false
+    }
+
+    /**
+     * The legacy rows only ever named authors on WP.com multi-author sites; the redesigned rows name
+     * them on any multi-author site.
+     */
+    private val canShowAuthorNames: Boolean by lazy {
+        isAuthorFilterSupported ||
+            experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.CONTENT_LIST_REDESIGN)
     }
 
     /**
@@ -777,8 +795,7 @@ class PostRsListViewModel @Inject constructor(
         userRefreshingTabs.clear()
         refreshJobs.clear()
         fetchedTabs.clear()
-        resolveAuthorJobs.values.forEach { it.cancel() }
-        resolveAuthorJobs.clear()
+        authorNames.clear()
         visiblePostIds.clear()
         viewCounts.clear()
         commentCountCache.clear()
@@ -933,6 +950,7 @@ class PostRsListViewModel @Inject constructor(
                 viewCounts.invalidateUnresolved()
                 commentCountCache.entries.removeAll { it.value == null }
                 featuredImages.invalidateUnresolved()
+                authorNames.invalidateUnresolved()
                 userRefreshingTabs.remove(tab)
                 // Read the fetched items and end both progress states here rather than relying
                 // on the collection observers, which aren't guaranteed to fire for a refresh.
@@ -1079,7 +1097,7 @@ class PostRsListViewModel @Inject constructor(
                 )
             }
             featuredImages.resolve(tab, site, uiModels)
-            resolveAuthorNames(tab, uiModels)
+            authorNames.resolve(tab, site, uiModels)
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
@@ -1093,42 +1111,9 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Fetches display names for posts that have a non-zero
-     * [PostRsUiModel.authorId] but no resolved name yet.
-     * Skipped when filtering by "Me" since the user already
-     * knows their own name.
-     */
-    private fun resolveAuthorNames(
-        tab: PostRsListTab,
-        posts: List<PostRsUiModel>
-    ) {
-        if (!isAuthorFilterSupported || _authorFilter.value == AuthorFilterSelection.ME) return
-
-        val unresolvedIds = posts
-            .filter { it.authorId != 0L && it.authorDisplayName == null }
-            .map { it.authorId }
-            .distinct()
-        if (unresolvedIds.isEmpty()) return
-
-        resolveAuthorJobs[tab]?.cancel()
-        resolveAuthorJobs[tab] = viewModelScope.launch {
-            val names = withContext(Dispatchers.IO) {
-                restClient.fetchUserDisplayNames(site, unresolvedIds)
-            }
-            if (names.isEmpty()) return@launch
-            updateTabUiState(tab) {
-                copy(
-                    items = this.items.map { post ->
-                        val name = names[post.authorId]
-                        if (name != null) {
-                            post.copy(authorDisplayName = name)
-                        } else {
-                            post
-                        }
-                    }
-                )
-            }
+    private fun applyAuthorNames(tab: PostRsListTab, names: Map<Long, String>) {
+        updateTabUiState(tab) {
+            copy(items = items.map { post -> names[post.authorId]?.let { post.copy(authorDisplayName = it) } ?: post })
         }
     }
 
@@ -1349,6 +1334,7 @@ class PostRsListViewModel @Inject constructor(
 
     companion object {
         private const val PAGE_SIZE = 20
+        private const val POST_TYPE = "post"
 
         private val ALL_STATUSES = PostRsListTab.entries.flatMap { it.statuses }.distinct()
 

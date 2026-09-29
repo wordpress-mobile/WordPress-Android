@@ -82,6 +82,7 @@ fun PostRsUiModel.toContentListRowUiState() = ContentListRowUiState(
     title = title,
     excerpt = excerpt,
     dateLabel = date,
+    authorName = authorDisplayName,
     thumbnailImageUrl = featuredImage?.thumbnail,
     heroImageUrl = featuredImage?.hero,
     isImagePending = featuredImageId != 0L &&

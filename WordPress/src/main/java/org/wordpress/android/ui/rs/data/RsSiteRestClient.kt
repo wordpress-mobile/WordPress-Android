@@ -2,6 +2,7 @@ package org.wordpress.android.ui.rs.data
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
@@ -21,11 +22,13 @@ import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.TermListParams
 import uniffi.wp_api.SparseThemeFieldWithViewContext
 import uniffi.wp_api.SparseThemeWithViewContext
+import uniffi.wp_api.SparseUserFieldWithViewContext
 import uniffi.wp_api.ThemeListParams
 import uniffi.wp_api.ThemeStatus
 import uniffi.wp_api.ThemeSupports
 import uniffi.wp_api.ThemeSupportsData
 import uniffi.wp_api.UserListParams
+import uniffi.wp_api.WpApiParamUsersHasPublishedPosts
 import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
@@ -58,7 +61,8 @@ class RsSiteRestClient @Inject constructor(
             ): Boolean = size > MEDIA_CACHE_MAX_ENTRIES
         }
     )
-    private val userNameCache = ConcurrentHashMap<Long, String>()
+    /** Keyed by site and user ID, since self-hosted user IDs are per site (user 1 is every admin). */
+    private val userNameCache = ConcurrentHashMap<String, String>()
     private val categoryNameCache = ConcurrentHashMap<Long, String>()
     private val tagNameCache = ConcurrentHashMap<Long, String>()
 
@@ -205,7 +209,7 @@ class RsSiteRestClient @Inject constructor(
         val result = mutableMapOf<Long, String>()
         val uncached = mutableListOf<Long>()
         for (id in userIds) {
-            val cached = userNameCache[id]
+            val cached = userNameCache[userCacheKey(site, id)]
             if (cached != null) result[id] = cached else uncached.add(id)
         }
         if (uncached.isEmpty()) return result
@@ -221,7 +225,7 @@ class RsSiteRestClient @Inject constructor(
             when (response) {
                 is WpRequestResult.Success -> {
                     for (user in response.response.data) {
-                        userNameCache[user.id] = user.name
+                        userNameCache[userCacheKey(site, user.id)] = user.name
                         result[user.id] = user.name
                     }
                 }
@@ -318,7 +322,7 @@ class RsSiteRestClient @Inject constructor(
             is WpRequestResult.Success -> {
                 val authors =
                     response.response.data.map { user ->
-                        userNameCache[user.id] = user.name
+                        userNameCache[userCacheKey(site, user.id)] = user.name
                         AuthorInfo(
                             id = user.id,
                             name = user.name
@@ -344,6 +348,35 @@ class RsSiteRestClient @Inject constructor(
                 )
             }
         }
+    }
+
+    /**
+     * Up to two users who have published [postType] - enough to tell one author from several - or null
+     * if the site couldn't say.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    suspend fun fetchPublishedAuthorIds(site: SiteModel, postType: String): List<Long>? {
+        val response = try {
+            wpApiClientProvider.getWpApiClient(site).request {
+                it.users().filterListWithViewContext(
+                    UserListParams(
+                        perPage = 2u,
+                        hasPublishedPosts = WpApiParamUsersHasPublishedPosts.PostTypes(listOf(postType))
+                    ),
+                    listOf(SparseUserFieldWithViewContext.ID)
+                )
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            AppLog.e(AppLog.T.POSTS, "fetchPublishedAuthorIds failed for $postType", e)
+            null
+        }
+        val ids = (response as? WpRequestResult.Success)?.response?.data?.mapNotNull { it.id }
+        if (response != null && ids == null) {
+            AppLog.w(AppLog.T.POSTS, "fetchPublishedAuthorIds failed for $postType")
+        }
+        return ids
     }
 
     /**
@@ -501,6 +534,8 @@ class RsSiteRestClient @Inject constructor(
 
     private fun mediaCacheKey(site: SiteModel, mediaId: Long): String =
         "${site.id}:$mediaId"
+
+    private fun userCacheKey(site: SiteModel, userId: Long): String = "${site.id}:$userId"
 
     /**
      * Reads the source URL and the available renders off the media

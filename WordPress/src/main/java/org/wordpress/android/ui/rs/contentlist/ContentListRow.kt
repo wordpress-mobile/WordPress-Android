@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -347,7 +348,9 @@ private fun RowExcerpt(excerpt: String) {
 }
 
 /**
- * "2d ago · 1,204 views", or just the metrics when the date sits under the title instead.
+ * "2d ago · Jane Doe · 1,204 views", or just the metrics when the date and author sit under the
+ * title instead. A long author name ellipsizes, or drops out entirely when there's no room, rather
+ * than pushing the metrics off the line.
  *
  * The separator is drawn as its own [Text] so it can take the dimmer outline colour without
  * splitting the line into something a screen reader announces piecemeal.
@@ -359,8 +362,23 @@ private fun RowMetaLine(
     showMetrics: Boolean,
     showSyncFailed: Boolean
 ) {
-    val segments = buildList<@Composable () -> Unit> {
-        if (showDate) add { MetaText(state.dateLabel) }
+    val segments = buildList<@Composable RowScope.() -> Unit> {
+        if (showDate) {
+            add {
+                MetaText(state.dateLabel)
+                state.authorName?.takeIf { it.isNotBlank() }?.let { name ->
+                    // Measured last with whatever space is left, so it carries its own separator: when
+                    // there's no room the bullet goes with the name instead of dangling beside the next.
+                    Row(
+                        modifier = Modifier.weight(1f, fill = false),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        MetaSeparator()
+                        MetaText(name)
+                    }
+                }
+            }
+        }
         // A condensed list does not fetch metrics, so it shows neither them nor a skeleton
         // waiting on a request that is never made.
         if (showMetrics) addMetrics(state)
@@ -394,7 +412,7 @@ private fun MetricText(@PluralsRes pluralResId: Int, count: Long) {
 }
 
 /** Views and comments, or a single bar standing in for both while they are still being fetched. */
-private fun MutableList<@Composable () -> Unit>.addMetrics(state: ContentListRowUiState) {
+private fun MutableList<@Composable RowScope.() -> Unit>.addMetrics(state: ContentListRowUiState) {
     if (state.areMetricsPending) {
         // Views and comments arrive together, so one bar stands in for both rather than two that
         // would resolve on the same frame anyway.
@@ -417,10 +435,12 @@ private fun MutableList<@Composable () -> Unit>.addMetrics(state: ContentListRow
 @Composable
 private fun MetaText(
     text: String,
+    modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.onSurfaceVariant
 ) {
     Text(
         text = text,
+        modifier = modifier,
         style = MaterialTheme.typography.bodySmall,
         fontSize = META_SIZE,
         color = color,

@@ -39,6 +39,8 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.posts.AuthorFilterSelection
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.rs.RsAuthorNames
 import org.wordpress.android.ui.rs.RsCollectionPrefetch
 import org.wordpress.android.ui.rs.RsCollectionScope
 import org.wordpress.android.ui.rs.RsErrorUtils
@@ -91,6 +93,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private val serviceProvider: WpServiceProvider,
     private val dispatcher: Dispatcher,
     private val restClient: RsSiteRestClient,
+    private val experimentalFeatures: ExperimentalFeatures,
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,
     private val homepageSettings: PageRsHomepageSettings,
@@ -133,7 +136,6 @@ internal class PagesRsListViewModel @Inject constructor(
 
     /** Tabs whose collection has completed at least one fetch, so an empty list means empty. */
     private val fetchedTabs = mutableSetOf<PageRsListTab>()
-    private val resolveAuthorJobs = mutableMapOf<PageRsListTab, Job>()
     private var lastTrackedTab: PageRsListTab? = null
 
     private val visiblePageIds = RsVisibleRows<PageRsListTab>()
@@ -148,6 +150,14 @@ internal class PagesRsListViewModel @Inject constructor(
         scope = viewModelScope,
         restClient = restClient,
         onImagesResolved = ::applyFeaturedImages,
+    )
+    private val authorNames = RsAuthorNames(
+        scope = viewModelScope,
+        restClient = restClient,
+        postType = POST_TYPE,
+        onNamesResolved = ::applyAuthorNames,
+        // A "Me" list is all the user's own, so naming the author on every row adds nothing.
+        isEnabled = { canShowAuthorNames && _authorFilter.value != AuthorFilterSelection.ME },
     )
 
     private val _density = MutableStateFlow(
@@ -185,6 +195,15 @@ internal class PagesRsListViewModel @Inject constructor(
         site.isUsingWpComRestApi &&
         site.hasCapabilityEditOthersPages &&
         site.isSingleUserSite == false
+
+    /**
+     * The legacy rows only ever named authors on WP.com multi-author sites; the redesigned rows name
+     * them on any multi-author site.
+     */
+    private val canShowAuthorNames: Boolean by lazy {
+        isAuthorFilterSupported ||
+            experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.CONTENT_LIST_REDESIGN)
+    }
 
     /**
      * View counts come from the WordPress.com stats endpoint, so they need a WordPress.com site ID
@@ -574,6 +593,7 @@ internal class PagesRsListViewModel @Inject constructor(
                 // while numbers already fetched stay put.
                 viewCounts.invalidateUnresolved()
                 featuredImages.invalidateUnresolved()
+                authorNames.invalidateUnresolved()
                 userRefreshingTabs.remove(tab)
                 fillingTabs.remove(tab)
                 // Read the fetched items and end both progress states here rather than relying
@@ -1455,8 +1475,10 @@ internal class PagesRsListViewModel @Inject constructor(
                     isAuthError = false
                 )
             }
-            resolveAuthorNames(tab, uiModels)
-            site?.let { featuredImages.resolve(tab, it, uiModels) }
+            site?.let {
+                featuredImages.resolve(tab, it, uiModels)
+                authorNames.resolve(tab, it, uiModels)
+            }
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
@@ -1500,34 +1522,9 @@ internal class PagesRsListViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Fetches display names for pages that have a non-zero
-     * [PageRsUiModel.authorId] but no resolved name yet.
-     * Skipped when filtering by "Me" since the user already
-     * knows their own name.
-     */
-    private fun resolveAuthorNames(
-        tab: PageRsListTab,
-        pages: List<PageRsUiModel>
-    ) {
-        val site = this.site
-        if (site == null || !isAuthorFilterSupported || _authorFilter.value == AuthorFilterSelection.ME) return
-
-        val unresolvedIds = pages
-            .filter { it.authorId != 0L && it.authorDisplayName == null }
-            .map { it.authorId }
-            .distinct()
-        if (unresolvedIds.isEmpty()) return
-
-        resolveAuthorJobs[tab]?.cancel()
-        resolveAuthorJobs[tab] = viewModelScope.launch {
-            val names = withContext(Dispatchers.IO) {
-                restClient.fetchUserDisplayNames(site, unresolvedIds)
-            }
-            if (names.isEmpty()) return@launch
-            updateTabUiState(tab) {
-                copy(items = this.items.map { item -> item.withResolvedAuthor(names) })
-            }
+    private fun applyAuthorNames(tab: PageRsListTab, names: Map<Long, String>) {
+        updateTabUiState(tab) {
+            copy(items = items.map { item -> item.withResolvedAuthor(names) })
         }
     }
 
@@ -1779,8 +1776,7 @@ internal class PagesRsListViewModel @Inject constructor(
         refreshJobs.clear()
         fillingTabs.clear()
         fetchedTabs.clear()
-        resolveAuthorJobs.values.forEach { it.cancel() }
-        resolveAuthorJobs.clear()
+        authorNames.clear()
         visiblePageIds.clear()
         viewCounts.clear()
         featuredImages.clear()
@@ -1800,6 +1796,7 @@ internal class PagesRsListViewModel @Inject constructor(
 
     companion object {
         private const val PAGE_SIZE = 20
+        private const val POST_TYPE = "page"
 
         /**
          * The REST maximum, used only by the collection that is paged to the end: the other tabs,
