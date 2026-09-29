@@ -90,6 +90,7 @@ fun UnifiedCommentDetailsScreen(
                         CommentDetailsContent(
                             uiState = uiState,
                             showLikeButton = showLikeButton,
+                            hasReplyDraft = replyText.text.isNotBlank(),
                             actions = actions,
                             onReplyClick = { showReplyEditor = true },
                             modifier = Modifier.fillMaxSize()
@@ -189,6 +190,7 @@ fun UnifiedCommentDetailsScreen(
 private fun CommentDetailsContent(
     uiState: CommentDetailsUiState,
     showLikeButton: Boolean,
+    hasReplyDraft: Boolean,
     actions: CommentDetailsActions,
     onReplyClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -254,6 +256,7 @@ private fun CommentDetailsContent(
                 showLikeButton = showLikeButton,
                 onReplyClick = onReplyClick,
                 onLikeClick = actions.onLikeClick,
+                hasReplyDraft = hasReplyDraft,
                 modifier = Modifier
                     .padding(top = CONTENT_REACTIONS_GAP)
                     .offset(x = -REACTION_ROW_INSET)

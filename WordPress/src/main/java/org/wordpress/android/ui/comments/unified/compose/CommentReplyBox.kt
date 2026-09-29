@@ -175,7 +175,7 @@ internal fun applyMentionSuggestion(
 }
 
 /**
- * The redesigned detail's reply editor, presented as a modal bottom sheet from the Reply action
+ * The comment detail's reply editor, presented as a modal bottom sheet from the Reply action
  * under the comment, so the comment being answered stays visible behind it.
  */
 @OptIn(ExperimentalMaterial3Api::class)

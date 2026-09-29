@@ -110,8 +110,8 @@ class UnifiedCommentDetailsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Opened via the notification's "reply" action: focus the reply field right away, like the
-        // legacy detail. Only on the first creation — not again after a rotation.
+        // Opened via the notification's "reply" action: open the reply sheet right away. Only on the
+        // first creation — not again after a rotation.
         val focusReplyField =
             savedInstanceState == null && arguments?.getBoolean(KEY_FOCUS_REPLY_FIELD) == true
         return ComposeView(requireContext()).apply {
@@ -341,7 +341,7 @@ class UnifiedCommentDetailsFragment : Fragment() {
         /**
          * Factory for the notifications host: [noteId] puts the screen in note mode (see
          * [UnifiedCommentDetailsViewModel]), [prefillReplyText] carries the notification's
-         * inline-reply text and [focusReplyField] opens the keyboard on the reply field.
+         * inline-reply text and [focusReplyField] opens the reply sheet.
          */
         @JvmStatic
         fun newInstance(

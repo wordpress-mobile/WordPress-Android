@@ -731,6 +731,25 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `a refresh keeps the author details the sheet fetched while it was in flight`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID, withEditContext = true))
+            .thenReturn(RS_COMMENT.copy(authorEmail = "a@b.c"))
+        viewModel.start(site, REMOTE_COMMENT_ID)
+        advanceUntilIdle()
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID, withEditContext = false))
+            .doSuspendableAnswer {
+                delay(LOAD_DELAY_MS)
+                RS_COMMENT
+            }
+
+        viewModel.onCommentEdited()
+        viewModel.onAuthorInfoShown()
+        advanceUntilIdle()
+
+        assertThat(uiStates.last().authorInfo.email).isEqualTo("a@b.c")
+    }
+
+    @Test
     fun `a guest author gets no bio request and a pingback no account label`() = test {
         viewModel.start(site, REMOTE_COMMENT_ID)
         advanceUntilIdle()

@@ -30,8 +30,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
  * iOS's comment detail.
  *
  * Unlike iOS there is no like *count* - the comment cache carries only whether the current user
- * liked it (`iLike`), with no total - so the label toggles between "Like" and "Liked" the way the
- * pre-redesign action footer did.
+ * liked it (`iLike`), with no total - so the label toggles between "Like" and "Liked".
  */
 @Composable
 fun CommentReactionRow(
@@ -39,14 +38,16 @@ fun CommentReactionRow(
     showLikeButton: Boolean,
     onReplyClick: () -> Unit,
     onLikeClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    hasReplyDraft: Boolean = false
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ReactionAction(
-            labelResId = R.string.reply,
+            // The reply sheet is the only place a draft shows, so the action says one is waiting.
+            labelResId = if (hasReplyDraft) R.string.comment_reply_continue else R.string.reply,
             icon = Icons.AutoMirrored.Filled.Reply,
             onClick = onReplyClick
         )

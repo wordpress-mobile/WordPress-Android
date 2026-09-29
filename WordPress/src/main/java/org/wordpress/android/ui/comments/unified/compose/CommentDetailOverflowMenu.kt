@@ -24,7 +24,7 @@ import org.wordpress.android.fluxc.model.CommentStatus.SPAM
 import org.wordpress.android.fluxc.model.CommentStatus.TRASH
 
 /**
- * The secondary comment actions on the redesigned detail screen: edit, copy/share link and the
+ * The secondary comment actions on the comment detail screen: edit, copy/share link and the
  * "move to pending" counterpart of Approve. Reply and like are not here - they sit in
  * [CommentReactionRow] directly under the comment, as on iOS.
  *
