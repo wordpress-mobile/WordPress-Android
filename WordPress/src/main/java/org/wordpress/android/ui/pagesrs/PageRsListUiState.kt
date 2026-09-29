@@ -143,6 +143,7 @@ internal fun PageRsListItem.toContentListRowUiState(
         title = if (isSiteEditor) siteEditorTitle else page.title,
         excerpt = if (isSiteEditor) siteEditorSubtitle else page.excerpt,
         dateLabel = page.date,
+        authorName = page.authorDisplayName,
         thumbnailImageUrl = page.featuredImage?.thumbnail,
         heroImageUrl = page.featuredImage?.hero,
         isImagePending = page.featuredImageId != 0L &&
