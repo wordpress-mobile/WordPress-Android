@@ -187,6 +187,7 @@ fun CommentReplySheet(
     suggestions: List<Suggestion>,
     hint: String,
     isReplyInProgress: Boolean,
+    isSendEnabled: Boolean,
     onSendClick: () -> Unit,
     onDeleteDraft: () -> Unit,
     onDismiss: () -> Unit
@@ -196,7 +197,7 @@ fun CommentReplySheet(
     val scope = rememberCoroutineScope()
     var isReplyFieldFocused by remember { mutableStateOf(false) }
     var showDraftPrompt by remember { mutableStateOf(false) }
-    val canSend = replyText.text.isNotBlank() && !isReplyInProgress
+    val canSend = isSendEnabled && replyText.text.isNotBlank() && !isReplyInProgress
 
     ModalBottomSheet(
         // Closing with something typed asks what to do with it, like iOS's composer. An empty

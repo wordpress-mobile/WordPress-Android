@@ -161,6 +161,9 @@ fun UnifiedCommentDetailsScreen(
             suggestions = suggestions,
             hint = replyHint,
             isReplyInProgress = uiState.isReplyInProgress,
+            // A notification's reply action opens the sheet before the comment loads, and a reply
+            // sent then would be dropped as the sheet closes.
+            isSendEnabled = uiState.contentVisible,
             onSendClick = {
                 showReplyEditor = false
                 actions.onSendReply(replyText.text)

@@ -159,9 +159,26 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         val comment = loadedComment ?: return
         if (authorExtrasJob != null) return
         authorExtrasJob = launch {
-            val (count, bio) = withContext(bgDispatcher) { fetchAuthorExtras(comment) }
+            val (details, extras) = withContext(bgDispatcher) {
+                // The email and IP need the edit context, which only moderators get. Fetched here
+                // rather than with the comment so the detail doesn't wait on the capability check.
+                val details = if (canModerateResult.await()) {
+                    commentsRsDataSource.getComment(site, remoteCommentId, withEditContext = true) ?: comment
+                } else {
+                    comment
+                }
+                details to fetchAuthorExtras(details)
+            }
+            val (count, bio) = extras
             _uiState.value = _uiState.value?.let {
-                it.copy(authorInfo = it.authorInfo.copy(commentCount = count, bio = bio))
+                it.copy(
+                    authorInfo = it.authorInfo.copy(
+                        email = details.authorEmail,
+                        ipAddress = details.authorIp,
+                        commentCount = count,
+                        bio = bio
+                    )
+                )
             }
         }
     }
@@ -188,14 +205,11 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
             if (!isRefresh) {
                 _uiState.value = CommentDetailsUiState(showProgress = true)
             }
+            val rs = withContext(bgDispatcher) { commentsRsDataSource.getComment(site, remoteCommentId) }
+            // Independent of the cache lookups below, so it runs alongside them, and the comment is
+            // shown without waiting for it.
+            val extras = async(bgDispatcher) { fetchParentAndReplyCount(rs) }
             val loaded = withContext(bgDispatcher) {
-                // The author sheet shows the email and IP, which need the edit context.
-                // The capability is session-cached, so this rarely costs a request.
-                val withEditContext = canModerateResult.await()
-                val rs = commentsRsDataSource.getComment(site, remoteCommentId, withEditContext)
-                // Independent of the cache lookups below, so it runs alongside them rather than
-                // adding its round trips to the first paint.
-                val extras = async { fetchParentAndReplyCount(rs) }
                 var local = commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId).firstOrNull()
                 // Opened from the rs list the FluxC cache may not have this comment at all (the
                 // legacy list guaranteed a row before the detail could open). Fetch it so the
@@ -220,19 +234,24 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                 } else {
                     false
                 }
-                val (parent, replies) = extras.await()
-                CommentLoadResult(rs, local, fallbackTitle, likedFallback, parent, replies)
+                CommentLoadResult(local, fallbackTitle, likedFallback)
             }
             when {
-                loaded.rsComment != null -> {
-                    loadedComment = loaded.rsComment
-                    _uiState.value = loaded.rsComment.toUiState(
-                        loaded.cached,
-                        loaded.fallbackPostTitle,
-                        loaded.fallbackIsLiked,
-                        loaded.parent,
-                        loaded.replyCount
-                    )
+                rs != null -> {
+                    loadedComment = rs
+                    val previous = _uiState.value
+                    val state = rs.toUiState(loaded.cached, loaded.fallbackPostTitle, loaded.fallbackIsLiked)
+                    // A refresh keeps the current parent strip and reply count until the new ones
+                    // land, rather than flashing the strip away.
+                    _uiState.value = if (isRefresh && previous != null) {
+                        state.copy(
+                            parentAuthorName = previous.parentAuthorName,
+                            parentSnippet = previous.parentSnippet,
+                            replyCount = previous.replyCount
+                        )
+                    } else {
+                        state
+                    }
                 }
                 isRefresh -> showSnackbar(R.string.error_load_comment)
                 else -> _onSnackbarMessage.value = Event(
@@ -240,6 +259,14 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                         message = UiStringRes(R.string.error_load_comment),
                         onDismissAction = { _uiActionEvent.value = Event(Close) }
                     )
+                )
+            }
+            if (rs != null) {
+                val (parent, replies) = extras.await()
+                _uiState.value = _uiState.value?.copy(
+                    parentAuthorName = parent?.authorName.orEmpty(),
+                    parentSnippet = parent?.contentHtml?.let { HtmlUtils.fastStripHtml(it).trim() }.orEmpty(),
+                    replyCount = replies
                 )
             }
         }
@@ -585,9 +612,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     private fun RsComment.toUiState(
         cached: CommentEntity?,
         fallbackPostTitle: String,
-        fallbackIsLiked: Boolean,
-        parent: RsComment?,
-        replyCount: Int?
+        fallbackIsLiked: Boolean
     ) = CommentDetailsUiState(
         showProgress = false,
         contentVisible = true,
@@ -608,19 +633,13 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         status = status,
         isLiked = cached?.iLike ?: fallbackIsLiked,
         canModerate = canModerate,
-        customStatusLabel = if (status == CommentStatus.ALL) rawStatus else "",
-        parentAuthorName = parent?.authorName.orEmpty(),
-        parentSnippet = parent?.contentHtml?.let { HtmlUtils.fastStripHtml(it).trim() }.orEmpty(),
-        replyCount = replyCount
+        customStatusLabel = if (status == CommentStatus.ALL) rawStatus else ""
     )
 
     private data class CommentLoadResult(
-        val rsComment: RsComment?,
         val cached: CommentEntity?,
         val fallbackPostTitle: String,
-        val fallbackIsLiked: Boolean,
-        val parent: RsComment? = null,
-        val replyCount: Int? = null
+        val fallbackIsLiked: Boolean
     )
 
     data class CommentDetailsUiState(
