@@ -708,6 +708,8 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `opening the author sheet loads the comment count and bio once`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID, withEditContext = false))
+            .thenReturn(RS_COMMENT.copy(authorId = AUTHOR_USER_ID))
         whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID, withEditContext = true))
             .thenReturn(RS_COMMENT.copy(authorId = AUTHOR_USER_ID, authorEmail = "a@b.c"))
         whenever(commentsRsDataSource.fetchAuthorCommentCount(site, "a@b.c")).thenReturn(12)
