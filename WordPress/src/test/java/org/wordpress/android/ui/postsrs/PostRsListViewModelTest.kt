@@ -31,7 +31,6 @@ import org.wordpress.android.ui.newstats.datasource.PostViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.ui.posts.AuthorFilterSelection
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.rs.RsFluxCBridge
 import org.wordpress.android.ui.rs.RsReveal
 import org.wordpress.android.ui.rs.data.RsSiteRestClient
@@ -48,7 +47,6 @@ import org.wordpress.android.viewmodel.ResourceProvider
 @Suppress("LargeClass")
 class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Mock lateinit var experimentalFeatures: ExperimentalFeatures
     @Mock lateinit var serviceProvider: WpServiceProvider
     @Mock lateinit var restClient: RsSiteRestClient
     @Mock lateinit var resourceProvider: ResourceProvider
@@ -91,7 +89,6 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         selectedSiteRepository = selectedSiteRepository,
         serviceProvider = serviceProvider,
         restClient = restClient,
-        experimentalFeatures = experimentalFeatures,
         resourceProvider = resourceProvider,
         postStore = postStore,
         fluxCBridge = fluxCBridge,

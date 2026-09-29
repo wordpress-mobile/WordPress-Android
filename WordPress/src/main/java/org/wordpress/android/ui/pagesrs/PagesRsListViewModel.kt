@@ -39,7 +39,6 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.posts.AuthorFilterSelection
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.rs.RsAuthorNames
 import org.wordpress.android.ui.rs.RsCollectionPrefetch
 import org.wordpress.android.ui.rs.RsCollectionScope
@@ -93,7 +92,6 @@ internal class PagesRsListViewModel @Inject constructor(
     private val serviceProvider: WpServiceProvider,
     private val dispatcher: Dispatcher,
     private val restClient: RsSiteRestClient,
-    private val experimentalFeatures: ExperimentalFeatures,
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,
     private val homepageSettings: PageRsHomepageSettings,
@@ -157,7 +155,7 @@ internal class PagesRsListViewModel @Inject constructor(
         postType = POST_TYPE,
         onNamesResolved = ::applyAuthorNames,
         // A "Me" list is all the user's own, so naming the author on every row adds nothing.
-        isEnabled = { canShowAuthorNames && _authorFilter.value != AuthorFilterSelection.ME },
+        isEnabled = { _authorFilter.value != AuthorFilterSelection.ME },
     )
 
     private val _density = MutableStateFlow(
@@ -195,15 +193,6 @@ internal class PagesRsListViewModel @Inject constructor(
         site.isUsingWpComRestApi &&
         site.hasCapabilityEditOthersPages &&
         site.isSingleUserSite == false
-
-    /**
-     * The legacy rows only ever named authors on WP.com multi-author sites; the redesigned rows name
-     * them on any multi-author site.
-     */
-    private val canShowAuthorNames: Boolean by lazy {
-        isAuthorFilterSupported ||
-            experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.CONTENT_LIST_REDESIGN)
-    }
 
     /**
      * View counts come from the WordPress.com stats endpoint, so they need a WordPress.com site ID

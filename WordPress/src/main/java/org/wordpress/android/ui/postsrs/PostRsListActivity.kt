@@ -19,7 +19,6 @@ import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.postsrs.screens.PostRsListScreen
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
 import org.wordpress.android.ui.rs.RsConfirmationDialogState
@@ -31,9 +30,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class PostRsListActivity : BaseAppCompatActivity() {
-    @Inject
-    lateinit var experimentalFeatures: ExperimentalFeatures
-
     @Inject
     lateinit var activityNavigator: ActivityNavigator
 
@@ -52,10 +48,6 @@ class PostRsListActivity : BaseAppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         observeEvents()
-
-        val isRedesignEnabled = experimentalFeatures.isEnabled(
-            ExperimentalFeatures.Feature.CONTENT_LIST_REDESIGN
-        )
 
         setContent {
             val tabStates by viewModel.tabStates.collectAsState()
@@ -96,7 +88,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
                     onRowsVisible = viewModel::onRowsVisible,
                     onDensityToggled = viewModel::onDensityToggled,
                     density = density,
-                    isRedesignEnabled = isRedesignEnabled
+                    isRedesignEnabled = true
                 )
             }
         }

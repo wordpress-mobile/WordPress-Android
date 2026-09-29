@@ -27,7 +27,6 @@ import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.posts.AuthorFilterSelection
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.rs.RsAuthorNames
 import org.wordpress.android.ui.rs.RsCollectionScope
 import org.wordpress.android.ui.rs.RsCommentCountFetcher
@@ -77,7 +76,6 @@ class PostRsListViewModel @Inject constructor(
     selectedSiteRepository: SelectedSiteRepository,
     private val serviceProvider: WpServiceProvider,
     private val restClient: RsSiteRestClient,
-    private val experimentalFeatures: ExperimentalFeatures,
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,
     private val fluxCBridge: RsFluxCBridge,
@@ -134,7 +132,7 @@ class PostRsListViewModel @Inject constructor(
         postType = POST_TYPE,
         onNamesResolved = ::applyAuthorNames,
         // A "Me" list is all the user's own, so naming the author on every row adds nothing.
-        isEnabled = { canShowAuthorNames && _authorFilter.value != AuthorFilterSelection.ME },
+        isEnabled = { _authorFilter.value != AuthorFilterSelection.ME },
     )
 
     /**
@@ -170,15 +168,6 @@ class PostRsListViewModel @Inject constructor(
             _site.isUsingWpComRestApi &&
             _site.hasCapabilityEditOthersPosts &&
             _site.isSingleUserSite == false
-    }
-
-    /**
-     * The legacy rows only ever named authors on WP.com multi-author sites; the redesigned rows name
-     * them on any multi-author site.
-     */
-    private val canShowAuthorNames: Boolean by lazy {
-        isAuthorFilterSupported ||
-            experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.CONTENT_LIST_REDESIGN)
     }
 
     /**

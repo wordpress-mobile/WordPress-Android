@@ -16,16 +16,11 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.commentsrs.screens.CommentsRsListScreen
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.setContent
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class CommentsRsListActivity : BaseAppCompatActivity() {
-    @Inject
-    lateinit var experimentalFeatures: ExperimentalFeatures
-
     private val viewModel: CommentsRsListViewModel by viewModels()
 
     // The detail reports RESULT_OK when it changed the comment (moderation, reply, edit,
@@ -43,10 +38,6 @@ class CommentsRsListActivity : BaseAppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         observeEvents()
-
-        val isRedesignEnabled = experimentalFeatures.isEnabled(
-            ExperimentalFeatures.Feature.CONTENT_LIST_REDESIGN
-        )
 
         setContent {
             val tabStates by viewModel.tabStates.collectAsState()
@@ -83,7 +74,7 @@ class CommentsRsListActivity : BaseAppCompatActivity() {
                     onConfirmPendingAction = viewModel::onConfirmPendingAction,
                     onDensityToggled = viewModel::onDensityToggled,
                     density = density,
-                    isRedesignEnabled = isRedesignEnabled
+                    isRedesignEnabled = true
                 )
             }
         }

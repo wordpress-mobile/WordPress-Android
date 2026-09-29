@@ -15,7 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.ui.compose.components.ShimmerBox
 
-/** The loading skeleton of a pre-redesign posts or pages row; goes with the CONTENT_LIST_REDESIGN flag. */
+/** The loading skeleton of a pre-redesign posts or pages row; no longer shown, pending removal. */
 @Composable
 internal fun LegacyContentListPlaceholderRow(modifier: Modifier = Modifier) {
     Card(
