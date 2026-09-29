@@ -349,7 +349,8 @@ private fun RowExcerpt(excerpt: String) {
 
 /**
  * "2d ago · Jane Doe · 1,204 views", or just the metrics when the date and author sit under the
- * title instead. A long author name ellipsizes rather than pushing the metrics off the line.
+ * title instead. A long author name ellipsizes, or drops out entirely when there's no room, rather
+ * than pushing the metrics off the line.
  *
  * The separator is drawn as its own [Text] so it can take the dimmer outline colour without
  * splitting the line into something a screen reader announces piecemeal.
@@ -363,9 +364,19 @@ private fun RowMetaLine(
 ) {
     val segments = buildList<@Composable RowScope.() -> Unit> {
         if (showDate) {
-            add { MetaText(state.dateLabel) }
-            state.authorName?.takeIf { it.isNotBlank() }?.let { name ->
-                add { MetaText(text = name, modifier = Modifier.weight(1f, fill = false)) }
+            add {
+                MetaText(state.dateLabel)
+                state.authorName?.takeIf { it.isNotBlank() }?.let { name ->
+                    // Measured last with whatever space is left, so it carries its own separator: when
+                    // there's no room the bullet goes with the name instead of dangling beside the next.
+                    Row(
+                        modifier = Modifier.weight(1f, fill = false),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        MetaSeparator()
+                        MetaText(name)
+                    }
+                }
             }
         }
         // A condensed list does not fetch metrics, so it shows neither them nor a skeleton
