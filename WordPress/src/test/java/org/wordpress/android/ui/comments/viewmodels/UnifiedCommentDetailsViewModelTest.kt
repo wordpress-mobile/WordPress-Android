@@ -695,6 +695,26 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `a slow first load does not overwrite a refresh's reply count`() = test {
+        var calls = 0
+        whenever(commentsRsDataSource.fetchReplyCount(site, REMOTE_COMMENT_ID)).doSuspendableAnswer {
+            if (calls++ == 0) {
+                delay(LOAD_DELAY_MS)
+                STALE_REPLY_COUNT
+            } else {
+                FRESH_REPLY_COUNT
+            }
+        }
+        viewModel.start(site, REMOTE_COMMENT_ID)
+        runCurrent()
+
+        viewModel.onCommentEdited()
+        advanceUntilIdle()
+
+        assertThat(uiStates.last().replyCount).isEqualTo(FRESH_REPLY_COUNT)
+    }
+
+    @Test
     fun `non-moderators get no edit-context request when the author sheet opens`() = test {
         whenever(siteCapabilityChecker.canModerateComments(site)).thenReturn(false)
         viewModel.start(site, REMOTE_COMMENT_ID)
@@ -1000,6 +1020,8 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         private const val REMOTE_COMMENT_ID = 4321L
         private const val REMOTE_POST_ID = 99L
         private const val LOAD_DELAY_MS = 1000L
+        private const val STALE_REPLY_COUNT = 5
+        private const val FRESH_REPLY_COUNT = 2
         private const val PARENT_COMMENT_ID = 777L
         private const val NOTE_ID = "note_5555"
 

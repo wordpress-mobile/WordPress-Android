@@ -124,6 +124,10 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     // it, and the detail pager would otherwise pay for it on every comment it pages past.
     private var authorExtrasJob: Job? = null
 
+    // A newer load supersedes an older one, so a slow first load can't land its parent and reply
+    // count on top of a refresh's.
+    private var loadJob: Job? = null
+
     fun start(site: SiteModel, remoteCommentId: Long, noteId: String? = null) {
         if (isStarted) return
         isStarted = true
@@ -197,7 +201,8 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     }
 
     private fun loadComment() {
-        launch {
+        loadJob?.cancel()
+        loadJob = launch {
             // On first load show the progress state. When refreshing (e.g. after an edit) keep the
             // currently displayed comment on screen instead: resetting the ui state mid-refresh
             // would make the action buttons compute toggles from a default status, and a failed
