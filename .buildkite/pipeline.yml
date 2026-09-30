@@ -10,6 +10,16 @@ common_params:
 agents:
   queue: "android"
 
+# AINFRA-3231: git mirror experiment branch. Do not merge.
+#
+# Ephemeral android agents terminate after a single job, so the git mirror is
+# built and thrown away within that job. Because the mirror clone is unfiltered,
+# the --filter=blob:none in the AMI's pre-checkout hook reads from a complete
+# local reference and saves nothing. Disabling the mirror makes the filter apply
+# to the only clone that touches the network.
+env:
+  BUILDKITE_GIT_MIRRORS_PATH: ""
+
 steps:
   #################
   # Gradle Wrapper Validation
