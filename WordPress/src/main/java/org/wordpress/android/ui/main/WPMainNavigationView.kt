@@ -446,6 +446,23 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     fun getFragment(pageType: PageType) = navAdapter.getFragmentIfExists(getPosition(pageType))
 
+    /**
+     * Replaces the Notifications fragment when the Compose list flag has been toggled since it was created,
+     * since the tab's fragment is otherwise kept for the life of the activity.
+     */
+    fun refreshNotificationsFragmentIfNeeded() {
+        val fragment = getFragment(NOTIFS) ?: return
+        if ((fragment is NotificationsComposeListFragment) == shouldUseComposeNotificationsList()) return
+        fragmentManager?.beginTransaction()?.remove(fragment)?.commitNow()
+        // Recreate it straight away only if it's on screen; otherwise it's created when the tab is selected.
+        if (currentSelectedPage == NOTIFS) navAdapter.getFragment(getPosition(NOTIFS))
+    }
+
+    // The Compose list has no Jetpack connection screen, so without a WP.com token the legacy
+    // list stays, since that is the one that offers to connect.
+    private fun shouldUseComposeNotificationsList() =
+        experimentalFeatures.isEnabled(Feature.COMPOSE_NOTIFICATIONS_LIST) && accountStore.hasAccessToken()
+
     private fun getItemView(position: Int): View? {
         if (isValidPosition(position)) {
             // Resolve the item view by its menu item id; the NavigationRailView used on tablets
@@ -495,11 +512,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             val fragment = when (pageType) {
                 MY_SITE -> MySiteFragment.newInstance()
                 READER -> ReaderFragment()
-                // The Compose list has no Jetpack connection screen, so without a WP.com token the legacy
-                // list stays, since that is the one that offers to connect.
-                NOTIFS -> if (experimentalFeatures.isEnabled(Feature.COMPOSE_NOTIFICATIONS_LIST) &&
-                    accountStore.hasAccessToken()
-                ) {
+                NOTIFS -> if (shouldUseComposeNotificationsList()) {
                     NotificationsComposeListFragment.newInstance()
                 } else {
                     NotificationsListFragment.newInstance()

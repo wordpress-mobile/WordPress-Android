@@ -1044,6 +1044,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         // Ex: Notifications -> notifications detail -> back to notifications
 
         if (mBottomNav != null) {
+            mBottomNav.refreshNotificationsFragmentIfNeeded();
             PageType currentPageType = mBottomNav.getCurrentSelectedPage();
             if (!mIsChangingConfiguration) {
                 // Don't track if onResume was called after a screen orientation change
