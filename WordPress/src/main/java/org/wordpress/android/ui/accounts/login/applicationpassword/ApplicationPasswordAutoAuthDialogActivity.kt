@@ -101,19 +101,29 @@ class ApplicationPasswordAutoAuthDialogActivity : ComponentActivity() {
         setContent {
             AppThemeM3 {
                 val isLoading = viewModel.isLoading.collectAsState()
-                ApplicationPasswordAutoAuthDialog(
-                    isLoading = isLoading.value,
-                    onDismiss = {
-                        setResult(RESULT_CANCELED)
-                        finish()
-                    },
-                    onConfirm = {
-                        viewModel.createApplicationPassword(
-                            site,
-                            ApplicationPasswordCreationTracker.SOURCE_AUTO_MIGRATION
-                        )
-                    }
-                )
+                val isAuthorizationHeaderBlocked = viewModel.isAuthorizationHeaderBlocked.collectAsState()
+                if (isAuthorizationHeaderBlocked.value) {
+                    AuthorizationHeaderBlockedDialog(
+                        onDismiss = {
+                            setResult(RESULT_CANCELED, Intent().putExtra(EXTRA_RESULT_ERROR, true))
+                            finish()
+                        }
+                    )
+                } else {
+                    ApplicationPasswordAutoAuthDialog(
+                        isLoading = isLoading.value,
+                        onDismiss = {
+                            setResult(RESULT_CANCELED)
+                            finish()
+                        },
+                        onConfirm = {
+                            viewModel.createApplicationPassword(
+                                site,
+                                ApplicationPasswordCreationTracker.SOURCE_AUTO_MIGRATION
+                            )
+                        }
+                    )
+                }
             }
         }
     }

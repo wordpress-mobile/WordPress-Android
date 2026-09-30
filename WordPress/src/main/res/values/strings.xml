@@ -4432,6 +4432,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_credentials_stored">Application password credentials stored for %1$s</string>
     <string name="application_password_credentials_storing_error">There was an error storing Application password credentials for %1$s</string>
     <string name="application_password_authorization_cancelled">Authorization cancelled</string>
+    <string name="application_password_authorization_header_blocked">Sign-in could not complete because your site\'s server is not passing login credentials to WordPress. Contact your hosting provider about this error. Your site\'s Site Health page should list it as \"The authorization header is missing\".</string>
     <string name="application_password_title">Authenticate using Application Password</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">The provided site does not support Application Password authentication.</string>
     <string name="application_password_private_site_error">This site is private, so we can\'t read its settings to sign you in.</string>

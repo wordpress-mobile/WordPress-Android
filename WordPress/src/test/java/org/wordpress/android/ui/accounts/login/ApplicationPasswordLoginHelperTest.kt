@@ -29,6 +29,7 @@ import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.Ur
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
+import rs.wordpress.api.kotlin.VerifyIssuedApplicationPasswordResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.AutoDiscoveryAttemptSuccess
 import uniffi.wp_api.DiscoveredAuthenticationMechanism
@@ -37,6 +38,8 @@ import uniffi.wp_api.AutoDiscoveryAttemptFailure
 import uniffi.wp_api.FetchAndParseApiRootFailure
 import uniffi.wp_api.FindApiRootFailure
 import uniffi.wp_api.ParseUrlException
+import uniffi.wp_api.VerifyIssuedApplicationPasswordException
+import uniffi.wp_api.WpApiException
 import uniffi.wp_api.WpErrorCode
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -89,6 +92,10 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     @Mock
     lateinit var analyticsTracker: AnalyticsTrackerWrapper
 
+    // Lenient: setUp stubs a passing check for every test, and many tests never reach it.
+    @Mock(strictness = Mock.Strictness.LENIENT)
+    lateinit var issuedPasswordVerifier: ApplicationPasswordLoginHelper.IssuedPasswordVerifier
+
     private lateinit var applicationPasswordLoginHelper: ApplicationPasswordLoginHelper
 
     @Before
@@ -106,7 +113,60 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             crashLogging,
             wpApiClientProvider,
             analyticsTracker,
+            issuedPasswordVerifier,
         )
+        whenever { issuedPasswordVerifier.verify(any(), any(), any()) }
+            .thenReturn(VerifyIssuedApplicationPasswordResult.Verified)
+    }
+
+    @Test
+    fun `storeApplicationPasswordCredentialsFrom returns AuthorizationHeaderBlocked and stores nothing`() = runTest {
+        val blocked = VerifyIssuedApplicationPasswordException.AuthorizationHeaderBlocked(
+            hostname = "test.com",
+            error = WpApiException.SiteUrlParsingException(reason = ""),
+        )
+        whenever(issuedPasswordVerifier.verify(any(), eq(TEST_API_ROOT_URL), any()))
+            .thenReturn(VerifyIssuedApplicationPasswordResult.Blocked(blocked))
+
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin, "login")
+
+        assertIs<StoreCredentialsResult.AuthorizationHeaderBlocked>(result)
+        verify(siteStore, never()).sites
+        verify(dispatcherWrapper, never()).updateApplicationPassword(any())
+        verify(wpApiClientProvider, never()).clearSelfHostedClient(any())
+        verify(analyticsTracker).track(
+            eq(Stat.APPLICATION_PASSWORD_STORING_FAILED),
+            eq(mapOf("url" to "txxt.com", "reason" to "authorization_header_blocked"))
+        )
+    }
+
+    @Test
+    fun `storeApplicationPasswordCredentialsFrom stores credentials when the check fails for another reason`() =
+        runTest {
+            val other = VerifyIssuedApplicationPasswordException.Other(
+                error = WpApiException.SiteUrlParsingException(reason = ""),
+            )
+            whenever(issuedPasswordVerifier.verify(any(), any(), any()))
+                .thenReturn(VerifyIssuedApplicationPasswordResult.Other(other))
+            val siteModel = SiteModel().apply { url = TEST_URL }
+            whenever(siteStore.sites).thenReturn(listOf(siteModel))
+
+            val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
+
+            assertIs<StoreCredentialsResult.Success>(result)
+            verify(dispatcherWrapper).updateApplicationPassword(eq(siteModel))
+        }
+
+    @Test
+    fun `storeApplicationPasswordCredentialsFrom stores credentials when the check could not run`() = runTest {
+        whenever(issuedPasswordVerifier.verify(any(), any(), any())).thenReturn(null)
+        val siteModel = SiteModel().apply { url = TEST_URL }
+        whenever(siteStore.sites).thenReturn(listOf(siteModel))
+
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
+
+        assertIs<StoreCredentialsResult.Success>(result)
+        verify(dispatcherWrapper).updateApplicationPassword(eq(siteModel))
     }
 
     @Test

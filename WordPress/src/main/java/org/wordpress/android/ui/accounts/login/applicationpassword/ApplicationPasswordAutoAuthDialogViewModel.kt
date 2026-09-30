@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts.login.applicationpassword
 
 import android.content.Context
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,12 +40,17 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val appLogWrapper: AppLogWrapper,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val _navigationEvent = MutableSharedFlow<NavigationEvent>()
     val navigationEvent: SharedFlow<NavigationEvent> = _navigationEvent.asSharedFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
+    // State rather than a navigation event, so the dialog that explains it survives recreation.
+    val isAuthorizationHeaderBlocked: StateFlow<Boolean> =
+        savedStateHandle.getStateFlow(KEY_AUTHORIZATION_HEADER_BLOCKED, false)
 
     @Suppress("TooGenericExceptionCaught", "LongMethod")
     fun createApplicationPassword(site: SiteModel, creationSource: String) {
@@ -94,6 +100,8 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
                                 _navigationEvent.emit(
                                     NavigationEvent.Success
                                 )
+                            is StoreCredentialsResult.AuthorizationHeaderBlocked ->
+                                savedStateHandle[KEY_AUTHORIZATION_HEADER_BLOCKED] = true
                             else ->
                                 _navigationEvent.emit(
                                     NavigationEvent.Error
@@ -181,5 +189,9 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
         object Success : NavigationEvent()
         data class FallbackToManualLogin(val authUrl: String) : NavigationEvent()
         object Error : NavigationEvent()
+    }
+
+    companion object {
+        private const val KEY_AUTHORIZATION_HEADER_BLOCKED = "authorization_header_blocked"
     }
 }
