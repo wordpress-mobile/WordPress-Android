@@ -14,4 +14,6 @@ class NotificationsTableWrapper @Inject constructor() {
     }
 
     fun getNoteById(noteId: String): Note? = NotificationsTable.getNoteById(noteId)
+
+    fun getLatestNotes(): List<Note> = NotificationsTable.getLatestNotes()
 }

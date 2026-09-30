@@ -998,6 +998,8 @@
     <string name="network_requests_disable">Disable</string>
     <string name="experimental_post_types">Post Types</string>
     <string name="experimental_post_types_description">Enable experimental post types screen</string>
+    <string name="experimental_compose_notifications_list">Notifications list redesign</string>
+    <string name="experimental_compose_notifications_list_description">Show the redesigned notifications list, in the same style as the posts, pages and comments lists.</string>
     <!-- New Stats switch controls -->
     <string name="stats_try_new_stats">Try new stats</string>
     <string name="stats_switch_to_old_stats">Disable new stats</string>

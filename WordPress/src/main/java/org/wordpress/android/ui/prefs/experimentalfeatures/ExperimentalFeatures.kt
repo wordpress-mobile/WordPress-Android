@@ -39,6 +39,11 @@ class ExperimentalFeatures @Inject constructor(
             "experimental_post_types",
             R.string.experimental_post_types,
             R.string.experimental_post_types_description
+        ),
+        COMPOSE_NOTIFICATIONS_LIST(
+            "compose_notifications_list",
+            R.string.experimental_compose_notifications_list,
+            R.string.experimental_compose_notifications_list_description
         )
     }
 }

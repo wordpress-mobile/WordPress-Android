@@ -25,12 +25,16 @@ import org.wordpress.android.R
 @Composable
 fun ContentListOverflowMenu(
     actions: List<ContentListMenuAction>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onExpand: () -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     Box(modifier = modifier) {
-        IconButton(onClick = { expanded = true }) {
+        IconButton(onClick = {
+            expanded = true
+            onExpand()
+        }) {
             Icon(
                 Icons.Default.MoreVert,
                 contentDescription = stringResource(R.string.more),

@@ -1333,8 +1333,9 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                 }
                 break;
             case RequestCodes.NOTE_DETAIL:
-                if (getNotificationsListFragment() != null) {
-                    getNotificationsListFragment().onActivityResult(requestCode, resultCode, data);
+                Fragment notificationsFragment = mBottomNav.getFragment(PageType.NOTIFS);
+                if (notificationsFragment != null) {
+                    notificationsFragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
             case RequestCodes.PHOTO_PICKER:
@@ -1394,14 +1395,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                 fragment.onActivityResult(requestCode, resultCode, data);
             }
         }
-    }
-
-    private NotificationsListFragment getNotificationsListFragment() {
-        Fragment fragment = mBottomNav.getFragment(PageType.NOTIFS);
-        if (fragment instanceof NotificationsListFragment) {
-            return (NotificationsListFragment) fragment;
-        }
-        return null;
     }
 
     // Events

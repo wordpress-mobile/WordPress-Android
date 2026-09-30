@@ -242,31 +242,9 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         clearToolbarScrollFlags()
         jetpackSetup.setOnClickListener {
             (requireActivity() as? WPMainActivity)?.selectedSite?.let { selectedSite ->
-                if (!startJetpackRestConnectionFlow(selectedSite)) {
-                    JetpackConnectionWebViewActivity.startJetpackConnectionFlow(
-                        activity,
-                        NOTIFICATIONS,
-                        selectedSite,
-                        false
-                    )
-                }
+                startJetpackConnection(requireActivity(), selectedSite)
             }
         }
-    }
-
-    /**
-     * If the Jetpack REST Connection flow is available and this site is able to use it, launch it and return true
-     * so we skip the old WebView-based flow
-     */
-    private fun startJetpackRestConnectionFlow(site: SiteModel): Boolean {
-        if (JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)) {
-            JetpackRestConnectionActivity.startJetpackRestConnectionFlow(
-                requireActivity(),
-                JetpackRestConnectionViewModel.ConnectionSource.NOTIFS
-            )
-            return true
-        }
-        return false
     }
 
     private class NotificationsFragmentAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
@@ -384,6 +362,17 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
         private fun openNoteForReplyWithParams(detailIntent: Intent, activity: Activity) {
             activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL)
+        }
+
+        fun startJetpackConnection(activity: Activity, site: SiteModel) {
+            if (JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)) {
+                JetpackRestConnectionActivity.startJetpackRestConnectionFlow(
+                    activity,
+                    JetpackRestConnectionViewModel.ConnectionSource.NOTIFS
+                )
+            } else {
+                JetpackConnectionWebViewActivity.startJetpackConnectionFlow(activity, NOTIFICATIONS, site, false)
+            }
         }
     }
 

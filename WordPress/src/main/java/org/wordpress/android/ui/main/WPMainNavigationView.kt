@@ -40,8 +40,11 @@ import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteFragment
 import org.wordpress.android.ui.notifications.NotificationsListFragment
+import org.wordpress.android.ui.notifications.compose.NotificationsComposeListFragment
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.reader.ReaderFragment
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
@@ -87,6 +90,9 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     @Inject
     lateinit var buildConfigWrapper: BuildConfigWrapper
+
+    @Inject
+    lateinit var experimentalFeatures: ExperimentalFeatures
 
     /** The WordPress app has no Reader or Notifications tabs, so My Site is its only page. */
     private val hasSingleTabNav get() = !buildConfigWrapper.isJetpackApp
@@ -489,7 +495,15 @@ class WPMainNavigationView @JvmOverloads constructor(
             val fragment = when (pageType) {
                 MY_SITE -> MySiteFragment.newInstance()
                 READER -> ReaderFragment()
-                NOTIFS -> NotificationsListFragment.newInstance()
+                // The Compose list has no Jetpack connection screen, so without a WP.com token the legacy
+                // list stays, since that is the one that offers to connect.
+                NOTIFS -> if (experimentalFeatures.isEnabled(Feature.COMPOSE_NOTIFICATIONS_LIST) &&
+                    accountStore.hasAccessToken()
+                ) {
+                    NotificationsComposeListFragment.newInstance()
+                } else {
+                    NotificationsListFragment.newInstance()
+                }
                 ME -> MeFragment.newInstance()
             }
             fragmentManager?.beginTransaction()

@@ -58,6 +58,7 @@ fun ContentListErrorState(
 fun ContentListEmptyState(
     @StringRes messageResId: Int,
     modifier: Modifier = Modifier,
+    @StringRes detailResId: Int? = null,
     @StringRes actionLabelResId: Int? = null,
     onAction: (() -> Unit)? = null,
 ) {
@@ -67,6 +68,15 @@ fun ContentListEmptyState(
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+        if (detailResId != null) {
+            Spacer(modifier = Modifier.height(TEXT_GAP))
+            Text(
+                text = stringResource(detailResId),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center
+            )
+        }
         if (actionLabelResId != null && onAction != null) {
             Spacer(modifier = Modifier.height(BUTTON_GAP))
             Button(onClick = onAction) {
