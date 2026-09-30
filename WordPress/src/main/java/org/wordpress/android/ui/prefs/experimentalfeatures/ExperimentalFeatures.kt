@@ -39,13 +39,6 @@ class ExperimentalFeatures @Inject constructor(
             "experimental_post_types",
             R.string.experimental_post_types,
             R.string.experimental_post_types_description
-        ),
-        // The pref key stays as-is: it is persisted, so renaming it would silently reset everyone
-        // who has the flag on. Only the user-facing label widened to cover comments.
-        CONTENT_LIST_REDESIGN(
-            "content_list_redesign",
-            R.string.experimental_content_redesign,
-            R.string.experimental_content_redesign_description
         )
     }
 }

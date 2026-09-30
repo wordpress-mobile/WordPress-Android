@@ -28,7 +28,6 @@ import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment.Companion.MODAL_LAYOUT_PICKER_TAG
 import org.wordpress.android.ui.pagesrs.screens.PagesRsListScreen
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.rs.RsConfirmationDialogState
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.ToastUtils
@@ -43,7 +42,6 @@ import javax.inject.Inject
 class PagesRsListActivity : BaseAppCompatActivity() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var buildConfigWrapper: BuildConfigWrapper
-    @Inject lateinit var experimentalFeatures: ExperimentalFeatures
     @Inject lateinit var activityNavigator: ActivityNavigator
 
     private val viewModel: PagesRsListViewModel by viewModels()
@@ -55,10 +53,6 @@ class PagesRsListActivity : BaseAppCompatActivity() {
         mlpViewModel = ViewModelProvider(this, viewModelFactory)[ModalLayoutPickerViewModel::class.java]
         observeEvents()
         observeMlp()
-
-        val isRedesignEnabled = experimentalFeatures.isEnabled(
-            ExperimentalFeatures.Feature.CONTENT_LIST_REDESIGN
-        )
 
         setContent {
             val tabStates by viewModel.tabStates.collectAsState()
@@ -105,7 +99,7 @@ class PagesRsListActivity : BaseAppCompatActivity() {
                     onRowsVisible = viewModel::onRowsVisible,
                     onDensityToggled = viewModel::onDensityToggled,
                     density = density,
-                    isRedesignEnabled = isRedesignEnabled
+                    isRedesignEnabled = true
                 )
             }
         }
