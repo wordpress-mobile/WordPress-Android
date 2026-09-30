@@ -7,8 +7,16 @@ common_params:
       files: "buildkite-test-analytics/*.xml"
       format: "junit"
 
+# AINFRA-3231 trial branch. Do not merge.
+#
+# Routes the android jobs to the `android-staging` queue so the git mirror
+# experiment runs on a queue that is normally idle. Both arms run here: this
+# build is the control (mirrors still on), and the same commit is rebuilt once
+# buildkite-ci#1001 is deployed to give the treatment. Keeping both arms on one
+# queue cancels out the InstanceBuffer / ScaleOutForWaitingJobs differences
+# between `android` and `android-staging`.
 agents:
-  queue: "android"
+  queue: "android-staging"
 
 steps:
   #################
