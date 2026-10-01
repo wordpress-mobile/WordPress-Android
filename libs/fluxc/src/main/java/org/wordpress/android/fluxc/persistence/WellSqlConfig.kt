@@ -8,7 +8,6 @@ import android.preference.PreferenceManager
 import android.view.Gravity
 import android.widget.Toast
 import androidx.annotation.StringDef
-import androidx.annotation.VisibleForTesting
 import com.yarolegovich.wellsql.DefaultWellConfig
 import com.yarolegovich.wellsql.WellSql
 import com.yarolegovich.wellsql.WellTableManager
@@ -33,13 +32,10 @@ open class WellSqlConfig : DefaultWellConfig {
 
         /**
          * Clears REST roots that point at the WP.com proxy, which can never be a direct-host root.
-         * Matches the same prefix [SiteSqlUtils.updateWpApiRestUrl] now refuses to store, so a value
-         * the writer would reject can't survive in an older row. Exposed for
-         * [WellSqlConfigMigrationTest]: the migration is the whole fix for existing installs, and a
-         * typo in the pattern would ship as a silent no-op.
+         * Matches the same prefix [SiteSqlUtils] refuses to store, so a value the writers would
+         * reject can't survive in an older row.
          */
-        @VisibleForTesting
-        const val CLEAR_WPCOM_PROXY_REST_ROOTS =
+        private const val CLEAR_WPCOM_PROXY_REST_ROOTS =
             "UPDATE SiteModel SET WP_API_REST_URL = NULL " +
                     "WHERE WP_API_REST_URL LIKE '${WPComApiProxy.ROOT_LIKE_PATTERN}'"
     }

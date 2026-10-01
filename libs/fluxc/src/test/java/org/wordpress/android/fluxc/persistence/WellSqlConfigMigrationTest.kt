@@ -5,24 +5,33 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.mock
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 
 /**
- * Covers the SQL behind schema migrations, which the app runs exactly once per install and never
- * revisits. A wrong predicate ships as a silent no-op — the upgrade "succeeds" and the rows it was
- * meant to repair stay broken — so the statements are asserted directly rather than trusted.
+ * Covers schema migrations, which the app runs exactly once per install and never revisits. A wrong
+ * predicate or case label ships as a silent no-op — the upgrade "succeeds" and the rows it was meant
+ * to repair stay broken — so each one is run through [WellSqlConfig.onUpgrade] and its effect asserted.
  *
- * Rows are seeded with raw SQL on purpose: [SiteSqlUtils.updateWpApiRestUrl] now refuses the very
- * values these migrations exist to clean up, so the writer can't set the state under test.
+ * Rows are seeded with raw SQL on purpose: [SiteSqlUtils] now refuses the very values these
+ * migrations exist to clean up, so its writers can't set the state under test.
  */
 @RunWith(RobolectricTestRunner::class)
 class WellSqlConfigMigrationTest {
+    private lateinit var config: WellSqlConfig
+
     @Before
     fun setUp() {
-        val config = WellSqlConfig(RuntimeEnvironment.getApplication().applicationContext)
+        config = WellSqlConfig(RuntimeEnvironment.getApplication().applicationContext)
         WellSql.init(config)
         config.reset()
+    }
+
+    /** onUpgrade only runs when the version rises, so installs on this version need a later one. */
+    @Test
+    fun `the database version is past the proxy root migration`() {
+        assertThat(config.dbVersion).isGreaterThan(PROXY_ROOT_MIGRATION)
     }
 
     @Test
@@ -78,8 +87,10 @@ class WellSqlConfigMigrationTest {
         assertThat(storedRestUrl(1)).isNull()
     }
 
+    // Runs only this version's case, so a migration filed under the wrong label, or shadowed by an
+    // earlier duplicate, fails here.
     private fun runMigration() {
-        WellSql.giveMeWritableDb().execSQL(WellSqlConfig.CLEAR_WPCOM_PROXY_REST_ROOTS)
+        config.onUpgrade(WellSql.giveMeWritableDb(), mock(), PROXY_ROOT_MIGRATION, PROXY_ROOT_MIGRATION)
     }
 
     private fun insertSite(localId: Int, restUrl: String?) {
@@ -97,4 +108,8 @@ class WellSqlConfigMigrationTest {
                 assertThat(cursor.moveToFirst()).isTrue()
                 if (cursor.isNull(0)) null else cursor.getString(0)
             }
+
+    companion object {
+        private const val PROXY_ROOT_MIGRATION = 212
+    }
 }
