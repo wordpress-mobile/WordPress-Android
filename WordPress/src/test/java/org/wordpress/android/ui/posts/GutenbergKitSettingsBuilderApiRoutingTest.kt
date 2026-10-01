@@ -46,16 +46,7 @@ class GutenbergKitSettingsBuilderApiRoutingTest {
      */
     @Test
     fun `atomic site with app password uses its own host as the API root`() {
-        val site = SiteModel().apply {
-            url = "https://mysite.com"
-            siteId = 123L
-            setIsWPCom(true)
-            setIsWPComAtomic(true)
-            origin = SiteModel.ORIGIN_WPCOM_REST
-            wpApiRestUrl = "https://mysite.com/wp-json/"
-            apiRestPasswordPlain = "app_pass"
-            apiRestUsernamePlain = "admin"
-        }
+        val site = atomicSiteWithAppPassword(storedRoot = "https://mysite.com/wp-json/")
 
         val config = builder.buildPostConfiguration(
             site = site,
@@ -76,16 +67,9 @@ class GutenbergKitSettingsBuilderApiRoutingTest {
      */
     @Test
     fun `stored WPCom proxy root is rejected in favour of the site host`() {
-        val site = SiteModel().apply {
-            url = "https://mysite.com"
-            siteId = 123L
-            setIsWPCom(true)
-            setIsWPComAtomic(true)
-            origin = SiteModel.ORIGIN_WPCOM_REST
-            wpApiRestUrl = "https://public-api.wordpress.com/wp/v2/sites/123"
-            apiRestPasswordPlain = "app_pass"
-            apiRestUsernamePlain = "admin"
-        }
+        val site = atomicSiteWithAppPassword(
+            storedRoot = "https://public-api.wordpress.com/wp/v2/sites/123"
+        )
 
         val config = builder.buildPostConfiguration(
             site = site,
@@ -138,17 +122,6 @@ class GutenbergKitSettingsBuilderApiRoutingTest {
         assertThat(config.siteApiRoot).isEqualTo("https://mysite.com/?rest_route=/")
     }
 
-    private fun atomicSiteWithAppPassword(storedRoot: String?) = SiteModel().apply {
-        url = "https://mysite.com"
-        siteId = 123L
-        setIsWPCom(true)
-        setIsWPComAtomic(true)
-        origin = SiteModel.ORIGIN_WPCOM_REST
-        wpApiRestUrl = storedRoot
-        apiRestPasswordPlain = "app_pass"
-        apiRestUsernamePlain = "admin"
-    }
-
     @Test
     fun `simple site with no stored root still uses the WPCom proxy with a namespace`() {
         val site = SiteModel().apply {
@@ -169,5 +142,16 @@ class GutenbergKitSettingsBuilderApiRoutingTest {
         assertThat(config.siteApiRoot).isEqualTo("https://public-api.wordpress.com/")
         assertThat(config.siteApiNamespace).contains("sites/123/")
         assertThat(config.authHeader).startsWith("Bearer ")
+    }
+
+    private fun atomicSiteWithAppPassword(storedRoot: String?) = SiteModel().apply {
+        url = "https://mysite.com"
+        siteId = 123L
+        setIsWPCom(true)
+        setIsWPComAtomic(true)
+        origin = SiteModel.ORIGIN_WPCOM_REST
+        wpApiRestUrl = storedRoot
+        apiRestPasswordPlain = "app_pass"
+        apiRestUsernamePlain = "admin"
     }
 }
