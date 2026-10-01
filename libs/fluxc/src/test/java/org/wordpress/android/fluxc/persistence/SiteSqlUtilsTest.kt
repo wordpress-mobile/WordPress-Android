@@ -63,8 +63,8 @@ class SiteSqlUtilsTest {
 
     /**
      * A WP.com proxy URL carries its namespace in the path, so it can never be the direct-host root
-     * this column holds. Refusing it at the single writer keeps it away from every reader, rather
-     * than each of them having to recognise it (CMM-2383).
+     * this column holds. Refusing it at both writers keeps it away from every reader, rather than
+     * each of them having to recognise it (CMM-2383).
      */
     @Test
     fun `updateWpApiRestUrl refuses a WPCom proxy url and leaves the stored value intact`() {
@@ -143,6 +143,25 @@ class SiteSqlUtilsTest {
         assertThat(rows).isEqualTo(1)
         assertThat(siteSqlUtils.getSites().single().wpApiRestUrl)
                 .isEqualTo("https://newsite.test/wp-json/")
+    }
+
+    /**
+     * The update path never rewrites the column, so a proxy root written at insert would stick; the
+     * insert has to refuse it just as updateWpApiRestUrl does.
+     */
+    @Test
+    fun `insertOrUpdateSite insert refuses a WPCom proxy url for a new site`() {
+        val rows = siteSqlUtils.insertOrUpdateSite(SiteModel().apply {
+            siteId = 99
+            url = "https://newsite.test"
+            name = "New"
+            wpApiRestUrl = "https://public-api.wordpress.com/wp/v2/sites/99"
+        })
+
+        assertThat(rows).isEqualTo(1)
+        val stored = siteSqlUtils.getSites().single()
+        assertThat(stored.wpApiRestUrl).isNull()
+        assertThat(stored.name).isEqualTo("New")
     }
 
     @Test

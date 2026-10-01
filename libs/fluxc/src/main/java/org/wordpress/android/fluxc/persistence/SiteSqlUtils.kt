@@ -227,6 +227,15 @@ class SiteSqlUtils
             // No site with this local ID, REMOTE_ID + URL, or XMLRPC URL, then insert it
             // The generated WellSql mapper persists getWpApiRestUrl(), and the update path below
             // excludes the column — so whatever this insert writes is what the row keeps for good.
+            // Hold it to the same rule as updateWpApiRestUrl.
+            if (WPComApiProxy.isProxyRoot(finalSiteModel.wpApiRestUrl)) {
+                AppLog.e(
+                    DB,
+                    "Refusing to store WP.com proxy URL as a REST root for new site ${finalSiteModel.url}:" +
+                            " ${finalSiteModel.wpApiRestUrl}"
+                )
+                finalSiteModel.wpApiRestUrl = null
+            }
             AppLog.d(
                 DB,
                 "Inserting site: ${finalSiteModel.url} wpApiRestUrl=${finalSiteModel.wpApiRestUrl}" +

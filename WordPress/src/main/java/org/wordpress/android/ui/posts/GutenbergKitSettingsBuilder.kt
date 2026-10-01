@@ -118,9 +118,8 @@ class GutenbergKitSettingsBuilder @Inject constructor(
      *
      * A [WPComApiProxy] root cannot serve that purpose: it already embeds its namespace, so
      * GutenbergKit would append an already-namespaced path to it and every request would 404 with
-     * `rest_no_route`. `SiteSqlUtils.updateWpApiRestUrl` refuses to store one and the migration in
-     * `WellSqlConfig` clears those older installs already hold, so this is a backstop for a row
-     * that predates both.
+     * `rest_no_route`. `SiteSqlUtils` refuses to store one and the migration in `WellSqlConfig`
+     * clears those older installs already hold, so this is a backstop for a row that predates both.
      */
     internal fun resolveDirectHostApiRoot(site: SiteModel): String {
         val fallback = "${site.url}/wp-json/"
