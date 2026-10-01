@@ -16,8 +16,7 @@ object ContentListDefaults {
      * a different role because its `surface` is darker than `surfaceContainerLow`.
      */
     @Composable
-    fun containerColor(isRedesignEnabled: Boolean): Color = when {
-        !isRedesignEnabled -> MaterialTheme.colorScheme.background
+    fun containerColor(): Color = when {
         isSystemInDarkTheme() -> MaterialTheme.colorScheme.surfaceContainerLowest
         else -> MaterialTheme.colorScheme.surfaceContainerLow
     }

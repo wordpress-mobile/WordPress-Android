@@ -22,6 +22,7 @@ import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.contentlist.ContentDateGroup
 import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
 import org.wordpress.android.ui.rs.contentlist.ContentListEmptyState
+import org.wordpress.android.ui.rs.contentlist.ContentListErrorRow
 import org.wordpress.android.ui.rs.contentlist.ContentListErrorState
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentDateGrouper
@@ -53,7 +54,6 @@ fun PostRsTabListScreen(
     modifier: Modifier = Modifier,
     isSearchIdle: Boolean = false,
     isSearching: Boolean = false,
-    isRedesignEnabled: Boolean = false,
     showDateGroups: Boolean = true,
     density: ContentListDensity = ContentListDensity.COMFORTABLE
 ) {
@@ -64,7 +64,7 @@ fun PostRsTabListScreen(
     ) {
         when {
             isSearchIdle -> Box(Modifier.fillMaxSize())
-            state.isLoading -> ContentListShimmer(isRedesignEnabled)
+            state.isLoading -> ContentListShimmer()
             state.error != null && state.items.isEmpty() -> FadeInOnAppear {
                 ContentListErrorState(
                     error = state.error,
@@ -93,7 +93,6 @@ fun PostRsTabListScreen(
                 onPostClick = onPostClick,
                 onPostMenuAction = onPostMenuAction,
                 onRowsVisible = onRowsVisible,
-                isRedesignEnabled = isRedesignEnabled,
                 // Date buckets are computed against "now", so a list of future-dated posts would
                 // land under "This week" wholesale. The Scheduled tab opts out instead.
                 showDateGroups = showDateGroups && !isSearching,
@@ -114,18 +113,13 @@ private fun PostListContent(
     onPostClick: (Long) -> Unit,
     onPostMenuAction: (Long, PostRsMenuAction) -> Unit,
     onRowsVisible: (List<Long>) -> Unit,
-    isRedesignEnabled: Boolean,
     showDateGroups: Boolean,
     density: ContentListDensity
 ) {
     val listState = rememberLazyListState()
 
-    val entries = remember(posts, isRedesignEnabled, showDateGroups, density) {
-        if (isRedesignEnabled) {
-            buildEntries(posts, showDateGroups, density)
-        } else {
-            posts.map { PostListEntry.NonContent(it) }
-        }
+    val entries = remember(posts, showDateGroups, density) {
+        buildEntries(posts, showDateGroups, density)
     }
 
     // Indexes the rendered entries, since group headers are list items too.
@@ -134,7 +128,7 @@ private fun PostListContent(
     }
 
     // Post entries key on their remote id; group headers key on a String and drop out.
-    ReportVisibleRows(listState, enabled = isRedesignEnabled, onRowsVisible = onRowsVisible) {
+    ReportVisibleRows(listState, onRowsVisible = onRowsVisible) {
         listState.layoutInfo.visibleItemsInfo.mapNotNull { it.key as? Long }
     }
 
@@ -155,22 +149,10 @@ private fun PostListContent(
                     modifier = Modifier.animateItem()
                 )
                 is PostListEntry.NonContent ->
-                    // The redesigned placeholder only belongs to the redesigned list; with the flag
-                    // off every row, placeholder included, goes through the pre-redesign item.
-                    if (isRedesignEnabled &&
-                        entry.post.displayState == ContentDisplayState.PLACEHOLDER
-                    ) {
+                    if (entry.post.displayState == ContentDisplayState.PLACEHOLDER) {
                         ContentListPlaceholderRow(modifier = Modifier.animateItem())
                     } else {
-                        // The pre-redesign row still owns the error presentation.
-                        PostRsListItem(
-                            post = entry.post,
-                            onClick = { onPostClick(entry.post.remoteId) },
-                            onMenuAction = { action ->
-                                onPostMenuAction(entry.post.remoteId, action)
-                            },
-                            modifier = Modifier.animateItem()
-                        )
+                        ContentListErrorRow(R.string.post_rs_failed_to_load, Modifier.animateItem())
                     }
                 is PostListEntry.Row -> RedesignedRow(
                     entry = entry,

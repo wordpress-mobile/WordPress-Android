@@ -37,7 +37,6 @@ internal fun PageRsTabListScreen(
     modifier: Modifier = Modifier,
     isSearchIdle: Boolean = false,
     isSearching: Boolean = false,
-    isRedesignEnabled: Boolean = false,
     density: ContentListDensity = ContentListDensity.COMFORTABLE
 ) {
     ContentListPullToRefreshBox(
@@ -47,7 +46,7 @@ internal fun PageRsTabListScreen(
     ) {
         when {
             isSearchIdle -> Box(Modifier.fillMaxSize())
-            state.isLoading -> ContentListShimmer(isRedesignEnabled)
+            state.isLoading -> ContentListShimmer()
             state.error != null && !state.items.hasRealPages -> {
                 ContentListErrorState(
                     error = state.error,
@@ -73,7 +72,6 @@ internal fun PageRsTabListScreen(
                 onPageClick = onPageClick,
                 onPageMenuAction = onPageMenuAction,
                 onRowsVisible = onRowsVisible,
-                isRedesignEnabled = isRedesignEnabled,
                 density = density
             )
         }
@@ -91,7 +89,6 @@ private fun PageListContent(
     onPageClick: (Long) -> Unit,
     onPageMenuAction: (Long, PageRsMenuAction) -> Unit,
     onRowsVisible: (List<Long>) -> Unit,
-    isRedesignEnabled: Boolean,
     density: ContentListDensity
 ) {
     val listState = rememberLazyListState()
@@ -104,7 +101,7 @@ private fun PageListContent(
 
     // Rows are keyed by a String, so the ids come from the entries the visible indexes land on.
     // The Site Editor row has no page behind it and so no view count to ask for.
-    ReportVisibleRows(listState, enabled = isRedesignEnabled, onRowsVisible = onRowsVisible) {
+    ReportVisibleRows(listState, onRowsVisible = onRowsVisible) {
         listState.layoutInfo.visibleItemsInfo.mapNotNull { info ->
             pages.getOrNull(info.index)
                 ?.remotePageId
@@ -122,26 +119,13 @@ private fun PageListContent(
             items = pages,
             key = { it.stableKey }
         ) { item ->
-            val onClick = { onPageClick(item.remotePageId) }
-            val onMenuAction = { action: PageRsMenuAction ->
-                onPageMenuAction(item.remotePageId, action)
-            }
-            if (isRedesignEnabled) {
-                PageRsRedesignedRow(
-                    item = item,
-                    density = density,
-                    onClick = onClick,
-                    onMenuAction = onMenuAction,
-                    modifier = Modifier.animateItem()
-                )
-            } else {
-                PageRsRow(
-                    item = item,
-                    onClick = onClick,
-                    onMenuAction = onMenuAction,
-                    modifier = Modifier.animateItem()
-                )
-            }
+            PageRsRedesignedRow(
+                item = item,
+                density = density,
+                onClick = { onPageClick(item.remotePageId) },
+                onMenuAction = { action -> onPageMenuAction(item.remotePageId, action) },
+                modifier = Modifier.animateItem()
+            )
         }
 
         if (isLoadingMore) contentListLoadingMoreItem()

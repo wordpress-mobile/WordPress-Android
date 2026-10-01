@@ -22,19 +22,13 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TooltipAnchorPosition
-import androidx.compose.material3.TooltipBox
-import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -51,6 +45,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.FilterChipTabRow
 import org.wordpress.android.ui.compose.utils.rsDebugTitle
 import org.wordpress.android.ui.pagesrs.PageRsListConfirmation
 import org.wordpress.android.ui.pagesrs.PageRsListItem
@@ -70,11 +65,10 @@ import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListDensityToggle
 import org.wordpress.android.ui.rs.contentlist.ContentListSearchClearButton
 import org.wordpress.android.ui.rs.contentlist.ContentListSearchField
-import org.wordpress.android.ui.rs.contentlist.ContentListTabRow
 import org.wordpress.android.ui.rs.contentlist.ReportSettledTab
 import org.wordpress.android.ui.rs.contentlist.ShowRsSnackbars
 
-@Suppress("CyclomaticComplexMethod", "LongMethod")
+@Suppress("CyclomaticComplexMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun PagesRsListScreen(
@@ -107,8 +101,7 @@ internal fun PagesRsListScreen(
     onAddNewPage: () -> Unit,
     onRowsVisible: (PageRsListTab, List<Long>) -> Unit,
     onDensityToggled: (PageRsListTab) -> Unit,
-    density: ContentListDensity = ContentListDensity.COMFORTABLE,
-    isRedesignEnabled: Boolean = false
+    density: ContentListDensity = ContentListDensity.COMFORTABLE
 ) {
     val tabs = PageRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
@@ -146,14 +139,10 @@ internal fun PagesRsListScreen(
     ShowRsSnackbars(snackbarMessages, snackbarHostState)
 
     Scaffold(
-        containerColor = ContentListDefaults.containerColor(isRedesignEnabled),
+        containerColor = ContentListDefaults.containerColor(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
-            AddPageFab(
-                visible = !isSearchActive,
-                isExtended = isRedesignEnabled,
-                onClick = onAddNewPage
-            )
+            AddPageFab(visible = !isSearchActive, onClick = onAddNewPage)
         },
         topBar = {
             TopAppBar(
@@ -188,12 +177,10 @@ internal fun PagesRsListScreen(
                         // Ahead of the author filter, not between it and search: these actions are
                         // end-aligned, so inserting anywhere later would shift both pre-existing
                         // icons left of where they have always been.
-                        if (isRedesignEnabled) {
-                            ContentListDensityToggle(
-                                density = density,
-                                onToggle = { onDensityToggled(activeTab) }
-                            )
-                        }
+                        ContentListDensityToggle(
+                            density = density,
+                            onToggle = { onDensityToggled(activeTab) }
+                        )
                         if (isAuthorFilterSupported) {
                             ContentListAuthorFilterButton(
                                 authorFilter = authorFilter,
@@ -216,10 +203,9 @@ internal fun PagesRsListScreen(
     ) { contentPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
             if (!isSearchActive) {
-                ContentListTabRow(
+                FilterChipTabRow(
                     labels = tabs.map { stringResource(it.labelResId) },
                     selectedIndex = pagerState.settledPage,
-                    isRedesignEnabled = isRedesignEnabled,
                     onSelect = { index ->
                         coroutineScope.launch { pagerState.animateScrollToPage(index) }
                     }
@@ -252,8 +238,7 @@ internal fun PagesRsListScreen(
                     onPageClick = { pageId -> onPageClick(pageId, tab) },
                     onPageMenuAction = onPageMenuAction,
                     onRowsVisible = { ids -> onRowsVisible(tab, ids) },
-                    density = density,
-                    isRedesignEnabled = isRedesignEnabled
+                    density = density
                 )
             }
         }
@@ -314,34 +299,17 @@ private fun PageConfirmationDialogHost(confirmationDialog: RsConfirmationDialogS
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AddPageFab(visible: Boolean, isExtended: Boolean, onClick: () -> Unit) {
+private fun AddPageFab(visible: Boolean, onClick: () -> Unit) {
     AnimatedVisibility(
         visible = visible,
         enter = scaleIn() + fadeIn(),
         exit = scaleOut() + fadeOut()
     ) {
-        // Serves as the extended FAB's own label as well as the plain one's tooltip.
-        val label = stringResource(R.string.create_page_fab_tooltip)
-        if (isExtended) {
-            // The extended form spells the action out, so the tooltip it would otherwise need
-            // would only repeat the label already on screen.
-            ExtendedFloatingActionButton(
-                onClick = onClick,
-                icon = { Icon(Icons.Default.Add, contentDescription = null) },
-                text = { Text(label) }
-            )
-        } else {
-            TooltipBox(
-                positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
-                tooltip = { PlainTooltip { Text(label) } },
-                state = rememberTooltipState()
-            ) {
-                FloatingActionButton(onClick = onClick) {
-                    Icon(Icons.Default.Add, contentDescription = label)
-                }
-            }
-        }
+        ExtendedFloatingActionButton(
+            onClick = onClick,
+            icon = { Icon(Icons.Default.Add, contentDescription = null) },
+            text = { Text(stringResource(R.string.create_page_fab_tooltip)) }
+        )
     }
 }

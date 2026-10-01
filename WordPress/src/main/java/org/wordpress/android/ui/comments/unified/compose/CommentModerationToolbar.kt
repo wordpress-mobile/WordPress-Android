@@ -43,13 +43,13 @@ import org.wordpress.android.ui.comments.unified.CommentModerationAction
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 /**
- * The moderation controls pinned to the bottom of the redesigned comment detail, matching iOS's
+ * The moderation controls pinned to the bottom of the comment detail, matching iOS's
  * `CommentModerationToolbar`: full-width buttons whose shape is driven by the comment's status
  * rather than a fixed row of every action.
  *
- * Renders nothing when the user can't moderate - unlike the pre-redesign footer, which showed the
- * actions disabled. There is nothing else on this bar to keep, so an all-disabled row would be a
- * strip of dead controls; reply and the overflow actions live elsewhere and stay reachable.
+ * Renders nothing when the user can't moderate rather than showing the actions disabled. There is
+ * nothing else on this bar to keep, so an all-disabled row would be a strip of dead controls;
+ * reply and the overflow actions live elsewhere and stay reachable.
  */
 @Composable
 fun CommentModerationToolbar(

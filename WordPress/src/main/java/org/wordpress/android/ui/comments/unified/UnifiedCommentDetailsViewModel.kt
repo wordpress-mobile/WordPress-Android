@@ -111,10 +111,6 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     private var isLikeInProgress = false
     private var isModerationInProgress = false
 
-    // The parent strip and the reply-aware trash prompt only exist in the redesigned detail, so
-    // their fetches are skipped entirely when it is off - the pre-redesign screen loads as before.
-    private var isRedesignEnabled = false
-
     // Whether the current user may moderate comments on this site (moderate_comments capability).
     // Fetched asynchronously in [start]; false until it resolves so the moderation controls start
     // disabled and enable once confirmed, rather than flashing enabled then greying out.
@@ -128,18 +124,16 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     // it, and the detail pager would otherwise pay for it on every comment it pages past.
     private var authorExtrasJob: Job? = null
 
-    fun start(
-        site: SiteModel,
-        remoteCommentId: Long,
-        noteId: String? = null,
-        isRedesignEnabled: Boolean = false
-    ) {
+    // A newer load supersedes an older one, so a slow first load can't land its parent and reply
+    // count on top of a refresh's.
+    private var loadJob: Job? = null
+
+    fun start(site: SiteModel, remoteCommentId: Long, noteId: String? = null) {
         if (isStarted) return
         isStarted = true
         this.site = site
         this.remoteCommentId = remoteCommentId
         this.noteId = noteId
-        this.isRedesignEnabled = isRedesignEnabled
         canModerateResult = viewModelScope.async(bgDispatcher) { siteCapabilityChecker.canModerateComments(site) }
         loadComment()
         loadModerationCapability()
@@ -159,9 +153,13 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     fun onCommentEdited() {
         if (!isStarted) return
         _commentChanged.value = Event(Unit)
-        // The edit may have changed the author's email, which the comment count is keyed on.
+        // The edit may have changed the author's email, which the comment count is keyed on, so the
+        // author sheet's extras are dropped and fetched afresh the next time it opens.
         authorExtrasJob?.cancel()
         authorExtrasJob = null
+        _uiState.value = _uiState.value?.let {
+            it.copy(authorInfo = it.authorInfo.copy(email = "", ipAddress = "", commentCount = null, bio = ""))
+        }
         loadComment()
     }
 
@@ -169,27 +167,42 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         val comment = loadedComment ?: return
         if (authorExtrasJob != null) return
         authorExtrasJob = launch {
-            val (count, bio) = withContext(bgDispatcher) { fetchAuthorExtras(comment) }
+            // Best effort: a failed request just hides its row in the sheet.
+            val (details, count, bio) = withContext(bgDispatcher) {
+                coroutineScope {
+                    // Needs only the author id, which the loaded comment has, so it doesn't wait for
+                    // the edit context below.
+                    val bio = async {
+                        comment.authorId.takeIf { it > 0 }?.let { commentsRsDataSource.fetchUserBio(site, it) }
+                    }
+                    // The email and IP need the edit context, which only moderators get. Fetched here
+                    // rather than with the comment so the detail doesn't wait on the capability check.
+                    val details = if (canModerateResult.await()) {
+                        commentsRsDataSource.getComment(site, remoteCommentId, withEditContext = true) ?: comment
+                    } else {
+                        comment
+                    }
+                    val count = details.authorEmail.takeIf { it.isNotBlank() }
+                        ?.let { commentsRsDataSource.fetchAuthorCommentCount(site, it) }
+                    Triple(details, count, bio.await()?.let { HtmlUtils.fastStripHtml(it).trim() }.orEmpty())
+                }
+            }
             _uiState.value = _uiState.value?.let {
-                it.copy(authorInfo = it.authorInfo.copy(commentCount = count, bio = bio))
+                it.copy(
+                    authorInfo = it.authorInfo.copy(
+                        email = details.authorEmail,
+                        ipAddress = details.authorIp,
+                        commentCount = count,
+                        bio = bio
+                    )
+                )
             }
         }
     }
 
-    /** Best effort: a failed half just hides its row in the sheet. */
-    private suspend fun fetchAuthorExtras(comment: RsComment): Pair<Int?, String> = coroutineScope {
-        val count = async {
-            comment.authorEmail.takeIf { it.isNotBlank() }
-                ?.let { commentsRsDataSource.fetchAuthorCommentCount(site, it) }
-        }
-        val bio = async {
-            comment.authorId.takeIf { it > 0 }?.let { commentsRsDataSource.fetchUserBio(site, it) }
-        }
-        count.await() to bio.await()?.let { HtmlUtils.fastStripHtml(it).trim() }.orEmpty()
-    }
-
     private fun loadComment() {
-        launch {
+        loadJob?.cancel()
+        loadJob = launch {
             // On first load show the progress state. When refreshing (e.g. after an edit) keep the
             // currently displayed comment on screen instead: resetting the ui state mid-refresh
             // would make the action buttons compute toggles from a default status, and a failed
@@ -198,14 +211,15 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
             if (!isRefresh) {
                 _uiState.value = CommentDetailsUiState(showProgress = true)
             }
+            val rs = withContext(bgDispatcher) { commentsRsDataSource.getComment(site, remoteCommentId) }
+            if (rs == null) {
+                showLoadError(isRefresh)
+                return@launch
+            }
+            // Independent of the cache lookups below, so it runs alongside them, and the comment is
+            // shown without waiting for it.
+            val extras = async(bgDispatcher) { fetchParentAndReplyCount(rs) }
             val loaded = withContext(bgDispatcher) {
-                // The redesign's author sheet shows the email and IP, which need the edit context.
-                // The capability is session-cached, so this rarely costs a request.
-                val withEditContext = isRedesignEnabled && canModerateResult.await()
-                val rs = commentsRsDataSource.getComment(site, remoteCommentId, withEditContext)
-                // Independent of the cache lookups below, so it runs alongside them rather than
-                // adding its round trips to the first paint.
-                val extras = async { fetchRedesignExtras(rs) }
                 var local = commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId).firstOrNull()
                 // Opened from the rs list the FluxC cache may not have this comment at all (the
                 // legacy list guaranteed a row before the detail could open). Fetch it so the
@@ -218,7 +232,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                 // Still no title (self-hosted application-password site, or the fetch failed):
                 // resolve it the way the rs list does — usually a free hit on the shared title
                 // cache the list populated moments earlier.
-                val fallbackTitle = if (local?.postTitle.isNullOrBlank() && rs != null && rs.postId > 0) {
+                val fallbackTitle = if (local?.postTitle.isNullOrBlank() && rs.postId > 0) {
                     commentsRsDataSource.fetchPostTitles(site, listOf(rs.postId))[rs.postId].orEmpty()
                 } else {
                     ""
@@ -230,44 +244,59 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                 } else {
                     false
                 }
-                val (parent, replies) = extras.await()
-                CommentLoadResult(rs, local, fallbackTitle, likedFallback, parent, replies)
+                CommentLoadResult(local, fallbackTitle, likedFallback)
             }
-            when {
-                loaded.rsComment != null -> {
-                    loadedComment = loaded.rsComment
-                    _uiState.value = loaded.rsComment.toUiState(
-                        loaded.cached,
-                        loaded.fallbackPostTitle,
-                        loaded.fallbackIsLiked,
-                        loaded.parent,
-                        loaded.replyCount
-                    )
-                }
-                isRefresh -> showSnackbar(R.string.error_load_comment)
-                else -> _onSnackbarMessage.value = Event(
-                    SnackbarMessageHolder(
-                        message = UiStringRes(R.string.error_load_comment),
-                        onDismissAction = { _uiActionEvent.value = Event(Close) }
+            loadedComment = rs
+            val previous = _uiState.value
+            val state = rs.toUiState(loaded.cached, loaded.fallbackPostTitle, loaded.fallbackIsLiked)
+            // A refresh keeps the current parent strip and reply count until the new ones land,
+            // rather than flashing the strip away. It also keeps the author sheet's extras, which the
+            // view-context load lacks and the sheet may have fetched while the refresh was in flight.
+            _uiState.value = if (isRefresh && previous != null) {
+                state.copy(
+                    parentAuthorName = previous.parentAuthorName,
+                    parentSnippet = previous.parentSnippet,
+                    replyCount = previous.replyCount,
+                    authorInfo = state.authorInfo.copy(
+                        email = previous.authorInfo.email,
+                        ipAddress = previous.authorInfo.ipAddress,
+                        commentCount = previous.authorInfo.commentCount,
+                        bio = previous.authorInfo.bio
                     )
                 )
+            } else {
+                state
             }
+            val (parent, replies) = extras.await()
+            _uiState.value = _uiState.value?.copy(
+                parentAuthorName = parent?.authorName.orEmpty(),
+                parentSnippet = parent?.contentHtml?.let { HtmlUtils.fastStripHtml(it).trim() }.orEmpty(),
+                replyCount = replies
+            )
         }
     }
 
-    /**
-     * The parent comment and reply count, which only the redesigned detail shows. Fetched together
-     * and best effort: a failure leaves the strip hidden and the trash prompt on generic copy.
-     */
-    private suspend fun fetchRedesignExtras(rs: RsComment?): Pair<RsComment?, Int?> {
-        if (!isRedesignEnabled || rs == null) return null to null
-        return coroutineScope {
-            val parent = async {
-                rs.parentId.takeIf { it > 0 }?.let { commentsRsDataSource.getComment(site, it) }
-            }
-            val replies = async { commentsRsDataSource.fetchReplyCount(site, remoteCommentId) }
-            parent.await() to replies.await()
+    /** A failed refresh keeps the comment on screen; a failed first load closes the screen. */
+    private fun showLoadError(isRefresh: Boolean) {
+        if (isRefresh) {
+            showSnackbar(R.string.error_load_comment)
+        } else {
+            _onSnackbarMessage.value = Event(
+                SnackbarMessageHolder(
+                    message = UiStringRes(R.string.error_load_comment),
+                    onDismissAction = { _uiActionEvent.value = Event(Close) }
+                )
+            )
         }
+    }
+
+    /** Best effort: a failure leaves the parent strip hidden and the trash prompt on generic copy. */
+    private suspend fun fetchParentAndReplyCount(rs: RsComment): Pair<RsComment?, Int?> = coroutineScope {
+        val parent = async {
+            rs.parentId.takeIf { it > 0 }?.let { commentsRsDataSource.getComment(site, it) }
+        }
+        val replies = async { commentsRsDataSource.fetchReplyCount(site, remoteCommentId) }
+        parent.await() to replies.await()
     }
 
     fun onApproveClicked() {
@@ -345,8 +374,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
 
     @Suppress("ReturnCount")
     fun onReplyClicked(replyText: String) {
-        // Guard against a second reply while one is already in flight (fast double-tap, or the
-        // full-screen editor confirming while the inline send is still processing).
+        // Guard against a second reply while one is already in flight (e.g. a fast double-tap).
         if (_uiState.value?.isReplyInProgress == true) return
         if (replyText.isBlank()) return
         if (isOffline()) return
@@ -598,9 +626,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     private fun RsComment.toUiState(
         cached: CommentEntity?,
         fallbackPostTitle: String,
-        fallbackIsLiked: Boolean,
-        parent: RsComment?,
-        replyCount: Int?
+        fallbackIsLiked: Boolean
     ) = CommentDetailsUiState(
         showProgress = false,
         contentVisible = true,
@@ -621,19 +647,13 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         status = status,
         isLiked = cached?.iLike ?: fallbackIsLiked,
         canModerate = canModerate,
-        customStatusLabel = if (status == CommentStatus.ALL) rawStatus else "",
-        parentAuthorName = parent?.authorName.orEmpty(),
-        parentSnippet = parent?.contentHtml?.let { HtmlUtils.fastStripHtml(it).trim() }.orEmpty(),
-        replyCount = replyCount
+        customStatusLabel = if (status == CommentStatus.ALL) rawStatus else ""
     )
 
     private data class CommentLoadResult(
-        val rsComment: RsComment?,
         val cached: CommentEntity?,
         val fallbackPostTitle: String,
-        val fallbackIsLiked: Boolean,
-        val parent: RsComment? = null,
-        val replyCount: Int? = null
+        val fallbackIsLiked: Boolean
     )
 
     data class CommentDetailsUiState(

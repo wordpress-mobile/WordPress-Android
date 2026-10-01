@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
@@ -30,8 +31,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
  * iOS's comment detail.
  *
  * Unlike iOS there is no like *count* - the comment cache carries only whether the current user
- * liked it (`iLike`), with no total - so the label toggles between "Like" and "Liked" the way the
- * pre-redesign action footer did.
+ * liked it (`iLike`), with no total - so the label toggles between "Like" and "Liked".
  */
 @Composable
 fun CommentReactionRow(
@@ -39,16 +39,21 @@ fun CommentReactionRow(
     showLikeButton: Boolean,
     onReplyClick: () -> Unit,
     onLikeClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    hasReplyDraft: Boolean = false
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ReactionAction(
-            labelResId = R.string.reply,
+            // The reply sheet is the only place a draft shows, so the action says one is waiting.
+            labelResId = if (hasReplyDraft) R.string.comment_reply_continue else R.string.reply,
             icon = Icons.AutoMirrored.Filled.Reply,
-            onClick = onReplyClick
+            onClick = onReplyClick,
+            // "Continue reply" is wide enough to starve Like at large display sizes, so Reply is
+            // the one that gives way. Unweighted, Like is measured first and keeps its width.
+            modifier = Modifier.weight(1f, fill = false)
         )
         if (showLikeButton) {
             ReactionAction(
@@ -92,6 +97,8 @@ private fun ReactionAction(
         Text(
             text = stringResource(labelResId),
             style = MaterialTheme.typography.labelLarge,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
             color = contentColor,
             modifier = Modifier.padding(start = ACTION_ICON_GAP)
         )

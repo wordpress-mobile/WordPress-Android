@@ -98,8 +98,7 @@ class PagesRsListActivity : BaseAppCompatActivity() {
                     onAddNewPage = viewModel::onAddNewPage,
                     onRowsVisible = viewModel::onRowsVisible,
                     onDensityToggled = viewModel::onDensityToggled,
-                    density = density,
-                    isRedesignEnabled = true
+                    density = density
                 )
             }
         }

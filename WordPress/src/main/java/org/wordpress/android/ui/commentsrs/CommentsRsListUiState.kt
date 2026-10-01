@@ -14,18 +14,13 @@ data class CommentRsUiModel(
     val relativeDate: String,
     val status: CommentStatus,
     val postId: Long,
-    /**
-     * The comment's publish time, for the redesigned list's date buckets. The pre-redesign list
-     * groups on [relativeDate] instead, which is why this is only read when the redesign is on.
-     */
+    /** The comment's publish time, for the list's date buckets. */
     val dateGmtMillis: Long = 0L,
     /** Resolved asynchronously in a batched request; null until then. */
     val postTitle: String? = null
 ) {
-    val isPending: Boolean get() = status == CommentStatus.UNAPPROVED
-
     /**
-     * The short qualifier shown above a redesigned row's title, or null for an approved comment -
+     * The short qualifier shown above a row's title, or null for an approved comment -
      * "Approved" on every row in a list that is mostly approved is noise. Mirrors how the pages
      * list turns its status into a badge rather than a coloured line.
      */

@@ -41,14 +41,12 @@ fun LoadMoreOnScrollToEnd(
 @Composable
 fun ReportVisibleRows(
     listState: LazyListState,
-    enabled: Boolean,
     onRowsVisible: (List<Long>) -> Unit,
     visibleRowIds: () -> List<Long>,
 ) {
     val currentOnRowsVisible by rememberUpdatedState(onRowsVisible)
     val currentVisibleRowIds by rememberUpdatedState(visibleRowIds)
-    LaunchedEffect(listState, enabled) {
-        if (!enabled) return@LaunchedEffect
+    LaunchedEffect(listState) {
         snapshotFlow { currentVisibleRowIds() }
             .debounce(VISIBLE_ROWS_DEBOUNCE_MS)
             .distinctUntilChanged()

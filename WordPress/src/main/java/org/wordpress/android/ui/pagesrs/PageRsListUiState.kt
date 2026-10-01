@@ -125,12 +125,11 @@ internal fun PageRsListItem.withPage(page: PageRsUiModel): PageRsListItem = when
 }
 
 /**
- * Projects a row onto the shared model the redesigned list renders.
+ * Projects a row onto the shared model the list renders.
  *
  * The SITE_EDITOR row has no backing page, so its text comes from the caller's already-resolved
- * strings. Everything the pre-redesign row spelled out in its own coloured header line - the
- * Homepage / Posts page label, and the status shown while searching - rides along as a badge
- * instead, which is where the redesigned card puts short qualifiers.
+ * strings. The Homepage / Posts page label and the status shown while searching ride along as
+ * badges, which is where the card puts short qualifiers.
  */
 internal fun PageRsListItem.toContentListRowUiState(
     siteEditorTitle: String,

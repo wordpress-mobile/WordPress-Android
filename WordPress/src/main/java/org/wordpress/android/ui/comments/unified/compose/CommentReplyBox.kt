@@ -3,7 +3,6 @@ package org.wordpress.android.ui.comments.unified.compose
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.heightIn
@@ -18,16 +17,12 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,160 +38,16 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.dataview.compose.RemoteImage
 import org.wordpress.android.ui.suggestion.Suggestion
-
-/**
- * The reply box pinned to the bottom of the comment detail: expand-to-full-screen affordance,
- * multi-line reply field with `@`-mention suggestions, and a send button that swaps for a
- * progress indicator while the reply is in flight. Mirrors the legacy reader_include_comment_box.
- */
-@Composable
-@Suppress("LongParameterList")
-fun CommentReplyBox(
-    replyText: TextFieldValue,
-    onReplyTextChange: (TextFieldValue) -> Unit,
-    suggestions: List<Suggestion>,
-    hint: String,
-    isReplyInProgress: Boolean,
-    focusOnLaunch: Boolean,
-    onSendClick: () -> Unit,
-    onExpandClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val focusRequester = remember { FocusRequester() }
-    var isReplyFieldFocused by remember { mutableStateOf(false) }
-    val canSend = replyText.text.isNotBlank() && !isReplyInProgress
-
-    Column(modifier = modifier.fillMaxWidth()) {
-        // Only suggest mentions while the field is focused, so a restored draft that happens to
-        // end in an @-token doesn't pop the panel the moment the screen opens.
-        if (isReplyFieldFocused) {
-            MentionSuggestionPanel(replyText, suggestions, onReplyTextChange)
-        }
-        HorizontalDivider()
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = onExpandClick) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_chevron_up_white_24dp),
-                    contentDescription = stringResource(R.string.description_expand),
-                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = MEDIUM_EMPHASIS_ALPHA)
-                )
-            }
-            ReplyTextField(
-                replyText = replyText,
-                onReplyTextChange = onReplyTextChange,
-                hint = hint,
-                enabled = !isReplyInProgress,
-                modifier = Modifier
-                    .weight(1f)
-                    .focusRequester(focusRequester)
-                    .onFocusChanged { isReplyFieldFocused = it.isFocused }
-            )
-            if (isReplyInProgress) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .padding(horizontal = 12.dp)
-                        .size(24.dp)
-                )
-            } else {
-                IconButton(onClick = onSendClick, enabled = canSend) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_send_white_24dp),
-                        contentDescription = stringResource(R.string.send),
-                        tint = if (canSend) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            MaterialTheme.colorScheme.onSurface.copy(alpha = MEDIUM_EMPHASIS_ALPHA)
-                        }
-                    )
-                }
-            }
-        }
-    }
-
-    if (focusOnLaunch) {
-        LaunchedEffect(Unit) {
-            focusRequester.requestFocus()
-        }
-    }
-}
-
-/**
- * A full-screen version of the reply field, opened from the reply box's expand affordance.
- * Shares [replyText] with the inline field so text and cursor survive expand/collapse, replacing
- * the legacy CollapseFullScreenDialogFragment + CommentFullScreenDialogFragment pair.
- */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-@Suppress("LongParameterList")
-fun FullScreenReplyDialog(
-    replyText: TextFieldValue,
-    onReplyTextChange: (TextFieldValue) -> Unit,
-    suggestions: List<Suggestion>,
-    hint: String,
-    isReplyInProgress: Boolean,
-    onSendClick: () -> Unit,
-    onCollapseClick: () -> Unit
-) {
-    val focusRequester = remember { FocusRequester() }
-    var isReplyFieldFocused by remember { mutableStateOf(false) }
-    val canSend = replyText.text.isNotBlank() && !isReplyInProgress
-    Dialog(
-        onDismissRequest = onCollapseClick,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
-    ) {
-        Surface(modifier = Modifier.fillMaxSize()) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                TopAppBar(
-                    title = { Text(stringResource(R.string.comment)) },
-                    navigationIcon = {
-                        IconButton(onClick = onCollapseClick) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_chevron_down_white_24dp),
-                                contentDescription = stringResource(R.string.description_collapse)
-                            )
-                        }
-                    },
-                    actions = {
-                        TextButton(onClick = onSendClick, enabled = canSend) {
-                            Text(stringResource(R.string.send))
-                        }
-                    }
-                )
-                ReplyTextField(
-                    replyText = replyText,
-                    onReplyTextChange = onReplyTextChange,
-                    hint = hint,
-                    enabled = !isReplyInProgress,
-                    singleLineHeight = false,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .focusRequester(focusRequester)
-                        .onFocusChanged { isReplyFieldFocused = it.isFocused }
-                )
-                if (isReplyFieldFocused) {
-                    MentionSuggestionPanel(replyText, suggestions, onReplyTextChange)
-                }
-            }
-        }
-    }
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
-    }
-}
 
 @Composable
 private fun ReplyTextField(
@@ -204,8 +55,7 @@ private fun ReplyTextField(
     onReplyTextChange: (TextFieldValue) -> Unit,
     hint: String,
     enabled: Boolean,
-    modifier: Modifier = Modifier,
-    singleLineHeight: Boolean = true
+    modifier: Modifier = Modifier
 ) {
     TextField(
         value = replyText,
@@ -213,8 +63,7 @@ private fun ReplyTextField(
         enabled = enabled,
         placeholder = { Text(hint) },
         textStyle = MaterialTheme.typography.bodyLarge,
-        minLines = if (singleLineHeight) 1 else 2,
-        maxLines = if (singleLineHeight) 4 else Int.MAX_VALUE,
+        minLines = 2,
         // No IME send action: the legacy field was textMultiLine, so the enter key inserts a
         // newline and sending stays on the dedicated send button.
         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
@@ -326,7 +175,7 @@ internal fun applyMentionSuggestion(
 }
 
 /**
- * The redesigned detail's reply editor, presented as a modal bottom sheet from the Reply action
+ * The comment detail's reply editor, presented as a modal bottom sheet from the Reply action
  * under the comment, so the comment being answered stays visible behind it.
  */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -338,6 +187,7 @@ fun CommentReplySheet(
     suggestions: List<Suggestion>,
     hint: String,
     isReplyInProgress: Boolean,
+    isSendEnabled: Boolean,
     onSendClick: () -> Unit,
     onDeleteDraft: () -> Unit,
     onDismiss: () -> Unit
@@ -347,7 +197,7 @@ fun CommentReplySheet(
     val scope = rememberCoroutineScope()
     var isReplyFieldFocused by remember { mutableStateOf(false) }
     var showDraftPrompt by remember { mutableStateOf(false) }
-    val canSend = replyText.text.isNotBlank() && !isReplyInProgress
+    val canSend = isSendEnabled && replyText.text.isNotBlank() && !isReplyInProgress
 
     ModalBottomSheet(
         // Closing with something typed asks what to do with it, like iOS's composer. An empty
@@ -392,7 +242,6 @@ fun CommentReplySheet(
                 onReplyTextChange = onReplyTextChange,
                 hint = hint,
                 enabled = !isReplyInProgress,
-                singleLineHeight = false,
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(min = SHEET_FIELD_MIN_HEIGHT)
@@ -476,3 +325,6 @@ private val SHEET_ACTION_PADDING = 8.dp
 private val SHEET_FIELD_MIN_HEIGHT = 120.dp
 private val SHEET_PROGRESS_SIZE = 20.dp
 private val SHEET_PROGRESS_STROKE = 2.dp
+
+/** Matches material_emphasis_medium. */
+private const val MEDIUM_EMPHASIS_ALPHA = 0.6f

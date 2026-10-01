@@ -6,10 +6,14 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Article
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
@@ -19,13 +23,14 @@ import org.wordpress.android.ui.pagesrs.isHeroRow
 import org.wordpress.android.ui.pagesrs.toContentListRowUiState
 import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.rs.contentlist.ContentListErrorRow
 import org.wordpress.android.ui.rs.contentlist.ContentListHeroRow
 import org.wordpress.android.ui.rs.contentlist.ContentListPlaceholderRow
 import org.wordpress.android.ui.rs.contentlist.ContentListRow
 import org.wordpress.android.ui.rs.contentlist.toContentListRowActions
 
 /**
- * One row of the redesigned pages list.
+ * One row of the pages list.
  *
  * Renders through the shared [ContentListRow] so the posts and pages lists cannot drift apart, with
  * two things only the pages list has: the hierarchy indent, applied outside the card, and the
@@ -39,11 +44,9 @@ internal fun PageRsRedesignedRow(
     onMenuAction: (PageRsMenuAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // The error row still belongs to the pre-redesign presentation: there is no card shape for
-    // "this one would not load", and inventing one would be a design decision of its own.
     when (item.page.displayState) {
         ContentDisplayState.PLACEHOLDER -> ContentListPlaceholderRow(modifier)
-        ContentDisplayState.ERROR -> ErrorItem(modifier)
+        ContentDisplayState.ERROR -> ContentListErrorRow(R.string.page_rs_failed_to_load, modifier)
         ContentDisplayState.NORMAL,
         ContentDisplayState.FETCHING_WITH_DATA,
         ContentDisplayState.FAILED_WITH_DATA -> PageRsContentCard(
@@ -116,6 +119,12 @@ private fun PageRsContentCard(
             )
         }
     }
+}
+
+private fun PageRsListItem.Virtual.Kind.icon(): ImageVector = when (this) {
+    PageRsListItem.Virtual.Kind.HOMEPAGE,
+    PageRsListItem.Virtual.Kind.SITE_EDITOR -> Icons.Filled.Home
+    PageRsListItem.Virtual.Kind.POSTS_PAGE -> Icons.AutoMirrored.Filled.Article
 }
 
 // Applied outside the card, so it stacks on top of the list's own horizontal padding.

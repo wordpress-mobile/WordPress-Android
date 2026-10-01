@@ -50,6 +50,7 @@ import org.wordpress.android.ui.commentsrs.CommentsRsListTab
 import org.wordpress.android.ui.commentsrs.PendingConfirmation
 import org.wordpress.android.ui.commentsrs.batchActions
 import org.wordpress.android.ui.commentsrs.isEnabledFor
+import org.wordpress.android.ui.compose.components.FilterChipTabRow
 import org.wordpress.android.ui.compose.utils.rsDebugTitle
 import org.wordpress.android.ui.rs.RsSnackbarMessage
 import org.wordpress.android.ui.rs.RsTabUiState
@@ -59,7 +60,6 @@ import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListDensityToggle
 import org.wordpress.android.ui.rs.contentlist.ContentListSearchClearButton
 import org.wordpress.android.ui.rs.contentlist.ContentListSearchField
-import org.wordpress.android.ui.rs.contentlist.ContentListTabRow
 import org.wordpress.android.ui.rs.contentlist.ShowRsSnackbars
 
 // Material's disabled-content alpha, used to dim batch-action icons that can't apply to the
@@ -69,7 +69,6 @@ private const val DISABLED_ICON_ALPHA = 0.38f
 /** Which of the mutually exclusive top bars is showing: selection wins over search. */
 private enum class TopBarMode { SELECTION, SEARCH, NORMAL }
 
-@Suppress("LongMethod", "CyclomaticComplexMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentsRsListScreen(
@@ -96,8 +95,7 @@ fun CommentsRsListScreen(
     onBatchAction: (CommentsRsBatchAction, CommentsRsListTab) -> Unit,
     onConfirmPendingAction: (CommentsRsListTab) -> Unit,
     onDensityToggled: () -> Unit,
-    density: ContentListDensity = ContentListDensity.COMFORTABLE,
-    isRedesignEnabled: Boolean = false
+    density: ContentListDensity = ContentListDensity.COMFORTABLE
 ) {
     val tabs = CommentsRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
@@ -168,7 +166,7 @@ fun CommentsRsListScreen(
     ShowRsSnackbars(snackbarMessages, snackbarHostState)
 
     Scaffold(
-        containerColor = ContentListDefaults.containerColor(isRedesignEnabled),
+        containerColor = ContentListDefaults.containerColor(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             AnimatedContent(targetState = topBarMode, label = "topBar") { mode ->
@@ -209,12 +207,10 @@ fun CommentsRsListScreen(
                         actions = {
                             // Ahead of search, so the pre-existing icon keeps its position -
                             // the same placement rule the posts list follows.
-                            if (isRedesignEnabled) {
-                                ContentListDensityToggle(
-                                    density = density,
-                                    onToggle = onDensityToggled
-                                )
-                            }
+                            ContentListDensityToggle(
+                                density = density,
+                                onToggle = onDensityToggled
+                            )
                             IconButton(onClick = {
                                 searchFocusPending = true
                                 onSearchOpen()
@@ -235,10 +231,9 @@ fun CommentsRsListScreen(
             // single status per request (unlike posts, which search across all statuses), so a
             // search is always scoped to one tab — keeping the tabs on screen makes that scope
             // visible and lets the user re-run the query against another status.
-            ContentListTabRow(
+            FilterChipTabRow(
                 labels = tabs.map { stringResource(it.labelResId) },
                 selectedIndex = pagerState.settledPage,
-                isRedesignEnabled = isRedesignEnabled,
                 onSelect = { index ->
                     coroutineScope.launch {
                         if (pagerState.settledPage == index) {
@@ -275,7 +270,6 @@ fun CommentsRsListScreen(
                     onLoadMore = { onLoadMore(tab) },
                     onCommentClick = onCommentClick,
                     onCommentLongClick = onCommentLongClick,
-                    isRedesignEnabled = isRedesignEnabled,
                     density = density
                 )
             }
