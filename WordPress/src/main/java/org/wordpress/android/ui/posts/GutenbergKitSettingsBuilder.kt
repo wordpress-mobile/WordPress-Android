@@ -121,7 +121,7 @@ class GutenbergKitSettingsBuilder @Inject constructor(
      * `rest_no_route`. `SiteSqlUtils` refuses to store one and the migration in `WellSqlConfig`
      * clears those older installs already hold, so this is a backstop for a row that predates both.
      */
-    internal fun resolveDirectHostApiRoot(site: SiteModel): String {
+    private fun resolveDirectHostApiRoot(site: SiteModel): String {
         val fallback = "${site.url}/wp-json/"
         val stored = site.wpApiRestUrl?.takeIf { it.isNotEmpty() }
         if (WPComApiProxy.isProxyRoot(stored)) {
@@ -270,4 +270,3 @@ class GutenbergKitSettingsBuilder @Inject constructor(
         private const val AUTH_BASIC_PREFIX = "Basic "
     }
 }
-
