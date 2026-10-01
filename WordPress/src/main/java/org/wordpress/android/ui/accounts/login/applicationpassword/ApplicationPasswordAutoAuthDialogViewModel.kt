@@ -145,7 +145,7 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
      * Records the REST root this mint is about to persist, alongside the classification it was
      * derived from.
      *
-     * [WpApiClientProvider.getApiRootUrlFrom] falls back to `"${'$'}{site.url}/wp-json"` when the site
+     * [WpApiClientProvider.getApiRootUrlFrom] falls back to `"${site.url}/wp-json"` when the site
      * has no stored root, and the value goes straight to
      * [ApplicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom], which persists it to
      * `WP_API_REST_URL`. That column is excluded from full-row writes, so whatever is written here
