@@ -438,15 +438,9 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     }
 
     /**
-     * The site's own REST API root, or null when discovery hasn't found one.
-     *
-     * Returns only the stored value, deliberately. This used to synthesize a WP.com proxy root
-     * ("https://public-api.wordpress.com/wp/v2/sites/<id>") for Simple sites, which poisoned the
-     * WP_API_REST_URL column: the generated WellSql mapper reads this getter when inserting a row,
-     * and the update path excludes the column, so a site added while Simple kept the proxy root for
-     * good. That root already embeds the wp/v2 namespace, so once the site became Atomic every
-     * caller treating this as a direct-host root namespaced its requests twice and got
-     * rest_no_route. Callers needing the WP.com proxy route through WpComUrlResolver instead.
+     * The site's own REST API root, or null when discovery hasn't found one. Never derive a value
+     * here: the generated WellSql mapper persists this getter on insert, so it would become permanent.
+     * Callers needing the WP.com proxy route through WpComUrlResolver instead.
      */
     public String getWpApiRestUrl() {
         return mWpApiRestUrl;
