@@ -35,11 +35,11 @@ class WellSqlConfigMigrationTest {
     }
 
     /**
-     * The shape WP.com Simple sites advertise during REST discovery. It reaches the column through
-     * application-password login, and an earlier revision of this migration missed it.
+     * The match covers the whole proxy host, not just the shape the removed getter synthesized: no
+     * URL under it can serve as a direct-host root, whatever its path or query.
      */
     @Test
-    fun `clearing proxy roots nulls the rest_route form`() {
+    fun `clearing proxy roots nulls any other url under the proxy host`() {
         insertSite(
             localId = 1,
             restUrl = "https://public-api.wordpress.com/wp-json/?rest_route=/sites/example.com"
