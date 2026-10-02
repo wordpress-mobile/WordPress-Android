@@ -56,7 +56,7 @@ class StatsApiErrorTest {
     @Test
     fun `given unauthorized body, when isStatsGatedByPlan, then true is returned`() {
         val response =
-            """{"error":"unauthorized","message":"The plan for this site does not allow fetching Device stats"}"""
+            """{"error":"unauthorized","message":"The plan for 12345 does not allow fetching Device stats"}"""
 
         assertThat(isStatsGatedByPlan(response)).isTrue()
     }
@@ -64,7 +64,7 @@ class StatsApiErrorTest {
     @Test
     fun `given a gated geolocation body, when isStatsGatedByPlan, then true is returned`() {
         val response =
-            """{"error":"unauthorized","message":"The plan for this site does not allow fetching Geolocation stats"}"""
+            """{"error":"unauthorized","message":"The plan for 12345 does not allow fetching Geolocation stats"}"""
 
         assertThat(isStatsGatedByPlan(response)).isTrue()
     }
@@ -107,10 +107,10 @@ class StatsApiErrorTest {
     @Test
     fun `given an error body, when parseStatsApiErrorMessage, then message is returned`() {
         val response =
-            """{"error":"unauthorized","message":"The plan for this site does not allow fetching UTM stats"}"""
+            """{"error":"unauthorized","message":"The plan for 12345 does not allow fetching UTM stats"}"""
 
         assertThat(parseStatsApiErrorMessage(response))
-            .isEqualTo("The plan for this site does not allow fetching UTM stats")
+            .isEqualTo("The plan for 12345 does not allow fetching UTM stats")
     }
 
     @Test

@@ -12,7 +12,10 @@ private const val ERROR_CODE_INVALID_BLOG = "invalid_blog"
  * Error code returned by the WordPress.com stats API when the requested stat is
  * gated behind a paid plan (region/city views, devices, UTM). The response body
  * looks like:
- * `{"error":"unauthorized","message":"The plan for this site does not allow fetching Device stats"}`
+ * `{"error":"unauthorized","message":"The plan for 12345 does not allow fetching Device stats"}`
+ *
+ * Note the site is named by its numeric blog id, not by a phrase like "this
+ * site" — see [PLAN_GATE_MESSAGE_FRAGMENT].
  *
  * The API reuses this code for a user who cannot view the site's stats at all,
  * which is why the code alone does not identify a plan gate — see
@@ -23,8 +26,12 @@ private const val ERROR_CODE_UNAUTHORIZED = "unauthorized"
 /**
  * Fragment of the "message" field that separates a plan gate from the other
  * `unauthorized` errors. The gated endpoints (region/city views, devices, UTM)
- * all phrase it as "The plan for this site does not allow fetching X stats",
+ * all phrase it as "The plan for <blog id> does not allow fetching X stats",
  * while a permission failure reads "user cannot view stats".
+ *
+ * The fragment deliberately starts after the blog id, so it must stay shorter
+ * than the sentence above: the id sits in the middle of that sentence, and
+ * matching any more of it would never match a real response.
  */
 private const val PLAN_GATE_MESSAGE_FRAGMENT = "does not allow fetching"
 
