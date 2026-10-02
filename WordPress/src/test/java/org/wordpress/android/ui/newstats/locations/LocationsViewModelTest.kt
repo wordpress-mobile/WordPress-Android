@@ -141,7 +141,7 @@ class LocationsViewModelTest : BaseUnitTest() {
         whenever(statsRepository.fetchRegionViews(any(), any()))
             .thenReturn(
                 RegionViewsResult.Error(
-                    R.string.stats_feature_gate_message,
+                    R.string.stats_error_not_available,
                     isPlanGated = true
                 )
             )
@@ -165,7 +165,7 @@ class LocationsViewModelTest : BaseUnitTest() {
         whenever(statsRepository.fetchCityViews(any(), any()))
             .thenReturn(
                 CityViewsResult.Error(
-                    R.string.stats_feature_gate_message,
+                    R.string.stats_error_not_available,
                     isPlanGated = true
                 )
             )

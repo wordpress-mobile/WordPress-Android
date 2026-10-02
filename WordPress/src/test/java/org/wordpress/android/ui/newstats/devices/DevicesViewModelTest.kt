@@ -142,7 +142,7 @@ class DevicesViewModelTest : BaseUnitTest() {
             statsRepository.fetchDevicesScreensize(any(), any())
         ).thenReturn(
             DevicesResult.Error(
-                R.string.stats_feature_gate_message,
+                R.string.stats_error_not_available,
                 isPlanGated = true
             )
         )

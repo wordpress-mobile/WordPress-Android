@@ -951,6 +951,7 @@ class StatsDataSourceImpl @Inject constructor(
         return errorFactory(errorType)
     }
 
+    @Suppress("LongMethod")
     private fun classifyError(
         methodName: String,
         result: WpRequestResult<*>
