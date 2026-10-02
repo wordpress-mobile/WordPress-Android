@@ -960,6 +960,8 @@ class StatsDataSourceImpl @Inject constructor(
             val errorType = when {
                 isStatsUnavailableForSite(result.response) ->
                     StatsErrorType.NOT_AVAILABLE
+                isStatsGatedByPlan(result.response) ->
+                    StatsErrorType.PLAN_GATED
                 statusCode == HTTP_FORBIDDEN ||
                     statusCode == HTTP_UNAUTHORIZED ->
                     StatsErrorType.AUTH_ERROR
@@ -995,12 +997,12 @@ class StatsDataSourceImpl @Inject constructor(
                 "${result.statusCode}" to StatsErrorType.API_ERROR
         }
         is WpRequestResult.UnknownError<*> -> {
-            val errorType = if (
-                isStatsUnavailableForSite(result.response)
-            ) {
-                StatsErrorType.NOT_AVAILABLE
-            } else {
-                StatsErrorType.UNKNOWN
+            val errorType = when {
+                isStatsUnavailableForSite(result.response) ->
+                    StatsErrorType.NOT_AVAILABLE
+                isStatsGatedByPlan(result.response) ->
+                    StatsErrorType.PLAN_GATED
+                else -> StatsErrorType.UNKNOWN
             }
             "StatsDataSourceImpl: $methodName UnknownError " +
                 "(status=${result.statusCode}) - " +

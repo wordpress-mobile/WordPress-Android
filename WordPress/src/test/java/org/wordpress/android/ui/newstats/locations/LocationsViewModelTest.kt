@@ -135,6 +135,54 @@ class LocationsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when regions are plan gated, then isPlanGated is true`() = test {
+        whenever(statsRepository.fetchCountryViews(any(), any()))
+            .thenReturn(createSuccessResult())
+        whenever(statsRepository.fetchRegionViews(any(), any()))
+            .thenReturn(
+                RegionViewsResult.Error(
+                    R.string.stats_feature_gate_message,
+                    isPlanGated = true
+                )
+            )
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onLocationTypeChanged(LocationType.REGIONS)
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertThat(state).isInstanceOf(LocationsCardUiState.Error::class.java)
+        assertThat((state as LocationsCardUiState.Error).isPlanGated).isTrue()
+        assertThat(state.isAuthError).isFalse()
+    }
+
+    @Test
+    fun `when cities are plan gated, then isPlanGated is true`() = test {
+        whenever(statsRepository.fetchCountryViews(any(), any()))
+            .thenReturn(createSuccessResult())
+        whenever(statsRepository.fetchCityViews(any(), any()))
+            .thenReturn(
+                CityViewsResult.Error(
+                    R.string.stats_feature_gate_message,
+                    isPlanGated = true
+                )
+            )
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onLocationTypeChanged(LocationType.CITIES)
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertThat(state).isInstanceOf(LocationsCardUiState.Error::class.java)
+        assertThat((state as LocationsCardUiState.Error).isPlanGated).isTrue()
+        assertThat(state.isAuthError).isFalse()
+    }
+
+    @Test
     fun `when auth error on cities, then isAuthError is true`() = test {
         whenever(statsRepository.fetchCountryViews(any(), any()))
             .thenReturn(createSuccessResult())

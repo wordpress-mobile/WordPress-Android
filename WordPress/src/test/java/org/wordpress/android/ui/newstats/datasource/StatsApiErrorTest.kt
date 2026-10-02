@@ -52,4 +52,24 @@ class StatsApiErrorTest {
     fun `given null body, when isStatsUnavailableForSite, then false is returned`() {
         assertThat(isStatsUnavailableForSite(null)).isFalse()
     }
+
+    @Test
+    fun `given unauthorized body, when isStatsGatedByPlan, then true is returned`() {
+        val response =
+            """{"error":"unauthorized","message":"The plan for this site does not allow fetching Device stats"}"""
+
+        assertThat(isStatsGatedByPlan(response)).isTrue()
+    }
+
+    @Test
+    fun `given a different error code, when isStatsGatedByPlan, then false is returned`() {
+        val response = """{"error":"invalid_blog","message":"nope"}"""
+
+        assertThat(isStatsGatedByPlan(response)).isFalse()
+    }
+
+    @Test
+    fun `given null body, when isStatsGatedByPlan, then false is returned`() {
+        assertThat(isStatsGatedByPlan(null)).isFalse()
+    }
 }

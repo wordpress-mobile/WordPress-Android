@@ -12,5 +12,6 @@ enum class StatsErrorType(@StringRes val messageResId: Int) {
     PARSING_ERROR(R.string.stats_error_parsing),
     API_ERROR(R.string.stats_error_api),
     NOT_AVAILABLE(R.string.stats_error_not_available),
+    PLAN_GATED(R.string.stats_feature_gate_message),
     UNKNOWN(R.string.stats_error_unknown)
 }
