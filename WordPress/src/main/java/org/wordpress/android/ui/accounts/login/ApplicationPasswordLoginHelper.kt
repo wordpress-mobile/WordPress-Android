@@ -24,9 +24,13 @@ import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.crashlogging.sendReportWithTag
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
+import rs.wordpress.api.kotlin.VerifyIssuedApplicationPasswordResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.AutoDiscoveryAttemptFailure
 import uniffi.wp_api.DiscoveredAuthenticationMechanism
+import uniffi.wp_api.ParseUrlException
+import uniffi.wp_api.ParsedUrl
+import uniffi.wp_api.WpApiApplicationPasswordDetails
 import uniffi.wp_api.applicationPasswordsUrl
 import uniffi.wp_api.localizedDescription
 import okhttp3.HttpUrl
@@ -54,6 +58,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     private val crashLogging: CrashLogging,
     private val wpApiClientProvider: WpApiClientProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val issuedPasswordVerifier: IssuedPasswordVerifier,
 ) {
     private var processedAppPasswordData: String? = null
 
@@ -213,6 +218,10 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         // the site with valid params instead of the original, possibly-incomplete, urlLogin.
         data class SiteNotFound(val urlLogin: UriLogin) : StoreCredentialsResult()
         object BadData : StoreCredentialsResult()
+
+        // The site's server does not pass the Authorization header to WordPress, so the password
+        // cannot work. Nothing is stored.
+        object AuthorizationHeaderBlocked : StoreCredentialsResult()
     }
 
     @Suppress("ComplexCondition")
@@ -243,6 +252,10 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         }
 
         return withContext(bgDispatcher) {
+            if (isAuthorizationHeaderBlocked(effectiveUrlLogin, creationSource)) {
+                return@withContext StoreCredentialsResult.AuthorizationHeaderBlocked
+            }
+
             val normalizedUrl = UrlUtils.normalizeUrl(effectiveUrlLogin.siteUrl)
             val sites = siteStore.sites
             val site = findSiteByUrl(normalizedUrl, sites)
@@ -270,6 +283,43 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 logSiteNotFound(effectiveUrlLogin.siteUrl, normalizedUrl, sites)
                 StoreCredentialsResult.SiteNotFound(effectiveUrlLogin)
             }
+        }
+    }
+
+    /**
+     * Both callers pass a password the site issued moments ago, which is the only case where the
+     * library's check is meaningful: a revoked or wrong password gets the same response. Any
+     * failure other than a blocked header is logged and ignored, so the check never adds a new way
+     * for the login to fail.
+     */
+    private suspend fun isAuthorizationHeaderBlocked(urlLogin: UriLogin, creationSource: String): Boolean {
+        val result = issuedPasswordVerifier.verify(
+            wpLoginClient = wpLoginClient,
+            apiRootUrl = urlLogin.apiRootUrl.orEmpty(),
+            credentials = WpApiApplicationPasswordDetails(
+                siteUrl = urlLogin.siteUrl.orEmpty(),
+                userLogin = urlLogin.user.orEmpty(),
+                password = urlLogin.password.orEmpty(),
+            ),
+        )
+        return when (result) {
+            is VerifyIssuedApplicationPasswordResult.Blocked -> {
+                appLogWrapper.e(
+                    AppLog.T.API,
+                    "A_P: ${result.failure.hostname} does not pass the Authorization header to WordPress"
+                )
+                trackStoringFailed(urlLogin.siteUrl, AUTHORIZATION_HEADER_BLOCKED, creationSource)
+                true
+            }
+            is VerifyIssuedApplicationPasswordResult.Other -> {
+                appLogWrapper.e(
+                    AppLog.T.API,
+                    "A_P: Could not verify the issued application password for ${urlLogin.siteUrl}. " +
+                        "Continuing with the login."
+                )
+                false
+            }
+            is VerifyIssuedApplicationPasswordResult.Verified, null -> false
         }
     }
 
@@ -519,9 +569,30 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         }
     }
 
+    /**
+     * Calls [WpLoginClient.verifyIssuedApplicationPassword]. Wrapped because parsing the API root
+     * into a [ParsedUrl] is a native call, which the helper's plain-JUnit tests can't make.
+     */
+    class IssuedPasswordVerifier @Inject constructor() {
+        /** `null` when [apiRootUrl] can't be parsed, so the check didn't run. */
+        suspend fun verify(
+            wpLoginClient: WpLoginClient,
+            apiRootUrl: String,
+            credentials: WpApiApplicationPasswordDetails,
+        ): VerifyIssuedApplicationPasswordResult? {
+            val parsedApiRootUrl = try {
+                ParsedUrl.parse(apiRootUrl)
+            } catch (_: ParseUrlException) {
+                return null
+            }
+            return wpLoginClient.verifyIssuedApplicationPassword(parsedApiRootUrl, credentials)
+        }
+    }
+
     companion object {
         private const val JETPACK_SUCCESS_URL = "jetpack://app-pass-authorize"
         private const val WORDPRESS_SUCCESS_URL = "wordpress://app-pass-authorize"
+        const val AUTHORIZATION_HEADER_BLOCKED = "authorization_header_blocked"
     }
 
     data class UriLogin(
