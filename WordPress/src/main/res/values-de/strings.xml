@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-09-20 20:49:09+0000
+Translation-Revision-Date: 2026-09-23 21:43:39+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: de
@@ -52,7 +52,7 @@ Language: de
     <string name="stats_utm_medium">Medium</string>
     <string name="stats_utm_source">Quelle</string>
     <string name="stats_utm_campaign_source_medium">Kampagne / Quelle / Medium</string>
-    <string name="stats_utm_source_medium">Quelle / Medium</string>
+    <string name="stats_utm_source_medium">Quelle/Medium</string>
     <string name="stats_utm_title">UTM</string>
     <string name="stats_error_not_authenticated">Nicht authentifiziert</string>
     <string name="stats_collapse_group">Einklappen</string>
@@ -2503,7 +2503,7 @@ Language: de
     <string name="stats_select_next_period_description">Nächsten Zeitraum auswählen</string>
     <string name="stats_select_previous_period_description">Vorherigen Zeitraum auswählen</string>
     <string name="stats_most_popular_percent_views">%1$s der Aufrufe</string>
-    <string name="stats_insights_popular">Beliebteste Zeit</string>
+    <string name="stats_insights_popular">Beliebtester Zeitraum</string>
     <string name="stats_traffic_change">%1$s (%2$s)</string>
     <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">Vorschau der Website anzeigen</string>
@@ -3580,7 +3580,7 @@ Language: de
     <string name="push_auth_expired">Die Anfrage ist nicht mehr gültig. Melde dich bei WordPress.com an, um es erneut zu versuchen.</string>
     <string name="ignore">Ignorieren</string>
     <string name="stats_insights_best_ever">Bisher bestes Aufrufergebnis</string>
-    <string name="stats_insights_most_popular_time">Beliebteste Uhrzeit</string>
+    <string name="stats_insights_most_popular_time">Beliebtester Zeitraum</string>
     <string name="stats_insights_most_popular_day">Beliebtester Tag</string>
     <string name="stats_insights_today">Heutige Statistiken</string>
     <string name="stats_insights_all_time">Beiträge, Aufrufe und Besucher für den gesamten Zeitraum</string>
