@@ -10,7 +10,6 @@ Language: sr_RS
     <string name="unified_support_attachment_match_score">%1$d%% подударања</string>
     <string name="support_screen_unified_support_title">Потражи помоћ</string>
     <string name="support_screen_unified_support_description">Добијте одговоре од нашег тима за подршку, било када</string>
-    <string name="unified_support_status_bot">Oddie бот</string>
     <string name="unified_support_message_input_placeholder">Упишите поруку…</string>
     <string name="page_rs_copy_url">Умножи URL</string>
     <string name="unified_support_conversations_title">Потражи помоћ</string>
@@ -94,7 +93,6 @@ Language: sr_RS
     <string name="stats_new_stats_suggestion_message">Направили смо потпуно нову статистику. Желите ли да је испробате? Увек се можете вратити на стару из изборника статистике.</string>
     <string name="stats_new_stats_suggestion_title">Нова статистика</string>
     <string name="gutenberg_kit_announcement_maybe_later">Можда касније</string>
-    <string name="gutenberg_kit_announcement_body_deadline">До краја јуна 2026. постаће подразумевани уређивач за све. %1$s</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Прво пређите на уређивач блокова да бисте испробали нови уређивач.</string>
     <string name="gutenberg_kit_announcement_title">Стиже бољи уређивач блокова</string>
     <string name="gutenberg_kit_announcement_body_intro">Уређивач блокова нове генерације је спреман и доноси још нових могућности.</string>
@@ -241,7 +239,6 @@ Language: sr_RS
     <string name="stats_select_date_range">Изабери опсег датума</string>
     <string name="stats_period_selector_content_description">Изабери период статистике</string>
     <string name="stats_period_last_12_months">Последњих 12 месеци</string>
-    <string name="stats_period_last_6_months">Последњих 6 месеци</string>
     <string name="stats_insights_management_title">Управљајте увидима да бисте видели само најбитнију статистику</string>
     <string name="stats_period_custom">Произвољно</string>
     <string name="post_rs_error_delete">Брисање чланка није успело</string>
@@ -256,8 +253,6 @@ Language: sr_RS
     <string name="post_rs_confirm_trash_message">Да ли сигурно желите да преместите овај чланак на отпад?</string>
     <string name="stats_timeframe_hours">Сати</string>
     <string name="post_rs_failed_to_load">Учитавање чланка није успело</string>
-    <string name="experimental_rs_pages_list_description">Прикажи списак страница у савременијем сучељу за WordPress.com и самосталне сајтове са лозинкама апликације</string>
-    <string name="experimental_rs_pages_list">Нови списак страница</string>
     <string name="stats_error_parsing">Дошло је до проблема при учитавању података. Покушајте поново</string>
     <string name="stats_error_admin_url_unavailable">Није могуће отворити WP Admin за овај сајт</string>
     <string name="stats_error_network">Грешка мреже. Проверите везу и покушајте поново</string>
@@ -318,8 +313,6 @@ Language: sr_RS
     <string name="he_support_conversation_closed_message">Овај разговор је затворен. Више не можете да одговорите на њега.</string>
     <string name="he_support_video_playback_error_title">Није могуће пустити видео</string>
     <string name="he_support_status_solved">Решено</string>
-    <string name="he_support_status_waiting_for_user">Чека се корисник</string>
-    <string name="he_support_status_waiting_for_support">Чека се подршка</string>
     <string name="he_support_select_attachments">Изабери прилоге</string>
     <string name="he_support_download_attachment">Преузми прилог</string>
     <string name="he_support_include_logs_description">Укључивање дневника може помоћи нашем тиму да истражи проблеме. Дневници могу да садрже недавне активности у апликацији.</string>
@@ -497,7 +490,6 @@ Language: sr_RS
     <string name="nickname">Надимак</string>
     <string name="name">Име</string>
     <string name="users">Корисници</string>
-    <string name="default_web_client_id">placeholder</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Укључи/искључи пречицу %s</string>
     <string name="personalization_screen_card_accessibility_label">Укључи/искључи картицу %s</string>
     <string name="user_avatar_content_description">Аватар корисника %s</string>
@@ -760,13 +752,8 @@ Language: sr_RS
     <string name="barcode_scanning_alert_dialog_rationale_message">За скенирање бар-кôда потребна је дозвола за камеру</string>
     <string name="barcode_scanning_alert_dialog_title">Одобри дозволу за камеру</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Блокови угнежђени дубље од %d нивоа можда се неће исправно приказати у мобилном уређивачу.</string>
-    <string name="jp_migration_done_no_sites_message">Време је да наставите своје Вордпрес путовање у апликацији Jetpack.</string>
-    <string name="jp_migration_lets_go_button">Идемо</string>
     <string name="domain_management_clear_search">Очисти претрагу</string>
     <string name="media_encoder_quality_very_high">Веома висок</string>
-    <string name="notification_security_key_needed">Доставите свој безбедносни кључ да бисте наставили.</string>
-    <string name="login_error_security_key">Дошло је до проблема при пријави безбедносним кључем</string>
-    <string name="login_text_security_key">Користи безбедносни кључ</string>
     <string name="purchase_domain_screen_error_title">Грешка</string>
     <string name="purchase_domain_screen_error_button_title">У реду</string>
     <string name="domain_management_site_domains_button">Сви</string>
@@ -946,22 +933,16 @@ Language: sr_RS
     <string name="sharing_twitter_deprecation_notice_find_out_more">Сазнајте више</string>
     <string name="sharing_twitter_deprecation_notice_description">Самостално дељење на Twitter више није доступно због Twitter-ових измена услова и цена.</string>
     <string name="sharing_twitter_deprecation_notice_title">Самостално дељење на Twitter више није доступно</string>
-    <string name="jp_migration_notifications_allow_title">Дозволите обавештења да бисте пратили свој сајт</string>
-    <string name="wp_jp_static_poster_message">Апликација Jetpack има све могућности Вордпресове апликације, а сада и искључиви приступ статистици, читачу, обавештењима и још много тога.</string>
-    <string name="wp_jp_static_poster_title_plural">Користите Вордпрес уз %s у апликацији\u00A0Jetpack.</string>
-    <string name="wp_jp_static_poster_title">Користите Вордпрес уз %s у апликацији\u00A0Jetpack.</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Неименована боја. %s</string>
     <string name="dashboard_activity_card_title">Недавна активност</string>
     <string name="site_creation_search_domain_example_body">Као у горњем примеру, домен омогућава људима да пронађу и посете ваш сајт из свог веб прегледача.</string>
     <string name="site_creation_search_domain_example_title">ImeVasegSajta.com</string>
     <string name="site_creation_domain_header_subtitle">Потражите кратак домен који се лако памти како бисте људима помогли да пронађу и посете ваш сајт.</string>
     <string name="site_creation_domain_search_input_hint">Претражујте по кључним речима</string>
-    <string name="site_creation_domain_cost_sale">за прву годину</string>
     <string name="site_creation_error_cart_subtitle">Ваш веб сајт је успешно направљен, али смо наишли на проблем при припреми вашег произвољног домена за плаћање. Покушајте поново или се обратите подршци за помоћ.</string>
     <string name="new_site_creation_preview_caption_paid">Може проћи до 30 минута док ваш произвољни домен не почне да ради.</string>
     <string name="new_site_creation_preview_subtitle_paid">Послали смо вам рачун е-поштом. %s</string>
     <string name="notifications_disabled_permission_dialog">Обавештења апликације су онемогућена. Додирните овде да бисте их омогућили.</string>
-    <string name="jp_migration_done_delete_wp_message">Препоручујемо да &lt;b&gt;уклоните Вордпресову апликацију&lt;/b&gt; са уређаја како бисте избегли сукобе података.</string>
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Уклони блокове</string>
     <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Приватност и оцена</string>
     <string name="gutenberg_native_manual" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ручно</string>
@@ -1004,11 +985,8 @@ Language: sr_RS
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Овај сајт</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s користи %2$s, што још не подржава све могућности апликације. Поставите %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s користи %2$s, што још не подржава све могућности апликације. Поставите %3$s.</string>
-    <string name="wp_jp_static_poster_footnote">Прелазак је бесплатан и траје само минут.</string>
     <string name="my_site_header_content">Садржај</string>
     <string name="jetpack_plugin_install_remote_plugin_done_button">Подеси</string>
-    <string name="wp_jp_static_poster_button_primary">Пређи на апликацију Jetpack</string>
-    <string name="wp_jp_static_poster_button_secondary">Сазнајте више на Jetpack.com</string>
     <string name="my_site_btn_wp_admin">WP Admin</string>
     <string name="my_site_header_traffic">Саобраћај</string>
     <string name="my_site_header_manage">Управљање</string>
@@ -1025,10 +1003,7 @@ Language: sr_RS
     <string name="blaze_promotional_subtitle_1">Промовишите било који чланак или страницу за само неколико минута, за само неколико долара дневно.</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="site_creation_domain_tag_unavailable">Овај домен је већ регистрован</string>
-    <string name="site_creation_domain_tag_sale">Попуст</string>
     <string name="site_creation_domain_tag_best_alternative">Најбоља алтернатива</string>
-    <string name="support_faq_caption">Погледајте наша честа питања за одговоре на уобичајена питања која можда имате.</string>
-    <string name="support_faq_title">Хвала што сте прешли на апликацију Jetpack!</string>
     <string name="logs_button">Дневници</string>
     <string name="tickets">Захтеви</string>
     <string name="free">Бесплатно</string>
@@ -1063,12 +1038,6 @@ Language: sr_RS
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Откључајте пун потенцијал свог сајта. Добијте статистику, обавештења и још много тога уз Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Ваш сајт има додатак Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Мобилна апликација Jetpack је направљена да ради заједно са додатком Jetpack. Пређите сада да бисте добили приступ статистици, обавештењима, читачу и још много тога.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Добијајте обавештења о новим коментарима, свиђањима, прегледима и још много тога.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Пронађите и пратите своје омиљене сајтове и заједнице и делите свој садржај.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Пратите раст свог саобраћаја уз корисне увиде и свеобухватну статистику.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Статистика и увиди</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack вам омогућава да урадите више са својим Вордпрес сајтом. Прелазак је бесплатан и траје само минут.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Појачајте Вордпрес помоћу Jetpack-а</string>
     <string name="blogging_prompts_onboarding_content_note_content">Подстицајима и подсетницима за блоговање можете управљати у било ком тренутку у Мој сајт &gt; Подешавања &gt; Блоговање</string>
     <string name="blogging_reminders_prompt_subtitle">Обавештење ће садржати реч или кратку фразу за надахнуће</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Посетите &lt;b&gt;Подешавања сајта&lt;/b&gt; да бисте поново укључили</string>
@@ -1079,42 +1048,22 @@ Language: sr_RS
     <string name="site_settings_blogging_reminders_notification_title">Подсетници за блоговање</string>
     <string name="site_settings_blogging_prompts_title">Прикажи подстицаје</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Искључи подстицаје</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Уради ово касније</string>
     <string name="install_play_store_to_get_jetpack">Поставите Google Play продавницу да бисте добили апликацију Jetpack</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Пређи на Jetpack </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Статистика, читач, обавештења и друге могућности које покреће Jetpack уклоњене су из Вордпресове апликације.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack могућности су премештене.</string>
-    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s се премештају за %2$s</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s се премешта за %2$s</string>
-    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s се ускоро премештају</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s се ускоро премешта</string>
     <string name="stats_timeframe_last_seven_days">Последњих 7 дана</string>
     <string name="stats_timeframe_previous_seven_days">Претходних 7 дана</string>
-    <string name="wp_jetpack_powered_phase_2">Набави апликацију Jetpack</string>
     <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">Број посетилаца у последњих 7 дана је %1$s мањи него претходних 7 дана.</string>
     <string name="stats_insights_total_stats_seven_days_negative">%1$s мање него претходних 7 дана</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s више него претходних 7 дана</string>
     <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">Број посетилаца у последњих 7 дана је %1$s већи него претходних 7 дана.</string>
     <string name="stats_insights_views_and_visitors_seven_days_views_negative">Број прегледа у последњих 7 дана је %1$s мањи него претходних 7 дана.</string>
     <string name="stats_insights_views_and_visitors_seven_days_views_positive">Број прегледа у последњих 7 дана је %1$s већи него претходних 7 дана.</string>
-    <string name="weeks_quantity_other">%d недеља</string>
     <string name="my_site_blogging_prompt_card_view_answers">Погледај све одговоре</string>
-    <string name="weeks_quantity_one">1 недеља</string>
     <string name="my_site_blogging_prompt_card_attribution_day_one">Из &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Подсети ме касније</string>
-    <string name="jetpack_feature_card_content_phase_three">Статистика, читач, обавештења и друге могућности ускоро се премештају у мобилну апликацију Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Пређи на апликацију Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Сазнајте више на jetpack.com</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Статистика, читач, обавештења и друге могућности које покреће Jetpack ускоро ће бити уклоњене из Вордпресове апликације.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Статистика, читач, обавештења и друге могућности које покреће Jetpack биће уклоњене из Вордпресове апликације %s.</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Прелазак је бесплатан и траје само минут.</string>
     <string name="blogging_prompts_list_error_fetch_title">Упс</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Jetpack могућности се ускоро премештају.</string>
-    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Пређи на нову апликацију Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Ваша статистика се премешта у апликацију Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Обавештења се премештају у Jetpack</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Дошло је до грешке при учитавању подстицаја.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Читач се премешта у апликацију Jetpack</string>
     <string name="blogging_prompts_list_number_of_answers_other">Одговора: %d</string>
     <string name="blogging_prompts_list_number_of_answers_zero">0 одговора</string>
     <string name="blogging_prompts_list_no_prompts">Још нема подстицаја</string>
@@ -1138,39 +1087,11 @@ Language: sr_RS
     <string name="wp_jetpack_continue_without_jetpack">Настави без Jetpack-а</string>
     <string name="deep_linking_weblinks_alias_label">weblinks</string>
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Пређите на апликацију Jetpack да бисте наставили да добијате обавештења у стварном времену на свом уређају.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Пређите на апликацију Jetpack да бисте помоћу читача пронашли, пратили и означили да вам се свиђају сви ваши омиљени сајтови и чланци.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Пређите на апликацију Jetpack да бисте пратили раст саобраћаја свог сајта уз статистику и увиде.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Добијајте обавештења помоћу апликације Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Пратите било који сајт помоћу апликације Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Није могуће онемогућити отварање веза у Jetpack-у</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Добијте статистику помоћу нове апликације Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Није могуће омогућити отварање веза у Jetpack-у</string>
     <string name="preference_open_links_in_jetpack">Отварај везе у Jetpack-у</string>
-    <string name="jp_migration_network_error_message">Не можемо да пренесемо ваше податке и подешавања без мрежне везе.</string>
-    <string name="jp_migration_network_error_subtitle">Проверите да ли ваша мрежна веза ради и покушајте поново.</string>
-    <string name="jp_migration_network_error_title">Није могуће повезати се на интернет.</string>
-    <string name="jp_migration_generic_error_message">Обратите се подршци или покушајте поново касније.</string>
-    <string name="jp_migration_generic_error_subtitle">Жао нам је, али нешто није ишло по плану. Ваши подаци су безбедни, али тренутно не можемо да их пренесемо.</string>
-    <string name="jp_migration_try_again_button">Покушај поново</string>
-    <string name="jp_migration_finish_button">Заврши</string>
     <string name="jp_migration_generic_error_title">Ух, нешто није у реду..</string>
-    <string name="jp_migration_remove_wp_app_icon_content_description">Уклони иконицу Вордпресове апликације</string>
-    <string name="jp_migration_done_subtitle">Пренели смо све ваше податке и подешавања. Све је тамо где сте оставили.</string>
-    <string name="jp_migration_done_title">Хвала што сте прешли на Jetpack!</string>
-    <string name="jp_migration_notifications_disabled_in_wp_message">Искључићемо обавештења из Вордпресове апликације.</string>
-    <string name="jp_migration_notifications_subtitle">Добијаћете сва иста обавештења, али ће сада стизати из апликације Jetpack.</string>
     <string name="support_title">Подршка</string>
-    <string name="wordpress_help_center_button">Вордпресов центар за помоћ</string>
-    <string name="notification_disable_broadcast_permission_desc">Омогућава апликацији да онемогући Вордпресова обавештења.</string>
-    <string name="notification_disable_broadcast_permission_label">онемогућавање Вордпресових обавештења</string>
-    <string name="jp_migration_continue_button">Настави</string>
-    <string name="jp_migration_help_button">Потребна вам је помоћ?</string>
-    <string name="jp_migration_welcome_site_found_message">Пронашли смо ваш сајт. Наставите да бисте пренели све своје податке и самостално се пријавили у Jetpack.</string>
-    <string name="jp_migration_welcome_sites_found_message">Пронашли смо ваше сајтове. Наставите да бисте пренели све своје податке и самостално се пријавили у Jetpack.</string>
-    <string name="jp_migration_avatar_content_description">Ваша фотографија профила</string>
-    <string name="jp_migration_welcome_subtitle">Изгледа да прелазите са Вордпресове апликације.</string>
-    <string name="jp_migration_welcome_title">Добро дошли у Jetpack!</string>
     <string name="icon_desc">иконица</string>
     <string name="post_settings_page_attributes">Атрибути странице</string>
     <string name="post_settings_parent">Родитељска страница</string>
@@ -1206,7 +1127,6 @@ Language: sr_RS
     <string name="weekly_roundup_notification_text_views_only">Прошле недеље сте имали прегледа: %1$s.</string>
     <string name="weekly_roundup_notification_text_all">Прошле недеље сте имали прегледа: %1$s, свиђања: %2$s и коментара: %3$s.</string>
     <string name="stats_insights_like_guide_card">⭐️ Ваш најновији чланак %1$s добио је свиђања: %2$s.</string>
-    <string name="wp_jetpack_powered">Покреће Jetpack</string>
     <string name="qrcode_auth_flow_error_content_description">Слика која показује грешку</string>
     <string name="qrcode_auth_flow_content_description">Слика која показује да је скенирање кôда за пријаву у току</string>
     <string name="qrcode_auth_flow_dismiss">Одбаци</string>
@@ -1381,12 +1301,7 @@ Language: sr_RS
     <string name="my_site_dashboard_tab_title">Почетна</string>
     <string name="notification_channel_weekly_roundup_title">Недељни преглед</string>
     <string name="adding_cat">Додавање категорије</string>
-    <string name="login_select_email_client">Коју апликацију за е-пошту користите?</string>
-    <string name="login_error_xml_rpc_auth_error_communicating">Дошло је до проблема у комуникацији са сајтом. Враћен је HTTP кôд грешке 401.</string>
-    <string name="login_error_xml_rpc_cannot_read_site_auth_required">Изгледа да су XML-RPC позиви блокирани на овом сајту (кôд грешке 401). Ако покушај пријаве не успе, додирните иконицу помоћи да бисте видели честа питања.</string>
-    <string name="login_error_xml_rpc_cannot_read_site">Није могуће прочитати Вордпрес сајт на том URL-у. Додирните иконицу помоћи да бисте видели честа питања.</string>
     <string name="my_site_menu_tab_title">Изборник</string>
-    <string name="login_error_xml_rpc_services_disabled">XML-RPC услуге су онемогућене на овом сајту.</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Ваша претрага садржи знакове који нису подржани у WordPress.com доменима. Дозвољени су следећи знакови: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Проверите интернет везу и освежите страницу.</string>
     <string name="my_site_todays_stat_card_title">Данашња статистика</string>
@@ -1628,11 +1543,6 @@ Language: sr_RS
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Унесите акредитиве сервера&lt;/a&gt; да бисте исправили претње.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Унесите акредитиве сервера&lt;/a&gt; да бисте исправили претњу.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Двапут додирните да додате везу.</string>
-    <string name="login_empty_view_see_instructions">Погледај упутства</string>
-    <string name="login_empty_view_try_another_account">Покушајте са другим налогом</string>
-    <string name="login_no_jetpack_sites_error_message">Ако већ имате сајт, мораћете да поставите бесплатни додатак Jetpack и повежете га са својим WordPress.com налогом.</string>
-    <string name="login_empty_view_avatar_content_description">Ваша фотографија профила</string>
-    <string name="login_not_a_jetpack_site">Да бисте користили ову апликацију за %1$s, потребно је да додатак Jetpack буде постављен и повезан са вашим WordPress.com налогом.</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Rel везе</string>
     <string name="gutenberg_native_no_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Нема описа</string>
     <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Подешавања ширине</string>
@@ -1668,7 +1578,6 @@ Language: sr_RS
     <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Више</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Укратко опишите везу да бисте помогли кориснику читача екрана</string>
     <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Додај блокове</string>
-    <string name="login_no_jetpack_sites">Нису пронађени Jetpack сајтови</string>
     <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Шта је алтернативни текст?</string>
     <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Преобрази %s у</string>
     <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Преобрази блок…</string>
@@ -1715,7 +1624,6 @@ Language: sr_RS
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Двапут додирните да отворите лист радњи за уређивање, замену или уклањање слике</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="new_site_creation_search_domain_input_hint">Упишите име свог сајта</string>
-    <string name="magic_link_not_meaning_to_create_account">Нисте хтели да направите нови налог? Вратите се да поново унесете адресу е-поште.</string>
     <string name="invite_links_disable_dialog_message">Када се ова веза позивнице онемогући, нико неће моћи да је користи да би се придружио вашем тиму. Да ли сте сигурни?</string>
     <string name="invite_links_disable_dialog_title">Онемогући везу позивнице</string>
     <string name="invite_links_bad_format_response">Примљен је неисправан одговор</string>
@@ -1980,9 +1888,7 @@ Language: sr_RS
     <string name="reader_discover_empty_title">Добродошли!</string>
     <string name="reader_discover_no_posts_title">Нема недавних чланака</string>
     <string name="scan">Скенирај</string>
-    <string name="login_find_your_connected_email">Пронађите повезану е-пошту</string>
     <string name="reader_discover_no_posts_follow_subtitle">Покушајте да пратите више ознака да бисте проширили претрагу</string>
-    <string name="continue_site_credentials">Настави са акредитивима продавнице</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Отворен је изборник блокова који се може померати. Изаберите блок.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Изборник блокова који се може померати је затворен.</string>
     <string name="hpp_choose_button">Изабери</string>
@@ -2021,8 +1927,6 @@ Language: sr_RS
     <string name="mlp_selected_description">Изабрано: %s</string>
     <string name="permission_microphone">Микрофон</string>
     <string name="comment_unable_to_show_error">Није могуће приказати овај коментар</string>
-    <string name="login_get_link_by_email">Добијте везу за пријаву е-поштом</string>
-    <string name="email_not_registered_wpcom">Хм, не можемо да пронађемо WordPress.com налог повезан са овом адресом е-поште.</string>
     <string name="media_browse_for_items">Прегледај ставке</string>
     <string name="reader_menu_report_post">Пријави овај чланак</string>
     <string name="error_media_xmlrcp_server_error">Дошло је до интерне грешке сервера</string>
@@ -2052,31 +1956,12 @@ Language: sr_RS
     <string name="gutenberg_native_replace_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Замени видео запис</string>
     <string name="gutenberg_native_replace_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Замени слику или видео запис</string>
     <string name="gutenberg_native_convert_to_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Претвори у везу</string>
-    <string name="continue_with_google_terms_of_service_text">Ако наставите са Google-ом, а још немате WordPress.com налог, правите налог и прихватате наше %1$sУслове коришћења%2$s.</string>
     <string name="enter_your_site_address">Унесите адресу свог постојећег сајта</string>
     <string name="gutenberg_native_choose_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Изабери видео запис</string>
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Изабери слику</string>
     <string name="gutenberg_native_choose_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Изабери слику или видео запис</string>
-    <string name="signup_confirmation_title">Потврда регистрације</string>
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Блок је уклоњен</string>
-    <string name="continue_terms_of_service_text">Настављањем прихватате наше %1$sУслове коришћења%2$s.</string>
-    <string name="signup_confirmation_message">Користићемо ову адресу е-поште за прављење вашег новог WordPress.com налога.</string>
-    <string name="signup_magic_link_message">Послали смо вам е-поштом везу за регистрацију за прављење новог WordPress.com налога. Проверите е-пошту на овом уређају и додирните везу у е-поруци коју добијете од WordPress.com.</string>
-    <string name="enter_account_info_for_site">Унесите податке о налогу за %1$s.</string>
-    <string name="login_or">или</string>
-    <string name="continue_google_button_suffix">Настави са Google-ом</string>
-    <string name="login_done">Готово</string>
-    <string name="login_find_your_site_adress">Пронађите адресу свог сајта</string>
-    <string name="login_magic_links_sent_label">Проверите е-пошту на овом уређају и додирните везу у е-поруци коју сте добили од WordPress.com.</string>
-    <string name="login_magic_links_label">Послаћемо вам е-поштом везу која ће вас одмах пријавити, без потребе за лозинком.</string>
-    <string name="magic_link_not_seeing_email_message">Не видите е-поруку? Проверите фасциклу са непожељним порукама.</string>
-    <string name="enter_email_to_continue_wordpress_com">Унесите своју адресу е-поште да бисте се пријавили или направили WordPress.com налог.</string>
-    <string name="send_link_by_email">Пошаљи везу е-поштом</string>
-    <string name="check_email">Провери е-пошту</string>
     <string name="get_started" a8c-src-lib="module:login">Започни</string>
-    <string name="create_account">Направи налог</string>
-    <string name="or_type_your_password">Или упишите своју лозинку</string>
-    <string name="reset_your_password">Поништите своју лозинку</string>
     <string name="reader_error_request_failed_title">Дошло је до проблема при обради захтева. Покушајте поново касније.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Премештање овог чланка на отпад одбациће и локалне измене, да ли сигурно желите да наставите?</string>
     <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Могућности блока %s</string>
@@ -2298,10 +2183,7 @@ Language: sr_RS
     <string name="gutenberg_native_replace_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Замени слику</string>
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Натпис галерије. %s</string>
     <string name="create_post_page_fab_tooltip">Направи чланак или страницу</string>
-    <string name="post_signup_interstitial_subtitle">Шта год желите да направите или поделите, помоћи ћемо вам да то урадите управо овде.</string>
     <string name="content_description_person_building_website">Особа која прави веб сајт</string>
-    <string name="post_signup_interstitial_not_right_now">Не сада</string>
-    <string name="post_signup_interstitial_title">Добро дошли у Вордпрес</string>
     <string name="stock_media_picker_list_content_description">Библиотека фотографија</string>
     <string name="photo_picker_image_thumbnail_unselected">Слика није изабрана</string>
     <string name="my_site_bottom_sheet_add_post">Чланак блога</string>
@@ -2315,13 +2197,7 @@ Language: sr_RS
     <string name="dialog_confirm_scheduled_post_sync_yes">Усклади сада</string>
     <string name="new_site_creation_unavailable_domain">Домен није доступан</string>
     <string name="negative_prefix">-%s</string>
-    <string name="login_discovery_error_ssl">Нисмо могли да приступимо вашем сајту због проблема са &lt;b&gt;SSL сертификатом&lt;/b&gt;. Мораћете да се обратите свом смештају да бисте ово решили.</string>
-    <string name="login_discovery_error_generic">Нисмо могли да приступимо вашем сајту. Мораћете да се обратите свом смештају да бисте ово решили.</string>
-    <string name="login_discovery_error_http_auth">Нисмо могли да приступимо вашем сајту јер захтева &lt;b&gt;HTTP потврду идентитета&lt;/b&gt;. Мораћете да се обратите свом смештају да бисте ово решили.</string>
     <string name="my_site_bottom_sheet_add_page">Страница сајта</string>
-    <string name="login_discovery_error_xmlrpc">Нисмо могли да приступимо &lt;b&gt;XMLRPC датотеци&lt;/b&gt; на вашем сајту. Мораћете да се обратите свом смештају да бисте ово решили.</string>
-    <string name="login_site_credentials_magic_link_label">Скоро готово! Треба само да потврдимо вашу адресу е-поште повезану са Jetpack-ом &lt;b&gt;%1$s&lt;/b&gt;</string>
-    <string name="enter_credentials_for_site">Пријавите се помоћу акредитива сајта %1$s</string>
     <string name="reader_save_for_later_display_name">Сачувано</string>
     <string name="reader_discover_display_name">Откриј</string>
     <string name="reader_my_likes_display_name">Свиђања</string>
@@ -2478,7 +2354,6 @@ Language: sr_RS
     <string name="post_settings_add_to_calendar">Додај у календар</string>
     <string name="post_settings_notification">Обавештење</string>
     <string name="post_settings_time_and_date">Датум и време</string>
-    <string name="login_invalid_site_url">Унесите потпуну адресу веб сајта, као што је example.com.</string>
     <string name="stats_post_views_label">Прегледи</string>
     <string name="stats_post_label">Чланак</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -2486,7 +2361,6 @@ Language: sr_RS
     <string name="stats_expand_content_description">Рашири</string>
     <string name="site_settings_editor">Уређивач</string>
     <string name="stats_graph_updated">Графикон је ажуриран.</string>
-    <string name="enter_email_for_site">Пријавите се помоћу WordPress.com да бисте се повезали са %1$s</string>
     <string name="stats_overview_content_description">%1$s %2$s за период: %3$s, промена у односу на претходни период - %4$s</string>
     <string name="stats_loading_card">Учитавање података изабране картице</string>
     <string name="stats_item_collapsed">Ставка је скупљена</string>
@@ -2585,8 +2459,6 @@ Language: sr_RS
     <string name="posts_draft_empty">Немате нацрте чланака</string>
     <string name="button_move_to_draft">Премести у нацрт</string>
     <string name="posts_trashed_empty">Немате чланке на отпаду</string>
-    <string name="error_user_username_instead_of_email">Пријавите се помоћу свог WordPress.com корисничког имена уместо адресе е-поште.</string>
-    <string name="notification_wpcom_username_needed">Пријавите се својим корисничким именом и лозинком.</string>
     <string name="stats_insights_total_comments">Укупно коментара</string>
     <string name="stats_insights_average_words">Просечно речи по чланку</string>
     <string name="stats_insights_total_words">Укупно речи</string>
@@ -2595,7 +2467,6 @@ Language: sr_RS
     <string name="stats_insights_posts">Чланци</string>
     <string name="stats_insights_year">Година</string>
     <string name="stats_insights_this_year_site_stats">Ове године</string>
-    <string name="no_site_error">Сајт на овој адреси није Вордпрес сајт. Да бисмо се повезали са њим, сајт мора да користи Вордпрес.</string>
     <string name="stats_insights_average_comments">Просечно коментара по чланку</string>
     <string name="plugin_check_domain_credit_error">Провера доступних кредита за домене није успела</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Провера кредита за домене</string>
@@ -2730,7 +2601,6 @@ Language: sr_RS
     <string name="history_detail_title">Преправка</string>
     <string name="media_space_used">%1$s искоришћено</string>
     <string name="history_load_dialog_button_positive">Учитај</string>
-    <string name="enter_wpcom_or_jetpack_site">Унесите WordPress.com сајт или самостални Вордпрес сајт повезан са Jetpack-ом</string>
     <string name="history_footer_post">Чланак је направљен %1$s у %2$s</string>
     <string name="history_footer_page">Страница је направљена %1$s у %2$s</string>
     <string name="history_loading_revision">Учитавање преправке</string>
@@ -2756,13 +2626,11 @@ Language: sr_RS
     <string name="pages_scheduled">Заказано</string>
     <string name="pages_drafts">Нацрти</string>
     <string name="pages_published">Објављено</string>
-    <string name="login_error_sms_throttled">Направили смо превише покушаја слања SMS кôда за потврду — направите паузу и затражите нови за минут.</string>
     <string name="pages_trashed">На отпаду</string>
     <string name="pages_view">Погледај</string>
     <string name="page_parent_changed">Родитељ странице је промењен</string>
     <string name="reader_no_followed_blogs_search_title">Нема блогова који одговарају вашој претрази</string>
     <string name="site_picker_remove_site_empty">Нема сајтова који одговарају вашој претрази</string>
-    <string name="login_error_email_not_found_v2">Не постоји WordPress.com налог који одговара овом Google налогу.</string>
     <string name="page_moved_to_scheduled">Страница је заказана</string>
     <string name="page_moved_to_published">Страница је објављена</string>
     <string name="top_level">Највиши ниво</string>
@@ -2779,7 +2647,6 @@ Language: sr_RS
     <string name="my_site_create_new_site_title">Немате ниједан сајт</string>
     <string name="reader_empty_subscribed_tags_subtitle">Додајте ознаке овде да бисте пронашли чланке о својим омиљеним темама</string>
     <string name="jetpack">Jetpack</string>
-    <string name="login_to_to_connect_jetpack">Пријавите се на WordPress.com налог који сте користили за повезивање Jetpack-а.</string>
     <string name="stats_jetpack_connection_faq">Jetpack честа питања</string>
     <string name="stats_jetpack_connection_setup_info">Да бисте користили статистику на свом Вордпрес сајту, мораћете да поставите додатак Jetpack.</string>
     <string name="reader_label_post_search_explainer">Шта бисте желели да пронађете?</string>
@@ -2831,13 +2698,7 @@ Language: sr_RS
     <string name="reader_empty_search_request_failed">Није могуће извршити претрагу</string>
     <string name="comment_read_source_post">Прочитајте изворни чланак</string>
     <string name="sites">Сајтови</string>
-    <string name="signup_magic_link_title">Чаробна веза је послата</string>
     <string name="site_address_login_title" a8c-src-lib="module:login">Пријава адресом сајта</string>
-    <string name="magic_link_login_title">Пријава чаробном везом</string>
-    <string name="magic_link_sent_login_title">Чаробна веза је послата</string>
-    <string name="email_address_login_title">Пријава адресом е-поште</string>
-    <string name="verification_2fa_screen_title">Потврда кôдом</string>
-    <string name="selfhosted_site_login_title">Акредитиви за пријаву</string>
     <string name="removed">Уклоњено</string>
     <string name="reader_save_for_later_title">Сачувани чланци</string>
     <string name="reader_empty_saved_posts_description">Додирните %s да бисте сачували чланак на свом списку.</string>
@@ -2938,7 +2799,6 @@ Language: sr_RS
     <string name="plugin_detail_logo_desc">логотип додатка</string>
     <string name="reader_cardview_post_play_video_desc">пусти истакнути видео</string>
     <string name="photo_picker_device_desc">изабери са уређаја</string>
-    <string name="signup_with_google_progress">Регистровање помоћу Google-а…</string>
     <string name="profile_picture">Слика профила корисника %s</string>
     <string name="jetpack_already_connected_toast">Већ сте повезани са Jetpack-ом</string>
     <string name="jetpack_connection_failed_with_reason">Повезивање са Jetpack-ом није успело: %s</string>
@@ -2946,7 +2806,6 @@ Language: sr_RS
     <string name="menu_save_as_draft">Сачувај као нацрт</string>
     <string name="menu_preview">Преглед</string>
     <string name="menu_visual_mode">Визуелни уређивач</string>
-    <string name="signup_epilogue_screen_title">Нови налог</string>
     <string name="comment_unapproved_talkback">Коментар није одобрен</string>
     <string name="comment_approved_talkback">Коментар је одобрен</string>
     <string name="comment_spam_talkback">Коментар је означен као непожељан</string>
@@ -3020,26 +2879,13 @@ Language: sr_RS
     <string name="username_changer_dismiss_button_positive">Одбаци</string>
     <string name="username_changer_action">Сачувај</string>
     <string name="content_description_add_avatar">Додај аватар</string>
-    <string name="google_error_timeout">Google-у је требало превише времена да одговори. Можда ћете морати да сачекате јачу интернет везу.</string>
     <string name="username_changer_error_none">Нема предложених корисничких имена за %1$s%2$s%3$s. Унесите још слова или бројева да бисте добили предлоге.</string>
     <string name="username_changer_error_generic">Дошло је до грешке при добијању предлога корисничких имена.</string>
     <string name="username_changer_header">Ваше тренутно корисничко име је %1$s%2$s%3$s. Уз мало изузетака, други ће видети само ваше приказано име, %4$s%5$s%6$s.</string>
     <string name="notification_site_creation_title_success">Сајт је направљен!</string>
-    <string name="signup_user_exists">Е-пошта већ постоји на WordPress.com.\nНаставља се са пријавом.</string>
     <string name="username_changer_hint">Куцајте за више предлога</string>
     <string name="username_changer_dismiss_message">Одбацити промену корисничког имена?</string>
-    <string name="signup_updating_account">Ажурирање налога…</string>
-    <string name="signup_magic_link_progress">Слање е-поруке</string>
-    <string name="signup_magic_link_error_button_positive">Покушај поново</string>
-    <string name="signup_magic_link_error_button_negative">Затвори</string>
-    <string name="signup_epilogue_hint_username">Корисничко име</string>
-    <string name="signup_epilogue_error_button_positive">Покушај поново</string>
-    <string name="signup_magic_link_error">Дошло је до проблема при слању е-поруке. Можете покушати поново сада или затворити и покушати касније.</string>
-    <string name="signup_epilogue_hint_password_detail">Увек се можете пријавити помоћу везе попут оне коју сте управо употребили, али можете подесити и лозинку ако желите.</string>
     <string name="signup_epilogue_error_generic">Дошло је до проблема при ажурирању налога. Можете покушати поново или вратити измене да бисте наставили.</string>
-    <string name="signup_epilogue_error_button_negative">Врати</string>
-    <string name="signup_epilogue_hint_display">Приказано име</string>
-    <string name="signup_epilogue_hint_password">Лозинка (необавезно)</string>
     <string name="plugins_empty_search_list">Нема резултата</string>
     <string name="plugin_needs_update">Потребно је ажурирање</string>
     <string name="plugin_caption_search">Претражи додатке</string>
@@ -3126,18 +2972,6 @@ Language: sr_RS
     <string name="plugin_inactive">Искључен</string>
     <string name="media_edit_link_hint">Отвори везу у новом прозору/језичку</string>
     <string name="media_edit_link_text">Веза до</string>
-    <string name="notification_login_failed">Дошло је до грешке.</string>
-    <string name="notification_2fa_needed">Доставите кôд за потврду идентитета да бисте наставили.</string>
-    <string name="notification_error_wrong_password">Још једном проверите лозинку да бисте наставили.</string>
-    <string name="notification_login_title_stopped">Пријављивање је заустављено</string>
-    <string name="notification_logging_in">Сачекајте док траје пријављивање.</string>
-    <string name="notification_login_title_in_progress">Пријављивање је у току…</string>
-    <string name="notification_logged_in">Додирните за наставак.</string>
-    <string name="notification_login_title_success">Пријављени сте!</string>
-    <string name="login_error_generic_start">Google пријава није могла да започне.</string>
-    <string name="login_empty_password">Унесите лозинку</string>
-    <string name="login_text_otp_another">Уместо тога, пошаљи ми други кôд поруком</string>
-    <string name="enter_verification_code_sms">Послали смо SMS поруку на број телефона који се завршава на %s. Унесите кôд за потврду из SMS-а.</string>
     <string name="image_size">Величина</string>
     <string name="uploading_subtitle_media_only_one">Преостала 1 датотека</string>
     <string name="uploading_subtitle_media_only">Преостало %1$d од %2$d датотека</string>
@@ -3154,15 +2988,10 @@ Language: sr_RS
     <string name="confirm_remove_media_image">Уклонити ову слику из чланка?</string>
     <string name="media_edit_customize_card_caption">Прилагоди</string>
     <string name="media_edit_file_details_card_caption">Појединости о датотеци</string>
-    <string name="login_error_generic">Дошло је до проблема при повезивању са Google налогом.</string>
-    <string name="login_error_suffix">\nМожда да покушате са другим налогом?</string>
     <string name="login_error_button">Затвори</string>
-    <string name="enter_wpcom_password_google">Да бисте наставили са овим Google налогом, унесите одговарајућу WordPress.com лозинку. Ово ће бити тражено само једном.</string>
     <string name="error_generic_network">Дошло је до грешке мреже. Проверите везу и покушајте поново.</string>
     <string name="post_settings_remove_featured_image">Уклони истакнуту слику</string>
     <string name="post_settings_choose_featured_image">Изабери истакнуту слику</string>
-    <string name="login_log_in_for_share_intent">Пријавите се на WordPress.com да бисте поделили садржај.</string>
-    <string name="enter_site_address_share_intent">Унесите адресу Вордпрес сајта на који желите да поделите садржај.</string>
     <string name="jetpack_disconnect_error_toast">Грешка при прекидању везе са сајтом</string>
     <string name="jetpack_disconnect_success_toast">Веза са сајтом је прекинута</string>
     <string name="jetpack_disconnect_confirm">Прекини везу</string>
@@ -3243,27 +3072,12 @@ Language: sr_RS
     <string name="post_queued">Чланак на чекању</string>
     <string name="connection_to_server_lost">Веза са сервером је изгубљена</string>
     <string name="uploading_post">Отпремање „%s“</string>
-    <string name="login_email_client_not_found">Није могуће открити вашу апликацију за е-пошту</string>
-    <string name="login_empty_2fa">Унесите кôд за потврду</string>
-    <string name="login_empty_username">Унесите корисничко име</string>
-    <string name="login_log_in_for_deeplink">Пријавите се на WordPress.com да бисте приступили чланку.</string>
-    <string name="login_error_while_adding_site">Грешка при додавању сајта. Кôд грешке: %s</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">Провера адресе сајта</string>
-    <string name="login_site_address_help_content">Адреса вашег сајта појављује се на траци на врху екрана када посетите сајт у Chrome-у.</string>
-    <string name="login_site_address_more_help">Потребна вам је додатна помоћ?</string>
-    <string name="login_site_address_help_title">Која је адреса мог сајта?</string>
     <string name="login_site_address" a8c-src-lib="module:login">Адреса сајта</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Унесите адресу Вордпрес сајта који желите да повежете.</string>
     <string name="login_already_logged_in_wpcom">Већ сте пријављени на WordPress.com</string>
-    <string name="enter_wpcom_password">Унесите своју WordPress.com лозинку.</string>
     <string name="login_continue" a8c-src-lib="module:login">Настави</string>
     <string name="connect_more">Повежи други сајт</string>
-    <string name="login_magic_link_email_requesting">Захтевање е-поруке за пријаву</string>
-    <string name="password_incorrect">Изгледа да је ова лозинка нетачна. Још једном проверите своје податке и покушајте поново.</string>
-    <string name="requesting_otp">Захтевање кôда за потврду путем SMS-а.</string>
-    <string name="login_text_otp">Уместо тога, пошаљи ми кôд поруком</string>
-    <string name="enter_verification_code">Скоро готово! Унесите кôд за потврду за WordPress.com из своје апликације за потврду идентитета.</string>
-    <string name="enter_email_wordpress_com">Пријавите се на WordPress.com помоћу адресе е-поште да бисте управљали свим својим Вордпрес сајтовима.</string>
     <string name="next">Следеће</string>
     <string name="me_profile_photo">Фотографија профила</string>
     <string name="error_media_parse_error">Неочекиван одговор са сервера</string>
@@ -3413,8 +3227,6 @@ Language: sr_RS
     <string name="error_unknown_post_type">Непознат облик чланка</string>
     <string name="submit_for_review">Пошаљи</string>
     <string name="title_subscriber">Претплатник</string>
-    <string name="duplicate_site_detected">Откривен је дупликат сајта.</string>
-    <string name="cannot_add_duplicate_site">Овај сајт већ постоји у апликацији, не можете да га додате.</string>
     <string name="already_logged_in_wpcom">Већ сте пријављени на WordPress.com налог, не можете да додате WordPress.com сајт везан за други налог.</string>
     <string name="error_media_load">Није могуће учитати медије</string>
     <string name="error_media_refresh_no_connection">За освежавање библиотеке потребна је веза</string>
@@ -3425,8 +3237,6 @@ Language: sr_RS
     <string name="media_generic_error">Дошло је до грешке са медијем</string>
     <string name="retry">Покушај поново</string>
     <string name="confirm">Потврди</string>
-    <string name="xmlrpc_endpoint_forbidden_error">Повезивање није успело. Добили смо грешку 403 при покушају приступа\n        XMLRPC крајњој тачки вашег сајта. Апликацији је то потребно за комуникацију са вашим сајтом. Обратите се свом смештају да бисте решили\n        овај проблем.</string>
-    <string name="xmlrpc_post_blocked_error">Повезивање није успело. Ваш смештај блокира POST захтеве, а апликацији су\n        они потребни за комуникацију са вашим сајтом. Обратите се свом смештају да бисте решили овај проблем.</string>
     <string name="pending_draft_one_generic">Не остављајте га на чекању! „%1$s“ чека да буде објављен.</string>
     <string name="pending_draft_one_month">Не остављајте га на чекању! „%1$s“ чека да буде објављен.</string>
     <string name="pending_draft_one_week_2">„%1$s“ је и даље нацрт. Не заборавите да га објавите!</string>
@@ -3509,8 +3319,6 @@ Language: sr_RS
     <string name="error_refreshing_gravatar">Грешка при поновном учитавању вашег Граватара</string>
     <string name="error_locating_image">Грешка при проналажењу опсечене слике</string>
     <string name="error_cropping_image">Грешка при опсецању слике</string>
-    <string name="checking_email">Провера е-поште</string>
-    <string name="magic_link_unavailable_error_message">Тренутно није доступно. Унесите своју лозинку</string>
     <string name="logging_in">Пријављивање</string>
     <string name="web_address_dialog_hint">Приказује се јавно када коментаришете.</string>
     <string name="export_your_content_message">Ваши чланци, странице и подешавања биће вам послати е-поштом на %s.</string>
@@ -3543,7 +3351,6 @@ Language: sr_RS
     <string name="comments_empty_list_filtered_pending">Нема коментара на чекању</string>
     <string name="comments_empty_list_filtered_approved">Нема одобрених коментара</string>
     <string name="button_skip">Прескочи</string>
-    <string name="xmlrpc_missing_method_error">Повезивање није успело. На серверу недостају потребне XML-RPC методе.</string>
     <string name="post_format_video">Видео</string>
     <string name="post_format_status">Статус</string>
     <string name="alignment_center">Средина</string>
@@ -3603,7 +3410,6 @@ Language: sr_RS
     <string name="about_the_app">О апликацији</string>
     <string name="error_post_account_settings">Није могуће сачувати подешавања налога</string>
     <string name="error_fetch_account_settings">Није могуће довући подешавања налога</string>
-    <string name="error_fetch_my_profile">Није могуће довући ваш профил</string>
     <string name="site_settings_unknown_language_code_error">Кôд језика није препознат</string>
     <string name="site_settings_threading_dialog_description">Дозволите угнежђавање коментара у нити.</string>
     <string name="site_settings_threading_dialog_header">Нити до</string>
@@ -3793,9 +3599,6 @@ Language: sr_RS
     <string name="reader_label_new_posts_subtitle">Додирните да бисте их приказали</string>
     <string name="select_all">Изабери све</string>
     <string name="language">Језик</string>
-    <string name="auth_required">Пријавите се поново за наставак.</string>
-    <string name="verification_code">Кôд за потврду</string>
-    <string name="invalid_verification_code">Неисправан кôд за потврду</string>
     <string name="error_notification_open">Није могуће отворити обавештење</string>
     <string name="stats_view_authors">Аутори</string>
     <string name="stats_search_terms_unknown_search_terms">Непознати изрази за претрагу</string>
@@ -3862,7 +3665,6 @@ Language: sr_RS
     <string name="error_generic">Дошло је до грешке</string>
     <string name="error_load_comment">Није могуће учитати коментар</string>
     <string name="invalid_email_message">Ваша адреса е-поште није исправна</string>
-    <string name="email_invalid">Унесите исправну адресу е-поште</string>
     <string name="username_or_password_incorrect">Неисправно корисничко име или лозинка</string>
     <string name="cat_name_required">Поље за име категорије је обавезно</string>
     <string name="error_edit_comment">Дошло је до грешке при уређивању коментара</string>
@@ -3901,7 +3703,6 @@ Language: sr_RS
     <string name="notifications_empty_all">Још нема обавештења!</string>
     <string name="reader_toast_err_adding_tag">Није могуће додати ову ознаку</string>
     <string name="reader_toast_err_removing_tag">Није могуће уклонити ову ознаку</string>
-    <string name="http_authorization_required">Потребно је овлашћење</string>
     <string name="file_error_create">Није могуће направити привремену датотеку за отпремање медија. Уверите се да на уређају има довољно слободног простора.</string>
     <string name="remove_account">Уклони сајт</string>
     <string name="reader_title_applog">Дневник апликације</string>
@@ -3909,7 +3710,6 @@ Language: sr_RS
     <string name="cannot_delete_multi_media_items">Неке медије тренутно није могуће избрисати. Покушајте поново касније.</string>
     <string name="connection_error">Грешка у повезивању</string>
     <string name="edit_comment">Уреди коментар</string>
-    <string name="fatal_db_error">Дошло је до грешке при прављењу базе података апликације. Покушајте поново да поставите апликацију.</string>
     <string name="link_enter_url_text">Текст везе (необавезно)</string>
     <string name="saving_changes">Чување измена</string>
     <string name="comment_status_spam">Непожељно</string>
@@ -3947,7 +3747,6 @@ Language: sr_RS
     <string name="reader_view_reblog">Поново објави</string>
     <string name="reader_toast_err_tag_not_valid">То није исправна ознака</string>
     <string name="reader_label_added_tag">Додато: %s</string>
-    <string name="sign_up_label">Региструј се</string>
     <string name="reader_btn_share">Подели</string>
     <string name="comments_empty_list">Још нема коментара</string>
     <string name="media_gallery_type_squares">Квадрати</string>
@@ -3977,8 +3776,6 @@ Language: sr_RS
     <string name="note_reply_successful">Одговор је објављен</string>
     <string name="more_notifications">и још %d.</string>
     <string name="loading">Учитавање…</string>
-    <string name="httpuser">HTTP корисничко име</string>
-    <string name="httppassword">HTTP лозинка</string>
     <string name="error_media_upload">Дошло је до грешке при отпремању медија</string>
     <string name="incorrect_credentials">Неисправно корисничко име или лозинка.</string>
     <string name="password">Лозинка</string>
