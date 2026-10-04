@@ -8,6 +8,7 @@ Language: ar
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="unified_support_message_input_placeholder">جارٍ كتابة رسالة…</string>
     <string name="unified_support_bot_typing_content_description">روبوت الدعم يكتب</string>
+    <string name="unified_support_status_bot">روبوت Oddie</string>
     <string name="unified_support_attachment_match_score">%1$d%% تطابق</string>
     <string name="support_screen_unified_support_title">الحصول على مساعدة</string>
     <string name="support_screen_unified_support_description">احصل على إجابات من فريق الدعم لدينا في أي وقت</string>
@@ -89,6 +90,7 @@ Language: ar
     <string name="site_settings_gutenberg_kit_enabled_unsupported">انتقل أولاً إلى محرر المكوّنات لتجربة المحرر الجديد.</string>
     <string name="gutenberg_kit_announcement_title">نسخة أفضل من محرر المكوّنات قادمة قريبًا</string>
     <string name="gutenberg_kit_announcement_body_intro">أصبح محرر المكوّنات من الجيل الجديد جاهزًا، ويأتي مع المزيد من الميزات الجديدة.</string>
+    <string name="gutenberg_kit_announcement_body_deadline">وسيصبح المحرر الافتراضي للجميع بحلول نهاية يونيو 2026. %1$s</string>
     <string name="gutenberg_kit_announcement_activate">تفعيل</string>
     <string name="gutenberg_kit_announcement_maybe_later">ربما لاحقًا</string>
     <string name="gutenberg_kit_announcement_learn_more">معرفة المزيد</string>
@@ -207,6 +209,7 @@ Language: ar
     <string name="stats_period_today">اليوم</string>
     <string name="stats_period_last_7_days">آخر 7 أيام</string>
     <string name="stats_period_last_30_days">آخر 30 يومًا</string>
+    <string name="stats_period_last_6_months">آخر 6 أشهر</string>
     <string name="stats_period_last_12_months">آخر 12 شهرًا</string>
     <string name="stats_period_custom">مخصص</string>
     <string name="stats_period_selector_content_description">تحديد فترة الإحصاءات</string>
@@ -251,6 +254,8 @@ Language: ar
     <string name="scan_start_request_failed_subtitle">تعذر على Jetpack Scan إكمال فحص موقعك. يرجى التحقق لمعرفة ما إذا كان موقعك معطلاً أم لا.</string>
     <string name="stats_timeframe_hours">ساعات</string>
     <string name="post_rs_failed_to_load">فشل تحميل التدوينة</string>
+    <string name="experimental_rs_pages_list">قائمة الصفحات الجديدة</string>
+    <string name="experimental_rs_pages_list_description">إظهار قائمة الصفحات في واجهة مستخدم أكثر حداثة لموقع WordPress.com والمواقع المستضافة ذاتيًا باستخدام كلمات مرور التطبيقات</string>
     <string name="stats_error_no_site">لم يتم تحديد أي موقع</string>
     <string name="stats_error_api">فشل تحميل الإحصاءات</string>
     <string name="stats_error_unknown">حدث خطأ غير متوقع</string>
@@ -311,6 +316,8 @@ Language: ar
     <string name="he_support_include_logs_description">يمكن أن يساعد تضمين السجلات فريقنا في التحقيق في المشكلات. قد تحتوي السجلات على نشاط التطبيق الأخير.</string>
     <string name="he_support_download_attachment">تنزيل المرفق</string>
     <string name="he_support_select_attachments">تحديد المرفقات</string>
+    <string name="he_support_status_waiting_for_support">في انتظار الدعم</string>
+    <string name="he_support_status_waiting_for_user">في انتظار المستخدم</string>
     <string name="he_support_status_solved">تم الحل</string>
     <string name="he_support_status_closed">مغلق</string>
     <string name="he_support_status_unknown">غير معروف</string>
@@ -462,6 +469,7 @@ Language: ar
     <string name="experimental_block_editor_note">سيصبح محرر المكوّنات التجريبي هو المحرر الافتراضي في الإصدارات المستقبلية وستتم إزالة إمكانية تعطيله.</string>
     <string name="avatar_update_email_unverified">لتحديث صورتك الرمزية، يتعين عليك التحقق من عنوان بريدك الإلكتروني أولاً.</string>
     <string name="feedback_form_note_link_wordpress">المنتديات المجتمعية.</string>
+    <string name="default_web_client_id">عنصر نائب</string>
     <string name="personalization_screen_shortcuts_accessibility_label">تبديل اختصار %s</string>
     <string name="personalization_screen_card_accessibility_label">تبديل بطاقة %s</string>
     <string name="user_avatar_content_description">الصورة الرمزية للمستخدم %s</string>
@@ -728,8 +736,13 @@ Language: ar
     <string name="barcode_scanning_alert_dialog_rationale_message">صلاحية الكاميرا مطلوبة من أجل مسح الرمز الشريطي ضوئيًا</string>
     <string name="barcode_scanning_alert_dialog_title">منح صلاحية الكاميرا</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">قد لا تظهر المكوّنات المتداخلة بشكل أكثر عمقًا من %d من المستويات بشكل صحيح في محرر الهاتف المحمول.</string>
+    <string name="jp_migration_lets_go_button">لنبدأ</string>
+    <string name="jp_migration_done_no_sites_message">حان الوقت لمواصلة رحلتك في ووردبريس.كوم على تطبيق Jetpack.</string>
     <string name="domain_management_clear_search">مسح البحث</string>
     <string name="media_encoder_quality_very_high">مرتفع للغاية</string>
+    <string name="notification_security_key_needed">يرجى إدخال مفتاح الأمان الخاص بك للاستمرار.</string>
+    <string name="login_error_security_key">كانت هناك بعض المشكلات عند تسجيل الدخول باستخدام مفتاح الأمان</string>
+    <string name="login_text_security_key">استخدام مفتاح الأمان</string>
     <string name="new_domain_search_screen_error_title">يتعذر استرداد النطاقات</string>
     <string name="new_domain_search_screen_list_item_sale_price">%s للعام الأول</string>
     <string name="new_domain_search_screen_list_item_regular_price">%s في العام</string>
@@ -909,16 +922,22 @@ Language: ar
     <string name="sharing_twitter_deprecation_notice_find_out_more">اكتشاف المزيد</string>
     <string name="sharing_twitter_deprecation_notice_description">لا تتوافر ميزة المشاركة التلقائية على تويتر بعد الآن بسبب التغييرات التي أجرتها تويتر في الشروط والأسعار.</string>
     <string name="sharing_twitter_deprecation_notice_title">لا تتوافر ميزة المشاركة التلقائية في تويتر بعد الآن</string>
+    <string name="jp_migration_notifications_allow_title">السماح بالتنبيهات بمواكبة موقعك</string>
+    <string name="wp_jp_static_poster_message">يحتوي تطبيق Jetpack على كل وظائف تطبيق ووردبريس، إلى جانب وصول حصري الآن إلى ميزات Stats وReader وNotifications والمزيد.</string>
+    <string name="wp_jp_static_poster_title_plural">استخدم ووردبريس مع %s في Jetpack\u00A0app.</string>
+    <string name="wp_jp_static_poster_title">استخدم ووردبريس مع %s في Jetpack\u00A0app.</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">لون غير مصنّف. %s</string>
     <string name="dashboard_activity_card_title">آخر نشاط</string>
     <string name="site_creation_search_domain_example_body">على غرار المثال أعلاه، يسمح النطاق للأشخاص بالعثور على موقعك وزيارته من متصفح الويب لديهم.</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_domain_search_input_hint">البحث باستخدام الكلمات المفتاحية</string>
     <string name="site_creation_domain_header_subtitle">ابحث عن نطاق قصير لا يُنسى لمساعدة الأشخاص على العثور على موقعك وزيارته.</string>
+    <string name="site_creation_domain_cost_sale">للعام الأول</string>
     <string name="site_creation_error_cart_subtitle">تم إنشاء موقعك على الويب بنجاح، لكننا واجهنا مشكلة في أثناء إعداد نطاقك المخصص للسداد. يرجى المحاولة مجددًا أو الاتصال بالدعم للحصول على المساعدة.</string>
     <string name="new_site_creation_preview_caption_paid">قد يستغرق الأمر ما يصل إلى 30 دقيقة لكي يبدأ نطاقك المخصص بالعمل.</string>
     <string name="new_site_creation_preview_subtitle_paid">لقد أرسلنا إليك الإيصال الخاص بك في رسالة عبر البريد الإلكتروني. %s</string>
     <string name="notifications_disabled_permission_dialog">تم تعطيل تنبيهات التطبيق. انقر هنا لتمكينها.</string>
+    <string name="jp_migration_done_delete_wp_message">نوصي &lt;b&gt;بإلغاء تثبيت تطبيق ووردبريس&lt;/b&gt; على جهازك لتفادي تعارضات البيانات.</string>
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إزالة المكوّنات</string>
     <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الخصوصية والتصنيف</string>
     <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إعدادات التشغيل</string>
@@ -961,6 +980,9 @@ Language: ar
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">هذا الموقع</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">يستخدم ⁦%1$s⁩ ⁦%2$s⁩، التي لا تدعم كل ميزات التطبيق حتى الآن. Please install the %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">يستخدم ⁦%1$s⁩ ⁦%2$s⁩، التي لا تدعم كل ميزات التطبيق حتى الآن. Please install the %3$s.</string>
+    <string name="wp_jp_static_poster_footnote">التبديل مجاني، ولا يستغرق سوى بضع دقائق.</string>
+    <string name="wp_jp_static_poster_button_secondary">معرفة المزيد على jetpack.com</string>
+    <string name="wp_jp_static_poster_button_primary">التبديل إلى تطبيق Jetpack</string>
     <string name="my_site_btn_wp_admin">مسؤول ووردبريس</string>
     <string name="my_site_header_manage">إدارة المحتويات</string>
     <string name="my_site_header_traffic">حركة المرور</string>
@@ -977,8 +999,11 @@ Language: ar
     <string name="blaze_promotional_text">جذب مزيد من حركة المرور إلى موقعك باستخدام Blaze</string>
     <string name="blaze_activity_title">التوهج</string>
     <string name="site_creation_domain_tag_unavailable">هذا النطاق مسجّل بالفعل</string>
+    <string name="site_creation_domain_tag_sale">تخفيض</string>
     <string name="site_creation_domain_tag_recommended">موصى به</string>
     <string name="site_creation_domain_tag_best_alternative">أفضل بديل</string>
+    <string name="support_faq_caption">ارجع إلى قسم الأسئلة المتداولة لدينا للحصول على إجابات عن الأسئلة الشائعة التي قد تطرحها.</string>
+    <string name="support_faq_title">شكرًا لك للتبديل إلى تطبيق Jetpack!</string>
     <string name="logs_button">السجلات</string>
     <string name="tickets">التذاكر</string>
     <string name="free">مجانًا</string>
@@ -1014,6 +1039,12 @@ Language: ar
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">افتح إمكانات موقعك بالكامل. احصل على ميزات الإحصاءات والتنبيهات والمزيد من خلال Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">يتضمن موقعك إضافة Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">تم تصميم تطبيق Jetpack للهاتف المحمول للعمل إلى جانب إضافة Jetpack. قم بالتبديل الآن لكي تحظى بإمكانية الوصول إلى ميزات الإحصاءات والتنبيهات والقارئ والمزيد.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">تلقَّ تنبيهات بالتعليقات والإعجابات والمشاهدات الجديدة، والمزيد.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">اعثر على الموقع والمجتمعات التي تفضّلها وتابعها، ثم شارك محتواك.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">راقب الزيادة في حركة المرور لديك من خلال الرؤى المفيدة والإحصاءات الشاملة.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">الإحصاءات والرؤى</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">يتيح لك Jetpack القيام بالمزيد من خلال موقع ووردبريس الخاص بك. التبديل مجاني، ولا يستغرق سوى بضع دقائق.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">تعزيز ووردبريس من خلال Jetpack</string>
     <string name="blogging_prompts_onboarding_content_note_content">يمكنك التحكم في مطالبات التدوين والتذكيرات في أي وقت ضمن موقعي &gt; الإعدادات &gt; التدوين</string>
     <string name="blogging_reminders_prompt_subtitle">سيتضمن التنبيه كلمة أو عبارة مختصرة كمصدر للإلهام</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">زيارة &lt;b&gt;إعدادات الموقع&lt;/b&gt; لإعادة التشغيل</string>
@@ -1025,6 +1056,15 @@ Language: ar
     <string name="site_settings_blogging_prompts_title">إظهار المطالبات</string>
     <string name="site_settings_blogging">التدوين</string>
     <string name="install_play_store_to_get_jetpack">يرجى تثبيت متجر Google Play للحصول على تطبيق Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">القيام بهذا لاحقًا</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">التبديل إلى Jetpack </string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">تمت إزالة ميزات الإحصاءات والقارئ والتنبيهات وغيرها من الميزات التي يدعمها Jetpack من تطبيق ووردبريس.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">لقد انتقلت ميزات Jetpack.</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">ستنتقل ⁦%1$s⁩ في غضون ⁦%2$s⁩</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">ستنتقل ⁦%1$s⁩ قريبًا</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">سينتقل ⁦%1$s⁩ قريبًا</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">سينتقل ⁦%1$s⁩ في غضون ⁦%2$s⁩</string>
+    <string name="wp_jetpack_powered_phase_2">تنزيل تطبيق Jetpack</string>
     <string name="my_site_blogging_prompt_card_view_answers">عرض كل الردود</string>
     <string name="stats_insights_total_stats_seven_days_negative">⁦%1$s⁩ أقل من الأيام الـ 7 السابقة</string>
     <string name="stats_insights_total_stats_seven_days_positive">⁦%1$s⁩ أعلى من الأيام الـ 7 السابقة</string>
@@ -1034,15 +1074,26 @@ Language: ar
     <string name="stats_insights_views_and_visitors_seven_days_views_positive">إن مشاهداتك في آخر 7 أيام أعلى بنسبة ⁦%1$s⁩ من الأيام الـ 7 السابقة.</string>
     <string name="stats_timeframe_previous_seven_days">الأيام الـ 7 السابقة</string>
     <string name="stats_timeframe_last_seven_days">آخر 7 أيام</string>
+    <string name="weeks_quantity_other">%d من الأسابيع</string>
+    <string name="weeks_quantity_one">أسبوع واحد</string>
     <string name="my_site_blogging_prompt_card_attribution_day_one">من &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">ذكرني لاحقًا</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">التبديل إلى تطبيق Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">معرفة المزيد على jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">التبديل مجاني، ولا يستغرق سوى بضع دقائق.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">ستتم إزالة ميزات الإحصاءات والقارئ والتنبيهات وغيرها من الميزات التي يدعمها Jetpack من تطبيق ووردبريس قريبًا.</string>
+    <string name="jetpack_feature_card_content_phase_three">ستنتقل ميزات الإحصاءات والقارئ والتنبيهات وغيرها من الميزات قريبًا إلى تطبيق Jetpack للهاتف المحمول.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">ستتم إزالة ميزات الإحصاءات والقارئ والتنبيهات وغيرها من الميزات التي يدعمها Jetpack من تطبيق ووردبريس في %s.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">ستنتقل ميزات Jetpack قريبًا.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">ستنتقل ميزة التنبيهات إلى Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">ستنتقل ميزة القارئ إلى تطبيق Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">التبديل إلى تطبيق Jetpack الجديد</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">حدث خطأ في أثناء تحميل المطالبات.</string>
     <string name="blogging_prompts_list_error_fetch_title">عذرًا</string>
     <string name="blogging_prompts_list_no_prompts">لا توجد مطالبات بعد</string>
     <string name="blogging_prompts_list_number_of_answers_other">%d من الإجابات</string>
     <string name="blogging_prompts_list_number_of_answers_one">إجابة واحدة</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">ستنتقل ميزة الإحصاءات لديك إلى تطبيق Jetpack</string>
     <string name="blogging_prompts_list_number_of_answers_zero">0 من الإجابات</string>
     <string name="blogging_prompts_list_answered_prompt">✓ تم الرد</string>
     <string name="blogging_prompts_list_title">المطالبات</string>
@@ -1063,11 +1114,39 @@ Language: ar
     <string name="wp_jetpack_continue_without_jetpack">الاستمرار من دون Jetpack</string>
     <string name="deep_linking_weblinks_alias_label">روابط الويب</string>
     <string name="deep_linking_urilinks_alias_label">روابط عناوين uri</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">قم بالتبديل إلى تطبيق Jetpack للاستمرار في تلقي   من التنبيهات في الوقت الفعلي على جهازك.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">قم بالتبديل إلى تطبيق Jetpack للعثور على كل المواقع والتدوينات التي تفضّلها ومتابعتها والإعجاب بها باستخدام القارئ.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">قم بالتبديل إلى تطبيق Jetpack لمراقبة نمو حركة المرور في موقعك من خلال الإحصاءات والرؤى.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">تلقي تنبيهاتك من خلال تطبيق Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">متابعة أي موقع باستخدام تطبيق Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">الحصول على إحصاءاتك باستخدام تطبيق Jetpack جديد</string>
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">يتعذر تعطيل فتح الروابط في Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">يتعذر تمكين فتح الروابط في Jetpack</string>
     <string name="preference_open_links_in_jetpack">فتح الروابط في Jetpack</string>
+    <string name="jp_migration_network_error_message">يتعذر علينا نقل بياناتك وإعداداتك من دون اتصال الشبكة.</string>
+    <string name="jp_migration_network_error_subtitle">يرجى التحقق للتأكد من أن اتصال الشبكة لديك قيد العمل، وحاول مجددًا.</string>
+    <string name="jp_migration_network_error_title">يتعذر الاتصال بالإنترنت.</string>
+    <string name="jp_migration_generic_error_message">يرجى الاتصال بالدعم  أو المحاولة مرة أخرى لاحقًا.</string>
+    <string name="jp_migration_generic_error_subtitle">عذرًا، ولكن هناك شيء لم يسِر مثلما هو مخطط له. تكون بياناتك آمنة، ولكن يتعذر علينا نقلها في الوقت الحالي.</string>
     <string name="jp_migration_generic_error_title">حسنًا، حدث خطأ.</string>
+    <string name="jp_migration_try_again_button">المحاولة مجددًا</string>
+    <string name="jp_migration_finish_button">إنهاء</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">إزالة أيقونة تطبيق ووردبريس</string>
+    <string name="jp_migration_done_subtitle">لقد نقلنا كل بياناتك وإعداداتك. يصبح كل شيء صحيحًا عندما تتركه.</string>
+    <string name="jp_migration_done_title">شكرًا على التبديل إلى Jetpack!</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">سنقوم بإيقاف تشغيل التنبيهات من تطبيق ووردبريس.</string>
+    <string name="jp_migration_notifications_subtitle">ستتلقى كل التنبيهات نفسها ولكنها ستأتي الآن من تطبيق Jetpack.</string>
+    <string name="wordpress_help_center_button">مركز مساعدة ووردبريس</string>
     <string name="support_title">دعم</string>
+    <string name="notification_disable_broadcast_permission_desc">يسمح للتطبيق بتعطيل تنبيهات ووردبريس.</string>
+    <string name="notification_disable_broadcast_permission_label">تعطيل تنبيهات ووردبريس</string>
+    <string name="jp_migration_help_button">هل تحتاج إلى مساعدة؟</string>
+    <string name="jp_migration_continue_button">متابعة</string>
+    <string name="jp_migration_welcome_site_found_message">عثرنا على موقعك. استمر في نقل جميع البيانات وسجّل الدخول إلى Jetpack تلقائيًا.</string>
+    <string name="jp_migration_welcome_sites_found_message">عثرنا على موقعك. استمر في نقل جميع البيانات وسجّل الدخول إلى Jetpack تلقائيًا.</string>
+    <string name="jp_migration_avatar_content_description">صورة ملفك الشخصي</string>
+    <string name="jp_migration_welcome_subtitle">يبدو أنك ستقوم بالتبديل من تطبيق ووربريس.</string>
+    <string name="jp_migration_welcome_title">مرحبًا بك في Jetpack!</string>
     <string name="icon_desc">أيقونة</string>
     <string name="post_settings_parent">الصفحة الأصل</string>
     <string name="post_settings_page_attributes">خصائص الصفحة</string>
@@ -1103,6 +1182,7 @@ Language: ar
     <string name="weekly_roundup_notification_text_views_only">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات.</string>
     <string name="weekly_roundup_notification_text_all">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات، و⁦%2$s⁩ من الإعجابات، و⁦%3$s⁩ من التعليقات.</string>
     <string name="stats_insights_like_guide_card">⭐️ لقد تلقت تدوينتك الأخيرة ⁦%1$s⁩ ⁦%2$s⁩ إعجاب.</string>
+    <string name="wp_jetpack_powered">مدعوم بواسطة Jetpack</string>
     <string name="qrcode_auth_flow_error_content_description">صورة تشير إلى وجود خطأ</string>
     <string name="qrcode_auth_flow_content_description">صورة تشير إلى مسح رمز تسجيل الدخول قيد التقدم</string>
     <string name="qrcode_auth_flow_error_no_connection_title">لا يوجد اتصال</string>
@@ -1277,6 +1357,11 @@ Language: ar
     <string name="notification_channel_weekly_roundup_title">موجز أسبوعي</string>
     <string name="my_site_dashboard_tab_title">الرئيسية</string>
     <string name="adding_cat">إضافة تصنيف</string>
+    <string name="login_select_email_client">ما تطبيق البريد الإلكتروني الذي تستخدمه؟</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">حدثت مشكلة في أثناء الاتصال بالموقع. تم إرجاع رمز خطأ HTTP رقم 401.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">تبدو استدعاءات XML-RPC محظورة على هذا الموقع (رمز الخطأ 401). إذا فشلت محاولة تسجيل الدخول، فانقر على أيقونة المساعدة لعرض الأسئلة المتداولة.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">يتعذر قراءة موقع WordPress على معرف URL ذلك. انقر على أيقونة المساعدة لعرض الأسئلة المتداولة.</string>
+    <string name="login_error_xml_rpc_services_disabled">خدمات XML-RPC غير مفعلة في هذا الموقع.</string>
     <string name="my_site_menu_tab_title">قائمة</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">يتضمن بحثك أحرف غير مدعومة في نطاقات ووردبريس.كوم. يُسمح بالأحرف الآتية: من A إلى Z، ومن a إلى z، ومن 0 إلى 9.</string>
     <string name="my_site_todays_stat_card_title">إحصاءات اليوم</string>
@@ -1518,7 +1603,12 @@ Language: ar
     <string name="error_media_unexpected_null_value">كانت الوسائط فارغة</string>
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;أدخل بيانات اعتماد خادمك&lt;/a&gt; لإصلاح التهديدات.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;أدخل بيانات اعتماد خادمك&lt;/a&gt; لإصلاح التهديد.</string>
+    <string name="login_empty_view_try_another_account">المحاولة باستخدام حساب آخر</string>
+    <string name="login_empty_view_see_instructions">الاطلاع على الإرشادات</string>
     <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">أنقر نقرًا مزدوجًا لإضافة رابط.</string>
+    <string name="login_no_jetpack_sites_error_message">إذا كان لديك موقع بالفعل، فسيتعيَّن عليك تنصيب إضافة Jetpack المجانية وربطها بحسابك على WordPress.com.</string>
+    <string name="login_empty_view_avatar_content_description">صورة ملفك الشخصي</string>
+    <string name="login_not_a_jetpack_site">لاستخدام هذا التطبيق لـ ⁦%1$s⁩، سيتعيَّن عليك تثبيت إضافة Jetpack وربطها بحسابك على WordPress.com.</string>
     <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إعدادات العرض</string>
     <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إعدادات العمود</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">خصائص الرابط</string>
@@ -1554,6 +1644,7 @@ Language: ar
     <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">المزيد</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">قدّم وصفاً موجزًا للرابط لمساعدة مستخدم قارئ الشاشة</string>
     <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إضافة مكوِّنات</string>
+    <string name="login_no_jetpack_sites">لم يتم العثور على أي مواقع Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ماهو النص البديل؟</string>
     <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تحويل %s إلى</string>
     <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تحويل المكوِّن…</string>
@@ -1601,6 +1692,7 @@ Language: ar
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط المزدوج لفتح الورقة السفلية لتحريرها أو استبدالها أو مسح الصورة</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط المزدوج لفتح ورقة الإجراءات لتحريرها أو استبدالها أو مسح الصورة</string>
     <string name="invite_links_disable_dialog_message">بمجرد تعطيل رابط الدعوة هذا، لن يتمكن أي شخص من استخدامه للانضمام إلى فريقك. هل أنتَ متأكد؟</string>
+    <string name="magic_link_not_meaning_to_create_account">ألم تقصد إنشاء حساب جديد؟ العودة للخلف لإعادة إدخال عنوان بريدك الإلكتروني.</string>
     <string name="invite_links_null_response">لم يتم تلقي أي ردّ</string>
     <string name="invite_links_bad_format_response">تم تلقي ردّ غير صالح</string>
     <string name="invite_links_disable_dialog_title">تعطيل رابط الدعوة</string>
@@ -1864,6 +1956,8 @@ Language: ar
     <string name="scan">فحص</string>
     <string name="reader_discover_empty_title">مرحبًا!</string>
     <string name="reader_discover_no_posts_title">لا توجد مقالات حديثة</string>
+    <string name="login_find_your_connected_email">العثور على بريدك الإلكتروني المتصل</string>
+    <string name="continue_site_credentials">الاستمرار في تخزين بيانات الاعتماد</string>
     <string name="reader_discover_no_posts_follow_subtitle">حاول متابعة مزيد من الوسوم لتوسيع نطاق البحث</string>
     <string name="hpp_choose_button">اختيار</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تم فتح قائمة المكوّن القابلة للتمرير. حدد مكوّنًا.</string>
@@ -1904,6 +1998,8 @@ Language: ar
     <string name="media_browse_for_items">استعراض العناصر</string>
     <string name="comment_unable_to_show_error">تعذر إظهار هذا التعليق</string>
     <string name="permission_microphone">الميكروفون</string>
+    <string name="login_get_link_by_email">الحصول على رابط تسجيل الدخول عن طريق البريد الإلكتروني</string>
+    <string name="email_not_registered_wpcom">حسناً، لا يمكننا العثور على حساب WordPress.com متصلاً بعنوان البريد الإلكتروني هذا.</string>
     <string name="reader_menu_report_post">الإبلاغ عن هذه المقالة</string>
     <string name="error_media_xmlrcp_server_error">حدث خطأ داخلي في الخادم</string>
     <string name="error_media_xmlrpc_not_allowed">إجراؤك غير مسموح به</string>
@@ -1935,9 +2031,28 @@ Language: ar
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">اختيار صورة</string>
     <string name="gutenberg_native_choose_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">اختيار صورة أو فيديو</string>
     <string name="gutenberg_native_choose_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">اختيار فيديو</string>
+    <string name="continue_with_google_terms_of_service_text">إذا تابعت مع Google وليس لديك حساب WordPress.com بالفعل، فأنت تقوم بإنشاء حساب وتوافق على %1$sشروط الخدمة%2$s.</string>
+    <string name="signup_confirmation_title">تأكيد التسجيل</string>
     <string name="enter_your_site_address">أدخل رابط موقعك الحالي</string>
     <string name="gutenberg_native_convert_to_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تحويل إلى رابط</string>
+    <string name="continue_terms_of_service_text">بالمتابعة، أنت توافق على %1$sشروط الخدمة%2$s.</string>
+    <string name="signup_confirmation_message">سنستخدم عنوان البريد الإلكتروني هذا لإنشاء حسابك الجديد على WordPress.com.</string>
+    <string name="signup_magic_link_message">أرسلنا لك عبر البريد الإلكتروني رسالة تتضمن رابط التسجيل لإنشاء حسابك الجديد على WordPress.com. تحقَّق من بريدك الإلكتروني على هذا الجهاز، وانقر على الرابط الموجود في الرسالة التي تم تلقيها عبر البريد الإلكتروني من WordPress.com.</string>
+    <string name="enter_account_info_for_site">أدخل معلومات حسابك لـ %1$s.</string>
+    <string name="login_magic_links_sent_label">تحقق من بريدك الإلكتروني على هذا الجهاز، واضغط على الرابط في رسالة البريد الإلكتروني التي ستستلمها من WordPress.com.</string>
+    <string name="login_done">تمّ</string>
+    <string name="login_find_your_site_adress">العثور على عنوان موقعك</string>
+    <string name="continue_google_button_suffix">المتابعة باستخدام Google</string>
+    <string name="login_or">أو</string>
+    <string name="magic_link_not_seeing_email_message">لم تشاهد البريد الإلكتروني؟ تحقّق من مجلد البريد المزعج أو البريد العشوائي.</string>
+    <string name="login_magic_links_label">سنرسل لك عبر البريد الإلكتروني رابطًا يسجّل دخولك على الفور، دون الحاجة إلى كلمة مرور.</string>
+    <string name="reset_your_password">إعادة تعيين كلمة المرور الخاصة بك</string>
+    <string name="send_link_by_email">إرسال الرابط عبر البريد الإلكتروني</string>
+    <string name="create_account">إنشاء حساب</string>
+    <string name="or_type_your_password">أو اكتب كلمة المرور الخاصة بك</string>
+    <string name="enter_email_to_continue_wordpress_com">أدخل عنوان بريدك الإلكتروني لتسجيل الدخول أو إنشاء حساب WordPress.com.</string>
     <string name="get_started" a8c-src-lib="module:login">البدء</string>
+    <string name="check_email">التحقق من البريد الإلكتروني</string>
     <string name="reader_error_request_failed_title">حدثت مشكلة أثناء معالجة الطلب. يرجى المحاولة مرة أخرى لاحقاً.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">سيؤدي نقل هذه المقالة إلى سلة المهملات إلى تجاهل التغييرات المحلية كذلك، هل ترغب بالتأكيد في المتابعة؟</string>
     <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">خيارات المكوِّن %s</string>
@@ -2160,6 +2275,9 @@ Language: ar
     <string name="create_post_page_fab_tooltip">إنشاء مقالة أو صفحة</string>
     <string name="gutenberg_native_replace_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">استبدال الصورة</string>
     <string name="content_description_person_building_website">شخص ينشئ موقعًا على الويب</string>
+    <string name="post_signup_interstitial_not_right_now">ليس الآن</string>
+    <string name="post_signup_interstitial_subtitle">سواء أرغبتَ في الإنشاء أو المشاركة، فإنَّنا سنساعدك على القيام بذلك بشكل صحيح.</string>
+    <string name="post_signup_interstitial_title">مرحبًا بك في ووردبريس.</string>
     <string name="stock_media_picker_list_content_description">مكتبة الصور</string>
     <string name="photo_picker_image_thumbnail_unselected">لم تُحدَّد أي صور</string>
     <string name="photo_picker_image_selected">، محدَّدة</string>
@@ -2173,6 +2291,12 @@ Language: ar
     <string name="dialog_confirm_scheduled_post_sync_title">هل أنت جاهز للمزامنة؟</string>
     <string name="new_site_creation_unavailable_domain">هذا النطاق غير متاح.</string>
     <string name="negative_prefix">-%s</string>
+    <string name="login_discovery_error_generic">تعذر علينا الوصول إلى موقعك. سيتعين عليك الوصول إلى مضيفك لحل هذا الأمر.</string>
+    <string name="login_discovery_error_ssl">تعذر علينا الوصول إلى موقعك بسبب حدوث مشكلة في &lt;b&gt;شهادة SSL&lt;/b&gt;. سيتعين عليك الوصول إلى مضيفك لحل هذا الأمر.</string>
+    <string name="login_discovery_error_http_auth">تعذر علينا الوصول إلى موقعك لأنه يتطلب &lt;b&gt;مصادقة HTTP&lt;/b&gt;. سيتعين عليك الوصول إلى مضيفك لحل هذا الأمر.</string>
+    <string name="login_discovery_error_xmlrpc">تعذر علينا الوصول إلى &lt;b&gt;ملف XMLRPC&lt;/b&gt; على موقعك. سيتعين عليك الوصول إلى مضيفك لحل هذا الأمر.</string>
+    <string name="login_site_credentials_magic_link_label">تقريبًا هناك! يتعين علينا فقط التحقق من صحة عنوان بريدك الإلكتروني المتصل بـ Jetpack &lt;b&gt;%1$s&lt;/b&gt;</string>
+    <string name="enter_credentials_for_site">تسجيل الدخول باستخدام بيانات اعتماد الموقع %1$s الخاصة بك</string>
     <string name="my_site_bottom_sheet_add_page">صفحة الموقع</string>
     <string name="posts_cannot_be_started">يتعذر علينا فتح هذه المقالات الآن. يرجى المحاولة مجددًا في وقت لاحق</string>
     <string name="suffix_1_000_000_000">%sB</string>
@@ -2329,9 +2453,11 @@ Language: ar
     <string name="post_notification_off">إيقاف</string>
     <string name="post_notification_one_hour_before">قبل ساعة</string>
     <string name="post_notification_ten_minutes_before">قبل 10 دقائق</string>
+    <string name="login_invalid_site_url">يرجى إدخال عنوان موقع ويب كامل، مثل example.com.</string>
     <string name="site_settings_editor">المُحرر</string>
     <string name="stats_collapse_content_description">طيّ</string>
     <string name="stats_expand_content_description">توسيع</string>
+    <string name="enter_email_for_site">تسجيل الدخول باستخدام WordPress.com للاتصال بـ %1$s</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
     <string name="stats_post_label">المقالة</string>
     <string name="stats_post_views_label">المشاهدات</string>
@@ -2434,6 +2560,8 @@ Language: ar
     <string name="posts_trashed_empty">ليس لديك أي مقالات تم وضعها في سلة المهملات</string>
     <string name="button_move_to_draft">نقل إلى المسودة</string>
     <string name="posts_published_empty">لم تنشر أي مقالات - حتى الآن!</string>
+    <string name="error_user_username_instead_of_email">يرجى تسجيل الدخول باستخدام اسم مستخدم WordPress.com الخاص بك بدلاً من عنوان بريدك الإلكتروني.</string>
+    <string name="notification_wpcom_username_needed">يرجى تسجيل الدخول باسم المستخدم وكلمة المرور الخاصة بك.</string>
     <string name="stats_insights_posts">المقالات</string>
     <string name="stats_insights_total_comments">إجمالي التعليقات</string>
     <string name="stats_insights_average_comments">معدل التعليقات/المقالة</string>
@@ -2443,6 +2571,7 @@ Language: ar
     <string name="stats_insights_average_words">معدل الكلمات/المقالة</string>
     <string name="stats_insights_year">عام</string>
     <string name="stats_insights_this_year_site_stats">هذا العام</string>
+    <string name="no_site_error">الموقع على عنوان هذا الرابط ليس موقع ووردبريس. وبالنسبة لنا للاتصال به، يجب أن يستخدم الموقع ووردبريس.</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">جاري التحقق من الرصيد المتاح للنطاقات</string>
     <string name="plugin_check_domain_credit_error">فشل التحقق من الرصيد المتاح للنطاقات</string>
     <string name="plugin_install_custom_domain_required_dialog_title">تنصيب الإضافة</string>
@@ -2581,6 +2710,7 @@ Language: ar
     <string name="history_footer_page">تم إنشاء الصفحة بتاريخ %1$s في تمام %2$s</string>
     <string name="history_empty_title">لا يوجد تاريخ حتى الآن</string>
     <string name="history_loading_revision">جاري تحميل المراجعة</string>
+    <string name="enter_wpcom_or_jetpack_site">يرجى إدخال موقع WordPress.com أو موقع ووردبريس مُستضاف ذاتيًّا ومتصل بـ Jetpack</string>
     <string name="description_user">صورة رمزية للمستخدم</string>
     <string name="image_size_large_label">كبير</string>
     <string name="image_size_medium_label">متوسط</string>
@@ -2602,9 +2732,11 @@ Language: ar
     <string name="pages_scheduled">مجدول</string>
     <string name="pages_drafts">المسودات</string>
     <string name="pages_published">منشور</string>
+    <string name="login_error_sms_throttled">أجرينا عددًا كبيرًا جدًا من المحاولات لإرسال رمز التحقق عبر الرسائل القصيرة — استرح، واطلب رمزًا جديدًا في غضون دقيقة.</string>
     <string name="pages_trashed">محذوف</string>
     <string name="site_picker_remove_site_empty">لا تتطابق أي مواقع مع بحثك</string>
     <string name="page_parent_changed">تم تغيير أصل الصفحة</string>
+    <string name="login_error_email_not_found_v2">لا يتطابق أي حساب على WordPress.com مع حساب Google هذا.</string>
     <string name="reader_no_followed_blogs_search_title">لا توجد تدوينات مطابقة لبحثك</string>
     <string name="page_permanently_deleted">تم حذف الصفحة نهائيًّا</string>
     <string name="page_moved_to_scheduled">تمت جدولة الصفحة</string>
@@ -2623,6 +2755,7 @@ Language: ar
     <string name="reader_empty_subscribed_tags_subtitle">إضافة وسوم هنا للعثور على التدوينات المتعلقة بالموضوعات التي تفضِّلها</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">الأسئلة الشائعة عن Jetpack</string>
+    <string name="login_to_to_connect_jetpack">سجّل الدخول إلى حساب WordPress.com الذي تستخدمه للاتصال بـ Jetpack.</string>
     <string name="stats_jetpack_connection_setup_info">لاستخدام الإحصاءات على موقع ووردبريس الخاص بك، سيتعين عليك تنصيب إضافة Jetpack.</string>
     <string name="themes_empty_list">لا توجد سمات مطابقة لبحثك</string>
     <string name="reader_label_post_search_explainer">ما الذي ترغب في إيجاده؟</string>
@@ -2673,7 +2806,13 @@ Language: ar
     <string name="reader_empty_search_title">لم يتم العثور على نتائج</string>
     <string name="comment_read_source_post">قراءة مقالة المصدر</string>
     <string name="sites">المواقع</string>
+    <string name="signup_magic_link_title">تمّ إرسال الرابط السحري</string>
+    <string name="verification_2fa_screen_title">رمز التحقق</string>
+    <string name="email_address_login_title">عنوان البريد الإلكتروني للدخول</string>
     <string name="site_address_login_title" a8c-src-lib="module:login">عنوان تسجيل الدخول للموقع</string>
+    <string name="magic_link_login_title">رابط تسجيل الدخول السحري</string>
+    <string name="magic_link_sent_login_title">تمّ إرسال الرابط السحري</string>
+    <string name="selfhosted_site_login_title">اعتماد تسجيل الدخول</string>
     <string name="reader_empty_saved_posts_description">انقر على %s لحفظ مقالة في القائمة لديك.</string>
     <string name="reader_bookmark_snack_title">تم حفظ المقالة</string>
     <string name="reader_bookmark_snack_btn">عرض الكل</string>
@@ -2769,6 +2908,7 @@ Language: ar
     <string name="invite_user_delete_desc">إزالة %s</string>
     <string name="profile_picture">صورة الملف الشخصي لـ %s</string>
     <string name="comment_checkmark_desc">علامة الاختيار</string>
+    <string name="signup_with_google_progress">جاري التسجيل باستخدام Google…</string>
     <string name="photo_picker_wpmedia_desc">اختر من وسائط ووردبريس</string>
     <string name="plugin_detail_banner_desc">لافتة الإضافة</string>
     <string name="plugin_detail_logo_desc">شعار الإضافة</string>
@@ -2799,6 +2939,7 @@ Language: ar
     <string name="notif_detail_screen_title">تفاصيل التنبيه %s</string>
     <string name="edit_photo_screen_title">تحرير الصورة</string>
     <string name="share_intent_screen_title">اختيار الموقع</string>
+    <string name="signup_epilogue_screen_title">حساب جديد</string>
     <string name="site_settings_quota_space_hint">إذا كنت بحاجة إلى مزيد من المساحة، ففكر في ترقية خطة ووردبريس الخاصة بك.</string>
     <string name="person_detail_screen_title">تفاصيل الشخص</string>
     <string name="media_settings_screen_title">تفاصيل الملف</string>
@@ -2850,6 +2991,7 @@ Language: ar
     <string name="site_creation_domain_finish_button">إنشاء موقع</string>
     <string name="notification_site_creation_created">انقر للمتابعة.</string>
     <string name="notification_site_creation_title_success">تم إنشاء الموقع!</string>
+    <string name="google_error_timeout">استغرق Google وقتًا طويلاً جدًا لدرجة أنه لم يستجب. قد تحتاج إلى الانتظار حتى يكون لديك اتصال قوي بالإنترنت.</string>
     <string name="username_changer_title">تغيير اسم المستخدم</string>
     <string name="username_changer_hint">اكتب للحصول على مزيد من الاقتراحات</string>
     <string name="username_changer_header">اسم المستخدم الحالي الخاص بك هو %1$s%2$s%3$s. مع بعض الاستثناءات، لن يرى الآخرون سوى اسم العرض، %4$s%5$s%6$s.</string>
@@ -2859,7 +3001,19 @@ Language: ar
     <string name="username_changer_action">حفظ</string>
     <string name="content_description_add_avatar">إضافة صورة رمزية</string>
     <string name="username_changer_dismiss_button_positive">تجاهل</string>
+    <string name="signup_user_exists">البريد الإلكتروني موجود بالفعل على WordPress.com.\nالمتابعة لتسجيل الدخول.</string>
+    <string name="signup_magic_link_progress">إرسال البريد الإلكتروني</string>
+    <string name="signup_updating_account">جاري تحديث الحساب…</string>
+    <string name="signup_magic_link_error_button_positive">إعادة المحاولة</string>
+    <string name="signup_magic_link_error_button_negative">إغلاق</string>
+    <string name="signup_epilogue_hint_username">اسم المستخدم</string>
+    <string name="signup_epilogue_hint_password">كلمة المرور (اختياري)</string>
+    <string name="signup_epilogue_hint_display">اسم العرض</string>
+    <string name="signup_epilogue_error_button_positive">إعادة المحاولة</string>
+    <string name="signup_epilogue_error_button_negative">إلغاء</string>
     <string name="signup_epilogue_error_generic">حدثت بعض المشكلات أثناء تحديث حسابك. يمكنك المحاولة مرة أخرى أو استرداد التغييرات للمتابعة.</string>
+    <string name="signup_magic_link_error">حدثت بعض المشكلات في إرسال البريد الإلكتروني. يمكنك إعادة المحاولة الآن أو الإغلاق والمحاولة مرة أخرى لاحقًا.</string>
+    <string name="signup_epilogue_hint_password_detail">يمكنك دائمًا تسجيل الدخول باستخدام رابط مثل الرابط الذي استخدمته للتو، ولكن يمكنك أيضًا إعداد كلمة مرور إذا كنت تفضل ذلك.</string>
     <string name="plugin_caption_new">جديد</string>
     <string name="plugin_caption_popular">شائع</string>
     <string name="plugins_empty_search_list">لا توجد مطابقات</string>
@@ -2946,6 +3100,18 @@ Language: ar
     <string name="plugins">الإضافات</string>
     <string name="media_edit_link_hint">فتح الرابط في نافذة/علامة تبويب جديدة</string>
     <string name="media_edit_link_text">رابط لـ</string>
+    <string name="notification_login_failed">حدث خطأ.</string>
+    <string name="notification_2fa_needed">يرجى إدخال رمز المصادقة للمتابعة.</string>
+    <string name="notification_error_wrong_password">يرجى التحقق مجددًا من كلمة مرورك للمتابعة.</string>
+    <string name="notification_login_title_stopped">تم إيقاف تسجيل الدخول</string>
+    <string name="notification_logging_in">يرجى الانتظار أثناء تسجيل الدخول.</string>
+    <string name="notification_login_title_in_progress">تسجيل الدخول قيد التقدم…</string>
+    <string name="notification_logged_in">انقر للمتابعة.</string>
+    <string name="notification_login_title_success">تم تسجيل الدخول!</string>
+    <string name="login_error_generic_start">تعذر بدء تسجيل الدخول إلى Google.</string>
+    <string name="login_empty_password">يرجى إدخال كلمة المرور</string>
+    <string name="login_text_otp_another">أرسل إليّ رمزًا آخر بدلاً من ذلك</string>
+    <string name="enter_verification_code_sms">أرسلنا رسالة نصية إلى رقم الهاتف الذي ينتهي بـ %s. يرجى إرسال رمز التحقق في رسالة نصية قصيرة.</string>
     <string name="image_size">الحجم</string>
     <string name="uploading_subtitle_media_only_one">ثمة ملف واحد متبقٍّ</string>
     <string name="uploading_subtitle_media_only">%1$d من %2$d من الملفات متبقية</string>
@@ -2962,10 +3128,15 @@ Language: ar
     <string name="confirm_remove_media_image">هل تريد إزالة هذه الصورة من المقالة؟</string>
     <string name="media_edit_customize_card_caption">تخصيص</string>
     <string name="media_edit_file_details_card_caption">تفاصيل الملف</string>
+    <string name="login_error_suffix">\nهل يمكن أن تجرّب حسابًا مختلفًا؟</string>
+    <string name="login_error_generic">حدثت مشكلة أثناء الاتصال بحساب Google.</string>
     <string name="login_error_button">إغلاق</string>
+    <string name="enter_wpcom_password_google">للمتابعة باستخدام حساب Google هذا، يرجى إدخال كلمة مرور متطابقة في WordPress.com. ستتم المطالبة بها لمرة واحدة.</string>
     <string name="error_generic_network">حدثت مشكلة في الشبكة. يرجى التحقق من اتصالك والمحاولة لاحقًا.</string>
     <string name="post_settings_remove_featured_image">إزالة الصورة البارزة</string>
     <string name="post_settings_choose_featured_image">اختيار صورة مميزة</string>
+    <string name="login_log_in_for_share_intent">سجّل الدخول إلى WordPress.com لمشاركة المحتوى.</string>
+    <string name="enter_site_address_share_intent">أدخل عنوان موقع ووردبريس الذي تود مشاركة المحتوى معه.</string>
     <string name="jetpack_disconnect_error_toast">خطأ في قطع الاتصال بالموقع</string>
     <string name="jetpack_disconnect_success_toast">تم قطع الاتصال بالموقع</string>
     <string name="jetpack_disconnect_confirm">قطع الاتصال</string>
@@ -3046,13 +3217,28 @@ Language: ar
     <string name="post_queued">مقالة موضوعة في قائمة الانتظار</string>
     <string name="uploading_post">رفع \"%s\"</string>
     <string name="connection_to_server_lost">كان الاتصال بالخادم مفقودًا</string>
+    <string name="login_email_client_not_found">لا يمكن اكتشاف تطبيق عميل البريد الإلكتروني الخاص بك</string>
+    <string name="login_empty_2fa">يُرجى إدخال كود التحقق</string>
+    <string name="login_empty_username">الرجاء إدخال اسم المستخدم</string>
+    <string name="login_log_in_for_deeplink">سجِّل الدخول إلى WordPress.com للوصول إلى المقالة.</string>
+    <string name="login_error_while_adding_site">حدث خطأ أثناء إضافة الموقع. خطأ بالخصائص: %s</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">التحقق من عنوان الموقع</string>
+    <string name="login_site_address_more_help">هل تحتاج إلى مزيد من المساعدة؟</string>
+    <string name="login_site_address_help_content">يظهر عنوان موقعك في الشريط الموجود في أعلى الشاشة عندما تدخل إلى موقعك من متصفح Chrome.</string>
+    <string name="login_site_address_help_title">ما عنوان الموقع الخاص بي؟</string>
     <string name="enter_site_address" a8c-src-lib="module:login">أدخل العنوان لموقع ووردبريس الذي تود الاتصال به.</string>
     <string name="login_site_address" a8c-src-lib="module:login">رابط الموقع</string>
     <string name="login_already_logged_in_wpcom">تم تسجيل الدخول بالفعل إلى WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">المتابعة</string>
+    <string name="enter_wpcom_password">أدخل كلمة مرور لحساب WordPress.com الخاص بك</string>
     <string name="connect_more">الاتصال بموقع آخر</string>
+    <string name="login_magic_link_email_requesting">طلب بريد إلكتروني لتسجيل الدخول</string>
+    <string name="password_incorrect">يبدو أن كلمة المرور هذه غير صحيحة. يرجى التحقق مجددًا من معلوماتك والمحاولة مرة أخرى.</string>
+    <string name="requesting_otp">طلب رمز تحقق عن طريق رسالة نصية قصيرة (SMS).</string>
+    <string name="login_text_otp">أرسل إليّ رمزًا بدلاً من ذلك.</string>
+    <string name="enter_verification_code">تقريبًا هناك! يرجى إدخال كود التحقق الخاص بووردبريس.كوم من تطبيق الموثق الخاص بك.</string>
     <string name="next">التالي</string>
+    <string name="enter_email_wordpress_com">سجِّل الدخول إلى WordPress.com باستخدام عنوان بريد إلكتروني لإدارة جميع مواقع ووردبريس الخاصة بك.</string>
     <string name="me_profile_photo">صورة الملف الشخصي</string>
     <string name="error_media_parse_error">استجابة غير متوقعة من الخادم</string>
     <string name="upload_finished_toast">يتعذر إيقاف التحميل لأنه انتهى بالفعل</string>
@@ -3201,6 +3387,8 @@ Language: ar
     <string name="error_unknown_post_type">تنسيق المقالة غير معروف</string>
     <string name="submit_for_review">إرسال</string>
     <string name="title_subscriber">مشترك</string>
+    <string name="duplicate_site_detected">تم اكتشاف موقع متكرر.</string>
+    <string name="cannot_add_duplicate_site">الموقع موجود بالفعل في التطبيق، لا يمكنك إضافته.</string>
     <string name="already_logged_in_wpcom">أنت قيد تسجيل الدخول بالفعل إلى حساب WordPress.com، ولا يمكنك إضافة موقع من WordPress.com مرتبط بحساب آخر.</string>
     <string name="error_media_load">تعذر تحميل الوسائط</string>
     <string name="error_media_refresh_no_connection">يلزم توفر اتصال لتحديث المكتبة</string>
@@ -3211,6 +3399,8 @@ Language: ar
     <string name="media_generic_error">حدث خطأ في الوسائط</string>
     <string name="retry">إعادة المحاولة</string>
     <string name="confirm">تأكيد</string>
+    <string name="xmlrpc_endpoint_forbidden_error">تعذر الاتصال. تلقينا الخطأ 403 عند محاولة الوصول إلى\n نقطة نهاية XMLRPC على موقعك. يحتاج التطبيق إلى ذلك للاتصال بموقعك. يرجى الاتصال بالمضيف لإيجاد حل\n لهذه المشكلة.</string>
+    <string name="xmlrpc_post_blocked_error">تعذر الاتصال. يقوم المضيف الخاص بك بحظر طلبات POST، ويحتاج التطبيق إليها\n للاتصال بموقعك. يُرجى الاتصال بالمضيف لحل هذه المشكلة.</string>
     <string name="pending_draft_one_generic">لا تتركه معلقًا! \"%1$s\" بانتظار النشر.</string>
     <string name="pending_draft_one_month">لا تتركه معلقًا! \"%1$s\" بانتظار النشر.</string>
     <string name="pending_draft_one_week_2">يبقى \"%1$s\" كمسودة. تذكّر أن تنشرها!</string>
@@ -3293,6 +3483,8 @@ Language: ar
     <string name="error_locating_image">حدث خطأ أثناء تحديد موقع الصورة التي تم اقتصاصها</string>
     <string name="error_refreshing_gravatar">حدث خطأ أثناء إعادة تحميل جرافتار</string>
     <string name="error_cropping_image">حدث خطأ أثناء اقتصاص الصورة</string>
+    <string name="checking_email">التحقق من البريد الإلكتروني</string>
+    <string name="magic_link_unavailable_error_message">غير متاح حاليًا. يُرجى إدخال كلمة مرورك</string>
     <string name="logging_in">تسجيل الدخول</string>
     <string name="web_address_dialog_hint">تظهر للعامة أثناء تعليقك.</string>
     <string name="export_your_content_message">سيتم إرسال مقالاتك وصفحاتك وإعداداتك إليك عبر البريد الإلكتروني على %s.</string>
@@ -3325,6 +3517,7 @@ Language: ar
     <string name="comments_empty_list_filtered_pending">لا توجد تعليقات في قائمة الإنتظار</string>
     <string name="comments_empty_list_filtered_approved">لا توجد تعليقات تمّت الموافقة عليها</string>
     <string name="button_skip">تخطي</string>
+    <string name="xmlrpc_missing_method_error">تعذر الاتصال. طرق XML-RPC غير موجودة على الخادم.</string>
     <string name="post_format_status">الحالة</string>
     <string name="alignment_center">وسط</string>
     <string name="post_format_video">فيديو</string>
@@ -3384,6 +3577,7 @@ Language: ar
     <string name="about_the_app">حول التطبيق</string>
     <string name="error_post_account_settings">تعذر حفظ إعدادات الحساب</string>
     <string name="error_fetch_account_settings">تعذر استرداد إعدادات حسابك</string>
+    <string name="error_fetch_my_profile">تعذر استرداد ملفك الشخصي</string>
     <string name="site_settings_unknown_language_code_error">لم يتم التعرف على رمز اللغة</string>
     <string name="site_settings_threading_dialog_description">السماح للتعليقات بالتداخل في سلسلة المواضيع.</string>
     <string name="site_settings_threading_dialog_header">عمق الموضوع إلى</string>
@@ -3572,7 +3766,10 @@ Language: ar
     <string name="my_site_btn_blog_posts">مقالات</string>
     <string name="reader_label_new_posts_subtitle">انقر لعرضها</string>
     <string name="select_all">اختيار الكل</string>
+    <string name="verification_code">رمز التحقق</string>
+    <string name="invalid_verification_code">رمز التحقق غير صالح</string>
     <string name="language">اللغة</string>
+    <string name="auth_required">سجّل الدخول مرة أخرى للمتابعة.</string>
     <string name="reader_empty_posts_request_failed">يتعذر استرداد المقالات</string>
     <string name="error_notification_open">تعذر فتح التنبيه</string>
     <string name="stats_search_terms_unknown_search_terms">مصطلحات بحث غير معروفة</string>
@@ -3638,6 +3835,7 @@ Language: ar
     <string name="no_network_message">لاتوجد شبكة متاحة</string>
     <string name="gallery_error">لا يمكن استعادة عنصر الوسائط المتعددة</string>
     <string name="invalid_email_message">عنوان بريدك الإلكتروني غير صالح</string>
+    <string name="email_invalid">أدخل عنوان بريد إلكتروني صالح</string>
     <string name="adding_cat_success">تم إضافة التصنيف بنجاح</string>
     <string name="adding_cat_failed">إضافة التصنيف فشلت</string>
     <string name="username_or_password_incorrect">اسم المستخدم أو كلمة المرور غير صحيحة</string>
@@ -3680,6 +3878,7 @@ Language: ar
     <string name="new_media">وسائط جديدة</string>
     <string name="local_changes">التغيرات المحلية</string>
     <string name="post_settings">إعدادات المقالة</string>
+    <string name="fatal_db_error">حدث خطأ اثناء إنشاء قاعدة بيانات التطبيق. حاول إعادة تنصيب التطبيق.</string>
     <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">المحاذاة الأفقية</string>
     <string name="trash">سلة المهملات</string>
     <string name="comment_status_spam">مزعج</string>
@@ -3694,6 +3893,7 @@ Language: ar
     <string name="delete_page">هل تريد حذف الصفحة؟</string>
     <string name="file_not_found">تعذر العثور على الملف المراد رفعه. هل تم حذفه أم نقله؟</string>
     <string name="comment_status_trash">محذوف</string>
+    <string name="http_authorization_required">التخويل مطلوب</string>
     <string name="comment_status_approved">تمّت الموافقة</string>
     <string name="reader_toast_err_removing_tag">تتعذر إزالة هذا الوسم</string>
     <string name="reader_toast_err_adding_tag">تتعذر إضافة هذا الوسم</string>
@@ -3722,6 +3922,7 @@ Language: ar
     <string name="reader_hint_comment_on_comment">رد على التعليق…</string>
     <string name="comments_empty_list">لا توجد تعليقات حتى الآن</string>
     <string name="reader_view_reblog">إعادة التدوين</string>
+    <string name="sign_up_label">التسجيل</string>
     <string name="reader_toast_err_tag_not_valid">هذا الوسم غير صالح</string>
     <string name="themes">القوالب</string>
     <string name="media_edit_title_text">العنوان</string>
@@ -3750,6 +3951,8 @@ Language: ar
     <string name="more_notifications">و %d اكثر</string>
     <string name="sign_in">تسجيل الدخول</string>
     <string name="loading">جاري التحميل…</string>
+    <string name="httppassword">كلمة مرور HTTP</string>
+    <string name="httpuser">اسم مستخدم HTTP</string>
     <string name="error_media_upload">حدث خطأ أثناء رفع ملفات الوسائط</string>
     <string name="incorrect_credentials">اسم المستخدم و/أو كلمة المرور غير صحيحين.</string>
     <string name="password">كلمة المرور</string>

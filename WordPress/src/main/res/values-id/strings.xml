@@ -9,6 +9,7 @@ Language: id
     <string name="support_screen_unified_support_description">Dapatkan jawaban dari tim dukungan kami, kapan saja</string>
     <string name="support_screen_unified_support_title">Dapatkan bantuan</string>
     <string name="unified_support_attachment_match_score">%1$d%% pertandingan</string>
+    <string name="unified_support_status_bot">Bot Oddie</string>
     <string name="unified_support_bot_typing_content_description">Bot dukungan sedang mengetik</string>
     <string name="unified_support_message_input_placeholder">Ketik pesan…</string>
     <string name="unified_support_conversations_title">Dapatkan bantuan</string>
@@ -90,6 +91,7 @@ Language: id
     <string name="gutenberg_kit_announcement_learn_more">Baca selengkapnya</string>
     <string name="gutenberg_kit_announcement_maybe_later">Mungkin nanti</string>
     <string name="gutenberg_kit_announcement_activate">Aktifkan</string>
+    <string name="gutenberg_kit_announcement_body_deadline">Pada akhir Juni 2026, editor ini akan menjadi editor default untuk semua pengguna. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">Editor blok generasi baru telah siap dan menghadirkan lebih banyak fitur baru.</string>
     <string name="gutenberg_kit_announcement_title">Editor blok yang lebih baik akan segera hadir</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Beralih ke editor blok terlebih dahulu untuk mencoba editor baru.</string>
@@ -230,6 +232,7 @@ Language: id
     <string name="stats_period_selector_content_description">Pilih periode statistik</string>
     <string name="stats_period_custom">Kustom</string>
     <string name="stats_period_last_12_months">12 bulan terakhir</string>
+    <string name="stats_period_last_6_months">6 bulan terakhir</string>
     <string name="stats_period_last_30_days">30 hari terakhir</string>
     <string name="stats_period_last_7_days">7 hari terakhir</string>
     <string name="stats_period_today">Hari ini</string>
@@ -246,6 +249,8 @@ Language: id
     <string name="post_rs_confirm_delete_message">Tindakan ini akan menghapus pos secara permanen. Tindakan ini tidak dapat dibatalkan.</string>
     <string name="post_rs_confirm_trash_message">Anda yakin ingin membuang pos ini?</string>
     <string name="post_rs_failed_to_load">Gagal memuat pos</string>
+    <string name="experimental_rs_pages_list_description">Tampilkan daftar halaman di UI yang lebih modern untuk WordPress.com dan situs yang dihosting sendiri dengan kata sandi aplikasi</string>
+    <string name="experimental_rs_pages_list">Daftar Halaman Baru</string>
     <string name="stats_error_admin_url_unavailable">Tidak dapat membuka WP Admin untuk situs ini</string>
     <string name="stats_error_parsing">Terjadi masalah saat memuat data. Coba lagi</string>
     <string name="stats_error_network">Error jaringan. Periksa koneksi Anda dan coba lagi</string>
@@ -305,6 +310,8 @@ Language: id
     <string name="he_support_status_unknown">Tidak diketahui</string>
     <string name="he_support_status_closed">Ditutup</string>
     <string name="he_support_status_solved">Teratasi</string>
+    <string name="he_support_status_waiting_for_user">Menunggu Pengguna</string>
+    <string name="he_support_status_waiting_for_support">Menunggu Dukungan</string>
     <string name="he_support_select_attachments">Pilih lampiran</string>
     <string name="he_support_download_attachment">Unduh lampiran</string>
     <string name="he_support_include_logs_description">Menyertakan log dapat membantu tim kami menyelidiki kendala. Log mungkin berisi aktivitas aplikasi terbaru.</string>
@@ -474,6 +481,7 @@ Language: id
     <string name="experimental_block_editor_note">Editor blok eksperimental akan menjadi pengaturan asal di rilis mendatang dan fitur untuk menonaktifkannya akan dihapus.</string>
     <string name="avatar_update_email_unverified">Untuk memperbarui avatar, alamat email Anda harus diverifikasi terlebih dahulu.</string>
     <string name="feedback_form_note_link_wordpress">forum komunitas.</string>
+    <string name="default_web_client_id">placeholder</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Tombol pintasan %s</string>
     <string name="personalization_screen_card_accessibility_label">Tombol kartu %s</string>
     <string name="user_avatar_content_description">Avatar untuk pengguna %s</string>
@@ -741,8 +749,13 @@ Language: id
     <string name="barcode_scanning_alert_dialog_rationale_message">Izin kamera diperlukan untuk memindai barcode</string>
     <string name="barcode_scanning_alert_dialog_title">Izinkan Akses Kamera</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok bertingkat yang kedalamannya melebihi %d level mungkin tidak dapat ditampilkan dengan benar di editor seluler.</string>
+    <string name="jp_migration_lets_go_button">Ayo</string>
+    <string name="jp_migration_done_no_sites_message">Waktunya untuk melanjutkan perjalanan WordPress Anda di aplikasi Jetpack!</string>
     <string name="domain_management_clear_search">Hapus pencarian</string>
     <string name="media_encoder_quality_very_high">Sangat Tinggi</string>
+    <string name="notification_security_key_needed">Silakan berikan kunci keamanan Anda untuk melanjutkan.</string>
+    <string name="login_error_security_key">Terjadi masalah dengan login kunci Keamanan.</string>
+    <string name="login_text_security_key">Gunakan kunci keamanan.</string>
     <string name="new_domain_search_screen_error_title">Tidak dapat mengambil domain</string>
     <string name="new_domain_search_screen_list_item_sale_price">%s untuk tahun pertama</string>
     <string name="new_domain_search_screen_list_item_regular_price">%s / tahun</string>
@@ -922,16 +935,22 @@ Language: id
     <string name="sharing_twitter_deprecation_notice_find_out_more">Cari tahu selengkapnya</string>
     <string name="sharing_twitter_deprecation_notice_description">Membagikan otomatis di Twitter tidak lagi tersedia karena perubahan kebijakan dan harga di Twitter.</string>
     <string name="sharing_twitter_deprecation_notice_title">Membagikan otomatis di Twitter tidak lagi tersedia</string>
+    <string name="jp_migration_notifications_allow_title">Izinkan pemberitahuan untuk mengikuti perkembangan situs Anda</string>
+    <string name="wp_jp_static_poster_message">Aplikasi Jetpack memiliki semua fungsionalitas aplikasi WordPress, dan sekarang memiliki akses eksklusif ke Statistik, Pembaca, Notifikasi, dan lainnya.</string>
+    <string name="wp_jp_static_poster_title_plural">Gunakan WordPress dengan %s di aplikasi\u00A0Jetpack.</string>
+    <string name="wp_jp_static_poster_title">Gunakan WordPress dengan %s di aplikasi\u00A0Jetpack.</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Warna tanpa label. %s</string>
     <string name="dashboard_activity_card_title">Aktivitas terbaru</string>
     <string name="site_creation_search_domain_example_body">Seperti contoh di atas, domain mengizinkan Anda menemukan dan mengunjungi situs Anda dari web browser.</string>
     <string name="site_creation_search_domain_example_title">NamaSitusAnda.com</string>
     <string name="site_creation_domain_search_input_hint">Cari dengan kata kunci</string>
     <string name="site_creation_domain_header_subtitle">Cari domain yang pendek dan mudah diingat agar siapa pun mudah menemukan dan mengunjungi situs Anda.</string>
+    <string name="site_creation_domain_cost_sale">untuk tahun pertama</string>
     <string name="site_creation_error_cart_subtitle">Situs web Anda berhasil dibuat, namun kami menemukan kendala saat menyiapkan domain khusus Anda selama checkout. Mohon coba lagi atau hubungi bantuan jika diperlukan.</string>
     <string name="new_site_creation_preview_caption_paid">Diperlukan 30 menit agar domain khusus Anda dapat berfungsi.</string>
     <string name="new_site_creation_preview_subtitle_paid">Kami telah mengirim e-mail resi Anda. %s</string>
     <string name="notifications_disabled_permission_dialog">Pemberitahuan aplikasi telah dinonaktifkan. Ketuk di sini untuk mengaktifkannya.</string>
+    <string name="jp_migration_done_delete_wp_message">Kami sarankan untuk &lt;b&gt;menghapus instalan aplikasi WordPress&lt;/b&gt; di perangkat Anda guna mencegah terjadinya konflik data.</string>
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Hapus blok</string>
     <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Privasi dan rating</string>
     <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pengaturan Playback</string>
@@ -974,6 +993,9 @@ Language: id
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Situs berikut</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s ini menggunakan %2$s yang belum mendukung semua fitur dalam aplikasi. Silakan instal %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s ini menggunakan %2$s yang belum mendukung semua fitur dalam aplikasi. Silakan instal %3$s.</string>
+    <string name="wp_jp_static_poster_footnote">Beralihlah ke aplikasi—gratis dan prosesnya cepat!</string>
+    <string name="wp_jp_static_poster_button_secondary">Baca selengkapnya di Jetpack.com</string>
+    <string name="wp_jp_static_poster_button_primary">Ganti ke aplikasi Jetpack</string>
     <string name="my_site_btn_wp_admin">Admin WP</string>
     <string name="my_site_header_manage">Kelola</string>
     <string name="my_site_header_traffic">Lalu Lintas</string>
@@ -990,8 +1012,11 @@ Language: id
     <string name="blaze_promotional_text">Tingkatkan jumlah pengunjung situs Anda dengan Blaze</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="site_creation_domain_tag_unavailable">Domain ini sudah terdaftar</string>
+    <string name="site_creation_domain_tag_sale">Obral</string>
     <string name="site_creation_domain_tag_recommended">Disarankan</string>
     <string name="site_creation_domain_tag_best_alternative">Alternatif Terbaik</string>
+    <string name="support_faq_caption">Tanya Jawab Umum akan menjawab berbagai pertanyaan yang umum diajukan.</string>
+    <string name="support_faq_title">Terima kasih sudah beralih ke aplikasi Jetpack.</string>
     <string name="logs_button">Log</string>
     <string name="tickets">Tiket</string>
     <string name="free">Gratis</string>
@@ -1027,6 +1052,12 @@ Language: id
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Maksimalkan potensi situs Anda. Dapatkan statistik, pemberitahuan, dan lainnya dengan Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Situs Anda memiliki plugin Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Aplikasi seluler Jetpack didesain agar terintegrasi dengan plugin Jetpack. Beralih sekarang untuk mengakses statistik, pemberitahuan, pembaca dan lainnya.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Dapatkan notifikasi komentar, jumlah suka, jumlah pengunjung baru, dan lainnya.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Temukan dan ikuti situs dan komunitas favorit Anda, serta bagikan konten Anda.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Amati peningkatan lalu lintas Anda lewat statistik lengkap dan wawasan penuh makna.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistik &amp; Wawasan</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack membuka jalan untuk lebih memberdayakan situs WordPress Anda. Beralihlah ke aplikasi—gratis dan prosesnya cepat!</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Sempurnakan WordPress dengan Jetpack</string>
     <string name="blogging_prompts_onboarding_content_note_content">Anda dapat mengendalikan Prompt dan Pengingat Blogging kapan pun di Situs Saya &gt; Pengaturan &gt; Blogging</string>
     <string name="blogging_reminders_prompt_subtitle">Pemberitahuan akan mencakup kata atau frasa singkat sebagai inspirasi</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Buka &lt;b&gt;Pengaturan Situs&lt;/b&gt; untuk menyalakan kembali</string>
@@ -1038,6 +1069,15 @@ Language: id
     <string name="site_settings_blogging_prompts_title">Tampilkan prompt</string>
     <string name="site_settings_blogging">Penulisan Blog</string>
     <string name="install_play_store_to_get_jetpack">Silakan instal Google Play Store untuk mendapatkan aplikasi Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Lakukan ini nanti</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Ganti ke Jetpack </string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistik, Reader, Pemberitahuan, dan beragam fitur lain berbasis Jetpack telah dihapus dari aplikasi WordPress.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Fitur-fitur Jetpack telah berpindah.</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s berpindah %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s berpindah %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s segera berpindah</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s segera berpindah</string>
+    <string name="wp_jetpack_powered_phase_2">Dapatkan aplikasi Jetpack</string>
     <string name="my_site_blogging_prompt_card_view_answers">Lihat semua tanggapan</string>
     <string name="stats_insights_total_stats_seven_days_negative">%1$s lebih rendah dari 7 hari sebelumnya</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s lebih tinggi dari 7 hari sebelumnya</string>
@@ -1047,10 +1087,21 @@ Language: id
     <string name="stats_insights_views_and_visitors_seven_days_views_positive">Penayangan Anda dalam 7 hari terakhir %1$s lebih tinggi dari 7 hari sebelumnya.</string>
     <string name="stats_timeframe_previous_seven_days">7 hari sebelumnya</string>
     <string name="stats_timeframe_last_seven_days">7 hari terakhir</string>
+    <string name="weeks_quantity_other">%d minggu</string>
+    <string name="weeks_quantity_one">1 minggu</string>
     <string name="my_site_blogging_prompt_card_attribution_day_one">Dari &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Ingatkan saya nanti</string>
+    <string name="jetpack_feature_card_content_phase_three">Statistik, Reader, Pemberitahuan, dan berbagai fitur lain akan segera berpindah ke aplikasi ponsel Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Ganti ke aplikasi Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Baca selengkapnya di jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Bergantilah ke aplikasi—gratis dan prosesnya cepat!</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Statistik, Reader, Pemberitahuan, dan beragam fitur lain berbasis Jetpack akan segera dihapus dari aplikasi WordPress.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Statistik, Reader, Pemberitahuan, dan beragam fitur lain berbasis Jetpack akan dihapus dari aplikasi WordPress pada %s.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Beragam fitur Jetpack akan segera berpindah.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Pemberitahuan akan berpindah ke Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader akan berpindah ke aplikasi Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Statistik Anda akan berpindah ke aplikasi Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Beralih ke aplikasi Jetpack baru</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Terjadi eror saat memuat prompt.</string>
     <string name="blogging_prompts_list_error_fetch_title">Waduh</string>
     <string name="blogging_prompts_list_no_prompts">Belum ada prompt</string>
@@ -1076,11 +1127,39 @@ Language: id
     <string name="wp_jetpack_continue_without_jetpack">Lanjutkan tanpa Jetpack</string>
     <string name="deep_linking_weblinks_alias_label">tautanweb</string>
     <string name="deep_linking_urilinks_alias_label">tautanuri</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Ganti ke aplikasi Jetpack agar dapat tetap menerima  notifikasi real-time langsung di perangkat Anda.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Ganti ke aplikasi Jetpack untuk menemukan, mengikuti, dan memberi suka ke situs dan pos favorit lewat Reader.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Ganti ke aplikasi Jetpack untuk memantau perkembangan situs dengan fitur statistik dan wawasan.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Dapatkan pemberitahuan dengan aplikasi Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Ikuti situs apa pun dengan aplikasi Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Dapatkan statistik situs Anda lewat aplikasi Jetpack baru</string>
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Tidak dapat menonaktifkan fitur buka tautan di Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Tidak dapat mengaktifkan fitur buka tautan di Jetpack</string>
     <string name="preference_open_links_in_jetpack">Buka tautan di Jetpack</string>
+    <string name="jp_migration_network_error_message">Tanpa koneksi internet, kami tidak dapat mentransfer data dan pengaturan.</string>
+    <string name="jp_migration_network_error_subtitle">Pastikan koneksi internet berfungsi lalu coba kembali.</string>
+    <string name="jp_migration_network_error_title">Tidak dapat menyambung ke internet.</string>
+    <string name="jp_migration_generic_error_message">Hubungi dukungan atau coba lagi nanti.</string>
+    <string name="jp_migration_generic_error_subtitle">Mohon maaf, prosesnya tidak berjalan sesuai rencana. Data Anda tetap aman, tetapi kali ini kami tidak dapat mentransfernya.</string>
     <string name="jp_migration_generic_error_title">Ups, ada yang salah..</string>
+    <string name="jp_migration_try_again_button">Coba lagi</string>
+    <string name="jp_migration_finish_button">Selesai</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">Hapus ikon Aplikasi WordPress</string>
+    <string name="jp_migration_done_subtitle">Kami telah mentransfer semua data dan pengaturan Anda. Semua percis seperti terakhir Anda tinggalkan.</string>
+    <string name="jp_migration_done_title">Terima kasih telah beralih ke Jetpack!</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">Kami akan menonaktifkan pemberitahuan dari aplikasi WordPress.</string>
+    <string name="jp_migration_notifications_subtitle">Anda akan tetap menerima pemberitahuan tersebut, tetapi dari aplikasi Jetpack.</string>
+    <string name="wordpress_help_center_button">Pusat bantuan WordPress</string>
     <string name="support_title">Dukungan</string>
+    <string name="notification_disable_broadcast_permission_desc">Mengizinkan aplikasi untuk menonaktifkan pemberitahuan WordPress.</string>
+    <string name="notification_disable_broadcast_permission_label">nonaktifkan pemberitahuan WordPress</string>
+    <string name="jp_migration_help_button">Butuh bantuan?</string>
+    <string name="jp_migration_continue_button">Lanjutkan</string>
+    <string name="jp_migration_welcome_site_found_message">Kami menemukan situs Anda. Lanjutkan memindahkan semua data Anda dan masuk ke Jetpack secara otomatis.</string>
+    <string name="jp_migration_welcome_sites_found_message">Kami menemukan situs Anda. Lanjutkan memindahkan semua data Anda dan masuk ke Jetpack secara otomatis.</string>
+    <string name="jp_migration_avatar_content_description">Foto profil Anda</string>
+    <string name="jp_migration_welcome_subtitle">Sepertinya Anda beralih dari aplikasi WordPress.</string>
+    <string name="jp_migration_welcome_title">Selamat datang di Jetpack!</string>
     <string name="icon_desc">ikon</string>
     <string name="post_settings_parent">Halaman Induk</string>
     <string name="post_settings_page_attributes">Atribut Halaman</string>
@@ -1116,6 +1195,7 @@ Language: id
     <string name="weekly_roundup_notification_text_views_only">Minggu lalu Anda mendapatkan %1$s tayangan.</string>
     <string name="weekly_roundup_notification_text_all">Minggu lalu Anda mendapatkan %1$s tayangan, %2$s suka, dan %3$s komentar.</string>
     <string name="stats_insights_like_guide_card">⭐️ Artikel terbaru Anda %1$s telah menerima %2$s suka.</string>
+    <string name="wp_jetpack_powered">Didukung Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Gambar menunjukkan pemindaian kode login sedang berlangsung</string>
     <string name="qrcode_auth_flow_error_content_description">Gambar menunjukkan terjadinya error</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">Autentikasi Gagal</string>
@@ -1290,6 +1370,11 @@ Language: id
     <string name="notification_channel_weekly_roundup_title">Ringkasan Mingguan</string>
     <string name="my_site_dashboard_tab_title">Beranda</string>
     <string name="adding_cat">Menambahkan kategori</string>
+    <string name="login_select_email_client">Aplikasi email apa yang Anda gunakan?</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">Ada kendala saat berkomunikasi dengan situs. Kode error HTTP 401 dikembalikan.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">Panggilan XML-RPC tampaknya diblok di situs ini (kode error 401). Jika upaya login gagal, ketuk ikon bantuan untuk melihat FAQ.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">Tidak dapat membaca situs WordPress dalam URL tersebut. Ketuk ikon bantuan untuk melihat FAQ.</string>
+    <string name="login_error_xml_rpc_services_disabled">Layanan XML-RPC tidak tersedia di situs ini.</string>
     <string name="my_site_menu_tab_title">Menu</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Pencarian Anda includes karakter yang tidak didukung di domain WordPress.com. Karakter berikut diperbolehkan: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Periksa koneksi internet Anda dan muat ulang halaman.</string>
@@ -1532,6 +1617,11 @@ Language: id
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Masukkan kredensial server Anda&lt;/a&gt; untuk memperbaiki ancaman.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Masukkan kredensial server Anda&lt;/a&gt; untuk memperbaiki ancaman.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk menambahkan tautan.</string>
+    <string name="login_empty_view_try_another_account">Coba dengan akun lain</string>
+    <string name="login_empty_view_see_instructions">Lihat petunjuk</string>
+    <string name="login_no_jetpack_sites_error_message">Jika telah memiliki situs, Anda perlu menginstal plugin Jetpack gratis dan menghubungkannya ke akun WordPress.com Anda.</string>
+    <string name="login_empty_view_avatar_content_description">Foto profil Anda</string>
+    <string name="login_not_a_jetpack_site">Untuk menggunakan aplikasi ini untuk %1$s, Anda perlu memasang plugin Jeptpack dan menghubungkannya ke akun WordPress.com Anda.</string>
     <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pengaturan Lebar</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link Rel</string>
     <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pengaturan Kolom</string>
@@ -1567,6 +1657,7 @@ Language: id
     <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Lainnya</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Menjelaskan secara singkat tautan untuk membantu pengguna pembaca layar</string>
     <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tambahkan blok</string>
+    <string name="login_no_jetpack_sites">Situs Jetpack tidak ditemukan</string>
     <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Apa itu teks alt?</string>
     <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ubah %s menjadi</string>
     <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Mengubah blok…</string>
@@ -1613,6 +1704,7 @@ Language: id
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk membuka Lembar Tindakan untuk menyunting, mengganti, atau menghapus gambar</string>
     <string name="new_site_creation_search_domain_example">contoh.com</string>
     <string name="new_site_creation_search_domain_input_hint">Ketik nama untuk situs Anda</string>
+    <string name="magic_link_not_meaning_to_create_account">Tidak ingin membuat akun baru? Silakan kembali dan masukkan lagi alamat email Anda.</string>
     <string name="invite_links_disable_dialog_message">Setelah tautan undangan ini dinonaktifkan, calon anggota tidak akan bisa lagi menggunakannya untuk bergabung dengan tim Anda. Apakah Anda yakin?</string>
     <string name="invite_links_disable_dialog_title">Nonaktifkan tautan undangan</string>
     <string name="invite_links_bad_format_response">Respons yang diterima tidak valid</string>
@@ -1874,6 +1966,8 @@ Language: id
     <string name="hpp_retry_error">Harap periksa koneksi internet Anda lalu coba lagi.</string>
     <string name="hpp_error_subtitle">Ketuk coba lagi saat  Anda kembali online.</string>
     <string name="hpp_error_title">Tata letak tidak tersedia saat offline</string>
+    <string name="continue_site_credentials">Lanjutkan dengan kredensial toko</string>
+    <string name="login_find_your_connected_email">Temukan email Anda yang terhubung</string>
     <string name="reader_discover_no_posts_follow_subtitle">Coba ikuti lebih banyak tag untuk memperluas pencarian</string>
     <string name="reader_discover_no_posts_title">Tak ada pos terbaru</string>
     <string name="reader_discover_empty_title">Selamat datang!</string>
@@ -1914,6 +2008,8 @@ Language: id
     <string name="suggestion_no_connection">Tidak tersedia koneksi internet.\nSaran tidak tersedia.</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s dipilih</string>
+    <string name="login_get_link_by_email">Dapatkan tautan login lewat email</string>
+    <string name="email_not_registered_wpcom">Hmm, kami tidak dapat menemukan akun WordPress.com yang terhubung dengan alamat email ini.</string>
     <string name="permission_microphone">Mikrofon</string>
     <string name="comment_unable_to_show_error">Tidak dapat menampilkan komentar ini</string>
     <string name="media_browse_for_items">Telusuri item</string>
@@ -1950,7 +2046,26 @@ Language: id
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pilih gambar</string>
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok dihapus</string>
     <string name="enter_your_site_address">Masukkan alamat situs Anda saat ini</string>
+    <string name="signup_confirmation_title">Konfirmasi pendaftaran</string>
+    <string name="continue_with_google_terms_of_service_text">Jika Anda melanjutkan dengan Google dan belum memiliki akun WordPress.com, Anda akan membuat akun dan menyetujui  %1$sKetentuan Layanan%2$s kami.</string>
+    <string name="continue_terms_of_service_text">Dengan melanjutkan, Anda menyetujui %1$sKetentuan Layanan%2$s kami.</string>
+    <string name="signup_confirmation_message">Kami akan menggunakan alamat email ini untuk membuat akun WordPress.com baru Anda.</string>
+    <string name="signup_magic_link_message">Kami telah mengirimi Anda email berisi tautan masuk untuk membuat akun WordPress.com baru. Periksa email Anda di perangkat ini, dan ketuk tautan dalam email yang Anda terima dari WordPress.com</string>
+    <string name="enter_account_info_for_site">Masukkan informasi akun Anda untuk %1$s.</string>
+    <string name="login_or">atau</string>
+    <string name="continue_google_button_suffix">Lanjutkan dengan Google</string>
+    <string name="login_find_your_site_adress">Temukan alamat situs Anda</string>
+    <string name="login_done">Selesai</string>
+    <string name="magic_link_not_seeing_email_message">Tidak melihat emailnya? Periksa folder Email Spam atau Sampah.</string>
+    <string name="login_magic_links_sent_label">Periksa email Anda di perangkat ini, dan ketuk tautan dalam email yang Anda terima dari WordPress.com</string>
+    <string name="login_magic_links_label">Kami akan mengirimkan email berisi tautan yang bisa Anda gunakan untuk login dalam sekejap, tanpa kata sandi.</string>
+    <string name="check_email">Periksa email</string>
     <string name="get_started" a8c-src-lib="module:login">Memulai</string>
+    <string name="enter_email_to_continue_wordpress_com">Masukkan alamat email Anda untuk login atau membuat akun WordPress.com.</string>
+    <string name="or_type_your_password">Atau ketik kata sandi Anda</string>
+    <string name="create_account">Buat akun</string>
+    <string name="send_link_by_email">Kirim tautan lewat email</string>
+    <string name="reset_your_password">Reset kata sandi</string>
     <string name="reader_error_request_failed_title">Ada masalah saat menangani permintaan. Silakan coba lagi nanti.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Membuang pos ini juga akan menghapus perubahan lokal, Anda yakin ingin melanjutkan?</string>
     <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s pilihan blok</string>
@@ -2173,6 +2288,9 @@ Language: id
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Keterangan galeri. %s</string>
     <string name="create_post_page_fab_tooltip">Buat pos atau halaman</string>
     <string name="content_description_person_building_website">Orang membangun situs web</string>
+    <string name="post_signup_interstitial_not_right_now">Jangan sekarang</string>
+    <string name="post_signup_interstitial_subtitle">Apa pun yang ingin Anda buat atau bagikan, kami akan membantu Anda melakukannya di sini.</string>
+    <string name="post_signup_interstitial_title">Selamat Datang di WordPress</string>
     <string name="stock_media_picker_list_content_description">Pustaka foto</string>
     <string name="photo_picker_image_thumbnail_unselected">Tidak ada gambar yang dipilih</string>
     <string name="photo_picker_image_selected">,Terpilih</string>
@@ -2186,6 +2304,12 @@ Language: id
     <string name="dialog_confirm_scheduled_post_sync_title">Siap Mensinkronkan?</string>
     <string name="new_site_creation_unavailable_domain">Domain ini tidak tersedia</string>
     <string name="negative_prefix">-%s</string>
+    <string name="login_discovery_error_generic">Kami tidak dapat mengakses situs Anda. Anda harus menghubungi host untuk mengatasi masalah ini.</string>
+    <string name="login_discovery_error_ssl">Kami tidak dapat mengakses situs Anda karena ada masalah dengan &lt;b&gt;Sertifikat SSL&lt;/b&gt;. Anda harus menghubungi host untuk mengatasi masalah ini.</string>
+    <string name="login_discovery_error_http_auth">Kami tidak dapat mengakses situs Anda akrena hal ini membutuhkan &lt;b&gt;Autentikasi HTTP&lt;/b&gt;. Anda harus menghubungi host untuk mengatasi masalah ini.</string>
+    <string name="login_discovery_error_xmlrpc">Kami tidak dapat mengakses &lt;b&gt;file XMLRPC&lt;/b&gt; situs Anda. Anda harus menghubungi host untuk mengatasi masalah ini.</string>
+    <string name="login_site_credentials_magic_link_label">Hampir selesai! Kami hanya perlu memverifikasi alamat email Anda yang terhubung dengan Jetpack &lt;b&gt;%1$s&lt;/b&gt;</string>
+    <string name="enter_credentials_for_site">Login dengan kredensial situs %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Halaman situs</string>
     <string name="reader_my_likes_display_name">Suka</string>
     <string name="reader_discover_display_name">Temukan</string>
@@ -2343,6 +2467,8 @@ Language: id
     <string name="post_settings_add_to_calendar">Tambahkan ke kalender</string>
     <string name="post_settings_notification">Pemberitahuan</string>
     <string name="post_settings_time_and_date">Tanggal &amp; Waktu</string>
+    <string name="login_invalid_site_url">Masukkan alamat situs web lengkap, seperti contoh.com.</string>
+    <string name="enter_email_for_site">Login dengan WordPress.com untuk terhubung ke %1$s</string>
     <string name="stats_post_views_label">Tampilan</string>
     <string name="stats_post_label">Pos</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -2448,6 +2574,8 @@ Language: id
     <string name="posts_draft_empty">Anda tidak memiliki pos konsep</string>
     <string name="posts_scheduled_empty">Anda belum memiliki pos terjadwal</string>
     <string name="posts_published_empty">Anda belum memublikasikan pos apa pun!</string>
+    <string name="notification_wpcom_username_needed">Silakan login dengan nama pengguna dan kata sandi Anda.</string>
+    <string name="error_user_username_instead_of_email">Silakan login menggunakan nama pengguna WordPress.com sebagai ganti alamat email Anda.</string>
     <string name="stats_insights_average_words">Rata-rata kata/pos</string>
     <string name="stats_insights_total_words">Total kata</string>
     <string name="stats_insights_average_likes">Rata-rata suka/pos</string>
@@ -2457,6 +2585,7 @@ Language: id
     <string name="stats_insights_posts">Pos</string>
     <string name="stats_insights_year">Tahun</string>
     <string name="stats_insights_this_year_site_stats">Tahun Ini</string>
+    <string name="no_site_error">Situs di alamat ini bukan situs WordPress. Agar kami dapat menghubungkannya, situs harus menggunakan WordPress.</string>
     <string name="plugin_check_domain_credit_error">Gagal memeriksa kredit domain yang tersedia</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Memeriksa kredit domain</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Daftarkan domain</string>
@@ -2589,6 +2718,7 @@ Language: id
     <string name="history_detail_button_previous">Sebelumnya</string>
     <string name="history_detail_button_next">Selanjutnya</string>
     <string name="media_space_used">%1$s digunakan</string>
+    <string name="enter_wpcom_or_jetpack_site">Masukkan situs WordPress dihosting sendiri yang terhubung ke Jetpack atau WordPress.com</string>
     <string name="history_loading_revision">Memuat revisi</string>
     <string name="history_loaded_revision">Revisi dimuat</string>
     <string name="history_load_dialog_button_positive">Memuat</string>
@@ -2617,6 +2747,8 @@ Language: id
     <string name="pages_scheduled">Terjadwal</string>
     <string name="pages_drafts">Konsep</string>
     <string name="pages_published">Dipublikasikan</string>
+    <string name="login_error_sms_throttled">Kami terlalu banyak melakukan upaya pengiriman kode verifikasi SMS. Tunggu sebentar, dan minta kode yang baru beberapa saat lagi.</string>
+    <string name="login_error_email_not_found_v2">Tidak ada akun WordPress.com yang cocok dengan akun Google ini.</string>
     <string name="site_picker_remove_site_empty">Tidak ada situs yang cocok dengan pencarian Anda</string>
     <string name="reader_no_followed_blogs_search_title">Tidak ada blog yang cocok dengan pencarian Anda</string>
     <string name="page_parent_changed">Induk halaman telah diubah</string>
@@ -2635,6 +2767,7 @@ Language: id
     <string name="content_description_more">Lainnya</string>
     <string name="my_site_create_new_site_title">Anda belum memiliki situs</string>
     <string name="reader_empty_subscribed_tags_subtitle">Tambahkan tag di sini untuk menemukan pos tentang topik favorit Anda</string>
+    <string name="login_to_to_connect_jetpack">Login ke akun WordPress.com yang Anda gunakan untuk menghubungkan Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
     <string name="stats_jetpack_connection_setup_info">Untuk menggunakan Statistik di situs WordPress, Anda perlu menginstal plugin Jetpack.</string>
@@ -2687,7 +2820,13 @@ Language: id
     <string name="reader_empty_search_title">Tema tidak ditemukan</string>
     <string name="comment_read_source_post">Baca pos sumber</string>
     <string name="sites">Situs</string>
+    <string name="signup_magic_link_title">Tautan ajaib terkirim</string>
+    <string name="verification_2fa_screen_title">Verifikasi kode</string>
+    <string name="selfhosted_site_login_title">Kredensial login</string>
+    <string name="magic_link_sent_login_title">Tautan ajaib terkirim</string>
+    <string name="magic_link_login_title">Login tautan ajaib</string>
     <string name="site_address_login_title" a8c-src-lib="module:login">Login alamat situs</string>
+    <string name="email_address_login_title">Login alamat email</string>
     <string name="reader_empty_saved_posts_description">Ketuk %s untuk menyimpan pos ke dalam daftar Anda.</string>
     <string name="reader_empty_saved_posts_title">Belum ada pos yang disimpan!</string>
     <string name="reader_bookmark_snack_title">Pos disimpan</string>
@@ -2789,6 +2928,7 @@ Language: id
     <string name="invite_user_delete_desc">hapus %s</string>
     <string name="profile_picture">Foto profil %s</string>
     <string name="comment_checkmark_desc">tanda cek</string>
+    <string name="signup_with_google_progress">Mendaftar dengan Google…</string>
     <string name="jetpack_connection_failed_with_reason">Koneksi ke Jetpack gagal: %s</string>
     <string name="jetpack_already_connected_toast">Anda sudah terhubung dengan Jetpack!</string>
     <string name="menu_visual_mode">Editor Visual</string>
@@ -2815,6 +2955,7 @@ Language: id
     <string name="notif_detail_screen_title">Detail Pemberitahuan %s</string>
     <string name="edit_photo_screen_title">Edit Foto</string>
     <string name="share_intent_screen_title">Pilih situs</string>
+    <string name="signup_epilogue_screen_title">Akun baru</string>
     <string name="person_detail_screen_title">Detail orang</string>
     <string name="media_settings_screen_title">Detail file</string>
     <string name="publicize_buttons_screen_title">Tombol berbagi</string>
@@ -2865,6 +3006,7 @@ Language: id
     <string name="site_creation_domain_finish_button">Buat situs</string>
     <string name="notification_site_creation_created">Ketuk untuk melanjutkan.</string>
     <string name="notification_site_creation_title_success">Situs telah dibuat!</string>
+    <string name="google_error_timeout">Google terlalu lama dalam merespons. Anda mungkin harus menunggu sampai memiliki koneksi internet yang lebih kuat.</string>
     <string name="username_changer_title">Ubah nama pengguna</string>
     <string name="username_changer_hint">Ketik untuk mendapatkan lebih banyak saran</string>
     <string name="username_changer_header">Nama pengguna Anda saat ini adalah %1$s%2$s%3$s. Dengan beberapa pengecualian, yang lain hanya akan melihat nama tampilan Anda, %4$s%5$s%6$s.</string>
@@ -2874,6 +3016,18 @@ Language: id
     <string name="username_changer_dismiss_button_positive">Buang</string>
     <string name="username_changer_action">Simpan</string>
     <string name="content_description_add_avatar">Tambahkan avatar</string>
+    <string name="signup_user_exists">Email sudah ada di WordPress.com.\nLanjutkan dengan login.</string>
+    <string name="signup_updating_account">Memperbarui akun…</string>
+    <string name="signup_magic_link_progress">Mengirim email</string>
+    <string name="signup_magic_link_error_button_positive">Coba lagi</string>
+    <string name="signup_magic_link_error_button_negative">Tutup</string>
+    <string name="signup_magic_link_error">Ada beberapa masalah saat mengirim email. Anda dapat mencoba lagi sekarang atau menutupnya dan mencoba lagi nanti.</string>
+    <string name="signup_epilogue_hint_username">Nama pengguna</string>
+    <string name="signup_epilogue_hint_password_detail">Anda dapat login dengan tautan seperti tautan yang baru Anda gunakan, tetapi Anda juga dapat menyiapkan kata sandi.</string>
+    <string name="signup_epilogue_hint_password">Kata Sandi (opsional)</string>
+    <string name="signup_epilogue_hint_display">Nama Tampilan</string>
+    <string name="signup_epilogue_error_button_positive">Coba lagi</string>
+    <string name="signup_epilogue_error_button_negative">Kembalikan</string>
     <string name="signup_epilogue_error_generic">Ada beberapa masalah saat memperbarui akun. Anda dapat mencoba lagi atau mengembalikan perubahan untuk melanjutkan.</string>
     <string name="plugin_needs_update">Perlu pembaruan</string>
     <string name="plugin_caption_search">Cari Plugin</string>
@@ -2961,6 +3115,18 @@ Language: id
     <string name="my_site_btn_plugins">Plugin</string>
     <string name="media_edit_link_hint">Buka tautan di jendela/tab baru</string>
     <string name="media_edit_link_text">Tautan ke</string>
+    <string name="notification_login_failed">Terjadi error.</string>
+    <string name="notification_2fa_needed">Masukkan kode autentikasi untuk melanjutkan.</string>
+    <string name="notification_error_wrong_password">Periksa lagi kata sandi Anda sebelum melanjutkan.</string>
+    <string name="notification_login_title_stopped">Login dihentikan</string>
+    <string name="notification_logging_in">Harap tunggu proses login.</string>
+    <string name="notification_login_title_in_progress">Login sedang berlangsung…</string>
+    <string name="notification_logged_in">Ketuk untuk melanjutkan.</string>
+    <string name="notification_login_title_success">Sudah login!</string>
+    <string name="login_error_generic_start">Login Google tidak dapat dimulai.</string>
+    <string name="login_empty_password">Masukkan kata sandi</string>
+    <string name="login_text_otp_another">Kirimi saya kode baru</string>
+    <string name="enter_verification_code_sms">Kami mengirimkan SMS ke nomor ponsel yang berakhiran %s. Masukkan kode verifikasi yang tercantum di SMS tersebut.</string>
     <string name="image_size">Ukuran</string>
     <string name="uploading_subtitle_media_only_one">1 file tersisa</string>
     <string name="uploading_subtitle_media_only">%1$d of %2$d file tersisa</string>
@@ -2977,10 +3143,15 @@ Language: id
     <string name="confirm_remove_media_image">Hapus gambar ini dari pos?</string>
     <string name="media_edit_customize_card_caption">Sesuaikan</string>
     <string name="media_edit_file_details_card_caption">Detail File</string>
+    <string name="login_error_suffix">\nCoba masuk dengan akun lain?</string>
+    <string name="login_error_generic">Ada masalah saat menyambungkan ke akun Google.</string>
     <string name="login_error_button">Tutup</string>
+    <string name="enter_wpcom_password_google">Untuk melanjutkan dengan akun Google ini, silakan masukkan kata sandi WordPress.com yang sesuai. Tindakan ini hanya akan ditanyakan satu kali.</string>
     <string name="error_generic_network">Terjadi error jaringan. Periksa koneksi Anda dan coba lagi.</string>
     <string name="post_settings_remove_featured_image">Hapus gambar andalan</string>
     <string name="post_settings_choose_featured_image">Pilih gambar andalan</string>
+    <string name="login_log_in_for_share_intent">Login ke WordPress.com untuk membagikan konten.</string>
+    <string name="enter_site_address_share_intent">Masukkan alamat situs WordPress tempat Anda ingin membagikan konten.</string>
     <string name="jetpack_disconnect_error_toast">Terjadi error saat memutuskan koneksi situs</string>
     <string name="jetpack_disconnect_success_toast">Situs tidak terhubung</string>
     <string name="jetpack_disconnect_confirm">Putuskan koneksi</string>
@@ -3061,13 +3232,28 @@ Language: id
     <string name="post_queued">Pos yang diantrekan</string>
     <string name="uploading_post">Mengunggah \"%s\"</string>
     <string name="connection_to_server_lost">Koneksi ke server hilang</string>
+    <string name="login_email_client_not_found">Tidak dapat mendeteksi aplikasi klien email Anda</string>
+    <string name="login_empty_2fa">Masukkan kode verifikasi</string>
+    <string name="login_empty_username">Masukkan nama pengguna</string>
+    <string name="login_log_in_for_deeplink">Login ke WordPress.com untuk mengakses pos.</string>
+    <string name="login_error_while_adding_site">Error saat menambahkan situs. Kode error: %s</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">Memeriksa alamat situs</string>
+    <string name="login_site_address_more_help">Butuh bantuan lebih lanjut?</string>
+    <string name="login_site_address_help_content">Alamat situs Anda ditampilkan di bilah bagian atas layar ketika Anda mengunjungi situs di Chrome.</string>
+    <string name="login_site_address_help_title">Apa alamat situs saya?</string>
     <string name="login_site_address" a8c-src-lib="module:login">Alamat situs</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Masukkan alamat situs WordPress yang ingin Anda hubungkan.</string>
     <string name="login_already_logged_in_wpcom">Sudah login ke WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Lanjutkan</string>
     <string name="connect_more">Hubungkan situs lainnya</string>
+    <string name="enter_wpcom_password">Masukkan kata sandi WordPress.com Anda.</string>
+    <string name="login_magic_link_email_requesting">Meminta email login</string>
+    <string name="password_incorrect">Sepertinya kata sandi ini salah. Periksa lagi informasi Anda dan coba lagi.</string>
+    <string name="requesting_otp">Meminta kode verifikasi melalui SMS.</string>
+    <string name="login_text_otp">Kirimi saya kode saja</string>
+    <string name="enter_verification_code">Hampir selesai! Masukkan kode verifikasi untuk WordPress.com dari aplikasi pengautentikasi.</string>
     <string name="next">Selanjutnya</string>
+    <string name="enter_email_wordpress_com">Login ke WordPress.com dengan alamat email untuk mengelola semua situs WordPress Anda.</string>
     <string name="me_profile_photo">Foto Profil</string>
     <string name="error_media_parse_error">Respons tidak terduga dari server</string>
     <string name="upload_finished_toast">Tidak dapat menghentikan pengunggahan karena prosesnya sudah selesai</string>
@@ -3216,6 +3402,8 @@ Language: id
     <string name="error_unknown_post_type">Format pos tidak diketahui</string>
     <string name="submit_for_review">Kirim</string>
     <string name="title_subscriber">Pelanggan</string>
+    <string name="duplicate_site_detected">Situs duplikat terdeteksi.</string>
+    <string name="cannot_add_duplicate_site">Situs ini sudah ada dalam aplikasi, Anda tidak bisa menambahkannya.</string>
     <string name="already_logged_in_wpcom">Anda sudah login ke akun WordPress.com, Anda tidak dapat menambahkan situs WordPress.com yang terikat ke akun lain.</string>
     <string name="error_media_load">Tidak dapat memuat media</string>
     <string name="error_media_refresh_no_connection">Perlu koneksi untuk menyegarkan pustaka</string>
@@ -3226,6 +3414,8 @@ Language: id
     <string name="media_generic_error">Terjadi error media</string>
     <string name="retry">Coba lagi</string>
     <string name="confirm">Konfirmasi</string>
+    <string name="xmlrpc_endpoint_forbidden_error">Tidak dapat terhubung. Kami menerima error 403 saat mencoba mengakses\n titik akhir XMLRPC situs Anda. Aplikasi ini memerlukannya agar dapat berkomunikasi dengan situs Anda. Hubungi host Anda untuk mengatasi\n masalah ini.</string>
+    <string name="xmlrpc_post_blocked_error">Tidak dapat terhubung. Host Anda memblokir permintaan POST yang dibutuhkan aplikasi\n agar dapat berkomunikasi dengan situs Anda. Hubungi host Anda untuk mengatasi masalah ini.</string>
     <string name="pending_draft_one_generic">Jangan biarkan menggantung! \'%1$s\' menunggu untuk diterbitkan.</string>
     <string name="pending_draft_one_month">Jangan biarkan menggantung! \'%1$s\' menunggu untuk diterbitkan.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' masih berupa konsep. Ingatlah untuk menerbitkannya!</string>
@@ -3308,6 +3498,8 @@ Language: id
     <string name="error_refreshing_gravatar">Terjadi galat saat memuat ulang Gravatar</string>
     <string name="error_locating_image">Terjadi galat saat mencari gambar yang dipangkas</string>
     <string name="error_cropping_image">Terjadi galat saat memangkas gambar</string>
+    <string name="checking_email">Memeriksa surat elektronik</string>
+    <string name="magic_link_unavailable_error_message">Saat ini tidak tersedia. Masukkan kata sandi Anda</string>
     <string name="logging_in">Proses masuk</string>
     <string name="web_address_dialog_hint">Ditampilkan secara publik saat Anda berkomentar.</string>
     <string name="export_your_content_message">Pos, halaman, dan pengaturan Anda akan dikirimkan melalui email kepada Anda pada %s.</string>
@@ -3340,6 +3532,7 @@ Language: id
     <string name="comments_empty_list_filtered_pending">Tidak komentar tertunda</string>
     <string name="comments_empty_list_filtered_approved">Tidak ada komentar yang disetujui</string>
     <string name="button_skip">Lewati</string>
+    <string name="xmlrpc_missing_method_error">Tidak dapat terhubung. Metode XML-RPC yang diperlukan tidak ditemukan di server.</string>
     <string name="alignment_center">Tengah</string>
     <string name="post_format_video">Video</string>
     <string name="post_format_status">Status</string>
@@ -3399,6 +3592,7 @@ Language: id
     <string name="about_the_app">Tentang aplikasi</string>
     <string name="error_post_account_settings">Tidak dapat menyimpan pengaturan akun Anda</string>
     <string name="error_fetch_account_settings">Tidak dapat mengambil pengaturan akun Anda</string>
+    <string name="error_fetch_my_profile">Tidak dapat mengambil profil Anda</string>
     <string name="site_settings_unknown_language_code_error">Kode bahasa tidak dikenali</string>
     <string name="site_settings_threading_dialog_description">Izinkan komentar ditumpuk dalam utas.</string>
     <string name="site_settings_threading_dialog_header">Utas hingga</string>
@@ -3587,6 +3781,9 @@ Language: id
     <string name="my_site_btn_blog_posts">Pos</string>
     <string name="reader_label_new_posts_subtitle">Ketuk untuk menampilkannya</string>
     <string name="select_all">Pilih semua</string>
+    <string name="auth_required">Log in lagi untuk melanjutkan.</string>
+    <string name="invalid_verification_code">Kode verifikasi tidak valid</string>
+    <string name="verification_code">Kode verifikasi</string>
     <string name="language">Bahasa</string>
     <string name="reader_empty_posts_request_failed">Gagal memuat pos-pos</string>
     <string name="error_notification_open">Gagal membuka notifikasi</string>
@@ -3650,6 +3847,7 @@ Language: id
     <string name="ssl_certificate_error">Sertifikat SSL tidak sah</string>
     <string name="help">Bantuan</string>
     <string name="username_or_password_incorrect">Nama pengguna atau kata sandi yang Anda masukkan tidak tepat</string>
+    <string name="email_invalid">Masukkan alamat email yang sah</string>
     <string name="invalid_email_message">Alamat emailmu tidak sah</string>
     <string name="error_downloading_image">Galat saat mengunduh gambar</string>
     <string name="error_load_comment">Gagal memuat tanggapan</string>
@@ -3673,12 +3871,14 @@ Language: id
     <string name="reader_toast_err_removing_tag">Tidak bisa menghapus tag ini</string>
     <string name="reader_toast_err_adding_tag">Tidak bisa menambahkan tag ini</string>
     <string name="reader_title_applog">Log aplikasi</string>
+    <string name="fatal_db_error">Terjadi gagal ketika membuat basis data app. Coba instal ulang app.</string>
     <string name="error_refresh_media">Media tidak bisa disegarkan saat ini</string>
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="local_changes">Perubahan lokal</string>
     <string name="new_media">Media baru</string>
     <string name="new_post">Pos baru</string>
     <string name="notifications_empty_all">Belum ada pemberitahuan…sampai sekarang!</string>
+    <string name="http_authorization_required">Otorisasi diwajibkan</string>
     <string name="invalid_site_url_message">Pastikan URL situs yang dimasukkan sudah valid</string>
     <string name="file_error_create">Tidak bisa membuat berkas temporer untuk pengunggahan media. Pastikan masih cukup ruang di perangkat Anda.</string>
     <string name="category_name">Nama kategori</string>
@@ -3723,6 +3923,7 @@ Language: id
     <string name="reader_likes_you_and_one">Anda dan satu orang lainnya menyukai ini</string>
     <string name="pick_video">Pilih video</string>
     <string name="pick_photo">Pilih foto</string>
+    <string name="sign_up_label">Daftar</string>
     <string name="reader_toast_err_url_intent">Tidak bisa  membuka %s</string>
     <string name="reader_toast_err_view_image">Tidak dapat melihat gambar</string>
     <string name="reader_toast_err_share_intent">Tidak dapat membagikan</string>
@@ -3765,6 +3966,8 @@ Language: id
     <string name="note_reply_successful">Balasan dipublikasikan</string>
     <string name="sign_in">Log in</string>
     <string name="loading">Memuat…</string>
+    <string name="httppassword">Kata sandi HTTP</string>
+    <string name="httpuser">Nama pengguna HTTP</string>
     <string name="error_media_upload">Ada masalah ketika mengunggah media</string>
     <string name="incorrect_credentials">Nama pengguna atau kata sandi salah.</string>
     <string name="log_in" a8c-src-lib="module:login">Masuk</string>
