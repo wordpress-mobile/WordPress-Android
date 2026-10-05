@@ -3,6 +3,7 @@ package org.wordpress.android.ui.newstats.locations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -106,6 +107,8 @@ class LocationsViewModel @Inject constructor(
     private var cachedCitiesTotalViewsChange: Long = 0L
     private var cachedCitiesTotalViewsChangePercent: Double = 0.0
 
+    private val fetchJobs = mutableMapOf<LocationType, Job>()
+
     fun loadData() {
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
@@ -131,10 +134,25 @@ class LocationsViewModel @Inject constructor(
             setCurrentTypeLoading()
         }
 
-        viewModelScope.launch {
+        launchFetch(type) {
             fetchForCurrentType(site)
             revalidateIfNeeded(type, site, period)
         }
+    }
+
+    /**
+     * Replaces any in-flight fetch for [type]. A background revalidation outlives the load that
+     * started it, so without this the period the user just left could still write its result into
+     * the card after the new period has rendered.
+     */
+    private fun launchFetch(type: LocationType, block: suspend () -> Unit) {
+        fetchJobs[type]?.cancel()
+        fetchJobs[type] = viewModelScope.launch { block() }
+    }
+
+    private fun cancelAllFetchJobs() {
+        fetchJobs.values.forEach { it.cancel() }
+        fetchJobs.clear()
     }
 
     private fun isCached(type: LocationType, siteId: Long, period: StatsPeriod) =
@@ -165,7 +183,7 @@ class LocationsViewModel @Inject constructor(
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) return
 
-        viewModelScope.launch {
+        launchFetch(_selectedLocationType.value) {
             try {
                 _isRefreshing.value = true
                 // Reset loaded period for current type to force re-fetch
@@ -188,6 +206,9 @@ class LocationsViewModel @Inject constructor(
         if (period == currentPeriod &&
             isTypeLoadedForCurrentPeriod(_selectedLocationType.value)
         ) return
+        // Every type's data is now for the wrong period, including any type the user is not
+        // currently looking at.
+        cancelAllFetchJobs()
         currentPeriod = period
         // Reset all per-type loaded periods on period change
         countriesLoadedPeriod = null
@@ -211,7 +232,7 @@ class LocationsViewModel @Inject constructor(
             if (!isCached(type, site.siteId, period)) {
                 setTypeLoading(type)
             }
-            viewModelScope.launch {
+            launchFetch(type) {
                 fetchForType(type, site)
                 revalidateIfNeeded(type, site, period)
             }

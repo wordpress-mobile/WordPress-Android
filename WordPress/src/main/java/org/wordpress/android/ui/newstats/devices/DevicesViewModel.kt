@@ -3,6 +3,7 @@ package org.wordpress.android.ui.newstats.devices
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -70,6 +71,8 @@ class DevicesViewModel @Inject constructor(
     private var browserLoadedPeriod: StatsPeriod? = null
     private var platformLoadedPeriod: StatsPeriod? = null
 
+    private val fetchJobs = mutableMapOf<DeviceType, Job>()
+
     fun loadData() {
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
@@ -91,10 +94,25 @@ class DevicesViewModel @Inject constructor(
             setCurrentTypeLoading()
         }
 
-        viewModelScope.launch {
+        launchFetch(type) {
             fetchForCurrentType(site)
             revalidateIfNeeded(type, site, period)
         }
+    }
+
+    /**
+     * Replaces any in-flight fetch for [type]. A background revalidation outlives the load that
+     * started it, so without this the period the user just left could still write its result into
+     * the card after the new period has rendered.
+     */
+    private fun launchFetch(type: DeviceType, block: suspend () -> Unit) {
+        fetchJobs[type]?.cancel()
+        fetchJobs[type] = viewModelScope.launch { block() }
+    }
+
+    private fun cancelAllFetchJobs() {
+        fetchJobs.values.forEach { it.cancel() }
+        fetchJobs.clear()
     }
 
     private fun isCached(type: DeviceType, siteId: Long, period: StatsPeriod) =
@@ -125,7 +143,7 @@ class DevicesViewModel @Inject constructor(
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) return
 
-        viewModelScope.launch {
+        launchFetch(_selectedDeviceType.value) {
             try {
                 _isRefreshing.value = true
                 resetLoadedPeriodForCurrentType()
@@ -149,6 +167,9 @@ class DevicesViewModel @Inject constructor(
                 _selectedDeviceType.value
             )
         ) return
+        // Every type's data is now for the wrong period, including any type the user is not
+        // currently looking at.
+        cancelAllFetchJobs()
         currentPeriod = period
         screensizeLoadedPeriod = null
         browserLoadedPeriod = null
@@ -171,7 +192,7 @@ class DevicesViewModel @Inject constructor(
             if (!isCached(type, site.siteId, period)) {
                 setTypeLoading(type)
             }
-            viewModelScope.launch {
+            launchFetch(type) {
                 fetchForType(type, site)
                 revalidateIfNeeded(type, site, period)
             }

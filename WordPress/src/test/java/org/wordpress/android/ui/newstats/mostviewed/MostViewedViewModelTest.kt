@@ -263,7 +263,9 @@ class MostViewedViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        verify(statsRepository).fetchMostViewed(eq(TEST_SITE_ID), any(), eq(MostViewedDataSource.POSTS_AND_PAGES), any())
+        verify(statsRepository).fetchMostViewed(
+            eq(TEST_SITE_ID), any(), eq(MostViewedDataSource.POSTS_AND_PAGES), any()
+        )
         verify(statsRepository).fetchMostViewed(eq(TEST_SITE_ID), any(), eq(MostViewedDataSource.REFERRERS), any())
     }
     // endregion

@@ -3,6 +3,7 @@ package org.wordpress.android.ui.newstats.authors
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -39,6 +40,7 @@ class AuthorsViewModel @Inject constructor(
     private var currentPeriod: StatsPeriod = StatsPeriod.Last7Days
     private var loadingPeriod: StatsPeriod? = null
     private var loadedPeriod: StatsPeriod? = null
+    private var fetchJob: Job? = null
 
     fun loadData() {
         val site = selectedSiteRepository.getSelectedSite()
@@ -66,7 +68,10 @@ class AuthorsViewModel @Inject constructor(
             _uiState.value = AuthorsCardUiState.Loading
         }
 
-        viewModelScope.launch {
+        // A background revalidation outlives the load that started it, so cancel the previous
+        // one: otherwise the period the user just left can still write into the card.
+        fetchJob?.cancel()
+        fetchJob = viewModelScope.launch {
             try {
                 fetchTopAuthors(site)
                 revalidateIfNeeded(site, period)
@@ -91,7 +96,8 @@ class AuthorsViewModel @Inject constructor(
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) return
 
-        viewModelScope.launch {
+        fetchJob?.cancel()
+        fetchJob = viewModelScope.launch {
             try {
                 _isRefreshing.value = true
                 fetchTopAuthors(site, forceRefresh = true)

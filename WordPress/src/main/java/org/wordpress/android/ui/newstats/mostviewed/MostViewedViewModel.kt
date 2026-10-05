@@ -3,6 +3,7 @@ package org.wordpress.android.ui.newstats.mostviewed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +15,6 @@ import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.repository.MostViewedItemData
 import org.wordpress.android.ui.newstats.repository.MostViewedResult
-import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.util.toDateRangeString
 import kotlin.math.abs
@@ -55,6 +55,8 @@ class MostViewedViewModel @Inject constructor(
     private var postsCachedTotalViewsChange: Long = 0L
     private var postsCachedTotalViewsChangePercent: Double = 0.0
 
+    private val fetchJobs = mutableMapOf<MostViewedDataSource, Job>()
+
     fun onPeriodChanged(period: StatsPeriod) {
         currentPeriod = period
         onPeriodChangedPosts(period)
@@ -89,7 +91,7 @@ class MostViewedViewModel @Inject constructor(
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) return
 
-        viewModelScope.launch {
+        launchFetch(MostViewedDataSource.POSTS_AND_PAGES) {
             try {
                 _isPostsRefreshing.value = true
                 loadDataForSourceInternal(
@@ -108,7 +110,7 @@ class MostViewedViewModel @Inject constructor(
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) return
 
-        viewModelScope.launch {
+        launchFetch(MostViewedDataSource.REFERRERS) {
             try {
                 _isReferrersRefreshing.value = true
                 loadDataForSourceInternal(
@@ -192,7 +194,7 @@ class MostViewedViewModel @Inject constructor(
             setUiState(dataSource, MostViewedCardUiState.Loading)
         }
 
-        viewModelScope.launch {
+        launchFetch(dataSource) {
             try {
                 loadDataForSourceInternal(site.siteId, dataSource)
                 if (!hasErrorStateForSource(dataSource)) {
@@ -205,8 +207,18 @@ class MostViewedViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Replaces any in-flight fetch for [dataSource]. A background revalidation outlives the load that
+     * started it, so without this the period the user just left could still write its result into
+     * the card after the new period has rendered.
+     */
+    private fun launchFetch(dataSource: MostViewedDataSource, block: suspend () -> Unit) {
+        fetchJobs[dataSource]?.cancel()
+        fetchJobs[dataSource] = viewModelScope.launch { block() }
+    }
+
     private fun isCached(siteId: Long, period: StatsPeriod, dataSource: MostViewedDataSource) =
-        statsRepository.isCached(StatsCacheBucket.MOST_VIEWED, siteId, period, variant = dataSource.name)
+        statsRepository.isMostViewedCached(siteId, period, dataSource)
 
     /**
      * Refreshes a result served from a previous visit to the stats screen, once. The card already
@@ -218,10 +230,7 @@ class MostViewedViewModel @Inject constructor(
         dataSource: MostViewedDataSource
     ) {
         if (period != currentPeriod) return
-        val needsRevalidation = statsRepository.needsRevalidation(
-            StatsCacheBucket.MOST_VIEWED, siteId, period, variant = dataSource.name
-        )
-        if (!needsRevalidation) return
+        if (!statsRepository.mostViewedNeedsRevalidation(siteId, period, dataSource)) return
         loadDataForSourceInternal(siteId, dataSource, forceRefresh = true, applyErrors = false)
     }
 

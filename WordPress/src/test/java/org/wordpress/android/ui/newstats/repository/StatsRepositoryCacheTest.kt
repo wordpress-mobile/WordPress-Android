@@ -7,16 +7,25 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.mostviewed.MostViewedDataSource
 import org.wordpress.android.ui.newstats.datasource.ClickDataItem
 import org.wordpress.android.ui.newstats.datasource.ClicksDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
+import org.wordpress.android.ui.newstats.datasource.StatsDateRange
 import org.wordpress.android.ui.newstats.datasource.CommentsDataPoint
+import org.wordpress.android.ui.newstats.datasource.ReferrerDataItem
+import org.wordpress.android.ui.newstats.datasource.ReferrersDataResult
+import org.wordpress.android.ui.newstats.datasource.TopPostDataItem
+import org.wordpress.android.ui.newstats.datasource.TopPostsDataResult
+import org.wordpress.android.ui.newstats.datasource.UtmData
+import org.wordpress.android.ui.newstats.datasource.UtmDataResult
 import org.wordpress.android.ui.newstats.datasource.LikesDataPoint
 import org.wordpress.android.ui.newstats.datasource.PostsDataPoint
 import org.wordpress.android.ui.newstats.datasource.StatsErrorType
@@ -226,6 +235,113 @@ class StatsRepositoryCacheTest : BaseUnitTest() {
     }
     // endregion
 
+
+    // region keys that carry a variant
+    // These endpoints share one bucket across several requests, so the variant is the only thing
+    // keeping them apart. Deriving it differently on either side would collide silently: both
+    // results are a Success of the same type, so nothing would throw.
+    @Test
+    fun `given posts were fetched, when referrers are fetched, then they do not share the entry`() = test {
+        stubTopPosts()
+        stubReferrers()
+
+        repository.fetchMostViewed(SITE_ID, StatsPeriod.Last7Days, MostViewedDataSource.POSTS_AND_PAGES)
+        repository.fetchMostViewed(SITE_ID, StatsPeriod.Last7Days, MostViewedDataSource.REFERRERS)
+
+        verify(statsDataSource, times(WINDOWS_PER_FETCH)).fetchTopPostsAndPages(any(), any(), any())
+        verify(statsDataSource, times(WINDOWS_PER_FETCH)).fetchReferrers(any(), any(), any())
+    }
+
+    @Test
+    fun `given one data source is cached, then the other data source is not`() = test {
+        stubTopPosts()
+
+        repository.fetchMostViewed(SITE_ID, StatsPeriod.Last7Days, MostViewedDataSource.POSTS_AND_PAGES)
+
+        assertThat(
+            repository.isMostViewedCached(SITE_ID, StatsPeriod.Last7Days, MostViewedDataSource.POSTS_AND_PAGES)
+        ).isTrue()
+        assertThat(
+            repository.isMostViewedCached(SITE_ID, StatsPeriod.Last7Days, MostViewedDataSource.REFERRERS)
+        ).isFalse()
+    }
+
+    @Test
+    fun `given the referrers card was fetched, when the detail screen fetches, then it is requested`() = test {
+        stubReferrers()
+
+        repository.fetchMostViewed(SITE_ID, StatsPeriod.Last7Days, MostViewedDataSource.REFERRERS)
+        repository.fetchReferrersDetail(SITE_ID, StatsPeriod.Last7Days)
+
+        // The card bounds the list and the detail screen asks for all of it, so they are different
+        // requests and must not answer each other.
+        verify(statsDataSource, times(2 * WINDOWS_PER_FETCH)).fetchReferrers(any(), any(), any())
+    }
+
+    @Test
+    fun `given one utm category was fetched, when another is fetched, then it is requested`() = test {
+        stubUtm()
+
+        repository.fetchUtm(SITE_ID, listOf("utm_source"), StatsPeriod.Last7Days)
+        repository.fetchUtm(SITE_ID, listOf("utm_medium"), StatsPeriod.Last7Days)
+
+        verify(statsDataSource, times(2)).fetchUtm(any(), any(), any(), any(), any(), any())
+    }
+
+    @Test
+    fun `given a utm category was fetched, when it is fetched again, then no new request is made`() = test {
+        stubUtm()
+
+        repository.fetchUtm(SITE_ID, UTM_SOURCE_MEDIUM_KEYS, StatsPeriod.Last7Days)
+        repository.fetchUtm(SITE_ID, UTM_SOURCE_MEDIUM_KEYS, StatsPeriod.Last7Days)
+
+        verify(statsDataSource, times(1)).fetchUtm(any(), any(), any(), any(), any(), any())
+        assertThat(repository.isUtmCached(SITE_ID, StatsPeriod.Last7Days, UTM_SOURCE_MEDIUM_KEYS)).isTrue()
+    }
+    // endregion
+
+    // region partial comparison results
+    @Test
+    fun `given the previous window failed, when the period is fetched again, then it is requested again`() = test {
+        whenever(statsDataSource.fetchClicks(any(), eq(CURRENT_RANGE), any()))
+            .thenReturn(ClicksDataResult.Success(listOf(clickItem())))
+        whenever(statsDataSource.fetchClicks(any(), eq(PREVIOUS_RANGE), any()))
+            .thenReturn(ClicksDataResult.Error(StatsErrorType.API_ERROR))
+
+        val first = repository.fetchClicks(SITE_ID, StatsPeriod.Last7Days)
+        repository.fetchClicks(SITE_ID, StatsPeriod.Last7Days)
+
+        // The result is a Success, but every item compares against nothing and so reads +100%.
+        // Caching it would freeze that comparison instead of recomputing it on the next visit.
+        assertThat(first).isInstanceOf(ClicksResult.Success::class.java)
+        assertThat(repository.isCached(StatsCacheBucket.CLICKS, SITE_ID, StatsPeriod.Last7Days)).isFalse()
+        verify(statsDataSource, times(2 * WINDOWS_PER_FETCH)).fetchClicks(any(), any(), any())
+    }
+
+    @Test
+    fun `given both windows succeeded, when the period is fetched again, then it is served from the cache`() = test {
+        stubClicks()
+
+        repository.fetchClicks(SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(repository.isCached(StatsCacheBucket.CLICKS, SITE_ID, StatsPeriod.Last7Days)).isTrue()
+    }
+
+    @Test
+    fun `given the previous posts window failed, then the most viewed result is not cached`() = test {
+        whenever(statsDataSource.fetchTopPostsAndPages(any(), eq(CURRENT_RANGE), any()))
+            .thenReturn(TopPostsDataResult.Success(listOf(topPostItem())))
+        whenever(statsDataSource.fetchTopPostsAndPages(any(), eq(PREVIOUS_RANGE), any()))
+            .thenReturn(TopPostsDataResult.Error(StatsErrorType.API_ERROR))
+
+        repository.fetchMostViewed(SITE_ID, StatsPeriod.Last7Days, MostViewedDataSource.POSTS_AND_PAGES)
+
+        assertThat(
+            repository.isMostViewedCached(SITE_ID, StatsPeriod.Last7Days, MostViewedDataSource.POSTS_AND_PAGES)
+        ).isFalse()
+    }
+    // endregion
+
     private suspend fun stubClicks() {
         whenever(statsDataSource.fetchClicks(any(), any(), any()))
             .thenReturn(ClicksDataResult.Success(listOf(clickItem())))
@@ -238,6 +354,25 @@ class StatsRepositoryCacheTest : BaseUnitTest() {
         comments = listOf(CommentsDataPoint(PERIOD_LABEL, 2)),
         posts = listOf(PostsDataPoint(PERIOD_LABEL, 3))
     )
+
+    private suspend fun stubTopPosts() {
+        whenever(statsDataSource.fetchTopPostsAndPages(any(), any(), any()))
+            .thenReturn(TopPostsDataResult.Success(listOf(topPostItem())))
+    }
+
+    private suspend fun stubReferrers() {
+        whenever(statsDataSource.fetchReferrers(any(), any(), any()))
+            .thenReturn(ReferrersDataResult.Success(listOf(referrerItem())))
+    }
+
+    private suspend fun stubUtm() {
+        whenever(statsDataSource.fetchUtm(any(), any(), any(), any(), any(), any()))
+            .thenReturn(UtmDataResult.Success(UtmData(topUtmValues = emptyMap(), topPosts = emptyMap())))
+    }
+
+    private fun topPostItem() = TopPostDataItem(id = 1L, title = "A post", views = 10)
+
+    private fun referrerItem() = ReferrerDataItem(name = "wordpress.org", url = null, views = 10)
 
     private fun clickItem() = ClickDataItem(
         name = "wordpress.org",
@@ -256,5 +391,12 @@ class StatsRepositoryCacheTest : BaseUnitTest() {
         private const val WINDOWS_PER_FETCH = 2
         private const val PERIOD_LABEL = "2026-10-01"
         private val TODAY = LocalDate.of(2026, 10, 5)
+        private val UTM_SOURCE_MEDIUM_KEYS = listOf("utm_source", "utm_medium")
+
+        // The two windows Last 7 Days resolves to for TODAY: the selected week, and the week
+        // before it that every item's change is measured against.
+        private const val DAYS_IN_7_DAYS = 7
+        private val CURRENT_RANGE = StatsDateRange.Preset(num = DAYS_IN_7_DAYS, date = "2026-10-05")
+        private val PREVIOUS_RANGE = StatsDateRange.Preset(num = DAYS_IN_7_DAYS, date = "2026-09-28")
     }
 }

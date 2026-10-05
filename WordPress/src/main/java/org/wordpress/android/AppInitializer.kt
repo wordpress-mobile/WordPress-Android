@@ -74,6 +74,7 @@ import org.wordpress.android.ui.debug.cookies.DebugCookieManager
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalWidgetHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.repository.StatsResultCache
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils
@@ -151,6 +152,9 @@ class AppInitializer @Inject constructor(
 
     @Inject
     lateinit var statsStore: StatsStore
+
+    @Inject
+    lateinit var statsResultCache: StatsResultCache
 
     @Inject
     lateinit var systemNotificationsTracker: SystemNotificationsTracker
@@ -716,6 +720,10 @@ class AppInitializer @Inject constructor(
 
         // Reset Stats Data
         statsStore.deleteAllData()
+        // The new-stats in-memory cache is a process-lifetime singleton keyed by remote site id,
+        // so without this the next account to sign in could be served this one's numbers for a
+        // site they both belong to.
+        statsResultCache.clear()
         statsWidgetUpdaters.update(context)
 
         // Reset Notifications Data

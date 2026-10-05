@@ -170,6 +170,11 @@ class TodaysStatsViewModel @Inject constructor(
         }
     }
 
+    /**
+     * A window that fails keeps whatever the card is already showing for it, so a silent background
+     * revalidation can never blank a sparkline it is unable to replace. With nothing on screen yet
+     * a failed window is still an empty series, as the card has always rendered it.
+     */
     private suspend fun fetchChartData(site: SiteModel, forceRefresh: Boolean): ChartData = coroutineScope {
         // Fetch both periods in parallel
         val currentPeriodDeferred = async { fetchHourlyData(site, 0, forceRefresh) }
@@ -177,17 +182,19 @@ class TodaysStatsViewModel @Inject constructor(
             fetchHourlyData(site, PREVIOUS_PERIOD_OFFSET_DAYS, forceRefresh)
         }
 
+        val shown = (_uiState.value as? TodaysStatsCardUiState.Loaded)?.chartData
         ChartData(
-            currentPeriod = currentPeriodDeferred.await(),
-            previousPeriod = previousPeriodDeferred.await()
+            currentPeriod = currentPeriodDeferred.await() ?: shown?.currentPeriod ?: emptyList(),
+            previousPeriod = previousPeriodDeferred.await() ?: shown?.previousPeriod ?: emptyList()
         )
     }
 
+    /** Null on failure, so a failed window is distinguishable from a day with no views. */
     private suspend fun fetchHourlyData(
         site: SiteModel,
         offsetDays: Int,
         forceRefresh: Boolean
-    ): List<ViewsDataPoint> {
+    ): List<ViewsDataPoint>? {
         val result = statsRepository.fetchHourlyViews(
             siteId = site.siteId,
             offsetDays = offsetDays,
@@ -208,7 +215,7 @@ class TodaysStatsViewModel @Inject constructor(
                     )
                 }
             }
-            is HourlyViewsResult.Error -> emptyList()
+            is HourlyViewsResult.Error -> null
         }
     }
 

@@ -25,8 +25,10 @@ import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.viewmodel.ResourceProvider
 
 /**
- * How a card behaves when the repository already holds the period (CMM-2473). Covers every card
- * built on `BaseStatsCardViewModel`, which is where the behaviour lives.
+ * How a card behaves when the repository already holds the period (CMM-2473). Covers the four cards
+ * built on `BaseStatsCardViewModel` (clicks, search terms, video plays, file downloads), which share
+ * this load path. The cards that hand-roll it have their own coverage — see
+ * `DevicesViewModelCacheTest` for the cancellation behaviour a hand-rolled copy has to get right.
  *
  * Runs on a [StandardTestDispatcher] rather than the unconfined default, so the state the card shows
  * *while* a load is in flight can be asserted — that is the whole point of the cached path.

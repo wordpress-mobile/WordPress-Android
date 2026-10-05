@@ -6,6 +6,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -19,6 +20,7 @@ import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.repository.MostViewedChildData
 import org.wordpress.android.ui.newstats.repository.MostViewedItemData
 import org.wordpress.android.ui.newstats.repository.MostViewedResult
+import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -219,6 +221,56 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
 
         verify(statsRepository, times(2)).fetchReferrersDetail(any(), any(), any())
     }
+
+    // region cache revalidation
+    // REFERRERS is the only source whose cache bucket no card shares, so if this screen does not
+    // revalidate its own entry, nothing does: the list would be served from an earlier visit for
+    // the rest of the day, with no refresh affordance on the screen.
+    @Test
+    fun `given the entry is from an earlier visit, when the screen loads, then it is refetched once`() = test {
+        whenever(statsRepository.fetchReferrersDetail(any(), any(), any())).thenReturn(createSuccessResult())
+        whenever(
+            statsRepository.needsRevalidation(
+                StatsCacheBucket.REFERRERS_DETAIL, TEST_SITE_ID, StatsPeriod.Last7Days
+            )
+        ).thenReturn(true)
+
+        viewModel.load(MostViewedDetailSource.REFERRERS, StatsPeriod.Last7Days)
+        advanceUntilIdle()
+
+        verify(statsRepository).fetchReferrersDetail(TEST_SITE_ID, StatsPeriod.Last7Days, false)
+        verify(statsRepository).fetchReferrersDetail(TEST_SITE_ID, StatsPeriod.Last7Days, true)
+    }
+
+    @Test
+    fun `given the entry is from this visit, when the screen loads, then it is fetched once`() = test {
+        whenever(statsRepository.fetchReferrersDetail(any(), any(), any())).thenReturn(createSuccessResult())
+
+        viewModel.load(MostViewedDetailSource.REFERRERS, StatsPeriod.Last7Days)
+        advanceUntilIdle()
+
+        verify(statsRepository, never()).fetchReferrersDetail(any(), any(), eq(true))
+    }
+
+    @Test
+    fun `given the revalidation fails, then the list stays on screen`() = test {
+        whenever(statsRepository.fetchReferrersDetail(any(), any(), eq(false))).thenReturn(createSuccessResult())
+        whenever(statsRepository.fetchReferrersDetail(any(), any(), eq(true)))
+            .thenReturn(MostViewedResult.Error(API_ERROR))
+        whenever(
+            statsRepository.needsRevalidation(
+                StatsCacheBucket.REFERRERS_DETAIL, TEST_SITE_ID, StatsPeriod.Last7Days
+            )
+        ).thenReturn(true)
+
+        viewModel.load(MostViewedDetailSource.REFERRERS, StatsPeriod.Last7Days)
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertThat(state).isInstanceOf(MostViewedDetailUiState.Loaded::class.java)
+        assertThat((state as MostViewedDetailUiState.Loaded).items).hasSize(1)
+    }
+    // endregion
 
     private fun createSuccessResult() = MostViewedResult.Success(
         items = listOf(

@@ -885,7 +885,7 @@ class ViewsStatsViewModel @Inject constructor(
      * from the same response (its per-bucket data already carries all five metrics); when false the
      * bottom row is left untouched here because a dedicated call populates it (Today and Custom).
      */
-    @Suppress("TooGenericExceptionCaught", "LongParameterList")
+    @Suppress("TooGenericExceptionCaught", "LongParameterList", "ReturnCount")
     private suspend fun loadChart(
         site: SiteModel,
         period: StatsPeriod,
@@ -973,7 +973,7 @@ class ViewsStatsViewModel @Inject constructor(
     )
 
     /** Fetches the bottom row from a dedicated call. Used for Today and Custom (see [fillsBottomFromChart]). */
-    @Suppress("TooGenericExceptionCaught")
+    @Suppress("TooGenericExceptionCaught", "ReturnCount")
     private suspend fun loadBottomStats(
         site: SiteModel,
         period: StatsPeriod,

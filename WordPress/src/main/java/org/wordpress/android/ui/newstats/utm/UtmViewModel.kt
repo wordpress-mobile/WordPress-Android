@@ -16,7 +16,6 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
-import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.UtmItemData
 import org.wordpress.android.ui.newstats.repository.UtmResult
@@ -136,9 +135,7 @@ class UtmViewModel @Inject constructor(
         category: UtmCategory,
         siteId: Long,
         period: StatsPeriod
-    ) = statsRepository.isCached(
-        StatsCacheBucket.UTM, siteId, period, variant = category.keys.joinToString(",")
-    )
+    ) = statsRepository.isUtmCached(siteId, period, category.keys)
 
     /**
      * Refreshes a result served from a previous visit to the stats screen, once. The card already
@@ -150,10 +147,7 @@ class UtmViewModel @Inject constructor(
         period: StatsPeriod
     ) {
         if (period != currentPeriod) return
-        val needsRevalidation = statsRepository.needsRevalidation(
-            StatsCacheBucket.UTM, siteId, period, variant = category.keys.joinToString(",")
-        )
-        if (!needsRevalidation) return
+        if (!statsRepository.utmNeedsRevalidation(siteId, period, category.keys)) return
         fetchForCategory(category, siteId, forceRefresh = true, applyErrors = false)
     }
 

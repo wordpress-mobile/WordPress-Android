@@ -17,6 +17,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.HourlyViewsDataPoint
 import org.wordpress.android.ui.newstats.repository.HourlyViewsResult
+import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.TodayAggregates
 import org.wordpress.android.ui.newstats.repository.TodayAggregatesResult
@@ -622,6 +623,28 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     /**
      * Creates hourly data spanning hours 12-16 for trim tests.
      */
+    // region background revalidation
+    @Test
+    fun `given the sparkline is on screen, when a revalidating hourly fetch fails, then it is kept`() = test {
+        whenever(statsRepository.fetchTodayAggregates(any(), any()))
+            .thenReturn(TodayAggregatesResult.Success(createTodayAggregates()))
+        whenever(statsRepository.fetchHourlyViews(any(), any(), eq(false)))
+            .thenReturn(createHourlyViewsResult())
+        // The aggregates are refetched successfully, but the hourly windows fail.
+        whenever(statsRepository.fetchHourlyViews(any(), any(), eq(true)))
+            .thenReturn(HourlyViewsResult.Error("Network error"))
+        whenever(statsRepository.needsRevalidation(StatsCacheBucket.TODAY_AGGREGATES, TEST_SITE_ID))
+            .thenReturn(true)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        // A silent revalidation must not replace a chart it cannot refetch with "No data yet".
+        val state = viewModel.uiState.value as TodaysStatsCardUiState.Loaded
+        assertThat(state.chartData.currentPeriod).isNotEmpty()
+    }
+    // endregion
+
     private fun createHourlyViewsResultWithHours() =
         HourlyViewsResult.Success(
             (12..16).map { hour ->
