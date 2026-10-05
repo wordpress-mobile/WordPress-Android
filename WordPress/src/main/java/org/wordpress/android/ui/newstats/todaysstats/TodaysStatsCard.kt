@@ -41,6 +41,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
@@ -63,7 +64,12 @@ private val CardPadding = 16.dp
 private val CardMargin = 16.dp
 private val ChartHeight = 50.dp
 private val MetricIconSize = 16.dp
-private val MetricSpacing = 4.dp
+private val MetricIconValueSpacing = 6.dp
+private val MetricItemSpacing = 20.dp
+// iOS runs the views count at ~26pt and the secondary values at ~19pt on a 390pt-wide screen; these
+// sit between the Material tokens, so the two text styles get an explicit size.
+private val PrimaryMetricTextSize = 28.sp
+private val SecondaryMetricTextSize = 20.sp
 
 @Composable
 fun TodaysStatsCard(
@@ -425,21 +431,28 @@ private fun MetricsRow(
     likes: Long,
     comments: Long
 ) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.Bottom
-    ) {
-        // Views - prominent on the left
-        PrimaryMetricItem(
-            value = formatStatValue(views),
-            label = stringResource(R.string.stats_views)
+    // iOS keeps every metric in one left-aligned row underneath the VIEWS label, with the secondary
+    // values sitting right next to the views count rather than pushed to the opposite card edge, and
+    // centred on it rather than bottom-aligned. The label only ever belongs to the views count, so it
+    // sits above the row instead of inside it.
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = stringResource(R.string.stats_views).uppercase(),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        Spacer(modifier = Modifier.weight(1f))
-        // Secondary metrics on the right
+        Spacer(modifier = Modifier.height(2.dp))
         Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(MetricItemSpacing),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Text(
+                text = formatStatValue(views),
+                style = MaterialTheme.typography.headlineMedium,
+                fontSize = PrimaryMetricTextSize,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
             SecondaryMetricItem(
                 icon = Icons.Default.PersonOutline,
                 value = formatStatValue(visitors)
@@ -457,34 +470,13 @@ private fun MetricsRow(
 }
 
 @Composable
-private fun PrimaryMetricItem(
-    value: String,
-    label: String
-) {
-    Column {
-        Text(
-            text = label.uppercase(),
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Spacer(modifier = Modifier.height(2.dp))
-        Text(
-            text = value,
-            style = MaterialTheme.typography.headlineLarge,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-    }
-}
-
-@Composable
 private fun SecondaryMetricItem(
     icon: ImageVector,
     value: String
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(MetricSpacing)
+        horizontalArrangement = Arrangement.spacedBy(MetricIconValueSpacing)
     ) {
         Icon(
             imageVector = icon,
@@ -492,10 +484,12 @@ private fun SecondaryMetricItem(
             modifier = Modifier.size(MetricIconSize),
             tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
+        // Sized against the views count the way iOS does it: clearly secondary, but not the half-height
+        // titleMedium it used to be.
         Text(
             text = value,
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.SemiBold,
+            style = MaterialTheme.typography.titleLarge,
+            fontSize = SecondaryMetricTextSize,
             color = MaterialTheme.colorScheme.onSurface
         )
     }
