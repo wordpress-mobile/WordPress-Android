@@ -26,6 +26,7 @@ import java.util.Locale
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 
+private const val CURRENT_PERIOD_OFFSET_DAYS = 0
 private const val PREVIOUS_PERIOD_OFFSET_DAYS = 1
 
 @HiltViewModel
@@ -90,7 +91,7 @@ class TodaysStatsViewModel @Inject constructor(
 
         // Today's numbers already in memory repaint in the same frame, so the placeholder would
         // only flash a skeleton over data the card is about to render anyway.
-        if (!statsRepository.isCached(StatsCacheBucket.TODAY_AGGREGATES, site.siteId)) {
+        if (!isCached(site)) {
             _uiState.value = TodaysStatsCardUiState.Loading
         }
 
@@ -105,12 +106,30 @@ class TodaysStatsViewModel @Inject constructor(
     }
 
     /**
+     * Whether everything this card shows is already in memory: the aggregates row, plus both of the
+     * hourly windows the sparkline is drawn from. All three are cached separately and can fail
+     * separately, so checking only the aggregates would let a load serve an older visit's sparkline
+     * under refreshed totals.
+     */
+    private fun isCached(site: SiteModel): Boolean =
+        statsRepository.isCached(StatsCacheBucket.TODAY_AGGREGATES, site.siteId) &&
+            statsRepository.isHourlyViewsCached(site.siteId, CURRENT_PERIOD_OFFSET_DAYS) &&
+            statsRepository.isHourlyViewsCached(site.siteId, PREVIOUS_PERIOD_OFFSET_DAYS)
+
+    /**
      * Refreshes numbers served from a previous visit to the stats screen, once. The card already
-     * shows them, so this runs without a loading state and keeps them if it fails.
+     * shows them, so this runs without a loading state and keeps them if it fails. Any one of the
+     * three entries being stale refreshes all of them, since one load fetches all three.
      */
     private suspend fun revalidateIfNeeded(site: SiteModel) {
         val needsRevalidation =
-            statsRepository.needsRevalidation(StatsCacheBucket.TODAY_AGGREGATES, site.siteId)
+            statsRepository.needsRevalidation(StatsCacheBucket.TODAY_AGGREGATES, site.siteId) ||
+                statsRepository.hourlyViewsNeedsRevalidation(
+                    site.siteId, CURRENT_PERIOD_OFFSET_DAYS
+                ) ||
+                statsRepository.hourlyViewsNeedsRevalidation(
+                    site.siteId, PREVIOUS_PERIOD_OFFSET_DAYS
+                )
         if (!needsRevalidation) return
         loadDataInternal(site, forceRefresh = true, applyErrors = false)
     }
@@ -177,7 +196,9 @@ class TodaysStatsViewModel @Inject constructor(
      */
     private suspend fun fetchChartData(site: SiteModel, forceRefresh: Boolean): ChartData = coroutineScope {
         // Fetch both periods in parallel
-        val currentPeriodDeferred = async { fetchHourlyData(site, 0, forceRefresh) }
+        val currentPeriodDeferred = async {
+            fetchHourlyData(site, CURRENT_PERIOD_OFFSET_DAYS, forceRefresh)
+        }
         val previousPeriodDeferred = async {
             fetchHourlyData(site, PREVIOUS_PERIOD_OFFSET_DAYS, forceRefresh)
         }
@@ -203,7 +224,7 @@ class TodaysStatsViewModel @Inject constructor(
 
         return when (result) {
             is HourlyViewsResult.Success -> {
-                val dataPoints = if (offsetDays == 0) {
+                val dataPoints = if (offsetDays == CURRENT_PERIOD_OFFSET_DAYS) {
                     trimFutureHours(result.dataPoints)
                 } else {
                     result.dataPoints

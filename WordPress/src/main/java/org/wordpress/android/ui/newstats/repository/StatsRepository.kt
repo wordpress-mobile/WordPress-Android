@@ -141,7 +141,9 @@ class StatsRepository @Inject constructor(
      * Marks a result that must not be stored even though it is a [Success][StatsCacheKey]. A
      * comparison endpoint still reports success when only its previous-period request failed, and
      * every item then carries `previousViews = 0` and a +100% change; caching that would freeze the
-     * wrong comparison in place instead of recomputing it on the next visit.
+     * wrong comparison in place instead of recomputing it on the next visit. [cached] also prefers
+     * an existing entry over a result marked this way, so a partial comparison can't replace a
+     * complete one the card is already showing.
      */
     private class CacheGate {
         var isComplete = true
@@ -158,6 +160,11 @@ class StatsRepository @Inject constructor(
      * successes only, so an error or a thrown call always refetches. [forceRefresh] skips the
      * lookup, for a pull-to-refresh or a background revalidation.
      *
+     * A gate-rejected result is not just left uncached: when the cache still holds this key, that
+     * entry is returned in its place. Only complete results are ever stored, so the cached one is
+     * strictly better than a partial comparison, and the caller never has to paint +100% over
+     * numbers it already had. The entry stays stale, so the next load retries.
+     *
      * Deliberately not wrapped in `withContext(ioDispatcher)`: a cache hit then returns without
      * suspending at all, so a card that already has its data repaints within the same frame.
      */
@@ -172,7 +179,10 @@ class StatsRepository @Inject constructor(
         }
         val gate = CacheGate()
         val result = fetch(gate)
-        if (gate.isComplete && isCacheable(result)) {
+        if (!gate.isComplete) {
+            return statsResultCache.get<T>(key) ?: result
+        }
+        if (isCacheable(result)) {
             statsResultCache.put(key, result)
         }
         return result
@@ -213,10 +223,10 @@ class StatsRepository @Inject constructor(
     ): Boolean = statsResultCache.needsRevalidation(cacheKey(bucket, siteId, period, variant))
 
     /**
-     * The cache queries for [fetchMostViewed] and [fetchUtm], whose keys carry a variant. They live
-     * here, next to the fetchers that write those keys, because a card deriving the variant itself
-     * would silently stop matching if either side's encoding changed — the cache would then look
-     * permanently empty and never revalidate, with nothing failing.
+     * The cache queries for [fetchMostViewed], [fetchUtm] and [fetchHourlyViews], whose keys carry a
+     * variant. They live here, next to the fetchers that write those keys, because a card deriving
+     * the variant itself would silently stop matching if either side's encoding changed — the cache
+     * would then look permanently empty and never revalidate, with nothing failing.
      */
     fun isMostViewedCached(siteId: Long, period: StatsPeriod, dataSource: MostViewedDataSource) =
         isCached(StatsCacheBucket.MOST_VIEWED, siteId, period, variant = dataSource.name)
@@ -232,6 +242,12 @@ class StatsRepository @Inject constructor(
 
     fun utmNeedsRevalidation(siteId: Long, period: StatsPeriod, keys: List<String>) =
         needsRevalidation(StatsCacheBucket.UTM, siteId, period, variant = utmVariant(keys))
+
+    fun isHourlyViewsCached(siteId: Long, offsetDays: Int) =
+        isCached(StatsCacheBucket.HOURLY_VIEWS, siteId, variant = offsetDays.toString())
+
+    fun hourlyViewsNeedsRevalidation(siteId: Long, offsetDays: Int) =
+        needsRevalidation(StatsCacheBucket.HOURLY_VIEWS, siteId, variant = offsetDays.toString())
 
     private fun utmVariant(keys: List<String>) = keys.joinToString(",")
 

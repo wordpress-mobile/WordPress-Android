@@ -7,6 +7,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -642,6 +643,44 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
         // A silent revalidation must not replace a chart it cannot refetch with "No data yet".
         val state = viewModel.uiState.value as TodaysStatsCardUiState.Loaded
         assertThat(state.chartData.currentPeriod).isNotEmpty()
+    }
+
+    // The card caches three entries and they can fail, and so go stale, independently. Gating the
+    // refresh on the aggregates alone would serve an earlier visit's sparkline under today's
+    // totals, with nothing else in the session ever asking about the hourly windows again.
+    @Test
+    fun `given only an hourly window is stale, when the card loads, then every window is refreshed`() = test {
+        whenever(statsRepository.fetchTodayAggregates(any(), any()))
+            .thenReturn(TodayAggregatesResult.Success(createTodayAggregates()))
+        whenever(statsRepository.fetchHourlyViews(any(), any(), any()))
+            .thenReturn(createHourlyViewsResult())
+        // The aggregates were fetched fresh on this load, so only the sparkline's windows predate it.
+        whenever(statsRepository.needsRevalidation(StatsCacheBucket.TODAY_AGGREGATES, TEST_SITE_ID))
+            .thenReturn(false)
+        whenever(statsRepository.hourlyViewsNeedsRevalidation(TEST_SITE_ID, 1)).thenReturn(true)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        verify(statsRepository).fetchTodayAggregates(eq(TEST_SITE_ID), eq(true))
+        verify(statsRepository).fetchHourlyViews(eq(TEST_SITE_ID), eq(0), eq(true))
+        verify(statsRepository).fetchHourlyViews(eq(TEST_SITE_ID), eq(1), eq(true))
+    }
+
+    @Test
+    fun `given nothing is stale, when the card loads, then no window is refetched`() = test {
+        whenever(statsRepository.fetchTodayAggregates(any(), any()))
+            .thenReturn(TodayAggregatesResult.Success(createTodayAggregates()))
+        whenever(statsRepository.fetchHourlyViews(any(), any(), any()))
+            .thenReturn(createHourlyViewsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        // One background refresh per visit, not one per entry: the load that served the card
+        // already covered all three, so a second pass would double every request.
+        verify(statsRepository, never()).fetchTodayAggregates(any(), eq(true))
+        verify(statsRepository, never()).fetchHourlyViews(any(), any(), eq(true))
     }
     // endregion
 

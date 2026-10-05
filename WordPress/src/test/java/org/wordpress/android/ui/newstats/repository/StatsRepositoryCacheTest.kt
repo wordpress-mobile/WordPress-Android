@@ -340,6 +340,37 @@ class StatsRepositoryCacheTest : BaseUnitTest() {
             repository.isMostViewedCached(SITE_ID, StatsPeriod.Last7Days, MostViewedDataSource.POSTS_AND_PAGES)
         ).isFalse()
     }
+
+    @Test
+    fun `given a stale period, when the previous window fails, then the cached comparison is served`() = test {
+        stubClicks()
+        val complete = repository.fetchClicks(SITE_ID, StatsPeriod.Last7Days)
+        cache.markAllStale()
+        whenever(statsDataSource.fetchClicks(any(), eq(PREVIOUS_RANGE), any()))
+            .thenReturn(ClicksDataResult.Error(StatsErrorType.API_ERROR))
+
+        val revalidated = repository.fetchClicks(SITE_ID, StatsPeriod.Last7Days, forceRefresh = true)
+
+        // Only complete results are ever stored, so the entry is strictly better than this partial
+        // one. Returning it keeps the real comparison on the card instead of flipping it to +100%,
+        // and leaves the entry stale so the next load tries again.
+        assertThat(revalidated).isEqualTo(complete)
+        assertThat(repository.needsRevalidation(StatsCacheBucket.CLICKS, SITE_ID, StatsPeriod.Last7Days))
+            .isTrue()
+    }
+
+    @Test
+    fun `given nothing is cached, when the previous window fails, then the partial result is served`() = test {
+        whenever(statsDataSource.fetchClicks(any(), eq(CURRENT_RANGE), any()))
+            .thenReturn(ClicksDataResult.Success(listOf(clickItem())))
+        whenever(statsDataSource.fetchClicks(any(), eq(PREVIOUS_RANGE), any()))
+            .thenReturn(ClicksDataResult.Error(StatsErrorType.API_ERROR))
+
+        val result = repository.fetchClicks(SITE_ID, StatsPeriod.Last7Days)
+
+        // With no entry to prefer, the card still gets the numbers it can show rather than an error.
+        assertThat(result).isInstanceOf(ClicksResult.Success::class.java)
+    }
     // endregion
 
     private suspend fun stubClicks() {
