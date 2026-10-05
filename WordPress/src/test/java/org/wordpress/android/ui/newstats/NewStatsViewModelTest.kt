@@ -9,12 +9,14 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
+import org.wordpress.android.ui.newstats.repository.StatsResultCache
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 @ExperimentalCoroutinesApi
@@ -28,6 +30,9 @@ class NewStatsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
 
     @Mock
     private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Mock
+    private lateinit var statsResultCache: StatsResultCache
 
     private lateinit var viewModel: NewStatsViewModel
 
@@ -51,7 +56,8 @@ class NewStatsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         viewModel = NewStatsViewModel(
             selectedSiteRepository,
             cardConfigurationRepository,
-            networkUtilsWrapper
+            networkUtilsWrapper,
+            statsResultCache
         )
     }
 
@@ -160,7 +166,8 @@ class NewStatsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         viewModel = NewStatsViewModel(
             selectedSiteRepository,
             cardConfigurationRepository,
-            networkUtilsWrapper
+            networkUtilsWrapper,
+            statsResultCache
         )
         advanceUntilIdle()
 
@@ -222,7 +229,8 @@ class NewStatsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         viewModel = NewStatsViewModel(
             selectedSiteRepository,
             cardConfigurationRepository,
-            networkUtilsWrapper
+            networkUtilsWrapper,
+            statsResultCache
         )
 
         // Before advanceUntilIdle(), config hasn't loaded yet
@@ -298,6 +306,25 @@ class NewStatsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         assertThat(viewModel.isNetworkAvailable.value).isTrue()
     }
     // endregion
+
+    @Test
+    fun `when the screen is entered, then cached stats are kept but marked for one refresh`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        verify(statsResultCache).markAllStale()
+        verify(statsResultCache, never()).clear()
+    }
+
+    @Test
+    fun `when invalidateStatsCache, then the cached stats are dropped`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.invalidateStatsCache()
+
+        verify(statsResultCache).clear()
+    }
 
     companion object {
         private const val TEST_SITE_ID = 123L

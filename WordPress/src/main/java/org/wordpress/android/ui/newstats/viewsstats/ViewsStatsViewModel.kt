@@ -26,6 +26,7 @@ import org.wordpress.android.ui.newstats.repository.BottomStatsResult
 import org.wordpress.android.ui.newstats.repository.PeriodAggregates
 import org.wordpress.android.ui.newstats.repository.PeriodStatsResult
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
+import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.ViewsDataPoint
 import org.wordpress.android.ui.newstats.util.RangeYearPlacement
@@ -723,7 +724,7 @@ class ViewsStatsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _isRefreshing.value = true
-                loadDataInternal(site)
+                loadDataInternal(site, forceRefresh = true)
             } finally {
                 _isRefreshing.value = false
             }
@@ -753,6 +754,7 @@ class ViewsStatsViewModel @Inject constructor(
             return
         }
 
+        val targetPeriod = currentPeriod
         val current = _uiState.value
         // While switching to a new period we keep the previous content on screen (dimmed, with a
         // spinner) instead of resetting to placeholders; otherwise show per-region placeholders.
@@ -761,11 +763,21 @@ class ViewsStatsViewModel @Inject constructor(
             // regain, or a no-connection Retry). Clear its effective period in lockstep with dropping
             // selectedBar below, so effectivePeriod can't stay stuck on the bar's sub-period.
             _selectedBarPeriod.value = null
-            _uiState.value = ViewsStatsCardUiState.Content(
-                chart = ChartUiState.Loading,
-                bottomStats = BottomStatsUiState.Loading,
-                selectedMetric = currentSelectedMetric
-            )
+            if (isCached(site.siteId, targetPeriod)) {
+                // A period already in memory repaints in the same frame, so resetting to
+                // placeholders would only flash a skeleton over data the card is about to render.
+                // The bar selection still has to go: updateChart keeps the overlay while one is set,
+                // so leaving it would freeze the card on the previous period's chart.
+                _uiState.update { state ->
+                    if (state is ViewsStatsCardUiState.Content) state.copy(selectedBar = null) else state
+                }
+            } else {
+                _uiState.value = ViewsStatsCardUiState.Content(
+                    chart = ChartUiState.Loading,
+                    bottomStats = BottomStatsUiState.Loading,
+                    selectedMetric = currentSelectedMetric
+                )
+            }
         }
 
         // Rapid paging ("back five days quickly") fires overlapping loads. Cancel the in-flight one so
@@ -774,7 +786,33 @@ class ViewsStatsViewModel @Inject constructor(
         loadJob?.cancel()
         loadJob = viewModelScope.launch {
             loadDataInternal(site)
+            revalidateIfNeeded(site, targetPeriod)
         }
+    }
+
+    /**
+     * Whether everything this card shows for [period] is already in memory: the chart, plus the
+     * bottom row for the single-day periods that fetch it separately.
+     */
+    private fun isCached(siteId: Long, period: StatsPeriod): Boolean =
+        statsRepository.isCached(StatsCacheBucket.CHART, siteId, period) &&
+            (fillsBottomFromChart(period) ||
+                statsRepository.isCached(StatsCacheBucket.BOTTOM_STATS, siteId, period))
+
+    /**
+     * Refreshes a period served from a previous visit to the stats screen, once. The card already
+     * shows those numbers, so this reloads without the placeholders or the dim, and a failure leaves
+     * what's on screen alone instead of replacing it with an error.
+     */
+    private suspend fun revalidateIfNeeded(site: SiteModel, period: StatsPeriod) {
+        if (isStale(period)) return
+        val needsRevalidation =
+            statsRepository.needsRevalidation(StatsCacheBucket.CHART, site.siteId, period) ||
+                (!fillsBottomFromChart(period) && statsRepository.needsRevalidation(
+                    StatsCacheBucket.BOTTOM_STATS, site.siteId, period
+                ))
+        if (!needsRevalidation) return
+        loadDataInternal(site, forceRefresh = true, applyErrors = false)
     }
 
     /**
@@ -782,21 +820,29 @@ class ViewsStatsViewModel @Inject constructor(
      * own region of the [ViewsStatsCardUiState.Content] state as it completes, so the chart can
      * appear before (or without) the bottom row and vice versa.
      */
-    private suspend fun loadDataInternal(site: SiteModel) {
+    private suspend fun loadDataInternal(
+        site: SiteModel,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
+    ) {
         val targetPeriod = currentPeriod
         try {
             val loaded = if (fillsBottomFromChart(targetPeriod)) {
                 // Every non-hourly period uses a daily/monthly/yearly chart whose response already
                 // carries all five bottom-row metrics per bucket, so the bottom row is filled from that
                 // same fetch. This makes the card issue 2 network calls instead of 4.
-                loadChart(site, targetPeriod, fillBottomFromChart = true)
+                loadChart(site, targetPeriod, true, forceRefresh, applyErrors)
             } else {
                 // Single-day periods fetch the bottom row from a dedicated day-level call (run in
                 // parallel with the chart), the same way the web app does it: their chart is hourly and
                 // an hourly response only populates `views`, so it can't fill the row.
                 coroutineScope {
-                    val chart = async { loadChart(site, targetPeriod, fillBottomFromChart = false) }
-                    val bottom = async { loadBottomStats(site, targetPeriod) }
+                    val chart = async {
+                        loadChart(site, targetPeriod, false, forceRefresh, applyErrors)
+                    }
+                    val bottom = async {
+                        loadBottomStats(site, targetPeriod, forceRefresh, applyErrors)
+                    }
                     val chartLoaded = chart.await()
                     val bottomLoaded = bottom.await()
                     chartLoaded && bottomLoaded
@@ -839,12 +885,18 @@ class ViewsStatsViewModel @Inject constructor(
      * from the same response (its per-bucket data already carries all five metrics); when false the
      * bottom row is left untouched here because a dedicated call populates it (Today and Custom).
      */
-    @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadChart(site: SiteModel, period: StatsPeriod, fillBottomFromChart: Boolean): Boolean {
+    @Suppress("TooGenericExceptionCaught", "LongParameterList")
+    private suspend fun loadChart(
+        site: SiteModel,
+        period: StatsPeriod,
+        fillBottomFromChart: Boolean,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
+    ): Boolean {
         // Fetch first and apply afterwards, so the staleness check sits between the two and every write
         // below it is known to belong to the period still on screen.
         val result = try {
-            statsRepository.fetchStatsForPeriod(site.siteId, period)
+            statsRepository.fetchStatsForPeriod(site.siteId, period, forceRefresh)
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
@@ -861,8 +913,10 @@ class ViewsStatsViewModel @Inject constructor(
                 buildChartState(result)
             }
             // An API error or a thrown call: both show the error state and drop the row rather than
-            // leaving the previous period's numbers under a new range.
+            // leaving the previous period's numbers under a new range. A background revalidation
+            // instead leaves the cached numbers it was refreshing on screen.
             else -> {
+                if (!applyErrors) return false
                 if (fillBottomFromChart) updateBottom(BottomStatsUiState.Hidden, period)
                 ChartUiState.Error
             }
@@ -920,10 +974,15 @@ class ViewsStatsViewModel @Inject constructor(
 
     /** Fetches the bottom row from a dedicated call. Used for Today and Custom (see [fillsBottomFromChart]). */
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadBottomStats(site: SiteModel, period: StatsPeriod): Boolean {
+    private suspend fun loadBottomStats(
+        site: SiteModel,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
+    ): Boolean {
         var success = false
         val bottomState = try {
-            when (val result = statsRepository.fetchBottomStats(site.siteId, period)) {
+            when (val result = statsRepository.fetchBottomStats(site.siteId, period, forceRefresh)) {
                 is BottomStatsResult.Success -> {
                     success = true
                     BottomStatsUiState.Loaded(buildStatItems(result.current, result.previous))
@@ -937,6 +996,7 @@ class ViewsStatsViewModel @Inject constructor(
             BottomStatsUiState.Hidden
         }
         if (isStale(period)) return false
+        if (!success && !applyErrors) return false
         updateBottom(bottomState, period)
         return success
     }

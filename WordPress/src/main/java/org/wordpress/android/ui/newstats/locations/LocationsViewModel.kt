@@ -20,12 +20,14 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.repository.CountryViewsResult
 import org.wordpress.android.ui.newstats.repository.RegionViewItemData
 import org.wordpress.android.ui.newstats.repository.RegionViewsResult
+import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.util.toDateRangeString
 import org.wordpress.android.ui.newstats.components.StatsViewChange
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.abs
 
 private const val CARD_MAX_ITEMS = 10
@@ -121,11 +123,41 @@ class LocationsViewModel @Inject constructor(
             return
         }
 
-        setCurrentTypeLoading()
+        val period = currentPeriod
+        val type = _selectedLocationType.value
+        // A period already in memory repaints in the same frame, so the placeholder would only
+        // flash a skeleton over data the card is about to render anyway.
+        if (!isCached(type, site.siteId, period)) {
+            setCurrentTypeLoading()
+        }
 
         viewModelScope.launch {
             fetchForCurrentType(site)
+            revalidateIfNeeded(type, site, period)
         }
+    }
+
+    private fun isCached(type: LocationType, siteId: Long, period: StatsPeriod) =
+        statsRepository.isCached(bucketFor(type), siteId, period)
+
+    /**
+     * Refreshes a result served from a previous visit to the stats screen, once. The card already
+     * shows those numbers, so this runs without a loading state and keeps them if it fails.
+     */
+    private suspend fun revalidateIfNeeded(
+        type: LocationType,
+        site: SiteModel,
+        period: StatsPeriod
+    ) {
+        if (period != currentPeriod) return
+        if (!statsRepository.needsRevalidation(bucketFor(type), site.siteId, period)) return
+        fetchForType(type, site, forceRefresh = true, applyErrors = false)
+    }
+
+    private fun bucketFor(type: LocationType) = when (type) {
+        LocationType.COUNTRIES -> StatsCacheBucket.COUNTRIES
+        LocationType.REGIONS -> StatsCacheBucket.REGIONS
+        LocationType.CITIES -> StatsCacheBucket.CITIES
     }
 
     fun refresh() {
@@ -138,7 +170,7 @@ class LocationsViewModel @Inject constructor(
                 _isRefreshing.value = true
                 // Reset loaded period for current type to force re-fetch
                 resetLoadedPeriodForCurrentType()
-                fetchForCurrentType(site)
+                fetchForCurrentType(site, forceRefresh = true)
             } finally {
                 _isRefreshing.value = false
             }
@@ -175,9 +207,13 @@ class LocationsViewModel @Inject constructor(
             val accessToken = accountStore.accessToken
             if (accessToken.isNullOrEmpty()) return
 
-            setTypeLoading(type)
+            val period = currentPeriod
+            if (!isCached(type, site.siteId, period)) {
+                setTypeLoading(type)
+            }
             viewModelScope.launch {
                 fetchForType(type, site)
+                revalidateIfNeeded(type, site, period)
             }
         }
     }
@@ -277,33 +313,40 @@ class LocationsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchForCurrentType(site: SiteModel) {
-        fetchForType(_selectedLocationType.value, site)
+    private suspend fun fetchForCurrentType(site: SiteModel, forceRefresh: Boolean = false) {
+        fetchForType(_selectedLocationType.value, site, forceRefresh)
     }
 
     private suspend fun fetchForType(
         type: LocationType,
-        site: SiteModel
+        site: SiteModel,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
     ) {
         when (type) {
-            LocationType.COUNTRIES -> fetchCountryViews(site)
-            LocationType.REGIONS -> fetchRegionViews(site)
-            LocationType.CITIES -> fetchCityViews(site)
+            LocationType.COUNTRIES -> fetchCountryViews(site, forceRefresh, applyErrors)
+            LocationType.REGIONS -> fetchRegionViews(site, forceRefresh, applyErrors)
+            LocationType.CITIES -> fetchCityViews(site, forceRefresh, applyErrors)
         }
     }
 
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun fetchCountryViews(site: SiteModel) {
+    private suspend fun fetchCountryViews(
+        site: SiteModel,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
+    ) {
         val siteId = site.siteId
 
         try {
             when (val result = statsRepository.fetchCountryViews(
-                siteId, currentPeriod
+                siteId, currentPeriod, forceRefresh
             )) {
                 is CountryViewsResult.Success -> {
                     handleCountryViewsSuccess(result)
                 }
                 is CountryViewsResult.Error -> {
+                    if (!applyErrors) return
                     _countriesUiState.value =
                         LocationsCardUiState.Error(
                             result.messageResId,
@@ -311,8 +354,11 @@ class LocationsViewModel @Inject constructor(
                         )
                 }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             AppLog.e(AppLog.T.STATS, "Error fetching country views", e)
+            if (!applyErrors) return
             _countriesUiState.value = LocationsCardUiState.Error(
                 R.string.stats_error_unknown
             )
@@ -374,17 +420,22 @@ class LocationsViewModel @Inject constructor(
     }
 
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun fetchRegionViews(site: SiteModel) {
+    private suspend fun fetchRegionViews(
+        site: SiteModel,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
+    ) {
         val siteId = site.siteId
 
         try {
             when (val result = statsRepository.fetchRegionViews(
-                siteId, currentPeriod
+                siteId, currentPeriod, forceRefresh
             )) {
                 is RegionViewsResult.Success -> {
                     handleRegionViewsSuccess(result)
                 }
                 is RegionViewsResult.Error -> {
+                    if (!applyErrors) return
                     _regionsUiState.value =
                         LocationsCardUiState.Error(
                             result.messageResId,
@@ -392,8 +443,11 @@ class LocationsViewModel @Inject constructor(
                         )
                 }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             AppLog.e(AppLog.T.STATS, "Error fetching region views", e)
+            if (!applyErrors) return
             _regionsUiState.value = LocationsCardUiState.Error(
                 R.string.stats_error_unknown
             )
@@ -450,17 +504,22 @@ class LocationsViewModel @Inject constructor(
     }
 
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun fetchCityViews(site: SiteModel) {
+    private suspend fun fetchCityViews(
+        site: SiteModel,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
+    ) {
         val siteId = site.siteId
 
         try {
             when (val result = statsRepository.fetchCityViews(
-                siteId, currentPeriod
+                siteId, currentPeriod, forceRefresh
             )) {
                 is CityViewsResult.Success -> {
                     handleCityViewsSuccess(result)
                 }
                 is CityViewsResult.Error -> {
+                    if (!applyErrors) return
                     _citiesUiState.value =
                         LocationsCardUiState.Error(
                             result.messageResId,
@@ -468,8 +527,11 @@ class LocationsViewModel @Inject constructor(
                         )
                 }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             AppLog.e(AppLog.T.STATS, "Error fetching city views", e)
+            if (!applyErrors) return
             _citiesUiState.value = LocationsCardUiState.Error(
                 R.string.stats_error_unknown
             )

@@ -16,6 +16,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.UtmItemData
 import org.wordpress.android.ui.newstats.repository.UtmResult
@@ -23,6 +24,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.coroutines.cancellation.CancellationException
 
 private const val CARD_MAX_ITEMS = 10
 
@@ -111,17 +113,48 @@ class UtmViewModel @Inject constructor(
             return
         }
         val cat = _selectedCategory.value
-        loadingPeriods[cat] = currentPeriod
-        setCurrentCategoryState(UtmCardUiState.Loading)
+        val period = currentPeriod
+        loadingPeriods[cat] = period
+        // A period already in memory repaints in the same frame, so the placeholder would only
+        // flash a skeleton over data the card is about to render anyway.
+        if (!isCached(cat, site.siteId, period)) {
+            setCurrentCategoryState(UtmCardUiState.Loading)
+        }
         fetchJobs[cat]?.cancel()
         fetchJobs[cat] = viewModelScope.launch {
             try {
                 fetchForCurrentCategory(site.siteId)
+                revalidateIfNeeded(cat, site.siteId, period)
             } finally {
                 loadingPeriods.remove(cat)
                 fetchJobs.remove(cat)
             }
         }
+    }
+
+    private fun isCached(
+        category: UtmCategory,
+        siteId: Long,
+        period: StatsPeriod
+    ) = statsRepository.isCached(
+        StatsCacheBucket.UTM, siteId, period, variant = category.keys.joinToString(",")
+    )
+
+    /**
+     * Refreshes a result served from a previous visit to the stats screen, once. The card already
+     * shows those numbers, so this runs without a loading state and keeps them if it fails.
+     */
+    private suspend fun revalidateIfNeeded(
+        category: UtmCategory,
+        siteId: Long,
+        period: StatsPeriod
+    ) {
+        if (period != currentPeriod) return
+        val needsRevalidation = statsRepository.needsRevalidation(
+            StatsCacheBucket.UTM, siteId, period, variant = category.keys.joinToString(",")
+        )
+        if (!needsRevalidation) return
+        fetchForCategory(category, siteId, forceRefresh = true, applyErrors = false)
     }
 
     fun refresh() {
@@ -133,7 +166,7 @@ class UtmViewModel @Inject constructor(
             try {
                 _isRefreshing.value = true
                 resetLoadedPeriodForCurrentCategory()
-                fetchForCurrentCategory(site.siteId)
+                fetchForCurrentCategory(site.siteId, forceRefresh = true)
             } finally {
                 _isRefreshing.value = false
             }
@@ -175,16 +208,22 @@ class UtmViewModel @Inject constructor(
         if (loadedPeriods[category] != currentPeriod) {
             val accessToken = accountStore.accessToken
             if (accessToken.isNullOrEmpty()) return
-            loadingPeriods[category] = currentPeriod
-            setCurrentCategoryState(
-                UtmCardUiState.Loading
-            )
+            val period = currentPeriod
+            loadingPeriods[category] = period
+            if (!isCached(category, siteId, period)) {
+                setCurrentCategoryState(
+                    UtmCardUiState.Loading
+                )
+            }
             fetchJobs[category]?.cancel()
             fetchJobs[category] =
                 viewModelScope.launch {
                     try {
                         fetchForCategory(
                             category, siteId
+                        )
+                        revalidateIfNeeded(
+                            category, siteId, period
                         )
                     } finally {
                         loadingPeriods.remove(category)
@@ -211,21 +250,24 @@ class UtmViewModel @Inject constructor(
     }
 
     private suspend fun fetchForCurrentCategory(
-        siteId: Long
+        siteId: Long,
+        forceRefresh: Boolean = false
     ) {
         fetchForCategory(
-            _selectedCategory.value, siteId
+            _selectedCategory.value, siteId, forceRefresh
         )
     }
 
     @Suppress("TooGenericExceptionCaught")
     private suspend fun fetchForCategory(
         category: UtmCategory,
-        siteId: Long
+        siteId: Long,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
     ) {
         try {
             val result = statsRepository.fetchUtm(
-                siteId, category.keys, currentPeriod
+                siteId, category.keys, currentPeriod, forceRefresh
             )
             when (result) {
                 is UtmResult.Success -> {
@@ -249,6 +291,7 @@ class UtmViewModel @Inject constructor(
                 }
                 is UtmResult.Error -> {
                     loadingPeriods.remove(category)
+                    if (!applyErrors) return
                     _categoryStates[category]?.value =
                         UtmCardUiState.Error(
                             result.messageResId,
@@ -256,12 +299,15 @@ class UtmViewModel @Inject constructor(
                         )
                 }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             loadingPeriods.remove(category)
             AppLog.e(
                 AppLog.T.STATS,
                 "Error fetching UTM data", e
             )
+            if (!applyErrors) return
             _categoryStates[category]?.value =
                 UtmCardUiState.Error(
                     R.string.stats_error_unknown

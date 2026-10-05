@@ -801,6 +801,9 @@ private fun TrafficTabContent(
         isRefreshing = isRefreshing,
         state = pullToRefreshState,
         onRefresh = {
+            // Empty the cache first, synchronously: the refreshes dispatched below must all reach the
+            // network, and a coroutine hop here would race them.
+            newStatsViewModel.invalidateStatsCache()
             newStatsViewModel.checkNetworkStatus()
             visibleCards.dispatchToVisibleCards(
                 onTodaysStats = { todaysStatsViewModel.refresh() },

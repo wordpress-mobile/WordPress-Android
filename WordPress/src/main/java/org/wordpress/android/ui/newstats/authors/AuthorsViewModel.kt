@@ -12,12 +12,14 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.components.StatsViewChange
+import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.TopAuthorItemData
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.repository.TopAuthorsResult
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.abs
 
 private const val CARD_MAX_ITEMS = 10
@@ -57,15 +59,31 @@ class AuthorsViewModel @Inject constructor(
             return
         }
 
-        _uiState.value = AuthorsCardUiState.Loading
+        val period = currentPeriod
+        // A period already in memory repaints in the same frame, so the placeholder would only
+        // flash a skeleton over data the card is about to render anyway.
+        if (!statsRepository.isCached(StatsCacheBucket.AUTHORS, site.siteId, period)) {
+            _uiState.value = AuthorsCardUiState.Loading
+        }
 
         viewModelScope.launch {
             try {
                 fetchTopAuthors(site)
+                revalidateIfNeeded(site, period)
             } finally {
                 loadingPeriod = null
             }
         }
+    }
+
+    /**
+     * Refreshes a result served from a previous visit to the stats screen, once. The card already
+     * shows those numbers, so this runs without a loading state and keeps them if it fails.
+     */
+    private suspend fun revalidateIfNeeded(site: SiteModel, period: StatsPeriod) {
+        if (period != currentPeriod) return
+        if (!statsRepository.needsRevalidation(StatsCacheBucket.AUTHORS, site.siteId, period)) return
+        fetchTopAuthors(site, forceRefresh = true, applyErrors = false)
     }
 
     fun refresh() {
@@ -76,7 +94,7 @@ class AuthorsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _isRefreshing.value = true
-                fetchTopAuthors(site)
+                fetchTopAuthors(site, forceRefresh = true)
             } finally {
                 _isRefreshing.value = false
             }
@@ -104,12 +122,16 @@ class AuthorsViewModel @Inject constructor(
     fun getCurrentPeriod(): StatsPeriod = currentPeriod
 
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun fetchTopAuthors(site: SiteModel) {
+    private suspend fun fetchTopAuthors(
+        site: SiteModel,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
+    ) {
         val siteId = site.siteId
 
         try {
             when (val result = statsRepository.fetchTopAuthors(
-                siteId, currentPeriod
+                siteId, currentPeriod, forceRefresh
             )) {
                 is TopAuthorsResult.Success -> {
                     loadedPeriod = currentPeriod
@@ -136,14 +158,18 @@ class AuthorsViewModel @Inject constructor(
                     }
                 }
                 is TopAuthorsResult.Error -> {
+                    if (!applyErrors) return
                     _uiState.value = AuthorsCardUiState.Error(
                         result.messageResId,
                         result.isAuthError
                     )
                 }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             AppLog.e(AppLog.T.STATS, "Error fetching top authors", e)
+            if (!applyErrors) return
             _uiState.value = AuthorsCardUiState.Error(
                 R.string.stats_error_unknown
             )

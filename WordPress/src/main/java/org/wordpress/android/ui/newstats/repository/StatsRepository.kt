@@ -123,6 +123,7 @@ private enum class CalendarUnit { WEEK, MONTH, YEAR }
 @Suppress("LargeClass")
 class StatsRepository @Inject constructor(
     private val statsDataSource: StatsDataSource,
+    private val statsResultCache: StatsResultCache,
     private val appLogWrapper: AppLogWrapper,
     private val clock: Clock,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
@@ -135,6 +136,64 @@ class StatsRepository @Inject constructor(
      * 30th, a leap day) instead of on whatever day the test happens to run.
      */
     private fun today(): LocalDate = LocalDate.now(clock)
+
+    /**
+     * Serves [key] from the in-memory cache when it holds it, otherwise runs [fetch] and caches the
+     * result if [isCacheable] accepts it — successes only, so an error or a thrown call always
+     * refetches. [forceRefresh] skips the lookup, for a pull-to-refresh or a background revalidation.
+     *
+     * Deliberately not wrapped in `withContext(ioDispatcher)`: a cache hit then returns without
+     * suspending at all, so a card that already has its data repaints within the same frame.
+     */
+    private suspend fun <T : Any> cached(
+        key: StatsCacheKey,
+        forceRefresh: Boolean,
+        isCacheable: (T) -> Boolean,
+        fetch: suspend () -> T
+    ): T {
+        if (!forceRefresh) {
+            statsResultCache.get<T>(key)?.let { return it }
+        }
+        val result = fetch()
+        if (isCacheable(result)) {
+            statsResultCache.put(key, result)
+        }
+        return result
+    }
+
+    /**
+     * The cache key for one request. Stamped with [today] so a window resolved on an earlier day —
+     * or in another timezone — can never be served for this one.
+     */
+    private fun cacheKey(
+        bucket: StatsCacheBucket,
+        siteId: Long,
+        period: StatsPeriod? = null,
+        variant: String? = null
+    ) = StatsCacheKey(bucket, siteId, today(), period, variant)
+
+    /**
+     * Whether [bucket]'s result for [period] can be served from memory. Cards check this before
+     * loading, so a cache hit doesn't flash a loading placeholder.
+     */
+    fun isCached(
+        bucket: StatsCacheBucket,
+        siteId: Long,
+        period: StatsPeriod? = null,
+        variant: String? = null
+    ): Boolean = statsResultCache.isCached(cacheKey(bucket, siteId, period, variant))
+
+    /**
+     * Whether the cached result for [bucket]/[period] predates this visit to the stats screen, and so
+     * should be refreshed once in the background. False when nothing is cached, and false again once a
+     * refresh has stored a fresh result.
+     */
+    fun needsRevalidation(
+        bucket: StatsCacheBucket,
+        siteId: Long,
+        period: StatsPeriod? = null,
+        variant: String? = null
+    ): Boolean = statsResultCache.needsRevalidation(cacheKey(bucket, siteId, period, variant))
 
     /**
      * The concrete range immediately before [period], stepped by the period's own length.
@@ -352,9 +411,23 @@ class StatsRepository @Inject constructor(
      * Fetches today's aggregated stats (views, visitors, likes, comments).
      *
      * @param siteId The WordPress.com site ID
+     * @param forceRefresh Refetches instead of serving the cached result
      * @return Today's aggregated stats or error
      */
-    suspend fun fetchTodayAggregates(siteId: Long): TodayAggregatesResult = withContext(ioDispatcher) {
+    suspend fun fetchTodayAggregates(
+        siteId: Long,
+        forceRefresh: Boolean = false
+    ): TodayAggregatesResult = cached(
+        key = cacheKey(StatsCacheBucket.TODAY_AGGREGATES, siteId),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is TodayAggregatesResult.Success }
+    ) {
+        fetchTodayAggregatesFromNetwork(siteId)
+    }
+
+    private suspend fun fetchTodayAggregatesFromNetwork(
+        siteId: Long
+    ): TodayAggregatesResult = withContext(ioDispatcher) {
         val dateString = today().format(dateFormatter)
 
         val result = statsDataSource.fetchStatsVisits(
@@ -401,11 +474,24 @@ class StatsRepository @Inject constructor(
      *
      * @param siteId The WordPress.com site ID
      * @param offsetDays Number of days to offset from today (0 = today, 1 = yesterday, etc.)
+     * @param forceRefresh Refetches instead of serving the cached result
      * @return List of hourly views data points, or empty list if fetch fails
      */
     suspend fun fetchHourlyViews(
         siteId: Long,
-        offsetDays: Int = 0
+        offsetDays: Int = 0,
+        forceRefresh: Boolean = false
+    ): HourlyViewsResult = cached(
+        key = cacheKey(StatsCacheBucket.HOURLY_VIEWS, siteId, variant = offsetDays.toString()),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is HourlyViewsResult.Success }
+    ) {
+        fetchHourlyViewsFromNetwork(siteId, offsetDays)
+    }
+
+    private suspend fun fetchHourlyViewsFromNetwork(
+        siteId: Long,
+        offsetDays: Int
     ): HourlyViewsResult = withContext(ioDispatcher) {
         val day = today().minusDays(offsetDays.toLong())
 
@@ -591,9 +677,22 @@ class StatsRepository @Inject constructor(
      *
      * @param siteId The WordPress.com site ID
      * @param period The stats period to fetch
+     * @param forceRefresh Refetches instead of serving the cached result
      * @return Chart stats for current and previous periods or error
      */
     suspend fun fetchStatsForPeriod(
+        siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): PeriodStatsResult = cached(
+        key = cacheKey(StatsCacheBucket.CHART, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is PeriodStatsResult.Success }
+    ) {
+        fetchStatsForPeriodFromNetwork(siteId, period)
+    }
+
+    private suspend fun fetchStatsForPeriodFromNetwork(
         siteId: Long,
         period: StatsPeriod
     ): PeriodStatsResult = withContext(ioDispatcher) {
@@ -682,9 +781,22 @@ class StatsRepository @Inject constructor(
      *
      * @param siteId The WordPress.com site ID
      * @param period The stats period to fetch
+     * @param forceRefresh Refetches instead of serving the cached result
      * @return Bottom-row totals for current and previous periods, or error
      */
     suspend fun fetchBottomStats(
+        siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): BottomStatsResult = cached(
+        key = cacheKey(StatsCacheBucket.BOTTOM_STATS, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is BottomStatsResult.Success }
+    ) {
+        fetchBottomStatsFromNetwork(siteId, period)
+    }
+
+    private suspend fun fetchBottomStatsFromNetwork(
         siteId: Long,
         period: StatsPeriod
     ): BottomStatsResult = withContext(ioDispatcher) {
@@ -1290,10 +1402,24 @@ class StatsRepository @Inject constructor(
      * @param siteId The WordPress.com site ID
      * @param period The stats period to fetch
      * @param dataSource The data source type (posts and pages or referrers)
+     * @param forceRefresh Refetches instead of serving the cached result
      * @return Most viewed items with comparison data or error
      */
-    @Suppress("ReturnCount")
     suspend fun fetchMostViewed(
+        siteId: Long,
+        period: StatsPeriod,
+        dataSource: MostViewedDataSource,
+        forceRefresh: Boolean = false
+    ): MostViewedResult = cached(
+        key = cacheKey(StatsCacheBucket.MOST_VIEWED, siteId, period, variant = dataSource.name),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is MostViewedResult.Success }
+    ) {
+        fetchMostViewedFromNetwork(siteId, period, dataSource)
+    }
+
+    @Suppress("ReturnCount")
+    private suspend fun fetchMostViewedFromNetwork(
         siteId: Long,
         period: StatsPeriod,
         dataSource: MostViewedDataSource
@@ -1316,6 +1442,18 @@ class StatsRepository @Inject constructor(
      * screen can show more entries than the card without inflating the card request.
      */
     suspend fun fetchReferrersDetail(
+        siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): MostViewedResult = cached(
+        key = cacheKey(StatsCacheBucket.REFERRERS_DETAIL, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is MostViewedResult.Success }
+    ) {
+        fetchReferrersDetailFromNetwork(siteId, period)
+    }
+
+    private suspend fun fetchReferrersDetailFromNetwork(
         siteId: Long,
         period: StatsPeriod
     ): MostViewedResult = withContext(ioDispatcher) {
@@ -1543,9 +1681,22 @@ class StatsRepository @Inject constructor(
      *
      * @param siteId The WordPress.com site ID
      * @param period The stats period to fetch
+     * @param forceRefresh Refetches instead of serving the cached result
      * @return Country views data with comparison or error
      */
     suspend fun fetchCountryViews(
+        siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): CountryViewsResult = cached(
+        key = cacheKey(StatsCacheBucket.COUNTRIES, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is CountryViewsResult.Success }
+    ) {
+        fetchCountryViewsFromNetwork(siteId, period)
+    }
+
+    private suspend fun fetchCountryViewsFromNetwork(
         siteId: Long,
         period: StatsPeriod
     ): CountryViewsResult = withContext(ioDispatcher) {
@@ -1614,9 +1765,22 @@ class StatsRepository @Inject constructor(
      *
      * @param siteId The WordPress.com site ID
      * @param period The stats period to fetch
+     * @param forceRefresh Refetches instead of serving the cached result
      * @return Region views data with comparison or error
      */
     suspend fun fetchRegionViews(
+        siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): RegionViewsResult = cached(
+        key = cacheKey(StatsCacheBucket.REGIONS, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is RegionViewsResult.Success }
+    ) {
+        fetchRegionViewsFromNetwork(siteId, period)
+    }
+
+    private suspend fun fetchRegionViewsFromNetwork(
         siteId: Long,
         period: StatsPeriod
     ): RegionViewsResult = withContext(ioDispatcher) {
@@ -1697,9 +1861,22 @@ class StatsRepository @Inject constructor(
      *
      * @param siteId The WordPress.com site ID
      * @param period The stats period to fetch
+     * @param forceRefresh Refetches instead of serving the cached result
      * @return City views data with comparison or error
      */
     suspend fun fetchCityViews(
+        siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): CityViewsResult = cached(
+        key = cacheKey(StatsCacheBucket.CITIES, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is CityViewsResult.Success }
+    ) {
+        fetchCityViewsFromNetwork(siteId, period)
+    }
+
+    private suspend fun fetchCityViewsFromNetwork(
         siteId: Long,
         period: StatsPeriod
     ): CityViewsResult = withContext(ioDispatcher) {
@@ -1782,9 +1959,22 @@ class StatsRepository @Inject constructor(
      *
      * @param siteId The WordPress.com site ID
      * @param period The stats period to fetch
+     * @param forceRefresh Refetches instead of serving the cached result
      * @return Top authors data with comparison or error
      */
     suspend fun fetchTopAuthors(
+        siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): TopAuthorsResult = cached(
+        key = cacheKey(StatsCacheBucket.AUTHORS, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is TopAuthorsResult.Success }
+    ) {
+        fetchTopAuthorsFromNetwork(siteId, period)
+    }
+
+    private suspend fun fetchTopAuthorsFromNetwork(
         siteId: Long,
         period: StatsPeriod
     ): TopAuthorsResult = withContext(ioDispatcher) {
@@ -1847,6 +2037,18 @@ class StatsRepository @Inject constructor(
 
     suspend fun fetchClicks(
         siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): ClicksResult = cached(
+        key = cacheKey(StatsCacheBucket.CLICKS, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is ClicksResult.Success }
+    ) {
+        fetchClicksFromNetwork(siteId, period)
+    }
+
+    private suspend fun fetchClicksFromNetwork(
+        siteId: Long,
         period: StatsPeriod
     ): ClicksResult = fetchWithComparison(
         period = period,
@@ -1890,6 +2092,18 @@ class StatsRepository @Inject constructor(
 
     suspend fun fetchSearchTerms(
         siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): SearchTermsResult = cached(
+        key = cacheKey(StatsCacheBucket.SEARCH_TERMS, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is SearchTermsResult.Success }
+    ) {
+        fetchSearchTermsFromNetwork(siteId, period)
+    }
+
+    private suspend fun fetchSearchTermsFromNetwork(
+        siteId: Long,
         period: StatsPeriod
     ): SearchTermsResult = fetchWithComparison(
         period = period,
@@ -1921,6 +2135,18 @@ class StatsRepository @Inject constructor(
 
     suspend fun fetchVideoPlays(
         siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): VideoPlaysResult = cached(
+        key = cacheKey(StatsCacheBucket.VIDEO_PLAYS, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is VideoPlaysResult.Success }
+    ) {
+        fetchVideoPlaysFromNetwork(siteId, period)
+    }
+
+    private suspend fun fetchVideoPlaysFromNetwork(
+        siteId: Long,
         period: StatsPeriod
     ): VideoPlaysResult = fetchWithComparison(
         period = period,
@@ -1951,6 +2177,18 @@ class StatsRepository @Inject constructor(
     )
 
     suspend fun fetchFileDownloads(
+        siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): FileDownloadsResult = cached(
+        key = cacheKey(StatsCacheBucket.FILE_DOWNLOADS, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is FileDownloadsResult.Success }
+    ) {
+        fetchFileDownloadsFromNetwork(siteId, period)
+    }
+
+    private suspend fun fetchFileDownloadsFromNetwork(
         siteId: Long,
         period: StatsPeriod
     ): FileDownloadsResult = fetchWithComparison(
@@ -1988,6 +2226,18 @@ class StatsRepository @Inject constructor(
      */
     suspend fun fetchDevicesScreensize(
         siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): DevicesResult = cached(
+        key = cacheKey(StatsCacheBucket.DEVICES_SCREENSIZE, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is DevicesResult.Success }
+    ) {
+        fetchDevicesScreensizeFromNetwork(siteId, period)
+    }
+
+    private suspend fun fetchDevicesScreensizeFromNetwork(
+        siteId: Long,
         period: StatsPeriod
     ): DevicesResult = withContext(ioDispatcher) {
         val dateRange = calculateCurrentDateRange(period)
@@ -1999,6 +2249,18 @@ class StatsRepository @Inject constructor(
      */
     suspend fun fetchDevicesBrowser(
         siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): DevicesResult = cached(
+        key = cacheKey(StatsCacheBucket.DEVICES_BROWSER, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is DevicesResult.Success }
+    ) {
+        fetchDevicesBrowserFromNetwork(siteId, period)
+    }
+
+    private suspend fun fetchDevicesBrowserFromNetwork(
+        siteId: Long,
         period: StatsPeriod
     ): DevicesResult = withContext(ioDispatcher) {
         val dateRange = calculateCurrentDateRange(period)
@@ -2009,6 +2271,18 @@ class StatsRepository @Inject constructor(
      * Fetches device platform stats for a specific site and period.
      */
     suspend fun fetchDevicesPlatform(
+        siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): DevicesResult = cached(
+        key = cacheKey(StatsCacheBucket.DEVICES_PLATFORM, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is DevicesResult.Success }
+    ) {
+        fetchDevicesPlatformFromNetwork(siteId, period)
+    }
+
+    private suspend fun fetchDevicesPlatformFromNetwork(
         siteId: Long,
         period: StatsPeriod
     ): DevicesResult = withContext(ioDispatcher) {
@@ -2047,8 +2321,21 @@ class StatsRepository @Inject constructor(
     /**
      * Fetches UTM stats for a specific site and period.
      */
-    @Suppress("TooGenericExceptionCaught")
     suspend fun fetchUtm(
+        siteId: Long,
+        keys: List<String>,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): UtmResult = cached(
+        key = cacheKey(StatsCacheBucket.UTM, siteId, period, variant = keys.joinToString(",")),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is UtmResult.Success }
+    ) {
+        fetchUtmFromNetwork(siteId, keys, period)
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun fetchUtmFromNetwork(
         siteId: Long,
         keys: List<String>,
         period: StatsPeriod

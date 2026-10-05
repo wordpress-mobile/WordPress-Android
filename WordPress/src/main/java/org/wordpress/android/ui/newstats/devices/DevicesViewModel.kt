@@ -17,9 +17,11 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.repository.DevicesResult
+import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 private const val CARD_MAX_ITEMS = 10
 
@@ -81,11 +83,41 @@ class DevicesViewModel @Inject constructor(
             return
         }
 
-        setCurrentTypeLoading()
+        val period = currentPeriod
+        val type = _selectedDeviceType.value
+        // A period already in memory repaints in the same frame, so the placeholder would only
+        // flash a skeleton over data the card is about to render anyway.
+        if (!isCached(type, site.siteId, period)) {
+            setCurrentTypeLoading()
+        }
 
         viewModelScope.launch {
             fetchForCurrentType(site)
+            revalidateIfNeeded(type, site, period)
         }
+    }
+
+    private fun isCached(type: DeviceType, siteId: Long, period: StatsPeriod) =
+        statsRepository.isCached(bucketFor(type), siteId, period)
+
+    /**
+     * Refreshes a result served from a previous visit to the stats screen, once. The card already
+     * shows those numbers, so this runs without a loading state and keeps them if it fails.
+     */
+    private suspend fun revalidateIfNeeded(
+        type: DeviceType,
+        site: SiteModel,
+        period: StatsPeriod
+    ) {
+        if (period != currentPeriod) return
+        if (!statsRepository.needsRevalidation(bucketFor(type), site.siteId, period)) return
+        fetchForType(type, site, forceRefresh = true, applyErrors = false)
+    }
+
+    private fun bucketFor(type: DeviceType) = when (type) {
+        DeviceType.SCREENSIZE -> StatsCacheBucket.DEVICES_SCREENSIZE
+        DeviceType.BROWSER -> StatsCacheBucket.DEVICES_BROWSER
+        DeviceType.PLATFORM -> StatsCacheBucket.DEVICES_PLATFORM
     }
 
     fun refresh() {
@@ -97,7 +129,7 @@ class DevicesViewModel @Inject constructor(
             try {
                 _isRefreshing.value = true
                 resetLoadedPeriodForCurrentType()
-                fetchForCurrentType(site)
+                fetchForCurrentType(site, forceRefresh = true)
             } finally {
                 _isRefreshing.value = false
             }
@@ -135,9 +167,13 @@ class DevicesViewModel @Inject constructor(
             val accessToken = accountStore.accessToken
             if (accessToken.isNullOrEmpty()) return
 
-            setTypeLoading(type)
+            val period = currentPeriod
+            if (!isCached(type, site.siteId, period)) {
+                setTypeLoading(type)
+            }
             viewModelScope.launch {
                 fetchForType(type, site)
+                revalidateIfNeeded(type, site, period)
             }
         }
     }
@@ -193,13 +229,15 @@ class DevicesViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchForCurrentType(site: SiteModel) {
-        fetchForType(_selectedDeviceType.value, site)
+    private suspend fun fetchForCurrentType(site: SiteModel, forceRefresh: Boolean = false) {
+        fetchForType(_selectedDeviceType.value, site, forceRefresh)
     }
 
     private suspend fun fetchForType(
         type: DeviceType,
-        site: SiteModel
+        site: SiteModel,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
     ) {
         val stateFlow = when (type) {
             DeviceType.SCREENSIZE -> _screensizeUiState
@@ -214,19 +252,19 @@ class DevicesViewModel @Inject constructor(
             DeviceType.PLATFORM ->
                 { -> platformLoadedPeriod = currentPeriod }
         }
-        fetchAndUpdate(stateFlow, setLoadedPeriod) {
+        fetchAndUpdate(stateFlow, setLoadedPeriod, applyErrors) {
             when (type) {
                 DeviceType.SCREENSIZE ->
                     statsRepository.fetchDevicesScreensize(
-                        site.siteId, currentPeriod
+                        site.siteId, currentPeriod, forceRefresh
                     )
                 DeviceType.BROWSER ->
                     statsRepository.fetchDevicesBrowser(
-                        site.siteId, currentPeriod
+                        site.siteId, currentPeriod, forceRefresh
                     )
                 DeviceType.PLATFORM ->
                     statsRepository.fetchDevicesPlatform(
-                        site.siteId, currentPeriod
+                        site.siteId, currentPeriod, forceRefresh
                     )
             }
         }
@@ -236,6 +274,7 @@ class DevicesViewModel @Inject constructor(
     private suspend fun fetchAndUpdate(
         stateFlow: MutableStateFlow<DevicesCardUiState>,
         setLoadedPeriod: () -> Unit,
+        applyErrors: Boolean,
         fetch: suspend () -> DevicesResult
     ) {
         try {
@@ -245,17 +284,21 @@ class DevicesViewModel @Inject constructor(
                     stateFlow.value = mapToLoadedState(result)
                 }
                 is DevicesResult.Error -> {
+                    if (!applyErrors) return
                     stateFlow.value = DevicesCardUiState.Error(
                         result.messageResId,
                         result.isAuthError
                     )
                 }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             AppLog.e(
                 AppLog.T.STATS,
                 "Error fetching devices data", e
             )
+            if (!applyErrors) return
             stateFlow.value = DevicesCardUiState.Error(
                 R.string.stats_error_unknown
             )

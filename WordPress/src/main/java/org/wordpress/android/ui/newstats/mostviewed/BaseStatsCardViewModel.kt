@@ -13,9 +13,11 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
+import kotlin.coroutines.cancellation.CancellationException
 
 private const val CARD_MAX_ITEMS = 10
 
@@ -25,6 +27,8 @@ private const val CARD_MAX_ITEMS = 10
  *
  * Subclasses only need to provide:
  * - [logTag]: a label for error logging
+ * - [cacheBucket]: the repository cache the card reads, so a
+ *   period it already holds renders without a placeholder
  * - [fetchStats]: the suspend function that calls the
  *   repository and maps the result to [StatsCardFetchResult]
  */
@@ -49,10 +53,12 @@ abstract class BaseStatsCardViewModel(
     private var loadedPeriod: StatsPeriod? = null
     private var fetchJob: Job? = null
     protected abstract val logTag: String
+    protected abstract val cacheBucket: StatsCacheBucket
 
     protected abstract suspend fun fetchStats(
         siteId: Long,
-        period: StatsPeriod
+        period: StatsPeriod,
+        forceRefresh: Boolean
     ): StatsCardFetchResult
 
     fun loadData() {
@@ -78,16 +84,33 @@ abstract class BaseStatsCardViewModel(
             return
         }
 
-        _uiState.value = MostViewedCardUiState.Loading
+        val period = currentPeriod
+        // A period already in memory repaints in the same frame, so showing the placeholder first
+        // would only flash a skeleton over data the card is about to render anyway.
+        if (!statsRepository.isCached(cacheBucket, site.siteId, period)) {
+            _uiState.value = MostViewedCardUiState.Loading
+        }
 
         fetchJob?.cancel()
         fetchJob = viewModelScope.launch {
             try {
                 fetchAndProcess(site)
+                revalidateIfNeeded(site, period)
             } finally {
                 loadingPeriod = null
             }
         }
+    }
+
+    /**
+     * Refreshes a result that was served from a previous visit to the stats screen, once. The card
+     * already shows those numbers, so this runs without a loading state and, if it fails, leaves
+     * them in place rather than replacing them with an error.
+     */
+    private suspend fun revalidateIfNeeded(site: SiteModel, period: StatsPeriod) {
+        if (period != currentPeriod) return
+        if (!statsRepository.needsRevalidation(cacheBucket, site.siteId, period)) return
+        fetchAndProcess(site, forceRefresh = true, applyErrors = false)
     }
 
     fun refresh() {
@@ -101,7 +124,7 @@ abstract class BaseStatsCardViewModel(
         fetchJob = viewModelScope.launch {
             try {
                 _isRefreshing.value = true
-                fetchAndProcess(site)
+                fetchAndProcess(site, forceRefresh = true)
             } finally {
                 _isRefreshing.value = false
                 loadingPeriod = null
@@ -132,12 +155,18 @@ abstract class BaseStatsCardViewModel(
     fun getCurrentPeriod(): StatsPeriod = currentPeriod
 
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun fetchAndProcess(site: SiteModel) {
+    private suspend fun fetchAndProcess(
+        site: SiteModel,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
+    ) {
         val siteId = site.siteId
 
         try {
             when (
-                val result = fetchStats(siteId, currentPeriod)
+                val result = fetchStats(
+                    siteId, currentPeriod, forceRefresh
+                )
             ) {
                 is StatsCardFetchResult.Success -> {
                     loadedPeriod = currentPeriod
@@ -164,6 +193,7 @@ abstract class BaseStatsCardViewModel(
                     }
                 }
                 is StatsCardFetchResult.Error -> {
+                    if (!applyErrors) return
                     _uiState.value = MostViewedCardUiState.Error(
                         message = resourceProvider.getString(
                             result.messageResId
@@ -173,12 +203,15 @@ abstract class BaseStatsCardViewModel(
                     )
                 }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             AppLog.e(
                 AppLog.T.STATS,
                 "Error fetching $logTag",
                 e
             )
+            if (!applyErrors) return
             _uiState.value = MostViewedCardUiState.Error(
                 resourceProvider.getString(
                     R.string.stats_error_unknown

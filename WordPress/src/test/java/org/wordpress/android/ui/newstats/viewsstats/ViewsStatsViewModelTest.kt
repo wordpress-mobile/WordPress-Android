@@ -121,7 +121,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             previousViews = TEST_PREVIOUS_PERIOD_VIEWS
         )
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
@@ -137,7 +137,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when period stats fetch fails, then chart region shows an error but the card stays`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(PeriodStatsResult.Error("Network error"))
 
         initViewModel()
@@ -152,7 +152,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     fun `when period data is empty, then chart data is empty but chart is loaded`() = test {
         val result = createPeriodStatsResult(currentPeriodData = emptyList(), previousPeriodData = emptyList())
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
@@ -177,7 +177,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             ),
             previousPeriodData = emptyList()
         )
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -189,7 +189,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     @Test
     fun `given YEAR unit, when chart loads, then the legend shows a year span`() = test {
         val result = createPeriodStatsResult(unit = StatsUnit.YEAR)
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -202,7 +202,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     fun `given DAY unit, when chart loads, then the legend date range includes the year`() = test {
         // Default aggregates span 2024-01-14..2024-01-20 (a Last7Days range within one month).
         val result = createPeriodStatsResult(unit = StatsUnit.DAY)
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -217,7 +217,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             currentStartDate = "2024-12-29",
             currentEndDate = "2025-01-04"
         )
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -233,7 +233,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             currentStartDate = "2024-01-01",
             currentEndDate = "2024-06-01"
         )
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -251,7 +251,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         // buckets and its legend is always a month span -- it no longer starts January in day buckets.
         // Default aggregates span 2024-01-14..2024-01-20.
         val result = createPeriodStatsResult(unit = StatsUnit.MONTH)
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -270,7 +270,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             currentStartDate = "2024-01-01",
             currentEndDate = "2024-06-01"
         )
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -285,7 +285,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     @Test
     fun `given DAY unit, when chart loads, then labels are not coarsened to the year`() = test {
         val result = createPeriodStatsResult(unit = StatsUnit.DAY)
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -300,7 +300,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     @Test
     fun `given MONTH unit, when chart loads, then labels are not coarsened to the year`() = test {
         val result = createPeriodStatsResult(unit = StatsUnit.MONTH)
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -320,7 +320,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             ),
             previousPeriodData = emptyList()
         )
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -333,7 +333,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     fun `when loadData is called, then repository is called`() = test {
         val result = createPeriodStatsResult()
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
@@ -343,14 +343,14 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Called twice: once during init, once during loadData
-        verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any())
+        verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any(), any())
     }
 
     @Test
     fun `when onRetry is called, then loadData is called`() = test {
         val result = createPeriodStatsResult()
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
@@ -360,14 +360,14 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Called twice: once during init, once during onRetry
-        verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any())
+        verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any(), any())
     }
 
     @Test
     fun `when data loads, then views difference is calculated correctly`() = test {
         val result = createPeriodStatsResult(currentViews = 7000L, previousViews = 8000L)
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
@@ -381,7 +381,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     fun `when data loads, then percentage change is calculated correctly`() = test {
         val result = createPeriodStatsResult(currentViews = 9000L, previousViews = 10000L)
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
@@ -395,7 +395,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     fun `when previous period has zero views, then percentage change is 100 percent`() = test {
         val result = createPeriodStatsResult(currentViews = 1000L, previousViews = 0L)
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
@@ -409,7 +409,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     fun `when refresh is called, then isRefreshing becomes true then false`() = test {
         val result = createPeriodStatsResult()
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
@@ -439,7 +439,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     fun `when a fixed period loads, then the bottom row is built from the chart response`() = test {
         // Fixed periods (default: Last7Days) fill the bottom row from the chart's own call — no
         // dedicated bottom fetch.
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
 
         initViewModel()
@@ -450,14 +450,14 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         assertThat(stats!!.map { it.metric }).containsExactly(
             StatsMetric.VIEWS, StatsMetric.VISITORS, StatsMetric.LIKES, StatsMetric.COMMENTS, StatsMetric.POSTS
         )
-        verify(statsRepository, times(0)).fetchBottomStats(any(), any())
+        verify(statsRepository, times(0)).fetchBottomStats(any(), any(), any())
     }
 
     @Test
     fun `when a multi-day Custom loads, then the bottom row is built from the chart response`() = test {
         // A multi-day Custom chart shares the bottom row's unit, quantity and windows, so its response
         // already carries the row's totals — no dedicated call, 2 network calls instead of 4.
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
 
         initViewModel()
@@ -474,16 +474,16 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         assertThat(stats!!.map { it.metric }).containsExactly(
             StatsMetric.VIEWS, StatsMetric.VISITORS, StatsMetric.LIKES, StatsMetric.COMMENTS, StatsMetric.POSTS
         )
-        verify(statsRepository, times(0)).fetchBottomStats(any(), any())
+        verify(statsRepository, times(0)).fetchBottomStats(any(), any(), any())
     }
 
     @Test
     fun `when a single-day Custom loads, then the bottom row comes from the dedicated call`() = test {
         // Its chart is hourly and an hourly response only populates `views`, so the row can't come
         // from the chart.
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
-        whenever(statsRepository.fetchBottomStats(any(), any()))
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
             .thenReturn(createBottomStatsResult())
 
         initViewModel()
@@ -494,13 +494,13 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         viewModel.loadDataIfNeeded()
         advanceUntilIdle()
 
-        verify(statsRepository, times(1)).fetchBottomStats(any(), any())
+        verify(statsRepository, times(1)).fetchBottomStats(any(), any(), any())
     }
 
     @Test
     fun `when a fixed-period chart fetch fails, then both the chart and the bottom row are hidden`() = test {
         // Fixed periods source the bottom row from the chart, so a chart failure hides both.
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(PeriodStatsResult.Error("Network error"))
 
         initViewModel()
@@ -514,9 +514,9 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     @Test
     fun `when a single-day bottom fetch fails, then the row is hidden but the chart still loads`() = test {
         // Single-day periods (Today) load the hourly chart and the bottom row independently.
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
-        whenever(statsRepository.fetchBottomStats(any(), any()))
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
             .thenReturn(BottomStatsResult.Error)
 
         initViewModel(periodType = "today")
@@ -529,9 +529,9 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when a single-day chart fetch fails, then the bottom row still loads from its dedicated call`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(PeriodStatsResult.Error("Network error"))
-        whenever(statsRepository.fetchBottomStats(any(), any()))
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
             .thenReturn(createBottomStatsResult())
 
         initViewModel(periodType = "today")
@@ -546,10 +546,10 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     fun `when a single-day bottom fetch fails transiently, then the next visibility retries and recovers`() = test {
         // The dedicated bottom call is used for single-day periods; a transient failure must not leave
         // the period marked loaded, so the next visibility retries it.
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
         // First attempt fails (row hidden); the retry on next visibility succeeds.
-        whenever(statsRepository.fetchBottomStats(any(), any()))
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
             .thenReturn(BottomStatsResult.Error)
             .thenReturn(createBottomStatsResult())
 
@@ -562,13 +562,13 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(viewModel.uiState.value.bottomState()).isInstanceOf(BottomStatsUiState.Loaded::class.java)
-        verify(statsRepository, times(2)).fetchBottomStats(any(), any())
+        verify(statsRepository, times(2)).fetchBottomStats(any(), any(), any())
     }
 
     @Test
     fun `when stat increases, then positive change is calculated`() = test {
         // For fixed periods the bottom row comes from the chart aggregates, so drive the change via them.
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult(currentViews = 1000L, previousViews = 800L))
 
         initViewModel()
@@ -581,7 +581,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when stat decreases, then negative change is calculated`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult(currentViews = 800L, previousViews = 1000L))
 
         initViewModel()
@@ -594,7 +594,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when stat is unchanged, then no change is calculated`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult(currentViews = 1000L, previousViews = 1000L))
 
         initViewModel()
@@ -608,7 +608,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     fun `when period average is calculated, then it is based on data points count`() = test {
         val result = createPeriodStatsResult(currentViews = 7000L)
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
@@ -628,7 +628,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
                 ViewsDataPoint(period = "2024-01-17", views = 0L, isUpcoming = true)
             )
         )
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -647,7 +647,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             currentPeriodData = createDefaultDataPoints() +
                 ViewsDataPoint(period = "2024-01-16", views = 0L, isUpcoming = true)
         )
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -664,7 +664,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when exception is thrown during chart fetch, then chart region shows an error`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenThrow(RuntimeException("Test exception"))
 
         initViewModel()
@@ -679,7 +679,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     fun `when onPeriodChanged is called with same period, then data is not reloaded`() = test {
         val result = createPeriodStatsResult()
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
@@ -690,14 +690,14 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Should only be called once during init
-        verify(statsRepository, times(1)).fetchStatsForPeriod(any(), any())
+        verify(statsRepository, times(1)).fetchStatsForPeriod(any(), any(), any())
     }
 
     @Test
     fun `when onPeriodChanged is called with different period, then data is reloaded`() = test {
         val result = createPeriodStatsResult()
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
@@ -708,14 +708,14 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Called twice: once during init, once after period change
-        verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any())
+        verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any(), any())
     }
 
     @Test
     fun `when onPeriodChanged is called with custom period, then data is loaded`() = test {
         val result = createPeriodStatsResult()
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
@@ -730,7 +730,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Called twice: once during init, once after custom period change
-        verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any())
+        verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any(), any())
     }
 
     @Test
@@ -747,7 +747,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
         // Fixed period: the chart call succeeds and fills the bottom row, so the period is fully loaded
         // and subsequent loadDataIfNeeded calls short-circuit.
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
@@ -760,14 +760,14 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Should only be called once despite three calls to loadDataIfNeeded
-        verify(statsRepository, times(1)).fetchStatsForPeriod(any(), any())
+        verify(statsRepository, times(1)).fetchStatsForPeriod(any(), any(), any())
     }
 
     @Test
     fun `when onChartTypeChanged is called, then chart type is updated`() = test {
         val result = createPeriodStatsResult()
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
@@ -784,7 +784,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     @Test
     fun `when chart type is saved, then it persists in SavedStateHandle`() = test {
         val result = createPeriodStatsResult()
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
@@ -803,7 +803,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         whenever(cardsConfigurationRepository.getConfiguration(any()))
             .thenReturn(StatsCardsConfiguration())
         val result = createPeriodStatsResult()
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         viewModel = ViewsStatsViewModel(
@@ -826,7 +826,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         whenever(cardsConfigurationRepository.getConfiguration(any()))
             .thenReturn(StatsCardsConfiguration())
         val result = createPeriodStatsResult()
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         viewModel = ViewsStatsViewModel(
@@ -847,7 +847,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
                 StatsCardsConfiguration(selectedChartType = "line")
             )
         val result = createPeriodStatsResult()
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         viewModel = ViewsStatsViewModel(
@@ -871,7 +871,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when a daily bar is tapped, then it soft-selects without changing the committed period`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
 
         initViewModel()
@@ -899,7 +899,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when the arrow is tapped on a daily selection, then the whole screen drills into that day`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
 
         initViewModel()
@@ -926,7 +926,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             ViewsDataPoint(period = "2024-01-01", views = 5000L),
             ViewsDataPoint(period = "2024-02-01", views = 6000L)
         )
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(
                 createPeriodStatsResult(
                     currentPeriodData = monthlyData,
@@ -965,7 +965,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             ViewsDataPoint(period = "2024-01-14", views = 1000L),
             ViewsDataPoint(period = "2024-01-15", views = 1500L)
         )
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(
                 createPeriodStatsResult(
                     currentPeriodData = dailyData,
@@ -1001,7 +1001,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             ViewsDataPoint(period = "2024-01-01", views = 5000L),
             ViewsDataPoint(period = "2024-02-01", views = 6000L)
         )
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(
                 createPeriodStatsResult(
                     currentPeriodData = monthlyData,
@@ -1035,7 +1035,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
             ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
         )
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult(currentPeriodData = hourlyData, previousPeriodData = hourlyData))
 
         initViewModel()
@@ -1066,7 +1066,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
             ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
         )
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult(currentPeriodData = hourlyData, previousPeriodData = hourlyData))
 
         initViewModel()
@@ -1085,7 +1085,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when the selected bar is tapped again, then the selection clears and the header is restored`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
 
         initViewModel()
@@ -1106,7 +1106,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when a different bar is tapped, then the selection moves to it`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
 
         initViewModel()
@@ -1135,7 +1135,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             ViewsDataPoint(period = "2024-01-07", views = 400L),
             ViewsDataPoint(period = "2024-01-08", views = 600L)
         )
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult(currentPeriodData = current, previousPeriodData = previous))
 
         initViewModel()
@@ -1159,7 +1159,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             ViewsDataPoint(period = "2024-01-14", views = 1000L, visitors = 300L),
             ViewsDataPoint(period = "2024-01-15", views = 1500L, visitors = 450L)
         )
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult(currentPeriodData = data, previousPeriodData = data))
 
         initViewModel()
@@ -1177,7 +1177,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when the selection is cleared, then the bottom row is restored to the whole period`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
 
         initViewModel()
@@ -1202,7 +1202,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             ViewsDataPoint(period = "2024-01-14", views = 1000L, visitors = 300L),
             ViewsDataPoint(period = "2024-01-15", views = 1500L, visitors = 450L)
         )
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult(currentPeriodData = data, previousPeriodData = data))
 
         initViewModel()
@@ -1221,7 +1221,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when the committed period changes, then any soft selection is cleared`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
 
         initViewModel()
@@ -1245,12 +1245,12 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
             ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
         )
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult(currentPeriodData = hourly, previousPeriodData = hourly))
         // Single-day periods fetch the bottom row from a dedicated call; gate it so the chart resolves
         // first, leaving a window where the card is chart=Loaded, bottom=Loading, not dimmed.
         val bottomGate = CompletableDeferred<Unit>()
-        whenever(statsRepository.fetchBottomStats(any(), any())).doSuspendableAnswer {
+        whenever(statsRepository.fetchBottomStats(any(), any(), any())).doSuspendableAnswer {
             bottomGate.await()
             createBottomStatsResult()
         }
@@ -1278,14 +1278,14 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
             ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
         )
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(
             createPeriodStatsResult(
                 currentPeriodData = hourly,
                 previousPeriodData = hourly,
                 unit = StatsUnit.HOUR
             )
         )
-        whenever(statsRepository.fetchBottomStats(any(), any())).thenReturn(createBottomStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any(), any())).thenReturn(createBottomStatsResult())
 
         initViewModel(periodType = "today")
         advanceUntilIdle()
@@ -1310,7 +1310,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
             ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
         )
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(
             createPeriodStatsResult(
                 currentPeriodData = hourly,
                 previousPeriodData = hourly,
@@ -1319,7 +1319,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         )
         // The day-level row is fetched separately and can land after the user has tapped a bar.
         val bottomGate = CompletableDeferred<Unit>()
-        whenever(statsRepository.fetchBottomStats(any(), any())).doSuspendableAnswer {
+        whenever(statsRepository.fetchBottomStats(any(), any(), any())).doSuspendableAnswer {
             bottomGate.await()
             createBottomStatsResult()
         }
@@ -1345,7 +1345,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         test {
             // Last 7 Days fills its bottom row from the chart, so the card is holding that row when the
             // user switches away from it.
-            whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
                 .thenReturn(createPeriodStatsResult(currentVisitors = STALE_VISITORS))
             initViewModel()
             advanceUntilIdle()
@@ -1358,7 +1358,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
                 ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
                 ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
             )
-            whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(
+            whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(
                 createPeriodStatsResult(
                     currentPeriodData = hourly,
                     previousPeriodData = hourly,
@@ -1366,7 +1366,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
                 )
             )
             val bottomGate = CompletableDeferred<Unit>()
-            whenever(statsRepository.fetchBottomStats(any(), any())).doSuspendableAnswer {
+            whenever(statsRepository.fetchBottomStats(any(), any(), any())).doSuspendableAnswer {
                 bottomGate.await()
                 createBottomStatsResult()
             }
@@ -1396,7 +1396,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         test {
             // Same window as the test above: Last 7 Days' row is what the card is holding when the user
             // switches to Today, whose own row hasn't landed yet.
-            whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
                 .thenReturn(createPeriodStatsResult(currentVisitors = STALE_VISITORS))
             initViewModel()
             advanceUntilIdle()
@@ -1405,7 +1405,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
                 ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
                 ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
             )
-            whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(
+            whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(
                 createPeriodStatsResult(
                     currentPeriodData = hourly,
                     previousPeriodData = hourly,
@@ -1413,7 +1413,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
                 )
             )
             val bottomGate = CompletableDeferred<Unit>()
-            whenever(statsRepository.fetchBottomStats(any(), any())).doSuspendableAnswer {
+            whenever(statsRepository.fetchBottomStats(any(), any(), any())).doSuspendableAnswer {
                 bottomGate.await()
                 createBottomStatsResult()
             }
@@ -1446,13 +1446,13 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         // refresh() loads outside the job loadData() cancels, so its response can arrive after the user
         // has already moved to another period.
         val staleResult = createPeriodStatsResult(currentVisitors = STALE_VISITORS)
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(staleResult)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(staleResult)
         initViewModel()
         advanceUntilIdle()
 
         // Gate the refresh's own fetch so it is still in flight when the period changes.
         val refreshGate = CompletableDeferred<Unit>()
-        whenever(statsRepository.fetchStatsForPeriod(any(), eq(StatsPeriod.Last7Days))).doSuspendableAnswer {
+        whenever(statsRepository.fetchStatsForPeriod(any(), eq(StatsPeriod.Last7Days), any())).doSuspendableAnswer {
             refreshGate.await()
             staleResult
         }
@@ -1460,7 +1460,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
             ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
         )
-        whenever(statsRepository.fetchStatsForPeriod(any(), eq(StatsPeriod.Today))).thenReturn(
+        whenever(statsRepository.fetchStatsForPeriod(any(), eq(StatsPeriod.Today), any())).thenReturn(
             createPeriodStatsResult(
                 currentPeriodData = hourly,
                 previousPeriodData = hourly,
@@ -1468,7 +1468,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             )
         )
         val bottomGate = CompletableDeferred<Unit>()
-        whenever(statsRepository.fetchBottomStats(any(), any())).doSuspendableAnswer {
+        whenever(statsRepository.fetchBottomStats(any(), any(), any())).doSuspendableAnswer {
             bottomGate.await()
             createBottomStatsResult()
         }
@@ -1508,7 +1508,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
                 ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
                 ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
             )
-            whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(
+            whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(
                 createPeriodStatsResult(
                     currentPeriodData = hourly,
                     previousPeriodData = hourly,
@@ -1517,7 +1517,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             )
             // Gate the day-level row so the bar can be tapped while it is still in flight, then fail it.
             val bottomGate = CompletableDeferred<Unit>()
-            whenever(statsRepository.fetchBottomStats(any(), any())).doSuspendableAnswer {
+            whenever(statsRepository.fetchBottomStats(any(), any(), any())).doSuspendableAnswer {
                 bottomGate.await()
                 BottomStatsResult.Error
             }
@@ -1540,7 +1540,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when loadData reloads while a bar is selected, then the selection and effective period reset`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
 
         initViewModel()
@@ -1563,9 +1563,9 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when a refresh chart reload lands after a bar is tapped, then the overlaid header survives`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
-        whenever(statsRepository.fetchBottomStats(any(), any()))
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
             .thenReturn(createBottomStatsResult())
 
         initViewModel()
@@ -1574,7 +1574,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
         // Gate the refresh's chart fetch so we can tap a bar while it is in flight.
         val gate = CompletableDeferred<Unit>()
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).doSuspendableAnswer {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).doSuspendableAnswer {
             gate.await()
             createPeriodStatsResult(currentViews = 9999L)
         }
@@ -1593,7 +1593,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when refreshing while a bar is selected, then the selection is cleared`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
 
         initViewModel()
@@ -1616,7 +1616,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when the committed range is re-selected while a bar is selected, then the selection clears`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
 
         initViewModel()
@@ -1642,7 +1642,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when the chart type changes while a bar is selected, then the selection is cleared`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
 
         initViewModel()
@@ -1663,12 +1663,12 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     @Test
     fun `when a bar is tapped, then no new fetch is triggered`() = test {
         var fetchCount = 0
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenAnswer {
                 fetchCount++
                 createPeriodStatsResult()
             }
-        whenever(statsRepository.fetchBottomStats(any(), any()))
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
             .thenReturn(createBottomStatsResult())
 
         initViewModel()
@@ -1689,10 +1689,10 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when a bar is tapped while a period is loading, then the tap is ignored`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
         val bottomGate = CompletableDeferred<Unit>()
-        whenever(statsRepository.fetchBottomStats(any(), any())).doSuspendableAnswer {
+        whenever(statsRepository.fetchBottomStats(any(), any(), any())).doSuspendableAnswer {
             bottomGate.await()
             createBottomStatsResult()
         }
@@ -1705,7 +1705,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         viewModel.onBarTapped(0)
         // Commit to enter the dimmed loading state (bottom gate left pending on the next load).
         val pendingGate = CompletableDeferred<Unit>()
-        whenever(statsRepository.fetchBottomStats(any(), any())).doSuspendableAnswer {
+        whenever(statsRepository.fetchBottomStats(any(), any(), any())).doSuspendableAnswer {
             pendingGate.await()
             createBottomStatsResult()
         }
@@ -1724,7 +1724,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when a bar is tapped with an invalid index, then nothing is selected`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
 
         initViewModel()
@@ -1741,11 +1741,11 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     @Test
     fun `when the arrow is tapped and the chart finishes first, then the card stays dimmed until bottom done`() =
         test {
-            whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
                 .thenReturn(createPeriodStatsResult())
             // Gate the (slower, dedicated) bottom-stats call so the chart always resolves first.
             var bottomGate = CompletableDeferred<Unit>()
-            whenever(statsRepository.fetchBottomStats(any(), any())).doSuspendableAnswer {
+            whenever(statsRepository.fetchBottomStats(any(), any(), any())).doSuspendableAnswer {
                 bottomGate.await()
                 createBottomStatsResult()
             }
@@ -1797,7 +1797,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         val previous = StatsPeriod.Custom(LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 7))
         whenever(statsRepository.canNavigateBackward(any())).thenReturn(true)
         whenever(statsRepository.previousPeriod(any(), anyOrNull())).thenReturn(previous)
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(createPeriodStatsResult())
         initViewModel()
         advanceUntilIdle()
 
@@ -1812,7 +1812,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         val next = StatsPeriod.Custom(LocalDate.of(2026, 2, 1), LocalDate.of(2026, 2, 7))
         whenever(statsRepository.canNavigateForward(any())).thenReturn(true)
         whenever(statsRepository.nextPeriod(any(), anyOrNull())).thenReturn(next)
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(createPeriodStatsResult())
         initViewModel()
         advanceUntilIdle()
 
@@ -1825,7 +1825,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     @Test
     fun `onNavigatePrevious is a no-op at the backward floor`() = test {
         whenever(statsRepository.canNavigateBackward(any())).thenReturn(false)
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(createPeriodStatsResult())
         initViewModel()
         advanceUntilIdle()
         val before = viewModel.selectedPeriod.value
@@ -1841,7 +1841,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     fun `navigation enablement flows reflect the repository`() = test {
         whenever(statsRepository.canNavigateBackward(any())).thenReturn(true)
         whenever(statsRepository.canNavigateForward(any())).thenReturn(false)
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(createPeriodStatsResult())
         initViewModel()
         advanceUntilIdle()
 
@@ -1858,7 +1858,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         whenever(statsRepository.canNavigateForward(any())).thenReturn(true)
         whenever(statsRepository.previousPeriod(any(), anyOrNull())).thenReturn(previous)
         whenever(statsRepository.nextPeriod(any(), anyOrNull())).thenReturn(StatsPeriod.ThisWeek)
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(createPeriodStatsResult())
         initViewModel()
         advanceUntilIdle()
         viewModel.onPeriodChanged(StatsPeriod.ThisWeek)
@@ -1877,7 +1877,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         val previous = StatsPeriod.Custom(LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 30))
         whenever(statsRepository.canNavigateBackward(any())).thenReturn(true)
         whenever(statsRepository.previousPeriod(any(), anyOrNull())).thenReturn(previous)
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(createPeriodStatsResult())
         initViewModel()
         advanceUntilIdle()
         viewModel.onPeriodChanged(StatsPeriod.Last30Days)
@@ -1914,7 +1914,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         )
         whenever(statsRepository.canNavigateForward(any())).thenReturn(true)
         whenever(statsRepository.nextPeriod(any(), anyOrNull())).thenReturn(StatsPeriod.Last30Days)
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(createPeriodStatsResult())
         viewModel = ViewsStatsViewModel(
             selectedSiteRepository, accountStore, statsRepository,
             resourceProvider, SavedStateHandle(), cardsConfigurationRepository
@@ -1940,7 +1940,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         )
         whenever(statsRepository.canNavigateForward(any())).thenReturn(true)
         whenever(statsRepository.nextPeriod(any(), anyOrNull())).thenReturn(StatsPeriod.Last30Days)
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(createPeriodStatsResult())
         viewModel = ViewsStatsViewModel(
             selectedSiteRepository, accountStore, statsRepository,
             resourceProvider, SavedStateHandle(), cardsConfigurationRepository
@@ -1968,7 +1968,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         whenever(cardsConfigurationRepository.getConfiguration(any())).thenReturn(StatsCardsConfiguration())
         whenever(statsRepository.canNavigateForward(any())).thenReturn(true)
         whenever(statsRepository.nextPeriod(any(), anyOrNull())).thenReturn(StatsPeriod.Last30Days)
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(createPeriodStatsResult())
         viewModel = ViewsStatsViewModel(
             selectedSiteRepository, accountStore, statsRepository,
             resourceProvider, savedState, cardsConfigurationRepository
@@ -1988,7 +1988,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         // never sets the origin keys, so the seeded period stands in for an explicit pick.
         whenever(statsRepository.canNavigateForward(any())).thenReturn(true)
         whenever(statsRepository.nextPeriod(any(), anyOrNull())).thenReturn(StatsPeriod.Last30Days)
-        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(createPeriodStatsResult())
         initViewModel(periodType = "last_30_days")
         advanceUntilIdle()
 
@@ -2003,7 +2003,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given a multi-day period, when data loads, then views is charted`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
 
         initViewModel()
@@ -2016,7 +2016,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when a metric is selected, then the chart re-plots that metric without a new fetch`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(
                 createPeriodStatsResult(
                     currentVisitors = 700L,
@@ -2042,12 +2042,12 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         // The header total follows the selection.
         assertThat(content.chartLoaded().currentPeriodTotal).isEqualTo(700L)
         // No additional network call was made — the data was already in memory.
-        verify(statsRepository, times(1)).fetchStatsForPeriod(any(), any())
+        verify(statsRepository, times(1)).fetchStatsForPeriod(any(), any(), any())
     }
 
     @Test
     fun `when a metric is selected, then the choice is persisted to the site configuration`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
 
         initViewModel()
@@ -2066,7 +2066,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     fun `given a persisted metric, when the view model initializes, then that metric is selected`() = test {
         whenever(cardsConfigurationRepository.getConfiguration(any()))
             .thenReturn(StatsCardsConfiguration(selectedMetric = "visitors"))
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(
                 createPeriodStatsResult(
                     currentPeriodData = listOf(
@@ -2097,9 +2097,9 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     fun `given a single-day period with a persisted non-views metric, then the chart is unavailable`() = test {
         whenever(cardsConfigurationRepository.getConfiguration(any()))
             .thenReturn(StatsCardsConfiguration(selectedMetric = "visitors"))
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
-        whenever(statsRepository.fetchBottomStats(any(), any()))
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
             .thenReturn(createBottomStatsResult())
 
         viewModel = ViewsStatsViewModel(
@@ -2123,9 +2123,9 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given a single-day period with views selected, then views is charted normally`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
-        whenever(statsRepository.fetchBottomStats(any(), any()))
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
             .thenReturn(createBottomStatsResult())
 
         initViewModel(periodType = "today")
@@ -2138,9 +2138,9 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when a non-views metric is selected on a single-day period, then the chart is unavailable`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
-        whenever(statsRepository.fetchBottomStats(any(), any()))
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
             .thenReturn(createBottomStatsResult())
 
         initViewModel(periodType = "today")
@@ -2159,7 +2159,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when bottom stats build, then each item carries its metric`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
 
         initViewModel()

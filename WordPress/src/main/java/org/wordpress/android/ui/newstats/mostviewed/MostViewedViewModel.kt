@@ -14,11 +14,13 @@ import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.repository.MostViewedItemData
 import org.wordpress.android.ui.newstats.repository.MostViewedResult
+import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.util.toDateRangeString
 import kotlin.math.abs
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
 class MostViewedViewModel @Inject constructor(
@@ -92,7 +94,8 @@ class MostViewedViewModel @Inject constructor(
                 _isPostsRefreshing.value = true
                 loadDataForSourceInternal(
                     site.siteId,
-                    MostViewedDataSource.POSTS_AND_PAGES
+                    MostViewedDataSource.POSTS_AND_PAGES,
+                    forceRefresh = true
                 )
             } finally {
                 _isPostsRefreshing.value = false
@@ -110,7 +113,8 @@ class MostViewedViewModel @Inject constructor(
                 _isReferrersRefreshing.value = true
                 loadDataForSourceInternal(
                     site.siteId,
-                    MostViewedDataSource.REFERRERS
+                    MostViewedDataSource.REFERRERS,
+                    forceRefresh = true
                 )
             } finally {
                 _isReferrersRefreshing.value = false
@@ -181,7 +185,12 @@ class MostViewedViewModel @Inject constructor(
             return
         }
 
-        setUiState(dataSource, MostViewedCardUiState.Loading)
+        val period = currentPeriod
+        // A period already in memory repaints in the same frame, so the placeholder would only
+        // flash a skeleton over data the card is about to render anyway.
+        if (!isCached(site.siteId, period, dataSource)) {
+            setUiState(dataSource, MostViewedCardUiState.Loading)
+        }
 
         viewModelScope.launch {
             try {
@@ -189,24 +198,55 @@ class MostViewedViewModel @Inject constructor(
                 if (!hasErrorStateForSource(dataSource)) {
                     setLoadedPeriod(dataSource, currentPeriod)
                 }
+                revalidateIfNeeded(site.siteId, period, dataSource)
             } finally {
                 clearLoadingPeriod(dataSource)
             }
         }
     }
 
+    private fun isCached(siteId: Long, period: StatsPeriod, dataSource: MostViewedDataSource) =
+        statsRepository.isCached(StatsCacheBucket.MOST_VIEWED, siteId, period, variant = dataSource.name)
+
+    /**
+     * Refreshes a result served from a previous visit to the stats screen, once. The card already
+     * shows those numbers, so this runs without a loading state and keeps them if it fails.
+     */
+    private suspend fun revalidateIfNeeded(
+        siteId: Long,
+        period: StatsPeriod,
+        dataSource: MostViewedDataSource
+    ) {
+        if (period != currentPeriod) return
+        val needsRevalidation = statsRepository.needsRevalidation(
+            StatsCacheBucket.MOST_VIEWED, siteId, period, variant = dataSource.name
+        )
+        if (!needsRevalidation) return
+        loadDataForSourceInternal(siteId, dataSource, forceRefresh = true, applyErrors = false)
+    }
+
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadDataForSourceInternal(siteId: Long, dataSource: MostViewedDataSource) {
+    private suspend fun loadDataForSourceInternal(
+        siteId: Long,
+        dataSource: MostViewedDataSource,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
+    ) {
         try {
-            val result = statsRepository.fetchMostViewed(siteId, currentPeriod, dataSource)
+            val result = statsRepository.fetchMostViewed(siteId, currentPeriod, dataSource, forceRefresh)
             when (result) {
                 is MostViewedResult.Success -> handleSuccessResult(result, dataSource)
-                is MostViewedResult.Error -> setErrorState(
-                    dataSource,
-                    resourceProvider.getString(R.string.stats_error_api)
-                )
+                is MostViewedResult.Error -> if (applyErrors) {
+                    setErrorState(
+                        dataSource,
+                        resourceProvider.getString(R.string.stats_error_api)
+                    )
+                }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
+            if (!applyErrors) return
             setErrorState(
                 dataSource,
                 e.message ?: resourceProvider.getString(R.string.stats_error_unknown)

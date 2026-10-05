@@ -60,6 +60,7 @@ class StatsRepositoryTest : BaseUnitTest() {
         Locale.setDefault(Locale.US)
         repository = StatsRepository(
             statsDataSource = statsDataSource,
+            statsResultCache = StatsResultCache(),
             appLogWrapper = appLogWrapper,
             clock = Clock.systemDefaultZone(),
             ioDispatcher = testDispatcher()
@@ -74,6 +75,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     /** A repository whose "today" is [today], so navigation can be asserted on exact calendar days. */
     private fun repositoryAt(today: LocalDate) = StatsRepository(
         statsDataSource = statsDataSource,
+        statsResultCache = StatsResultCache(),
         appLogWrapper = appLogWrapper,
         clock = Clock.fixed(today.atStartOfDay(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault()),
         ioDispatcher = testDispatcher()

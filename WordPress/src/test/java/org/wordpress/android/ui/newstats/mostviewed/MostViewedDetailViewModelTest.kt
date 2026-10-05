@@ -64,7 +64,7 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when load succeeds, then loaded state with items and totals is emitted`() = test {
-        whenever(statsRepository.fetchReferrersDetail(any(), any())).thenReturn(createSuccessResult())
+        whenever(statsRepository.fetchReferrersDetail(any(), any(), any())).thenReturn(createSuccessResult())
 
         viewModel.load(MostViewedDetailSource.REFERRERS, StatsPeriod.Last7Days)
         advanceUntilIdle()
@@ -83,7 +83,7 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when load succeeds, then child items propagate to the loaded state`() = test {
-        whenever(statsRepository.fetchReferrersDetail(any(), any())).thenReturn(createSuccessResult())
+        whenever(statsRepository.fetchReferrersDetail(any(), any(), any())).thenReturn(createSuccessResult())
 
         viewModel.load(MostViewedDetailSource.REFERRERS, StatsPeriod.Last7Days)
         advanceUntilIdle()
@@ -97,7 +97,7 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when the source is clicks, then the clicks fetch backs the loaded state`() = test {
-        whenever(statsRepository.fetchClicks(any(), any())).thenReturn(
+        whenever(statsRepository.fetchClicks(any(), any(), any())).thenReturn(
             org.wordpress.android.ui.newstats.repository.ClicksResult.Success(
                 items = listOf(
                     org.wordpress.android.ui.newstats.repository.ClickItemData(
@@ -119,7 +119,7 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
         assertThat(loaded.items).hasSize(1)
         assertThat(loaded.items[0].title).isEqualTo("example.com")
         assertThat(loaded.totalViews).isEqualTo(TEST_TOTAL_VIEWS)
-        verify(statsRepository, never()).fetchReferrersDetail(any(), any())
+        verify(statsRepository, never()).fetchReferrersDetail(any(), any(), any())
     }
 
     @Test
@@ -132,7 +132,7 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
         val state = viewModel.uiState.value
         assertThat(state).isInstanceOf(MostViewedDetailUiState.Error::class.java)
         assertThat((state as MostViewedDetailUiState.Error).message).isEqualTo(API_ERROR)
-        verify(statsRepository, never()).fetchReferrersDetail(any(), any())
+        verify(statsRepository, never()).fetchReferrersDetail(any(), any(), any())
     }
 
     @Test
@@ -145,12 +145,12 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
         val state = viewModel.uiState.value
         assertThat(state).isInstanceOf(MostViewedDetailUiState.Error::class.java)
         assertThat((state as MostViewedDetailUiState.Error).message).isEqualTo(API_ERROR)
-        verify(statsRepository, never()).fetchReferrersDetail(any(), any())
+        verify(statsRepository, never()).fetchReferrersDetail(any(), any(), any())
     }
 
     @Test
     fun `when the repository returns an error, then the api error state is emitted`() = test {
-        whenever(statsRepository.fetchReferrersDetail(any(), any()))
+        whenever(statsRepository.fetchReferrersDetail(any(), any(), any()))
             .thenReturn(MostViewedResult.Error("Network error"))
 
         viewModel.load(MostViewedDetailSource.REFERRERS, StatsPeriod.Last7Days)
@@ -163,7 +163,7 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when the fetch returns an auth error, then the error state carries the auth flag`() = test {
-        whenever(statsRepository.fetchClicks(any(), any())).thenReturn(
+        whenever(statsRepository.fetchClicks(any(), any(), any())).thenReturn(
             org.wordpress.android.ui.newstats.repository.ClicksResult.Error(
                 R.string.stats_error_api,
                 isAuthError = true
@@ -185,7 +185,7 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when the fetch throws, then the generic unknown error state is emitted`() = test {
-        whenever(statsRepository.fetchReferrersDetail(any(), any()))
+        whenever(statsRepository.fetchReferrersDetail(any(), any(), any()))
             .thenThrow(RuntimeException(EXCEPTION_MESSAGE))
 
         viewModel.load(MostViewedDetailSource.REFERRERS, StatsPeriod.Last7Days)
@@ -198,26 +198,26 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when load is called twice, then the data is fetched only once`() = test {
-        whenever(statsRepository.fetchReferrersDetail(any(), any())).thenReturn(createSuccessResult())
+        whenever(statsRepository.fetchReferrersDetail(any(), any(), any())).thenReturn(createSuccessResult())
 
         viewModel.load(MostViewedDetailSource.REFERRERS, StatsPeriod.Last7Days)
         advanceUntilIdle()
         viewModel.load(MostViewedDetailSource.REFERRERS, StatsPeriod.Last7Days)
         advanceUntilIdle()
 
-        verify(statsRepository, times(1)).fetchReferrersDetail(any(), any())
+        verify(statsRepository, times(1)).fetchReferrersDetail(any(), any(), any())
     }
 
     @Test
     fun `when retry is called after a load, then the data is fetched again`() = test {
-        whenever(statsRepository.fetchReferrersDetail(any(), any())).thenReturn(createSuccessResult())
+        whenever(statsRepository.fetchReferrersDetail(any(), any(), any())).thenReturn(createSuccessResult())
 
         viewModel.load(MostViewedDetailSource.REFERRERS, StatsPeriod.Last7Days)
         advanceUntilIdle()
         viewModel.retry()
         advanceUntilIdle()
 
-        verify(statsRepository, times(2)).fetchReferrersDetail(any(), any())
+        verify(statsRepository, times(2)).fetchReferrersDetail(any(), any(), any())
     }
 
     private fun createSuccessResult() = MostViewedResult.Success(
