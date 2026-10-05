@@ -430,12 +430,17 @@ class ViewsStatsViewModel @Inject constructor(
      * period where only [StatsMetric.VIEWS] has a series: there the chart region shows the "no hourly
      * data" state so the tap has a visible answer instead of appearing inert. That differs from merely
      * *arriving* on such a period, which falls back to views — see [chartedMetric].
+     *
+     * Tapping the metric already on screen does nothing and persists nothing, so the stored preference
+     * only ever changes through a tap that visibly changes the card.
      */
     fun onMetricSelected(metric: StatsMetric) {
-        // The pick must go through even when it already matches the stored preference, as long as it
-        // isn't what the card currently shows: that is exactly the case where the views fallback is
-        // standing in for it, and the tap has to replace it with the metric's own (unavailable) state.
-        if (metric == currentSelectedMetric && metric == chartedMetric()) return
+        // Tapping the metric the card already shows is a no-op, whether it is showing because the user
+        // chose it or because the views fallback stands in for something else. Comparing against the
+        // *stored preference* instead would let a tap on the highlighted Views tab through while the
+        // fallback is up: the rebuilt state is identical, so nothing would change on screen, but the
+        // user's real preference would be silently overwritten with views.
+        if (metric == chartedMetric()) return
         currentSelectedMetric = metric
         metricPickedOnCurrentPeriod = true
         saveMetric(metric)

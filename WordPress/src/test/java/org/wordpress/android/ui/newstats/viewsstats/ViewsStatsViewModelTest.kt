@@ -2194,6 +2194,43 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given the views fallback, when views is tapped, then the stored preference is untouched`() = test {
+        whenever(cardsConfigurationRepository.getConfiguration(any()))
+            .thenReturn(StatsCardsConfiguration(selectedMetric = "visitors"))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository,
+            accountStore,
+            statsRepository,
+            resourceProvider,
+            SavedStateHandle(mapOf("period_type" to "today")),
+            cardsConfigurationRepository
+        )
+        advanceUntilIdle()
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+        // Views is standing in for the stored visitors preference, so the Views tab is the highlighted
+        // one even though nothing was picked.
+        assertThat(viewModel.uiState.value.selectedMetric()).isEqualTo(StatsMetric.VIEWS)
+
+        // Tapping that highlighted tab can't change anything on screen, so it must not quietly rewrite
+        // the preference either — otherwise the visitors choice is lost with no feedback at all.
+        viewModel.onMetricSelected(StatsMetric.VIEWS)
+        advanceUntilIdle()
+
+        verify(cardsConfigurationRepository, never()).saveConfiguration(any(), any())
+        // Proof the preference survived: the next multi-day period charts visitors again.
+        viewModel.onPeriodChanged(StatsPeriod.Last7Days)
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.selectedMetric()).isEqualTo(StatsMetric.VISITORS)
+    }
+
+    @Test
     fun `given an unavailable chart, when show views is tapped, then views is charted`() = test {
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenReturn(createPeriodStatsResult())
