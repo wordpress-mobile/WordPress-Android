@@ -179,13 +179,11 @@ class StatsRepository @Inject constructor(
         }
         val gate = CacheGate()
         val result = fetch(gate)
-        if (!gate.isComplete) {
-            return statsResultCache.get<T>(key) ?: result
+        return if (gate.isComplete) {
+            result.also { if (isCacheable(it)) statsResultCache.put(key, it) }
+        } else {
+            statsResultCache.get<T>(key) ?: result
         }
-        if (isCacheable(result)) {
-            statsResultCache.put(key, result)
-        }
-        return result
     }
 
     /**
