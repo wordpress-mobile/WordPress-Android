@@ -529,6 +529,142 @@ class SubscribersGraphViewModelTest : BaseUnitTest() {
             assertThat(state.isAuthError).isTrue()
         }
 
+    @Test
+    fun `given weeks tab, when data loads, then labels show the week start date`() =
+        test {
+            stubDataPoints(
+                "2026W01W26" to TEST_COUNT_1,
+                "2026W02W02" to TEST_COUNT_2
+            )
+
+            loadWithTab(SubscribersGraphTab.WEEKS)
+
+            assertThat(loadedLabels())
+                .containsExactly("Jan 26", "Feb 2")
+        }
+
+    @Test
+    fun `given a weekly period with a separator, when data loads, then the label is readable`() =
+        test {
+            stubDataPoints("2026-W07W27" to TEST_COUNT_1)
+
+            loadWithTab(SubscribersGraphTab.WEEKS)
+
+            assertThat(loadedLabels())
+                .containsExactly("Jul 27")
+        }
+
+    @Test
+    fun `given weeks tab, when data loads, then no raw period string is shown`() =
+        test {
+            // Locale-independent contract lock: the ISO-week shape must never reach the
+            // label, and its 'W' separators are what would give it away.
+            stubDataPoints(
+                "2026W01W26" to TEST_COUNT_1,
+                "2026W02W02" to TEST_COUNT_2
+            )
+
+            loadWithTab(SubscribersGraphTab.WEEKS)
+
+            assertThat(loadedLabels())
+                .isNotEmpty
+                .noneMatch { it.contains("W") }
+        }
+
+    @Test
+    fun `given days tab, when data loads, then labels show the day`() =
+        test {
+            stubDataPoints(
+                "2026-02-25" to TEST_COUNT_1,
+                "2026-02-26" to TEST_COUNT_2
+            )
+
+            initViewModel()
+            advanceUntilIdle()
+
+            assertThat(loadedLabels())
+                .containsExactly("Feb 25", "Feb 26")
+        }
+
+    @Test
+    fun `given months tab, when data loads, then labels show the month`() =
+        test {
+            stubDataPoints(
+                "2026-02-01" to TEST_COUNT_1,
+                "2026-03-01" to TEST_COUNT_2
+            )
+
+            loadWithTab(SubscribersGraphTab.MONTHS)
+
+            assertThat(loadedLabels())
+                .containsExactly("Feb", "Mar")
+        }
+
+    @Test
+    fun `given a year-less month period, when data loads, then the label shows the month`() =
+        test {
+            stubDataPoints("2026-02" to TEST_COUNT_1)
+
+            loadWithTab(SubscribersGraphTab.MONTHS)
+
+            assertThat(loadedLabels()).containsExactly("Feb")
+        }
+
+    @Test
+    fun `given years tab, when data loads, then labels show the year`() =
+        test {
+            stubDataPoints(
+                "2025" to TEST_COUNT_1,
+                "2026" to TEST_COUNT_2
+            )
+
+            loadWithTab(SubscribersGraphTab.YEARS)
+
+            assertThat(loadedLabels())
+                .containsExactly("2025", "2026")
+        }
+
+    @Test
+    fun `given an unrecognised period, when data loads, then it is shown verbatim`() =
+        test {
+            stubDataPoints("not-a-period" to TEST_COUNT_1)
+
+            initViewModel()
+            advanceUntilIdle()
+
+            assertThat(loadedLabels())
+                .containsExactly("not-a-period")
+        }
+
+    private fun loadWithTab(tab: SubscribersGraphTab) {
+        initViewModel()
+        advanceUntilIdle()
+        viewModel.onTabSelected(tab)
+        advanceUntilIdle()
+    }
+
+    private suspend fun stubDataPoints(
+        vararg points: Pair<String, Long>
+    ) {
+        whenever(
+            statsRepository.fetchSubscribersGraph(
+                any(), any(), any(), any()
+            )
+        ).thenReturn(
+            SubscribersGraphResult.Success(
+                dataPoints = points.map { (date, count) ->
+                    SubscribersGraphDataPoint(date, count)
+                }
+            )
+        )
+    }
+
+    private fun loadedLabels(): List<String> =
+        (
+            viewModel.uiState.value
+                as SubscribersGraphUiState.Loaded
+            ).dataPoints.map { it.label }
+
     private fun createSuccessResult() =
         SubscribersGraphResult.Success(
             dataPoints = listOf(
