@@ -9,7 +9,7 @@ gem 'fastlane', '~> 2.240'
 
 gem 'fastlane-plugin-firebase_app_distribution', '~> 1.0'
 gem 'fastlane-plugin-sentry', '~> 2.8'
-gem 'fastlane-plugin-wpmreleasetoolkit', '~> 15.0.0'
+gem 'fastlane-plugin-wpmreleasetoolkit', '~> 15.1.0'
 # gem 'fastlane-plugin-wpmreleasetoolkit', path: '../../release-toolkit'
 # gem 'fastlane-plugin-wpmreleasetoolkit', git: 'https://github.com/wordpress-mobile/release-toolkit', branch: ''
 
