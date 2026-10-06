@@ -33,6 +33,7 @@ import uniffi.wp_api.RequestMethod
 import uniffi.wp_api.SparseAnyPostWithViewContext
 import uniffi.wp_api.SparsePostTitleWithViewContext
 import uniffi.wp_api.UniffiWpApiClient
+import uniffi.wp_api.UserAvatarSize
 import uniffi.wp_api.WpErrorCode
 import java.util.Date
 
@@ -311,6 +312,18 @@ class CommentsRsDataSourceTest {
     }
 
     @Test
+    fun `getComment with edit context maps missing avatar urls to an empty url`() = runTest {
+        // Sites with "Show Avatars" disabled omit the field entirely.
+        val serverComment = editContextComment(authorAvatarUrls = null)
+        stubRequests(WpRequestResult.Success(CommentsRequestRetrieveWithEditContextResponse(serverComment, mock())))
+
+        val result = dataSource.getComment(siteA, 42L, withEditContext = true)
+
+        assertThat(result).isNotNull
+        assertThat(result?.authorAvatarUrl).isEmpty()
+    }
+
+    @Test
     fun `getComment falls back to the view context when edit context is refused`() = runTest {
         stubRequests(
             wpError(),
@@ -329,7 +342,8 @@ class CommentsRsDataSourceTest {
         authorEmail: String = "",
         authorUrl: String = "",
         contentRaw: String = "",
-        authorIp: String = ""
+        authorIp: String = "",
+        authorAvatarUrls: Map<UserAvatarSize, String?>? = emptyMap()
     ) = CommentWithEditContext(
         id = 42L,
         author = 1L,
@@ -346,7 +360,7 @@ class CommentsRsDataSourceTest {
         post = 0L,
         status = CommentStatus.Approved,
         commentType = CommentType.Comment,
-        authorAvatarUrls = emptyMap(),
+        authorAvatarUrls = authorAvatarUrls,
         additionalFields = mock()
     )
 
