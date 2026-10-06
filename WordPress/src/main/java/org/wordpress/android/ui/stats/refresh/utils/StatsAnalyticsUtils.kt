@@ -58,8 +58,8 @@ fun AnalyticsTrackerWrapper.trackViewsVisitorsChips(position: Int) {
     this.track(STATS_INSIGHTS_VIEWS_VISITORS_TOGGLED, mapOf(TYPE to property))
 }
 
-fun AnalyticsTrackerWrapper.trackWithGranularity(stat: Stat, granularity: StatsGranularity) =
-    track(stat, mapOf(PERIOD_PROPERTY to getPropertyByGranularity(granularity)))
+fun AnalyticsTrackerWrapper.trackWithGranularity(stat: Stat, site: SiteModel?, granularity: StatsGranularity) =
+    track(stat, site, mapOf(PERIOD_PROPERTY to getPropertyByGranularity(granularity)))
 
 private fun getPropertyByGranularity(granularity: StatsGranularity) = when (granularity) {
     StatsGranularity.HOURS -> HOURS_PROPERTY

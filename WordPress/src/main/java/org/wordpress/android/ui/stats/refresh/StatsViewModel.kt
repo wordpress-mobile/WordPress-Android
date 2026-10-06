@@ -183,6 +183,12 @@ class StatsViewModel
         if (restart) {
             selectedDateProvider.clear()
         }
+
+        // Resolve the site being viewed before anything below reads it. Stats can be opened for a site other than
+        // the selected one (widget, notification, deep link), and StatsSiteProvider is a singleton still holding the
+        // previously selected site until start() runs, so tracking before this point attributes events to that site.
+        val siteChanged = statsSiteProvider.start(localSiteId)
+
         // Check if VM is not already initialized
         if (!isInitialized || restart) {
             isInitialized = true
@@ -224,7 +230,6 @@ class StatsViewModel
 
         _statsModuleUiModel.value = Event(buildShowStatsEnabledViewUiModel())
 
-        val siteChanged = statsSiteProvider.start(localSiteId)
         if (!isStatsModuleEnabled()) {
             _statsModuleUiModel.value = Event(buildShowStatsDisabledViewUiModel())
         } else {
@@ -332,6 +337,7 @@ class StatsViewModel
         when (statsSection) {
             StatsSection.TRAFFIC -> analyticsTracker.trackWithGranularity(
                 STATS_PERIOD_ACCESSED,
+                statsSiteProvider.siteModel,
                 selectedTrafficGranularityManager.getSelectedTrafficGranularity()
             )
 
@@ -341,21 +347,25 @@ class StatsViewModel
 
             StatsSection.DAYS -> analyticsTracker.trackWithGranularity(
                 STATS_PERIOD_DAYS_ACCESSED,
+                statsSiteProvider.siteModel,
                 StatsGranularity.DAYS
             )
 
             StatsSection.WEEKS -> analyticsTracker.trackWithGranularity(
                 STATS_PERIOD_WEEKS_ACCESSED,
+                statsSiteProvider.siteModel,
                 StatsGranularity.WEEKS
             )
 
             StatsSection.MONTHS -> analyticsTracker.trackWithGranularity(
                 STATS_PERIOD_MONTHS_ACCESSED,
+                statsSiteProvider.siteModel,
                 StatsGranularity.MONTHS
             )
 
             StatsSection.YEARS -> analyticsTracker.trackWithGranularity(
                 STATS_PERIOD_YEARS_ACCESSED,
+                statsSiteProvider.siteModel,
                 StatsGranularity.YEARS
             )
 

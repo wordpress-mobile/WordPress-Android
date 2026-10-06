@@ -34,6 +34,7 @@ import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.SelectedTrafficGranularityManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.trackWithGranularity
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mapNullable
@@ -243,6 +244,7 @@ class TrafficListViewModel @Inject constructor(
     @Named(GRANULAR_USE_CASE_FACTORIES)
     private val useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>,
     private val selectedTrafficGranularityManager: SelectedTrafficGranularityManager,
+    private val statsSiteProvider: StatsSiteProvider,
 ) : StatsListViewModel(
     mainDispatcher,
     trafficStatsUseCase,
@@ -256,6 +258,7 @@ class TrafficListViewModel @Inject constructor(
         if (dateSelector?.statsGranularity != statsGranularity) {
             analyticsTracker.trackWithGranularity(
                 Stat.STATS_PERIOD_ACCESSED,
+                statsSiteProvider.siteModel,
                 selectedTrafficGranularityManager.getSelectedTrafficGranularity()
             )
 

@@ -220,7 +220,7 @@ class OverviewUseCase constructor(
             3 -> AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED_COMMENTS
             else -> null
         }
-        event?.let { analyticsTracker.trackWithGranularity(it, statsGranularity) }
+        event?.let { analyticsTracker.trackWithGranularity(it, statsSiteProvider.siteModel, statsGranularity) }
         updateUiState { it.copy(selectedPosition = position) }
     }
 
