@@ -274,7 +274,11 @@ class ReferrersUseCase(
     }
 
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
-        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_REFERRERS_VIEW_MORE_TAPPED, statsGranularity)
+        analyticsTracker.trackGranular(
+            AnalyticsTracker.Stat.STATS_REFERRERS_VIEW_MORE_TAPPED,
+            statsSiteProvider.siteModel,
+            statsGranularity
+        )
         navigateTo(
             ViewReferrers(
                 statsGranularity,
@@ -284,7 +288,11 @@ class ReferrersUseCase(
     }
 
     private fun onItemClick(url: String) {
-        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_REFERRERS_ITEM_TAPPED, statsGranularity)
+        analyticsTracker.trackGranular(
+            AnalyticsTracker.Stat.STATS_REFERRERS_ITEM_TAPPED,
+            statsSiteProvider.siteModel,
+            statsGranularity
+        )
         openWebsite(url)
     }
 
@@ -299,7 +307,11 @@ class ReferrersUseCase(
             else -> null
         }
         if (url != null) {
-            analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_REFERRERS_ITEM_LONG_PRESSED, statsGranularity)
+            analyticsTracker.trackGranular(
+                AnalyticsTracker.Stat.STATS_REFERRERS_ITEM_LONG_PRESSED,
+                statsSiteProvider.siteModel,
+                statsGranularity
+            )
             popupMenuHandler.onMenuClick(view, statsGranularity, url, spam, this)
         } else {
             // Show snackbar with error message

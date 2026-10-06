@@ -240,6 +240,7 @@ class ViewsAndVisitorsUseCase
     private fun onLineSelected(period: String?) {
         analyticsTracker.trackGranular(
             AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_LINE_CHART_TAPPED,
+            statsSiteProvider.siteModel,
             statsGranularity
         )
         if (period != null && period != "empty") {

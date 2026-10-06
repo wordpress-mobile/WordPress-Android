@@ -47,8 +47,8 @@ enum class StatsLaunchedFrom(val value: String) {
 fun AnalyticsTrackerWrapper.trackStatsAccessed(site: SiteModel, tapSource: String) =
     track(stat = Stat.STATS_ACCESSED, site = site, properties = mutableMapOf(TAP_SOURCE_PROPERTY to tapSource))
 
-fun AnalyticsTrackerWrapper.trackGranular(stat: Stat, granularity: StatsGranularity) =
-    track(stat, mapOf(GRANULARITY_PROPERTY to getPropertyByGranularity(granularity)))
+fun AnalyticsTrackerWrapper.trackGranular(stat: Stat, site: SiteModel?, granularity: StatsGranularity) =
+    track(stat, site, mapOf(GRANULARITY_PROPERTY to getPropertyByGranularity(granularity)))
 
 fun AnalyticsTrackerWrapper.trackViewsVisitorsChips(position: Int) {
     val property = when (position) {

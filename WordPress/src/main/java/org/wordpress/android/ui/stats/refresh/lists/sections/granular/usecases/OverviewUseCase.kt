@@ -200,6 +200,7 @@ class OverviewUseCase constructor(
     private fun onBarSelected(period: String?) {
         analyticsTracker.trackGranular(
             AnalyticsTracker.Stat.STATS_OVERVIEW_BAR_CHART_TAPPED,
+            statsSiteProvider.siteModel,
             statsGranularity
         )
         if (period != null && period != "empty") {
