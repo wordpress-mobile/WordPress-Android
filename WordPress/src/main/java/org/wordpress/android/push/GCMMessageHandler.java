@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.collection.ArrayMap;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -56,6 +57,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY;
+import static org.wordpress.android.push.GCMMessageService.PUSH_ARG_BLOG_ID;
 import static org.wordpress.android.push.GCMMessageService.PUSH_ARG_NOTE_ID;
 import static org.wordpress.android.push.NotificationPushIds.AUTH_PUSH_NOTIFICATION_ID;
 import static org.wordpress.android.push.NotificationPushIds.GROUP_NOTIFICATION_ID;
@@ -96,7 +98,7 @@ public class GCMMessageHandler {
 
     // Add to the analytics properties map a subset of the push notification payload.
     private static final String[] PROPERTIES_TO_COPY_INTO_ANALYTICS =
-            {PUSH_ARG_NOTE_ID, PUSH_ARG_TYPE, "blog_id", "post_id", "comment_id"};
+            {PUSH_ARG_NOTE_ID, PUSH_ARG_TYPE, PUSH_ARG_BLOG_ID, "post_id", "comment_id"};
 
     private final ArrayMap<Integer, Bundle> mActiveNotificationsMap;
     private final NotificationHelper mNotificationHelper;
@@ -255,8 +257,37 @@ public class GCMMessageHandler {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
             String lastRegisteredGCMToken = preferences.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_TOKEN, null);
             properties.put("push_notification_token", lastRegisteredGCMToken);
+            Long blogId = parsePushBlogId(noteBundle.getString(PUSH_ARG_BLOG_ID));
+            if (blogId != null) {
+                properties.put(PUSH_ARG_BLOG_ID, blogId);
+            }
             AnalyticsTracker.track(stat, properties);
         }
+    }
+
+    /**
+     * The site a push notification concerns, as carried by the payload. Returns null when the payload has no
+     * blog_id (account-level pushes such as the login approval) or when it is not a parsable id.
+     */
+    @Nullable
+    static Long parsePushBlogId(@Nullable String rawBlogId) {
+        // Deliberately not TextUtils.isEmpty: unit tests run with returnDefaultValues, which would stub it to
+        // false and hide the empty case.
+        if (rawBlogId == null || rawBlogId.isEmpty()) {
+            return null;
+        }
+        try {
+            return Long.parseLong(rawBlogId);
+        } catch (NumberFormatException e) {
+            AppLog.w(AppLog.T.NOTIFS, "Unparsable blog_id on a push notification: " + rawBlogId);
+            return null;
+        }
+    }
+
+    @Nullable
+    private Long getPushBlogId(int pushId) {
+        Bundle noteBundle = mActiveNotificationsMap.get(pushId);
+        return noteBundle == null ? null : parsePushBlogId(noteBundle.getString(PUSH_ARG_BLOG_ID));
     }
 
     private void addAuthPushNotificationToNotificationMap(Bundle data) {
@@ -849,7 +880,8 @@ public class GCMMessageHandler {
                 );
                 builder.setContentIntent(pendingIntent);
                 mNotificationManagerWrapper.notify(pushId, builder.build());
-                mSystemNotificationsTracker.trackShownNotification(notificationType);
+                mSystemNotificationsTracker.trackShownNotification(
+                        notificationType, mGCMMessageHandler.getPushBlogId(pushId));
             }
         }
 
@@ -1093,7 +1125,7 @@ public class GCMMessageHandler {
             builder.setDeleteIntent(pendingDeleteIntent);
 
             mNotificationManagerWrapper.notify(AUTH_PUSH_NOTIFICATION_ID, builder.build());
-            mSystemNotificationsTracker.trackShownNotification(notificationType);
+            mSystemNotificationsTracker.trackShownNotification(notificationType, null);
         }
 
         // Returns true if the note type is known to have a gravatar
