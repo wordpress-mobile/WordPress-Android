@@ -290,6 +290,35 @@ public class GCMMessageHandler {
         return noteBundle == null ? null : parsePushBlogId(noteBundle.getString(PUSH_ARG_BLOG_ID));
     }
 
+    /**
+     * The site shared by every active notification, or null when they span more than one site or any of them
+     * carries no parsable blog_id. The group summary stands for all of them, so attributing it to a single
+     * site is only correct when they agree. The account-level 2fa push is excluded here, as it is from the
+     * summary itself.
+     */
+    @Nullable
+    private synchronized Long getCommonPushBlogId() {
+        Long commonBlogId = null;
+        for (Entry<Integer, Bundle> row : mActiveNotificationsMap.entrySet()) {
+            Integer pushId = row.getKey();
+            if (pushId == null || pushId.equals(AUTH_PUSH_NOTIFICATION_ID)) {
+                continue;
+            }
+            Bundle noteBundle = row.getValue();
+            Long blogId = noteBundle == null
+                    ? null : parsePushBlogId(noteBundle.getString(PUSH_ARG_BLOG_ID));
+            if (blogId == null) {
+                return null;
+            }
+            if (commonBlogId == null) {
+                commonBlogId = blogId;
+            } else if (!commonBlogId.equals(blogId)) {
+                return null;
+            }
+        }
+        return commonBlogId;
+    }
+
     private void addAuthPushNotificationToNotificationMap(Bundle data) {
         mActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, data);
     }
@@ -367,7 +396,8 @@ public class GCMMessageHandler {
             mGCMMessageHandler.mActiveNotificationsMap.put(pushId, data);
             Intent resultIntent = new Intent(context, WPMainActivity.class);
             resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            showSimpleNotification(context, title, message, resultIntent, pushId, NotificationType.TEST_NOTE);
+            showSimpleNotification(context, title, message, resultIntent, pushId, NotificationType.TEST_NOTE,
+                    parsePushBlogId(data.getString(PUSH_ARG_BLOG_ID)));
         }
 
         private void buildAndShowNotificationFromNoteData(Context context, Bundle data) {
@@ -498,7 +528,8 @@ public class GCMMessageHandler {
             String message = StringEscapeUtils.unescapeHtml4(noteData.getString(PUSH_ARG_MSG));
             int pushId = getPushIdForWpcomeNoteID(wpcomNoteID);
 
-            showSingleNotificationForBuilder(context, builder, noteType, wpcomNoteID, pushId, true);
+            showSingleNotificationForBuilder(context, builder, noteType, wpcomNoteID, pushId, true,
+                    mGCMMessageHandler.getPushBlogId(pushId));
 
             // Also add a group summary notification, which is required for non-wearable devices
             // Do not need to play the sound again. We've already played it in the individual builder.
@@ -525,9 +556,10 @@ public class GCMMessageHandler {
         }
 
         private void showSimpleNotification(Context context, String title, String message, Intent resultIntent,
-                                            int pushId, NotificationType notificationType) {
+                                            int pushId, NotificationType notificationType,
+                                            @Nullable Long blogId) {
             NotificationCompat.Builder builder = getNotificationBuilder(context, title, message);
-            showNotificationForBuilder(builder, context, resultIntent, pushId, true, notificationType);
+            showNotificationForBuilder(builder, context, resultIntent, pushId, true, notificationType, blogId);
         }
 
         private void addActionsForCommentNotification(Context context, NotificationCompat.Builder builder,
@@ -752,19 +784,19 @@ public class GCMMessageHandler {
                         .setStyle(inboxStyle);
 
                 showWPComNotificationForBuilder(groupBuilder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, false,
-                        NotificationType.GROUP_NOTIFICATION);
+                        NotificationType.GROUP_NOTIFICATION, mGCMMessageHandler.getCommonPushBlogId());
             } else {
                 // Set the individual notification we've already built as the group summary
                 builder.setGroupSummary(true)
                        .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN);
                 showWPComNotificationForBuilder(builder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, false,
-                        NotificationType.GROUP_NOTIFICATION);
+                        NotificationType.GROUP_NOTIFICATION, mGCMMessageHandler.getCommonPushBlogId());
             }
         }
 
         private void showSingleNotificationForBuilder(Context context, NotificationCompat.Builder builder,
                                                       String noteType, String wpcomNoteID, int pushId,
-                                                      boolean notifyUser) {
+                                                      boolean notifyUser, @Nullable Long blogId) {
             if (builder == null || context == null) {
                 return;
             }
@@ -773,7 +805,8 @@ public class GCMMessageHandler {
                 addActionsForCommentNotification(context, builder, wpcomNoteID);
             }
 
-            showWPComNotificationForBuilder(builder, context, wpcomNoteID, pushId, notifyUser, fromNoteType(noteType));
+            showWPComNotificationForBuilder(builder, context, wpcomNoteID, pushId, notifyUser,
+                    fromNoteType(noteType), blogId);
         }
 
         private NotificationType fromNoteType(String noteType) {
@@ -805,7 +838,7 @@ public class GCMMessageHandler {
 
         private void showWPComNotificationForBuilder(NotificationCompat.Builder builder, Context context,
                                                      String wpcomNoteID, int pushId, boolean notifyUser,
-                                                     NotificationType notificationType) {
+                                                     NotificationType notificationType, @Nullable Long blogId) {
             Intent resultIntent = new Intent(context, WPMainActivity.class);
             resultIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
             resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
@@ -815,13 +848,16 @@ public class GCMMessageHandler {
             resultIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, wpcomNoteID);
             resultIntent.putExtra(IS_TAPPED_ON_NOTIFICATION, true);
 
-            showNotificationForBuilder(builder, context, resultIntent, pushId, notifyUser, notificationType);
+            showNotificationForBuilder(builder, context, resultIntent, pushId, notifyUser, notificationType,
+                    blogId);
         }
 
-        // Displays a notification to the user
+        // Displays a notification to the user. blogId is the site the notification concerns, or null when it
+        // is account-level or spans several sites; it cannot be derived from pushId, which for the group
+        // summary is a sentinel id with no entry in the active notifications map.
         private void showNotificationForBuilder(NotificationCompat.Builder builder, Context context,
                                                 Intent resultIntent, int pushId, boolean notifyUser,
-                                                NotificationType notificationType) {
+                                                NotificationType notificationType, @Nullable Long blogId) {
             if (builder == null || context == null || resultIntent == null) {
                 return;
             }
@@ -880,8 +916,7 @@ public class GCMMessageHandler {
                 );
                 builder.setContentIntent(pendingIntent);
                 mNotificationManagerWrapper.notify(pushId, builder.build());
-                mSystemNotificationsTracker.trackShownNotification(
-                        notificationType, mGCMMessageHandler.getPushBlogId(pushId));
+                mSystemNotificationsTracker.trackShownNotification(notificationType, blogId);
             }
         }
 
@@ -947,7 +982,8 @@ public class GCMMessageHandler {
                     wpcomNoteID = remainingNote.getString(PUSH_ARG_NOTE_ID, "");
                     if (!tmpMap.isEmpty()) {
                         showSingleNotificationForBuilder(context, builder, noteType, wpcomNoteID,
-                                tmpMap.keyAt(0), false);
+                                tmpMap.keyAt(0), false,
+                                parsePushBlogId(remainingNote.getString(PUSH_ARG_BLOG_ID)));
                     }
                 }
             }
@@ -1160,8 +1196,9 @@ public class GCMMessageHandler {
             Intent resultIntent = new Intent(context, WPMainActivity.class);
             resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             resultIntent.putExtra(WPMainActivity.ARG_SHOW_ZENDESK_NOTIFICATIONS, true);
+            // Support notifications are account-level, so there is no site to attach.
             showSimpleNotification(context, title, message, resultIntent, ZENDESK_PUSH_NOTIFICATION_ID,
-                    NotificationType.ZENDESK);
+                    NotificationType.ZENDESK, null);
         }
     }
 }
