@@ -478,7 +478,7 @@ private fun ChartErrorBox(onRetry: () -> Unit) {
 }
 
 /**
- * Shown in place of the chart when the selected metric has no series for the current period (a
+ * Shown in place of the chart when the user picked a metric with no series for the current period (a
  * single-day/hourly response only carries views). The header is dropped too — there is nothing to
  * summarise — but its height is reserved by the caller so the card keeps the same size, while the
  * bottom row keeps showing all five values from its dedicated call.
