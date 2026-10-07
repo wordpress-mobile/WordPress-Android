@@ -47,6 +47,7 @@ import uniffi.wp_api.StatsEmailsSummarySortField
 import uniffi.wp_api.StatsUtmKey
 import uniffi.wp_api.StatsUtmParams
 import uniffi.wp_api.WpApiParamOrder
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
@@ -57,7 +58,8 @@ import javax.inject.Inject
  */
 @Suppress("LargeClass")
 class StatsDataSourceImpl @Inject constructor(
-    private val wpComApiClient: WpComApiClient
+    private val wpComApiClient: WpComApiClient,
+    private val siteStore: SiteStore
 ) : StatsDataSource {
     override suspend fun fetchStatsVisits(
         siteId: Long,
@@ -306,7 +308,9 @@ class StatsDataSourceImpl @Inject constructor(
                     )
                 )
             }
-            else -> logErrorAndReturn("fetchCountryViews", result) {
+            else -> logErrorAndReturn(
+                "fetchCountryViews", result, planGatedSiteId = siteId
+            ) {
                 CountryViewsDataResult.Error(it)
             }
         }
@@ -378,7 +382,9 @@ class StatsDataSourceImpl @Inject constructor(
                     )
                 )
             }
-            else -> logErrorAndReturn("fetchRegionViews", result) {
+            else -> logErrorAndReturn(
+                "fetchRegionViews", result, planGatedSiteId = siteId
+            ) {
                 RegionViewsDataResult.Error(it)
             }
         }
@@ -454,7 +460,9 @@ class StatsDataSourceImpl @Inject constructor(
                     )
                 )
             }
-            else -> logErrorAndReturn("fetchCityViews", result) {
+            else -> logErrorAndReturn(
+                "fetchCityViews", result, planGatedSiteId = siteId
+            ) {
                 CityViewsDataResult.Error(it)
             }
         }
@@ -642,12 +650,12 @@ class StatsDataSourceImpl @Inject constructor(
                 )
             }
             is WpRequestResult.WpError -> logErrorAndReturn(
-                "fetchDevicesScreensize", result
+                "fetchDevicesScreensize", result, planGatedSiteId = siteId
             ) {
                 DevicesDataResult.Error(it)
             }
             else -> logErrorAndReturn(
-                "fetchDevicesScreensize", result
+                "fetchDevicesScreensize", result, planGatedSiteId = siteId
             ) {
                 DevicesDataResult.Error(it)
             }
@@ -741,12 +749,12 @@ class StatsDataSourceImpl @Inject constructor(
                 )
             }
             is WpRequestResult.WpError -> logErrorAndReturn(
-                "fetchDevicesBrowser", result
+                "fetchDevicesBrowser", result, planGatedSiteId = siteId
             ) {
                 DevicesDataResult.Error(it)
             }
             else -> logErrorAndReturn(
-                "fetchDevicesBrowser", result
+                "fetchDevicesBrowser", result, planGatedSiteId = siteId
             ) {
                 DevicesDataResult.Error(it)
             }
@@ -840,12 +848,12 @@ class StatsDataSourceImpl @Inject constructor(
                 )
             }
             is WpRequestResult.WpError -> logErrorAndReturn(
-                "fetchDevicesPlatform", result
+                "fetchDevicesPlatform", result, planGatedSiteId = siteId
             ) {
                 DevicesDataResult.Error(it)
             }
             else -> logErrorAndReturn(
-                "fetchDevicesPlatform", result
+                "fetchDevicesPlatform", result, planGatedSiteId = siteId
             ) {
                 DevicesDataResult.Error(it)
             }
@@ -941,27 +949,47 @@ class StatsDataSourceImpl @Inject constructor(
         else -> "Unknown"
     }
 
+    /**
+     * @param planGatedSiteId the site the request was made for, and only for a stat a paid plan can
+     * gate (region and city views, devices, UTM). Every other endpoint leaves it null and keeps
+     * reporting [StatsErrorType.AUTH_ERROR], so a refusal can never reach a card that has no upsell
+     * to offer for it.
+     */
     private fun <R> logErrorAndReturn(
         methodName: String,
         result: WpRequestResult<*>,
+        planGatedSiteId: Long? = null,
         errorFactory: (StatsErrorType) -> R
     ): R {
-        val (logMessage, errorType) = classifyError(methodName, result)
+        val (logMessage, errorType) = classifyError(
+            methodName = methodName,
+            result = result,
+            userCanViewStats = canViewStats(planGatedSiteId)
+        )
         AppLog.e(T.STATS, logMessage)
         return errorFactory(errorType)
     }
 
+    /**
+     * Whether the site says this user may read its stats, which is what separates a plan gate from
+     * a permission problem — see [isStatsGatedByPlan]. A null [siteId] means the endpoint is one no
+     * plan gates, so its refusals stay permission errors whatever the user may do.
+     */
+    private fun canViewStats(siteId: Long?): Boolean =
+        siteId != null && siteStore.getSiteBySiteId(siteId)?.hasCapabilityViewStats == true
+
     @Suppress("LongMethod")
     private fun classifyError(
         methodName: String,
-        result: WpRequestResult<*>
+        result: WpRequestResult<*>,
+        userCanViewStats: Boolean
     ): Pair<String, StatsErrorType> = when (result) {
         is WpRequestResult.WpError -> {
             val statusCode = result.statusCode.toInt()
             val errorType = when {
                 isStatsUnavailableForSite(result.response) ->
                     StatsErrorType.NOT_AVAILABLE
-                isStatsGatedByPlan(result.response) ->
+                isStatsGatedByPlan(result.response, userCanViewStats) ->
                     StatsErrorType.PLAN_GATED
                 statusCode == HTTP_FORBIDDEN ||
                     statusCode == HTTP_UNAUTHORIZED ->
@@ -1001,7 +1029,7 @@ class StatsDataSourceImpl @Inject constructor(
             val errorType = when {
                 isStatsUnavailableForSite(result.response) ->
                     StatsErrorType.NOT_AVAILABLE
-                isStatsGatedByPlan(result.response) ->
+                isStatsGatedByPlan(result.response, userCanViewStats) ->
                     StatsErrorType.PLAN_GATED
                 else -> StatsErrorType.UNKNOWN
             }
@@ -1525,7 +1553,7 @@ class StatsDataSourceImpl @Inject constructor(
                 )
             }
             else -> logErrorAndReturn(
-                "fetchUtm", result
+                "fetchUtm", result, planGatedSiteId = siteId
             ) {
                 UtmDataResult.Error(it)
             }

@@ -54,68 +54,38 @@ class StatsApiErrorTest {
     }
 
     @Test
-    fun `given unauthorized body, when isStatsGatedByPlan, then true is returned`() {
+    fun `given a plan gate body and a user who can view stats, when isStatsGatedByPlan, then true`() {
         val response =
             """{"error":"unauthorized","message":"The plan for 12345 does not allow fetching Device stats"}"""
 
-        assertThat(isStatsGatedByPlan(response)).isTrue()
+        assertThat(isStatsGatedByPlan(response, userCanViewStats = true)).isTrue()
     }
 
     @Test
-    fun `given a gated geolocation body, when isStatsGatedByPlan, then true is returned`() {
+    fun `given a localized plan gate body, when isStatsGatedByPlan, then true is returned`() {
         val response =
-            """{"error":"unauthorized","message":"The plan for 12345 does not allow fetching Geolocation stats"}"""
+            """{"error":"unauthorized","message":"Der Tarif für 12345 erlaubt das Abrufen nicht"}"""
 
-        assertThat(isStatsGatedByPlan(response)).isTrue()
+        assertThat(isStatsGatedByPlan(response, userCanViewStats = true)).isTrue()
+    }
+
+    @Test
+    fun `given a user who cannot view stats, when isStatsGatedByPlan, then false is returned`() {
+        val response =
+            """{"error":"unauthorized","message":"user cannot view stats"}"""
+
+        assertThat(isStatsGatedByPlan(response, userCanViewStats = false)).isFalse()
     }
 
     @Test
     fun `given a different error code, when isStatsGatedByPlan, then false is returned`() {
         val response = """{"error":"invalid_blog","message":"nope"}"""
 
-        assertThat(isStatsGatedByPlan(response)).isFalse()
-    }
-
-    @Test
-    fun `given a permission refusal, when isStatsGatedByPlan, then false is returned`() {
-        val response =
-            """{"error":"unauthorized","message":"user cannot view stats"}"""
-
-        assertThat(isStatsGatedByPlan(response)).isFalse()
-    }
-
-    @Test
-    fun `given a private blog refusal, when isStatsGatedByPlan, then false is returned`() {
-        val response =
-            """{"error":"unauthorized","message":"User cannot access this private blog."}"""
-
-        assertThat(isStatsGatedByPlan(response)).isFalse()
-    }
-
-    @Test
-    fun `given unauthorized body without a message, when isStatsGatedByPlan, then false is returned`() {
-        val response = """{"error":"unauthorized"}"""
-
-        assertThat(isStatsGatedByPlan(response)).isFalse()
+        assertThat(isStatsGatedByPlan(response, userCanViewStats = true)).isFalse()
     }
 
     @Test
     fun `given null body, when isStatsGatedByPlan, then false is returned`() {
-        assertThat(isStatsGatedByPlan(null)).isFalse()
-    }
-
-    @Test
-    fun `given an error body, when parseStatsApiErrorMessage, then message is returned`() {
-        val response =
-            """{"error":"unauthorized","message":"The plan for 12345 does not allow fetching UTM stats"}"""
-
-        assertThat(parseStatsApiErrorMessage(response))
-            .isEqualTo("The plan for 12345 does not allow fetching UTM stats")
-    }
-
-    @Test
-    fun `given body without message field, when parseStatsApiErrorMessage, then null is returned`() {
-        assertThat(parseStatsApiErrorMessage("""{"error":"unauthorized"}""")).isNull()
-        assertThat(parseStatsApiErrorMessage(null)).isNull()
+        assertThat(isStatsGatedByPlan(null, userCanViewStats = true)).isFalse()
     }
 }

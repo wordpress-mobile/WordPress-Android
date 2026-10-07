@@ -14,11 +14,12 @@ enum class StatsErrorType(@StringRes val messageResId: Int) {
     NOT_AVAILABLE(R.string.stats_error_not_available),
 
     /**
-     * The site's plan does not include this stat. Cards that show the upsell
-     * supply its copy themselves, so this message is only the fallback for a
-     * card without one: it has to stand on its own as an error, which the
-     * upsell copy ("Upgrade your plan…") would not.
+     * The site's plan does not include this stat, and the user may buy one that
+     * does. Only the stats a plan can gate report this, so the cards that render
+     * the upsell are the only place it reaches; the upsell supplies its own copy,
+     * leaving this message as the fallback for a surface without one — the plain
+     * permission wording those surfaces showed before the upsell existed.
      */
-    PLAN_GATED(R.string.stats_error_not_available),
+    PLAN_GATED(R.string.stats_error_auth),
     UNKNOWN(R.string.stats_error_unknown)
 }

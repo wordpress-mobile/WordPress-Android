@@ -14,26 +14,12 @@ private const val ERROR_CODE_INVALID_BLOG = "invalid_blog"
  * looks like:
  * `{"error":"unauthorized","message":"The plan for 12345 does not allow fetching Device stats"}`
  *
- * Note the site is named by its numeric blog id, not by a phrase like "this
- * site" — see [PLAN_GATE_MESSAGE_FRAGMENT].
- *
  * The API reuses this code for a user who cannot view the site's stats at all,
- * which is why the code alone does not identify a plan gate — see
+ * and only the message — which WordPress.com localizes, so it cannot be matched
+ * on — tells the two apart. The caller resolves that ambiguity instead; see
  * [isStatsGatedByPlan].
  */
 private const val ERROR_CODE_UNAUTHORIZED = "unauthorized"
-
-/**
- * Fragment of the "message" field that separates a plan gate from the other
- * `unauthorized` errors. The gated endpoints (region/city views, devices, UTM)
- * all phrase it as "The plan for <blog id> does not allow fetching X stats",
- * while a permission failure reads "user cannot view stats".
- *
- * The fragment deliberately starts after the blog id, so it must stay shorter
- * than the sentence above: the id sits in the middle of that sentence, and
- * matching any more of it would never match a real response.
- */
-private const val PLAN_GATE_MESSAGE_FRAGMENT = "does not allow fetching"
 
 /**
  * Matches the value of the top-level "error" field in a WordPress.com API error
@@ -41,12 +27,6 @@ private const val PLAN_GATE_MESSAGE_FRAGMENT = "does not allow fetching"
  * pulling in the Android [org.json] stubs.
  */
 private val STATS_ERROR_CODE_REGEX = "\"error\"\\s*:\\s*\"([^\"]+)\"".toRegex()
-
-/**
- * Matches the value of the top-level "message" field in a WordPress.com API
- * error body. Same lightweight-regex reasoning as [STATS_ERROR_CODE_REGEX].
- */
-private val STATS_ERROR_MESSAGE_REGEX = "\"message\"\\s*:\\s*\"([^\"]+)\"".toRegex()
 
 /**
  * Extracts the WordPress.com stats API error code from a raw response body, or
@@ -58,15 +38,6 @@ internal fun parseStatsApiErrorCode(response: String?): String? {
 }
 
 /**
- * Extracts the WordPress.com stats API error message from a raw response body,
- * or returns null when the body is missing or carries no message.
- */
-internal fun parseStatsApiErrorMessage(response: String?): String? {
-    if (response.isNullOrBlank()) return null
-    return STATS_ERROR_MESSAGE_REGEX.find(response)?.groupValues?.get(1)
-}
-
-/**
  * Returns true when the stats API reports that the requested stat is not
  * available for the site (WordPress.com `invalid_blog` error).
  */
@@ -74,18 +45,20 @@ internal fun isStatsUnavailableForSite(response: String?): Boolean =
     parseStatsApiErrorCode(response) == ERROR_CODE_INVALID_BLOG
 
 /**
- * Returns true when the stats API reports that the site's plan does not include
- * the requested stat, meaning the user has to upgrade to see it.
+ * Returns true when the stats API refused the stat because the site's plan does
+ * not include it, so the user can be offered an upgrade.
  *
- * Both the plan gate and a plain "you may not view this site's stats" refusal
- * come back as `unauthorized`, so the message has to be checked too: every
- * stats endpoint runs its permission check before the plan check, and only the
- * plan check names the plan. Without that the upsell would also be shown to a
- * user whose role simply does not allow viewing stats — someone no purchase can
- * help. When the message does not name the plan this returns false and the
- * caller falls back to the regular permission error.
+ * `unauthorized` is both how the API reports a plan gate and how it refuses a
+ * user whose role may not read the site's stats at all. Only the message
+ * distinguishes them and WordPress.com returns it in the caller's locale, so the
+ * code is all that can be matched on and [userCanViewStats] — the capability the
+ * app already stores for the site — settles the rest: a user who may view the
+ * site's stats can only be refused by the plan. Anyone else gets the regular
+ * permission error, since no purchase gives a user a role they do not have.
+ *
+ * The caller must also only ask this for a stat a plan can actually gate (region
+ * and city views, devices, UTM): for every other endpoint an `unauthorized` is a
+ * permission problem whatever the user's capability says.
  */
-internal fun isStatsGatedByPlan(response: String?): Boolean =
-    parseStatsApiErrorCode(response) == ERROR_CODE_UNAUTHORIZED &&
-        parseStatsApiErrorMessage(response)
-            ?.contains(PLAN_GATE_MESSAGE_FRAGMENT, ignoreCase = true) == true
+internal fun isStatsGatedByPlan(response: String?, userCanViewStats: Boolean): Boolean =
+    userCanViewStats && parseStatsApiErrorCode(response) == ERROR_CODE_UNAUTHORIZED
