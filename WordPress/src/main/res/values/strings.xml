@@ -1673,6 +1673,7 @@
     <!-- stats paid-plan feature gate -->
     <string name="stats_feature_gate_message">Upgrade your plan to get access to advanced analytics</string>
     <string name="stats_feature_gate_explore_plans">Explore Plans</string>
+    <string name="stats_feature_gate_plans_unavailable">Unable to open the plans page for this site</string>
 
     <!-- stats ring chart accessibility -->
     <string name="stats_ring_chart_entry_description">%1$s: %2$s</string>

@@ -983,7 +983,8 @@ private fun TrafficTabContent(
                             getUpgradeUrl =
                                 locationsViewModel::getUpgradeUrl,
                             cardType = StatsCardType.LOCATIONS,
-                            onExplorePlansClick = onExplorePlansClick
+                            onExplorePlansClick = onExplorePlansClick,
+                            context = context
                         )
                     )
                     StatsCardType.DEVICES -> DevicesCard(
@@ -1025,7 +1026,8 @@ private fun TrafficTabContent(
                             getUpgradeUrl =
                                 devicesViewModel::getUpgradeUrl,
                             cardType = StatsCardType.DEVICES,
-                            onExplorePlansClick = onExplorePlansClick
+                            onExplorePlansClick = onExplorePlansClick,
+                            context = context
                         )
                     )
                     StatsCardType.UTM -> UtmCard(
@@ -1071,7 +1073,8 @@ private fun TrafficTabContent(
                             getUpgradeUrl =
                                 utmViewModel::getUpgradeUrl,
                             cardType = StatsCardType.UTM,
-                            onExplorePlansClick = onExplorePlansClick
+                            onExplorePlansClick = onExplorePlansClick,
+                            context = context
                         )
                     )
                     StatsCardType.AUTHORS -> AuthorsCard(
@@ -1682,7 +1685,8 @@ private fun buildExplorePlansAction(
     isPlanGated: Boolean,
     getUpgradeUrl: () -> String?,
     cardType: StatsCardType,
-    onExplorePlansClick: (String, StatsCardType) -> Unit
+    onExplorePlansClick: (String, StatsCardType) -> Unit,
+    context: Context
 ): (() -> Unit)? = if (isPlanGated) {
     {
         val url = getUpgradeUrl()
@@ -1693,6 +1697,11 @@ private fun buildExplorePlansAction(
                 AppLog.T.STATS,
                 "No site selected, cannot open the plans page"
             )
+            Toast.makeText(
+                context,
+                R.string.stats_feature_gate_plans_unavailable,
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 } else {
