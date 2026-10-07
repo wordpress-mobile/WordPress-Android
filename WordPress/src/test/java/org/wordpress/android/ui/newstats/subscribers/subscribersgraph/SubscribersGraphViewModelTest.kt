@@ -2,6 +2,7 @@ package org.wordpress.android.ui.newstats.subscribers.subscribersgraph
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -19,6 +20,7 @@ import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.SubscribersGraphDataPoint
 import org.wordpress.android.ui.newstats.repository.SubscribersGraphResult
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.util.Locale
 
 @ExperimentalCoroutinesApi
 class SubscribersGraphViewModelTest : BaseUnitTest() {
@@ -45,8 +47,15 @@ class SubscribersGraphViewModelTest : BaseUnitTest() {
         name = "Test Site"
     }
 
+    private lateinit var defaultLocale: Locale
+
     @Before
     fun setUp() {
+        // The month abbreviations these tests assert ("Jan", "Feb", ...) come from
+        // Locale.getDefault() inside formatLabel. Pin the locale for determinism, and restore
+        // it in tearDown so this global mutation doesn't leak into other tests in the runner.
+        defaultLocale = Locale.getDefault()
+        Locale.setDefault(Locale.US)
         whenever(
             selectedSiteRepository.getSelectedSite()
         ).thenReturn(testSite)
@@ -72,6 +81,11 @@ class SubscribersGraphViewModelTest : BaseUnitTest() {
                 R.string.stats_error_unknown
             )
         ).thenReturn("Unknown error")
+    }
+
+    @After
+    fun tearDown() {
+        Locale.setDefault(defaultLocale)
     }
 
     private fun initViewModel() {
@@ -544,21 +558,11 @@ class SubscribersGraphViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given a weekly period with a separator, when data loads, then the label is readable`() =
-        test {
-            stubDataPoints("2026-W07W27" to TEST_COUNT_1)
-
-            loadWithTab(SubscribersGraphTab.WEEKS)
-
-            assertThat(loadedLabels())
-                .containsExactly("Jul 27")
-        }
-
-    @Test
     fun `given weeks tab, when data loads, then no raw period string is shown`() =
         test {
-            // Locale-independent contract lock: the ISO-week shape must never reach the
-            // label, and its 'W' separators are what would give it away.
+            // Locale-independent contract lock: the raw WordPress period shape (not an
+            // ISO week, which would be '2026-W05') must never reach the label, and its
+            // 'W' separators are what would give it away.
             stubDataPoints(
                 "2026W01W26" to TEST_COUNT_1,
                 "2026W02W02" to TEST_COUNT_2
@@ -601,7 +605,7 @@ class SubscribersGraphViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given a year-less month period, when data loads, then the label shows the month`() =
+    fun `given a day-less month period, when data loads, then the label shows the month`() =
         test {
             stubDataPoints("2026-02" to TEST_COUNT_1)
 
@@ -636,6 +640,86 @@ class SubscribersGraphViewModelTest : BaseUnitTest() {
                 .containsExactly("not-a-period")
         }
 
+    @Test
+    fun `given weeks tab, when a point is selected, then the marker names the whole week`() =
+        test {
+            stubDataPoints("2026W07W27" to TEST_COUNT_1)
+
+            loadWithTab(SubscribersGraphTab.WEEKS)
+
+            // 27 Jul 2026 is a Monday; the span must read as seven days, not one.
+            assertThat(loadedMarkerLabels())
+                .containsExactly("27 Jul - 2 Aug")
+        }
+
+    @Test
+    fun `given a week inside one month, when selected, then the marker omits the first month`() =
+        test {
+            stubDataPoints("2026W07W20" to TEST_COUNT_1)
+
+            loadWithTab(SubscribersGraphTab.WEEKS)
+
+            assertThat(loadedMarkerLabels())
+                .containsExactly("20-26 Jul")
+        }
+
+    @Test
+    fun `given days tab, when a point is selected, then the marker matches the axis label`() =
+        test {
+            stubDataPoints("2026-02-25" to TEST_COUNT_1)
+
+            initViewModel()
+            advanceUntilIdle()
+
+            assertThat(loadedMarkerLabels())
+                .isEqualTo(loadedLabels())
+        }
+
+    @Test
+    fun `given an out-of-range weekly period, when data loads, then it is shown verbatim`() =
+        test {
+            // Pins the breadth of the catch: the regex matches, so this fails inside
+            // LocalDate.of rather than LocalDate.parse. Narrowing the caught type to
+            // DateTimeParseException would crash the card here while every other test stays
+            // green.
+            stubDataPoints("2026W13W27" to TEST_COUNT_1)
+
+            loadWithTab(SubscribersGraphTab.WEEKS)
+
+            assertThat(loadedLabels())
+                .containsExactly("2026W13W27")
+        }
+
+    @Test
+    fun `given unordered weekly periods, when data loads, then points are in date order`() =
+        test {
+            stubDataPoints(
+                "2026W08W03" to TEST_COUNT_3,
+                "2026W07W20" to TEST_COUNT_1,
+                "2026W07W27" to TEST_COUNT_2
+            )
+
+            loadWithTab(SubscribersGraphTab.WEEKS)
+
+            assertThat(loadedLabels())
+                .containsExactly("Jul 20", "Jul 27", "Aug 3")
+        }
+
+    @Test
+    fun `given an unparseable period, when data loads, then it sorts last`() =
+        test {
+            stubDataPoints(
+                "not-a-period" to TEST_COUNT_3,
+                "2026-02-25" to TEST_COUNT_1
+            )
+
+            initViewModel()
+            advanceUntilIdle()
+
+            assertThat(loadedLabels())
+                .containsExactly("Feb 25", "not-a-period")
+        }
+
     private fun loadWithTab(tab: SubscribersGraphTab) {
         initViewModel()
         advanceUntilIdle()
@@ -660,10 +744,16 @@ class SubscribersGraphViewModelTest : BaseUnitTest() {
     }
 
     private fun loadedLabels(): List<String> =
+        loadedPoints().map { it.label }
+
+    private fun loadedMarkerLabels(): List<String> =
+        loadedPoints().map { it.markerLabel }
+
+    private fun loadedPoints(): List<GraphDataPoint> =
         (
             viewModel.uiState.value
                 as SubscribersGraphUiState.Loaded
-            ).dataPoints.map { it.label }
+            ).dataPoints
 
     private fun createSuccessResult() =
         SubscribersGraphResult.Success(

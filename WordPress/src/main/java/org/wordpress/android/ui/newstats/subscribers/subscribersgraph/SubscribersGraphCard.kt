@@ -354,7 +354,7 @@ private class SubscribersMarkerValueFormatter(
         val x = target.x.toInt()
         if (x !in dataPoints.indices) return ""
         val point = dataPoints[x]
-        return "${point.label}\n" +
+        return "${point.markerLabel}\n" +
             formatStatValue(point.count)
     }
 }

@@ -9,6 +9,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.SubscribersGraphResult
 import org.wordpress.android.ui.newstats.subscribers.BaseSubscribersCardViewModel
+import org.wordpress.android.ui.newstats.util.formatCustomDateRange
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -68,14 +69,23 @@ class SubscribersGraphViewModel @Inject constructor(
             is SubscribersGraphResult.Success -> {
                 markLoadedSuccessfully()
                 val sorted = result.dataPoints
-                    .sortedBy { it.date }
+                    .map {
+                        ParsedPoint(
+                            raw = it.date,
+                            start = parsePeriodDate(it.date),
+                            count = it.count
+                        )
+                    }
+                    .sortedWith(
+                        compareBy(nullsLast()) { it.start }
+                    )
                 updateState(
                     SubscribersGraphUiState.Loaded(
                         dataPoints = sorted.map {
                             GraphDataPoint(
-                                label = formatLabel(
-                                    it.date, tab
-                                ),
+                                label = formatLabel(it, tab),
+                                markerLabel =
+                                    formatMarkerLabel(it, tab),
                                 count = it.count
                             )
                         }
@@ -95,27 +105,49 @@ class SubscribersGraphViewModel @Inject constructor(
     }
 
     /**
-     * Formats one chart point's label. `/stats/subscribers` labels every point to match the
-     * unit that was asked for, and the shapes do not agree: `2026-01-27` for a day,
-     * `2026W01W27` for a week, the first of the month for a month and a bare `2026` for a
+     * Formats one chart point's axis label. `/stats/subscribers` labels every point to match
+     * the unit that was asked for, and the shapes do not agree: `2026-01-27` for a day,
+     * `2026W01W26` for a week, the first of the month for a month and a bare `2026` for a
      * year. Only the day shape is an ISO date, so the others are parsed on their own terms.
+     *
+     * A point whose period matched no known shape keeps its raw string, which is the most
+     * honest thing left to show.
      */
     private fun formatLabel(
-        dateStr: String,
+        point: ParsedPoint,
         tab: SubscribersGraphTab
     ): String {
-        val date = parsePeriodDate(dateStr)
-            ?: return dateStr
+        val start = point.start ?: return point.raw
         val pattern = when (tab) {
             SubscribersGraphTab.DAYS,
             SubscribersGraphTab.WEEKS -> DAY_PATTERN
             SubscribersGraphTab.MONTHS -> MONTH_PATTERN
             SubscribersGraphTab.YEARS -> YEAR_PATTERN
         }
-        return date.format(
+        return start.format(
             DateTimeFormatter.ofPattern(
                 pattern, Locale.getDefault()
             )
+        )
+    }
+
+    /**
+     * Formats the label shown when a point is selected. A weekly point spans seven days, so it
+     * is named as a range ("27 Jul - 2 Aug") rather than by its first day alone — otherwise the
+     * marker is indistinguishable from the Days tab's, which is what CMM-2474 asked for. Every
+     * other granularity names a span the axis label already states unambiguously, so it reuses
+     * that label.
+     */
+    private fun formatMarkerLabel(
+        point: ParsedPoint,
+        tab: SubscribersGraphTab
+    ): String {
+        val start = point.start
+        if (tab != SubscribersGraphTab.WEEKS || start == null) {
+            return formatLabel(point, tab)
+        }
+        return formatCustomDateRange(
+            start, start.plusDays(DAYS_IN_WEEK - 1)
         )
     }
 
@@ -124,9 +156,9 @@ class SubscribersGraphViewModel @Inject constructor(
      * string is in none of the shapes the endpoint is known to return.
      *
      * A weekly period is not a date in any format: it carries the year, then the month and
-     * the day of the week's first day, each prefixed with a `W` (`2026W01W27` is the week
-     * starting 27 January 2026). The `-?` tolerates the `2026-W01W27` variant that has also
-     * been seen in responses.
+     * the day of the week's first day, each prefixed with a `W`. `2026W01W26` is the week
+     * starting Monday 26 January 2026 — the embedded day is always a Monday, which is why
+     * the same shape is parsed as `yyyy'W'MM'W'dd` in [WeeklyRoundupUtils].
      */
     private fun parsePeriodDate(dateStr: String): LocalDate? = try {
         WEEK_PERIOD_REGEX.matchEntire(dateStr)
@@ -171,11 +203,23 @@ class SubscribersGraphViewModel @Inject constructor(
 
         private const val FIRST_MONTH = 1
         private const val FIRST_DAY = 1
+        private const val DAYS_IN_WEEK = 7L
 
         private val WEEK_PERIOD_REGEX =
-            Regex("""(\d{4})-?W(\d{2})W(\d{2})""")
+            Regex("""(\d{4})W(\d{2})W(\d{2})""")
         private val MONTH_PERIOD_REGEX =
             Regex("""(\d{4})-(\d{2})""")
         private val YEAR_PERIOD_REGEX = Regex("""\d{4}""")
     }
 }
+
+/**
+ * One data point with its period resolved once: [start] is the first day of the span [raw]
+ * names, or `null` when [raw] matched no known shape. Parsing up front lets the chart be
+ * ordered by a real date rather than by how the period happens to sort as text.
+ */
+private data class ParsedPoint(
+    val raw: String,
+    val start: LocalDate?,
+    val count: Long
+)
