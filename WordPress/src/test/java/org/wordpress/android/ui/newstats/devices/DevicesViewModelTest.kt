@@ -137,6 +137,30 @@ class DevicesViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when plan gated, then isPlanGated is true`() = test {
+        whenever(
+            statsRepository.fetchDevicesScreensize(any(), any())
+        ).thenReturn(
+            DevicesResult.Error(
+                R.string.stats_error_not_available,
+                isPlanGated = true
+            )
+        )
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertThat(state).isInstanceOf(
+            DevicesCardUiState.Error::class.java
+        )
+        assertThat(
+            (state as DevicesCardUiState.Error).isPlanGated
+        ).isTrue()
+        assertThat(state.isAuthError).isFalse()
+    }
+
+    @Test
     fun `when browser fetch fails, then error state is emitted`() =
         test {
             whenever(

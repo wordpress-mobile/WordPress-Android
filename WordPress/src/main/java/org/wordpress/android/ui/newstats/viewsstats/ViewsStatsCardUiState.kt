@@ -48,8 +48,9 @@ data class SelectedBar(
 /**
  * State of the chart region (header totals + chart). Loads from the two chart calls, independently
  * of the bottom row. [Error] renders a compact retry affordance while the bottom row stays visible.
- * [Unavailable] means the selected metric has no series for this period (a single-day/hourly response
- * only carries views), so the chart region shows an empty state while the bottom row stays visible.
+ * [Unavailable] means the user picked a metric this period has no series for (a single-day/hourly
+ * response only carries views), so the chart region explains that while the bottom row stays visible.
+ * Merely carrying such a preference into an hourly period charts views instead of landing here.
  */
 sealed class ChartUiState {
     data object Loading : ChartUiState()
