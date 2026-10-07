@@ -21,12 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.outlined.ShowChart
-import androidx.compose.material.icons.filled.ChatBubbleOutline
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.outlined.ModeEditOutline
-import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material.icons.outlined.BarChart
-import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
@@ -914,17 +909,8 @@ private fun BottomStatsRow(
     }
 }
 
-private fun iconForMetric(metric: StatsMetric) = when (metric) {
-    StatsMetric.VIEWS -> Icons.Outlined.Visibility
-    StatsMetric.VISITORS -> Icons.Default.PersonOutline
-    StatsMetric.LIKES -> Icons.Default.FavoriteBorder
-    StatsMetric.COMMENTS -> Icons.Default.ChatBubbleOutline
-    StatsMetric.POSTS -> Icons.Outlined.ModeEditOutline
-}
-
 @Composable
 private fun StatItemCard(stat: StatItem, isSelected: Boolean, onClick: () -> Unit) {
-    val icon = iconForMetric(stat.metric)
     val label = stringResource(stat.metric.labelRes)
     // The selected tab's indicator uses the metric's accent color so it matches the recoloured chart.
     val indicatorColor = if (isSelected) metricColor(stat.metric) else Color.Transparent
@@ -939,20 +925,11 @@ private fun StatItemCard(stat: StatItem, isSelected: Boolean, onClick: () -> Uni
             },
         horizontalAlignment = Alignment.Start
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                modifier = Modifier.size(14.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(
-                text = label.uppercase(),
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
+        Text(
+            text = label.uppercase(),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = formatStatValue(stat.value),
