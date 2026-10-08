@@ -10,6 +10,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -313,6 +314,19 @@ class NewStatsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         advanceUntilIdle()
 
         verify(statsResultCache).markAllStale()
+        verify(statsResultCache, never()).clear()
+    }
+
+    @Test
+    fun `when the screen is entered again, then the cached stats are marked once more`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        // The activity calls this on every resume: entries never expire, so a screen that sat in the
+        // background for hours has to re-arm the one background refresh each card performs.
+        viewModel.onScreenEntered()
+
+        verify(statsResultCache, times(2)).markAllStale()
         verify(statsResultCache, never()).clear()
     }
 

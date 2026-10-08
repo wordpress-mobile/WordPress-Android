@@ -45,12 +45,22 @@ class NewStatsViewModel @Inject constructor(
         get() = selectedSiteRepository.getSelectedSite()?.siteId ?: 0L
 
     init {
-        // Entering the screen: keep what's already in memory so the cards render instantly, but mark
-        // it for one background refresh each, so a visit never shows only what a previous one fetched.
-        statsResultCache.markAllStale()
+        onScreenEntered()
         checkNetworkStatus()
         loadConfiguration()
         observeConfigurationChanges()
+    }
+
+    /**
+     * Entering the screen: keep what's already in memory so the cards render instantly, but mark it
+     * for one background refresh each, so a visit never shows only what a previous one fetched.
+     *
+     * Called again on every resume, not just when this ViewModel is created. Entries have no expiry,
+     * and a screen left in the background for hours would otherwise keep serving — with no refresh
+     * — the numbers it fetched before, for periods like Today or This week that are still moving.
+     */
+    fun onScreenEntered() {
+        statsResultCache.markAllStale()
     }
 
     /**
