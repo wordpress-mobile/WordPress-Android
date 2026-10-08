@@ -61,11 +61,23 @@ internal object RsErrorUtils {
         errorCode(e) is WpErrorCode.PostInvalidPageNumber
 
     private fun failureReason(e: Exception?): RequestExecutionErrorReason? =
-        (unwrapException(e) as? WpApiException.RequestExecutionFailed)
-            ?.reason
+        (e as? RsBridgeException)?.reason
+            ?: (unwrapException(e) as? WpApiException.RequestExecutionFailed)?.reason
 
     private fun errorCode(e: Exception?): WpErrorCode? =
-        (unwrapException(e) as? WpApiException.WpException)?.errorCode
+        (e as? RsBridgeException)?.errorCode
+            ?: (unwrapException(e) as? WpApiException.WpException)?.errorCode
+
+    /**
+     * Whether the request never reached the server. rs reports a failed DNS lookup on a device
+     * that says it is online as [RequestExecutionErrorReason.NonExistentSiteError], but these
+     * screens only talk to a site the app has already reached, so that is the network too.
+     */
+    private fun isConnectionFailure(reason: RequestExecutionErrorReason?): Boolean =
+        reason is RequestExecutionErrorReason.DeviceIsOfflineError ||
+            reason is RequestExecutionErrorReason.NonExistentSiteError ||
+            reason is RequestExecutionErrorReason.ConnectionError ||
+            reason is RequestExecutionErrorReason.HttpTimeoutError
 
     /**
      * Returns a user-friendly error string based on the
@@ -83,8 +95,7 @@ internal object RsErrorUtils {
         val failureReason = reason ?: failureReason(e)
 
         val resId = when {
-            failureReason is RequestExecutionErrorReason
-                .DeviceIsOfflineError ||
+            isConnectionFailure(failureReason) ||
                 !networkUtilsWrapper.isNetworkAvailable() ->
                 R.string.error_generic_network
 
