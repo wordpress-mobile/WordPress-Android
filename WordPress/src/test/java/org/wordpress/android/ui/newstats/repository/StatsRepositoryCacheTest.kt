@@ -1,12 +1,15 @@
 package org.wordpress.android.ui.newstats.repository
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -371,6 +374,22 @@ class StatsRepositoryCacheTest : BaseUnitTest() {
         // With no entry to prefer, the card still gets the numbers it can show rather than an error.
         assertThat(result).isInstanceOf(ClicksResult.Success::class.java)
     }
+    @Test
+    fun `given the cache is emptied mid-fetch, when the result lands, then it is not stored`() = test {
+        whenever(statsDataSource.fetchClicks(any(), any(), any())).doSuspendableAnswer {
+            delay(REQUEST_MS)
+            ClicksDataResult.Success(listOf(clickItem()))
+        }
+
+        val fetch = launch { repository.fetchClicks(SITE_ID, StatsPeriod.Last7Days) }
+        // Signing out empties the cache while the card is still fetching. Storing the result now
+        // would hand the next account to sign in the numbers this one was looking at.
+        cache.clear()
+        advanceUntilIdle()
+        fetch.join()
+
+        assertThat(repository.isCached(StatsCacheBucket.CLICKS, SITE_ID, StatsPeriod.Last7Days)).isFalse()
+    }
     // endregion
 
     private suspend fun stubClicks() {
@@ -420,6 +439,7 @@ class StatsRepositoryCacheTest : BaseUnitTest() {
 
         // Every comparison endpoint fetches the selected window and the one before it.
         private const val WINDOWS_PER_FETCH = 2
+        private const val REQUEST_MS = 1_000L
         private const val PERIOD_LABEL = "2026-10-01"
         private val TODAY = LocalDate.of(2026, 10, 5)
         private val UTM_SOURCE_MEDIUM_KEYS = listOf("utm_source", "utm_medium")

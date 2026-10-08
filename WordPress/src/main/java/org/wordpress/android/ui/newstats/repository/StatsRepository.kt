@@ -177,10 +177,14 @@ class StatsRepository @Inject constructor(
         if (!forceRefresh) {
             statsResultCache.get<T>(key)?.let { return it }
         }
+        // Read before the fetch: if the cache is emptied while this one is in flight — a
+        // pull-to-refresh, or a sign-out — the result belongs to a cache that no longer exists and
+        // put() drops it instead of writing it back.
+        val generation = statsResultCache.currentGeneration
         val gate = CacheGate()
         val result = fetch(gate)
         return if (gate.isComplete) {
-            result.also { if (isCacheable(it)) statsResultCache.put(key, it) }
+            result.also { if (isCacheable(it)) statsResultCache.put(key, it, generation) }
         } else {
             statsResultCache.get<T>(key) ?: result
         }

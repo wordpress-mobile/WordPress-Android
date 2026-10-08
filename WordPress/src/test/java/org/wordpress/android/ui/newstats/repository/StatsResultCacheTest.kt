@@ -111,6 +111,28 @@ class StatsResultCacheTest {
     }
 
     @Test
+    fun `given a fetch that started before clear, when it is stored, then it is dropped`() {
+        val generation = cache.currentGeneration
+
+        // Signing out empties the cache while a request is still in flight: its result belongs to the
+        // account that just signed out, so storing it would undo the clear.
+        cache.clear()
+        cache.put(key(StatsPeriod.Last7Days), "value", generation)
+
+        assertThat(cache.isCached(key(StatsPeriod.Last7Days))).isFalse()
+    }
+
+    @Test
+    fun `given a fetch that started after clear, when it is stored, then it is kept`() {
+        cache.clear()
+        val generation = cache.currentGeneration
+
+        cache.put(key(StatsPeriod.Last7Days), "value", generation)
+
+        assertThat(cache.get<String>(key(StatsPeriod.Last7Days))).isEqualTo("value")
+    }
+
+    @Test
     fun `given a stored value, then a different site, period, day or variant does not match it`() {
         cache.put(key(StatsPeriod.Last7Days), "value")
 

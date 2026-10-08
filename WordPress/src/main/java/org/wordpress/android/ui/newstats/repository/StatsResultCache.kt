@@ -3,6 +3,7 @@ package org.wordpress.android.ui.newstats.repository
 import org.wordpress.android.ui.newstats.StatsPeriod
 import java.time.LocalDate
 import java.util.Collections
+import java.util.concurrent.atomic.AtomicLong
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -77,6 +78,15 @@ class StatsResultCache @Inject constructor() {
     private val buckets: Map<StatsCacheBucket, MutableMap<StatsCacheKey, Entry>> =
         StatsCacheBucket.entries.associateWith { newLruMap(it.capacity) }
 
+    private val generation = AtomicLong()
+
+    /**
+     * Identifies the contents the cache is holding right now. [clear] moves it on, so a fetch that
+     * reads it before going to the network can tell, when it comes back, whether the cache it was
+     * about to write into is still the one it started from.
+     */
+    val currentGeneration: Long get() = generation.get()
+
     /** The cached result for [key], or null when there is none. */
     @Suppress("UNCHECKED_CAST")
     fun <T : Any> get(key: StatsCacheKey): T? {
@@ -84,8 +94,16 @@ class StatsResultCache @Inject constructor() {
         return entry.value as T
     }
 
-    /** Stores [value]. It came off the network, so it counts as revalidated for this session. */
-    fun put(key: StatsCacheKey, value: Any) {
+    /**
+     * Stores [value]. It came off the network, so it counts as revalidated for this session.
+     *
+     * [generation] is the value [currentGeneration] had when the fetch started. A result that was
+     * already in flight when the cache was emptied is dropped rather than stored: on sign-out it
+     * belongs to the account that just signed out, and storing it would undo the [clear] that
+     * sign-out performs.
+     */
+    fun put(key: StatsCacheKey, value: Any, generation: Long = currentGeneration) {
+        if (generation != currentGeneration) return
         buckets.getValue(key.bucket)[key] = Entry(value, isRevalidated = true)
     }
 
@@ -120,6 +138,8 @@ class StatsResultCache @Inject constructor() {
      * empty the cache before it dispatches the refetches, and a coroutine hop there would race them.
      */
     fun clear() {
+        // Moved on first, so a result landing while the buckets are being emptied is already stale.
+        generation.incrementAndGet()
         buckets.values.forEach { it.clear() }
     }
 
