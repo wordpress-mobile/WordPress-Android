@@ -127,7 +127,7 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
 
         weeklyRoundupNotifier.onNotificationsShown(notifications)
 
-        verify(notificationsTracker, times(numberOfNotifications)).trackShownNotification(WEEKLY_ROUNDUP)
+        verify(notificationsTracker, times(numberOfNotifications)).trackShownNotification(WEEKLY_ROUNDUP, null)
     }
 
     @Test

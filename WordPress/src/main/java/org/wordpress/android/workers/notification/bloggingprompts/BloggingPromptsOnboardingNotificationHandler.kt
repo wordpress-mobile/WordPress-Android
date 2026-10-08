@@ -42,6 +42,6 @@ class BloggingPromptsOnboardingNotificationHandler @Inject constructor(
     }
 
     override fun onNotificationShown() {
-        notificationsTracker.trackShownNotification(BLOGGING_PROMPTS_ONBOARDING)
+        notificationsTracker.trackShownNotification(BLOGGING_PROMPTS_ONBOARDING, blogId = null)
     }
 }

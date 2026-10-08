@@ -479,12 +479,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         (application as WordPress).component().inject(this)
         initializeViewModels()
 
-        // Track if this editor launch came via EditorLauncher (only on initial creation)
-        if (savedInstanceState == null
-            && intent.getBooleanExtra(EditorLauncher.EXTRA_LAUNCHED_VIA_EDITOR_LAUNCHER, false)) {
-            analyticsTrackerWrapper.track(Stat.EDITOR_LAUNCHED_VIA_EDITOR_LAUNCHER)
-        }
-
         setContentView(R.layout.new_edit_post_activity)
 
         // Handle edge-to-edge with IME insets for keyboard management
@@ -508,6 +502,13 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT)
             finish()
             return
+        }
+
+        // Track if this editor launch came via EditorLauncher (only on initial creation). Tracked after the site
+        // is resolved so the event carries the site it was launched for.
+        if (savedInstanceState == null
+            && intent.getBooleanExtra(EditorLauncher.EXTRA_LAUNCHED_VIA_EDITOR_LAUNCHER, false)) {
+            analyticsTrackerWrapper.track(Stat.EDITOR_LAUNCHED_VIA_EDITOR_LAUNCHER, siteModel)
         }
 
         if (shouldRequireApplicationPassword()) {
@@ -1256,7 +1257,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     override fun onPause() {
         super.onPause()
         EventBus.getDefault().unregister(this)
-        AnalyticsTracker.track(Stat.EDITOR_CLOSED)
+        analyticsTrackerWrapper.track(Stat.EDITOR_CLOSED, siteModel)
     }
 
     override fun onStop() {
@@ -2232,6 +2233,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 ),
                 isNetworkLoggingEnabled = AppPrefs.isTrackNetworkRequestsEnabled(),
                 post = post,
+                source = GutenbergKitSettingsBuilder.ConfigSource.EDITOR,
             )
         }
 

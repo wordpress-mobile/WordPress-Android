@@ -45,6 +45,6 @@ class BloggingPromptsOnboardingNotificationHandlerTest {
     @Test
     fun `Should track notification shown when onNotificationShown is called`() {
         classToTest.onNotificationShown()
-        verify(systemNotificationsTracker).trackShownNotification(BLOGGING_PROMPTS_ONBOARDING)
+        verify(systemNotificationsTracker).trackShownNotification(BLOGGING_PROMPTS_ONBOARDING, null)
     }
 }
