@@ -265,13 +265,17 @@ class NewStatsActivity : BaseAppCompatActivity() {
     }
 
     private fun openPostDetailStats(item: MostViewedItem) {
-        analyticsTracker.track(Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED)
+        analyticsTracker.track(
+            Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED,
+            selectedSiteRepository.getSelectedSite()
+        )
         PostStatsDetailActivity.start(this, item.id, item.title)
     }
 
     private fun openLatestPostStats(postId: Long, title: String) {
         analyticsTracker.track(
-            Stat.STATS_LATEST_POST_SUMMARY_VIEW_POST_DETAILS_TAPPED
+            Stat.STATS_LATEST_POST_SUMMARY_VIEW_POST_DETAILS_TAPPED,
+            selectedSiteRepository.getSelectedSite()
         )
         PostStatsDetailActivity.start(this, postId, title)
     }
@@ -306,7 +310,7 @@ class NewStatsActivity : BaseAppCompatActivity() {
      * finishing this activity straight away would tear the dialog down with it.
      */
     private fun switchToOldStats() {
-        analyticsTracker.track(Stat.STATS_NEW_STATS_DISABLED)
+        analyticsTracker.track(Stat.STATS_NEW_STATS_DISABLED, selectedSiteRepository.getSelectedSite())
         newStatsRouting.optOut()
     }
 

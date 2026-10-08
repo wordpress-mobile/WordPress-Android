@@ -132,6 +132,6 @@ class CreateSiteNotificationHandlerTest {
     fun `should track notification shown`() {
         createSiteNotificationHandler.onNotificationShown()
 
-        verify(notificationsTracker).trackShownNotification(CREATE_SITE)
+        verify(notificationsTracker).trackShownNotification(CREATE_SITE, null)
     }
 }

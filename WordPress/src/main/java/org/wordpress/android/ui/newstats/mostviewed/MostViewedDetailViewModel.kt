@@ -9,6 +9,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
@@ -56,6 +57,13 @@ class MostViewedDetailViewModel @Inject constructor(
      * fetch fails with an auth error (mirrors the cards and the UTM detail screen).
      */
     fun getAdminUrl(): String? = selectedSiteRepository.getSelectedSite()?.adminUrl
+
+    /**
+     * The site this detail screen belongs to, so its Tracks events can carry a blog_id. New Stats
+     * always selects the site it was opened for before rendering, so the selected site is the
+     * viewed one.
+     */
+    fun getSite(): SiteModel? = selectedSiteRepository.getSelectedSite()
 
     private fun fetch() {
         val source = source
