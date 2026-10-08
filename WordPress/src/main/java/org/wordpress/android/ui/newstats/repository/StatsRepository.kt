@@ -63,7 +63,6 @@ private const val WEEKLY_QUANTITY = 7
 private const val DAYS_BEFORE_END_DATE = -6
 private const val DAYS_IN_7_DAYS = 7
 private const val DAYS_IN_30_DAYS = 30
-private const val DAYS_IN_12_MONTHS = 365
 private const val MONTHS_IN_12_MONTHS = 12
 private const val MAX_DAYS_IN_MONTH = 31
 private const val MAX_DAYS_IN_2_YEARS = 731
@@ -810,19 +809,30 @@ class StatsRepository @Inject constructor(
      * The API `start_date` for a window starting at [start] at [unit], or null when the window must not
      * send one.
      *
-     * Only YEAR windows send it. Without a `start_date` the API does not anchor its year buckets to the
-     * requested window, so a range over two years comes back with the wrong buckets and every number on
-     * the card — chart, header total, % change and bottom row alike — is wrong. Sending the window's own
-     * real start also truncates its first bucket to the range actually asked for, which is what keeps
-     * the current and previous totals comparable: each then covers exactly its own day span. This
-     * mirrors the web app, which requests `unit=year&date=<end>&start_date=<start>&quantity=<n>`.
+     * MONTH and YEAR windows send it; this is what the web app does
+     * (`unit=month&date=<end>&start_date=<start>&quantity=<n>`), and for the same two reasons.
      *
-     * DAY and MONTH windows deliberately send none: they are already correct from unit + quantity +
-     * endDate, and a mid-bucket start_date there truncates the first bucket's `views` (an additive
-     * metric) while leaving `visitors` (a per-bucket unique) at the full-bucket value.
+     * It anchors the buckets: without a start the API does not tie its year buckets to the requested
+     * window, so a range over two years comes back with the wrong buckets and every number on the card
+     * — chart, header total, % change and bottom row alike — is wrong.
+     *
+     * It also truncates the window's first bucket to the range actually asked for. A Custom range
+     * picked as 11 Feb – 7 Oct is nine month buckets either way, but without a start the February
+     * bucket arrives whole and the card silently reports from the 1st — ten days the user did not ask
+     * for, and ten days the list cards (which always send their own start) exclude. The same
+     * truncation is what keeps the current and previous totals comparable: each then covers exactly
+     * its own day span.
+     *
+     * The caveat is that truncating a bucket is exact for additive metrics (`views`) but not for
+     * per-bucket uniques (`visitors`), which can come back at their full-bucket value. The web app
+     * requests `views` and `visitors` together with a mid-bucket start and accepts the same, so this
+     * matches rather than diverges from it.
+     *
+     * DAY and HOUR windows send none: their buckets are never partial, so unit + quantity + endDate
+     * already pins the window exactly.
      */
     private fun apiStartDateOrNull(start: LocalDate, unit: StatsUnit): String? =
-        if (unit == StatsUnit.YEAR) start.format(dateFormatter) else null
+        if (unit == StatsUnit.MONTH || unit == StatsUnit.YEAR) start.format(dateFormatter) else null
 
     /**
      * Fetches the bottom-row totals from a dedicated call, for the single-day periods only: Today and a
@@ -899,9 +909,8 @@ class StatsRepository @Inject constructor(
      * cannot accidentally share one window's quantity — they can span different bucket counts.
      *
      * The request mirrors the chart's [fetchStatsForPeriod] exactly, [apiStartDateOrNull] included: a
-     * DAY or MONTH window is defined by unit + quantity + endDate alone, because a mid-bucket startDate
-     * there makes the API truncate the first bucket's views (an additive metric) while leaving visitors
-     * (a per-bucket unique) at the full-bucket value. A YEAR window must send its start.
+     * DAY or HOUR window is defined by unit + quantity + endDate alone, while a MONTH or YEAR window
+     * must send its start so the API anchors and truncates its buckets to the window asked for.
      */
     @Suppress("TooGenericExceptionCaught")
     private suspend fun fetchBottomStatsVisits(
@@ -1156,12 +1165,11 @@ class StatsRepository @Inject constructor(
     }
 
     /**
-     * The immediately-preceding window that mirrors [start]..[end]'s exact day span. Used only where
-     * the chart itself compares against an exact day span (Today and Custom): for those paths the day
-     * boundaries line up with the chart, so the Views % change stays consistent. Standard month-unit
-     * periods instead align the previous window to whole months via [previousWindowForConfig], matching
-     * the chart — a day-span mirror there would produce a different previous window and a contradictory
-     * % change.
+     * The immediately-preceding window that mirrors [start]..[end]'s exact day span, ending the day
+     * before [start]. Used only where the chart itself compares against an exact day span (Today and
+     * Custom): for those paths the day boundaries line up with the chart, so the Views % change stays
+     * consistent. The fixed-span presets instead step both endpoints back by whole bucket units via
+     * [previousWindowForConfig] — the same day span, but aligned to the buckets the chart plots.
      *
      * The mirror preserves the day span, so [unitAndQuantityFor] always resolves it to the same unit as
      * the window it mirrors — but not necessarily to the same bucket count, so its quantity must be
@@ -1175,13 +1183,27 @@ class StatsRepository @Inject constructor(
     }
 
     /**
-     * The previous window aligned to whole [PeriodConfig.dateUnit] steps (the chart's rule in
-     * [calculatePeriodDates]): the previous window ends one unit before [currentStart] and spans
-     * `quantity` units back. Shared so the chart and the bottom-row totals derive it identically.
+     * The window immediately before [currentStart]..[currentEnd], stepped back by the period's whole
+     * span — `quantity` [PeriodConfig.dateUnit] steps — at *both* endpoints. Shared with
+     * [calculateComparisonDateRanges] so the chart and the list cards derive it identically.
+     *
+     * Moving both endpoints by the same amount is what keeps the two totals comparable: the previous
+     * window then covers the same number of days as the current one, and its last bucket is cut at the
+     * same day of the month. Anchoring the end to [currentStart] instead — the day before it, or a
+     * whole unit before it — makes a month-granular previous window a full twelve months against a
+     * current window that only reaches today, so a site with flat traffic reads a steady loss (−8% on
+     * the 1st of a month, falling to 0% on its last day) on the Views card and on every list card.
+     *
+     * Day-unit windows are untouched by the choice: `currentEnd − quantity days` and
+     * `currentStart − 1 day` are the same date when the window spans `quantity` days.
      */
-    private fun previousWindowForConfig(currentStart: LocalDate, config: PeriodConfig): Pair<LocalDate, LocalDate> {
-        val previousEnd = subtractFromDate(currentStart, 1, config.dateUnit)
-        val previousStart = subtractFromDate(previousEnd, config.quantity - 1, config.dateUnit)
+    private fun previousWindowForConfig(
+        currentStart: LocalDate,
+        currentEnd: LocalDate,
+        config: PeriodConfig
+    ): Pair<LocalDate, LocalDate> {
+        val previousStart = subtractFromDate(currentStart, config.quantity, config.dateUnit)
+        val previousEnd = subtractFromDate(currentEnd, config.quantity, config.dateUnit)
         return previousStart to previousEnd
     }
 
@@ -1200,10 +1222,10 @@ class StatsRepository @Inject constructor(
 
         val config = getPeriodConfig(period)
         val (currentStart, currentEnd) = currentWindow
-        val (previousStart, previousEnd) = previousWindowForConfig(currentStart, config)
+        val (previousStart, previousEnd) = previousWindowForConfig(currentStart, currentEnd, config)
 
-        // [previousWindowForConfig] spans exactly config.quantity units back, so both windows request
-        // the same number of buckets by construction.
+        // [previousWindowForConfig] steps both endpoints exactly config.quantity units back, so both
+        // windows request the same number of buckets, and cover the same day span, by construction.
         return PeriodDateRange(
             currentStart = currentStart,
             currentEnd = currentEnd,
@@ -1352,7 +1374,13 @@ class StatsRepository @Inject constructor(
             is StatsPeriod.Today -> today to today
             is StatsPeriod.Last7Days -> today.minusDays((DAYS_IN_7_DAYS - 1).toLong()) to today
             is StatsPeriod.Last30Days -> today.minusDays((DAYS_IN_30_DAYS - 1).toLong()) to today
-            is StatsPeriod.Last12Months -> today.minusMonths((MONTHS_IN_12_MONTHS - 1).toLong()) to today
+            // Twelve whole month buckets ending with the current month. That is what the API returns
+            // for the chart's `unit=month&quantity=12&date=<today>` request, and the window web and iOS
+            // ask for explicitly (`start_date` = the 1st of the month eleven months back). Starting it
+            // eleven months back *from today* instead would describe a window nobody fetches, and the
+            // list cards — which do send their own start — would cover a different range from the chart.
+            is StatsPeriod.Last12Months ->
+                today.minusMonths((MONTHS_IN_12_MONTHS - 1).toLong()).withDayOfMonth(1) to today
             // Calendar-aligned windows run from the start of the current week/month/year up to today.
             is StatsPeriod.ThisWeek ->
                 today.with(TemporalAdjusters.previousOrSame(firstDayOfWeek())) to today
@@ -1424,8 +1452,9 @@ class StatsRepository @Inject constructor(
         // Daily up to a full month (31 days), monthly up to two years, yearly beyond. Coarsening the
         // chart to YEAR past two years (the same rule the bottom-row totals use) keeps the chart and
         // the bottom row on one unit, so the header's Views and the bottom row's Views — and their
-        // visitor de-duplication — always agree for long Custom ranges. A YEAR window also sends its
-        // own start to the API (see [apiStartDateOrNull]).
+        // visitor de-duplication — always agree for long Custom ranges. A coarsened window also sends
+        // its own start to the API, so it still covers the picked days and not whole buckets (see
+        // [apiStartDateOrNull]).
         val (unit, currentQuantity) = unitAndQuantityFor(startDate, endDate)
         val (previousStart, previousEnd) = previousWindowMirror(startDate, endDate)
         val (_, previousQuantity) = unitAndQuantityFor(previousStart, previousEnd)
@@ -1670,8 +1699,9 @@ class StatsRepository @Inject constructor(
                 StatsDateRange.Preset(num = DAYS_IN_7_DAYS, date = todayString)
             is StatsPeriod.Last30Days ->
                 StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = todayString)
-            is StatsPeriod.Last12Months ->
-                StatsDateRange.Preset(num = DAYS_IN_12_MONTHS, date = todayString)
+            // Last 12 Months sends its window rather than a day count: it is twelve whole month
+            // buckets, which no `num` describes. See [currentPeriodWindow].
+            is StatsPeriod.Last12Months,
             is StatsPeriod.ThisWeek,
             is StatsPeriod.ThisMonth,
             is StatsPeriod.ThisYear -> {
@@ -1709,10 +1739,22 @@ class StatsRepository @Inject constructor(
                 StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = todayString) to
                     StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = previousEndString)
             }
+            // Twelve whole month buckets, compared against the same window twelve months earlier — the
+            // windows the chart fetches, derived from the chart's own rules ([currentPeriodWindow] and
+            // [previousWindowForConfig]) so the two cannot drift apart. A rolling `num=365` would put
+            // this card on a window three weeks longer than the chart above it, and longer than the one
+            // web and iOS report.
             is StatsPeriod.Last12Months -> {
-                val previousEndString = today.minusDays(DAYS_IN_12_MONTHS.toLong()).format(dateFormatter)
-                StatsDateRange.Preset(num = DAYS_IN_12_MONTHS, date = todayString) to
-                    StatsDateRange.Preset(num = DAYS_IN_12_MONTHS, date = previousEndString)
+                val (start, end) = currentPeriodWindow(period)
+                val (previousStart, previousEnd) =
+                    previousWindowForConfig(start, end, getPeriodConfig(period))
+                StatsDateRange.Custom(
+                    startDate = start.format(dateFormatter),
+                    date = end.format(dateFormatter)
+                ) to StatsDateRange.Custom(
+                    startDate = previousStart.format(dateFormatter),
+                    date = previousEnd.format(dateFormatter)
+                )
             }
             is StatsPeriod.ThisWeek,
             is StatsPeriod.ThisMonth,
