@@ -119,7 +119,7 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
     }
 
     private fun openPostDetailStats(item: MostViewedDetailItem) {
-        analyticsTracker.track(Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED)
+        analyticsTracker.track(Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED, viewModel.getSite())
         PostStatsDetailActivity.start(this, item.id, item.title)
     }
 
