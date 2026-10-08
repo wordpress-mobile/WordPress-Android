@@ -79,6 +79,24 @@ class MostViewedDetailViewModel @Inject constructor(
         _uiState.value = MostViewedDetailUiState.Loading
         viewModelScope.launch {
             _uiState.value = fetchDetail(source, site.siteId, period)
+            revalidateIfNeeded(source, site.siteId, period)
+        }
+    }
+
+    /**
+     * Refreshes a list served from an earlier visit to the stats screen, once. The screen already
+     * shows it, so this runs without a loading state and only applies a successful result — a
+     * failed refresh leaves the list in place rather than replacing it with an error.
+     */
+    private suspend fun revalidateIfNeeded(
+        source: MostViewedDetailSource,
+        siteId: Long,
+        period: StatsPeriod
+    ) {
+        if (!detailFetcher.needsRevalidation(source, siteId, period)) return
+        val refreshed = fetchDetail(source, siteId, period, forceRefresh = true)
+        if (refreshed is MostViewedDetailUiState.Loaded) {
+            _uiState.value = refreshed
         }
     }
 
@@ -86,10 +104,11 @@ class MostViewedDetailViewModel @Inject constructor(
     private suspend fun fetchDetail(
         source: MostViewedDetailSource,
         siteId: Long,
-        period: StatsPeriod
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
     ): MostViewedDetailUiState =
         try {
-            when (val result = detailFetcher.fetch(source, siteId, period)) {
+            when (val result = detailFetcher.fetch(source, siteId, period, forceRefresh)) {
                 is StatsCardFetchResult.Success -> MostViewedDetailUiState.Loaded(
                     items = result.items,
                     maxViewsForBar = result.items.firstOrNull()?.views ?: 0L,

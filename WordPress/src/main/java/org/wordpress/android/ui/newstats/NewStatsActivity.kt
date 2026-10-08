@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -172,6 +173,10 @@ class NewStatsActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var activityNavigator: ActivityNavigator
 
+    // The same instance the composables below obtain with viewModel(): both resolve against this
+    // activity's ViewModelStore.
+    private val newStatsViewModel: NewStatsViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // New Stats always shows the currently selected site, so when launched for a specific
@@ -226,6 +231,14 @@ class NewStatsActivity : BaseAppCompatActivity() {
                 )
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Coming back counts as entering the screen, including after hours in the background: what
+        // the cards still hold in memory may no longer be current, so each one refreshes it once the
+        // next time it loads.
+        newStatsViewModel.onScreenEntered()
     }
 
     /**
@@ -824,6 +837,9 @@ private fun TrafficTabContent(
         isRefreshing = isRefreshing,
         state = pullToRefreshState,
         onRefresh = {
+            // Empty the cache first, synchronously: the refreshes dispatched below must all reach the
+            // network, and a coroutine hop here would race them.
+            newStatsViewModel.invalidateStatsCache()
             newStatsViewModel.checkNetworkStatus()
             visibleCards.dispatchToVisibleCards(
                 onTodaysStats = { todaysStatsViewModel.refresh() },

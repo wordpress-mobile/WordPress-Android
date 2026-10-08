@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.HourlyViewsDataPoint
 import org.wordpress.android.ui.newstats.repository.HourlyViewsResult
+import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.TodayAggregatesResult
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -23,7 +24,9 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
+private const val CURRENT_PERIOD_OFFSET_DAYS = 0
 private const val PREVIOUS_PERIOD_OFFSET_DAYS = 1
 
 @HiltViewModel
@@ -54,7 +57,7 @@ class TodaysStatsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _isRefreshing.value = true
-                loadDataInternal(site)
+                loadDataInternal(site, forceRefresh = true)
             } finally {
                 _isRefreshing.value = false
             }
@@ -86,24 +89,64 @@ class TodaysStatsViewModel @Inject constructor(
             return
         }
 
-        _uiState.value = TodaysStatsCardUiState.Loading
+        // Today's numbers already in memory repaint in the same frame, so the placeholder would
+        // only flash a skeleton over data the card is about to render anyway.
+        if (!isCached(site)) {
+            _uiState.value = TodaysStatsCardUiState.Loading
+        }
 
         viewModelScope.launch {
             try {
                 loadDataInternal(site)
+                revalidateIfNeeded(site)
             } finally {
                 isLoading = false
             }
         }
     }
 
+    /**
+     * Whether everything this card shows is already in memory: the aggregates row, plus both of the
+     * hourly windows the sparkline is drawn from. All three are cached separately and can fail
+     * separately, so checking only the aggregates would let a load serve an older visit's sparkline
+     * under refreshed totals.
+     */
+    private fun isCached(site: SiteModel): Boolean =
+        statsRepository.isCached(StatsCacheBucket.TODAY_AGGREGATES, site.siteId) &&
+            statsRepository.isHourlyViewsCached(site.siteId, CURRENT_PERIOD_OFFSET_DAYS) &&
+            statsRepository.isHourlyViewsCached(site.siteId, PREVIOUS_PERIOD_OFFSET_DAYS)
+
+    /**
+     * Refreshes numbers served from a previous visit to the stats screen, once. The card already
+     * shows them, so this runs without a loading state and keeps them if it fails. Any one of the
+     * three entries being stale refreshes all of them, since one load fetches all three.
+     */
+    private suspend fun revalidateIfNeeded(site: SiteModel) {
+        val needsRevalidation =
+            statsRepository.needsRevalidation(StatsCacheBucket.TODAY_AGGREGATES, site.siteId) ||
+                statsRepository.hourlyViewsNeedsRevalidation(
+                    site.siteId, CURRENT_PERIOD_OFFSET_DAYS
+                ) ||
+                statsRepository.hourlyViewsNeedsRevalidation(
+                    site.siteId, PREVIOUS_PERIOD_OFFSET_DAYS
+                )
+        if (!needsRevalidation) return
+        loadDataInternal(site, forceRefresh = true, applyErrors = false)
+    }
+
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadDataInternal(site: SiteModel) {
+    private suspend fun loadDataInternal(
+        site: SiteModel,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
+    ) {
         try {
             // Fetch all data in parallel for better performance
             val (todayStats, chartData) = coroutineScope {
-                val todayStatsDeferred = async { fetchTodayStats(site) }
-                val chartDataDeferred = async { fetchChartData(site) }
+                val todayStatsDeferred = async { fetchTodayStats(site, forceRefresh) }
+                val chartDataDeferred = async {
+                    fetchChartData(site, forceRefresh, keepShownOnFailure = !applyErrors)
+                }
                 todayStatsDeferred.await() to chartDataDeferred.await()
             }
 
@@ -116,13 +159,16 @@ class TodaysStatsViewModel @Inject constructor(
                     comments = todayStats.comments,
                     chartData = chartData
                 )
-            } else {
+            } else if (applyErrors) {
                 _uiState.value = TodaysStatsCardUiState.Error(
                     message = resourceProvider.getString(R.string.stats_error_api),
                     onRetry = ::loadData
                 )
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
+            if (!applyErrors) return
             _uiState.value = TodaysStatsCardUiState.Error(
                 message = e.message ?: resourceProvider.getString(R.string.stats_error_unknown),
                 onRetry = ::loadData
@@ -130,8 +176,8 @@ class TodaysStatsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchTodayStats(site: SiteModel): TodayStatsData? {
-        val result = statsRepository.fetchTodayAggregates(site.siteId)
+    private suspend fun fetchTodayStats(site: SiteModel, forceRefresh: Boolean): TodayStatsData? {
+        val result = statsRepository.fetchTodayAggregates(site.siteId, forceRefresh)
         return when (result) {
             is TodayAggregatesResult.Success -> {
                 TodayStatsData(
@@ -145,31 +191,52 @@ class TodaysStatsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchChartData(site: SiteModel): ChartData = coroutineScope {
+    /**
+     * With [keepShownOnFailure] a window that fails keeps whatever the card is already showing for
+     * it, so a silent background revalidation can never blank a sparkline it is unable to replace.
+     *
+     * Only that path passes it. A load the user asked for renders a failed window as an empty series,
+     * as the card has always done: keeping the old one there would put yesterday's hours under
+     * today's label once the day rolls over, and refreshed totals over a sparkline that was not
+     * refreshed with them.
+     */
+    private suspend fun fetchChartData(
+        site: SiteModel,
+        forceRefresh: Boolean,
+        keepShownOnFailure: Boolean
+    ): ChartData = coroutineScope {
         // Fetch both periods in parallel
-        val currentPeriodDeferred = async { fetchHourlyData(site, offsetDays = 0) }
+        val currentPeriodDeferred = async {
+            fetchHourlyData(site, CURRENT_PERIOD_OFFSET_DAYS, forceRefresh)
+        }
         val previousPeriodDeferred = async {
-            fetchHourlyData(site, offsetDays = PREVIOUS_PERIOD_OFFSET_DAYS)
+            fetchHourlyData(site, PREVIOUS_PERIOD_OFFSET_DAYS, forceRefresh)
         }
 
+        val shown = (_uiState.value as? TodaysStatsCardUiState.Loaded)
+            ?.chartData
+            ?.takeIf { keepShownOnFailure }
         ChartData(
-            currentPeriod = currentPeriodDeferred.await(),
-            previousPeriod = previousPeriodDeferred.await()
+            currentPeriod = currentPeriodDeferred.await() ?: shown?.currentPeriod ?: emptyList(),
+            previousPeriod = previousPeriodDeferred.await() ?: shown?.previousPeriod ?: emptyList()
         )
     }
 
+    /** Null on failure, so a failed window is distinguishable from a day with no views. */
     private suspend fun fetchHourlyData(
         site: SiteModel,
-        offsetDays: Int
-    ): List<ViewsDataPoint> {
+        offsetDays: Int,
+        forceRefresh: Boolean
+    ): List<ViewsDataPoint>? {
         val result = statsRepository.fetchHourlyViews(
             siteId = site.siteId,
-            offsetDays = offsetDays
+            offsetDays = offsetDays,
+            forceRefresh = forceRefresh
         )
 
         return when (result) {
             is HourlyViewsResult.Success -> {
-                val dataPoints = if (offsetDays == 0) {
+                val dataPoints = if (offsetDays == CURRENT_PERIOD_OFFSET_DAYS) {
                     trimFutureHours(result.dataPoints)
                 } else {
                     result.dataPoints
@@ -181,7 +248,7 @@ class TodaysStatsViewModel @Inject constructor(
                     )
                 }
             }
-            is HourlyViewsResult.Error -> emptyList()
+            is HourlyViewsResult.Error -> null
         }
     }
 
