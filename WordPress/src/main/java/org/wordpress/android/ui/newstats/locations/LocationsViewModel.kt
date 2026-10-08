@@ -23,6 +23,7 @@ import org.wordpress.android.ui.newstats.repository.RegionViewItemData
 import org.wordpress.android.ui.newstats.repository.RegionViewsResult
 import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.ui.newstats.util.statsUpgradeUrl
 import org.wordpress.android.ui.newstats.util.toDateRangeString
 import org.wordpress.android.ui.newstats.components.StatsViewChange
 import org.wordpress.android.util.AppLog
@@ -202,6 +203,9 @@ class LocationsViewModel @Inject constructor(
     fun getAdminUrl(): String? =
         selectedSiteRepository.getSelectedSite()?.adminUrl
 
+    fun getUpgradeUrl(): String? =
+        selectedSiteRepository.getSelectedSite()?.statsUpgradeUrl()
+
     fun onPeriodChanged(period: StatsPeriod) {
         if (period == currentPeriod &&
             isTypeLoadedForCurrentPeriod(_selectedLocationType.value)
@@ -371,7 +375,8 @@ class LocationsViewModel @Inject constructor(
                     _countriesUiState.value =
                         LocationsCardUiState.Error(
                             result.messageResId,
-                            result.isAuthError
+                            result.isAuthError,
+                            result.isPlanGated
                         )
                 }
             }
@@ -460,7 +465,8 @@ class LocationsViewModel @Inject constructor(
                     _regionsUiState.value =
                         LocationsCardUiState.Error(
                             result.messageResId,
-                            result.isAuthError
+                            result.isAuthError,
+                            result.isPlanGated
                         )
                 }
             }
@@ -544,7 +550,8 @@ class LocationsViewModel @Inject constructor(
                     _citiesUiState.value =
                         LocationsCardUiState.Error(
                             result.messageResId,
-                            result.isAuthError
+                            result.isAuthError,
+                            result.isPlanGated
                         )
                 }
             }

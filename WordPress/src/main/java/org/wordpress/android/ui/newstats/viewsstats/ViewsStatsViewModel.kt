@@ -89,10 +89,16 @@ class ViewsStatsViewModel @Inject constructor(
 
     private var currentChartType: ChartType = restoreChartTypeFromSavedState()
 
-    // The user's persisted metric preference. On single-day periods a non-views selection shows the
-    // "hourly data not available" empty state instead of a chart (see [chartAvailableFor]); the
-    // preference is kept so the chart returns when the user goes back to a multi-day period.
+    // The user's persisted metric preference. It isn't necessarily what the chart plots: on single-day
+    // periods only views has an hourly series, so the chart falls back to it (see [chartedMetric]) while
+    // this preference is kept untouched, so the chart returns to it on the next multi-day period.
     private var currentSelectedMetric: StatsMetric = restoreMetricFromSavedState()
+
+    // Whether [currentSelectedMetric] was picked while on [currentPeriod], as opposed to carried in from
+    // an earlier one. Only a carried-in preference is overridden by the views fallback, so a deliberate
+    // tap on a metric this period can't chart still gets that metric's own empty state. Reset on every
+    // period change: the fallback has to be re-evaluated for the period the user just moved to.
+    private var metricPickedOnCurrentPeriod = false
 
     // The last successful chart result for the current period, cached so a metric switch can re-plot
     // the chart from data already in memory, without a new network call.
@@ -202,6 +208,8 @@ class ViewsStatsViewModel @Inject constructor(
         // whole-period header/bottom) so no stale overlay survives into the reload.
         clearSoftSelection()
         currentPeriod = period
+        // The pick belonged to the period being left, so it no longer suppresses the fallback here.
+        metricPickedOnCurrentPeriod = false
         if (!keepOrigin) periodOrigin = period
         // Drop the previous period's cached chart result so a metric switch mid-load can't re-plot from
         // stale data or evaluate availability against the wrong period; it is repopulated on next load.
@@ -419,13 +427,23 @@ class ViewsStatsViewModel @Inject constructor(
 
     /**
      * Selects a metric to chart and list. Re-plots the chart from the cached period result (no network
-     * call) and persists the choice. On single-day (hourly) periods only [StatsMetric.VIEWS] has a
-     * series, so selecting another metric shows the "hourly data not available" empty state rather than
-     * a chart — see [chartAvailableFor].
+     * call) and persists the choice. An explicit pick is always honoured, even on a single-day (hourly)
+     * period where only [StatsMetric.VIEWS] has a series: there the chart region shows the "no hourly
+     * data" state so the tap has a visible answer instead of appearing inert. That differs from merely
+     * *arriving* on such a period, which falls back to views — see [chartedMetric].
+     *
+     * Tapping the metric already on screen does nothing and persists nothing, so the stored preference
+     * only ever changes through a tap that visibly changes the card.
      */
     fun onMetricSelected(metric: StatsMetric) {
-        if (metric == currentSelectedMetric) return
+        // Tapping the metric the card already shows is a no-op, whether it is showing because the user
+        // chose it or because the views fallback stands in for something else. Comparing against the
+        // *stored preference* instead would let a tap on the highlighted Views tab through while the
+        // fallback is up: the rebuilt state is identical, so nothing would change on screen, but the
+        // user's real preference would be silently overwritten with views.
+        if (metric == chartedMetric()) return
         currentSelectedMetric = metric
+        metricPickedOnCurrentPeriod = true
         saveMetric(metric)
         val cached = lastChartResult
         _uiState.update { current ->
@@ -463,6 +481,23 @@ class ViewsStatsViewModel @Inject constructor(
     /** Whether the chart region currently shows plotted content (as opposed to loading/error). */
     private fun ChartUiState.isPlotted(): Boolean =
         this is ChartUiState.Loaded || this is ChartUiState.Unavailable
+
+    /**
+     * The metric the chart plots and the card labels itself with: the user's [currentSelectedMetric],
+     * except when a preference is *carried into* a single-day (hourly) period that has no series for it
+     * — there it falls back to [StatsMetric.VIEWS] rather than dropping the user on an empty state they
+     * never asked for (CMM-2472). The fallback is transient: the stored preference is untouched, so the
+     * chart returns to it as soon as the period spans more than a day.
+     *
+     * A pick made *while on* the period is not overridden ([metricPickedOnCurrentPeriod]); that tap gets
+     * the metric's own [ChartUiState.Unavailable] state, which explains why there is no chart.
+     */
+    private fun chartedMetric(): StatsMetric =
+        if (metricPickedOnCurrentPeriod || chartAvailableFor(currentSelectedMetric)) {
+            currentSelectedMetric
+        } else {
+            StatsMetric.VIEWS
+        }
 
     /**
      * Whether [metric] has a chartable series for [currentPeriod]. Every metric is chartable on
@@ -775,7 +810,7 @@ class ViewsStatsViewModel @Inject constructor(
                 _uiState.value = ViewsStatsCardUiState.Content(
                     chart = ChartUiState.Loading,
                     bottomStats = BottomStatsUiState.Loading,
-                    selectedMetric = currentSelectedMetric
+                    selectedMetric = chartedMetric()
                 )
             }
         }
@@ -1016,12 +1051,12 @@ class ViewsStatsViewModel @Inject constructor(
                 is ViewsStatsCardUiState.Content ->
                     current.copy(
                         chart = if (current.selectedBar != null) current.chart else chart,
-                        selectedMetric = currentSelectedMetric
+                        selectedMetric = chartedMetric()
                     )
                 else -> ViewsStatsCardUiState.Content(
                     chart = chart,
                     bottomStats = BottomStatsUiState.Loading,
-                    selectedMetric = currentSelectedMetric
+                    selectedMetric = chartedMetric()
                 )
             }
         }
@@ -1050,12 +1085,12 @@ class ViewsStatsViewModel @Inject constructor(
                         bottomStats = current.selectedBar
                             ?.let { buildSelectedBarBottom(it.index) ?: current.bottomStats }
                             ?: bottom,
-                        selectedMetric = currentSelectedMetric
+                        selectedMetric = chartedMetric()
                     )
                 else -> ViewsStatsCardUiState.Content(
                     chart = ChartUiState.Loading,
                     bottomStats = bottom,
-                    selectedMetric = currentSelectedMetric
+                    selectedMetric = chartedMetric()
                 )
             }
         }
@@ -1063,14 +1098,14 @@ class ViewsStatsViewModel @Inject constructor(
 
     /**
      * Builds the chart-region state for [result] and the current selection: the plotted chart when the
-     * selected metric has a series for this period, or [ChartUiState.Unavailable] when it doesn't (a
-     * non-views metric on a single-day/hourly period) — see [chartAvailableFor].
+     * charted metric has a series for this period, or [ChartUiState.Unavailable] when it doesn't (a
+     * non-views metric explicitly picked on a single-day/hourly period) — see [chartedMetric].
      */
     private fun buildChartState(result: PeriodStatsResult.Success): ChartUiState =
-        if (chartAvailableFor(currentSelectedMetric)) buildChartLoaded(result) else ChartUiState.Unavailable
+        if (chartAvailableFor(chartedMetric())) buildChartLoaded(result) else ChartUiState.Unavailable
 
     private fun buildChartLoaded(result: PeriodStatsResult.Success): ChartUiState.Loaded {
-        val metric = currentSelectedMetric
+        val metric = chartedMetric()
         val currentStats = result.currentAggregates
         val previousStats = result.previousAggregates
         val currentValue = currentStats.valueFor(metric)

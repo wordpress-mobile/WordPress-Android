@@ -2094,7 +2094,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given a single-day period with a persisted non-views metric, then the chart is unavailable`() = test {
+    fun `given a single-day period with a persisted non-views metric, then views is charted instead`() = test {
         whenever(cardsConfigurationRepository.getConfiguration(any()))
             .thenReturn(StatsCardsConfiguration(selectedMetric = "visitors"))
         whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
@@ -2114,11 +2114,13 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         viewModel.loadDataIfNeeded()
         advanceUntilIdle()
 
-        // The user's preference is preserved (so it returns on a multi-day period) but the hourly
-        // response has no visitors series, so the chart region shows the unavailable state.
+        // The hourly response has no visitors series, so the card falls back to charting views and says
+        // so through the metric selection, instead of leaving a dead end with no chart (CMM-2472).
         val content = viewModel.uiState.value as ViewsStatsCardUiState.Content
-        assertThat(content.selectedMetric).isEqualTo(StatsMetric.VISITORS)
-        assertThat(content.chart).isEqualTo(ChartUiState.Unavailable)
+        assertThat(content.selectedMetric).isEqualTo(StatsMetric.VIEWS)
+        assertThat(content.chart).isInstanceOf(ChartUiState.Loaded::class.java)
+        // The stored preference is untouched by the fallback.
+        verify(cardsConfigurationRepository, never()).saveConfiguration(any(), any())
     }
 
     @Test
@@ -2149,12 +2151,181 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         viewModel.onMetricSelected(StatsMetric.VISITORS)
         advanceUntilIdle()
 
-        // The selection is honored (and persisted) but there is no hourly visitors series to plot.
+        // An explicit pick is honored (and persisted) even though there is no hourly visitors series:
+        // the empty state answers the tap, rather than it looking like nothing happened.
         val content = viewModel.uiState.value as ViewsStatsCardUiState.Content
         assertThat(content.selectedMetric).isEqualTo(StatsMetric.VISITORS)
         assertThat(content.chart).isEqualTo(ChartUiState.Unavailable)
         verify(cardsConfigurationRepository)
             .saveConfiguration(any(), argThat { selectedMetric == "visitors" })
+    }
+
+    @Test
+    fun `given the views fallback, when the fallen-back metric is tapped, then the chart is unavailable`() = test {
+        whenever(cardsConfigurationRepository.getConfiguration(any()))
+            .thenReturn(StatsCardsConfiguration(selectedMetric = "visitors"))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository,
+            accountStore,
+            statsRepository,
+            resourceProvider,
+            SavedStateHandle(mapOf("period_type" to "today")),
+            cardsConfigurationRepository
+        )
+        advanceUntilIdle()
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+        // Views is standing in for the stored visitors preference.
+        assertThat(viewModel.uiState.value.selectedMetric()).isEqualTo(StatsMetric.VIEWS)
+
+        // Tapping the metric the fallback is standing in for still has to answer, even though it is
+        // already the stored preference and so isn't a change to it.
+        viewModel.onMetricSelected(StatsMetric.VISITORS)
+        advanceUntilIdle()
+
+        val content = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(content.selectedMetric).isEqualTo(StatsMetric.VISITORS)
+        assertThat(content.chart).isEqualTo(ChartUiState.Unavailable)
+    }
+
+    @Test
+    fun `given the views fallback, when views is tapped, then the stored preference is untouched`() = test {
+        whenever(cardsConfigurationRepository.getConfiguration(any()))
+            .thenReturn(StatsCardsConfiguration(selectedMetric = "visitors"))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository,
+            accountStore,
+            statsRepository,
+            resourceProvider,
+            SavedStateHandle(mapOf("period_type" to "today")),
+            cardsConfigurationRepository
+        )
+        advanceUntilIdle()
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+        // Views is standing in for the stored visitors preference, so the Views tab is the highlighted
+        // one even though nothing was picked.
+        assertThat(viewModel.uiState.value.selectedMetric()).isEqualTo(StatsMetric.VIEWS)
+
+        // Tapping that highlighted tab can't change anything on screen, so it must not quietly rewrite
+        // the preference either — otherwise the visitors choice is lost with no feedback at all.
+        viewModel.onMetricSelected(StatsMetric.VIEWS)
+        advanceUntilIdle()
+
+        verify(cardsConfigurationRepository, never()).saveConfiguration(any(), any())
+        // Proof the preference survived: the next multi-day period charts visitors again.
+        viewModel.onPeriodChanged(StatsPeriod.Last7Days)
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.selectedMetric()).isEqualTo(StatsMetric.VISITORS)
+    }
+
+    @Test
+    fun `given an unavailable chart, when show views is tapped, then views is charted`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        initViewModel(periodType = "today")
+        advanceUntilIdle()
+        viewModel.onMetricSelected(StatsMetric.VISITORS)
+        advanceUntilIdle()
+
+        viewModel.onMetricSelected(StatsMetric.VIEWS)
+        advanceUntilIdle()
+
+        val content = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(content.selectedMetric).isEqualTo(StatsMetric.VIEWS)
+        assertThat(content.chart).isInstanceOf(ChartUiState.Loaded::class.java)
+    }
+
+    @Test
+    fun `given a non-views metric, when moving to a single-day period, then the chart falls back to views`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+        viewModel.onMetricSelected(StatsMetric.VISITORS)
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.selectedMetric()).isEqualTo(StatsMetric.VISITORS)
+
+        viewModel.onPeriodChanged(StatsPeriod.Today)
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        // Arriving with a preference the period can't chart plots views instead of the empty state.
+        assertThat(viewModel.uiState.value.selectedMetric()).isEqualTo(StatsMetric.VIEWS)
+        val content = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(content.chart).isInstanceOf(ChartUiState.Loaded::class.java)
+    }
+
+    @Test
+    fun `given a single-day fallback, when moving back to a multi-day period, then the pick is charted again`() = test {
+        whenever(cardsConfigurationRepository.getConfiguration(any()))
+            .thenReturn(StatsCardsConfiguration(selectedMetric = "visitors"))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository,
+            accountStore,
+            statsRepository,
+            resourceProvider,
+            SavedStateHandle(mapOf("period_type" to "today")),
+            cardsConfigurationRepository
+        )
+        advanceUntilIdle()
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.selectedMetric()).isEqualTo(StatsMetric.VIEWS)
+
+        viewModel.onPeriodChanged(StatsPeriod.Last7Days)
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.selectedMetric()).isEqualTo(StatsMetric.VISITORS)
+    }
+
+    @Test
+    fun `given an unavailable chart, when leaving and returning to the period, then views is charted`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        initViewModel(periodType = "today")
+        advanceUntilIdle()
+        viewModel.onMetricSelected(StatsMetric.VISITORS)
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.chartOrNull()).isEqualTo(ChartUiState.Unavailable)
+
+        viewModel.onPeriodChanged(StatsPeriod.Last7Days)
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+        viewModel.onPeriodChanged(StatsPeriod.Today)
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        // The pick belonged to the period it was made on, so coming back lands on the fallback again
+        // rather than resurrecting the empty state.
+        assertThat(viewModel.uiState.value.selectedMetric()).isEqualTo(StatsMetric.VIEWS)
+        assertThat(viewModel.uiState.value.chartOrNull()).isInstanceOf(ChartUiState.Loaded::class.java)
     }
 
     @Test
@@ -2251,6 +2422,12 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     private fun ViewsStatsCardUiState.chartLoaded(): ChartUiState.Loaded =
         (this as ViewsStatsCardUiState.Content).chart as ChartUiState.Loaded
+
+    private fun ViewsStatsCardUiState.chartOrNull(): ChartUiState? =
+        (this as? ViewsStatsCardUiState.Content)?.chart
+
+    private fun ViewsStatsCardUiState.selectedMetric(): StatsMetric =
+        (this as ViewsStatsCardUiState.Content).selectedMetric
 
     private fun ViewsStatsCardUiState.bottomState(): BottomStatsUiState =
         (this as ViewsStatsCardUiState.Content).bottomStats

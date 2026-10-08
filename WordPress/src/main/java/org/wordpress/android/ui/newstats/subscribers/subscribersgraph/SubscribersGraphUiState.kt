@@ -14,8 +14,14 @@ sealed class SubscribersGraphUiState {
     ) : SubscribersGraphUiState()
 }
 
+/**
+ * One point on the subscribers chart. [label] is the compact axis form ("27 Jul"); [markerLabel]
+ * is what the press-and-hold marker shows, which for a weekly point names the whole span
+ * ("27 Jul - 2 Aug") so it cannot be mistaken for a single day.
+ */
 data class GraphDataPoint(
     val label: String,
+    val markerLabel: String,
     val count: Long
 )
 

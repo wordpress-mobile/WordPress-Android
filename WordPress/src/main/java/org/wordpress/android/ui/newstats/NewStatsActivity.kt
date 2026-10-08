@@ -145,6 +145,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.time.Year
+import java.util.Locale
 import javax.inject.Inject
 
 // Opacity of a navigation control (forward at the present edge, back at the year floor) when it is
@@ -223,6 +224,7 @@ class NewStatsActivity : BaseAppCompatActivity() {
                     onStatsUrlClick = { url ->
                         activityNavigator.openInCustomTab(this, url)
                     },
+                    onExplorePlansClick = ::openPlans,
                     onPostItemClick = ::openPostDetailStats,
                     onLatestPostClick = ::openLatestPostStats,
                     onCreatePostClick = ::createNewPost
@@ -272,6 +274,18 @@ class NewStatsActivity : BaseAppCompatActivity() {
             Stat.STATS_LATEST_POST_SUMMARY_VIEW_POST_DETAILS_TAPPED
         )
         PostStatsDetailActivity.start(this, postId, title)
+    }
+
+    /**
+     * Opens the plans page for a stat the site's plan does not include, from the upsell shown in
+     * place of that card's data.
+     */
+    private fun openPlans(upgradeUrl: String, cardType: StatsCardType) {
+        analyticsTracker.track(
+            Stat.STATS_FEATURE_GATE_EXPLORE_PLANS_TAPPED,
+            mapOf("feature" to cardType.name.lowercase(Locale.ROOT))
+        )
+        activityNavigator.openInCustomTab(this, upgradeUrl)
     }
 
     private fun createNewPost() {
@@ -406,6 +420,7 @@ private fun NewStatsScreen(
     showIntroBottomSheet: Boolean = false,
     onIntroDismissed: () -> Unit = {},
     onStatsUrlClick: (String) -> Unit = {},
+    onExplorePlansClick: (String, StatsCardType) -> Unit = { _, _ -> },
     onPostItemClick: (MostViewedItem) -> Unit = {},
     onLatestPostClick: (Long, String) -> Unit = { _, _ -> },
     onCreatePostClick: () -> Unit = {}
@@ -597,6 +612,7 @@ private fun NewStatsScreen(
                     tab = tabs[page],
                     viewsStatsViewModel = viewsStatsViewModel,
                     onStatsUrlClick = onStatsUrlClick,
+                    onExplorePlansClick = onExplorePlansClick,
                     onPostItemClick = onPostItemClick,
                     onLatestPostClick = onLatestPostClick,
                     onCreatePostClick = onCreatePostClick
@@ -611,6 +627,7 @@ private fun StatsTabContent(
     tab: StatsTab,
     viewsStatsViewModel: ViewsStatsViewModel,
     onStatsUrlClick: (String) -> Unit = {},
+    onExplorePlansClick: (String, StatsCardType) -> Unit = { _, _ -> },
     onPostItemClick: (MostViewedItem) -> Unit = {},
     onLatestPostClick: (Long, String) -> Unit = { _, _ -> },
     onCreatePostClick: () -> Unit = {}
@@ -619,6 +636,7 @@ private fun StatsTabContent(
         StatsTab.TRAFFIC -> TrafficTabContent(
             viewsStatsViewModel = viewsStatsViewModel,
             onStatsUrlClick = onStatsUrlClick,
+            onExplorePlansClick = onExplorePlansClick,
             onPostItemClick = onPostItemClick
         )
         StatsTab.INSIGHTS -> InsightsTabContent(
@@ -647,6 +665,7 @@ private fun TrafficTabContent(
     utmViewModel: UtmViewModel = viewModel(),
     newStatsViewModel: NewStatsViewModel = viewModel(),
     onStatsUrlClick: (String) -> Unit = {},
+    onExplorePlansClick: (String, StatsCardType) -> Unit = { _, _ -> },
     onPostItemClick: (MostViewedItem) -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -972,6 +991,16 @@ private fun TrafficTabContent(
                                 ?.isAuthError == true,
                             getAdminUrl = locationsViewModel::getAdminUrl,
                             context = context
+                        ),
+                        onExplorePlans = buildExplorePlansAction(
+                            isPlanGated = (locationsUiState as?
+                                LocationsCardUiState.Error)
+                                ?.isPlanGated == true,
+                            getUpgradeUrl =
+                                locationsViewModel::getUpgradeUrl,
+                            cardType = StatsCardType.LOCATIONS,
+                            onExplorePlansClick = onExplorePlansClick,
+                            context = context
                         )
                     )
                     StatsCardType.DEVICES -> DevicesCard(
@@ -1004,6 +1033,16 @@ private fun TrafficTabContent(
                                 ?.isAuthError == true,
                             getAdminUrl =
                                 devicesViewModel::getAdminUrl,
+                            context = context
+                        ),
+                        onExplorePlans = buildExplorePlansAction(
+                            isPlanGated = (devicesUiState as?
+                                DevicesCardUiState.Error)
+                                ?.isPlanGated == true,
+                            getUpgradeUrl =
+                                devicesViewModel::getUpgradeUrl,
+                            cardType = StatsCardType.DEVICES,
+                            onExplorePlansClick = onExplorePlansClick,
                             context = context
                         )
                     )
@@ -1041,6 +1080,16 @@ private fun TrafficTabContent(
                                 UtmCardUiState.Error)
                                 ?.isAuthError == true,
                             getAdminUrl = utmViewModel::getAdminUrl,
+                            context = context
+                        ),
+                        onExplorePlans = buildExplorePlansAction(
+                            isPlanGated = (utmUiState as?
+                                UtmCardUiState.Error)
+                                ?.isPlanGated == true,
+                            getUpgradeUrl =
+                                utmViewModel::getUpgradeUrl,
+                            cardType = StatsCardType.UTM,
+                            onExplorePlansClick = onExplorePlansClick,
                             context = context
                         )
                     )
@@ -1642,6 +1691,37 @@ private fun SingleRangeLine(line: RangeLine, style: TextStyle, color: Color) {
         is RangeLine.Split -> "${line.start} - ${line.end}"
     }
     Text(text = text, style = style, color = color, maxLines = 1)
+}
+
+/**
+ * The "Explore Plans" action for a card the site's plan does not cover, or null when the card is
+ * not gated so the card keeps its regular error handling.
+ */
+private fun buildExplorePlansAction(
+    isPlanGated: Boolean,
+    getUpgradeUrl: () -> String?,
+    cardType: StatsCardType,
+    onExplorePlansClick: (String, StatsCardType) -> Unit,
+    context: Context
+): (() -> Unit)? = if (isPlanGated) {
+    {
+        val url = getUpgradeUrl()
+        if (url != null) {
+            onExplorePlansClick(url, cardType)
+        } else {
+            AppLog.w(
+                AppLog.T.STATS,
+                "No site selected, cannot open the plans page"
+            )
+            Toast.makeText(
+                context,
+                R.string.stats_feature_gate_plans_unavailable,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+} else {
+    null
 }
 
 private fun buildOpenWpAdminAction(

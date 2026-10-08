@@ -20,6 +20,7 @@ import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.repository.DevicesResult
 import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.ui.newstats.util.statsUpgradeUrl
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
@@ -160,6 +161,9 @@ class DevicesViewModel @Inject constructor(
 
     fun getAdminUrl(): String? =
         selectedSiteRepository.getSelectedSite()?.adminUrl
+
+    fun getUpgradeUrl(): String? =
+        selectedSiteRepository.getSelectedSite()?.statsUpgradeUrl()
 
     fun onPeriodChanged(period: StatsPeriod) {
         if (period == currentPeriod &&
@@ -308,7 +312,8 @@ class DevicesViewModel @Inject constructor(
                     if (!applyErrors) return
                     stateFlow.value = DevicesCardUiState.Error(
                         result.messageResId,
-                        result.isAuthError
+                        result.isAuthError,
+                        result.isPlanGated
                     )
                 }
             }
