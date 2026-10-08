@@ -19,6 +19,7 @@ import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.UtmItemData
 import org.wordpress.android.ui.newstats.repository.UtmResult
+import org.wordpress.android.ui.newstats.util.statsUpgradeUrl
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
@@ -148,6 +149,10 @@ class UtmViewModel @Inject constructor(
         selectedSiteRepository.getSelectedSite()
             ?.adminUrl
 
+    fun getUpgradeUrl(): String? =
+        selectedSiteRepository.getSelectedSite()
+            ?.statsUpgradeUrl()
+
     fun getCurrentPeriod(): StatsPeriod = currentPeriod
 
     fun onPeriodChanged(period: StatsPeriod) {
@@ -252,7 +257,8 @@ class UtmViewModel @Inject constructor(
                     _categoryStates[category]?.value =
                         UtmCardUiState.Error(
                             result.messageResId,
-                            result.isAuthError
+                            result.isAuthError,
+                            result.isPlanGated
                         )
                 }
             }
