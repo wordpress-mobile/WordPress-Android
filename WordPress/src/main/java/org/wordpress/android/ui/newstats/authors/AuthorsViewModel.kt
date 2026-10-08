@@ -3,10 +3,12 @@ package org.wordpress.android.ui.newstats.authors
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -71,14 +73,23 @@ class AuthorsViewModel @Inject constructor(
         // A background revalidation outlives the load that started it, so cancel the previous
         // one: otherwise the period the user just left can still write into the card.
         fetchJob?.cancel()
-        fetchJob = viewModelScope.launch {
+        // Registered before it starts, so the job in flight is always the one this field holds.
+        val job = viewModelScope.launch(start = CoroutineStart.LAZY) {
             try {
                 fetchTopAuthors(site)
                 revalidateIfNeeded(site, period)
             } finally {
-                loadingPeriod = null
+                // The cancelled job unwinds on another thread, so its `finally` runs after the
+                // replacement has been registered here. Only the current job may clear the guard,
+                // or the re-dispatch that follows a card being added would cancel and restart the
+                // load that is already fetching this period.
+                if (fetchJob === coroutineContext.job) {
+                    loadingPeriod = null
+                }
             }
         }
+        fetchJob = job
+        job.start()
     }
 
     /**

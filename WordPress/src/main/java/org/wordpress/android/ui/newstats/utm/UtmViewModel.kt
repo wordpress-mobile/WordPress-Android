@@ -10,7 +10,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
@@ -119,16 +121,38 @@ class UtmViewModel @Inject constructor(
         if (!isCached(cat, site.siteId, period)) {
             setCurrentCategoryState(UtmCardUiState.Loading)
         }
-        fetchJobs[cat]?.cancel()
-        fetchJobs[cat] = viewModelScope.launch {
+        launchFetch(cat) {
+            fetchForCurrentCategory(site.siteId)
+            revalidateIfNeeded(cat, site.siteId, period)
+        }
+    }
+
+    /**
+     * Replaces any in-flight fetch for [category] with [block].
+     *
+     * The job is registered before it is started, and only the job that is still registered may
+     * remove itself: cancelling a coroutine suspended in a request unwinds it on another thread, so
+     * its `finally` runs after this method has already stored the replacement under the same key.
+     * Removing blindly there would leave that replacement untracked, so the next period change
+     * could no longer cancel it — leaving it free to write the period the user just left over the
+     * one they are looking at.
+     */
+    private fun launchFetch(
+        category: UtmCategory,
+        block: suspend () -> Unit
+    ) {
+        fetchJobs[category]?.cancel()
+        val job = viewModelScope.launch(start = CoroutineStart.LAZY) {
             try {
-                fetchForCurrentCategory(site.siteId)
-                revalidateIfNeeded(cat, site.siteId, period)
+                block()
             } finally {
-                loadingPeriods.remove(cat)
-                fetchJobs.remove(cat)
+                if (fetchJobs.remove(category, coroutineContext.job)) {
+                    loadingPeriods.remove(category)
+                }
             }
         }
+        fetchJobs[category] = job
+        job.start()
     }
 
     private fun isCached(
@@ -209,21 +233,10 @@ class UtmViewModel @Inject constructor(
                     UtmCardUiState.Loading
                 )
             }
-            fetchJobs[category]?.cancel()
-            fetchJobs[category] =
-                viewModelScope.launch {
-                    try {
-                        fetchForCategory(
-                            category, siteId
-                        )
-                        revalidateIfNeeded(
-                            category, siteId, period
-                        )
-                    } finally {
-                        loadingPeriods.remove(category)
-                        fetchJobs.remove(category)
-                    }
-                }
+            launchFetch(category) {
+                fetchForCategory(category, siteId)
+                revalidateIfNeeded(category, siteId, period)
+            }
         }
     }
 

@@ -3,10 +3,12 @@ package org.wordpress.android.ui.newstats.mostviewed
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
@@ -18,6 +20,7 @@ import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.coroutines.coroutineContext
 
 private const val CARD_MAX_ITEMS = 10
 
@@ -91,14 +94,39 @@ abstract class BaseStatsCardViewModel(
             _uiState.value = MostViewedCardUiState.Loading
         }
 
-        fetchJob?.cancel()
-        fetchJob = viewModelScope.launch {
+        launchFetch {
             try {
                 fetchAndProcess(site)
                 revalidateIfNeeded(site, period)
             } finally {
-                loadingPeriod = null
+                clearLoadingPeriodIfCurrent()
             }
+        }
+    }
+
+    /**
+     * Replaces any in-flight fetch with [block]. A background revalidation outlives the load that
+     * started it, so without this the period the user just left could still write its result into
+     * the card after the new period has rendered.
+     *
+     * The job is registered before it is started, so [fetchJob] always holds the one in flight —
+     * which is what [clearLoadingPeriodIfCurrent] compares against.
+     */
+    private fun launchFetch(block: suspend () -> Unit) {
+        fetchJob?.cancel()
+        val job = viewModelScope.launch(start = CoroutineStart.LAZY) { block() }
+        fetchJob = job
+        job.start()
+    }
+
+    /**
+     * Clears the guard that keeps a period from being requested twice, but only for the job that is
+     * still current: a cancelled one clearing it would let the re-dispatch that follows a card being
+     * added cancel and restart the load that is already fetching this period.
+     */
+    private suspend fun clearLoadingPeriodIfCurrent() {
+        if (fetchJob === coroutineContext.job) {
+            loadingPeriod = null
         }
     }
 
@@ -120,14 +148,15 @@ abstract class BaseStatsCardViewModel(
         if (accessToken.isNullOrEmpty()) return
 
         loadingPeriod = currentPeriod
-        fetchJob?.cancel()
-        fetchJob = viewModelScope.launch {
+        launchFetch {
             try {
                 _isRefreshing.value = true
                 fetchAndProcess(site, forceRefresh = true)
             } finally {
+                // Not gated on the job: a cancelled refresh must still stop the spinner, because
+                // whatever replaced it does not own it.
                 _isRefreshing.value = false
-                loadingPeriod = null
+                clearLoadingPeriodIfCurrent()
             }
         }
     }

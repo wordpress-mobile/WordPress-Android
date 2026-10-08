@@ -3,10 +3,12 @@ package org.wordpress.android.ui.newstats.mostviewed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
@@ -21,6 +23,7 @@ import kotlin.math.abs
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.coroutines.coroutineContext
 
 @HiltViewModel
 class MostViewedViewModel @Inject constructor(
@@ -202,7 +205,7 @@ class MostViewedViewModel @Inject constructor(
                 }
                 revalidateIfNeeded(site.siteId, period, dataSource)
             } finally {
-                clearLoadingPeriod(dataSource)
+                clearLoadingPeriodIfCurrent(dataSource)
             }
         }
     }
@@ -211,10 +214,27 @@ class MostViewedViewModel @Inject constructor(
      * Replaces any in-flight fetch for [dataSource]. A background revalidation outlives the load that
      * started it, so without this the period the user just left could still write its result into
      * the card after the new period has rendered.
+     *
+     * The job is registered before it is started, so the map always holds the one in flight — which
+     * is what [clearLoadingPeriodIfCurrent] compares against.
      */
     private fun launchFetch(dataSource: MostViewedDataSource, block: suspend () -> Unit) {
         fetchJobs[dataSource]?.cancel()
-        fetchJobs[dataSource] = viewModelScope.launch { block() }
+        val job = viewModelScope.launch(start = CoroutineStart.LAZY) { block() }
+        fetchJobs[dataSource] = job
+        job.start()
+    }
+
+    /**
+     * Clears the guard that keeps a period from being requested twice, but only for the job that is
+     * still current: a cancelled coroutine unwinds on another thread, so its `finally` runs after
+     * the replacement has been registered, and clearing it there would let the re-dispatch that
+     * follows a card being added cancel and restart the load already fetching this period.
+     */
+    private suspend fun clearLoadingPeriodIfCurrent(dataSource: MostViewedDataSource) {
+        if (fetchJobs[dataSource] === coroutineContext.job) {
+            clearLoadingPeriod(dataSource)
+        }
     }
 
     private fun isCached(siteId: Long, period: StatsPeriod, dataSource: MostViewedDataSource) =
