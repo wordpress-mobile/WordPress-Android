@@ -64,16 +64,17 @@ class RsFluxCBridge @Inject constructor(
                 PostRetrieveParams()
             )
         }
-        val fetched = when (response) {
-            is WpRequestResult.Success -> response.response.data
-            is WpRequestResult.WpError ->
-                throw RsBridgeException(response.errorMessage, errorCode = response.errorCode)
-            is WpRequestResult.RequestExecutionFailed ->
-                throw RsBridgeException("Failed to fetch $kind", reason = response.reason)
-            else -> throw RsBridgeException("Failed to fetch $kind")
+        if (response !is WpRequestResult.Success) {
+            throw when (response) {
+                is WpRequestResult.WpError ->
+                    RsBridgeException(response.errorMessage, errorCode = response.errorCode)
+                is WpRequestResult.RequestExecutionFailed ->
+                    RsBridgeException("Failed to fetch $kind", reason = response.reason)
+                else -> RsBridgeException("Failed to fetch $kind")
+            }
         }
 
-        val model = mapper.map(fetched, site).apply { setIsPage(isPage) }
+        val model = mapper.map(response.response.data, site).apply { setIsPage(isPage) }
         postSqlUtils.insertOrUpdatePost(model, false)
 
         // Re-read to get the auto-assigned local ID
