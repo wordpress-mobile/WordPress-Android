@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -93,6 +94,7 @@ class PostRsListViewModel @Inject constructor(
 
     private val _isOpeningPost = MutableStateFlow(false)
     val isOpeningPost: StateFlow<Boolean> = _isOpeningPost.asStateFlow()
+    private var openingJob: Job? = null
 
     private val _isSearchActive = MutableStateFlow(false)
     val isSearchActive: StateFlow<Boolean> = _isSearchActive.asStateFlow()
@@ -584,7 +586,7 @@ class PostRsListViewModel @Inject constructor(
     private fun duplicatePost(remotePostId: Long) {
         if (!checkNetwork()) return
         _isOpeningPost.value = true
-        viewModelScope.launch {
+        openingJob = viewModelScope.launch {
             try {
                 val lastModified = findPost(remotePostId)?.lastModified
                 val postToCopy = withContext(Dispatchers.IO) {
@@ -683,7 +685,7 @@ class PostRsListViewModel @Inject constructor(
     ) {
         if (!checkNetwork()) return
         _isOpeningPost.value = true
-        viewModelScope.launch {
+        openingJob = viewModelScope.launch {
             try {
                 val lastModified = findPost(remotePostId)?.lastModified
                 val post = withContext(Dispatchers.IO) {
@@ -713,6 +715,15 @@ class PostRsListViewModel @Inject constructor(
                 _isOpeningPost.value = false
             }
         }
+    }
+
+    /**
+     * Abandons the post being opened, so a slow fetch doesn't hold the user behind the spinner -
+     * a Jetpack site's fetch goes through the WP.com proxy and takes as long as the site does.
+     */
+    @MainThread
+    fun cancelOpeningPost() {
+        openingJob?.cancel()
     }
 
     private fun getMenuActions(
