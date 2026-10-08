@@ -36,6 +36,13 @@ class RsErrorUtilsTest {
     }
 
     @Test
+    fun `a timeout is not blamed on the connection`() {
+        val e = RsBridgeException("Failed to fetch post", reason = RequestExecutionErrorReason.HttpTimeoutError)
+
+        assertThat(message(e)).isEqualTo("res:${R.string.post_not_found}")
+    }
+
+    @Test
     fun `a rejected credential from the bridge is reported as an auth error`() {
         val e = RsBridgeException("Unauthorized", errorCode = WpErrorCode.Unauthorized())
 
