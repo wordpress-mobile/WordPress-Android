@@ -22,6 +22,7 @@
 * [**] Deleting a category now works on sites connected with an application password, and a category or tag that can't be deleted tells you so instead of leaving the screen loading. [https://github.com/wordpress-mobile/WordPress-Android/pull/23294]
 * [**] Photos and videos now keep their original file name when uploaded, instead of being renamed to something like "wp-1710415123456".
 * [**] Redesigned the posts, pages and comments lists with cards, filter chips and a condensed view, along with a redesigned comment detail screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/23381]
+* [*] You can now clear the Web Address in Account Settings, instead of the OK button being disabled when the field is empty.
 * [*] Stats cards that your plan doesn't include - Regions, Cities, Devices and UTM - now invite you to explore plans instead of showing a permission error.
 
 26.9
