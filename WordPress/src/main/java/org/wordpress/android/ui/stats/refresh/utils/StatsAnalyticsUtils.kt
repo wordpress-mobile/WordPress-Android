@@ -50,12 +50,12 @@ fun AnalyticsTrackerWrapper.trackStatsAccessed(site: SiteModel, tapSource: Strin
 fun AnalyticsTrackerWrapper.trackGranular(stat: Stat, site: SiteModel?, granularity: StatsGranularity) =
     track(stat, site, mapOf(GRANULARITY_PROPERTY to getPropertyByGranularity(granularity)))
 
-fun AnalyticsTrackerWrapper.trackViewsVisitorsChips(position: Int) {
+fun AnalyticsTrackerWrapper.trackViewsVisitorsChips(site: SiteModel?, position: Int) {
     val property = when (position) {
         0 -> CHIP_VIEWS_PROPERTY
         else -> CHIP_VISITORS__PROPERTY
     }
-    this.track(STATS_INSIGHTS_VIEWS_VISITORS_TOGGLED, mapOf(TYPE to property))
+    this.track(STATS_INSIGHTS_VIEWS_VISITORS_TOGGLED, site, mapOf(TYPE to property))
 }
 
 fun AnalyticsTrackerWrapper.trackWithGranularity(stat: Stat, site: SiteModel?, granularity: StatsGranularity) =
@@ -69,12 +69,12 @@ private fun getPropertyByGranularity(granularity: StatsGranularity) = when (gran
     StatsGranularity.YEARS -> YEARS_PROPERTY
 }
 
-fun AnalyticsTrackerWrapper.trackWithType(stat: Stat, insightType: InsightType) {
-    this.track(stat, mapOf(TYPE to insightType.name))
+fun AnalyticsTrackerWrapper.trackWithType(stat: Stat, site: SiteModel?, insightType: InsightType) {
+    this.track(stat, site, mapOf(TYPE to insightType.name))
 }
 
-fun AnalyticsTrackerWrapper.trackWithTypes(stat: Stat, insightTypes: Set<InsightType>) {
-    this.track(stat, mapOf(TYPES to insightTypes.map { it.name }))
+fun AnalyticsTrackerWrapper.trackWithTypes(stat: Stat, site: SiteModel?, insightTypes: Set<InsightType>) {
+    this.track(stat, site, mapOf(TYPES to insightTypes.map { it.name }))
 }
 
 fun AnalyticsTrackerWrapper.trackWithWidgetType(stat: Stat, widgetType: WidgetType) {

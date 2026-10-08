@@ -143,7 +143,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(INSIGHTS)
 
         verify(statsSectionManager).setSelectedSection(INSIGHTS)
-        verify(analyticsTracker).track(STATS_INSIGHTS_ACCESSED)
+        verify(analyticsTracker).track(STATS_INSIGHTS_ACCESSED, site)
     }
 
     @Test

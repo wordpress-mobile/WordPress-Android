@@ -136,12 +136,16 @@ class TotalLikesUseCase @Inject constructor(
     }
 
     private fun onLinkClicked(params: LinkClickParams) {
-        analyticsTracker.track(STATS_INSIGHTS_TOTAL_LIKES_GUIDE_TAPPED)
+        analyticsTracker.track(STATS_INSIGHTS_TOTAL_LIKES_GUIDE_TAPPED, statsSiteProvider.siteModel)
         navigateTo(ViewPost(params.postId, params.postUrl))
     }
 
     private fun onViewMoreClick() {
-        analyticsTracker.trackWithType(AnalyticsTracker.Stat.STATS_INSIGHTS_VIEW_MORE, TOTAL_LIKES)
+        analyticsTracker.trackWithType(
+            AnalyticsTracker.Stat.STATS_INSIGHTS_VIEW_MORE,
+            statsSiteProvider.siteModel,
+            TOTAL_LIKES
+        )
         navigateTo(
             ViewInsightDetails(
                 StatsSection.TOTAL_LIKES_DETAIL,

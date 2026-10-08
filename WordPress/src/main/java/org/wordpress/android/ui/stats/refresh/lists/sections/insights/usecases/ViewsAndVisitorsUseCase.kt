@@ -136,6 +136,7 @@ class ViewsAndVisitorsUseCase
                 val lastItemAge = ceil((currentCalendar.timeInMillis - lastDayDate.time) / 86400000.0)
                 analyticsTracker.track(
                     STATS_VIEWS_AND_VISITORS_ERROR,
+                    site,
                     mapOf(
                         "stats_last_date" to statsDateFormatter.printStatsDate(lastDayDate),
                         "stats_current_date" to statsDateFormatter.printStatsDate(currentCalendar.time),
@@ -222,7 +223,11 @@ class ViewsAndVisitorsUseCase
     )
 
     private fun onViewMoreClick() {
-        analyticsTracker.trackWithType(AnalyticsTracker.Stat.STATS_INSIGHTS_VIEW_MORE, InsightType.VIEWS_AND_VISITORS)
+        analyticsTracker.trackWithType(
+            AnalyticsTracker.Stat.STATS_INSIGHTS_VIEW_MORE,
+            statsSiteProvider.siteModel,
+            InsightType.VIEWS_AND_VISITORS
+        )
         navigateTo(
             ViewInsightDetails(
                 INSIGHT_DETAIL,
@@ -253,7 +258,7 @@ class ViewsAndVisitorsUseCase
     }
 
     private fun onChipSelected(position: Int) {
-        analyticsTracker.trackViewsVisitorsChips(position)
+        analyticsTracker.trackViewsVisitorsChips(statsSiteProvider.siteModel, position)
         updateUiState { it.copy(selectedPosition = position) }
     }
 

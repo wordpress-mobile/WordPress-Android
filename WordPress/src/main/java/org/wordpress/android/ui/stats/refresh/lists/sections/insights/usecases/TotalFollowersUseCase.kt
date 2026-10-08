@@ -103,7 +103,11 @@ class TotalFollowersUseCase @Inject constructor(
     )
 
     private fun onViewMoreClick() {
-        analyticsTracker.trackWithType(AnalyticsTracker.Stat.STATS_INSIGHTS_VIEW_MORE, TOTAL_FOLLOWERS)
+        analyticsTracker.trackWithType(
+            AnalyticsTracker.Stat.STATS_INSIGHTS_VIEW_MORE,
+            statsSiteProvider.siteModel,
+            TOTAL_FOLLOWERS
+        )
         navigateTo(
             ViewInsightDetails(
                 StatsSection.TOTAL_FOLLOWERS_DETAIL,

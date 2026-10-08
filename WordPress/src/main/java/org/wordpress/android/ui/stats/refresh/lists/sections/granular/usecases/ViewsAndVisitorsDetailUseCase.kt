@@ -227,7 +227,7 @@ class ViewsAndVisitorsDetailUseCase constructor(
     }
 
     private fun onChipSelected(position: Int) {
-        analyticsTracker.trackViewsVisitorsChips(position)
+        analyticsTracker.trackViewsVisitorsChips(statsSiteProvider.siteModel, position)
         updateUiState { it.copy(selectedPosition = position) }
     }
 

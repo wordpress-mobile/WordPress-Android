@@ -341,9 +341,15 @@ class StatsViewModel
                 selectedTrafficGranularityManager.getSelectedTrafficGranularity()
             )
 
-            StatsSection.INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
+            StatsSection.INSIGHTS -> analyticsTracker.track(
+                STATS_INSIGHTS_ACCESSED,
+                statsSiteProvider.siteModel
+            )
 
-            StatsSection.SUBSCRIBERS -> analyticsTracker.track(STATS_SUBSCRIBERS_ACCESSED)
+            StatsSection.SUBSCRIBERS -> analyticsTracker.track(
+                STATS_SUBSCRIBERS_ACCESSED,
+                statsSiteProvider.siteModel
+            )
 
             StatsSection.DAYS -> analyticsTracker.trackWithGranularity(
                 STATS_PERIOD_DAYS_ACCESSED,

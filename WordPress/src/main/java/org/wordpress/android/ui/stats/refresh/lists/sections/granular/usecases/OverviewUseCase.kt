@@ -127,6 +127,7 @@ class OverviewUseCase constructor(
                 val lastItemAge = ceil((currentCalendar.timeInMillis - lastDayDate.time) / 86400000.0)
                 analyticsTracker.track(
                     STATS_OVERVIEW_ERROR,
+                    site,
                     mapOf(
                         "stats_last_date" to statsDateFormatter.printStatsDate(lastDayDate),
                         "stats_current_date" to statsDateFormatter.printStatsDate(currentCalendar.time),
