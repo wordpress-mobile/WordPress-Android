@@ -123,7 +123,7 @@ class UtmViewModel @Inject constructor(
             setCurrentCategoryState(UtmCardUiState.Loading)
         }
         launchFetch(cat) {
-            fetchForCurrentCategory(site.siteId)
+            fetchForCategory(cat, site.siteId, period)
             revalidateIfNeeded(cat, site.siteId, period)
         }
     }
@@ -173,7 +173,7 @@ class UtmViewModel @Inject constructor(
     ) {
         if (period != currentPeriod) return
         if (!statsRepository.utmNeedsRevalidation(siteId, period, category.keys)) return
-        fetchForCategory(category, siteId, forceRefresh = true, applyErrors = false)
+        fetchForCategory(category, siteId, period, forceRefresh = true, applyErrors = false)
     }
 
     fun refresh() {
@@ -181,12 +181,21 @@ class UtmViewModel @Inject constructor(
             .getSelectedSite() ?: return
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) return
-        viewModelScope.launch {
+        val cat = _selectedCategory.value
+        val period = currentPeriod
+        // Registered like any other fetch, so a period change can cancel it: an untracked refresh
+        // outlives the period it was started for and lands its rows on top of the one the user
+        // switched to — which, now that a cached period repaints instantly, is the period they are
+        // looking at for the whole remainder of the refresh.
+        loadedPeriods.remove(cat)
+        loadingPeriods[cat] = period
+        launchFetch(cat) {
             try {
                 _isRefreshing.value = true
-                resetLoadedPeriodForCurrentCategory()
-                fetchForCurrentCategory(site.siteId, forceRefresh = true)
+                fetchForCategory(cat, site.siteId, period, forceRefresh = true)
             } finally {
+                // Not gated on the job: a cancelled refresh must still stop the spinner, because
+                // whatever replaced it does not own it.
                 _isRefreshing.value = false
             }
         }
@@ -239,7 +248,7 @@ class UtmViewModel @Inject constructor(
                 )
             }
             launchFetch(category) {
-                fetchForCategory(category, siteId)
+                fetchForCategory(category, siteId, period)
                 revalidateIfNeeded(category, siteId, period)
             }
         }
@@ -257,34 +266,27 @@ class UtmViewModel @Inject constructor(
         _categoryStates[cat]?.value = state
     }
 
-    private fun resetLoadedPeriodForCurrentCategory() {
-        loadedPeriods.remove(_selectedCategory.value)
-    }
-
-    private suspend fun fetchForCurrentCategory(
-        siteId: Long,
-        forceRefresh: Boolean = false
-    ) {
-        fetchForCategory(
-            _selectedCategory.value, siteId, forceRefresh
-        )
-    }
-
+    /**
+     * Fetches [period] for [category]. The period is passed in rather than read from
+     * [currentPeriod]: the request and the [loadedPeriods] entry it writes afterwards have to be the
+     * same period, or a fetch that lands after the user moved on records its rows under the period
+     * they moved to and the card can never reload it.
+     */
     @Suppress("TooGenericExceptionCaught")
     private suspend fun fetchForCategory(
         category: UtmCategory,
         siteId: Long,
+        period: StatsPeriod,
         forceRefresh: Boolean = false,
         applyErrors: Boolean = true
     ) {
         try {
             val result = statsRepository.fetchUtm(
-                siteId, category.keys, currentPeriod, forceRefresh
+                siteId, category.keys, period, forceRefresh
             )
             when (result) {
                 is UtmResult.Success -> {
-                    loadedPeriods[category] =
-                        currentPeriod
+                    loadedPeriods[category] = period
                     loadingPeriods.remove(category)
                     val items = result.items
                         .map { it.toUiItem() }
