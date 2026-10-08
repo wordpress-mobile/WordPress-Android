@@ -508,12 +508,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         (application as WordPress).component().inject(this)
         initializeViewModels()
 
-        // Track if this editor launch came via EditorLauncher (only on initial creation)
-        if (savedInstanceState == null
-            && intent.getBooleanExtra(EditorLauncher.EXTRA_LAUNCHED_VIA_EDITOR_LAUNCHER, false)) {
-            analyticsTrackerWrapper.track(Stat.EDITOR_LAUNCHED_VIA_EDITOR_LAUNCHER)
-        }
-
         setContentView(R.layout.new_edit_post_activity)
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -529,6 +523,13 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT)
             finish()
             return
+        }
+
+        // Track if this editor launch came via EditorLauncher (only on initial creation). Tracked after the site
+        // is resolved so the event carries the site it was launched for.
+        if (savedInstanceState == null
+            && intent.getBooleanExtra(EditorLauncher.EXTRA_LAUNCHED_VIA_EDITOR_LAUNCHER, false)) {
+            analyticsTrackerWrapper.track(Stat.EDITOR_LAUNCHED_VIA_EDITOR_LAUNCHER, siteModel)
         }
 
         isLandingEditor = intent.extras?.getBoolean(EditorConstants.EXTRA_IS_LANDING_EDITOR) ?: false
@@ -1290,7 +1291,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     override fun onPause() {
         super.onPause()
         EventBus.getDefault().unregister(this)
-        AnalyticsTracker.track(Stat.EDITOR_CLOSED)
+        analyticsTrackerWrapper.track(Stat.EDITOR_CLOSED, siteModel)
     }
 
     override fun onStop() {

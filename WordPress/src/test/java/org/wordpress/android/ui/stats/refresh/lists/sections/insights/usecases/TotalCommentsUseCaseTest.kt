@@ -161,6 +161,7 @@ class TotalCommentsUseCaseTest : BaseUnitTest() {
 
         verify(analyticsTrackerWrapper).track(
             STATS_TOTAL_COMMENTS_ERROR,
+            site,
             mapOf(
                 "stats_last_date" to "2020-12-13",
                 "stats_current_date" to "2020-12-15",
