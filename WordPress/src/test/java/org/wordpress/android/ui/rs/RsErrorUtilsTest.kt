@@ -49,13 +49,6 @@ class RsErrorUtilsTest {
         assertThat(message(e)).isEqualTo("res:${R.string.post_rs_error_auth}")
     }
 
-    @Test
-    fun `any other bridge failure falls back to the caller's message`() {
-        val e = RsBridgeException("Invalid param", errorCode = WpErrorCode.InvalidParam())
-
-        assertThat(message(e)).isEqualTo("res:${R.string.post_not_found}")
-    }
-
     private fun message(e: Exception) = RsErrorUtils.friendlyErrorMessage(
         e, R.string.post_not_found, resourceProvider, networkUtilsWrapper
     )

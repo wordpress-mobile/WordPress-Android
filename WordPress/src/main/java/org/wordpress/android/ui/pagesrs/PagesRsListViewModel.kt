@@ -834,10 +834,7 @@ internal class PagesRsListViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Abandons the page being opened, so a slow fetch doesn't hold the user behind the spinner -
-     * a Jetpack site's fetch goes through the WP.com proxy and takes as long as the site does.
-     */
+    /** Abandons the page being opened, for when the fetch behind the spinner is slow. */
     @MainThread
     fun cancelOpeningPage() {
         openingJob?.cancel()
