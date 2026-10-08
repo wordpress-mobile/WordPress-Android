@@ -1492,7 +1492,7 @@ class StatsRepositoryTest : BaseUnitTest() {
         )
         verify(statsDataSource).fetchTopPostsAndPages(
             eq(TEST_SITE_ID),
-            eq(StatsDateRange.Custom(startDate = "2024-10-01", date = "2025-09-30")),
+            eq(StatsDateRange.Custom(startDate = "2024-10-01", date = "2025-09-16")),
             any()
         )
     }
@@ -1505,9 +1505,9 @@ class StatsRepositoryTest : BaseUnitTest() {
 
             repositoryAt(MID_WEEK).fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last12Months)
 
-            // The previous window ends on the last day of its last month rather than on that month's
-            // 1st, so the comparison covers whole buckets — and so the list cards, which send the same
-            // window verbatim as start_date/date, don't drop the rest of September 2025.
+            // Both endpoints step back twelve months, so the previous window covers the same 351 days
+            // as the current one and its last bucket is cut on the 16th too. Ending it on 30 September
+            // instead would compare 351 days of traffic against a full 365.
             verify(statsDataSource).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.MONTH),
@@ -1520,7 +1520,7 @@ class StatsRepositoryTest : BaseUnitTest() {
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.MONTH),
                 quantity = eq(12),
-                endDate = eq("2025-09-30"),
+                endDate = eq("2025-09-16"),
                 startDate = eq("2024-10-01"),
                 statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )

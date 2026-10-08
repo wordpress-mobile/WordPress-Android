@@ -995,12 +995,11 @@ class StatsRepository @Inject constructor(
     }
 
     /**
-     * The immediately-preceding window that mirrors [start]..[end]'s exact day span. Used only where
-     * the chart itself compares against an exact day span (Today and Custom): for those paths the day
-     * boundaries line up with the chart, so the Views % change stays consistent. Standard month-unit
-     * periods instead align the previous window to whole months via [previousWindowForConfig], matching
-     * the chart — a day-span mirror there would produce a different previous window and a contradictory
-     * % change.
+     * The immediately-preceding window that mirrors [start]..[end]'s exact day span, ending the day
+     * before [start]. Used only where the chart itself compares against an exact day span (Today and
+     * Custom): for those paths the day boundaries line up with the chart, so the Views % change stays
+     * consistent. The fixed-span presets instead step both endpoints back by whole bucket units via
+     * [previousWindowForConfig] — the same day span, but aligned to the buckets the chart plots.
      *
      * The mirror preserves the day span, so [unitAndQuantityFor] always resolves it to the same unit as
      * the window it mirrors — but not necessarily to the same bucket count, so its quantity must be
@@ -1014,19 +1013,27 @@ class StatsRepository @Inject constructor(
     }
 
     /**
-     * The previous window aligned to whole [PeriodConfig.dateUnit] steps (the chart's rule in
-     * [calculatePeriodDates]): it ends the day before [currentStart] and spans `quantity` units back.
-     * Shared with [calculateComparisonDateRanges] so the chart and the list cards derive it identically.
+     * The window immediately before [currentStart]..[currentEnd], stepped back by the period's whole
+     * span — `quantity` [PeriodConfig.dateUnit] steps — at *both* endpoints. Shared with
+     * [calculateComparisonDateRanges] so the chart and the list cards derive it identically.
      *
-     * The end is the day before rather than a whole unit before so a MONTH window ends on the last day
-     * of its last month rather than on that month's 1st. Both describe the same month buckets to the
-     * chart, but the list cards send the window verbatim as `start_date`/`date`, and a window ending on
-     * the 1st would drop the rest of the month from every list card's comparison. Day-unit windows are
-     * unaffected: a day before and a unit before are the same date.
+     * Moving both endpoints by the same amount is what keeps the two totals comparable: the previous
+     * window then covers the same number of days as the current one, and its last bucket is cut at the
+     * same day of the month. Anchoring the end to [currentStart] instead — the day before it, or a
+     * whole unit before it — makes a month-granular previous window a full twelve months against a
+     * current window that only reaches today, so a site with flat traffic reads a steady loss (−8% on
+     * the 1st of a month, falling to 0% on its last day) on the Views card and on every list card.
+     *
+     * Day-unit windows are untouched by the choice: `currentEnd − quantity days` and
+     * `currentStart − 1 day` are the same date when the window spans `quantity` days.
      */
-    private fun previousWindowForConfig(currentStart: LocalDate, config: PeriodConfig): Pair<LocalDate, LocalDate> {
-        val previousEnd = currentStart.minusDays(1)
+    private fun previousWindowForConfig(
+        currentStart: LocalDate,
+        currentEnd: LocalDate,
+        config: PeriodConfig
+    ): Pair<LocalDate, LocalDate> {
         val previousStart = subtractFromDate(currentStart, config.quantity, config.dateUnit)
+        val previousEnd = subtractFromDate(currentEnd, config.quantity, config.dateUnit)
         return previousStart to previousEnd
     }
 
@@ -1045,10 +1052,10 @@ class StatsRepository @Inject constructor(
 
         val config = getPeriodConfig(period)
         val (currentStart, currentEnd) = currentWindow
-        val (previousStart, previousEnd) = previousWindowForConfig(currentStart, config)
+        val (previousStart, previousEnd) = previousWindowForConfig(currentStart, currentEnd, config)
 
-        // [previousWindowForConfig] spans exactly config.quantity units back, so both windows request
-        // the same number of buckets by construction.
+        // [previousWindowForConfig] steps both endpoints exactly config.quantity units back, so both
+        // windows request the same number of buckets, and cover the same day span, by construction.
         return PeriodDateRange(
             currentStart = currentStart,
             currentEnd = currentEnd,
@@ -1525,14 +1532,15 @@ class StatsRepository @Inject constructor(
                 StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = todayString) to
                     StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = previousEndString)
             }
-            // Twelve whole month buckets, compared against the twelve before them — the same windows
-            // the chart fetches, derived from the chart's own rules ([currentPeriodWindow] and
+            // Twelve whole month buckets, compared against the same window twelve months earlier — the
+            // windows the chart fetches, derived from the chart's own rules ([currentPeriodWindow] and
             // [previousWindowForConfig]) so the two cannot drift apart. A rolling `num=365` would put
             // this card on a window three weeks longer than the chart above it, and longer than the one
             // web and iOS report.
             is StatsPeriod.Last12Months -> {
                 val (start, end) = currentPeriodWindow(period)
-                val (previousStart, previousEnd) = previousWindowForConfig(start, getPeriodConfig(period))
+                val (previousStart, previousEnd) =
+                    previousWindowForConfig(start, end, getPeriodConfig(period))
                 StatsDateRange.Custom(
                     startDate = start.format(dateFormatter),
                     date = end.format(dateFormatter)
