@@ -81,7 +81,7 @@ class LocationsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when fetch fails, then error state is emitted`() = test {
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(CountryViewsResult.Error(R.string.stats_error_api))
 
         initViewModel()
@@ -95,7 +95,7 @@ class LocationsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when auth error on countries, then isAuthError is true`() = test {
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(
                 CountryViewsResult.Error(
                     R.string.stats_error_auth,
@@ -113,9 +113,9 @@ class LocationsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when auth error on regions, then isAuthError is true`() = test {
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(createSuccessResult())
-        whenever(statsRepository.fetchRegionViews(any(), any()))
+        whenever(statsRepository.fetchRegionViews(any(), any(), any()))
             .thenReturn(
                 RegionViewsResult.Error(
                     R.string.stats_error_auth,
@@ -136,9 +136,9 @@ class LocationsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when regions are plan gated, then isPlanGated is true`() = test {
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(createSuccessResult())
-        whenever(statsRepository.fetchRegionViews(any(), any()))
+        whenever(statsRepository.fetchRegionViews(any(), any(), any()))
             .thenReturn(
                 RegionViewsResult.Error(
                     R.string.stats_error_not_available,
@@ -160,9 +160,9 @@ class LocationsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when cities are plan gated, then isPlanGated is true`() = test {
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(createSuccessResult())
-        whenever(statsRepository.fetchCityViews(any(), any()))
+        whenever(statsRepository.fetchCityViews(any(), any(), any()))
             .thenReturn(
                 CityViewsResult.Error(
                     R.string.stats_error_not_available,
@@ -184,9 +184,9 @@ class LocationsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when auth error on cities, then isAuthError is true`() = test {
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(createSuccessResult())
-        whenever(statsRepository.fetchCityViews(any(), any()))
+        whenever(statsRepository.fetchCityViews(any(), any(), any()))
             .thenReturn(
                 CityViewsResult.Error(
                     R.string.stats_error_auth,
@@ -207,7 +207,7 @@ class LocationsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when non-auth error, then isAuthError is false`() = test {
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(
                 CountryViewsResult.Error(R.string.stats_error_network)
             )
@@ -243,7 +243,7 @@ class LocationsViewModelTest : BaseUnitTest() {
     // region Success states
     @Test
     fun `when data loads successfully, then loaded state is emitted`() = test {
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -255,7 +255,7 @@ class LocationsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when data loads, then countries contain correct values`() = test {
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -272,7 +272,7 @@ class LocationsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when data loads, then map data is built correctly`() = test {
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -286,7 +286,7 @@ class LocationsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when data loads, then min and max views are calculated correctly`() = test {
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -309,7 +309,7 @@ class LocationsViewModelTest : BaseUnitTest() {
             totalViewsChange = 30,
             totalViewsChangePercent = 17.6
         )
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(sameViewsResult)
 
         initViewModel()
@@ -331,7 +331,7 @@ class LocationsViewModelTest : BaseUnitTest() {
                 previousViews = (90 - index).toLong()
             )
         }
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(
                 CountryViewsResult.Success(
                     countries = manyCountries,
@@ -352,7 +352,7 @@ class LocationsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when data loads with 10 or fewer countries, then hasMoreItems is false`() = test {
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -371,7 +371,7 @@ class LocationsViewModelTest : BaseUnitTest() {
             totalViewsChange = 0,
             totalViewsChangePercent = 0.0
         )
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(emptyResult)
 
         initViewModel()
@@ -387,7 +387,7 @@ class LocationsViewModelTest : BaseUnitTest() {
     // region Period changes
     @Test
     fun `when period changes, then data is reloaded`() = test {
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -396,13 +396,13 @@ class LocationsViewModelTest : BaseUnitTest() {
         viewModel.onPeriodChanged(StatsPeriod.Last30Days)
         advanceUntilIdle()
 
-        verify(statsRepository, times(2)).fetchCountryViews(any(), any())
-        verify(statsRepository).fetchCountryViews(eq(TEST_SITE_ID), eq(StatsPeriod.Last30Days))
+        verify(statsRepository, times(2)).fetchCountryViews(any(), any(), any())
+        verify(statsRepository).fetchCountryViews(eq(TEST_SITE_ID), eq(StatsPeriod.Last30Days), any())
     }
 
     @Test
     fun `when same period is selected, then data is not reloaded`() = test {
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -412,12 +412,12 @@ class LocationsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Should only be called once during init
-        verify(statsRepository, times(1)).fetchCountryViews(any(), any())
+        verify(statsRepository, times(1)).fetchCountryViews(any(), any(), any())
     }
 
     @Test
     fun `when same period is re-selected after success, then fetch is skipped`() = test {
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -427,14 +427,14 @@ class LocationsViewModelTest : BaseUnitTest() {
         viewModel.onPeriodChanged(StatsPeriod.Last7Days)
         advanceUntilIdle()
 
-        verify(statsRepository, times(1)).fetchCountryViews(any(), any())
+        verify(statsRepository, times(1)).fetchCountryViews(any(), any(), any())
         assertThat(viewModel.uiState.value)
             .isInstanceOf(LocationsCardUiState.Loaded::class.java)
     }
 
     @Test
     fun `when same period is re-selected after error, then data is re-fetched`() = test {
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(CountryViewsResult.Error(R.string.stats_error_api))
 
         initViewModel()
@@ -442,13 +442,13 @@ class LocationsViewModelTest : BaseUnitTest() {
 
         // loadedPeriod should not be set after error, so re-selecting
         // the same period should trigger a new fetch
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         viewModel.onPeriodChanged(StatsPeriod.Last7Days)
         advanceUntilIdle()
 
-        verify(statsRepository, times(2)).fetchCountryViews(any(), any())
+        verify(statsRepository, times(2)).fetchCountryViews(any(), any(), any())
         assertThat(viewModel.uiState.value)
             .isInstanceOf(LocationsCardUiState.Loaded::class.java)
     }
@@ -457,7 +457,7 @@ class LocationsViewModelTest : BaseUnitTest() {
     // region Refresh
     @Test
     fun `when refresh is called, then isRefreshing becomes true then false`() = test {
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -473,7 +473,7 @@ class LocationsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when refresh is called, then data is fetched`() = test {
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -483,12 +483,12 @@ class LocationsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Called twice: once during init, once during refresh
-        verify(statsRepository, times(2)).fetchCountryViews(eq(TEST_SITE_ID), any())
+        verify(statsRepository, times(2)).fetchCountryViews(eq(TEST_SITE_ID), any(), any())
     }
 
     @Test
     fun `when refresh is called with no site, then data is not fetched`() = test {
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -500,14 +500,14 @@ class LocationsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Should only be called once during init
-        verify(statsRepository, times(1)).fetchCountryViews(any(), any())
+        verify(statsRepository, times(1)).fetchCountryViews(any(), any(), any())
     }
     // endregion
 
     // region Retry
     @Test
     fun `when onRetry is called, then data is reloaded`() = test {
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -517,14 +517,14 @@ class LocationsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Called twice: once during init, once during retry
-        verify(statsRepository, times(2)).fetchCountryViews(any(), any())
+        verify(statsRepository, times(2)).fetchCountryViews(any(), any(), any())
     }
     // endregion
 
     // region getDetailData
     @Test
     fun `when getDetailData is called, then returns cached data`() = test {
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(createSuccessResult())
         whenever(resourceProvider.getString(R.string.stats_period_last_7_days))
             .thenReturn("Last 7 days")
@@ -554,7 +554,7 @@ class LocationsViewModelTest : BaseUnitTest() {
         }
         whenever(resourceProvider.getString(R.string.stats_period_last_7_days))
             .thenReturn("Last 7 days")
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(
                 CountryViewsResult.Success(
                     countries = manyCountries,
@@ -575,7 +575,7 @@ class LocationsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when getDetailData is called, then map data is included`() = test {
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(createSuccessResult())
         whenever(resourceProvider.getString(R.string.stats_period_last_7_days))
             .thenReturn("Last 7 days")
@@ -605,7 +605,7 @@ class LocationsViewModelTest : BaseUnitTest() {
                 previousViews = 100
             )
         )
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(
                 CountryViewsResult.Success(
                     countries = countries,
@@ -637,7 +637,7 @@ class LocationsViewModelTest : BaseUnitTest() {
                 previousViews = 100
             )
         )
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(
                 CountryViewsResult.Success(
                     countries = countries,
@@ -669,7 +669,7 @@ class LocationsViewModelTest : BaseUnitTest() {
                 previousViews = 100
             )
         )
-        whenever(statsRepository.fetchCountryViews(any(), any()))
+        whenever(statsRepository.fetchCountryViews(any(), any(), any()))
             .thenReturn(
                 CountryViewsResult.Success(
                     countries = countries,
@@ -692,9 +692,9 @@ class LocationsViewModelTest : BaseUnitTest() {
     @Test
     fun `when regions load, then map data is aggregated by country code`() =
         test {
-            whenever(statsRepository.fetchCountryViews(any(), any()))
+            whenever(statsRepository.fetchCountryViews(any(), any(), any()))
                 .thenReturn(createSuccessResult())
-            whenever(statsRepository.fetchRegionViews(any(), any()))
+            whenever(statsRepository.fetchRegionViews(any(), any(), any()))
                 .thenReturn(createRegionsSuccessResult())
 
             initViewModel()
@@ -716,9 +716,9 @@ class LocationsViewModelTest : BaseUnitTest() {
     @Test
     fun `when regions load, then min and max are from aggregated values`() =
         test {
-            whenever(statsRepository.fetchCountryViews(any(), any()))
+            whenever(statsRepository.fetchCountryViews(any(), any(), any()))
                 .thenReturn(createSuccessResult())
-            whenever(statsRepository.fetchRegionViews(any(), any()))
+            whenever(statsRepository.fetchRegionViews(any(), any(), any()))
                 .thenReturn(createRegionsSuccessResult())
 
             initViewModel()
@@ -737,9 +737,9 @@ class LocationsViewModelTest : BaseUnitTest() {
     @Test
     fun `when regions load, then list shows individual regions`() =
         test {
-            whenever(statsRepository.fetchCountryViews(any(), any()))
+            whenever(statsRepository.fetchCountryViews(any(), any(), any()))
                 .thenReturn(createSuccessResult())
-            whenever(statsRepository.fetchRegionViews(any(), any()))
+            whenever(statsRepository.fetchRegionViews(any(), any(), any()))
                 .thenReturn(createRegionsSuccessResult())
 
             initViewModel()
@@ -762,9 +762,9 @@ class LocationsViewModelTest : BaseUnitTest() {
     @Test
     fun `when region views fetch fails, then error state is emitted`() =
         test {
-            whenever(statsRepository.fetchCountryViews(any(), any()))
+            whenever(statsRepository.fetchCountryViews(any(), any(), any()))
                 .thenReturn(createSuccessResult())
-            whenever(statsRepository.fetchRegionViews(any(), any()))
+            whenever(statsRepository.fetchRegionViews(any(), any(), any()))
                 .thenReturn(RegionViewsResult.Error(R.string.stats_error_api))
 
             initViewModel()
@@ -785,9 +785,9 @@ class LocationsViewModelTest : BaseUnitTest() {
     @Test
     fun `when cities load, then map data uses lat long markers`() =
         test {
-            whenever(statsRepository.fetchCountryViews(any(), any()))
+            whenever(statsRepository.fetchCountryViews(any(), any(), any()))
                 .thenReturn(createSuccessResult())
-            whenever(statsRepository.fetchCityViews(any(), any()))
+            whenever(statsRepository.fetchCityViews(any(), any(), any()))
                 .thenReturn(createCitiesSuccessResult())
 
             initViewModel()
@@ -810,9 +810,9 @@ class LocationsViewModelTest : BaseUnitTest() {
     @Test
     fun `when cities load, then min and max are from individual cities`() =
         test {
-            whenever(statsRepository.fetchCountryViews(any(), any()))
+            whenever(statsRepository.fetchCountryViews(any(), any(), any()))
                 .thenReturn(createSuccessResult())
-            whenever(statsRepository.fetchCityViews(any(), any()))
+            whenever(statsRepository.fetchCityViews(any(), any(), any()))
                 .thenReturn(createCitiesSuccessResult())
 
             initViewModel()
@@ -831,9 +831,9 @@ class LocationsViewModelTest : BaseUnitTest() {
     @Test
     fun `when cities load, then list shows individual cities`() =
         test {
-            whenever(statsRepository.fetchCountryViews(any(), any()))
+            whenever(statsRepository.fetchCountryViews(any(), any(), any()))
                 .thenReturn(createSuccessResult())
-            whenever(statsRepository.fetchCityViews(any(), any()))
+            whenever(statsRepository.fetchCityViews(any(), any(), any()))
                 .thenReturn(createCitiesSuccessResult())
 
             initViewModel()
@@ -856,9 +856,9 @@ class LocationsViewModelTest : BaseUnitTest() {
     @Test
     fun `when city views fetch fails, then error state is emitted`() =
         test {
-            whenever(statsRepository.fetchCountryViews(any(), any()))
+            whenever(statsRepository.fetchCountryViews(any(), any(), any()))
                 .thenReturn(createSuccessResult())
-            whenever(statsRepository.fetchCityViews(any(), any()))
+            whenever(statsRepository.fetchCityViews(any(), any(), any()))
                 .thenReturn(CityViewsResult.Error(R.string.stats_error_api))
 
             initViewModel()
@@ -893,9 +893,9 @@ class LocationsViewModelTest : BaseUnitTest() {
                 totalViewsChange = 40,
                 totalViewsChangePercent = 25.0
             )
-            whenever(statsRepository.fetchCountryViews(any(), any()))
+            whenever(statsRepository.fetchCountryViews(any(), any(), any()))
                 .thenReturn(createSuccessResult())
-            whenever(statsRepository.fetchCityViews(any(), any()))
+            whenever(statsRepository.fetchCityViews(any(), any(), any()))
                 .thenReturn(sameViewsCities)
 
             initViewModel()
@@ -916,9 +916,9 @@ class LocationsViewModelTest : BaseUnitTest() {
     @Test
     fun `when switching to regions, then regions are fetched`() =
         test {
-            whenever(statsRepository.fetchCountryViews(any(), any()))
+            whenever(statsRepository.fetchCountryViews(any(), any(), any()))
                 .thenReturn(createSuccessResult())
-            whenever(statsRepository.fetchRegionViews(any(), any()))
+            whenever(statsRepository.fetchRegionViews(any(), any(), any()))
                 .thenReturn(createRegionsSuccessResult())
 
             initViewModel()
@@ -928,14 +928,14 @@ class LocationsViewModelTest : BaseUnitTest() {
             advanceUntilIdle()
 
             verify(statsRepository).fetchRegionViews(
-                eq(TEST_SITE_ID), any()
+                eq(TEST_SITE_ID), any(), any()
             )
         }
 
     @Test
     fun `when switching to same type, then data is not re-fetched`() =
         test {
-            whenever(statsRepository.fetchCountryViews(any(), any()))
+            whenever(statsRepository.fetchCountryViews(any(), any(), any()))
                 .thenReturn(createSuccessResult())
 
             initViewModel()
@@ -945,15 +945,15 @@ class LocationsViewModelTest : BaseUnitTest() {
             advanceUntilIdle()
 
             verify(statsRepository, times(1))
-                .fetchCountryViews(any(), any())
+                .fetchCountryViews(any(), any(), any())
         }
 
     @Test
     fun `when getDetailData for regions, then returns region data`() =
         test {
-            whenever(statsRepository.fetchCountryViews(any(), any()))
+            whenever(statsRepository.fetchCountryViews(any(), any(), any()))
                 .thenReturn(createSuccessResult())
-            whenever(statsRepository.fetchRegionViews(any(), any()))
+            whenever(statsRepository.fetchRegionViews(any(), any(), any()))
                 .thenReturn(createRegionsSuccessResult())
             whenever(
                 resourceProvider.getString(
@@ -977,9 +977,9 @@ class LocationsViewModelTest : BaseUnitTest() {
     @Test
     fun `when getDetailData for cities, then returns city data`() =
         test {
-            whenever(statsRepository.fetchCountryViews(any(), any()))
+            whenever(statsRepository.fetchCountryViews(any(), any(), any()))
                 .thenReturn(createSuccessResult())
-            whenever(statsRepository.fetchCityViews(any(), any()))
+            whenever(statsRepository.fetchCityViews(any(), any(), any()))
                 .thenReturn(createCitiesSuccessResult())
             whenever(
                 resourceProvider.getString(

@@ -8,6 +8,7 @@ import org.wordpress.android.ui.newstats.mostviewed.BaseStatsCardViewModel
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedChange
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDetailItem
 import org.wordpress.android.ui.newstats.mostviewed.StatsCardFetchResult
+import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.VideoPlayItemData
 import org.wordpress.android.ui.newstats.repository.VideoPlaysResult
@@ -25,14 +26,16 @@ class VideoPlaysViewModel @Inject constructor(
     statsRepository, resourceProvider
 ) {
     override val logTag = "video plays"
+    override val cacheBucket = StatsCacheBucket.VIDEO_PLAYS
 
     override suspend fun fetchStats(
         siteId: Long,
-        period: StatsPeriod
+        period: StatsPeriod,
+        forceRefresh: Boolean
     ): StatsCardFetchResult {
         return when (
             val result = statsRepository.fetchVideoPlays(
-                siteId, period
+                siteId, period, forceRefresh
             )
         ) {
             is VideoPlaysResult.Success -> {
