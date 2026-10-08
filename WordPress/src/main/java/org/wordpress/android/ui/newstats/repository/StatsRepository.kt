@@ -652,19 +652,30 @@ class StatsRepository @Inject constructor(
      * The API `start_date` for a window starting at [start] at [unit], or null when the window must not
      * send one.
      *
-     * Only YEAR windows send it. Without a `start_date` the API does not anchor its year buckets to the
-     * requested window, so a range over two years comes back with the wrong buckets and every number on
-     * the card — chart, header total, % change and bottom row alike — is wrong. Sending the window's own
-     * real start also truncates its first bucket to the range actually asked for, which is what keeps
-     * the current and previous totals comparable: each then covers exactly its own day span. This
-     * mirrors the web app, which requests `unit=year&date=<end>&start_date=<start>&quantity=<n>`.
+     * MONTH and YEAR windows send it; this is what the web app does
+     * (`unit=month&date=<end>&start_date=<start>&quantity=<n>`), and for the same two reasons.
      *
-     * DAY and MONTH windows deliberately send none: they are already correct from unit + quantity +
-     * endDate, and a mid-bucket start_date there truncates the first bucket's `views` (an additive
-     * metric) while leaving `visitors` (a per-bucket unique) at the full-bucket value.
+     * It anchors the buckets: without a start the API does not tie its year buckets to the requested
+     * window, so a range over two years comes back with the wrong buckets and every number on the card
+     * — chart, header total, % change and bottom row alike — is wrong.
+     *
+     * It also truncates the window's first bucket to the range actually asked for. A Custom range
+     * picked as 11 Feb – 7 Oct is nine month buckets either way, but without a start the February
+     * bucket arrives whole and the card silently reports from the 1st — ten days the user did not ask
+     * for, and ten days the list cards (which always send their own start) exclude. The same
+     * truncation is what keeps the current and previous totals comparable: each then covers exactly
+     * its own day span.
+     *
+     * The caveat is that truncating a bucket is exact for additive metrics (`views`) but not for
+     * per-bucket uniques (`visitors`), which can come back at their full-bucket value. The web app
+     * requests `views` and `visitors` together with a mid-bucket start and accepts the same, so this
+     * matches rather than diverges from it.
+     *
+     * DAY and HOUR windows send none: their buckets are never partial, so unit + quantity + endDate
+     * already pins the window exactly.
      */
     private fun apiStartDateOrNull(start: LocalDate, unit: StatsUnit): String? =
-        if (unit == StatsUnit.YEAR) start.format(dateFormatter) else null
+        if (unit == StatsUnit.MONTH || unit == StatsUnit.YEAR) start.format(dateFormatter) else null
 
     /**
      * Fetches the bottom-row totals from a dedicated call, for the single-day periods only: Today and a
@@ -728,9 +739,8 @@ class StatsRepository @Inject constructor(
      * cannot accidentally share one window's quantity — they can span different bucket counts.
      *
      * The request mirrors the chart's [fetchStatsForPeriod] exactly, [apiStartDateOrNull] included: a
-     * DAY or MONTH window is defined by unit + quantity + endDate alone, because a mid-bucket startDate
-     * there makes the API truncate the first bucket's views (an additive metric) while leaving visitors
-     * (a per-bucket unique) at the full-bucket value. A YEAR window must send its start.
+     * DAY or HOUR window is defined by unit + quantity + endDate alone, while a MONTH or YEAR window
+     * must send its start so the API anchors and truncates its buckets to the window asked for.
      */
     @Suppress("TooGenericExceptionCaught")
     private suspend fun fetchBottomStatsVisits(
@@ -1265,8 +1275,9 @@ class StatsRepository @Inject constructor(
         // Daily up to a full month (31 days), monthly up to two years, yearly beyond. Coarsening the
         // chart to YEAR past two years (the same rule the bottom-row totals use) keeps the chart and
         // the bottom row on one unit, so the header's Views and the bottom row's Views — and their
-        // visitor de-duplication — always agree for long Custom ranges. A YEAR window also sends its
-        // own start to the API (see [apiStartDateOrNull]).
+        // visitor de-duplication — always agree for long Custom ranges. A coarsened window also sends
+        // its own start to the API, so it still covers the picked days and not whole buckets (see
+        // [apiStartDateOrNull]).
         val (unit, currentQuantity) = unitAndQuantityFor(startDate, endDate)
         val (previousStart, previousEnd) = previousWindowMirror(startDate, endDate)
         val (_, previousQuantity) = unitAndQuantityFor(previousStart, previousEnd)

@@ -519,14 +519,14 @@ class StatsRepositoryTest : BaseUnitTest() {
             repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last12Months)
 
             // The chart is fetched twice (current + previous), each requesting the card's stat fields
-            // so the same response can also fill the bottom row. start_date stays null: it is a
-            // YEAR-only workaround and must not leak into the fixed periods, which work as they are.
+            // so the same response can also fill the bottom row. A MONTH window sends its own start,
+            // which here is the 1st of a month either way — the twelve buckets are whole.
             verify(statsDataSource, times(2)).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.MONTH),
                 quantity = eq(12),
                 endDate = any(),
-                startDate = isNull(),
+                startDate = isNotNull(),
                 statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )
         }
@@ -747,14 +747,14 @@ class StatsRepositoryTest : BaseUnitTest() {
             )
             repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
 
-            // The current window spans May, Jun, Jul (3). MONTH sends no start_date — it is already
-            // correct from unit + quantity + endDate.
+            // The current window spans May, Jun, Jul (3), and sends its own start so the May bucket
+            // is truncated to the 31st rather than arriving whole.
             verify(statsDataSource).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.MONTH),
                 quantity = eq(3),
                 endDate = eq("2024-07-02"),
-                startDate = isNull(),
+                startDate = eq("2024-05-31"),
                 statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )
             // Its mirror 2024-04-28..2024-05-30 spans only Apr and May (2). Sending the current
@@ -764,7 +764,40 @@ class StatsRepositoryTest : BaseUnitTest() {
                 unit = eq(StatsUnit.MONTH),
                 quantity = eq(2),
                 endDate = eq("2024-05-30"),
-                startDate = isNull(),
+                startDate = eq("2024-04-28"),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+        }
+
+    @Test
+    fun `given a Custom range starting mid-month, when fetchStatsForPeriod, then the picked days are charted`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            val customPeriod = StatsPeriod.Custom(
+                startDate = LocalDate.of(2026, 2, 11),
+                endDate = LocalDate.of(2026, 10, 7)
+            )
+            repositoryAt(MID_WEEK).fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
+
+            // Both requests match what the web app sends for this range, start_date included. Without
+            // it the February bucket arrives whole and the card reports from the 1st — ten days the
+            // user did not pick, and ten days the list cards below it exclude.
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.MONTH),
+                quantity = eq(9),
+                endDate = eq("2026-10-07"),
+                startDate = eq("2026-02-11"),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.MONTH),
+                quantity = eq(9),
+                endDate = eq("2026-02-10"),
+                startDate = eq("2025-06-17"),
                 statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )
         }
@@ -781,7 +814,7 @@ class StatsRepositoryTest : BaseUnitTest() {
             )
             repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
 
-            // start_date is a YEAR-only workaround: a DAY window is correct without one, and the mirror
+            // A DAY window's buckets are never partial, so it needs no start_date, and the mirror
             // preserves the day span, so both windows request the same 10 buckets.
             verify(statsDataSource, times(2)).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
@@ -941,13 +974,13 @@ class StatsRepositoryTest : BaseUnitTest() {
                 unit = eq(StatsUnit.MONTH),
                 quantity = eq(3),
                 endDate = any(),
-                startDate = isNull(),
+                startDate = isNotNull(),
                 statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )
         }
 
     @Test
-    fun `given multi-month Custom, when fetchBottomStats, then no startDate is sent`() =
+    fun `given multi-month Custom, when fetchBottomStats, then each window sends its own startDate`() =
         test {
             whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
@@ -958,16 +991,22 @@ class StatsRepositoryTest : BaseUnitTest() {
             )
             repository.fetchBottomStats(TEST_SITE_ID, customPeriod)
 
-            // A mid-bucket startDate would make the API truncate the first month bucket's views
-            // (additive) while leaving visitors (unique) at the full-month value, so the bottom row's
-            // Views would under-count and disagree with the chart header. Mirror the chart: no
-            // startDate, just unit + quantity + endDate.
-            verify(statsDataSource, times(2)).fetchStatsVisits(
+            // The row mirrors the chart, startDate included, so both cover the picked days rather than
+            // whole month buckets. The mirror starts mid-July, which is exactly the case that needs it.
+            verify(statsDataSource).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.MONTH),
                 quantity = eq(6),
-                endDate = any(),
-                startDate = isNull(),
+                endDate = eq("2024-06-30"),
+                startDate = eq("2024-01-01"),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.MONTH),
+                quantity = eq(6),
+                endDate = eq("2023-12-31"),
+                startDate = eq("2023-07-03"),
                 statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )
         }
@@ -1326,7 +1365,7 @@ class StatsRepositoryTest : BaseUnitTest() {
             unit = eq(StatsUnit.MONTH),
             quantity = eq(1),
             endDate = eq("2026-01-05"),
-            startDate = isNull(),
+            startDate = eq("2026-01-01"),
             statFields = eq(EXPECTED_CARD_STAT_FIELDS)
         )
         verify(statsDataSource).fetchStatsVisits(
@@ -1334,7 +1373,7 @@ class StatsRepositoryTest : BaseUnitTest() {
             unit = eq(StatsUnit.MONTH),
             quantity = eq(MONTHS_IN_YEAR),
             endDate = eq("2025-12-31"),
-            startDate = isNull(),
+            startDate = eq("2025-01-01"),
             statFields = eq(EXPECTED_CARD_STAT_FIELDS)
         )
         val success = result as PeriodStatsResult.Success
@@ -1474,7 +1513,7 @@ class StatsRepositoryTest : BaseUnitTest() {
                 unit = eq(StatsUnit.MONTH),
                 quantity = eq(12),
                 endDate = eq("2026-09-16"),
-                startDate = isNull(),
+                startDate = eq("2025-10-01"),
                 statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )
             verify(statsDataSource).fetchStatsVisits(
@@ -1482,7 +1521,7 @@ class StatsRepositoryTest : BaseUnitTest() {
                 unit = eq(StatsUnit.MONTH),
                 quantity = eq(12),
                 endDate = eq("2025-09-30"),
-                startDate = isNull(),
+                startDate = eq("2024-10-01"),
                 statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )
         }
