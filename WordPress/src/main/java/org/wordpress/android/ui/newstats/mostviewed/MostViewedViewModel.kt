@@ -94,6 +94,7 @@ class MostViewedViewModel @Inject constructor(
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) return
 
+        setLoadingPeriod(MostViewedDataSource.POSTS_AND_PAGES, currentPeriod)
         launchFetch(MostViewedDataSource.POSTS_AND_PAGES) {
             try {
                 _isPostsRefreshing.value = true
@@ -103,7 +104,10 @@ class MostViewedViewModel @Inject constructor(
                     forceRefresh = true
                 )
             } finally {
+                // Not gated on the job: a cancelled refresh must still stop the spinner, because
+                // whatever replaced it does not own it.
                 _isPostsRefreshing.value = false
+                clearLoadingPeriodIfCurrent(MostViewedDataSource.POSTS_AND_PAGES)
             }
         }
     }
@@ -113,6 +117,7 @@ class MostViewedViewModel @Inject constructor(
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) return
 
+        setLoadingPeriod(MostViewedDataSource.REFERRERS, currentPeriod)
         launchFetch(MostViewedDataSource.REFERRERS) {
             try {
                 _isReferrersRefreshing.value = true
@@ -122,7 +127,10 @@ class MostViewedViewModel @Inject constructor(
                     forceRefresh = true
                 )
             } finally {
+                // Not gated on the job: a cancelled refresh must still stop the spinner, because
+                // whatever replaced it does not own it.
                 _isReferrersRefreshing.value = false
+                clearLoadingPeriodIfCurrent(MostViewedDataSource.REFERRERS)
             }
         }
     }
@@ -230,6 +238,10 @@ class MostViewedViewModel @Inject constructor(
      * still current: a cancelled coroutine unwinds on another thread, so its `finally` runs after
      * the replacement has been registered, and clearing it there would let the re-dispatch that
      * follows a card being added cancel and restart the load already fetching this period.
+     *
+     * Every fetch registered through [launchFetch] has to call this, including the refreshes: the
+     * job one replaces skips the clear because it is no longer current, so whatever replaced it owns
+     * the guard from then on.
      */
     private suspend fun clearLoadingPeriodIfCurrent(dataSource: MostViewedDataSource) {
         if (fetchJobs[dataSource] === coroutineContext.job) {
@@ -355,6 +367,15 @@ class MostViewedViewModel @Inject constructor(
             dataSource,
             MostViewedCardUiState.Error(message = message)
         )
+    }
+
+    private fun setLoadingPeriod(dataSource: MostViewedDataSource, period: StatsPeriod) {
+        when (dataSource) {
+            MostViewedDataSource.POSTS_AND_PAGES ->
+                postsLoadingPeriod = period
+            MostViewedDataSource.REFERRERS ->
+                referrersLoadingPeriod = period
+        }
     }
 
     private fun clearLoadingPeriod(dataSource: MostViewedDataSource) {

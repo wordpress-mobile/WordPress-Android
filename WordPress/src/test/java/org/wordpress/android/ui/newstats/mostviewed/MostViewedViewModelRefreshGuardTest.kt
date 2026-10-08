@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.newstats.authors
+package org.wordpress.android.ui.newstats.mostviewed
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -15,23 +15,24 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.repository.MostViewedResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
-import org.wordpress.android.ui.newstats.repository.TopAuthorsResult
+import org.wordpress.android.viewmodel.ResourceProvider
 
 /**
- * Covers the guard that keeps the card from requesting a period it is already loading.
+ * Covers the guard that keeps a period from being requested twice when a pull-to-refresh replaces
+ * the load that was holding it.
  *
  * Needs a [StandardTestDispatcher] rather than the unconfined default: cancelling a coroutine that
- * is suspended in a request only unwinds it when its dispatcher next runs, which is what lets a
- * cancelled job's `finally` run after the load that replaced it has already set the guard.
+ * is suspended in a request only unwinds it when its dispatcher next runs, which is what makes the
+ * cancelled load skip the clear and leaves the refresh owning the guard.
  */
 @ExperimentalCoroutinesApi
-class AuthorsViewModelPeriodChangeTest : BaseUnitTest(StandardTestDispatcher()) {
+class MostViewedViewModelRefreshGuardTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock
     private lateinit var selectedSiteRepository: SelectedSiteRepository
 
@@ -41,7 +42,10 @@ class AuthorsViewModelPeriodChangeTest : BaseUnitTest(StandardTestDispatcher()) 
     @Mock
     private lateinit var statsRepository: StatsRepository
 
-    private lateinit var viewModel: AuthorsViewModel
+    @Mock
+    private lateinit var resourceProvider: ResourceProvider
+
+    private lateinit var viewModel: MostViewedViewModel
 
     private val testSite = SiteModel().apply {
         id = 1
@@ -56,33 +60,11 @@ class AuthorsViewModelPeriodChangeTest : BaseUnitTest(StandardTestDispatcher()) 
     }
 
     @Test
-    fun `given a period is loading, when it is requested again, then the request is not repeated`() = test {
-        whenever(statsRepository.fetchTopAuthors(eq(TEST_SITE_ID), any(), any())).doSuspendableAnswer {
-            delay(REQUEST_MS)
-            success()
-        }
-
-        viewModel = AuthorsViewModel(selectedSiteRepository, accountStore, statsRepository)
-        viewModel.onPeriodChanged(StatsPeriod.Last7Days)
-        // Starts the first request and leaves it waiting on its response.
-        runCurrent()
-
-        viewModel.onPeriodChanged(StatsPeriod.Last30Days)
-        // Unwinds the cancelled Last7Days load. Its `finally` must leave the guard the Last30Days
-        // load set in place.
-        runCurrent()
-        // Adding or reordering a card re-dispatches the current period to every visible card.
-        viewModel.onPeriodChanged(StatsPeriod.Last30Days)
-        advanceUntilIdle()
-
-        verify(statsRepository, times(1))
-            .fetchTopAuthors(eq(TEST_SITE_ID), eq(StatsPeriod.Last30Days), any())
-    }
-
-    @Test
     fun `given a refresh replaced a failing load, when the period is re-dispatched, then it is requested`() = test {
         var calls = 0
-        whenever(statsRepository.fetchTopAuthors(eq(TEST_SITE_ID), any(), any())).doSuspendableAnswer {
+        whenever(
+            statsRepository.fetchMostViewed(eq(TEST_SITE_ID), any(), eq(POSTS), any())
+        ).doSuspendableAnswer {
             calls++
             when (calls) {
                 // The load the pull-to-refresh below cancels.
@@ -91,30 +73,35 @@ class AuthorsViewModelPeriodChangeTest : BaseUnitTest(StandardTestDispatcher()) 
                     success()
                 }
                 // The refresh itself, which fails.
-                2 -> TopAuthorsResult.Error(R.string.stats_error_api)
+                2 -> MostViewedResult.Error("Network error")
                 else -> success()
             }
         }
 
-        viewModel = AuthorsViewModel(selectedSiteRepository, accountStore, statsRepository)
-        viewModel.onPeriodChanged(StatsPeriod.Last7Days)
+        viewModel = MostViewedViewModel(
+            selectedSiteRepository,
+            accountStore,
+            statsRepository,
+            resourceProvider
+        )
+        viewModel.onPeriodChangedPosts(StatsPeriod.Last7Days)
         // Starts the first request and leaves it waiting on its response.
         runCurrent()
-        viewModel.refresh()
+        viewModel.refreshPosts()
         advanceUntilIdle()
 
         // The refresh owns the guard the load it replaced was holding, so it has to release it:
         // otherwise the card is stuck on the error until the user taps Retry, and the re-dispatch
         // that follows adding or reordering a card can't load the period again.
-        viewModel.onPeriodChanged(StatsPeriod.Last7Days)
+        viewModel.onPeriodChangedPosts(StatsPeriod.Last7Days)
         advanceUntilIdle()
 
         verify(statsRepository, times(3))
-            .fetchTopAuthors(eq(TEST_SITE_ID), eq(StatsPeriod.Last7Days), any())
+            .fetchMostViewed(eq(TEST_SITE_ID), eq(StatsPeriod.Last7Days), eq(POSTS), any())
     }
 
-    private fun success() = TopAuthorsResult.Success(
-        authors = emptyList(),
+    private fun success() = MostViewedResult.Success(
+        items = emptyList(),
         totalViews = 0L,
         totalViewsChange = 0L,
         totalViewsChangePercent = 0.0
@@ -124,5 +111,6 @@ class AuthorsViewModelPeriodChangeTest : BaseUnitTest(StandardTestDispatcher()) 
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN = "test_token"
         private const val REQUEST_MS = 1_000L
+        private val POSTS = MostViewedDataSource.POSTS_AND_PAGES
     }
 }
