@@ -72,7 +72,7 @@ class UtmViewModelTest : BaseUnitTest() {
         )
         whenever(
             statsRepository.fetchUtm(
-                eq(TEST_SITE_ID), any(), any()
+                eq(TEST_SITE_ID), any(), any(), any()
             )
         ).thenReturn(result)
 
@@ -96,7 +96,7 @@ class UtmViewModelTest : BaseUnitTest() {
         )
         whenever(
             statsRepository.fetchUtm(
-                eq(TEST_SITE_ID), any(), any()
+                eq(TEST_SITE_ID), any(), any(), any()
             )
         ).thenReturn(result)
 
@@ -116,7 +116,7 @@ class UtmViewModelTest : BaseUnitTest() {
         )
         whenever(
             statsRepository.fetchUtm(
-                eq(TEST_SITE_ID), any(), any()
+                eq(TEST_SITE_ID), any(), any(), any()
             )
         ).thenReturn(result)
 
@@ -136,7 +136,7 @@ class UtmViewModelTest : BaseUnitTest() {
         )
         whenever(
             statsRepository.fetchUtm(
-                eq(TEST_SITE_ID), any(), any()
+                eq(TEST_SITE_ID), any(), any(), any()
             )
         ).thenReturn(result)
 
@@ -196,7 +196,7 @@ class UtmViewModelTest : BaseUnitTest() {
         val result = createSuccessResult(items)
         whenever(
             statsRepository.fetchUtm(
-                eq(TEST_SITE_ID), any(), any()
+                eq(TEST_SITE_ID), any(), any(), any()
             )
         ).thenReturn(result)
 
@@ -221,7 +221,7 @@ class UtmViewModelTest : BaseUnitTest() {
         val result = createSuccessResult(listOf(item))
         whenever(
             statsRepository.fetchUtm(
-                eq(TEST_SITE_ID), any(), any()
+                eq(TEST_SITE_ID), any(), any(), any()
             )
         ).thenReturn(result)
 

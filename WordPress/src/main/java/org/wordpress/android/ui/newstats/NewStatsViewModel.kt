@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
+import org.wordpress.android.ui.newstats.repository.StatsResultCache
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 
@@ -20,7 +21,8 @@ import javax.inject.Inject
 class NewStatsViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val cardConfigurationRepository: StatsCardsConfigurationRepository,
-    private val networkUtilsWrapper: NetworkUtilsWrapper
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val statsResultCache: StatsResultCache
 ) : ViewModel() {
     private val _visibleCards = MutableStateFlow<List<StatsCardType>>(StatsCardType.defaultCards())
     val visibleCards: StateFlow<List<StatsCardType>> = _visibleCards.asStateFlow()
@@ -43,9 +45,30 @@ class NewStatsViewModel @Inject constructor(
         get() = selectedSiteRepository.getSelectedSite()?.siteId ?: 0L
 
     init {
+        onScreenEntered()
         checkNetworkStatus()
         loadConfiguration()
         observeConfigurationChanges()
+    }
+
+    /**
+     * Entering the screen: keep what's already in memory so the cards render instantly, but mark it
+     * for one background refresh each, so a visit never shows only what a previous one fetched.
+     *
+     * Called again on every resume, not just when this ViewModel is created. Entries have no expiry,
+     * and a screen left in the background for hours would otherwise keep serving — with no refresh
+     * — the numbers it fetched before, for periods like Today or This week that are still moving.
+     */
+    fun onScreenEntered() {
+        statsResultCache.markAllStale()
+    }
+
+    /**
+     * Drops every cached stats result, so the refetches that follow all go to the network. Called
+     * synchronously by pull-to-refresh, before it dispatches the refresh to the cards.
+     */
+    fun invalidateStatsCache() {
+        statsResultCache.clear()
     }
 
     fun checkNetworkStatus(): Boolean {

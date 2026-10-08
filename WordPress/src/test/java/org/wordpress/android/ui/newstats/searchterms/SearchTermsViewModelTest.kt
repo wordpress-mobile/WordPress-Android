@@ -97,7 +97,7 @@ class SearchTermsViewModelTest : BaseUnitTest() {
         whenever(
             resourceProvider.getString(R.string.stats_error_api)
         ).thenReturn("API error")
-        whenever(statsRepository.fetchSearchTerms(any(), any()))
+        whenever(statsRepository.fetchSearchTerms(any(), any(), any()))
             .thenReturn(
                 SearchTermsResult.Error(R.string.stats_error_api)
             )
@@ -117,7 +117,7 @@ class SearchTermsViewModelTest : BaseUnitTest() {
     @Test
     fun `when data loads successfully, then loaded state is emitted`() =
         test {
-            whenever(statsRepository.fetchSearchTerms(any(), any()))
+            whenever(statsRepository.fetchSearchTerms(any(), any(), any()))
                 .thenReturn(createSuccessResult())
 
             initViewModel()
@@ -130,7 +130,7 @@ class SearchTermsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when data loads, then items contain correct values`() = test {
-        whenever(statsRepository.fetchSearchTerms(any(), any()))
+        whenever(statsRepository.fetchSearchTerms(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -155,7 +155,7 @@ class SearchTermsViewModelTest : BaseUnitTest() {
                     previousViews = (90 - index).toLong()
                 )
             }
-            whenever(statsRepository.fetchSearchTerms(any(), any()))
+            whenever(statsRepository.fetchSearchTerms(any(), any(), any()))
                 .thenReturn(
                     SearchTermsResult.Success(
                         items = manyItems,
@@ -176,7 +176,7 @@ class SearchTermsViewModelTest : BaseUnitTest() {
     @Test
     fun `when data loads with empty items, then loaded state with empty list`() =
         test {
-            whenever(statsRepository.fetchSearchTerms(any(), any()))
+            whenever(statsRepository.fetchSearchTerms(any(), any(), any()))
                 .thenReturn(
                     SearchTermsResult.Success(
                         items = emptyList(),
@@ -199,7 +199,7 @@ class SearchTermsViewModelTest : BaseUnitTest() {
     // region Period changes
     @Test
     fun `when period changes, then data is reloaded`() = test {
-        whenever(statsRepository.fetchSearchTerms(any(), any()))
+        whenever(statsRepository.fetchSearchTerms(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -209,16 +209,17 @@ class SearchTermsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         verify(statsRepository, times(2))
-            .fetchSearchTerms(any(), any())
+            .fetchSearchTerms(any(), any(), any())
         verify(statsRepository).fetchSearchTerms(
-            eq(TEST_SITE_ID), eq(StatsPeriod.Last30Days)
+            eq(TEST_SITE_ID), eq(StatsPeriod.Last30Days),
+            any()
         )
     }
 
     @Test
     fun `when same period is selected, then data is not reloaded`() =
         test {
-            whenever(statsRepository.fetchSearchTerms(any(), any()))
+            whenever(statsRepository.fetchSearchTerms(any(), any(), any()))
                 .thenReturn(createSuccessResult())
 
             initViewModel()
@@ -228,14 +229,14 @@ class SearchTermsViewModelTest : BaseUnitTest() {
             advanceUntilIdle()
 
             verify(statsRepository, times(1))
-                .fetchSearchTerms(any(), any())
+                .fetchSearchTerms(any(), any(), any())
         }
     // endregion
 
     // region Refresh
     @Test
     fun `when refresh is called, then data is fetched`() = test {
-        whenever(statsRepository.fetchSearchTerms(any(), any()))
+        whenever(statsRepository.fetchSearchTerms(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -245,14 +246,14 @@ class SearchTermsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         verify(statsRepository, times(2))
-            .fetchSearchTerms(eq(TEST_SITE_ID), any())
+            .fetchSearchTerms(eq(TEST_SITE_ID), any(), any())
     }
     // endregion
 
     // region Retry
     @Test
     fun `when onRetry is called, then data is reloaded`() = test {
-        whenever(statsRepository.fetchSearchTerms(any(), any()))
+        whenever(statsRepository.fetchSearchTerms(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -262,7 +263,7 @@ class SearchTermsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         verify(statsRepository, times(2))
-            .fetchSearchTerms(any(), any())
+            .fetchSearchTerms(any(), any(), any())
     }
     // endregion
 
@@ -277,7 +278,7 @@ class SearchTermsViewModelTest : BaseUnitTest() {
                     previousViews = 100
                 )
             )
-            whenever(statsRepository.fetchSearchTerms(any(), any()))
+            whenever(statsRepository.fetchSearchTerms(any(), any(), any()))
                 .thenReturn(
                     SearchTermsResult.Success(
                         items = items,
@@ -310,7 +311,7 @@ class SearchTermsViewModelTest : BaseUnitTest() {
                     previousViews = 100
                 )
             )
-            whenever(statsRepository.fetchSearchTerms(any(), any()))
+            whenever(statsRepository.fetchSearchTerms(any(), any(), any()))
                 .thenReturn(
                     SearchTermsResult.Success(
                         items = items,
@@ -342,7 +343,7 @@ class SearchTermsViewModelTest : BaseUnitTest() {
                 previousViews = 100
             )
         )
-        whenever(statsRepository.fetchSearchTerms(any(), any()))
+        whenever(statsRepository.fetchSearchTerms(any(), any(), any()))
             .thenReturn(
                 SearchTermsResult.Success(
                     items = items,

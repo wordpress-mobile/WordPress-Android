@@ -3,19 +3,24 @@ package org.wordpress.android.ui.newstats.mostviewed
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
+import kotlin.coroutines.cancellation.CancellationException
+import kotlin.coroutines.coroutineContext
 
 private const val CARD_MAX_ITEMS = 10
 
@@ -25,6 +30,8 @@ private const val CARD_MAX_ITEMS = 10
  *
  * Subclasses only need to provide:
  * - [logTag]: a label for error logging
+ * - [cacheBucket]: the repository cache the card reads, so a
+ *   period it already holds renders without a placeholder
  * - [fetchStats]: the suspend function that calls the
  *   repository and maps the result to [StatsCardFetchResult]
  */
@@ -49,10 +56,12 @@ abstract class BaseStatsCardViewModel(
     private var loadedPeriod: StatsPeriod? = null
     private var fetchJob: Job? = null
     protected abstract val logTag: String
+    protected abstract val cacheBucket: StatsCacheBucket
 
     protected abstract suspend fun fetchStats(
         siteId: Long,
-        period: StatsPeriod
+        period: StatsPeriod,
+        forceRefresh: Boolean
     ): StatsCardFetchResult
 
     fun loadData() {
@@ -78,16 +87,58 @@ abstract class BaseStatsCardViewModel(
             return
         }
 
-        _uiState.value = MostViewedCardUiState.Loading
+        val period = currentPeriod
+        // A period already in memory repaints in the same frame, so showing the placeholder first
+        // would only flash a skeleton over data the card is about to render anyway.
+        if (!statsRepository.isCached(cacheBucket, site.siteId, period)) {
+            _uiState.value = MostViewedCardUiState.Loading
+        }
 
-        fetchJob?.cancel()
-        fetchJob = viewModelScope.launch {
+        launchFetch {
             try {
                 fetchAndProcess(site)
+                revalidateIfNeeded(site, period)
             } finally {
-                loadingPeriod = null
+                clearLoadingPeriodIfCurrent()
             }
         }
+    }
+
+    /**
+     * Replaces any in-flight fetch with [block]. A background revalidation outlives the load that
+     * started it, so without this the period the user just left could still write its result into
+     * the card after the new period has rendered.
+     *
+     * The job is registered before it is started, so [fetchJob] always holds the one in flight —
+     * which is what [clearLoadingPeriodIfCurrent] compares against.
+     */
+    private fun launchFetch(block: suspend () -> Unit) {
+        fetchJob?.cancel()
+        val job = viewModelScope.launch(start = CoroutineStart.LAZY) { block() }
+        fetchJob = job
+        job.start()
+    }
+
+    /**
+     * Clears the guard that keeps a period from being requested twice, but only for the job that is
+     * still current: a cancelled one clearing it would let the re-dispatch that follows a card being
+     * added cancel and restart the load that is already fetching this period.
+     */
+    private suspend fun clearLoadingPeriodIfCurrent() {
+        if (fetchJob === coroutineContext.job) {
+            loadingPeriod = null
+        }
+    }
+
+    /**
+     * Refreshes a result that was served from a previous visit to the stats screen, once. The card
+     * already shows those numbers, so this runs without a loading state and, if it fails, leaves
+     * them in place rather than replacing them with an error.
+     */
+    private suspend fun revalidateIfNeeded(site: SiteModel, period: StatsPeriod) {
+        if (period != currentPeriod) return
+        if (!statsRepository.needsRevalidation(cacheBucket, site.siteId, period)) return
+        fetchAndProcess(site, forceRefresh = true, applyErrors = false)
     }
 
     fun refresh() {
@@ -97,14 +148,15 @@ abstract class BaseStatsCardViewModel(
         if (accessToken.isNullOrEmpty()) return
 
         loadingPeriod = currentPeriod
-        fetchJob?.cancel()
-        fetchJob = viewModelScope.launch {
+        launchFetch {
             try {
                 _isRefreshing.value = true
-                fetchAndProcess(site)
+                fetchAndProcess(site, forceRefresh = true)
             } finally {
+                // Not gated on the job: a cancelled refresh must still stop the spinner, because
+                // whatever replaced it does not own it.
                 _isRefreshing.value = false
-                loadingPeriod = null
+                clearLoadingPeriodIfCurrent()
             }
         }
     }
@@ -132,12 +184,18 @@ abstract class BaseStatsCardViewModel(
     fun getCurrentPeriod(): StatsPeriod = currentPeriod
 
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun fetchAndProcess(site: SiteModel) {
+    private suspend fun fetchAndProcess(
+        site: SiteModel,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
+    ) {
         val siteId = site.siteId
 
         try {
             when (
-                val result = fetchStats(siteId, currentPeriod)
+                val result = fetchStats(
+                    siteId, currentPeriod, forceRefresh
+                )
             ) {
                 is StatsCardFetchResult.Success -> {
                     loadedPeriod = currentPeriod
@@ -164,6 +222,7 @@ abstract class BaseStatsCardViewModel(
                     }
                 }
                 is StatsCardFetchResult.Error -> {
+                    if (!applyErrors) return
                     _uiState.value = MostViewedCardUiState.Error(
                         message = resourceProvider.getString(
                             result.messageResId
@@ -173,12 +232,15 @@ abstract class BaseStatsCardViewModel(
                     )
                 }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             AppLog.e(
                 AppLog.T.STATS,
                 "Error fetching $logTag",
                 e
             )
+            if (!applyErrors) return
             _uiState.value = MostViewedCardUiState.Error(
                 resourceProvider.getString(
                     R.string.stats_error_unknown
