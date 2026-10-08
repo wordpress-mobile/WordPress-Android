@@ -144,7 +144,9 @@ class TodaysStatsViewModel @Inject constructor(
             // Fetch all data in parallel for better performance
             val (todayStats, chartData) = coroutineScope {
                 val todayStatsDeferred = async { fetchTodayStats(site, forceRefresh) }
-                val chartDataDeferred = async { fetchChartData(site, forceRefresh) }
+                val chartDataDeferred = async {
+                    fetchChartData(site, forceRefresh, keepShownOnFailure = !applyErrors)
+                }
                 todayStatsDeferred.await() to chartDataDeferred.await()
             }
 
@@ -190,11 +192,19 @@ class TodaysStatsViewModel @Inject constructor(
     }
 
     /**
-     * A window that fails keeps whatever the card is already showing for it, so a silent background
-     * revalidation can never blank a sparkline it is unable to replace. With nothing on screen yet
-     * a failed window is still an empty series, as the card has always rendered it.
+     * With [keepShownOnFailure] a window that fails keeps whatever the card is already showing for
+     * it, so a silent background revalidation can never blank a sparkline it is unable to replace.
+     *
+     * Only that path passes it. A load the user asked for renders a failed window as an empty series,
+     * as the card has always done: keeping the old one there would put yesterday's hours under
+     * today's label once the day rolls over, and refreshed totals over a sparkline that was not
+     * refreshed with them.
      */
-    private suspend fun fetchChartData(site: SiteModel, forceRefresh: Boolean): ChartData = coroutineScope {
+    private suspend fun fetchChartData(
+        site: SiteModel,
+        forceRefresh: Boolean,
+        keepShownOnFailure: Boolean
+    ): ChartData = coroutineScope {
         // Fetch both periods in parallel
         val currentPeriodDeferred = async {
             fetchHourlyData(site, CURRENT_PERIOD_OFFSET_DAYS, forceRefresh)
@@ -203,7 +213,9 @@ class TodaysStatsViewModel @Inject constructor(
             fetchHourlyData(site, PREVIOUS_PERIOD_OFFSET_DAYS, forceRefresh)
         }
 
-        val shown = (_uiState.value as? TodaysStatsCardUiState.Loaded)?.chartData
+        val shown = (_uiState.value as? TodaysStatsCardUiState.Loaded)
+            ?.chartData
+            ?.takeIf { keepShownOnFailure }
         ChartData(
             currentPeriod = currentPeriodDeferred.await() ?: shown?.currentPeriod ?: emptyList(),
             previousPeriod = previousPeriodDeferred.await() ?: shown?.previousPeriod ?: emptyList()

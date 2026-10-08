@@ -645,6 +645,28 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
         assertThat(state.chartData.currentPeriod).isNotEmpty()
     }
 
+    @Test
+    fun `given the sparkline is on screen, when a refresh's hourly fetch fails, then it is cleared`() = test {
+        whenever(statsRepository.fetchTodayAggregates(any(), any()))
+            .thenReturn(TodayAggregatesResult.Success(createTodayAggregates()))
+        whenever(statsRepository.fetchHourlyViews(any(), any(), eq(false)))
+            .thenReturn(createHourlyViewsResult())
+        // The refresh refetches the aggregates successfully, but the hourly windows fail.
+        whenever(statsRepository.fetchHourlyViews(any(), any(), eq(true)))
+            .thenReturn(HourlyViewsResult.Error("Network error"))
+
+        initViewModel()
+        advanceUntilIdle()
+        viewModel.refresh()
+        advanceUntilIdle()
+
+        // The user asked for this one, so the chart may not keep a series that was not refreshed with
+        // the totals above it — which across midnight would be yesterday's hours under today's label.
+        val state = viewModel.uiState.value as TodaysStatsCardUiState.Loaded
+        assertThat(state.chartData.currentPeriod).isEmpty()
+        assertThat(state.chartData.previousPeriod).isEmpty()
+    }
+
     // The card caches three entries and they can fail, and so go stale, independently. Gating the
     // refresh on the aggregates alone would serve an earlier visit's sparkline under today's
     // totals, with nothing else in the session ever asking about the hourly windows again.
