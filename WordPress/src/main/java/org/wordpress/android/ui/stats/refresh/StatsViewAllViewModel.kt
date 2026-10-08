@@ -59,7 +59,14 @@ class StatsViewAllViewModel(
 
     val toolbarHasShadow = dateSelectorData.mapSafe { !it.isVisible }
 
-    fun start(startDate: SelectedDate?) {
+    private var siteIdToRestoreOnExit: Int? = null
+
+    fun start(startDate: SelectedDate?, previousSiteId: Int = 0) {
+        // Only the first start reflects the site the user came from. A later start (configuration change) would
+        // report this screen's own site, because the provider already points at it by then.
+        if (siteIdToRestoreOnExit == null) {
+            siteIdToRestoreOnExit = previousSiteId
+        }
         launch {
             startDate?.let {
                 dateSelector?.start(startDate)
@@ -100,7 +107,17 @@ class StatsViewAllViewModel(
     override fun onCleared() {
         _showSnackbarMessage.value = null
         useCase.clear()
-        statsSiteProvider.reset()
+        // Restore the site that was in effect when this screen opened, not the selected one. Stats can be open
+        // for a site other than the selected one (widget, notification, deep link), and resetting to the
+        // selection would leave the screen underneath reporting and fetching against the wrong site. Falls back
+        // to the selection when there was no previous site, which is the case when a notification opens this
+        // screen directly with no Stats screen on the back stack.
+        val siteId = siteIdToRestoreOnExit
+        if (siteId != null && siteId != 0) {
+            statsSiteProvider.start(siteId)
+        } else {
+            statsSiteProvider.reset()
+        }
     }
 
     fun onRetryClick() {

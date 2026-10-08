@@ -78,7 +78,11 @@ class EditorLauncher @Inject constructor(
         val properties = mapOf(
             "will_use_gutenberg_kit" to shouldUseGutenbergKit
         )
-        analyticsTrackerWrapper.track(stat = AnalyticsTracker.Stat.EDITOR_LAUNCHER, properties)
+        analyticsTrackerWrapper.track(
+            stat = AnalyticsTracker.Stat.EDITOR_LAUNCHER,
+            site = params.siteSource.getSite(siteStore),
+            properties = properties
+        )
 
         return Intent(context, targetActivity).apply {
             addEditorExtras(params)

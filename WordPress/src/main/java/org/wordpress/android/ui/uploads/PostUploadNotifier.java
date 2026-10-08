@@ -887,7 +887,7 @@ class PostUploadNotifier {
         try {
             mNotificationManager.notify((int) id, notification);
             if (notificationType != null) {
-                mSystemNotificationsTracker.trackShownNotification(notificationType);
+                mSystemNotificationsTracker.trackShownNotification(notificationType, null);
             }
         } catch (RuntimeException runtimeException) {
             AppLog.e(T.POSTS, "doNotify failed; See issue #2858 / #3966", runtimeException);

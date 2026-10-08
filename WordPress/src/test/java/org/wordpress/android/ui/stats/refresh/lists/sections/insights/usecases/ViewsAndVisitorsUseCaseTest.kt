@@ -191,7 +191,7 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
         loadData(true, forced)
 
         verify(analyticsTrackerWrapper).track(
-            STATS_VIEWS_AND_VISITORS_ERROR, mapOf(
+            STATS_VIEWS_AND_VISITORS_ERROR, site, mapOf(
                 "stats_last_date" to "2020-12-13",
                 "stats_current_date" to "2020-12-15",
                 "stats_age_in_days" to 2,

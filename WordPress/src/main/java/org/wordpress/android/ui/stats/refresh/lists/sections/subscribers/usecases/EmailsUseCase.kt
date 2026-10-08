@@ -113,7 +113,7 @@ class EmailsUseCase @Inject constructor(
     private fun buildTitle() = BlockListItem.Title(R.string.stats_view_emails)
 
     private fun onLinkClick() {
-        analyticsTracker.track(AnalyticsTracker.Stat.STATS_EMAILS_VIEW_MORE_TAPPED)
+        analyticsTracker.track(AnalyticsTracker.Stat.STATS_EMAILS_VIEW_MORE_TAPPED, statsSiteProvider.siteModel)
         navigateTo(NavigationTarget.EmailsStats)
     }
 

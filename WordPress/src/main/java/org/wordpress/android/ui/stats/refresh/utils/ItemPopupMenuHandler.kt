@@ -61,6 +61,7 @@ class ItemPopupMenuHandler
                         UP -> {
                             analyticsTrackerWrapper.trackWithType(
                                 Stat.STATS_INSIGHTS_TYPE_MOVED_UP,
+                                statsSiteProvider.siteModel,
                                 statsType
                             )
                             coroutineScope.launch {
@@ -72,6 +73,7 @@ class ItemPopupMenuHandler
                             coroutineScope.launch {
                                 analyticsTrackerWrapper.trackWithType(
                                     Stat.STATS_INSIGHTS_TYPE_MOVED_DOWN,
+                                    statsSiteProvider.siteModel,
                                     statsType
                                 )
                                 statsStore.moveTypeDown(statsSiteProvider.siteModel, type)
@@ -82,6 +84,7 @@ class ItemPopupMenuHandler
                             coroutineScope.launch {
                                 analyticsTrackerWrapper.trackWithType(
                                     Stat.STATS_INSIGHTS_TYPE_REMOVED,
+                                    statsSiteProvider.siteModel,
                                     statsType
                                 )
                                 statsStore.removeType(statsSiteProvider.siteModel, type)
