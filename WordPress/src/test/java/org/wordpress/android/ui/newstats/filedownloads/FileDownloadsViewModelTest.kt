@@ -97,7 +97,7 @@ class FileDownloadsViewModelTest : BaseUnitTest() {
         whenever(
             resourceProvider.getString(R.string.stats_error_api)
         ).thenReturn("API error")
-        whenever(statsRepository.fetchFileDownloads(any(), any()))
+        whenever(statsRepository.fetchFileDownloads(any(), any(), any()))
             .thenReturn(
                 FileDownloadsResult.Error(R.string.stats_error_api)
             )
@@ -117,7 +117,7 @@ class FileDownloadsViewModelTest : BaseUnitTest() {
     @Test
     fun `when data loads successfully, then loaded state is emitted`() =
         test {
-            whenever(statsRepository.fetchFileDownloads(any(), any()))
+            whenever(statsRepository.fetchFileDownloads(any(), any(), any()))
                 .thenReturn(createSuccessResult())
 
             initViewModel()
@@ -130,7 +130,7 @@ class FileDownloadsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when data loads, then items contain correct values`() = test {
-        whenever(statsRepository.fetchFileDownloads(any(), any()))
+        whenever(statsRepository.fetchFileDownloads(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -157,7 +157,7 @@ class FileDownloadsViewModelTest : BaseUnitTest() {
                     previousDownloads = (90 - index).toLong()
                 )
             }
-            whenever(statsRepository.fetchFileDownloads(any(), any()))
+            whenever(statsRepository.fetchFileDownloads(any(), any(), any()))
                 .thenReturn(
                     FileDownloadsResult.Success(
                         items = manyItems,
@@ -178,7 +178,7 @@ class FileDownloadsViewModelTest : BaseUnitTest() {
     @Test
     fun `when data loads with empty items, then loaded state with empty list`() =
         test {
-            whenever(statsRepository.fetchFileDownloads(any(), any()))
+            whenever(statsRepository.fetchFileDownloads(any(), any(), any()))
                 .thenReturn(
                     FileDownloadsResult.Success(
                         items = emptyList(),
@@ -201,7 +201,7 @@ class FileDownloadsViewModelTest : BaseUnitTest() {
     // region Period changes
     @Test
     fun `when period changes, then data is reloaded`() = test {
-        whenever(statsRepository.fetchFileDownloads(any(), any()))
+        whenever(statsRepository.fetchFileDownloads(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -211,16 +211,17 @@ class FileDownloadsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         verify(statsRepository, times(2))
-            .fetchFileDownloads(any(), any())
+            .fetchFileDownloads(any(), any(), any())
         verify(statsRepository).fetchFileDownloads(
-            eq(TEST_SITE_ID), eq(StatsPeriod.Last30Days)
+            eq(TEST_SITE_ID), eq(StatsPeriod.Last30Days),
+            any()
         )
     }
 
     @Test
     fun `when same period is selected, then data is not reloaded`() =
         test {
-            whenever(statsRepository.fetchFileDownloads(any(), any()))
+            whenever(statsRepository.fetchFileDownloads(any(), any(), any()))
                 .thenReturn(createSuccessResult())
 
             initViewModel()
@@ -230,14 +231,14 @@ class FileDownloadsViewModelTest : BaseUnitTest() {
             advanceUntilIdle()
 
             verify(statsRepository, times(1))
-                .fetchFileDownloads(any(), any())
+                .fetchFileDownloads(any(), any(), any())
         }
     // endregion
 
     // region Refresh
     @Test
     fun `when refresh is called, then data is fetched`() = test {
-        whenever(statsRepository.fetchFileDownloads(any(), any()))
+        whenever(statsRepository.fetchFileDownloads(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -247,14 +248,14 @@ class FileDownloadsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         verify(statsRepository, times(2))
-            .fetchFileDownloads(eq(TEST_SITE_ID), any())
+            .fetchFileDownloads(eq(TEST_SITE_ID), any(), any())
     }
     // endregion
 
     // region Retry
     @Test
     fun `when onRetry is called, then data is reloaded`() = test {
-        whenever(statsRepository.fetchFileDownloads(any(), any()))
+        whenever(statsRepository.fetchFileDownloads(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -264,7 +265,7 @@ class FileDownloadsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         verify(statsRepository, times(2))
-            .fetchFileDownloads(any(), any())
+            .fetchFileDownloads(any(), any(), any())
     }
     // endregion
 
@@ -279,7 +280,7 @@ class FileDownloadsViewModelTest : BaseUnitTest() {
                     previousDownloads = 100
                 )
             )
-            whenever(statsRepository.fetchFileDownloads(any(), any()))
+            whenever(statsRepository.fetchFileDownloads(any(), any(), any()))
                 .thenReturn(
                     FileDownloadsResult.Success(
                         items = items,
@@ -312,7 +313,7 @@ class FileDownloadsViewModelTest : BaseUnitTest() {
                     previousDownloads = 100
                 )
             )
-            whenever(statsRepository.fetchFileDownloads(any(), any()))
+            whenever(statsRepository.fetchFileDownloads(any(), any(), any()))
                 .thenReturn(
                     FileDownloadsResult.Success(
                         items = items,
@@ -344,7 +345,7 @@ class FileDownloadsViewModelTest : BaseUnitTest() {
                 previousDownloads = 100
             )
         )
-        whenever(statsRepository.fetchFileDownloads(any(), any()))
+        whenever(statsRepository.fetchFileDownloads(any(), any(), any()))
             .thenReturn(
                 FileDownloadsResult.Success(
                     items = items,
