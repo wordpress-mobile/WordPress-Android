@@ -63,7 +63,6 @@ private const val WEEKLY_QUANTITY = 7
 private const val DAYS_BEFORE_END_DATE = -6
 private const val DAYS_IN_7_DAYS = 7
 private const val DAYS_IN_30_DAYS = 30
-private const val DAYS_IN_12_MONTHS = 365
 private const val MONTHS_IN_12_MONTHS = 12
 private const val MAX_DAYS_IN_MONTH = 31
 private const val MAX_DAYS_IN_2_YEARS = 731
@@ -1006,12 +1005,18 @@ class StatsRepository @Inject constructor(
 
     /**
      * The previous window aligned to whole [PeriodConfig.dateUnit] steps (the chart's rule in
-     * [calculatePeriodDates]): the previous window ends one unit before [currentStart] and spans
-     * `quantity` units back. Shared so the chart and the bottom-row totals derive it identically.
+     * [calculatePeriodDates]): it ends the day before [currentStart] and spans `quantity` units back.
+     * Shared with [calculateComparisonDateRanges] so the chart and the list cards derive it identically.
+     *
+     * The end is the day before rather than a whole unit before so a MONTH window ends on the last day
+     * of its last month rather than on that month's 1st. Both describe the same month buckets to the
+     * chart, but the list cards send the window verbatim as `start_date`/`date`, and a window ending on
+     * the 1st would drop the rest of the month from every list card's comparison. Day-unit windows are
+     * unaffected: a day before and a unit before are the same date.
      */
     private fun previousWindowForConfig(currentStart: LocalDate, config: PeriodConfig): Pair<LocalDate, LocalDate> {
-        val previousEnd = subtractFromDate(currentStart, 1, config.dateUnit)
-        val previousStart = subtractFromDate(previousEnd, config.quantity - 1, config.dateUnit)
+        val previousEnd = currentStart.minusDays(1)
+        val previousStart = subtractFromDate(currentStart, config.quantity, config.dateUnit)
         return previousStart to previousEnd
     }
 
@@ -1182,7 +1187,13 @@ class StatsRepository @Inject constructor(
             is StatsPeriod.Today -> today to today
             is StatsPeriod.Last7Days -> today.minusDays((DAYS_IN_7_DAYS - 1).toLong()) to today
             is StatsPeriod.Last30Days -> today.minusDays((DAYS_IN_30_DAYS - 1).toLong()) to today
-            is StatsPeriod.Last12Months -> today.minusMonths((MONTHS_IN_12_MONTHS - 1).toLong()) to today
+            // Twelve whole month buckets ending with the current month. That is what the API returns
+            // for the chart's `unit=month&quantity=12&date=<today>` request, and the window web and iOS
+            // ask for explicitly (`start_date` = the 1st of the month eleven months back). Starting it
+            // eleven months back *from today* instead would describe a window nobody fetches, and the
+            // list cards — which do send their own start — would cover a different range from the chart.
+            is StatsPeriod.Last12Months ->
+                today.minusMonths((MONTHS_IN_12_MONTHS - 1).toLong()).withDayOfMonth(1) to today
             // Calendar-aligned windows run from the start of the current week/month/year up to today.
             is StatsPeriod.ThisWeek ->
                 today.with(TemporalAdjusters.previousOrSame(firstDayOfWeek())) to today
@@ -1463,8 +1474,9 @@ class StatsRepository @Inject constructor(
                 StatsDateRange.Preset(num = DAYS_IN_7_DAYS, date = todayString)
             is StatsPeriod.Last30Days ->
                 StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = todayString)
-            is StatsPeriod.Last12Months ->
-                StatsDateRange.Preset(num = DAYS_IN_12_MONTHS, date = todayString)
+            // Last 12 Months sends its window rather than a day count: it is twelve whole month
+            // buckets, which no `num` describes. See [currentPeriodWindow].
+            is StatsPeriod.Last12Months,
             is StatsPeriod.ThisWeek,
             is StatsPeriod.ThisMonth,
             is StatsPeriod.ThisYear -> {
@@ -1502,10 +1514,21 @@ class StatsRepository @Inject constructor(
                 StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = todayString) to
                     StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = previousEndString)
             }
+            // Twelve whole month buckets, compared against the twelve before them — the same windows
+            // the chart fetches, derived from the chart's own rules ([currentPeriodWindow] and
+            // [previousWindowForConfig]) so the two cannot drift apart. A rolling `num=365` would put
+            // this card on a window three weeks longer than the chart above it, and longer than the one
+            // web and iOS report.
             is StatsPeriod.Last12Months -> {
-                val previousEndString = today.minusDays(DAYS_IN_12_MONTHS.toLong()).format(dateFormatter)
-                StatsDateRange.Preset(num = DAYS_IN_12_MONTHS, date = todayString) to
-                    StatsDateRange.Preset(num = DAYS_IN_12_MONTHS, date = previousEndString)
+                val (start, end) = currentPeriodWindow(period)
+                val (previousStart, previousEnd) = previousWindowForConfig(start, getPeriodConfig(period))
+                StatsDateRange.Custom(
+                    startDate = start.format(dateFormatter),
+                    date = end.format(dateFormatter)
+                ) to StatsDateRange.Custom(
+                    startDate = previousStart.format(dateFormatter),
+                    date = previousEnd.format(dateFormatter)
+                )
             }
             is StatsPeriod.ThisWeek,
             is StatsPeriod.ThisMonth,
