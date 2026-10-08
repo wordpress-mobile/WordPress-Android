@@ -1603,7 +1603,8 @@ class StatsRepository @Inject constructor(
                 )
                 CountryViewsResult.Error(
                     currentResult.errorType.messageResId,
-                    currentResult.errorType == StatsErrorType.AUTH_ERROR
+                    currentResult.errorType == StatsErrorType.AUTH_ERROR,
+                    currentResult.errorType == StatsErrorType.PLAN_GATED
                 )
             }
         }
@@ -1645,7 +1646,8 @@ class StatsRepository @Inject constructor(
                 )
                 RegionViewsResult.Error(
                     currentResult.errorType.messageResId,
-                    currentResult.errorType == StatsErrorType.AUTH_ERROR
+                    currentResult.errorType == StatsErrorType.AUTH_ERROR,
+                    currentResult.errorType == StatsErrorType.PLAN_GATED
                 )
             }
         }
@@ -1728,7 +1730,8 @@ class StatsRepository @Inject constructor(
                 )
                 CityViewsResult.Error(
                     currentResult.errorType.messageResId,
-                    currentResult.errorType == StatsErrorType.AUTH_ERROR
+                    currentResult.errorType == StatsErrorType.AUTH_ERROR,
+                    currentResult.errorType == StatsErrorType.PLAN_GATED
                 )
             }
         }
@@ -2038,7 +2041,8 @@ class StatsRepository @Inject constructor(
                 )
                 DevicesResult.Error(
                     result.errorType.messageResId,
-                    result.errorType == StatsErrorType.AUTH_ERROR
+                    result.errorType == StatsErrorType.AUTH_ERROR,
+                    result.errorType == StatsErrorType.PLAN_GATED
                 )
             }
         }
@@ -2097,7 +2101,9 @@ class StatsRepository @Inject constructor(
                 UtmResult.Error(
                     curResult.errorType.messageResId,
                     curResult.errorType ==
-                        StatsErrorType.AUTH_ERROR
+                        StatsErrorType.AUTH_ERROR,
+                    curResult.errorType ==
+                        StatsErrorType.PLAN_GATED
                 )
             }
         }
@@ -2748,7 +2754,8 @@ sealed class CountryViewsResult {
     ) : CountryViewsResult()
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isPlanGated: Boolean = false
     ) : CountryViewsResult()
 }
 
@@ -2780,7 +2787,8 @@ sealed class RegionViewsResult {
     ) : RegionViewsResult()
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isPlanGated: Boolean = false
     ) : RegionViewsResult()
 }
 
@@ -2812,7 +2820,8 @@ sealed class CityViewsResult {
     ) : CityViewsResult()
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isPlanGated: Boolean = false
     ) : CityViewsResult()
 }
 
@@ -2972,7 +2981,8 @@ sealed class DevicesResult {
     ) : DevicesResult()
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isPlanGated: Boolean = false
     ) : DevicesResult()
 }
 
@@ -3122,7 +3132,8 @@ sealed class UtmResult {
     ) : UtmResult()
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isPlanGated: Boolean = false
     ) : UtmResult()
 }
 
