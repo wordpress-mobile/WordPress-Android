@@ -44,14 +44,27 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
+import org.wordpress.android.ui.newstats.subscribers.SubscribersCardType
+import javax.inject.Inject
 
 private const val LOAD_MORE_THRESHOLD = 5
 
 @AndroidEntryPoint
 class SubscribersListDetailActivity :
     BaseAppCompatActivity() {
+    @Inject
+    lateinit var newStatsTracker: NewStatsTracker
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Only on a fresh launch: a rotation recreates this activity from the same Intent, and
+        // re-reporting there would inflate the count. Same guard as NewStatsActivity's.
+        if (savedInstanceState == null) {
+            newStatsTracker.trackDetailScreenShown(
+                SubscribersCardType.SUBSCRIBERS_LIST
+            )
+        }
         setContent {
             AppThemeM3 {
                 SubscribersListDetailScreen(

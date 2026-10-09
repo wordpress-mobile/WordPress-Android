@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.repository.CityViewItemData
 import org.wordpress.android.ui.newstats.repository.CityViewsResult
@@ -40,7 +41,8 @@ class LocationsViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
     private val statsRepository: StatsRepository,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val newStatsTracker: NewStatsTracker
 ) : ViewModel() {
     private val _countriesUiState =
         MutableStateFlow<LocationsCardUiState>(LocationsCardUiState.Loading)
@@ -224,6 +226,10 @@ class LocationsViewModel @Inject constructor(
     @Suppress("ReturnCount")
     fun onLocationTypeChanged(type: LocationType) {
         if (_selectedLocationType.value == type) return
+        newStatsTracker.trackLocationLevelChanged(
+            from = _selectedLocationType.value,
+            to = type
+        )
         _selectedLocationType.value = type
 
         // Lazy-fetch: if this type hasn't been loaded for the current period

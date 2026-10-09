@@ -142,7 +142,12 @@ class MinifiedWidgetUpdater
     }
 
     override fun delete(appWidgetId: Int) {
-        analyticsTrackerWrapper.trackMinifiedWidget(AnalyticsTracker.Stat.STATS_WIDGET_REMOVED)
+        // Tracked before the prefs below are cleared: removeAppWidgetSiteId drops the only record
+        // of which site this widget belonged to.
+        analyticsTrackerWrapper.trackMinifiedWidget(
+            AnalyticsTracker.Stat.STATS_WIDGET_REMOVED,
+            siteStore.getSiteBySiteId(appPrefsWrapper.getAppWidgetSiteId(appWidgetId))
+        )
         appPrefsWrapper.removeAppWidgetColorModeId(appWidgetId)
         appPrefsWrapper.removeAppWidgetSiteId(appWidgetId)
     }

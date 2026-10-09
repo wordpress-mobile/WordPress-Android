@@ -39,11 +39,14 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.components.StatsDetailListItem
 import org.wordpress.android.ui.newstats.components.StatsListHeader
 import org.wordpress.android.ui.newstats.components.StatsSummaryCard
 import org.wordpress.android.ui.newstats.components.StatsViewChange
+import javax.inject.Inject
 
 private const val EXTRA_PERIOD_TYPE = "extra_period_type"
 private const val EXTRA_PERIOD_CUSTOM_START = "extra_period_custom_start"
@@ -52,10 +55,19 @@ private const val NO_EPOCH_DAY = -1L
 
 @AndroidEntryPoint
 class AuthorsDetailActivity : BaseAppCompatActivity() {
+    @Inject
+    lateinit var newStatsTracker: NewStatsTracker
+
     private val viewModel: AuthorsDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Only on a fresh launch: a rotation recreates this activity from the same Intent, and
+        // re-reporting there would inflate the count. Same guard as NewStatsActivity's.
+        if (savedInstanceState == null) {
+            newStatsTracker.trackDetailScreenShown(StatsCardType.AUTHORS)
+        }
 
         viewModel.load(readPeriod())
 

@@ -9,6 +9,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -16,6 +17,8 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker.CardMoveDirection
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
 import org.wordpress.android.ui.newstats.repository.StatsResultCache
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -34,6 +37,9 @@ class NewStatsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
 
     @Mock
     private lateinit var statsResultCache: StatsResultCache
+
+    @Mock
+    private lateinit var newStatsTracker: NewStatsTracker
 
     private lateinit var viewModel: NewStatsViewModel
 
@@ -58,7 +64,8 @@ class NewStatsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             selectedSiteRepository,
             cardConfigurationRepository,
             networkUtilsWrapper,
-            statsResultCache
+            statsResultCache,
+            newStatsTracker
         )
     }
 
@@ -168,7 +175,8 @@ class NewStatsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             selectedSiteRepository,
             cardConfigurationRepository,
             networkUtilsWrapper,
-            statsResultCache
+            statsResultCache,
+            newStatsTracker
         )
         advanceUntilIdle()
 
@@ -231,7 +239,8 @@ class NewStatsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             selectedSiteRepository,
             cardConfigurationRepository,
             networkUtilsWrapper,
-            statsResultCache
+            statsResultCache,
+            newStatsTracker
         )
 
         // Before advanceUntilIdle(), config hasn't loaded yet
@@ -340,6 +349,79 @@ class NewStatsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         verify(statsResultCache).clear()
     }
 
+
+    // region Tracking
+    @Test
+    fun `when a card is added or removed, then the card type is reported`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.addCard(StatsCardType.CLICKS)
+        viewModel.removeCard(StatsCardType.LOCATIONS)
+
+        verify(newStatsTracker).trackCardAdded(StatsCardType.CLICKS)
+        verify(newStatsTracker).trackCardRemoved(StatsCardType.LOCATIONS)
+    }
+
+    @Test
+    fun `when a card is moved, then the move and the positions it spanned are reported`() = test {
+        // Default order: today, chart, posts and pages, locations.
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.moveCardUp(StatsCardType.MOST_VIEWED_POSTS_AND_PAGES)
+
+        verify(newStatsTracker).trackCardMoved(
+            StatsCardType.MOST_VIEWED_POSTS_AND_PAGES,
+            CardMoveDirection.UP,
+            2,
+            1
+        )
+    }
+
+    /** The reordering menu offers the move anyway, but it would do nothing. */
+    @Test
+    fun `when a card at the end of the list is moved further that way, then nothing is reported`() =
+        test {
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.moveCardUp(StatsCardType.TODAYS_STATS)
+            viewModel.moveCardToTop(StatsCardType.TODAYS_STATS)
+            viewModel.moveCardDown(StatsCardType.LOCATIONS)
+            viewModel.moveCardToBottom(StatsCardType.LOCATIONS)
+
+            verify(newStatsTracker, never()).trackCardMoved(
+                any<StatsCardType>(),
+                any(),
+                any(),
+                any()
+            )
+        }
+
+    @Test
+    fun `when a tab is shown, then its own shown event is reported`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onTabShown(StatsTab.SUBSCRIBERS)
+
+        verify(newStatsTracker).trackTabShown(StatsTab.SUBSCRIBERS)
+    }
+
+    @Test
+    fun `when the user moves between tabs, then the tab left is reported with the new one`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onTabSelected(from = StatsTab.TRAFFIC, to = StatsTab.INSIGHTS)
+
+        verify(newStatsTracker).trackTabSelected(
+            from = StatsTab.TRAFFIC,
+            to = StatsTab.INSIGHTS
+        )
+    }
+    // endregion
     companion object {
         private const val TEST_SITE_ID = 123L
         private const val OTHER_SITE_ID = 456L

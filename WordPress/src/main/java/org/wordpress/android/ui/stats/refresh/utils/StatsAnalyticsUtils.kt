@@ -13,6 +13,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWi
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 private const val TAP_SOURCE_PROPERTY = "tap_source"
+private const val NEW_STATS_PROPERTY = "new_stats"
 private const val GRANULARITY_PROPERTY = "granularity"
 private const val PERIOD_PROPERTY = "period"
 private const val HOURS_PROPERTY = "hours"
@@ -44,8 +45,23 @@ enum class StatsLaunchedFrom(val value: String) {
     STATS_TOGGLE("stats_toggle"),
 }
 
-fun AnalyticsTrackerWrapper.trackStatsAccessed(site: SiteModel, tapSource: String) =
-    track(stat = Stat.STATS_ACCESSED, site = site, properties = mutableMapOf(TAP_SOURCE_PROPERTY to tapSource))
+/**
+ * Both Stats screens report this under the same name, so the open counts stay comparable for the
+ * length of the rollout. [isNewStats] is what tells them apart: it is set only by New Stats, and
+ * matches how iOS marks the same event (`new_stats` = "1").
+ */
+fun AnalyticsTrackerWrapper.trackStatsAccessed(
+    site: SiteModel,
+    tapSource: String,
+    isNewStats: Boolean = false
+) = track(
+    stat = Stat.STATS_ACCESSED,
+    site = site,
+    properties = buildMap {
+        put(TAP_SOURCE_PROPERTY, tapSource)
+        if (isNewStats) put(NEW_STATS_PROPERTY, "1")
+    }
+)
 
 fun AnalyticsTrackerWrapper.trackGranular(stat: Stat, site: SiteModel?, granularity: StatsGranularity) =
     track(stat, site, mapOf(GRANULARITY_PROPERTY to getPropertyByGranularity(granularity)))
@@ -77,16 +93,24 @@ fun AnalyticsTrackerWrapper.trackWithTypes(stat: Stat, site: SiteModel?, insight
     this.track(stat, site, mapOf(TYPES to insightTypes.map { it.name }))
 }
 
-fun AnalyticsTrackerWrapper.trackWithWidgetType(stat: Stat, widgetType: WidgetType) {
+/**
+ * [site] is the site the widget is configured for, read back from the widget's own configuration
+ * rather than from a stats provider - these events fire outside any stats screen, from the
+ * configure flow and from the launcher's delete callback (CMM-2273). Null when the configuration is
+ * gone or names a site that is no longer installed, in which case the event still reports, without
+ * the site properties.
+ */
+fun AnalyticsTrackerWrapper.trackWithWidgetType(stat: Stat, widgetType: WidgetType, site: SiteModel?) {
     val property = when (widgetType) {
         WEEK_VIEWS -> WEEKLY_VIEWS_WIDGET_PROPERTY
         ALL_TIME_VIEWS -> ALL_TIME_WIDGET_PROPERTY
         TODAY_VIEWS -> TODAY_WIDGET_PROPERTY
         WEEK_TOTAL -> WEEK_TOTALS_WIDGET_PROPERTY
     }
-    this.track(stat, mapOf(WIDGET_TYPE to property))
+    this.track(stat, site, mapOf(WIDGET_TYPE to property))
 }
 
-fun AnalyticsTrackerWrapper.trackMinifiedWidget(stat: Stat) {
-    this.track(stat, mapOf(WIDGET_TYPE to MINIFIED_WIDGET_PROPERTY))
+/** See [trackWithWidgetType] for where [site] comes from and why it can be null. */
+fun AnalyticsTrackerWrapper.trackMinifiedWidget(stat: Stat, site: SiteModel?) {
+    this.track(stat, site, mapOf(WIDGET_TYPE to MINIFIED_WIDGET_PROPERTY))
 }
