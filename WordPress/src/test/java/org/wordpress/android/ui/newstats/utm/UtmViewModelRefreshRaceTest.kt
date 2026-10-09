@@ -66,7 +66,7 @@ class UtmViewModelRefreshRaceTest : BaseUnitTest(StandardTestDispatcher()) {
     @Test
     fun `given a refresh is in flight, when the period changes, then the new period stays on screen`() = test {
         givenSlowSevenDays()
-        viewModel = UtmViewModel(selectedSiteRepository, accountStore, statsRepository, appPrefsWrapper, newStatsTracker)
+        viewModel = createViewModel()
 
         // Pull-to-refresh on Last7Days, still waiting on its response...
         viewModel.refresh()
@@ -81,7 +81,7 @@ class UtmViewModelRefreshRaceTest : BaseUnitTest(StandardTestDispatcher()) {
     @Test
     fun `given a refresh was left behind, when the period is re-dispatched, then the card is not stuck`() = test {
         givenSlowSevenDays()
-        viewModel = UtmViewModel(selectedSiteRepository, accountStore, statsRepository, appPrefsWrapper, newStatsTracker)
+        viewModel = createViewModel()
 
         viewModel.refresh()
         runCurrent()
@@ -99,7 +99,7 @@ class UtmViewModelRefreshRaceTest : BaseUnitTest(StandardTestDispatcher()) {
     @Test
     fun `given a refresh is in flight, when the period changes, then the spinner stops`() = test {
         givenSlowSevenDays()
-        viewModel = UtmViewModel(selectedSiteRepository, accountStore, statsRepository, appPrefsWrapper, newStatsTracker)
+        viewModel = createViewModel()
 
         viewModel.refresh()
         runCurrent()
@@ -109,6 +109,14 @@ class UtmViewModelRefreshRaceTest : BaseUnitTest(StandardTestDispatcher()) {
         // The period change cancels the refresh, so nothing else is left to clear its spinner.
         assertThat(viewModel.isRefreshing.value).isFalse()
     }
+
+    private fun createViewModel() = UtmViewModel(
+        selectedSiteRepository,
+        accountStore,
+        statsRepository,
+        appPrefsWrapper,
+        newStatsTracker
+    )
 
     /** Every period answers from memory except the one the refresh is sent for. */
     private suspend fun givenSlowSevenDays() {

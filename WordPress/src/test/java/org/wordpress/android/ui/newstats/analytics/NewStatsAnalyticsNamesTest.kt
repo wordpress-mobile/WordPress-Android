@@ -81,7 +81,9 @@ class NewStatsAnalyticsNamesTest {
         assertThat(ChartType.entries.associateWith { it.analyticsName }).isEqualTo(
             mapOf(
                 ChartType.LINE to "line",
-                ChartType.BAR to "bar"
+                // iOS calls the bar chart `columns`; this deliberately differs from the enum's
+                // own persisted storage key ("bar"), which cannot be renamed to match.
+                ChartType.BAR to "columns"
             )
         )
     }
@@ -116,6 +118,27 @@ class NewStatsAnalyticsNamesTest {
                 StatsCardType.FILE_DOWNLOADS to "file_downloads",
                 StatsCardType.DEVICES to "devices",
                 StatsCardType.UTM to "utm"
+            )
+        )
+    }
+
+    /** iOS has one card class per kind, so every top list is `top_list` there. */
+    @Test
+    fun `traffic cards report the iOS card kind`() {
+        assertThat(StatsCardType.entries.associateWith { it.cardAnalyticsName }).isEqualTo(
+            mapOf(
+                StatsCardType.TODAYS_STATS to "today",
+                StatsCardType.VIEWS_STATS to "chart",
+                StatsCardType.MOST_VIEWED_POSTS_AND_PAGES to "top_list",
+                StatsCardType.MOST_VIEWED_REFERRERS to "top_list",
+                StatsCardType.LOCATIONS to "top_list",
+                StatsCardType.AUTHORS to "top_list",
+                StatsCardType.CLICKS to "top_list",
+                StatsCardType.SEARCH_TERMS to "top_list",
+                StatsCardType.VIDEO_PLAYS to "top_list",
+                StatsCardType.FILE_DOWNLOADS to "top_list",
+                StatsCardType.DEVICES to "top_list",
+                StatsCardType.UTM to "top_list"
             )
         )
     }

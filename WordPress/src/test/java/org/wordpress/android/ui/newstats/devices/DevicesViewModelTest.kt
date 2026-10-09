@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
-import org.wordpress.android.ui.newstats.devices.DeviceType
 import org.wordpress.android.ui.newstats.repository.DeviceItemData
 import org.wordpress.android.ui.newstats.repository.DevicesResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository

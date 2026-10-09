@@ -21,7 +21,6 @@ import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.UtmItemData
 import org.wordpress.android.ui.newstats.repository.UtmPostItemData
 import org.wordpress.android.ui.newstats.repository.UtmResult
-import org.wordpress.android.ui.newstats.utm.UtmCategory
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 
 @ExperimentalCoroutinesApi

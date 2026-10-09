@@ -184,10 +184,42 @@ class NewStatsTrackerTest {
     // region Cards
 
     @Test
-    fun `adding and removing a card report the card type`() {
+    fun `adding and removing a traffic card report the kind and the list`() {
         tracker.trackCardAdded(StatsCardType.CLICKS)
+        assertThat(propertiesOf(Stat.JETPACK_STATS_CARD_ADDED)).isEqualTo(
+            mapOf(
+                "card_type" to "top_list",
+                "item_type" to "external_links"
+            )
+        )
+
+        tracker.trackCardRemoved(StatsCardType.MOST_VIEWED_REFERRERS)
+        assertThat(propertiesOf(Stat.JETPACK_STATS_CARD_REMOVED)).isEqualTo(
+            mapOf(
+                "card_type" to "top_list",
+                "item_type" to "referrers"
+            )
+        )
+    }
+
+    /** The two Traffic cards with no list behind them report the kind alone, as iOS does. */
+    @Test
+    fun `adding a listless traffic card reports no item type`() {
+        tracker.trackCardAdded(StatsCardType.VIEWS_STATS)
         assertThat(propertiesOf(Stat.JETPACK_STATS_CARD_ADDED))
-            .isEqualTo(mapOf("card_type" to "external_links"))
+            .isEqualTo(mapOf("card_type" to "chart"))
+
+        tracker.trackCardRemoved(StatsCardType.TODAYS_STATS)
+        assertThat(propertiesOf(Stat.JETPACK_STATS_CARD_REMOVED))
+            .isEqualTo(mapOf("card_type" to "today"))
+    }
+
+    /** Insights and Subscribers cards are Android-only, so they keep their own `card_type`. */
+    @Test
+    fun `adding and removing an android-only card report their own name`() {
+        tracker.trackCardAdded(SubscribersCardType.EMAILS)
+        assertThat(propertiesOf(Stat.JETPACK_STATS_CARD_ADDED))
+            .isEqualTo(mapOf("card_type" to "emails"))
 
         tracker.trackCardRemoved(InsightsCardType.LATEST_POST)
         assertThat(propertiesOf(Stat.JETPACK_STATS_CARD_REMOVED))
@@ -213,6 +245,26 @@ class NewStatsTrackerTest {
         )
     }
 
+    @Test
+    fun `moving a traffic card reports the kind and the list alongside the move`() {
+        tracker.trackCardMoved(
+            cardType = StatsCardType.LOCATIONS,
+            direction = CardMoveDirection.DOWN,
+            fromIndex = 1,
+            toIndex = 2
+        )
+
+        assertThat(propertiesOf(Stat.JETPACK_STATS_CARD_MOVED)).isEqualTo(
+            mapOf(
+                "card_type" to "top_list",
+                "item_type" to "locations",
+                "action" to "move_down",
+                "from_index" to 1,
+                "to_index" to 2
+            )
+        )
+    }
+
     // endregion
 
     // region Chart
@@ -223,7 +275,7 @@ class NewStatsTrackerTest {
 
         assertThat(propertiesOf(Stat.JETPACK_STATS_CHART_TYPE_CHANGED)).isEqualTo(
             mapOf(
-                "from_type" to "bar",
+                "from_type" to "columns",
                 "to_type" to "line"
             )
         )

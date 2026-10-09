@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
-import org.wordpress.android.ui.newstats.locations.LocationType
 import org.wordpress.android.ui.newstats.repository.CityViewItemData
 import org.wordpress.android.ui.newstats.repository.CityViewsResult
 import org.wordpress.android.ui.newstats.repository.CountryViewItemData

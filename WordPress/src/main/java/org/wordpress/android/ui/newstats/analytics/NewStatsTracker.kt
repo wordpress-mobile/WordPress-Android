@@ -132,24 +132,40 @@ class NewStatsTracker @Inject constructor(
 
     // region Cards
 
-    fun trackCardAdded(cardType: StatsCardType) = trackCardAdded(cardType.analyticsName)
+    /**
+     * Traffic cards report the iOS card *kind* as `card_type` - `today`, `chart` or `top_list` -
+     * so the event can be read across platforms, and the list itself as `item_type`, which is the
+     * breakdown iOS has no card type for. Insights and Subscribers cards exist only on Android, so
+     * they report their own name as `card_type` and carry no `item_type`.
+     */
+    fun trackCardAdded(cardType: StatsCardType) =
+        trackCardAdded(cardType.cardAnalyticsName, cardType.itemTypeOrNull())
 
     fun trackCardAdded(cardType: InsightsCardType) = trackCardAdded(cardType.analyticsName)
 
     fun trackCardAdded(cardType: SubscribersCardType) = trackCardAdded(cardType.analyticsName)
 
-    fun trackCardRemoved(cardType: StatsCardType) = trackCardRemoved(cardType.analyticsName)
+    /** See [trackCardAdded] for how a Traffic card's `card_type` and `item_type` are split. */
+    fun trackCardRemoved(cardType: StatsCardType) =
+        trackCardRemoved(cardType.cardAnalyticsName, cardType.itemTypeOrNull())
 
     fun trackCardRemoved(cardType: InsightsCardType) = trackCardRemoved(cardType.analyticsName)
 
     fun trackCardRemoved(cardType: SubscribersCardType) = trackCardRemoved(cardType.analyticsName)
 
+    /** See [trackCardAdded] for how a Traffic card's `card_type` and `item_type` are split. */
     fun trackCardMoved(
         cardType: StatsCardType,
         direction: CardMoveDirection,
         fromIndex: Int,
         toIndex: Int
-    ) = trackCardMoved(cardType.analyticsName, direction, fromIndex, toIndex)
+    ) = trackCardMoved(
+        cardType.cardAnalyticsName,
+        direction,
+        fromIndex,
+        toIndex,
+        cardType.itemTypeOrNull()
+    )
 
     fun trackCardMoved(
         cardType: InsightsCardType,
@@ -165,26 +181,41 @@ class NewStatsTracker @Inject constructor(
         toIndex: Int
     ) = trackCardMoved(cardType.analyticsName, direction, fromIndex, toIndex)
 
-    private fun trackCardAdded(cardType: String) =
-        track(Stat.JETPACK_STATS_CARD_ADDED, mapOf(CARD_TYPE to cardType))
+    private fun trackCardAdded(cardType: String, itemType: String? = null) = track(
+        Stat.JETPACK_STATS_CARD_ADDED,
+        cardProperties(cardType, itemType)
+    )
 
-    private fun trackCardRemoved(cardType: String) =
-        track(Stat.JETPACK_STATS_CARD_REMOVED, mapOf(CARD_TYPE to cardType))
+    private fun trackCardRemoved(cardType: String, itemType: String? = null) = track(
+        Stat.JETPACK_STATS_CARD_REMOVED,
+        cardProperties(cardType, itemType)
+    )
 
     private fun trackCardMoved(
         cardType: String,
         direction: CardMoveDirection,
         fromIndex: Int,
-        toIndex: Int
+        toIndex: Int,
+        itemType: String? = null
     ) = track(
         Stat.JETPACK_STATS_CARD_MOVED,
-        mapOf(
-            CARD_TYPE to cardType,
+        cardProperties(cardType, itemType) + mapOf(
             ACTION to direction.analyticsName,
             FROM_INDEX to fromIndex,
             TO_INDEX to toIndex
         )
     )
+
+    private fun cardProperties(cardType: String, itemType: String?): Map<String, Any?> = buildMap {
+        put(CARD_TYPE, cardType)
+        itemType?.let { put(ITEM_TYPE, it) }
+    }
+
+    /** The list behind a Traffic card, or null for the two cards that have no list. */
+    private fun StatsCardType.itemTypeOrNull(): String? = when (this) {
+        StatsCardType.TODAYS_STATS, StatsCardType.VIEWS_STATS -> null
+        else -> analyticsName
+    }
 
     // endregion
 
@@ -326,11 +357,12 @@ internal fun <T> List<T>.cardMoveIndices(
     if (from < 0) return null
     val isFirst = from == 0
     val isLast = from == size - 1
+    // Null for a direction that is inert at this end of the list, so no move is reported.
     val to = when (direction) {
-        NewStatsTracker.CardMoveDirection.UP -> if (isFirst) return null else from - 1
-        NewStatsTracker.CardMoveDirection.TOP -> if (isFirst) return null else 0
-        NewStatsTracker.CardMoveDirection.DOWN -> if (isLast) return null else from + 1
-        NewStatsTracker.CardMoveDirection.BOTTOM -> if (isLast) return null else size - 1
+        NewStatsTracker.CardMoveDirection.UP -> if (isFirst) null else from - 1
+        NewStatsTracker.CardMoveDirection.TOP -> if (isFirst) null else 0
+        NewStatsTracker.CardMoveDirection.DOWN -> if (isLast) null else from + 1
+        NewStatsTracker.CardMoveDirection.BOTTOM -> if (isLast) null else size - 1
     }
-    return from to to
+    return to?.let { from to it }
 }

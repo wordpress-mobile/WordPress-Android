@@ -17,10 +17,11 @@ import org.wordpress.android.ui.newstats.viewsstats.StatsMetric
  * The strings New Stats reports its own types as, kept in one place so an event's property values
  * can't drift from each other between call sites.
  *
- * Every value here matches the `analyticsName` the iOS JetpackStats module reports for the same
- * concept (see `StatsEvent.swift`), so a dashboard can read both platforms as one series. Where a
+ * Wherever iOS reports the same concept, the value here matches what its JetpackStats module sends
+ * for it (see `StatsEvent.swift`), so a dashboard can read both platforms as one series. Where a
  * name reads oddly for Android it is because iOS already ships it that way - the mismatches are
- * called out individually below. Nothing here is a display string: none of it is localized, and
+ * called out individually below, as are the few types Android has no iOS counterpart for (the
+ * Insights and Subscribers cards). Nothing here is a display string: none of it is localized, and
  * none of it should be shown to a user.
  */
 
@@ -44,9 +45,16 @@ internal val StatsPeriod.analyticsName: String
 internal val StatsMetric.analyticsName: String
     get() = storageKey
 
-/** Matches iOS `ChartType.rawValue`, which is also this enum's persisted storage key. */
+/**
+ * Matches iOS `ChartType.rawValue`. Deliberately not [ChartType.storageKey]: iOS calls the bar
+ * chart `columns`, and the storage key is persisted in prefs and in the cards configuration, so it
+ * can't be renamed to match without migrating what's already stored.
+ */
 internal val ChartType.analyticsName: String
-    get() = storageKey
+    get() = when (this) {
+        ChartType.LINE -> "line"
+        ChartType.BAR -> "columns"
+    }
 
 /** Matches iOS `DateRangeGranularity.analyticsName` - singular, unlike this enum's own names. */
 internal val StatsUnit.analyticsName: String
@@ -59,15 +67,40 @@ internal val StatsUnit.analyticsName: String
     }
 
 /**
- * Matches iOS `TopListItemType.analyticsName` for every card that exists on both platforms, which
- * is why two of these don't read like their enum entry:
+ * What kind of card this is, which is what iOS reports as `card_type` - it has one card class per
+ * kind rather than per list, so every top list is `top_list` there (iOS `CardType.rawValue`).
+ *
+ * Android has a card type per list instead, so the list itself is reported alongside this as
+ * `item_type` - see [StatsCardType.analyticsName]. Keeping the two apart is what lets `card_type`
+ * be read as one series across platforms while Android keeps the finer breakdown.
+ */
+internal val StatsCardType.cardAnalyticsName: String
+    get() = when (this) {
+        StatsCardType.TODAYS_STATS -> "today"
+        StatsCardType.VIEWS_STATS -> "chart"
+        StatsCardType.MOST_VIEWED_POSTS_AND_PAGES,
+        StatsCardType.MOST_VIEWED_REFERRERS,
+        StatsCardType.LOCATIONS,
+        StatsCardType.AUTHORS,
+        StatsCardType.CLICKS,
+        StatsCardType.SEARCH_TERMS,
+        StatsCardType.VIDEO_PLAYS,
+        StatsCardType.FILE_DOWNLOADS,
+        StatsCardType.DEVICES,
+        StatsCardType.UTM -> "top_list"
+    }
+
+/**
+ * The list behind a card, reported as `item_type` (a row tap, or the list a card is showing) and as
+ * `screen` (a "show all" screen). Matches iOS `TopListItemType.analyticsName` for every card that
+ * exists on both platforms, which is why two of these don't read like their enum entry:
  *
  * - [StatsCardType.CLICKS] reports as `external_links`. Both platforms show the same thing (clicks
  *   on outbound links); iOS names the type after the link rather than the tap.
  * - [StatsCardType.VIDEO_PLAYS] reports as `videos`.
  *
- * The two cards with no top list behind them take iOS's card names instead: Today's stats is
- * `today`, and the Views card is `chart`.
+ * The two cards with no top list behind them have no iOS `TopListItemType` to match, and are only
+ * ever reported through [cardAnalyticsName]: Today's stats is `today`, and the Views card `chart`.
  */
 internal val StatsCardType.analyticsName: String
     get() = when (this) {
