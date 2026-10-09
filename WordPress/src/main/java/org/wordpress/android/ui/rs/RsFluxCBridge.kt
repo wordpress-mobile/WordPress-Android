@@ -8,6 +8,8 @@ import org.wordpress.android.fluxc.store.PostStore
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostRetrieveParams
+import uniffi.wp_api.RequestExecutionErrorReason
+import uniffi.wp_api.WpErrorCode
 import javax.inject.Inject
 
 /**
@@ -62,16 +64,17 @@ class RsFluxCBridge @Inject constructor(
                 PostRetrieveParams()
             )
         }
-        val fetched = when (response) {
-            is WpRequestResult.Success -> response.response.data
-            else -> {
-                val msg = (response as? WpRequestResult.WpError<*>)?.errorMessage
-                    ?: "Failed to fetch $kind"
-                throw IllegalStateException(msg)
+        if (response !is WpRequestResult.Success) {
+            throw when (response) {
+                is WpRequestResult.WpError ->
+                    RsBridgeException(response.errorMessage, errorCode = response.errorCode)
+                is WpRequestResult.RequestExecutionFailed ->
+                    RsBridgeException("Failed to fetch $kind", reason = response.reason)
+                else -> RsBridgeException("Failed to fetch $kind")
             }
         }
 
-        val model = mapper.map(fetched, site).apply { setIsPage(isPage) }
+        val model = mapper.map(response.response.data, site).apply { setIsPage(isPage) }
         postSqlUtils.insertOrUpdatePost(model, false)
 
         // Re-read to get the auto-assigned local ID
@@ -79,3 +82,13 @@ class RsFluxCBridge @Inject constructor(
             ?: error("${kind.replaceFirstChar { it.uppercase() }} inserted but not found in FluxC")
     }
 }
+
+/**
+ * A post or page the bridge couldn't fetch. Keeps what rs reported, so
+ * [RsErrorUtils.friendlyErrorMessage] can tell a dropped connection from a rejected credential.
+ */
+class RsBridgeException(
+    message: String,
+    val reason: RequestExecutionErrorReason? = null,
+    val errorCode: WpErrorCode? = null,
+) : IllegalStateException(message)

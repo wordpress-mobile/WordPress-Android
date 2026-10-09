@@ -111,6 +111,7 @@ internal class PagesRsListViewModel @Inject constructor(
 
     private val _isOpeningPage = MutableStateFlow(false)
     val isOpeningPage: StateFlow<Boolean> = _isOpeningPage.asStateFlow()
+    private var openingJob: Job? = null
 
     private val _isSearchActive = MutableStateFlow(false)
     val isSearchActive: StateFlow<Boolean> = _isSearchActive.asStateFlow()
@@ -813,7 +814,7 @@ internal class PagesRsListViewModel @Inject constructor(
         )
 
         _isOpeningPage.value = true
-        viewModelScope.launch {
+        openingJob = viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
                 val page = withContext(Dispatchers.IO) {
@@ -831,6 +832,12 @@ internal class PagesRsListViewModel @Inject constructor(
                 _isOpeningPage.value = false
             }
         }
+    }
+
+    /** Abandons the page being opened, for when the fetch behind the spinner is slow. */
+    @MainThread
+    fun cancelOpeningPage() {
+        openingJob?.cancel()
     }
 
     @MainThread
@@ -1299,7 +1306,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private fun duplicatePage(site: SiteModel, remotePageId: Long) {
         if (!checkNetwork()) return
         _isOpeningPage.value = true
-        viewModelScope.launch {
+        openingJob = viewModelScope.launch {
             try {
                 val lastModified = findPage(remotePageId)?.lastModified
                 val pageToCopy = withContext(Dispatchers.IO) {
@@ -1334,7 +1341,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private fun bridgeAndPromote(site: SiteModel, remotePageId: Long) {
         if (!checkNetwork()) return
         _isOpeningPage.value = true
-        viewModelScope.launch {
+        openingJob = viewModelScope.launch {
             try {
                 val page = bridgePageOrNull(site, remotePageId)
                 if (page != null) {
