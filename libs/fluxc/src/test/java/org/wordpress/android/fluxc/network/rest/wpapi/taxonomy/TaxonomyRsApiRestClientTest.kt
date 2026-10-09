@@ -182,6 +182,11 @@ class TaxonomyRsApiRestClientTest {
         assertNotNull(payload.terms)
         assertEquals(2, payload.terms.terms.size)
         assertNull(payload.error)
+        // The local row id is left for the database to assign; reusing the remote id overwrote unrelated rows
+        payload.terms.terms.forEach {
+            assertEquals(0, it.id)
+            assertEquals(TEST_TERM_ID, it.remoteTermId)
+        }
     }
 
     @Test
@@ -465,7 +470,7 @@ class TaxonomyRsApiRestClientTest {
         assertEquals(testSite, payload.site)
         assertNotNull(payload.term)
         // Verify the created term has the correct properties
-        assertEquals(anyTermWithEditContext.id.toInt(), payload.term.id)
+        assertEquals(0, payload.term.id)
         assertEquals(testSite.id, payload.term.localSiteId)
         assertEquals(anyTermWithEditContext.id, payload.term.remoteTermId)
         assertEquals(testCategoryTaxonomyName, payload.term.taxonomy)
@@ -531,7 +536,7 @@ class TaxonomyRsApiRestClientTest {
         assertEquals(testSite, payload.site)
         assertNotNull(payload.term)
         // Verify the created term has the correct properties
-        assertEquals(anyTermWithEditContext.id.toInt(), payload.term.id)
+        assertEquals(0, payload.term.id)
         assertEquals(testSite.id, payload.term.localSiteId)
         assertEquals(anyTermWithEditContext.id, payload.term.remoteTermId)
         assertEquals(testTagTaxonomyName, payload.term.taxonomy)
@@ -780,7 +785,7 @@ class TaxonomyRsApiRestClientTest {
         assertEquals(capturedAction.type, TaxonomyAction.PUSHED_TERM)
         assertEquals(testSite, payload.site)
         assertNotNull(payload.term)
-        assertEquals(anyTermWithEditContext.id.toInt(), payload.term.id)
+        assertEquals(0, payload.term.id)
         assertEquals(testSite.id, payload.term.localSiteId)
         assertEquals(anyTermWithEditContext.id, payload.term.remoteTermId)
         assertEquals(testCategoryTaxonomyName, payload.term.taxonomy)
@@ -870,7 +875,7 @@ class TaxonomyRsApiRestClientTest {
         assertEquals(capturedAction.type, TaxonomyAction.PUSHED_TERM)
         assertEquals(testSite, payload.site)
         assertNotNull(payload.term)
-        assertEquals(anyTermWithEditContext.id.toInt(), payload.term.id)
+        assertEquals(0, payload.term.id)
         assertEquals(testSite.id, payload.term.localSiteId)
         assertEquals(anyTermWithEditContext.id, payload.term.remoteTermId)
         assertEquals(testTagTaxonomyName, payload.term.taxonomy)

@@ -313,7 +313,8 @@ class TermsViewModel @Inject constructor(
             TermsModel(
                 terms.map { term ->
                     TermModel(
-                        term.id.toInt(),
+                        // Local row id: 0 lets FluxC match by remote id instead of overwriting another row
+                        0,
                         site.id,
                         term.id,
                         taxonomySlug,
