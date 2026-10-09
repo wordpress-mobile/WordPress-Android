@@ -252,21 +252,19 @@ class NewStatsTracker @Inject constructor(
     // region Lists
 
     /**
-     * A row tapped in any stats list, on a card or on a detail screen. [metric] is what the list
-     * is ranked by, omitted for the lists that aren't ranked by a selectable metric.
+     * A row tapped in any stats list, on a card or on a detail screen. iOS additionally reports a
+     * `metric` here, because its top lists are ranked by a metric the reader picks; Android's are
+     * not, so there is nothing to report until they are.
      */
-    fun trackTopListItemTapped(cardType: StatsCardType, metric: StatsMetric? = null) =
-        trackTopListItemTapped(cardType.analyticsName, metric)
+    fun trackTopListItemTapped(cardType: StatsCardType) =
+        trackTopListItemTapped(cardType.analyticsName)
 
-    fun trackTopListItemTapped(cardType: InsightsCardType, metric: StatsMetric? = null) =
-        trackTopListItemTapped(cardType.analyticsName, metric)
+    fun trackTopListItemTapped(cardType: InsightsCardType) =
+        trackTopListItemTapped(cardType.analyticsName)
 
-    private fun trackTopListItemTapped(itemType: String, metric: StatsMetric?) = track(
+    private fun trackTopListItemTapped(itemType: String) = track(
         Stat.JETPACK_STATS_TOP_LIST_ITEM_TAPPED,
-        buildMap {
-            put(ITEM_TYPE, itemType)
-            metric?.let { put(METRIC, it.analyticsName) }
-        }
+        mapOf(ITEM_TYPE to itemType)
     )
 
     fun trackLocationLevelChanged(from: LocationType, to: LocationType) = track(

@@ -319,21 +319,6 @@ class NewStatsTrackerTest {
     }
 
     @Test
-    fun `a tapped row in a ranked list also reports the ranking metric`() {
-        tracker.trackTopListItemTapped(
-            StatsCardType.MOST_VIEWED_POSTS_AND_PAGES,
-            metric = StatsMetric.VIEWS
-        )
-
-        assertThat(propertiesOf(Stat.JETPACK_STATS_TOP_LIST_ITEM_TAPPED)).isEqualTo(
-            mapOf(
-                "item_type" to "posts_and_pages",
-                "metric" to "views"
-            )
-        )
-    }
-
-    @Test
     fun `the list selectors report what they moved from and to`() {
         tracker.trackLocationLevelChanged(from = LocationType.COUNTRIES, to = LocationType.CITIES)
         assertThat(propertiesOf(Stat.JETPACK_STATS_LOCATION_LEVEL_CHANGED)).isEqualTo(
