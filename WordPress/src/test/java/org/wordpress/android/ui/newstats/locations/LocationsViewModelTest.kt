@@ -7,6 +7,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -16,6 +17,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
+import org.wordpress.android.ui.newstats.locations.LocationType
 import org.wordpress.android.ui.newstats.repository.CityViewItemData
 import org.wordpress.android.ui.newstats.repository.CityViewsResult
 import org.wordpress.android.ui.newstats.repository.CountryViewItemData
@@ -41,6 +44,9 @@ class LocationsViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var resourceProvider: ResourceProvider
 
+    @Mock
+    private lateinit var newStatsTracker: NewStatsTracker
+
     private lateinit var viewModel: LocationsViewModel
 
     private val testSite = SiteModel().apply {
@@ -60,7 +66,8 @@ class LocationsViewModelTest : BaseUnitTest() {
             selectedSiteRepository,
             accountStore,
             statsRepository,
-            resourceProvider
+            resourceProvider,
+            newStatsTracker
         )
         viewModel.onPeriodChanged(StatsPeriod.Last7Days)
     }
@@ -1094,6 +1101,31 @@ class LocationsViewModelTest : BaseUnitTest() {
         )
     // endregion
 
+
+    // region Tracking
+    @Test
+    fun `when the location level changes, then the level moved from and to are reported`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onLocationTypeChanged(LocationType.CITIES)
+
+        verify(newStatsTracker).trackLocationLevelChanged(
+            from = LocationType.COUNTRIES,
+            to = LocationType.CITIES
+        )
+    }
+
+    @Test
+    fun `when the level already shown is re-selected, then nothing is reported`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onLocationTypeChanged(LocationType.COUNTRIES)
+
+        verify(newStatsTracker, never()).trackLocationLevelChanged(any(), any())
+    }
+    // endregion
     companion object {
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN = "test_access_token"

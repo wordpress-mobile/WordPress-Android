@@ -7,6 +7,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -16,6 +17,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
+import org.wordpress.android.ui.newstats.devices.DeviceType
 import org.wordpress.android.ui.newstats.repository.DeviceItemData
 import org.wordpress.android.ui.newstats.repository.DevicesResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
@@ -31,6 +34,9 @@ class DevicesViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var statsRepository: StatsRepository
+
+    @Mock
+    private lateinit var newStatsTracker: NewStatsTracker
 
     private lateinit var viewModel: DevicesViewModel
 
@@ -52,7 +58,8 @@ class DevicesViewModelTest : BaseUnitTest() {
         viewModel = DevicesViewModel(
             selectedSiteRepository,
             accountStore,
-            statsRepository
+            statsRepository,
+            newStatsTracker
         )
         viewModel.onPeriodChanged(StatsPeriod.Last7Days)
     }
@@ -584,6 +591,31 @@ class DevicesViewModelTest : BaseUnitTest() {
     )
     // endregion
 
+
+    // region Tracking
+    @Test
+    fun `when the breakdown changes, then the breakdown moved from and to are reported`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onDeviceTypeChanged(DeviceType.BROWSER)
+
+        verify(newStatsTracker).trackDeviceBreakdownChanged(
+            from = DeviceType.SCREENSIZE,
+            to = DeviceType.BROWSER
+        )
+    }
+
+    @Test
+    fun `when the breakdown already shown is re-selected, then nothing is reported`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onDeviceTypeChanged(DeviceType.SCREENSIZE)
+
+        verify(newStatsTracker, never()).trackDeviceBreakdownChanged(any(), any())
+    }
+    // endregion
     companion object {
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN = "test_access_token"

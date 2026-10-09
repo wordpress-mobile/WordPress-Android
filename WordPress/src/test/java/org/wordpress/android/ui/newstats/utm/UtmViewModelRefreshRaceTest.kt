@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.UtmItemData
 import org.wordpress.android.ui.newstats.repository.UtmResult
@@ -44,6 +45,9 @@ class UtmViewModelRefreshRaceTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
 
+    @Mock
+    private lateinit var newStatsTracker: NewStatsTracker
+
     private lateinit var viewModel: UtmViewModel
 
     private val testSite = SiteModel().apply {
@@ -62,7 +66,7 @@ class UtmViewModelRefreshRaceTest : BaseUnitTest(StandardTestDispatcher()) {
     @Test
     fun `given a refresh is in flight, when the period changes, then the new period stays on screen`() = test {
         givenSlowSevenDays()
-        viewModel = UtmViewModel(selectedSiteRepository, accountStore, statsRepository, appPrefsWrapper)
+        viewModel = UtmViewModel(selectedSiteRepository, accountStore, statsRepository, appPrefsWrapper, newStatsTracker)
 
         // Pull-to-refresh on Last7Days, still waiting on its response...
         viewModel.refresh()
@@ -77,7 +81,7 @@ class UtmViewModelRefreshRaceTest : BaseUnitTest(StandardTestDispatcher()) {
     @Test
     fun `given a refresh was left behind, when the period is re-dispatched, then the card is not stuck`() = test {
         givenSlowSevenDays()
-        viewModel = UtmViewModel(selectedSiteRepository, accountStore, statsRepository, appPrefsWrapper)
+        viewModel = UtmViewModel(selectedSiteRepository, accountStore, statsRepository, appPrefsWrapper, newStatsTracker)
 
         viewModel.refresh()
         runCurrent()
@@ -95,7 +99,7 @@ class UtmViewModelRefreshRaceTest : BaseUnitTest(StandardTestDispatcher()) {
     @Test
     fun `given a refresh is in flight, when the period changes, then the spinner stops`() = test {
         givenSlowSevenDays()
-        viewModel = UtmViewModel(selectedSiteRepository, accountStore, statsRepository, appPrefsWrapper)
+        viewModel = UtmViewModel(selectedSiteRepository, accountStore, statsRepository, appPrefsWrapper, newStatsTracker)
 
         viewModel.refresh()
         runCurrent()

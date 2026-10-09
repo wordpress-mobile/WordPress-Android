@@ -157,7 +157,11 @@ class StatsWidgetConfigureFragment : Fragment() {
             })
 
             viewModel.widgetAdded.observeEvent(viewLifecycleOwner) {
-                analyticsTrackerWrapper.trackWithWidgetType(STATS_WIDGET_ADDED, it.widgetType)
+                analyticsTrackerWrapper.trackWithWidgetType(
+                    STATS_WIDGET_ADDED,
+                    it.widgetType,
+                    siteStore.getSiteBySiteId(appPrefsWrapper.getAppWidgetSiteId(it.appWidgetId))
+                )
                 when (it.widgetType) {
                     WEEK_VIEWS -> {
                         viewsWidgetUpdater.updateAppWidget(requireContext(), appWidgetId = it.appWidgetId)

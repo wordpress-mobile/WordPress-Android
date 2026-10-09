@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.StatsCardsConfiguration
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.repository.ViewsDataPoint
 import org.wordpress.android.ui.newstats.repository.StatsRepository
@@ -54,6 +55,9 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var cardsConfigurationRepository: StatsCardsConfigurationRepository
+
+    @Mock
+    private lateinit var newStatsTracker: NewStatsTracker
 
     private lateinit var viewModel: ViewsStatsViewModel
 
@@ -97,7 +101,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             statsRepository,
             resourceProvider,
             savedState,
-            cardsConfigurationRepository
+            cardsConfigurationRepository,
+            newStatsTracker
         )
         viewModel.loadDataIfNeeded()
     }
@@ -809,7 +814,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         viewModel = ViewsStatsViewModel(
             selectedSiteRepository, accountStore, statsRepository,
             resourceProvider, SavedStateHandle(),
-            cardsConfigurationRepository
+            cardsConfigurationRepository,
+            newStatsTracker
         )
         viewModel.loadDataIfNeeded()
         advanceUntilIdle()
@@ -831,7 +837,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
         viewModel = ViewsStatsViewModel(
             selectedSiteRepository, accountStore, statsRepository,
-            resourceProvider, savedState, cardsConfigurationRepository
+            resourceProvider, savedState, cardsConfigurationRepository,
+            newStatsTracker
         )
         viewModel.loadDataIfNeeded()
         advanceUntilIdle()
@@ -853,7 +860,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         viewModel = ViewsStatsViewModel(
             selectedSiteRepository, accountStore, statsRepository,
             resourceProvider, SavedStateHandle(),
-            cardsConfigurationRepository
+            cardsConfigurationRepository,
+            newStatsTracker
         )
         viewModel.loadDataIfNeeded()
         advanceUntilIdle()
@@ -1917,7 +1925,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(createPeriodStatsResult())
         viewModel = ViewsStatsViewModel(
             selectedSiteRepository, accountStore, statsRepository,
-            resourceProvider, SavedStateHandle(), cardsConfigurationRepository
+            resourceProvider, SavedStateHandle(), cardsConfigurationRepository,
+            newStatsTracker
         )
         viewModel.loadDataIfNeeded()
         advanceUntilIdle()
@@ -1943,7 +1952,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(createPeriodStatsResult())
         viewModel = ViewsStatsViewModel(
             selectedSiteRepository, accountStore, statsRepository,
-            resourceProvider, SavedStateHandle(), cardsConfigurationRepository
+            resourceProvider, SavedStateHandle(), cardsConfigurationRepository,
+            newStatsTracker
         )
         viewModel.loadDataIfNeeded()
         advanceUntilIdle()
@@ -1971,7 +1981,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(createPeriodStatsResult())
         viewModel = ViewsStatsViewModel(
             selectedSiteRepository, accountStore, statsRepository,
-            resourceProvider, savedState, cardsConfigurationRepository
+            resourceProvider, savedState, cardsConfigurationRepository,
+            newStatsTracker
         )
         viewModel.loadDataIfNeeded()
         advanceUntilIdle()
@@ -2082,7 +2093,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             statsRepository,
             resourceProvider,
             SavedStateHandle(),
-            cardsConfigurationRepository
+            cardsConfigurationRepository,
+            newStatsTracker
         )
         // Let the async preference restore complete before the first load.
         advanceUntilIdle()
@@ -2108,7 +2120,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             statsRepository,
             resourceProvider,
             SavedStateHandle(mapOf("period_type" to "today")),
-            cardsConfigurationRepository
+            cardsConfigurationRepository,
+            newStatsTracker
         )
         advanceUntilIdle()
         viewModel.loadDataIfNeeded()
@@ -2175,7 +2188,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             statsRepository,
             resourceProvider,
             SavedStateHandle(mapOf("period_type" to "today")),
-            cardsConfigurationRepository
+            cardsConfigurationRepository,
+            newStatsTracker
         )
         advanceUntilIdle()
         viewModel.loadDataIfNeeded()
@@ -2208,7 +2222,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             statsRepository,
             resourceProvider,
             SavedStateHandle(mapOf("period_type" to "today")),
-            cardsConfigurationRepository
+            cardsConfigurationRepository,
+            newStatsTracker
         )
         advanceUntilIdle()
         viewModel.loadDataIfNeeded()
@@ -2288,7 +2303,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             statsRepository,
             resourceProvider,
             SavedStateHandle(mapOf("period_type" to "today")),
-            cardsConfigurationRepository
+            cardsConfigurationRepository,
+            newStatsTracker
         )
         advanceUntilIdle()
         viewModel.loadDataIfNeeded()
