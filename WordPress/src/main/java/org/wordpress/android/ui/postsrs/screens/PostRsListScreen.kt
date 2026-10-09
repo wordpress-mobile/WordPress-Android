@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.postsrs.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -89,6 +90,7 @@ fun PostRsListScreen(
     onCreatePost: () -> Unit,
     onRowsVisible: (PostRsListTab, List<Long>) -> Unit,
     onDensityToggled: (PostRsListTab) -> Unit,
+    onCancelOpeningPost: () -> Unit,
     density: ContentListDensity = ContentListDensity.COMFORTABLE
 ) {
     val tabs = PostRsListTab.entries
@@ -264,6 +266,8 @@ fun PostRsListScreen(
         null -> {}
     }
 
+    // Back abandons the post being opened rather than leaving the list behind the spinner.
+    BackHandler(enabled = isOpeningPost, onBack = onCancelOpeningPost)
     if (isOpeningPost) {
         Box(
             modifier = Modifier
