@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-24 14:54:21+0000
+Translation-Revision-Date: 2026-10-09 09:55:36+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: he_IL
@@ -30,6 +30,7 @@ Language: he_IL
     <string name="reader_reading_time">משך קריאה – %s דקות</string>
     <string name="reader_discover_tab_latest">הפריטים האחרונים</string>
     <string name="reader_discover_tab_recommended">מומלץ</string>
+    <string name="stats_subscriber_years_and_days">%1$s, %2$s</string>
     <string name="stats_subscriber_since_today">היום</string>
     <string name="stats_subscribers_graph_years">שנים</string>
     <string name="stats_subscribers_graph_months">חודשים</string>
@@ -52,6 +53,7 @@ Language: he_IL
     <string name="stats_utm_source">מקור</string>
     <string name="stats_utm_campaign_source_medium">קמפיין / מקור / בינוני</string>
     <string name="stats_utm_source_medium">מקור / בינוני</string>
+    <string name="stats_utm_title">UTM</string>
     <string name="stats_error_not_authenticated">לא בוצע אימות</string>
     <string name="stats_collapse_group">מזעור</string>
     <string name="stats_expand_group">הרחבה</string>
@@ -145,6 +147,7 @@ Language: he_IL
     <string name="post_rs_sync_failed">הסנכרון נכשל</string>
     <string name="post_rs_error_auth">פג תוקף האימות. יש להיכנס מחדש.</string>
     <string name="post_rs_error_load_more">לא ניתן היה לטעון פוסטים נוספים</string>
+    <string name="stats_ring_chart_entry_description">%1$s: %2$s</string>
     <string name="menu_item_accessibility_description">רמה ⁦%1$d⁩, %2$s, %3$s</string>
     <string name="menu_item_reorder_failed">שינוי הסדר של פריט התפריט נכשל</string>
     <string name="menu_item_invalid_url">יש להזין כתובת URL תקפה</string>
@@ -422,6 +425,7 @@ Language: he_IL
     <string name="subscribers_add_failed">ההוספה של המנויים נכשלה</string>
     <string name="subscribers_add_success">ההוספה של המנויים בוצעה בהצלחה</string>
     <string name="subscribers_add_disclosure">\n        לחיצה על \'לשלוח\' מהווה הצהרה שקיבלת את ההסכמה המתאימה כדי לשלוח אימייל לכל אחד. תלונות על דואר זבל או שיעור גבוה של אימיילים שחזרו או נדחו מהמנויים עלולים להוביל לנקיטת פעולות נגד החשבון שלך.\n    </string>
+    <string name="subscribers_add_email_hint">name@example.com</string>
     <string name="subscribers_add_subscribers">להוסיף מנויים</string>
     <string name="subscribers_gift_content_description">מתנה</string>
     <string name="subscribers_renewal_interval">תדירות החידוש</string>
@@ -458,6 +462,7 @@ Language: he_IL
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">האתר שצוין לא תומך באימות של סיסמאות אפליקציה.</string>
     <string name="application_password_title">לאמת באמצעות סיסמת אפליקציה</string>
     <string name="application_password_credentials_stored">פרטי הכניסה של סיסמת האפליקציה שמאוחסנים עבור ⁦%1$s⁩</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">הזמן שנדרש לגילוי הקוד היה ארוך מדי. יש לנסות שוב או להשתמש באפליקציית המצלמה כדי לסרוק את הקוד.</string>
     <string name="qrcode_auth_flow_timeout_title">הזמן הקצוב לסריקה הסתיים</string>
     <string name="invite_users">להזמין משתמשים</string>
     <string name="cant_share_no_blog">אין לך אפשרות לשתף ב-WordPress בלי בלוג</string>
@@ -508,6 +513,7 @@ Language: he_IL
     <string name="dialog_confirm_autosave_dont_restore_button">מהאפליקציה הזאת</string>
     <string name="dialog_confirm_autosave_restore_button">ממכשיר אחר</string>
     <string name="item_selected">נבחר</string>
+    <string name="send_feedback">שליחת משוב</string>
     <string name="media_pager_remove_item_content_description">להסיר את הפריט ⁦%1$d⁩</string>
     <string name="feedback_form_add_attachments">להוסיף קבצים מצורפים</string>
     <string name="feedback_form_attachment_already_added">הקובץ המצורף כבר נוסף</string>
@@ -2232,6 +2238,7 @@ Language: he_IL
     <string name="gutenberg_native_choose_from_device" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">לבחור מהמכשיר</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">אירעה שגיאה לא מזוהה. יש לנסות שוב.</string>
     <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">טקסט חלופי</string>
+    <string name="gutenberg_native_add_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">הוספת סרטון</string>
     <string name="gutenberg_native_add_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">הוספת כתובת URL</string>
     <string name="gutenberg_native_add_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">להוסיף טקסט חלופי</string>
     <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">להוסיף בלוק כאן</string>
