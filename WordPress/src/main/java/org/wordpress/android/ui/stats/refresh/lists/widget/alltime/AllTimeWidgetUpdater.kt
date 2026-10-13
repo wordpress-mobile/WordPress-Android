@@ -85,7 +85,13 @@ class AllTimeWidgetUpdater
     override fun componentName(context: Context) = ComponentName(context, StatsAllTimeWidget::class.java)
 
     override fun delete(appWidgetId: Int) {
-        analyticsTrackerWrapper.trackWithWidgetType(AnalyticsTracker.Stat.STATS_WIDGET_REMOVED, ALL_TIME_VIEWS)
+        // Tracked before the prefs below are cleared: removeAppWidgetSiteId drops the only record
+        // of which site this widget belonged to.
+        analyticsTrackerWrapper.trackWithWidgetType(
+            AnalyticsTracker.Stat.STATS_WIDGET_REMOVED,
+            ALL_TIME_VIEWS,
+            siteStore.getSiteBySiteId(appPrefsWrapper.getAppWidgetSiteId(appWidgetId))
+        )
         appPrefsWrapper.removeAppWidgetColorModeId(appWidgetId)
         appPrefsWrapper.removeAppWidgetSiteId(appWidgetId)
     }

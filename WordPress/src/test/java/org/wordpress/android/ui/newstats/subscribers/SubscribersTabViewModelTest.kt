@@ -14,6 +14,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.repository.SubscribersCardsConfigurationRepository
 import org.wordpress.android.util.NetworkUtilsWrapper
 
@@ -28,6 +29,9 @@ class SubscribersTabViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
 
     @Mock
     private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Mock
+    private lateinit var newStatsTracker: NewStatsTracker
 
     private lateinit var viewModel: SubscribersTabViewModel
 
@@ -54,7 +58,8 @@ class SubscribersTabViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         viewModel = SubscribersTabViewModel(
             selectedSiteRepository,
             cardConfigurationRepository,
-            networkUtilsWrapper
+            networkUtilsWrapper,
+            newStatsTracker
         )
     }
 
@@ -172,7 +177,8 @@ class SubscribersTabViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         viewModel = SubscribersTabViewModel(
             selectedSiteRepository,
             cardConfigurationRepository,
-            networkUtilsWrapper
+            networkUtilsWrapper,
+            newStatsTracker
         )
         advanceUntilIdle()
 
@@ -246,7 +252,8 @@ class SubscribersTabViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         viewModel = SubscribersTabViewModel(
             selectedSiteRepository,
             cardConfigurationRepository,
-            networkUtilsWrapper
+            networkUtilsWrapper,
+            newStatsTracker
         )
 
         assertThat(viewModel.cardsToLoad.value).isEmpty()

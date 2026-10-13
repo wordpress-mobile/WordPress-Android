@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.repository.SubscribersGraphResult
 import org.wordpress.android.ui.newstats.subscribers.BaseSubscribersCardViewModel
 import org.wordpress.android.ui.newstats.util.formatCustomDateRange
@@ -24,7 +25,8 @@ class SubscribersGraphViewModel @Inject constructor(
     selectedSiteRepository: SelectedSiteRepository,
     accountStore: AccountStore,
     statsRepository: StatsRepository,
-    resourceProvider: ResourceProvider
+    resourceProvider: ResourceProvider,
+    private val newStatsTracker: NewStatsTracker
 ) : BaseSubscribersCardViewModel<SubscribersGraphUiState>(
     selectedSiteRepository,
     accountStore,
@@ -46,6 +48,10 @@ class SubscribersGraphViewModel @Inject constructor(
 
     fun onTabSelected(tab: SubscribersGraphTab) {
         if (tab == _selectedTab.value) return
+        newStatsTracker.trackSubscribersChartRangeChanged(
+            from = _selectedTab.value,
+            to = tab
+        )
         _selectedTab.value = tab
         resetLoadedSuccessfully()
         loadData()

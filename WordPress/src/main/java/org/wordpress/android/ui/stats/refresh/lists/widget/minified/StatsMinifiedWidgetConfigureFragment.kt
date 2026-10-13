@@ -136,7 +136,10 @@ class StatsMinifiedWidgetConfigureFragment : Fragment(R.layout.stats_widget_conf
             })
         }
         viewModel.widgetAdded.observeEvent(viewLifecycleOwner, {
-            analyticsTrackerWrapper.trackMinifiedWidget(STATS_WIDGET_ADDED)
+            analyticsTrackerWrapper.trackMinifiedWidget(
+                STATS_WIDGET_ADDED,
+                siteStore.getSiteBySiteId(appPrefsWrapper.getAppWidgetSiteId(appWidgetId))
+            )
             minifiedWidgetUpdater.updateAppWidget(requireContext(), appWidgetId = appWidgetId)
             val resultValue = Intent()
             resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)

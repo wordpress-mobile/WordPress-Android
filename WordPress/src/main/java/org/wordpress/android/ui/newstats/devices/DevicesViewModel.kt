@@ -16,6 +16,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.repository.DevicesResult
 import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
@@ -31,7 +32,8 @@ private const val CARD_MAX_ITEMS = 10
 class DevicesViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
-    private val statsRepository: StatsRepository
+    private val statsRepository: StatsRepository,
+    private val newStatsTracker: NewStatsTracker
 ) : ViewModel() {
     private val _screensizeUiState =
         MutableStateFlow<DevicesCardUiState>(DevicesCardUiState.Loading)
@@ -184,6 +186,10 @@ class DevicesViewModel @Inject constructor(
     @Suppress("ReturnCount")
     fun onDeviceTypeChanged(type: DeviceType) {
         if (_selectedDeviceType.value == type) return
+        newStatsTracker.trackDeviceBreakdownChanged(
+            from = _selectedDeviceType.value,
+            to = type
+        )
         _selectedDeviceType.value = type
 
         if (!isTypeLoadedForCurrentPeriod(type)) {

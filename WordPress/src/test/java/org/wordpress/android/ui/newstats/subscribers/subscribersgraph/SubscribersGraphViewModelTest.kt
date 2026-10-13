@@ -7,6 +7,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -15,6 +16,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.SubscribersGraphDataPoint
 import org.wordpress.android.ui.newstats.repository.SubscribersGraphResult
@@ -35,6 +37,9 @@ class SubscribersGraphViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var resourceProvider:
         ResourceProvider
+
+    @Mock
+    private lateinit var newStatsTracker: NewStatsTracker
 
     private lateinit var viewModel:
         SubscribersGraphViewModel
@@ -79,7 +84,8 @@ class SubscribersGraphViewModelTest : BaseUnitTest() {
             selectedSiteRepository,
             accountStore,
             statsRepository,
-            resourceProvider
+            resourceProvider,
+            newStatsTracker
         )
         viewModel.loadData()
     }
@@ -245,7 +251,8 @@ class SubscribersGraphViewModelTest : BaseUnitTest() {
                 selectedSiteRepository,
                 accountStore,
                 statsRepository,
-                resourceProvider
+                resourceProvider,
+                newStatsTracker
             )
             viewModel.loadDataIfNeeded()
             advanceUntilIdle()
@@ -285,7 +292,8 @@ class SubscribersGraphViewModelTest : BaseUnitTest() {
                 selectedSiteRepository,
                 accountStore,
                 statsRepository,
-                resourceProvider
+                resourceProvider,
+                newStatsTracker
             )
 
             assertThat(viewModel.selectedTab.value)
@@ -544,6 +552,32 @@ class SubscribersGraphViewModelTest : BaseUnitTest() {
             )
         )
 
+
+    // region Tracking
+    @Test
+    fun `when the chart range changes, then the granularity moved from and to are reported`() =
+        test {
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.onTabSelected(SubscribersGraphTab.MONTHS)
+
+            verify(newStatsTracker).trackSubscribersChartRangeChanged(
+                from = SubscribersGraphTab.DAYS,
+                to = SubscribersGraphTab.MONTHS
+            )
+        }
+
+    @Test
+    fun `when the range already shown is re-selected, then nothing is reported`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onTabSelected(SubscribersGraphTab.DAYS)
+
+        verify(newStatsTracker, never()).trackSubscribersChartRangeChanged(any(), any())
+    }
+    // endregion
     companion object {
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN =

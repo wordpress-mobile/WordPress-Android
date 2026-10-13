@@ -46,9 +46,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.newstats.InsightsCardType
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.util.ProvideShimmerBrush
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 import org.wordpress.android.ui.newstats.util.formatStatValue
+import javax.inject.Inject
 
 private val CardCornerRadius = 10.dp
 private const val LOADING_SHIMMER_ITEM_COUNT = 3
@@ -56,11 +59,22 @@ private const val LOADING_SHIMMER_ITEM_COUNT = 3
 @AndroidEntryPoint
 class YearInReviewDetailActivity :
     BaseAppCompatActivity() {
+    @Inject
+    lateinit var newStatsTracker: NewStatsTracker
+
     private val viewModel:
         YearInReviewDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Only on a fresh launch: a rotation recreates this activity from the same Intent, and
+        // re-reporting there would inflate the count. Same guard as NewStatsActivity's.
+        if (savedInstanceState == null) {
+            newStatsTracker.trackDetailScreenShown(
+                InsightsCardType.YEAR_IN_REVIEW
+            )
+        }
 
         viewModel.loadData()
 

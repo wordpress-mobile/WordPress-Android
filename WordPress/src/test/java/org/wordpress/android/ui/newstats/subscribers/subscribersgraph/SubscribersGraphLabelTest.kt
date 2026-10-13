@@ -12,6 +12,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.SubscribersGraphDataPoint
 import org.wordpress.android.ui.newstats.repository.SubscribersGraphResult
@@ -38,6 +39,9 @@ class SubscribersGraphLabelTest : BaseUnitTest() {
     @Mock
     private lateinit var resourceProvider:
         ResourceProvider
+
+    @Mock
+    private lateinit var newStatsTracker: NewStatsTracker
 
     private lateinit var viewModel:
         SubscribersGraphViewModel
@@ -74,7 +78,8 @@ class SubscribersGraphLabelTest : BaseUnitTest() {
             selectedSiteRepository,
             accountStore,
             statsRepository,
-            resourceProvider
+            resourceProvider,
+            newStatsTracker
         )
         viewModel.loadData()
     }

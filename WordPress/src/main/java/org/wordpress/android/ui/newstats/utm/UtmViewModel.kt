@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.UtmItemData
@@ -35,7 +36,8 @@ class UtmViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
     private val statsRepository: StatsRepository,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val newStatsTracker: NewStatsTracker
 ) : ViewModel() {
     private val _selectedCategory =
         MutableStateFlow(UtmCategory.SOURCE_MEDIUM)
@@ -231,6 +233,10 @@ class UtmViewModel @Inject constructor(
     @Suppress("ReturnCount")
     fun onCategoryChanged(category: UtmCategory) {
         if (_selectedCategory.value == category) return
+        newStatsTracker.trackUtmParamGroupingChanged(
+            from = _selectedCategory.value,
+            to = category
+        )
         _selectedCategory.value = category
         val siteId = selectedSiteRepository
             .getSelectedSite()?.siteId ?: return

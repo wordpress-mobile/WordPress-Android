@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
+import org.wordpress.android.ui.newstats.analytics.cardMoveIndices
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
 import org.wordpress.android.ui.newstats.repository.StatsResultCache
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -22,7 +24,8 @@ class NewStatsViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val cardConfigurationRepository: StatsCardsConfigurationRepository,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val statsResultCache: StatsResultCache
+    private val statsResultCache: StatsResultCache,
+    private val newStatsTracker: NewStatsTracker
 ) : ViewModel() {
     private val _visibleCards = MutableStateFlow<List<StatsCardType>>(StatsCardType.defaultCards())
     val visibleCards: StateFlow<List<StatsCardType>> = _visibleCards.asStateFlow()
@@ -103,7 +106,21 @@ class NewStatsViewModel @Inject constructor(
         _cardsToLoad.value = config.visibleCards
     }
 
+    /**
+     * The tab now on screen, including the one New Stats opened on. Tracked from here rather than
+     * from the pager so the event carries the site without the composable having to hold a tracker.
+     */
+    fun onTabShown(tab: StatsTab) {
+        newStatsTracker.trackTabShown(tab)
+    }
+
+    /** A move between tabs. Not reported for the tab the screen opens on - see [onTabShown]. */
+    fun onTabSelected(from: StatsTab, to: StatsTab) {
+        newStatsTracker.trackTabSelected(from, to)
+    }
+
     fun removeCard(cardType: StatsCardType) {
+        newStatsTracker.trackCardRemoved(cardType)
         val currentSiteId = siteId // Capture siteId to avoid race conditions during site switching
         viewModelScope.launch {
             cardConfigurationRepository.removeCard(currentSiteId, cardType)
@@ -111,6 +128,7 @@ class NewStatsViewModel @Inject constructor(
     }
 
     fun addCard(cardType: StatsCardType) {
+        newStatsTracker.trackCardAdded(cardType)
         val currentSiteId = siteId // Capture siteId to avoid race conditions during site switching
         viewModelScope.launch {
             cardConfigurationRepository.addCard(currentSiteId, cardType)
@@ -118,6 +136,7 @@ class NewStatsViewModel @Inject constructor(
     }
 
     fun moveCardUp(cardType: StatsCardType) {
+        trackCardMoved(cardType, NewStatsTracker.CardMoveDirection.UP)
         val currentSiteId = siteId // Capture siteId to avoid race conditions during site switching
         viewModelScope.launch {
             cardConfigurationRepository.moveCardUp(currentSiteId, cardType)
@@ -125,6 +144,7 @@ class NewStatsViewModel @Inject constructor(
     }
 
     fun moveCardToTop(cardType: StatsCardType) {
+        trackCardMoved(cardType, NewStatsTracker.CardMoveDirection.TOP)
         val currentSiteId = siteId // Capture siteId to avoid race conditions during site switching
         viewModelScope.launch {
             cardConfigurationRepository.moveCardToTop(currentSiteId, cardType)
@@ -132,6 +152,7 @@ class NewStatsViewModel @Inject constructor(
     }
 
     fun moveCardDown(cardType: StatsCardType) {
+        trackCardMoved(cardType, NewStatsTracker.CardMoveDirection.DOWN)
         val currentSiteId = siteId // Capture siteId to avoid race conditions during site switching
         viewModelScope.launch {
             cardConfigurationRepository.moveCardDown(currentSiteId, cardType)
@@ -139,9 +160,19 @@ class NewStatsViewModel @Inject constructor(
     }
 
     fun moveCardToBottom(cardType: StatsCardType) {
+        trackCardMoved(cardType, NewStatsTracker.CardMoveDirection.BOTTOM)
         val currentSiteId = siteId // Capture siteId to avoid race conditions during site switching
         viewModelScope.launch {
             cardConfigurationRepository.moveCardToBottom(currentSiteId, cardType)
+        }
+    }
+
+    private fun trackCardMoved(
+        cardType: StatsCardType,
+        direction: NewStatsTracker.CardMoveDirection
+    ) {
+        _visibleCards.value.cardMoveIndices(cardType, direction)?.let { (from, to) ->
+            newStatsTracker.trackCardMoved(cardType, direction, from, to)
         }
     }
 }
