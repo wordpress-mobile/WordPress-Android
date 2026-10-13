@@ -51,6 +51,7 @@ import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.components.StatsSummaryCard
 import org.wordpress.android.util.extensions.getParcelableArrayListCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
@@ -77,6 +78,8 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
 
     @Inject lateinit var analyticsTracker: AnalyticsTrackerWrapper
 
+    @Inject lateinit var newStatsTracker: NewStatsTracker
+
     private val viewModel: MostViewedDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,6 +89,12 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
             ?: StatsCardType.MOST_VIEWED_POSTS_AND_PAGES
         val valueHeaderResId = intent.getIntExtra(EXTRA_VALUE_HEADER_RES_ID, R.string.stats_views)
         val selfFetch = readSelfFetchArgs()
+
+        // Only on a fresh launch, for the same reason NewStatsActivity guards its open event: a
+        // rotation recreates this activity from the same Intent and would inflate the count.
+        if (savedInstanceState == null) {
+            newStatsTracker.trackDetailScreenShown(cardType)
+        }
 
         if (selfFetch != null) {
             viewModel.load(selfFetch.source, selfFetch.period)
@@ -107,7 +116,10 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
                     onOpenWpAdmin = {
                         viewModel.getAdminUrl()?.let { ActivityLauncher.openUrlExternal(this, it) }
                     },
-                    onUrlClick = { url -> activityNavigator.openInCustomTab(this, url) },
+                    onUrlClick = { url ->
+                        newStatsTracker.trackTopListItemTapped(cardType)
+                        activityNavigator.openInCustomTab(this, url)
+                    },
                     onItemClick = if (cardType == StatsCardType.MOST_VIEWED_POSTS_AND_PAGES) {
                         ::openPostDetailStats
                     } else {
@@ -120,6 +132,7 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
 
     private fun openPostDetailStats(item: MostViewedDetailItem) {
         analyticsTracker.track(Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED, viewModel.getSite())
+        newStatsTracker.trackTopListItemTapped(StatsCardType.MOST_VIEWED_POSTS_AND_PAGES)
         PostStatsDetailActivity.start(this, item.id, item.title)
     }
 

@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.UtmItemData
 import org.wordpress.android.ui.newstats.repository.UtmResult
@@ -43,6 +44,9 @@ class UtmViewModelPeriodChangeTest : BaseUnitTest(StandardTestDispatcher()) {
 
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
+    private lateinit var newStatsTracker: NewStatsTracker
 
     private lateinit var viewModel: UtmViewModel
 
@@ -75,7 +79,8 @@ class UtmViewModelPeriodChangeTest : BaseUnitTest(StandardTestDispatcher()) {
             selectedSiteRepository,
             accountStore,
             statsRepository,
-            appPrefsWrapper
+            appPrefsWrapper,
+            newStatsTracker
         )
         viewModel.onPeriodChanged(StatsPeriod.Last7Days)
         // Starts the first request and leaves it waiting on its response.

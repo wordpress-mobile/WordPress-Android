@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.repository.BottomStatsAggregates
 import org.wordpress.android.ui.newstats.repository.BottomStatsResult
@@ -61,7 +62,8 @@ class ViewsStatsViewModel @Inject constructor(
     private val statsRepository: StatsRepository,
     private val resourceProvider: ResourceProvider,
     private val savedStateHandle: SavedStateHandle,
-    private val cardsConfigurationRepository: StatsCardsConfigurationRepository
+    private val cardsConfigurationRepository: StatsCardsConfigurationRepository,
+    private val newStatsTracker: NewStatsTracker
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<ViewsStatsCardUiState>(ViewsStatsCardUiState.Loading)
     val uiState: StateFlow<ViewsStatsCardUiState> = _uiState.asStateFlow()
@@ -189,6 +191,26 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     /**
+     * A preset picked from the period selector. Separate from [onPeriodChanged] so only a pick made
+     * in the menu is reported - paging and bar drill-downs reach the same range through their own
+     * entry points, and each has its own event.
+     *
+     * Reports the tap even when [period] is already the committed range: that tap is how the user
+     * returns the screen to the whole period after soft-selecting a bar, so it is a real choice
+     * rather than a no-op.
+     */
+    fun onPresetSelected(period: StatsPeriod) {
+        newStatsTracker.trackDateRangePresetSelected(period)
+        onPeriodChanged(period)
+    }
+
+    /** A range picked in the date-range picker dialog. */
+    fun onCustomRangeSelected(startDate: LocalDate, endDate: LocalDate) {
+        newStatsTracker.trackCustomDateRangeSelected(startDate, endDate)
+        onPeriodChanged(StatsPeriod.Custom(startDate, endDate))
+    }
+
+    /**
      * Commits [period] as the screen's range. An explicit pick — the selector, a custom range, a bar
      * drill-down — also becomes the origin future navigation resolves ties against; paging passes
      * [keepOrigin] so the ranges it produces don't overwrite the preset the user chose.
@@ -226,6 +248,11 @@ class ViewsStatsViewModel @Inject constructor(
      */
     fun onNavigatePrevious() {
         if (!statsRepository.canNavigateBackward(currentPeriod)) return
+        // Reported before the move, so the event names the range being left.
+        newStatsTracker.trackDateNavigationButtonTapped(
+            NewStatsTracker.NavigationDirection.PREVIOUS,
+            currentPeriod
+        )
         navigateTo(statsRepository.previousPeriod(currentPeriod, origin = periodOrigin))
     }
 
@@ -235,6 +262,10 @@ class ViewsStatsViewModel @Inject constructor(
      */
     fun onNavigateNext() {
         if (!statsRepository.canNavigateForward(currentPeriod)) return
+        newStatsTracker.trackDateNavigationButtonTapped(
+            NewStatsTracker.NavigationDirection.NEXT,
+            currentPeriod
+        )
         navigateTo(statsRepository.nextPeriod(currentPeriod, origin = periodOrigin))
     }
 
@@ -381,6 +412,10 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     fun onChartTypeChanged(chartType: ChartType) {
+        // Re-picking the type already on screen changes nothing visible, so it isn't reported.
+        if (chartType != currentChartType) {
+            newStatsTracker.trackChartTypeChanged(from = currentChartType, to = chartType)
+        }
         currentChartType = chartType
         saveChartType(chartType)
         // The bar highlight is BAR-only and the header overlay is tied to a selection, so a chart-type
@@ -442,6 +477,7 @@ class ViewsStatsViewModel @Inject constructor(
         // fallback is up: the rebuilt state is identical, so nothing would change on screen, but the
         // user's real preference would be silently overwritten with views.
         if (metric == chartedMetric()) return
+        newStatsTracker.trackChartMetricSelected(metric)
         currentSelectedMetric = metric
         metricPickedOnCurrentPeriod = true
         saveMetric(metric)
@@ -544,6 +580,16 @@ class ViewsStatsViewModel @Inject constructor(
         if (content.selectedBar?.index == index) {
             clearSoftSelection()
             return
+        }
+
+        // Only a bar becoming selected is reported; the branch above that clears a selection is the
+        // same tap undone, and would otherwise double every bar interaction.
+        lastChartResult?.let { result ->
+            newStatsTracker.trackChartBarSelected(
+                metric = chartedMetric(),
+                unit = result.unit,
+                value = dataPoint.value
+            )
         }
 
         // drillDownPeriod is null for hourly buckets: no sub-period to broadcast and no arrow, but the

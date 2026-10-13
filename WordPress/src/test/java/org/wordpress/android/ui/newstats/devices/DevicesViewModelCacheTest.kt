@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.repository.DeviceItemData
 import org.wordpress.android.ui.newstats.repository.DevicesResult
 import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
@@ -43,6 +44,9 @@ class DevicesViewModelCacheTest : BaseUnitTest(StandardTestDispatcher()) {
 
     @Mock
     private lateinit var statsRepository: StatsRepository
+
+    @Mock
+    private lateinit var newStatsTracker: NewStatsTracker
 
     private lateinit var viewModel: DevicesViewModel
 
@@ -82,7 +86,7 @@ class DevicesViewModelCacheTest : BaseUnitTest(StandardTestDispatcher()) {
         whenever(statsRepository.fetchDevicesScreensize(any(), eq(SECOND_PERIOD), eq(false)))
             .thenReturn(result(SECOND_PERIOD_ITEM))
 
-        viewModel = DevicesViewModel(selectedSiteRepository, accountStore, statsRepository)
+        viewModel = DevicesViewModel(selectedSiteRepository, accountStore, statsRepository, newStatsTracker)
         viewModel.onPeriodChanged(FIRST_PERIOD)
         advanceUntilIdle()
 
@@ -104,7 +108,7 @@ class DevicesViewModelCacheTest : BaseUnitTest(StandardTestDispatcher()) {
         whenever(statsRepository.fetchDevicesBrowser(any(), any(), any()))
             .thenReturn(result(FIRST_PERIOD_ITEM))
 
-        viewModel = DevicesViewModel(selectedSiteRepository, accountStore, statsRepository)
+        viewModel = DevicesViewModel(selectedSiteRepository, accountStore, statsRepository, newStatsTracker)
         viewModel.onPeriodChanged(FIRST_PERIOD)
         advanceUntilIdle()
         viewModel.onDeviceTypeChanged(DeviceType.BROWSER)
@@ -121,7 +125,7 @@ class DevicesViewModelCacheTest : BaseUnitTest(StandardTestDispatcher()) {
         whenever(statsRepository.fetchDevicesScreensize(any(), any(), any()))
             .thenReturn(result(FIRST_PERIOD_ITEM))
 
-        viewModel = DevicesViewModel(selectedSiteRepository, accountStore, statsRepository)
+        viewModel = DevicesViewModel(selectedSiteRepository, accountStore, statsRepository, newStatsTracker)
         viewModel.onPeriodChanged(FIRST_PERIOD)
         advanceUntilIdle()
 
