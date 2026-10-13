@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-25 11:54:22+0000
+Translation-Revision-Date: 2026-10-09 09:54:55+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.1.0
 Language: zh_CN
@@ -177,6 +177,7 @@ Language: zh_CN
     <string name="menu_item_target_label">链接目标</string>
     <string name="menu_item_no_parent">无（顶级）</string>
     <string name="menu_item_parent_label">父级</string>
+    <string name="menu_item_url_label">URL</string>
     <string name="menu_item_title_label">标题</string>
     <string name="move_down">下移</string>
     <string name="move_up">上移</string>

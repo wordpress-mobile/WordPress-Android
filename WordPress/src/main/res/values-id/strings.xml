@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-07-16 20:25:24+0000
+Translation-Revision-Date: 2026-10-12 07:06:29+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.1.0
 Language: id
@@ -30,6 +30,7 @@ Language: id
     <string name="reader_reading_time">Bacaan %s mnt</string>
     <string name="reader_discover_tab_latest">Terbaru</string>
     <string name="reader_discover_tab_recommended">Rekomendasi</string>
+    <string name="stats_subscriber_years_and_days">%1$s, %2$s</string>
     <string name="stats_subscriber_since_today">hari ini</string>
     <string name="stats_subscribers_graph_years">Tahun</string>
     <string name="stats_subscribers_graph_months">Bulan</string>
@@ -52,9 +53,11 @@ Language: id
     <string name="stats_utm_source">Sumber</string>
     <string name="stats_utm_campaign_source_medium">Kampanye / Sumber / Sedang</string>
     <string name="stats_utm_source_medium">Sumber / Sedang</string>
+    <string name="stats_utm_title">UTM</string>
     <string name="stats_error_not_authenticated">Tidak terautentikasi.</string>
     <string name="stats_collapse_group">Ciutkan</string>
     <string name="stats_expand_group">Bentangkan</string>
+    <string name="stats_tag_type_tag">Tag</string>
     <string name="stats_tag_type_category">Kategori</string>
     <string name="stats_insights_tags_empty">Tidak ada tag atau kategori yang ditemukan</string>
     <string name="stats_insights_views_percent">%1$s%% kunjungan</string>
@@ -114,6 +117,8 @@ Language: id
     <string name="stats_try_new_stats">Coba statistik baru</string>
     <string name="stats_devices_percentage_header">Persentase</string>
     <string name="stats_devices_device_header">Perangkat</string>
+    <string name="stats_devices_platform">Platform</string>
+    <string name="stats_devices_browser">Browser</string>
     <string name="stats_devices_screensize">Ukuran</string>
     <string name="stats_devices_title">Perangkat</string>
     <string name="show_less">Tampilkan sedikit</string>
@@ -123,6 +128,7 @@ Language: id
     <string name="post_rs_settings_clear_excerpt">Hapus kutipan</string>
     <string name="post_rs_settings_format_dialog_title">Format Pos</string>
     <string name="post_rs_settings_excerpt_dialog_title">Kutipan</string>
+    <string name="post_rs_settings_slug_dialog_title">Slug</string>
     <string name="post_rs_settings_discard_message">Anda memiliki perubahan yang belum disimpan. Buang?</string>
     <string name="post_rs_settings_discard_title">Buang perubahan</string>
     <string name="post_rs_settings_status_dialog_title">Status Pos</string>
@@ -141,6 +147,7 @@ Language: id
     <string name="post_rs_sync_failed">Sinkronisasi gagal</string>
     <string name="post_rs_error_auth">Autentikasi Anda telah kedaluwarsa. Harap login lagi.</string>
     <string name="post_rs_error_load_more">Tidak dapat memuat lebih banyak pos</string>
+    <string name="stats_ring_chart_entry_description">%1$s: %2$s</string>
     <string name="menu_item_accessibility_description">Level%1$d, %2$s, %3$s</string>
     <string name="menu_item_reorder_failed">Gagal menyusun ulang item menu</string>
     <string name="menu_item_invalid_url">Masukkan URL yang valid</string>
@@ -267,6 +274,7 @@ Language: id
     <string name="error_browser_no_network">Tidak dapat memuat halaman ini</string>
     <string name="history_empty_subtitle_post">Anda akan melihat riwayat pos ini saat melakukan perubahan</string>
     <string name="history_empty_subtitle_page">Anda akan melihat riwayat halaman ini saat melakukan perubahan</string>
+    <string name="reader_discover_tab_freshly_pressed">Freshly Pressed</string>
     <string name="notifications_empty_action_comments">Bergabung dalam percakapan! Komentari pos di Pembaca.</string>
     <string name="notifications_empty_action_all">Aktiflah! Komentari pos di Pembaca.</string>
     <string name="more_options">Pilihan lainnya</string>
