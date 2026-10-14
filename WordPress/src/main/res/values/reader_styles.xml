@@ -14,11 +14,6 @@
         <item name="android:background">@color/reader_post_list_background</item>
     </style>
 
-    <style name="ReaderCardView" parent="Widget.MaterialComponents.CardView">
-        <item name="cardElevation">@dimen/reader_card_elevation</item>
-        <item name="cardCornerRadius">0dp</item>
-    </style>
-
     <style name="ReaderCardViewNew" parent="Widget.MaterialComponents.CardView">
         <item name="cardElevation">@dimen/reader_card_elevation_new</item>
         <item name="cardCornerRadius">0dp</item>

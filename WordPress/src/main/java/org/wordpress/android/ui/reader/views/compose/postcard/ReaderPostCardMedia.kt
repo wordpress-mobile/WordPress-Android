@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -141,10 +142,11 @@ private fun rememberVideoThumbnail(postId: Long, videoUrl: String): VideoThumbna
 private fun ThumbnailStrip(data: GalleryThumbnailStripData) {
     if (data.images.size < THUMBNAIL_STRIP_IMG_COUNT) return
     val context = LocalContext.current
+    val resources = LocalResources.current
     val height = dimensionResource(R.dimen.reader_thumbnail_strip_image_height)
-    val heightPx = context.resources.getDimensionPixelSize(R.dimen.reader_thumbnail_strip_image_height)
-    val widthPx = remember {
-        val margins = context.resources.getDimensionPixelSize(R.dimen.reader_card_content_padding) * 2
+    val heightPx = resources.getDimensionPixelSize(R.dimen.reader_thumbnail_strip_image_height)
+    val widthPx = remember(resources) {
+        val margins = resources.getDimensionPixelSize(R.dimen.reader_card_content_padding) * 2
         (DisplayUtils.getWindowPixelWidth(context) - margins) / THUMBNAIL_STRIP_IMG_COUNT
     }
     val photoViewerOptions = remember(data.isPrivate) {
