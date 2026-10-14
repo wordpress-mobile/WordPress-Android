@@ -33,6 +33,7 @@ import org.wordpress.android.ui.accounts.LoginFlow;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.push.NotificationType;
+import org.wordpress.android.support.SupportRouting;
 import org.wordpress.android.support.main.ui.SupportActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
@@ -97,8 +98,6 @@ import org.wordpress.android.posttypes.bridge.SiteReference;
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures;
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature;
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeaturesActivity;
 import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailActivity;
 import org.wordpress.android.ui.prefs.categories.list.CategoriesListActivity;
@@ -1370,7 +1369,8 @@ public class ActivityLauncher {
     }
 
     public static void viewHelpInNewStack(@NonNull Context context, @NonNull Origin origin,
-                                          @Nullable SiteModel selectedSite, @Nullable List<String> extraSupportTags) {
+                                          @Nullable SiteModel selectedSite, @Nullable List<String> extraSupportTags,
+                                          @NonNull SupportRouting supportRouting) {
         Map<String, String> properties = new HashMap<>();
         properties.put("origin", origin.name());
         AnalyticsTracker.track(Stat.SUPPORT_OPENED, properties);
@@ -1380,7 +1380,12 @@ public class ActivityLauncher {
         mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         Intent meIntent = new Intent(context, MeActivity.class);
         meIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        Intent helpIntent = HelpActivity.createIntent(context, origin, selectedSite, extraSupportTags);
+        // The new support flow is a separate screen that takes no entry-point context, so origin,
+        // selectedSite and extraSupportTags are deliberately skipped when it is enabled. They only
+        // apply to the legacy HelpActivity, which forwards them to Zendesk.
+        Intent helpIntent = supportRouting.isNewSupportFlowEnabled()
+                ? SupportActivity.createIntent(context)
+                : HelpActivity.createIntent(context, origin, selectedSite, extraSupportTags);
 
         taskStackBuilder.addNextIntent(mainActivityIntent);
         taskStackBuilder.addNextIntent(meIntent);
@@ -1390,11 +1395,13 @@ public class ActivityLauncher {
 
     public static void viewHelp(@NonNull Context context, @NonNull Origin origin, @Nullable SiteModel selectedSite,
                                 @Nullable List<String> extraSupportTags,
-                                @NonNull ExperimentalFeatures experimentalFeatures) {
+                                @NonNull SupportRouting supportRouting) {
         Map<String, String> properties = new HashMap<>();
         properties.put("origin", origin.name());
         AnalyticsTracker.track(Stat.SUPPORT_OPENED, properties);
-        if (experimentalFeatures.isEnabled(Feature.MODERN_SUPPORT)) {
+        // See viewHelpInNewStack: the new flow takes no entry-point context, so origin,
+        // selectedSite and extraSupportTags are deliberately skipped here too.
+        if (supportRouting.isNewSupportFlowEnabled()) {
             context.startActivity(SupportActivity.createIntent(context));
         } else {
             context.startActivity(HelpActivity.createIntent(context, origin, selectedSite, extraSupportTags));
@@ -1414,8 +1421,9 @@ public class ActivityLauncher {
 
 
     public static void viewZendeskTickets(@NonNull Context context,
-                                          @Nullable SiteModel selectedSite) {
-        viewHelpInNewStack(context, Origin.ZENDESK_NOTIFICATION, selectedSite, null);
+                                          @Nullable SiteModel selectedSite,
+                                          @NonNull SupportRouting supportRouting) {
+        viewHelpInNewStack(context, Origin.ZENDESK_NOTIFICATION, selectedSite, null, supportRouting);
     }
 
     public static void viewSSLCerts(Context context, String certificateString) {

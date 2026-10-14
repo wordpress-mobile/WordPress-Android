@@ -120,6 +120,7 @@ import org.wordpress.android.fluxc.tools.FluxCImageLoader
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.InputData
 import org.wordpress.android.networking.NetworkConnectionMonitor
+import org.wordpress.android.support.SupportRouting
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
@@ -190,7 +191,6 @@ import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessage
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.SiteSettingsInterface
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.suggestion.SuggestionActivity
 import org.wordpress.android.ui.suggestion.SuggestionType
@@ -403,7 +403,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     @Inject lateinit var postConflictResolutionFeatureConfig: PostConflictResolutionFeatureConfig
 
-    @Inject lateinit var experimentalFeatures: ExperimentalFeatures
+    @Inject lateinit var supportRouting: SupportRouting
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var storePostViewModel: StorePostViewModel
@@ -3629,7 +3629,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     override fun onGotoCustomerSupportOptions() {
-        onGotoCustomerSupportOptions(this, site, experimentalFeatures)
+        onGotoCustomerSupportOptions(this, site, supportRouting)
     }
 
     override fun onSendEventToHost(eventName: String, properties: Map<String, Any>) {
