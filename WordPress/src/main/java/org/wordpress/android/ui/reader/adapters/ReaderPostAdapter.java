@@ -55,7 +55,6 @@ import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderViewUiState.ReaderTagHeaderUiState;
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState;
-import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ColorUtils;
@@ -83,7 +82,6 @@ import kotlinx.coroutines.CoroutineScope;
 
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final ImageManager mImageManager;
-    private final UiHelpers mUiHelpers;
     private final NetworkUtilsWrapper mNetworkUtilsWrapper;
     private final CoroutineScope mScope;
     private ReaderTag mCurrentTag;
@@ -262,9 +260,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 );
                 return new ReaderRemovedPostViewHolder(postView);
             default:
-                return new ReaderPostNewViewHolder(
-                        mUiHelpers, mImageManager, mReaderTracker, mNetworkUtilsWrapper, parent
-                );
+                return new ReaderPostNewViewHolder(mReaderTracker, mNetworkUtilsWrapper, parent);
         }
     }
 
@@ -429,7 +425,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (post == null) {
             return;
         }
-        Context ctx = holder.getViewContext();
+        Context ctx = holder.itemView.getContext();
         Function3<Long, Long, ReaderPostCardActionType, Unit> onButtonClicked =
                 (postId, blogId, type) -> {
                     mOnPostListItemButtonListener.onButtonClicked(post, type);
@@ -541,7 +537,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             Context context,
             ReaderPostListType postListType,
             ImageManager imageManager,
-            UiHelpers uiHelpers,
             @NonNull final NetworkUtilsWrapper networkUtilsWrapper,
             boolean isMainReader,
             LifecycleCoroutineScope scope
@@ -551,7 +546,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.mImageManager = imageManager;
         mPostListType = postListType;
         mSource = mReaderTracker.getSource(mPostListType);
-        mUiHelpers = uiHelpers;
         mNetworkUtilsWrapper = networkUtilsWrapper;
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mIsMainReader = isMainReader;

@@ -61,7 +61,7 @@ sealed class ReaderCardUiState {
         data class GalleryThumbnailStripData(
             val images: ReaderImageList,
             val isPrivate: Boolean,
-            val content: String // needs to be here as it's required by ReaderThumbnailStrip
+            val content: String // the photo viewer needs it to build the gallery
         )
     }
 
