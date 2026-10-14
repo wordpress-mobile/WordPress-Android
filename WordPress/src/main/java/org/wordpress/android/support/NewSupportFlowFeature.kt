@@ -2,7 +2,7 @@ package org.wordpress.android.support
 
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
-import org.wordpress.android.util.config.NewOdieSupportFlowFeatureConfig
+import org.wordpress.android.util.config.NewMobileSupportFlowFeatureConfig
 import javax.inject.Inject
 
 /**
@@ -13,8 +13,8 @@ import javax.inject.Inject
  */
 class NewSupportFlowFeature @Inject constructor(
     private val experimentalFeatures: ExperimentalFeatures,
-    private val newOdieSupportFlowFeatureConfig: NewOdieSupportFlowFeatureConfig
+    private val newMobileSupportFlowFeatureConfig: NewMobileSupportFlowFeatureConfig
 ) {
     fun isEnabled(): Boolean = experimentalFeatures.isEnabled(Feature.MODERN_SUPPORT) ||
-            newOdieSupportFlowFeatureConfig.isEnabled()
+            newMobileSupportFlowFeatureConfig.isEnabled()
 }
