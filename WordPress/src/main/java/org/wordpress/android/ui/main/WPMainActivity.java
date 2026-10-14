@@ -69,6 +69,7 @@ import org.wordpress.android.push.GCMRegistrationScheduler;
 import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.push.NotificationsProcessingService;
+import org.wordpress.android.support.SupportRouting;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.ActivityNavigator;
@@ -266,6 +267,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Inject GCMRegistrationScheduler mGCMRegistrationScheduler;
 
     @Inject ActivityNavigator mActivityNavigator;
+
+    @Inject SupportRouting mSupportRouting;
 
     @Inject SnackbarSequencer mSnackbarSequencer;
 
@@ -872,7 +875,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         // init selected site, this is the same as in onResume
         initSelectedSite();
 
-        ActivityLauncher.viewZendeskTickets(this, getSelectedSite());
+        ActivityLauncher.viewZendeskTickets(this, getSelectedSite(), mSupportRouting);
     }
 
     /*

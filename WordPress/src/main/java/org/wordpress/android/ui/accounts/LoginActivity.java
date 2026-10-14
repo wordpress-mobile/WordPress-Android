@@ -35,6 +35,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.ui.accounts.login.LoginAnalyticsTracker;
 import org.wordpress.android.ui.accounts.login.applicationpassword.LoginSiteApplicationPasswordFragment;
+import org.wordpress.android.support.SupportRouting;
 import org.wordpress.android.support.ZendeskExtraTags;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
@@ -46,7 +47,6 @@ import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.main.ChooseSiteActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
@@ -108,7 +108,7 @@ public class LoginActivity extends BaseAppCompatActivity {
     private boolean mFetchingPrimarySite = false;
     private ArrayList<Integer> mOldSitesIdsForLoginUpdate;
 
-    @Inject ExperimentalFeatures mExperimentalFeatures;
+    @Inject SupportRouting mSupportRouting;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -549,7 +549,7 @@ public class LoginActivity extends BaseAppCompatActivity {
     private void viewHelp(Origin origin) {
         List<String> extraSupportTags = getLoginFlow() == LoginFlow.JETPACK_STATS ? Collections
                 .singletonList(ZendeskExtraTags.connectingJetpack) : null;
-        ActivityLauncher.viewHelp(this, origin, null, extraSupportTags, mExperimentalFeatures);
+        ActivityLauncher.viewHelp(this, origin, null, extraSupportTags, mSupportRouting);
     }
 
     public void helpSiteAddress() {
