@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-07-16 20:24:24+0000
+Translation-Revision-Date: 2026-10-09 09:58:17+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.1.0
 Language: ar
@@ -146,6 +146,7 @@ Language: ar
     <string name="post_rs_settings_loading">%s: جارٍ التحميل</string>
     <string name="post_rs_settings_featured_image_not_set">لم يتم تعيين صورة بارزة.</string>
     <string name="post_rs_settings_featured_image_error">تعذّر تحميل الصورة البارزة.</string>
+    <string name="stats_ring_chart_entry_description">%1$s: %2$s</string>
     <string name="menu_item_invalid_url">يُرجى إدخال عنوان موقع صالح</string>
     <string name="menu_item_reorder_failed">فشلت إعادة ترتيب عنصر القائمة</string>
     <string name="menu_item_accessibility_description">المستوى ⁦%1$d⁩، %2$s، %3$s</string>
@@ -336,6 +337,8 @@ Language: ar
     <string name="he_support_empty_conversations_button">بدء محادثة</string>
     <string name="he_support_last_updated">آخر تحديث في ⁦%1$s⁩</string>
     <string name="he_support_reply_button">الرد</string>
+    <string name="unified_support_new_conversation_content_description">المحادثة الجديدة</string>
+    <string name="unified_support_generic_error">حدث خطأ ما. يُرجى المحاولة مرة أخرى لاحقاً.</string>
     <string name="support_screen_diagnostics_section_title">التشخيصات</string>
     <string name="support_screen_application_logs_title">سجلات التطبيق</string>
     <string name="support_screen_application_logs_description">أداة متقدمة لتصحيح الأخطاء</string>
@@ -363,6 +366,7 @@ Language: ar
     <string name="application_password_required_description">كلمات مرور التطبيقات هي طريقة أكثر أمانًا للاتصال بموقعك المستضاف ذاتيًا، وتمكين الدعم لميزات، مثل: ⁦%1$s⁩.</string>
     <string name="application_password_required">كلمة المرور الخاصة بالتطبيق مطلوبة</string>
     <string name="taxonomies_title">الفئات</string>
+    <string name="menu_html_mode">محرر الشفرة البرمجية:</string>
     <string name="jetpack_rest_connection_error_login_wpcom">يتعذّر تسجيل الدخول إلى ووردبريس.كوم</string>
     <string name="jetpack_rest_connection_step_connect_site">ربط الموقع الإلكتروني بووردبريس.كوم</string>
     <string name="dataview_default_empty_message">لا يوجد شيء هنا</string>

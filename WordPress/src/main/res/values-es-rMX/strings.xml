@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-09-29 15:41:16+0000
+Translation-Revision-Date: 2026-10-09 14:16:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: es_MX
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="support_screen_unified_support_title">Obtener ayuda</string>
+    <string name="page_rs_copy_url">Copiar URL</string>
     <string name="feedback_form_add_attachments">Añadir adjuntos</string>
     <string name="feedback_form_attachment_already_added">Adjunto ya añadido</string>
     <string name="feedback_form_title">Retroalimentación</string>
@@ -24,26 +26,121 @@ Language: es_MX
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">No se puede activar las ligas abiertas en Jetpack.</string>
     <string name="preference_open_links_in_jetpack">Abrir las ligas en Jetpack.</string>
     <string name="jp_migration_generic_error_title">Ups, algo salió mal.</string>
+    <string name="new_site_creation_site_name_title">Nombre del sitio</string>
+    <string name="stop_upload_dialog_button_yes" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Sí</string>
+    <string name="dialog_button_cancel" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Cancelar</string>
+    <string name="stop_upload_dialog_button_no" tools:ignore="UnusedResources" a8c-src-lib="module:editor">No</string>
+    <string name="blogging_prompts_onboarding_try_it_now">Pruébalo ahora</string>
+    <string name="blogging_prompts_onboarding_content_note_title">Nota:</string>
+    <string name="site_creation_intent_travel">Viajes</string>
+    <string name="site_creation_intent_technology">Tecnología</string>
+    <string name="site_creation_intent_news">Noticias</string>
+    <string name="site_creation_intent_music">Música</string>
+    <string name="site_creation_intent_food">Comida</string>
+    <string name="site_creation_intent_education">Educación</string>
+    <string name="site_creation_intent_photography">Fotografía</string>
+    <string name="site_creation_intent_people">Gente</string>
+    <string name="site_creation_intent_business">Negocio</string>
+    <string name="site_creation_intent_books">Libros</string>
+    <string name="site_creation_intent_beauty">Belleza</string>
+    <string name="my_site_all_tab_title">Todas</string>
+    <string name="my_site_dashboard_tab_title">Inicio</string>
+    <string name="my_site_menu_tab_title">Menú</string>
+    <string name="my_site_todays_stat_card_title">Estadísticas de hoy</string>
+    <string name="reader_comment_menu_edit">Editar</string>
+    <string name="about_automattic_woocommerce" tools:ignore="UnusedResources" a8c-src-lib="about">WooCommerce</string>
+    <string name="about_automattic_tumblr" tools:ignore="UnusedResources" a8c-src-lib="about">Tumblr</string>
+    <string name="about_automattic_terms_of_service_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Términos del servicio</string>
+    <string name="about_automattic_instagram_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Instagram</string>
+    <string name="about_automattic_twitter_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Twitter</string>
+    <string name="about_automattic_work_with_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Trabaja con nosotros</string>
+    <string name="about_automattic_family_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Familia de Automattic</string>
+    <string name="about_automattic_version_label" tools:ignore="UnusedResources" a8c-src-lib="about">Versión %1$s</string>
+    <string name="about_blog">Blog</string>
+    <string name="gutenberg_native_get_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Obtener soporte</string>
+    <string name="reader_comments_view_all">Ver todos los comentarios</string>
+    <string name="comment_author_badge">Autor</string>
+    <string name="my_site_untitled_post">Sin titulo</string>
     <string name="gutenberg_native_create_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Crear enlace</string>
     <string name="domains_title">Dominios</string>
+    <string name="post_status_sticky">Fija</string>
+    <string name="domains_search_for_a_domain_button">Buscar un dominio</string>
+    <string name="domains_site_domain_expires">Expira el %s</string>
+    <string name="comment_edit_email_address">Dirección de correo electrónico</string>
+    <string name="comment_edit_web_address">Dirección web</string>
+    <string name="comment_edit_user_name">Nombre</string>
+    <string name="comment_edit_menu_done">Hecho</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pronto llegarán las vistas previas de los bloques incrustados</string>
+    <string name="my_site_btn_domains">Dominios</string>
+    <string name="recommend_app_null_response">No se ha recibido ninguna respuesta</string>
+    <string name="recommend_app_bad_format_response">Respuesta recibida no válida</string>
+    <string name="create_site_notification_create_site_action">Crear sitio</string>
+    <string name="gutenberg_native_what_is_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">¿Qué es un  bloque?</string>
+    <string name="blogging_reminders_tip">Consejo</string>
+    <string name="blogging_reminders_update">Actualizar</string>
+    <string name="blogging_reminders_done">Hecho</string>
+    <string name="site_settings_blogging_reminders_title">Recordatorios</string>
+    <string name="site_settings_categories_title">Categorías</string>
     <string name="storage_utils_dialog_dont_show_button">No mostrar de nuevo</string>
     <string name="storage_utils_dialog_title">Insuficiente almacenamiento en el dispositivo</string>
     <string name="gutenberg_native_type_a_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Escribe una URL</string>
     <string name="gutenberg_native_s_has_url_set" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s tiene una URL ya establecida</string>
     <string name="gutenberg_native_s_has_no_url_set" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s no tiene una URL establecida</string>
+    <string name="gutenberg_native_s_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bloque %s</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">rel del enlace</string>
     <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ajustes de medios</string>
     <string name="user_profile_bottom_sheet_description">Información de hoja inferior del perfil de usuario</string>
     <string name="user_profile_site_section_header">Sitio</string>
     <string name="user_profile_untitled_site">(Sin título)</string>
     <string name="likes_list_screen_title">Lista de Me gusta %s</string>
+    <string name="gutenberg_native_two" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dos</string>
+    <string name="gutenberg_native_three" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tres</string>
+    <string name="gutenberg_native_no_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sin título</string>
+    <string name="gutenberg_native_mention" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Mención</string>
+    <string name="gutenberg_native_new" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">NUEVO</string>
+    <string name="gutenberg_native_retry" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Reintentar</string>
+    <string name="gutenberg_native_gif" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">GIF</string>
+    <string name="gutenberg_native_one" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Uno</string>
+    <string name="gutenberg_native_loading" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Cargando</string>
+    <string name="gutenberg_native_text_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Color del texto</string>
+    <string name="gutenberg_native_four" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Cuatro</string>
+    <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Más</string>
+    <string name="suggestion">Sugerencia:</string>
+    <string name="comment_status_unreplied">Sin respuesta</string>
     <string name="gutenberg_native_add_button_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Añade el texto al botón</string>
     <string name="activity_log_backup_download_notice_download_action">Descargar</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">Descartar</string>
     <string name="threat_fix_all_status_success_message_plural">Las amenazas se solucionaron con éxito.</string>
     <string name="gutenberg_native_edit_focal_point" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Editar punto focal</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Toca dos veces para abrir la hoja inferior y editar, reemplazar o borrar la imagen</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Toca dos veces para abrir la hoja de acción y editar, reemplazar o borrar la imagen</string>
     <string name="new_site_creation_search_domain_input_hint">Introduce un nombre para tu sitio</string>
+    <string name="new_site_creation_search_domain_example">example.com</string>
+    <string name="invite_links_null_response">No se ha recibido ninguna respuesta</string>
+    <string name="invite_links_generate">Generar un nuevo enlace</string>
+    <string name="invite_links_section_title">Enlace de invitación</string>
+    <string name="disable">Desactivar</string>
+    <string name="restore_status_failure_bullet3">Te avisaremos cuando hayamos terminado.</string>
+    <string name="restore_warning_action_button">Confirmar</string>
+    <string name="gutenberg_native_open" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ABIERTO</string>
+    <string name="gutenberg_native_audio_player" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Reproductor de Audio</string>
+    <string name="threat_found_header">Encontrado</string>
+    <string name="people_learn_more_about_roles">Saber más sobre los roles</string>
+    <string name="pick_audio">Selecciona el audio</string>
+    <string name="restore_progress_header">Estamos restaurando el sitio</string>
+    <string name="restore_details_action_button">Restaurar sitio</string>
+    <string name="restore">Restaurar</string>
+    <string name="backup_download_complete_failed_action_button">Hecho</string>
+    <string name="backup_download_complete_failed_title">La descarga ha fallado</string>
+    <string name="web_preview_tablet">Tablet</string>
+    <string name="web_preview_mobile">Móvil</string>
+    <string name="scan_history_all_threats_tab">Todas</string>
+    <string name="scan_scanning_title">Analizando archivos</string>
+    <string name="scan_preparing_to_scan_title">Preparando el análisis</string>
+    <string name="scan_history_menu_title">Historia</string>
+    <string name="backup_empty_title">Tu primera copia de seguridad estará lista pronto</string>
+    <string name="gutenberg_native_move_to_bottom" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Mover al final</string>
+    <string name="gutenberg_native_change_block_position" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Cambiar la posición del bloque</string>
     <string name="backup_download_complete_info">También te hemos enviado por correo electrónico un enlace a tu archivo.</string>
     <string name="jetpack_icon_content_description">icono</string>
     <string name="backup_download_complete_header">Tu copia de seguridad ya está disponible para descargar</string>
@@ -70,6 +167,14 @@ Language: es_MX
     <string name="threat_ignore">Ignorar la amenaza</string>
     <string name="threat_get_free_estimate">Obtén un presupuesto gratuito</string>
     <string name="suggestion_user">usuario</string>
+    <string name="threat_fix_default_header">¿Cómo vamos a corregirlo?</string>
+    <string name="threat_file_description">Amenaza encontrada en el archivo:</string>
+    <string name="threat_technical_details_header">Los detalles técnicos</string>
+    <string name="threats_fix_all">Corregir todo</string>
+    <string name="scan_in_few_seconds">hace unos segundos</string>
+    <string name="scan_this_site">este sitio</string>
+    <string name="backup">Copia de seguridad</string>
+    <string name="activity_log_activity_type_error_title">Sin conexión</string>
     <string name="backup_item_media_uploads">Subidas de medios</string>
     <string name="backup_item_plugins">Plugins de WordPress</string>
     <string name="backup_item_themes">Temas de WordPress</string>
@@ -823,6 +928,7 @@ Language: es_MX
     <string name="page_status_change_error">Hubo un problema al cambiar el estado de la página</string>
     <string name="page_delete_error">Hubo un problema al borrar la página</string>
     <string name="set_parent">Hacer superior</string>
+    <string name="dismiss">Descartar</string>
     <string name="my_site_create_new_site_title">No tienes sitios</string>
     <string name="content_description_more">Más</string>
     <string name="jetpack">Jetpack</string>
@@ -859,6 +965,7 @@ Language: es_MX
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">No establecido</string>
     <string name="support_contact_email">Correo electrónico de contacto</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Restauración en curso</string>
     <string name="activity_log_currently_restoring_title">Actualmente restaurando tu sitio</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Tu sitio ha sido restaurado satisfactoriamente</string>
     <string name="activity_log_button">Botón de acción del registro de actividad</string>
@@ -973,6 +1080,7 @@ Language: es_MX
     <string name="menu_preview">Vista previa</string>
     <string name="menu_save_as_draft">Guardar como borrador</string>
     <string name="file_size_in_terabytes">%s TB</string>
+    <string name="menu_visual_mode">Editor visual</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
     <string name="file_size_in_bytes">%s B</string>
@@ -1094,6 +1202,7 @@ Language: es_MX
     <string name="dlg_saving_tag">Guardando</string>
     <string name="dlg_deleting_tag">Borrando</string>
     <string name="dlg_confirm_delete_tag">¿Borrar permanentemente la etiqueta \'%s\'?</string>
+    <string name="my_site_btn_site_pages">Páginas</string>
     <string name="error_tag_exists">Ya existe una etiqueta con este nombre</string>
     <string name="add_new_tag">Añadir nueva etiqueta</string>
     <string name="tag_description_hint">Descripción</string>
@@ -1332,6 +1441,7 @@ Language: es_MX
     <string name="tabbar_accessibility_label_reader">Lector. Sigue contenido de otros sitios.</string>
     <string name="tabbar_accessibility_label_my_site">Mi sitio. Ve tu sitio y gestiónalo, estadísticas incluidas.</string>
     <string name="button_not_now">Ahora no</string>
+    <string name="my_site_btn_sharing">Social</string>
     <string name="media_error_internal_server_error">Error en la subida. Trata de cambiar la optimización de imágenes en los ajustes de tu aplicación</string>
     <string name="media_downloading">Guardando medios en este dispositivo</string>
     <string name="error_media_save">No fue posible guardar los medios</string>
@@ -1370,6 +1480,7 @@ Language: es_MX
     <string name="site_settings_image_quality_hint">Calidad de las imágenes: cuanto más alto es el valor, más calidad tienen las imágenes.</string>
     <string name="site_settings_optimize_images_summary">Activa la opción para cambiar el tamaño de las imágenes y comprimirlas</string>
     <string name="media_upload_state_uploaded">Se ha subido</string>
+    <string name="media_encoder_quality_maximum">Máximo</string>
     <string name="media_upload_state_deleted">Se ha eliminado</string>
     <string name="media_upload_state_deleting">Eliminando</string>
     <string name="media_upload_state_uploading">Subiendo</string>
@@ -1379,6 +1490,7 @@ Language: es_MX
     <string name="error_all_media_upload_canceled">Todos los archivos de multimedia han sido cancelados debido a un error desconocido. Por favor vuelva a intentar cargarlos</string>
     <string name="error_unknown_post_type">Formato de entrada desconocido</string>
     <string name="submit_for_review">Enviar</string>
+    <string name="title_subscriber">Suscriptor</string>
     <string name="already_logged_in_wpcom">Ya estás registrado en una cuenta de WordPress.com, no se puede agregar un sitio de WordPress.com a otra cuenta.</string>
     <string name="error_media_load">No se puede cargar archivos multimedia</string>
     <string name="error_media_refresh_no_connection">Se necesita estar conectado para actualizar la biblioteca</string>
@@ -1416,6 +1528,7 @@ Language: es_MX
     <string name="signout">Cerrar sesión</string>
     <string name="sign_in_wpcom">Iniciar sesión en WordPress.com</string>
     <string name="reader_label_global_related_posts">Más en WordPress.com</string>
+    <string name="reader_label_local_related_posts">Más de %s</string>
     <string name="preference_open_device_settings">Abrir ajustes del dispositivo</string>
     <string name="invite_user_blocked_invites">%s: Invitaciones bloqueadas por el usuario</string>
     <string name="invite_invalid_email">%s: Correo electrónico no válido</string>
@@ -1736,6 +1849,7 @@ Language: es_MX
     <string name="site_picker_add_self_hosted">Añadir sitio autoalojado</string>
     <string name="site_picker_title">Elegir sitio</string>
     <string name="my_site_btn_switch_site">Cambiar sitio</string>
+    <string name="my_site_btn_blog_posts">Entradas</string>
     <string name="reader_label_new_posts_subtitle">Toca para mostrarlos</string>
     <string name="select_all">Seleccionar todo</string>
     <string name="language">Idioma</string>
@@ -1790,6 +1904,8 @@ Language: es_MX
     <string name="error_publish_empty_post">No se puede publicar una entrada vacía.</string>
     <string name="reader_empty_comments">Aún no hay comentarios</string>
     <string name="browse_our_faq_button">Explora nuestras Preguntas frecuentes.</string>
+    <string name="reader_label_view_original">Ver original</string>
+    <string name="help_and_support">Ayuda y soporte</string>
     <string name="reader_toast_err_generic">No es posible realizar esta acción</string>
     <string name="update_verb">Actualizar</string>
     <string name="schedule_verb">Programación</string>
@@ -1954,4 +2070,14 @@ Language: es_MX
     <string name="notification_settings">Ajustes de avisos</string>
     <string name="preview">Vista previa</string>
     <string name="publish_now">Publicar ahora</string>
+    <string name="clear">Vaciar</string>
+    <string-array name="blogging_reminders_count">
+        <item>Una vez</item>
+        <item>Dos veces</item>
+        <item>Tres veces</item>
+        <item>Cuatro veces</item>
+        <item>Cinco veces</item>
+        <item>Seis veces</item>
+        <item>Siete veces</item>
+    </string-array>
 </resources>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-07-16 22:57:30+0000
+Translation-Revision-Date: 2026-10-12 07:06:14+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.1.0
 Language: zh_TW
@@ -427,6 +427,7 @@ Language: zh_TW
     <string name="subscribers_add_failed">無法新增訂閱者</string>
     <string name="subscribers_add_success">已成功新增訂閱者</string>
     <string name="subscribers_add_disclosure">\n按一下「傳送」，即表示你已徵得所有人同意，願意接收你傳送的電子郵件。        若你的訂閱者投訴垃圾訊息或退信的機率過高，我們可能會對你的帳號採取行動。\n    </string>
+    <string name="subscribers_add_email_hint">name@example.com</string>
     <string name="subscribers_add_subscribers">新增訂閱者</string>
     <string name="subscribers_gift_content_description">禮物</string>
     <string name="subscribers_renewal_interval">續訂間隔</string>
@@ -733,6 +734,7 @@ Language: zh_TW
     <string name="bloganuary_dashboard_nudge_overlay_text_two">張貼回覆。</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_one">每天接收新提示，激發靈感。</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">參加為期一個月的寫作挑戰</string>
+    <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_text">Bloganuary 會在 1 月送上網誌提示：這個社群挑戰的目的，是為了協助你在新的一年養成寫網誌的習慣。</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">因此，我們建議使用網頁瀏覽器來編輯區塊。</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">因此，我們建議使用網頁編輯器來編輯區塊。</string>
@@ -1167,6 +1169,7 @@ Language: zh_TW
     <string name="gutenberg_native_1_s_currently_selected_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%1$s。 目前選取：%2$s</string>
     <string name="me_btn_scan_login_code">掃描登入碼</string>
     <string name="stats_insights_likes_guide_card">⭐️ 你的最新文章 %1$s 已獲得 %2$s 次按讚。</string>
+    <string name="stats_most_popular_percent_views_empty">沒有足夠的活動。 有更多訪客造訪網站的時候，再回來查看！</string>
     <string name="stats_total_subscribers_content_description">%1$s，訂閱者總人數的 %2$s%%</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="photo_picker_video_thumbnail_content_description">影片縮圖</string>

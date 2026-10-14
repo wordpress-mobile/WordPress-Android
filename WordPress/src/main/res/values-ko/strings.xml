@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-25 09:55:25+0000
+Translation-Revision-Date: 2026-10-09 09:56:29+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.1.0
 Language: ko_KR
@@ -30,6 +30,7 @@ Language: ko_KR
     <string name="reader_reading_time">%s분 읽음</string>
     <string name="reader_discover_tab_latest">최신</string>
     <string name="reader_discover_tab_recommended">권장</string>
+    <string name="stats_subscriber_years_and_days">%1$s, %2$s</string>
     <string name="stats_subscriber_since_today">오늘</string>
     <string name="stats_subscribers_graph_years">년</string>
     <string name="stats_subscribers_graph_months">개월</string>
@@ -52,6 +53,7 @@ Language: ko_KR
     <string name="stats_utm_source">소스</string>
     <string name="stats_utm_campaign_source_medium">캠페인/소스/중간</string>
     <string name="stats_utm_source_medium">소스/중간</string>
+    <string name="stats_utm_title">UTM</string>
     <string name="stats_error_not_authenticated">인증되지 않았습니다.</string>
     <string name="stats_collapse_group">축소</string>
     <string name="stats_expand_group">확장</string>
@@ -144,6 +146,7 @@ Language: ko_KR
     <string name="post_rs_sync_failed">동기화 실패</string>
     <string name="post_rs_error_auth">인증이 만료되었습니다. 다시 로그인하세요.</string>
     <string name="post_rs_error_load_more">더 많은 글을 로드할 수 없음</string>
+    <string name="stats_ring_chart_entry_description">%1$s: %2$s</string>
     <string name="menu_item_accessibility_description">레벨 %1$d, %2$s, %3$s</string>
     <string name="menu_item_reorder_failed">메뉴 항목 재정렬 실패</string>
     <string name="menu_item_invalid_url">유효한 URL을 입력하세요.</string>
@@ -174,6 +177,7 @@ Language: ko_KR
     <string name="menu_item_target_label">연결 대상</string>
     <string name="menu_item_no_parent">없음(최상위 레벨)</string>
     <string name="menu_item_parent_label">부모</string>
+    <string name="menu_item_url_label">URL</string>
     <string name="menu_item_title_label">제목</string>
     <string name="move_down">아래로 이동</string>
     <string name="move_up">위로 이동</string>
