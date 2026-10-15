@@ -35,10 +35,6 @@ class ReaderPostNewViewHolder(
 
     fun onBind(state: ReaderPostUiState) {
         uiState.value = state
-        // The adapter re-binds with the menu items when the more button is tapped
-        if (state.moreMenuItems != null) {
-            readerTracker.track(AnalyticsTracker.Stat.POST_CARD_MORE_TAPPED)
-        }
         state.onItemRendered(state)
     }
 

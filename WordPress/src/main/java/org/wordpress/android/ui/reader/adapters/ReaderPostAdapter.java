@@ -475,6 +475,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return Unit.INSTANCE;
         };
         Function1<ReaderPostUiState, Unit> onMoreButtonClicked = (uiState) -> {
+            mReaderTracker.track(AnalyticsTracker.Stat.POST_CARD_MORE_TAPPED);
             renderPostNew(position, holder, true);
             return Unit.INSTANCE;
         };

@@ -24,7 +24,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.theme.AppThemeM3WithoutBackground
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
@@ -54,7 +54,6 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryActi
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.utils.ReaderUtils
-import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.image.ImagePlaceholderManager
@@ -64,6 +63,9 @@ private const val MEDIUM_EMPHASIS_ALPHA = 0.6f
 private const val HIGH_EMPHASIS_ALPHA = 0.87f
 private const val TEXT_MAX_LINES = 3
 private const val ACTION_MAX_WIDTH_DP = 140
+
+// Stateless, so one instance serves every avatar
+private val avatarPlaceholders = ImagePlaceholderManager()
 
 /**
  * The Reader post card shown in the post list. Renders a [ReaderPostUiState] exactly as the
@@ -80,14 +82,19 @@ fun ReaderPostCard(
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
             .clickable(onClick = onCardClick)
-            .padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 8.dp),
+            .padding(
+                start = Margin.ExtraMediumLarge.value,
+                end = Margin.ExtraMediumLarge.value,
+                top = Margin.ExtraLarge.value,
+                bottom = Margin.Medium.value,
+            ),
     ) {
         BlogSection(uiState.blogSection)
         ReaderPostCardMedia(uiState)
         uiState.title?.let { title ->
             Text(
                 text = uiStringText(title),
-                modifier = Modifier.padding(top = 8.dp),
+                modifier = Modifier.padding(top = Margin.Medium.value),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -100,7 +107,7 @@ fun ReaderPostCard(
                 text = excerpt,
                 // Kept out of the card's TalkBack label, as the View-based card did
                 modifier = Modifier
-                    .padding(top = 8.dp)
+                    .padding(top = Margin.Medium.value)
                     .clearAndSetSemantics {},
                 style = MaterialTheme.typography.bodyMedium,
                 lineHeight = 21.sp,
@@ -151,7 +158,7 @@ private fun BlogSectionAvatars(blogSection: CompactBlogSectionData) {
     val blogAvatarUrl = blogSection.avatarOrBlavatarUrl
     if (authorAvatarUrl == null && blogAvatarUrl == null) return
 
-    Box(modifier = Modifier.padding(end = 8.dp)) {
+    Box(modifier = Modifier.padding(end = Margin.Medium.value)) {
         authorAvatarUrl?.let { CircleAvatar(it, ImageType.BLAVATAR_CIRCULAR) }
         blogAvatarUrl?.let {
             CircleAvatar(
@@ -165,7 +172,6 @@ private fun BlogSectionAvatars(blogSection: CompactBlogSectionData) {
 
 @Composable
 private fun CircleAvatar(url: String, imageType: ImageType, modifier: Modifier = Modifier) {
-    val placeholders = remember { ImagePlaceholderManager() }
     Box(
         modifier = modifier
             .size(26.dp)
@@ -176,8 +182,8 @@ private fun CircleAvatar(url: String, imageType: ImageType, modifier: Modifier =
             model = ImageRequest.Builder(LocalContext.current)
                 .data(url)
                 .apply {
-                    placeholders.getPlaceholderResource(imageType)?.let { placeholder(it) }
-                    placeholders.getErrorResource(imageType)?.let { error(it) }
+                    avatarPlaceholders.getPlaceholderResource(imageType)?.let { placeholder(it) }
+                    avatarPlaceholders.getErrorResource(imageType)?.let { error(it) }
                 }
                 .build(),
             contentDescription = null,
@@ -202,7 +208,7 @@ private fun InteractionCounts(interactionSection: InteractionSectionData) {
         ?.let { ReaderUtils.getShortCommentLabelText(context, it) }
     if (likeLabel == null && commentLabel == null) return
 
-    Row(modifier = Modifier.padding(top = 8.dp)) {
+    Row(modifier = Modifier.padding(top = Margin.Medium.value)) {
         likeLabel?.let { SecondaryText(it) }
         if (likeLabel != null && commentLabel != null) {
             DotSeparator()
@@ -235,15 +241,20 @@ private fun SecondaryText(text: String, modifier: Modifier = Modifier) {
 private fun ActionRow(uiState: ReaderPostUiState) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(Margin.ExtraLarge.value),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        ActionButton(uiState, uiState.reblogAction, R.string.reader_view_reblog, R.drawable.ic_reblog_new_24dp)
         ActionButton(
-            uiState,
-            uiState.commentsAction,
-            R.string.comment,
-            R.drawable.ic_comment_outline_new_24dp
+            uiState = uiState,
+            action = uiState.reblogAction,
+            labelRes = R.string.reader_view_reblog,
+            iconRes = R.drawable.ic_reblog_new_24dp,
+        )
+        ActionButton(
+            uiState = uiState,
+            action = uiState.commentsAction,
+            labelRes = R.string.comment,
+            iconRes = R.drawable.ic_comment_outline_new_24dp,
         )
         ActionButton(
             uiState = uiState,
@@ -335,13 +346,13 @@ private fun MoreMenuItem(uiState: ReaderPostUiState, item: ReaderPostCardAction)
                         tint = Color(context.getColorFromAttribute(item.iconColor)),
                     )
                 },
-                onClick = {
-                    uiState.onMoreDismissed(uiState)
-                    item.onClicked(uiState.postId, uiState.blogId, item.type)
-                },
+                // The item's handler re-binds the card without the menu items, which closes the menu
+                onClick = { item.onClicked(uiState.postId, uiState.blogId, item.type) },
             )
         }
-        is ReaderPostCardAction.SpacerNoAction -> HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+        is ReaderPostCardAction.SpacerNoAction -> {
+            HorizontalDivider(modifier = Modifier.padding(vertical = Margin.Small.value))
+        }
         is PrimaryAction -> Unit // never part of the more menu
     }
 }
@@ -380,7 +391,6 @@ private fun previewUiState(): ReaderPostUiState {
         title = UiStringText("This is the title of this post, which runs long enough to wrap"),
         excerpt = "This is the post excerpt. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
         featuredImageUrl = null,
-        featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius_new),
         fullVideoUrl = null,
         thumbnailStripSection = null,
         videoOverlayVisibility = false,

@@ -8,7 +8,6 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryActi
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SPACER_NO_ACTION
 import org.wordpress.android.ui.reader.models.ReaderImageList
 
-import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.image.ImageType
@@ -25,7 +24,6 @@ sealed class ReaderCardUiState {
         val title: UiString?,
         val excerpt: String?,
         val featuredImageUrl: String?,
-        val featuredImageCornerRadius: UiDimen,
         val fullVideoUrl: String?,
         val thumbnailStripSection: GalleryThumbnailStripData?,
         val videoOverlayVisibility: Boolean,
