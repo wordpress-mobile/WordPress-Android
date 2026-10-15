@@ -54,7 +54,6 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.SupportRouting
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
-import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.accounts.login.WPcomLoginHelper
 import org.wordpress.android.ui.about.UnifiedAboutActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.ME_SCREEN_HELP
@@ -312,7 +311,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         if (!viewLifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) return
         if (target == GravatarEditorTarget.WEB_EDITOR) {
             appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Opening the web profile editor instead")
-            WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(requireContext(), GRAVATAR_PROFILE_URL)
+            activityNavigator.openInCustomTab(requireActivity(), GRAVATAR_PROFILE_URL)
             return
         }
 
@@ -693,8 +692,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         private const val IS_DISCONNECTING = "IS_DISCONNECTING"
         private const val GRAVATAR_URL = "https://www.gravatar.com"
 
-        // Opened with the account's WP.com credentials, so the gravatar.com -> wordpress.com login
-        // redirect resolves without the user signing in again
+        // Opened in a Custom Tab, so it uses the browser's own session. gravatar.com bounces
+        // through wordpress.com to log in, which is seamless when the browser is already signed
+        // in to WordPress.com and a log-in screen otherwise.
         private const val GRAVATAR_PROFILE_URL = "https://gravatar.com/profile"
 
         fun newInstance(): MeFragment {
