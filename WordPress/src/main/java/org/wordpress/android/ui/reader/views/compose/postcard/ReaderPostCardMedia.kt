@@ -34,6 +34,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.createBitmap
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.size.Dimension
@@ -201,7 +202,7 @@ private class PortraitAwareCropTransformation(@ColorInt private val backgroundCo
     }
 
     private fun draw(input: Bitmap, width: Int, height: Int): Bitmap {
-        val output = Bitmap.createBitmap(width, height, input.config ?: Bitmap.Config.ARGB_8888)
+        val output = createBitmap(width, height, input.config ?: Bitmap.Config.ARGB_8888)
         val canvas = Canvas(output)
         val scale = if (input.height > input.width) {
             canvas.drawColor(backgroundColor)

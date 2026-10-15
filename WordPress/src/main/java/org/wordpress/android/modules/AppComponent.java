@@ -2,6 +2,7 @@ package org.wordpress.android.modules;
 
 import com.automattic.android.tracks.crashlogging.CrashLogging;
 
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
 import org.wordpress.android.ui.JetpackConnectionResultActivity;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
@@ -179,6 +180,8 @@ import org.wordpress.android.workers.WordPressWorkersFactory;
 import dagger.hilt.EntryPoint;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
+import javax.inject.Named;
+import okhttp3.OkHttpClient;
 
 @InstallIn(SingletonComponent.class)
 @EntryPoint
@@ -533,6 +536,9 @@ public interface AppComponent {
     // Provide access to EditorLauncher for static utility classes
     EditorLauncher editorLauncher();
 
-    // Provide access to the image auth interceptor, shared by Glide and Coil
+    // Provide access to the image HTTP client and auth interceptor, shared by Glide and Coil
+    @Named(OkHttpClientQualifiers.CUSTOM_SSL_CUSTOM_REDIRECTS)
+    OkHttpClient customSslOkHttpClient();
+
     GlideAuthInterceptor glideAuthInterceptor();
 }
