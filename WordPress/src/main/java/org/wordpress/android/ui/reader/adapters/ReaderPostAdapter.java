@@ -61,7 +61,6 @@ import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.NetworkUtilsWrapper;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
@@ -82,7 +81,6 @@ import kotlinx.coroutines.CoroutineScope;
 
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final ImageManager mImageManager;
-    private final NetworkUtilsWrapper mNetworkUtilsWrapper;
     private final CoroutineScope mScope;
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
@@ -260,7 +258,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 );
                 return new ReaderRemovedPostViewHolder(postView);
             default:
-                return new ReaderPostNewViewHolder(mReaderTracker, mNetworkUtilsWrapper, parent);
+                return new ReaderPostNewViewHolder(mReaderTracker, parent);
         }
     }
 
@@ -537,7 +535,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             Context context,
             ReaderPostListType postListType,
             ImageManager imageManager,
-            @NonNull final NetworkUtilsWrapper networkUtilsWrapper,
             boolean isMainReader,
             LifecycleCoroutineScope scope
     ) {
@@ -546,7 +543,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.mImageManager = imageManager;
         mPostListType = postListType;
         mSource = mReaderTracker.getSource(mPostListType);
-        mNetworkUtilsWrapper = networkUtilsWrapper;
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mIsMainReader = isMainReader;
         mScope = scope;

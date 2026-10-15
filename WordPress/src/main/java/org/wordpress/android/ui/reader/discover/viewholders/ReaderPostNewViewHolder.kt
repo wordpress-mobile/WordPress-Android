@@ -9,11 +9,9 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3WithoutBackground
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.views.compose.postcard.ReaderPostCard
-import org.wordpress.android.util.NetworkUtilsWrapper
 
 class ReaderPostNewViewHolder(
     private val readerTracker: ReaderTracker,
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
     parentView: ViewGroup
 ) : RecyclerView.ViewHolder(ComposeView(parentView.context)) {
     private val uiState = mutableStateOf<ReaderPostUiState?>(null)
@@ -29,7 +27,6 @@ class ReaderPostNewViewHolder(
                     ReaderPostCard(
                         uiState = state,
                         onCardClick = { onCardClicked(state) },
-                        isNetworkAvailable = networkUtilsWrapper::isNetworkAvailable,
                     )
                 }
             }

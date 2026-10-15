@@ -24,10 +24,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +33,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -69,13 +67,12 @@ private const val ACTION_MAX_WIDTH_DP = 140
 
 /**
  * The Reader post card shown in the post list. Renders a [ReaderPostUiState] exactly as the
- * `reader_cardview_post_new` layout did; [isNetworkAvailable] gates the optimistic like toggle.
+ * `reader_cardview_post_new` layout did.
  */
 @Composable
 fun ReaderPostCard(
     uiState: ReaderPostUiState,
     onCardClick: () -> Unit,
-    isNetworkAvailable: () -> Boolean,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -102,7 +99,10 @@ fun ReaderPostCard(
         uiState.excerpt?.let { excerpt ->
             Text(
                 text = excerpt,
-                modifier = Modifier.padding(top = 8.dp),
+                // Kept out of the card's TalkBack label, as the View-based card did
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .clearAndSetSemantics {},
                 style = MaterialTheme.typography.bodyMedium,
                 lineHeight = 21.sp,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -111,7 +111,7 @@ fun ReaderPostCard(
             )
         }
         InteractionCounts(uiState.interactionSection)
-        ActionRow(uiState, isNetworkAvailable)
+        ActionRow(uiState)
     }
 }
 
@@ -133,7 +133,7 @@ private fun BlogSection(blogSection: CompactBlogSectionData, postId: Long, blogI
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
-        SecondaryText(stringResource(R.string.reader_dot_separator))
+        DotSeparator()
         SecondaryText(blogSection.dateLine)
     }
 }
@@ -201,16 +201,25 @@ private fun InteractionCounts(interactionSection: InteractionSectionData) {
     Row(modifier = Modifier.padding(top = 8.dp)) {
         likeLabel?.let { SecondaryText(it) }
         if (likeLabel != null && commentLabel != null) {
-            SecondaryText(stringResource(R.string.reader_dot_separator))
+            DotSeparator()
         }
         commentLabel?.let { SecondaryText(it) }
     }
 }
 
 @Composable
-private fun SecondaryText(text: String) {
+private fun DotSeparator() {
+    SecondaryText(
+        text = stringResource(R.string.reader_dot_separator),
+        modifier = Modifier.clearAndSetSemantics {},
+    )
+}
+
+@Composable
+private fun SecondaryText(text: String, modifier: Modifier = Modifier) {
     Text(
         text = text,
+        modifier = modifier,
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onSurface.copy(alpha = MEDIUM_EMPHASIS_ALPHA),
         maxLines = 1,
@@ -219,7 +228,7 @@ private fun SecondaryText(text: String) {
 }
 
 @Composable
-private fun ActionRow(uiState: ReaderPostUiState, isNetworkAvailable: () -> Boolean) {
+private fun ActionRow(uiState: ReaderPostUiState) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -232,17 +241,14 @@ private fun ActionRow(uiState: ReaderPostUiState, isNetworkAvailable: () -> Bool
             R.string.comment,
             R.drawable.ic_comment_outline_new_24dp
         )
-        // Flip the like right away rather than waiting for the re-bind; the re-bind (or an error) settles it
-        var likeOverride by remember(uiState.likeAction) { mutableStateOf<Boolean?>(null) }
-        val isLiked = likeOverride ?: uiState.likeAction.isSelected
         ActionButton(
             uiState = uiState,
             action = uiState.likeAction,
             labelRes = R.string.like,
-            iconRes = if (isLiked) R.drawable.ic_like_fill_new_24dp else R.drawable.ic_like_outline_new_24dp,
-            isSelected = isLiked,
-            onClick = {
-                if (isNetworkAvailable()) likeOverride = !isLiked
+            iconRes = if (uiState.likeAction.isSelected) {
+                R.drawable.ic_like_fill_new_24dp
+            } else {
+                R.drawable.ic_like_outline_new_24dp
             },
         )
         Spacer(Modifier.weight(1f))
@@ -252,18 +258,15 @@ private fun ActionRow(uiState: ReaderPostUiState, isNetworkAvailable: () -> Bool
     }
 }
 
-@Suppress("LongParameterList")
 @Composable
 private fun ActionButton(
     uiState: ReaderPostUiState,
     action: PrimaryAction,
     labelRes: Int,
     iconRes: Int,
-    isSelected: Boolean = action.isSelected,
-    onClick: () -> Unit = {},
 ) {
     if (!action.isEnabled) return
-    val color = if (isSelected) {
+    val color = if (action.isSelected) {
         MaterialTheme.colorScheme.primary
     } else {
         MaterialTheme.colorScheme.onSurface.copy(alpha = MEDIUM_EMPHASIS_ALPHA)
@@ -273,10 +276,7 @@ private fun ActionButton(
         modifier = Modifier
             .widthIn(max = ACTION_MAX_WIDTH_DP.dp)
             .heightIn(min = 40.dp)
-            .clickable {
-                onClick()
-                action.onClicked?.invoke(uiState.postId, uiState.blogId, action.type)
-            }
+            .clickable { action.onClicked?.invoke(uiState.postId, uiState.blogId, action.type) }
             .then(if (description != null) Modifier.semantics { contentDescription = description } else Modifier),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -347,7 +347,7 @@ private fun MoreMenuItem(uiState: ReaderPostUiState, item: ReaderPostCardAction)
 @Composable
 private fun ReaderPostCardPreview() {
     AppThemeM3WithoutBackground {
-        ReaderPostCard(uiState = previewUiState(), onCardClick = {}, isNetworkAvailable = { true })
+        ReaderPostCard(uiState = previewUiState(), onCardClick = {})
     }
 }
 

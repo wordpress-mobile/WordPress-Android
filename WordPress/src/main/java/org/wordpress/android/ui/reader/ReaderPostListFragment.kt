@@ -136,7 +136,6 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.NetworkUtils
-import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.StringUtils
@@ -173,9 +172,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     @Inject
     lateinit var imageManager: ImageManager
-
-    @Inject
-    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     @Inject
     lateinit var tagUpdateClientUtilsProvider: TagUpdateClientUtilsProvider
@@ -1973,7 +1969,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 WPActivityUtils.getThemedContext(activity),
                 getPostListType(),
                 imageManager,
-                networkUtilsWrapper,
                 isTopLevel,
                 lifecycleScope
             )
