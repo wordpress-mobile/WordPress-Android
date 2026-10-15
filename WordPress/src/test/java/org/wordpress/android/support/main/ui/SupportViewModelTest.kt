@@ -153,11 +153,9 @@ class SupportViewModelTest : BaseUnitTest() {
         viewModel.init()
 
         // Then
-        // Note: For WordPress variant (IS_JETPACK_APP=false), the option should be hidden
-        // For Jetpack variant (IS_JETPACK_APP=true), it should be shown when user has access token
-        // This test will behave differently based on which variant is being tested
-        assertThat(viewModel.optionsVisibility.value.showUnifiedSupport)
-            .isEqualTo(org.wordpress.android.BuildConfig.IS_JETPACK_APP)
+        // The access token is the only requirement: the option is shown in both the WordPress and
+        // the Jetpack app.
+        assertThat(viewModel.optionsVisibility.value.showUnifiedSupport).isTrue()
     }
 
     @Test
