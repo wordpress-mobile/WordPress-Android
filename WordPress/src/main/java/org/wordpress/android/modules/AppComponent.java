@@ -177,10 +177,11 @@ import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.image.getters.WPCustomImageGetter;
 import org.wordpress.android.workers.WordPressWorkersFactory;
 
+import javax.inject.Named;
+
 import dagger.hilt.EntryPoint;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
-import javax.inject.Named;
 import okhttp3.OkHttpClient;
 
 @InstallIn(SingletonComponent.class)
