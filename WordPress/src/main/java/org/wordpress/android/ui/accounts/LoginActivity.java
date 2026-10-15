@@ -113,11 +113,10 @@ public class LoginActivity extends BaseAppCompatActivity {
     // is launched from onCreate and this activity has no UI of its own behind it, so when the user
     // comes back without completing the login there is nothing left to show. These let us tell
     // that case apart from the first resume (which happens before the tab is on top) and finish
-    // instead of showing a blank screen. See CMM-2503.
+    // instead of showing a blank screen. Both are cleared once a callback arrives, so an
+    // in-flight login is never mistaken for a cancellation. See CMM-2503.
     private boolean mWpcomOAuthTabLaunched = false;
     private boolean mWpcomOAuthTabShown = false;
-    // Set once an OAuth callback is being handled, so the checks above leave the login alone
-    private boolean mHandlingOAuthCallback = false;
     // Access token as it was when this instance was created. A login that completed in a different
     // activity instance - e.g. the user moved the page to the browser's own task with "Open in
     // browser" - must not be reported back to the caller as a cancellation. Deliberately not
@@ -260,11 +259,10 @@ public class LoginActivity extends BaseAppCompatActivity {
         // Handle OAuth callback when activity is reused (singleTop)
         String dataString = intent.getDataString();
         if (mLoginHelper.hasOAuthCallback(dataString)) {
-            mHandlingOAuthCallback = true;
-            // Clear the tab flags as well. They are the persisted half of this state, so clearing
-            // them is what stops a recreation during the post-OAuth account/site fetch (rotation,
-            // a theme change, "don't keep activities") from mistaking an in-flight login for a
-            // cancellation: mHandlingOAuthCallback itself does not survive onSaveInstanceState.
+            // The login is under way, so this is no longer an abandoned tab. Clearing the flags
+            // here is also what survives a recreation during the post-OAuth account/site fetch
+            // (rotation, a theme change, "don't keep activities"): they are persisted, so the
+            // rebuilt activity starts out knowing the callback already arrived.
             mWpcomOAuthTabLaunched = false;
             mWpcomOAuthTabShown = false;
             intent.setData(null);
@@ -320,7 +318,7 @@ public class LoginActivity extends BaseAppCompatActivity {
         // The user came back from the WordPress.com Custom Tab without completing the login (no
         // OAuth callback reached us). This activity shows nothing in that flow, so finish instead
         // of leaving the user on a blank screen. See CMM-2503.
-        if (mWpcomOAuthTabShown && !mHandlingOAuthCallback && !hasNewAccessToken()) {
+        if (mWpcomOAuthTabShown && !hasNewAccessToken()) {
             mWpcomOAuthTabLaunched = false;
             mWpcomOAuthTabShown = false;
             setResult(Activity.RESULT_CANCELED);
