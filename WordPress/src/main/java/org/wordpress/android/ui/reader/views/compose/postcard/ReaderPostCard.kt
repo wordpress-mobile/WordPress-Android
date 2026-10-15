@@ -20,9 +20,9 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,6 +32,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -265,6 +266,8 @@ private fun ActionRow(uiState: ReaderPostUiState) {
             } else {
                 R.drawable.ic_like_outline_new_24dp
             },
+            // Only Like is capped, as in the View-based card
+            modifier = Modifier.widthIn(max = ACTION_MAX_WIDTH_DP.dp),
         )
         Spacer(Modifier.weight(1f))
         if (uiState.moreMenuVisibility) {
@@ -279,6 +282,7 @@ private fun ActionButton(
     action: PrimaryAction,
     labelRes: Int,
     iconRes: Int,
+    modifier: Modifier = Modifier,
 ) {
     if (!action.isEnabled) return
     val color = if (action.isSelected) {
@@ -288,8 +292,7 @@ private fun ActionButton(
     }
     val description = action.contentDescription?.let { uiStringText(it) }
     Row(
-        modifier = Modifier
-            .widthIn(max = ACTION_MAX_WIDTH_DP.dp)
+        modifier = modifier
             .heightIn(min = 40.dp)
             .clickable { action.onClicked?.invoke(uiState.postId, uiState.blogId, action.type) }
             .semantics { description?.let { contentDescription = it } },
@@ -313,13 +316,21 @@ private fun ActionButton(
 @Composable
 private fun MoreMenu(uiState: ReaderPostUiState) {
     Box {
-        IconButton(onClick = { uiState.onMoreButtonClicked(uiState) }) {
-            Icon(
-                painter = painterResource(R.drawable.ic_more_ellipsis_horizontal_squares),
-                contentDescription = stringResource(R.string.show_more_desc),
-                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = MEDIUM_EMPHASIS_ALPHA),
-            )
-        }
+        // A plain 24dp icon rather than an IconButton, whose 48dp layout size would make the row taller and
+        // inset the icon from the card's edge; Compose still extends its touch target to the 48dp minimum
+        Icon(
+            painter = painterResource(R.drawable.ic_more_ellipsis_horizontal_squares),
+            contentDescription = stringResource(R.string.show_more_desc),
+            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = MEDIUM_EMPHASIS_ALPHA),
+            modifier = Modifier
+                .size(24.dp)
+                .clickable(
+                    interactionSource = null,
+                    indication = ripple(bounded = false),
+                    role = Role.Button,
+                    onClick = { uiState.onMoreButtonClicked(uiState) },
+                ),
+        )
         val items = uiState.moreMenuItems
         DropdownMenu(
             expanded = items != null,

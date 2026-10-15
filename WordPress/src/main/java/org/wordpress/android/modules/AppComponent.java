@@ -102,7 +102,7 @@ import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeAdapte
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeFragment;
 import org.wordpress.android.ui.posts.EditorLauncher;
 import org.wordpress.android.ui.posts.prepublishing.publishsettings.PrepublishingPublishSettingsFragment;
-import org.wordpress.android.ui.utils.AuthenticationUtils;
+import org.wordpress.android.networking.GlideAuthInterceptor;
 import org.wordpress.android.ui.posts.prepublishing.social.PrepublishingSocialFragment;
 import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsFragment;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
@@ -533,6 +533,6 @@ public interface AppComponent {
     // Provide access to EditorLauncher for static utility classes
     EditorLauncher editorLauncher();
 
-    // Provide access to AuthenticationUtils for Coil image auth
-    AuthenticationUtils authenticationUtils();
+    // Provide access to the image auth interceptor, shared by Glide and Coil
+    GlideAuthInterceptor glideAuthInterceptor();
 }

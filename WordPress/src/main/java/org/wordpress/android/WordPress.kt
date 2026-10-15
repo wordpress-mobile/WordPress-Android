@@ -53,16 +53,10 @@ abstract class WordPress : Application(), coil.ImageLoaderFactory, Configuration
      * This returns a singleton Coil ImageLoader that's accessed with context.imageLoader
      */
     override fun newImageLoader(): coil.ImageLoader {
-        val authUtils = component().authenticationUtils()
+        // Same auth as Glide, including its http→https upgrade for WordPress.com URLs, without which
+        // private WordPress.com images requested over http would go out unauthenticated
         val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor { chain ->
-                val request = chain.request()
-                val authHeaders = authUtils.getAuthHeaders(request.url.toString())
-                val newRequest = request.newBuilder().apply {
-                    authHeaders.forEach { (name, value) -> header(name, value) }
-                }.build()
-                chain.proceed(newRequest)
-            }
+            .addInterceptor(component().glideAuthInterceptor())
             .build()
         return coil.ImageLoader.Builder(this)
             .okHttpClient(okHttpClient)
