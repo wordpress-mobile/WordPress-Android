@@ -118,6 +118,12 @@ public class LoginActivity extends BaseAppCompatActivity {
     private boolean mWpcomOAuthTabShown = false;
     // Set once an OAuth callback is being handled, so the checks above leave the login alone
     private boolean mHandlingOAuthCallback = false;
+    // Access token as it was when this instance was created. A login that completed in a different
+    // activity instance - e.g. the user moved the page to the browser's own task with "Open in
+    // browser" - must not be reported back to the caller as a cancellation. Deliberately not
+    // persisted: a recreated instance re-reads the current token, and putting a token in the saved
+    // state bundle would write it to disk.
+    @Nullable private String mAccessTokenAtStart;
 
     @Inject SupportRouting mSupportRouting;
 
@@ -127,6 +133,8 @@ public class LoginActivity extends BaseAppCompatActivity {
 
         // Enable edge-to-edge display
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
+        mAccessTokenAtStart = mAccountStore.getAccessToken();
 
         // Attempt Login if this activity was created in response to a user confirming login
         String dataString = getIntent().getDataString();
@@ -253,6 +261,12 @@ public class LoginActivity extends BaseAppCompatActivity {
         String dataString = intent.getDataString();
         if (mLoginHelper.hasOAuthCallback(dataString)) {
             mHandlingOAuthCallback = true;
+            // Clear the tab flags as well. They are the persisted half of this state, so clearing
+            // them is what stops a recreation during the post-OAuth account/site fetch (rotation,
+            // a theme change, "don't keep activities") from mistaking an in-flight login for a
+            // cancellation: mHandlingOAuthCallback itself does not survive onSaveInstanceState.
+            mWpcomOAuthTabLaunched = false;
+            mWpcomOAuthTabShown = false;
             intent.setData(null);
             if (mLoadingOverlay != null) {
                 showLoadingOverlay();
@@ -306,12 +320,21 @@ public class LoginActivity extends BaseAppCompatActivity {
         // The user came back from the WordPress.com Custom Tab without completing the login (no
         // OAuth callback reached us). This activity shows nothing in that flow, so finish instead
         // of leaving the user on a blank screen. See CMM-2503.
-        if (mWpcomOAuthTabShown && !mHandlingOAuthCallback) {
+        if (mWpcomOAuthTabShown && !mHandlingOAuthCallback && !hasNewAccessToken()) {
             mWpcomOAuthTabLaunched = false;
             mWpcomOAuthTabShown = false;
             setResult(Activity.RESULT_CANCELED);
             finish();
         }
+    }
+
+    /**
+     * True when a WordPress.com access token appeared since this instance was created, i.e. the
+     * login completed somewhere other than this activity.
+     */
+    private boolean hasNewAccessToken() {
+        String token = mAccountStore.getAccessToken();
+        return token != null && !token.isEmpty() && !token.equals(mAccessTokenAtStart);
     }
 
     @SuppressWarnings("unused")
@@ -558,7 +581,17 @@ public class LoginActivity extends BaseAppCompatActivity {
         Uri loginUri = mLoginHelper.getWpcomLoginUri();
         try {
             intent.launchUrl(this, loginUri);
-        } catch (SecurityException | ActivityNotFoundException e) {
+        } catch (ActivityNotFoundException e) {
+            AppLog.e(AppLog.T.UTILS, "No activity available to open the login uri", e);
+            ActivityLauncher.openUrlExternal(this, loginUri.toString());
+            // openUrlExternal sends the same ACTION_VIEW intent, so it fails the same way and only
+            // shows a toast. Nothing will ever cover this activity, so onStop never runs and the
+            // no-UI OAuth flow would be stranded on the empty screen - finish instead.
+            if (mWpcomOAuthTabLaunched) {
+                setResult(Activity.RESULT_CANCELED);
+                finish();
+            }
+        } catch (SecurityException e) {
             AppLog.e(AppLog.T.UTILS, "Error opening login uri in CustomTabsIntent, attempting external browser", e);
             ActivityLauncher.openUrlExternal(this, loginUri.toString());
         }
