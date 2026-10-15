@@ -75,6 +75,8 @@ public class LoginActivity extends BaseAppCompatActivity {
     private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
     private static final String KEY_SHARE_FLOW_LOGIN_LAUNCHED = "KEY_SHARE_FLOW_LOGIN_LAUNCHED";
     private static final String KEY_FETCHING_PRIMARY_SITE = "KEY_FETCHING_PRIMARY_SITE";
+    private static final String KEY_WPCOM_OAUTH_TAB_LAUNCHED = "KEY_WPCOM_OAUTH_TAB_LAUNCHED";
+    private static final String KEY_WPCOM_OAUTH_TAB_SHOWN = "KEY_WPCOM_OAUTH_TAB_SHOWN";
 
     private int mFragmentContainerId;
     private View mLoadingOverlay;
@@ -107,6 +109,15 @@ public class LoginActivity extends BaseAppCompatActivity {
     // causeOfChange, so a spurious event here would be mistaken for our primary-site result.
     private boolean mFetchingPrimarySite = false;
     private ArrayList<Integer> mOldSitesIdsForLoginUpdate;
+    // Flags for the WordPress.com OAuth Custom Tab when it is the flow's initial screen. The tab
+    // is launched from onCreate and this activity has no UI of its own behind it, so when the user
+    // comes back without completing the login there is nothing left to show. These let us tell
+    // that case apart from the first resume (which happens before the tab is on top) and finish
+    // instead of showing a blank screen. See CMM-2503.
+    private boolean mWpcomOAuthTabLaunched = false;
+    private boolean mWpcomOAuthTabShown = false;
+    // Set once an OAuth callback is being handled, so the checks above leave the login alone
+    private boolean mHandlingOAuthCallback = false;
 
     @Inject SupportRouting mSupportRouting;
 
@@ -180,6 +191,12 @@ public class LoginActivity extends BaseAppCompatActivity {
                     showFragment(new LoginPrologueRevampedFragment(), LoginPrologueRevampedFragment.TAG);
                     break;
                 case WPCOM_OAUTH:
+                    // This flow has no UI of its own: the WordPress.com page opens in a Custom
+                    // Tab on top of an empty activity. Flag it so we can finish when the user
+                    // comes back without logging in, rather than showing them a blank screen.
+                    // Flows that open the same page from a fragment (the prologue, the site
+                    // address form) are not flagged: they have a screen to come back to.
+                    mWpcomOAuthTabLaunched = true;
                     showWPcomLoginScreen(this);
                     break;
                 case SELF_HOSTED:
@@ -199,6 +216,8 @@ public class LoginActivity extends BaseAppCompatActivity {
             mShareFlowLoginLaunched = savedInstanceState.getBoolean(KEY_SHARE_FLOW_LOGIN_LAUNCHED);
             mFetchingPrimarySite = savedInstanceState.getBoolean(KEY_FETCHING_PRIMARY_SITE);
             mOldSitesIdsForLoginUpdate = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
+            mWpcomOAuthTabLaunched = savedInstanceState.getBoolean(KEY_WPCOM_OAUTH_TAB_LAUNCHED);
+            mWpcomOAuthTabShown = savedInstanceState.getBoolean(KEY_WPCOM_OAUTH_TAB_SHOWN);
         }
 
         // If we're waiting for sites (e.g. after config change during post-OAuth fetch),
@@ -220,6 +239,8 @@ public class LoginActivity extends BaseAppCompatActivity {
         outState.putBoolean(KEY_SHARE_FLOW_LOGIN_LAUNCHED, mShareFlowLoginLaunched);
         outState.putBoolean(KEY_FETCHING_PRIMARY_SITE, mFetchingPrimarySite);
         outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIdsForLoginUpdate);
+        outState.putBoolean(KEY_WPCOM_OAUTH_TAB_LAUNCHED, mWpcomOAuthTabLaunched);
+        outState.putBoolean(KEY_WPCOM_OAUTH_TAB_SHOWN, mWpcomOAuthTabShown);
     }
 
     @Override
@@ -231,6 +252,7 @@ public class LoginActivity extends BaseAppCompatActivity {
         // Handle OAuth callback when activity is reused (singleTop)
         String dataString = intent.getDataString();
         if (mLoginHelper.hasOAuthCallback(dataString)) {
+            mHandlingOAuthCallback = true;
             intent.setData(null);
             if (mLoadingOverlay != null) {
                 showLoadingOverlay();
@@ -255,6 +277,11 @@ public class LoginActivity extends BaseAppCompatActivity {
     protected void onStop() {
         super.onStop();
         mDispatcher.unregister(this);
+        if (mWpcomOAuthTabLaunched) {
+            // The Custom Tab (or the external browser) is now on top of us, so the next resume
+            // means the user came back from it
+            mWpcomOAuthTabShown = true;
+        }
     }
 
     @Override
@@ -272,6 +299,17 @@ public class LoginActivity extends BaseAppCompatActivity {
                 && mShareFlowLoginLaunched
                 && mSiteStore.hasSite()) {
             setResult(Activity.RESULT_OK);
+            finish();
+            return;
+        }
+
+        // The user came back from the WordPress.com Custom Tab without completing the login (no
+        // OAuth callback reached us). This activity shows nothing in that flow, so finish instead
+        // of leaving the user on a blank screen. See CMM-2503.
+        if (mWpcomOAuthTabShown && !mHandlingOAuthCallback) {
+            mWpcomOAuthTabLaunched = false;
+            mWpcomOAuthTabShown = false;
+            setResult(Activity.RESULT_CANCELED);
             finish();
         }
     }
