@@ -64,9 +64,10 @@ fun ReaderPostCardMedia(uiState: ReaderPostUiState) {
 
 @Composable
 private fun FeaturedImage(uiState: ReaderPostUiState) {
-    val videoThumbnail = uiState.fullVideoUrl?.let { rememberVideoThumbnail(uiState.postId, it) }
     // A video post shows its thumbnail once resolved, and only the placeholder if there isn't one
-    val imageUrl = if (uiState.fullVideoUrl != null) videoThumbnail?.url else uiState.featuredImageUrl
+    val imageUrl = uiState.fullVideoUrl.let { videoUrl ->
+        if (videoUrl != null) rememberVideoThumbnail(uiState.postId, videoUrl) else uiState.featuredImageUrl
+    }
     // Portrait images are fitted to the height on a background colour rather than center-cropped
     var isPortrait by remember(imageUrl) { mutableStateOf(false) }
 
@@ -109,26 +110,24 @@ private fun FeaturedImage(uiState: ReaderPostUiState) {
     }
 }
 
-private class VideoThumbnail(val url: String?)
-
 /**
  * Resolves a video's thumbnail through [ReaderVideoUtils], caching what it finds just as the
- * View-based card did. Null until resolved; a null [VideoThumbnail.url] means "show the placeholder".
+ * View-based card did. Null until resolved, or when there's no thumbnail and the placeholder shows.
  *
  * This runs during composition rather than in an effect because YouTube and cached thumbnails resolve
  * synchronously, so the first frame already has them; only Vimeo's arrives later.
  */
 @Composable
-private fun rememberVideoThumbnail(postId: Long, videoUrl: String): VideoThumbnail? {
+private fun rememberVideoThumbnail(postId: Long, videoUrl: String): String? {
     val thumbnail = remember(videoUrl) {
-        mutableStateOf<VideoThumbnail?>(null).also { state ->
+        mutableStateOf<String?>(null).also { state ->
             ReaderVideoUtils.retrieveVideoThumbnailUrl(videoUrl, object : VideoThumbnailUrlListener {
                 override fun showThumbnail(thumbnailUrl: String) {
-                    state.value = VideoThumbnail(thumbnailUrl)
+                    state.value = thumbnailUrl
                 }
 
                 override fun showPlaceholder() {
-                    state.value = VideoThumbnail(null)
+                    state.value = null
                 }
 
                 override fun cacheThumbnailUrl(thumbnailUrl: String) {

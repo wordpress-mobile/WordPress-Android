@@ -75,15 +75,14 @@ fun ReaderPostCard(
     onCardClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(Color(context.getColorFromAttribute(com.google.android.material.R.attr.colorSurface)))
+            .background(MaterialTheme.colorScheme.surface)
             .clickable(onClick = onCardClick)
             .padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 8.dp),
     ) {
-        BlogSection(uiState.blogSection, uiState.postId, uiState.blogId)
+        BlogSection(uiState.blogSection)
         ReaderPostCardMedia(uiState)
         uiState.title?.let { title ->
             Text(
@@ -116,12 +115,17 @@ fun ReaderPostCard(
 }
 
 @Composable
-private fun BlogSection(blogSection: CompactBlogSectionData, postId: Long, blogId: Long) {
+private fun BlogSection(blogSection: CompactBlogSectionData) {
     val onClicked = blogSection.onClicked
+    val clickModifier = if (onClicked != null) {
+        Modifier.clickable { onClicked(blogSection.postId, blogSection.blogId) }
+    } else {
+        Modifier
+    }
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .then(if (onClicked != null) Modifier.clickable { onClicked(postId, blogId) } else Modifier),
+            .then(clickModifier),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         BlogSectionAvatars(blogSection)
@@ -277,7 +281,7 @@ private fun ActionButton(
             .widthIn(max = ACTION_MAX_WIDTH_DP.dp)
             .heightIn(min = 40.dp)
             .clickable { action.onClicked?.invoke(uiState.postId, uiState.blogId, action.type) }
-            .then(if (description != null) Modifier.semantics { contentDescription = description } else Modifier),
+            .semantics { description?.let { contentDescription = it } },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(painter = painterResource(iconRes), contentDescription = null, tint = color)
