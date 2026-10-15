@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.fluxc.network.NetworkRequestsRetentionPeriod
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -93,7 +92,7 @@ class SupportViewModel @Inject constructor(
         )
 
         _optionsVisibility.value = SupportOptionsVisibility(
-            showUnifiedSupport = hasAccessToken && BuildConfig.IS_JETPACK_APP,
+            showUnifiedSupport = hasAccessToken,
         )
     }
 
