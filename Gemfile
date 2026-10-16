@@ -3,7 +3,7 @@
 source 'https://rubygems.org'
 
 gem 'danger-dangermattic', '~> 1.4'
-gem 'fastlane', '~> 2.240'
+gem 'fastlane', '~> 2.241'
 
 ### Fastlane Plugins
 
