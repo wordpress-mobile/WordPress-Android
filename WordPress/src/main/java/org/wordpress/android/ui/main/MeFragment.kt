@@ -292,13 +292,34 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         // Opening now waits on a network probe, so ignore a second tap while the first is in flight
         if (isOpeningGravatarEditor) return
         isOpeningGravatarEditor = true
+        showGravatarEditorProgress(page, show = true)
         val appContext = requireContext().applicationContext
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 openGravatarEditor(page, appContext)
             } finally {
                 isOpeningGravatarEditor = false
+                showGravatarEditorProgress(page, show = false)
             }
+        }
+    }
+
+    /**
+     * Shows the wait where the tap happened: over the avatar for the picker, in the row icon's place for
+     * the profile editor. A tap now waits on the network probe before anything opens (CMM-1100), and
+     * without this the screen would sit there unchanged for the length of a request.
+     */
+    private fun MeFragmentBinding.showGravatarEditorProgress(
+        page: AvatarPickerAndAboutEditorConfiguration.Page,
+        show: Boolean
+    ) {
+        if (page == AvatarPickerAndAboutEditorConfiguration.Page.AvatarPicker) {
+            meAvatarProgress.isVisible = show
+            // Dimmed so the spinner stays legible on top of whatever the avatar happens to be
+            meAvatar.alpha = if (show) DIMMED_AVATAR_ALPHA else 1f
+        } else {
+            meMyProfileIcon.isVisible = !show
+            meMyProfileProgress.isVisible = show
         }
     }
 
@@ -716,11 +737,16 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         private const val IS_DISCONNECTING = "IS_DISCONNECTING"
         private const val OPENED_WEB_GRAVATAR_EDITOR = "OPENED_WEB_GRAVATAR_EDITOR"
         private const val GRAVATAR_URL = "https://www.gravatar.com"
+        private const val DIMMED_AVATAR_ALPHA = 0.3f
 
+        // The avatars page rather than /profile, which is only a menu of sections: this is the web
+        // screen closest to the editor the app was about to show.
+        //
         // Opened in a Custom Tab, so it uses the browser's own session. gravatar.com bounces
         // through wordpress.com to log in, which is seamless when the browser is already signed
-        // in to WordPress.com and a log-in screen otherwise.
-        private const val GRAVATAR_PROFILE_URL = "https://gravatar.com/profile"
+        // in to WordPress.com and a log-in screen otherwise. The bounce keeps the path, so a
+        // signed-out browser still lands here once it is through the log-in.
+        private const val GRAVATAR_PROFILE_URL = "https://gravatar.com/profile/avatars"
 
         fun newInstance(): MeFragment {
             return MeFragment()
