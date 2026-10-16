@@ -75,6 +75,8 @@ public class LoginActivity extends BaseAppCompatActivity {
     private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
     private static final String KEY_SHARE_FLOW_LOGIN_LAUNCHED = "KEY_SHARE_FLOW_LOGIN_LAUNCHED";
     private static final String KEY_FETCHING_PRIMARY_SITE = "KEY_FETCHING_PRIMARY_SITE";
+    private static final String KEY_WPCOM_OAUTH_TAB_LAUNCHED = "KEY_WPCOM_OAUTH_TAB_LAUNCHED";
+    private static final String KEY_WPCOM_OAUTH_TAB_SHOWN = "KEY_WPCOM_OAUTH_TAB_SHOWN";
 
     private int mFragmentContainerId;
     private View mLoadingOverlay;
@@ -107,6 +109,20 @@ public class LoginActivity extends BaseAppCompatActivity {
     // causeOfChange, so a spurious event here would be mistaken for our primary-site result.
     private boolean mFetchingPrimarySite = false;
     private ArrayList<Integer> mOldSitesIdsForLoginUpdate;
+    // Flags for the WordPress.com OAuth Custom Tab when it is the flow's initial screen. The tab
+    // is launched from onCreate and this activity has no UI of its own behind it, so when the user
+    // comes back without completing the login there is nothing left to show. These let us tell
+    // that case apart from the first resume (which happens before the tab is on top) and finish
+    // instead of showing a blank screen. Both are cleared once a callback arrives, so an
+    // in-flight login is never mistaken for a cancellation. See CMM-2503.
+    private boolean mWpcomOAuthTabLaunched = false;
+    private boolean mWpcomOAuthTabShown = false;
+    // Access token as it was when this instance was created. A login that completed in a different
+    // activity instance - e.g. the user moved the page to the browser's own task with "Open in
+    // browser" - must not be reported back to the caller as a cancellation. Deliberately not
+    // persisted: a recreated instance re-reads the current token, and putting a token in the saved
+    // state bundle would write it to disk.
+    @Nullable private String mAccessTokenAtStart;
 
     @Inject SupportRouting mSupportRouting;
 
@@ -116,6 +132,8 @@ public class LoginActivity extends BaseAppCompatActivity {
 
         // Enable edge-to-edge display
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
+        mAccessTokenAtStart = mAccountStore.getAccessToken();
 
         // Attempt Login if this activity was created in response to a user confirming login
         String dataString = getIntent().getDataString();
@@ -180,6 +198,12 @@ public class LoginActivity extends BaseAppCompatActivity {
                     showFragment(new LoginPrologueRevampedFragment(), LoginPrologueRevampedFragment.TAG);
                     break;
                 case WPCOM_OAUTH:
+                    // This flow has no UI of its own: the WordPress.com page opens in a Custom
+                    // Tab on top of an empty activity. Flag it so we can finish when the user
+                    // comes back without logging in, rather than showing them a blank screen.
+                    // Flows that open the same page from a fragment (the prologue, the site
+                    // address form) are not flagged: they have a screen to come back to.
+                    mWpcomOAuthTabLaunched = true;
                     showWPcomLoginScreen(this);
                     break;
                 case SELF_HOSTED:
@@ -199,6 +223,8 @@ public class LoginActivity extends BaseAppCompatActivity {
             mShareFlowLoginLaunched = savedInstanceState.getBoolean(KEY_SHARE_FLOW_LOGIN_LAUNCHED);
             mFetchingPrimarySite = savedInstanceState.getBoolean(KEY_FETCHING_PRIMARY_SITE);
             mOldSitesIdsForLoginUpdate = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
+            mWpcomOAuthTabLaunched = savedInstanceState.getBoolean(KEY_WPCOM_OAUTH_TAB_LAUNCHED);
+            mWpcomOAuthTabShown = savedInstanceState.getBoolean(KEY_WPCOM_OAUTH_TAB_SHOWN);
         }
 
         // If we're waiting for sites (e.g. after config change during post-OAuth fetch),
@@ -220,6 +246,8 @@ public class LoginActivity extends BaseAppCompatActivity {
         outState.putBoolean(KEY_SHARE_FLOW_LOGIN_LAUNCHED, mShareFlowLoginLaunched);
         outState.putBoolean(KEY_FETCHING_PRIMARY_SITE, mFetchingPrimarySite);
         outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIdsForLoginUpdate);
+        outState.putBoolean(KEY_WPCOM_OAUTH_TAB_LAUNCHED, mWpcomOAuthTabLaunched);
+        outState.putBoolean(KEY_WPCOM_OAUTH_TAB_SHOWN, mWpcomOAuthTabShown);
     }
 
     @Override
@@ -231,6 +259,12 @@ public class LoginActivity extends BaseAppCompatActivity {
         // Handle OAuth callback when activity is reused (singleTop)
         String dataString = intent.getDataString();
         if (mLoginHelper.hasOAuthCallback(dataString)) {
+            // The login is under way, so this is no longer an abandoned tab. Clearing the flags
+            // here is also what survives a recreation during the post-OAuth account/site fetch
+            // (rotation, a theme change, "don't keep activities"): they are persisted, so the
+            // rebuilt activity starts out knowing the callback already arrived.
+            mWpcomOAuthTabLaunched = false;
+            mWpcomOAuthTabShown = false;
             intent.setData(null);
             if (mLoadingOverlay != null) {
                 showLoadingOverlay();
@@ -255,6 +289,11 @@ public class LoginActivity extends BaseAppCompatActivity {
     protected void onStop() {
         super.onStop();
         mDispatcher.unregister(this);
+        if (mWpcomOAuthTabLaunched) {
+            // The Custom Tab (or the external browser) is now on top of us, so the next resume
+            // means the user came back from it
+            mWpcomOAuthTabShown = true;
+        }
     }
 
     @Override
@@ -273,7 +312,29 @@ public class LoginActivity extends BaseAppCompatActivity {
                 && mSiteStore.hasSite()) {
             setResult(Activity.RESULT_OK);
             finish();
+            return;
         }
+
+        // The user came back from the WordPress.com Custom Tab and no OAuth callback reached this
+        // instance. This activity shows nothing in that flow, so finish either way rather than
+        // leaving the user on a blank screen. A token that appeared meanwhile means the login
+        // completed in another instance - e.g. the user moved the page to the browser's own task
+        // with "Open in browser" - and the caller is owed that success. See CMM-2503.
+        if (mWpcomOAuthTabShown) {
+            mWpcomOAuthTabLaunched = false;
+            mWpcomOAuthTabShown = false;
+            setResult(hasNewAccessToken() ? Activity.RESULT_OK : Activity.RESULT_CANCELED);
+            finish();
+        }
+    }
+
+    /**
+     * True when a WordPress.com access token appeared since this instance was created, i.e. the
+     * login completed somewhere other than this activity.
+     */
+    private boolean hasNewAccessToken() {
+        String token = mAccountStore.getAccessToken();
+        return token != null && !token.isEmpty() && !token.equals(mAccessTokenAtStart);
     }
 
     @SuppressWarnings("unused")
@@ -520,7 +581,17 @@ public class LoginActivity extends BaseAppCompatActivity {
         Uri loginUri = mLoginHelper.getWpcomLoginUri();
         try {
             intent.launchUrl(this, loginUri);
-        } catch (SecurityException | ActivityNotFoundException e) {
+        } catch (ActivityNotFoundException e) {
+            AppLog.e(AppLog.T.UTILS, "No activity available to open the login uri", e);
+            ActivityLauncher.openUrlExternal(this, loginUri.toString());
+            // openUrlExternal sends the same ACTION_VIEW intent, so it fails the same way and only
+            // shows a toast. Nothing will ever cover this activity, so onStop never runs and the
+            // no-UI OAuth flow would be stranded on the empty screen - finish instead.
+            if (mWpcomOAuthTabLaunched) {
+                setResult(Activity.RESULT_CANCELED);
+                finish();
+            }
+        } catch (SecurityException e) {
             AppLog.e(AppLog.T.UTILS, "Error opening login uri in CustomTabsIntent, attempting external browser", e);
             ActivityLauncher.openUrlExternal(this, loginUri.toString());
         }
