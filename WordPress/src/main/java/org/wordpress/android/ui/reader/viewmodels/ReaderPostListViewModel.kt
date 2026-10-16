@@ -606,33 +606,34 @@ class ReaderPostListViewModel @Inject constructor(
             }
 
             is ReaderPostListEvent.SearchEnded -> if (isSearch) {
-                setIsUpdating(false, searchAction(event.offset))
-                // success means the search didn't fail, not that it has results - refreshing will show
-                // the empty message if there aren't any
-                val showResults = event.didSucceed && event.query == searchQuery
-                if (showResults) {
-                    reload()
-                }
-                sendUiEvent(ReaderPostListUiEvent.SearchEnded(showResults))
+                onSearchEnded(event)
             }
 
             is ReaderPostListEvent.FollowedTagsFetched -> if (listType == ReaderPostListType.TAG_FOLLOWED) {
-                launch {
-                    // update the current tag if the list is empty - this happens on first run
-                    if (posts.isEmpty() && (repository.hasFollowedBlogs() || !hasUpdatedPosts)) {
-                        currentTag?.let { requestPosts(ReaderPostListTarget.Tag(it), UpdateAction.REQUEST_NEWER) }
-                    }
-                }
+                onFollowedTagsFetched()
             }
 
-            is ReaderPostListEvent.FollowedBlogsFetched -> {
-                val tag = currentTag
-                if (event.didChange && listType == ReaderPostListType.TAG_FOLLOWED && tag != null &&
-                    (tag.isFollowedSites || tag.isDefaultInMemoryTag)
-                ) {
-                    reload()
-                }
+            is ReaderPostListEvent.FollowedBlogsFetched -> if (event.didChange && isFollowedSitesList) {
+                reload()
             }
+        }
+    }
+
+    private fun onSearchEnded(event: ReaderPostListEvent.SearchEnded) {
+        setIsUpdating(false, searchAction(event.offset))
+        // success means the search didn't fail, not that it has results - refreshing will show
+        // the empty message if there aren't any
+        val showResults = event.didSucceed && event.query == searchQuery
+        if (showResults) {
+            reload()
+        }
+        sendUiEvent(ReaderPostListUiEvent.SearchEnded(showResults))
+    }
+
+    private fun onFollowedTagsFetched() = launch {
+        // update the current tag if the list is empty - this happens on first run
+        if (posts.isEmpty() && (repository.hasFollowedBlogs() || !hasUpdatedPosts)) {
+            currentTag?.let { requestPosts(ReaderPostListTarget.Tag(it), UpdateAction.REQUEST_NEWER) }
         }
     }
 
@@ -647,14 +648,7 @@ class ReaderPostListViewModel @Inject constructor(
 
         // the "new posts" bar appears when there are new posts in a followed tag and the user has
         // scrolled past the first post - the new posts aren't shown until the user taps the bar
-        if (event.result == UpdateResult.HAS_NEW &&
-            event.action == UpdateAction.REQUEST_NEWER &&
-            listType == ReaderPostListType.TAG_FOLLOWED &&
-            posts.isNotEmpty() &&
-            !isFirstItemVisible &&
-            // the list reloads when the user comes back, so there's no need for the bar
-            isViewStarted
-        ) {
+        if (isNewPostsUpdate(event) && listType == ReaderPostListType.TAG_FOLLOWED && canShowNewPostsBar()) {
             isNewPostsBarVisible = true
             // the gap marker is no longer valid
             isGapMarkerHidden = true
@@ -671,6 +665,16 @@ class ReaderPostListViewModel @Inject constructor(
             }
         }
     }
+
+    private fun isNewPostsUpdate(event: ReaderPostListEvent.UpdateEnded) =
+        event.result == UpdateResult.HAS_NEW && event.action == UpdateAction.REQUEST_NEWER
+
+    // the list reloads when the user comes back, so there's no need for the bar while stopped
+    private fun canShowNewPostsBar() = posts.isNotEmpty() && !isFirstItemVisible && isViewStarted
+
+    private val isFollowedSitesList: Boolean
+        get() = listType == ReaderPostListType.TAG_FOLLOWED &&
+                currentTag.let { it != null && (it.isFollowedSites || it.isDefaultInMemoryTag) }
 
     private fun isCurrentTarget(tag: ReaderTag?) = tag == null || ReaderTag.isSameTag(tag, currentTag)
 
@@ -762,17 +766,7 @@ class ReaderPostListViewModel @Inject constructor(
     private suspend fun loadPosts() {
         val target = currentTarget()
         val newPosts = target?.let { repository.getPosts(it) } ?: ReaderPostList()
-        val tag = currentTag
-
-        gapMarkerIndex = if (listType.isTagType && tag != null) getGapMarkerIndex(tag, newPosts) else -1
-        if (listType == ReaderPostListType.TAG_FOLLOWED && tag != null &&
-            (tag.isFollowedSites || tag.isDefaultInMemoryTag)
-        ) {
-            hasFollowedBlogs = repository.hasFollowedBlogs()
-        }
-        if (listType == ReaderPostListType.TAG_PREVIEW && tag != null) {
-            isTagHeaderFollowed = repository.isFollowedTag(tag)
-        }
+        loadListDetails(newPosts)
 
         // build the cards before swapping in the new posts, since the UI can re-render while they're built
         val newCardStates = buildCardStates(newPosts)
@@ -785,7 +779,28 @@ class ReaderPostListViewModel @Inject constructor(
         isGapFilling = false
         requestFailed = false
         isLoaded = true
+        applyPendingScroll()
 
+        updateUiState()
+        sendUiEvent(ReaderPostListUiEvent.DataLoaded)
+    }
+
+    /*
+     * Loads what the list shows besides the posts: the gap marker, whether the user follows any sites
+     * (for the empty state) and whether the previewed tag is followed (for the header)
+     */
+    private suspend fun loadListDetails(newPosts: ReaderPostList) {
+        val tag = currentTag
+        gapMarkerIndex = if (listType.isTagType && tag != null) getGapMarkerIndex(tag, newPosts) else -1
+        if (isFollowedSitesList) {
+            hasFollowedBlogs = repository.hasFollowedBlogs()
+        }
+        if (listType == ReaderPostListType.TAG_PREVIEW && tag != null) {
+            isTagHeaderFollowed = repository.isFollowedTag(tag)
+        }
+    }
+
+    private fun applyPendingScroll() {
         if (posts.isNotEmpty()) {
             if (restorePosition > 0) {
                 scrollToPosition = restorePosition
@@ -796,9 +811,6 @@ class ReaderPostListViewModel @Inject constructor(
             }
         }
         restorePosition = 0
-
-        updateUiState()
-        sendUiEvent(ReaderPostListUiEvent.DataLoaded)
     }
 
     private suspend fun getGapMarkerIndex(tag: ReaderTag, newPosts: ReaderPostList): Int {
@@ -905,18 +917,18 @@ class ReaderPostListViewModel @Inject constructor(
      * state since it depends on the search UI.
      */
     private fun buildEmptyState(): ReaderPostListEmptyState? {
-        if (isSearch) return null
-        val isSelfHostedCta = isSelfHostedCta()
-        // don't show "no posts" before the first update unless an update is running or won't happen
-        val canShowEmpty = updateActions.isNotEmpty() || (isLoaded && (hasUpdatedPosts || autoUpdateSkipped))
-        if (!isSelfHostedCta && (posts.isNotEmpty() || !canShowEmpty)) return null
-
-        val emptyState = emptyStateBuilder.build(emptyStateInput(requestFailed))
+        val emptyState = if (shouldShowEmptyState()) emptyStateBuilder.build(emptyStateInput(requestFailed)) else null
         if (emptyState == ReaderPostListEmptyState.NoConnection) {
             // no update can complete while offline
             updateActions.clear()
         }
         return emptyState
+    }
+
+    private fun shouldShowEmptyState(): Boolean {
+        // don't show "no posts" before the first update unless an update is running or won't happen
+        val canShowEmpty = updateActions.isNotEmpty() || (isLoaded && (hasUpdatedPosts || autoUpdateSkipped))
+        return !isSearch && (isSelfHostedCta() || (posts.isEmpty() && canShowEmpty))
     }
 
     private fun updateUiState() {

@@ -442,9 +442,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
             }
         }
 
-        if (lastState == null || lastState.isRefreshing != state.isRefreshing ||
-            lastState.isLoadingMore != state.isLoadingMore || lastState.isUpdating != state.isUpdating
-        ) {
+        if (lastState?.progress() != state.progress()) {
             updateProgressIndicators(state)
         }
 
@@ -465,6 +463,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
             }
         }
     }
+
+    private fun ReaderPostListUiState.progress() = Triple(isRefreshing, isLoadingMore, isUpdating)
 
     private fun handleUiEvent(event: ReaderPostListUiEvent) {
         when (event) {
@@ -611,9 +611,10 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
         if (!isFollowingScreen || postListViewModel.listType != ReaderPostListType.TAG_FOLLOWED) {
             return null
         }
-        val addedTag = EventBus.getDefault().getStickyEvent(TagAdded::class.java) ?: return null
-        EventBus.getDefault().removeStickyEvent(addedTag)
-        return addedTag.tagName
+        return EventBus.getDefault().getStickyEvent(TagAdded::class.java)?.let { addedTag ->
+            EventBus.getDefault().removeStickyEvent(addedTag)
+            addedTag.tagName
+        }
     }
 
     private fun getSiteIfBlogPreview(): SubfilterListItem.Site? {
@@ -1241,31 +1242,36 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
         showEmptyView()
     }
 
-    @Suppress("LongMethod", "CyclomaticComplexMethod")
     private fun setEmptyView(emptyState: ReaderPostListEmptyState, isUpdating: Boolean) {
         val emptyView = actionableEmptyView ?: return
-        val heightToolbar = resources.getDimensionPixelSize(R.dimen.toolbar_height)
-        val heightTabs = resources.getDimensionPixelSize(R.dimen.tab_height)
         emptyView.updateLayoutForSearch(false, 0)
         emptyView.subtitle.contentDescription = null
 
         // Ensure the default image is reset for empty views before applying logic
         emptyView.image.setImageResource(0)
 
+        when (emptyState) {
+            ReaderPostListEmptyState.SelfHostedCta -> setEmptyViewForSelfHostedCta(emptyView)
+            ReaderPostListEmptyState.Bookmarks -> setEmptyViewForBookmarksList(emptyView)
+            else -> setEmptyViewForPosts(emptyView, emptyState, isUpdating)
+        }
+    }
+
+    @Suppress("LongMethod", "CyclomaticComplexMethod")
+    private fun setEmptyViewForPosts(
+        emptyView: ActionableEmptyView,
+        emptyState: ReaderPostListEmptyState,
+        isUpdating: Boolean
+    ) {
+        val heightToolbar = resources.getDimensionPixelSize(R.dimen.toolbar_height)
+        val heightTabs = resources.getDimensionPixelSize(R.dimen.tab_height)
         var title: String? = null
         var description: String? = null
         var button: ReaderPostListEmptyButton? = null
         var isImageHidden = false
         when (emptyState) {
-            ReaderPostListEmptyState.SelfHostedCta -> {
-                setEmptyViewForSelfHostedCta(emptyView)
-                return
-            }
-
-            ReaderPostListEmptyState.Bookmarks -> {
-                setEmptyViewForBookmarksList(emptyView)
-                return
-            }
+            // handled by setEmptyView()
+            ReaderPostListEmptyState.SelfHostedCta, ReaderPostListEmptyState.Bookmarks -> Unit
 
             ReaderPostListEmptyState.NoConnection -> title = getString(R.string.reader_empty_posts_no_connection)
             is ReaderPostListEmptyState.RequestFailed -> title = getString(

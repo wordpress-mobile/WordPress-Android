@@ -82,9 +82,7 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         whenever(repository.getPosts(any())).thenReturn(ReaderPostList())
         whenever(repository.getPostCount(any())).thenReturn(0)
         whenever(repository.shouldAutoUpdateTag(any())).thenReturn(false)
-        whenever(repository.hasFollowedBlogs()).thenReturn(false)
         whenever(repository.isFollowedTag(any())).thenReturn(false)
-        whenever(repository.tagExists(any())).thenReturn(true)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(readerTracker.getSource(any(), anyOrNull())).thenReturn("source")
         whenever(
