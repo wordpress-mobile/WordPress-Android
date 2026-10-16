@@ -5,6 +5,9 @@ import android.os.Bundle
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
@@ -17,6 +20,8 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.accounts.login.applicationpassword.AuthorizationHeaderBlockedDialog
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.main.WPMainActivity
@@ -34,9 +39,12 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
 
     private var viewModel: ApplicationPasswordLoginViewModel? = null
 
+    private var showAuthorizationHeaderBlocked by mutableStateOf(false)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        showAuthorizationHeaderBlocked = savedInstanceState?.getBoolean(KEY_AUTHORIZATION_HEADER_BLOCKED) == true
         initViewModel()
         setContent {
             AppThemeM3 {
@@ -46,6 +54,9 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
                 ) {
                     CircularProgressIndicator()
                 }
+                if (showAuthorizationHeaderBlocked) {
+                    AuthorizationHeaderBlockedDialog(onDismiss = { navigate(isError = true) })
+                }
             }
         }
     }
@@ -53,10 +64,23 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
     private fun initViewModel() {
         viewModel = ViewModelProvider(this, viewModelFactory)[ApplicationPasswordLoginViewModel::class.java]
         viewModel!!.onFinishedEvent.onEach(this::openMainActivity).launchIn(lifecycleScope)
-        viewModel!!.setupSite(intent.dataString.orEmpty())
+        // A restored dialog means the callback was handled before the activity was recreated.
+        if (!showAuthorizationHeaderBlocked) {
+            viewModel!!.setupSite(intent.dataString.orEmpty())
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(KEY_AUTHORIZATION_HEADER_BLOCKED, showAuthorizationHeaderBlocked)
     }
 
     private fun openMainActivity(navigationActionData: ApplicationPasswordLoginViewModel.NavigationActionData) {
+        if (navigationActionData.errorMessage == ApplicationPasswordLoginHelper.AUTHORIZATION_HEADER_BLOCKED) {
+            // A toast disappears before the user can note the remedy, so this error gets a dialog.
+            showAuthorizationHeaderBlocked = true
+            return
+        }
         if (!navigationActionData.isError && navigationActionData.siteUrl != null) {
             ToastUtils.showToast(
                 this,
@@ -78,16 +102,19 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
                 )
             )
         }
+        navigate(navigationActionData.isError, navigationActionData.newSiteLocalId)
+    }
 
+    private fun navigate(isError: Boolean, newSiteLocalId: Int? = null) {
         // Check if we're in a share flow - if so, just finish and return to LoginActivity
         val isShareFlow = LoginActivity.consumeShareFlowPending()
-        if (isShareFlow && !navigationActionData.isError) {
+        if (isShareFlow && !isError) {
             setResult(RESULT_OK)
             finish()
             return
         }
 
-        if (navigationActionData.isError) {
+        if (isError) {
             ActivityLauncher.showMainActivity(this)
         } else {
             unifiedLoginTracker.setFlow(UnifiedLoginTracker.Flow.APPLICATION_PASSWORD.value)
@@ -96,7 +123,7 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
                 (Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                         or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             )
-            navigationActionData.newSiteLocalId?.let {
+            newSiteLocalId?.let {
                 mainActivityIntent.putExtra(WPMainActivity.ARG_SELECTED_SITE, it)
             }
             startActivity(mainActivityIntent)
@@ -112,5 +139,9 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
     override fun onStop() {
         super.onStop()
         viewModel?.onStop()
+    }
+
+    companion object {
+        private const val KEY_AUTHORIZATION_HEADER_BLOCKED = "authorization_header_blocked"
     }
 }

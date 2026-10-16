@@ -72,17 +72,22 @@ class ApplicationPasswordRequiredDialogActivity : ComponentActivity() {
         setContent {
             AppThemeM3 {
                 val isLoading = viewModel.isLoading.collectAsState()
-                ApplicationPasswordRequiredDialog(
-                    featureName = featureName,
-                    isLoading = isLoading.value,
-                    onDismiss = { finish() },
-                    onConfirm = {
-                        viewModel.createApplicationPassword(
-                            site,
-                            ApplicationPasswordCreationTracker.SOURCE_MIGRATION
-                        )
-                    }
-                )
+                val isAuthorizationHeaderBlocked = viewModel.isAuthorizationHeaderBlocked.collectAsState()
+                if (isAuthorizationHeaderBlocked.value) {
+                    AuthorizationHeaderBlockedDialog(onDismiss = { finish() })
+                } else {
+                    ApplicationPasswordRequiredDialog(
+                        featureName = featureName,
+                        isLoading = isLoading.value,
+                        onDismiss = { finish() },
+                        onConfirm = {
+                            viewModel.createApplicationPassword(
+                                site,
+                                ApplicationPasswordCreationTracker.SOURCE_MIGRATION
+                            )
+                        }
+                    )
+                }
             }
         }
     }
