@@ -188,7 +188,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     private lateinit var recyclerView: FilteredRecyclerView
     private lateinit var newPostsBar: View
     private lateinit var progressBar: ProgressBar
-    private lateinit var searchMenuItem: MenuItem
+    private var searchMenuItem: MenuItem? = null
 
     private lateinit var postListViewModel: ReaderPostListViewModel
 
@@ -419,10 +419,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         postListViewModel = ViewModelProvider(this, viewModelFactory)[ReaderPostListViewModel::class.java]
 
         if (isTopLevel) {
-            readerViewModel = ViewModelProvider(
-                requireParentFragment(),
-                viewModelFactory
-            )[ReaderViewModel::class.java]
+            // Discover sub-tabs are nested inside ReaderDiscoverTabsFragment, so look for the
+            // ReaderFragment ancestor rather than the direct parent
+            val readerFragment = generateSequence(parentFragment) { it.parentFragment }
+                .firstOrNull { it is ReaderFragment } ?: requireParentFragment()
+            readerViewModel = ViewModelProvider(readerFragment, viewModelFactory)[ReaderViewModel::class.java]
         }
 
         if (isFilterableScreen) {
@@ -438,7 +439,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         if (isSearching) {
             recyclerView.showAppBarLayout()
-            searchMenuItem.expandActionView()
+            // searchMenuItem is only set up when logged in, but logged-out users can still reach search
+            searchMenuItem?.expandActionView()
             recyclerView.setToolbarScrollFlags(0)
         }
     }
@@ -1091,7 +1093,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
      */
     private fun setupRecyclerToolbar() {
         val menu = recyclerView.addToolbarMenu(R.menu.reader_list)
-        searchMenuItem = menu.findItem(R.id.menu_reader_search)
+        val searchMenuItem = menu.findItem(R.id.menu_reader_search)
+        this.searchMenuItem = searchMenuItem
 
         searchView = searchMenuItem.actionView as SearchView?
         searchView!!.queryHint = getString(R.string.reader_hint_post_search)
@@ -1998,7 +2001,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
      */
     override fun onActivityBackPressed(): Boolean {
         return if (isSearchViewExpanded) {
-            searchMenuItem.collapseActionView()
+            searchMenuItem?.collapseActionView()
             true
         } else {
             goBackInTagHistory()
