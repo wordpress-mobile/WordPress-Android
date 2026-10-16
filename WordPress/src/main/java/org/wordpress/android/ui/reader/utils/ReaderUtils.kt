@@ -9,7 +9,6 @@ import org.wordpress.android.datasets.ReaderTagTable
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
-import org.wordpress.android.ui.FilteredRecyclerView
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.services.update.TagUpdateClientUtilsProvider
 import org.wordpress.android.util.FormatUtils
@@ -480,66 +479,6 @@ object ReaderUtils {
         prependDefaults(defaultTags, orderedTagList, defaultTagInfos)
 
         return orderedTagList
-    }
-
-    @Suppress("ReturnCount")
-    fun isTagManagedInFollowingTab(
-        tag: ReaderTag,
-        isTopLevelReader: Boolean,
-        recyclerView: FilteredRecyclerView
-    ): Boolean {
-        if (isTopLevelReader) {
-            if (tag.isDefaultInMemoryTag) {
-                return true
-            }
-
-            val isSpecialTag = tag.isDiscover || tag.isPostsILike || tag.isBookmarked
-            val tabsInitializingNow = recyclerView.currentFilter == null
-            val tagIsFollowedSitesOrAFollowedTag =
-                tag.isFollowedSites || tag.tagType == ReaderTagType.FOLLOWED
-
-            return if (isSpecialTag) {
-                false
-            } else if (tabsInitializingNow) {
-                tagIsFollowedSitesOrAFollowedTag
-            } else if (recyclerView.currentFilter is ReaderTag) {
-                if (recyclerView.isValidFilter(tag)) {
-                    tag.isFollowedSites
-                } else {
-                    // If we reach here it means we are setting a followed tag or site in the Following tab
-                    true
-                }
-            } else {
-                false
-            }
-        } else {
-            return tag.isFollowedSites
-        }
-    }
-
-    @Suppress("ReturnCount")
-    fun getValidTagForSharedPrefs(
-        tag: ReaderTag,
-        isTopLevelReader: Boolean,
-        recyclerView: FilteredRecyclerView,
-        defaultTag: ReaderTag
-    ): ReaderTag {
-        if (!isTopLevelReader) {
-            return tag
-        }
-
-        val isValidFilter = recyclerView.isValidFilter(tag)
-        val isSpecialTag = tag.isDiscover || tag.isPostsILike || tag.isBookmarked
-        if (!isSpecialTag && !isValidFilter && isTagManagedInFollowingTab(
-                tag = tag,
-                isTopLevelReader = isTopLevelReader,
-                recyclerView = recyclerView
-            )
-        ) {
-            return defaultTag
-        }
-
-        return tag
     }
 
     @JvmStatic
