@@ -11,7 +11,6 @@
         style="@style/ReaderRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:wpSpinnerItemView="@layout/toolbar_main_spinner_item"
         app:wpToolbarDisableScrollGestures="true"
         app:wpHideAppBarLayout="true"
         app:wpIncludeDefaultSpacing="false" />

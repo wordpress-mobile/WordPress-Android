@@ -17,9 +17,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.widget.ProgressBar
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
@@ -61,7 +58,6 @@ import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
 import org.wordpress.android.fluxc.store.ReaderStore
 import org.wordpress.android.fluxc.store.ReaderStore.OnReaderSitesSearched
 import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesPayload
-import org.wordpress.android.models.FilterCriteria
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.models.ReaderTag
@@ -71,7 +67,6 @@ import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.EmptyViewMessageType
 import org.wordpress.android.ui.FilteredRecyclerView
-import org.wordpress.android.ui.FilteredRecyclerView.FilterCriteriaAsyncLoaderListener
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.main.BottomNavController
@@ -80,7 +75,6 @@ import org.wordpress.android.ui.main.WPMainActivity.OnActivityBackPressedListene
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
 import org.wordpress.android.ui.reader.ReaderEvents.FollowedBlogsFetched
 import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsFetched
@@ -115,7 +109,6 @@ import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
 import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
-import org.wordpress.android.ui.reader.services.update.TagUpdateClientUtilsProvider
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModelProvider.Companion.getSubFilterViewModelForTag
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
@@ -129,7 +122,6 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView.OnBlogInfoFailedListener
-import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView.OnBlogInfoLoadedListener
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView.OnSubscriptionSettingsClickListener
 import org.wordpress.android.ui.reader.subscription.ReaderSubscriptionSettingsBottomSheetFragment
 import org.wordpress.android.util.AniUtils
@@ -149,7 +141,6 @@ import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import java.util.EnumSet
-import java.util.Locale
 import javax.inject.Inject
 
 @Suppress("LargeClass")
@@ -172,9 +163,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     @Inject
     lateinit var imageManager: ImageManager
-
-    @Inject
-    lateinit var tagUpdateClientUtilsProvider: TagUpdateClientUtilsProvider
 
     @Inject
     lateinit var seenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
@@ -233,7 +221,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     private var isFilterableScreen = false
     private var isFiltered = false
-    private var readerSubsActivityResultLauncher: ActivityResultLauncher<Intent>? = null
     private var currentUpdateActions = HashSet<ReaderPostServiceStarter.UpdateAction>()
 
     private var bookmarksSavedLocallyDialog: AlertDialog? = null
@@ -786,8 +773,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             bottomNavController = context
         }
 
-        initReaderSubsActivityResultLauncher()
-
         val activity: Activity? = activity
         if (activity != null) {
             val intent = Intent()
@@ -796,30 +781,9 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
     }
 
-    private fun initReaderSubsActivityResultLauncher() {
-        readerSubsActivityResultLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result: ActivityResult ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val data = result.data
-                if (data != null) {
-                    val shouldRefreshSubscriptions =
-                        data.getBooleanExtra(
-                            ReaderSubsActivity.RESULT_SHOULD_REFRESH_SUBSCRIPTIONS,
-                            false
-                        )
-                    if (shouldRefreshSubscriptions) {
-                        subFilterViewModel!!.loadSubFilters()
-                    }
-                }
-            }
-        }
-    }
-
     override fun onDetach() {
         super.onDetach()
         bottomNavController = null
-        readerPostAdapter?.setOnBlogInfoLoadedListener(null)
         readerPostAdapter?.setOnBlogInfoFailedListener(null)
         readerPostAdapter?.setOnSubscriptionSettingsClickListener(null)
     }
@@ -828,8 +792,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         super.onStart()
         dispatcher.register(this)
         EventBus.getDefault().register(this)
-
-        reloadTags()
 
         // purge database and update followed tags/blog if necessary - note that we don't purge unless
         // there's a connection to avoid removing posts the user would expect to see offline
@@ -888,11 +850,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: FollowedTagsFetched) {
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
-            if (event.didChange()) {
-                // reload the tag filter since tags have changed or we just opened the fragment
-                reloadTags()
-            }
-
             // update the current tag if the list fragment is empty - this will happen if
             // the tag table was previously empty (ie: first run)
             if (isPostAdapterEmpty() && (ReaderBlogTable.hasFollowedBlogs() || !hasUpdatedPosts)) {
@@ -1058,7 +1015,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     private fun setupRecycler() {
-        recyclerView.setLogT(AppLog.T.READER)
         recyclerView.setCustomEmptyView()
 
         recyclerView.setBackgroundColor(
@@ -1085,7 +1041,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         recyclerView.addItemDivider(R.drawable.default_list_divider)
 
         recyclerView.setToolbarBackgroundColor(0)
-        recyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp)
 
         if (isTopLevel) {
             recyclerView.setToolbarTitle(
@@ -1109,49 +1064,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     private fun setupRecyclerFilterListener() {
         recyclerView.setFilterListener(object : FilteredRecyclerView.FilterListener {
-            override fun onLoadFilterCriteriaOptions(refresh: Boolean): List<FilterCriteria> {
-                return emptyList()
-            }
-
-            override fun onLoadFilterCriteriaOptionsAsync(
-                listener: FilterCriteriaAsyncLoaderListener, refresh: Boolean
-            ) {
-                // noop
-            }
-
             override fun onLoadData(forced: Boolean) {
                 if (forced) {
                     readerTracker.track(AnalyticsTracker.Stat.READER_PULL_TO_REFRESH)
                 }
                 updatePosts(forced)
-            }
-
-            override fun onFilterSelected(position: Int, criteria: FilterCriteria) {
-                onTagChanged(criteria as ReaderTag)
-            }
-
-            override fun onRecallSelection(): FilterCriteria {
-                if (hasCurrentTag()) {
-                    val defaultTag = ReaderUtils.getDefaultTagFromDbOrCreateInMemory(
-                        requireActivity(),
-                        tagUpdateClientUtilsProvider
-                    )
-
-                    val tag = ReaderUtils.getValidTagForSharedPrefs(
-                        currentTag!!,
-                        isTopLevel,
-                        recyclerView,
-                        defaultTag
-                    )
-
-                    return tag
-                } else {
-                    AppLog.w(
-                        AppLog.T.READER,
-                        "reader post list > no current tag in onRecallSelection"
-                    )
-                    return ReaderUtils.getDefaultTag()
-                }
             }
 
             override fun onShowEmptyViewMessage(emptyViewMsgType: EmptyViewMessageType): String? {
@@ -1978,9 +1895,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             readerPostAdapter!!.setOnPostListItemButtonListener(this)
             readerPostAdapter!!.setOnDataLoadedListener(mDataLoadedListener)
             readerPostAdapter!!.setOnDataRequestedListener(dataRequestedListener)
-            if (activity is OnBlogInfoLoadedListener) {
-                readerPostAdapter!!.setOnBlogInfoLoadedListener(activity as OnBlogInfoLoadedListener?)
-            }
             if (activity is OnBlogInfoFailedListener) {
                 readerPostAdapter!!.setOnBlogInfoFailedListener(activity as OnBlogInfoFailedListener?)
             }
@@ -2057,54 +1971,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
             currentReaderTag = tag
 
-            if (isFilterableScreen) {
-                if (isFilterableTag(currentReaderTag) || currentReaderTag!!.isDefaultInMemoryTag) {
-                    subFilterViewModel!!.onSubfilterReselected()
-                } else {
-                    changeReaderMode(
-                        ReaderModeInfo(
-                            tag,
-                            ReaderPostListType.TAG_FOLLOWED,
-                            0,
-                            0,
-                            false,
-                            null,
-                            false,
-                            isFiltered
-                        ),
-                        false
-                    )
-                }
-            }
-
-            val validTag = ReaderUtils.getValidTagForSharedPrefs(
-                tag,
-                isTopLevel,
-                recyclerView,
-                ReaderUtils.getDefaultTagFromDbOrCreateInMemory(
-                    requireActivity(),
-                    tagUpdateClientUtilsProvider
-                )
-            )
-
-            when (getPostListType()) {
-                ReaderPostListType.TAG_FOLLOWED -> {
-                    // remember this as the current tag if viewing followed tag
-                    AppPrefs.setReaderTag(validTag)
-                }
-
-                ReaderPostListType.TAG_PREVIEW -> {
-                    tagPreviewHistory.push(tag.tagSlug)
-                }
-
-                ReaderPostListType.BLOG_PREVIEW -> {
-                    if (isTopLevel) {
-                        AppPrefs.setReaderTag(validTag)
-                    }
-                }
-
-                ReaderPostListType.SEARCH_RESULTS -> {}
-                ReaderPostListType.TAGS_FEED -> {}
+            if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
+                tagPreviewHistory.push(tag.tagSlug)
             }
 
             getPostAdapter().setCurrentTag(currentReaderTag)
@@ -2185,15 +2053,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         hideNewPostsBar()
         if (hasPostAdapter()) {
             getPostAdapter().reload()
-        }
-    }
-
-    /*
-     * reload the list of tags for the dropdown filter
-     */
-    private fun reloadTags() {
-        if (isAdded) {
-            recyclerView.refreshFilterCriteriaOptions()
         }
     }
 
@@ -2597,30 +2456,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             }
         }
 
-    /*
-     * called when user selects a tag from the tag toolbar
-     */
-    private fun onTagChanged(tag: ReaderTag) {
-        if (!isAdded || isCurrentTag(tag)) {
-            return
-        }
-        // clear 'post removed from saved posts' undo items
-        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
-            ReaderPostTable.purgeUnbookmarkedPostsWithBookmarkTag()
-        }
-
-        trackTagLoaded(tag)
-        AppLog.d(
-            AppLog.T.READER,
-            String.format(
-                Locale.US,
-                "reader post list > tag %s displayed",
-                tag.tagNameForLog
-            )
-        )
-        currentTag = tag
-    }
-
     /**
      * WARNING: Do not replace the static reader tracker with the corresponding instance reader tracker
      * as this will result into a [NullPointerException] crash on specific scenarios.
@@ -2862,10 +2697,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     private val isFollowingScreen: Boolean
         get() = tagFragmentStartedWith != null && tagFragmentStartedWith!!.isFollowedSites
-
-    private fun isFilterableTag(tag: ReaderTag?): Boolean {
-        return tag != null && tag.isFilterable
-    }
 
     private enum class ActionableEmptyViewButtonType {
         DISCOVER,

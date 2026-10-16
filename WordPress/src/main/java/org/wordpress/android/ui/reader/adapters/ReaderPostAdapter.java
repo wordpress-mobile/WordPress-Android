@@ -28,7 +28,6 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
@@ -101,7 +100,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
-    private ReaderSiteHeaderView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
     private ReaderSiteHeaderView.OnBlogInfoFailedListener mBlogInfoFailedListener;
     @Nullable private ReaderSiteHeaderView.OnSubscriptionSettingsClickListener mSubscriptionSettingsClickListener;
 
@@ -272,7 +270,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             renderRemovedPost(position, (ReaderRemovedPostViewHolder) holder);
         } else if (holder instanceof SiteHeaderViewHolder) {
             SiteHeaderViewHolder siteHolder = (SiteHeaderViewHolder) holder;
-            siteHolder.mSiteHeaderView.setOnBlogInfoLoadedListener(mBlogInfoLoadedListener);
             siteHolder.mSiteHeaderView.setOnBlogInfoFailedListener(mBlogInfoFailedListener);
             siteHolder.mSiteHeaderView.setOnSubscriptionSettingsClickListener(mSubscriptionSettingsClickListener);
             if (isDiscover()) {
@@ -447,33 +444,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
             return Unit.INSTANCE;
         };
-        Function2<Long, Long, Unit> onDiscoverSectionClicked = (postId, blogId) -> {
-            ReaderPostDiscoverData discoverData = post.getDiscoverData();
-            switch (discoverData.getDiscoverType()) {
-                case EDITOR_PICK:
-                    if (mPostSelectedListener != null) {
-                        mPostSelectedListener.onPostSelected(post);
-                    }
-                    break;
-                case SITE_PICK:
-                    if (discoverData.getBlogId() != 0) {
-                        ReaderActivityLauncher.showReaderBlogPreview(
-                                ctx,
-                                discoverData.getBlogId(),
-                                post.isFollowedByCurrentUser,
-                                mSource,
-                                mReaderTracker
-                        );
-                    } else if (discoverData.hasBlogUrl()) {
-                        ReaderActivityLauncher.openUrl(ctx, discoverData.getBlogUrl());
-                    }
-                    break;
-                case OTHER:
-                    // noop
-                    break;
-            }
-            return Unit.INSTANCE;
-        };
         Function1<ReaderPostUiState, Unit> onMoreButtonClicked = (uiState) -> {
             mReaderTracker.track(AnalyticsTracker.Stat.POST_CARD_MORE_TAPPED);
             renderPostNew(position, holder, true);
@@ -590,10 +560,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setOnDataRequestedListener(ReaderActions.DataRequestedListener listener) {
         mDataRequestedListener = listener;
-    }
-
-    public void setOnBlogInfoLoadedListener(ReaderSiteHeaderView.OnBlogInfoLoadedListener listener) {
-        mBlogInfoLoadedListener = listener;
     }
 
     public void setOnBlogInfoFailedListener(ReaderSiteHeaderView.OnBlogInfoFailedListener listener) {
