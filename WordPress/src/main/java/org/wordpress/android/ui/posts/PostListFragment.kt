@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.ProgressBar
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
@@ -20,6 +21,7 @@ import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
@@ -29,9 +31,9 @@ import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
-import org.wordpress.android.viewmodel.posts.PagedPostList
 import org.wordpress.android.viewmodel.posts.PostListEmptyUiState
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
+import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.viewmodel.posts.PostListViewModel
 import javax.inject.Inject
 
@@ -61,6 +63,8 @@ class PostListFragment : ViewPagerFragment() {
 
     private lateinit var nonNullActivity: FragmentActivity
 
+    private var scrollTargetPostId: LocalPostId? = null
+
     private val postListAdapter: PostListAdapter by lazy {
         PostListAdapter(
             context = nonNullActivity,
@@ -73,6 +77,12 @@ class PostListFragment : ViewPagerFragment() {
         super.onCreate(savedInstanceState)
         nonNullActivity = requireActivity()
         (nonNullActivity.application as WordPress).component().inject(this)
+        postListAdapter.registerAdapterDataObserver(keepItemsInsertedAtTopVisible)
+        postListAdapter.addOnPagesUpdatedListener {
+            if (postListAdapter.itemCount > 0) {
+                scrollToTargetPostIfLoaded()
+            }
+        }
 
         val nonNullIntent = checkNotNull(nonNullActivity.intent)
         val site = nonNullIntent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)
@@ -132,7 +142,7 @@ class PostListFragment : ViewPagerFragment() {
         if (postListType == SEARCH) {
             mainViewModel.searchQuery.observe(viewLifecycleOwner) {
                 if (TextUtils.isEmpty(it)) {
-                    postListAdapter.submitList(null)
+                    postListAdapter.submitData(viewLifecycleOwner.lifecycle, PagingData.empty())
                 }
                 viewModel.search(it)
             }
@@ -147,16 +157,11 @@ class PostListFragment : ViewPagerFragment() {
         }
 
         viewModel.pagedListData.observe(viewLifecycleOwner) {
-            it?.let { pagedListData -> updatePagedListData(pagedListData) }
+            it?.let { pagedListData -> postListAdapter.submitData(viewLifecycleOwner.lifecycle, pagedListData) }
         }
 
         viewModel.isLoadingMore.observe(viewLifecycleOwner) {
             progressLoadMore?.visibility = if (it == true) View.VISIBLE else View.GONE
-        }
-        viewModel.scrollToPosition.observe(viewLifecycleOwner) {
-            it?.let { index ->
-                recyclerView?.scrollToPosition(index)
-            }
         }
     }
 
@@ -185,27 +190,25 @@ class PostListFragment : ViewPagerFragment() {
     }
 
     /**
-     * Updates the data for the adapter while retaining visible item in certain cases.
+     * Retains the visible item in certain cases when the data changes.
      *
-     * PagedList tries to keep the visible item by adding new items outside of the screen while modifying the scroll
-     * position. In most cases, this works out great because it doesn't interrupt to the user. However, after a new
-     * item is inserted at the top while the list is showing the very first items, it feels very weird to not have the
-     * inserted item shown. For example, if a new draft is added there is no indication of it except for the flash
+     * RecyclerView tries to keep the visible item by adding new items outside of the screen while modifying the
+     * scroll position. In most cases, this works out great because it doesn't interrupt to the user. However, after a
+     * new item is inserted at the top while the list is showing the very first items, it feels very weird to not have
+     * the inserted item shown. For example, if a new draft is added there is no indication of it except for the flash
      * of the scroll bar which is not noticeable unless user is paying attention to it.
      *
-     * In these cases, we try to keep the scroll position the same instead of keeping the visible item the same by
-     * first saving the state and re-applying it after the data updates are completed. Since `PagedListAdapter` uses
-     * bg thread to calculate the changes, we need to post the change in the bg thread as well so that it'll be applied
-     * after changes are reflected.
+     * In these cases, we scroll to the top so the inserted item is shown. The observer is notified before the
+     * RecyclerView lays out the change, so the first visible position is still the one from before the insertion.
      */
-    private fun updatePagedListData(pagedListData: PagedPostList) {
-        val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
-        postListAdapter.submitList(pagedListData)
-        recyclerView?.post {
-            (recyclerView?.layoutManager as? LinearLayoutManager)?.let { layoutManager ->
-                if (layoutManager.findFirstVisibleItemPosition() < MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION) {
-                    layoutManager.onRestoreInstanceState(recyclerViewState)
-                }
+    private val keepItemsInsertedAtTopVisible = object : RecyclerView.AdapterDataObserver() {
+        override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+            val layoutManager = recyclerView?.layoutManager as? LinearLayoutManager ?: return
+            val wasListEmpty = itemCount == postListAdapter.itemCount
+            if (positionStart == 0 && !wasListEmpty &&
+                layoutManager.findFirstVisibleItemPosition() < MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION
+            ) {
+                recyclerView?.scrollToPosition(0)
             }
         }
     }
@@ -233,7 +236,24 @@ class PostListFragment : ViewPagerFragment() {
     }
 
     fun scrollToTargetPost(localPostId: LocalPostId) {
-        viewModel.scrollToPost(localPostId)
+        scrollTargetPostId = localPostId
+        // if the data isn't loaded yet, the pages updated listener scrolls there once it is
+        if (postListAdapter.itemCount > 0) {
+            scrollToTargetPostIfLoaded()
+        }
+    }
+
+    private fun scrollToTargetPostIfLoaded() {
+        val localPostId = scrollTargetPostId ?: return
+        scrollTargetPostId = null
+        val position = postListAdapter.snapshot().indexOfFirst {
+            (it as? PostListItemUiState)?.data?.localPostId == localPostId
+        }
+        if (position >= 0) {
+            recyclerView?.scrollToPosition(position)
+        } else {
+            AppLog.e(AppLog.T.POSTS, "ScrollToPost failed - the post not found.")
+        }
     }
 
     companion object {
