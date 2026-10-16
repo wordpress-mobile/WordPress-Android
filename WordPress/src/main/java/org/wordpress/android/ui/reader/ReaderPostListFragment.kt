@@ -132,12 +132,10 @@ import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView.OnBlogInfoFail
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView.OnBlogInfoLoadedListener
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView.OnSubscriptionSettingsClickListener
 import org.wordpress.android.ui.reader.subscription.ReaderSubscriptionSettingsBottomSheetFragment
-import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.NetworkUtils
-import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.StringUtils
@@ -174,12 +172,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     @Inject
     lateinit var imageManager: ImageManager
-
-    @Inject
-    lateinit var uiHelpers: UiHelpers
-
-    @Inject
-    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     @Inject
     lateinit var tagUpdateClientUtilsProvider: TagUpdateClientUtilsProvider
@@ -1977,8 +1969,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 WPActivityUtils.getThemedContext(activity),
                 getPostListType(),
                 imageManager,
-                uiHelpers,
-                networkUtilsWrapper,
                 isTopLevel,
                 lifecycleScope
             )
