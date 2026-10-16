@@ -19,6 +19,7 @@ class PagedListFactory<LIST_DESCRIPTOR : ListDescriptor, ITEM_IDENTIFIER, LIST_I
     private val onRefreshLoaded: (totalSize: Int) -> Unit = {},
     private val onItemAtEndLoaded: () -> Unit = {}
 ) {
+    @Volatile
     private var currentSource: PagingSource<Int, LIST_ITEM>? = null
 
     fun create(): PagingSource<Int, LIST_ITEM> {

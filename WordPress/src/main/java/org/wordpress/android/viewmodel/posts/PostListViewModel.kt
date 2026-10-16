@@ -98,6 +98,9 @@ class PostListViewModel @Inject constructor(
     private val _pagedListData = MediatorLiveData<PagedPostList>()
     val pagedListData: LiveData<PagedPostList> = _pagedListData
 
+    // search data held back while the first page is fetched; it only loads once it's delivered to the adapter
+    private var heldSearchData: PagedPostList? = null
+
     private val _emptyViewState = ThrottleLiveData<PostListEmptyUiState>(
         offset = EMPTY_VIEW_THROTTLE,
         coroutineScope = viewModelScope,
@@ -162,7 +165,10 @@ class PostListViewModel @Inject constructor(
         _pagedListData.addSource(pagedListWrapper.data) { pagedPostList ->
             pagedPostList?.let {
                 if (isSearchResultDeliverable()) {
+                    heldSearchData = null
                     _pagedListData.value = it
+                } else {
+                    heldSearchData = it
                 }
             }
         }
@@ -183,6 +189,10 @@ class PostListViewModel @Inject constructor(
                 }
             } else {
                 _isFetchingFirstPage.value = false
+                heldSearchData?.let {
+                    heldSearchData = null
+                    _pagedListData.value = it
+                }
             }
         }
         _isLoadingMore.addSource(pagedListWrapper.isLoadingMore) {
@@ -194,6 +204,7 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun clearLiveDataSources() {
+        heldSearchData = null
         pagedListWrapper?.let {
             _pagedListData.removeSource(it.data)
             _emptyViewState.removeSource(pagedListData)
