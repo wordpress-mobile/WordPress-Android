@@ -210,7 +210,7 @@ public class AppSettingsFragment extends PreferenceFragment
         }
 
         if (!BuildConfig.DEBUG || !BuildConfig.ENABLE_DEBUG_SETTINGS) {
-            removeDebugSettings();
+            getPreferenceScreen().removePreference(findPreference(getString(R.string.pref_key_debug_settings)));
         }
 
         final boolean showPrivacySettings = getActivity()
@@ -285,13 +285,6 @@ public class AppSettingsFragment extends PreferenceFragment
         PreferenceScreen preferenceScreen =
                 (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
         preferenceScreen.removePreference(openWebLinksWithJetpackPreference);
-    }
-
-    private void removeDebugSettings() {
-        Preference debugSettingsPreference = findPreference(getString(R.string.pref_key_debug_settings));
-        PreferenceScreen preferenceScreen =
-                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
-        preferenceScreen.removePreference(debugSettingsPreference);
     }
 
     @Override
