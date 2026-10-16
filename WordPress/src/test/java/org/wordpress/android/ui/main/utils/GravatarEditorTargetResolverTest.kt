@@ -75,23 +75,23 @@ class GravatarEditorTargetResolverTest : BaseUnitTest() {
 
     @Test
     fun `returns web editor on a 200 the SDK cannot parse`() = test {
-        // The shared helper leaves the Content-Type header unset, which the SDK reads as JSON, so this
-        // case needs a response that really carries the header.
-        val call = mock<Call>()
-        whenever(clientFactory.create()).thenReturn(client)
-        whenever(client.newCall(any())).thenReturn(call)
-        whenever(call.execute()).thenAnswer {
-            Response.Builder()
-                .request(Request.Builder().url(PROFILE_URL).build())
-                .protocol(Protocol.HTTP_2)
-                .code(200)
-                .message("probe")
-                .header("Content-Type", "text/html; charset=utf-8")
-                .body(BLOCK_PAGE.toResponseBody("text/html".toMediaType()))
-                .build()
-        }
+        givenResponse(code = 200, body = BLOCK_PAGE, contentType = "text/html; charset=utf-8")
 
         assertThat(resolver.resolve(TOKEN)).isEqualTo(GravatarEditorTarget.WEB_EDITOR)
+    }
+
+    @Test
+    fun `returns quick editor on a 200 whose json content type carries a charset`() = test {
+        givenResponse(code = 200, body = "{}", contentType = "application/json; charset=utf-8")
+
+        assertThat(resolver.resolve(TOKEN)).isEqualTo(GravatarEditorTarget.QUICK_EDITOR)
+    }
+
+    @Test
+    fun `returns quick editor on a 200 with no content type, which the SDK parses as json`() = test {
+        givenResponse(code = 200, body = "{}", contentType = null)
+
+        assertThat(resolver.resolve(TOKEN)).isEqualTo(GravatarEditorTarget.QUICK_EDITOR)
     }
 
     @Test
@@ -148,17 +148,23 @@ class GravatarEditorTargetResolverTest : BaseUnitTest() {
         verify(clientFactory, times(2)).create()
     }
 
-    private fun givenResponse(code: Int, body: String, contentType: String) {
+    /**
+     * The resolver reads the Content-Type *header*, which `toResponseBody` does not set, so the header
+     * has to be added explicitly or every response here would look like the absent-header case.
+     * A null [contentType] is that case on purpose.
+     */
+    private fun givenResponse(code: Int, body: String, contentType: String?) {
         val call = mock<Call>()
         whenever(clientFactory.create()).thenReturn(client)
         whenever(client.newCall(any())).thenReturn(call)
         whenever(call.execute()).thenAnswer {
             Response.Builder()
-                .request(Request.Builder().url("https://api.gravatar.com/v3/me/profile").build())
+                .request(Request.Builder().url(PROFILE_URL).build())
                 .protocol(Protocol.HTTP_2)
                 .code(code)
                 .message("probe")
-                .body(body.toResponseBody(contentType.toMediaType()))
+                .apply { contentType?.let { header("Content-Type", it) } }
+                .body(body.toResponseBody(contentType?.toMediaType()))
                 .build()
         }
     }
