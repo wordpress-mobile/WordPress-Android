@@ -13,6 +13,8 @@ fun validateEmail(text: CharSequence): Boolean = validate(Patterns.EMAIL_ADDRESS
 
 fun validateUrl(text: CharSequence): Boolean = validate(Patterns.WEB_URL, text)
 
+fun validateOptionalUrl(text: CharSequence): Boolean = text.isEmpty() || validateUrl(text)
+
 fun validateIPv4(text: CharSequence): Boolean = validate(IPv4_PATTERN, text)
 
 fun validatePassword(text: CharSequence): Boolean = validate(PASSWORD_PATTERN, text)
