@@ -147,9 +147,6 @@ android {
         buildConfigField "boolean", "IS_JETPACK_APP", "false"
         buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
         buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
-        // Mirrors the X-SDK-Version header the Gravatar SDK sends, so our pre-flight probe looks
-        // the same on the wire. See GravatarEditorTargetResolver.
-        buildConfigField "String", "GRAVATAR_SDK_VERSION", "\"${libs.versions.gravatar.get()}\""
         buildConfigField "boolean", "MP4_COMPOSER_VIDEO_OPTIMIZATION", "false"
         buildConfigField "boolean", "MANAGE_CATEGORIES", "false"
         buildConfigField "boolean", "TAXONOMIES_REST_API_MIGRATION", "false"

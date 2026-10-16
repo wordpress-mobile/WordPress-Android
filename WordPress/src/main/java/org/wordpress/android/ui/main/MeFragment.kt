@@ -46,6 +46,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_TAPPED
 import org.wordpress.android.databinding.MeFragmentBinding
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.PostStore
@@ -147,6 +148,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     // A tap now waits on a network probe, so guard against a second tap starting another one
     private var isOpeningGravatarEditor = false
 
+    // A Custom Tab returns no result, so remember the diversion and refresh the profile on the way back
+    private var openedWebGravatarEditor = false
+
     @Inject
     lateinit var activityNavigator: ActivityNavigator
 
@@ -170,6 +174,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // The flag is cleared by the launching coroutine, but a probe blocked in OkHttp outlives the view
+        // scope that would cancel it, so a detach/attach could otherwise come back with taps still blocked
+        isOpeningGravatarEditor = false
         binding = MeFragmentBinding.bind(view).apply {
             setupViews()
             setupObservers(savedInstanceState)
@@ -292,7 +299,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
+    // The guard clauses below read better as early returns than as nesting, hence the ReturnCount suppression
+    @Suppress("TooGenericExceptionCaught", "ReturnCount")
     private suspend fun MeFragmentBinding.openGravatarEditor(
         page: AvatarPickerAndAboutEditorConfiguration.Page,
         appContext: Context
@@ -311,6 +319,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         if (!viewLifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) return
         if (target == GravatarEditorTarget.WEB_EDITOR) {
             appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Opening the web profile editor instead")
+            openedWebGravatarEditor = true
             activityNavigator.openInCustomTab(requireActivity(), GRAVATAR_PROFILE_URL)
             return
         }
@@ -530,6 +539,15 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     override fun onResume() {
         super.onResume()
         binding?.refreshAccountDetails()
+        // The web editor has no updateHandler, so without this the avatar would keep being served from
+        // Glide's cache: the hash-based URL and the avatarVersion signature are both unchanged by an edit
+        // made on gravatar.com. Runs after refreshAccountDetails so the forced load is the one that sticks.
+        // The account fetch picks up a display name changed there, which MeActivity would otherwise miss.
+        if (openedWebGravatarEditor) {
+            openedWebGravatarEditor = false
+            binding?.loadAvatar(null, true)
+            dispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
+        }
     }
 
     override fun onDestroy() {

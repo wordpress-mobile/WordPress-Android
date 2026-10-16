@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main.utils
 
+import com.gravatar.BuildConfig as GravatarBuildConfig
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okhttp3.Call
 import okhttp3.MediaType.Companion.toMediaType
@@ -56,11 +57,41 @@ class GravatarEditorTargetResolverTest : BaseUnitTest() {
 
     @Test
     fun `returns web editor for other refusals the SDK cannot recover from`() = test {
-        listOf(404, 429, 500).forEach { code ->
+        listOf(404, 429, 413).forEach { code ->
             givenResponse(code = code, body = "", contentType = "application/json")
 
             assertThat(resolver.resolve(TOKEN)).isEqualTo(GravatarEditorTarget.WEB_EDITOR)
         }
+    }
+
+    @Test
+    fun `returns quick editor on 5xx so the sheet can offer its working retry`() = test {
+        listOf(500, 502, 503).forEach { code ->
+            givenResponse(code = code, body = "", contentType = "application/json")
+
+            assertThat(resolver.resolve(TOKEN)).isEqualTo(GravatarEditorTarget.QUICK_EDITOR)
+        }
+    }
+
+    @Test
+    fun `returns web editor on a 200 the SDK cannot parse`() = test {
+        // The shared helper leaves the Content-Type header unset, which the SDK reads as JSON, so this
+        // case needs a response that really carries the header.
+        val call = mock<Call>()
+        whenever(clientFactory.create()).thenReturn(client)
+        whenever(client.newCall(any())).thenReturn(call)
+        whenever(call.execute()).thenAnswer {
+            Response.Builder()
+                .request(Request.Builder().url(PROFILE_URL).build())
+                .protocol(Protocol.HTTP_2)
+                .code(200)
+                .message("probe")
+                .header("Content-Type", "text/html; charset=utf-8")
+                .body(BLOCK_PAGE.toResponseBody("text/html".toMediaType()))
+                .build()
+        }
+
+        assertThat(resolver.resolve(TOKEN)).isEqualTo(GravatarEditorTarget.WEB_EDITOR)
     }
 
     @Test
@@ -96,12 +127,12 @@ class GravatarEditorTargetResolverTest : BaseUnitTest() {
         val captor = argumentCaptor<Request>()
         verify(client).newCall(captor.capture())
         with(captor.firstValue) {
-            assertThat(url.toString()).isEqualTo("https://api.gravatar.com/v3/me/profile")
+            assertThat(url.toString()).isEqualTo(PROFILE_URL)
             assertThat(method).isEqualTo("GET")
             assertThat(header("Authorization")).isEqualTo("Bearer $TOKEN")
             assertThat(header("Accept")).isEqualTo("application/json")
             assertThat(header("X-Platform")).isEqualTo("Android")
-            assertThat(header("X-SDK-Version")).isNotBlank()
+            assertThat(header("X-SDK-Version")).isEqualTo(GravatarBuildConfig.SDK_VERSION)
             // Left unset on purpose so OkHttp stamps its own, exactly as the SDK's client does
             assertThat(header("User-Agent")).isNull()
         }
@@ -134,6 +165,10 @@ class GravatarEditorTargetResolverTest : BaseUnitTest() {
 
     companion object {
         private const val TOKEN = "a-wpcom-access-token"
+        private const val PROFILE_URL = "https://api.gravatar.com/v3/me/profile"
+        private val BLOCK_PAGE = """
+            <html><body>Access denied</body></html>
+        """.trimIndent()
         private val NGINX_403 = """
             <html>
             <head><title>403 Forbidden</title></head>

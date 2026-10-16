@@ -1,15 +1,16 @@
 package org.wordpress.android.ui.main.utils
 
+import com.gravatar.BuildConfig as GravatarBuildConfig
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.AppLog.T
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
@@ -59,7 +60,11 @@ class GravatarProbeClientFactory @Inject constructor() {
  * swap in the app's shared OkHttp client — that one sends `wp-android/...` as its User-Agent, reuses
  * connections and carries our interceptors, which are exactly the properties the block is suspected
  * of keying on, so it could well succeed while the SDK is still refused. Re-check this against the
- * SDK's `SdkVersionInterceptor` whenever the gravatar version in `libs.versions.toml` moves.
+ * SDK's `SdkVersionInterceptor` whenever the gravatar dependency moves.
+ *
+ * One divergence is deliberate: the probe caps the whole call at [GravatarProbeClientFactory]'s
+ * timeout, where the SDK leaves OkHttp's 10s-per-phase defaults. A refusal that arrives later than
+ * that is missed and we fall open to the sheet, which is the pre-existing behaviour anyway.
  */
 class GravatarEditorTargetResolver @Inject constructor(
     private val clientFactory: GravatarProbeClientFactory,
@@ -67,11 +72,13 @@ class GravatarEditorTargetResolver @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) {
     /**
-     * Returns [GravatarEditorTarget.WEB_EDITOR] only when Gravatar actively refused the request.
-     * Anything we cannot judge — no token, no connectivity, a timeout — falls open to
+     * Returns [GravatarEditorTarget.WEB_EDITOR] only when Gravatar refused the request in a way the
+     * sheet cannot recover from. The question is not "did this fail?" but "can the sheet do anything
+     * useful with this failure?", which is why 401 and 5xx stay on the sheet while 403 and 429 do not.
+     *
+     * Anything we cannot judge — no token, no connectivity, a timeout — also falls open to
      * [GravatarEditorTarget.QUICK_EDITOR] so a flaky network never blocks a working flow. The sheet
-     * has its own "no internet" card and its own recoverable session-expired card for 401, both of
-     * which are better than silently diverting the user to a browser.
+     * has its own "no internet" card, which is better than silently diverting the user to a browser.
      */
     @Suppress("TooGenericExceptionCaught")
     suspend fun resolve(accessToken: String): GravatarEditorTarget = withContext(bgDispatcher) {
@@ -89,16 +96,37 @@ class GravatarEditorTargetResolver @Inject constructor(
         .header("Authorization", "Bearer $accessToken")
         .header("Accept", "application/json")
         .header("X-Platform", "Android")
-        .header("X-SDK-Version", BuildConfig.GRAVATAR_SDK_VERSION)
+        .header("X-SDK-Version", GravatarBuildConfig.SDK_VERSION)
         .build()
 
     private fun Response.toTarget(): GravatarEditorTarget = when {
-        isSuccessful -> GravatarEditorTarget.QUICK_EDITOR
+        // A 2xx the SDK cannot parse strands the user just as a refusal does: its ApiClient only
+        // handles JSON here and throws on anything else, which surfaces as the same "Ooops" card. An
+        // absent Content-Type is fine — the SDK treats that as JSON too.
+        isSuccessful -> if (hasJsonContentType()) {
+            GravatarEditorTarget.QUICK_EDITOR
+        } else {
+            appLogWrapper.w(
+                T.MAIN,
+                "Gravatar: profile probe got an unparseable $code, using the web editor. ${describe()}"
+            )
+            GravatarEditorTarget.WEB_EDITOR
+        }
 
-        // The SDK maps 401 to a recoverable "Session expired" card with a log-in action, which is a
-        // better answer than a browser, so leave that case to the sheet.
+        // The sheet shows its own "Session expired" card for 401. In Bearer mode — what MeFragment
+        // passes — that card only offers Close, so there is no in-app recovery, but a 401 needs a
+        // token Gravatar rejects that the app still believes in, and a dead WP.com token normally
+        // trips the re-auth flow elsewhere first. Narrow enough to leave to the sheet's own messaging.
         code == HTTP_UNAUTHORIZED -> {
             appLogWrapper.d(T.MAIN, "Gravatar: profile probe got 401, letting the editor handle the session")
+            GravatarEditorTarget.QUICK_EDITOR
+        }
+
+        // The SDK maps 5xx to a "couldn't connect to Gravatar servers" card whose Try again actually
+        // re-runs the fetch, so a blip is recoverable in place. Diverting would trade that for a
+        // browser that asks the user to log in to WordPress.com again.
+        code in SERVER_ERRORS -> {
+            appLogWrapper.w(T.MAIN, "Gravatar: profile probe got $code, letting the editor offer its retry")
             GravatarEditorTarget.QUICK_EDITOR
         }
 
@@ -111,6 +139,17 @@ class GravatarEditorTargetResolver @Inject constructor(
         }
     }
 
+    /**
+     * Mirrors the SDK's own check in `ApiClient.responseBody`: an absent Content-Type is parsed as
+     * JSON, and otherwise only `application/...json` is. Deliberately the same shape, including the
+     * lack of trimming, so the probe agrees with the SDK on borderline values.
+     */
+    private fun Response.hasJsonContentType(): Boolean {
+        val mediaType = header("Content-Type")?.substringBefore(";")?.lowercase(Locale.US)
+        return mediaType == null ||
+            (mediaType.startsWith(JSON_TYPE_PREFIX) && mediaType.endsWith(JSON_TYPE_SUFFIX))
+    }
+
     /** Content type plus a short body excerpt — the diagnostic the SDK throws away. */
     private fun Response.describe(): String {
         val contentType = header("Content-Type").orEmpty()
@@ -120,8 +159,11 @@ class GravatarEditorTargetResolver @Inject constructor(
 
     companion object {
         private val WHITESPACE = Regex("\\s+")
+        private val SERVER_ERRORS = 500..599
         private const val PROFILE_URL = "https://api.gravatar.com/v3/me/profile"
         private const val HTTP_UNAUTHORIZED = 401
         private const val MAX_LOGGED_BODY_BYTES = 512L
+        private const val JSON_TYPE_PREFIX = "application/"
+        private const val JSON_TYPE_SUFFIX = "json"
     }
 }
