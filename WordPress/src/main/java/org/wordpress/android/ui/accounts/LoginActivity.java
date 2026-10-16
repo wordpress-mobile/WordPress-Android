@@ -315,13 +315,15 @@ public class LoginActivity extends BaseAppCompatActivity {
             return;
         }
 
-        // The user came back from the WordPress.com Custom Tab without completing the login (no
-        // OAuth callback reached us). This activity shows nothing in that flow, so finish instead
-        // of leaving the user on a blank screen. See CMM-2503.
-        if (mWpcomOAuthTabShown && !hasNewAccessToken()) {
+        // The user came back from the WordPress.com Custom Tab and no OAuth callback reached this
+        // instance. This activity shows nothing in that flow, so finish either way rather than
+        // leaving the user on a blank screen. A token that appeared meanwhile means the login
+        // completed in another instance - e.g. the user moved the page to the browser's own task
+        // with "Open in browser" - and the caller is owed that success. See CMM-2503.
+        if (mWpcomOAuthTabShown) {
             mWpcomOAuthTabLaunched = false;
             mWpcomOAuthTabShown = false;
-            setResult(Activity.RESULT_CANCELED);
+            setResult(hasNewAccessToken() ? Activity.RESULT_OK : Activity.RESULT_CANCELED);
             finish();
         }
     }
