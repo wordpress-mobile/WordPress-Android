@@ -134,10 +134,7 @@
     <dimen name="reader_a8c_avatar_margin_start_new">18dp</dimen>
 
     <dimen name="reader_card_gutters">0dp</dimen>
-    <dimen name="reader_card_elevation">0dp</dimen>
     <dimen name="reader_card_elevation_new">0dp</dimen>
-
-    <dimen name="reader_video_overlay_size">56dp</dimen>
 
     <dimen name="reader_footer_progress_bar_size">48dp</dimen>
 
@@ -188,11 +185,9 @@
     <dimen name="blavatar_sz_extra_large">72dp</dimen>
     <dimen name="my_site_blavatar_sz">56dp</dimen>
 
-    <dimen name="reader_post_header_height">40dp</dimen>
     <dimen name="reader_button_icon">24dp</dimen>
     <dimen name="reader_button_minimum_height">44dp</dimen>
     <dimen name="reader_count_icon">18dp</dimen>
-    <dimen name="reader_more_icon">36dp</dimen>
     <dimen name="reader_follow_icon">24dp</dimen>
     <dimen name="reader_follow_button_min_height">36dp</dimen>
     <dimen name="reader_follow_button_progress_size">24dp</dimen>
@@ -216,18 +211,12 @@
 
     <dimen name="reader_subfilter_empty_content_max_width">440dp</dimen>
 
-    <item name="reader_photo_title_shadow_offset" format="float" type="dimen">3.0</item>
-    <item name="reader_photo_title_shadow_radius" format="float" type="dimen">1.5</item>
-
     <!-- margin to use when indenting comment replies under their parents -->
     <dimen name="reader_comment_indent_per_level">24dp</dimen>
 
     <dimen name="reader_comments_actions_height">24dp</dimen>
     <dimen name="reader_comments_content_line_height">24dp</dimen>
     <dimen name="reader_comments_selected_indicator_width">6dp</dimen>
-
-    <!-- Increased touch targets to make views more accessible -->
-    <dimen name="reader_more_image_extra_padding">12dp</dimen>
 
     <dimen name="reader_chip_radius">8dp</dimen>
     <dimen name="reader_site_header_avatar_padding">1dp</dimen>

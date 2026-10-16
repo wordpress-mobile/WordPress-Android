@@ -32,7 +32,6 @@ import org.wordpress.android.ui.reader.utils.ReaderImageScannerProvider
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
-import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
@@ -120,7 +119,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
             title = buildTitle(post),
             excerpt = buildExcerpt(post),
             featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
-            featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius_new),
             fullVideoUrl = buildFullVideoUrl(post),
             thumbnailStripSection = buildThumbnailStripUrls(post),
             videoOverlayVisibility = buildVideoOverlayVisibility(post),

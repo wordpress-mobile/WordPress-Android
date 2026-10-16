@@ -2,6 +2,7 @@ package org.wordpress.android.modules;
 
 import com.automattic.android.tracks.crashlogging.CrashLogging;
 
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
 import org.wordpress.android.ui.JetpackConnectionResultActivity;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
@@ -102,7 +103,7 @@ import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeAdapte
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeFragment;
 import org.wordpress.android.ui.posts.EditorLauncher;
 import org.wordpress.android.ui.posts.prepublishing.publishsettings.PrepublishingPublishSettingsFragment;
-import org.wordpress.android.ui.utils.AuthenticationUtils;
+import org.wordpress.android.networking.GlideAuthInterceptor;
 import org.wordpress.android.ui.posts.prepublishing.social.PrepublishingSocialFragment;
 import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsFragment;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
@@ -176,9 +177,12 @@ import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.image.getters.WPCustomImageGetter;
 import org.wordpress.android.workers.WordPressWorkersFactory;
 
+import javax.inject.Named;
+
 import dagger.hilt.EntryPoint;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
+import okhttp3.OkHttpClient;
 
 @InstallIn(SingletonComponent.class)
 @EntryPoint
@@ -533,6 +537,9 @@ public interface AppComponent {
     // Provide access to EditorLauncher for static utility classes
     EditorLauncher editorLauncher();
 
-    // Provide access to AuthenticationUtils for Coil image auth
-    AuthenticationUtils authenticationUtils();
+    // Provide access to the image HTTP client and auth interceptor, shared by Glide and Coil
+    @Named(OkHttpClientQualifiers.CUSTOM_SSL_CUSTOM_REDIRECTS)
+    OkHttpClient customSslOkHttpClient();
+
+    GlideAuthInterceptor glideAuthInterceptor();
 }

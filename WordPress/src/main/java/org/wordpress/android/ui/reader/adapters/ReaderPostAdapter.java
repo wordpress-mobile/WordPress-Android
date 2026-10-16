@@ -55,14 +55,12 @@ import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderViewUiState.ReaderTagHeaderUiState;
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState;
-import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.NetworkUtilsWrapper;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
@@ -83,8 +81,6 @@ import kotlinx.coroutines.CoroutineScope;
 
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final ImageManager mImageManager;
-    private final UiHelpers mUiHelpers;
-    private final NetworkUtilsWrapper mNetworkUtilsWrapper;
     private final CoroutineScope mScope;
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
@@ -262,9 +258,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 );
                 return new ReaderRemovedPostViewHolder(postView);
             default:
-                return new ReaderPostNewViewHolder(
-                        mUiHelpers, mImageManager, mReaderTracker, mNetworkUtilsWrapper, parent
-                );
+                return new ReaderPostNewViewHolder(mReaderTracker, parent);
         }
     }
 
@@ -429,7 +423,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (post == null) {
             return;
         }
-        Context ctx = holder.getViewContext();
+        Context ctx = holder.itemView.getContext();
         Function3<Long, Long, ReaderPostCardActionType, Unit> onButtonClicked =
                 (postId, blogId, type) -> {
                     mOnPostListItemButtonListener.onButtonClicked(post, type);
@@ -481,6 +475,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return Unit.INSTANCE;
         };
         Function1<ReaderPostUiState, Unit> onMoreButtonClicked = (uiState) -> {
+            mReaderTracker.track(AnalyticsTracker.Stat.POST_CARD_MORE_TAPPED);
             renderPostNew(position, holder, true);
             return Unit.INSTANCE;
         };
@@ -541,8 +536,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             Context context,
             ReaderPostListType postListType,
             ImageManager imageManager,
-            UiHelpers uiHelpers,
-            @NonNull final NetworkUtilsWrapper networkUtilsWrapper,
             boolean isMainReader,
             LifecycleCoroutineScope scope
     ) {
@@ -551,8 +544,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.mImageManager = imageManager;
         mPostListType = postListType;
         mSource = mReaderTracker.getSource(mPostListType);
-        mUiHelpers = uiHelpers;
-        mNetworkUtilsWrapper = networkUtilsWrapper;
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mIsMainReader = isMainReader;
         mScope = scope;
