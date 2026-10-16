@@ -2,16 +2,9 @@ package org.wordpress.android.ui.reader;
 
 import android.view.View;
 
-import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
-
 public class ReaderInterfaces {
     private ReaderInterfaces() {
         throw new AssertionError();
-    }
-
-    public interface OnPostSelectedListener {
-        void onPostSelected(ReaderPost post);
     }
 
     /*
@@ -37,14 +30,5 @@ public class ReaderInterfaces {
         void onFollowingTapped();
 
         void onFollowTappedWhenLoggedOut();
-    }
-
-    /*
-     * Used by adapters to notify when button on post list item is clicked. This interface was created during
-     * refactoring for the new Discover tab. It isn't ideal but we wanted to re-use some of the legacy code but
-     * refactoring everything was out of scope of the project.
-     */
-    public interface OnPostListItemButtonListener {
-        void onButtonClicked(ReaderPost post, ReaderPostCardActionType actionType);
     }
 }
