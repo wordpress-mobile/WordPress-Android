@@ -6,7 +6,13 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.paging.PagingData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -41,6 +47,17 @@ class PagedListWrapperTest {
     private val mockListDescriptor = mock<ListDescriptor>()
     private val mockRefresh = mock<() -> Unit>()
     private val mockInvalidate = mock<() -> Unit>()
+
+    // PagingData.cachedIn creates a LiveData that needs Dispatchers.Main
+    @Before
+    fun setUp() {
+        Dispatchers.setMain(UnconfinedTestDispatcher())
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
 
     private fun createPagedListWrapper(lifecycle: Lifecycle = mock()) = PagedListWrapper(
             data = MutableLiveData<PagingData<String>>(),
