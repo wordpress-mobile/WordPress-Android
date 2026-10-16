@@ -699,8 +699,9 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
         super.onSaveInstanceState(outState)
     }
 
+    // a detached fragment (e.g. an inactive main tab restored after process death) never creates its view
     private val currentPosition: Int
-        get() = recyclerView.currentPosition
+        get() = if (::recyclerView.isInitialized) recyclerView.currentPosition else -1
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -134,6 +134,7 @@ class ReaderPostListViewModel @Inject constructor(
     private var postsVersion = 0
     private var isLoaded = false
     private var loadJob: Job? = null
+    private var searchJob: Job? = null
     private var gapMarkerIndex = -1
     private var isGapMarkerHidden = false
     private var isGapFilling = false
@@ -576,7 +577,9 @@ class ReaderPostListViewModel @Inject constructor(
     fun onSearchSubmitted(query: String) {
         searchQuery = query
         clearPosts()
-        launch {
+        // a newer search replaces one that hasn't started yet
+        searchJob?.cancel()
+        searchJob = launch {
             // search results are ephemeral, so each search starts from scratch
             repository.deletePostsWithTag(ReaderUtils.getTagForSearchQuery(query))
             reload()
@@ -679,7 +682,12 @@ class ReaderPostListViewModel @Inject constructor(
         get() = listType == ReaderPostListType.TAG_FOLLOWED &&
                 currentTag.let { it != null && (it.isFollowedSites || it.isDefaultInMemoryTag) }
 
-    private fun isCurrentTarget(tag: ReaderTag?) = tag == null || ReaderTag.isSameTag(tag, currentTag)
+    // blog and feed updates don't carry a tag, so they only apply to blog previews
+    private fun isCurrentTarget(tag: ReaderTag?) = if (tag == null) {
+        listType == ReaderPostListType.BLOG_PREVIEW
+    } else {
+        ReaderTag.isSameTag(tag, currentTag)
+    }
 
     private fun searchAction(offset: Int) =
         if (offset == 0) UpdateAction.REQUEST_NEWER else UpdateAction.REQUEST_OLDER
