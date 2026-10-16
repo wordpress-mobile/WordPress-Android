@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagedList
+import androidx.paging.PagingData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -39,21 +39,18 @@ import org.wordpress.android.ui.posts.trackPostListAction
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
-import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ThrottleLiveData
 import org.wordpress.android.viewmodel.ScopedViewModel
-import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.posts.PostListEmptyUiState.RefreshError
-import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.properties.Delegates
 
-typealias PagedPostList = PagedList<PostListItemType>
+typealias PagedPostList = PagingData<PostListItemType>
 
 private const val SEARCH_DELAY_MS = 500L
 private const val SEARCH_PROGRESS_INDICATOR_DELAY_MS = 500L
@@ -86,11 +83,6 @@ class PostListViewModel @Inject constructor(
 
     private var photonWidth by Delegates.notNull<Int>()
     private var photonHeight by Delegates.notNull<Int>()
-
-    private var scrollToLocalPostId: LocalPostId? = null
-
-    private val _scrollToPosition = SingleLiveEvent<Int>()
-    val scrollToPosition: LiveData<Int> = _scrollToPosition
 
     private val dataSource: PostListItemDataSource by lazy {
         PostListItemDataSource(
@@ -170,7 +162,6 @@ class PostListViewModel @Inject constructor(
         _pagedListData.addSource(pagedListWrapper.data) { pagedPostList ->
             pagedPostList?.let {
                 if (isSearchResultDeliverable()) {
-                    onDataUpdated(it)
                     _pagedListData.value = it
                 }
             }
@@ -211,6 +202,7 @@ class PostListViewModel @Inject constructor(
             _emptyViewState.removeSource(it.listError)
             _isFetchingFirstPage.removeSource(it.isFetchingFirstPage)
             _isLoadingMore.removeSource(it.isLoadingMore)
+            it.close()
         }
     }
 
@@ -244,7 +236,7 @@ class PostListViewModel @Inject constructor(
                 postListType = connector.postListType,
                 isNetworkAvailable = networkUtilsWrapper.isNetworkAvailable(),
                 isLoadingData = pagedListWrapper.isFetchingFirstPage.value ?: false ||
-                        pagedListWrapper.data.value == null,
+                        pagedListWrapper.isEmpty.value == null,
                 isListEmpty = pagedListWrapper.isEmpty.value ?: true,
                 isSearchPromptRequired = isEmptySearch(),
                 error = pagedListWrapper.listError.value,
@@ -325,45 +317,10 @@ class PostListViewModel @Inject constructor(
         fetchFirstPage()
     }
 
-    fun scrollToPost(localPostId: LocalPostId) {
-        val data = pagedListData.value
-        if (data != null) {
-            updateScrollPosition(data, localPostId)
-        } else {
-            // store the target post id and scroll there when the data is loaded
-            scrollToLocalPostId = localPostId
-        }
-    }
-
     // Utils
 
     private fun fetchFirstPage() {
         pagedListWrapper?.fetchFirstPage()
-    }
-
-    private fun onDataUpdated(data: PagedPostList) {
-        val localPostId = scrollToLocalPostId
-        if (localPostId != null) {
-            scrollToLocalPostId = null
-            updateScrollPosition(data, localPostId)
-        }
-    }
-
-    private fun updateScrollPosition(data: PagedPostList, localPostId: LocalPostId) {
-        val position = findItemListPosition(data, localPostId)
-        position?.let {
-            _scrollToPosition.value = it
-        } ?: AppLog.e(AppLog.T.POSTS, "ScrollToPost failed - the post not found.")
-    }
-
-    private fun findItemListPosition(data: PagedPostList, localPostId: LocalPostId): Int? {
-        return data.listIterator().withIndex().asSequence().find { listItem ->
-            if (listItem.value is PostListItemUiState) {
-                (listItem.value as PostListItemUiState).data.localPostId == localPostId
-            } else {
-                false
-            }
-        }?.index
     }
 
     private fun transformPostModelToPostListItemUiState(post: PostModel): PostListItemUiState {

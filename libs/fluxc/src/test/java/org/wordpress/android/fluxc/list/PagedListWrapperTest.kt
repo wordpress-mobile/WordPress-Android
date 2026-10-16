@@ -5,7 +5,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.paging.PagedList
+import androidx.paging.PagingData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
@@ -43,7 +43,8 @@ class PagedListWrapperTest {
     private val mockInvalidate = mock<() -> Unit>()
 
     private fun createPagedListWrapper(lifecycle: Lifecycle = mock()) = PagedListWrapper(
-            data = MutableLiveData<PagedList<String>>(),
+            data = MutableLiveData<PagingData<String>>(),
+            isEmpty = MutableLiveData(),
             dispatcher = mockDispatcher,
             listDescriptor = mockListDescriptor,
             lifecycle = lifecycle,
