@@ -774,11 +774,13 @@ class ReaderPostListViewModel @Inject constructor(
             isTagHeaderFollowed = repository.isFollowedTag(tag)
         }
 
+        // build the cards before swapping in the new posts, since the UI can re-render while they're built
+        val newCardStates = buildCardStates(newPosts)
         if (!posts.isSameListWithBookmark(newPosts)) {
             postsVersion++
         }
         posts = newPosts
-        cardStates = buildCardStates(newPosts)
+        cardStates = newCardStates
         isGapMarkerHidden = false
         isGapFilling = false
         requestFailed = false
@@ -852,12 +854,15 @@ class ReaderPostListViewModel @Inject constructor(
         }
 
         val menu = moreMenu
+        val isBookmarksList = isBookmarksList
         posts.forEachIndexed { index, post ->
             val cardState = cardStates.getOrNull(index)
             items.add(
                 when {
                     post.isXpost -> ReaderPostListItem.XPost(post)
-                    cardState == null -> ReaderPostListItem.RemovedPost(post)
+                    isBookmarksList && !post.isBookmarked -> ReaderPostListItem.RemovedPost(post)
+                    // the card hasn't been built yet
+                    cardState == null -> return@forEachIndexed
                     menu != null && menu.first.hasSameIds(post) -> ReaderPostListItem.Post(
                         cardState.copy(moreMenuItems = menu.second),
                         post.stableId
