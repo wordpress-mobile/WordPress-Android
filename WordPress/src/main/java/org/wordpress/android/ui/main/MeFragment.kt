@@ -165,6 +165,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // A configuration change or process death while the Custom Tab is in front builds a new fragment,
+        // so without this the diversion would be forgotten and the avatar left stale (CMM-1100)
+        openedWebGravatarEditor = savedInstanceState?.getBoolean(OPENED_WEB_GRAVATAR_EDITOR) == true
         (requireActivity().application as WordPress).component().inject(this)
         val appContext = requireContext().applicationContext
         quickEditorReady = lifecycleScope.async(Dispatchers.IO) {
@@ -515,6 +518,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         if (disconnectProgressDialog != null) {
             outState.putBoolean(IS_DISCONNECTING, true)
         }
+        if (openedWebGravatarEditor) {
+            outState.putBoolean(OPENED_WEB_GRAVATAR_EDITOR, true)
+        }
         super.onSaveInstanceState(outState)
     }
 
@@ -708,6 +714,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     companion object {
         private const val IS_DISCONNECTING = "IS_DISCONNECTING"
+        private const val OPENED_WEB_GRAVATAR_EDITOR = "OPENED_WEB_GRAVATAR_EDITOR"
         private const val GRAVATAR_URL = "https://www.gravatar.com"
 
         // Opened in a Custom Tab, so it uses the browser's own session. gravatar.com bounces
