@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -35,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -242,34 +242,44 @@ private fun SecondaryText(text: String, modifier: Modifier = Modifier) {
 private fun ActionRow(uiState: ReaderPostUiState) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(Margin.ExtraLarge.value),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        ActionButton(
-            uiState = uiState,
-            action = uiState.reblogAction,
-            labelRes = R.string.reader_view_reblog,
-            iconRes = R.drawable.ic_reblog_new_24dp,
-        )
-        ActionButton(
-            uiState = uiState,
-            action = uiState.commentsAction,
-            labelRes = R.string.comment,
-            iconRes = R.drawable.ic_comment_outline_new_24dp,
-        )
-        ActionButton(
-            uiState = uiState,
-            action = uiState.likeAction,
-            labelRes = R.string.like,
-            iconRes = if (uiState.likeAction.isSelected) {
-                R.drawable.ic_like_fill_new_24dp
-            } else {
-                R.drawable.ic_like_outline_new_24dp
-            },
-            // Only Like is capped, as in the View-based card
-            modifier = Modifier.widthIn(max = ACTION_MAX_WIDTH_DP.dp),
-        )
-        Spacer(Modifier.weight(1f))
+        // The buttons share the weighted space, so the more button keeps its width and long labels
+        // ellipsize instead of squeezing it out, as the View-based card's end constraint did
+        Row(
+            modifier = Modifier.weight(1f),
+            horizontalArrangement = Arrangement.spacedBy(Margin.ExtraLarge.value),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            ActionButton(
+                uiState = uiState,
+                action = uiState.reblogAction,
+                labelRes = R.string.reader_view_reblog,
+                iconRes = R.drawable.ic_reblog_new_24dp,
+                modifier = Modifier.weight(1f, fill = false),
+            )
+            ActionButton(
+                uiState = uiState,
+                action = uiState.commentsAction,
+                labelRes = R.string.comment,
+                iconRes = R.drawable.ic_comment_outline_new_24dp,
+                modifier = Modifier.weight(1f, fill = false),
+            )
+            ActionButton(
+                uiState = uiState,
+                action = uiState.likeAction,
+                labelRes = R.string.like,
+                iconRes = if (uiState.likeAction.isSelected) {
+                    R.drawable.ic_like_fill_new_24dp
+                } else {
+                    R.drawable.ic_like_outline_new_24dp
+                },
+                // Only Like is capped, as in the View-based card
+                modifier = Modifier
+                    .weight(1f, fill = false)
+                    .widthIn(max = ACTION_MAX_WIDTH_DP.dp),
+            )
+        }
         if (uiState.moreMenuVisibility) {
             MoreMenu(uiState)
         }
@@ -295,7 +305,11 @@ private fun ActionButton(
         modifier = modifier
             .heightIn(min = 40.dp)
             .clickable { action.onClicked?.invoke(uiState.postId, uiState.blogId, action.type) }
-            .semantics { description?.let { contentDescription = it } },
+            .semantics {
+                description?.let { contentDescription = it }
+                // TalkBack announces "selected" for a liked post, as it did for the View-based card
+                selected = action.isSelected
+            },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(painter = painterResource(iconRes), contentDescription = null, tint = color)
