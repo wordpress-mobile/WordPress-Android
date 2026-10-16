@@ -90,7 +90,6 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowRepor
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportUser
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModelProvider.Companion.getSubFilterViewModelForTag
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
@@ -282,11 +281,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
             ReaderPostListType::class.java
         ) ?: ReaderTypes.DEFAULT_POST_LIST_TYPE
 
-        @Suppress("UNCHECKED_CAST")
-        val updateActions = savedInstanceState?.let {
-            BundleCompat.getSerializable(it, ReaderConstants.KEY_CURRENT_UPDATE_ACTIONS, HashSet::class.java)
-        } as? HashSet<UpdateAction>
-
         return ReaderPostListArgs(
             listType = listType,
             tag = BundleCompat.getSerializable(state, ReaderConstants.ARG_TAG, ReaderTag::class.java),
@@ -299,7 +293,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
             tagHistory = savedInstanceState?.getStringArrayList(KEY_TAG_PREVIEW_HISTORY).orEmpty(),
             hasRequestedPosts = savedInstanceState?.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED) ?: false,
             hasUpdatedPosts = savedInstanceState?.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED) ?: false,
-            updateActions = updateActions.orEmpty(),
             restorePosition = savedInstanceState?.getInt(ReaderConstants.KEY_RESTORE_POSITION) ?: 0
         )
     }
@@ -686,7 +679,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, wasPaused)
         outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, args.hasRequestedPosts)
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, args.hasUpdatedPosts)
-        outState.putSerializable(ReaderConstants.KEY_CURRENT_UPDATE_ACTIONS, HashSet(args.updateActions))
         outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, args.restorePosition)
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, args.listType)
         outState.putBoolean(ReaderConstants.ARG_IS_TOP_LEVEL, isTopLevel)

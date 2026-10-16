@@ -138,6 +138,7 @@ class ReaderPostListViewModel @Inject constructor(
     private var isGapMarkerHidden = false
     private var isGapFilling = false
     private var isTagHeaderFollowed = false
+    private var isTagFollowInFlight = false
     private var moreMenu: Pair<ReaderPost, List<ReaderPostCardAction>>? = null
     private val renderedIds = HashSet<String>()
 
@@ -212,7 +213,6 @@ class ReaderPostListViewModel @Inject constructor(
         }
         hasRequestedPosts = args.hasRequestedPosts
         hasUpdatedPosts = args.hasUpdatedPosts
-        updateActions.addAll(args.updateActions)
         restorePosition = args.restorePosition
         updateSource()
 
@@ -274,7 +274,6 @@ class ReaderPostListViewModel @Inject constructor(
         tagHistory = tagHistory.toList(),
         hasRequestedPosts = hasRequestedPosts,
         hasUpdatedPosts = hasUpdatedPosts,
-        updateActions = updateActions.toSet(),
         restorePosition = restorePosition
     )
 
@@ -460,11 +459,14 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     fun onTagHeaderFollowClicked() {
-        val tag = currentTag ?: return
+        val tag = currentTag
+        if (tag == null || isTagFollowInFlight) return
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             sendUiEvent(ReaderPostListUiEvent.NoConnection)
             return
         }
+        isTagFollowInFlight = true
+        updateUiState()
         launch {
             val isFollowRequest = !repository.isFollowedTag(tag)
             if (accountStore.hasAccessToken()) {
@@ -483,6 +485,7 @@ class ReaderPostListViewModel @Inject constructor(
                 sendUiEvent(ReaderPostListUiEvent.TagFollowFailed(isFollowRequest))
             }
             isTagHeaderFollowed = repository.isFollowedTag(tag)
+            isTagFollowInFlight = false
             updateUiState()
         }
     }
@@ -766,7 +769,7 @@ class ReaderPostListViewModel @Inject constructor(
     private suspend fun loadPosts() {
         val target = currentTarget()
         val newPosts = target?.let { repository.getPosts(it) } ?: ReaderPostList()
-        loadListDetails(newPosts)
+        val newGapMarkerIndex = loadListDetails(newPosts)
 
         // build the cards before swapping in the new posts, since the UI can re-render while they're built
         val newCardStates = buildCardStates(newPosts)
@@ -775,6 +778,7 @@ class ReaderPostListViewModel @Inject constructor(
         }
         posts = newPosts
         cardStates = newCardStates
+        gapMarkerIndex = newGapMarkerIndex
         isGapMarkerHidden = false
         isGapFilling = false
         requestFailed = false
@@ -786,18 +790,19 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     /*
-     * Loads what the list shows besides the posts: the gap marker, whether the user follows any sites
-     * (for the empty state) and whether the previewed tag is followed (for the header)
+     * Loads what the list shows besides the posts: whether the user follows any sites (for the empty
+     * state) and whether the previewed tag is followed (for the header). Returns the gap marker's index,
+     * which is only applied once the new posts are swapped in.
      */
-    private suspend fun loadListDetails(newPosts: ReaderPostList) {
+    private suspend fun loadListDetails(newPosts: ReaderPostList): Int {
         val tag = currentTag
-        gapMarkerIndex = if (listType.isTagType && tag != null) getGapMarkerIndex(tag, newPosts) else -1
         if (isFollowedSitesList) {
             hasFollowedBlogs = repository.hasFollowedBlogs()
         }
-        if (listType == ReaderPostListType.TAG_PREVIEW && tag != null) {
+        if (listType == ReaderPostListType.TAG_PREVIEW && tag != null && !isTagFollowInFlight) {
             isTagHeaderFollowed = repository.isFollowedTag(tag)
         }
+        return if (listType.isTagType && tag != null) getGapMarkerIndex(tag, newPosts) else -1
     }
 
     private fun applyPendingScroll() {
@@ -862,7 +867,7 @@ class ReaderPostListViewModel @Inject constructor(
                 items.add(ReaderPostListItem.SiteHeader(blogId, feedId, postsVersion))
             }
         } else if (listType == ReaderPostListType.TAG_PREVIEW && tag != null && posts.isNotEmpty()) {
-            items.add(ReaderPostListItem.TagHeader(tag.label, isTagHeaderFollowed))
+            items.add(ReaderPostListItem.TagHeader(tag.label, isTagHeaderFollowed, isTagFollowInFlight))
         }
 
         val menu = moreMenu
@@ -946,7 +951,14 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     private fun sendUiEvent(event: ReaderPostListUiEvent) {
-        _uiEvents.trySend(event)
+        // these only update what's on screen, so don't queue them up while the fragment is stopped - the
+        // old fragment didn't receive them then either, and it reloads when it comes back
+        val isViewOnlyEvent = event is ReaderPostListUiEvent.DataLoaded ||
+                event is ReaderPostListUiEvent.SearchStarted ||
+                event is ReaderPostListUiEvent.SearchEnded
+        if (isViewStarted || !isViewOnlyEvent) {
+            _uiEvents.trySend(event)
+        }
     }
 
     private fun findPost(blogId: Long, postId: Long) =

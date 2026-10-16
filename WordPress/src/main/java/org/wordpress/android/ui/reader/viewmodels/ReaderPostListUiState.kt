@@ -5,7 +5,6 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction
 
 /**
  * Everything the post list needs to start, and everything it saves to survive process death
@@ -22,7 +21,6 @@ data class ReaderPostListArgs(
     val tagHistory: List<String> = emptyList(),
     val hasRequestedPosts: Boolean = false,
     val hasUpdatedPosts: Boolean = false,
-    val updateActions: Set<UpdateAction> = emptySet(),
     val restorePosition: Int = 0
 )
 
@@ -47,7 +45,11 @@ sealed class ReaderPostListItem {
         override val stableId = ITEM_ID_HEADER
     }
 
-    data class TagHeader(val label: String, val isFollowed: Boolean) : ReaderPostListItem() {
+    data class TagHeader(
+        val label: String,
+        val isFollowed: Boolean,
+        val isFollowActionRunning: Boolean = false
+    ) : ReaderPostListItem() {
         override val stableId = ITEM_ID_HEADER
     }
 

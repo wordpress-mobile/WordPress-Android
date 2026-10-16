@@ -6,14 +6,13 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
+import org.wordpress.android.databinding.ReaderCardviewRemovedPostBinding
+import org.wordpress.android.databinding.ReaderCardviewXpostBinding
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostNewViewHolder
@@ -79,9 +78,9 @@ class ReaderPostListAdapter(
             VIEW_TYPE_GAP_MARKER -> GapMarkerViewHolder(ReaderGapMarkerView(context).apply {
                 setOnFillClickListener { listener.onGapMarkerClicked() }
             })
-            VIEW_TYPE_XPOST -> XPostViewHolder(inflater.inflate(R.layout.reader_cardview_xpost, parent, false))
+            VIEW_TYPE_XPOST -> XPostViewHolder(ReaderCardviewXpostBinding.inflate(inflater, parent, false))
             VIEW_TYPE_REMOVED_POST -> RemovedPostViewHolder(
-                inflater.inflate(R.layout.reader_cardview_removed_post, parent, false)
+                ReaderCardviewRemovedPostBinding.inflate(inflater, parent, false)
             )
             else -> ReaderPostNewViewHolder(readerTracker, parent)
         }
@@ -103,33 +102,37 @@ class ReaderPostListAdapter(
         }
     }
 
-    private inner class XPostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val avatar: ImageView = itemView.findViewById(R.id.image_avatar)
-        private val blavatar: ImageView = itemView.findViewById(R.id.image_blavatar)
-        private val title: TextView = itemView.findViewById(R.id.text_title)
-        private val subtitle: TextView = itemView.findViewById(R.id.text_subtitle)
+    private inner class XPostViewHolder(
+        private val binding: ReaderCardviewXpostBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
         private val avatarSize = itemView.resources.getDimensionPixelSize(R.dimen.avatar_sz_small)
+        private var post: ReaderPost? = null
 
-        fun bind(post: ReaderPost) {
+        init {
+            binding.postContainer.setOnClickListener { post?.let { listener.onXPostClicked(it) } }
+        }
+
+        fun bind(post: ReaderPost) = with(binding) {
+            this@XPostViewHolder.post = post
             imageManager.loadIntoCircle(
-                avatar,
+                imageAvatar,
                 ImageType.AVATAR_WITH_BACKGROUND,
                 WPAvatarUtils.rewriteAvatarUrl(post.postAvatar, avatarSize)
             )
             imageManager.loadIntoCircle(
-                blavatar,
+                imageBlavatar,
                 SiteUtils.getSiteImageType(post.isP2orA8C, BlavatarShape.CIRCULAR),
                 WPAvatarUtils.rewriteAvatarUrl(post.blogImageUrl, avatarSize)
             )
-            title.text = ReaderXPostUtils.getXPostTitle(post)
-            subtitle.text = ReaderXPostUtils.getXPostSubtitleHtml(post)
-            itemView.findViewById<View>(R.id.post_container).setOnClickListener { listener.onXPostClicked(post) }
+            textTitle.text = ReaderXPostUtils.getXPostTitle(post)
+            textSubtitle.text = ReaderXPostUtils.getXPostSubtitleHtml(post)
         }
     }
 
-    private inner class RemovedPostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val title: TextView = itemView.findViewById(R.id.removed_post_title)
-        private val undo: TextView = itemView.findViewById(R.id.undo_remove)
+    private inner class RemovedPostViewHolder(
+        private val binding: ReaderCardviewRemovedPostBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+        private var post: ReaderPost? = null
 
         init {
             val context = itemView.context
@@ -138,18 +141,17 @@ class ReaderPostListAdapter(
                 R.drawable.ic_undo_white_24dp,
                 context.getColorResIdFromAttribute(androidx.appcompat.R.attr.colorPrimary)
             )
-            undo.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+            binding.undoRemove.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+            binding.postContainer.setOnClickListener { post?.let { listener.onRemovedPostClicked(it) } }
         }
 
         fun bind(post: ReaderPost) {
+            this.post = post
             // "Removed [post title]" with the title in bold
             val removed = itemView.context.getString(R.string.removed)
             val text = "$removed ${post.title}"
-            title.text = SpannableStringBuilder(text).apply {
+            binding.removedPostTitle.text = SpannableStringBuilder(text).apply {
                 setSpan(StyleSpan(Typeface.BOLD), removed.length, text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            }
-            itemView.findViewById<View>(R.id.post_container).setOnClickListener {
-                listener.onRemovedPostClicked(post)
             }
         }
     }
@@ -169,7 +171,8 @@ class ReaderPostListAdapter(
                     title = item.label,
                     followButtonUiState = FollowButtonUiState(
                         onFollowButtonClicked = { listener.onTagHeaderFollowClicked() },
-                        isFollowed = item.isFollowed
+                        isFollowed = item.isFollowed,
+                        isFollowActionRunning = item.isFollowActionRunning
                     )
                 )
             )
