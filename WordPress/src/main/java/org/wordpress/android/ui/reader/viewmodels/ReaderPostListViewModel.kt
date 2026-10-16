@@ -939,7 +939,6 @@ class ReaderPostListViewModel @Inject constructor(
             isRefreshing = isPullRefreshing || (updateActions.isNotEmpty() && !isOnlyLoadingOlder),
             isLoadingMore = isOnlyLoadingOlder,
             isUpdating = updateActions.isNotEmpty(),
-            canLoadMore = posts.size < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY,
             newPostsBarVisible = isNewPostsBarVisible,
             emptyState = emptyState,
             scrollToPosition = scrollToPosition

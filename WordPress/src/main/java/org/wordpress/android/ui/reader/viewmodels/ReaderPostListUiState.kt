@@ -31,7 +31,6 @@ data class ReaderPostListUiState(
     val isRefreshing: Boolean = false,
     val isLoadingMore: Boolean = false,
     val isUpdating: Boolean = false,
-    val canLoadMore: Boolean = false,
     val newPostsBarVisible: Boolean = false,
     val emptyState: ReaderPostListEmptyState? = null,
     val scrollToPosition: Int? = null

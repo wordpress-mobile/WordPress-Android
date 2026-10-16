@@ -47,7 +47,6 @@ public class FilteredRecyclerView extends RelativeLayout {
     private FilterListener mFilterListener;
     private RecyclerView.Adapter<RecyclerView.ViewHolder> mAdapter;
 
-    private boolean mShowEmptyView;
     private boolean mToolbarDisableScrollGestures = false;
 
     public FilteredRecyclerView(Context context) {
@@ -95,10 +94,6 @@ public class FilteredRecyclerView extends RelativeLayout {
 
     public void setSwipeToRefreshEnabled(boolean enable) {
         mSwipeToRefreshHelper.setEnabled(enable);
-    }
-
-    public void setCustomEmptyView() {
-        mShowEmptyView = true;
     }
 
     private void init(@NonNull Context context, @Nullable AttributeSet attrs) {
@@ -159,7 +154,7 @@ public class FilteredRecyclerView extends RelativeLayout {
                             public void run() {
                                 if (!NetworkUtils.checkConnection(getContext())) {
                                     mSwipeToRefreshHelper.setRefreshing(false);
-                                    updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+                                    showEmptyViewIfEmpty();
                                     return;
                                 }
                                 if (mFilterListener != null) {
@@ -184,26 +179,14 @@ public class FilteredRecyclerView extends RelativeLayout {
         }
     }
 
-    public void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
+    /*
+     * shows the default "empty list" message when there's nothing in the list
+     */
+    private void showEmptyViewIfEmpty() {
         if (mEmptyView == null) return;
 
-        if (!hasAdapter() || mAdapter.getItemCount() == 0) {
-            if (mFilterListener != null) {
-                if (mShowEmptyView) {
-                    String msg = mFilterListener.onShowEmptyViewMessage(emptyViewMessageType);
-                    if (msg == null || msg.isEmpty()) {
-                        msg = getContext().getString(R.string.empty_list_default);
-                    }
-                    mEmptyView.setText(msg);
-                    mEmptyView.setVisibility(View.VISIBLE);
-                } else {
-                    mEmptyView.setVisibility(View.GONE);
-                    mFilterListener.onShowCustomEmptyView(emptyViewMessageType);
-                }
-            }
-        } else {
-            mEmptyView.setVisibility(View.GONE);
-        }
+        boolean isEmpty = !hasAdapter() || mAdapter.getItemCount() == 0;
+        mEmptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -352,24 +335,5 @@ public class FilteredRecyclerView extends RelativeLayout {
          * Called when the user pulls to refresh, after the connection check passes.
          */
         void onLoadData(boolean forced);
-
-        /**
-         * Called when there's no data to show.
-         *
-         * @param emptyViewMsgType this will hint you on the reason why no data is being shown, so you can return
-         *                         a proper message to be displayed to the user
-         * @return the message to be displayed to the user, or null if using a Custom Empty View (see below)
-         */
-        String onShowEmptyViewMessage(EmptyViewMessageType emptyViewMsgType);
-
-        /**
-         * Called when there's no data to show, and only if a custom EmptyView is set (onShowEmptyViewMessage will
-         * be called otherwise).
-         *
-         * @param emptyViewMsgType this will hint you on the reason why no data is being shown, and
-         *                         also here you should perform any actions on your custom empty view
-         * @return nothing
-         */
-        void onShowCustomEmptyView(EmptyViewMessageType emptyViewMsgType);
     }
 }

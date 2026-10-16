@@ -53,8 +53,6 @@ class ReaderPostListAdapter(
         fun onGapMarkerClicked()
     }
 
-    private val onTagHeaderFollowClicked: () -> Unit = { listener.onTagHeaderFollowClicked() }
-
     init {
         setHasStableIds(true)
     }
@@ -170,7 +168,7 @@ class ReaderPostListAdapter(
                 ReaderTagHeaderUiState(
                     title = item.label,
                     followButtonUiState = FollowButtonUiState(
-                        onFollowButtonClicked = onTagHeaderFollowClicked,
+                        onFollowButtonClicked = { listener.onTagHeaderFollowClicked() },
                         isFollowed = item.isFollowed
                     )
                 )

@@ -62,7 +62,6 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.networking.NetworkConnectionMonitor
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.EmptyViewMessageType
 import org.wordpress.android.ui.FilteredRecyclerView
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ViewPagerFragment
@@ -742,8 +741,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
     }
 
     private fun setupRecycler() {
-        recyclerView.setCustomEmptyView()
-
         recyclerView.setBackgroundColor(
             ContextCompat.getColor(
                 requireContext(), R.color.reader_post_list_background
@@ -800,22 +797,12 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
     }
 
     private fun setupRecyclerFilterListener() {
-        recyclerView.setFilterListener(object : FilteredRecyclerView.FilterListener {
-            override fun onLoadData(forced: Boolean) {
-                if (forced) {
-                    readerTracker.track(AnalyticsTracker.Stat.READER_PULL_TO_REFRESH)
-                }
-                postListViewModel.onPullToRefresh()
+        recyclerView.setFilterListener { forced ->
+            if (forced) {
+                readerTracker.track(AnalyticsTracker.Stat.READER_PULL_TO_REFRESH)
             }
-
-            override fun onShowEmptyViewMessage(emptyViewMsgType: EmptyViewMessageType): String? {
-                return null
-            }
-
-            override fun onShowCustomEmptyView(emptyViewMsgType: EmptyViewMessageType) {
-                // never called: setCustomEmptyView() makes FilteredRecyclerView use its own empty view
-            }
-        })
+            postListViewModel.onPullToRefresh()
+        }
     }
 
     /*
