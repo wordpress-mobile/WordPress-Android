@@ -657,9 +657,6 @@ Language: cs_CZ
     <string name="notifications_action_mark_all_as_read">Označit vše jako přečtené</string>
     <string name="notifications_unread_content_description">Nepřečtené</string>
     <string name="qrcode_media_deeplink_error">Web nenalezen. Zkontrolujte, zda jste přihlášeni ke správnému účtu.</string>
-    <string name="gravatar_info_learn_more_link">Co je Gravatar?</string>
-    <string name="gravatar_info_description">Aktualizace avatara, jména a informací o sobě se projeví i na všech webech, které používají profily Gravatar.</string>
-    <string name="gravatar_info_title">Váš profil WordPress.com je provozován Gravatarem</string>
     <string name="error_media_could_not_share_media_from_device">Nelze načíst média pro sdílení. Zkontrolujte oprávnění aplikace\n     nebo použijte knihovnu médií aplikace.</string>
     <string name="site_monitoring_cannot_be_started">V současné době nemůžeme spustit monitorování webu. Zkuste to prosím později</string>
     <string name="site_monitoring_tab_title_web_server_logs">Protokoly webového serveru</string>

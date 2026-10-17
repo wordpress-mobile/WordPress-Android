@@ -657,9 +657,6 @@ Language: ru
     <string name="notifications_action_mark_all_as_read">Отметить все как прочитанные</string>
     <string name="notifications_unread_content_description">Не прочитано</string>
     <string name="qrcode_media_deeplink_error">Сайт не найден. Убедитесь в том, что выполнили вход в нужную учётную запись.</string>
-    <string name="gravatar_info_learn_more_link">Что такое Gravatar?</string>
-    <string name="gravatar_info_description">Если вы обновите свой аватар, имя пользователя и личные данные на этом сайте, всё это будет автоматически обновлено на других сайтах, где используются профили Gravatar.</string>
-    <string name="gravatar_info_title">Ваш профиль WordPress.com создан при поддержке Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">Не удалось загрузить медиафайл для публикации в соцсетях. Проверьте разрешения приложения\n        или воспользуйтесь библиотекой файлов приложения.</string>
     <string name="site_monitoring_cannot_be_started">Не удалось открыть страницу мониторинга сайтов. Повторите попытку позже</string>
     <string name="site_monitoring_tab_title_web_server_logs">Журналы веб-сервера</string>

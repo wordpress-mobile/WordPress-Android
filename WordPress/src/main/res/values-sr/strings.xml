@@ -657,9 +657,6 @@ Language: sr_RS
     <string name="notifications_unread_content_description">Непрочитано</string>
     <string name="notifications_action_mark_all_as_read">Означи све као прочитано</string>
     <string name="qrcode_media_deeplink_error">Сајт није пронађен. Проверите да ли сте пријављени на исправан налог.</string>
-    <string name="gravatar_info_learn_more_link">Шта је Граватар?</string>
-    <string name="gravatar_info_description">Ажурирање аватара, имена и података о себи овде ажурираће их и на свим сајтовима који користе Граватар профиле.</string>
-    <string name="gravatar_info_title">Ваш WordPress.com профил покреће Граватар</string>
     <string name="error_media_could_not_share_media_from_device">Није могуће учитати медије за дељење. Проверите дозволе апликације\n        или користите библиотеку медија апликације.</string>
     <string name="site_monitoring_cannot_be_started">Тренутно не можемо да отворимо надзор сајта. Покушајте поново касније</string>
     <string name="site_monitoring_tab_title_php_logs">PHP дневници</string>
