@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.repository.usecases
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -15,13 +16,15 @@ class UndoBlockBlogUseCase @Inject constructor(
 ) {
     suspend fun undoBlockBlog(
         blockedBlogData: BlockedBlogResult,
-        source: String
+        source: String,
+        actionListener: ReaderActions.ActionListener? = null
     ) {
         withContext(bgDispatcher) {
             ReaderBlogActions.undoBlockBlogFromReader(
                 blockedBlogData,
                 source,
-                readerTracker
+                readerTracker,
+                actionListener
             )
         }
     }
