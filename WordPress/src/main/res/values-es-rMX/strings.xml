@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-09 14:16:24+0000
+Translation-Revision-Date: 2026-10-13 21:00:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: es_MX
@@ -8,6 +8,7 @@ Language: es_MX
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="support_screen_unified_support_title">Obtener ayuda</string>
     <string name="page_rs_copy_url">Copiar URL</string>
+    <string name="unified_support_conversations_title">Obtener ayuda</string>
     <string name="feedback_form_add_attachments">Añadir adjuntos</string>
     <string name="feedback_form_attachment_already_added">Adjunto ya añadido</string>
     <string name="feedback_form_title">Retroalimentación</string>
