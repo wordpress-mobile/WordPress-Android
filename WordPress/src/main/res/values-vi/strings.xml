@@ -166,11 +166,6 @@ Language: vi_VN
     <string name="adding_cat">Thêm chuyên mục</string>
     <string name="notification_channel_weekly_roundup_title">Tóm Tắt Tuần</string>
     <string name="my_site_dashboard_tab_title">Tổng quan</string>
-    <string name="login_select_email_client">Bạn dùng ứng dụng email nào?</string>
-    <string name="login_error_xml_rpc_auth_error_communicating">Xảy ra lỗi khi giao tiếp với blog. Mã lỗi HTTP 401.</string>
-    <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC bị chặn trên blog này (mã lỗi 401). Nếu tiếp tục đăng nhập thất bại, nhấn biểu tượng trợ giúp để xem câu hỏi thường gặp.</string>
-    <string name="login_error_xml_rpc_cannot_read_site">Không thể đọc blog WordPress trên URL này. Nhấn biểu tượng trợ giúp để xem câu hỏi thường gặp.</string>
-    <string name="login_error_xml_rpc_services_disabled">Dịch vụ XML-RPC bị chặn trên blog này.</string>
     <string name="my_site_menu_tab_title">Menu</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Tên miền WordPress.com không chứa những ký tự này. Chỉ có chữ và số được cho phép.</string>
     <string name="my_site_todays_stat_card_title">Thống kê hôm nay</string>
@@ -407,11 +402,6 @@ Language: vi_VN
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Nhập thông tin đăng nhập máy chủ của bạn&lt;/a&gt; để khắc phục các mối đe dọa.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Nhập thông tin đăng nhập máy chủ của bạn&lt;/a&gt; để khắc phục mối đe dọa.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nhấn hai lần để chèn liên kết</string>
-    <string name="login_empty_view_try_another_account">Thử một tài khoản khác</string>
-    <string name="login_empty_view_see_instructions">Xem hướng dẫn</string>
-    <string name="login_no_jetpack_sites_error_message">Nếu bạn đã có sẵn một trang, bạn cần cài đặt plugin Jetpack miễn phí và kết nối nó với tài khoản WordPress.com của bạn.</string>
-    <string name="login_empty_view_avatar_content_description">Ảnh hồ sơ của bạn</string>
-    <string name="login_not_a_jetpack_site">Để sử dụng ứng dụng cho %1$s, bạn cần cài đặt Jetpack và kết nối nó với tài khoản WordPress.com.</string>
     <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Thiết lập Chiều Rộng</string>
     <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tùy chỉnh cột</string>
     <string name="user_profile_untitled_site">(Không tựa)</string>
@@ -439,7 +429,6 @@ Language: vi_VN
     <string name="gutenberg_native_column_d" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Cột %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Mô tả ngắn gọn các liên kết để độc giả hiểu.</string>
     <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Thêm khối</string>
-    <string name="login_no_jetpack_sites">Không tìm thấy blog có Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alt text là gì?</string>
     <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Chuyển %s thành</string>
     <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Biến đổi khối</string>
@@ -486,7 +475,6 @@ Language: vi_VN
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nhấn hai lần để mở Menu Hành Động, sau đó sửa, thay thế hoặc xóa hình ảnh</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="new_site_creation_search_domain_input_hint">Nhận tên blog của bạn</string>
-    <string name="magic_link_not_meaning_to_create_account">Không muốn tạo tài khoản mới? Quay lại và nhập địa chỉ email khác.</string>
     <string name="invite_links_disable_dialog_message">Nếu thư mời này bị vô hiệu hóa, mọi người sẽ không thể dùng để tham gia nhóm của bạn nữa. Bạn chắc chứ?</string>
     <string name="invite_links_disable_dialog_title">Vô hiệu hóa thư mời</string>
     <string name="invite_links_bad_format_response">Phản hồi đã nhận không hợp lệ</string>
@@ -747,8 +735,6 @@ Language: vi_VN
     <string name="hpp_retry_error">Kiểm tra kết nối mạng và thử lại.</string>
     <string name="hpp_error_subtitle">Nhấn thử lại khi có mạng trở lại.</string>
     <string name="hpp_error_title">Không dùng được bố cục khi rớt mạng</string>
-    <string name="continue_site_credentials">Tiếp tục với định giá đã lưu</string>
-    <string name="login_find_your_connected_email">Tìm email đã kết nối</string>
     <string name="reader_discover_no_posts_title">Không có bài viết mới</string>
     <string name="reader_discover_empty_title">Chào mừng!</string>
     <string name="scan">Quét</string>
@@ -787,8 +773,6 @@ Language: vi_VN
     <string name="suggestion_no_connection">Không có kết nối mạng.\nKhông thể tải đề xuất.</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">Đã chọn %s</string>
-    <string name="login_get_link_by_email">Đăng nhập bằng email</string>
-    <string name="email_not_registered_wpcom">Hmm, chúng tôi không tìm thấy tài khoản WordPress.com kết nối với địa chỉ email này.</string>
     <string name="comment_unable_to_show_error">Không thể hiện bình luận này</string>
     <string name="media_browse_for_items">Duyệt qua</string>
     <string name="permission_microphone">Micrô</string>
@@ -824,26 +808,7 @@ Language: vi_VN
     <string name="gutenberg_native_choose_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Chọn ảnh hoặc video</string>
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Chọn ảnh</string>
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Đã xóa khối</string>
-    <string name="signup_confirmation_title">Xác nhận đăng ký</string>
-    <string name="continue_with_google_terms_of_service_text">Nếu bạn tiếp tục với Google mà chưa có tài khoản WordPress.com, bạn sẽ được tạo một tài khoản và đồng ý %1$sĐiều khoản dịch vụ%2$s.</string>
     <string name="enter_your_site_address">Dùng địa chỉ blog có sẵn</string>
-    <string name="continue_terms_of_service_text">Tiếp tục nghĩa là bạn đồng ý %1$sĐiều khoản dịch vụ%2$s.</string>
-    <string name="signup_confirmation_message">Chúng tôi sẽ sử dụng địa chỉ email này để tạo tài khoản WordPress mới cho bạn.</string>
-    <string name="signup_magic_link_message">Chúng tôi đã gửi email cho bạn một liên kết để tạo tài khoản WordPress.com mới. Kiểm tra email trên thiết bị này, và nhấn vào liên kết trong thư.</string>
-    <string name="enter_account_info_for_site">Nhập thông tin tài khoản %1$s.</string>
-    <string name="login_or">hoặc</string>
-    <string name="continue_google_button_suffix">Tiếp tục với Google</string>
-    <string name="login_done">Xong</string>
-    <string name="magic_link_not_seeing_email_message">Không thấy email? Kiểm tra mục Spam hoặc Thư Rác.</string>
-    <string name="login_magic_links_sent_label">Kiểm tra email trên thiết bị này và nhấn vào liên kết trong email được gửi từ WordPress.com.</string>
-    <string name="login_magic_links_label">Chúng tôi đã gửi cho bạn liên kết đăng nhập trực tiếp, không cần mật khẩu.</string>
-    <string name="login_find_your_site_adress">Tìm địa chỉ blog của bạn</string>
-    <string name="check_email">Kiểm tra email</string>
-    <string name="enter_email_to_continue_wordpress_com">Nhập địa chỉ email để đăng nhập hoặc tạo tài khoản WordPress.com.</string>
-    <string name="or_type_your_password">Nhập mật khẩu</string>
-    <string name="create_account">Tạo tài khoản</string>
-    <string name="send_link_by_email">Gửi liên kết qua email</string>
-    <string name="reset_your_password">Đổi mật khẩu</string>
     <string name="get_started" a8c-src-lib="module:login">Bắt đầu</string>
     <string name="reader_error_request_failed_title">Xảy ra lỗi khi xử lý yêu cầu. Xin thử lại sau.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Cho bài này vào thùng rác sẽ hủy bỏ hết thay đổi, bạn có chắc muốn tiếp tục?</string>
@@ -1053,10 +1018,7 @@ Language: vi_VN
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Chú thích Gallery. %s</string>
     <string name="create_post_page_fab_tooltip">Tạo một bài viết hoặc trang</string>
-    <string name="post_signup_interstitial_not_right_now">Để sau</string>
     <string name="content_description_person_building_website">Trang web cá nhân</string>
-    <string name="post_signup_interstitial_subtitle">Bất cứ điều gì bạn muốn tạo hoặc chia sẻ, chúng tôi sẽ giúp bạn thực hiện ngay tại đây.</string>
-    <string name="post_signup_interstitial_title">Chào mừng tới WordPress</string>
     <string name="stock_media_picker_list_content_description">Thư viện ảnh</string>
     <string name="photo_picker_image_thumbnail_unselected">Ảnh đã bỏ chọn</string>
     <string name="my_site_bottom_sheet_title">Tạo mới</string>
@@ -1070,13 +1032,7 @@ Language: vi_VN
     <string name="dialog_confirm_scheduled_post_sync_title">Sẵn sàng đồng bộ?</string>
     <string name="new_site_creation_unavailable_domain">Tên miền không khả dụng</string>
     <string name="negative_prefix">-%s</string>
-    <string name="login_discovery_error_generic">Chúng tôi không thể truy cập blog của bạn. Hãy liên hệ máy chủ của bạn để xử lý vấn đề.</string>
-    <string name="login_discovery_error_ssl">Không thể truy cập blog của bạn bởi vì xảy ra lỗi &lt;b&gt;Chứng Chỉ SSL&lt;/b&gt;. Hãy liên hệ máy chủ của bạn để xử lý vấn đề.</string>
-    <string name="login_discovery_error_http_auth">Chúng tôi không thể truy cập blog của bạn vì nó yêu cầu &lt;b&gt;Xác Thực HTTP&lt;/b&gt;. Hãy liên hệ máy chủ của bạn để xử lý vấn đề.</string>
-    <string name="enter_credentials_for_site">Đăng nhập với chứng chỉ trang %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Trang</string>
-    <string name="login_discovery_error_xmlrpc">Chúng tôi không thể truy cập &lt;b&gt;tập tin XMLRPC&lt;/b&gt; trên blog của bạn. Hãy liên hệ máy chủ của bạn để xử lý vấn đề.</string>
-    <string name="login_site_credentials_magic_link_label">Sắp xong! Chúng tôi cần xác minh địa chỉ email &lt;b&gt;%1$s&lt;/b&gt; của bạn đã kết nối Jetpack</string>
     <string name="reader_discover_display_name">Khám phá</string>
     <string name="reader_my_likes_display_name">Đã thích</string>
     <string name="reader_save_for_later_display_name">Đã lưu</string>
@@ -1229,8 +1185,6 @@ Language: vi_VN
     <string name="post_notification_off">Tắt</string>
     <string name="post_settings_add_to_calendar">Thêm vào lịch</string>
     <string name="post_settings_notification">Thông báo</string>
-    <string name="login_invalid_site_url">Nhập địa chỉ trang web đầy đủ, ví dụ example.com.</string>
-    <string name="enter_email_for_site">Đăng nhập WordPress.com để kết nối với %1$s</string>
     <string name="stats_post_views_label">Lượt xem</string>
     <string name="stats_post_label">Bài viết</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -1332,8 +1286,6 @@ Language: vi_VN
     <string name="posts_scheduled_empty">Bạn không có bài viết đã lên lịch</string>
     <string name="posts_trashed_empty">Thùng rác trống</string>
     <string name="button_move_to_draft">Chuyển về nháp</string>
-    <string name="notification_wpcom_username_needed">Hãy đăng nhập với tên người dùng và mật khẩu của bạn.</string>
-    <string name="error_user_username_instead_of_email">Hãy đăng nhập với tên người dùng WordPress.com thay vì địa chỉ email.</string>
     <string name="stats_insights_total_words">Tổng số chữ đã viết</string>
     <string name="stats_insights_average_likes">Lượt thích mỗi bài viết</string>
     <string name="stats_insights_average_words">Số chữ mỗi bài viết</string>
@@ -1343,7 +1295,6 @@ Language: vi_VN
     <string name="stats_insights_posts">Bài viết</string>
     <string name="stats_insights_year">Năm</string>
     <string name="stats_insights_this_year_site_stats">Năm nay</string>
-    <string name="no_site_error">Đây không phải là trang WordPress. Để kết nối, phải dùng WordPress.</string>
     <string name="plugin_check_domain_credit_error">Kiểu tra tên miền khả dụng thất bại</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Đang kiểm tra tên miền khả dụng</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Đăng ký tên miền</string>
@@ -1473,7 +1424,6 @@ Language: vi_VN
     <string name="history_detail_button_previous">Trước</string>
     <string name="history_detail_button_next">Kế</string>
     <string name="media_space_used">đã dùng %1$s</string>
-    <string name="enter_wpcom_or_jetpack_site">Hãy nhập một trang WordPress.com hoặc một trang WordPress tự lưu trữ đã tích hợp Jetpack</string>
     <string name="history_loading_revision">Đang tải quá khứ</string>
     <string name="history_loaded_revision">Đã tải quá khứ</string>
     <string name="history_load_dialog_button_positive">Tải</string>
@@ -1501,8 +1451,6 @@ Language: vi_VN
     <string name="pages_scheduled">Lên lịch</string>
     <string name="pages_drafts">Nháp</string>
     <string name="pages_published">Đã đăng</string>
-    <string name="login_error_sms_throttled">Chúng tôi đã gửi mã xác minh SMS quá nhiều lần - hãy tạm dừng và yêu cầu mã mới sau một phút.</string>
-    <string name="login_error_email_not_found_v2">Không có tài khoản WordPress.com nào kết nối với tài khoản Google này.</string>
     <string name="page_parent_changed">Trang mẹ đã bị thay đổi</string>
     <string name="site_picker_remove_site_empty">Không có blog nào trùng khớp</string>
     <string name="page_permanently_deleted">Đã xóa trang vĩnh viễn</string>
@@ -1520,7 +1468,6 @@ Language: vi_VN
     <string name="my_site_create_new_site_title">Bạn chưa có blog nào</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
-    <string name="login_to_to_connect_jetpack">Đăng nhập tài khoản WordPress.com mà bạn có kết nối Jetpack.</string>
     <string name="stats_jetpack_connection_setup_info">Để xem Thống Kê trên trang WordPress, bạn phải cài đặt plugin Jetpack.</string>
     <string name="reader_label_post_search_explainer">Bạn muốn tìm đọc gì?</string>
     <string name="site_settings_tags_empty_button">Tạo thẻ</string>
@@ -1567,13 +1514,7 @@ Language: vi_VN
     <string name="reader_save_posts_locally_dialog_title">Để Dành Đọc Sau</string>
     <string name="comment_read_source_post">Đọc bài viết gốc</string>
     <string name="sites">Blog</string>
-    <string name="signup_magic_link_title">Đã gửi email đăng ký</string>
-    <string name="selfhosted_site_login_title">Chứng chỉ đăng nhập</string>
-    <string name="magic_link_sent_login_title">Đã gửi email đăng nhập</string>
-    <string name="magic_link_login_title">Email đăng nhập</string>
-    <string name="email_address_login_title">Đăng nhập địa chỉ email</string>
     <string name="site_address_login_title" a8c-src-lib="module:login">Đăng nhập địa chỉ blog</string>
-    <string name="verification_2fa_screen_title">Mã xác minh</string>
     <string name="reader_empty_saved_posts_description">Nhấn %s để lưu bài viết để dành đọc sau.</string>
     <string name="reader_bookmark_snack_title">Đã lưu bài viết</string>
     <string name="reader_remove_bookmark">Bỏ lưu</string>
@@ -1672,7 +1613,6 @@ Language: vi_VN
     <string name="media_grid_item_image_desc">xem trước media, tập tin %s</string>
     <string name="invite_user_delete_desc">xóa %s</string>
     <string name="profile_picture">Ảnh đại diện của %s</string>
-    <string name="signup_with_google_progress">Đang đăng ký với Google…</string>
     <string name="people_invite_role_info_desc">vai trò</string>
     <string name="jetpack_connection_failed_with_reason">Kết nối Jetpack thất bại: %s</string>
     <string name="jetpack_already_connected_toast">Bạn đã được kết nối với Jetpack</string>
@@ -1695,7 +1635,6 @@ Language: vi_VN
     <string name="site_settings_quota_header">Media</string>
     <string name="notif_detail_screen_title">Chi tiết thông báo %s</string>
     <string name="edit_photo_screen_title">Sửa Ảnh</string>
-    <string name="signup_epilogue_screen_title">Tài khoản mới</string>
     <string name="site_settings_quota_space_title">Đã dùng</string>
     <string name="site_settings_quota_space_value">%1$s của %2$s</string>
     <string name="share_intent_screen_title">Chọn blog</string>
@@ -1746,7 +1685,6 @@ Language: vi_VN
     <string name="media_file_page_singular_mixed_not_uploaded_one_file">Chưa tải lên 1 trang với 1 tập tin</string>
     <string name="site_creation_domain_finish_button">Tạo blog</string>
     <string name="notification_site_creation_created">Nhấn để tiếp tục.</string>
-    <string name="google_error_timeout">Google phản hồi quá lâu. Hãy đợi cho tới khi bạn có kết nối mạng mạnh hơn.</string>
     <string name="username_changer_title">Đổi tên người dùng</string>
     <string name="username_changer_hint">Nhập để có nhiều gợi ý hơn</string>
     <string name="username_changer_header">Tên người dùng gần đây của bạn là %1$s%2$s%3$s. Với ngoài ngoại lệ, mọi người chỉ có thể xem tên hiển thị %4$s%5$s%6$s.</string>
@@ -1756,19 +1694,7 @@ Language: vi_VN
     <string name="username_changer_dismiss_button_positive">Hủy bỏ</string>
     <string name="username_changer_action">Lưu</string>
     <string name="content_description_add_avatar">Thêm ảnh đại diện</string>
-    <string name="signup_user_exists">Email đã tồn tại trên WordPress.com.\nTiếp tục đăng nhập.</string>
     <string name="notification_site_creation_title_success">Đã tạo blog!</string>
-    <string name="signup_updating_account">Đang cập nhật tài khoản…</string>
-    <string name="signup_magic_link_progress">Đang gửi email</string>
-    <string name="signup_epilogue_hint_password_detail">Bạn có thể đăng nhập bằng liên kết giống như gần đây, tuy nhiên bạn nên đặt mật khẩu.</string>
-    <string name="signup_magic_link_error_button_positive">Thử lại</string>
-    <string name="signup_magic_link_error_button_negative">Đóng</string>
-    <string name="signup_magic_link_error">Xảy ra lỗi khi gửi email. Hãy đóng và thử lại sau.</string>
-    <string name="signup_epilogue_hint_username">Tên người dùng</string>
-    <string name="signup_epilogue_hint_password">Mật khẩu (tùy chọn)</string>
-    <string name="signup_epilogue_hint_display">Tên hiển thị</string>
-    <string name="signup_epilogue_error_button_positive">Thử lại</string>
-    <string name="signup_epilogue_error_button_negative">Đảo ngược</string>
     <string name="signup_epilogue_error_generic">Xảy ra lỗi khi cập nhật tài khoản của bạn. Hãy thử lại hoặc đảo ngược những thay đổi.</string>
     <string name="site_settings_like_header">Thích</string>
     <string name="plugin_needs_update">Cần cập nhật</string>
@@ -1856,18 +1782,6 @@ Language: vi_VN
     <string name="my_site_btn_plugins">Plugin</string>
     <string name="media_edit_link_hint">Mở liên kết trong cửa sổ/tab mới</string>
     <string name="media_edit_link_text">Liên kết tới</string>
-    <string name="notification_login_failed">Đã xảy ra lỗi.</string>
-    <string name="notification_2fa_needed">Hãy cung cấp mã xác minh để tiếp tục.</string>
-    <string name="notification_error_wrong_password">Kiểm tra kỹ mật khẩu để tiếp tục.</string>
-    <string name="notification_login_title_stopped">Tạm dừng đăng nhập</string>
-    <string name="notification_logging_in">Xin đợi khi đăng nhập.</string>
-    <string name="notification_login_title_in_progress">Đang đăng nhập…</string>
-    <string name="notification_logged_in">Nhấn để tiếp tục.</string>
-    <string name="notification_login_title_success">Đã đăng nhập!</string>
-    <string name="login_error_generic_start">Không thể đăng nhập bằng Google.</string>
-    <string name="login_empty_password">Hãy nhập mật khẩu</string>
-    <string name="login_text_otp_another">Gửi cho tôi mã khác</string>
-    <string name="enter_verification_code_sms">Chúng tôi đã gửi tin nhắn tới số điện thoại có số đuôi %s. Hãy kiểm tra mã xác minh trong SMS.</string>
     <string name="image_size">Kích thước</string>
     <string name="uploading_subtitle_media_only_one">Còn lại 1 tập tin</string>
     <string name="uploading_subtitle_media_only">Còn lại %1$d trong %2$d tập tin</string>
@@ -1884,15 +1798,10 @@ Language: vi_VN
     <string name="confirm_remove_media_image">Xóa ảnh này khỏi bài viết?</string>
     <string name="media_edit_customize_card_caption">Tùy biến</string>
     <string name="media_edit_file_details_card_caption">Chi tiết tập tin</string>
-    <string name="login_error_suffix">\nThử một tài khoản khác?</string>
-    <string name="login_error_generic">Xảy ra lỗi khi kết nối với tài khoản Google.</string>
     <string name="login_error_button">Đóng</string>
-    <string name="enter_wpcom_password_google">Để tiếp tục với tài khoản Google account này, hãy cung cấp mật khẩu WordPress.com trùng khớp. Sau này không hỏi lại.</string>
     <string name="error_generic_network">Lỗi kết nối mạng. Hãy kiểm tra kết nối và thử lại.</string>
     <string name="post_settings_remove_featured_image">Xóa ảnh minh họa</string>
     <string name="post_settings_choose_featured_image">Chọn ảnh minh họa</string>
-    <string name="login_log_in_for_share_intent">Đăng nhập WordPress.com để chia sẻ nội dung.</string>
-    <string name="enter_site_address_share_intent">Nhập địa chỉ trang WordPress mà bạn muốn chia sẻ nội dung lên.</string>
     <string name="jetpack_disconnect_error_toast">Lỗi kết nối blog</string>
     <string name="jetpack_disconnect_success_toast">Đã ngắt kết nối blog</string>
     <string name="jetpack_disconnect_confirm">Hủy kết nối</string>
@@ -1973,27 +1882,13 @@ Language: vi_VN
     <string name="post_queued">Bài viết đã lên lịch</string>
     <string name="uploading_post">Đang tải lên \"%s\"</string>
     <string name="connection_to_server_lost">Mất kết nối tới máy chủ</string>
-    <string name="login_email_client_not_found">Không nhận diện được ứng dụng email</string>
-    <string name="login_empty_2fa">Hãy nhập mã xác minh</string>
-    <string name="login_empty_username">Hãy nhập tên người dùng</string>
-    <string name="login_log_in_for_deeplink">Đăng nhập WordPress.com để xem bài viết.</string>
-    <string name="login_error_while_adding_site">Lỗi khi thêm blog. Mã lỗi: %s</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">Đang kiểm tra địa chỉ blog</string>
-    <string name="login_site_address_more_help">Cần trợ giúp?</string>
-    <string name="login_site_address_help_content">Địa chỉ blog của bạn xuất hiện trong thanh địa chỉ trình duyệt.</string>
-    <string name="login_site_address_help_title">Địa chỉ blog của tôi là gì?</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Nhập địa chỉ trang WordPress mà bạn muốn kết nối.</string>
     <string name="login_site_address" a8c-src-lib="module:login">Địa chỉ blog</string>
     <string name="login_already_logged_in_wpcom">Đã đăng nhập WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Tiếp tục</string>
-    <string name="enter_wpcom_password">Nhập mật khẩu WordPress.com của bạn.</string>
     <string name="connect_more">Kết nối blog khác</string>
-    <string name="login_magic_link_email_requesting">Đang yêu cầu đăng nhập email</string>
-    <string name="password_incorrect">Mật khẩu không hợp lệ. Kiểm tra kỹ thông tin và thử lại.</string>
-    <string name="requesting_otp">Đang yêu cầu mã xác minh qua SMS.</string>
-    <string name="login_text_otp">Nhắn mã cho tôi</string>
     <string name="next">Kế</string>
-    <string name="enter_email_wordpress_com">Đăng nhập WordPress.com sử dụng một địa chỉ email để quản lý toàn bộ trang WordPress khác.</string>
     <string name="me_profile_photo">Ảnh hồ sơ</string>
     <string name="error_media_parse_error">Phản hồi không mong muốn từ máy chủ</string>
     <string name="upload_finished_toast">Không thể dừng tải lên bởi vì đã tải lên xong</string>
@@ -2131,8 +2026,6 @@ Language: vi_VN
     <string name="error_all_media_upload_canceled">Tất cả media tải lên đã bị hủy vì lỗi chưa rõ. Vui lòng thử tải lên lại</string>
     <string name="error_unknown_post_type">Định dạng bài viết chưa rõ</string>
     <string name="submit_for_review">Gửi</string>
-    <string name="duplicate_site_detected">Đã phát hiện blog trùng lặp.</string>
-    <string name="cannot_add_duplicate_site">Blog này đã có trong ứng dụng, bạn không thể thêm nó.</string>
     <string name="already_logged_in_wpcom">Bạn đã đăng nhập tài khoản WordPress.com, không thể thêm một trang WordPress.com liên kết với một tài khoản khác.</string>
     <string name="error_media_load">Không thể tải media</string>
     <string name="error_media_refresh_no_connection">Cần có kết nối mạng để xem thư viện</string>
@@ -2143,8 +2036,6 @@ Language: vi_VN
     <string name="media_generic_error">Lỗi media</string>
     <string name="retry">Thử lại</string>
     <string name="confirm">Xác nhận</string>
-    <string name="xmlrpc_endpoint_forbidden_error">Không thể kết nối. Chúng tôi đã nhận được lỗi 403 khi cố gắng truy cập\n        XMLRPC endpoint. Ứng dụng cần thứ này để giao tiếp với trang web của bạn. Liên hệ với máy chủ của bạn để giải quyết\n        vấn đề này.</string>
-    <string name="xmlrpc_post_blocked_error">Không thể kết nối. Máy chủ của bạn đang chặn các yêu cầu ĐĂNG\n         mà ứng dụng cần để giao tiếp với trang của bạn. Liên hệ với máy chủ của bạn để giải quyết vấn đề này.</string>
     <string name="pending_draft_one_generic">Đừng để nó mọc nấm! \'%1$s\' đang chờ được đăng.</string>
     <string name="pending_draft_one_month">Đừng để nó mọc nấm! \'%1$s\' đang chờ được đăng.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' vẫn là bản nháp. Nhớ đăng nó!</string>
@@ -2225,8 +2116,6 @@ Language: vi_VN
     <string name="error_refreshing_gravatar">Lỗi nạp lại Gravatar của bạn</string>
     <string name="error_locating_image">Lỗi định vị hình ảnh được cắt</string>
     <string name="error_cropping_image">Lỗi cắt ảnh</string>
-    <string name="checking_email">Đang kiểm tra email</string>
-    <string name="magic_link_unavailable_error_message">Hiện tại không sẵn có. Vui lòng nhập mật khẩu của bạn</string>
     <string name="logging_in">Đang đăng nhập</string>
     <string name="web_address_dialog_hint">Hiển thị công khai khi bạn bình luận.</string>
     <string name="export_your_content_message">Các bài viết, trang và thiết lập sẽ được gửi tới email %s.</string>
@@ -2259,7 +2148,6 @@ Language: vi_VN
     <string name="comments_empty_list_filtered_pending">Không có bình luận đang chờ</string>
     <string name="comments_empty_list_filtered_approved">Không có bình luận đã duyệt</string>
     <string name="button_skip">Bỏ qua</string>
-    <string name="xmlrpc_missing_method_error">Không thể kết nối. Máy chủ này không có các phương thức XML-RPC cần thiết.</string>
     <string name="post_format_status">Trạng thái</string>
     <string name="post_format_video">Video</string>
     <string name="alignment_center">Giữa</string>
@@ -2319,7 +2207,6 @@ Language: vi_VN
     <string name="about_the_app">Giới thiệu</string>
     <string name="error_post_account_settings">Không thể lưu các thiết đặt tài khoản của bạn</string>
     <string name="error_fetch_account_settings">Không thể tải các thiết lập tài khoản của bạn</string>
-    <string name="error_fetch_my_profile">Không thể tải hồ sơ của bạn</string>
     <string name="site_settings_unknown_language_code_error">Mã ngôn ngữ không được nhận dạng</string>
     <string name="site_settings_threading_dialog_description">Cho phép các bình luận được rẽ nhánh.</string>
     <string name="site_settings_threading_dialog_header">Rẽ nhánh tối đa</string>
@@ -2504,9 +2391,6 @@ Language: vi_VN
     <string name="reader_label_new_posts_subtitle">Nhấn để đọc tất cả</string>
     <string name="select_all">Chọn tất cả</string>
     <string name="language">Ngôn ngữ</string>
-    <string name="auth_required">Đăng nhập lại để tiếp tục.</string>
-    <string name="invalid_verification_code">Mã xác minh không hợp lệ</string>
-    <string name="verification_code">Mã xác minh</string>
     <string name="stats_view_authors">Tác giả</string>
     <string name="error_notification_open">Không thể mở thông báo</string>
     <string name="stats_view_search_terms">Điều kiện tìm kiếm</string>
@@ -2570,7 +2454,6 @@ Language: vi_VN
     <string name="error_downloading_image">Lỗi tải ảnh về</string>
     <string name="invalid_email_message">Địa chỉ email của bạn không hợp lệ</string>
     <string name="username_or_password_incorrect">Tên người dùng và mật khẩu bạn đã nhập không đúng</string>
-    <string name="email_invalid">Nhập một địa chỉ email hợp lệ</string>
     <string name="notifications_empty_list">Không có thông báo</string>
     <string name="error_generic">Đã xảy ra lỗi</string>
     <string name="no_network_message">Không có kết nối mạng</string>
@@ -2599,7 +2482,6 @@ Language: vi_VN
     <string name="media_error_no_permission">Bạn không có quyền xem thư viện media</string>
     <string name="link_enter_url_text">Văn bản liên kết (tùy chọn)</string>
     <string name="trash">Thùng rác</string>
-    <string name="http_authorization_required">Cần được cấp phép</string>
     <string name="local_changes">Các thay đổi nội bộ</string>
     <string name="comment_status_spam">Spam</string>
     <string name="mnu_comment_spam">Spam</string>
@@ -2613,7 +2495,6 @@ Language: vi_VN
     <string name="mnu_comment_unapprove">Không duyệt</string>
     <string name="new_post">Viết bài</string>
     <string name="new_media">Tải lên media</string>
-    <string name="fatal_db_error">Xảy ra lỗi khi tạo cơ sở dữ liệu ứng dụng. Thử cài đặt lại ứng dụng.</string>
     <string name="reader_title_applog">Nhật ký ứng dụng</string>
     <string name="add_new_category">Thêm chuyên mục mới</string>
     <string name="category_name">Tên chuyên mục</string>
@@ -2653,7 +2534,6 @@ Language: vi_VN
     <string name="empty_list_default">Danh sách này trống trơn</string>
     <string name="reader_untitled_post">(Không có tựa đề)</string>
     <string name="reader_view_reblog">Đăng lại</string>
-    <string name="sign_up_label">Đăng ký</string>
     <string name="stats_timeframe_weeks">Tuần</string>
     <string name="stats_timeframe_months">Tháng</string>
     <string name="stats_timeframe_today">Hôm nay</string>
@@ -2681,8 +2561,6 @@ Language: vi_VN
     <string name="more_notifications">và %d thông báo nữa.</string>
     <string name="note_reply_successful">Đã gửi bình luận</string>
     <string name="loading">Đang tải…</string>
-    <string name="httpuser">Tên người dùng HTTP</string>
-    <string name="httppassword">Mật khẩu HTTP</string>
     <string name="error_media_upload">Xảy ra lỗi khi tải lên media</string>
     <string name="incorrect_credentials">Tên người dùng hoặc mật khẩu không đúng.</string>
     <string name="password">Mật khẩu</string>
