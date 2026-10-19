@@ -998,6 +998,8 @@
     <string name="network_requests_disable">Disable</string>
     <string name="experimental_post_types">Post Types</string>
     <string name="experimental_post_types_description">Enable experimental post types screen</string>
+    <string name="experimental_local_working_copies">Local Working Copies</string>
+    <string name="experimental_local_working_copies_description">Also save edited posts to local storage</string>
     <!-- New Stats switch controls -->
     <string name="stats_try_new_stats">Try new stats</string>
     <string name="stats_switch_to_old_stats">Disable new stats</string>
