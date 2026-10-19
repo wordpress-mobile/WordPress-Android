@@ -479,8 +479,9 @@ private fun CommentType.isPingback() = this == CommentType.Pingback || this == C
 
 internal fun CommentWithViewContext.pickAvatarUrl(): String = authorAvatarUrls.pickAvatarUrl()
 
-private fun Map<UserAvatarSize, String?>.pickAvatarUrl(): String =
-    (this[UserAvatarSize.Size96] ?: values.firstOrNull { !it.isNullOrEmpty() }).orEmpty()
+// The map is absent when the site doesn't show avatars.
+private fun Map<UserAvatarSize, String?>?.pickAvatarUrl(): String =
+    (this?.get(UserAvatarSize.Size96) ?: this?.values?.firstOrNull { !it.isNullOrEmpty() }).orEmpty()
 
 internal fun CommentStatus.toRsCommentStatus(): RsCommentStatus = when (this) {
     CommentStatus.APPROVED -> RsCommentStatus.Approved
