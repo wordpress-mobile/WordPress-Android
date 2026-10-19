@@ -3,6 +3,7 @@
 package org.wordpress.android.ui.main
 
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.BitmapDrawable
@@ -45,6 +46,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_TAPPED
 import org.wordpress.android.databinding.MeFragmentBinding
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.PostStore
@@ -62,6 +64,8 @@ import org.wordpress.android.ui.main.MeViewModel.RecommendAppUiState
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.emailverificationbanner.EmailVerificationBanner
 import org.wordpress.android.ui.main.emailverificationbanner.EmailVerificationViewModel
+import org.wordpress.android.ui.main.utils.GravatarEditorTarget
+import org.wordpress.android.ui.main.utils.GravatarEditorTargetResolver
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils
@@ -135,8 +139,17 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     @Inject
     lateinit var appLogWrapper: AppLogWrapper
 
+    @Inject
+    lateinit var gravatarEditorTargetResolver: GravatarEditorTargetResolver
+
     // Started in onCreate so the KeyStore-backed Gravatar init is usually finished before the avatar is tapped
     private lateinit var quickEditorReady: Deferred<Boolean>
+
+    // A tap now waits on a network probe, so guard against a second tap starting another one
+    private var isOpeningGravatarEditor = false
+
+    // A Custom Tab returns no result, so remember the diversion and refresh the profile on the way back
+    private var openedWebGravatarEditor = false
 
     @Inject
     lateinit var activityNavigator: ActivityNavigator
@@ -152,6 +165,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // A configuration change or process death while the Custom Tab is in front builds a new fragment,
+        // so without this the diversion would be forgotten and the avatar left stale (CMM-1100)
+        openedWebGravatarEditor = savedInstanceState?.getBoolean(OPENED_WEB_GRAVATAR_EDITOR) == true
         (requireActivity().application as WordPress).component().inject(this)
         val appContext = requireContext().applicationContext
         quickEditorReady = lifecycleScope.async(Dispatchers.IO) {
@@ -161,6 +177,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // The flag is cleared by the launching coroutine, but a probe blocked in OkHttp outlives the view
+        // scope that would cancel it, so a detach/attach could otherwise come back with taps still blocked
+        isOpeningGravatarEditor = false
         binding = MeFragmentBinding.bind(view).apply {
             setupViews()
             setupObservers(savedInstanceState)
@@ -266,57 +285,105 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
     private fun MeFragmentBinding.showQuickEditor(
         page: AvatarPickerAndAboutEditorConfiguration.Page
     ) {
         appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Showing Gravatar quick editor: ${page.value}")
+        // Opening now waits on a network probe, so ignore a second tap while the first is in flight
+        if (isOpeningGravatarEditor) return
+        isOpeningGravatarEditor = true
+        showGravatarEditorProgress(page, show = true)
         val appContext = requireContext().applicationContext
         viewLifecycleOwner.lifecycleScope.launch {
-            // Complete except in the first moments of the fragment's life, so this almost never suspends. A
-            // warm-up that failed (e.g. a transient KeyStore error) gets one more try here.
-            val ready = quickEditorReady.await() ||
-                withContext(Dispatchers.IO) { GravatarQuickEditorInitializer.initialize(appContext) }
-            if (!ready) return@launch
-            // A tap that did suspend could resume after the fragment left the screen
-            if (!viewLifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) return@launch
             try {
-                GravatarQuickEditor.show(
-                    fragment = this@MeFragment,
-                    gravatarQuickEditorParams = GravatarQuickEditorParams {
-                        email = Email(accountStore.account.email)
-                        scopeOption = QuickEditorScopeOption.avatarAndAbout {
-                            initialPage = page
-                            fields = setOf(
-                                AboutInputField.FirstName,
-                                AboutInputField.LastName,
-                                AboutInputField.DisplayName,
-                                AboutInputField.AboutMe
-                            )
-                        }
-                    },
-                    authenticationMethod = AuthenticationMethod.Bearer(accountStore.accessToken.orEmpty()),
-                    updateHandler = { event ->
-                        when (event) {
-                            AvatarPickerResult -> {
-                                loadAvatar(null, true)
-                            }
-
-                            is AboutEditorResult -> {
-                                meDisplayName.text =
-                                    event.profile.displayName.ifEmpty { accountStore.account.displayName }
-                            }
-
-                            else -> Unit
-                        }
-                    },
-                    onDismiss = {
-                        appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Gravatar quick editor dismissed: ${page.value}")
-                    }
-                )
-            } catch (exception: Exception) {
-                appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Error opening Gravatar quick editor: ${exception.message}")
+                openGravatarEditor(page, appContext)
+            } finally {
+                isOpeningGravatarEditor = false
+                showGravatarEditorProgress(page, show = false)
             }
+        }
+    }
+
+    /**
+     * Shows the wait where the tap happened: over the avatar for the picker, in the row icon's place for
+     * the profile editor. A tap now waits on the network probe before anything opens (CMM-1100), and
+     * without this the screen would sit there unchanged for the length of a request.
+     */
+    private fun MeFragmentBinding.showGravatarEditorProgress(
+        page: AvatarPickerAndAboutEditorConfiguration.Page,
+        show: Boolean
+    ) {
+        if (page == AvatarPickerAndAboutEditorConfiguration.Page.AvatarPicker) {
+            meAvatarProgress.isVisible = show
+            // Dimmed so the spinner stays legible on top of whatever the avatar happens to be
+            meAvatar.alpha = if (show) DIMMED_AVATAR_ALPHA else 1f
+        } else {
+            meMyProfileIcon.isVisible = !show
+            meMyProfileProgress.isVisible = show
+        }
+    }
+
+    // The guard clauses below read better as early returns than as nesting, hence the ReturnCount suppression
+    @Suppress("TooGenericExceptionCaught", "ReturnCount")
+    private suspend fun MeFragmentBinding.openGravatarEditor(
+        page: AvatarPickerAndAboutEditorConfiguration.Page,
+        appContext: Context
+    ) {
+        // Complete except in the first moments of the fragment's life, so this almost never suspends. A
+        // warm-up that failed (e.g. a transient KeyStore error) gets one more try here.
+        val ready = quickEditorReady.await() ||
+            withContext(Dispatchers.IO) { GravatarQuickEditorInitializer.initialize(appContext) }
+        if (!ready) return
+        // A tap that did suspend could resume after the fragment left the screen
+        if (!viewLifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) return
+
+        // The SDK has no error callback, so a refused request would strand the user on its unrecoverable
+        // "Something went terribly wrong." card (CMM-1100). Ask first, and send them to the web editor instead.
+        val target = gravatarEditorTargetResolver.resolve(accountStore.accessToken.orEmpty())
+        if (!viewLifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) return
+        if (target == GravatarEditorTarget.WEB_EDITOR) {
+            appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Opening the web profile editor instead")
+            openedWebGravatarEditor = true
+            activityNavigator.openInCustomTab(requireActivity(), GRAVATAR_PROFILE_URL)
+            return
+        }
+
+        try {
+            GravatarQuickEditor.show(
+                fragment = this@MeFragment,
+                gravatarQuickEditorParams = GravatarQuickEditorParams {
+                    email = Email(accountStore.account.email)
+                    scopeOption = QuickEditorScopeOption.avatarAndAbout {
+                        initialPage = page
+                        fields = setOf(
+                            AboutInputField.FirstName,
+                            AboutInputField.LastName,
+                            AboutInputField.DisplayName,
+                            AboutInputField.AboutMe
+                        )
+                    }
+                },
+                authenticationMethod = AuthenticationMethod.Bearer(accountStore.accessToken.orEmpty()),
+                updateHandler = { event ->
+                    when (event) {
+                        AvatarPickerResult -> {
+                            loadAvatar(null, true)
+                        }
+
+                        is AboutEditorResult -> {
+                            meDisplayName.text =
+                                event.profile.displayName.ifEmpty { accountStore.account.displayName }
+                        }
+
+                        else -> Unit
+                    }
+                },
+                onDismiss = {
+                    appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Gravatar quick editor dismissed: ${page.value}")
+                }
+            )
+        } catch (exception: Exception) {
+            appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Error opening Gravatar quick editor: ${exception.message}")
         }
     }
 
@@ -472,6 +539,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         if (disconnectProgressDialog != null) {
             outState.putBoolean(IS_DISCONNECTING, true)
         }
+        if (openedWebGravatarEditor) {
+            outState.putBoolean(OPENED_WEB_GRAVATAR_EDITOR, true)
+        }
         super.onSaveInstanceState(outState)
     }
 
@@ -496,6 +566,15 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     override fun onResume() {
         super.onResume()
         binding?.refreshAccountDetails()
+        // The web editor has no updateHandler, so without this the avatar would keep being served from
+        // Glide's cache: the hash-based URL and the avatarVersion signature are both unchanged by an edit
+        // made on gravatar.com. Runs after refreshAccountDetails so the forced load is the one that sticks.
+        // The account fetch picks up a display name changed there, which MeActivity would otherwise miss.
+        if (openedWebGravatarEditor) {
+            openedWebGravatarEditor = false
+            binding?.loadAvatar(null, true)
+            dispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
+        }
     }
 
     override fun onDestroy() {
@@ -656,7 +735,19 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     companion object {
         private const val IS_DISCONNECTING = "IS_DISCONNECTING"
+        private const val OPENED_WEB_GRAVATAR_EDITOR = "OPENED_WEB_GRAVATAR_EDITOR"
         private const val GRAVATAR_URL = "https://www.gravatar.com"
+        private const val DIMMED_AVATAR_ALPHA = 0.3f
+
+        // The avatars page rather than /profile, which is only a menu of sections: this is the web
+        // screen closest to the editor the app was about to show.
+        //
+        // Opened in a Custom Tab, so it uses the browser's own session. gravatar.com bounces
+        // through wordpress.com to log in, which is seamless when the browser is already signed
+        // in to WordPress.com and a log-in screen otherwise. The bounce keeps the path, so a
+        // signed-out browser still lands here once it is through the log-in.
+        private const val GRAVATAR_PROFILE_URL = "https://gravatar.com/profile/avatars"
+
         fun newInstance(): MeFragment {
             return MeFragment()
         }

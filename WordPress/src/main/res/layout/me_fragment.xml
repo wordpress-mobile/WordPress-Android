@@ -55,6 +55,14 @@
                             android:layout_width="@dimen/avatar_sz_inner_circle"
                             android:layout_height="@dimen/avatar_sz_inner_circle"
                             android:contentDescription="@string/reader_avatar_desc" />
+
+                        <ProgressBar
+                            android:id="@+id/me_avatar_progress"
+                            style="?android:attr/progressBarStyleSmall"
+                            android:layout_width="@dimen/me_list_row_icon_size"
+                            android:layout_height="@dimen/me_list_row_icon_size"
+                            android:layout_gravity="center"
+                            android:visibility="gone" />
                     </FrameLayout>
 
                     <org.wordpress.android.widgets.WPTextView
@@ -103,6 +111,19 @@
                     style="@style/MeListRowIcon"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_user_white_24dp" />
+
+                <!-- Takes the icon's place while the editor is being opened, so sizes and margins match it -->
+                <ProgressBar
+                    android:id="@+id/me_my_profile_progress"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="@dimen/me_list_row_icon_size"
+                    android:layout_height="@dimen/me_list_row_icon_size"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/margin_large"
+                    android:layout_marginTop="@dimen/margin_large"
+                    android:layout_marginEnd="@dimen/margin_extra_large"
+                    android:layout_marginBottom="@dimen/margin_large"
+                    android:visibility="gone" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/me_my_profile_text_view"
