@@ -232,7 +232,6 @@ fun PostRsListScreen(
                     onLoadMore = { onLoadMore(tab) },
                     onPostClick = { postId -> onPostClick(postId, tab) },
                     onPostMenuAction = onPostMenuAction,
-                    onCreatePost = onCreatePost,
                     onRowsVisible = { ids -> onRowsVisible(tab, ids) },
                     density = density,
                     showDateGroups = tab != PostRsListTab.SCHEDULED
