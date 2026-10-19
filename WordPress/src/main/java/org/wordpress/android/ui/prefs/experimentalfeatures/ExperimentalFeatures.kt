@@ -39,6 +39,11 @@ class ExperimentalFeatures @Inject constructor(
             "experimental_post_types",
             R.string.experimental_post_types,
             R.string.experimental_post_types_description
+        ),
+        LOCAL_WORKING_COPIES(
+            "local_working_copies",
+            R.string.experimental_local_working_copies,
+            R.string.experimental_local_working_copies_description
         )
     }
 }

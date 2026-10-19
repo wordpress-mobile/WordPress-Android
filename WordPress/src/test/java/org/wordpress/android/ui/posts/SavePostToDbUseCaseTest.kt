@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.post.PostStatus.TRASHED
 import org.wordpress.android.fluxc.model.post.PostStatus.UNKNOWN
+import org.wordpress.android.ui.localcontent.FluxCWorkingCopySaver
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtilsWrapper
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
@@ -48,6 +49,9 @@ class SavePostToDbUseCaseTest {
 
     @Mock
     lateinit var context: Context
+
+    @Mock
+    lateinit var fluxCWorkingCopySaver: FluxCWorkingCopySaver
     private lateinit var siteModel: SiteModel
     private lateinit var postModel: PostModel
     private lateinit var savePostToDbUseCase: SavePostToDbUseCase
@@ -62,7 +66,8 @@ class SavePostToDbUseCaseTest {
             dateTimeUtils,
             dispatcher,
             pendingDraftsNotificationsUtils,
-            context
+            context,
+            fluxCWorkingCopySaver
         )
         actionCaptor = argumentCaptor()
         whenever(dateTimeUtils.currentTimeInIso8601()).thenReturn(currentTime)

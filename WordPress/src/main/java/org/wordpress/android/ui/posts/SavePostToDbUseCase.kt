@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.ui.localcontent.FluxCWorkingCopySaver
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtilsWrapper
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
@@ -16,7 +17,8 @@ class SavePostToDbUseCase
     private val dateTimeUtils: DateTimeUtilsWrapper,
     private val dispatcher: Dispatcher,
     private val pendingDraftsNotificationsUtils: PendingDraftsNotificationsUtilsWrapper,
-    private val context: Context
+    private val context: Context,
+    private val fluxCWorkingCopySaver: FluxCWorkingCopySaver
 ) {
     fun savePostToDb(
         postRepository: EditPostRepository,
@@ -46,6 +48,7 @@ class SavePostToDbUseCase
             handlePendingDraftNotifications(postRepository)
             postRepository.savePostSnapshot()
             dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post))
+            fluxCWorkingCopySaver.save(post, site)
         }
     }
 
