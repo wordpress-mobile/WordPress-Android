@@ -62,11 +62,14 @@ private class PositionalPagingSource<LIST_DESCRIPTOR : ListDescriptor, ITEM_IDEN
         val end = if (params is LoadParams.Prepend) key else minOf(start + params.loadSize, totalSize)
         val items = if (start < end) dataSource.getItemsInRange(start, end) else emptyList()
 
-        if (params is LoadParams.Refresh) {
-            onRefreshLoaded(totalSize)
-        }
-        if (end == totalSize && totalSize > 0) {
-            onItemAtEndLoaded()
+        // a superseded generation mustn't overwrite the state reported by the one that replaced it
+        if (!invalid) {
+            if (params is LoadParams.Refresh) {
+                onRefreshLoaded(totalSize)
+            }
+            if (end == totalSize && totalSize > 0) {
+                onItemAtEndLoaded()
+            }
         }
 
         LoadResult.Page(
