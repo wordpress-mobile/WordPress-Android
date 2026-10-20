@@ -427,6 +427,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
         lastRenderedState = state
 
         getPostAdapter().submitList(state.items) {
+            // the diff can finish after the view is destroyed - keep the scroll for the next view
+            if (view == null) return@submitList
             state.scrollToPosition?.let { position ->
                 AppLog.d(AppLog.T.READER, "reader post list > scrolling to position $position")
                 recyclerView.scrollRecycleViewToPosition(position)

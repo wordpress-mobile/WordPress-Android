@@ -48,6 +48,7 @@ import org.wordpress.android.ui.reader.repository.ReaderPostListTarget
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.image.ImageType
@@ -66,6 +67,8 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var accountStore: AccountStore
 
     private val repositoryEvents = MutableSharedFlow<ReaderPostListEvent>()
+    private val followStatusUpdated = MutableLiveData<FollowStatusChanged>()
+    private val scrollToSiteId = MutableSharedFlow<Long>()
     private val tag = ReaderTestUtils.createTag("cats")
     private val tagTarget = ReaderPostListTarget.Tag(tag)
     private lateinit var viewModel: ReaderPostListViewModel
@@ -76,8 +79,8 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         whenever(actionsHandler.snackbarEvents).thenReturn(MutableLiveData())
         whenever(actionsHandler.preloadPostEvents).thenReturn(MutableLiveData())
         whenever(actionsHandler.refreshPosts).thenReturn(MutableLiveData())
-        whenever(actionsHandler.followStatusUpdated).thenReturn(MutableLiveData())
-        whenever(actionsHandler.scrollToSiteId).thenReturn(MutableSharedFlow())
+        whenever(actionsHandler.followStatusUpdated).thenReturn(followStatusUpdated)
+        whenever(actionsHandler.scrollToSiteId).thenReturn(scrollToSiteId)
         whenever(repository.events).thenReturn(repositoryEvents)
         whenever(repository.getPosts(any())).thenReturn(ReaderPostList())
         whenever(repository.getPostCount(any())).thenReturn(0)
@@ -154,6 +157,35 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         assertThat(viewModel.uiState.value.items.first())
             .isInstanceOf(ReaderPostListItem.SiteHeader::class.java)
         verify(repository).requestPosts(blogTarget, UpdateAction.REQUEST_NEWER)
+    }
+
+    @Test
+    fun `following a site from a card updates its posts and the site header`() = test {
+        whenever(repository.getPosts(ReaderPostListTarget.Blog(BLOG_ID))).thenReturn(posts(1, 2))
+        startAndLoad(ReaderPostListArgs(listType = ReaderPostListType.BLOG_PREVIEW, blogId = BLOG_ID))
+        val headerBefore = viewModel.uiState.value.items.first()
+
+        followStatusUpdated.value = FollowStatusChanged(BLOG_ID, 0, following = true)
+        advanceUntilIdle()
+
+        // the header has to change so the adapter rebinds it and it re-reads the follow state
+        assertThat(viewModel.uiState.value.items.first()).isNotEqualTo(headerBefore)
+        assertThat(cardState(0).isFollowed).isTrue
+        assertThat(cardState(1).isFollowed).isTrue
+    }
+
+    @Test
+    fun `scrolling to a site accounts for the header and gap marker`() = test {
+        whenever(repository.getPosts(tagTarget))
+            .thenReturn(posts(1, 2, 3).apply { last().blogId = OTHER_BLOG_ID })
+        whenever(repository.getGapMarkerIds(tag)).thenReturn(ReaderBlogIdPostId(BLOG_ID, 1))
+        startAndLoad(args(listType = ReaderPostListType.TAG_PREVIEW))
+
+        scrollToSiteId.emit(OTHER_BLOG_ID)
+        endUpdate(UpdateResult.CHANGED)
+
+        // tag header, post 1, gap marker, post 2, post 3
+        assertThat(viewModel.uiState.value.scrollToPosition).isEqualTo(4)
     }
 
     @Test
@@ -564,6 +596,7 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
 
     companion object {
         private const val BLOG_ID = 100L
+        private const val OTHER_BLOG_ID = 200L
         private const val MAX_POSTS = 200
         private const val PHOTON_WIDTH = 1000
         private const val PHOTON_HEIGHT = 500

@@ -807,8 +807,12 @@ class ReaderPostListViewModel @Inject constructor(
         if (isFollowedSitesList) {
             hasFollowedBlogs = repository.hasFollowedBlogs()
         }
-        if (listType == ReaderPostListType.TAG_PREVIEW && tag != null && !isTagFollowInFlight) {
-            isTagHeaderFollowed = repository.isFollowedTag(tag)
+        if (listType == ReaderPostListType.TAG_PREVIEW && tag != null) {
+            val isFollowed = repository.isFollowedTag(tag)
+            // a follow tap during the read owns the header's state until its request finishes
+            if (!isTagFollowInFlight) {
+                isTagHeaderFollowed = isFollowed
+            }
         }
         return if (listType.isTagType && tag != null) getGapMarkerIndex(tag, newPosts) else -1
     }
@@ -1022,6 +1026,8 @@ class ReaderPostListViewModel @Inject constructor(
         val changed = posts.filter { it.blogId == data.blogId && it.isFollowedByCurrentUser != data.following }
         if (changed.isEmpty()) return
         changed.forEach { it.isFollowedByCurrentUser = data.following }
+        // the site header shows the follow state too, so make it rebind (and re-read it)
+        postsVersion++
         val postsSnapshot = posts
         launch {
             val newCardStates = buildCardStates(postsSnapshot)
