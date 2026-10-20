@@ -138,6 +138,27 @@ class SiteInfoHeaderCardViewModelSliceTest : BaseUnitTest() {
         viewModelSlice.initialize(testScope())
     }
 
+    @Test
+    fun `a fresh observer never sees a null card while a site is selected`() {
+        whenever(siteInfoHeaderCardBuilder.buildSiteInfoCard(any())).thenReturn(mock())
+        val freshSlice = SiteInfoHeaderCardViewModelSlice(
+            testDispatcher(),
+            selectedSiteRepository,
+            analyticsTrackerWrapper,
+            networkUtilsWrapper,
+            wpMediaUtilsWrapper,
+            mediaUtilsWrapper,
+            fluxCUtilsWrapper,
+            contextProvider,
+            siteInfoHeaderCardBuilder
+        )
+        val emitted = mutableListOf<SiteInfoHeaderCard?>()
+
+        freshSlice.uiModel.observeForever { emitted.add(it) }
+
+        Assertions.assertThat(emitted).isNotEmpty.doesNotContainNull()
+    }
+
     /* SITE INFO CARD */
 
     @Test
