@@ -65,10 +65,8 @@ public class ReaderConstants {
     static final String KEY_SITE_SEARCH_RESTORE_POSITION = "site_search_restore_position";
     static final String KEY_WAS_PAUSED = "was_paused";
     static final String KEY_ERROR_MESSAGE = "error_message";
-    static final String KEY_FIRST_LOAD = "first_load";
     static final String KEY_ACTIVITY_TITLE = "activity_title";
     static final String KEY_TRACKED_POSITIONS = "tracked_positions";
-    static final String KEY_CURRENT_UPDATE_ACTIONS = "current_update_actions";
     static final String KEY_ACTIVE_SEARCH_TAB = "active_search_tab";
     static final String KEY_SITE_ID = "site_id";
 

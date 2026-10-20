@@ -51,10 +51,6 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
     private final int mBlavatarSz;
 
-    public interface OnBlogInfoLoadedListener {
-        void onBlogInfoLoaded(ReaderBlog blogInfo);
-    }
-
     public interface OnBlogInfoFailedListener {
         void onBlogInfoFailed();
     }
@@ -71,7 +67,6 @@ public class ReaderSiteHeaderView extends LinearLayout {
     @Nullable private ProgressBar mFollowProgress;
     @Nullable private ImageButton mSubscriptionSettingsButton;
     private ReaderBlog mBlogInfo;
-    @Nullable private WeakReference<OnBlogInfoLoadedListener> mBlogInfoListenerRef;
     @Nullable private WeakReference<OnBlogInfoFailedListener> mBlogInfoFailedListenerRef;
     @Nullable private WeakReference<OnFollowListener> mFollowListenerRef;
     @Nullable private WeakReference<OnSubscriptionSettingsClickListener> mSubscriptionSettingsListenerRef;
@@ -108,10 +103,6 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
     public void setOnFollowListener(@Nullable OnFollowListener listener) {
         mFollowListenerRef = listener != null ? new WeakReference<>(listener) : null;
-    }
-
-    public void setOnBlogInfoLoadedListener(@Nullable OnBlogInfoLoadedListener listener) {
-        mBlogInfoListenerRef = listener != null ? new WeakReference<>(listener) : null;
     }
 
     public void setOnBlogInfoFailedListener(@Nullable OnBlogInfoFailedListener listener) {
@@ -252,12 +243,6 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
         if (layoutInfo.getVisibility() != View.VISIBLE) {
             layoutInfo.setVisibility(View.VISIBLE);
-        }
-
-        OnBlogInfoLoadedListener blogInfoListener =
-                mBlogInfoListenerRef != null ? mBlogInfoListenerRef.get() : null;
-        if (blogInfoListener != null) {
-            blogInfoListener.onBlogInfoLoaded(blogInfo);
         }
     }
 
