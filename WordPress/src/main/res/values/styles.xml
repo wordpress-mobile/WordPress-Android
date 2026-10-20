@@ -401,11 +401,6 @@
         <item name="textColorHint">@color/hint_text</item>
     </style>
 
-    <style name="FilteredRecyclerViewFilterTextView.MainToolbar">
-        <item name="android:textSize">@null</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
-    </style>
-
     <style name="WordPress.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Surface">
         <item name="android:background">?attr/colorSurface</item>
         <item name="liftOnScroll">true</item>
