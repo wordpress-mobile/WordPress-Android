@@ -1069,6 +1069,11 @@ class PostRsListViewModel @Inject constructor(
                 val existing = existingPosts
                     .firstOrNull { it.remoteId == model.remoteId }
                 featuredImages.carryOver(model, existing).copy(
+                    date = if (useModifiedDate && model.date.isNotEmpty()) {
+                        resourceProvider.getString(R.string.rs_date_modified, model.date)
+                    } else {
+                        model.date
+                    },
                     actions = getMenuActions(effectiveTab, model.hasPassword, model.commentsOpen),
                     authorDisplayName = if (
                         model.authorId != 0L &&
