@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.list
 
-import androidx.paging.DataSource.InvalidatedCallback
+import androidx.paging.PagingSource.LoadParams.Refresh
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
@@ -10,28 +11,27 @@ import org.wordpress.android.fluxc.model.list.PagedListFactory
 
 internal class PagedListFactoryTest {
     @Test
-    fun `create factory triggers create data source`() {
+    fun `first load triggers create data source`() = runBlocking<Unit> {
         val mockCreateDataSource = mock<() -> TestInternalPagedListDataSource>()
         whenever(mockCreateDataSource.invoke()).thenReturn(mock())
         val pagedListFactory = PagedListFactory(mockCreateDataSource)
 
-        pagedListFactory.create()
+        pagedListFactory.create().load(Refresh(key = null, loadSize = 1, placeholdersEnabled = true))
 
         verify(mockCreateDataSource, times(1)).invoke()
     }
 
     @Test
-    fun `invalidate triggers create data source`() {
+    fun `invalidate invalidates the current paging source`() {
         val mockCreateDataSource = mock<() -> TestInternalPagedListDataSource>()
-        whenever(mockCreateDataSource.invoke()).thenReturn(mock())
-        val invalidatedCallback = mock<InvalidatedCallback>()
+        val invalidatedCallback = mock<() -> Unit>()
 
         val pagedListFactory = PagedListFactory(mockCreateDataSource)
         val currentSource = pagedListFactory.create()
-        currentSource.addInvalidatedCallback(invalidatedCallback)
+        currentSource.registerInvalidatedCallback(invalidatedCallback)
 
         pagedListFactory.invalidate()
 
-        verify(invalidatedCallback, times(1)).onInvalidated()
+        verify(invalidatedCallback, times(1)).invoke()
     }
 }

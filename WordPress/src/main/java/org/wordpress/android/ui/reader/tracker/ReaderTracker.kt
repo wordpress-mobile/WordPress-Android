@@ -488,6 +488,22 @@ class ReaderTracker @Inject constructor(
 
         private const val UNKNOWN_VALUE = "unknown"
 
+        /**
+         * Tracks that a Freshly Pressed, tag or list stream was loaded. This is static because it's called
+         * before the post list fragment is injected.
+         */
+        @JvmStatic
+        fun trackTagLoaded(tag: ReaderTag?) {
+            val stat = when {
+                tag == null -> return
+                tag.isFreshlyPressed -> AnalyticsTracker.Stat.READER_FRESHLY_PRESSED_LOADED
+                tag.isTagTopic -> AnalyticsTracker.Stat.READER_TAG_LOADED
+                tag.isListTopic -> AnalyticsTracker.Stat.READER_LIST_LOADED
+                else -> return
+            }
+            trackTag(stat, tag.tagSlug)
+        }
+
         @JvmStatic
         fun trackTag(
             stat: AnalyticsTracker.Stat,
