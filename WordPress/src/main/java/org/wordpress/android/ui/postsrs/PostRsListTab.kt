@@ -3,12 +3,14 @@ package org.wordpress.android.ui.postsrs
 import org.wordpress.android.R
 import uniffi.wp_api.PostStatus
 import uniffi.wp_api.WpApiParamOrder
+import uniffi.wp_api.WpApiParamPostsOrderBy
 
 enum class PostRsListTab(
     val labelResId: Int,
     val emptyMessageResId: Int,
     val statuses: List<PostStatus>,
-    val order: WpApiParamOrder
+    val order: WpApiParamOrder,
+    val orderBy: WpApiParamPostsOrderBy = WpApiParamPostsOrderBy.DATE
 ) {
     PUBLISHED(
         labelResId = R.string.post_list_tab_published_posts,
@@ -20,7 +22,9 @@ enum class PostRsListTab(
         labelResId = R.string.post_list_tab_drafts,
         emptyMessageResId = R.string.posts_draft_empty,
         statuses = listOf(PostStatus.Draft, PostStatus.Pending),
-        order = WpApiParamOrder.DESC
+        order = WpApiParamOrder.DESC,
+        // Most recently edited first, matching iOS. The rows show and group by the same date.
+        orderBy = WpApiParamPostsOrderBy.MODIFIED
     ),
     SCHEDULED(
         labelResId = R.string.post_list_tab_scheduled_posts,
