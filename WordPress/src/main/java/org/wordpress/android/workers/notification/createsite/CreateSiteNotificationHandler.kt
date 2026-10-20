@@ -49,6 +49,7 @@ class CreateSiteNotificationHandler @Inject constructor(
     }
 
     override fun onNotificationShown() {
-        notificationsTracker.trackShownNotification(CREATE_SITE)
+        // Account-level: the user has no site yet, which is the point of this notification.
+        notificationsTracker.trackShownNotification(CREATE_SITE, blogId = null)
     }
 }

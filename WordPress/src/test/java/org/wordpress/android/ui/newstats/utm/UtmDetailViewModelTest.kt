@@ -127,7 +127,7 @@ class UtmDetailViewModelTest : BaseUnitTest() {
     fun `shows error on repository error`() = test {
         whenever(
             statsRepository.fetchUtm(
-                eq(TEST_SITE_ID), any(), any()
+                eq(TEST_SITE_ID), any(), any(), any()
             )
         ).thenReturn(
             UtmResult.Error(
@@ -161,7 +161,7 @@ class UtmDetailViewModelTest : BaseUnitTest() {
         }
         whenever(
             statsRepository.fetchUtm(
-                eq(TEST_SITE_ID), any(), any()
+                eq(TEST_SITE_ID), any(), any(), any()
             )
         ).thenReturn(createSuccessResult(items))
 
@@ -185,7 +185,7 @@ class UtmDetailViewModelTest : BaseUnitTest() {
         )
         whenever(
             statsRepository.fetchUtm(
-                eq(TEST_SITE_ID), any(), any()
+                eq(TEST_SITE_ID), any(), any(), any()
             )
         ).thenReturn(createSuccessResult(listOf(item)))
 
@@ -211,7 +211,7 @@ class UtmDetailViewModelTest : BaseUnitTest() {
         )
         whenever(
             statsRepository.fetchUtm(
-                eq(TEST_SITE_ID), any(), any()
+                eq(TEST_SITE_ID), any(), any(), any()
             )
         ).thenReturn(
             UtmResult.Success(
@@ -238,7 +238,7 @@ class UtmDetailViewModelTest : BaseUnitTest() {
         )
         whenever(
             statsRepository.fetchUtm(
-                eq(TEST_SITE_ID), any(), any()
+                eq(TEST_SITE_ID), any(), any(), any()
             )
         ).thenReturn(createSuccessResult(listOf(item)))
 
@@ -260,7 +260,7 @@ class UtmDetailViewModelTest : BaseUnitTest() {
     fun `uses category from saved state`() = test {
         whenever(
             statsRepository.fetchUtm(
-                eq(TEST_SITE_ID), any(), any()
+                eq(TEST_SITE_ID), any(), any(), any()
             )
         ).thenReturn(
             createSuccessResult(
@@ -277,7 +277,7 @@ class UtmDetailViewModelTest : BaseUnitTest() {
         verify(statsRepository).fetchUtm(
             eq(TEST_SITE_ID),
             eq(UtmCategory.CAMPAIGN.keys),
-            any()
+            any(), any()
         )
     }
 
@@ -286,7 +286,7 @@ class UtmDetailViewModelTest : BaseUnitTest() {
         test {
             whenever(
                 statsRepository.fetchUtm(
-                    eq(TEST_SITE_ID), any(), any()
+                    eq(TEST_SITE_ID), any(), any(), any()
                 )
             ).thenReturn(
                 createSuccessResult(
@@ -303,7 +303,7 @@ class UtmDetailViewModelTest : BaseUnitTest() {
             verify(statsRepository).fetchUtm(
                 eq(TEST_SITE_ID),
                 eq(UtmCategory.SOURCE_MEDIUM.keys),
-                any()
+                any(), any()
             )
         }
 
@@ -315,7 +315,7 @@ class UtmDetailViewModelTest : BaseUnitTest() {
     fun `loadData only fetches once`() = test {
         whenever(
             statsRepository.fetchUtm(
-                eq(TEST_SITE_ID), any(), any()
+                eq(TEST_SITE_ID), any(), any(), any()
             )
         ).thenReturn(
             createSuccessResult(
@@ -329,7 +329,7 @@ class UtmDetailViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         verify(statsRepository).fetchUtm(
-            any(), any(), any()
+            any(), any(), any(), any()
         )
     }
 
@@ -337,7 +337,7 @@ class UtmDetailViewModelTest : BaseUnitTest() {
     fun `retry re-fetches after failure`() = test {
         whenever(
             statsRepository.fetchUtm(
-                eq(TEST_SITE_ID), any(), any()
+                eq(TEST_SITE_ID), any(), any(), any()
             )
         ).thenReturn(
             UtmResult.Error(R.string.stats_error_api)

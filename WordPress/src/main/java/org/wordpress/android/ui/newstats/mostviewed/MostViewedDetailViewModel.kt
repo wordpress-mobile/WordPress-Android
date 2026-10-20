@@ -9,6 +9,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
@@ -57,6 +58,13 @@ class MostViewedDetailViewModel @Inject constructor(
      */
     fun getAdminUrl(): String? = selectedSiteRepository.getSelectedSite()?.adminUrl
 
+    /**
+     * The site this detail screen belongs to, so its Tracks events can carry a blog_id. New Stats
+     * always selects the site it was opened for before rendering, so the selected site is the
+     * viewed one.
+     */
+    fun getSite(): SiteModel? = selectedSiteRepository.getSelectedSite()
+
     private fun fetch() {
         val source = source
         val period = period
@@ -71,6 +79,24 @@ class MostViewedDetailViewModel @Inject constructor(
         _uiState.value = MostViewedDetailUiState.Loading
         viewModelScope.launch {
             _uiState.value = fetchDetail(source, site.siteId, period)
+            revalidateIfNeeded(source, site.siteId, period)
+        }
+    }
+
+    /**
+     * Refreshes a list served from an earlier visit to the stats screen, once. The screen already
+     * shows it, so this runs without a loading state and only applies a successful result — a
+     * failed refresh leaves the list in place rather than replacing it with an error.
+     */
+    private suspend fun revalidateIfNeeded(
+        source: MostViewedDetailSource,
+        siteId: Long,
+        period: StatsPeriod
+    ) {
+        if (!detailFetcher.needsRevalidation(source, siteId, period)) return
+        val refreshed = fetchDetail(source, siteId, period, forceRefresh = true)
+        if (refreshed is MostViewedDetailUiState.Loaded) {
+            _uiState.value = refreshed
         }
     }
 
@@ -78,10 +104,11 @@ class MostViewedDetailViewModel @Inject constructor(
     private suspend fun fetchDetail(
         source: MostViewedDetailSource,
         siteId: Long,
-        period: StatsPeriod
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
     ): MostViewedDetailUiState =
         try {
-            when (val result = detailFetcher.fetch(source, siteId, period)) {
+            when (val result = detailFetcher.fetch(source, siteId, period, forceRefresh)) {
                 is StatsCardFetchResult.Success -> MostViewedDetailUiState.Loaded(
                     items = result.items,
                     maxViewsForBar = result.items.firstOrNull()?.views ?: 0L,

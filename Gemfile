@@ -3,7 +3,7 @@
 source 'https://rubygems.org'
 
 gem 'danger-dangermattic', '~> 1.4'
-gem 'fastlane', '~> 2.240'
+gem 'fastlane', '~> 2.241'
 
 ### Fastlane Plugins
 
@@ -15,5 +15,5 @@ gem 'fastlane-plugin-wpmreleasetoolkit', '~> 15.1.0'
 
 ### Gems needed only for generating Promo Screenshots
 group :screenshots, optional: true do
-  gem 'rmagick', '~> 7.1'
+  gem 'rmagick', '~> 7.2'
 end

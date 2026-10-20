@@ -146,7 +146,11 @@ class FileDownloadsUseCase constructor(
     }
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
-        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_FILE_DOWNLOADS_VIEW_MORE_TAPPED, statsGranularity)
+        analyticsTracker.trackGranular(
+            AnalyticsTracker.Stat.STATS_FILE_DOWNLOADS_VIEW_MORE_TAPPED,
+            statsSiteProvider.siteModel,
+            statsGranularity
+        )
         navigateTo(
             ViewFileDownloads(
                 statsGranularity,

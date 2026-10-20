@@ -28,7 +28,8 @@ class ReferrerPopupMenuHandler
 @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val statsSiteProvider: StatsSiteProvider
 ) {
     private val coroutineScope = CoroutineScope(bgDispatcher)
 
@@ -56,6 +57,7 @@ class ReferrerPopupMenuHandler
                             coroutineScope.launch {
                                 analyticsTrackerWrapper.trackGranular(
                                     Stat.STATS_REFERRERS_ITEM_MARKED_AS_SPAM,
+                                    statsSiteProvider.siteModel,
                                     statsGranularity
                                 )
                                 referrersUseCase.markReferrerAsSpam(url)
@@ -66,6 +68,7 @@ class ReferrerPopupMenuHandler
                             coroutineScope.launch {
                                 analyticsTrackerWrapper.trackGranular(
                                     Stat.STATS_REFERRERS_ITEM_MARKED_AS_NOT_SPAM,
+                                    statsSiteProvider.siteModel,
                                     statsGranularity
                                 )
                                 referrersUseCase.unmarkReferrerAsSpam(url)

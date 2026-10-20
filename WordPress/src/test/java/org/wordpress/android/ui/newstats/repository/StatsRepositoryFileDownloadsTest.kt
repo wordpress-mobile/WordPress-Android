@@ -34,6 +34,7 @@ class StatsRepositoryFileDownloadsTest : BaseUnitTest() {
     fun setUp() {
         repository = StatsRepository(
             statsDataSource = statsDataSource,
+            statsResultCache = StatsResultCache(),
             appLogWrapper = appLogWrapper,
             clock = Clock.systemDefaultZone(),
             ioDispatcher = testDispatcher()

@@ -9,6 +9,7 @@ import org.wordpress.android.ui.newstats.repository.FileDownloadsResult
 import org.wordpress.android.ui.newstats.repository.MostViewedResult
 import org.wordpress.android.ui.newstats.repository.SearchTermItemData
 import org.wordpress.android.ui.newstats.repository.SearchTermsResult
+import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.VideoPlayItemData
 import org.wordpress.android.ui.newstats.repository.VideoPlaysResult
@@ -40,15 +41,38 @@ class MostViewedDetailFetcher @Inject constructor(
     suspend fun fetch(
         source: MostViewedDetailSource,
         siteId: Long,
-        period: StatsPeriod
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
     ): StatsCardFetchResult {
         return when (source) {
-            MostViewedDetailSource.REFERRERS -> statsRepository.fetchReferrersDetail(siteId, period).toFetchResult()
-            MostViewedDetailSource.CLICKS -> statsRepository.fetchClicks(siteId, period).toFetchResult()
-            MostViewedDetailSource.SEARCH_TERMS -> statsRepository.fetchSearchTerms(siteId, period).toFetchResult()
-            MostViewedDetailSource.VIDEO_PLAYS -> statsRepository.fetchVideoPlays(siteId, period).toFetchResult()
-            MostViewedDetailSource.FILE_DOWNLOADS -> statsRepository.fetchFileDownloads(siteId, period).toFetchResult()
+            MostViewedDetailSource.REFERRERS ->
+                statsRepository.fetchReferrersDetail(siteId, period, forceRefresh).toFetchResult()
+            MostViewedDetailSource.CLICKS ->
+                statsRepository.fetchClicks(siteId, period, forceRefresh).toFetchResult()
+            MostViewedDetailSource.SEARCH_TERMS ->
+                statsRepository.fetchSearchTerms(siteId, period, forceRefresh).toFetchResult()
+            MostViewedDetailSource.VIDEO_PLAYS ->
+                statsRepository.fetchVideoPlays(siteId, period, forceRefresh).toFetchResult()
+            MostViewedDetailSource.FILE_DOWNLOADS ->
+                statsRepository.fetchFileDownloads(siteId, period, forceRefresh).toFetchResult()
         }
+    }
+
+    /**
+     * Whether [source]'s entry for [period] came from an earlier visit to the stats screen and so
+     * should be refreshed in the background. [MostViewedDetailSource.REFERRERS] is the only source
+     * whose cache bucket no card shares, so without its own revalidation its list could be served
+     * from a previous visit for the rest of the day.
+     */
+    fun needsRevalidation(source: MostViewedDetailSource, siteId: Long, period: StatsPeriod) =
+        statsRepository.needsRevalidation(bucketOf(source), siteId, period)
+
+    private fun bucketOf(source: MostViewedDetailSource) = when (source) {
+        MostViewedDetailSource.REFERRERS -> StatsCacheBucket.REFERRERS_DETAIL
+        MostViewedDetailSource.CLICKS -> StatsCacheBucket.CLICKS
+        MostViewedDetailSource.SEARCH_TERMS -> StatsCacheBucket.SEARCH_TERMS
+        MostViewedDetailSource.VIDEO_PLAYS -> StatsCacheBucket.VIDEO_PLAYS
+        MostViewedDetailSource.FILE_DOWNLOADS -> StatsCacheBucket.FILE_DOWNLOADS
     }
 
     private fun MostViewedResult.toFetchResult() = when (this) {

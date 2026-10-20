@@ -159,6 +159,7 @@ class QuickLinksItemViewModelSlice @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
             analyticsTrackerWrapper.track(
                 AnalyticsTracker.Stat.QUICK_LINK_ITEM_TAPPED,
+                selectedSite,
                 mapOf(QUICK_LINK_TRACKING_PARAMETER to action.trackingLabel)
             )
             _onNavigation.postValue(Event(listItemActionHandler.handleAction(action, selectedSite)))

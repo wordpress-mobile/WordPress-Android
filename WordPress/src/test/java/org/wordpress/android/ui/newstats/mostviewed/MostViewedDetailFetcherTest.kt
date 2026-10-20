@@ -38,7 +38,7 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
     // region Referrers
     @Test
     fun `fetch referrers maps the success result into the common shape`() = test {
-        whenever(statsRepository.fetchReferrersDetail(any(), any())).thenReturn(
+        whenever(statsRepository.fetchReferrersDetail(any(), any(), any())).thenReturn(
             MostViewedResult.Success(
                 items = listOf(
                     MostViewedItemData(
@@ -69,7 +69,7 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
 
     @Test
     fun `fetch referrers maps the error result to the generic api error`() = test {
-        whenever(statsRepository.fetchReferrersDetail(any(), any()))
+        whenever(statsRepository.fetchReferrersDetail(any(), any(), any()))
             .thenReturn(MostViewedResult.Error("network"))
 
         val result = fetcher.fetch(MostViewedDetailSource.REFERRERS, SITE_ID, PERIOD)
@@ -83,7 +83,7 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
     // region Clicks
     @Test
     fun `fetch clicks maps items with positional ids and clicks totals`() = test {
-        whenever(statsRepository.fetchClicks(any(), any())).thenReturn(
+        whenever(statsRepository.fetchClicks(any(), any(), any())).thenReturn(
             ClicksResult.Success(
                 items = listOf(
                     ClickItemData(name = "example.com", clicks = 50L, previousClicks = 20L),
@@ -111,7 +111,7 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
     @Test
     fun `fetch clicks carries the url and children onto the detail items`() = test {
         val child = MostViewedChildData(name = "Child link", url = "child-url", views = 10L)
-        whenever(statsRepository.fetchClicks(any(), any())).thenReturn(
+        whenever(statsRepository.fetchClicks(any(), any(), any())).thenReturn(
             clicksSuccess(
                 ClickItemData("example.com", 50L, 20L, url = "link-url"),
                 ClickItemData("Grouped", 10L, 10L, children = listOf(child))
@@ -127,7 +127,7 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
 
     @Test
     fun `fetch clicks passes through the error message resId and auth flag`() = test {
-        whenever(statsRepository.fetchClicks(any(), any()))
+        whenever(statsRepository.fetchClicks(any(), any(), any()))
             .thenReturn(ClicksResult.Error(R.string.stats_error_unknown, isAuthError = true))
 
         val result = fetcher.fetch(MostViewedDetailSource.CLICKS, SITE_ID, PERIOD)
@@ -141,7 +141,7 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
     // region Search terms
     @Test
     fun `fetch search terms maps items and totals`() = test {
-        whenever(statsRepository.fetchSearchTerms(any(), any())).thenReturn(
+        whenever(statsRepository.fetchSearchTerms(any(), any(), any())).thenReturn(
             SearchTermsResult.Success(
                 items = listOf(SearchTermItemData(name = "kotlin", views = 12L, previousViews = 4L)),
                 totalViews = 12L,
@@ -161,7 +161,7 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
 
     @Test
     fun `fetch search terms passes through the error`() = test {
-        whenever(statsRepository.fetchSearchTerms(any(), any()))
+        whenever(statsRepository.fetchSearchTerms(any(), any(), any()))
             .thenReturn(SearchTermsResult.Error(R.string.stats_error_api))
 
         val error = fetcher.fetch(MostViewedDetailSource.SEARCH_TERMS, SITE_ID, PERIOD)
@@ -173,7 +173,7 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
     // region Video plays
     @Test
     fun `fetch video plays maps the title field and totals`() = test {
-        whenever(statsRepository.fetchVideoPlays(any(), any())).thenReturn(
+        whenever(statsRepository.fetchVideoPlays(any(), any(), any())).thenReturn(
             VideoPlaysResult.Success(
                 items = listOf(VideoPlayItemData(title = "Intro.mp4", views = 9L, previousViews = 3L)),
                 totalViews = 9L,
@@ -192,7 +192,7 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
 
     @Test
     fun `fetch video plays passes through the error`() = test {
-        whenever(statsRepository.fetchVideoPlays(any(), any()))
+        whenever(statsRepository.fetchVideoPlays(any(), any(), any()))
             .thenReturn(VideoPlaysResult.Error(R.string.stats_error_api, isAuthError = true))
 
         val error = fetcher.fetch(MostViewedDetailSource.VIDEO_PLAYS, SITE_ID, PERIOD)
@@ -205,7 +205,7 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
     // region File downloads
     @Test
     fun `fetch file downloads maps downloads into views and totals`() = test {
-        whenever(statsRepository.fetchFileDownloads(any(), any())).thenReturn(
+        whenever(statsRepository.fetchFileDownloads(any(), any(), any())).thenReturn(
             FileDownloadsResult.Success(
                 items = listOf(FileDownloadItemData(name = "guide.pdf", downloads = 15L, previousDownloads = 5L)),
                 totalDownloads = 15L,
@@ -225,7 +225,7 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
 
     @Test
     fun `fetch file downloads passes through the error`() = test {
-        whenever(statsRepository.fetchFileDownloads(any(), any()))
+        whenever(statsRepository.fetchFileDownloads(any(), any(), any()))
             .thenReturn(FileDownloadsResult.Error(R.string.stats_error_unknown))
 
         val error = fetcher.fetch(MostViewedDetailSource.FILE_DOWNLOADS, SITE_ID, PERIOD)

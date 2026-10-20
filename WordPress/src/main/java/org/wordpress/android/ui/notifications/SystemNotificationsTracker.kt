@@ -32,6 +32,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
 private const val SYSTEM_NOTIFICATIONS_ENABLED = "system_notifications_enabled"
+private const val BLOG_ID = "blog_id"
 
 class SystemNotificationsTracker
 @Inject constructor(
@@ -53,17 +54,25 @@ class SystemNotificationsTracker
         }
     }
 
-    fun track(stat: Stat) {
+    /**
+     * @param blogId the site the notification concerns, or null for account-level notifications. This is the
+     * notified site rather than the selected one, which are often not the same.
+     */
+    fun track(stat: Stat, blogId: Long?) {
         val notificationsEnabled = notificationManager.areNotificationsEnabled()
-        analyticsTracker.track(
-            stat,
-            mapOf(SYSTEM_NOTIFICATIONS_ENABLED to notificationsEnabled)
-        )
+        val properties = mutableMapOf<String, Any>(SYSTEM_NOTIFICATIONS_ENABLED to notificationsEnabled)
+        blogId?.let { properties[BLOG_ID] = it }
+        analyticsTracker.track(stat, properties)
     }
 
-    fun trackShownNotification(notificationType: NotificationType) {
+    /**
+     * @param blogId the site the notification concerns, or null for account-level notifications such as the
+     * login approval push or the onboarding reminders, where no site exists yet.
+     */
+    fun trackShownNotification(notificationType: NotificationType, blogId: Long?) {
         val notificationTypeValue = notificationType.toTypeValue()
-        val properties = mapOf(NOTIFICATION_TYPE_KEY to notificationTypeValue)
+        val properties = mutableMapOf<String, Any>(NOTIFICATION_TYPE_KEY to notificationTypeValue)
+        blogId?.let { properties[BLOG_ID] = it }
         analyticsTracker.track(Stat.NOTIFICATION_SHOWN, properties)
     }
 

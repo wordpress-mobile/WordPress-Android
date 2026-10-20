@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-30 14:54:51+0000
+Translation-Revision-Date: 2026-10-09 09:57:33+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.1.0
 Language: fr
@@ -30,6 +30,7 @@ Language: fr
     <string name="reader_reading_time">%s min de lecture</string>
     <string name="reader_discover_tab_latest">Les plus récents</string>
     <string name="reader_discover_tab_recommended">Recommandé</string>
+    <string name="stats_subscriber_years_and_days">%1$s, %2$s</string>
     <string name="stats_subscriber_since_today">aujourd’hui</string>
     <string name="stats_subscribers_graph_years">Années</string>
     <string name="stats_subscribers_graph_months">Mois</string>
@@ -49,8 +50,10 @@ Language: fr
     <string name="stats_subscribers_all_time">Abonnés depuis le début</string>
     <string name="stats_utm_campaign">Campagne</string>
     <string name="stats_utm_medium">Média</string>
+    <string name="stats_utm_source">Source</string>
     <string name="stats_utm_campaign_source_medium">Campagne/Source/Média</string>
     <string name="stats_utm_source_medium">Source/Média</string>
+    <string name="stats_utm_title">UTM</string>
     <string name="stats_error_not_authenticated">Non authentifié</string>
     <string name="stats_collapse_group">Réduire</string>
     <string name="stats_expand_group">Développer</string>
@@ -68,6 +71,7 @@ Language: fr
     <string name="stats_insights_total_posts">Articles au total</string>
     <string name="stats_insights_likes">Mentions J’aime</string>
     <string name="stats_insights_words">Mots</string>
+    <string name="activity_log_mcp_agent_label">via %1$s</string>
     <string name="post_rs_settings_show_password">Afficher le mot de passe</string>
     <string name="post_rs_settings_hide_password">Masquer le mot de passe</string>
     <string name="post_rs_settings_saving">Enregistrement\u2026</string>
@@ -124,6 +128,7 @@ Language: fr
     <string name="post_rs_settings_clear_excerpt">Effacer l’extrait</string>
     <string name="post_rs_settings_format_dialog_title">Format d’article</string>
     <string name="post_rs_settings_excerpt_dialog_title">Extrait</string>
+    <string name="post_rs_settings_slug_dialog_title">Slug</string>
     <string name="post_rs_settings_discard_message">Certaines modifications ne sont pas enregistrées. Voulez-vous les abandonner ?</string>
     <string name="post_rs_settings_discard_title">Annuler les modifications</string>
     <string name="post_rs_settings_status_dialog_title">État de l’article</string>
@@ -170,6 +175,8 @@ Language: fr
     <string name="menu_item_saved">Élément de menu enregistré</string>
     <string name="menu_item_target_label">Cible du lien</string>
     <string name="menu_item_no_parent">Aucun (niveau supérieur)</string>
+    <string name="menu_item_parent_label">Parent</string>
+    <string name="menu_item_url_label">URL</string>
     <string name="menu_item_title_label">Titre</string>
     <string name="move_down">Déplacer vers le bas</string>
     <string name="move_up">Déplacer vers le haut</string>
@@ -183,12 +190,14 @@ Language: fr
     <string name="menu_saved">Menu enregistré</string>
     <string name="menu_display_locations">Emplacements d’affichage</string>
     <string name="menu_auto_add_pages">Ajouter automatiquement les nouvelles pages de premier niveau</string>
+    <string name="menu_description_label">Description</string>
     <string name="menu_name_label">Nom</string>
     <string name="edit_items">Modifier les éléments</string>
     <string name="menu_locations_label">Emplacements : %1$s</string>
     <string name="no_menus">Aucun menu trouvé</string>
     <string name="edit_menu">Modifier le menu</string>
     <string name="create_menu">Créer un menu</string>
+    <string name="menus">Menus</string>
     <string name="qrcode_auth_flow_error_auth_failed_subtitle">Nous n’avons pas réussi à vous connecter à l’aide de ce code</string>
     <string name="qrcode_auth_flow_error_expired_subtitle">Ce code de connexion a expiré</string>
     <string name="qrcode_auth_flow_error_invalid_data_title">Échec de la validation</string>
@@ -263,9 +272,11 @@ Language: fr
     <string name="error_browser_no_network">Impossible de charger cette page</string>
     <string name="history_empty_subtitle_post">Vous verrez l’historique de cet article lorsque vous y apporterez des modifications</string>
     <string name="history_empty_subtitle_page">Vous verrez l’historique de cette page lorsque vous y apporterez des modifications</string>
+    <string name="reader_discover_tab_freshly_pressed">Fraîchement pressé</string>
     <string name="notifications_empty_action_comments">Rejoignez une conversation ! Commentez les articles dans le Lecteur.</string>
     <string name="notifications_empty_action_all">Participez ! Commentez les articles dans le Lecteur.</string>
     <string name="more_options">Plus d’options</string>
+    <string name="stats_weekly_average">%1$s en moyenne</string>
     <string name="stats_chart_type_bars">Bars</string>
     <string name="stats_chart_type_lines">Lignes</string>
     <string name="post_types_screen_title">Types d’articles</string>
@@ -316,6 +327,7 @@ Language: fr
     <string name="he_support_attachment_image">Image jointe</string>
     <string name="he_support_loading_image">Chargement de l’image</string>
     <string name="he_support_downloading_attachment">Téléchargement de %1$s…</string>
+    <string name="he_support_message_label">Message</string>
     <string name="he_support_send_button">Envoyer</string>
     <string name="he_support_reply_button">Répondre</string>
     <string name="he_support_last_updated">Dernière mise à jour %1$s</string>
@@ -331,6 +343,7 @@ Language: fr
     <string name="support_screen_user_avatar_content_description">Avatar de l’utilisateur</string>
     <string name="support_screen_application_logs_description">Outil avancé pour déboguer les problèmes</string>
     <string name="support_screen_application_logs_title">Journaux d’application</string>
+    <string name="support_screen_diagnostics_section_title">Diagnostics</string>
     <string name="support_screen_help_center_description">Documentation et didacticiels pour vous aider à démarrer</string>
     <string name="support_screen_help_center_title">Centre d’aide</string>
     <string name="support_screen_how_can_we_help_title">Comment pouvons-nous vous aider ?</string>
@@ -357,6 +370,7 @@ Language: fr
     <string name="application_password_required_description">Les mots de passe d’application sont un moyen plus sûr de vous connecter à votre site auto-hébergé et activer des fonctionnalités telles que %1$s.</string>
     <string name="application_password_required">Mot de passe d’application requis</string>
     <string name="menu_html_mode">Éditeur de code</string>
+    <string name="taxonomies_title">Taxonomies</string>
     <string name="media_edit_file_size_caption">Taille du fichier</string>
     <string name="jetpack_rest_connection_error_login_wpcom">Impossible de se connecter à WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">Connecter le site à WordPress.com</string>
@@ -424,8 +438,10 @@ Language: fr
     <string name="subscribers_plan_details_label">Détails du plan</string>
     <string name="subscribers_gift_plan_label">Plan cadeau</string>
     <string name="subscribers_delete_button">Supprimer l’abonné</string>
+    <string name="subscribers_site_label">Site</string>
     <string name="subscribers_country_label">Pays</string>
     <string name="subscribers_email_label">E-mail</string>
+    <string name="subscribers_plan_label">Plan</string>
     <string name="subscribers_status_label">État de l’abonnement</string>
     <string name="subscribers_date_label">Date d’abonnement</string>
     <string name="subscribers_detail_label">Détails de l’abonné</string>

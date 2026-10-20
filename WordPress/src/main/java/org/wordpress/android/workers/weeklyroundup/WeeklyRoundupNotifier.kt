@@ -57,7 +57,9 @@ class WeeklyRoundupNotifier @Inject constructor(
 
     fun onNotificationsShown(notifications: List<WeeklyRoundupNotification>) {
         repeat(notifications.size) {
-            notificationsTracker.trackShownNotification(WEEKLY_ROUNDUP)
+            // TODO WeeklyRoundupNotification is a display model with no site on it, so the per-site id is not
+            // reachable here yet. These are per-site notifications and should carry one.
+            notificationsTracker.trackShownNotification(WEEKLY_ROUNDUP, blogId = null)
         }
 
         weeklyRoundupScheduler.scheduleIfNeeded()

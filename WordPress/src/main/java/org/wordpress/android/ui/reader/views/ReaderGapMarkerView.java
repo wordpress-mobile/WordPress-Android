@@ -7,20 +7,18 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import org.wordpress.android.R;
-import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction;
-import org.wordpress.android.util.NetworkUtils;
 
 /**
  * marker view between posts indicating a gap in time between them that can be filled in - designed
- * for use inside ReaderPostAdapter
+ * for use inside ReaderPostListAdapter
  */
 public class ReaderGapMarkerView extends RelativeLayout {
     private TextView mText;
     private ProgressBar mProgress;
-    private ReaderTag mCurrentTag;
+    @Nullable private Runnable mOnFillClickListener;
 
     public ReaderGapMarkerView(Context context) {
         super(context);
@@ -42,29 +40,23 @@ public class ReaderGapMarkerView extends RelativeLayout {
         mText = (TextView) view.findViewById(R.id.text_gap_marker);
         mProgress = (ProgressBar) view.findViewById(R.id.progress_gap_marker);
 
-        mText.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fillTheGap();
+        mText.setOnClickListener(v -> {
+            if (mOnFillClickListener != null) {
+                mOnFillClickListener.run();
             }
         });
     }
 
-    public void setCurrentTag(ReaderTag tag) {
-        mCurrentTag = tag;
-        hideProgress();
+    public void setOnFillClickListener(@Nullable Runnable listener) {
+        mOnFillClickListener = listener;
     }
 
-    private void fillTheGap() {
-        if (mCurrentTag == null
-            || !NetworkUtils.checkConnection(getContext())) {
-            return;
+    public void setFilling(boolean isFilling) {
+        if (isFilling) {
+            showProgress();
+        } else {
+            hideProgress();
         }
-
-        // start service to fill the gap - EventBus will notify the owning fragment of new posts,
-        // and will take care of hiding this view
-        ReaderPostServiceStarter.startServiceForTag(getContext(), mCurrentTag, UpdateAction.REQUEST_OLDER_THAN_GAP);
-        showProgress();
     }
 
     private void showProgress() {

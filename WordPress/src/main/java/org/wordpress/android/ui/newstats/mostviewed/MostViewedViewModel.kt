@@ -3,9 +3,12 @@ package org.wordpress.android.ui.newstats.mostviewed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
@@ -19,6 +22,8 @@ import org.wordpress.android.ui.newstats.util.toDateRangeString
 import kotlin.math.abs
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
+import kotlin.coroutines.coroutineContext
 
 @HiltViewModel
 class MostViewedViewModel @Inject constructor(
@@ -52,6 +57,8 @@ class MostViewedViewModel @Inject constructor(
     private var postsCachedTotalViews: Long = 0L
     private var postsCachedTotalViewsChange: Long = 0L
     private var postsCachedTotalViewsChangePercent: Double = 0.0
+
+    private val fetchJobs = mutableMapOf<MostViewedDataSource, Job>()
 
     fun onPeriodChanged(period: StatsPeriod) {
         currentPeriod = period
@@ -87,15 +94,20 @@ class MostViewedViewModel @Inject constructor(
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) return
 
-        viewModelScope.launch {
+        setLoadingPeriod(MostViewedDataSource.POSTS_AND_PAGES, currentPeriod)
+        launchFetch(MostViewedDataSource.POSTS_AND_PAGES) {
             try {
                 _isPostsRefreshing.value = true
                 loadDataForSourceInternal(
                     site.siteId,
-                    MostViewedDataSource.POSTS_AND_PAGES
+                    MostViewedDataSource.POSTS_AND_PAGES,
+                    forceRefresh = true
                 )
             } finally {
+                // Not gated on the job: a cancelled refresh must still stop the spinner, because
+                // whatever replaced it does not own it.
                 _isPostsRefreshing.value = false
+                clearLoadingPeriodIfCurrent(MostViewedDataSource.POSTS_AND_PAGES)
             }
         }
     }
@@ -105,15 +117,20 @@ class MostViewedViewModel @Inject constructor(
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) return
 
-        viewModelScope.launch {
+        setLoadingPeriod(MostViewedDataSource.REFERRERS, currentPeriod)
+        launchFetch(MostViewedDataSource.REFERRERS) {
             try {
                 _isReferrersRefreshing.value = true
                 loadDataForSourceInternal(
                     site.siteId,
-                    MostViewedDataSource.REFERRERS
+                    MostViewedDataSource.REFERRERS,
+                    forceRefresh = true
                 )
             } finally {
+                // Not gated on the job: a cancelled refresh must still stop the spinner, because
+                // whatever replaced it does not own it.
                 _isReferrersRefreshing.value = false
+                clearLoadingPeriodIfCurrent(MostViewedDataSource.REFERRERS)
             }
         }
     }
@@ -181,32 +198,96 @@ class MostViewedViewModel @Inject constructor(
             return
         }
 
-        setUiState(dataSource, MostViewedCardUiState.Loading)
+        val period = currentPeriod
+        // A period already in memory repaints in the same frame, so the placeholder would only
+        // flash a skeleton over data the card is about to render anyway.
+        if (!isCached(site.siteId, period, dataSource)) {
+            setUiState(dataSource, MostViewedCardUiState.Loading)
+        }
 
-        viewModelScope.launch {
+        launchFetch(dataSource) {
             try {
                 loadDataForSourceInternal(site.siteId, dataSource)
                 if (!hasErrorStateForSource(dataSource)) {
                     setLoadedPeriod(dataSource, currentPeriod)
                 }
+                revalidateIfNeeded(site.siteId, period, dataSource)
             } finally {
-                clearLoadingPeriod(dataSource)
+                clearLoadingPeriodIfCurrent(dataSource)
             }
         }
     }
 
+    /**
+     * Replaces any in-flight fetch for [dataSource]. A background revalidation outlives the load that
+     * started it, so without this the period the user just left could still write its result into
+     * the card after the new period has rendered.
+     *
+     * The job is registered before it is started, so the map always holds the one in flight — which
+     * is what [clearLoadingPeriodIfCurrent] compares against.
+     */
+    private fun launchFetch(dataSource: MostViewedDataSource, block: suspend () -> Unit) {
+        fetchJobs[dataSource]?.cancel()
+        val job = viewModelScope.launch(start = CoroutineStart.LAZY) { block() }
+        fetchJobs[dataSource] = job
+        job.start()
+    }
+
+    /**
+     * Clears the guard that keeps a period from being requested twice, but only for the job that is
+     * still current: a cancelled coroutine unwinds on another thread, so its `finally` runs after
+     * the replacement has been registered, and clearing it there would let the re-dispatch that
+     * follows a card being added cancel and restart the load already fetching this period.
+     *
+     * Every fetch registered through [launchFetch] has to call this, including the refreshes: the
+     * job one replaces skips the clear because it is no longer current, so whatever replaced it owns
+     * the guard from then on.
+     */
+    private suspend fun clearLoadingPeriodIfCurrent(dataSource: MostViewedDataSource) {
+        if (fetchJobs[dataSource] === coroutineContext.job) {
+            clearLoadingPeriod(dataSource)
+        }
+    }
+
+    private fun isCached(siteId: Long, period: StatsPeriod, dataSource: MostViewedDataSource) =
+        statsRepository.isMostViewedCached(siteId, period, dataSource)
+
+    /**
+     * Refreshes a result served from a previous visit to the stats screen, once. The card already
+     * shows those numbers, so this runs without a loading state and keeps them if it fails.
+     */
+    private suspend fun revalidateIfNeeded(
+        siteId: Long,
+        period: StatsPeriod,
+        dataSource: MostViewedDataSource
+    ) {
+        if (period != currentPeriod) return
+        if (!statsRepository.mostViewedNeedsRevalidation(siteId, period, dataSource)) return
+        loadDataForSourceInternal(siteId, dataSource, forceRefresh = true, applyErrors = false)
+    }
+
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadDataForSourceInternal(siteId: Long, dataSource: MostViewedDataSource) {
+    private suspend fun loadDataForSourceInternal(
+        siteId: Long,
+        dataSource: MostViewedDataSource,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
+    ) {
         try {
-            val result = statsRepository.fetchMostViewed(siteId, currentPeriod, dataSource)
+            val result = statsRepository.fetchMostViewed(siteId, currentPeriod, dataSource, forceRefresh)
             when (result) {
                 is MostViewedResult.Success -> handleSuccessResult(result, dataSource)
-                is MostViewedResult.Error -> setErrorState(
-                    dataSource,
-                    resourceProvider.getString(R.string.stats_error_api)
-                )
+                is MostViewedResult.Error -> if (applyErrors) {
+                    setErrorState(
+                        dataSource,
+                        resourceProvider.getString(R.string.stats_error_api)
+                    )
+                }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
+            if (!applyErrors) return
             setErrorState(
                 dataSource,
                 e.message ?: resourceProvider.getString(R.string.stats_error_unknown)
@@ -286,6 +367,15 @@ class MostViewedViewModel @Inject constructor(
             dataSource,
             MostViewedCardUiState.Error(message = message)
         )
+    }
+
+    private fun setLoadingPeriod(dataSource: MostViewedDataSource, period: StatsPeriod) {
+        when (dataSource) {
+            MostViewedDataSource.POSTS_AND_PAGES ->
+                postsLoadingPeriod = period
+            MostViewedDataSource.REFERRERS ->
+                referrersLoadingPeriod = period
+        }
     }
 
     private fun clearLoadingPeriod(dataSource: MostViewedDataSource) {

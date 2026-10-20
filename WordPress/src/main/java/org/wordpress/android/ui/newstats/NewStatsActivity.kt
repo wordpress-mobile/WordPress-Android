@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -141,9 +142,11 @@ import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.utils.trackStatsAccessed
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.time.Year
+import java.util.Locale
 import javax.inject.Inject
 
 // Opacity of a navigation control (forward at the present edge, back at the year floor) when it is
@@ -166,10 +169,17 @@ class NewStatsActivity : BaseAppCompatActivity() {
     lateinit var analyticsTracker: AnalyticsTrackerWrapper
 
     @Inject
+    lateinit var newStatsTracker: NewStatsTracker
+
+    @Inject
     lateinit var newStatsRouting: NewStatsRouting
 
     @Inject
     lateinit var activityNavigator: ActivityNavigator
+
+    // The same instance the composables below obtain with viewModel(): both resolve against this
+    // activity's ViewModelStore.
+    private val newStatsViewModel: NewStatsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -215,15 +225,23 @@ class NewStatsActivity : BaseAppCompatActivity() {
                         appPrefsWrapper
                             .setNewStatsIntroShown(true)
                     },
-                    onStatsUrlClick = { url ->
-                        activityNavigator.openInCustomTab(this, url)
-                    },
+                    onTrafficRowUrlClick = ::openTrafficRowUrl,
+                    onInsightsRowUrlClick = ::openInsightsRowUrl,
+                    onExplorePlansClick = ::openPlans,
                     onPostItemClick = ::openPostDetailStats,
                     onLatestPostClick = ::openLatestPostStats,
                     onCreatePostClick = ::createNewPost
                 )
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Coming back counts as entering the screen, including after hours in the background: what
+        // the cards still hold in memory may no longer be current, so each one refreshes it once the
+        // next time it loads.
+        newStatsViewModel.onScreenEntered()
     }
 
     /**
@@ -237,7 +255,29 @@ class NewStatsActivity : BaseAppCompatActivity() {
         val site = selectedSiteRepository.getSelectedSite() ?: return
         val name = intent?.getStringExtra(KEY_LAUNCHED_FROM)
         val launchedFrom = StatsLaunchedFrom.entries.firstOrNull { it.name == name }
-        analyticsTracker.trackStatsAccessed(site, tapSource = launchedFrom?.value.orEmpty())
+        analyticsTracker.trackStatsAccessed(
+            site,
+            tapSource = launchedFrom?.value.orEmpty(),
+            isNewStats = true
+        )
+        // The New-Stats-only open event, which carries no tap source. Reported alongside the shared
+        // one above rather than instead of it: that one keeps the two screens comparable, this one
+        // lines the screen up with iOS, where it is the only open event New Stats sends.
+        newStatsTracker.trackMainScreenShown()
+    }
+
+    /**
+     * Opens the page behind a stats row (a referrer, an outbound click, a tag). [cardType] is the
+     * list the row came from, which is all that is reported - never the URL itself.
+     */
+    private fun openTrafficRowUrl(cardType: StatsCardType, url: String) {
+        newStatsTracker.trackTopListItemTapped(cardType)
+        activityNavigator.openInCustomTab(this, url)
+    }
+
+    private fun openInsightsRowUrl(cardType: InsightsCardType, url: String) {
+        newStatsTracker.trackTopListItemTapped(cardType)
+        activityNavigator.openInCustomTab(this, url)
     }
 
     private fun selectSiteFromIntentIfNeeded() {
@@ -250,15 +290,33 @@ class NewStatsActivity : BaseAppCompatActivity() {
     }
 
     private fun openPostDetailStats(item: MostViewedItem) {
-        analyticsTracker.track(Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED)
+        analyticsTracker.track(
+            Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED,
+            selectedSiteRepository.getSelectedSite()
+        )
+        newStatsTracker.trackTopListItemTapped(StatsCardType.MOST_VIEWED_POSTS_AND_PAGES)
         PostStatsDetailActivity.start(this, item.id, item.title)
     }
 
     private fun openLatestPostStats(postId: Long, title: String) {
         analyticsTracker.track(
-            Stat.STATS_LATEST_POST_SUMMARY_VIEW_POST_DETAILS_TAPPED
+            Stat.STATS_LATEST_POST_SUMMARY_VIEW_POST_DETAILS_TAPPED,
+            selectedSiteRepository.getSelectedSite()
         )
+        newStatsTracker.trackTopListItemTapped(InsightsCardType.LATEST_POST)
         PostStatsDetailActivity.start(this, postId, title)
+    }
+
+    /**
+     * Opens the plans page for a stat the site's plan does not include, from the upsell shown in
+     * place of that card's data.
+     */
+    private fun openPlans(upgradeUrl: String, cardType: StatsCardType) {
+        analyticsTracker.track(
+            Stat.STATS_FEATURE_GATE_EXPLORE_PLANS_TAPPED,
+            mapOf("feature" to cardType.name.lowercase(Locale.ROOT))
+        )
+        activityNavigator.openInCustomTab(this, upgradeUrl)
     }
 
     private fun createNewPost() {
@@ -279,7 +337,7 @@ class NewStatsActivity : BaseAppCompatActivity() {
      * finishing this activity straight away would tear the dialog down with it.
      */
     private fun switchToOldStats() {
-        analyticsTracker.track(Stat.STATS_NEW_STATS_DISABLED)
+        analyticsTracker.track(Stat.STATS_NEW_STATS_DISABLED, selectedSiteRepository.getSelectedSite())
         newStatsRouting.optOut()
     }
 
@@ -392,7 +450,9 @@ private fun NewStatsScreen(
     onSwitchToOldStats: () -> Unit = {},
     showIntroBottomSheet: Boolean = false,
     onIntroDismissed: () -> Unit = {},
-    onStatsUrlClick: (String) -> Unit = {},
+    onTrafficRowUrlClick: (StatsCardType, String) -> Unit = { _, _ -> },
+    onInsightsRowUrlClick: (InsightsCardType, String) -> Unit = { _, _ -> },
+    onExplorePlansClick: (String, StatsCardType) -> Unit = { _, _ -> },
     onPostItemClick: (MostViewedItem) -> Unit = {},
     onLatestPostClick: (Long, String) -> Unit = { _, _ -> },
     onCreatePostClick: () -> Unit = {}
@@ -408,6 +468,23 @@ private fun NewStatsScreen(
     val tabs = StatsTab.entries
     val pagerState = rememberPagerState(initialPage = initialTab.ordinal, pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
+    // The same NewStatsViewModel instance the tab contents use: both resolve against the activity's
+    // ViewModelStore, so this is where the screen-level events can reach a tracker.
+    val newStatsViewModel: NewStatsViewModel = viewModel()
+    // Keyed on settledPage, not currentPage, so a swipe the user drags back doesn't report a tab they
+    // never landed on. Saved across configuration changes so a rotation doesn't re-report the tab
+    // already on screen - the same reason onCreate only tracks on a fresh launch.
+    var lastReportedTab by rememberSaveable { mutableStateOf<String?>(null) }
+    LaunchedEffect(pagerState.settledPage) {
+        val tab = tabs[pagerState.settledPage]
+        val previous = lastReportedTab?.let(StatsTab::fromName)
+        lastReportedTab = tab.name
+        // Null on the first pass: the tab the screen opened on was not navigated to.
+        if (previous != null && previous != tab) {
+            newStatsViewModel.onTabSelected(from = previous, to = tab)
+        }
+        if (previous != tab) newStatsViewModel.onTabShown(tab)
+    }
     var showPeriodMenu by remember { mutableStateOf(false) }
     var showIntro by remember { mutableStateOf(showIntroBottomSheet) }
     val introSheetState = rememberModalBottomSheetState(
@@ -429,7 +506,7 @@ private fun NewStatsScreen(
         StatsDateRangePickerDialog(
             onDismiss = { showDateRangePicker = false },
             onDateRangeSelected = { startDate, endDate ->
-                viewsStatsViewModel.onPeriodChanged(StatsPeriod.Custom(startDate, endDate))
+                viewsStatsViewModel.onCustomRangeSelected(startDate, endDate)
                 showDateRangePicker = false
             }
         )
@@ -500,7 +577,7 @@ private fun NewStatsScreen(
                                     },
                                     onPresetSelected = { period ->
                                         viewsStatsViewModel
-                                            .onPeriodChanged(period)
+                                            .onPresetSelected(period)
                                         showPeriodMenu = false
                                     },
                                     onCustomSelected = {
@@ -583,7 +660,9 @@ private fun NewStatsScreen(
                 StatsTabContent(
                     tab = tabs[page],
                     viewsStatsViewModel = viewsStatsViewModel,
-                    onStatsUrlClick = onStatsUrlClick,
+                    onTrafficRowUrlClick = onTrafficRowUrlClick,
+                    onInsightsRowUrlClick = onInsightsRowUrlClick,
+                    onExplorePlansClick = onExplorePlansClick,
                     onPostItemClick = onPostItemClick,
                     onLatestPostClick = onLatestPostClick,
                     onCreatePostClick = onCreatePostClick
@@ -597,7 +676,9 @@ private fun NewStatsScreen(
 private fun StatsTabContent(
     tab: StatsTab,
     viewsStatsViewModel: ViewsStatsViewModel,
-    onStatsUrlClick: (String) -> Unit = {},
+    onTrafficRowUrlClick: (StatsCardType, String) -> Unit = { _, _ -> },
+    onInsightsRowUrlClick: (InsightsCardType, String) -> Unit = { _, _ -> },
+    onExplorePlansClick: (String, StatsCardType) -> Unit = { _, _ -> },
     onPostItemClick: (MostViewedItem) -> Unit = {},
     onLatestPostClick: (Long, String) -> Unit = { _, _ -> },
     onCreatePostClick: () -> Unit = {}
@@ -605,11 +686,12 @@ private fun StatsTabContent(
     when (tab) {
         StatsTab.TRAFFIC -> TrafficTabContent(
             viewsStatsViewModel = viewsStatsViewModel,
-            onStatsUrlClick = onStatsUrlClick,
+            onRowUrlClick = onTrafficRowUrlClick,
+            onExplorePlansClick = onExplorePlansClick,
             onPostItemClick = onPostItemClick
         )
         StatsTab.INSIGHTS -> InsightsTabContent(
-            onStatsUrlClick = onStatsUrlClick,
+            onRowUrlClick = onInsightsRowUrlClick,
             onLatestPostClick = onLatestPostClick,
             onCreatePostClick = onCreatePostClick
         )
@@ -633,7 +715,8 @@ private fun TrafficTabContent(
     devicesViewModel: DevicesViewModel = viewModel(),
     utmViewModel: UtmViewModel = viewModel(),
     newStatsViewModel: NewStatsViewModel = viewModel(),
-    onStatsUrlClick: (String) -> Unit = {},
+    onRowUrlClick: (StatsCardType, String) -> Unit = { _, _ -> },
+    onExplorePlansClick: (String, StatsCardType) -> Unit = { _, _ -> },
     onPostItemClick: (MostViewedItem) -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -801,6 +884,9 @@ private fun TrafficTabContent(
         isRefreshing = isRefreshing,
         state = pullToRefreshState,
         onRefresh = {
+            // Empty the cache first, synchronously: the refreshes dispatched below must all reach the
+            // network, and a coroutine hop here would race them.
+            newStatsViewModel.invalidateStatsCache()
             newStatsViewModel.checkNetworkStatus()
             visibleCards.dispatchToVisibleCards(
                 onTodaysStats = { todaysStatsViewModel.refresh() },
@@ -930,7 +1016,7 @@ private fun TrafficTabContent(
                         onMoveToTop = { newStatsViewModel.moveCardToTop(cardType) },
                         onMoveDown = { newStatsViewModel.moveCardDown(cardType) },
                         onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) },
-                        onUrlClick = onStatsUrlClick
+                        onUrlClick = { url -> onRowUrlClick(cardType, url) }
                     )
                     StatsCardType.LOCATIONS -> LocationsCard(
                         uiState = locationsUiState,
@@ -955,6 +1041,16 @@ private fun TrafficTabContent(
                                 LocationsCardUiState.Error)
                                 ?.isAuthError == true,
                             getAdminUrl = locationsViewModel::getAdminUrl,
+                            context = context
+                        ),
+                        onExplorePlans = buildExplorePlansAction(
+                            isPlanGated = (locationsUiState as?
+                                LocationsCardUiState.Error)
+                                ?.isPlanGated == true,
+                            getUpgradeUrl =
+                                locationsViewModel::getUpgradeUrl,
+                            cardType = StatsCardType.LOCATIONS,
+                            onExplorePlansClick = onExplorePlansClick,
                             context = context
                         )
                     )
@@ -988,6 +1084,16 @@ private fun TrafficTabContent(
                                 ?.isAuthError == true,
                             getAdminUrl =
                                 devicesViewModel::getAdminUrl,
+                            context = context
+                        ),
+                        onExplorePlans = buildExplorePlansAction(
+                            isPlanGated = (devicesUiState as?
+                                DevicesCardUiState.Error)
+                                ?.isPlanGated == true,
+                            getUpgradeUrl =
+                                devicesViewModel::getUpgradeUrl,
+                            cardType = StatsCardType.DEVICES,
+                            onExplorePlansClick = onExplorePlansClick,
                             context = context
                         )
                     )
@@ -1025,6 +1131,16 @@ private fun TrafficTabContent(
                                 UtmCardUiState.Error)
                                 ?.isAuthError == true,
                             getAdminUrl = utmViewModel::getAdminUrl,
+                            context = context
+                        ),
+                        onExplorePlans = buildExplorePlansAction(
+                            isPlanGated = (utmUiState as?
+                                UtmCardUiState.Error)
+                                ?.isPlanGated == true,
+                            getUpgradeUrl =
+                                utmViewModel::getUpgradeUrl,
+                            cardType = StatsCardType.UTM,
+                            onExplorePlansClick = onExplorePlansClick,
                             context = context
                         )
                     )
@@ -1087,7 +1203,7 @@ private fun TrafficTabContent(
                             getAdminUrl = clicksViewModel::getAdminUrl,
                             context = context
                         ),
-                        onUrlClick = onStatsUrlClick
+                        onUrlClick = { url -> onRowUrlClick(cardType, url) }
                     )
                     StatsCardType.SEARCH_TERMS -> MostViewedCard(
                         uiState = searchTermsUiState,
@@ -1271,7 +1387,7 @@ private fun InsightsTabContent(
     tagsAndCategoriesViewModel: TagsAndCategoriesViewModel = viewModel(),
     latestPostViewModel: LatestPostViewModel = viewModel(),
     insightsViewModel: InsightsViewModel = viewModel(),
-    onStatsUrlClick: (String) -> Unit = {},
+    onRowUrlClick: (InsightsCardType, String) -> Unit = { _, _ -> },
     onLatestPostClick: (Long, String) -> Unit = { _, _ -> },
     onCreatePostClick: () -> Unit = {}
 ) {
@@ -1482,7 +1598,7 @@ private fun InsightsTabContent(
                             onMoveToTop = { insightsViewModel.moveCardToTop(cardType) },
                             onMoveDown = { insightsViewModel.moveCardDown(cardType) },
                             onMoveToBottom = { insightsViewModel.moveCardToBottom(cardType) },
-                            onUrlClick = onStatsUrlClick
+                            onUrlClick = { url -> onRowUrlClick(cardType, url) }
                         )
                     }
                 }
@@ -1626,6 +1742,37 @@ private fun SingleRangeLine(line: RangeLine, style: TextStyle, color: Color) {
         is RangeLine.Split -> "${line.start} - ${line.end}"
     }
     Text(text = text, style = style, color = color, maxLines = 1)
+}
+
+/**
+ * The "Explore Plans" action for a card the site's plan does not cover, or null when the card is
+ * not gated so the card keeps its regular error handling.
+ */
+private fun buildExplorePlansAction(
+    isPlanGated: Boolean,
+    getUpgradeUrl: () -> String?,
+    cardType: StatsCardType,
+    onExplorePlansClick: (String, StatsCardType) -> Unit,
+    context: Context
+): (() -> Unit)? = if (isPlanGated) {
+    {
+        val url = getUpgradeUrl()
+        if (url != null) {
+            onExplorePlansClick(url, cardType)
+        } else {
+            AppLog.w(
+                AppLog.T.STATS,
+                "No site selected, cannot open the plans page"
+            )
+            Toast.makeText(
+                context,
+                R.string.stats_feature_gate_plans_unavailable,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+} else {
+    null
 }
 
 private fun buildOpenWpAdminAction(

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-07-29 09:58:00+0000
+Translation-Revision-Date: 2026-10-12 07:06:24+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.1.0
 Language: ja_JP
@@ -53,6 +53,7 @@ Language: ja_JP
     <string name="stats_utm_source">ソース</string>
     <string name="stats_utm_campaign_source_medium">キャンペーン / ソース / メディア</string>
     <string name="stats_utm_source_medium">ソース / メディア</string>
+    <string name="stats_utm_title">UTM</string>
     <string name="stats_error_not_authenticated">認証されていません</string>
     <string name="stats_collapse_group">折りたたむ</string>
     <string name="stats_expand_group">展開</string>
@@ -272,6 +273,7 @@ Language: ja_JP
     <string name="error_browser_no_network">このページを読み込めません</string>
     <string name="history_empty_subtitle_post">この投稿に変更を加えると、その投稿の履歴が表示されます</string>
     <string name="history_empty_subtitle_page">このページに変更を加えると、そのページの履歴が表示されます</string>
+    <string name="reader_discover_tab_freshly_pressed">Freshly Pressed</string>
     <string name="notifications_empty_action_comments">ディスカッションに参加しましょう ! Reader の投稿にコメントします。</string>
     <string name="notifications_empty_action_all">活発に参加しましょう ! Reader の投稿にコメントします。</string>
     <string name="more_options">その他のオプション</string>
@@ -336,6 +338,7 @@ Language: ja_JP
     <string name="ai_bot_time_just_now">たった今</string>
     <string name="ai_bot_welcome_message">あなたのパーソナル AI アシスタントです。 サイトやアカウントについての質問にお答えします。</string>
     <string name="ai_bot_welcome_greeting">こんにちは、%1$s 様</string>
+    <string name="unified_support_generic_error">エラーが発生しました。 しばらくしてからもう一度お試しください。</string>
     <string name="create">作成</string>
     <string name="logs_screen_general_error">エラーが発生しました…</string>
     <string name="logs_screen_empty_state">表示できるログがありません</string>
@@ -617,6 +620,8 @@ Language: ja_JP
     <string name="reader_menu_reading_preferences">閲覧の設定</string>
     <string name="reader_page_followed_tags_text_title">フォロー中のタグ</string>
     <string name="reader_preferences_theme_candy">キャンディー</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
     <string name="reader_preferences_theme_evening">イヴニング</string>
     <string name="reader_preferences_theme_sepia">セピア</string>
     <string name="reader_preferences_theme_soft">ソフト</string>

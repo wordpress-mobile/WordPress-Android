@@ -20,12 +20,14 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.repository.BottomStatsAggregates
 import org.wordpress.android.ui.newstats.repository.BottomStatsResult
 import org.wordpress.android.ui.newstats.repository.PeriodAggregates
 import org.wordpress.android.ui.newstats.repository.PeriodStatsResult
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
+import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.ViewsDataPoint
 import org.wordpress.android.ui.newstats.util.RangeYearPlacement
@@ -60,7 +62,8 @@ class ViewsStatsViewModel @Inject constructor(
     private val statsRepository: StatsRepository,
     private val resourceProvider: ResourceProvider,
     private val savedStateHandle: SavedStateHandle,
-    private val cardsConfigurationRepository: StatsCardsConfigurationRepository
+    private val cardsConfigurationRepository: StatsCardsConfigurationRepository,
+    private val newStatsTracker: NewStatsTracker
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<ViewsStatsCardUiState>(ViewsStatsCardUiState.Loading)
     val uiState: StateFlow<ViewsStatsCardUiState> = _uiState.asStateFlow()
@@ -88,10 +91,16 @@ class ViewsStatsViewModel @Inject constructor(
 
     private var currentChartType: ChartType = restoreChartTypeFromSavedState()
 
-    // The user's persisted metric preference. On single-day periods a non-views selection shows the
-    // "hourly data not available" empty state instead of a chart (see [chartAvailableFor]); the
-    // preference is kept so the chart returns when the user goes back to a multi-day period.
+    // The user's persisted metric preference. It isn't necessarily what the chart plots: on single-day
+    // periods only views has an hourly series, so the chart falls back to it (see [chartedMetric]) while
+    // this preference is kept untouched, so the chart returns to it on the next multi-day period.
     private var currentSelectedMetric: StatsMetric = restoreMetricFromSavedState()
+
+    // Whether [currentSelectedMetric] was picked while on [currentPeriod], as opposed to carried in from
+    // an earlier one. Only a carried-in preference is overridden by the views fallback, so a deliberate
+    // tap on a metric this period can't chart still gets that metric's own empty state. Reset on every
+    // period change: the fallback has to be re-evaluated for the period the user just moved to.
+    private var metricPickedOnCurrentPeriod = false
 
     // The last successful chart result for the current period, cached so a metric switch can re-plot
     // the chart from data already in memory, without a new network call.
@@ -182,6 +191,26 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     /**
+     * A preset picked from the period selector. Separate from [onPeriodChanged] so only a pick made
+     * in the menu is reported - paging and bar drill-downs reach the same range through their own
+     * entry points, and each has its own event.
+     *
+     * Reports the tap even when [period] is already the committed range: that tap is how the user
+     * returns the screen to the whole period after soft-selecting a bar, so it is a real choice
+     * rather than a no-op.
+     */
+    fun onPresetSelected(period: StatsPeriod) {
+        newStatsTracker.trackDateRangePresetSelected(period)
+        onPeriodChanged(period)
+    }
+
+    /** A range picked in the date-range picker dialog. */
+    fun onCustomRangeSelected(startDate: LocalDate, endDate: LocalDate) {
+        newStatsTracker.trackCustomDateRangeSelected(startDate, endDate)
+        onPeriodChanged(StatsPeriod.Custom(startDate, endDate))
+    }
+
+    /**
      * Commits [period] as the screen's range. An explicit pick — the selector, a custom range, a bar
      * drill-down — also becomes the origin future navigation resolves ties against; paging passes
      * [keepOrigin] so the ranges it produces don't overwrite the preset the user chose.
@@ -201,6 +230,8 @@ class ViewsStatsViewModel @Inject constructor(
         // whole-period header/bottom) so no stale overlay survives into the reload.
         clearSoftSelection()
         currentPeriod = period
+        // The pick belonged to the period being left, so it no longer suppresses the fallback here.
+        metricPickedOnCurrentPeriod = false
         if (!keepOrigin) periodOrigin = period
         // Drop the previous period's cached chart result so a metric switch mid-load can't re-plot from
         // stale data or evaluate availability against the wrong period; it is repopulated on next load.
@@ -217,6 +248,11 @@ class ViewsStatsViewModel @Inject constructor(
      */
     fun onNavigatePrevious() {
         if (!statsRepository.canNavigateBackward(currentPeriod)) return
+        // Reported before the move, so the event names the range being left.
+        newStatsTracker.trackDateNavigationButtonTapped(
+            NewStatsTracker.NavigationDirection.PREVIOUS,
+            currentPeriod
+        )
         navigateTo(statsRepository.previousPeriod(currentPeriod, origin = periodOrigin))
     }
 
@@ -226,6 +262,10 @@ class ViewsStatsViewModel @Inject constructor(
      */
     fun onNavigateNext() {
         if (!statsRepository.canNavigateForward(currentPeriod)) return
+        newStatsTracker.trackDateNavigationButtonTapped(
+            NewStatsTracker.NavigationDirection.NEXT,
+            currentPeriod
+        )
         navigateTo(statsRepository.nextPeriod(currentPeriod, origin = periodOrigin))
     }
 
@@ -372,6 +412,10 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     fun onChartTypeChanged(chartType: ChartType) {
+        // Re-picking the type already on screen changes nothing visible, so it isn't reported.
+        if (chartType != currentChartType) {
+            newStatsTracker.trackChartTypeChanged(from = currentChartType, to = chartType)
+        }
         currentChartType = chartType
         saveChartType(chartType)
         // The bar highlight is BAR-only and the header overlay is tied to a selection, so a chart-type
@@ -418,13 +462,24 @@ class ViewsStatsViewModel @Inject constructor(
 
     /**
      * Selects a metric to chart and list. Re-plots the chart from the cached period result (no network
-     * call) and persists the choice. On single-day (hourly) periods only [StatsMetric.VIEWS] has a
-     * series, so selecting another metric shows the "hourly data not available" empty state rather than
-     * a chart — see [chartAvailableFor].
+     * call) and persists the choice. An explicit pick is always honoured, even on a single-day (hourly)
+     * period where only [StatsMetric.VIEWS] has a series: there the chart region shows the "no hourly
+     * data" state so the tap has a visible answer instead of appearing inert. That differs from merely
+     * *arriving* on such a period, which falls back to views — see [chartedMetric].
+     *
+     * Tapping the metric already on screen does nothing and persists nothing, so the stored preference
+     * only ever changes through a tap that visibly changes the card.
      */
     fun onMetricSelected(metric: StatsMetric) {
-        if (metric == currentSelectedMetric) return
+        // Tapping the metric the card already shows is a no-op, whether it is showing because the user
+        // chose it or because the views fallback stands in for something else. Comparing against the
+        // *stored preference* instead would let a tap on the highlighted Views tab through while the
+        // fallback is up: the rebuilt state is identical, so nothing would change on screen, but the
+        // user's real preference would be silently overwritten with views.
+        if (metric == chartedMetric()) return
+        newStatsTracker.trackChartMetricSelected(metric)
         currentSelectedMetric = metric
+        metricPickedOnCurrentPeriod = true
         saveMetric(metric)
         val cached = lastChartResult
         _uiState.update { current ->
@@ -462,6 +517,23 @@ class ViewsStatsViewModel @Inject constructor(
     /** Whether the chart region currently shows plotted content (as opposed to loading/error). */
     private fun ChartUiState.isPlotted(): Boolean =
         this is ChartUiState.Loaded || this is ChartUiState.Unavailable
+
+    /**
+     * The metric the chart plots and the card labels itself with: the user's [currentSelectedMetric],
+     * except when a preference is *carried into* a single-day (hourly) period that has no series for it
+     * — there it falls back to [StatsMetric.VIEWS] rather than dropping the user on an empty state they
+     * never asked for (CMM-2472). The fallback is transient: the stored preference is untouched, so the
+     * chart returns to it as soon as the period spans more than a day.
+     *
+     * A pick made *while on* the period is not overridden ([metricPickedOnCurrentPeriod]); that tap gets
+     * the metric's own [ChartUiState.Unavailable] state, which explains why there is no chart.
+     */
+    private fun chartedMetric(): StatsMetric =
+        if (metricPickedOnCurrentPeriod || chartAvailableFor(currentSelectedMetric)) {
+            currentSelectedMetric
+        } else {
+            StatsMetric.VIEWS
+        }
 
     /**
      * Whether [metric] has a chartable series for [currentPeriod]. Every metric is chartable on
@@ -508,6 +580,16 @@ class ViewsStatsViewModel @Inject constructor(
         if (content.selectedBar?.index == index) {
             clearSoftSelection()
             return
+        }
+
+        // Only a bar becoming selected is reported; the branch above that clears a selection is the
+        // same tap undone, and would otherwise double every bar interaction.
+        lastChartResult?.let { result ->
+            newStatsTracker.trackChartBarSelected(
+                metric = chartedMetric(),
+                unit = result.unit,
+                value = dataPoint.value
+            )
         }
 
         // drillDownPeriod is null for hourly buckets: no sub-period to broadcast and no arrow, but the
@@ -723,7 +805,7 @@ class ViewsStatsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _isRefreshing.value = true
-                loadDataInternal(site)
+                loadDataInternal(site, forceRefresh = true)
             } finally {
                 _isRefreshing.value = false
             }
@@ -753,6 +835,7 @@ class ViewsStatsViewModel @Inject constructor(
             return
         }
 
+        val targetPeriod = currentPeriod
         val current = _uiState.value
         // While switching to a new period we keep the previous content on screen (dimmed, with a
         // spinner) instead of resetting to placeholders; otherwise show per-region placeholders.
@@ -761,11 +844,21 @@ class ViewsStatsViewModel @Inject constructor(
             // regain, or a no-connection Retry). Clear its effective period in lockstep with dropping
             // selectedBar below, so effectivePeriod can't stay stuck on the bar's sub-period.
             _selectedBarPeriod.value = null
-            _uiState.value = ViewsStatsCardUiState.Content(
-                chart = ChartUiState.Loading,
-                bottomStats = BottomStatsUiState.Loading,
-                selectedMetric = currentSelectedMetric
-            )
+            if (isCached(site.siteId, targetPeriod)) {
+                // A period already in memory repaints in the same frame, so resetting to
+                // placeholders would only flash a skeleton over data the card is about to render.
+                // The bar selection still has to go: updateChart keeps the overlay while one is set,
+                // so leaving it would freeze the card on the previous period's chart.
+                _uiState.update { state ->
+                    if (state is ViewsStatsCardUiState.Content) state.copy(selectedBar = null) else state
+                }
+            } else {
+                _uiState.value = ViewsStatsCardUiState.Content(
+                    chart = ChartUiState.Loading,
+                    bottomStats = BottomStatsUiState.Loading,
+                    selectedMetric = chartedMetric()
+                )
+            }
         }
 
         // Rapid paging ("back five days quickly") fires overlapping loads. Cancel the in-flight one so
@@ -774,7 +867,33 @@ class ViewsStatsViewModel @Inject constructor(
         loadJob?.cancel()
         loadJob = viewModelScope.launch {
             loadDataInternal(site)
+            revalidateIfNeeded(site, targetPeriod)
         }
+    }
+
+    /**
+     * Whether everything this card shows for [period] is already in memory: the chart, plus the
+     * bottom row for the single-day periods that fetch it separately.
+     */
+    private fun isCached(siteId: Long, period: StatsPeriod): Boolean =
+        statsRepository.isCached(StatsCacheBucket.CHART, siteId, period) &&
+            (fillsBottomFromChart(period) ||
+                statsRepository.isCached(StatsCacheBucket.BOTTOM_STATS, siteId, period))
+
+    /**
+     * Refreshes a period served from a previous visit to the stats screen, once. The card already
+     * shows those numbers, so this reloads without the placeholders or the dim, and a failure leaves
+     * what's on screen alone instead of replacing it with an error.
+     */
+    private suspend fun revalidateIfNeeded(site: SiteModel, period: StatsPeriod) {
+        if (isStale(period)) return
+        val needsRevalidation =
+            statsRepository.needsRevalidation(StatsCacheBucket.CHART, site.siteId, period) ||
+                (!fillsBottomFromChart(period) && statsRepository.needsRevalidation(
+                    StatsCacheBucket.BOTTOM_STATS, site.siteId, period
+                ))
+        if (!needsRevalidation) return
+        loadDataInternal(site, forceRefresh = true, applyErrors = false)
     }
 
     /**
@@ -782,21 +901,29 @@ class ViewsStatsViewModel @Inject constructor(
      * own region of the [ViewsStatsCardUiState.Content] state as it completes, so the chart can
      * appear before (or without) the bottom row and vice versa.
      */
-    private suspend fun loadDataInternal(site: SiteModel) {
+    private suspend fun loadDataInternal(
+        site: SiteModel,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
+    ) {
         val targetPeriod = currentPeriod
         try {
             val loaded = if (fillsBottomFromChart(targetPeriod)) {
                 // Every non-hourly period uses a daily/monthly/yearly chart whose response already
                 // carries all five bottom-row metrics per bucket, so the bottom row is filled from that
                 // same fetch. This makes the card issue 2 network calls instead of 4.
-                loadChart(site, targetPeriod, fillBottomFromChart = true)
+                loadChart(site, targetPeriod, true, forceRefresh, applyErrors)
             } else {
                 // Single-day periods fetch the bottom row from a dedicated day-level call (run in
                 // parallel with the chart), the same way the web app does it: their chart is hourly and
                 // an hourly response only populates `views`, so it can't fill the row.
                 coroutineScope {
-                    val chart = async { loadChart(site, targetPeriod, fillBottomFromChart = false) }
-                    val bottom = async { loadBottomStats(site, targetPeriod) }
+                    val chart = async {
+                        loadChart(site, targetPeriod, false, forceRefresh, applyErrors)
+                    }
+                    val bottom = async {
+                        loadBottomStats(site, targetPeriod, forceRefresh, applyErrors)
+                    }
                     val chartLoaded = chart.await()
                     val bottomLoaded = bottom.await()
                     chartLoaded && bottomLoaded
@@ -839,12 +966,18 @@ class ViewsStatsViewModel @Inject constructor(
      * from the same response (its per-bucket data already carries all five metrics); when false the
      * bottom row is left untouched here because a dedicated call populates it (Today and Custom).
      */
-    @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadChart(site: SiteModel, period: StatsPeriod, fillBottomFromChart: Boolean): Boolean {
+    @Suppress("TooGenericExceptionCaught", "LongParameterList", "ReturnCount")
+    private suspend fun loadChart(
+        site: SiteModel,
+        period: StatsPeriod,
+        fillBottomFromChart: Boolean,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
+    ): Boolean {
         // Fetch first and apply afterwards, so the staleness check sits between the two and every write
         // below it is known to belong to the period still on screen.
         val result = try {
-            statsRepository.fetchStatsForPeriod(site.siteId, period)
+            statsRepository.fetchStatsForPeriod(site.siteId, period, forceRefresh)
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
@@ -861,8 +994,10 @@ class ViewsStatsViewModel @Inject constructor(
                 buildChartState(result)
             }
             // An API error or a thrown call: both show the error state and drop the row rather than
-            // leaving the previous period's numbers under a new range.
+            // leaving the previous period's numbers under a new range. A background revalidation
+            // instead leaves the cached numbers it was refreshing on screen.
             else -> {
+                if (!applyErrors) return false
                 if (fillBottomFromChart) updateBottom(BottomStatsUiState.Hidden, period)
                 ChartUiState.Error
             }
@@ -919,11 +1054,16 @@ class ViewsStatsViewModel @Inject constructor(
     )
 
     /** Fetches the bottom row from a dedicated call. Used for Today and Custom (see [fillsBottomFromChart]). */
-    @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadBottomStats(site: SiteModel, period: StatsPeriod): Boolean {
+    @Suppress("TooGenericExceptionCaught", "ReturnCount")
+    private suspend fun loadBottomStats(
+        site: SiteModel,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
+    ): Boolean {
         var success = false
         val bottomState = try {
-            when (val result = statsRepository.fetchBottomStats(site.siteId, period)) {
+            when (val result = statsRepository.fetchBottomStats(site.siteId, period, forceRefresh)) {
                 is BottomStatsResult.Success -> {
                     success = true
                     BottomStatsUiState.Loaded(buildStatItems(result.current, result.previous))
@@ -937,6 +1077,7 @@ class ViewsStatsViewModel @Inject constructor(
             BottomStatsUiState.Hidden
         }
         if (isStale(period)) return false
+        if (!success && !applyErrors) return false
         updateBottom(bottomState, period)
         return success
     }
@@ -956,12 +1097,12 @@ class ViewsStatsViewModel @Inject constructor(
                 is ViewsStatsCardUiState.Content ->
                     current.copy(
                         chart = if (current.selectedBar != null) current.chart else chart,
-                        selectedMetric = currentSelectedMetric
+                        selectedMetric = chartedMetric()
                     )
                 else -> ViewsStatsCardUiState.Content(
                     chart = chart,
                     bottomStats = BottomStatsUiState.Loading,
-                    selectedMetric = currentSelectedMetric
+                    selectedMetric = chartedMetric()
                 )
             }
         }
@@ -990,12 +1131,12 @@ class ViewsStatsViewModel @Inject constructor(
                         bottomStats = current.selectedBar
                             ?.let { buildSelectedBarBottom(it.index) ?: current.bottomStats }
                             ?: bottom,
-                        selectedMetric = currentSelectedMetric
+                        selectedMetric = chartedMetric()
                     )
                 else -> ViewsStatsCardUiState.Content(
                     chart = ChartUiState.Loading,
                     bottomStats = bottom,
-                    selectedMetric = currentSelectedMetric
+                    selectedMetric = chartedMetric()
                 )
             }
         }
@@ -1003,14 +1144,14 @@ class ViewsStatsViewModel @Inject constructor(
 
     /**
      * Builds the chart-region state for [result] and the current selection: the plotted chart when the
-     * selected metric has a series for this period, or [ChartUiState.Unavailable] when it doesn't (a
-     * non-views metric on a single-day/hourly period) — see [chartAvailableFor].
+     * charted metric has a series for this period, or [ChartUiState.Unavailable] when it doesn't (a
+     * non-views metric explicitly picked on a single-day/hourly period) — see [chartedMetric].
      */
     private fun buildChartState(result: PeriodStatsResult.Success): ChartUiState =
-        if (chartAvailableFor(currentSelectedMetric)) buildChartLoaded(result) else ChartUiState.Unavailable
+        if (chartAvailableFor(chartedMetric())) buildChartLoaded(result) else ChartUiState.Unavailable
 
     private fun buildChartLoaded(result: PeriodStatsResult.Success): ChartUiState.Loaded {
-        val metric = currentSelectedMetric
+        val metric = chartedMetric()
         val currentStats = result.currentAggregates
         val previousStats = result.previousAggregates
         val currentValue = currentStats.valueFor(metric)

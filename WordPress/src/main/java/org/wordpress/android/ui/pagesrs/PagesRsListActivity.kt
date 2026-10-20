@@ -98,6 +98,7 @@ class PagesRsListActivity : BaseAppCompatActivity() {
                     onAddNewPage = viewModel::onAddNewPage,
                     onRowsVisible = viewModel::onRowsVisible,
                     onDensityToggled = viewModel::onDensityToggled,
+                    onCancelOpeningPage = viewModel::cancelOpeningPage,
                     density = density
                 )
             }

@@ -166,7 +166,8 @@ class OverviewUseCaseTest : BaseUnitTest() {
 
         loadData(true, forced)
 
-        verify(analyticsTrackerWrapper, never()).track(eq(STATS_OVERVIEW_ERROR), any<Map<String, *>>())
+        verify(analyticsTrackerWrapper, never())
+            .track(eq(STATS_OVERVIEW_ERROR), eq(site), any<Map<String, *>>())
     }
 
     @Test
@@ -182,7 +183,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
         loadData(true, forced)
 
         verify(analyticsTrackerWrapper).track(
-            STATS_OVERVIEW_ERROR, mapOf(
+            STATS_OVERVIEW_ERROR, site, mapOf(
                 "stats_last_date" to "2020-12-13",
                 "stats_current_date" to "2020-12-15",
                 "stats_age_in_days" to 2,

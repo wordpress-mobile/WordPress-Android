@@ -203,12 +203,18 @@ class TagsAndCategoriesUseCase
         if (type == "tag") R.drawable.ic_reader_tag else R.drawable.ic_folder_white_24dp
 
     private fun onLinkClick() {
-        analyticsTracker.track(AnalyticsTracker.Stat.STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED)
+        analyticsTracker.track(
+            AnalyticsTracker.Stat.STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED,
+            statsSiteProvider.siteModel
+        )
         navigateTo(ViewTagsAndCategoriesStats)
     }
 
     private fun onTagClick(link: String) {
-        analyticsTracker.track(AnalyticsTracker.Stat.STATS_TAGS_AND_CATEGORIES_VIEW_TAG_TAPPED)
+        analyticsTracker.track(
+            AnalyticsTracker.Stat.STATS_TAGS_AND_CATEGORIES_VIEW_TAG_TAPPED,
+            statsSiteProvider.siteModel
+        )
         navigateTo(ViewTag(link))
     }
 

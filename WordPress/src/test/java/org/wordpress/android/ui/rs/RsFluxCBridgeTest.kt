@@ -20,6 +20,7 @@ import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.AnyPostWithEditContext
 import uniffi.wp_api.PostsRequestRetrieveWithEditContextResponse
+import uniffi.wp_api.RequestExecutionErrorReason
 import uniffi.wp_api.RequestMethod
 import uniffi.wp_api.WpErrorCode
 import uniffi.wp_api.WpNetworkHeaderMap
@@ -163,6 +164,21 @@ class RsFluxCBridgeTest {
         verify(postSqlUtils, never()).insertOrUpdatePost(any(), any())
     }
 
+    @Test
+    fun `slow path keeps the reason a request never reached the server`() = runTest {
+        val client: WpApiClient = mock()
+        whenever(postStore.getPostByRemotePostId(REMOTE_ID, site)).thenReturn(null)
+        whenever(wpApiClientProvider.getWpApiClient(eq(site), anyOrNull())).thenReturn(client)
+        whenever(client.request<PostsRequestRetrieveWithEditContextResponse>(any()))
+            .thenReturn(fetchFailed(RequestExecutionErrorReason.HttpTimeoutError))
+
+        val error = runCatching { bridge.fetchAndBridgePost(REMOTE_ID, site) }.exceptionOrNull()
+
+        assertThat((error as RsBridgeException).reason)
+            .isEqualTo(RequestExecutionErrorReason.HttpTimeoutError)
+        verify(postSqlUtils, never()).insertOrUpdatePost(any(), any())
+    }
+
     // endregion
 
     private fun cachedItem(isPage: Boolean) = PostModel().apply {
@@ -197,6 +213,15 @@ class RsFluxCBridgeTest {
             errorMessage = message,
             statusCode = 400.toUInt(),
             response = "",
+            requestUrl = "https://example.com",
+            requestMethod = RequestMethod.GET,
+        )
+
+    private fun fetchFailed(reason: RequestExecutionErrorReason) =
+        WpRequestResult.RequestExecutionFailed<PostsRequestRetrieveWithEditContextResponse>(
+            statusCode = null,
+            redirects = null,
+            reason = reason,
             requestUrl = "https://example.com",
             requestMethod = RequestMethod.GET,
         )

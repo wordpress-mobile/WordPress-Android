@@ -16,12 +16,16 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ReferredItem
 import org.wordpress.android.ui.stats.refresh.utils.StatsPostProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @ExperimentalCoroutinesApi
 class PostHeaderUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var statsPostProvider: StatsPostProvider
+
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
 
     @Mock
     lateinit var tracker: AnalyticsTrackerWrapper
@@ -38,6 +42,7 @@ class PostHeaderUseCaseTest : BaseUnitTest() {
             testDispatcher(),
             testDispatcher(),
             statsPostProvider,
+            statsSiteProvider,
             tracker
         )
     }

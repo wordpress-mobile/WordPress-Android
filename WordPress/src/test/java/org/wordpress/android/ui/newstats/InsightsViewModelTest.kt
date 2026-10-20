@@ -20,6 +20,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.datasource.StatsInsightsData
 import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
 import org.wordpress.android.ui.newstats.repository.InsightsCardsConfigurationRepository
@@ -63,6 +64,9 @@ class InsightsViewModelTest :
     @Mock
     private lateinit var resourceProvider:
         ResourceProvider
+
+    @Mock
+    private lateinit var newStatsTracker: NewStatsTracker
 
     private lateinit var viewModel: InsightsViewModel
 
@@ -110,7 +114,8 @@ class InsightsViewModelTest :
             statsSummaryUseCase,
             statsInsightsUseCase,
             statsTagsUseCase,
-            resourceProvider
+            resourceProvider,
+            newStatsTracker
         )
     }
 
@@ -260,7 +265,8 @@ class InsightsViewModelTest :
                 statsSummaryUseCase,
                 statsInsightsUseCase,
                 statsTagsUseCase,
-                resourceProvider
+                resourceProvider,
+                newStatsTracker
             )
             advanceUntilIdle()
 
@@ -377,7 +383,8 @@ class InsightsViewModelTest :
                 statsSummaryUseCase,
                 statsInsightsUseCase,
                 statsTagsUseCase,
-                resourceProvider
+                resourceProvider,
+                newStatsTracker
             )
 
             assertThat(viewModel.cardsToLoad.value)

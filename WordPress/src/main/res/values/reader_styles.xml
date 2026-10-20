@@ -14,11 +14,6 @@
         <item name="android:background">@color/reader_post_list_background</item>
     </style>
 
-    <style name="ReaderCardView" parent="Widget.MaterialComponents.CardView">
-        <item name="cardElevation">@dimen/reader_card_elevation</item>
-        <item name="cardCornerRadius">0dp</item>
-    </style>
-
     <style name="ReaderCardViewNew" parent="Widget.MaterialComponents.CardView">
         <item name="cardElevation">@dimen/reader_card_elevation_new</item>
         <item name="cardCornerRadius">0dp</item>
@@ -67,16 +62,6 @@
         <item name="android:fontFamily">serif</item>
         <item name="android:lineSpacingMultiplier">1.2</item>
         <item name="android:includeFontPadding">false</item>
-    </style>
-
-    <style name="ReaderTextView.Post.Excerpt" parent="ReaderTextView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
-        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
-        <item name="android:lineSpacingMultiplier">1.1</item>
-        <item name="android:maxLines">3</item>
-        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="ReaderTextView.MetaHeader">
@@ -406,20 +391,6 @@
     <!-- New Post Card -->
     <style name="ReaderTextView.Post.New" parent="ReaderTextView" />
 
-    <style name="ReaderTextView.Post.New.BlogSection" />
-
-    <style name="ReaderTextView.Post.New.BlogSection.Compact">
-        <item name="android:textAlignment">viewStart</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:maxLines">1</item>
-    </style>
-
-    <style name="ReaderTextView.Post.New.BlogSection.Compact.Dateline">
-        <item name="android:textAppearance">@style/TextAppearance.Material3.BodyMedium</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:alpha">@dimen/material_emphasis_medium</item>
-    </style>
-
     <style name="ReaderTextView.Post.New.Title">
         <item name="android:textAppearance">@style/TextAppearance.Material3.TitleLarge</item>
         <item name="fontFamily">sans-serif-medium</item>
@@ -427,36 +398,6 @@
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">3</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
-    </style>
-
-    <style name="ReaderTextView.Post.New.Excerpt" parent="ReaderTextView">
-        <item name="android:textAppearance">@style/TextAppearance.Material3.BodyMedium</item>
-        <item name="android:lineSpacingMultiplier">1.333333</item>
-        <item name="android:maxLines">3</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:textColor">?attr/colorOnSurface</item>
-    </style>
-
-    <style name="ReaderTextView.Post.New.FooterActionItem">
-        <item name="android:textAppearance">@style/TextAppearance.Material3.BodyMedium</item>
-        <item name="android:textAlignment">viewStart</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">@color/on_surface_primary_selector</item>
-        <item name="android:lines">1</item>
-        <item name="android:paddingBottom">@dimen/margin_medium</item>
-        <item name="android:paddingTop">@dimen/margin_medium</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:background">?attr/selectableItemBackground</item>
-        <item name="drawableTint">@color/on_surface_primary_selector</item>
-    </style>
-
-    <style name="ReaderTextView.Post.New.Interactions">
-        <item name="android:textAppearance">@style/TextAppearance.Material3.BodyMedium</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:alpha">@dimen/material_emphasis_medium</item>
-        <item name="android:textAlignment">viewStart</item>
-        <item name="android:lines">1</item>
-        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="ReaderTextView.Post.New.Removed.Title" parent="ReaderTextView">

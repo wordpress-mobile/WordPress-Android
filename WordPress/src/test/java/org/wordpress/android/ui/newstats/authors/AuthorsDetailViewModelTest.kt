@@ -61,7 +61,7 @@ class AuthorsDetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when load succeeds, then loaded state with mapped authors and totals is emitted`() = test {
-        whenever(statsRepository.fetchTopAuthors(any(), any())).thenReturn(createSuccessResult())
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any())).thenReturn(createSuccessResult())
 
         viewModel.load(StatsPeriod.Last7Days)
         advanceUntilIdle()
@@ -81,7 +81,7 @@ class AuthorsDetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when load succeeds, then maxViewsForBar is the first (highest) author's views`() = test {
-        whenever(statsRepository.fetchTopAuthors(any(), any())).thenReturn(createSuccessResult())
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any())).thenReturn(createSuccessResult())
 
         viewModel.load(StatsPeriod.Last7Days)
         advanceUntilIdle()
@@ -92,7 +92,7 @@ class AuthorsDetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when the success result has no authors, then maxViewsForBar is zero`() = test {
-        whenever(statsRepository.fetchTopAuthors(any(), any())).thenReturn(
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any())).thenReturn(
             TopAuthorsResult.Success(
                 authors = emptyList(),
                 totalViews = 0L,
@@ -119,7 +119,7 @@ class AuthorsDetailViewModelTest : BaseUnitTest() {
         val state = viewModel.uiState.value
         assertThat(state).isInstanceOf(AuthorsDetailUiState.Error::class.java)
         assertThat((state as AuthorsDetailUiState.Error).message).isEqualTo(API_ERROR)
-        verify(statsRepository, never()).fetchTopAuthors(any(), any())
+        verify(statsRepository, never()).fetchTopAuthors(any(), any(), any())
     }
 
     @Test
@@ -132,12 +132,12 @@ class AuthorsDetailViewModelTest : BaseUnitTest() {
         val state = viewModel.uiState.value
         assertThat(state).isInstanceOf(AuthorsDetailUiState.Error::class.java)
         assertThat((state as AuthorsDetailUiState.Error).message).isEqualTo(API_ERROR)
-        verify(statsRepository, never()).fetchTopAuthors(any(), any())
+        verify(statsRepository, never()).fetchTopAuthors(any(), any(), any())
     }
 
     @Test
     fun `when the repository returns an error, then its message resId is resolved into the error state`() = test {
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any()))
             .thenReturn(TopAuthorsResult.Error(R.string.stats_error_api))
 
         viewModel.load(StatsPeriod.Last7Days)
@@ -150,7 +150,7 @@ class AuthorsDetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when the repository returns an auth error, then the error state carries the auth flag`() = test {
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any()))
             .thenReturn(TopAuthorsResult.Error(R.string.stats_error_api, isAuthError = true))
 
         viewModel.load(StatsPeriod.Last7Days)
@@ -168,7 +168,7 @@ class AuthorsDetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when the fetch throws, then the generic unknown error state is emitted`() = test {
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any()))
             .thenThrow(RuntimeException(EXCEPTION_MESSAGE))
 
         viewModel.load(StatsPeriod.Last7Days)
@@ -181,26 +181,26 @@ class AuthorsDetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when load is called twice, then the data is fetched only once`() = test {
-        whenever(statsRepository.fetchTopAuthors(any(), any())).thenReturn(createSuccessResult())
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any())).thenReturn(createSuccessResult())
 
         viewModel.load(StatsPeriod.Last7Days)
         advanceUntilIdle()
         viewModel.load(StatsPeriod.Last7Days)
         advanceUntilIdle()
 
-        verify(statsRepository, times(1)).fetchTopAuthors(any(), any())
+        verify(statsRepository, times(1)).fetchTopAuthors(any(), any(), any())
     }
 
     @Test
     fun `when retry is called after a load, then the data is fetched again`() = test {
-        whenever(statsRepository.fetchTopAuthors(any(), any())).thenReturn(createSuccessResult())
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any())).thenReturn(createSuccessResult())
 
         viewModel.load(StatsPeriod.Last7Days)
         advanceUntilIdle()
         viewModel.retry()
         advanceUntilIdle()
 
-        verify(statsRepository, times(2)).fetchTopAuthors(any(), any())
+        verify(statsRepository, times(2)).fetchTopAuthors(any(), any(), any())
     }
 
     private fun createSuccessResult() = TopAuthorsResult.Success(

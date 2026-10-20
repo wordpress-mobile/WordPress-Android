@@ -11,6 +11,7 @@ import androidx.fragment.app.commit
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.cancel
 import org.wordpress.android.R
+import org.wordpress.android.support.SupportRouting
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout
@@ -18,7 +19,6 @@ import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.main.ChooseSiteActivity
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
@@ -75,7 +75,7 @@ class SiteCreationActivity : BaseAppCompatActivity(),
     @Inject
     internal lateinit var siteNameFeatureConfig: SiteNameFeatureConfig
     @Inject
-    lateinit var experimentalFeatures: ExperimentalFeatures
+    lateinit var supportRouting: SupportRouting
     private val mainViewModel: SiteCreationMainVM by viewModels()
     private val hppViewModel: HomePagePickerViewModel by viewModels()
     private val siteCreationIntentsViewModel: SiteCreationIntentsViewModel by viewModels()
@@ -179,7 +179,7 @@ class SiteCreationActivity : BaseAppCompatActivity(),
     }
 
     override fun onHelpClicked(origin: Origin) {
-        ActivityLauncher.viewHelp(this, origin, null, null, experimentalFeatures)
+        ActivityLauncher.viewHelp(this, origin, null, null, supportRouting)
     }
 
     private fun showStep(target: WizardNavigationTarget<SiteCreationStep, SiteCreationState>) {

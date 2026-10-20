@@ -87,6 +87,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
                     onCreatePost = viewModel::createNewPost,
                     onRowsVisible = viewModel::onRowsVisible,
                     onDensityToggled = viewModel::onDensityToggled,
+                    onCancelOpeningPost = viewModel::cancelOpeningPost,
                     density = density
                 )
             }

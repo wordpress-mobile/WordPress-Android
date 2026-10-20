@@ -144,7 +144,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                 appLogWrapper.d(AppLog.T.POSTS, "Created $taxonomyName: ${term.name}")
                 val payload = RemoteTermPayload(
                     TermModel(
-                        term.id.toInt(),
+                        NEW_LOCAL_TERM_ID,
                         site.id,
                         term.id,
                         taxonomyName,
@@ -215,7 +215,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                 appLogWrapper.d(AppLog.T.POSTS, "Updated $taxonomyName: ${term.name}")
                 val payload = RemoteTermPayload(
                     TermModel(
-                        term.id.toInt(),
+                        NEW_LOCAL_TERM_ID,
                         site.id,
                         term.id,
                         taxonomyName,
@@ -317,7 +317,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
     }
 
     private fun AnyTermWithViewContext.toTermModel(site: SiteModel, taxonomyName: String) = TermModel(
-        id.toInt(),
+        NEW_LOCAL_TERM_ID,
         site.id,
         id,
         taxonomyName,
@@ -366,6 +366,10 @@ class TaxonomyRsApiRestClient @Inject constructor(
         if (message.isEmpty()) type.toString() else "$type - $message"
 
     companion object {
+        // TermModel.id is the local row id, not the remote term id. Leaving it at 0 lets TaxonomySqlUtils match
+        // the row by remote id + site + taxonomy; passing the remote id instead matched and overwrote whichever
+        // row happened to have that local id, even one belonging to another site or taxonomy.
+        private const val NEW_LOCAL_TERM_ID = 0
         private const val TERMS_PER_PAGE = 100u
         private const val HTTP_UNAUTHORIZED = 401u
         private const val HTTP_FORBIDDEN = 403u
