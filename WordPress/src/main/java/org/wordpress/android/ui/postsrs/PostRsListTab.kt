@@ -10,8 +10,7 @@ enum class PostRsListTab(
     val emptyMessageResId: Int,
     val statuses: List<PostStatus>,
     val order: WpApiParamOrder,
-    val orderBy: WpApiParamPostsOrderBy = WpApiParamPostsOrderBy.DATE,
-    /** Wraps the row date when sorting by [WpApiParamPostsOrderBy.MODIFIED], e.g. "Modified: %s". */
+    /** When set, the tab sorts by modified date and wraps each row's date in it, e.g. "Modified: %s". */
     val modifiedDateLabelResId: Int = 0
 ) {
     PUBLISHED(
@@ -26,7 +25,6 @@ enum class PostRsListTab(
         statuses = listOf(PostStatus.Draft, PostStatus.Pending),
         order = WpApiParamOrder.DESC,
         // Most recently edited first, matching iOS. The rows show and group by the same date.
-        orderBy = WpApiParamPostsOrderBy.MODIFIED,
         modifiedDateLabelResId = R.string.rs_date_modified
     ),
     SCHEDULED(
@@ -41,7 +39,9 @@ enum class PostRsListTab(
         statuses = listOf(PostStatus.Trash),
         order = WpApiParamOrder.DESC,
         // Trashing bumps the modified date, so this lists the most recently trashed first.
-        orderBy = WpApiParamPostsOrderBy.MODIFIED,
         modifiedDateLabelResId = R.string.rs_date_trashed
     );
+
+    val orderBy: WpApiParamPostsOrderBy
+        get() = if (modifiedDateLabelResId != 0) WpApiParamPostsOrderBy.MODIFIED else WpApiParamPostsOrderBy.DATE
 }

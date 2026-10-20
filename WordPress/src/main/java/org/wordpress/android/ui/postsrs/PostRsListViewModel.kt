@@ -1052,14 +1052,16 @@ class PostRsListViewModel @Inject constructor(
             // three reads below, and the query can change under it.
             val isSearch = isSearching
             val nowLabel = resourceProvider.getString(R.string.rs_date_now)
-            val useModifiedDate = !isSearch && tab.orderBy == WpApiParamPostsOrderBy.MODIFIED
+            val modifiedDateFormat = tab.modifiedDateLabelResId
+                .takeIf { !isSearch && it != 0 }
+                ?.let(resourceProvider::getString)
             val items = withContext(Dispatchers.IO) {
                 collection.loadItems().map { item ->
                     item.state.toContentItemUiModel<PostRsMenuAction>(
                         item.id,
                         nowLabel,
                         showStatus = isSearch,
-                        useModifiedDate = useModifiedDate
+                        modifiedDateFormat = modifiedDateFormat
                     )
                 }
             }
@@ -1069,11 +1071,6 @@ class PostRsListViewModel @Inject constructor(
                 val existing = existingPosts
                     .firstOrNull { it.remoteId == model.remoteId }
                 featuredImages.carryOver(model, existing).copy(
-                    date = if (useModifiedDate && model.date.isNotEmpty()) {
-                        resourceProvider.getString(tab.modifiedDateLabelResId, model.date)
-                    } else {
-                        model.date
-                    },
                     actions = getMenuActions(effectiveTab, model.hasPassword, model.commentsOpen),
                     authorDisplayName = if (
                         model.authorId != 0L &&

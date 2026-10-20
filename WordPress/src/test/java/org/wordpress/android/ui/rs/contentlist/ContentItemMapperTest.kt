@@ -132,16 +132,17 @@ class ContentItemMapperTest {
     }
 
     @Test
-    fun `the row date comes from the modified date only when asked`() {
+    fun `the row date comes from the modified date only when given a format`() {
         val entity = entity(modifiedGmt = MODIFIED_AT)
 
         assertThat(map(PostItemState.Fresh(entity)).dateGmtMillis).isEqualTo(PUBLISHED_AT.time)
-        assertThat(map(PostItemState.Fresh(entity), useModifiedDate = true).dateGmtMillis)
-            .isEqualTo(MODIFIED_AT.time)
+        val modified = map(PostItemState.Fresh(entity), modifiedDateFormat = "Modified: %s")
+        assertThat(modified.dateGmtMillis).isEqualTo(MODIFIED_AT.time)
+        assertThat(modified.date).startsWith("Modified: ")
     }
 
-    private fun map(state: PostItemState, showStatus: Boolean = false, useModifiedDate: Boolean = false) =
-        state.toContentItemUiModel<TestAction>(REMOTE_ID, NOW_LABEL, showStatus, useModifiedDate)
+    private fun map(state: PostItemState, showStatus: Boolean = false, modifiedDateFormat: String? = null) =
+        state.toContentItemUiModel<TestAction>(REMOTE_ID, NOW_LABEL, showStatus, modifiedDateFormat)
 
     // Only the fields the mapper reads are stubbed; mocking avoids building the ~30-field data
     // class by hand, and the same trick is used in RsToFluxCMapperTest.

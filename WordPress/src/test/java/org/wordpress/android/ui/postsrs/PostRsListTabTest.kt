@@ -56,13 +56,6 @@ class PostRsListTabTest {
     }
 
     @Test
-    fun `every tab sorted by modified date has a label for it`() {
-        PostRsListTab.entries
-            .filter { it.orderBy == WpApiParamPostsOrderBy.MODIFIED }
-            .forEach { assertThat(it.modifiedDateLabelResId).isNotZero }
-    }
-
-    @Test
     fun `all tabs have exactly four entries`() {
         assertThat(PostRsListTab.entries).hasSize(4)
     }
