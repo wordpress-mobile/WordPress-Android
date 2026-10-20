@@ -69,7 +69,7 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
         viewModel.onKeyboardOpened.observeEvent(viewLifecycleOwner, {
             coroutineScope.launch {
                 val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-                imm?.showSoftInput(reply, InputMethodManager.SHOW_IMPLICIT)
+                imm?.showSoftInput(reply, 0)
             }
         })
 
