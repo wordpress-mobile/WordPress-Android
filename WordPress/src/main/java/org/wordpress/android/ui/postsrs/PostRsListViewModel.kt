@@ -1070,7 +1070,7 @@ class PostRsListViewModel @Inject constructor(
                     .firstOrNull { it.remoteId == model.remoteId }
                 featuredImages.carryOver(model, existing).copy(
                     date = if (useModifiedDate && model.date.isNotEmpty()) {
-                        resourceProvider.getString(R.string.rs_date_modified, model.date)
+                        resourceProvider.getString(tab.modifiedDateLabelResId, model.date)
                     } else {
                         model.date
                     },

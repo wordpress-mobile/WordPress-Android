@@ -48,11 +48,18 @@ class PostRsListTabTest {
     }
 
     @Test
-    fun `DRAFTS tab sorts by modified date and the others by date`() {
+    fun `DRAFTS and TRASHED tabs sort by modified date and the others by date`() {
         assertThat(PostRsListTab.DRAFTS.orderBy).isEqualTo(WpApiParamPostsOrderBy.MODIFIED)
+        assertThat(PostRsListTab.TRASHED.orderBy).isEqualTo(WpApiParamPostsOrderBy.MODIFIED)
         assertThat(PostRsListTab.PUBLISHED.orderBy).isEqualTo(WpApiParamPostsOrderBy.DATE)
         assertThat(PostRsListTab.SCHEDULED.orderBy).isEqualTo(WpApiParamPostsOrderBy.DATE)
-        assertThat(PostRsListTab.TRASHED.orderBy).isEqualTo(WpApiParamPostsOrderBy.DATE)
+    }
+
+    @Test
+    fun `every tab sorted by modified date has a label for it`() {
+        PostRsListTab.entries
+            .filter { it.orderBy == WpApiParamPostsOrderBy.MODIFIED }
+            .forEach { assertThat(it.modifiedDateLabelResId).isNotZero }
     }
 
     @Test
