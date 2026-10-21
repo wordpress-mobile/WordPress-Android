@@ -10,23 +10,26 @@ import uniffi.wp_api.PostCommentStatus
 import uniffi.wp_api.PostStatus
 import uniffi.wp_mobile.FullEntityAnyPostWithEditContext
 import uniffi.wp_mobile.PostItemState
+import java.util.Date
 
 /**
  * Maps one row of an rs collection onto [ContentItemUiModel]. Rows without data yet map to a
  * placeholder or error row carrying only [remoteId]. [showStatus] is set while searching, where
- * results mix statuses.
+ * results mix statuses. [modifiedDateFormat] is set for lists sorted by modified date: rows then
+ * show and group by that date, wrapped in the format (e.g. "Modified: %s").
  */
 fun <A : RsMenuAction> PostItemState.toContentItemUiModel(
     remoteId: Long,
     nowLabel: String,
-    showStatus: Boolean = false
+    showStatus: Boolean = false,
+    modifiedDateFormat: String? = null
 ): ContentItemUiModel<A> = when (this) {
-    is PostItemState.Fresh -> data.toContentItemUiModel(showStatus, nowLabel)
-    is PostItemState.Stale -> data.toContentItemUiModel(showStatus, nowLabel)
+    is PostItemState.Fresh -> data.toContentItemUiModel(showStatus, nowLabel, modifiedDateFormat)
+    is PostItemState.Stale -> data.toContentItemUiModel(showStatus, nowLabel, modifiedDateFormat)
     is PostItemState.FetchingWithData ->
-        data.toContentItemUiModel(showStatus, nowLabel, ContentDisplayState.FETCHING_WITH_DATA)
+        data.toContentItemUiModel(showStatus, nowLabel, modifiedDateFormat, ContentDisplayState.FETCHING_WITH_DATA)
     is PostItemState.FailedWithData ->
-        data.toContentItemUiModel(showStatus, nowLabel, ContentDisplayState.FAILED_WITH_DATA)
+        data.toContentItemUiModel(showStatus, nowLabel, modifiedDateFormat, ContentDisplayState.FAILED_WITH_DATA)
     is PostItemState.Missing,
     is PostItemState.Fetching -> blankItem(remoteId, ContentDisplayState.PLACEHOLDER)
     is PostItemState.Failed -> blankItem(remoteId, ContentDisplayState.ERROR)
@@ -44,9 +47,11 @@ private fun <A : RsMenuAction> blankItem(remoteId: Long, displayState: ContentDi
 private fun <A : RsMenuAction> FullEntityAnyPostWithEditContext.toContentItemUiModel(
     showStatus: Boolean,
     nowLabel: String,
+    modifiedDateFormat: String?,
     displayState: ContentDisplayState = ContentDisplayState.NORMAL
 ): ContentItemUiModel<A> {
     val item: AnyPostWithEditContext = data
+    val displayDate = if (modifiedDateFormat != null) item.modifiedGmt else item.dateGmt
     return ContentItemUiModel(
         remoteId = item.id,
         title = item.title?.raw?.takeIf { it.isNotBlank() }
@@ -57,8 +62,8 @@ private fun <A : RsMenuAction> FullEntityAnyPostWithEditContext.toContentItemUiM
                 ?: item.excerpt?.rendered
                 ?: ""
             ).let { HtmlUtils.fastStripHtml(it).trim() },
-        date = RsDateFormatter.format(item.dateGmt, nowLabel, isScheduled = item.status is PostStatus.Future),
-        dateGmtMillis = item.dateGmt.time,
+        date = formatRowDate(displayDate, nowLabel, item.status is PostStatus.Future, modifiedDateFormat),
+        dateGmtMillis = displayDate.time,
         parentId = item.parent ?: 0L,
         lastModified = DateTimeUtils.iso8601UTCFromDate(item.modifiedGmt),
         link = item.link,
@@ -82,4 +87,9 @@ private fun <A : RsMenuAction> FullEntityAnyPostWithEditContext.toContentItemUiM
         },
         displayState = displayState
     )
+}
+
+private fun formatRowDate(date: Date, nowLabel: String, isScheduled: Boolean, modifiedDateFormat: String?): String {
+    val formatted = RsDateFormatter.format(date, nowLabel, isScheduled)
+    return modifiedDateFormat?.format(formatted) ?: formatted
 }
