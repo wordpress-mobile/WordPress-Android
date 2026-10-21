@@ -503,13 +503,37 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         viewModel.onSearchSubmitted("cats")
         advanceUntilIdle()
         verify(repository).searchPosts("cats", 0)
+        assertThat(viewModel.uiState.value.emptyState).isEqualTo(ReaderPostListEmptyState.SearchUpdating)
 
-        viewModel.uiEvents.filterIsInstance<ReaderPostListUiEvent.SearchEnded>().test {
-            repositoryEvents.emit(ReaderPostListEvent.SearchEnded("cats", 0, didSucceed = true))
-            assertThat(awaitItem()).isEqualTo(ReaderPostListUiEvent.SearchEnded(showResults = true))
-        }
+        repositoryEvents.emit(ReaderPostListEvent.SearchEnded("cats", 0, didSucceed = true))
         advanceUntilIdle()
         verify(repository, times(2)).getPosts(searchTarget)
+        assertThat(viewModel.uiState.value.emptyState).isEqualTo(ReaderPostListEmptyState.SearchNoResults("cats"))
+    }
+
+    @Test
+    fun `failed search shows the search error`() = test {
+        startAndLoad(ReaderPostListArgs(listType = ReaderPostListType.SEARCH_RESULTS))
+        viewModel.onSearchSubmitted("cats")
+        advanceUntilIdle()
+
+        repositoryEvents.emit(ReaderPostListEvent.SearchEnded("cats", 0, didSucceed = false))
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.emptyState).isEqualTo(ReaderPostListEmptyState.RequestFailed(true))
+    }
+
+    @Test
+    fun `search shows no empty state before a query is submitted or after it's cleared`() = test {
+        startAndLoad(ReaderPostListArgs(listType = ReaderPostListType.SEARCH_RESULTS))
+        assertThat(viewModel.uiState.value.emptyState).isNull()
+
+        viewModel.onSearchSubmitted("cats")
+        advanceUntilIdle()
+        viewModel.onSearchCleared()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.emptyState).isNull()
     }
 
     private suspend fun TestScope.startAndLoad(args: ReaderPostListArgs = args()) {
