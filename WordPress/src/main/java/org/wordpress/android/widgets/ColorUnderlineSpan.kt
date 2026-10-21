@@ -6,13 +6,22 @@ import android.text.style.CharacterStyle
 import android.text.style.UpdateAppearance
 
 class ColorUnderlineSpan(var color: Int) : CharacterStyle(), UpdateAppearance {
+    @Suppress("SwallowedException")
     override fun updateDrawState(tp: TextPaint) {
         // a custom LineBackgroundSpan ignores part of the string in some circumstances, so set the underline on the
-        // paint instead; a colored underline is only public API from Q, older versions get a plain one
+        // paint instead; a colored underline is only public API from Q, so older versions use the hidden setter
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             tp.underlineColor = color
             tp.underlineThickness = UNDERLINE_THICKNESS
-        } else {
+            return
+        }
+        try {
+            TextPaint::class.java.getMethod(
+                "setUnderlineText",
+                Integer.TYPE,
+                java.lang.Float.TYPE
+            ).invoke(tp, color, UNDERLINE_THICKNESS)
+        } catch (e: Exception) {
             tp.isUnderlineText = true
         }
     }

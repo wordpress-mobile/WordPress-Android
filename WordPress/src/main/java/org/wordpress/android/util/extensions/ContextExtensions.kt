@@ -103,7 +103,7 @@ fun Context.getStringFromAsset(assetFilename: String): String? = try {
 }
 
 /**
- * Parses Json from an asset file. Annotate the model's fields with @SerializedName so R8 keeps them.
+ * Parses Json from an asset file. The model class needs a -keep rule in proguard.cfg (see "Gson model classes").
  * @param assetFilename the asset filename
  * @param modelClass the model class
  * @return the parsed model

@@ -1,16 +1,14 @@
 package org.wordpress.android.ui.debug.cookies
 
 import com.google.gson.Gson
-import com.google.gson.annotations.SerializedName
 import java.net.HttpCookie
 import java.net.URI
 
-// @SerializedName keeps these fields through R8 via Gson's consumer rules; the derived values are getters so Gson
-// never needs to restore them
+// Persisted via Gson, so the derived values are getters rather than fields Gson would need to restore
 data class DebugCookie(
-    @SerializedName("host") val host: String,
-    @SerializedName("name") val name: String,
-    @SerializedName("value") val value: String?
+    val host: String,
+    val name: String,
+    val value: String?
 ) {
     val key get() = host + "_" + name
 
