@@ -131,8 +131,18 @@ class ContentItemMapperTest {
             .isEqualTo(R.string.post_status_draft)
     }
 
-    private fun map(state: PostItemState, showStatus: Boolean = false) =
-        state.toContentItemUiModel<TestAction>(REMOTE_ID, NOW_LABEL, showStatus)
+    @Test
+    fun `the row date comes from the modified date only when given a format`() {
+        val entity = entity(modifiedGmt = MODIFIED_AT)
+
+        assertThat(map(PostItemState.Fresh(entity)).dateGmtMillis).isEqualTo(PUBLISHED_AT.time)
+        val modified = map(PostItemState.Fresh(entity), modifiedDateFormat = "Modified: %s")
+        assertThat(modified.dateGmtMillis).isEqualTo(MODIFIED_AT.time)
+        assertThat(modified.date).startsWith("Modified: ")
+    }
+
+    private fun map(state: PostItemState, showStatus: Boolean = false, modifiedDateFormat: String? = null) =
+        state.toContentItemUiModel<TestAction>(REMOTE_ID, NOW_LABEL, showStatus, modifiedDateFormat)
 
     // Only the fields the mapper reads are stubbed; mocking avoids building the ~30-field data
     // class by hand, and the same trick is used in RsToFluxCMapperTest.
@@ -146,13 +156,14 @@ class ContentItemMapperTest {
         parent: Long? = null,
         password: String? = null,
         commentStatus: PostCommentStatus = PostCommentStatus.Closed,
+        modifiedGmt: Date = PUBLISHED_AT,
     ): FullEntityAnyPostWithEditContext {
         val post: AnyPostWithEditContext = mock()
         whenever(post.id).thenReturn(REMOTE_ID)
         whenever(post.title).thenReturn(PostTitleWithEditContext(title, rendered))
         whenever(post.excerpt).thenReturn(SparsePostExcerpt(excerpt, excerpt, false))
         whenever(post.dateGmt).thenReturn(PUBLISHED_AT)
-        whenever(post.modifiedGmt).thenReturn(PUBLISHED_AT)
+        whenever(post.modifiedGmt).thenReturn(modifiedGmt)
         whenever(post.link).thenReturn("https://example.com/p")
         whenever(post.status).thenReturn(status)
         whenever(post.sticky).thenReturn(sticky)
@@ -176,5 +187,6 @@ class ContentItemMapperTest {
         private const val REMOTE_ID = 42L
         private const val NOW_LABEL = "now"
         private val PUBLISHED_AT = Date(1_700_000_000_000L)
+        private val MODIFIED_AT = Date(1_700_100_000_000L)
     }
 }
