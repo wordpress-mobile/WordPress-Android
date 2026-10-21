@@ -4,7 +4,6 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
 import androidx.exifinterface.media.ExifInterface;
 
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -21,8 +20,7 @@ public class MediaUtils {
     public static final double MEMORY_LIMIT_FILESIZE_MULTIPLIER = 0.75D;
 
     // Every GPS tag ExifInterface supports - setting a tag to null removes it from the file
-    @VisibleForTesting
-    static final String[] GPS_TAGS = {
+    private static final String[] GPS_TAGS = {
             ExifInterface.TAG_GPS_VERSION_ID,
             ExifInterface.TAG_GPS_LATITUDE_REF,
             ExifInterface.TAG_GPS_LATITUDE,

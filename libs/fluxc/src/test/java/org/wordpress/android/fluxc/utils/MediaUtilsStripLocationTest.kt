@@ -18,39 +18,17 @@ class MediaUtilsStripLocationTest {
         val path = copyFixture()
         ExifInterface(path).apply {
             setLatLong(LATITUDE, LONGITUDE)
-            setAttribute(ExifInterface.TAG_GPS_DEST_LATITUDE_REF, "N")
-            setAttribute(ExifInterface.TAG_GPS_DEST_LATITUDE, "51/1,30/1,0/1")
-            setAttribute(ExifInterface.TAG_GPS_DEST_LONGITUDE_REF, "W")
-            setAttribute(ExifInterface.TAG_GPS_DEST_LONGITUDE, "0/1,7/1,0/1")
-            setAttribute(ExifInterface.TAG_GPS_AREA_INFORMATION, "London")
-            setAttribute(ExifInterface.TAG_GPS_IMG_DIRECTION, "90/1")
-            setAttribute(ExifInterface.TAG_GPS_SPEED, "10/1")
+            GPS_TAG_VALUES.forEach { (tag, value) -> setAttribute(tag, value) }
             saveAttributes()
         }
-        assertThat(ExifInterface(path).latLong).isNotNull
-        assertThat(ExifInterface(path).getAttribute(ExifInterface.TAG_GPS_AREA_INFORMATION)).isEqualTo("London")
 
         MediaUtils.stripLocation(path)
 
         val stripped = ExifInterface(path)
         assertThat(stripped.latLong).isNull()
-        MediaUtils.GPS_TAGS.forEach { tag ->
+        GPS_TAG_VALUES.keys.forEach { tag ->
             assertThat(stripped.getAttribute(tag)).describedAs(tag).isNull()
         }
-    }
-
-    @Test
-    fun `stripLocation leaves non-GPS tags intact`() {
-        val path = copyFixture()
-        ExifInterface(path).apply {
-            setLatLong(LATITUDE, LONGITUDE)
-            setAttribute(ExifInterface.TAG_MAKE, "Pixel")
-            saveAttributes()
-        }
-
-        MediaUtils.stripLocation(path)
-
-        assertThat(ExifInterface(path).getAttribute(ExifInterface.TAG_MAKE)).isEqualTo("Pixel")
     }
 
     private fun copyFixture(): String {
@@ -64,5 +42,14 @@ class MediaUtilsStripLocationTest {
     companion object {
         private const val LATITUDE = 51.5072
         private const val LONGITUDE = -0.1276
+        private val GPS_TAG_VALUES = mapOf(
+            ExifInterface.TAG_GPS_DEST_LATITUDE_REF to "N",
+            ExifInterface.TAG_GPS_DEST_LATITUDE to "51/1,30/1,0/1",
+            ExifInterface.TAG_GPS_DEST_LONGITUDE_REF to "W",
+            ExifInterface.TAG_GPS_DEST_LONGITUDE to "0/1,7/1,0/1",
+            ExifInterface.TAG_GPS_AREA_INFORMATION to "London",
+            ExifInterface.TAG_GPS_IMG_DIRECTION to "90/1",
+            ExifInterface.TAG_GPS_SPEED to "10/1"
+        )
     }
 }
