@@ -1018,6 +1018,12 @@
     <string name="new_stats_intro_footer">You can turn off New Stats from the overflow menu in the Stats screen.</string>
     <!-- Timespan shown in the rs posts, pages and comments lists for anything under a minute old -->
     <string name="rs_date_now">Now</string>
+    <!-- Date shown on rs Drafts list rows, which are sorted by when they were last modified. %s is the
+         formatted date, e.g. "2 days ago", "Yesterday", "Now" or "Dec 15, 2025" -->
+    <string name="rs_date_modified">Modified: %s</string>
+    <!-- Date shown on rs Trashed list rows, which are sorted by when they were trashed. %s is the
+         formatted date, e.g. "2 days ago", "Yesterday", "Now" or "Dec 15, 2025" -->
+    <string name="rs_date_trashed">Trashed: %s</string>
     <string name="post_rs_failed_to_load">Failed to load post</string>
     <string name="page_rs_failed_to_load">Failed to load page</string>
     <string name="page_rs_copy_url">Copy URL</string>
