@@ -108,16 +108,16 @@ class ReaderSearchViewModel @Inject constructor(
     }
 
     fun onSuggestionDeleteClicked(query: String) {
-        launch(bgDispatcher) {
-            searchTable.deleteQuery(query)
+        launch {
+            withContext(bgDispatcher) { searchTable.deleteQuery(query) }
             loadSuggestions()
         }
     }
 
     fun onClearHistoryConfirmed() {
-        launch(bgDispatcher) {
-            readerTracker.track(AnalyticsTracker.Stat.READER_SEARCH_HISTORY_CLEARED)
-            searchTable.deleteAllQueries()
+        readerTracker.track(AnalyticsTracker.Stat.READER_SEARCH_HISTORY_CLEARED)
+        launch {
+            withContext(bgDispatcher) { searchTable.deleteAllQueries() }
             loadSuggestions()
         }
     }
@@ -199,13 +199,18 @@ class ReaderSearchViewModel @Inject constructor(
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onReaderSitesSearched(event: OnReaderSitesSearched) {
-        if (event.searchTerm != _uiState.value.submittedQuery) return
+        val state = _uiState.value
+        if (event.searchTerm != state.submittedQuery) return
+        // a later page that doesn't follow the current list belongs to a search that has since restarted
+        if (event.offset > 0 && event.offset != state.sites.size) return
 
         setState { state ->
             if (event.isError) {
                 state.copy(
                     isLoadingSites = false,
                     isLoadingMoreSites = false,
+                    // stop paging, or scrolling to the end would retry the failed page in a loop
+                    canLoadMoreSites = false,
                     sitesRequestFailed = state.sites.isEmpty()
                 )
             } else {
@@ -245,7 +250,7 @@ class ReaderSearchViewModel @Inject constructor(
         suggestionsJob = launch {
             val max = if (prefix == null) MAX_SUGGESTIONS_WHEN_EMPTY else MAX_SUGGESTIONS
             val suggestions = withContext(bgDispatcher) { searchTable.getQueries(prefix, max) }
-            setState { it.copy(suggestions = suggestions) }
+            setState { it.copy(suggestions = suggestions, suggestionsQuery = prefix.orEmpty()) }
         }
     }
 
@@ -290,6 +295,8 @@ data class ReaderSearchUiState(
     val query: String = "",
     val submittedQuery: String? = null,
     val suggestions: List<String> = emptyList(),
+    // the trimmed query the suggestions were loaded for, since they load after the query changes
+    val suggestionsQuery: String = "",
     val selectedTab: ReaderSearchTab = ReaderSearchTab.POSTS,
     val sites: List<ReaderSearchSite> = emptyList(),
     val isLoadingSites: Boolean = false,
@@ -302,11 +309,14 @@ data class ReaderSearchUiState(
      */
     val content: ReaderSearchContent
         get() = when {
-            submittedQuery != null && (query.trim() == submittedQuery || suggestions.isEmpty()) ->
+            submittedQuery != null && (query.trim() == submittedQuery || !hasSuggestionsForQuery) ->
                 ReaderSearchContent.RESULTS
             suggestions.isNotEmpty() -> ReaderSearchContent.SUGGESTIONS
             else -> ReaderSearchContent.EXPLAINER
         }
+
+    private val hasSuggestionsForQuery: Boolean
+        get() = suggestions.isNotEmpty() && suggestionsQuery == query.trim()
 }
 
 enum class ReaderSearchContent { EXPLAINER, SUGGESTIONS, RESULTS }

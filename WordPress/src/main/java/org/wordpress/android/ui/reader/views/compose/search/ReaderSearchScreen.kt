@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.views.compose.search
 
-import android.text.TextUtils
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -15,8 +14,8 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -50,12 +49,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.text.htmlEncode
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
@@ -68,19 +69,6 @@ import org.wordpress.android.ui.rs.contentlist.ContentListSearchField
 import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
 import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
 import org.wordpress.android.util.UrlUtils
-
-class ReaderSearchActions(
-    val onBack: () -> Unit,
-    val onQueryChanged: (String) -> Unit,
-    val onSearch: () -> Unit,
-    val onSuggestionClicked: (String) -> Unit,
-    val onSuggestionDeleteClicked: (String) -> Unit,
-    val onClearHistoryConfirmed: () -> Unit,
-    val onTabSelected: (ReaderSearchTab) -> Unit,
-    val onSiteClicked: (ReaderSearchSite) -> Unit,
-    val onSiteFollowClicked: (ReaderSearchSite) -> Unit,
-    val onLoadMoreSites: () -> Unit
-)
 
 /**
  * The Reader search screen. [postList] is the post list fragment, which stays composed (and hidden by
@@ -103,6 +91,8 @@ fun ReaderSearchScreen(
         hasRequestedFocus = true
     }
 
+    // hoisted so the Sites tab keeps its scroll while hidden, and keyed so a new search starts at the top
+    val sitesListState = rememberSaveable(uiState.submittedQuery, saver = LazyListState.Saver) { LazyListState() }
     val content = uiState.content
     Scaffold(
         topBar = {
@@ -156,7 +146,7 @@ fun ReaderSearchScreen(
                         ReaderSearchContent.EXPLAINER ->
                             SearchMessage(title = stringResource(R.string.reader_label_post_search_explainer))
                         ReaderSearchContent.SUGGESTIONS -> Suggestions(uiState.suggestions, actions)
-                        ReaderSearchContent.RESULTS -> SitesTab(uiState, actions)
+                        ReaderSearchContent.RESULTS -> SitesTab(uiState, sitesListState, actions)
                     }
                 }
             }
@@ -180,11 +170,16 @@ private fun SearchTabs(selectedTab: ReaderSearchTab, onTabSelected: (ReaderSearc
 @Composable
 private fun Suggestions(suggestions: List<String>, actions: ReaderSearchActions) {
     var isClearDialogVisible by rememberSaveable { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(suggestions, key = { it }) { suggestion ->
             SuggestionRow(
                 suggestion = suggestion,
-                onClick = { actions.onSuggestionClicked(suggestion) },
+                onClick = {
+                    // hide the keyboard, as submitting from the keyboard does
+                    focusManager.clearFocus()
+                    actions.onSuggestionClicked(suggestion)
+                },
                 onDelete = { actions.onSuggestionDeleteClicked(suggestion) }
             )
         }
@@ -256,7 +251,7 @@ private fun SuggestionRow(suggestion: String, onClick: () -> Unit, onDelete: () 
 }
 
 @Composable
-private fun SitesTab(uiState: ReaderSearchUiState, actions: ReaderSearchActions) {
+private fun SitesTab(uiState: ReaderSearchUiState, listState: LazyListState, actions: ReaderSearchActions) {
     when {
         uiState.isLoadingSites -> Box(
             modifier = Modifier.fillMaxSize(),
@@ -269,7 +264,7 @@ private fun SitesTab(uiState: ReaderSearchUiState, actions: ReaderSearchActions)
             SearchMessage(title = stringResource(R.string.reader_empty_search_request_failed))
 
         uiState.sites.isEmpty() -> {
-            val query = TextUtils.htmlEncode(uiState.submittedQuery.orEmpty())
+            val query = uiState.submittedQuery.orEmpty().htmlEncode()
             SearchMessage(
                 title = stringResource(R.string.reader_empty_search_title),
                 description = AnnotatedString.fromHtml(
@@ -278,13 +273,12 @@ private fun SitesTab(uiState: ReaderSearchUiState, actions: ReaderSearchActions)
             )
         }
 
-        else -> SitesList(uiState, actions)
+        else -> SitesList(uiState, listState, actions)
     }
 }
 
 @Composable
-private fun SitesList(uiState: ReaderSearchUiState, actions: ReaderSearchActions) {
-    val listState = rememberLazyListState()
+private fun SitesList(uiState: ReaderSearchUiState, listState: LazyListState, actions: ReaderSearchActions) {
     LoadMoreOnScrollToEnd(
         listState = listState,
         itemCount = uiState.sites.size,

@@ -180,6 +180,49 @@ class ReaderSearchViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `a failed later page stops paging instead of retrying`() {
+        submit("cats")
+        viewModel.onReaderSitesSearched(OnReaderSitesSearched(listOf(site(1)), "cats", 0, true))
+        viewModel.onLoadMoreSites()
+
+        viewModel.onReaderSitesSearched(
+            OnReaderSitesSearched(ReaderError(ReaderErrorType.GENERIC_ERROR, null), "cats", 1)
+        )
+        viewModel.onLoadMoreSites()
+
+        with(viewModel.uiState.value) {
+            assertThat(canLoadMoreSites).isFalse
+            assertThat(sitesRequestFailed).isFalse
+            assertThat(sites).hasSize(1)
+        }
+        assertThat(siteSearches()).hasSize(2)
+    }
+
+    @Test
+    fun `a later page from before the search restarted is ignored`() {
+        submit("cats")
+        viewModel.onReaderSitesSearched(OnReaderSitesSearched(listOf(site(1), site(2)), "cats", 0, true))
+        viewModel.onSearchSubmitted()
+
+        viewModel.onReaderSitesSearched(OnReaderSitesSearched(listOf(site(3)), "cats", 2, true))
+
+        assertThat(viewModel.uiState.value.sites).isEmpty()
+        assertThat(viewModel.uiState.value.isLoadingSites).isTrue
+    }
+
+    @Test
+    fun `suggestions for the previous query don't hide the results`() {
+        val state = ReaderSearchUiState(
+            query = "dox",
+            submittedQuery = "cats",
+            suggestions = listOf("dogs"),
+            suggestionsQuery = "do"
+        )
+
+        assertThat(state.content).isEqualTo(ReaderSearchContent.RESULTS)
+    }
+
+    @Test
     fun `doesn't load more sites when there are no more`() {
         submit("cats")
         viewModel.onReaderSitesSearched(OnReaderSitesSearched(listOf(site(1)), "cats", 0, false))

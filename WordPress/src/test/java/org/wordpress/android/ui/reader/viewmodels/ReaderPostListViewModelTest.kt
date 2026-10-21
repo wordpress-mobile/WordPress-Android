@@ -524,6 +524,20 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
+    fun `an older search ending doesn't end the current one`() = test {
+        startAndLoad(ReaderPostListArgs(listType = ReaderPostListType.SEARCH_RESULTS))
+        viewModel.onSearchSubmitted("cats")
+        advanceUntilIdle()
+        viewModel.onSearchSubmitted("dogs")
+        advanceUntilIdle()
+
+        repositoryEvents.emit(ReaderPostListEvent.SearchEnded("cats", 0, didSucceed = true))
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.emptyState).isEqualTo(ReaderPostListEmptyState.SearchUpdating)
+    }
+
+    @Test
     fun `search shows no empty state before a query is submitted or after it's cleared`() = test {
         startAndLoad(ReaderPostListArgs(listType = ReaderPostListType.SEARCH_RESULTS))
         assertThat(viewModel.uiState.value.emptyState).isNull()

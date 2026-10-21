@@ -601,7 +601,7 @@ class ReaderPostListViewModel @Inject constructor(
                 onUpdateEnded(event)
             }
 
-            is ReaderPostListEvent.SearchStarted -> if (isSearch) {
+            is ReaderPostListEvent.SearchStarted -> if (isSearch && event.query == searchQuery) {
                 setIsUpdating(true, searchAction(event.offset))
             }
 
@@ -620,14 +620,13 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     private fun onSearchEnded(event: ReaderPostListEvent.SearchEnded) {
-        val isCurrentQuery = event.query == searchQuery
-        if (isCurrentQuery && !event.didSucceed) {
-            requestFailed = true
-        }
+        // a newer search replaced this one, and its updating flag must stay set until it ends
+        if (event.query != searchQuery) return
+        requestFailed = !event.didSucceed
         setIsUpdating(false, searchAction(event.offset))
         // success means the search didn't fail, not that it has results - reloading shows the
         // empty message if there aren't any
-        if (isCurrentQuery && event.didSucceed) {
+        if (event.didSucceed) {
             reload()
         }
     }
