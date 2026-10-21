@@ -47,6 +47,7 @@ import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ShimmerBox
 import java.text.NumberFormat
+import java.util.Locale
 
 /**
  * Compact row: title and metadata on the left, featured image trailing.
@@ -136,7 +137,7 @@ fun ContentListGroupHeader(
     modifier: Modifier = Modifier
 ) {
     Text(
-        text = group.label().uppercase(),
+        text = group.label().uppercase(Locale.getDefault()),
         style = MaterialTheme.typography.labelSmall,
         fontWeight = FontWeight.Bold,
         letterSpacing = GROUP_HEADER_TRACKING,
@@ -379,9 +380,8 @@ private fun RowMetaLine(
                 }
             }
         }
-        // A condensed list does not fetch metrics, so it shows neither them nor a skeleton
-        // waiting on a request that is never made.
-        if (showMetrics) addMetrics(state)
+        // Ahead of the metrics: the Row measures segments in order, so whatever comes last is the
+        // first squeezed out, and a long translation of this would otherwise lose to the counts.
         if (showSyncFailed && state.hasSyncFailed) {
             add {
                 MetaText(
@@ -390,6 +390,9 @@ private fun RowMetaLine(
                 )
             }
         }
+        // A condensed list does not fetch metrics, so it shows neither them nor a skeleton
+        // waiting on a request that is never made.
+        if (showMetrics) addMetrics(state)
     }
     Row(verticalAlignment = Alignment.CenterVertically) {
         segments.forEachIndexed { index, segment ->

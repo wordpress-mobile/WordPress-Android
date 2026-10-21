@@ -13,6 +13,7 @@ import org.wordpress.android.ui.pagesrs.PageRsMenuAction
 import org.wordpress.android.ui.pagesrs.SITE_EDITOR_PAGE_ID
 import org.wordpress.android.ui.pagesrs.hasRealPages
 import org.wordpress.android.ui.rs.RsTabUiState
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListEmptyState
 import org.wordpress.android.ui.rs.contentlist.ContentListErrorState
@@ -113,7 +114,8 @@ private fun PageListContent(
 
     LazyColumn(
         state = listState,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = ContentListDefaults.FabClearancePadding
     ) {
         items(
             items = pages,
