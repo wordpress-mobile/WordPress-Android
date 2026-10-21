@@ -87,6 +87,7 @@ This will usually take a full sprint (to give time for polyglots to translate th
 To do this:
 
  - Update the `screenshot_{n}.txt` files in `WordPress/{metadata,jetpack_metadata}/` with the new source English copies that you need to get translated.
+ - Commit those changes, as `generate_playstore_strings` requires a clean working tree.
  - Run `bundle exec fastlane generate_playstore_strings app:<wordpress|jetpack>`, which includes the new content of those `.txt` files into the `PlayStoreStrings.po` file, which will then be imported into GlotPress for translation.
  - Polyglots will then translate your new copies into the various locales in GlotPress.
  - Once all the translations have been done, run `bundle exec fastlane download_metadata_strings app:<wordpress|jetpack>` to retrieve them from GlotPress. You should then have `fastlane/{jetpack_,}metadata/android/{locale}/screenshot_{n}.txt` files translated in each of the locales, ready to be referenced by your config file and used for the promo screenshots generation in all the locales.
