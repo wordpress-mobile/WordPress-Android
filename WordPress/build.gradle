@@ -268,6 +268,8 @@ android {
 
             // Bundle native debug symbols into the AAB so Play Console can symbolicate
             // native crashes and ANRs from the .so libraries shipped by our dependencies.
+            // This and native-lib stripping need AGP's default NDK installed (it won't download it);
+            // without it AGP logs "Unable to strip" and packages the libs unstripped.
             ndk {
                 debugSymbolLevel 'SYMBOL_TABLE'
             }
@@ -690,38 +692,47 @@ android {
     }
 }
 
-// Copy React Native JavaScript bundle and source map so they can be uploaded to the Crash logging
-// service during the build process.
+// Moves the React Native bundle's source map out of the packaged assets (it's ~19 MB and unused at
+// runtime) into build/react-native-bundle-source-map, where fastlane uploads it with the bundle to
+// the crash logging service. Done as an ASSETS transform so packaging always sees the stripped assets.
+abstract class ExtractReactNativeSourceMapTask extends DefaultTask {
+    @InputDirectory
+    @PathSensitive(PathSensitivity.RELATIVE)
+    abstract DirectoryProperty getInputAssets()
+
+    @OutputDirectory
+    abstract DirectoryProperty getOutputAssets()
+
+    @OutputDirectory
+    abstract DirectoryProperty getSourceMapDir()
+
+    @javax.inject.Inject
+    abstract FileSystemOperations getFs()
+
+    @TaskAction
+    void extract() {
+        fs.sync {
+            from(inputAssets)
+            into(outputAssets)
+            exclude('**/*.bundle.map')
+        }
+        fs.copy {
+            from(inputAssets)
+            into(sourceMapDir)
+            include('*.bundle', '*.bundle.map')
+        }
+    }
+}
+
 androidComponents {
     onVariants(selector().all()) { variant ->
-        def capitalizedName = variant.name.capitalize()
-        def assetsDir = variant.artifacts.get(
-            com.android.build.api.artifact.SingleArtifact.ASSETS.INSTANCE
-        )
-
-        def deleteTask = tasks.register(
-            "delete${capitalizedName}ReactNativeBundleSourceMap", Delete
+        def extractTask = tasks.register(
+            "extract${variant.name.capitalize()}ReactNativeBundleSourceMap", ExtractReactNativeSourceMapTask
         ) {
-            delete(fileTree(dir: assetsDir, includes: ['**/*.bundle.map']))
+            sourceMapDir.set(layout.buildDirectory.dir("react-native-bundle-source-map"))
         }
-
-        def copyTask = tasks.register(
-            "copy${capitalizedName}ReactNativeBundleSourceMap", Copy
-        ) {
-            from(assetsDir)
-            into(layout.buildDirectory.dir("react-native-bundle-source-map"))
-            include("*.bundle", "*.bundle.map")
-            finalizedBy(deleteTask)
-        }
-
-        // TODO: Replace afterEvaluate with AGP artifacts API when a suitable
-        //  hook for post-merge asset tasks becomes available. afterEvaluate is
-        //  needed here because the mergeXxxAssets task doesn't exist yet when
-        //  onVariants runs, and there's no artifact transform for this use case.
-        afterEvaluate {
-            tasks.named("merge${capitalizedName}Assets").configure {
-                finalizedBy(copyTask)
-            }
-        }
+        variant.artifacts.use(extractTask)
+            .wiredWithDirectories({ it.inputAssets }, { it.outputAssets })
+            .toTransform(com.android.build.api.artifact.SingleArtifact.ASSETS.INSTANCE)
     }
 }
