@@ -68,12 +68,14 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     val onMediaUpload = _onMediaUpload
 
+    // The site goes first: a fresh observer replays the sources in order, and pairing the progress
+    // bar's state with no site yet builds a null card, which My Site renders as its no-sites view.
     @Suppress("UNCHECKED_CAST")
     val uiModel: LiveData<SiteInfoHeaderCard?> =
         merge(
-            selectedSiteRepository.showSiteIconProgressBar,
-            selectedSiteRepository.selectedSiteChange)
-        { showSiteIconProgressBar, site ->
+            selectedSiteRepository.selectedSiteChange,
+            selectedSiteRepository.showSiteIconProgressBar)
+        { site, showSiteIconProgressBar ->
             buildCard(showSiteIconProgressBar, site)
         }.distinctUntilChanged() as LiveData<SiteInfoHeaderCard?>
 
