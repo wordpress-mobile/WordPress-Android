@@ -6,6 +6,10 @@ import org.wordpress.android.util.AppLog.T
 import java.io.IOException
 
 object ExifUtils {
+    // Every GPS tag ExifInterface supports - all of their names start with "GPS"
+    @JvmField
+    val GPS_TAGS: List<String> = getExifAttributes().filter { it.startsWith("GPS") }
+
     @Suppress("LongMethod")
     private fun getExifAttributes(): List<String> {
         return listOf(
