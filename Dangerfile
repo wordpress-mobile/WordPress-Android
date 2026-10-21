@@ -58,4 +58,6 @@ labels_checker.check(
 )
 
 # runs the milestone check if this is not a WIP feature and the PR is against the main branch or the release branch
-milestone_checker.check_milestone_due_date(days_before_due: 4) if (github_utils.main_branch? || github_utils.release_branch?) && !github_utils.wip_feature?
+if (github_utils.main_branch? || github_utils.release_branch?) && !github_utils.wip_feature?
+  milestone_checker.check_milestone_due_date(days_before_due: 4, report_type_if_no_milestone: :none)
+end

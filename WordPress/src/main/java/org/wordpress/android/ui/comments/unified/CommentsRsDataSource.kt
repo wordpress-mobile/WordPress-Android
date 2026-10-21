@@ -462,7 +462,7 @@ private fun CommentWithEditContext.toRsComment() = CommentsRsDataSource.RsCommen
     authorId = author,
     parentId = parent,
     authorName = authorName,
-    authorAvatarUrl = authorAvatarUrls.pickAvatarUrl(),
+    authorAvatarUrl = authorAvatarUrls.orEmpty().pickAvatarUrl(),
     dateGmt = dateGmt ?: Date(0),
     contentHtml = content.rendered,
     url = link,
@@ -477,7 +477,8 @@ private fun CommentWithEditContext.toRsComment() = CommentsRsDataSource.RsCommen
 
 private fun CommentType.isPingback() = this == CommentType.Pingback || this == CommentType.Trackback
 
-internal fun CommentWithViewContext.pickAvatarUrl(): String = authorAvatarUrls.pickAvatarUrl()
+// Sites with "Show Avatars" disabled omit the avatar URLs field entirely.
+internal fun CommentWithViewContext.pickAvatarUrl(): String = authorAvatarUrls.orEmpty().pickAvatarUrl()
 
 private fun Map<UserAvatarSize, String?>.pickAvatarUrl(): String =
     (this[UserAvatarSize.Size96] ?: values.firstOrNull { !it.isNullOrEmpty() }).orEmpty()
