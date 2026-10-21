@@ -171,16 +171,7 @@ private fun SearchTabs(selectedTab: ReaderSearchTab, onTabSelected: (ReaderSearc
             Tab(
                 selected = tab == selectedTab,
                 onClick = { onTabSelected(tab) },
-                text = {
-                    Text(
-                        stringResource(
-                            when (tab) {
-                                ReaderSearchTab.POSTS -> R.string.posts
-                                ReaderSearchTab.SITES -> R.string.sites
-                            }
-                        )
-                    )
-                }
+                text = { Text(stringResource(tab.labelRes)) }
             )
         }
     }
@@ -267,7 +258,7 @@ private fun SuggestionRow(suggestion: String, onClick: () -> Unit, onDelete: () 
 @Composable
 private fun SitesTab(uiState: ReaderSearchUiState, actions: ReaderSearchActions) {
     when {
-        uiState.sites.isEmpty() && uiState.isLoadingSites -> Box(
+        uiState.isLoadingSites -> Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {

@@ -67,9 +67,9 @@ class ReaderSearchActivity : BaseAppCompatActivity() {
             onQueryChanged = viewModel::onQueryChanged,
             onSearch = viewModel::onSearchSubmitted,
             onSuggestionClicked = viewModel::onSuggestionClicked,
-            onSuggestionDeleteClicked = { viewModel.onSuggestionDeleteClicked(it) },
-            onClearHistoryConfirmed = { viewModel.onClearHistoryConfirmed() },
-            onTabSelected = { viewModel.onTabSelected(it) },
+            onSuggestionDeleteClicked = viewModel::onSuggestionDeleteClicked,
+            onClearHistoryConfirmed = viewModel::onClearHistoryConfirmed,
+            onTabSelected = viewModel::onTabSelected,
             onSiteClicked = viewModel::onSiteClicked,
             onSiteFollowClicked = viewModel::onSiteFollowClicked,
             onLoadMoreSites = viewModel::onLoadMoreSites

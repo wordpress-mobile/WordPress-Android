@@ -95,17 +95,7 @@ class ReaderSearchViewModel @Inject constructor(
         val query = _uiState.value.query.trim()
         if (query.isEmpty()) return
 
-        setState {
-            it.copy(
-                query = query,
-                submittedQuery = query,
-                sites = emptyList(),
-                isLoadingSites = false,
-                isLoadingMoreSites = false,
-                canLoadMoreSites = false,
-                sitesRequestFailed = false
-            )
-        }
+        setState { it.withoutSites().copy(query = query, submittedQuery = query) }
         launch(bgDispatcher) { searchTable.addOrUpdateQuery(query) }
         readerTracker.trackQuery(AnalyticsTracker.Stat.READER_SEARCH_PERFORMED, query)
         _events.trySend(ReaderSearchEvent.SubmitPostSearch(query))
@@ -117,15 +107,19 @@ class ReaderSearchViewModel @Inject constructor(
         onSearchSubmitted()
     }
 
-    fun onSuggestionDeleteClicked(query: String) = launch(bgDispatcher) {
-        searchTable.deleteQuery(query)
-        loadSuggestions()
+    fun onSuggestionDeleteClicked(query: String) {
+        launch(bgDispatcher) {
+            searchTable.deleteQuery(query)
+            loadSuggestions()
+        }
     }
 
-    fun onClearHistoryConfirmed() = launch(bgDispatcher) {
-        readerTracker.track(AnalyticsTracker.Stat.READER_SEARCH_HISTORY_CLEARED)
-        searchTable.deleteAllQueries()
-        loadSuggestions()
+    fun onClearHistoryConfirmed() {
+        launch(bgDispatcher) {
+            readerTracker.track(AnalyticsTracker.Stat.READER_SEARCH_HISTORY_CLEARED)
+            searchTable.deleteAllQueries()
+            loadSuggestions()
+        }
     }
 
     fun onTabSelected(tab: ReaderSearchTab) = setState { it.copy(selectedTab = tab) }
@@ -135,7 +129,7 @@ class ReaderSearchViewModel @Inject constructor(
      */
     fun onConnectionRestored() {
         val state = _uiState.value
-        if (state.submittedQuery != null && state.query == state.submittedQuery) {
+        if (state.query == state.submittedQuery) {
             onSearchSubmitted()
         }
     }
@@ -160,7 +154,7 @@ class ReaderSearchViewModel @Inject constructor(
         lastTappedSiteKey = null
         val site = _uiState.value.sites.firstOrNull { it.key == key } ?: return
         launch {
-            val isFollowing = withBg { blogTable.isSiteFollowed(site.siteId, site.feedId) }
+            val isFollowing = withContext(bgDispatcher) { blogTable.isSiteFollowed(site.siteId, site.feedId) }
             updateSite(key) { it.copy(isFollowing = isFollowing) }
         }
     }
@@ -241,18 +235,7 @@ class ReaderSearchViewModel @Inject constructor(
     }
 
     private fun clearSearch() {
-        setState {
-            it.copy(
-                submittedQuery = null,
-                selectedTab = ReaderSearchTab.POSTS,
-                sites = emptyList(),
-                isLoadingSites = false,
-                isLoadingMoreSites = false,
-                canLoadMoreSites = false,
-                sitesRequestFailed = false
-            )
-        }
-        lastTappedSiteKey = null
+        setState { it.withoutSites().copy(submittedQuery = null, selectedTab = ReaderSearchTab.POSTS) }
         _events.trySend(ReaderSearchEvent.ClearPostSearch)
     }
 
@@ -261,7 +244,7 @@ class ReaderSearchViewModel @Inject constructor(
         suggestionsJob?.cancel()
         suggestionsJob = launch {
             val max = if (prefix == null) MAX_SUGGESTIONS_WHEN_EMPTY else MAX_SUGGESTIONS
-            val suggestions = withBg { searchTable.getQueries(prefix, max) }
+            val suggestions = withContext(bgDispatcher) { searchTable.getQueries(prefix, max) }
             setState { it.copy(suggestions = suggestions) }
         }
     }
@@ -277,8 +260,13 @@ class ReaderSearchViewModel @Inject constructor(
         savedStateHandle[KEY_SELECTED_TAB] = state.selectedTab
     }
 
-    private suspend fun <T> withBg(block: suspend () -> T): T =
-        withContext(bgDispatcher) { block() }
+    private fun ReaderSearchUiState.withoutSites() = copy(
+        sites = emptyList(),
+        isLoadingSites = false,
+        isLoadingMoreSites = false,
+        canLoadMoreSites = false,
+        sitesRequestFailed = false
+    )
 
     private fun ReaderSiteModel.toSearchSite() = ReaderSearchSite(
         siteId = siteId,
@@ -323,7 +311,10 @@ data class ReaderSearchUiState(
 
 enum class ReaderSearchContent { EXPLAINER, SUGGESTIONS, RESULTS }
 
-enum class ReaderSearchTab { POSTS, SITES }
+enum class ReaderSearchTab(@StringRes val labelRes: Int) {
+    POSTS(R.string.posts),
+    SITES(R.string.sites)
+}
 
 data class ReaderSearchSite(
     val siteId: Long,

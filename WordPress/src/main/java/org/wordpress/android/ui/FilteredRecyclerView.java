@@ -3,14 +3,12 @@ package org.wordpress.android.ui;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
-import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -198,15 +196,6 @@ public class FilteredRecyclerView extends RelativeLayout {
         }
     }
 
-    /*
-     * add a menu to the right side of the toolbar, returns the toolbar menu so the caller
-     * can act upon it
-     */
-    public Menu addToolbarMenu(@MenuRes int menuResId) {
-        mToolbar.inflateMenu(menuResId);
-        return mToolbar.getMenu();
-    }
-
     public void setToolbarBackgroundColor(int color) {
         mToolbar.setBackgroundColor(color);
     }
@@ -229,12 +218,6 @@ public class FilteredRecyclerView extends RelativeLayout {
     public void setToolbarTitle(@StringRes int title, int startMargin) {
         mToolbar.setTitle(title);
         mToolbar.setTitleMarginStart(startMargin);
-    }
-
-    public void setToolbarScrollFlags(int flags) {
-        AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mToolbar.getLayoutParams();
-        params.setScrollFlags(flags);
-        mToolbar.setLayoutParams(params);
     }
 
     public void scrollRecycleViewToPosition(int position) {
@@ -283,16 +266,8 @@ public class FilteredRecyclerView extends RelativeLayout {
         }
     }
 
-    public AppBarLayout getAppBarLayout() {
-        return mAppBarLayout;
-    }
-
     public void hideAppBarLayout() {
         mAppBarLayout.setVisibility(GONE);
-    }
-
-    public void showAppBarLayout() {
-        mAppBarLayout.setVisibility(VISIBLE);
     }
 
     /*

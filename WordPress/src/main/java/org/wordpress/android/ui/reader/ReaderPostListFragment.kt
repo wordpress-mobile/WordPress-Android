@@ -587,9 +587,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
 
         if (args.listType == ReaderPostListType.TAG_PREVIEW) {
             outState.putStringArrayList(KEY_TAG_PREVIEW_HISTORY, ArrayList(args.tagHistory))
-        } else if (isSearching) {
-            outState.putString(ReaderConstants.ARG_SEARCH_QUERY, args.searchQuery)
         }
+        outState.putString(ReaderConstants.ARG_SEARCH_QUERY, args.searchQuery)
 
         outState.putLong(ReaderConstants.ARG_BLOG_ID, args.blogId)
         outState.putLong(ReaderConstants.ARG_FEED_ID, args.feedId)
