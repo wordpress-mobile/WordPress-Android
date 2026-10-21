@@ -91,7 +91,8 @@ platform :android do
           release_status: options[:release_status] || 'draft',
           metadata_path: metadata_dir,
           skip_upload_metadata: (options[:track] != 'production'), # Only update app title/description/etc. if uploading for Production, skip for beta tracks
-          skip_upload_changelogs: false,
+          # Release notes are set when a build is promoted to beta, not on upload
+          skip_upload_changelogs: true,
           skip_upload_images: true,
           skip_upload_screenshots: true,
           json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY,
