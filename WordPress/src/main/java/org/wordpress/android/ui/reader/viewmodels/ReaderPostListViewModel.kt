@@ -584,6 +584,7 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     fun onSearchCleared() {
+        searchJob?.cancel()
         searchQuery = null
         requestFailed = false
         updateActions.clear()

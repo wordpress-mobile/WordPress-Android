@@ -538,6 +538,17 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
+    fun `clearing the search before it starts cancels it`() = test {
+        startAndLoad(ReaderPostListArgs(listType = ReaderPostListType.SEARCH_RESULTS))
+
+        viewModel.onSearchSubmitted("cats")
+        viewModel.onSearchCleared()
+        advanceUntilIdle()
+
+        verify(repository, never()).searchPosts(any(), any())
+    }
+
+    @Test
     fun `search shows no empty state before a query is submitted or after it's cleared`() = test {
         startAndLoad(ReaderPostListArgs(listType = ReaderPostListType.SEARCH_RESULTS))
         assertThat(viewModel.uiState.value.emptyState).isNull()

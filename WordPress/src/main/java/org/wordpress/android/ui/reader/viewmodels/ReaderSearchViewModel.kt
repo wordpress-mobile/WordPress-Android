@@ -68,7 +68,7 @@ class ReaderSearchViewModel @Inject constructor(
     val events: Flow<ReaderSearchEvent> = _events.receiveAsFlow()
 
     private var suggestionsJob: Job? = null
-    private var lastTappedSiteKey: Long? = null
+    private var lastTappedSiteKey: String? = null
 
     init {
         dispatcher.register(this)
@@ -138,7 +138,7 @@ class ReaderSearchViewModel @Inject constructor(
         val state = _uiState.value
         val query = state.submittedQuery ?: return
         if (!state.canLoadMoreSites || state.isLoadingSites || state.isLoadingMoreSites) return
-        searchSites(query, offset = state.sites.size)
+        searchSites(query, offset = state.nextSitesOffset)
     }
 
     fun onSiteClicked(site: ReaderSearchSite) {
@@ -202,7 +202,7 @@ class ReaderSearchViewModel @Inject constructor(
         val state = _uiState.value
         if (event.searchTerm != state.submittedQuery) return
         // a later page that doesn't follow the current list belongs to a search that has since restarted
-        if (event.offset > 0 && event.offset != state.sites.size) return
+        if (event.offset > 0 && event.offset != state.nextSitesOffset) return
 
         setState { state ->
             if (event.isError) {
@@ -216,7 +216,9 @@ class ReaderSearchViewModel @Inject constructor(
             } else {
                 val newSites = event.sites.map { it.toSearchSite() }
                 state.copy(
-                    sites = if (event.offset == 0) newSites else (state.sites + newSites).distinctBy { it.key },
+                    sites = (if (event.offset == 0) newSites else state.sites + newSites).distinctBy { it.key },
+                    // the server's offset, since dropping duplicates can leave fewer rows than it returned
+                    nextSitesOffset = event.offset + event.sites.size,
                     isLoadingSites = false,
                     isLoadingMoreSites = false,
                     canLoadMoreSites = event.canLoadMore,
@@ -254,7 +256,7 @@ class ReaderSearchViewModel @Inject constructor(
         }
     }
 
-    private fun updateSite(key: Long, transform: (ReaderSearchSite) -> ReaderSearchSite) = setState { state ->
+    private fun updateSite(key: String, transform: (ReaderSearchSite) -> ReaderSearchSite) = setState { state ->
         state.copy(sites = state.sites.map { if (it.key == key) transform(it) else it })
     }
 
@@ -270,6 +272,7 @@ class ReaderSearchViewModel @Inject constructor(
         isLoadingSites = false,
         isLoadingMoreSites = false,
         canLoadMoreSites = false,
+        nextSitesOffset = 0,
         sitesRequestFailed = false
     )
 
@@ -302,6 +305,7 @@ data class ReaderSearchUiState(
     val isLoadingSites: Boolean = false,
     val isLoadingMoreSites: Boolean = false,
     val canLoadMoreSites: Boolean = false,
+    val nextSitesOffset: Int = 0,
     val sitesRequestFailed: Boolean = false
 ) {
     /*
@@ -335,8 +339,9 @@ data class ReaderSearchSite(
     val isFollowing: Boolean,
     val isFollowEnabled: Boolean = true
 ) {
-    val key: Long
-        get() = if (feedId != 0L) feedId else siteId
+    // feed and site ids are separate id spaces, so prefix them to keep LazyColumn keys unique
+    val key: String
+        get() = if (feedId != 0L) "feed:$feedId" else "site:$siteId"
 }
 
 sealed class ReaderSearchEvent {

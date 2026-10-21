@@ -223,6 +223,32 @@ class ReaderSearchViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `duplicate sites are dropped and paging continues from the server's offset`() {
+        submit("cats")
+        viewModel.onReaderSitesSearched(OnReaderSitesSearched(listOf(site(1), site(1), site(2)), "cats", 0, true))
+        assertThat(viewModel.uiState.value.sites.map { it.feedId }).containsExactly(1L, 2L)
+
+        viewModel.onLoadMoreSites()
+
+        assertThat(lastSiteSearch().offset).isEqualTo(3)
+    }
+
+    @Test
+    fun `a feed and a site with the same id get different keys`() {
+        val feed = ReaderSearchSite(
+            siteId = 0,
+            feedId = 5,
+            title = null,
+            url = null,
+            iconUrl = null,
+            isFollowing = false
+        )
+        val site = feed.copy(siteId = 5, feedId = 0)
+
+        assertThat(feed.key).isNotEqualTo(site.key)
+    }
+
+    @Test
     fun `doesn't load more sites when there are no more`() {
         submit("cats")
         viewModel.onReaderSitesSearched(OnReaderSitesSearched(listOf(site(1)), "cats", 0, false))
