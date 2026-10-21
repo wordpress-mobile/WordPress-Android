@@ -87,9 +87,9 @@ This will usually take a full sprint (to give time for polyglots to translate th
 To do this:
 
  - Update the `screenshot_{n}.txt` files in `WordPress/{metadata,jetpack_metadata}/` with the new source English copies that you need to get translated.
- - Wait for the release manager to do the next code freeze, which will include the new content of those `.txt` files into the `PlayStoreStrings.po` file and then will be imported into GlotPress for translation (same process than for the release notes translation)
- - During the beta test phase that runs post code freeze, polyglots will then translate your new copies into the various locales in GlotPress.
- - At the end of the sprint, once all the translations have been done and retrieved from GlotPress as part of the release finalization, you should then have `fastlane/{jetpack_,}metadata/android/{locale}/screenshot_{n}.txt` files translated in each of the locales, ready to be referenced by your config file and used for the promo screenshots generation in all the locales.
+ - Run `bundle exec fastlane generate_playstore_strings app:<wordpress|jetpack>`, which includes the new content of those `.txt` files into the `PlayStoreStrings.po` file, which will then be imported into GlotPress for translation.
+ - Polyglots will then translate your new copies into the various locales in GlotPress.
+ - Once all the translations have been done, run `bundle exec fastlane download_metadata_strings app:<wordpress|jetpack>` to retrieve them from GlotPress. You should then have `fastlane/{jetpack_,}metadata/android/{locale}/screenshot_{n}.txt` files translated in each of the locales, ready to be referenced by your config file and used for the promo screenshots generation in all the locales.
 
 If you need a faster feedback loop or to accelerate the translation, get in touch with your Release Manager and/or with Team Global, to see if we can fasttrack the translations outside of the regular cycle; though polyglots will still always need time to do translations, so keep in mind that this will never be instantaneous and you need to account for it in your planning about updating PlayStore screenshots.
 
