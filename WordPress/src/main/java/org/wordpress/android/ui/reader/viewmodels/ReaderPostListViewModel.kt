@@ -568,13 +568,9 @@ class ReaderPostListViewModel @Inject constructor(
      * Search - the search field itself lives in ReaderSearchActivity
      */
     fun onSearchSubmitted(query: String) {
-        searchQuery = query
-        requestFailed = false
-        clearPosts()
+        resetSearch(query)
         // show the search as running until the service reports back, so "no results" doesn't flash first
         setIsUpdating(true, searchAction(0))
-        // a newer search replaces one that hasn't started yet
-        searchJob?.cancel()
         searchJob = launch {
             // search results are ephemeral, so each search starts from scratch
             repository.deletePostsWithTag(ReaderUtils.getTagForSearchQuery(query))
@@ -583,13 +579,21 @@ class ReaderPostListViewModel @Inject constructor(
         }
     }
 
-    fun onSearchCleared() {
+    fun onSearchCleared() = resetSearch(query = null)
+
+    /*
+     * drops the previous search, including one that hasn't started yet and anything it left running
+     */
+    private fun resetSearch(query: String?) {
         searchJob?.cancel()
-        searchQuery = null
+        searchQuery = query
         requestFailed = false
         updateActions.clear()
         clearPosts()
     }
+
+    // events from a search the user has since replaced or cleared are ignored
+    private fun isCurrentSearch(query: String) = isSearch && query == searchQuery
 
     private fun onRepositoryEvent(event: ReaderPostListEvent) {
         when (event) {
@@ -602,11 +606,11 @@ class ReaderPostListViewModel @Inject constructor(
                 onUpdateEnded(event)
             }
 
-            is ReaderPostListEvent.SearchStarted -> if (isSearch && event.query == searchQuery) {
+            is ReaderPostListEvent.SearchStarted -> if (isCurrentSearch(event.query)) {
                 setIsUpdating(true, searchAction(event.offset))
             }
 
-            is ReaderPostListEvent.SearchEnded -> if (isSearch) {
+            is ReaderPostListEvent.SearchEnded -> if (isCurrentSearch(event.query)) {
                 onSearchEnded(event)
             }
 
@@ -621,8 +625,6 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     private fun onSearchEnded(event: ReaderPostListEvent.SearchEnded) {
-        // a newer search replaced this one, and its updating flag must stay set until it ends
-        if (event.query != searchQuery) return
         requestFailed = !event.didSucceed
         setIsUpdating(false, searchAction(event.offset))
         // success means the search didn't fail, not that it has results - reloading shows the
@@ -643,7 +645,7 @@ class ReaderPostListViewModel @Inject constructor(
         setIsUpdating(false, event.action)
         hasUpdatedPosts = true
 
-        // don't show new posts while searching - they appear when search is exited
+        // the new posts bar doesn't apply to search results
         if (isSearch) {
             return
         }
@@ -912,7 +914,7 @@ class ReaderPostListViewModel @Inject constructor(
         }
     }.takeIf { it > -1 }
 
-    private fun emptyStateInput(requestFailed: Boolean) = ReaderPostListEmptyStateBuilder.Input(
+    private fun emptyStateInput() = ReaderPostListEmptyStateBuilder.Input(
         listType = listType,
         tag = currentTag,
         isSelfHostedCta = isSelfHostedCta(),
@@ -929,7 +931,7 @@ class ReaderPostListViewModel @Inject constructor(
      * Returns the empty state to show, or null if it shouldn't be shown
      */
     private fun buildEmptyState(): ReaderPostListEmptyState? {
-        val emptyState = if (shouldShowEmptyState()) emptyStateBuilder.build(emptyStateInput(requestFailed)) else null
+        val emptyState = if (shouldShowEmptyState()) emptyStateBuilder.build(emptyStateInput()) else null
         if (emptyState == ReaderPostListEmptyState.NoConnection) {
             // no update can complete while offline
             updateActions.clear()

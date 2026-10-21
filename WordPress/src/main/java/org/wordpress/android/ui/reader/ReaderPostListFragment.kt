@@ -465,9 +465,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
         subFilterViewModel!!.currentSubFilter.observe(
             viewLifecycleOwner
         ) { subfilter ->
-            if (!isSearching) {
-                postListViewModel.onSubfilterChanged(subfilter)
-            }
+            postListViewModel.onSubfilterChanged(subfilter)
         }
 
         subFilterViewModel!!.readerModeInfo.observe(
@@ -507,10 +505,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
             if (isTopLevel) {
                 // Remove sticky event if not consumed
                 EventBus.getDefault().removeStickyEvent(TagAdded::class.java)
-            }
-
-            if (isSearching) {
-                return
             }
         }
 
@@ -723,7 +717,9 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
 
     private fun setEmptyView(emptyState: ReaderPostListEmptyState, isUpdating: Boolean) {
         val emptyView = actionableEmptyView ?: return
-        emptyView.updateLayoutForSearch(false, 0)
+        val isSearchState = emptyState is ReaderPostListEmptyState.SearchUpdating ||
+                emptyState is ReaderPostListEmptyState.SearchNoResults
+        emptyView.updateLayoutForSearch(isSearchState, 0)
         emptyView.subtitle.contentDescription = null
 
         // Ensure the default image is reset for empty views before applying logic
@@ -785,9 +781,9 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
             ReaderPostListEmptyState.NoPostsWithTag -> title = getString(R.string.reader_no_posts_with_this_tag)
             ReaderPostListEmptyState.NoPostsInBlog -> title = getString(R.string.reader_no_posts_in_blog)
             ReaderPostListEmptyState.SearchUpdating -> {
+                // not null - WPTextView.setText() crashes on a null title
                 title = ""
                 isImageHidden = true
-                emptyView.updateLayoutForSearch(true, 0)
             }
 
             is ReaderPostListEmptyState.SearchNoResults -> {
@@ -797,7 +793,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
                     "<em>${emptyState.query}</em>"
                 )
                 isImageHidden = true
-                emptyView.updateLayoutForSearch(true, 0)
             }
         }
 

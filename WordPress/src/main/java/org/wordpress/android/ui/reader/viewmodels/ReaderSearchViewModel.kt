@@ -137,7 +137,7 @@ class ReaderSearchViewModel @Inject constructor(
     fun onLoadMoreSites() {
         val state = _uiState.value
         val query = state.submittedQuery ?: return
-        if (!state.canLoadMoreSites || state.isLoadingSites || state.isLoadingMoreSites) return
+        if (!state.canRequestMoreSites) return
         searchSites(query, offset = state.nextSitesOffset)
     }
 
@@ -318,6 +318,9 @@ data class ReaderSearchUiState(
             suggestions.isNotEmpty() -> ReaderSearchContent.SUGGESTIONS
             else -> ReaderSearchContent.EXPLAINER
         }
+
+    val canRequestMoreSites: Boolean
+        get() = canLoadMoreSites && !isLoadingSites && !isLoadingMoreSites
 
     private val hasSuggestionsForQuery: Boolean
         get() = suggestions.isNotEmpty() && suggestionsQuery == query.trim()

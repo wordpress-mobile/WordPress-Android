@@ -8,7 +8,6 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.core.view.isVisible
 import androidx.fragment.compose.AndroidFragment
@@ -44,7 +43,8 @@ class ReaderSearchActivity : BaseAppCompatActivity() {
 
     private val viewModel: ReaderSearchViewModel by viewModels()
 
-    private var postListFragment: ReaderPostListFragment? = null
+    // state, so the screen re-applies the list's visibility once AndroidFragment provides it
+    private var postListFragment by mutableStateOf<ReaderPostListFragment?>(null)
 
     // starts as connected so the replay of "connected" doesn't re-run the search - only a real
     // offline->online transition should
@@ -80,14 +80,10 @@ class ReaderSearchActivity : BaseAppCompatActivity() {
             val uiState by viewModel.uiState.collectAsState()
             AppThemeM3 {
                 ReaderSearchScreen(uiState = uiState, actions = actions) { isPostListVisible ->
-                    var fragment by remember { mutableStateOf<ReaderPostListFragment?>(null) }
-                    AndroidFragment<ReaderPostListFragment>(arguments = postListArguments) {
-                        fragment = it
-                        postListFragment = it
-                    }
+                    AndroidFragment<ReaderPostListFragment>(arguments = postListArguments) { postListFragment = it }
                     // hide the list rather than removing it, so its results survive tab switches, and so
                     // TalkBack doesn't reach it under the suggestions or sites
-                    SideEffect { fragment?.view?.isVisible = isPostListVisible }
+                    SideEffect { postListFragment?.view?.isVisible = isPostListVisible }
                 }
             }
         }

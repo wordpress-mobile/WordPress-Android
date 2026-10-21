@@ -23,7 +23,6 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -60,6 +59,7 @@ import androidx.core.text.htmlEncode
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.LoadingState
 import org.wordpress.android.ui.reader.viewmodels.ReaderSearchContent
 import org.wordpress.android.ui.reader.viewmodels.ReaderSearchSite
 import org.wordpress.android.ui.reader.viewmodels.ReaderSearchTab
@@ -69,6 +69,10 @@ import org.wordpress.android.ui.rs.contentlist.ContentListSearchField
 import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
 import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
 import org.wordpress.android.util.UrlUtils
+import org.wordpress.android.util.image.ImagePlaceholderManager
+import org.wordpress.android.util.image.ImageType
+
+private val blavatarPlaceholders = ImagePlaceholderManager()
 
 /**
  * The Reader search screen. [postList] is the post list fragment, which stays composed (and hidden by
@@ -253,23 +257,17 @@ private fun SuggestionRow(suggestion: String, onClick: () -> Unit, onDelete: () 
 @Composable
 private fun SitesTab(uiState: ReaderSearchUiState, listState: LazyListState, actions: ReaderSearchActions) {
     when {
-        uiState.isLoadingSites -> Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
-        }
+        uiState.isLoadingSites -> LoadingState()
 
         uiState.sitesRequestFailed ->
             SearchMessage(title = stringResource(R.string.reader_empty_search_request_failed))
 
         uiState.sites.isEmpty() -> {
             val query = uiState.submittedQuery.orEmpty().htmlEncode()
+            val description = stringResource(R.string.reader_empty_search_description, "<em>$query</em>")
             SearchMessage(
                 title = stringResource(R.string.reader_empty_search_title),
-                description = AnnotatedString.fromHtml(
-                    stringResource(R.string.reader_empty_search_description, "<em>$query</em>")
-                )
+                description = remember(description) { AnnotatedString.fromHtml(description) }
             )
         }
 
@@ -282,7 +280,7 @@ private fun SitesList(uiState: ReaderSearchUiState, listState: LazyListState, ac
     LoadMoreOnScrollToEnd(
         listState = listState,
         itemCount = uiState.sites.size,
-        canLoadMore = uiState.canLoadMoreSites && !uiState.isLoadingMoreSites,
+        canLoadMore = uiState.canRequestMoreSites,
         onLoadMore = actions.onLoadMoreSites
     )
     LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
@@ -312,8 +310,10 @@ private fun SiteRow(site: ReaderSearchSite, onClick: () -> Unit, onFollowClick: 
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(site.iconUrl)
-                .placeholder(R.drawable.bg_rectangle_placeholder_globe_32dp)
-                .error(R.drawable.bg_rectangle_placeholder_globe_32dp)
+                .apply {
+                    blavatarPlaceholders.getPlaceholderResource(ImageType.BLAVATAR)?.let { placeholder(it) }
+                    blavatarPlaceholders.getErrorResource(ImageType.BLAVATAR)?.let { error(it) }
+                }
                 .build(),
             contentDescription = null,
             modifier = Modifier
