@@ -6,4 +6,3 @@ gradlew text eol=lf
 *.png binary
 *.jpg binary
 .a8c-secrets/*.age binary
-RELEASE-NOTES.txt merge=union

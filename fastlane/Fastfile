@@ -49,7 +49,6 @@ PROTOTYPE_BUILD_TYPE = 'Debug'
 
 PROJECT_ROOT_FOLDER = File.dirname(File.expand_path(__dir__))
 FASTLANE_FOLDER = File.join(PROJECT_ROOT_FOLDER, 'fastlane')
-RELEASE_NOTES_SOURCE_PATH = File.join(PROJECT_ROOT_FOLDER, 'RELEASE-NOTES.txt')
 
 # Mirrors `a8c-secrets which`, without spawning the command
 A8C_SECRETS_FOLDER = File.join(Dir.home, '.a8c-secrets', File.read(File.join(PROJECT_ROOT_FOLDER, '.a8c-secrets', 'repo-id')).strip)

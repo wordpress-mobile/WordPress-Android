@@ -19,8 +19,6 @@ end
 
 android_strings_checker.check_existing_strings_not_modified unless github.pr_labels.include?('Allow String Modifications')
 
-common_release_checker.check_internal_release_notes_changed(report_type: :message)
-
 view_changes_checker.check
 
 pr_size_checker.check_diff_size(

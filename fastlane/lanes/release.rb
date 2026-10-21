@@ -49,27 +49,7 @@ platform :android do
     commit_version_bump
     UI.success "Done! New Beta Version: #{current_beta_version}. New Build Code: #{current_build_code}"
 
-    extract_release_notes_for_version(
-      version: new_version,
-      release_notes_file_path: RELEASE_NOTES_SOURCE_PATH,
-      extracted_notes_file_path: release_notes_path('wordpress')
-    )
-    # Jetpack Release notes are based on WP Release notes
-    begin
-      # FIXME: Move this logic to release-toolkit?
-      FileUtils.cp(release_notes_path('wordpress'), release_notes_path('jetpack'))
-      sh('git', 'add', release_notes_path('jetpack'))
-      sh('git', 'commit', '-m', "Update draft release notes for Jetpack #{new_version}.")
-    end
     cleanup_release_files(files: release_notes_short_paths)
-    # Adds empty section for next version
-    android_update_release_notes(
-      new_version: new_version,
-      release_notes_file_path: RELEASE_NOTES_SOURCE_PATH
-    )
-
-    UI.message("Jetpack release notes were based on the same ones as WordPress. Don't forget to check #{release_notes_path('jetpack')} and amend them" \
-               'as necessary if any item does not apply for Jetpack before sending them to Editorial.')
 
     push_to_git_remote(tags: false)
 
