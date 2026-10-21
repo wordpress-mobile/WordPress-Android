@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import uniffi.wp_api.PostStatus
 import uniffi.wp_api.WpApiParamOrder
+import uniffi.wp_api.WpApiParamPostsOrderBy
 
 class PostRsListTabTest {
     @Test
@@ -44,6 +45,14 @@ class PostRsListTabTest {
             .isEqualTo(WpApiParamOrder.DESC)
         assertThat(PostRsListTab.TRASHED.order)
             .isEqualTo(WpApiParamOrder.DESC)
+    }
+
+    @Test
+    fun `DRAFTS and TRASHED tabs sort by modified date and the others by date`() {
+        assertThat(PostRsListTab.DRAFTS.orderBy).isEqualTo(WpApiParamPostsOrderBy.MODIFIED)
+        assertThat(PostRsListTab.TRASHED.orderBy).isEqualTo(WpApiParamPostsOrderBy.MODIFIED)
+        assertThat(PostRsListTab.PUBLISHED.orderBy).isEqualTo(WpApiParamPostsOrderBy.DATE)
+        assertThat(PostRsListTab.SCHEDULED.orderBy).isEqualTo(WpApiParamPostsOrderBy.DATE)
     }
 
     @Test

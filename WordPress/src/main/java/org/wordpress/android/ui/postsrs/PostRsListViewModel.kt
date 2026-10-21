@@ -863,7 +863,8 @@ class PostRsListViewModel @Inject constructor(
                 val filter = PostListFilter(
                     status = if (query.isNotBlank()) ALL_STATUSES else tab.statuses,
                     order = tab.order,
-                    orderby = WpApiParamPostsOrderBy.DATE,
+                    // Search mixes statuses and shows no date groups, so it stays on date.
+                    orderby = if (query.isNotBlank()) WpApiParamPostsOrderBy.DATE else tab.orderBy,
                     search = query.ifBlank { null },
                     author = authorIds
                 )
@@ -1051,9 +1052,17 @@ class PostRsListViewModel @Inject constructor(
             // three reads below, and the query can change under it.
             val isSearch = isSearching
             val nowLabel = resourceProvider.getString(R.string.rs_date_now)
+            val modifiedDateFormat = tab.modifiedDateLabelResId
+                .takeIf { !isSearch && it != 0 }
+                ?.let(resourceProvider::getString)
             val items = withContext(Dispatchers.IO) {
                 collection.loadItems().map { item ->
-                    item.state.toContentItemUiModel<PostRsMenuAction>(item.id, nowLabel, showStatus = isSearch)
+                    item.state.toContentItemUiModel<PostRsMenuAction>(
+                        item.id,
+                        nowLabel,
+                        showStatus = isSearch,
+                        modifiedDateFormat = modifiedDateFormat
+                    )
                 }
             }
             val existingPosts = getTabUiState(tab).items
