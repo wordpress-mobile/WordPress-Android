@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mlp
 
+import com.google.gson.annotations.SerializedName
 import org.wordpress.android.util.BuildConfig
 import org.wordpress.android.util.extensions.parseJsonFromAsset
 import org.wordpress.android.viewmodel.ContextProvider
@@ -14,11 +15,12 @@ class SupportedBlocksProvider @Inject constructor(private val contextProvider: C
     }
 }
 
+// Parsed by Gson; @SerializedName keeps the fields through R8
 data class SupportedBlocks(
-    val common: List<String> = listOf(),
-    val devOnly: List<String> = listOf(),
-    val iOSOnly: List<String> = listOf(),
-    val androidOnly: List<String> = listOf()
+    @SerializedName("common") val common: List<String> = listOf(),
+    @SerializedName("devOnly") val devOnly: List<String> = listOf(),
+    @SerializedName("iOSOnly") val iOSOnly: List<String> = listOf(),
+    @SerializedName("androidOnly") val androidOnly: List<String> = listOf()
 ) {
     val supported: List<String>
         get() = (if (BuildConfig.DEBUG) listOf(common, devOnly, androidOnly) else listOf(common, androidOnly)).flatten()

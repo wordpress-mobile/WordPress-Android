@@ -2,6 +2,7 @@ package org.wordpress.android.auth
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -49,11 +50,11 @@ class WordPressCookieAuthenticator @Inject constructor(
     }
 
     /**
-     * Data class for cached cookie information
+     * Data class for cached cookie information, persisted via Gson. @SerializedName keeps the fields through R8.
      */
     private data class CachedCookieData(
-        val cookies: Map<String, String>,
-        val expirationTimestamp: Long
+        @SerializedName("cookies") val cookies: Map<String, String>,
+        @SerializedName("expirationTimestamp") val expirationTimestamp: Long
     )
 
     /**

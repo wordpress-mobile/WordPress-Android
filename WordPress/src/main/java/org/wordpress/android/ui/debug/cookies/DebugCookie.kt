@@ -1,19 +1,22 @@
 package org.wordpress.android.ui.debug.cookies
 
 import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
 import java.net.HttpCookie
 import java.net.URI
 
+// @SerializedName keeps these fields through R8 via Gson's consumer rules; the derived values are getters so Gson
+// never needs to restore them
 data class DebugCookie(
-    val host: String,
-    val name: String,
-    val value: String?
+    @SerializedName("host") val host: String,
+    @SerializedName("name") val name: String,
+    @SerializedName("value") val value: String?
 ) {
-    val key = host + "_" + name
+    val key get() = host + "_" + name
 
-    val oldRfcDomain = ".$host" // Append leading dot to match subdomains under RFC2109 and RFC2965
+    val oldRfcDomain get() = ".$host" // Append leading dot to match subdomains under RFC2109 and RFC2965
 
-    val headerValue = name + "=" + value.orEmpty()
+    val headerValue get() = name + "=" + value.orEmpty()
 
     fun toURI(): URI = URI(host)
 
