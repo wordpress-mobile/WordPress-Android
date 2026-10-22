@@ -41,12 +41,17 @@ data class StatsCardsConfiguration(
         /** A configuration persisted before [defaultCardsVersion] existed. */
         const val UNVERSIONED = 0
 
+        /** The revision that promoted Referrers to the defaults (CMM-2583). */
+        const val VERSION_REFERRERS = 1
+
         /**
          * Revision of [StatsCardType.defaultCards] this build ships. Bump it when a card is added
-         * to the defaults and it should also reach sites that are already configured.
+         * to the defaults and it should also reach sites that are already configured - and gate
+         * the step that adds it on its own revision, so that bumping this again later cannot
+         * re-run a step for configurations that have already been through it.
          *
          * 1: Referrers became a default card (CMM-2583).
          */
-        const val CURRENT_DEFAULT_CARDS_VERSION = 1
+        const val CURRENT_DEFAULT_CARDS_VERSION = VERSION_REFERRERS
     }
 }

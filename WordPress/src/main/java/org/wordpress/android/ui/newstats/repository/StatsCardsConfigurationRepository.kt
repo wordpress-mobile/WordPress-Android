@@ -124,26 +124,40 @@ class StatsCardsConfigurationRepository @Inject constructor(
      * Referrers became a default card in CMM-2583, and sites configured before that - which is any
      * site whose owner has picked a period, metric or chart type, since those are stored alongside
      * the card list - would otherwise keep a list without it and have to discover the card in the
-     * add-card list. Stamping the version keeps this a one-off: removing the card afterwards
-     * sticks, and cards the user had already removed themselves are not brought back.
+     * add-card list.
+     *
+     * Each step is gated on its own revision, so that adding a step for a later revision cannot
+     * re-run an earlier one. Stamping the version keeps every step a one-off: removing a card
+     * once its step has run sticks, and no card other than the one a step adds is ever added,
+     * moved or restored. The stored data cannot tell "never had this card" apart from "had it and
+     * removed it", so a user who had removed Referrers themselves does get it back - once.
      */
     private fun addNewDefaultCards(config: StatsCardsConfiguration): StatsCardsConfiguration {
         if (config.defaultCardsVersion >= StatsCardsConfiguration.CURRENT_DEFAULT_CARDS_VERSION) {
             return config
         }
-        val versioned = config.copy(
+        var visibleCards = config.visibleCards
+        if (config.defaultCardsVersion < StatsCardsConfiguration.VERSION_REFERRERS) {
+            visibleCards = withReferrers(visibleCards)
+        }
+        return config.copy(
+            visibleCards = visibleCards,
             defaultCardsVersion = StatsCardsConfiguration.CURRENT_DEFAULT_CARDS_VERSION
         )
-        if (config.isCardVisible(StatsCardType.MOST_VIEWED_REFERRERS)) {
-            return versioned
+    }
+
+    /** [visibleCards] with Referrers added, or unchanged when the card is already visible. */
+    private fun withReferrers(visibleCards: List<StatsCardType>): List<StatsCardType> {
+        if (StatsCardType.MOST_VIEWED_REFERRERS in visibleCards) {
+            return visibleCards
         }
-        val visibleCards = config.visibleCards.toMutableList()
+        val updated = visibleCards.toMutableList()
         // Under Posts & pages, as in the defaults, falling back to the end of the list when the
         // user has removed that card.
-        val anchorIndex = visibleCards.indexOf(StatsCardType.MOST_VIEWED_POSTS_AND_PAGES)
-        val insertIndex = if (anchorIndex >= 0) anchorIndex + 1 else visibleCards.size
-        visibleCards.add(insertIndex, StatsCardType.MOST_VIEWED_REFERRERS)
-        return versioned.copy(visibleCards = visibleCards)
+        val anchorIndex = updated.indexOf(StatsCardType.MOST_VIEWED_POSTS_AND_PAGES)
+        val insertIndex = if (anchorIndex >= 0) anchorIndex + 1 else updated.size
+        updated.add(insertIndex, StatsCardType.MOST_VIEWED_REFERRERS)
+        return updated
     }
 
     @Suppress("TooGenericExceptionCaught")

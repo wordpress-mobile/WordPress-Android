@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.newstats.repository
 
+import com.google.gson.Gson
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.assertj.core.api.Assertions.assertThat
@@ -171,17 +172,31 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
     fun `when configuration predates the referrers default, then the migrated configuration is persisted`() = test {
         val legacyJson = """
             {
-                "visibleCards": ["TODAYS_STATS", "MOST_VIEWED_POSTS_AND_PAGES"]
+                "visibleCards": ["TODAYS_STATS", "MOST_VIEWED_POSTS_AND_PAGES"],
+                "selectedPeriodType": "week",
+                "selectedMetric": "visitors"
             }
         """.trimIndent()
         whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(legacyJson)
 
-        repository.getConfiguration(TEST_SITE_ID)
+        val returned = repository.getConfiguration(TEST_SITE_ID)
 
         val jsonCaptor = argumentCaptor<String>()
         verify(appPrefsWrapper).setStatsCardsConfigurationJson(eq(TEST_SITE_ID), jsonCaptor.capture())
-        assertThat(jsonCaptor.firstValue).contains("MOST_VIEWED_REFERRERS")
-        assertThat(jsonCaptor.firstValue).contains("\"defaultCardsVersion\":1")
+        // What is written has to be the configuration that was returned. Asserting only that the
+        // JSON mentions referrers would also pass if a fresh default configuration were persisted,
+        // which would silently discard the card order, period and metric the user had saved.
+        val persisted = Gson().fromJson(jsonCaptor.firstValue, StatsCardsConfiguration::class.java)
+        assertThat(persisted).isEqualTo(returned)
+        assertThat(persisted.visibleCards).containsExactly(
+            StatsCardType.TODAYS_STATS,
+            StatsCardType.MOST_VIEWED_POSTS_AND_PAGES,
+            StatsCardType.MOST_VIEWED_REFERRERS
+        )
+        assertThat(persisted.selectedPeriodType).isEqualTo("week")
+        assertThat(persisted.selectedMetric).isEqualTo("visitors")
+        assertThat(persisted.defaultCardsVersion)
+            .isEqualTo(StatsCardsConfiguration.CURRENT_DEFAULT_CARDS_VERSION)
     }
 
     @Test
@@ -217,6 +232,11 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
             StatsCardType.MOST_VIEWED_REFERRERS,
             StatsCardType.TODAYS_STATS
         )
+        // The version still has to be stamped and written, even though no card was added. Without
+        // it the migration runs again on every load and would undo a later removal of the card.
+        assertThat(config.defaultCardsVersion)
+            .isEqualTo(StatsCardsConfiguration.CURRENT_DEFAULT_CARDS_VERSION)
+        verify(appPrefsWrapper).setStatsCardsConfigurationJson(eq(TEST_SITE_ID), any())
     }
 
     @Test
