@@ -91,9 +91,10 @@ class StatsDataSourceArchivesTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given several custom taxonomies, when flattening, then they share one section`() {
-        // The web lists every custom taxonomy under a single "Taxonomies" row rather than one row
-        // each, so their terms are ranked and totalled together.
+    fun `given several custom taxonomies, when flattening, then each becomes an entry of one section`() {
+        // The web gathers the custom taxonomies under a single "Taxonomies" row, but keeps the
+        // taxonomy itself as a level: a term is listed under the taxonomy it belongs to, named by
+        // the API's own key for it, and the group totals them all.
         val sections = sectionsOf(
             tax = mapOf(
                 "page_condition" to listOf(entry("featured", views = 3uL)),
@@ -104,7 +105,28 @@ class StatsDataSourceArchivesTest : BaseUnitTest() {
         val taxonomies = sections.single()
         assertThat(taxonomies.key).isEqualTo(ARCHIVE_SECTION_KEY_TAXONOMIES)
         assertThat(taxonomies.views).isEqualTo(12L)
-        assertThat(taxonomies.entries.map { it.value }).containsExactly("saffron", "featured", "cumin")
+        assertThat(taxonomies.entries.map { it.value }).containsExactly("ingredient", "page_condition")
+
+        val ingredient = taxonomies.entries.first()
+        assertThat(ingredient.views).isEqualTo(9L)
+        // The taxonomy is not an archive page of its own, so there is nothing to open for it.
+        assertThat(ingredient.href).isNull()
+        assertThat(ingredient.children.map { it.value }).containsExactly("saffron", "cumin")
+        assertThat(taxonomies.entries.last().children.map { it.value }).containsExactly("featured")
+    }
+
+    @Test
+    fun `given a taxonomy whose terms are all unnamed, when flattening, then it is left out`() {
+        val sections = sectionsOf(
+            tax = mapOf(
+                "ingredient" to listOf(entry(null, views = 40uL)),
+                "page_condition" to listOf(entry("featured", views = 3uL))
+            )
+        )
+
+        val taxonomies = sections.single()
+        assertThat(taxonomies.entries.map { it.value }).containsExactly("page_condition")
+        assertThat(taxonomies.views).isEqualTo(3L)
     }
 
     @Test
@@ -115,17 +137,33 @@ class StatsDataSourceArchivesTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given taxonomy terms past the cap, when flattening, then the whole row is capped`() {
-        // The cap applies to the merged row, not to each taxonomy, so one busy taxonomy cannot
-        // push another's terms out of its own list.
+    fun `given two busy taxonomies, when flattening, then each is capped on its own`() {
+        // The cap applies per taxonomy, so a busy one cannot push a quieter one's terms out of its
+        // own list -- which is exactly what pooling every term into one list did: 160 terms over a
+        // 100 cap left `page_condition` with none at all.
         val sections = sectionsOf(
             tax = mapOf(
-                "ingredient" to (1..80).map { entry("ingredient $it", views = it.toULong()) },
+                "ingredient" to (1..80).map { entry("ingredient $it", views = (1_000 + it).toULong()) },
                 "page_condition" to (1..80).map { entry("condition $it", views = it.toULong()) }
             )
         )
 
-        assertThat(sections.single().entries).hasSize(MAX_ENTRIES_PER_SECTION)
+        val taxonomies = sections.single().entries
+        assertThat(taxonomies.map { it.value }).containsExactly("ingredient", "page_condition")
+        assertThat(taxonomies.map { it.children.size }).containsExactly(80, 80)
+    }
+
+    @Test
+    fun `given one taxonomy past the cap, when flattening, then only its top terms are kept`() {
+        val sections = sectionsOf(
+            tax = mapOf("ingredient" to (1..150).map { entry("term $it", views = it.toULong()) })
+        )
+
+        val ingredient = sections.single().entries.single()
+        assertThat(ingredient.children).hasSize(MAX_ENTRIES_PER_SECTION)
+        assertThat(ingredient.children.first().value).isEqualTo("term 150")
+        // The taxonomy's own total still counts every term, not only the ones kept.
+        assertThat(ingredient.views).isEqualTo((1..150).sum().toLong())
     }
 
     @Test
@@ -188,6 +226,40 @@ class StatsDataSourceArchivesTest : BaseUnitTest() {
 
         assertThat(sections.single().views).isEqualTo(0L)
         assertThat(sections.single().entries.single().views).isEqualTo(0L)
+    }
+
+    @Test
+    fun `given a percent-encoded term, when flattening, then it is decoded as the web decodes it`() {
+        // The API stores the term as it appeared in the URL, so a space or an ampersand arrives
+        // encoded; Calypso runs every term through decodeURIComponent before showing it.
+        val sections = sectionsOf(
+            groups = mapOf("search" to listOf(entry("ekonomi%20%26%20pengar", views = 5uL)))
+        )
+
+        assertThat(sections.single().entries.single().value).isEqualTo("ekonomi & pengar")
+    }
+
+    @Test
+    fun `given a term holding a plus, when flattening, then the plus is not read as a space`() {
+        // URLDecoder on its own reads "+" as the form-encoded space it is in a query string;
+        // decodeURIComponent, which the web uses here, leaves it alone.
+        val sections = sectionsOf(groups = mapOf("search" to listOf(entry("c++ generics", views = 5uL))))
+
+        assertThat(sections.single().entries.single().value).isEqualTo("c++ generics")
+    }
+
+    @Test
+    fun `given a term with a stray percent, when flattening, then it is left as it came`() {
+        val sections = sectionsOf(groups = mapOf("search" to listOf(entry("100% cotton", views = 5uL))))
+
+        assertThat(sections.single().entries.single().value).isEqualTo("100% cotton")
+    }
+
+    @Test
+    fun `given encoded taxonomy terms, when flattening, then they are decoded too`() {
+        val sections = sectionsOf(tax = mapOf("ingredient" to listOf(entry("cr%C3%A8me", views = 5uL))))
+
+        assertThat(sections.single().entries.single().children.single().value).isEqualTo("cr\u00e8me")
     }
 
     @Test

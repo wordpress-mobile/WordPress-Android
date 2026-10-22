@@ -1742,6 +1742,9 @@
     <string name="stats_archives_section_categories">Categories</string>
     <string name="stats_archives_section_tags">Tags</string>
     <string name="stats_archives_section_authors">Authors</string>
+    <string name="stats_archives_section_dates">Dates</string>
+    <string name="stats_archives_section_error">Error</string>
+    <string name="stats_archives_section_aggregated">Aggregated</string>
     <string name="stats_archives_section_other">Other</string>
     <string name="stats_archives_section_taxonomies">Taxonomies</string>
 

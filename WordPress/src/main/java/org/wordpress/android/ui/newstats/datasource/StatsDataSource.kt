@@ -685,9 +685,10 @@ sealed class ArchivesDataResult {
 }
 
 /**
- * The [ArchiveSectionDataItem.key] of the one group that holds every custom taxonomy's terms. The
- * API reports each taxonomy separately in its own `tax` map, but they are collapsed into a single
- * group, as the web does, so a site with a dozen taxonomies doesn't bury its built-in groups.
+ * The [ArchiveSectionDataItem.key] of the one group that holds every custom taxonomy the site has.
+ * The API reports each taxonomy separately in its own `tax` map, and they are gathered under a
+ * single group, as the web does, so a site with a dozen taxonomies doesn't bury its built-in
+ * groups -- one entry per taxonomy, its terms nested under it.
  *
  * The name is borrowed from the API's own key for that map, which is never a built-in group key,
  * so the synthesised group can't collide with a real one.
@@ -696,7 +697,7 @@ const val ARCHIVE_SECTION_KEY_TAXONOMIES = "tax"
 
 /**
  * One group of archive pages. [key] is the API's own name for the group -- one of its short
- * built-in keys ("search", "cat", "tag", "author", "other") or
+ * built-in keys ("search", "cat", "tag", "author", "date", "err", "multiple", "other") or
  * [ARCHIVE_SECTION_KEY_TAXONOMIES] -- which is what the UI resolves into a label.
  *
  * [views] is the total across every entry kept for the group, including any dropped from [entries]
@@ -711,13 +712,19 @@ data class ArchiveSectionDataItem(
 )
 
 /**
- * A single archive page within a group, e.g. one category. [value] is the term itself and [href]
- * the archive page it links to.
+ * A single archive page within a group, e.g. one category. [value] is the term itself, percent-
+ * decoded as the web decodes it, and [href] the archive page it links to -- left encoded, being a
+ * URL to open.
+ *
+ * [children] is only used by [ARCHIVE_SECTION_KEY_TAXONOMIES], whose entries are the site's custom
+ * taxonomies rather than pages: there, [value] is the taxonomy's name, [href] is null and the
+ * taxonomy's terms are the children. Empty for every other group, whose entries are pages already.
  */
 data class ArchiveEntryDataItem(
     val value: String,
     val href: String?,
-    val views: Long
+    val views: Long,
+    val children: List<ArchiveEntryDataItem> = emptyList()
 )
 
 /**

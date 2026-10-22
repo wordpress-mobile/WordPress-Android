@@ -5,6 +5,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.datasource.CityViewsDataResult
+import org.wordpress.android.ui.newstats.datasource.ArchiveEntryDataItem
 import org.wordpress.android.ui.newstats.datasource.ArchiveSectionDataItem
 import org.wordpress.android.ui.newstats.datasource.ArchivesDataResult
 import org.wordpress.android.ui.newstats.datasource.ClicksDataResult
@@ -114,9 +115,15 @@ private const val SUBSCRIBERS_DEFAULT_MAX = 10
 private const val REFERRERS_CARD_MAX = 10
 private const val REFERRERS_DETAIL_MAX = 0
 
-// Number of archive entries requested for the card, matching what the web asks for. The cap is
-// applied by the server per day table across all archive types at once, so the card still gets a
-// usable top list. The detail screen requests all of them (max = 0, "unlimited").
+// Number of archive entries requested for the card: 10, which is what Calypso's Traffic page asks
+// for, deliberately, so the card reports the same numbers as the web for the same period.
+//
+// The server applies the cap as a SQL LIMIT per day table, across all archive types at once, and
+// then caps the number of archive types to the same 10. A group's total is therefore the sum of
+// whatever survived that per-day cap, not the group's true total: the card can read lower than the
+// "show all" screen, which asks for everything (max = 0, "unlimited"). That divergence is the
+// price of web parity on the card and is accepted -- the alternative is a card that disagrees with
+// Calypso instead.
 private const val ARCHIVES_CARD_MAX = 10
 private const val ARCHIVES_DETAIL_MAX = 0
 
@@ -2278,13 +2285,7 @@ class StatsRepository @Inject constructor(
                 key = section.key,
                 views = section.views,
                 previousViews = prev,
-                entries = section.entries.map { entry ->
-                    MostViewedChildData(
-                        name = entry.value,
-                        url = entry.href,
-                        views = entry.views
-                    )
-                }
+                entries = section.entries.map { entry -> entry.toChildData() }
             )
         },
         buildSuccess = { sections, total, change, pct ->
@@ -2300,6 +2301,17 @@ class StatsRepository @Inject constructor(
         },
         logLabel = "archives",
         gate = gate
+    )
+
+    /**
+     * Maps an archive entry and, for the "Taxonomies" group, the terms nested under it. Only that
+     * group is more than one level deep; see [ArchiveEntryDataItem].
+     */
+    private fun ArchiveEntryDataItem.toChildData(): MostViewedChildData = MostViewedChildData(
+        name = value,
+        url = href,
+        views = views,
+        children = children.map { child -> child.toChildData() }
     )
 
     suspend fun fetchSearchTerms(
@@ -3238,11 +3250,15 @@ data class MostViewedItemData(
 
 /**
  * A child item nested under a most viewed item (e.g. a referrer under a referrer group).
+ *
+ * [children] holds a further level of nesting, which only the archives card uses -- the terms of
+ * one custom taxonomy, under that taxonomy, under the "Taxonomies" group. Empty everywhere else.
  */
 data class MostViewedChildData(
     val name: String,
     val url: String?,
-    val views: Long
+    val views: Long,
+    val children: List<MostViewedChildData> = emptyList()
 )
 
 /**

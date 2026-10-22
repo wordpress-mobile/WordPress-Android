@@ -5,10 +5,18 @@ import org.junit.Test
 
 class StatsCardsConfigurationTest {
     @Test
-    fun `when default configuration, then all default cards are visible`() {
+    fun `when default configuration, then only the four default cards are visible, in order`() {
+        // Spelled out rather than compared against `defaultCards()`, which is what builds the
+        // default configuration: adding a card to the defaults, dropping one, or reordering them
+        // has to be a deliberate edit here. Archives in particular ships hidden.
         val config = StatsCardsConfiguration()
 
-        assertThat(config.visibleCards).isEqualTo(StatsCardType.defaultCards())
+        assertThat(config.visibleCards).containsExactly(
+            StatsCardType.TODAYS_STATS,
+            StatsCardType.VIEWS_STATS,
+            StatsCardType.MOST_VIEWED_POSTS_AND_PAGES,
+            StatsCardType.LOCATIONS
+        )
     }
 
     @Test

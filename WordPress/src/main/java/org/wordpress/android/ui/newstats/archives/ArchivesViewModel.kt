@@ -59,8 +59,9 @@ class ArchivesViewModel @Inject constructor(
     }
 
     companion object {
-        // How many archive pages are listed under an expanded group on the card. The "show all"
-        // screen lists every entry the group was fetched with.
+        // How many archive pages are listed under an expanded group on the card, and -- in the
+        // "Taxonomies" group, which is a level deeper -- how many taxonomies and how many terms
+        // under each. The "show all" screen lists every entry the group was fetched with.
         private const val CARD_MAX_ENTRIES_PER_SECTION = 10
     }
 }

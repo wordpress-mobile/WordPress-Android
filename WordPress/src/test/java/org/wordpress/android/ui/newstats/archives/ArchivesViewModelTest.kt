@@ -147,14 +147,23 @@ class ArchivesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when the site has custom taxonomies, then they arrive as one Taxonomies row`() = test {
+    fun `when the site has custom taxonomies, then one Taxonomies row holds a level per taxonomy`() = test {
         whenever(statsRepository.fetchArchives(any(), any(), any())).thenReturn(
             archivesSuccess(
                 ArchiveSectionItemData(
                     key = ARCHIVE_SECTION_KEY_TAXONOMIES,
                     views = 12L,
                     previousViews = 0L,
-                    entries = listOf(MostViewedChildData(name = "saffron", url = null, views = 8L))
+                    entries = listOf(
+                        MostViewedChildData(
+                            name = "ingredient",
+                            url = null,
+                            views = 8L,
+                            children = listOf(
+                                MostViewedChildData(name = "saffron", url = null, views = 8L)
+                            )
+                        )
+                    )
                 )
             )
         )
@@ -165,7 +174,36 @@ class ArchivesViewModelTest : BaseUnitTest() {
         val state = viewModel.uiState.value as MostViewedCardUiState.Loaded
         assertThat(state.items).hasSize(1)
         assertThat(state.items[0].title).isEqualTo("Taxonomies")
-        assertThat(state.items[0].children.single().name).isEqualTo("saffron")
+        val taxonomy = state.items[0].children.single()
+        assertThat(taxonomy.name).isEqualTo("ingredient")
+        assertThat(taxonomy.children.single().name).isEqualTo("saffron")
+    }
+
+    @Test
+    fun `when a taxonomy has more than ten terms, then the card lists only ten of them`() = test {
+        val terms = (1..25).map {
+            MostViewedChildData(name = "term $it", url = null, views = (100 - it).toLong())
+        }
+        whenever(statsRepository.fetchArchives(any(), any(), any())).thenReturn(
+            archivesSuccess(
+                ArchiveSectionItemData(
+                    key = ARCHIVE_SECTION_KEY_TAXONOMIES,
+                    views = 500L,
+                    previousViews = 0L,
+                    entries = listOf(
+                        MostViewedChildData(name = "ingredient", url = null, views = 500L, children = terms)
+                    )
+                )
+            )
+        )
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value as MostViewedCardUiState.Loaded
+        val taxonomy = state.items[0].children.single()
+        assertThat(taxonomy.children).hasSize(10)
+        assertThat(taxonomy.children.last().name).isEqualTo("term 10")
     }
 
     @Test

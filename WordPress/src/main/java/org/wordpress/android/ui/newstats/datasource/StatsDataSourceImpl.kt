@@ -55,6 +55,7 @@ import uniffi.wp_api.WpApiParamOrder
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import java.net.URLDecoder
 import javax.inject.Inject
 
 /**
@@ -690,10 +691,11 @@ class StatsDataSourceImpl @Inject constructor(
 
     /**
      * Flattens the archive summary into one list of groups: one per built-in group, plus a single
-     * [ARCHIVE_SECTION_KEY_TAXONOMIES] group holding the terms of every custom taxonomy the site
-     * has. The API keeps those taxonomies apart in its own `tax` map, one entry per taxonomy, but
-     * listing each as its own row would bury the built-in groups on a site with many of them, so
-     * they are merged into one row as the web does -- their terms ranked and capped together.
+     * [ARCHIVE_SECTION_KEY_TAXONOMIES] group gathering every custom taxonomy the site has. Listing
+     * each taxonomy as its own group would bury the built-in ones on a site with many of them, so
+     * they share a group -- which, as on the web, keeps a level: the group's entries are the
+     * taxonomies themselves, each with its own terms nested under it. A term is then unambiguous,
+     * and each taxonomy is ranked and capped on its own rather than competing with the others.
      */
     @VisibleForTesting
     internal fun StatsArchivesSummaryData?.toArchiveSections(): List<ArchiveSectionDataItem> {
@@ -701,38 +703,85 @@ class StatsDataSourceImpl @Inject constructor(
         val builtIn = groups.entries.mapNotNull { (key, entries) ->
             entries.toArchiveSection(key)
         }
-        val taxonomies = tax.values.flatten().toArchiveSection(ARCHIVE_SECTION_KEY_TAXONOMIES)
-        return builtIn + listOfNotNull(taxonomies)
+        return builtIn + listOfNotNull(tax.toTaxonomiesSection())
     }
 
     /**
-     * A group's entries, sorted by views and capped: the detail screen asks for an unbounded
-     * summary -- a busy site returns thousands of search terms -- and the card and its "show all"
-     * screen are the only readers, so keeping the whole list would only grow the result held in
-     * the stats cache.
-     *
-     * The group's own total is summed before the cap so it still counts every entry kept here, not
-     * only the ones displayed. Entries with no term are dropped first, from the total as well as
-     * from the list: they have no label to show, and the web drops them the same way, so a group's
-     * total matches what Calypso reports for it.
+     * A group's entries, sorted by views and capped -- see [toArchiveEntries] for both.
      */
     private fun List<StatsArchivesEntry>.toArchiveSection(key: String): ArchiveSectionDataItem? {
-        val entries = mapNotNull { entry ->
-            val value = entry.value?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
-            ArchiveEntryDataItem(
-                value = value,
-                href = entry.href,
-                views = entry.views?.toLong() ?: 0L
-            )
-        }
+        val entries = toArchiveEntries()
         if (entries.isEmpty()) return null
         return ArchiveSectionDataItem(
             key = key,
             views = entries.sumOf { it.views },
-            entries = entries
-                .sortedByDescending { it.views }
-                .take(MAX_ARCHIVE_ENTRIES_PER_SECTION)
+            entries = entries.rankedAndCapped()
         )
+    }
+
+    /**
+     * The one group holding the site's custom taxonomies: an entry per taxonomy, named by the
+     * API's own key for it (as the web labels them), carrying that taxonomy's terms as children and
+     * their views as its own total. A taxonomy whose terms are all unnamed is left out entirely,
+     * and so is the whole group if the site has no custom taxonomies.
+     */
+    private fun Map<String, List<StatsArchivesEntry>>.toTaxonomiesSection(): ArchiveSectionDataItem? {
+        val taxonomies = mapNotNull { (taxonomy, entries) ->
+            val terms = entries.toArchiveEntries()
+            if (terms.isEmpty()) return@mapNotNull null
+            ArchiveEntryDataItem(
+                value = taxonomy,
+                href = null,
+                views = terms.sumOf { it.views },
+                children = terms.rankedAndCapped()
+            )
+        }
+        if (taxonomies.isEmpty()) return null
+        return ArchiveSectionDataItem(
+            key = ARCHIVE_SECTION_KEY_TAXONOMIES,
+            views = taxonomies.sumOf { it.views },
+            entries = taxonomies.rankedAndCapped()
+        )
+    }
+
+    /**
+     * The entries of one group or one taxonomy, in the order the API sent them.
+     *
+     * Entries with no term are dropped, from the group's total as well as from its list: they have
+     * no label to show, and the web drops them the same way, so a group's total matches what
+     * Calypso reports for it. A term is percent-decoded, again as the web does, so a search for
+     * "ekonomi & pengar" doesn't read "ekonomi %26 pengar"; the `href` is left as it came, being a
+     * URL to open rather than a label.
+     */
+    private fun List<StatsArchivesEntry>.toArchiveEntries(): List<ArchiveEntryDataItem> =
+        mapNotNull { entry ->
+            val value = entry.value?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
+            ArchiveEntryDataItem(
+                value = value.percentDecoded(),
+                href = entry.href,
+                views = entry.views?.toLong() ?: 0L
+            )
+        }
+
+    /**
+     * Ranked by views and capped: the detail screen asks for an unbounded summary -- a busy site
+     * returns thousands of search terms -- and the card and its "show all" screen are the only
+     * readers, so keeping the whole list would only grow the result held in the stats cache. The
+     * total it belongs to is summed before this, so it still counts every entry.
+     */
+    private fun List<ArchiveEntryDataItem>.rankedAndCapped() =
+        sortedByDescending { it.views }.take(MAX_ARCHIVE_ENTRIES_PER_SECTION)
+
+    /**
+     * Percent-decodes an archive term the way the web's `decodeURIComponent` does, leaving a
+     * malformed sequence ("100%") as it came rather than throwing. Unlike [URLDecoder] on its own,
+     * a literal "+" stays a plus sign instead of becoming a space, so a search for "a+b" survives.
+     */
+    private fun String.percentDecoded(): String = try {
+        URLDecoder.decode(replace("+", PLUS_ENCODED), Charsets.UTF_8)
+    } catch (e: IllegalArgumentException) {
+        AppLog.d(T.STATS, "StatsDataSourceImpl: undecodable archive term - ${e.message}")
+        this
     }
 
     override suspend fun fetchDevicesScreensize(
@@ -1687,6 +1736,9 @@ class StatsDataSourceImpl @Inject constructor(
         // group, and the ceiling for its "show all" screen. The detail screen asks for max = 0, so
         // a busy site really does return thousands of search terms for the year ranges.
         private const val MAX_ARCHIVE_ENTRIES_PER_SECTION = 100
+        // What a literal "+" in an archive term is rewritten to before decoding, so the decoder
+        // reads it as a plus sign rather than as the form-encoded space it would otherwise be.
+        private const val PLUS_ENCODED = "%2B"
         private const val HTTP_UNAUTHORIZED = 401
         private const val HTTP_FORBIDDEN = 403
     }

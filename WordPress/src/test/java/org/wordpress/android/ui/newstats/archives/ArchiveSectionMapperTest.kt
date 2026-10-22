@@ -25,6 +25,10 @@ class ArchiveSectionMapperTest : BaseUnitTest() {
             .thenReturn(CATEGORIES_LABEL)
         whenever(resourceProvider.getString(R.string.stats_archives_section_taxonomies))
             .thenReturn(TAXONOMIES_LABEL)
+        whenever(resourceProvider.getString(R.string.stats_archives_section_dates)).thenReturn("Dates")
+        whenever(resourceProvider.getString(R.string.stats_archives_section_error)).thenReturn("Error")
+        whenever(resourceProvider.getString(R.string.stats_archives_section_aggregated))
+            .thenReturn("Aggregated")
     }
 
     @Test
@@ -40,6 +44,17 @@ class ArchiveSectionMapperTest : BaseUnitTest() {
             .toDetailItem(id = 0, resourceProvider = resourceProvider)
 
         assertThat(item.title).isEqualTo(TAXONOMIES_LABEL)
+    }
+
+    @Test
+    fun `given the API's less common group keys, when mapped, then they are titled as the web titles them`() {
+        // These three reach the app like any other group, and read as "Date", "Err" and "Multiple"
+        // without a name of their own.
+        val titles = listOf("date", "err", "multiple").map { key ->
+            section(key = key).toDetailItem(id = 0, resourceProvider = resourceProvider).title
+        }
+
+        assertThat(titles).containsExactly("Dates", "Error", "Aggregated")
     }
 
     @Test
@@ -67,6 +82,53 @@ class ArchiveSectionMapperTest : BaseUnitTest() {
             .toDetailItem(id = 0, resourceProvider = resourceProvider, maxEntries = 2)
 
         assertThat(item.children.map { it.name }).containsExactly("term 0", "term 1")
+    }
+
+    @Test
+    fun `given entries with their own children, when mapped, then the nesting is kept`() {
+        val item = ArchiveSectionItemData(
+            key = ARCHIVE_SECTION_KEY_TAXONOMIES,
+            views = 12L,
+            previousViews = 0L,
+            entries = listOf(
+                MostViewedChildData(
+                    name = "ingredient",
+                    url = null,
+                    views = 9L,
+                    children = listOf(
+                        MostViewedChildData(name = "saffron", url = "https://example.com/saffron", views = 8L),
+                        MostViewedChildData(name = "cumin", url = null, views = 1L)
+                    )
+                )
+            )
+        ).toDetailItem(id = 0, resourceProvider = resourceProvider)
+
+        val taxonomy = item.children.single()
+        assertThat(taxonomy.name).isEqualTo("ingredient")
+        assertThat(taxonomy.children.map { it.name }).containsExactly("saffron", "cumin")
+        assertThat(taxonomy.children[0].url).isEqualTo("https://example.com/saffron")
+    }
+
+    @Test
+    fun `given nested entries past the cap, when mapped, then the cap applies at both levels`() {
+        val item = ArchiveSectionItemData(
+            key = ARCHIVE_SECTION_KEY_TAXONOMIES,
+            views = 12L,
+            previousViews = 0L,
+            entries = (0 until 5).map { index ->
+                MostViewedChildData(
+                    name = "taxonomy $index",
+                    url = null,
+                    views = 1L,
+                    children = (0 until 5).map { term ->
+                        MostViewedChildData(name = "term $term", url = null, views = 1L)
+                    }
+                )
+            }
+        ).toDetailItem(id = 0, resourceProvider = resourceProvider, maxEntries = 2)
+
+        assertThat(item.children.map { it.name }).containsExactly("taxonomy 0", "taxonomy 1")
+        assertThat(item.children[0].children.map { it.name }).containsExactly("term 0", "term 1")
     }
 
     @Test
