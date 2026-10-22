@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-08 12:24:35+0000
+Translation-Revision-Date: 2026-10-14 02:39:41+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.1.0
 Language: sr_RS
@@ -516,7 +516,6 @@ Language: sr_RS
     <string name="dialog_confirm_autosave_dont_restore_button">Из ове апликације</string>
     <string name="dialog_confirm_autosave_restore_button">Са другог уређаја</string>
     <string name="item_selected">Изабрано</string>
-    <string name="submit">Пошаљи</string>
     <string name="close">Затвори</string>
     <string name="media_pager_remove_item_content_description">Уклони ставку %1$d</string>
     <string name="feedback_form_attachment_already_added">Прилог је већ додат</string>
@@ -530,7 +529,8 @@ Language: sr_RS
     <string name="sending">Слање</string>
     <string name="send_feedback">Пошаљи повратне информације</string>
     <string name="feedback_form_add_attachments">Додај прилоге</string>
-    <string name="feedback_form_title">Повратне информације</string>
+    <string name="feedback_form_title">Мишљење</string>
+    <string name="submit">Предај</string>
     <string name="voice_to_content_error_label">Грешка</string>
     <string name="voice_to_content_generic_error">Чланак из звука тренутно није доступан, покушајте поново касније.</string>
     <string name="voice_to_content_upgrade">Надоградите за више захтева</string>
@@ -991,7 +991,7 @@ Language: sr_RS
     <string name="my_site_header_traffic">Саобраћај</string>
     <string name="jetpack_plugin_install_remote_plugin_done_description">Сада када је Jetpack постављен, треба још само да вас подесимо. Ово ће трајати само минут.</string>
     <string name="jetpack_plugin_install_full_plugin_done_button">Готово</string>
-    <string name="my_site_header_manage">Уређивање</string>
+    <string name="my_site_header_manage">Управљај</string>
     <string name="blaze_overlay_site_promotional_button">Промовиши чланак помоћу Blaze-а сада</string>
     <string name="blaze_overlay_page_promotional_button">Промовиши ову страницу помоћу Blaze-а</string>
     <string name="blaze_overlay_post_promotional_button">Промовиши овај чланак помоћу Blaze-а</string>
@@ -1310,7 +1310,7 @@ Language: sr_RS
     <string name="comment_moderation_error">Модерисање коментара није успело</string>
     <string name="reader_comment_menu_trash">Премести на отпад</string>
     <string name="reader_comment_menu_spam">Означи као непожељно</string>
-    <string name="reader_comment_menu_unapprove">Поништи одобрење</string>
+    <string name="reader_comment_menu_unapprove">Одбаци одобрење</string>
     <string name="gutenberg_native_tiled_gallery_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Подешавања поплочане галерије</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Води на екран за избор распореда</string>
     <string name="gutenberg_native_gallery_style" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Стил галерије</string>
@@ -1523,9 +1523,9 @@ Language: sr_RS
     <string name="gutenberg_native_s_has_url_set" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s има постављен URL</string>
     <string name="gutenberg_native_s_has_no_url_set" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s нема постављен URL</string>
     <string name="gutenberg_native_s_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Блок %s</string>
-    <string name="gutenberg_native_opacity" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Непрозирност</string>
     <string name="gutenberg_native_media_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Могућности медија</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Неисправан URL. Звучна датотека није пронађена.</string>
+    <string name="gutenberg_native_opacity" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Степен непровидности</string>
     <string name="gutenberg_native_insert_crosspost" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Уметни унакрсну објаву</string>
     <string name="gutenberg_native_drag_to_adjust_focal_point" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Превуците да подесите жижну тачку</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Двапут додирните да отворите доњи лист за додавање слике или видеа</string>
@@ -2147,8 +2147,8 @@ Language: sr_RS
     <string name="notifications_tab_title_comments">Коментари</string>
     <string name="notifications_tab_title_likes">Свиђања</string>
     <string name="notifications_tab_title_unread_notifications">Непрочитано</string>
-    <string name="dlg_confirm_action_trash">Премести на отпад</string>
     <string name="dlg_cancel_action_dont_trash">Не премештај на отпад</string>
+    <string name="dlg_confirm_action_trash">Отпад</string>
     <string name="stats_insights_management_activity">Активност</string>
     <string name="stats_insights_management_general">Опште</string>
     <string name="stats_management_screen_title">Додај нову картицу</string>
@@ -2418,7 +2418,7 @@ Language: sr_RS
     <string name="domain_contact_information_phone_number_hint">Телефон</string>
     <string name="domain_contact_information_register_domain_button">Региструј домен</string>
     <string name="domain_contact_information_country_code_hint">Позивни број државе</string>
-    <string name="domain_contact_information_state_hint">Држава</string>
+    <string name="domain_contact_information_state_hint">Савезна држава</string>
     <string name="domain_contact_information_description">Ради ваше удобности, унапред смо попунили ваше WordPress.com\n        податке за контакт. Прегледајте их да бисте били сигурни да су то исправни подаци које желите да користите за овај домен.</string>
     <string name="domain_contact_information_organization_hint">Организација (необавезно)</string>
     <string name="domain_privacy_option_off_title">Региструј јавно</string>
@@ -2994,8 +2994,8 @@ Language: sr_RS
     <string name="post_settings_choose_featured_image">Изабери истакнуту слику</string>
     <string name="jetpack_disconnect_error_toast">Грешка при прекидању везе са сајтом</string>
     <string name="jetpack_disconnect_success_toast">Веза са сајтом је прекинута</string>
-    <string name="jetpack_disconnect_confirm">Прекини везу</string>
     <string name="jetpack_disconnect_confirmation_message">Да ли сигурно желите да прекинете везу Jetpack-а са сајтом?</string>
+    <string name="jetpack_disconnect_confirm">Прекини</string>
     <string name="jetpack_disconnect_pref_title">\"Прекини везу са WordPress.com\"</string>
     <string name="site_settings_jetpack_allowlist_description">IP адресу (или низ адреса) можете означити као „Увек дозвољено“, чиме спречавате да их Jetpack икада блокира. Прихватљиви су IPv4 и IPv6. Да бисте навели опсег, унесите најнижу и највишу вредност раздвојене цртицом. Пример: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Захтевај потврду идентитета у два корака</string>
@@ -3167,14 +3167,14 @@ Language: sr_RS
     <string name="share_btn_reconnect">Поново повежи</string>
     <string name="share_btn_connect">Повежи</string>
     <string name="connection_service_description">Повежите се да бисте самостално делили чланке са свог блога на %s.</string>
-    <string name="share_btn_disconnect">Прекини везу</string>
+    <string name="share_btn_disconnect">Прекини</string>
     <string name="connected_accounts_label">Повезани налози</string>
     <string name="connections_description">Повежите своје омиљене друштвене мреже да бисте самостално делили нове чланке са пријатељима.</string>
     <string name="tabbar_accessibility_label_notifications">Обавештења. Управљајте обавештењима.</string>
     <string name="tabbar_accessibility_label_reader">Читач. Пратите садржај са других сајтова.</string>
     <string name="tabbar_accessibility_label_my_site">Мој сајт. Погледајте свој сајт и управљајте њиме, укључујући статистику.</string>
     <string name="button_not_now">Не сада</string>
-    <string name="my_site_btn_sharing">Друштвене мреже</string>
+    <string name="my_site_btn_sharing">Друштвено</string>
     <string name="media_error_internal_server_error">Грешка при отпремању. Покушајте да промените „Оптимизуј слике“ у подешавањима апликације</string>
     <string name="media_downloading">Чување медија на овом уређају</string>
     <string name="error_media_save">Није могуће сачувати медиј</string>
@@ -3225,7 +3225,7 @@ Language: sr_RS
     <string name="image_quality">Квалитет слике</string>
     <string name="error_all_media_upload_canceled">Сва отпремања медија су отказана због непознате грешке. Покушајте поново да отпремите</string>
     <string name="error_unknown_post_type">Непознат облик чланка</string>
-    <string name="submit_for_review">Пошаљи</string>
+    <string name="submit_for_review">Предај</string>
     <string name="title_subscriber">Претплатник</string>
     <string name="already_logged_in_wpcom">Већ сте пријављени на WordPress.com налог, не можете да додате WordPress.com сајт везан за други налог.</string>
     <string name="error_media_load">Није могуће учитати медије</string>
@@ -3686,7 +3686,6 @@ Language: sr_RS
     <string name="comment_status_approved">Одобрено</string>
     <string name="comment_status_unapproved">На чекању</string>
     <string name="mnu_comment_approve">Одобри</string>
-    <string name="mnu_comment_unapprove">Поништи одобрење</string>
     <string name="media_error_no_permission">Немате дозволу да прегледате библиотеку медија</string>
     <string name="new_post">Нови чланак</string>
     <string name="new_media">Нови медиј</string>
@@ -3724,6 +3723,7 @@ Language: sr_RS
     <string name="invalid_site_url_message">Проверите да ли је унети URL сајта исправан</string>
     <string name="mnu_comment_trash">Отпад</string>
     <string name="trash">Отпад</string>
+    <string name="mnu_comment_unapprove">Одбаци одобрење</string>
     <string name="share_link">Подели везу</string>
     <string name="reader_empty_posts_in_tag_updating">Довлачење чланака…</string>
     <string name="comment_unapproved">Коментар није одобрен</string>
