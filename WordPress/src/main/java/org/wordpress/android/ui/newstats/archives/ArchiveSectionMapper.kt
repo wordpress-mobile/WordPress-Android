@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.newstats.archives
 
 import org.wordpress.android.R
+import org.wordpress.android.ui.newstats.datasource.ARCHIVE_SECTION_KEY_TAXONOMIES
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedChange
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedChildItem
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDetailItem
@@ -29,9 +30,10 @@ internal fun ArchiveSectionItemData.toDetailItem(
 
 /**
  * The label a group is listed under. The API names its built-in groups with short keys that read
- * poorly on their own ("cat", "author"), so those get a translated name; a site's custom
- * taxonomies arrive under their own slug, which has no translation to give it and is instead
- * spelled out from the slug ("page_condition" -> "Page condition").
+ * poorly on their own ("cat", "author"), so those get a translated name, as does the one group
+ * holding every custom taxonomy. A key with no translation -- one of the rarer built-in ones the
+ * API can still send -- is spelled out from itself ("page_condition" -> "Page condition") rather
+ * than shown raw.
  */
 private fun ArchiveSectionItemData.sectionTitle(resourceProvider: ResourceProvider): String {
     val titleResId = when (key) {
@@ -40,6 +42,7 @@ private fun ArchiveSectionItemData.sectionTitle(resourceProvider: ResourceProvid
         SECTION_KEY_TAG -> R.string.stats_archives_section_tags
         SECTION_KEY_AUTHOR -> R.string.stats_archives_section_authors
         SECTION_KEY_OTHER -> R.string.stats_archives_section_other
+        ARCHIVE_SECTION_KEY_TAXONOMIES -> R.string.stats_archives_section_taxonomies
         else -> null
     }
     return titleResId?.let { resourceProvider.getString(it) } ?: key.humanizeSlug()

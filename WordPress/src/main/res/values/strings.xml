@@ -1743,6 +1743,7 @@
     <string name="stats_archives_section_tags">Tags</string>
     <string name="stats_archives_section_authors">Authors</string>
     <string name="stats_archives_section_other">Other</string>
+    <string name="stats_archives_section_taxonomies">Taxonomies</string>
 
     <!-- Subscribers Stats Cards -->
     <string name="stats_subscribers_all_time">All-time Subscribers</string>

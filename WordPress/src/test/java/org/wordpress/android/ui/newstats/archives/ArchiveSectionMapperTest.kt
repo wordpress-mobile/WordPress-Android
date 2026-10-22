@@ -8,6 +8,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.ui.newstats.datasource.ARCHIVE_SECTION_KEY_TAXONOMIES
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedChange
 import org.wordpress.android.ui.newstats.repository.ArchiveSectionItemData
 import org.wordpress.android.ui.newstats.repository.MostViewedChildData
@@ -22,6 +23,8 @@ class ArchiveSectionMapperTest : BaseUnitTest() {
     fun setUp() {
         whenever(resourceProvider.getString(R.string.stats_archives_section_categories))
             .thenReturn(CATEGORIES_LABEL)
+        whenever(resourceProvider.getString(R.string.stats_archives_section_taxonomies))
+            .thenReturn(TAXONOMIES_LABEL)
     }
 
     @Test
@@ -32,7 +35,15 @@ class ArchiveSectionMapperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given a custom taxonomy slug, when mapped, then it is titled from the slug`() {
+    fun `given the merged taxonomies group, when mapped, then it is titled with its translated name`() {
+        val item = section(key = ARCHIVE_SECTION_KEY_TAXONOMIES)
+            .toDetailItem(id = 0, resourceProvider = resourceProvider)
+
+        assertThat(item.title).isEqualTo(TAXONOMIES_LABEL)
+    }
+
+    @Test
+    fun `given a group key with no translation, when mapped, then it is titled from the key`() {
         val item = section(key = "page_condition")
             .toDetailItem(id = 0, resourceProvider = resourceProvider)
 
@@ -87,5 +98,6 @@ class ArchiveSectionMapperTest : BaseUnitTest() {
 
     companion object {
         private const val CATEGORIES_LABEL = "Categories"
+        private const val TAXONOMIES_LABEL = "Taxonomies"
     }
 }

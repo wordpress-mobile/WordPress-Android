@@ -86,7 +86,46 @@ class StatsDataSourceArchivesTest : BaseUnitTest() {
             tax = mapOf("page_condition" to listOf(entry("featured", views = 3uL)))
         )
 
-        assertThat(sections.map { it.key }).containsExactlyInAnyOrder("search", "page_condition")
+        assertThat(sections.map { it.key })
+            .containsExactlyInAnyOrder("search", ARCHIVE_SECTION_KEY_TAXONOMIES)
+    }
+
+    @Test
+    fun `given several custom taxonomies, when flattening, then they share one section`() {
+        // The web lists every custom taxonomy under a single "Taxonomies" row rather than one row
+        // each, so their terms are ranked and totalled together.
+        val sections = sectionsOf(
+            tax = mapOf(
+                "page_condition" to listOf(entry("featured", views = 3uL)),
+                "ingredient" to listOf(entry("saffron", views = 8uL), entry("cumin", views = 1uL))
+            )
+        )
+
+        val taxonomies = sections.single()
+        assertThat(taxonomies.key).isEqualTo(ARCHIVE_SECTION_KEY_TAXONOMIES)
+        assertThat(taxonomies.views).isEqualTo(12L)
+        assertThat(taxonomies.entries.map { it.value }).containsExactly("saffron", "featured", "cumin")
+    }
+
+    @Test
+    fun `given a site with no custom taxonomies, when flattening, then no taxonomies section`() {
+        val sections = sectionsOf(groups = mapOf("search" to listOf(entry("kotlin", views = 5uL))))
+
+        assertThat(sections.map { it.key }).containsExactly("search")
+    }
+
+    @Test
+    fun `given taxonomy terms past the cap, when flattening, then the whole row is capped`() {
+        // The cap applies to the merged row, not to each taxonomy, so one busy taxonomy cannot
+        // push another's terms out of its own list.
+        val sections = sectionsOf(
+            tax = mapOf(
+                "ingredient" to (1..80).map { entry("ingredient $it", views = it.toULong()) },
+                "page_condition" to (1..80).map { entry("condition $it", views = it.toULong()) }
+            )
+        )
+
+        assertThat(sections.single().entries).hasSize(MAX_ENTRIES_PER_SECTION)
     }
 
     @Test

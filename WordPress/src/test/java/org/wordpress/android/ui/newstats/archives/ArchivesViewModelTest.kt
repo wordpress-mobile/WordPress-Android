@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.datasource.ARCHIVE_SECTION_KEY_TAXONOMIES
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedCardUiState
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedChange
 import org.wordpress.android.ui.newstats.repository.ArchiveSectionItemData
@@ -55,6 +56,7 @@ class ArchivesViewModelTest : BaseUnitTest() {
         whenever(resourceProvider.getString(R.string.stats_error_api)).thenReturn("API error")
         whenever(resourceProvider.getString(R.string.stats_archives_section_search)).thenReturn("Search terms")
         whenever(resourceProvider.getString(R.string.stats_archives_section_categories)).thenReturn("Categories")
+        whenever(resourceProvider.getString(R.string.stats_archives_section_taxonomies)).thenReturn("Taxonomies")
     }
 
     private fun initViewModel() {
@@ -145,7 +147,29 @@ class ArchivesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when a group's key has no translation, then its slug is spelled out`() = test {
+    fun `when the site has custom taxonomies, then they arrive as one Taxonomies row`() = test {
+        whenever(statsRepository.fetchArchives(any(), any(), any())).thenReturn(
+            archivesSuccess(
+                ArchiveSectionItemData(
+                    key = ARCHIVE_SECTION_KEY_TAXONOMIES,
+                    views = 12L,
+                    previousViews = 0L,
+                    entries = listOf(MostViewedChildData(name = "saffron", url = null, views = 8L))
+                )
+            )
+        )
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value as MostViewedCardUiState.Loaded
+        assertThat(state.items).hasSize(1)
+        assertThat(state.items[0].title).isEqualTo("Taxonomies")
+        assertThat(state.items[0].children.single().name).isEqualTo("saffron")
+    }
+
+    @Test
+    fun `when a group's key has no translation, then it is spelled out rather than shown raw`() = test {
         whenever(statsRepository.fetchArchives(any(), any(), any())).thenReturn(
             archivesSuccess(
                 ArchiveSectionItemData(key = "page_condition", views = 5L, previousViews = 0L)

@@ -689,16 +689,20 @@ class StatsDataSourceImpl @Inject constructor(
     }
 
     /**
-     * Flattens the archive summary into one list of groups. The API keeps a site's custom
-     * taxonomies in their own `tax` map rather than alongside the built-in groups, but they are
-     * the same shape and read the same way in the card, so both become sections here.
+     * Flattens the archive summary into one list of groups: one per built-in group, plus a single
+     * [ARCHIVE_SECTION_KEY_TAXONOMIES] group holding the terms of every custom taxonomy the site
+     * has. The API keeps those taxonomies apart in its own `tax` map, one entry per taxonomy, but
+     * listing each as its own row would bury the built-in groups on a site with many of them, so
+     * they are merged into one row as the web does -- their terms ranked and capped together.
      */
     @VisibleForTesting
     internal fun StatsArchivesSummaryData?.toArchiveSections(): List<ArchiveSectionDataItem> {
         if (this == null) return emptyList()
-        return (groups.entries + tax.entries).mapNotNull { (key, entries) ->
+        val builtIn = groups.entries.mapNotNull { (key, entries) ->
             entries.toArchiveSection(key)
         }
+        val taxonomies = tax.values.flatten().toArchiveSection(ARCHIVE_SECTION_KEY_TAXONOMIES)
+        return builtIn + listOfNotNull(taxonomies)
     }
 
     /**

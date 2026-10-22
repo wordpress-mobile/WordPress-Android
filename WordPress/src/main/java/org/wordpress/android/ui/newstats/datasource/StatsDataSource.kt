@@ -685,9 +685,19 @@ sealed class ArchivesDataResult {
 }
 
 /**
+ * The [ArchiveSectionDataItem.key] of the one group that holds every custom taxonomy's terms. The
+ * API reports each taxonomy separately in its own `tax` map, but they are collapsed into a single
+ * group, as the web does, so a site with a dozen taxonomies doesn't bury its built-in groups.
+ *
+ * The name is borrowed from the API's own key for that map, which is never a built-in group key,
+ * so the synthesised group can't collide with a real one.
+ */
+const val ARCHIVE_SECTION_KEY_TAXONOMIES = "tax"
+
+/**
  * One group of archive pages. [key] is the API's own name for the group -- one of its short
- * built-in keys ("search", "cat", "tag", "author", "other") or, for a custom taxonomy, that
- * taxonomy's slug -- which is what the UI resolves into a label.
+ * built-in keys ("search", "cat", "tag", "author", "other") or
+ * [ARCHIVE_SECTION_KEY_TAXONOMIES] -- which is what the UI resolves into a label.
  *
  * [views] is the total across every entry kept for the group, including any dropped from [entries]
  * by the display cap, so the group's own number stays right however many of its entries are listed
