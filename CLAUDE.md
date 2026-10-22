@@ -138,6 +138,12 @@ description from the server (e.g. `gh pr view <number> --json body`) and edit th
 content. Never rewrite the whole description from local knowledge or memory, since it may
 have been changed on the server side and those changes would be lost.
 
+## User-Facing Changes Log
+
+`docs/USER-FACING-CHANGES.md` is a rolling log of changes a customer could notice, written by the author of the change. It is not release notes. `docs/USER-FACING-CHANGES-DOCUMENTATION.md` covers what belongs in the log and the entry format.
+
+When a change could be noticed by a customer, read the documentation file and add an entry at the top of the log as part of the same change.
+
 ## Release Notes Compilation Process
 
 ### Overview
