@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -17,6 +18,7 @@ import org.mockito.Mock
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -503,13 +505,101 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         viewModel.onSearchSubmitted("cats")
         advanceUntilIdle()
         verify(repository).searchPosts("cats", 0)
+        assertThat(viewModel.uiState.value.emptyState).isEqualTo(ReaderPostListEmptyState.SearchUpdating)
 
-        viewModel.uiEvents.filterIsInstance<ReaderPostListUiEvent.SearchEnded>().test {
-            repositoryEvents.emit(ReaderPostListEvent.SearchEnded("cats", 0, didSucceed = true))
-            assertThat(awaitItem()).isEqualTo(ReaderPostListUiEvent.SearchEnded(showResults = true))
-        }
+        repositoryEvents.emit(ReaderPostListEvent.SearchEnded("cats", 0, didSucceed = true))
         advanceUntilIdle()
         verify(repository, times(2)).getPosts(searchTarget)
+        assertThat(viewModel.uiState.value.emptyState).isEqualTo(ReaderPostListEmptyState.SearchNoResults("cats"))
+    }
+
+    @Test
+    fun `a successful search keeps showing as running until its results are loaded`() = test {
+        val searchTarget = ReaderPostListTarget.Tag(
+            ReaderTag("cats", "cats", "cats", null, ReaderTagType.SEARCH)
+        )
+        val resultsLoaded = CompletableDeferred<Unit>()
+        var loads = 0
+        whenever(repository.getPosts(searchTarget)).doSuspendableAnswer {
+            // the first load is the empty list on submit, the second is the one after the search ends
+            if (++loads > 1) resultsLoaded.await()
+            ReaderPostList()
+        }
+        startAndLoad(ReaderPostListArgs(listType = ReaderPostListType.SEARCH_RESULTS))
+        viewModel.onSearchSubmitted("cats")
+        advanceUntilIdle()
+
+        repositoryEvents.emit(ReaderPostListEvent.SearchEnded("cats", 0, didSucceed = true))
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.emptyState).isEqualTo(ReaderPostListEmptyState.SearchUpdating)
+
+        resultsLoaded.complete(Unit)
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.emptyState).isEqualTo(ReaderPostListEmptyState.SearchNoResults("cats"))
+    }
+
+    @Test
+    fun `re-running a failed search clears the error when it starts`() = test {
+        startAndLoad(ReaderPostListArgs(listType = ReaderPostListType.SEARCH_RESULTS))
+        viewModel.onSearchSubmitted("cats")
+        advanceUntilIdle()
+        repositoryEvents.emit(ReaderPostListEvent.SearchEnded("cats", 0, didSucceed = false))
+        advanceUntilIdle()
+
+        repositoryEvents.emit(ReaderPostListEvent.SearchStarted("cats", 0))
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.emptyState).isEqualTo(ReaderPostListEmptyState.SearchUpdating)
+    }
+
+    @Test
+    fun `failed search shows the search error`() = test {
+        startAndLoad(ReaderPostListArgs(listType = ReaderPostListType.SEARCH_RESULTS))
+        viewModel.onSearchSubmitted("cats")
+        advanceUntilIdle()
+
+        repositoryEvents.emit(ReaderPostListEvent.SearchEnded("cats", 0, didSucceed = false))
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.emptyState).isEqualTo(ReaderPostListEmptyState.RequestFailed(true))
+    }
+
+    @Test
+    fun `an older search ending doesn't end the current one`() = test {
+        startAndLoad(ReaderPostListArgs(listType = ReaderPostListType.SEARCH_RESULTS))
+        viewModel.onSearchSubmitted("cats")
+        advanceUntilIdle()
+        viewModel.onSearchSubmitted("dogs")
+        advanceUntilIdle()
+
+        repositoryEvents.emit(ReaderPostListEvent.SearchEnded("cats", 0, didSucceed = true))
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.emptyState).isEqualTo(ReaderPostListEmptyState.SearchUpdating)
+    }
+
+    @Test
+    fun `clearing the search before it starts cancels it`() = test {
+        startAndLoad(ReaderPostListArgs(listType = ReaderPostListType.SEARCH_RESULTS))
+
+        viewModel.onSearchSubmitted("cats")
+        viewModel.onSearchCleared()
+        advanceUntilIdle()
+
+        verify(repository, never()).searchPosts(any(), any())
+    }
+
+    @Test
+    fun `search shows no empty state before a query is submitted or after it's cleared`() = test {
+        startAndLoad(ReaderPostListArgs(listType = ReaderPostListType.SEARCH_RESULTS))
+        assertThat(viewModel.uiState.value.emptyState).isNull()
+
+        viewModel.onSearchSubmitted("cats")
+        advanceUntilIdle()
+        viewModel.onSearchCleared()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.emptyState).isNull()
     }
 
     private suspend fun TestScope.startAndLoad(args: ReaderPostListArgs = args()) {

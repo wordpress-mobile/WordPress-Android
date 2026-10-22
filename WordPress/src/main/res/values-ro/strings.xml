@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-08-25 17:56:31+0000
+Translation-Revision-Date: 2026-10-21 09:05:05+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.1.0
 Language: ro
@@ -2206,9 +2206,9 @@ Language: ro
     <string name="suffix_1_000_000_000_000_000_000">exa%s</string>
     <string name="suffix_1_000">kilo%s</string>
     <string name="suffix_1_000_000_000">giga%s</string>
-    <string name="suffix_1_000_000">mega%s</string>
     <string name="posts_cannot_be_started">Nu putem deschide articolele acum. Te rog reîncearcă mai târziu</string>
     <string name="site_cannot_be_loaded">Nu putem încărca datele pentru site-ul tău chiar acum. Te rog reîncearcă mai târziu</string>
+    <string name="suffix_1_000_000">%s milioane</string>
     <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bibliotecă Media WordPress</string>
     <string name="gutenberg_native_unsupported" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Neacceptat</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Atinge pentru a ascunde tastatura</string>
@@ -3071,7 +3071,7 @@ Language: ro
     <string name="button_retry">Reîncearcă</string>
     <string name="post_queued">Articolul este în coada de așteptare</string>
     <string name="uploading_post">Încarc „%s”</string>
-    <string name="connection_to_server_lost">Conexiunea cu serverul s-a pierdut</string>
+    <string name="connection_to_server_lost">Conexiunea la server s-a pierdut</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">Verific adresa site-ului</string>
     <string name="login_site_address" a8c-src-lib="module:login">Adresă site</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Introdu adresa site-ului WordPress pe care vrei să-l conectezi.</string>
