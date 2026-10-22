@@ -79,7 +79,6 @@ class ReaderSearchViewModel @Inject constructor(
 
     override fun onCleared() {
         dispatcher.unregister(this)
-        super.onCleared()
     }
 
     fun onQueryChanged(query: String) {
