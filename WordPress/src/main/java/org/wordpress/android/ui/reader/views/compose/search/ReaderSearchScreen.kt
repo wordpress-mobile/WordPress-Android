@@ -100,6 +100,10 @@ fun ReaderSearchScreen(
 
     // hoisted so the Sites tab keeps its scroll while hidden, and keyed so a new search starts at the top
     val sitesListState = rememberSaveable(uiState.submittedQuery, saver = LazyListState.Saver) { LazyListState() }
+    // re-running the same query reloads the first page, so it needs the scroll reset its key can't give it
+    LaunchedEffect(uiState.isLoadingSites) {
+        if (uiState.isLoadingSites) sitesListState.requestScrollToItem(0)
+    }
     val content = uiState.content
     Scaffold(
         topBar = {
