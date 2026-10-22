@@ -1,18 +1,9 @@
 package org.wordpress.android.ui.reader.views
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
-import android.view.animation.AccelerateDecelerateInterpolator
 import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
-import android.R as AndroidR
 
 /**
  * Follow button used in reader detail
@@ -52,11 +43,11 @@ class ReaderFollowButton @JvmOverloads constructor(
     }
 
     fun setIsFollowed(isFollowed: Boolean) {
-        setIsFollowed(isFollowed, false)
-    }
-
-    fun setIsFollowedAnimated(isFollowed: Boolean) {
-        setIsFollowed(isFollowed, true)
+        if (isFollowed == this.isFollowed && isSelected == isFollowed) {
+            return
+        }
+        this.isFollowed = isFollowed
+        updateFollowText()
     }
 
     fun setIsLoading(loading: Boolean) {
@@ -66,36 +57,4 @@ class ReaderFollowButton @JvmOverloads constructor(
     }
 
     fun getIsLoading(): Boolean = isLoading
-
-    @SuppressLint("Recycle")
-    private fun setIsFollowed(isFollowed: Boolean, animateChanges: Boolean) {
-        if (isFollowed == this.isFollowed && isSelected == isFollowed) {
-            return
-        }
-        this.isFollowed = isFollowed
-        if (animateChanges) {
-            val anim = ObjectAnimator.ofFloat(
-                this,
-                View.SCALE_Y,
-                1f,
-                0f
-            )
-            with(anim) {
-                repeatMode = ValueAnimator.REVERSE
-                repeatCount = 1
-                addListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationRepeat(animation: Animator) {
-                        updateFollowText()
-                    }
-                })
-            }
-            AnimatorSet().apply {
-                play(anim)
-                duration = context.resources.getInteger(AndroidR.integer.config_shortAnimTime).toLong()
-                interpolator = AccelerateDecelerateInterpolator()
-            }.start()
-        } else {
-            updateFollowText()
-        }
-    }
 }
