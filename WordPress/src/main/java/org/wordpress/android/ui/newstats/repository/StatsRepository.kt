@@ -114,6 +114,12 @@ private const val SUBSCRIBERS_DEFAULT_MAX = 10
 private const val REFERRERS_CARD_MAX = 10
 private const val REFERRERS_DETAIL_MAX = 0
 
+// Number of archive entries requested for the card, matching what the web asks for. The cap is
+// applied by the server per day table across all archive types at once, so the card still gets a
+// usable top list. The detail screen requests all of them (max = 0, "unlimited").
+private const val ARCHIVES_CARD_MAX = 10
+private const val ARCHIVES_DETAIL_MAX = 0
+
 /** The calendar unit a calendar-aligned period pages by. */
 private enum class CalendarUnit { WEEK, MONTH, YEAR }
 
@@ -2227,18 +2233,37 @@ class StatsRepository @Inject constructor(
         forceRefresh = forceRefresh,
         isCacheable = { it is ArchivesResult.Success }
     ) { gate ->
-        fetchArchivesFromNetwork(siteId, period, gate)
+        fetchArchivesFromNetwork(siteId, period, ARCHIVES_CARD_MAX, gate)
+    }
+
+    /**
+     * Fetches every archive entry (max = 0 = unlimited) for the archives detail screen. Kept
+     * separate from [fetchArchives] (which bounds the card to [ARCHIVES_CARD_MAX]) so the detail
+     * screen can show more entries than the card without inflating the card request, and cached
+     * under its own bucket so the two responses cannot overwrite each other.
+     */
+    suspend fun fetchArchivesDetail(
+        siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): ArchivesResult = cached(
+        key = cacheKey(StatsCacheBucket.ARCHIVES_DETAIL, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is ArchivesResult.Success }
+    ) { gate ->
+        fetchArchivesFromNetwork(siteId, period, ARCHIVES_DETAIL_MAX, gate)
     }
 
     private suspend fun fetchArchivesFromNetwork(
         siteId: Long,
         period: StatsPeriod,
+        max: Int,
         gate: CacheGate
     ): ArchivesResult = fetchWithComparison(
         period = period,
         fetch = { dateRange ->
             when (val r = statsDataSource.fetchArchives(
-                siteId, dateRange, max = 0
+                siteId, dateRange, max
             )) {
                 is ArchivesDataResult.Success ->
                     DataSourceResult.Success(r.sections)

@@ -1737,7 +1737,7 @@
 
     <!-- Archive Stats Card -->
     <string name="stats_archives_title">Archives</string>
-    <string name="stats_archives_title_label">Title</string>
+    <string name="stats_archives_title_label">Archive pages</string>
     <string name="stats_archives_section_search">Search terms</string>
     <string name="stats_archives_section_categories">Categories</string>
     <string name="stats_archives_section_tags">Tags</string>

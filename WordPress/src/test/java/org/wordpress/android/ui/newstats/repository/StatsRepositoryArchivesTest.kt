@@ -102,7 +102,7 @@ class StatsRepositoryArchivesTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when fetchArchives is called, then the data source is asked for the full list twice`() = test {
+    fun `when fetchArchives is called, then the card asks for the top entries of both periods`() = test {
         whenever(statsDataSource.fetchArchives(any(), any(), any()))
             .thenReturn(ArchivesDataResult.Success(listOf(categorySection(views = 30L))))
 
@@ -111,8 +111,51 @@ class StatsRepositoryArchivesTest : BaseUnitTest() {
         verify(statsDataSource, times(2)).fetchArchives(
             siteId = eq(TEST_SITE_ID),
             dateRange = any(),
-            max = eq(0)
+            max = eq(CARD_MAX)
         )
+    }
+
+    @Test
+    fun `when fetchArchivesDetail is called, then the data source is asked for every entry`() = test {
+        whenever(statsDataSource.fetchArchives(any(), any(), any()))
+            .thenReturn(ArchivesDataResult.Success(listOf(categorySection(views = 30L))))
+
+        repository.fetchArchivesDetail(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        verify(statsDataSource, times(2)).fetchArchives(
+            siteId = eq(TEST_SITE_ID),
+            dateRange = any(),
+            max = eq(DETAIL_MAX)
+        )
+    }
+
+    @Test
+    fun `given the card was fetched, when fetchArchivesDetail, then the capped result is not reused`() = test {
+        whenever(statsDataSource.fetchArchives(any(), any(), eq(CARD_MAX)))
+            .thenReturn(ArchivesDataResult.Success(listOf(categorySection(views = 30L))))
+        whenever(statsDataSource.fetchArchives(any(), any(), eq(DETAIL_MAX)))
+            .thenReturn(ArchivesDataResult.Success(listOf(categorySection(views = 300L))))
+
+        repository.fetchArchives(TEST_SITE_ID, StatsPeriod.Last7Days)
+        val detail = repository.fetchArchivesDetail(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        // The two requests differ only in `max`, so sharing one cache bucket would serve the
+        // card's truncated list to the detail screen.
+        assertThat((detail as ArchivesResult.Success).sections[0].views).isEqualTo(300L)
+        verify(statsDataSource, times(2)).fetchArchives(any(), any(), eq(DETAIL_MAX))
+    }
+
+    @Test
+    fun `given the detail list is cached, when fetchArchives, then the card still asks for its own`() = test {
+        whenever(statsDataSource.fetchArchives(any(), any(), eq(DETAIL_MAX)))
+            .thenReturn(ArchivesDataResult.Success(listOf(categorySection(views = 300L))))
+        whenever(statsDataSource.fetchArchives(any(), any(), eq(CARD_MAX)))
+            .thenReturn(ArchivesDataResult.Success(listOf(categorySection(views = 30L))))
+
+        repository.fetchArchivesDetail(TEST_SITE_ID, StatsPeriod.Last7Days)
+        val card = repository.fetchArchives(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat((card as ArchivesResult.Success).sections[0].views).isEqualTo(30L)
     }
 
     @Test
@@ -153,6 +196,8 @@ class StatsRepositoryArchivesTest : BaseUnitTest() {
 
     companion object {
         private const val TEST_SITE_ID = 123L
+        private const val CARD_MAX = 10
+        private const val DETAIL_MAX = 0
         private const val CATEGORY_URL = "https://example.com/category/benefits/"
         private const val SEARCH_URL = "https://example.com/?s=sabbatical"
     }

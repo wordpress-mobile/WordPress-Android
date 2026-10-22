@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.newstats.datasource
 
+import androidx.annotation.VisibleForTesting
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.StatsArchivesEntry
@@ -627,24 +628,32 @@ class StatsDataSourceImpl @Inject constructor(
             )
         }
 
-    private fun buildArchivesParams(
+    @VisibleForTesting
+    internal fun buildArchivesParams(
         dateRange: StatsDateRange,
         max: Int
-    ) = when (dateRange) {
-        is StatsDateRange.Preset -> StatsArchivesParams(
-            period = StatsArchivesPeriod.DAY,
-            date = WpDateString(dateRange.date),
-            num = dateRange.num.toUInt(),
-            max = if (max > 0) max.toUInt() else null,
-            summarize = true
-        )
-        is StatsDateRange.Custom -> StatsArchivesParams(
-            period = StatsArchivesPeriod.DAY,
-            date = WpDateString(dateRange.date),
-            startDate = WpDateString(dateRange.startDate),
-            max = if (max > 0) max.toUInt() else null,
-            summarize = true
-        )
+    ): StatsArchivesParams {
+        // Archives shares the referrers `max` semantics: the server treats max=0 as "all", but an
+        // unset max as "default 10", so 0 is sent explicitly rather than mapped to null. The cap is
+        // applied as a SQL LIMIT per day table, across all archive types at once, so a year of days
+        // still yields thousands of entries -- enough to look unlimited without being so.
+        val maxParam = max.coerceAtLeast(0).toUInt()
+        return when (dateRange) {
+            is StatsDateRange.Preset -> StatsArchivesParams(
+                period = StatsArchivesPeriod.DAY,
+                date = WpDateString(dateRange.date),
+                num = dateRange.num.toUInt(),
+                max = maxParam,
+                summarize = true
+            )
+            is StatsDateRange.Custom -> StatsArchivesParams(
+                period = StatsArchivesPeriod.DAY,
+                date = WpDateString(dateRange.date),
+                startDate = WpDateString(dateRange.startDate),
+                max = maxParam,
+                summarize = true
+            )
+        }
     }
 
     override suspend fun fetchArchives(
@@ -684,7 +693,8 @@ class StatsDataSourceImpl @Inject constructor(
      * taxonomies in their own `tax` map rather than alongside the built-in groups, but they are
      * the same shape and read the same way in the card, so both become sections here.
      */
-    private fun StatsArchivesSummaryData?.toArchiveSections(): List<ArchiveSectionDataItem> {
+    @VisibleForTesting
+    internal fun StatsArchivesSummaryData?.toArchiveSections(): List<ArchiveSectionDataItem> {
         if (this == null) return emptyList()
         return (groups.entries + tax.entries).mapNotNull { (key, entries) ->
             entries.toArchiveSection(key)
@@ -692,12 +702,15 @@ class StatsDataSourceImpl @Inject constructor(
     }
 
     /**
-     * A group's entries, sorted by views and capped: the summary is unbounded -- a busy site
-     * returns thousands of search terms -- and the card and its "show all" screen are the only
-     * readers, so keeping the whole list would only grow the result held in the stats cache.
+     * A group's entries, sorted by views and capped: the detail screen asks for an unbounded
+     * summary -- a busy site returns thousands of search terms -- and the card and its "show all"
+     * screen are the only readers, so keeping the whole list would only grow the result held in
+     * the stats cache.
      *
-     * The group's own total is summed before the cap so it still counts every entry the API
-     * returned. Entries with no term are dropped: they have no label to show.
+     * The group's own total is summed before the cap so it still counts every entry kept here, not
+     * only the ones displayed. Entries with no term are dropped first, from the total as well as
+     * from the list: they have no label to show, and the web drops them the same way, so a group's
+     * total matches what Calypso reports for it.
      */
     private fun List<StatsArchivesEntry>.toArchiveSection(key: String): ArchiveSectionDataItem? {
         val entries = mapNotNull { entry ->
@@ -1667,8 +1680,8 @@ class StatsDataSourceImpl @Inject constructor(
         // The API addresses the site's home page as post 0.
         private const val HOME_PAGE_POST_ID = 0L
         // How many entries of one archive group are kept: ten times what the card lists under a
-        // group, and the ceiling for its "show all" screen, which the API itself does not impose
-        // (`max` is ignored on a summarized response, so a busy site returns every search term).
+        // group, and the ceiling for its "show all" screen. The detail screen asks for max = 0, so
+        // a busy site really does return thousands of search terms for the year ranges.
         private const val MAX_ARCHIVE_ENTRIES_PER_SECTION = 100
         private const val HTTP_UNAUTHORIZED = 401
         private const val HTTP_FORBIDDEN = 403

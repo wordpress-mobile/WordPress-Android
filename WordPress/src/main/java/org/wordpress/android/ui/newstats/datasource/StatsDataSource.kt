@@ -689,9 +689,10 @@ sealed class ArchivesDataResult {
  * built-in keys ("search", "cat", "tag", "author", "other") or, for a custom taxonomy, that
  * taxonomy's slug -- which is what the UI resolves into a label.
  *
- * [views] is the total across every entry the API returned for the group, including any dropped
- * from [entries] by the display cap, so the group's own number stays right however many of its
- * entries are listed under it.
+ * [views] is the total across every entry kept for the group, including any dropped from [entries]
+ * by the display cap, so the group's own number stays right however many of its entries are listed
+ * under it. Entries the API returned with no term are not counted: they have no label to show, and
+ * leaving them out is what the web does too.
  */
 data class ArchiveSectionDataItem(
     val key: String,

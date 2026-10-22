@@ -61,15 +61,16 @@ class MostViewedDetailFetcher @Inject constructor(
             MostViewedDetailSource.FILE_DOWNLOADS ->
                 statsRepository.fetchFileDownloads(siteId, period, forceRefresh).toFetchResult()
             MostViewedDetailSource.ARCHIVES ->
-                statsRepository.fetchArchives(siteId, period, forceRefresh).toFetchResult()
+                statsRepository.fetchArchivesDetail(siteId, period, forceRefresh).toFetchResult()
         }
     }
 
     /**
      * Whether [source]'s entry for [period] came from an earlier visit to the stats screen and so
-     * should be refreshed in the background. [MostViewedDetailSource.REFERRERS] is the only source
-     * whose cache bucket no card shares, so without its own revalidation its list could be served
-     * from a previous visit for the rest of the day.
+     * should be refreshed in the background. [MostViewedDetailSource.REFERRERS] and
+     * [MostViewedDetailSource.ARCHIVES] are the sources whose cache bucket no card shares, so
+     * without their own revalidation their lists could be served from a previous visit for the
+     * rest of the day.
      */
     fun needsRevalidation(source: MostViewedDetailSource, siteId: Long, period: StatsPeriod) =
         statsRepository.needsRevalidation(bucketOf(source), siteId, period)
@@ -80,7 +81,7 @@ class MostViewedDetailFetcher @Inject constructor(
         MostViewedDetailSource.SEARCH_TERMS -> StatsCacheBucket.SEARCH_TERMS
         MostViewedDetailSource.VIDEO_PLAYS -> StatsCacheBucket.VIDEO_PLAYS
         MostViewedDetailSource.FILE_DOWNLOADS -> StatsCacheBucket.FILE_DOWNLOADS
-        MostViewedDetailSource.ARCHIVES -> StatsCacheBucket.ARCHIVES
+        MostViewedDetailSource.ARCHIVES -> StatsCacheBucket.ARCHIVES_DETAIL
     }
 
     private fun MostViewedResult.toFetchResult() = when (this) {
