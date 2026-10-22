@@ -17,7 +17,11 @@ data class StatsCardsConfiguration(
     // this was persisted.
     val originPeriodType: String? = null,
     val originCustomStartDate: Long? = null,
-    val originCustomEndDate: Long? = null
+    val originCustomEndDate: Long? = null,
+    // Which revision of the default card set this configuration has already been brought up to
+    // date with, so that a card promoted to the defaults can be given once to sites configured
+    // before the promotion. Configurations written before this was persisted read as [UNVERSIONED].
+    val defaultCardsVersion: Int = UNVERSIONED
 ) {
     /**
      * Returns card types that are not currently visible (available to add).
@@ -31,5 +35,18 @@ data class StatsCardsConfiguration(
      */
     fun isCardVisible(cardType: StatsCardType): Boolean {
         return cardType in visibleCards
+    }
+
+    companion object {
+        /** A configuration persisted before [defaultCardsVersion] existed. */
+        const val UNVERSIONED = 0
+
+        /**
+         * Revision of [StatsCardType.defaultCards] this build ships. Bump it when a card is added
+         * to the defaults and it should also reach sites that are already configured.
+         *
+         * 1: Referrers became a default card (CMM-2583).
+         */
+        const val CURRENT_DEFAULT_CARDS_VERSION = 1
     }
 }
