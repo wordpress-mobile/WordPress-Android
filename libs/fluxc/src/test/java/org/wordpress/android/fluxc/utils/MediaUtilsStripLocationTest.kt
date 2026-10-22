@@ -14,10 +14,12 @@ class MediaUtilsStripLocationTest {
     val tempFolder = TemporaryFolder()
 
     @Test
-    fun `stripLocation removes every GPS tag`() {
+    fun `stripLocation removes every GPS tag and keeps other tags`() {
         val path = copyFixture()
         ExifInterface(path).apply {
             GPS_TAG_VALUES.forEach { (tag, value) -> setAttribute(tag, value) }
+            setAttribute(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_ROTATE_90.toString())
+            setAttribute(ExifInterface.TAG_MAKE, MAKE)
             saveAttributes()
         }
         val seeded = ExifInterface(path)
@@ -32,6 +34,9 @@ class MediaUtilsStripLocationTest {
         GPS_TAG_VALUES.keys.forEach { tag ->
             assertThat(stripped.getAttribute(tag)).describedAs(tag).isNull()
         }
+        assertThat(stripped.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED))
+            .isEqualTo(ExifInterface.ORIENTATION_ROTATE_90)
+        assertThat(stripped.getAttribute(ExifInterface.TAG_MAKE)).isEqualTo(MAKE)
     }
 
     private fun copyFixture(): String {
@@ -43,6 +48,8 @@ class MediaUtilsStripLocationTest {
     }
 
     companion object {
+        private const val MAKE = "Google"
+
         // Kept independent of ExifUtils.GPS_TAGS so a tag dropped from that list fails this test
         private val GPS_TAG_VALUES = mapOf(
             ExifInterface.TAG_GPS_VERSION_ID to "2 3 0 0",
