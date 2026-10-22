@@ -406,7 +406,6 @@ class ActivityLogViewModel @Inject constructor(
             activityLogStore.clearActivityLogCache(site)
         }
         jetpackCapabilitiesUseCase.clear()
-
     }
 
     private fun refreshFiltersUiState() {
