@@ -20,4 +20,10 @@ class ValidationUtilsTest {
     fun testInvalidIPv4Addresses() {
         invalidIpV4Addresses.forEach { assertThat(validateIPv4(it)).isEqualTo(false) }
     }
+
+    // Non-empty values are matched against android.util.Patterns.WEB_URL, which is stubbed in JVM unit tests
+    @Test
+    fun testEmptyOptionalUrlIsValid() {
+        assertThat(validateOptionalUrl("")).isEqualTo(true)
+    }
 }
