@@ -85,7 +85,6 @@ sealed class ReaderPostListEmptyState {
     data object NoPostsInList : ReaderPostListEmptyState()
     data object NoPostsWithTag : ReaderPostListEmptyState()
     data object NoPostsInBlog : ReaderPostListEmptyState()
-    data object SearchExplainer : ReaderPostListEmptyState()
     data object SearchUpdating : ReaderPostListEmptyState()
     data class SearchNoResults(val query: String) : ReaderPostListEmptyState()
 }
@@ -102,6 +101,4 @@ sealed class ReaderPostListUiEvent {
     data object SetDefaultSubfilter : ReaderPostListUiEvent()
     data object NoConnection : ReaderPostListUiEvent()
     data object DataLoaded : ReaderPostListUiEvent()
-    data class SearchStarted(val hasPosts: Boolean) : ReaderPostListUiEvent()
-    data class SearchEnded(val showResults: Boolean) : ReaderPostListUiEvent()
 }
