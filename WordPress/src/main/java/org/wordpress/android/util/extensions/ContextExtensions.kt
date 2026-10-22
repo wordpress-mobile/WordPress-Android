@@ -103,7 +103,7 @@ fun Context.getStringFromAsset(assetFilename: String): String? = try {
 }
 
 /**
- * Parses Json from an asset file. The model class needs a -keep rule in proguard.cfg (see "Gson model classes").
+ * Parses Json from an asset file
  * @param assetFilename the asset filename
  * @param modelClass the model class
  * @return the parsed model
