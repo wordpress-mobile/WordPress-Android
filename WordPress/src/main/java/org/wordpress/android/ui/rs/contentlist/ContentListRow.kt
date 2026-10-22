@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.rs.contentlist
 
-import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -34,7 +33,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -405,16 +403,14 @@ private fun RowMetaLine(
     }
 }
 
-/** One metric, e.g. "1,204 views". */
+/**
+ * One metric, e.g. "1,204 views". Singular and plural are separate strings rather than a `<plurals>`
+ * resource because GlotPress can't translate plurals (see docs/localization.md).
+ */
 @Composable
-private fun MetricText(@PluralsRes pluralResId: Int, count: Long) {
-    MetaText(
-        pluralStringResource(
-            pluralResId,
-            count.toInt(),
-            NumberFormat.getIntegerInstance().format(count)
-        )
-    )
+private fun MetricText(@StringRes singularResId: Int, @StringRes pluralResId: Int, count: Long) {
+    val resId = if (count == 1L) singularResId else pluralResId
+    MetaText(stringResource(resId, NumberFormat.getIntegerInstance().format(count)))
 }
 
 /** Views and comments, or a single bar standing in for both while they are still being fetched. */
@@ -432,10 +428,18 @@ private fun MutableList<@Composable RowScope.() -> Unit>.addMetrics(state: Conte
         }
         return
     }
-    state.viewCount?.let { count -> add { MetricText(R.plurals.content_list_view_count, count) } }
+    state.viewCount?.let { count ->
+        add {
+            MetricText(R.string.content_list_view_count_singular, R.string.content_list_view_count_plural, count)
+        }
+    }
     // A post with no comments still says so; unlike views, zero is meaningful here and the number
     // arrives in the same response, so hiding it would look like a gap.
-    state.commentCount?.let { count -> add { MetricText(R.plurals.content_list_comment_count, count) } }
+    state.commentCount?.let { count ->
+        add {
+            MetricText(R.string.content_list_comment_count_singular, R.string.content_list_comment_count_plural, count)
+        }
+    }
 }
 
 @Composable

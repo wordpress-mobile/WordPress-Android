@@ -5000,6 +5000,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="content_list_group_this_week">This week</string>
     <string name="content_list_group_earlier_in">Earlier in %1$s</string>
     <string name="content_list_fab_write">Write</string>
+    <string name="content_list_view_count_singular">%1$s view</string>
+    <string name="content_list_view_count_plural">%1$s views</string>
+    <string name="content_list_comment_count_singular">%1$s comment</string>
+    <string name="content_list_comment_count_plural">%1$s comments</string>
     <string name="content_list_density_show_condensed">Show condensed list</string>
     <string name="content_list_density_show_comfortable">Show expanded list</string>
     <string name="comment_trash_has_replies">This comment has replies. They won’t be moved to the trash with it.</string>
