@@ -76,9 +76,6 @@ class ReaderPostListEmptyStateBuilderTest {
     @Test
     fun `search states`() {
         val search = ReaderPostListType.SEARCH_RESULTS
-        assertThat(build(listType = search, searchQuery = null)).isEqualTo(ReaderPostListEmptyState.SearchExplainer)
-        assertThat(build(listType = search, searchQuery = "cats", isSearchViewEmpty = true))
-            .isEqualTo(ReaderPostListEmptyState.SearchExplainer)
         assertThat(build(listType = search, searchQuery = "cats", isUpdating = true))
             .isEqualTo(ReaderPostListEmptyState.SearchUpdating)
         assertThat(build(listType = search, searchQuery = "cats"))
@@ -94,8 +91,7 @@ class ReaderPostListEmptyStateBuilderTest {
         requestFailed: Boolean = false,
         isUpdating: Boolean = false,
         hasFollowedBlogs: Boolean = false,
-        searchQuery: String? = null,
-        isSearchViewEmpty: Boolean = false
+        searchQuery: String? = null
     ) = builder.build(
         ReaderPostListEmptyStateBuilder.Input(
             listType = listType,
@@ -105,8 +101,7 @@ class ReaderPostListEmptyStateBuilderTest {
             requestFailed = requestFailed,
             isUpdating = isUpdating,
             hasFollowedBlogs = hasFollowedBlogs,
-            searchQuery = searchQuery,
-            isSearchViewEmpty = isSearchViewEmpty
+            searchQuery = searchQuery
         )
     )
 

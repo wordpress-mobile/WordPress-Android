@@ -29,6 +29,7 @@ fun ContentListSearchField(
     onQueryChange: (String) -> Unit,
     @StringRes placeholderResId: Int,
     modifier: Modifier = Modifier,
+    onSearch: () -> Unit = {},
 ) {
     val focusManager = LocalFocusManager.current
     TextField(
@@ -37,7 +38,10 @@ fun ContentListSearchField(
         placeholder = { Text(stringResource(placeholderResId)) },
         singleLine = true,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-        keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() }),
+        keyboardActions = KeyboardActions(onSearch = {
+            onSearch()
+            focusManager.clearFocus()
+        }),
         colors = TextFieldDefaults.colors(
             focusedContainerColor = Color.Transparent,
             unfocusedContainerColor = Color.Transparent,

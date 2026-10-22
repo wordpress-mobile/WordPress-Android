@@ -565,20 +565,12 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     /*
-     * Search - the search UI itself lives in the fragment until it moves to its own screen
+     * Search - the search field itself lives in ReaderSearchActivity
      */
-    fun onSearchExpanded() {
-        // the search view is expanded again when the fragment is recreated
-        if (isSearch) return
-        listType = ReaderPostListType.SEARCH_RESULTS
-        onTargetChanged()
-    }
-
     fun onSearchSubmitted(query: String) {
-        searchQuery = query
-        clearPosts()
-        // a newer search replaces one that hasn't started yet
-        searchJob?.cancel()
+        resetSearch(query)
+        // show the search as running until the service reports back, so "no results" doesn't flash first
+        setIsUpdating(true, searchAction(0))
         searchJob = launch {
             // search results are ephemeral, so each search starts from scratch
             repository.deletePostsWithTag(ReaderUtils.getTagForSearchQuery(query))
@@ -587,13 +579,21 @@ class ReaderPostListViewModel @Inject constructor(
         }
     }
 
-    fun onSearchCleared() {
-        searchQuery = null
+    fun onSearchCleared() = resetSearch(query = null)
+
+    /*
+     * drops the previous search, including one that hasn't started yet and anything it left running
+     */
+    private fun resetSearch(query: String?) {
+        searchJob?.cancel()
+        searchQuery = query
+        requestFailed = false
+        updateActions.clear()
         clearPosts()
     }
 
-    fun searchEmptyState(requestFailed: Boolean, isSearchViewEmpty: Boolean) =
-        emptyStateBuilder.build(emptyStateInput(requestFailed).copy(isSearchViewEmpty = isSearchViewEmpty))
+    // events from a search the user has since replaced or cleared are ignored
+    private fun isCurrentSearch(query: String) = isSearch && query == searchQuery
 
     private fun onRepositoryEvent(event: ReaderPostListEvent) {
         when (event) {
@@ -606,12 +606,13 @@ class ReaderPostListViewModel @Inject constructor(
                 onUpdateEnded(event)
             }
 
-            is ReaderPostListEvent.SearchStarted -> if (isSearch) {
+            is ReaderPostListEvent.SearchStarted -> if (isCurrentSearch(event.query)) {
+                // a re-run of the same query can follow a failed end from the run it replaced
+                requestFailed = false
                 setIsUpdating(true, searchAction(event.offset))
-                sendUiEvent(ReaderPostListUiEvent.SearchStarted(hasPosts = posts.isNotEmpty()))
             }
 
-            is ReaderPostListEvent.SearchEnded -> if (isSearch) {
+            is ReaderPostListEvent.SearchEnded -> if (isCurrentSearch(event.query)) {
                 onSearchEnded(event)
             }
 
@@ -626,14 +627,16 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     private fun onSearchEnded(event: ReaderPostListEvent.SearchEnded) {
-        setIsUpdating(false, searchAction(event.offset))
-        // success means the search didn't fail, not that it has results - refreshing will show
-        // the empty message if there aren't any
-        val showResults = event.didSucceed && event.query == searchQuery
-        if (showResults) {
+        val action = searchAction(event.offset)
+        if (event.didSucceed) {
+            // don't publish the end of the search until the reload does, or "no results" would show (and be
+            // announced) before the results. Success doesn't mean there are results - the reload shows that.
+            updateActions.remove(action)
             reload()
+        } else {
+            requestFailed = true
+            setIsUpdating(false, action)
         }
-        sendUiEvent(ReaderPostListUiEvent.SearchEnded(showResults))
     }
 
     private fun onFollowedTagsFetched() = launch {
@@ -647,7 +650,7 @@ class ReaderPostListViewModel @Inject constructor(
         setIsUpdating(false, event.action)
         hasUpdatedPosts = true
 
-        // don't show new posts while searching - they appear when search is exited
+        // the new posts bar doesn't apply to search results
         if (isSearch) {
             return
         }
@@ -916,7 +919,7 @@ class ReaderPostListViewModel @Inject constructor(
         }
     }.takeIf { it > -1 }
 
-    private fun emptyStateInput(requestFailed: Boolean) = ReaderPostListEmptyStateBuilder.Input(
+    private fun emptyStateInput() = ReaderPostListEmptyStateBuilder.Input(
         listType = listType,
         tag = currentTag,
         isSelfHostedCta = isSelfHostedCta(),
@@ -930,11 +933,10 @@ class ReaderPostListViewModel @Inject constructor(
     private fun isSelfHostedCta() = isFilterable && !accountStore.hasAccessToken() && isSiteAllSubfilter
 
     /*
-     * Returns the empty state to show, or null if it shouldn't be shown. Search handles its own empty
-     * state since it depends on the search UI.
+     * Returns the empty state to show, or null if it shouldn't be shown
      */
     private fun buildEmptyState(): ReaderPostListEmptyState? {
-        val emptyState = if (shouldShowEmptyState()) emptyStateBuilder.build(emptyStateInput(requestFailed)) else null
+        val emptyState = if (shouldShowEmptyState()) emptyStateBuilder.build(emptyStateInput()) else null
         if (emptyState == ReaderPostListEmptyState.NoConnection) {
             // no update can complete while offline
             updateActions.clear()
@@ -944,8 +946,12 @@ class ReaderPostListViewModel @Inject constructor(
 
     private fun shouldShowEmptyState(): Boolean {
         // don't show "no posts" before the first update unless an update is running or won't happen
+        if (isSearch) {
+            // the search screen shows suggestions until a query is submitted
+            return !searchQuery.isNullOrEmpty() && posts.isEmpty() && (updateActions.isNotEmpty() || isLoaded)
+        }
         val canShowEmpty = updateActions.isNotEmpty() || (isLoaded && (hasUpdatedPosts || autoUpdateSkipped))
-        return !isSearch && (isSelfHostedCta() || (posts.isEmpty() && canShowEmpty))
+        return isSelfHostedCta() || (posts.isEmpty() && canShowEmpty)
     }
 
     private fun updateUiState() {
@@ -963,12 +969,9 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     private fun sendUiEvent(event: ReaderPostListUiEvent) {
-        // these only update what's on screen, so don't queue them up while the fragment is stopped - the
-        // old fragment didn't receive them then either, and it reloads when it comes back
-        val isViewOnlyEvent = event is ReaderPostListUiEvent.DataLoaded ||
-                event is ReaderPostListUiEvent.SearchStarted ||
-                event is ReaderPostListUiEvent.SearchEnded
-        if (isViewStarted || !isViewOnlyEvent) {
+        // DataLoaded only updates what's on screen, so don't queue it up while the fragment is stopped - the
+        // old fragment didn't receive it then either, and it reloads when it comes back
+        if (isViewStarted || event !is ReaderPostListUiEvent.DataLoaded) {
             _uiEvents.trySend(event)
         }
     }
