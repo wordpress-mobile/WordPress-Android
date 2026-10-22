@@ -1333,7 +1333,6 @@ class PostRsListViewModel @Inject constructor(
     }
 
     public override fun onCleared() {
-        super.onCleared()
         changeListener.stop()
         clearCollections()
     }

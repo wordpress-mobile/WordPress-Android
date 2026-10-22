@@ -49,7 +49,6 @@ abstract class InsightsDetailViewModel (
     }
 
     override fun onCleared() {
-        super.onCleared()
         detailUseCase.onCleared()
     }
 

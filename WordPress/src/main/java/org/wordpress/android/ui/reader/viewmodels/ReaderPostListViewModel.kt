@@ -257,7 +257,6 @@ class ReaderPostListViewModel @Inject constructor(
     override fun onCleared() {
         readerPostCardActionsHandler.refreshPosts.removeObserver(refreshPostsObserver)
         readerPostCardActionsHandler.followStatusUpdated.removeObserver(followStatusObserver)
-        super.onCleared()
     }
 
     /**

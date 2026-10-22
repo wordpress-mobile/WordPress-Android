@@ -107,7 +107,6 @@ abstract class StatsListViewModel(
 
     override fun onCleared() {
         statsUseCase.onCleared()
-        super.onCleared()
     }
 
     fun onScrolledToBottom() {
