@@ -5,6 +5,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.datasource.CityViewsDataResult
+import org.wordpress.android.ui.newstats.datasource.ArchiveSectionDataItem
+import org.wordpress.android.ui.newstats.datasource.ArchivesDataResult
 import org.wordpress.android.ui.newstats.datasource.ClicksDataResult
 import org.wordpress.android.ui.newstats.datasource.CountryViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.DevicesDataResult
@@ -2216,6 +2218,65 @@ class StatsRepository @Inject constructor(
         gate = gate
     )
 
+    suspend fun fetchArchives(
+        siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): ArchivesResult = cached(
+        key = cacheKey(StatsCacheBucket.ARCHIVES, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is ArchivesResult.Success }
+    ) { gate ->
+        fetchArchivesFromNetwork(siteId, period, gate)
+    }
+
+    private suspend fun fetchArchivesFromNetwork(
+        siteId: Long,
+        period: StatsPeriod,
+        gate: CacheGate
+    ): ArchivesResult = fetchWithComparison(
+        period = period,
+        fetch = { dateRange ->
+            when (val r = statsDataSource.fetchArchives(
+                siteId, dateRange, max = 0
+            )) {
+                is ArchivesDataResult.Success ->
+                    DataSourceResult.Success(r.sections)
+                is ArchivesDataResult.Error ->
+                    DataSourceResult.Error(r.errorType)
+            }
+        },
+        keyOf = ArchiveSectionDataItem::key,
+        metricOf = ArchiveSectionDataItem::views,
+        mapItem = { section, prev ->
+            ArchiveSectionItemData(
+                key = section.key,
+                views = section.views,
+                previousViews = prev,
+                entries = section.entries.map { entry ->
+                    MostViewedChildData(
+                        name = entry.value,
+                        url = entry.href,
+                        views = entry.views
+                    )
+                }
+            )
+        },
+        buildSuccess = { sections, total, change, pct ->
+            // Unlike every other top list, this one arrives as a map of groups rather than a
+            // ranked array, so the order has to be imposed here.
+            ArchivesResult.Success(
+                sections.sortedByDescending { it.views },
+                total, change, pct
+            )
+        },
+        buildError = { resId, isAuth, isNotAvailable ->
+            ArchivesResult.Error(resId, isAuth, isNotAvailable)
+        },
+        logLabel = "archives",
+        gate = gate
+    )
+
     suspend fun fetchSearchTerms(
         siteId: Long,
         period: StatsPeriod,
@@ -3314,6 +3375,35 @@ data class ClickItemData(
     val clicksChange: Long get() = clicks - previousClicks
     val clicksChangePercent: Double
         get() = calculateItemChangePercent(clicks, previousClicks)
+}
+
+sealed class ArchivesResult {
+    data class Success(
+        val sections: List<ArchiveSectionItemData>,
+        val totalViews: Long,
+        val totalViewsChange: Long,
+        val totalViewsChangePercent: Double
+    ) : ArchivesResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false,
+        val isNotAvailable: Boolean = false
+    ) : ArchivesResult()
+}
+
+/**
+ * One group of archive pages and the entries listed under it. [key] is the API's own name for the
+ * group, which the UI resolves into a label; see [ArchiveSectionDataItem].
+ */
+data class ArchiveSectionItemData(
+    val key: String,
+    val views: Long,
+    val previousViews: Long,
+    val entries: List<MostViewedChildData> = emptyList()
+) {
+    val viewsChange: Long get() = views - previousViews
+    val viewsChangePercent: Double
+        get() = calculateItemChangePercent(views, previousViews)
 }
 
 sealed class SearchTermsResult {

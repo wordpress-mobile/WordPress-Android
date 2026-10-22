@@ -167,6 +167,21 @@ interface StatsDataSource {
     ): FileDownloadsDataResult
 
     /**
+     * Fetches archive stats for a specific site: the views a site's archive pages (categories,
+     * tags, author and search result pages, and any custom taxonomy) received.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param dateRange The date range parameters for the query
+     * @param max Maximum number of items to return
+     * @return Result containing the archive data or an error
+     */
+    suspend fun fetchArchives(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int = 10
+    ): ArchivesDataResult
+
+    /**
      * Fetches device screen size stats for a specific site.
      *
      * @param siteId The WordPress.com site ID
@@ -655,6 +670,43 @@ sealed class FileDownloadsDataResult {
 data class FileDownloadDataItem(
     val name: String,
     val downloads: Long
+)
+
+/**
+ * Result wrapper for archive stats fetch operation.
+ */
+sealed class ArchivesDataResult {
+    data class Success(
+        val sections: List<ArchiveSectionDataItem>
+    ) : ArchivesDataResult()
+    data class Error(
+        val errorType: StatsErrorType
+    ) : ArchivesDataResult()
+}
+
+/**
+ * One group of archive pages. [key] is the API's own name for the group -- one of its short
+ * built-in keys ("search", "cat", "tag", "author", "other") or, for a custom taxonomy, that
+ * taxonomy's slug -- which is what the UI resolves into a label.
+ *
+ * [views] is the total across every entry the API returned for the group, including any dropped
+ * from [entries] by the display cap, so the group's own number stays right however many of its
+ * entries are listed under it.
+ */
+data class ArchiveSectionDataItem(
+    val key: String,
+    val views: Long,
+    val entries: List<ArchiveEntryDataItem>
+)
+
+/**
+ * A single archive page within a group, e.g. one category. [value] is the term itself and [href]
+ * the archive page it links to.
+ */
+data class ArchiveEntryDataItem(
+    val value: String,
+    val href: String?,
+    val views: Long
 )
 
 /**

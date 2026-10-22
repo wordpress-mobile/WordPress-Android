@@ -29,7 +29,8 @@ class StatsCardsConfigurationTest {
             StatsCardType.VIDEO_PLAYS,
             StatsCardType.FILE_DOWNLOADS,
             StatsCardType.DEVICES,
-            StatsCardType.UTM
+            StatsCardType.UTM,
+            StatsCardType.ARCHIVES
         )
     }
 

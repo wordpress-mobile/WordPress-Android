@@ -2,6 +2,10 @@ package org.wordpress.android.ui.newstats.datasource
 
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.StatsArchivesEntry
+import uniffi.wp_api.StatsArchivesParams
+import uniffi.wp_api.StatsArchivesPeriod
+import uniffi.wp_api.StatsArchivesSummaryData
 import uniffi.wp_api.StatsCityViewsParams
 import uniffi.wp_api.StatsCityViewsPeriod
 import uniffi.wp_api.StatsClicksChild
@@ -622,6 +626,97 @@ class StatsDataSourceImpl @Inject constructor(
                 clicks = child.views?.toLong() ?: 0L
             )
         }
+
+    private fun buildArchivesParams(
+        dateRange: StatsDateRange,
+        max: Int
+    ) = when (dateRange) {
+        is StatsDateRange.Preset -> StatsArchivesParams(
+            period = StatsArchivesPeriod.DAY,
+            date = WpDateString(dateRange.date),
+            num = dateRange.num.toUInt(),
+            max = if (max > 0) max.toUInt() else null,
+            summarize = true
+        )
+        is StatsDateRange.Custom -> StatsArchivesParams(
+            period = StatsArchivesPeriod.DAY,
+            date = WpDateString(dateRange.date),
+            startDate = WpDateString(dateRange.startDate),
+            max = if (max > 0) max.toUInt() else null,
+            summarize = true
+        )
+    }
+
+    override suspend fun fetchArchives(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int
+    ): ArchivesDataResult {
+        val params = buildArchivesParams(dateRange, max)
+        val result = wpComApiClient.request { api ->
+            api.statsArchives().getStatsArchives(
+                wpComSiteId = siteId.toULong(),
+                params = params
+            )
+        }
+        logResultType("fetchArchives", result)
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val sections = result.response.data.summary
+                    .toArchiveSections()
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchArchives " +
+                        "success - ${sections.size} sections"
+                )
+                ArchivesDataResult.Success(sections)
+            }
+            else -> logErrorAndReturn(
+                "fetchArchives", result
+            ) {
+                ArchivesDataResult.Error(it)
+            }
+        }
+    }
+
+    /**
+     * Flattens the archive summary into one list of groups. The API keeps a site's custom
+     * taxonomies in their own `tax` map rather than alongside the built-in groups, but they are
+     * the same shape and read the same way in the card, so both become sections here.
+     */
+    private fun StatsArchivesSummaryData?.toArchiveSections(): List<ArchiveSectionDataItem> {
+        if (this == null) return emptyList()
+        return (groups.entries + tax.entries).mapNotNull { (key, entries) ->
+            entries.toArchiveSection(key)
+        }
+    }
+
+    /**
+     * A group's entries, sorted by views and capped: the summary is unbounded -- a busy site
+     * returns thousands of search terms -- and the card and its "show all" screen are the only
+     * readers, so keeping the whole list would only grow the result held in the stats cache.
+     *
+     * The group's own total is summed before the cap so it still counts every entry the API
+     * returned. Entries with no term are dropped: they have no label to show.
+     */
+    private fun List<StatsArchivesEntry>.toArchiveSection(key: String): ArchiveSectionDataItem? {
+        val entries = mapNotNull { entry ->
+            val value = entry.value?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
+            ArchiveEntryDataItem(
+                value = value,
+                href = entry.href,
+                views = entry.views?.toLong() ?: 0L
+            )
+        }
+        if (entries.isEmpty()) return null
+        return ArchiveSectionDataItem(
+            key = key,
+            views = entries.sumOf { it.views },
+            entries = entries
+                .sortedByDescending { it.views }
+                .take(MAX_ARCHIVE_ENTRIES_PER_SECTION)
+        )
+    }
 
     override suspend fun fetchDevicesScreensize(
         siteId: Long,
@@ -1571,6 +1666,10 @@ class StatsDataSourceImpl @Inject constructor(
     companion object {
         // The API addresses the site's home page as post 0.
         private const val HOME_PAGE_POST_ID = 0L
+        // How many entries of one archive group are kept: ten times what the card lists under a
+        // group, and the ceiling for its "show all" screen, which the API itself does not impose
+        // (`max` is ignored on a summarized response, so a busy site returns every search term).
+        private const val MAX_ARCHIVE_ENTRIES_PER_SECTION = 100
         private const val HTTP_UNAUTHORIZED = 401
         private const val HTTP_FORBIDDEN = 403
     }

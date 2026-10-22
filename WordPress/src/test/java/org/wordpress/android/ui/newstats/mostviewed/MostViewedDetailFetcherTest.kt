@@ -10,6 +10,8 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.repository.ArchiveSectionItemData
+import org.wordpress.android.ui.newstats.repository.ArchivesResult
 import org.wordpress.android.ui.newstats.repository.ClickItemData
 import org.wordpress.android.ui.newstats.repository.ClicksResult
 import org.wordpress.android.ui.newstats.repository.FileDownloadItemData
@@ -22,17 +24,21 @@ import org.wordpress.android.ui.newstats.repository.SearchTermsResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.VideoPlayItemData
 import org.wordpress.android.ui.newstats.repository.VideoPlaysResult
+import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class MostViewedDetailFetcherTest : BaseUnitTest() {
     @Mock
     private lateinit var statsRepository: StatsRepository
 
+    @Mock
+    private lateinit var resourceProvider: ResourceProvider
+
     private lateinit var fetcher: MostViewedDetailFetcher
 
     @Before
     fun setUp() {
-        fetcher = MostViewedDetailFetcher(statsRepository)
+        fetcher = MostViewedDetailFetcher(statsRepository, resourceProvider)
     }
 
     // region Referrers
