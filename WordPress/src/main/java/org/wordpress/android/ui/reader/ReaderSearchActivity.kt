@@ -70,6 +70,7 @@ class ReaderSearchActivity : BaseAppCompatActivity() {
             onSuggestionDeleteClicked = viewModel::onSuggestionDeleteClicked,
             onClearHistoryConfirmed = viewModel::onClearHistoryConfirmed,
             onTabSelected = viewModel::onTabSelected,
+            onPostsTabReselected = { postListFragment?.onScrollToTop() },
             onSiteClicked = viewModel::onSiteClicked,
             onSiteFollowClicked = viewModel::onSiteFollowClicked,
             onLoadMoreSites = viewModel::onLoadMoreSites

@@ -21,7 +21,9 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
@@ -45,6 +47,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -63,6 +66,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.text.htmlEncode
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.LoadingState
 import org.wordpress.android.ui.reader.viewmodels.ReaderSearchContent
@@ -104,6 +108,7 @@ fun ReaderSearchScreen(
     LaunchedEffect(uiState.isLoadingSites) {
         if (uiState.isLoadingSites) sitesListState.requestScrollToItem(0)
     }
+    val scope = rememberCoroutineScope()
     val content = uiState.content
     Scaffold(
         topBar = {
@@ -131,7 +136,13 @@ fun ReaderSearchScreen(
                     }
                 )
                 if (content == ReaderSearchContent.RESULTS) {
-                    SearchTabs(uiState.selectedTab, actions.onTabSelected)
+                    SearchTabs(uiState.selectedTab, actions.onTabSelected) { tab ->
+                        // tapping the current tab jumps back to the top, as it did before
+                        when (tab) {
+                            ReaderSearchTab.POSTS -> actions.onPostsTabReselected()
+                            ReaderSearchTab.SITES -> scope.launch { sitesListState.animateScrollToItem(0) }
+                        }
+                    }
                 }
             }
         }
@@ -166,7 +177,11 @@ fun ReaderSearchScreen(
 }
 
 @Composable
-private fun SearchTabs(selectedTab: ReaderSearchTab, onTabSelected: (ReaderSearchTab) -> Unit) {
+private fun SearchTabs(
+    selectedTab: ReaderSearchTab,
+    onTabSelected: (ReaderSearchTab) -> Unit,
+    onTabReselected: (ReaderSearchTab) -> Unit
+) {
     // the top bar slot isn't inset, and only the TopAppBar insets itself
     PrimaryTabRow(
         selectedTabIndex = selectedTab.ordinal,
@@ -175,7 +190,7 @@ private fun SearchTabs(selectedTab: ReaderSearchTab, onTabSelected: (ReaderSearc
         ReaderSearchTab.entries.forEach { tab ->
             Tab(
                 selected = tab == selectedTab,
-                onClick = { onTabSelected(tab) },
+                onClick = { if (tab == selectedTab) onTabReselected(tab) else onTabSelected(tab) },
                 text = { Text(stringResource(tab.labelRes)) }
             )
         }
@@ -370,8 +385,10 @@ private fun SiteRow(site: ReaderSearchSite, onClick: () -> Unit, onFollowClick: 
 private fun SearchMessage(title: String, description: AnnotatedString? = null) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
+        // scrollable so the message still fits once the keyboard shrinks the screen
         modifier = Modifier
             .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = 32.dp, vertical = 48.dp)
     ) {
         Text(
