@@ -776,9 +776,12 @@ class StatsDataSourceImpl @Inject constructor(
      * Percent-decodes an archive term the way the web's `decodeURIComponent` does, leaving a
      * malformed sequence ("100%") as it came rather than throwing. Unlike [URLDecoder] on its own,
      * a literal "+" stays a plus sign instead of becoming a space, so a search for "a+b" survives.
+     *
+     * Named charset rather than a [java.nio.charset.Charset]: that overload of [URLDecoder.decode]
+     * is API 33, which this app does not have the minimum for.
      */
     private fun String.percentDecoded(): String = try {
-        URLDecoder.decode(replace("+", PLUS_ENCODED), Charsets.UTF_8)
+        URLDecoder.decode(replace("+", PLUS_ENCODED), Charsets.UTF_8.name())
     } catch (e: IllegalArgumentException) {
         AppLog.d(T.STATS, "StatsDataSourceImpl: undecodable archive term - ${e.message}")
         this
