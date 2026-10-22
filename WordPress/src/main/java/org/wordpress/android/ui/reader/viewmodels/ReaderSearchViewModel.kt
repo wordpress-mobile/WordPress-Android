@@ -85,7 +85,7 @@ class ReaderSearchViewModel @Inject constructor(
     fun onQueryChanged(query: String) {
         setState { it.copy(query = query) }
         // emptying the field ends the search, as it did with the old SearchView
-        if (query.isEmpty() && _uiState.value.submittedQuery != null) {
+        if (query.isBlank() && _uiState.value.submittedQuery != null) {
             clearSearch()
         }
         loadSuggestions()
@@ -182,6 +182,8 @@ class ReaderSearchViewModel @Inject constructor(
                 )
             }
         }
+        // disable the button before the request, since the listener can run before followFeedById returns
+        updateSite(site.key) { it.copy(isFollowing = isAskingToFollow, isFollowEnabled = false) }
         val isStarted = blogActions.followFeedById(
             site.siteId,
             site.feedId,
@@ -190,9 +192,8 @@ class ReaderSearchViewModel @Inject constructor(
             ReaderTracker.SOURCE_SEARCH,
             readerTracker
         )
-        if (isStarted) {
-            // disable the button until the request returns
-            updateSite(site.key) { it.copy(isFollowing = isAskingToFollow, isFollowEnabled = false) }
+        if (!isStarted) {
+            updateSite(site.key) { it.copy(isFollowing = site.isFollowing, isFollowEnabled = true) }
         }
     }
 

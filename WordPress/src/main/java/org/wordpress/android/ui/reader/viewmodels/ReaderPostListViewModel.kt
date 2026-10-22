@@ -607,6 +607,8 @@ class ReaderPostListViewModel @Inject constructor(
             }
 
             is ReaderPostListEvent.SearchStarted -> if (isCurrentSearch(event.query)) {
+                // a re-run of the same query can follow a failed end from the run it replaced
+                requestFailed = false
                 setIsUpdating(true, searchAction(event.offset))
             }
 
@@ -625,12 +627,15 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     private fun onSearchEnded(event: ReaderPostListEvent.SearchEnded) {
-        requestFailed = !event.didSucceed
-        setIsUpdating(false, searchAction(event.offset))
-        // success means the search didn't fail, not that it has results - reloading shows the
-        // empty message if there aren't any
+        val action = searchAction(event.offset)
         if (event.didSucceed) {
+            // don't publish the end of the search until the reload does, or "no results" would show (and be
+            // announced) before the results. Success doesn't mean there are results - the reload shows that.
+            updateActions.remove(action)
             reload()
+        } else {
+            requestFailed = true
+            setIsUpdating(false, action)
         }
     }
 

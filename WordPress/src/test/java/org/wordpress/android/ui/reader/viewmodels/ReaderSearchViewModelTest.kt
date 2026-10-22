@@ -140,6 +140,15 @@ class ReaderSearchViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `a blank field ends the search too`() {
+        submit("cats")
+
+        viewModel.onQueryChanged("  ")
+
+        assertThat(viewModel.uiState.value.submittedQuery).isNull()
+    }
+
+    @Test
     fun `editing the query shows matching suggestions over the results`() {
         submit("cats")
         whenever(searchTable.getQueries("do", 5)).thenReturn(listOf("dogs"))
@@ -282,6 +291,22 @@ class ReaderSearchViewModelTest : BaseUnitTest() {
         followListener(isAskingToFollow = true).onActionResult(true)
         assertThat(viewModel.uiState.value.sites.single().isFollowing).isTrue
         assertThat(viewModel.uiState.value.sites.single().isFollowEnabled).isTrue
+    }
+
+    @Test
+    fun `a follow that fails before the request returns leaves the button enabled`() {
+        val site = submitWithSite(isFollowing = false)
+        whenever(blogActions.followFeedById(any(), any(), any(), any(), any(), any())).thenAnswer {
+            it.getArgument<ActionListener>(3).onActionResult(false)
+            true
+        }
+
+        viewModel.onSiteFollowClicked(site)
+
+        with(viewModel.uiState.value.sites.single()) {
+            assertThat(isFollowing).isFalse
+            assertThat(isFollowEnabled).isTrue
+        }
     }
 
     @Test

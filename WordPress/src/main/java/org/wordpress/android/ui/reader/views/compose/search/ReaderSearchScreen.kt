@@ -6,13 +6,18 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -86,13 +91,11 @@ fun ReaderSearchScreen(
     postList: @Composable (isPostListVisible: Boolean) -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
-    // raise the keyboard once per screen, not on every return from a post or site
-    var hasRequestedFocus by rememberSaveable { mutableStateOf(false) }
+    // runs once per composition, so the keyboard comes back after rotation but not on return from a post or site
     LaunchedEffect(Unit) {
-        if (!hasRequestedFocus && uiState.submittedQuery == null) {
+        if (uiState.submittedQuery == null) {
             focusRequester.requestFocus()
         }
-        hasRequestedFocus = true
     }
 
     // hoisted so the Sites tab keeps its scroll while hidden, and keyed so a new search starts at the top
@@ -160,7 +163,11 @@ fun ReaderSearchScreen(
 
 @Composable
 private fun SearchTabs(selectedTab: ReaderSearchTab, onTabSelected: (ReaderSearchTab) -> Unit) {
-    PrimaryTabRow(selectedTabIndex = selectedTab.ordinal) {
+    // the top bar slot isn't inset, and only the TopAppBar insets itself
+    PrimaryTabRow(
+        selectedTabIndex = selectedTab.ordinal,
+        modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
+    ) {
         ReaderSearchTab.entries.forEach { tab ->
             Tab(
                 selected = tab == selectedTab,
@@ -176,7 +183,8 @@ private fun Suggestions(suggestions: List<String>, actions: ReaderSearchActions)
     var isClearDialogVisible by rememberSaveable { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
     LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(suggestions, key = { it }) { suggestion ->
+        // prefixed so a saved query can't collide with the footer's key
+        items(suggestions, key = { "suggestion:$it" }) { suggestion ->
             SuggestionRow(
                 suggestion = suggestion,
                 onClick = {

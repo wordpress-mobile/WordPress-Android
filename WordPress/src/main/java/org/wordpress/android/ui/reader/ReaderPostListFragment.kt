@@ -882,7 +882,10 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
     private fun showEmptyView() {
         if (isAdded) {
             actionableEmptyView!!.visibility = View.VISIBLE
-            actionableEmptyView!!.announceEmptyStateForAccessibility()
+            // the search screen hides this list rather than removing it, so don't announce while hidden
+            if (isListShown) {
+                actionableEmptyView!!.announceEmptyStateForAccessibility()
+            }
         }
     }
 
@@ -892,8 +895,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
         }
     }
 
+    private val isListShown: Boolean
+        get() = view?.isShown == true
+
     private fun announceListStateForAccessibility() {
-        if (view != null) {
+        if (isListShown) {
             @Suppress("DEPRECATION")
             requireView().announceForAccessibility(
                 getString(
