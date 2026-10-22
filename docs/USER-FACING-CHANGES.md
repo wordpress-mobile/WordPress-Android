@@ -16,6 +16,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** My Site → Stats → Traffic → Add card → Archives
   - **Notes:** Groups are ranked by total views, as are the pages within a group. The card lists ten pages under each group and "Show All" opens the group's full list, which is itself capped at 100 pages — a site with thousands of search terms sees its busiest ones, not all of them. The card requests the same amount of data as the Traffic page on the web, so its numbers match what a customer sees there; "Show All" asks for everything and so can report a higher total for the same group and period.
 
+- **"Remove location from media" removes all GPS EXIF data**
+  With the setting on, uploaded images no longer keep any GPS EXIF data. Previously it blanked only latitude, longitude, altitude and GPS time, so tags such as destination coordinates, place name, compass direction and speed still reached the server.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Me → App Settings → Remove location from media
+  - **Notes:** Doesn't yet cover images added with the block editor's Upload button, or HEIC/HEIF files. Location stored in XMP metadata, as written by apps like Lightroom and Photoshop, is not removed.
+
 - **Reader search redesigned**
   Reader search has a new layout: the search field sits in the top bar, recent searches show as one list as you type (each with a delete button, plus "Clear search history" at the end), and the Posts and Sites tabs appear as soon as a search is submitted. A failed post search now shows "Unable to perform search" in the Posts tab instead of a blank screen.
   - **Apps:** Jetpack
