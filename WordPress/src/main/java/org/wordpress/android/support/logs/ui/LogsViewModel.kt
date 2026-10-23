@@ -185,7 +185,6 @@ class LogsViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         cleanupSharedLogsCache()
     }
 

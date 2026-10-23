@@ -132,7 +132,6 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
 
     override fun onCleared() {
         dispatcher.unregister(this)
-        super.onCleared()
     }
 
     fun start(site: SiteModel, domainProductDetails: DomainProductDetails) {

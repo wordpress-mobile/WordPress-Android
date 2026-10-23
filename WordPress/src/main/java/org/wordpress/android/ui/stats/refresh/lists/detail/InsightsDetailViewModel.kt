@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
 import android.annotation.SuppressLint
+import androidx.annotation.CallSuper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -48,8 +49,8 @@ abstract class InsightsDetailViewModel (
         }
     }
 
+    @CallSuper
     override fun onCleared() {
-        super.onCleared()
         detailUseCase.onCleared()
     }
 

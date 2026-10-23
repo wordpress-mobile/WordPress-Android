@@ -83,7 +83,6 @@ class StorePostViewModel
 
     override fun onCleared() {
         dispatcher.unregister(this)
-        super.onCleared()
     }
 
     fun savePostOnline(
