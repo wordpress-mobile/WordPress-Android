@@ -12,6 +12,16 @@ class StatsCardsConfigurationTest {
     }
 
     @Test
+    fun `when default configuration, then referrers is visible under posts and pages`() {
+        val config = StatsCardsConfiguration()
+
+        assertThat(config.visibleCards).containsSequence(
+            StatsCardType.MOST_VIEWED_POSTS_AND_PAGES,
+            StatsCardType.MOST_VIEWED_REFERRERS
+        )
+    }
+
+    @Test
     fun `when hiddenCards is called, then non-visible cards are returned`() {
         val config = StatsCardsConfiguration(
             visibleCards = listOf(StatsCardType.TODAYS_STATS, StatsCardType.VIEWS_STATS)
