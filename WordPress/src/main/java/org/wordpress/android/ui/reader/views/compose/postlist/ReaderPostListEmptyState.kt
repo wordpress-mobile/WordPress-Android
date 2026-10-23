@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader.views.compose.postlist
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
@@ -51,7 +50,6 @@ internal fun ReaderPostListEmptyState(
     val content = emptyStateContent(emptyState)
     Column(
         modifier = modifier
-            .fillMaxSize()
             .padding(Margin.ExtraExtraMediumLarge.value)
             // announced when it appears or changes, as ActionableEmptyView did
             .semantics(mergeDescendants = true) { liveRegion = LiveRegionMode.Polite },

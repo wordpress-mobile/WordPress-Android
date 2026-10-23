@@ -344,6 +344,25 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
+    fun `pull to refresh is off while an update runs and in search`() = test {
+        startAndLoad()
+        assertThat(viewModel.uiState.value.canPullToRefresh).isTrue
+
+        repositoryEvents.emit(ReaderPostListEvent.UpdateStarted(tag, UpdateAction.REQUEST_NEWER))
+        assertThat(viewModel.uiState.value.canPullToRefresh).isFalse
+
+        endUpdate(UpdateResult.UNCHANGED)
+        assertThat(viewModel.uiState.value.canPullToRefresh).isTrue
+    }
+
+    @Test
+    fun `pull to refresh is off for search results`() = test {
+        startAndLoad(ReaderPostListArgs(listType = ReaderPostListType.SEARCH_RESULTS))
+
+        assertThat(viewModel.uiState.value.canPullToRefresh).isFalse
+    }
+
+    @Test
     fun `events for other tags are ignored`() = test {
         startAndLoad()
 

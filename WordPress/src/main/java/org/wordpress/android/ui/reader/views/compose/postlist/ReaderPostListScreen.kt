@@ -52,14 +52,12 @@ private const val NEW_POSTS_BAR_SCROLL_DELAY_MS = 1000L
 fun ReaderPostListScreen(
     uiState: ReaderPostListUiState,
     listState: LazyListState,
-    isSearch: Boolean,
     actions: ReaderPostListActions,
 ) {
     ContentListPullToRefreshBox(
         isRefreshing = uiState.isRefreshing,
         onRefresh = actions.onRefresh,
-        // search results are brief snapshots, and a refresh can't start while another update is running
-        enabled = !isSearch && !uiState.isUpdating,
+        enabled = uiState.canPullToRefresh,
         // outermost, so the host's app bar collapses and expands before the list scrolls
         modifier = Modifier
             .nestedScroll(rememberNestedScrollInteropConnection())

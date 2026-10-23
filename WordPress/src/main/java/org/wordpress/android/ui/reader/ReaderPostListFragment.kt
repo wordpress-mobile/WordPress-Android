@@ -508,7 +508,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListene
                 ReaderPostListScreen(
                     uiState = uiState,
                     listState = listState,
-                    isSearch = isSearching,
                     actions = actions
                 )
             }
