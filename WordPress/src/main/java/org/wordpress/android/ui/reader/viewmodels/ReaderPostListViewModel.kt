@@ -842,20 +842,24 @@ class ReaderPostListViewModel @Inject constructor(
                 hasFetchedSiteHeader = true
                 sendUiEvent(ReaderPostListUiEvent.BlogInfoFailed)
             }
-            return
+        } else {
+            val localBlog = repository.getBlogInfo(headerBlogId, headerFeedId)
+            showSiteHeader(localBlog)
+            val isStale = localBlog == null || repository.isTimeToUpdateBlogInfo(localBlog)
+            if (!hasFetchedSiteHeader && isStale) {
+                fetchSiteHeader(headerBlogId, headerFeedId, hasLocalBlog = localBlog != null)
+            }
         }
-        val localBlog = repository.getBlogInfo(headerBlogId, headerFeedId)
-        showSiteHeader(localBlog)
-        if (hasFetchedSiteHeader || (localBlog != null && !repository.isTimeToUpdateBlogInfo(localBlog))) {
-            return
-        }
+    }
+
+    private suspend fun fetchSiteHeader(headerBlogId: Long, headerFeedId: Long, hasLocalBlog: Boolean) {
         hasFetchedSiteHeader = true
         when (fetchSiteUseCase.fetchSite(headerBlogId, headerFeedId)) {
             FetchSiteState.Success -> showSiteHeader(repository.getBlogInfo(headerBlogId, headerFeedId))
             is FetchSiteState.Failed -> {
                 // try again on the next reload, e.g. after the connection returns
                 hasFetchedSiteHeader = false
-                if (localBlog == null) {
+                if (!hasLocalBlog) {
                     sendUiEvent(ReaderPostListUiEvent.BlogInfoFailed)
                 }
             }
@@ -874,8 +878,10 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     private fun siteHeaderUiState(): ReaderSiteHeaderUiState? {
-        val blog = siteHeaderBlog ?: return null
-        val (headerBlogId, headerFeedId) = siteHeaderIds() ?: return null
+        val blog = siteHeaderBlog
+        val ids = siteHeaderIds()
+        if (blog == null || ids == null) return null
+        val (headerBlogId, headerFeedId) = ids
         val isFeed = ReaderUtils.isExternalFeed(headerBlogId, headerFeedId)
         return ReaderSiteHeaderUiState(
             name = blog.name.ifEmpty { null },
@@ -891,9 +897,10 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     fun onSiteHeaderFollowClicked() {
-        val blog = siteHeaderBlog ?: return
-        val (headerBlogId, headerFeedId) = siteHeaderIds() ?: return
-        if (isSiteHeaderFollowInProgress) return
+        val blog = siteHeaderBlog
+        val ids = siteHeaderIds()
+        if (blog == null || ids == null || isSiteHeaderFollowInProgress) return
+        val (headerBlogId, headerFeedId) = ids
         launch(bgDispatcher) {
             readerPostCardActionsHandler.handleFollowSiteClicked(headerBlogId, headerFeedId, blog.name, source)
         }
@@ -1164,16 +1171,20 @@ class ReaderPostListViewModel @Inject constructor(
 
     private fun onSiteHeaderFollowStatusChanged(data: FollowStatusChanged) {
         val blog = siteHeaderBlog ?: return
-        val (headerBlogId, headerFeedId) = siteHeaderIds() ?: return
-        val isHeaderSite = if (ReaderUtils.isExternalFeed(headerBlogId, headerFeedId)) {
-            data.feedId == headerFeedId
-        } else {
-            data.blogId == headerBlogId
+        if (isSiteHeader(data.blogId, data.feedId)) {
+            blog.isFollowing = data.following
+            isSiteHeaderFollowInProgress = !data.isChangeFinal
+            updateUiState()
         }
-        if (!isHeaderSite) return
-        blog.isFollowing = data.following
-        isSiteHeaderFollowInProgress = !data.isChangeFinal
-        updateUiState()
+    }
+
+    private fun isSiteHeader(blogId: Long, feedId: Long): Boolean {
+        val (headerBlogId, headerFeedId) = siteHeaderIds() ?: return false
+        return if (ReaderUtils.isExternalFeed(headerBlogId, headerFeedId)) {
+            feedId == headerFeedId
+        } else {
+            blogId == headerBlogId
+        }
     }
 
     /**

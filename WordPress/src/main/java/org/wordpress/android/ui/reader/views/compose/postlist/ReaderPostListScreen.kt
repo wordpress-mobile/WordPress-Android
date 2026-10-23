@@ -168,9 +168,9 @@ private fun KeepTopInViewOnPrepend(listState: LazyListState, firstKey: String?, 
     SideEffect {
         val previous = previousFirstKey.value
         previousFirstKey.value = firstKey
-        if (previous != null && firstKey != previous && scrollToPosition == null &&
-            listState.firstVisibleItemIndex == 0
-        ) {
+        val isFirstKeyChanged = previous != null && firstKey != previous
+        val wasAtTop = scrollToPosition == null && listState.firstVisibleItemIndex == 0
+        if (isFirstKeyChanged && wasAtTop) {
             listState.requestScrollToItem(0)
         }
     }
