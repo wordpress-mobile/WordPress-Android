@@ -16,6 +16,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** My Site → Stats → Traffic → Add card → Archives
   - **Notes:** Groups are ranked by total views, as are the pages within a group. The card lists ten pages under each group; "Show All" opens the full Archives screen, where every group can be expanded to its whole list, itself capped at 100 pages per group — a site with thousands of search terms sees its busiest ones, not all of them. The card requests the same amount of data as the Traffic page on the web, so its numbers match what a customer sees there; "Show All" asks for everything and so can report a higher total for the same group and period.
 
+- **Referrers card shown by default in Stats**
+  The redesigned Stats screen shows the Referrers card under Posts & pages without having to add it. Sites that already had the new Stats screen customised get the card added once, in the same position; removing it afterwards sticks.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic
+  - **Notes:** Anyone who had already added Referrers themselves keeps it where they put it, and no other card is moved or restored.
+
 - **"Remove location from media" removes all GPS EXIF data**
   With the setting on, uploaded images no longer keep any GPS EXIF data. Previously it blanked only latitude, longitude, altitude and GPS time, so tags such as destination coordinates, place name, compass direction and speed still reached the server.
   - **Apps:** Both

@@ -5,7 +5,7 @@ import org.junit.Test
 
 class StatsCardsConfigurationTest {
     @Test
-    fun `when default configuration, then only the four default cards are visible, in order`() {
+    fun `when default configuration, then only the five default cards are visible, in order`() {
         // Spelled out rather than compared against `defaultCards()`, which is what builds the
         // default configuration: adding a card to the defaults, dropping one, or reordering them
         // has to be a deliberate edit here. Archives in particular ships hidden.
@@ -15,7 +15,18 @@ class StatsCardsConfigurationTest {
             StatsCardType.TODAYS_STATS,
             StatsCardType.VIEWS_STATS,
             StatsCardType.MOST_VIEWED_POSTS_AND_PAGES,
+            StatsCardType.MOST_VIEWED_REFERRERS,
             StatsCardType.LOCATIONS
+        )
+    }
+
+    @Test
+    fun `when default configuration, then referrers is visible under posts and pages`() {
+        val config = StatsCardsConfiguration()
+
+        assertThat(config.visibleCards).containsSequence(
+            StatsCardType.MOST_VIEWED_POSTS_AND_PAGES,
+            StatsCardType.MOST_VIEWED_REFERRERS
         )
     }
 
