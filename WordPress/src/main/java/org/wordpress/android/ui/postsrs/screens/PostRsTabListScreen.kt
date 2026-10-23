@@ -24,6 +24,7 @@ import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
 import org.wordpress.android.ui.rs.contentlist.ContentListEmptyState
 import org.wordpress.android.ui.rs.contentlist.ContentListErrorRow
 import org.wordpress.android.ui.rs.contentlist.ContentListErrorState
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentDateGrouper
 import org.wordpress.android.ui.rs.contentlist.ContentListGroupHeader
@@ -132,7 +133,8 @@ private fun PostListContent(
 
     LazyColumn(
         state = listState,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = ContentListDefaults.FabClearancePadding
     ) {
         items(
             items = entries,
