@@ -21,7 +21,8 @@ enum class StatsCardType(
     VIDEO_PLAYS(R.string.stats_videos),
     FILE_DOWNLOADS(R.string.stats_file_downloads),
     DEVICES(R.string.stats_devices_title),
-    UTM(R.string.stats_utm_title);
+    UTM(R.string.stats_utm_title),
+    ARCHIVES(R.string.stats_archives_title);
 
     companion object {
         /**

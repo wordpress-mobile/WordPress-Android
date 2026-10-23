@@ -5,6 +5,9 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.datasource.CityViewsDataResult
+import org.wordpress.android.ui.newstats.datasource.ArchiveEntryDataItem
+import org.wordpress.android.ui.newstats.datasource.ArchiveSectionDataItem
+import org.wordpress.android.ui.newstats.datasource.ArchivesDataResult
 import org.wordpress.android.ui.newstats.datasource.ClicksDataResult
 import org.wordpress.android.ui.newstats.datasource.CountryViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.DevicesDataResult
@@ -111,6 +114,18 @@ private const val SUBSCRIBERS_DEFAULT_MAX = 10
 // which the server treats as "unlimited").
 private const val REFERRERS_CARD_MAX = 10
 private const val REFERRERS_DETAIL_MAX = 0
+
+// Number of archive entries requested for the card: 10, which is what Calypso's Traffic page asks
+// for, deliberately, so the card reports the same numbers as the web for the same period.
+//
+// The server applies the cap as a SQL LIMIT per day table, across all archive types at once, and
+// then caps the number of archive types to the same 10. A group's total is therefore the sum of
+// whatever survived that per-day cap, not the group's true total: the card can read lower than the
+// "show all" screen, which asks for everything (max = 0, "unlimited"). That divergence is the
+// price of web parity on the card and is accepted -- the alternative is a card that disagrees with
+// Calypso instead.
+private const val ARCHIVES_CARD_MAX = 10
+private const val ARCHIVES_DETAIL_MAX = 0
 
 /** The calendar unit a calendar-aligned period pages by. */
 private enum class CalendarUnit { WEEK, MONTH, YEAR }
@@ -2216,6 +2231,89 @@ class StatsRepository @Inject constructor(
         gate = gate
     )
 
+    suspend fun fetchArchives(
+        siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): ArchivesResult = cached(
+        key = cacheKey(StatsCacheBucket.ARCHIVES, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is ArchivesResult.Success }
+    ) { gate ->
+        fetchArchivesFromNetwork(siteId, period, ARCHIVES_CARD_MAX, gate)
+    }
+
+    /**
+     * Fetches every archive entry (max = 0 = unlimited) for the archives detail screen. Kept
+     * separate from [fetchArchives] (which bounds the card to [ARCHIVES_CARD_MAX]) so the detail
+     * screen can show more entries than the card without inflating the card request, and cached
+     * under its own bucket so the two responses cannot overwrite each other.
+     */
+    suspend fun fetchArchivesDetail(
+        siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): ArchivesResult = cached(
+        key = cacheKey(StatsCacheBucket.ARCHIVES_DETAIL, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is ArchivesResult.Success }
+    ) { gate ->
+        fetchArchivesFromNetwork(siteId, period, ARCHIVES_DETAIL_MAX, gate)
+    }
+
+    private suspend fun fetchArchivesFromNetwork(
+        siteId: Long,
+        period: StatsPeriod,
+        max: Int,
+        gate: CacheGate
+    ): ArchivesResult = fetchWithComparison(
+        period = period,
+        fetch = { dateRange ->
+            when (val r = statsDataSource.fetchArchives(
+                siteId, dateRange, max
+            )) {
+                is ArchivesDataResult.Success ->
+                    DataSourceResult.Success(r.sections)
+                is ArchivesDataResult.Error ->
+                    DataSourceResult.Error(r.errorType)
+            }
+        },
+        keyOf = ArchiveSectionDataItem::key,
+        metricOf = ArchiveSectionDataItem::views,
+        mapItem = { section, prev ->
+            ArchiveSectionItemData(
+                key = section.key,
+                views = section.views,
+                previousViews = prev,
+                entries = section.entries.map { entry -> entry.toChildData() }
+            )
+        },
+        buildSuccess = { sections, total, change, pct ->
+            // Unlike every other top list, this one arrives as a map of groups rather than a
+            // ranked array, so the order has to be imposed here.
+            ArchivesResult.Success(
+                sections.sortedByDescending { it.views },
+                total, change, pct
+            )
+        },
+        buildError = { resId, isAuth, isNotAvailable ->
+            ArchivesResult.Error(resId, isAuth, isNotAvailable)
+        },
+        logLabel = "archives",
+        gate = gate
+    )
+
+    /**
+     * Maps an archive entry and, for the "Taxonomies" group, the terms nested under it. Only that
+     * group is more than one level deep; see [ArchiveEntryDataItem].
+     */
+    private fun ArchiveEntryDataItem.toChildData(): MostViewedChildData = MostViewedChildData(
+        name = value,
+        url = href,
+        views = views,
+        children = children.map { child -> child.toChildData() }
+    )
+
     suspend fun fetchSearchTerms(
         siteId: Long,
         period: StatsPeriod,
@@ -3152,11 +3250,15 @@ data class MostViewedItemData(
 
 /**
  * A child item nested under a most viewed item (e.g. a referrer under a referrer group).
+ *
+ * [children] holds a further level of nesting, which only the archives card uses -- the terms of
+ * one custom taxonomy, under that taxonomy, under the "Taxonomies" group. Empty everywhere else.
  */
 data class MostViewedChildData(
     val name: String,
     val url: String?,
-    val views: Long
+    val views: Long,
+    val children: List<MostViewedChildData> = emptyList()
 )
 
 /**
@@ -3314,6 +3416,35 @@ data class ClickItemData(
     val clicksChange: Long get() = clicks - previousClicks
     val clicksChangePercent: Double
         get() = calculateItemChangePercent(clicks, previousClicks)
+}
+
+sealed class ArchivesResult {
+    data class Success(
+        val sections: List<ArchiveSectionItemData>,
+        val totalViews: Long,
+        val totalViewsChange: Long,
+        val totalViewsChangePercent: Double
+    ) : ArchivesResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false,
+        val isNotAvailable: Boolean = false
+    ) : ArchivesResult()
+}
+
+/**
+ * One group of archive pages and the entries listed under it. [key] is the API's own name for the
+ * group, which the UI resolves into a label; see [ArchiveSectionDataItem].
+ */
+data class ArchiveSectionItemData(
+    val key: String,
+    val views: Long,
+    val previousViews: Long,
+    val entries: List<MostViewedChildData> = emptyList()
+) {
+    val viewsChange: Long get() = views - previousViews
+    val viewsChangePercent: Double
+        get() = calculateItemChangePercent(views, previousViews)
 }
 
 sealed class SearchTermsResult {

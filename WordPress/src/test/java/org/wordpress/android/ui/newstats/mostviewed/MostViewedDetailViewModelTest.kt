@@ -55,7 +55,7 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
         whenever(resourceProvider.getString(R.string.stats_period_last_7_days)).thenReturn(DATE_RANGE)
         whenever(resourceProvider.getString(R.string.stats_error_api)).thenReturn(API_ERROR)
         whenever(resourceProvider.getString(R.string.stats_error_unknown)).thenReturn(UNKNOWN_ERROR)
-        detailFetcher = MostViewedDetailFetcher(statsRepository)
+        detailFetcher = MostViewedDetailFetcher(statsRepository, resourceProvider)
         viewModel = MostViewedDetailViewModel(
             selectedSiteRepository,
             accountStore,
