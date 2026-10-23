@@ -109,6 +109,7 @@ import org.wordpress.android.ui.newstats.utm.UtmDetailActivity
 import org.wordpress.android.ui.newstats.utm.UtmViewModel
 import org.wordpress.android.ui.newstats.filedownloads.FileDownloadsViewModel
 import org.wordpress.android.ui.newstats.locations.LocationsCardUiState
+import org.wordpress.android.ui.newstats.archives.ArchivesViewModel
 import org.wordpress.android.ui.newstats.searchterms.SearchTermsViewModel
 import org.wordpress.android.ui.newstats.videoplays.VideoPlaysViewModel
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsCard
@@ -714,6 +715,7 @@ private fun TrafficTabContent(
     fileDownloadsViewModel: FileDownloadsViewModel = viewModel(),
     devicesViewModel: DevicesViewModel = viewModel(),
     utmViewModel: UtmViewModel = viewModel(),
+    archivesViewModel: ArchivesViewModel = viewModel(),
     newStatsViewModel: NewStatsViewModel = viewModel(),
     onRowUrlClick: (StatsCardType, String) -> Unit = { _, _ -> },
     onExplorePlansClick: (String, StatsCardType) -> Unit = { _, _ -> },
@@ -735,6 +737,7 @@ private fun TrafficTabContent(
     val selectedDeviceType by devicesViewModel.selectedDeviceType.collectAsState()
     val utmUiState by utmViewModel.uiState.collectAsState()
     val selectedUtmCategory by utmViewModel.selectedCategory.collectAsState()
+    val archivesUiState by archivesViewModel.uiState.collectAsState()
     // The period the non-Views cards should reflect: the soft-selected bar's period when one is
     // selected, otherwise the committed period. The Views chart itself stays bound to its own period.
     val effectivePeriod by viewsStatsViewModel.effectivePeriod.collectAsState()
@@ -755,13 +758,14 @@ private fun TrafficTabContent(
         .isRefreshing.collectAsState()
     val isDevicesRefreshing by devicesViewModel.isRefreshing.collectAsState()
     val isUtmRefreshing by utmViewModel.isRefreshing.collectAsState()
+    val isArchivesRefreshing by archivesViewModel.isRefreshing.collectAsState()
     val isRefreshing = listOf(
         isTodaysStatsRefreshing, isViewsStatsRefreshing,
         isMostViewedPostsRefreshing, isMostViewedReferrersRefreshing,
         isLocationsRefreshing, isAuthorsRefreshing,
         isClicksRefreshing, isSearchTermsRefreshing,
         isVideoPlaysRefreshing, isFileDownloadsRefreshing,
-        isDevicesRefreshing, isUtmRefreshing
+        isDevicesRefreshing, isUtmRefreshing, isArchivesRefreshing
     ).any { it }
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -817,6 +821,9 @@ private fun TrafficTabContent(
             },
             onUtm = {
                 utmViewModel.onPeriodChanged(effectivePeriod)
+            },
+            onArchives = {
+                archivesViewModel.onPeriodChanged(effectivePeriod)
             }
         )
     }
@@ -851,7 +858,8 @@ private fun TrafficTabContent(
             onVideoPlays = { videoPlaysViewModel.loadData() },
             onFileDownloads = { fileDownloadsViewModel.loadData() },
             onDevices = { devicesViewModel.loadData() },
-            onUtm = { utmViewModel.loadData() }
+            onUtm = { utmViewModel.loadData() },
+            onArchives = { archivesViewModel.loadData() }
         )
     }
 
@@ -906,7 +914,8 @@ private fun TrafficTabContent(
                     fileDownloadsViewModel.refresh()
                 },
                 onDevices = { devicesViewModel.refresh() },
-                onUtm = { utmViewModel.refresh() }
+                onUtm = { utmViewModel.refresh() },
+                onArchives = { archivesViewModel.refresh() }
             )
         },
         indicator = {
@@ -1312,6 +1321,41 @@ private fun TrafficTabContent(
                             context = context
                         )
                     )
+                    StatsCardType.ARCHIVES -> MostViewedCard(
+                        uiState = archivesUiState,
+                        cardType = cardType,
+                        onShowAllClick = {
+                            MostViewedDetailActivity.startSelfFetch(
+                                context = context,
+                                cardType = StatsCardType.ARCHIVES,
+                                source = MostViewedDetailSource.ARCHIVES,
+                                period = archivesViewModel.getCurrentPeriod()
+                            )
+                        },
+                        onRetry = archivesViewModel::onRetry,
+                        onRemoveCard = {
+                            newStatsViewModel.removeCard(cardType)
+                        },
+                        cardPosition = cardPosition,
+                        onMoveUp = { newStatsViewModel.moveCardUp(cardType) },
+                        onMoveToTop = {
+                            newStatsViewModel.moveCardToTop(cardType)
+                        },
+                        onMoveDown = {
+                            newStatsViewModel.moveCardDown(cardType)
+                        },
+                        onMoveToBottom = {
+                            newStatsViewModel.moveCardToBottom(cardType)
+                        },
+                        onOpenWpAdmin = buildOpenWpAdminAction(
+                            isAuthError = (archivesUiState as?
+                                MostViewedCardUiState.Error)
+                                ?.isAuthError == true,
+                            getAdminUrl = archivesViewModel::getAdminUrl,
+                            context = context
+                        ),
+                        onUrlClick = { url -> onRowUrlClick(cardType, url) }
+                    )
                 }
             }
 
@@ -1356,7 +1400,8 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     onVideoPlays: () -> Unit,
     onFileDownloads: () -> Unit,
     onDevices: () -> Unit,
-    onUtm: () -> Unit
+    onUtm: () -> Unit,
+    onArchives: () -> Unit
 ) {
     if (StatsCardType.TODAYS_STATS in this) onTodaysStats()
     if (StatsCardType.VIEWS_STATS in this) onViewsStats()
@@ -1374,6 +1419,7 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     if (StatsCardType.FILE_DOWNLOADS in this) onFileDownloads()
     if (StatsCardType.DEVICES in this) onDevices()
     if (StatsCardType.UTM in this) onUtm()
+    if (StatsCardType.ARCHIVES in this) onArchives()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
