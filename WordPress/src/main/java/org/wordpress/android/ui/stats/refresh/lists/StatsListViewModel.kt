@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
+import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -105,6 +106,7 @@ abstract class StatsListViewModel(
 
     val scrollTo = newsCardHandler?.scrollTo
 
+    @CallSuper
     override fun onCleared() {
         statsUseCase.onCleared()
     }
