@@ -122,6 +122,21 @@ class ReaderPostListRepository @Inject constructor(
                 ReaderBlogTable.isFollowedBlog(blog.blogId)
     }
 
+    /**
+     * Returns the stored info for the blog or feed, or null if there isn't any
+     */
+    suspend fun getBlogInfo(blogId: Long, feedId: Long): ReaderBlog? = withContext(ioDispatcher) {
+        if (ReaderUtils.isExternalFeed(blogId, feedId)) {
+            ReaderBlogTable.getFeedInfo(feedId)
+        } else {
+            ReaderBlogTable.getBlogInfo(blogId)
+        }
+    }
+
+    suspend fun isTimeToUpdateBlogInfo(blog: ReaderBlog): Boolean = withContext(ioDispatcher) {
+        ReaderBlogTable.isTimeToUpdateBlogInfo(blog)
+    }
+
     fun requestPosts(target: ReaderPostListTarget, action: UpdateAction) {
         val context = contextProvider.getContext()
         when (target) {

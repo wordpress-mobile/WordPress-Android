@@ -35,14 +35,16 @@ data class ReaderPostListUiState(
 )
 
 sealed class ReaderPostListItem {
-    abstract val stableId: Long
+    /**
+     * Unique within the list - the LazyColumn crashes on duplicate keys
+     */
+    abstract val key: String
 
     /**
-     * [postsVersion] changes whenever the loaded posts change, so the header rebinds (and reloads its
-     * blog info) at the same times it did when the adapter called notifyDataSetChanged
+     * [info] is null until the blog info has been read
      */
-    data class SiteHeader(val blogId: Long, val feedId: Long, val postsVersion: Int) : ReaderPostListItem() {
-        override val stableId = ITEM_ID_HEADER
+    data class SiteHeader(val info: ReaderSiteHeaderUiState?) : ReaderPostListItem() {
+        override val key = KEY_HEADER
     }
 
     data class TagHeader(
@@ -50,28 +52,44 @@ sealed class ReaderPostListItem {
         val isFollowed: Boolean,
         val isFollowActionRunning: Boolean = false
     ) : ReaderPostListItem() {
-        override val stableId = ITEM_ID_HEADER
+        override val key = KEY_HEADER
     }
 
-    data class Post(val uiState: ReaderPostUiState, override val stableId: Long) : ReaderPostListItem()
+    data class Post(val uiState: ReaderPostUiState, override val key: String) : ReaderPostListItem()
 
     data class XPost(val post: ReaderPost) : ReaderPostListItem() {
-        override val stableId = post.stableId
+        override val key = postKey(post)
     }
 
     data class RemovedPost(val post: ReaderPost) : ReaderPostListItem() {
-        override val stableId = post.stableId
+        override val key = postKey(post)
     }
 
     data class GapMarker(val isFilling: Boolean) : ReaderPostListItem() {
-        override val stableId = ITEM_ID_GAP_MARKER
+        override val key = KEY_GAP_MARKER
     }
 
     companion object {
-        const val ITEM_ID_HEADER = -1L
-        const val ITEM_ID_GAP_MARKER = -2L
+        private const val KEY_HEADER = "header"
+        private const val KEY_GAP_MARKER = "gap"
+
+        fun postKey(post: ReaderPost) = "${post.blogId}:${post.feedId}:${post.postId}"
     }
 }
+
+data class ReaderSiteHeaderUiState(
+    val blogId: Long,
+    val feedId: Long,
+    val name: String?,
+    val url: String?,
+    val description: String?,
+    val imageUrl: String?,
+    val isP2orA8C: Boolean,
+    val subscriberCount: Int,
+    val isFollowed: Boolean,
+    val isFollowInProgress: Boolean,
+    val showSettings: Boolean
+)
 
 sealed class ReaderPostListEmptyState {
     data object SelfHostedCta : ReaderPostListEmptyState()
@@ -101,4 +119,7 @@ sealed class ReaderPostListUiEvent {
     data object SetDefaultSubfilter : ReaderPostListUiEvent()
     data object NoConnection : ReaderPostListUiEvent()
     data object DataLoaded : ReaderPostListUiEvent()
+    data object BlogInfoFailed : ReaderPostListUiEvent()
+    data class ShowSubscriptionSettings(val blogId: Long, val blogName: String, val blogUrl: String) :
+        ReaderPostListUiEvent()
 }
