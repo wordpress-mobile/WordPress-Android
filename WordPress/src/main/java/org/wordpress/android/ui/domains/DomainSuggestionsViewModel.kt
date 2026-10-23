@@ -108,7 +108,6 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     override fun onCleared() {
         debouncer.shutdown()
-        super.onCleared()
     }
 
     fun start(site: SiteModel, domainRegistrationPurpose: DomainRegistrationPurpose) {
