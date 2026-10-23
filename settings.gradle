@@ -28,7 +28,10 @@ gradle.ext {
             file(secretPath),
             file("${rootDir}/secrets.properties")
     )
-    developerProperties = loadPropertiesFromFile(file("$rootDir/developer.properties"))
+    def developerFile = file("$rootDir/developer.properties")
+    developerProperties = loadPropertiesFromFile(
+            developerFile.exists() ? developerFile : file("$rootDir/developer.properties-example")
+    )
 }
 
 // Mirrors `a8c-secrets which`, without spawning the command
@@ -139,6 +142,10 @@ buildCache {
             }
         }
     } else if (gradle.ext.developerProperties["use_remote_build_cache_locally"]?.toBoolean() == true) {
+        if (!file(gradle.ext.secretPath).exists()) {
+            logger.warn("\nℹ️ Remote build cache is enabled, but ${gradle.ext.secretPath} is not found. Run `a8c-secrets decrypt` to use it.")
+            return
+        }
 
         checkForRemoteBuildCacheOptimizedExperience()
 
@@ -156,7 +163,6 @@ buildCache {
 }
 
 def checkForRemoteBuildCacheOptimizedExperience() {
-    assertSecretsApplied()
     assertDeveloperPropertiesMatch("${rootDir}/libs/fluxc/developer.properties")
     assertJava21Amazon()
 }
@@ -173,12 +179,6 @@ def assertDeveloperPropertiesMatch(String developerPropertiesPath) {
         def yellow = "\u001B[33m"
         def reset = "\u001B[0m"
         logger.warn("${yellow}The developer properties file $developerPropertiesPath does not match the default developer properties file. This will reduce efficiency of remote build cache.$reset")
-    }
-}
-
-def assertSecretsApplied() {
-    if (!file(gradle.ext.secretPath).exists()) {
-        throw new GradleException("The build requested remote build cache, but ${gradle.ext.secretPath} is not found. Please run `a8c-secrets decrypt` to apply secrets.")
     }
 }
 
