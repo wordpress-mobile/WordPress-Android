@@ -40,10 +40,7 @@ sealed class ReaderPostListItem {
      */
     abstract val key: String
 
-    /**
-     * [info] is null until the blog info has been read
-     */
-    data class SiteHeader(val info: ReaderSiteHeaderUiState?) : ReaderPostListItem() {
+    data class SiteHeader(val info: ReaderSiteHeaderUiState) : ReaderPostListItem() {
         override val key = KEY_HEADER
     }
 
@@ -78,10 +75,8 @@ sealed class ReaderPostListItem {
 }
 
 data class ReaderSiteHeaderUiState(
-    val blogId: Long,
-    val feedId: Long,
     val name: String?,
-    val url: String?,
+    val host: String?,
     val description: String?,
     val imageUrl: String?,
     val isP2orA8C: Boolean,
@@ -120,6 +115,6 @@ sealed class ReaderPostListUiEvent {
     data object NoConnection : ReaderPostListUiEvent()
     data object DataLoaded : ReaderPostListUiEvent()
     data object BlogInfoFailed : ReaderPostListUiEvent()
-    data class ShowSubscriptionSettings(val blogId: Long, val blogName: String, val blogUrl: String) :
+    data class ShowSubscriptionSettings(val blogId: Long, val blogName: String, val blogHost: String) :
         ReaderPostListUiEvent()
 }

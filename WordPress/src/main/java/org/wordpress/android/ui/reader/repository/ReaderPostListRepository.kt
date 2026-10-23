@@ -10,6 +10,7 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.datasets.ReaderBlogTable
+import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.datasets.ReaderTagTable
 import org.wordpress.android.fluxc.store.AccountStore
@@ -46,6 +47,7 @@ class ReaderPostListRepository @Inject constructor(
     private val contextProvider: ContextProvider,
     private val eventBusWrapper: EventBusWrapper,
     private val accountStore: AccountStore,
+    private val readerBlogTableWrapper: ReaderBlogTableWrapper,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) {
     val events: Flow<ReaderPostListEvent> = callbackFlow {
@@ -126,11 +128,7 @@ class ReaderPostListRepository @Inject constructor(
      * Returns the stored info for the blog or feed, or null if there isn't any
      */
     suspend fun getBlogInfo(blogId: Long, feedId: Long): ReaderBlog? = withContext(ioDispatcher) {
-        if (ReaderUtils.isExternalFeed(blogId, feedId)) {
-            ReaderBlogTable.getFeedInfo(feedId)
-        } else {
-            ReaderBlogTable.getBlogInfo(blogId)
-        }
+        readerBlogTableWrapper.getReaderBlog(blogId, feedId)
     }
 
     suspend fun isTimeToUpdateBlogInfo(blog: ReaderBlog): Boolean = withContext(ioDispatcher) {

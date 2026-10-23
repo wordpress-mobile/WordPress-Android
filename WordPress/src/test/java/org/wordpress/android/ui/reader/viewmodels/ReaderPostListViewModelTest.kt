@@ -160,6 +160,7 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     fun `blog preview starts with a site header`() = test {
         val blogTarget = ReaderPostListTarget.Blog(BLOG_ID)
         whenever(repository.getPosts(blogTarget)).thenReturn(posts(1))
+        whenever(repository.getBlogInfo(BLOG_ID, 0)).thenReturn(blog())
 
         startAndLoad(ReaderPostListArgs(listType = ReaderPostListType.BLOG_PREVIEW, blogId = BLOG_ID))
 
@@ -213,7 +214,21 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             startAndLoad(blogPreviewArgs())
             assertThat(awaitItem()).isEqualTo(ReaderPostListUiEvent.BlogInfoFailed)
         }
-        assertThat(viewModel.uiState.value.items.first()).isEqualTo(ReaderPostListItem.SiteHeader(null))
+        // the header stays out of the list until there's blog info to show
+        assertThat(viewModel.uiState.value.items).noneMatch { it is ReaderPostListItem.SiteHeader }
+    }
+
+    @Test
+    fun `a failed blog info fetch is tried again on the next reload`() = test {
+        whenever(repository.getBlogInfo(BLOG_ID, 0)).thenReturn(blog(name = "stored"))
+        whenever(repository.isTimeToUpdateBlogInfo(any())).thenReturn(true)
+        whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull())).thenReturn(FetchSiteState.Failed.NoNetwork)
+        startAndLoad(blogPreviewArgs())
+
+        viewModel.reload()
+        advanceUntilIdle()
+
+        verify(fetchSiteUseCase, times(2)).fetchSite(BLOG_ID, 0)
     }
 
     @Test

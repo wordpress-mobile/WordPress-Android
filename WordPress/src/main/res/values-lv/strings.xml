@@ -220,7 +220,6 @@ Language: lv
     <string name="reader_no_recommended_blogs_title">Nav ieteiktu emuāru</string>
     <string name="reader_label_subscribers_count_single">1 abonents</string>
     <string name="reader_label_choose_interests">Izvēlieties savas intereses</string>
-    <string name="reader_toast_err_show_blog">Nevar parādīt šo emuāru</string>
     <string name="reader_toast_err_already_follow_this_blog">Jūs jau esat abonējis šo emuāru</string>
     <string name="reader_subscribed_display_name">Abonēts</string>
     <string name="reader_activity_title_blog_preview">Lasītāja emuārs</string>

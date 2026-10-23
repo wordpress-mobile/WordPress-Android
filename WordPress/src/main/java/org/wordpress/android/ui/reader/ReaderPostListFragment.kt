@@ -77,7 +77,6 @@ import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
@@ -102,8 +101,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListene
 
     private lateinit var postListViewModel: ReaderPostListViewModel
 
-    // outlives the view, so the list keeps its position when the view is recreated from the back stack
-    private val listState = LazyListState()
+    // created with each view, since it holds that view's layout. The position is kept here in between, so
+    // the list keeps it when the view is recreated from the back stack.
+    private var listState: LazyListState? = null
+    private var savedFirstVisibleIndex = 0
+    private var savedFirstVisibleOffset = 0
 
     private var isTopLevel = false
     private var wasPaused = false
@@ -315,7 +317,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListene
                 ReaderSubscriptionSettingsBottomSheetFragment.newInstance(
                     blogId = event.blogId,
                     blogName = event.blogName,
-                    blogUrl = event.blogUrl.ifEmpty { null }?.let { UrlUtils.getHost(it) }.orEmpty()
+                    blogUrl = event.blogHost
                 ).show(childFragmentManager, ReaderSubscriptionSettingsBottomSheetFragment.TAG)
         }
     }
@@ -464,7 +466,9 @@ class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListene
 
     override fun onSaveInstanceState(outState: Bundle) {
         AppLog.d(AppLog.T.READER, "reader post list > saving instance state")
-        val args = postListViewModel.currentArgs(restorePosition = listState.firstVisibleItemIndex)
+        val args = postListViewModel.currentArgs(
+            restorePosition = listState?.firstVisibleItemIndex ?: savedFirstVisibleIndex
+        )
 
         args.tag?.let { outState.putSerializable(ReaderConstants.ARG_TAG, it) }
         args.originalTag?.let { outState.putSerializable(ReaderConstants.ARG_ORIGINAL_TAG, it) }
@@ -497,6 +501,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListene
         savedInstanceState: Bundle?
     ): View {
         val actions = buildActions()
+        val listState = LazyListState(savedFirstVisibleIndex, savedFirstVisibleOffset).also { listState = it }
         return ReaderPostListComposeView(requireContext(), listState) {
             AppThemeM3 {
                 val uiState by postListViewModel.uiState.collectAsStateWithLifecycle()
@@ -512,6 +517,15 @@ class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListene
             id = R.id.reader_post_list
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        listState?.let {
+            savedFirstVisibleIndex = it.firstVisibleItemIndex
+            savedFirstVisibleOffset = it.firstVisibleItemScrollOffset
+        }
+        listState = null
     }
 
     private fun buildActions() = ReaderPostListActions(
@@ -859,7 +873,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListene
     }
 
     override fun onScrollToTop() {
-        if (view != null && listState.firstVisibleItemIndex > 0) {
+        val listState = listState ?: return
+        if (listState.firstVisibleItemIndex > 0) {
             viewLifecycleOwner.lifecycleScope.launch { listState.animateScrollToItem(0) }
         }
     }

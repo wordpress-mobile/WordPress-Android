@@ -66,6 +66,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -763,6 +764,7 @@ class ReaderPostListViewModel @Inject constructor(
         siteHeaderJob?.cancel()
         siteHeaderBlog = null
         hasFetchedSiteHeader = false
+        isSiteHeaderFollowInProgress = false
         autoUpdateSkipped = false
         clearPosts()
         reload()
@@ -789,7 +791,7 @@ class ReaderPostListViewModel @Inject constructor(
 
     private suspend fun loadPosts() {
         val target = currentTarget()
-        val newPosts = target?.let { repository.getPosts(it) } ?: ReaderPostList()
+        val newPosts = target?.let { distinctPosts(repository.getPosts(it)) } ?: ReaderPostList()
         val newGapMarkerIndex = loadListDetails(newPosts)
 
         // build the cards before swapping in the new posts, since the UI can re-render while they're built
@@ -809,6 +811,12 @@ class ReaderPostListViewModel @Inject constructor(
         if (siteHeaderIds() != null && siteHeaderJob?.isActive != true) {
             siteHeaderJob = launch { loadSiteHeader() }
         }
+    }
+
+    // the LazyColumn crashes on duplicate keys, so drop a post that's in the list more than once
+    private fun distinctPosts(posts: ReaderPostList): ReaderPostList {
+        val keys = HashSet<String>()
+        return posts.filterTo(ReaderPostList()) { keys.add(ReaderPostListItem.postKey(it)) }
     }
 
     /*
@@ -844,16 +852,22 @@ class ReaderPostListViewModel @Inject constructor(
         hasFetchedSiteHeader = true
         when (fetchSiteUseCase.fetchSite(headerBlogId, headerFeedId)) {
             FetchSiteState.Success -> showSiteHeader(repository.getBlogInfo(headerBlogId, headerFeedId))
-            is FetchSiteState.Failed -> if (localBlog == null) {
-                sendUiEvent(ReaderPostListUiEvent.BlogInfoFailed)
+            is FetchSiteState.Failed -> {
+                // try again on the next reload, e.g. after the connection returns
+                hasFetchedSiteHeader = false
+                if (localBlog == null) {
+                    sendUiEvent(ReaderPostListUiEvent.BlogInfoFailed)
+                }
             }
             FetchSiteState.AlreadyRunning -> Unit
         }
     }
 
     private fun showSiteHeader(blog: ReaderBlog?) {
+        if (blog == null) return
         // the header owns its follow state while a follow tap is running
-        if (blog != null && !isSiteHeaderFollowInProgress) {
+        siteHeaderBlog?.takeIf { isSiteHeaderFollowInProgress }?.let { blog.isFollowing = it.isFollowing }
+        if (!blog.isSameAs(siteHeaderBlog)) {
             siteHeaderBlog = blog
             updateUiState()
         }
@@ -864,10 +878,8 @@ class ReaderPostListViewModel @Inject constructor(
         val (headerBlogId, headerFeedId) = siteHeaderIds() ?: return null
         val isFeed = ReaderUtils.isExternalFeed(headerBlogId, headerFeedId)
         return ReaderSiteHeaderUiState(
-            blogId = headerBlogId,
-            feedId = headerFeedId,
             name = blog.name.ifEmpty { null },
-            url = blog.url.ifEmpty { null },
+            host = blog.url.ifEmpty { null }?.let { UrlUtils.getHost(it) }?.ifEmpty { null },
             description = blog.description.ifEmpty { null },
             imageUrl = blog.imageUrl.ifEmpty { null },
             isP2orA8C = blog.isP2orA8C,
@@ -879,25 +891,22 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     fun onSiteHeaderFollowClicked() {
-        val header = siteHeaderUiState() ?: return
-        if (header.isFollowInProgress) return
+        val blog = siteHeaderBlog ?: return
+        val (headerBlogId, headerFeedId) = siteHeaderIds() ?: return
+        if (isSiteHeaderFollowInProgress) return
         launch(bgDispatcher) {
-            readerPostCardActionsHandler.handleFollowSiteClicked(
-                header.blogId,
-                header.feedId,
-                header.name.orEmpty(),
-                source
-            )
+            readerPostCardActionsHandler.handleFollowSiteClicked(headerBlogId, headerFeedId, blog.name, source)
         }
     }
 
     fun onSiteHeaderSettingsClicked() {
         val header = siteHeaderUiState() ?: return
+        val (headerBlogId, _) = siteHeaderIds() ?: return
         sendUiEvent(
             ReaderPostListUiEvent.ShowSubscriptionSettings(
-                header.blogId,
+                headerBlogId,
                 header.name.orEmpty(),
-                header.url.orEmpty()
+                header.host.orEmpty()
             )
         )
     }
@@ -974,14 +983,20 @@ class ReaderPostListViewModel @Inject constructor(
         }
     }
 
-    private fun buildItems(): List<ReaderPostListItem> {
+    /*
+     * [includePosts] is false while the empty state shows, since it replaces the posts but not the header
+     */
+    private fun buildItems(includePosts: Boolean = true): List<ReaderPostListItem> {
         val items = ArrayList<ReaderPostListItem>()
         val tag = currentTag
         if (siteHeaderIds() != null) {
-            items.add(ReaderPostListItem.SiteHeader(siteHeaderUiState()))
+            // the header stays out of the list until its blog info has been read
+            siteHeaderUiState()?.let { items.add(ReaderPostListItem.SiteHeader(it)) }
         } else if (listType == ReaderPostListType.TAG_PREVIEW && tag != null && posts.isNotEmpty()) {
             items.add(ReaderPostListItem.TagHeader(tag.label, isTagHeaderFollowed, isTagFollowInFlight))
         }
+
+        if (!includePosts) return items
 
         val menu = moreMenu
         val isBookmarksList = isBookmarksList
@@ -1005,8 +1020,7 @@ class ReaderPostListViewModel @Inject constructor(
                 items.add(ReaderPostListItem.GapMarker(isGapFilling))
             }
         }
-        // the LazyColumn crashes on duplicate keys
-        return items.distinctBy { it.key }
+        return items
     }
 
     private fun positionOfFirstPostFromBlog(blogId: Long): Int? = buildItems().indexOfFirst { item ->
@@ -1057,7 +1071,7 @@ class ReaderPostListViewModel @Inject constructor(
         val emptyState = buildEmptyState()
         val isOnlyLoadingOlder = updateActions == setOf(UpdateAction.REQUEST_OLDER)
         _uiState.value = ReaderPostListUiState(
-            items = buildItems(),
+            items = buildItems(includePosts = emptyState == null),
             isRefreshing = isPullRefreshing || (updateActions.isNotEmpty() && !isOnlyLoadingOlder),
             isLoadingMore = isOnlyLoadingOlder,
             isUpdating = updateActions.isNotEmpty(),

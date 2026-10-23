@@ -58,8 +58,8 @@ fun ReaderPostListScreen(
     ContentListPullToRefreshBox(
         isRefreshing = uiState.isRefreshing,
         onRefresh = actions.onRefresh,
-        // search results are brief snapshots, and a refresh can't start while older posts are loading
-        enabled = !isSearch && !uiState.isLoadingMore,
+        // search results are brief snapshots, and a refresh can't start while another update is running
+        enabled = !isSearch && !uiState.isUpdating,
         // outermost, so the host's app bar collapses and expands before the list scrolls
         modifier = Modifier
             .nestedScroll(rememberNestedScrollInteropConnection())
@@ -86,19 +86,12 @@ private fun PostList(
     actions: ReaderPostListActions,
 ) {
     val emptyState = uiState.emptyState
-    // the empty state replaces the posts, but not the site or tag header above them
-    val items = if (emptyState == null) {
-        uiState.items
-    } else {
-        uiState.items.filter { it is ReaderPostListItem.SiteHeader || it is ReaderPostListItem.TagHeader }
-    }
+    val items = uiState.items
     val hasPosts = items.any { it is ReaderPostListItem.Post || it is ReaderPostListItem.XPost }
     val margin = dimensionResource(R.dimen.reader_card_margin)
 
     LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
         items(items = items, key = { it.key }, contentType = { it::class }) { item ->
-            // the site header (and its divider) stays out of sight until its blog info is read
-            if (item is ReaderPostListItem.SiteHeader && item.info == null) return@items
             Column(modifier = Modifier.padding(horizontal = margin)) {
                 PostListRow(item, actions)
                 if (item !== items.last()) {
@@ -120,10 +113,13 @@ private fun PostList(
         }
     }
 
+    // not keyed on isLoadingMore: at the true end of the list a request that adds nothing would restart the
+    // effect and ask again forever, so only new rows trigger another request (the view model skips requests
+    // while an update is running)
     LoadMoreOnScrollToEnd(
         listState = listState,
         itemCount = items.size,
-        canLoadMore = hasPosts && !uiState.isLoadingMore,
+        canLoadMore = hasPosts,
         onLoadMore = actions.onLoadMore
     )
     KeepTopInViewOnPrepend(listState, items.firstOrNull()?.key, uiState.scrollToPosition)
@@ -144,18 +140,20 @@ private fun PostListRow(item: ReaderPostListItem, actions: ReaderPostListActions
             )
         }
 
-        is ReaderPostListItem.SiteHeader -> item.info?.let { info ->
-            ReaderSiteHeader(
-                info = info,
-                onFollowClick = actions.onSiteHeaderFollowClicked,
-                onSettingsClick = actions.onSiteHeaderSettingsClicked
-            )
-        }
+        is ReaderPostListItem.SiteHeader -> ReaderSiteHeader(
+            info = item.info,
+            onFollowClick = actions.onSiteHeaderFollowClicked,
+            onSettingsClick = actions.onSiteHeaderSettingsClicked
+        )
 
         is ReaderPostListItem.TagHeader -> ReaderTagHeader(item, actions.onTagHeaderFollowClicked)
         is ReaderPostListItem.GapMarker -> ReaderGapMarker(item.isFilling, actions.onGapMarkerClicked)
-        is ReaderPostListItem.XPost -> ReaderXPostRow(item.post) { actions.onXPostClicked(item.post) }
-        is ReaderPostListItem.RemovedPost -> ReaderRemovedPostRow(item.post) { actions.onRemovedPostClicked(item.post) }
+        // the click lambdas capture the post rather than the item, which is rebuilt with every state, so the
+        // rows can skip recomposing
+        is ReaderPostListItem.XPost -> item.post.let { post -> ReaderXPostRow(post) { actions.onXPostClicked(post) } }
+        is ReaderPostListItem.RemovedPost -> item.post.let { post ->
+            ReaderRemovedPostRow(post) { actions.onRemovedPostClicked(post) }
+        }
     }
 }
 

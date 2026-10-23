@@ -166,21 +166,18 @@ private fun buttonTextRes(button: ReaderPostListEmptyButton) = when (button) {
 }
 
 // replaces the %s placeholder with the bookmark icon
-private fun withBookmarkIcon(text: String): AnnotatedString = buildAnnotatedString {
-    val parts = text.split("%s", limit = 2)
-    append(parts[0])
-    if (parts.size > 1) {
-        appendInlineContent(BOOKMARK_ICON_ID)
-        append(parts[1])
-    }
-}
+private fun withBookmarkIcon(text: String) = replacePlaceholder(text) { appendInlineContent(BOOKMARK_ICON_ID) }
 
 // replaces the %s placeholder with the query in italics
-private fun withItalicQuery(text: String, query: String): AnnotatedString = buildAnnotatedString {
+private fun withItalicQuery(text: String, query: String) = replacePlaceholder(text) {
+    withStyle(SpanStyle(fontStyle = FontStyle.Italic)) { append(query) }
+}
+
+private fun replacePlaceholder(text: String, insert: AnnotatedString.Builder.() -> Unit) = buildAnnotatedString {
     val parts = text.split("%s", limit = 2)
     append(parts[0])
     if (parts.size > 1) {
-        withStyle(SpanStyle(fontStyle = FontStyle.Italic)) { append(query) }
+        insert()
         append(parts[1])
     }
 }

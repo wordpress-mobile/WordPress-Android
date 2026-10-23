@@ -61,7 +61,6 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostListItem
 import org.wordpress.android.ui.reader.viewmodels.ReaderSiteHeaderUiState
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.SiteUtils
-import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPAvatarUtils
 import org.wordpress.android.util.image.BlavatarShape
 import org.wordpress.android.util.image.ImagePlaceholderManager
@@ -110,7 +109,7 @@ internal fun ReaderSiteHeader(
                         .clip(CircleShape)
                 )
             }
-            val host = remember(info.url) { info.url?.let { UrlUtils.getHost(it) } }
+            val host = info.host
             Text(
                 text = info.name ?: host ?: stringResource(R.string.reader_untitled_post),
                 style = MaterialTheme.typography.headlineMedium,
@@ -119,7 +118,7 @@ internal fun ReaderSiteHeader(
                 maxLines = HEADER_TITLE_MAX_LINES,
                 overflow = TextOverflow.Ellipsis
             )
-            if (!host.isNullOrEmpty()) {
+            if (host != null) {
                 Text(
                     text = host,
                     modifier = Modifier.padding(top = Margin.Medium.value),
@@ -281,19 +280,17 @@ internal fun ReaderGapMarker(isFilling: Boolean, onClick: () -> Unit) {
  */
 @Composable
 internal fun ReaderXPostRow(post: ReaderPost, onClick: () -> Unit) {
-    val avatarSize = dimensionResource(R.dimen.avatar_sz_extra_small)
-    val avatarSizePx = with(LocalDensity.current) { avatarSize.roundToPx() }
     val subtitle = remember(post) { xPostSubtitle(post) }
     ReaderPostListRowSurface(modifier = Modifier.clickable(onClick = onClick)) {
         Column(modifier = Modifier.padding(dimensionResource(R.dimen.reader_card_content_padding))) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box {
                     XPostAvatar(
-                        url = WPAvatarUtils.rewriteAvatarUrl(post.postAvatar, avatarSizePx),
+                        avatarUrl = post.postAvatar,
                         imageType = ImageType.AVATAR_WITH_BACKGROUND
                     )
                     XPostAvatar(
-                        url = WPAvatarUtils.rewriteAvatarUrl(post.blogImageUrl, avatarSizePx),
+                        avatarUrl = post.blogImageUrl,
                         imageType = SiteUtils.getSiteImageType(post.isP2orA8C, BlavatarShape.CIRCULAR),
                         modifier = Modifier.padding(
                             start = dimensionResource(R.dimen.reader_a8c_avatar_margin_start_new)
@@ -323,12 +320,15 @@ internal fun ReaderXPostRow(post: ReaderPost, onClick: () -> Unit) {
 }
 
 @Composable
-private fun XPostAvatar(url: String?, imageType: ImageType, modifier: Modifier = Modifier) {
+private fun XPostAvatar(avatarUrl: String, imageType: ImageType, modifier: Modifier = Modifier) {
+    val size = dimensionResource(R.dimen.avatar_sz_extra_small)
+    val sizePx = with(LocalDensity.current) { size.roundToPx() }
+    val url = remember(avatarUrl, sizePx) { WPAvatarUtils.rewriteAvatarUrl(avatarUrl, sizePx) }
     AsyncImage(
         model = imageRequest(url, imageType),
         contentDescription = null,
         modifier = modifier
-            .size(dimensionResource(R.dimen.avatar_sz_extra_small))
+            .size(size)
             .background(MaterialTheme.colorScheme.surface, CircleShape)
             .clip(CircleShape)
     )
