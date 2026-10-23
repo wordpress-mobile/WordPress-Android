@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.pagesrs.screens
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -73,7 +74,8 @@ internal fun PageRsTabListScreen(
                 onPageClick = onPageClick,
                 onPageMenuAction = onPageMenuAction,
                 onRowsVisible = onRowsVisible,
-                density = density
+                density = density,
+                isSearching = isSearching
             )
         }
     }
@@ -90,7 +92,8 @@ private fun PageListContent(
     onPageClick: (Long) -> Unit,
     onPageMenuAction: (Long, PageRsMenuAction) -> Unit,
     onRowsVisible: (List<Long>) -> Unit,
-    density: ContentListDensity
+    density: ContentListDensity,
+    isSearching: Boolean
 ) {
     val listState = rememberLazyListState()
 
@@ -115,7 +118,8 @@ private fun PageListContent(
     LazyColumn(
         state = listState,
         modifier = Modifier.fillMaxSize(),
-        contentPadding = ContentListDefaults.FabClearancePadding
+        // The add-page FAB is hidden while searching, so there's nothing to clear.
+        contentPadding = if (isSearching) PaddingValues() else ContentListDefaults.FabClearancePadding
     ) {
         items(
             items = pages,
