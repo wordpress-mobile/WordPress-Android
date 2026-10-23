@@ -117,7 +117,8 @@ class NewStatsAnalyticsNamesTest {
                 StatsCardType.VIDEO_PLAYS to "videos",
                 StatsCardType.FILE_DOWNLOADS to "file_downloads",
                 StatsCardType.DEVICES to "devices",
-                StatsCardType.UTM to "utm"
+                StatsCardType.UTM to "utm",
+                StatsCardType.ARCHIVES to "archive"
             )
         )
     }
@@ -138,7 +139,8 @@ class NewStatsAnalyticsNamesTest {
                 StatsCardType.VIDEO_PLAYS to "top_list",
                 StatsCardType.FILE_DOWNLOADS to "top_list",
                 StatsCardType.DEVICES to "top_list",
-                StatsCardType.UTM to "top_list"
+                StatsCardType.UTM to "top_list",
+                StatsCardType.ARCHIVES to "top_list"
             )
         )
     }
