@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.os.BundleCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -514,7 +513,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListene
         }.apply {
             // the host activity's AppBarLayout uses this as its lift-on-scroll target
             id = R.id.reader_post_list
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
         }
     }
 
