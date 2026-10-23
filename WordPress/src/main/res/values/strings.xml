@@ -1735,6 +1735,19 @@
     <string name="stats_utm_medium">Medium</string>
     <string name="stats_utm_campaign">Campaign</string>
 
+    <!-- Archive Stats Card -->
+    <string name="stats_archives_title">Archives</string>
+    <string name="stats_archives_title_label">Archive pages</string>
+    <string name="stats_archives_section_search">Search terms</string>
+    <string name="stats_archives_section_categories">Categories</string>
+    <string name="stats_archives_section_tags">Tags</string>
+    <string name="stats_archives_section_authors">Authors</string>
+    <string name="stats_archives_section_dates">Dates</string>
+    <string name="stats_archives_section_error">Error</string>
+    <string name="stats_archives_section_aggregated">Aggregated</string>
+    <string name="stats_archives_section_other">Other</string>
+    <string name="stats_archives_section_taxonomies">Taxonomies</string>
+
     <!-- Subscribers Stats Cards -->
     <string name="stats_subscribers_all_time">All-time Subscribers</string>
     <string name="stats_subscribers_graph">Subscribers Graph</string>
