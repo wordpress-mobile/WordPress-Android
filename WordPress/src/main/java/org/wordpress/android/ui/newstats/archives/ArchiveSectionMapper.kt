@@ -43,6 +43,9 @@ private fun MostViewedChildData.toChildItem(maxEntries: Int): MostViewedChildIte
  * their own ("cat", "err"), so each one it can send gets a translated name, matching the names the
  * web lists them under. A key with no translation -- one the API gains after this was written -- is
  * spelled out from itself ("page_condition" -> "Page condition") rather than shown raw.
+ *
+ * The API's `home` group is deliberately absent: the request excludes it, as the web's does. See
+ * `StatsDataSourceImpl.buildArchivesParams`.
  */
 private fun ArchiveSectionItemData.sectionTitle(resourceProvider: ResourceProvider): String {
     val titleResId = when (key) {
@@ -60,9 +63,11 @@ private fun ArchiveSectionItemData.sectionTitle(resourceProvider: ResourceProvid
     return titleResId?.let { resourceProvider.getString(it) } ?: key.humanizeSlug()
 }
 
+// ROOT, not the device locale: the input is an ASCII API key, and Turkish would title-case its
+// leading "i" to a dotted "I".
 private fun String.humanizeSlug(): String = replace('_', ' ')
     .replace('-', ' ')
-    .replaceFirstChar { it.titlecase(Locale.getDefault()) }
+    .replaceFirstChar { it.titlecase(Locale.ROOT) }
 
 private const val SECTION_KEY_SEARCH = "search"
 private const val SECTION_KEY_CATEGORY = "cat"

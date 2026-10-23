@@ -638,6 +638,13 @@ class StatsDataSourceImpl @Inject constructor(
         // unset max as "default 10", so 0 is sent explicitly rather than mapped to null. The cap is
         // applied as a SQL LIMIT per day table, across all archive types at once, so a year of days
         // still yields thousands of entries -- enough to look unlimited without being so.
+        //
+        // `skipArchives` is left at its default of true, which is what the web sends whenever it
+        // shows this list. The server reads it as its own `migrate_archive_homepage` and drops the
+        // `home` group outright, so that group never reaches the app and needs no label. Were it
+        // ever set to false, labelling it would not be enough: the home group's entries carry the
+        // page id as their value, so the web labels them with the href instead, and collapses the
+        // group to a plain row when it holds only one.
         val maxParam = max.coerceAtLeast(0).toUInt()
         return when (dateRange) {
             is StatsDateRange.Preset -> StatsArchivesParams(
