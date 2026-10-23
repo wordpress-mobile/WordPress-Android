@@ -46,7 +46,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -191,9 +190,12 @@ private fun CommentCountChip(count: Int, modifier: Modifier = Modifier) {
             modifier = Modifier.size(CHIP_ICON_SIZE)
         )
         Text(
-            text = pluralStringResource(
-                R.plurals.content_list_comment_count,
-                count,
+            text = stringResource(
+                if (count == 1) {
+                    R.string.content_list_comment_count_singular
+                } else {
+                    R.string.content_list_comment_count_plural
+                },
                 NumberFormat.getIntegerInstance().format(count)
             ),
             style = MaterialTheme.typography.labelLarge,
