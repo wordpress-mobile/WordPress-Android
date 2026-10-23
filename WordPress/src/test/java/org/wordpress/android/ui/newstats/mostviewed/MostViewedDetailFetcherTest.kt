@@ -6,10 +6,15 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.repository.ArchiveSectionItemData
+import org.wordpress.android.ui.newstats.repository.ArchivesResult
 import org.wordpress.android.ui.newstats.repository.ClickItemData
 import org.wordpress.android.ui.newstats.repository.ClicksResult
 import org.wordpress.android.ui.newstats.repository.FileDownloadItemData
@@ -19,20 +24,25 @@ import org.wordpress.android.ui.newstats.repository.MostViewedItemData
 import org.wordpress.android.ui.newstats.repository.MostViewedResult
 import org.wordpress.android.ui.newstats.repository.SearchTermItemData
 import org.wordpress.android.ui.newstats.repository.SearchTermsResult
+import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.VideoPlayItemData
 import org.wordpress.android.ui.newstats.repository.VideoPlaysResult
+import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class MostViewedDetailFetcherTest : BaseUnitTest() {
     @Mock
     private lateinit var statsRepository: StatsRepository
 
+    @Mock
+    private lateinit var resourceProvider: ResourceProvider
+
     private lateinit var fetcher: MostViewedDetailFetcher
 
     @Before
     fun setUp() {
-        fetcher = MostViewedDetailFetcher(statsRepository)
+        fetcher = MostViewedDetailFetcher(statsRepository, resourceProvider)
     }
 
     // region Referrers
@@ -231,6 +241,95 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
         val error = fetcher.fetch(MostViewedDetailSource.FILE_DOWNLOADS, SITE_ID, PERIOD)
             as StatsCardFetchResult.Error
         assertThat(error.messageResId).isEqualTo(R.string.stats_error_unknown)
+    }
+    // endregion
+
+    // region Archives
+    @Test
+    fun `fetch archives maps groups into rows with their entries as children`() = test {
+        whenever(resourceProvider.getString(R.string.stats_archives_section_search)).thenReturn("Search terms")
+        whenever(statsRepository.fetchArchivesDetail(any(), any(), any())).thenReturn(
+            ArchivesResult.Success(
+                sections = listOf(
+                    ArchiveSectionItemData(
+                        key = "search",
+                        views = 30L,
+                        previousViews = 10L,
+                        entries = listOf(
+                            MostViewedChildData(name = "kotlin", url = "https://example.com/?s=kotlin", views = 20L),
+                            MostViewedChildData(name = "coroutines", url = null, views = 10L)
+                        )
+                    )
+                ),
+                totalViews = 30L,
+                totalViewsChange = 20L,
+                totalViewsChangePercent = 200.0
+            )
+        )
+
+        val result = fetcher.fetch(MostViewedDetailSource.ARCHIVES, SITE_ID, PERIOD)
+
+        val success = result as StatsCardFetchResult.Success
+        assertThat(success.items).hasSize(1)
+        assertThat(success.items[0].id).isEqualTo(0L)
+        assertThat(success.items[0].title).isEqualTo("Search terms")
+        assertThat(success.items[0].views).isEqualTo(30L)
+        assertThat(success.items[0].children.map { it.name }).containsExactly("kotlin", "coroutines")
+        assertThat(success.totalValue).isEqualTo(30L)
+        assertThat(success.totalValueChange).isEqualTo(20L)
+    }
+
+    @Test
+    fun `fetch archives keeps every entry of a group, unlike the card`() = test {
+        whenever(resourceProvider.getString(any())).thenReturn("Search terms")
+        whenever(statsRepository.fetchArchivesDetail(any(), any(), any())).thenReturn(
+            ArchivesResult.Success(
+                sections = listOf(
+                    ArchiveSectionItemData(
+                        key = "search",
+                        views = 60L,
+                        previousViews = 0L,
+                        entries = (1..60).map { MostViewedChildData(name = "term $it", url = null, views = 1L) }
+                    )
+                ),
+                totalViews = 60L,
+                totalViewsChange = 60L,
+                totalViewsChangePercent = 100.0
+            )
+        )
+
+        val result = fetcher.fetch(MostViewedDetailSource.ARCHIVES, SITE_ID, PERIOD)
+
+        assertThat((result as StatsCardFetchResult.Success).items[0].children).hasSize(60)
+    }
+
+    @Test
+    fun `fetch archives asks for the unbounded detail list, not the card's`() = test {
+        whenever(statsRepository.fetchArchivesDetail(any(), any(), any()))
+            .thenReturn(ArchivesResult.Error(R.string.stats_error_api))
+
+        fetcher.fetch(MostViewedDetailSource.ARCHIVES, SITE_ID, PERIOD, forceRefresh = true)
+
+        verify(statsRepository).fetchArchivesDetail(eq(SITE_ID), eq(PERIOD), eq(true))
+        verify(statsRepository, never()).fetchArchives(any(), any(), any())
+    }
+
+    @Test
+    fun `archives revalidation is checked against its own cache bucket`() = test {
+        fetcher.needsRevalidation(MostViewedDetailSource.ARCHIVES, SITE_ID, PERIOD)
+
+        verify(statsRepository).needsRevalidation(StatsCacheBucket.ARCHIVES_DETAIL, SITE_ID, PERIOD)
+    }
+
+    @Test
+    fun `fetch archives passes through the error message resId and auth flag`() = test {
+        whenever(statsRepository.fetchArchivesDetail(any(), any(), any()))
+            .thenReturn(ArchivesResult.Error(R.string.stats_error_auth, isAuthError = true))
+
+        val error = fetcher.fetch(MostViewedDetailSource.ARCHIVES, SITE_ID, PERIOD)
+            as StatsCardFetchResult.Error
+        assertThat(error.messageResId).isEqualTo(R.string.stats_error_auth)
+        assertThat(error.isAuthError).isTrue()
     }
     // endregion
 
