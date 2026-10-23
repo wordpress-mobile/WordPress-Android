@@ -1080,7 +1080,6 @@ class ReaderPostListViewModel @Inject constructor(
             items = buildItems(includePosts = emptyState == null),
             isRefreshing = isPullRefreshing || (updateActions.isNotEmpty() && !isOnlyLoadingOlder),
             isLoadingMore = isOnlyLoadingOlder,
-            isUpdating = updateActions.isNotEmpty(),
             // search results are brief snapshots, and a refresh can't start while another update is running
             canPullToRefresh = !isSearch && updateActions.isEmpty(),
             newPostsBarVisible = isNewPostsBarVisible,

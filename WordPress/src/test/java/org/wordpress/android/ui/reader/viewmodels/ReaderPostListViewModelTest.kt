@@ -370,7 +370,7 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             ReaderPostListEvent.UpdateStarted(ReaderTestUtils.createTag("dogs"), UpdateAction.REQUEST_NEWER)
         )
 
-        assertThat(viewModel.uiState.value.isUpdating).isFalse
+        assertThat(viewModel.uiState.value.isRefreshing).isFalse
     }
 
     @Test

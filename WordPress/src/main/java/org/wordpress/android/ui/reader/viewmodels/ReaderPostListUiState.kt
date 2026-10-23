@@ -28,7 +28,6 @@ data class ReaderPostListUiState(
     val items: List<ReaderPostListItem> = emptyList(),
     val isRefreshing: Boolean = false,
     val isLoadingMore: Boolean = false,
-    val isUpdating: Boolean = false,
     val canPullToRefresh: Boolean = false,
     val newPostsBarVisible: Boolean = false,
     val emptyState: ReaderPostListEmptyState? = null,
