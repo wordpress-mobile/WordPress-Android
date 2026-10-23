@@ -164,7 +164,7 @@ buildCache {
 
 def checkForRemoteBuildCacheOptimizedExperience() {
     assertDeveloperPropertiesMatch("${rootDir}/libs/fluxc/developer.properties")
-    checkJava21Amazon()
+    assertJava21Amazon()
 }
 
 def assertDeveloperPropertiesMatch(String developerPropertiesPath) {
@@ -182,14 +182,13 @@ def assertDeveloperPropertiesMatch(String developerPropertiesPath) {
     }
 }
 
-def checkJava21Amazon() {
+boolean assertJava21Amazon() {
     def version = System.getProperty("java.version")
     def expectedVersion = "21.0.6"
     def vendor = System.getProperty("java.vendor")
 
     if (!(version.contains(expectedVersion) && vendor.toLowerCase().contains("amazon"))) {
-        def yellow = "\u001B[33m"
-        def reset = "\u001B[0m"
-        logger.warn("${yellow}Java version is $version ($vendor), not $expectedVersion Amazon Corretto. This significantly reduces efficiency of remote build cache. Please set up the matching JDK.$reset")
+        logger.error("Java version: $version, vendor: $vendor")
+        throw new GradleException("Java version is not $expectedVersion or vendor is not Amazon Corretto. This significantly reduces efficiency of remote build cache. Please set up the matching JDK.")
     }
 }
