@@ -194,7 +194,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
         source: String
     ) {
         when (type) {
-            FOLLOW -> handleFollowClicked(post, source)
+            FOLLOW -> handleFollowSiteClicked(post.blogId, post.feedId, post.blogName, source)
             SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId, post.feedId)
             SHARE -> handleShareClicked(post, source)
             VISIT_SITE -> handleVisitSiteClicked(post)
@@ -315,11 +315,6 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
         followSite(ReaderSiteFollowUseCase.Param(blogId, feedId, blogName), source)
     }
-
-    private suspend fun handleFollowClicked(
-        post: ReaderPost,
-        source: String
-    ) = handleFollowSiteClicked(post.blogId, post.feedId, post.blogName, source)
 
     private fun showSignInPrompt() {
         _navigationEvents.postValue(Event(ReaderNavigationEvents.ShowLoginRequiredBottomSheet))

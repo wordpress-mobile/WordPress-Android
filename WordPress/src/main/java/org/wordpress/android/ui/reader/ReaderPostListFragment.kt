@@ -464,7 +464,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListene
 
     override fun onSaveInstanceState(outState: Bundle) {
         AppLog.d(AppLog.T.READER, "reader post list > saving instance state")
-        val args = postListViewModel.currentArgs(restorePosition = currentPosition)
+        val args = postListViewModel.currentArgs(restorePosition = listState.firstVisibleItemIndex)
 
         args.tag?.let { outState.putSerializable(ReaderConstants.ARG_TAG, it) }
         args.originalTag?.let { outState.putSerializable(ReaderConstants.ARG_ORIGINAL_TAG, it) }
@@ -491,30 +491,26 @@ class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListene
         super.onSaveInstanceState(outState)
     }
 
-    private val currentPosition: Int
-        get() = listState.firstVisibleItemIndex
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         val actions = buildActions()
-        return ReaderPostListComposeView(requireContext(), listState).apply {
+        return ReaderPostListComposeView(requireContext(), listState) {
+            AppThemeM3 {
+                val uiState by postListViewModel.uiState.collectAsStateWithLifecycle()
+                ReaderPostListScreen(
+                    uiState = uiState,
+                    listState = listState,
+                    isSearch = isSearching,
+                    actions = actions
+                )
+            }
+        }.apply {
             // the host activity's AppBarLayout uses this as its lift-on-scroll target
             id = R.id.reader_post_list
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                AppThemeM3 {
-                    val uiState by postListViewModel.uiState.collectAsStateWithLifecycle()
-                    ReaderPostListScreen(
-                        uiState = uiState,
-                        listState = listState,
-                        isSearch = isSearching,
-                        actions = actions
-                    )
-                }
-            }
         }
     }
 

@@ -6,10 +6,8 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -167,11 +165,11 @@ private fun PostListRow(item: ReaderPostListItem, actions: ReaderPostListActions
  */
 @Composable
 private fun KeepTopInViewOnPrepend(listState: LazyListState, firstKey: String?, scrollToPosition: Int?) {
-    val previousFirstKey = remember { arrayOfNulls<String>(1) }
+    val previousFirstKey = remember { PreviousKey() }
     // runs before this frame's measure, so the list still reports the position from before the change
     SideEffect {
-        val previous = previousFirstKey[0]
-        previousFirstKey[0] = firstKey
+        val previous = previousFirstKey.value
+        previousFirstKey.value = firstKey
         if (previous != null && firstKey != previous && scrollToPosition == null &&
             listState.firstVisibleItemIndex == 0
         ) {
@@ -179,6 +177,9 @@ private fun KeepTopInViewOnPrepend(listState: LazyListState, firstKey: String?, 
         }
     }
 }
+
+// a plain holder rather than state, since changing it mustn't trigger recomposition
+private class PreviousKey(var value: String? = null)
 
 @Composable
 private fun PendingScroll(listState: LazyListState, scrollToPosition: Int?, onScrollHandled: () -> Unit) {
@@ -245,12 +246,5 @@ private fun NewPostsBar(
                 )
             }
         }
-    }
-}
-
-@Composable
-internal fun ReaderPostListRowSurface(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
-    Surface(modifier = modifier.fillMaxWidth(), color = MaterialTheme.colorScheme.surface) {
-        Box { content() }
     }
 }

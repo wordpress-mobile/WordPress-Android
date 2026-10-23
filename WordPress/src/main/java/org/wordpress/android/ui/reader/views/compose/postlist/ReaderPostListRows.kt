@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader.views.compose.postlist
 import android.icu.text.CompactDecimalFormat
 import android.icu.text.NumberFormat
 import android.net.Uri
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,11 +32,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.ImageShader
 import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
@@ -80,6 +79,11 @@ private const val X_POST_TITLE_PREFIX = "X-post: "
 // Stateless, so one instance serves every avatar
 private val imagePlaceholders = ImagePlaceholderManager()
 
+@Composable
+private fun ReaderPostListRowSurface(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+    Surface(modifier = modifier.fillMaxWidth(), color = MaterialTheme.colorScheme.surface, content = content)
+}
+
 /**
  * The blog or feed being previewed, shown above its posts
  */
@@ -93,17 +97,12 @@ internal fun ReaderSiteHeader(
     ReaderPostListRowSurface {
         Column(modifier = Modifier.padding(Margin.ExtraLarge.value)) {
             info.imageUrl?.let { imageUrl ->
-                val context = LocalContext.current
                 val sizePx = with(LocalDensity.current) { blavatarSize.roundToPx() }
-                val imageType = SiteUtils.getSiteImageType(info.isP2orA8C, BlavatarShape.CIRCULAR)
                 AsyncImage(
-                    model = ImageRequest.Builder(context)
-                        .data(PhotonUtils.getPhotonImageUrl(imageUrl, sizePx, sizePx, PhotonUtils.Quality.HIGH))
-                        .apply {
-                            imagePlaceholders.getPlaceholderResource(imageType)?.let { placeholder(it) }
-                            imagePlaceholders.getErrorResource(imageType)?.let { error(it) }
-                        }
-                        .build(),
+                    model = imageRequest(
+                        url = PhotonUtils.getPhotonImageUrl(imageUrl, sizePx, sizePx, PhotonUtils.Quality.HIGH),
+                        imageType = SiteUtils.getSiteImageType(info.isP2orA8C, BlavatarShape.CIRCULAR)
+                    ),
                     contentDescription = null,
                     modifier = Modifier
                         .padding(bottom = Margin.ExtraLarge.value)
@@ -192,8 +191,8 @@ private fun subscriberCountText(count: Int): String {
  */
 @Composable
 internal fun ReaderTagHeader(item: ReaderPostListItem.TagHeader, onFollowClick: () -> Unit) {
-    // creative-writing -> Creative Writing
-    val locale = Locale.getDefault()
+    // creative-writing -> Creative Writing, in the app's language rather than the device's
+    val locale = LocalConfiguration.current.locales[0]
     val title = remember(item.label, locale) {
         item.label.split("-").joinToString(separator = " ") { word ->
             word.replaceFirstChar { it.titlecase(locale) }
@@ -209,7 +208,7 @@ internal fun ReaderTagHeader(item: ReaderPostListItem.TagHeader, onFollowClick: 
                 maxLines = HEADER_TITLE_MAX_LINES,
                 overflow = TextOverflow.Ellipsis
             )
-            Spacer(modifier = Modifier.padding(top = Margin.Medium.value))
+            Spacer(modifier = Modifier.height(Margin.Medium.value))
             FollowButton(
                 isFollowed = item.isFollowed,
                 isInProgress = item.isFollowActionRunning,
@@ -326,13 +325,7 @@ internal fun ReaderXPostRow(post: ReaderPost, onClick: () -> Unit) {
 @Composable
 private fun XPostAvatar(url: String?, imageType: ImageType, modifier: Modifier = Modifier) {
     AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(url)
-            .apply {
-                imagePlaceholders.getPlaceholderResource(imageType)?.let { placeholder(it) }
-                imagePlaceholders.getErrorResource(imageType)?.let { error(it) }
-            }
-            .build(),
+        model = imageRequest(url, imageType),
         contentDescription = null,
         modifier = modifier
             .size(dimensionResource(R.dimen.avatar_sz_extra_small))
@@ -340,6 +333,15 @@ private fun XPostAvatar(url: String?, imageType: ImageType, modifier: Modifier =
             .clip(CircleShape)
     )
 }
+
+@Composable
+private fun imageRequest(url: String?, imageType: ImageType) = ImageRequest.Builder(LocalContext.current)
+    .data(url)
+    .apply {
+        imagePlaceholders.getPlaceholderResource(imageType)?.let { placeholder(it) }
+        imagePlaceholders.getErrorResource(imageType)?.let { error(it) }
+    }
+    .build()
 
 // note that these strings don't need to be localized due to the intended audience
 private const val UNKNOWN_SITE = "(unknown)"
@@ -413,10 +415,10 @@ internal fun ReaderRemovedPostRow(post: ReaderPost, onClick: () -> Unit) {
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            Image(
+            Icon(
                 painter = painterResource(R.drawable.ic_undo_white_24dp),
                 contentDescription = null,
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+                tint = MaterialTheme.colorScheme.primary
             )
             Spacer(modifier = Modifier.width(Margin.Small.value))
             Text(
