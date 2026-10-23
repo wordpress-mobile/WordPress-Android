@@ -292,7 +292,6 @@ class EngagedPeopleListViewModel @Inject constructor(
 
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public override fun onCleared() {
-        super.onCleared()
         getLikesJob?.cancel()
         getLikesHandler.clear()
     }
