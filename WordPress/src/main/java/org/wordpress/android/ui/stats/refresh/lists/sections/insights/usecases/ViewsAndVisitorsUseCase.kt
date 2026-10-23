@@ -28,6 +28,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUse
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.UiState
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.ui.stats.refresh.utils.trimLeadingEmptyPeriods
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.ui.stats.refresh.utils.trackViewsVisitorsChips
@@ -156,6 +157,10 @@ class ViewsAndVisitorsUseCase
     ): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         if (domainModel.dates.isNotEmpty()) {
+            // Trim leading periods without data so the chart starts at the first period
+            // with actual data instead of misleading users with empty years/days.
+            // See https://github.com/wordpress-mobile/WordPress-Android/issues/21190
+            val dates = domainModel.dates.trimLeadingEmptyPeriods().ifEmpty { domainModel.dates.takeLast(1) }
             items.add(buildTitle())
 
             if (uiState.selectedPosition == 1) {
@@ -165,8 +170,8 @@ class ViewsAndVisitorsUseCase
             }
 
             val dateFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
-            val visibleLineCount = uiState.visibleLineCount ?: domainModel.dates.size
-            val availableDates = domainModel.dates.map {
+            val visibleLineCount = uiState.visibleLineCount ?: dates.size
+            val availableDates = dates.map {
                 statsDateFormatter.parseStatsDate(
                     statsGranularity,
                     it.period
@@ -177,11 +182,11 @@ class ViewsAndVisitorsUseCase
 
             selectedDateProvider.selectDate(selectedDate, availableDates.takeLast(visibleLineCount), statsGranularity)
 
-            val selectedItem = domainModel.dates.getOrNull(index) ?: domainModel.dates.last()
+            val selectedItem = dates.getOrNull(index) ?: dates.last()
 
             items.add(
                 viewsAndVisitorsMapper.buildTitle(
-                    domainModel.dates,
+                    dates,
                     statsGranularity = statsGranularity,
                     selectedItem,
                     uiState.selectedPosition
@@ -189,7 +194,7 @@ class ViewsAndVisitorsUseCase
             )
             items.addAll(
                 viewsAndVisitorsMapper.buildChart(
-                    domainModel.dates,
+                    dates,
                     statsGranularity,
                     this::onLineSelected,
                     this::onLineChartDrawn,
