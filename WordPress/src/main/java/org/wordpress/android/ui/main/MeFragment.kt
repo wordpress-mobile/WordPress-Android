@@ -584,6 +584,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             cardAvatar.visibility = View.VISIBLE
             rowMyProfile.visibility = View.VISIBLE
             myProfileDivider.visibility = View.VISIBLE
+            rowAccountSettings.visibility = View.VISIBLE
             accountSettingsDivider.visibility = View.VISIBLE
             loadAvatar(null)
             meUsername.text = getString(R.string.at_username, defaultAccount.userName)
