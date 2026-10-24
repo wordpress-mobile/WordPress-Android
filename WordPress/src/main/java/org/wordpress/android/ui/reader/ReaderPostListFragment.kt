@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.AndroidUiDispatcher
 import androidx.core.os.BundleCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -878,7 +879,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListene
     override fun onScrollToTop() {
         val listState = listState ?: return
         if (listState.firstVisibleItemIndex > 0) {
-            viewLifecycleOwner.lifecycleScope.launch { listState.animateScrollToItem(0) }
+            // animated scrolls need Compose's frame clock, which lifecycleScope doesn't provide
+            viewLifecycleOwner.lifecycleScope.launch(AndroidUiDispatcher.Main) { listState.animateScrollToItem(0) }
         }
     }
 
