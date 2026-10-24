@@ -52,6 +52,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEdito
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowNoSitesToReblog
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowLoginRequiredBottomSheet
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportUser
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
@@ -247,6 +248,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListene
                     ),
                     OpenUrlType.INTERNAL
                 )
+            }
+
+            is ShowLoginRequiredBottomSheet -> {
+                ReaderLoginRequiredBottomSheetFragment.newInstance()
+                    .show(childFragmentManager, ReaderLoginRequiredBottomSheetFragment.TAG)
             }
 
             else -> {
