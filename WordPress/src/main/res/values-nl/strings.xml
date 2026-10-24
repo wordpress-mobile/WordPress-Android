@@ -657,9 +657,6 @@ Language: nl
     <string name="notifications_action_mark_all_as_read">Alles als gelezen markeren</string>
     <string name="notifications_unread_content_description">Ongelezen</string>
     <string name="qrcode_media_deeplink_error">Site niet gevonden. Controleer of je op het juiste account bent ingelogd.</string>
-    <string name="gravatar_info_learn_more_link">Wat is Gravatar?</string>
-    <string name="gravatar_info_description">Als je je avatar, naam en beschrijving hier updatet, worden deze ook geüpdatet op alle sites waarop het Gravatar profiel wordt gebruikt.</string>
-    <string name="gravatar_info_title">Je WordPress.com profiel wordt mogelijk gemaakt door Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">Kan de media niet laden om te delen. Controleer de rechten van de app.\n        of gebruik de mediabibliotheek van de app.</string>
     <string name="site_monitoring_cannot_be_started">We kunnen de sitebewaking momenteel niet openen. Probeer het later opnieuw</string>
     <string name="site_monitoring_tab_title_web_server_logs">Webserver logs</string>

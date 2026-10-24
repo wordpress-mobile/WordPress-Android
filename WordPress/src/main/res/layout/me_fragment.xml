@@ -100,336 +100,260 @@
                 android:id="@+id/me_email_verification_compose_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_extra_large" />
+                android:layout_marginHorizontal="@dimen/content_margin" />
 
-            <LinearLayout
-                android:id="@+id/row_my_profile"
-                style="@style/MeListRowLayout">
+            <com.google.android.material.card.MaterialCardView
+                style="@style/MeListCard">
 
-                <ImageView
-                    android:id="@+id/me_my_profile_icon"
-                    style="@style/MeListRowIcon"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_user_white_24dp" />
-
-                <!-- Takes the icon's place while the editor is being opened, so sizes and margins match it -->
-                <ProgressBar
-                    android:id="@+id/me_my_profile_progress"
-                    style="?android:attr/progressBarStyleSmall"
-                    android:layout_width="@dimen/me_list_row_icon_size"
-                    android:layout_height="@dimen/me_list_row_icon_size"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="@dimen/margin_large"
-                    android:layout_marginTop="@dimen/margin_large"
-                    android:layout_marginEnd="@dimen/margin_extra_large"
-                    android:layout_marginBottom="@dimen/margin_large"
-                    android:visibility="gone" />
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/me_my_profile_text_view"
-                    style="@style/MeListRowTextView"
-                    android:text="@string/my_profile" />
-
-            </LinearLayout>
-
-            <View
-                android:id="@+id/my_profile_divider"
-                android:visibility="gone"
-                style="@style/MeListSectionDividerView"
-                tools:visibility="visible"/>
-
-            <LinearLayout
-                android:id="@+id/row_account_settings"
-                style="@style/MeListRowLayout">
-
-                <ImageView
-                    android:id="@+id/me_account_settings_icon"
-                    style="@style/MeListRowIcon"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_cog_white_24dp" />
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/me_account_settings_text_view"
-                    style="@style/MeListRowTextView"
-                    android:text="@string/account_settings" />
-
-            </LinearLayout>
-
-            <View
-                android:id="@+id/account_settings_divider"
-                android:visibility="gone"
-                style="@style/MeListSectionDividerView"
-                tools:visibility="visible"/>
-
-            <LinearLayout
-                android:id="@+id/row_scan_login_code"
-                style="@style/MeListRowLayout"
-                android:visibility="gone"
-                tools:visibility="visible">
-
-                <ImageView
-                    android:id="@+id/me_scan_login_code_icon"
-                    style="@style/MeListRowIcon"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_baseline_qr_code_scanner_white_24dp" />
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/me_scan_login_code_text_view"
-                    style="@style/MeListRowTextView"
-                    android:text="@string/me_btn_scan_login_code" />
-
-            </LinearLayout>
-
-            <View
-                android:id="@+id/scan_login_code_divider"
-                android:visibility="gone"
-                style="@style/MeListSectionDividerView"
-                tools:visibility="visible"/>
-
-            <LinearLayout
-                android:id="@+id/row_app_settings"
-                style="@style/MeListRowLayout">
-
-                <ImageView
-                    android:id="@+id/me_app_settings_icon"
-                    style="@style/MeListRowIcon"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_phone_white_24dp" />
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/me_app_settings_text_view"
-                    style="@style/MeListRowTextView"
-                    android:text="@string/me_btn_app_settings" />
-
-            </LinearLayout>
-
-            <View style="@style/MeListSectionDividerView" />
-
-            <LinearLayout
-                android:id="@+id/row_experimental_features_settings"
-                style="@style/MeListRowLayout">
-
-                <ImageView
-                    android:id="@+id/me_experimental_features_icon"
-                    style="@style/MeListRowIcon"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_science_24" />
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/me_open_experimental_features"
-                    style="@style/MeListRowTextView"
-                    android:text="@string/experimental_features_screen_title" />
-
-            </LinearLayout>
-
-            <View style="@style/MeListSectionDividerView" />
-
-            <LinearLayout
-                android:id="@+id/row_debug_settings"
-                android:visibility="gone"
-                style="@style/MeListRowLayout"
-                tools:visibility="visible">
-
-                <ImageView
-                    android:id="@+id/me_debug_settings_icon"
-                    style="@style/MeListRowIcon"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_cog_white_24dp" />
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/me_open_debug_settings"
-                    style="@style/MeListRowTextView"
-                    android:text="@string/preference_open_debug_settings" />
-
-            </LinearLayout>
-
-            <View
-                android:id="@+id/debug_settings_divider"
-                android:visibility="gone"
-                style="@style/MeListSectionDividerView"
-                tools:visibility="visible"/>
-
-            <LinearLayout
-                android:id="@+id/row_support"
-                style="@style/MeListRowLayout">
-
-                <ImageView
-                    android:id="@+id/me_support_icon"
-                    style="@style/MeListRowIcon"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_help_white_24dp" />
-
-                <org.wordpress.android.util.widgets.AutoResizeTextView
-                    style="@style/MeListRowTextView"
-                    android:text="@string/me_btn_help_and_support" />
-
-            </LinearLayout>
-
-            <View style="@style/MeListSectionDividerView" />
-
-            <LinearLayout
-                android:id="@+id/recommend_the_app_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <com.facebook.shimmer.ShimmerFrameLayout
-                    android:id="@+id/recommend_the_app_shimmer"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:shimmer_auto_start="false">
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:id="@+id/row_recommend_the_app"
+                        android:id="@+id/row_my_profile"
                         style="@style/MeListRowLayout">
 
                         <ImageView
-                            android:id="@+id/me_share_icon"
+                            android:id="@+id/me_my_profile_icon"
                             style="@style/MeListRowIcon"
                             android:contentDescription="@null"
-                            android:src="@drawable/ic_share_white_24dp" />
+                            android:src="@drawable/ic_user_white_24dp" />
 
-                        <org.wordpress.android.util.widgets.AutoResizeTextView
-                            android:id="@+id/me_share_text_view"
+                        <!-- Takes the icon's place while the editor is being opened, so sizes and margins match it -->
+                        <ProgressBar
+                            android:id="@+id/me_my_profile_progress"
+                            style="?android:attr/progressBarStyleSmall"
+                            android:layout_width="@dimen/me_list_row_icon_size"
+                            android:layout_height="@dimen/me_list_row_icon_size"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/margin_large"
+                            android:layout_marginTop="@dimen/margin_large"
+                            android:layout_marginEnd="@dimen/margin_extra_large"
+                            android:layout_marginBottom="@dimen/margin_large"
+                            android:visibility="gone" />
+
+                        <org.wordpress.android.widgets.WPTextView
+                            android:id="@+id/me_my_profile_text_view"
                             style="@style/MeListRowTextView"
-                            android:text="@string/me_btn_share" />
+                            android:text="@string/my_profile" />
 
                     </LinearLayout>
-                </com.facebook.shimmer.ShimmerFrameLayout>
 
-                <View style="@style/MeListSectionDividerView" />
-            </LinearLayout>
+                    <View
+                        android:id="@+id/my_profile_divider"
+                        android:visibility="gone"
+                        style="@style/MeListSectionDividerView"
+                        tools:visibility="visible"/>
 
-            <LinearLayout
-                android:id="@+id/about_the_app_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                    <LinearLayout
+                        android:id="@+id/row_account_settings"
+                        style="@style/MeListRowLayout">
+
+                        <ImageView
+                            android:id="@+id/me_account_settings_icon"
+                            style="@style/MeListRowIcon"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_cog_white_24dp" />
+
+                        <org.wordpress.android.widgets.WPTextView
+                            android:id="@+id/me_account_settings_text_view"
+                            style="@style/MeListRowTextView"
+                            android:text="@string/account_settings" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/account_settings_divider"
+                        android:visibility="gone"
+                        style="@style/MeListSectionDividerView"
+                        tools:visibility="visible"/>
+
+                    <LinearLayout
+                        android:id="@+id/row_scan_login_code"
+                        style="@style/MeListRowLayout"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                        <ImageView
+                            android:id="@+id/me_scan_login_code_icon"
+                            style="@style/MeListRowIcon"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_baseline_qr_code_scanner_white_24dp" />
+
+                        <org.wordpress.android.widgets.WPTextView
+                            android:id="@+id/me_scan_login_code_text_view"
+                            style="@style/MeListRowTextView"
+                            android:text="@string/me_btn_scan_login_code" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/scan_login_code_divider"
+                        android:visibility="gone"
+                        style="@style/MeListSectionDividerView"
+                        tools:visibility="visible"/>
+
+                    <LinearLayout
+                        android:id="@+id/row_app_settings"
+                        style="@style/MeListRowLayout">
+
+                        <ImageView
+                            android:id="@+id/me_app_settings_icon"
+                            style="@style/MeListRowIcon"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_phone_white_24dp" />
+
+                        <org.wordpress.android.widgets.WPTextView
+                            android:id="@+id/me_app_settings_text_view"
+                            style="@style/MeListRowTextView"
+                            android:text="@string/me_btn_app_settings" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/MeListCard">
 
                 <LinearLayout
-                    android:id="@+id/row_about_the_app"
-                    style="@style/MeListRowLayout">
-
-                    <ImageView
-                        android:id="@+id/me_about_icon"
-                        style="@style/MeListRowIcon"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_wordpress_white_24dp" />
-
-                    <org.wordpress.android.util.widgets.AutoResizeTextView
-                        android:id="@+id/me_about_text_view"
-                        style="@style/MeListRowTextView"
-                        android:text="@string/me_btn_about" />
-
-                </LinearLayout>
-
-                <View style="@style/MeListSectionDividerView" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/domain_management_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone"
-                >
-
-                <LinearLayout
-                    android:id="@+id/row_domain_management"
-                    style="@style/MeListRowLayout">
-
-                    <ImageView
-                        android:id="@+id/me_domains_icon"
-                        style="@style/MeListRowIcon"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_domains_white_24dp" />
-
-                    <org.wordpress.android.util.widgets.AutoResizeTextView
-                        android:id="@+id/me_domain_management_text_view"
-                        style="@style/MeListRowTextView"
-                        android:text="@string/domains_title" />
-
-                </LinearLayout>
-
-                <View style="@style/MeListSectionDividerView" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/row_logout"
-                style="@style/MeListRowLayout">
-
-                <ImageView
-                    android:id="@+id/me_login_logout_icon"
-                    style="@style/MeListRowIcon"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_sign_out_white_24dp" />
-
-                <org.wordpress.android.util.widgets.AutoResizeTextView
-                    android:id="@+id/me_login_logout_text_view"
-                    style="@style/MeListRowTextView"
-                    tools:text="@string/me_btn_login_logout" />
-
-            </LinearLayout>
-
-            <View style="@style/MeListSectionDividerView" />
-
-            <LinearLayout
-                android:id="@+id/gravatar_info_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingHorizontal="@dimen/margin_extra_small_large"
-                android:paddingTop="@dimen/margin_extra_small_large"
-                android:paddingBottom="@dimen/margin_extra_large"
-                android:layout_margin="@dimen/margin_extra_large"
-                android:background="@drawable/bg_wordpress_gravatar_info"
-                app:layout_constraintBottom_toTopOf="@+id/gravatar_sync_container"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/ic_logo_plus_gravatar" />
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/gravatar_title"
-                    style="@style/MyProfileLabel"
-                    app:fixWidowWords="true"
-                    android:layout_marginTop="@dimen/margin_extra_large"
-                    android:text="@string/gravatar_info_title"
-                    android:textStyle="bold"/>
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/gravatar_description"
-                    style="@style/MyProfileLabel"
-                    app:fixWidowWords="true"
-                    android:layout_marginTop="@dimen/margin_medium"
-                    android:text="@string/gravatar_info_description" />
-
-                <View
-                    android:id="@+id/divider"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="@dimen/margin_medium"
-                    android:layout_marginTop="@dimen/margin_large"
-                    android:background="?android:attr/listDivider"
-                    android:visibility="visible" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/learn_more_at_gravatar"
-                    style="@style/OverlayMigrationHelperText"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/gravatar_info_learn_more_link"
-                    android:textColor="@color/jetpack_green_50"
-                    app:drawableEndCompat="@drawable/ic_external_white_24dp"
-                    app:icon="@drawable/ic_external_white_24dp" />
+                    android:orientation="vertical">
 
-            </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/row_support"
+                        style="@style/MeListRowLayout">
+
+                        <ImageView
+                            android:id="@+id/me_support_icon"
+                            style="@style/MeListRowIcon"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_help_white_24dp" />
+
+                        <org.wordpress.android.util.widgets.AutoResizeTextView
+                            style="@style/MeListRowTextView"
+                            android:text="@string/me_btn_help_and_support" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/MeListCard">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/recommend_the_app_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <com.facebook.shimmer.ShimmerFrameLayout
+                            android:id="@+id/recommend_the_app_shimmer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:shimmer_auto_start="false">
+
+                            <LinearLayout
+                                android:id="@+id/row_recommend_the_app"
+                                style="@style/MeListRowLayout">
+
+                                <ImageView
+                                    android:id="@+id/me_share_icon"
+                                    style="@style/MeListRowIcon"
+                                    android:contentDescription="@null"
+                                    android:src="@drawable/ic_share_white_24dp" />
+
+                                <org.wordpress.android.util.widgets.AutoResizeTextView
+                                    android:id="@+id/me_share_text_view"
+                                    style="@style/MeListRowTextView"
+                                    android:text="@string/me_btn_share" />
+
+                            </LinearLayout>
+                        </com.facebook.shimmer.ShimmerFrameLayout>
+
+                        <View style="@style/MeListSectionDividerView" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/row_about_the_app"
+                        style="@style/MeListRowLayout">
+
+                        <ImageView
+                            android:id="@+id/me_about_icon"
+                            style="@style/MeListRowIcon"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_wordpress_white_24dp" />
+
+                        <org.wordpress.android.util.widgets.AutoResizeTextView
+                            android:id="@+id/me_about_text_view"
+                            style="@style/MeListRowTextView"
+                            android:text="@string/me_btn_about" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/MeListCard">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/domain_management_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        >
+
+                        <LinearLayout
+                            android:id="@+id/row_domain_management"
+                            style="@style/MeListRowLayout">
+
+                            <ImageView
+                                android:id="@+id/me_domains_icon"
+                                style="@style/MeListRowIcon"
+                                android:contentDescription="@null"
+                                android:src="@drawable/ic_domains_white_24dp" />
+
+                            <org.wordpress.android.util.widgets.AutoResizeTextView
+                                android:id="@+id/me_domain_management_text_view"
+                                style="@style/MeListRowTextView"
+                                android:text="@string/domains_title" />
+
+                        </LinearLayout>
+
+                        <View style="@style/MeListSectionDividerView" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/row_logout"
+                        style="@style/MeListRowLayout">
+
+                        <ImageView
+                            android:id="@+id/me_login_logout_icon"
+                            style="@style/MeListRowIcon"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_sign_out_white_24dp" />
+
+                        <org.wordpress.android.util.widgets.AutoResizeTextView
+                            android:id="@+id/me_login_logout_text_view"
+                            style="@style/MeListRowTextView"
+                            tools:text="@string/me_btn_login_logout" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

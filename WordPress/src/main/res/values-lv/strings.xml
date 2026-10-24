@@ -198,9 +198,6 @@ Language: lv
     <string name="gutenberg_native_edit_video_024aee6d" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Rediģēt videoklipu</string>
     <string name="gutenberg_native_video_caption_empty_663aab49" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Video paraksts. Tukšs</string>
     <string name="gutenberg_native_video_caption_s_0141bd20" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Video paraksts. %s</string>
-    <string name="gravatar_info_title">Jūsu WordPress.com profilu nodrošina Gravatar</string>
-    <string name="gravatar_info_description">Atjauninot savu avatāru, vārdu un informāciju par sevi šeit, tā tiks atjaunināta arī visās vietnēs, kas izmanto Gravatar profilus.</string>
-    <string name="gravatar_info_learn_more_link">Kas ir Gravatar?</string>
     <string name="qrcode_media_deeplink_error">Vietne nav atrasta. Pārbaudiet, vai esat pieteicies pareizajā kontā.</string>
     <string name="error_media_could_not_share_media_from_device">Nevar ielādēt multivides failus koplietošanai. Lūdzu, pārbaudiet lietotnes atļaujas vai izmantojiet lietotnes multivides bibliotēku.</string>
     <string name="site_monitoring_cannot_be_started">Šobrīd nevaram atvērt vietnes uzraudzību. Lūdzu, mēģiniet vēlreiz vēlāk.</string>
