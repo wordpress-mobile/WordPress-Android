@@ -201,7 +201,6 @@ Language: es_CL
     <string name="reader_label_choose_interests">Elige tus intereses</string>
     <string name="reader_label_subscribers_count_single">1 suscriptor</string>
     <string name="reader_toast_err_already_follow_this_blog">Ya estás suscrito a este blog.</string>
-    <string name="reader_toast_err_show_blog">No se puede mostrar este blog</string>
     <string name="reader_activity_title_blog_preview">Blog del lector</string>
     <string name="reader_activity_title_manage_tags_blogs">Gestionar etiquetas y blogs</string>
     <string name="reader_activity_title_tag_preview">Etiqueta</string>

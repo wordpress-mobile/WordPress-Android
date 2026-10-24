@@ -167,23 +167,6 @@
     </declare-styleable>
 
     <!--
-        FilteredRecyclerView
-    -->
-    <declare-styleable name="FilteredRecyclerView">
-        <!-- Optional: Default is false. Locks the toolbar and prevents scroll to hide/reveal functionality -->
-        <attr name="wpToolbarDisableScrollGestures" format="boolean"/>
-        <!-- Optional: Default to false. Hide the AppBarLayout. This flag was added as part of
-        ReaderPostListFragment refactoring. We don't need to use the FilteredRecyclerView in the
-        Reader anymore, but since it's planned to iteratively rewrite the ReaderPostListFragment
-        it's not worth replacing the FilteredRecyclerView with something else now. Therefore we
-        opted for a simple flag which hides the filtering options from the FilteredRecyclerView -->
-        <attr name="wpHideAppBarLayout" format="boolean"/>
-        <!-- Optional: Default is true. Include a default spacing between items, which can act as
-         a divider in case the RecyclerView background is different than each item's background-->
-        <attr name="wpIncludeDefaultSpacing" format="boolean"/>
-    </declare-styleable>
-
-    <!--
     WPTooltipView
     -->
     <declare-styleable name="WPTooltipView">

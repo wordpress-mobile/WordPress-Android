@@ -673,7 +673,6 @@ Language: zh_TW
     <string name="reader_toast_err_follow_not_authorized_to_access_blog">你沒有存取此網誌的權限</string>
     <string name="reader_toast_err_unable_to_follow_blog">無法訂閱此網誌</string>
     <string name="reader_toast_err_already_follow_this_blog">你已訂閱此網誌</string>
-    <string name="reader_toast_err_show_blog">無法顯示此網誌</string>
     <string name="reader_label_choose_interests">選擇你的興趣</string>
     <string name="reader_label_subscribers_count_single">1 名訂閱者</string>
     <string name="reader_label_subscribers_count">%s 名訂閱者</string>

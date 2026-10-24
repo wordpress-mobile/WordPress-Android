@@ -1,58 +1,43 @@
 package org.wordpress.android.ui.reader
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.TextUtils
-import android.text.style.ImageSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.widget.ProgressBar
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.AndroidUiDispatcher
 import androidx.core.os.BundleCompat
-import androidx.core.text.HtmlCompat
-import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SimpleItemAnimator
-import kotlinx.coroutines.launch
-import com.google.android.material.R as MaterialR
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderDatabase
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
-import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload
-import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.FilteredRecyclerView
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ViewPagerFragment
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.ChooseSiteActivity
 import org.wordpress.android.ui.main.WPMainActivity.OnActivityBackPressedListener
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
@@ -60,15 +45,15 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
 import org.wordpress.android.ui.reader.ReaderEvents.TagAdded
-import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener
+import org.wordpress.android.ui.reader.ReaderInterfaces.OnBlogInfoFailedListener
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
-import org.wordpress.android.ui.reader.adapters.ReaderPostListAdapter
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowNoSitesToReblog
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowLoginRequiredBottomSheet
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportUser
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
@@ -81,15 +66,12 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListArgs
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyButton
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListUiEvent
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostListUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
-import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView.OnBlogInfoFailedListener
-import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView.OnSubscriptionSettingsClickListener
-import org.wordpress.android.util.AniUtils
+import org.wordpress.android.ui.reader.views.compose.postlist.ReaderPostListActions
+import org.wordpress.android.ui.reader.views.compose.postlist.ReaderPostListComposeView
+import org.wordpress.android.ui.reader.views.compose.postlist.ReaderPostListScreen
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.NetworkUtils
@@ -97,25 +79,17 @@ import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
-import org.wordpress.android.util.extensions.getColorFromAttribute
-import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
-import org.wordpress.android.widgets.RecyclerItemDecoration
-import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import javax.inject.Inject
 
 @Suppress("LargeClass")
-class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivityBackPressedListener,
-    OnScrollToTopListener {
+class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListener, OnScrollToTopListener {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
     lateinit var dispatcher: Dispatcher
-
-    @Inject
-    lateinit var imageManager: ImageManager
 
     @Inject
     lateinit var seenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
@@ -126,20 +100,16 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
     @Inject
     lateinit var snackbarSequencer: SnackbarSequencer
 
-    private var postAdapter: ReaderPostListAdapter? = null
-
-    private lateinit var recyclerView: FilteredRecyclerView
-    private lateinit var newPostsBar: View
-    private lateinit var progressBar: ProgressBar
-
     private lateinit var postListViewModel: ReaderPostListViewModel
 
-    private var actionableEmptyView: ActionableEmptyView? = null
+    // created with each view, since it holds that view's layout. The position is kept here in between, so
+    // the list keeps it when the view is recreated from the back stack.
+    private var listState: LazyListState? = null
+    private var savedFirstVisibleIndex = 0
+    private var savedFirstVisibleOffset = 0
 
     private var isTopLevel = false
     private var wasPaused = false
-    private var isAnimatingOutNewPostsBar = false
-    private var lastRenderedState: ReaderPostListUiState? = null
 
     private var tagFragmentStartedWith: ReaderTag? = null
 
@@ -150,43 +120,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
     // This VM is initialized only on the Following tab
     private var subFilterViewModel: SubFilterViewModel? = null
     private var readerViewModel: ReaderViewModel? = null
-
-    /*
-     * called when user clicks on subscription settings button in the blog header
-     */
-    private val subscriptionSettingsClickListener =
-        OnSubscriptionSettingsClickListener { blogId, blogName, blogUrl ->
-            ReaderSubscriptionSettingsBottomSheetFragment.newInstance(
-                blogId = blogId,
-                blogName = blogName,
-                blogUrl = blogUrl
-            ).show(childFragmentManager, ReaderSubscriptionSettingsBottomSheetFragment.TAG)
-        }
-
-    private val adapterListener = object : ReaderPostListAdapter.Listener {
-        override val source: String
-            get() = postListViewModel.source
-        override val followListener: OnFollowListener
-            get() = this@ReaderPostListFragment
-        override val blogInfoFailedListener: OnBlogInfoFailedListener?
-            get() = activity as? OnBlogInfoFailedListener
-        override val subscriptionSettingsClickListener: OnSubscriptionSettingsClickListener
-            get() = this@ReaderPostListFragment.subscriptionSettingsClickListener
-
-        override fun onLastItemBound() = postListViewModel.onLoadMore()
-
-        override fun onXPostClicked(post: ReaderPost) = onPostSelected(post)
-
-        override fun onRemovedPostClicked(post: ReaderPost) {
-            if (!post.isBookmarked) {
-                onButtonClicked(post, ReaderPostCardActionType.BOOKMARK)
-            }
-        }
-
-        override fun onTagHeaderFollowClicked() = postListViewModel.onTagHeaderFollowClicked()
-
-        override fun onGapMarkerClicked() = postListViewModel.onGapMarkerClicked()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -253,7 +186,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerView.adapter = getPostAdapter()
         savedInstanceState?.let {
             postListViewModel.onViewRestored(it.getInt(ReaderConstants.KEY_RESTORE_POSITION))
         }
@@ -319,6 +251,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
                 )
             }
 
+            is ShowLoginRequiredBottomSheet -> {
+                ReaderLoginRequiredBottomSheetFragment.newInstance()
+                    .show(childFragmentManager, ReaderLoginRequiredBottomSheetFragment.TAG)
+            }
+
             else -> {
                 error("Action not supported in ReaderPostListFragment $navTarget")
             }
@@ -350,51 +287,12 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
             }
         }
 
-        lastRenderedState = null
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { postListViewModel.uiState.collect { renderState(it) } }
-                launch { postListViewModel.uiEvents.collect { handleUiEvent(it) } }
+                postListViewModel.uiEvents.collect { handleUiEvent(it) }
             }
         }
     }
-
-    private fun renderState(state: ReaderPostListUiState) {
-        val lastState = lastRenderedState
-        lastRenderedState = state
-
-        getPostAdapter().submitList(state.items) {
-            // the diff can finish after the view is destroyed - keep the scroll for the next view
-            if (view == null) return@submitList
-            state.scrollToPosition?.let { position ->
-                AppLog.d(AppLog.T.READER, "reader post list > scrolling to position $position")
-                recyclerView.scrollRecycleViewToPosition(position)
-                postListViewModel.onScrollHandled()
-            }
-        }
-
-        if (lastState?.progress() != state.progress()) {
-            updateProgressIndicators(state)
-        }
-
-        if (lastState?.newPostsBarVisible != state.newPostsBarVisible) {
-            if (state.newPostsBarVisible) showNewPostsBar() else hideNewPostsBar()
-        }
-
-        val isEmptyStateChanged = lastState == null || lastState.emptyState != state.emptyState ||
-                lastState.isUpdating != state.isUpdating
-        if (isEmptyStateChanged) {
-            val emptyState = state.emptyState
-            if (emptyState == null) {
-                hideEmptyView()
-            } else {
-                setEmptyView(emptyState, state.isUpdating)
-                showEmptyView()
-            }
-        }
-    }
-
-    private fun ReaderPostListUiState.progress() = Triple(isRefreshing, isLoadingMore, isUpdating)
 
     private fun handleUiEvent(event: ReaderPostListUiEvent) {
         when (event) {
@@ -420,6 +318,13 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
             ReaderPostListUiEvent.SetDefaultSubfilter -> subFilterViewModel?.setDefaultSubfilter(false)
             ReaderPostListUiEvent.NoConnection -> NetworkUtils.checkConnection(requireContext())
             ReaderPostListUiEvent.DataLoaded -> onDataLoaded()
+            ReaderPostListUiEvent.BlogInfoFailed -> (activity as? OnBlogInfoFailedListener)?.onBlogInfoFailed()
+            is ReaderPostListUiEvent.ShowSubscriptionSettings ->
+                ReaderSubscriptionSettingsBottomSheetFragment.newInstance(
+                    blogId = event.blogId,
+                    blogName = event.blogName,
+                    blogUrl = event.blogHost
+                ).show(childFragmentManager, ReaderSubscriptionSettingsBottomSheetFragment.TAG)
         }
     }
 
@@ -488,14 +393,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
         postListViewModel.onFragmentPause(isTopLevel, isSearching, isFilterableScreen)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
-        /*
-         * This is a workaround for https://github.com/wordpress-mobile/WordPress-Android/issues/11985.
-         * The RecyclerView doesn't get redrawn correctly when the adapter finishes its initialization in onStart.
-         */
-        getPostAdapter().notifyDataSetChanged()
         if (wasPaused) {
             AppLog.d(AppLog.T.READER, "reader post list > resumed from paused state")
             wasPaused = false
@@ -567,14 +466,15 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
 
     override fun onStop() {
         super.onStop()
-        newPostsBar.clearAnimation()
         dispatcher.unregister(this)
         postListViewModel.onStop()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         AppLog.d(AppLog.T.READER, "reader post list > saving instance state")
-        val args = postListViewModel.currentArgs(restorePosition = currentPosition)
+        val args = postListViewModel.currentArgs(
+            restorePosition = listState?.firstVisibleItemIndex ?: savedFirstVisibleIndex
+        )
 
         args.tag?.let { outState.putSerializable(ReaderConstants.ARG_TAG, it) }
         args.originalTag?.let { outState.putSerializable(ReaderConstants.ARG_ORIGINAL_TAG, it) }
@@ -601,99 +501,59 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
         super.onSaveInstanceState(outState)
     }
 
-    // a detached fragment (e.g. an inactive main tab restored after process death) never creates its view
-    private val currentPosition: Int
-        get() = if (::recyclerView.isInitialized) recyclerView.currentPosition else -1
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val rootView =
-            inflater.inflate(R.layout.reader_fragment_post_cards, container, false) as ViewGroup
-        recyclerView = rootView.findViewById(R.id.reader_recycler_view)
-
-        actionableEmptyView = rootView.findViewById(R.id.empty_custom_view)
-
-        setupRecycler()
-        setupRecyclerFilterListener()
-
-        // bar that appears at top after new posts are loaded
-        newPostsBar = rootView.findViewById(R.id.layout_new_posts)
-        newPostsBar.visibility = View.GONE
-        isAnimatingOutNewPostsBar = false
-        newPostsBar.setOnClickListener {
-            recyclerView.scrollRecycleViewToPosition(0)
-            postListViewModel.reload()
+        val actions = buildActions()
+        val listState = LazyListState(savedFirstVisibleIndex, savedFirstVisibleOffset).also { listState = it }
+        return ReaderPostListComposeView(requireContext(), listState) {
+            AppThemeM3 {
+                val uiState by postListViewModel.uiState.collectAsStateWithLifecycle()
+                ReaderPostListScreen(
+                    uiState = uiState,
+                    listState = listState,
+                    actions = actions
+                )
+            }
+        }.apply {
+            // the host activity's AppBarLayout uses this as its lift-on-scroll target
+            id = R.id.reader_post_list
         }
-
-        // progress bar that appears when loading more posts
-        progressBar = rootView.findViewById(R.id.progress_footer)
-        progressBar.visibility = View.GONE
-
-        return rootView
     }
 
-    private fun setupRecycler() {
-        recyclerView.setBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(), R.color.reader_post_list_background
-            )
-        )
-
-        // add the item decoration (dividers) to the recycler, skipping the first item if the first
-        // item is the tag toolbar (shown when viewing posts in followed tags) - this is to avoid
-        // having the tag toolbar take up more vertical space than necessary
-        val spacingVerticalRes = R.dimen.reader_card_gutters
-        val spacingHorizontal = resources.getDimensionPixelSize(R.dimen.reader_card_margin)
-        val spacingVertical = resources.getDimensionPixelSize(spacingVerticalRes)
-        recyclerView.addItemDecoration(
-            RecyclerItemDecoration(
-                spacingHorizontal,
-                spacingVertical,
-                false
-            )
-        )
-
-        // add a proper item divider to the RecyclerView
-        recyclerView.addItemDivider(R.drawable.default_list_divider)
-
-        recyclerView.setToolbarBackgroundColor(0)
-
-        if (isTopLevel) {
-            recyclerView.setToolbarTitle(
-                R.string.reader_screen_title,
-                resources.getDimensionPixelSize(R.dimen.margin_extra_large)
-            )
-        } else {
-            recyclerView.setToolbarLeftAndRightPadding(
-                resources.getDimensionPixelSize(R.dimen.margin_medium),
-                resources.getDimensionPixelSize(R.dimen.margin_extra_large)
-            )
+    override fun onDestroyView() {
+        super.onDestroyView()
+        listState?.let {
+            savedFirstVisibleIndex = it.firstVisibleItemIndex
+            savedFirstVisibleOffset = it.firstVisibleItemScrollOffset
         }
-
-        recyclerView.setSwipeToRefreshEnabled(isSwipeToRefreshSupported)
-
-        // rows are diffed rather than redrawn with notifyDataSetChanged, so skip the change crossfade
-        (recyclerView.internalRecyclerView.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
-
-        // the view model decides whether to show the "new posts" bar based on whether the first item is visible
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(rv: RecyclerView, dx: Int, dy: Int) {
-                postListViewModel.onFirstItemVisibilityChanged(recyclerView.isFirstItemVisible)
-            }
-        })
+        listState = null
     }
 
-    private fun setupRecyclerFilterListener() {
-        recyclerView.setFilterListener { forced ->
-            if (forced) {
-                readerTracker.track(AnalyticsTracker.Stat.READER_PULL_TO_REFRESH)
-            }
+    private fun buildActions() = ReaderPostListActions(
+        onRefresh = {
+            readerTracker.track(AnalyticsTracker.Stat.READER_PULL_TO_REFRESH)
             postListViewModel.onPullToRefresh()
+        },
+        onLoadMore = postListViewModel::onLoadMore,
+        onScrollHandled = postListViewModel::onScrollHandled,
+        onFirstItemVisibilityChanged = postListViewModel::onFirstItemVisibilityChanged,
+        onNewPostsBarClicked = postListViewModel::reload,
+        onNewPostsBarScrolledAway = postListViewModel::onNewPostsBarScrolledAway,
+        onEmptyStateButtonClicked = postListViewModel::onEmptyStateButtonTapped,
+        onGapMarkerClicked = postListViewModel::onGapMarkerClicked,
+        onTagHeaderFollowClicked = postListViewModel::onTagHeaderFollowClicked,
+        onSiteHeaderFollowClicked = postListViewModel::onSiteHeaderFollowClicked,
+        onSiteHeaderSettingsClicked = postListViewModel::onSiteHeaderSettingsClicked,
+        onXPostClicked = ::onPostSelected,
+        onRemovedPostClicked = { post ->
+            if (!post.isBookmarked) {
+                onButtonClicked(post, ReaderPostCardActionType.BOOKMARK)
+            }
         }
-    }
+    )
 
     private val isSearching: Boolean
         get() = postListViewModel.listType == ReaderPostListType.SEARCH_RESULTS
@@ -713,186 +573,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
         val coordinator =
             requireActivity().findViewById<View>(R.id.coordinator_layout)
         return coordinator ?: view
-    }
-
-    private fun setEmptyView(emptyState: ReaderPostListEmptyState, isUpdating: Boolean) {
-        val emptyView = actionableEmptyView ?: return
-        val isSearchState = emptyState is ReaderPostListEmptyState.SearchUpdating ||
-                emptyState is ReaderPostListEmptyState.SearchNoResults
-        emptyView.updateLayoutForSearch(isSearchState, 0)
-        emptyView.subtitle.contentDescription = null
-
-        // Ensure the default image is reset for empty views before applying logic
-        emptyView.image.setImageResource(0)
-
-        when (emptyState) {
-            ReaderPostListEmptyState.SelfHostedCta -> setEmptyViewForSelfHostedCta(emptyView)
-            ReaderPostListEmptyState.Bookmarks -> setEmptyViewForBookmarksList(emptyView)
-            else -> setEmptyViewForPosts(emptyView, emptyState, isUpdating)
-        }
-    }
-
-    @Suppress("LongMethod", "CyclomaticComplexMethod")
-    private fun setEmptyViewForPosts(
-        emptyView: ActionableEmptyView,
-        emptyState: ReaderPostListEmptyState,
-        isUpdating: Boolean
-    ) {
-        var title: String? = null
-        var description: String? = null
-        var button: ReaderPostListEmptyButton? = null
-        var isImageHidden = false
-        when (emptyState) {
-            // handled by setEmptyView()
-            ReaderPostListEmptyState.SelfHostedCta, ReaderPostListEmptyState.Bookmarks -> Unit
-
-            ReaderPostListEmptyState.NoConnection -> title = getString(R.string.reader_empty_posts_no_connection)
-            is ReaderPostListEmptyState.RequestFailed -> title = getString(
-                if (emptyState.isSearch) {
-                    R.string.reader_empty_search_request_failed
-                } else {
-                    R.string.reader_empty_posts_request_failed
-                }
-            )
-
-            ReaderPostListEmptyState.Updating -> title = getString(R.string.reader_empty_posts_in_tag_updating)
-            ReaderPostListEmptyState.FollowedSitesNoRecentPosts -> {
-                title = getString(R.string.reader_empty_followed_blogs_no_recent_posts_title)
-                description = getString(R.string.reader_empty_followed_blogs_subscribed_no_recent_posts_description)
-                button = ReaderPostListEmptyButton.DISCOVER
-                isImageHidden = true
-            }
-
-            ReaderPostListEmptyState.NoFollowedSites -> {
-                title = getString(R.string.reader_no_followed_blogs_title)
-                description = getString(R.string.reader_no_followed_blogs_description)
-                button = ReaderPostListEmptyButton.DISCOVER
-                isImageHidden = true
-            }
-
-            ReaderPostListEmptyState.NoLikedPosts -> {
-                title = getString(R.string.reader_empty_posts_liked_title)
-                description = getString(R.string.reader_empty_posts_liked_description)
-                button = ReaderPostListEmptyButton.FOLLOWED
-            }
-
-            ReaderPostListEmptyState.NoPostsInList ->
-                title = getString(R.string.reader_empty_blogs_posts_in_custom_list)
-            ReaderPostListEmptyState.NoPostsWithTag -> title = getString(R.string.reader_no_posts_with_this_tag)
-            ReaderPostListEmptyState.NoPostsInBlog -> title = getString(R.string.reader_no_posts_in_blog)
-            ReaderPostListEmptyState.SearchUpdating -> {
-                // not null - WPTextView.setText() crashes on a null title
-                title = ""
-                isImageHidden = true
-            }
-
-            is ReaderPostListEmptyState.SearchNoResults -> {
-                title = getString(R.string.reader_empty_search_title)
-                description = String.format(
-                    getString(R.string.reader_empty_search_description),
-                    "<em>${emptyState.query}</em>"
-                )
-                isImageHidden = true
-            }
-        }
-
-        emptyView.image.visibility = if (!isUpdating && !isImageHidden) View.VISIBLE else View.GONE
-        emptyView.title.text = title
-
-        if (description == null) {
-            emptyView.subtitle.visibility = View.GONE
-        } else {
-            emptyView.subtitle.visibility = View.VISIBLE
-            emptyView.subtitle.text = if (description.contains("<") && description.contains(">")) {
-                HtmlCompat.fromHtml(description, HtmlCompat.FROM_HTML_MODE_LEGACY)
-            } else {
-                description
-            }
-        }
-
-        if (button == null) {
-            emptyView.button.visibility = View.GONE
-        } else {
-            emptyView.button.visibility = View.VISIBLE
-            emptyView.button.setText(emptyButtonTextRes(button))
-            emptyView.button.setOnClickListener { postListViewModel.onEmptyStateButtonTapped(button) }
-        }
-    }
-
-    @StringRes
-    private fun emptyButtonTextRes(button: ReaderPostListEmptyButton) = when (button) {
-        ReaderPostListEmptyButton.DISCOVER -> R.string.reader_no_followed_blogs_button_discover
-        ReaderPostListEmptyButton.FOLLOWED -> R.string.reader_empty_followed_blogs_button_subscriptions
-    }
-
-    /*
-     * Currently, only local bookmarks are supported.  Show an empty view if the local database has no data.
-     */
-    private fun setEmptyViewForBookmarksList(emptyView: ActionableEmptyView) {
-        // replace %s placeholder with bookmark outline icon
-        val description = getString(R.string.reader_empty_saved_posts_description)
-        val ssb = SpannableStringBuilder(description)
-        val imagePlaceholderPosition = description.indexOf("%s")
-        addBookmarkImageSpan(ssb, imagePlaceholderPosition)
-        emptyView.image.visibility = View.VISIBLE
-        emptyView.title.setText(R.string.reader_empty_saved_posts_title)
-        emptyView.subtitle.text = ssb
-        emptyView.subtitle.contentDescription =
-            getString(R.string.reader_empty_saved_posts_content_description)
-        emptyView.subtitle.visibility = View.VISIBLE
-        emptyView.button.setText(R.string.reader_no_followed_blogs_button_discover)
-        emptyView.button.visibility = View.VISIBLE
-        emptyView.button.setOnClickListener {
-            postListViewModel.onEmptyStateButtonTapped(ReaderPostListEmptyButton.DISCOVER)
-        }
-    }
-
-    private fun setEmptyViewForSelfHostedCta(emptyView: ActionableEmptyView) {
-        emptyView.image.visibility = View.VISIBLE
-        emptyView.title.text = getString(R.string.reader_empty_subscriptions)
-        emptyView.subtitle.visibility = View.GONE
-        emptyView.button.setText(R.string.reader_no_followed_blogs_button_discover)
-        emptyView.button.setOnClickListener {
-            postListViewModel.onEmptyStateButtonTapped(ReaderPostListEmptyButton.DISCOVER)
-        }
-    }
-
-    private fun addBookmarkImageSpan(ssb: SpannableStringBuilder, imagePlaceholderPosition: Int) {
-        val drawable = ContextCompat.getDrawable(
-            requireContext(),
-            R.drawable.ic_bookmark_grey_dark_18dp
-        )
-
-        val tint = requireContext().getColorFromAttribute(MaterialR.attr.colorOnBackground)
-        drawable?.setTint(tint)
-        drawable?.alpha = BOOKMARK_IMAGE_ALPHA
-
-        drawable!!.setBounds(
-            0,
-            0,
-            (drawable.intrinsicWidth * BOOKMARK_IMAGE_MULTIPLIER).toInt(),
-            (drawable.intrinsicHeight * BOOKMARK_IMAGE_MULTIPLIER).toInt()
-        )
-        ssb.setSpan(
-            ImageSpan(drawable), imagePlaceholderPosition, imagePlaceholderPosition + 2,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-    }
-
-    private fun showEmptyView() {
-        if (isAdded) {
-            actionableEmptyView!!.visibility = View.VISIBLE
-            // the search screen hides this list rather than removing it, so don't announce while hidden
-            if (isListShown) {
-                actionableEmptyView!!.announceEmptyStateForAccessibility()
-            }
-        }
-    }
-
-    private fun hideEmptyView() {
-        if (isAdded) {
-            actionableEmptyView!!.visibility = View.GONE
-        }
     }
 
     private val isListShown: Boolean
@@ -932,25 +612,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
         announceListStateForAccessibility()
     }
 
-    private fun getPostAdapter(): ReaderPostListAdapter {
-        return postAdapter ?: ReaderPostListAdapter(imageManager, readerTracker, adapterListener).also {
-            AppLog.d(AppLog.T.READER, "reader post list > creating post adapter")
-            it.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-                override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                    // RecyclerView keeps the current first row in place when rows are inserted above it, so
-                    // newer posts would land above the screen - keep the top in view instead
-                    if (positionStart == 0 && recyclerView.isFirstItemVisible) {
-                        recyclerView.scrollRecycleViewToPosition(0)
-                    }
-                }
-            })
-            postAdapter = it
-        }
-    }
-
-    override fun getScrollableViewForUniqueIdProvision(): View? {
-        return recyclerView.internalRecyclerView
-    }
+    override fun getScrollableViewForUniqueIdProvision(): View? = view
 
     /*
      * called by the activity when user hits the back button - returns true if the back button
@@ -958,92 +620,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
      */
     override fun onActivityBackPressed(): Boolean {
         return postListViewModel.goBackInTagHistory()
-    }
-
-    /*
-    * show/hide progress bar which appears at the bottom of the activity when loading more posts
-    */
-    private fun showLoadingProgress(showProgress: Boolean) {
-        if (isAdded) {
-            if (showProgress) {
-                progressBar.bringToFront()
-                progressBar.visibility = View.VISIBLE
-            } else {
-                progressBar.visibility = View.GONE
-            }
-        }
-    }
-
-    private fun updateProgressIndicators(state: ReaderPostListUiState) {
-        // if only older posts are being updated, show only the bottom progress bar, otherwise
-        // show only the swipe-to-refresh progress bar
-        showLoadingProgress(state.isLoadingMore)
-        recyclerView.isRefreshing = state.isRefreshing
-
-        // if swipe-to-refresh isn't active, keep it disabled during an update - this prevents
-        // doing a refresh while another update is already in progress
-        if (!recyclerView.isRefreshing) {
-            recyclerView.setSwipeToRefreshEnabled(!state.isUpdating && isSwipeToRefreshSupported)
-        }
-    }
-
-    /*
-     * swipe-to-refresh isn't supported for search results since they're really brief snapshots
-     * and are unlikely to show new posts due to the way they're sorted
-     */
-    private val isSwipeToRefreshSupported: Boolean
-        get() = !isSearching
-
-    /*
-     * bar that appears at the top when new posts have been retrieved
-     */
-    private fun isNewPostsBarShowing() = newPostsBar.isVisible
-
-    private fun showNewPostsBar() {
-        if (!isAdded || isNewPostsBarShowing()) {
-            return
-        }
-
-        AniUtils.startAnimation(newPostsBar, R.anim.reader_top_bar_in)
-        newPostsBar.visibility = View.VISIBLE
-
-        // assign the scroll listener to hide the bar when the recycler is scrolled, but don't assign
-        // it right away since the user may be scrolling when the bar appears (which would cause it
-        // to disappear as soon as it's displayed)
-        recyclerView.postDelayed({
-            if (isAdded && isNewPostsBarShowing()) {
-                recyclerView.addOnScrollListener(onRecyclerScrollListener)
-            }
-        }, RECYCLER_DELAY_MS)
-    }
-
-    private fun hideNewPostsBar() {
-        if (!isAdded || !isNewPostsBarShowing() || isAnimatingOutNewPostsBar) {
-            return
-        }
-
-        isAnimatingOutNewPostsBar = true
-
-        // remove the onScrollListener assigned in showNewPostsBar()
-        recyclerView.removeOnScrollListener(onRecyclerScrollListener)
-
-        val listener: Animation.AnimationListener = object : Animation.AnimationListener {
-            override fun onAnimationStart(animation: Animation) {
-                // noop
-            }
-
-            override fun onAnimationEnd(animation: Animation) {
-                if (isAdded) {
-                    newPostsBar.visibility = View.GONE
-                    isAnimatingOutNewPostsBar = false
-                }
-            }
-
-            override fun onAnimationRepeat(animation: Animation) {
-                // noop
-            }
-        }
-        AniUtils.startAnimation(newPostsBar, R.anim.reader_top_bar_out, listener)
     }
 
     /*
@@ -1152,18 +728,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
         )
     }
 
-    /*
-     * scroll listener assigned to the recycler when the "new posts" bar is shown to hide
-     * it upon scrolling
-     */
-    private val onRecyclerScrollListener: RecyclerView.OnScrollListener =
-        object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                postListViewModel.onNewPostsBarScrolledAway()
-            }
-        }
-
     @Suppress("LongMethod")
     private fun onButtonClicked(post: ReaderPost, actionType: ReaderPostCardActionType) {
         val source = postListViewModel.source
@@ -1271,52 +835,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
         }
     }
 
-    override fun onFollowTapped(view: View, blogName: String, blogId: Long, feedId: Long) {
-        dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
-
-        val blog = if (TextUtils.isEmpty(blogName))
-            getString(R.string.reader_followed_blog_notifications_this)
-        else
-            blogName
-
-        if (blogId > 0) {
-            make(
-                view = getSnackbarParent()!!,
-                text = HtmlCompat.fromHtml(
-                    getString(R.string.reader_followed_blog_notifications, "<b>", blog, "</b>"),
-                    HtmlCompat.FROM_HTML_MODE_LEGACY
-                ),
-                duration = Snackbar.LENGTH_LONG
-            ).setAction(
-                getString(R.string.reader_followed_blog_notifications_action)
-            ) {
-                readerTracker.trackBlog(
-                    AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED,
-                    blogId,
-                    feedId
-                )
-                val payload = AddOrDeleteSubscriptionPayload(
-                    blogId.toString(), SubscriptionAction.NEW
-                )
-                dispatcher.dispatch(
-                    AccountActionBuilder.newUpdateSubscriptionNotificationPostAction(
-                        payload
-                    )
-                )
-                ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true)
-            }.show()
-        }
-    }
-
-    override fun onFollowingTapped() {
-        dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
-    }
-
-    override fun onFollowTappedWhenLoggedOut() {
-        ReaderLoginRequiredBottomSheetFragment.newInstance()
-            .show(childFragmentManager, ReaderLoginRequiredBottomSheetFragment.TAG)
-    }
-
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSubscriptionUpdated(event: OnSubscriptionUpdated) {
@@ -1359,8 +877,10 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
     }
 
     override fun onScrollToTop() {
-        if (isAdded && currentPosition > 0) {
-            recyclerView.smoothScrollToPosition(0)
+        val listState = listState ?: return
+        if (listState.firstVisibleItemIndex > 0) {
+            // animated scrolls need Compose's frame clock, which lifecycleScope doesn't provide
+            viewLifecycleOwner.lifecycleScope.launch(AndroidUiDispatcher.Main) { listState.animateScrollToItem(0) }
         }
     }
 
@@ -1381,9 +901,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnFollowListener, OnActivity
         get() = tagFragmentStartedWith != null && tagFragmentStartedWith!!.isFollowedSites
 
     companion object {
-        private const val RECYCLER_DELAY_MS = 1000L
-        private const val BOOKMARK_IMAGE_MULTIPLIER = 1.2
-        private const val BOOKMARK_IMAGE_ALPHA = 150
         private const val READER_FEATURED_IMAGE_ASPECT_RATIO = 16 / 9f
         private const val KEY_TAG_PREVIEW_HISTORY = "tag_preview_history"
         private var hasPurgedReaderDb = false

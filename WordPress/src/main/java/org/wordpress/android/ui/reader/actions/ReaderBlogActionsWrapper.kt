@@ -69,7 +69,7 @@ class ReaderBlogActionsWrapper @Inject constructor(
 
     fun updateBlogInfo(blogId: Long, feedId: Long, blogUrl: String?, infoListener: UpdateBlogInfoListener) =
         if (readerUtilsWrapper.isExternalFeed(blogId, feedId)) {
-            ReaderBlogActions.updateFeedInfo(blogId, blogUrl, infoListener)
+            ReaderBlogActions.updateFeedInfo(feedId, blogUrl, infoListener)
         } else {
             ReaderBlogActions.updateBlogInfo(blogId, blogUrl, infoListener)
         }

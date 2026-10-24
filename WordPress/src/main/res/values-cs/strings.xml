@@ -677,7 +677,6 @@ Language: cs_CZ
     <string name="reader_toast_err_follow_not_authorized_to_access_blog">Nemáte oprávnění k přístupu k tomuto blogu</string>
     <string name="reader_toast_err_unable_to_follow_blog">Přihlášení k odběru tohoto blogu se nezdařilo</string>
     <string name="reader_toast_err_already_follow_this_blog">K odběru tohoto blogu jste již přihlášeni</string>
-    <string name="reader_toast_err_show_blog">Tento blog nelze zobrazit</string>
     <string name="reader_label_choose_interests">Vyberte své zájmy</string>
     <string name="reader_label_subscribers_count_single">1 odběratel</string>
     <string name="reader_label_subscribers_count">%s odběratelů</string>

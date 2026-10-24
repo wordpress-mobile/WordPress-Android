@@ -678,7 +678,6 @@ Language: gl_ES
     <string name="reader_toast_posts_from_this_blog_blocked">As entradas deste blog xa non se mostrarán</string>
     <string name="reader_label_subscribers_count_single">1 subscritor</string>
     <string name="reader_label_choose_interests">Elixe os teus intereses</string>
-    <string name="reader_toast_err_show_blog">Non se pode amosar este blog</string>
     <string name="reader_toast_err_already_follow_this_blog">Xa estás subscrito a este blog.</string>
     <string name="reader_activity_title_tag_preview">Etiqueta</string>
     <string name="reader_btn_subscribe">Subscribirse</string>
