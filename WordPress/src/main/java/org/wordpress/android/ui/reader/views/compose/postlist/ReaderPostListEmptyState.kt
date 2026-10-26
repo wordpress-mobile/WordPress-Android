@@ -28,6 +28,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.unit.Margin
@@ -37,6 +38,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState
 private const val BOOKMARK_ICON_ID = "bookmark"
 private const val BOOKMARK_ICON_ALPHA = 0.6f
 private const val BOOKMARK_ICON_SIZE_EM = 1.2
+private val TOP_PADDING = 48.dp
 
 /**
  * What the post list shows instead of posts
@@ -45,16 +47,18 @@ private const val BOOKMARK_ICON_SIZE_EM = 1.2
 internal fun ReaderPostListEmptyState(
     emptyState: ReaderPostListEmptyState,
     onButtonClick: (ReaderPostListEmptyButton) -> Unit,
+    isTopAligned: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val content = emptyStateContent(emptyState)
+    val padding = Margin.ExtraExtraMediumLarge.value
     Column(
         modifier = modifier
-            .padding(Margin.ExtraExtraMediumLarge.value)
-            // announced when it appears or changes, as ActionableEmptyView did
+            .padding(start = padding, end = padding, bottom = padding, top = if (isTopAligned) TOP_PADDING else padding)
+            // a live region, so TalkBack announces it when its content changes
             .semantics(mergeDescendants = true) { liveRegion = LiveRegionMode.Polite },
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = if (isTopAligned) Arrangement.Top else Arrangement.Center
     ) {
         if (content.title.isNotEmpty()) {
             Text(

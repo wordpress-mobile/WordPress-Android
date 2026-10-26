@@ -15,6 +15,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.Mockito.lenient
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
@@ -189,8 +190,14 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             .thenReturn(blog(name = "stored"))
             .thenReturn(blog(name = "fetched"))
         whenever(repository.isTimeToUpdateBlogInfo(any())).thenReturn(true)
+        val fetch = CompletableDeferred<FetchSiteState>()
+        whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull())).doSuspendableAnswer { fetch.await() }
 
         startAndLoad(blogPreviewArgs())
+        assertThat(siteHeader()?.name).isEqualTo("stored")
+
+        fetch.complete(FetchSiteState.Success)
+        advanceUntilIdle()
 
         verify(fetchSiteUseCase).fetchSite(BLOG_ID, 0)
         assertThat(siteHeader()?.name).isEqualTo("fetched")
@@ -216,6 +223,19 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         }
         // the header stays out of the list until there's blog info to show
         assertThat(viewModel.uiState.value.items).noneMatch { it is ReaderPostListItem.SiteHeader }
+    }
+
+    @Test
+    fun `a failed fetch doesn't report the blog as missing when it's stored`() = test {
+        whenever(repository.getBlogInfo(BLOG_ID, 0)).thenReturn(blog(name = "stored"))
+        whenever(repository.isTimeToUpdateBlogInfo(any())).thenReturn(true)
+        whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull())).thenReturn(FetchSiteState.Failed.RequestFailed)
+
+        viewModel.uiEvents.filterIsInstance<ReaderPostListUiEvent.BlogInfoFailed>().test {
+            startAndLoad(blogPreviewArgs())
+            expectNoEvents()
+        }
+        assertThat(siteHeader()?.name).isEqualTo("stored")
     }
 
     @Test
@@ -259,8 +279,59 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
 
         viewModel.uiEvents.filterIsInstance<ReaderPostListUiEvent.ShowSubscriptionSettings>().test {
             viewModel.onSiteHeaderSettingsClicked()
-            assertThat(awaitItem().blogId).isEqualTo(BLOG_ID)
+            assertThat(awaitItem()).isEqualTo(ReaderPostListUiEvent.ShowSubscriptionSettings(BLOG_ID, "blog", ""))
         }
+    }
+
+    @Test
+    fun `the site header has no settings button for a site that isn't followed`() = test {
+        whenever(repository.getBlogInfo(BLOG_ID, 0)).thenReturn(blog(isFollowing = false))
+        // lenient since the check can stop before reading it, but it has to be true for the test to mean anything
+        lenient().`when`(accountStore.hasAccessToken()).thenReturn(true)
+
+        startAndLoad(blogPreviewArgs())
+
+        assertThat(siteHeader()?.showSettings).isFalse
+    }
+
+    @Test
+    fun `the site header has no settings button when logged out`() = test {
+        whenever(repository.getBlogInfo(BLOG_ID, 0)).thenReturn(blog(isFollowing = true))
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+
+        startAndLoad(blogPreviewArgs())
+
+        assertThat(siteHeader()?.showSettings).isFalse
+    }
+
+    @Test
+    fun `the site header has no settings button for an external feed`() = test {
+        whenever(repository.getBlogInfo(0, FEED_ID)).thenReturn(blog(isFollowing = true))
+        lenient().`when`(accountStore.hasAccessToken()).thenReturn(true)
+
+        startAndLoad(ReaderPostListArgs(listType = ReaderPostListType.BLOG_PREVIEW, feedId = FEED_ID))
+
+        assertThat(siteHeader()?.showSettings).isFalse
+    }
+
+    @Test
+    fun `a site header follow tap can't start a second follow before the first reports back`() = test {
+        whenever(repository.getBlogInfo(BLOG_ID, 0)).thenReturn(blog())
+        val follow = CompletableDeferred<Unit>()
+        whenever(actionsHandler.handleFollowSiteClicked(any(), any(), any(), any()))
+            .doSuspendableAnswer { follow.await() }
+        startAndLoad(blogPreviewArgs())
+
+        viewModel.onSiteHeaderFollowClicked()
+        viewModel.onSiteHeaderFollowClicked()
+        advanceUntilIdle()
+        assertThat(siteHeader()?.isFollowInProgress).isTrue
+
+        follow.complete(Unit)
+        advanceUntilIdle()
+
+        verify(actionsHandler, times(1)).handleFollowSiteClicked(any(), any(), any(), any())
+        assertThat(siteHeader()?.isFollowInProgress).isFalse
     }
 
     @Test
@@ -813,6 +884,7 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     companion object {
         private const val BLOG_ID = 100L
         private const val OTHER_BLOG_ID = 200L
+        private const val FEED_ID = 300L
         private const val MAX_POSTS = 200
         private const val PHOTON_WIDTH = 1000
         private const val PHOTON_HEIGHT = 500

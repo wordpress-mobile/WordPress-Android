@@ -36,6 +36,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import org.wordpress.android.R
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListItem
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListUiState
 import org.wordpress.android.ui.reader.views.compose.postcard.ReaderPostCard
@@ -98,11 +99,16 @@ private fun PostList(
             }
         }
         if (emptyState != null) {
+            // centred in the list, except below a header (where centring could push it off screen) and for
+            // search, which shows its messages just under the tabs
+            val isTopAligned = items.isNotEmpty() || emptyState is ReaderPostListEmptyState.SearchUpdating ||
+                    emptyState is ReaderPostListEmptyState.SearchNoResults
             item(key = "empty") {
                 ReaderPostListEmptyState(
                     emptyState = emptyState,
                     onButtonClick = actions.onEmptyStateButtonClicked,
-                    modifier = Modifier.fillParentMaxSize()
+                    isTopAligned = isTopAligned,
+                    modifier = if (isTopAligned) Modifier.fillParentMaxWidth() else Modifier.fillParentMaxSize()
                 )
             }
         }

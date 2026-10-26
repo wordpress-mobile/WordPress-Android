@@ -150,7 +150,6 @@ class ReaderPostListViewModel @Inject constructor(
     private val renderedIds = HashSet<String>()
     private var siteHeaderBlog: ReaderBlog? = null
     private var isSiteHeaderFollowInProgress = false
-    private var hasFetchedSiteHeader = false
     private var siteHeaderJob: Job? = null
 
     private var isFirstItemVisible = true
@@ -764,7 +763,6 @@ class ReaderPostListViewModel @Inject constructor(
         renderedIds.clear()
         siteHeaderJob?.cancel()
         siteHeaderBlog = null
-        hasFetchedSiteHeader = false
         isSiteHeaderFollowInProgress = false
         autoUpdateSkipped = false
         clearPosts()
@@ -839,33 +837,26 @@ class ReaderPostListViewModel @Inject constructor(
     private suspend fun loadSiteHeader() {
         val (headerBlogId, headerFeedId) = siteHeaderIds() ?: return
         if (headerBlogId == 0L && headerFeedId == 0L) {
-            if (!hasFetchedSiteHeader) {
-                hasFetchedSiteHeader = true
-                sendUiEvent(ReaderPostListUiEvent.BlogInfoFailed)
-            }
+            sendUiEvent(ReaderPostListUiEvent.BlogInfoFailed)
         } else {
             val localBlog = repository.getBlogInfo(headerBlogId, headerFeedId)
             showSiteHeader(localBlog)
+            // a fetch stores the blog with a fresh timestamp, so this only fetches again once that's stale
             val isStale = localBlog == null || repository.isTimeToUpdateBlogInfo(localBlog)
-            if (!hasFetchedSiteHeader && isStale) {
+            if (isStale) {
                 fetchSiteHeader(headerBlogId, headerFeedId, hasLocalBlog = localBlog != null)
             }
         }
     }
 
     private suspend fun fetchSiteHeader(headerBlogId: Long, headerFeedId: Long, hasLocalBlog: Boolean) {
-        hasFetchedSiteHeader = true
         val result = fetchSiteUseCase.fetchSite(headerBlogId, headerFeedId)
         // the fetch can't be cancelled, so drop its result if the list moved on to another target meanwhile
         currentCoroutineContext().ensureActive()
         when (result) {
             FetchSiteState.Success -> showSiteHeader(repository.getBlogInfo(headerBlogId, headerFeedId))
-            is FetchSiteState.Failed -> {
-                // try again on the next reload, e.g. after the connection returns
-                hasFetchedSiteHeader = false
-                if (!hasLocalBlog) {
-                    sendUiEvent(ReaderPostListUiEvent.BlogInfoFailed)
-                }
+            is FetchSiteState.Failed -> if (!hasLocalBlog) {
+                sendUiEvent(ReaderPostListUiEvent.BlogInfoFailed)
             }
             FetchSiteState.AlreadyRunning -> Unit
         }
@@ -905,8 +896,16 @@ class ReaderPostListViewModel @Inject constructor(
         val ids = siteHeaderIds()
         if (blog == null || ids == null || isSiteHeaderFollowInProgress) return
         val (headerBlogId, headerFeedId) = ids
+        // set right away, so a second tap can't start another follow before the first reports back
+        isSiteHeaderFollowInProgress = true
+        updateUiState()
         launch(bgDispatcher) {
             readerPostCardActionsHandler.handleFollowSiteClicked(headerBlogId, headerFeedId, blog.name, source)
+            // the follow has finished (or never started, when offline or logged out)
+            withContext(mainDispatcher) {
+                isSiteHeaderFollowInProgress = false
+                updateUiState()
+            }
         }
     }
 

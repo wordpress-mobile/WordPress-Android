@@ -70,7 +70,9 @@ sealed class ReaderPostListItem {
         private const val KEY_HEADER = "header"
         private const val KEY_GAP_MARKER = "gap"
 
-        fun postKey(post: ReaderPost) = "${post.blogId}:${post.feedId}:${post.postId}"
+        // pseudo_id is part of the posts table's primary key, and every list query fixes the rest of it, so it's
+        // unique within a list - the ids are only a fallback for a post without one
+        fun postKey(post: ReaderPost) = post.pseudoId.ifEmpty { "${post.blogId}:${post.feedId}:${post.postId}" }
     }
 }
 
