@@ -6,8 +6,6 @@ Generator: GlotPress/4.1.0
 Language: cy_GB
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="duplicate_site_detected">Mae gwefan dyblyg wedi\'i chanfod.</string>
-    <string name="cannot_add_duplicate_site">Mae\'r wefan hon yn bodoli eisoes yn yr ap, chewch chi ddim ychwanegu iddi.</string>
     <string name="already_logged_in_wpcom">Rydych eisoes wedi mewngofnodi i gyfrif WordPress.com, chewch chi ddim ychwanegu gwefan WordPress.com sy\'n rhwym i gyfrif arall.</string>
     <string name="error_media_load">Methu llwytho cyfrwng</string>
     <string name="error_media_refresh_no_connection">Mae angen cysylltiader mwyn adnewyddu\'r llyfrgell.</string>
@@ -17,7 +15,6 @@ Language: cy_GB
     <string name="media_generic_error">Digwyddodd gwall cyfryngau</string>
     <string name="retry">Ceisiwch eto</string>
     <string name="confirm">Cadarnhau</string>
-    <string name="xmlrpc_post_blocked_error">Methu cysylltu. Mae eich gwesteiwr yn rhwystro ceisiadau POST, ac mae\'r ap angen\n       hynny er mwyn cyfathrebu â\'ch gwefan. Cysylltwch â eich gwesteiwr i ddatrys y broblem.</string>
     <string name="pending_draft_one_generic">Peidiwch â\'i adael! Mae \'%1$s\' disgwyl cael ei gyhoeddi.</string>
     <string name="pending_draft_one_month">Peidiwch â\'i adael! Mae \'%1$s\' disgwyl cael ei gyhoeddi.</string>
     <string name="pending_draft_one_week_2">Mae \'%1$s\' yn ddrafft o hyd. Cofiwch ei gyhoeddi!</string>
@@ -92,8 +89,6 @@ Language: cy_GB
     <string name="error_locating_image">Gwall wrth ganfod y ddelwedd wedi ei thocio</string>
     <string name="error_refreshing_gravatar">Gwall wrth ail-lwytho eich Gravatar</string>
     <string name="error_cropping_image">Bu gwall wrth docio eich delwedd.</string>
-    <string name="checking_email">Gwirio e-bost</string>
-    <string name="magic_link_unavailable_error_message">Ddim ar gael ar hyn o bryd. Rhowch eich cyfrinair</string>
     <string name="logging_in">Mewngofnodi</string>
     <string name="web_address_dialog_hint">Dangos yn gyhoeddus pan fyddwch yn gwneud sylw</string>
     <string name="export_your_content_message">Bydd cofnodion, tudalennau a gosodiadau yn cael eu e-bost atoch i %s.</string>
@@ -121,7 +116,6 @@ Language: cy_GB
     <string name="editor_remove_failed_uploads">Tynnu llwythi sydd wedi methu</string>
     <string name="site_settings_advanced_header">Uwch</string>
     <string name="button_skip">Hepgor</string>
-    <string name="xmlrpc_missing_method_error">Doedd dim modd cysylltu. Mae\'r dulliau XML-RPC angenrheidiol ar goll o\'r gweinydd.</string>
     <string name="post_format_status">Statws</string>
     <string name="post_format_video">Fideo</string>
     <string name="alignment_center">Canol</string>
@@ -177,7 +171,6 @@ Language: cy_GB
     <string name="about_the_app">Am yr ap</string>
     <string name="error_post_account_settings">Nid oedd modd cadw manylion eich cyfrif</string>
     <string name="error_fetch_account_settings">Methu adfer gosodiadau eich cyfrif</string>
-    <string name="error_fetch_my_profile">Methu adfer eich proffil</string>
     <string name="site_settings_unknown_language_code_error">Heb adnabd y cod iaith</string>
     <string name="site_settings_threading_dialog_description">Caniatáu sylwadau i\'w nythu mewn edafedd.</string>
     <string name="site_settings_threading_dialog_header">Edafedd hyd at</string>
@@ -347,9 +340,6 @@ Language: cy_GB
     <string name="reader_label_new_posts_subtitle">Tapio i\'w dangos</string>
     <string name="select_all">Dewis y cyfan</string>
     <string name="language">Iaith</string>
-    <string name="verification_code">Cod dilysu</string>
-    <string name="invalid_verification_code">Cod dilysu annilys</string>
-    <string name="auth_required">Mewngofnodwch eto i barhau.</string>
     <string name="reader_empty_posts_request_failed">Methu adfer cofnodion</string>
     <string name="error_notification_open">Methu agor hysbysiadau</string>
     <string name="stats_search_terms_unknown_search_terms">Termau Chwilio Anhysbys</string>
@@ -425,7 +415,6 @@ Language: cy_GB
     <string name="error_load_comment">Methu llwytho\'r sylw</string>
     <string name="error_downloading_image">Gwall wrth lwytho delwedd i lawr</string>
     <string name="invalid_email_message">Nid yw eich cyfeiriad e-bost yn ddilys</string>
-    <string name="email_invalid">Rhowch gyfeiriad e-bost dilys</string>
     <string name="username_or_password_incorrect">Mae\'r enw defnyddiwr neu gyfrinair yn anghywir</string>
     <string name="select_categories">Dewis categorïau</string>
     <string name="connection_error">Gwall cysylltu</string>
@@ -456,12 +445,10 @@ Language: cy_GB
     <string name="add_new_category">Ychwanegu categori newydd</string>
     <string name="category_name">Enw categori</string>
     <string name="file_error_create">Methwyd creu ffeil dros dro ar gyfer llwytho cyfryngau. Gwnewch yn siwr bod digon o le rhydd ar eich dyfais.</string>
-    <string name="http_authorization_required">Mae angen awdurdodi</string>
     <string name="new_post">Cofnod newydd</string>
     <string name="new_media">Cyfryngau newydd</string>
     <string name="local_changes">Newidiadau lleol</string>
     <string name="wordpress_blog">Blog WordPress</string>
-    <string name="fatal_db_error">Digwyddodd gwall wrth greu cronfa ddata\'r ap. Ceisiwch ailosod yr ap.</string>
     <string name="reader_title_applog">Cofnod yr ap</string>
     <string name="invalid_site_url_message">Gwiriwch fod URL y blog yn ddilys</string>
     <string name="share_link">Rhannu dolen</string>
@@ -512,8 +499,6 @@ Language: cy_GB
     <string name="more_notifications">a %d yn rhagor.</string>
     <string name="sign_in">Mewngofnodi</string>
     <string name="loading">Llwytho…</string>
-    <string name="httpuser">Enw defnyddiwr HTTP</string>
-    <string name="httppassword">Cyfrinair HTTP</string>
     <string name="error_media_upload">Digwyddodd gwall wrth lwytho\'r cyfrwng</string>
     <string name="incorrect_credentials">Enw cyfrif neu gyfrinair anghywir.</string>
     <string name="password">Cyfrinair</string>

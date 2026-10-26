@@ -38,8 +38,6 @@ Language: gd_GB
     <string name="reader_label_new_posts_subtitle">Thoir gnogag gus an sealltainn</string>
     <string name="select_all">Tagh na h-uile</string>
     <string name="language">Cànan</string>
-    <string name="verification_code">Còd dearbhaidh</string>
-    <string name="invalid_verification_code">Còd dearbhadh mì-dhligheach</string>
     <string name="reader_empty_posts_request_failed">Chan urrainn dhuinn na puist fhaighinn</string>
     <string name="error_notification_open">Cha b’ urrainn dhuinn am brath fhosgladh</string>
     <string name="stats_search_terms_unknown_search_terms">Faclan-luirg nach aithnichear</string>
@@ -114,7 +112,6 @@ Language: gd_GB
     <string name="error_load_comment">Cha b’ urrainn dhuinn am beachd a luchdadh</string>
     <string name="error_downloading_image">Mearachd le luchdadh a-nuas an deilbh</string>
     <string name="invalid_email_message">Chan eil am post-d agad dligheach</string>
-    <string name="email_invalid">Cuir a-steach post-d dligheach</string>
     <string name="username_or_password_incorrect">Tha an t-ainm-cleachdaiche no am facal-faire a chuir thu a-steach cearr</string>
     <string name="select_categories">Tagh roinnean-seòrsa</string>
     <string name="connection_error">Mearachd leis a’ cheangal</string>
@@ -145,12 +142,10 @@ Language: gd_GB
     <string name="add_new_category">Cuir roinn-seòrsa ùr ris</string>
     <string name="category_name">Ainm na roinne-seòrsa</string>
     <string name="file_error_create">Cha b’ urrainn dhuinn am faidhle sealach a chruthachadh gus meadhan a luchdadh suas. Dèan cinnteach gu bheil rum gu leòr air an uidheam agad.</string>
-    <string name="http_authorization_required">Tha feum air ùghdarrasadh</string>
     <string name="new_post">Post ùr</string>
     <string name="new_media">Meadhan ùr</string>
     <string name="local_changes">Atharraichean ionadail</string>
     <string name="wordpress_blog">Bloga WordPress</string>
-    <string name="fatal_db_error">Thachair mearachd fhad ’s a bha sinn a’ cruthachadh stòr-dàta nan aplacaidean. Feuch is stàlaich an aplacaid às ùr.</string>
     <string name="reader_title_applog">Loga na h-aplacaid</string>
     <string name="invalid_site_url_message">Dèan cinnteach gu bheil an URL a chuir thu a-steach dligheach</string>
     <string name="share_link">Co-roinn an ceangal</string>
@@ -201,8 +196,6 @@ Language: gd_GB
     <string name="new_notifications">%d brath(an) ùra</string>
     <string name="more_notifications">agus %d a bharrachd.</string>
     <string name="loading">\'Ga luchdadh…</string>
-    <string name="httpuser">Ainm-cleachdaiche HTTP</string>
-    <string name="httppassword">Facal-faire HTTP</string>
     <string name="error_media_upload">Thachair mearachd fhad \'s a bha sinn a\' luchdadh suas meadhan</string>
     <string name="incorrect_credentials">Ainm-cleachdaiche no facal-faire cearr.</string>
     <string name="password">Facal-faire</string>
