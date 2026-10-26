@@ -9,6 +9,7 @@ Language: cs_CZ
     <string name="support_screen_unified_support_description">Získejte odpovědi od našeho týmu podpory, kdykoli budete potřebovat</string>
     <string name="support_screen_unified_support_title">Získat pomoc</string>
     <string name="unified_support_attachment_match_score">%1$d%% shoda</string>
+    <string name="unified_support_status_bot">Boty Oddie</string>
     <string name="unified_support_bot_typing_content_description">Podpůrný bot právě píše</string>
     <string name="unified_support_message_input_placeholder">Napište zprávu…</string>
     <string name="unified_support_conversations_title">Získat pomoc</string>
@@ -93,6 +94,7 @@ Language: cs_CZ
     <string name="gutenberg_kit_announcement_learn_more">Další informace</string>
     <string name="gutenberg_kit_announcement_maybe_later">Možná později</string>
     <string name="gutenberg_kit_announcement_activate">Aktivovat</string>
+    <string name="gutenberg_kit_announcement_body_deadline">Do konce června 2026 se stane výchozím editorem pro všechny. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">Blokový editor nové generace je připraven a přináší řadu nových funkcí.</string>
     <string name="gutenberg_kit_announcement_title">Připravuje se vylepšený blokový editor</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Nejprve přepněte do blokového editoru, abyste si nový editor vyzkoušeli.</string>
@@ -237,6 +239,7 @@ Language: cs_CZ
     <string name="stats_period_selector_content_description">Vyberte období statistik</string>
     <string name="stats_period_custom">Vlastní</string>
     <string name="stats_period_last_12_months">Posledních 12 měsíců</string>
+    <string name="stats_period_last_6_months">Posledních 6 měsíců</string>
     <string name="stats_period_last_30_days">Posledních 30 dní</string>
     <string name="stats_period_last_7_days">Posledních 7 dní</string>
     <string name="stats_period_today">Dnes</string>
@@ -253,6 +256,8 @@ Language: cs_CZ
     <string name="post_rs_confirm_delete_message">Tím trvale smažete tento příspěvek. Tuto akci nelze vrátit zpět.</string>
     <string name="post_rs_confirm_trash_message">Opravdu chcete přesunout tento příspěvek do koše?</string>
     <string name="post_rs_failed_to_load">Načtení příspěvku se nezdařilo</string>
+    <string name="experimental_rs_pages_list_description">Zobrazit seznam stránek v modernějším uživatelském rozhraní pro WordPress.com a weby s vlastním hostováním pomocí aplikačních hesel</string>
+    <string name="experimental_rs_pages_list">Seznam nových stránek</string>
     <string name="stats_error_admin_url_unavailable">Nelze otevřít WP Admin pro tento web</string>
     <string name="stats_error_parsing">Při načítání dat došlo k chybě. Zkuste to prosím znovu</string>
     <string name="stats_error_network">Chyba sítě. Zkontrolujte připojení a zkuste to znovu</string>
@@ -313,6 +318,8 @@ Language: cs_CZ
     <string name="he_support_status_unknown">Neznámý</string>
     <string name="he_support_status_closed">Uzavřeno</string>
     <string name="he_support_status_solved">Vyřešeno</string>
+    <string name="he_support_status_waiting_for_user">Čeká na uživatele</string>
+    <string name="he_support_status_waiting_for_support">Čeká na podporu</string>
     <string name="he_support_select_attachments">Vybrat přílohy</string>
     <string name="he_support_download_attachment">Stáhnout přílohu</string>
     <string name="he_support_include_logs_description">Přiložení záznamů může pomoci našemu týmu při vyšetřování problémů. Záznamy mohou obsahovat nedávnou aktivitu aplikace.</string>
@@ -485,6 +492,7 @@ Language: cs_CZ
     <string name="experimental_block_editor_note">Experimentální editor bloků se v budoucí verzi stane výchozím a možnost jeho zakázání bude odstraněna.</string>
     <string name="avatar_update_email_unverified">Chcete-li aktualizovat avatar, musíte nejprve ověřit svou e-mailovou adresu.</string>
     <string name="feedback_form_note_link_wordpress">komunitních fórech.</string>
+    <string name="default_web_client_id">zástupný text</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Přepnout zkratku %s</string>
     <string name="personalization_screen_card_accessibility_label">Přepnout kartu %s</string>
     <string name="user_avatar_content_description">Avatar uživatele %s</string>
@@ -752,8 +760,13 @@ Language: cs_CZ
     <string name="barcode_scanning_alert_dialog_rationale_message">Pro skenování čárového kódu je vyžadováno oprávnění fotoaparátu</string>
     <string name="barcode_scanning_alert_dialog_title">Udělit oprávnění fotoaparátu</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bloky vnořené hlouběji než %d úrovní se nemusí v mobilním editoru správně zobrazovat.</string>
+    <string name="jp_migration_lets_go_button">Jdeme na to</string>
+    <string name="jp_migration_done_no_sites_message">Je čas pokračovat ve vaší cestě WordPressem v aplikaci Jetpack.</string>
     <string name="domain_management_clear_search">Vymazat hledání</string>
     <string name="media_encoder_quality_very_high">Velmi vysoké</string>
+    <string name="notification_security_key_needed">Pro pokračování zadejte svůj bezpečnostní klíč.</string>
+    <string name="login_error_security_key">Při přihlašování pomocí bezpečnostního klíče došlo k problému</string>
+    <string name="login_text_security_key">Použít bezpečnostní klíč</string>
     <string name="new_domain_search_screen_error_title">Nepodařilo se načíst domény</string>
     <string name="new_domain_search_screen_list_item_sale_price">%s za první rok</string>
     <string name="new_domain_search_screen_list_item_regular_price">%s / rok</string>
@@ -933,16 +946,22 @@ Language: cs_CZ
     <string name="sharing_twitter_deprecation_notice_find_out_more">Zjistěte více</string>
     <string name="sharing_twitter_deprecation_notice_description">Automatické sdílení na Twitteru již není dostupné kvůli změnám podmínek a cen Twitteru.</string>
     <string name="sharing_twitter_deprecation_notice_title">Automatické sdílení na Twitteru již není dostupné</string>
+    <string name="jp_migration_notifications_allow_title">Povolte oznámení pro sledování svého webu</string>
+    <string name="wp_jp_static_poster_message">Aplikace Jetpack má veškerou funkcionalitu aplikace WordPress a nyní exkluzivní přístup ke statistikám, čtečce, oznámením a dalšímu.</string>
+    <string name="wp_jp_static_poster_title_plural">Používejte WordPress s %s v aplikaci Jetpack .</string>
+    <string name="wp_jp_static_poster_title">Používejte WordPress s %s v aplikaci Jetpack .</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nepojmenovaná barva. %s</string>
     <string name="dashboard_activity_card_title">Nedávná aktivita</string>
     <string name="site_creation_search_domain_example_body">Stejně jako výše uvedený příklad, doména umožňuje lidem najít a navštívit váš web z jejich webového prohlížeče.</string>
     <string name="site_creation_search_domain_example_title">NazevVasehoWebu.cz</string>
     <string name="site_creation_domain_search_input_hint">Hledat pomocí klíčových slov</string>
     <string name="site_creation_domain_header_subtitle">Hledejte krátkou a zapamatovatelnou doménu, která pomůže lidem najít a navštívit váš web.</string>
+    <string name="site_creation_domain_cost_sale">za první rok</string>
     <string name="site_creation_error_cart_subtitle">Váš web byl úspěšně vytvořen, ale při přípravě vaší vlastní domény k pokladně jsme narazili na problém. Zkuste to prosím znovu nebo kontaktujte podporu.</string>
     <string name="new_site_creation_preview_caption_paid">Správné fungování vaší vlastní domény může trvat až 30 minut.</string>
     <string name="new_site_creation_preview_subtitle_paid">Zaslali jsme vám e-mailem účtenku. %s</string>
     <string name="notifications_disabled_permission_dialog">Oznámení aplikace byla zakázána. Klepnutím zde je povolíte.</string>
+    <string name="jp_migration_done_delete_wp_message">Doporučujeme &lt;b&gt;odinstalovat aplikaci WordPress&lt;/b&gt; ve vašem zařízení, abyste předešli konfliktům dat.</string>
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Odebrat bloky</string>
     <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Soukromí a hodnocení</string>
     <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nastavení přehrávání</string>
@@ -985,6 +1004,9 @@ Language: cs_CZ
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Tento web</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s používá aplikaci %2$s, která zatím nepodporuje všechny funkce aplikace. Nainstalujte prosím %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s používá aplikaci %2$s, která zatím nepodporuje všechny funkce aplikace. Nainstalujte %3$s.</string>
+    <string name="wp_jp_static_poster_footnote">Přepínání je zdarma a trvá jen minutu.</string>
+    <string name="wp_jp_static_poster_button_secondary">Více se dozvíte na Jetpack.com</string>
+    <string name="wp_jp_static_poster_button_primary">Přepněte do aplikace Jetpack</string>
     <string name="my_site_btn_wp_admin">WP Admin</string>
     <string name="my_site_header_manage">Správa</string>
     <string name="my_site_header_traffic">Návštěvnost</string>
@@ -1001,8 +1023,11 @@ Language: cs_CZ
     <string name="blaze_promotional_text">Přiveďte na svůj web větší návštěvnost se zvýrazněním</string>
     <string name="blaze_activity_title">Zvýraznění</string>
     <string name="site_creation_domain_tag_unavailable">Tato doména je již registrována</string>
+    <string name="site_creation_domain_tag_sale">Prodej</string>
     <string name="site_creation_domain_tag_recommended">Doporučeno</string>
     <string name="site_creation_domain_tag_best_alternative">Nejlepší alternativa</string>
+    <string name="support_faq_caption">Odpovědi na běžné otázky, které můžete mít, najdete v našich FAQ.</string>
+    <string name="support_faq_title">Děkujeme, že jste přešli na aplikaci Jetpack!</string>
     <string name="logs_button">Protokoly</string>
     <string name="tickets">Vstupenky</string>
     <string name="free">Zdarma</string>
@@ -1038,6 +1063,12 @@ Language: cs_CZ
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Odemkněte plný potenciál svého webu. Získejte statistiky, upozornění a další s Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Vaše stránky mají plugin Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Mobilní aplikace Jetpack je navržena tak, aby fungovala společně s pluginem Jetpack. Přepněte nyní a získejte přístup ke statistikám, oznámením, čtečce a dalším.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Dostávejte upozornění na nové komentáře, hodnocení Líbí se mi, zhlédnutí a další.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Najděte a sledujte své oblíbené stránky a komunity a sdílejte svůj obsah.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Sledujte, jak vaše návštěvnost roste, pomocí užitečných statistik a komplexních statistik.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistiky a postřehy</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack vám umožní udělat více s vaším webem WordPress. Přepínání je zdarma a trvá jen minutu.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Dejte WordPressu podporu s Jetpackem</string>
     <string name="blogging_prompts_onboarding_content_note_content">Předvolby pro návrhy a připomenutí psaní blogu můžete kdykoli nastavit v části Můj web &gt; Nastavení &gt; Blogování</string>
     <string name="blogging_reminders_prompt_subtitle">Oznámení bude obsahovat slovo nebo krátkou frázi pro inspiraci</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Navštivte &lt;b&gt;nastavení webu&lt;/b&gt; a znovu jej zapněte</string>
@@ -1049,6 +1080,15 @@ Language: cs_CZ
     <string name="site_settings_blogging_prompts_title">Zobrazit výzvy</string>
     <string name="site_settings_blogging">Blogování</string>
     <string name="install_play_store_to_get_jetpack">Chcete-li získat aplikaci Jetpack, nainstalujte si obchod Google Play</string>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Odložit na později</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Přejděte na Jetpack </string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistiky, čtečka, upozornění a další funkce poháněné Jetpack byly z aplikace WordPress odstraněny.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Funkce Jetpacku se přesunuly</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s se přesunou za %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s se přesune za %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s se brzy přesunou</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s se brzy přesune</string>
+    <string name="wp_jetpack_powered_phase_2">Získejte aplikaci Jetpack</string>
     <string name="my_site_blogging_prompt_card_view_answers">Zobrazit všechny odpovědi</string>
     <string name="stats_insights_total_stats_seven_days_negative">%1$s méně než za předchozích 7 dní</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s vyšší než za předchozích 7 dní</string>
@@ -1058,10 +1098,21 @@ Language: cs_CZ
     <string name="stats_insights_views_and_visitors_seven_days_views_positive">Počet zhlédnutí za posledních 7 dní je o %1$s vyšší než za předchozích 7 dní.</string>
     <string name="stats_timeframe_previous_seven_days">Předchozích 7 dní</string>
     <string name="stats_timeframe_last_seven_days">Posledních 7 dní</string>
+    <string name="weeks_quantity_other">%d týdnů</string>
+    <string name="weeks_quantity_one">1 týden</string>
     <string name="my_site_blogging_prompt_card_attribution_day_one">Od &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Připomenout později</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Přepněte do aplikace Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Více se dozvíte na jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Přepínání je zdarma a trvá jen minutu.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Statistiky, čtečka, upozornění a další funkce poháněné Jetpack budou z aplikace WordPress brzy odstraněny.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Statistiky, čtečka, upozornění a další funkce poháněné Jetpack budou z aplikace WordPress odstraněny na %s.</string>
+    <string name="jetpack_feature_card_content_phase_three">Statistiky, čtečka, upozornění a další funkce se brzy přesunou do mobilní aplikace Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Funkce Jetpacku se brzy přesunou.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Oznámení se přesouvají do Jetpacku</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Čtečka se přesouvá do aplikace Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Vaše statistiky se přesouvají do aplikace Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Přepněte na novou aplikaci Jetpack</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Došlo k chybě při načítání to se mi líbí</string>
     <string name="blogging_prompts_list_error_fetch_title">Jejda</string>
     <string name="blogging_prompts_list_no_prompts">Zatím žádné výzvy</string>
@@ -1087,11 +1138,39 @@ Language: cs_CZ
     <string name="wp_jetpack_continue_without_jetpack">Pokračujte bez Jetpacku</string>
     <string name="deep_linking_weblinks_alias_label">weblinks</string>
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Přepněte na aplikaci Jetpack, abyste do svého zařízení nadále dostávali upozornění v reálném čase.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Přepněte do aplikace Jetpack a najděte, sledujte a lajkujte všechny své oblíbené stránky a příspěvky pomocí aplikace Reader.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Přepněte do aplikace Jetpack a sledujte, jak návštěvnost vašeho webu roste pomocí statistik a statistik.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Získejte oznámení pomocí aplikace Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Sledujte libovolnou stránku pomocí aplikace Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Získejte své statistiky pomocí nové aplikace Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Nelze zakázat otevřené odkazy v Jetpacku</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Nelze povolit otevřené odkazy v Jetpacku</string>
     <string name="preference_open_links_in_jetpack">Otevřít odkazy v Jetpacku</string>
+    <string name="jp_migration_network_error_message">Bez připojení k síti nemůžeme přenést vaše data a nastavení.</string>
+    <string name="jp_migration_network_error_subtitle">Zkontrolujte, zda vaše síťové připojení funguje, a zkuste to znovu.</string>
+    <string name="jp_migration_network_error_title">Nelze se připojit k internetu.</string>
+    <string name="jp_migration_generic_error_message">Kontaktujte podporu nebo to zkuste znovu později.</string>
+    <string name="jp_migration_generic_error_subtitle">Je nám líto, ale něco nevyšlo podle plánu. Vaše data jsou v bezpečí, ale momentálně je nemůžeme přenést.</string>
     <string name="jp_migration_generic_error_title">Aha, něco se pokazilo..</string>
+    <string name="jp_migration_try_again_button">Zkuste to znovu</string>
+    <string name="jp_migration_finish_button">Dokončit</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">Odstranit ikonu aplikace WordPress</string>
+    <string name="jp_migration_done_subtitle">Přenesli jsme všechna vaše data a nastavení. Všechno je tam, kde jsi to nechal.</string>
+    <string name="jp_migration_done_title">Děkujeme, že jste přešli na Jetpack!</string>
+    <string name="jp_migration_notifications_subtitle">Budete dostávat všechna stejná oznámení, ale nyní budou pocházet z aplikace Jetpack.</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">Vypneme oznámení z WordPress aplikace.</string>
+    <string name="wordpress_help_center_button">WordPress centrum nápovědy</string>
     <string name="support_title">Podpora</string>
+    <string name="notification_disable_broadcast_permission_desc">Umožňuje aplikaci zakázat WordPress oznámení.</string>
+    <string name="notification_disable_broadcast_permission_label">zakázat WordPress oznámení</string>
+    <string name="jp_migration_help_button">Potřebujete pomoci?</string>
+    <string name="jp_migration_continue_button">Pokračovat</string>
+    <string name="jp_migration_welcome_site_found_message">Našli jsme vaše stránky. Pokračujte v přenosu všech dat a automaticky se přihlaste k Jetpacku.</string>
+    <string name="jp_migration_welcome_sites_found_message">Našli jsme vaše stránky. Pokračujte v přenosu všech dat a automaticky se přihlaste k Jetpacku.</string>
+    <string name="jp_migration_avatar_content_description">Vaše profilová fotka</string>
+    <string name="jp_migration_welcome_subtitle">Vypadá to, že přecházíte z WordPress aplikace.</string>
+    <string name="jp_migration_welcome_title">Vítejte v Jetpacku!</string>
     <string name="icon_desc">ikona</string>
     <string name="post_settings_parent">Nadřazená stránka</string>
     <string name="post_settings_page_attributes">Vlastnosti stránky</string>
@@ -1127,6 +1206,7 @@ Language: cs_CZ
     <string name="weekly_roundup_notification_text_views_only">Minulý týden jste měli %1$s zhlédnutí.</string>
     <string name="weekly_roundup_notification_text_all">Minulý týden jste měli %1$s zhlédnutí, %2$s lajků a %3$s komentářů.</string>
     <string name="stats_insights_like_guide_card">⭐️ Vašemu poslednímu příspěvku %1$s se líbí %2$s.</string>
+    <string name="wp_jetpack_powered">Poháněno Jetpackem</string>
     <string name="qrcode_auth_flow_content_description">Obrázek označující probíhající skenování přihlašovacího kódu</string>
     <string name="qrcode_auth_flow_error_content_description">Obrázek označující chybu</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">Autentikace se nezdařila</string>
@@ -1301,6 +1381,11 @@ Language: cs_CZ
     <string name="notification_channel_weekly_roundup_title">Týdenní shrnutí</string>
     <string name="my_site_dashboard_tab_title">Domů</string>
     <string name="adding_cat">Vytváření rubrik</string>
+    <string name="login_select_email_client">Jakou e-mailovou aplikaci používáte?</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">Při komunikaci se stránkou došlo k problému. Byl vrácen kód chyby HTTP 401.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">Zdá se, že volání XML-RPC jsou na tomto webu blokována (kód chyby 401). Pokud se pokus o přihlášení nezdaří, klepněte na ikonu nápovědy pro zobrazení FAQ.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">Nelze číst WordPress web na této adrese URL. Klepnutím na ikonu nápovědy zobrazíte FAQ.</string>
+    <string name="login_error_xml_rpc_services_disabled">Služby publikačního protokolu XML-RPC nejsou na tomto webu povoleny.</string>
     <string name="my_site_menu_tab_title">Menu</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Vaše vyhledávání obsahuje znaky, které nejsou podporovány v doménách WordPress.com. Jsou povoleny pouze alfanumerické znaky: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Zkontrolujte připojení k internetu a obnovte stránku.</string>
@@ -1542,7 +1627,12 @@ Language: cs_CZ
     <string name="threat_fix_enter_server_creds_msg_plural">Chcete-li opravit hrozby &lt;a href=\"%1$s\"&gt;vložte přihlašovací údaje k vašemu serveru&lt;/a&gt;.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">Chcete-li opravit hrozbu &lt;a href=\"%1$s\"&gt;vložte přihlašovací údaje k vašemu serveru&lt;/a&gt;.</string>
     <string name="error_media_unexpected_null_value">Média byla prázdná</string>
+    <string name="login_empty_view_try_another_account">Zkuste to s jiným účtem</string>
     <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dvojitým klepnutím přidáte odkaz</string>
+    <string name="login_empty_view_see_instructions">Zobrazit instrukce</string>
+    <string name="login_no_jetpack_sites_error_message">Pokud již web máte, budete si muset nainstalovat bezplatný plugin Jetpack a připojit ho ke svému účtu WordPress.com.</string>
+    <string name="login_empty_view_avatar_content_description">Vaše profilová fotka</string>
+    <string name="login_not_a_jetpack_site">Abyste mohli tuto aplikaci používat po dobu %1$s, musíte mít nainstalovaný plugin Jetpack a připojený k vašemu účtu WordPress.com.</string>
     <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nastavení šířky</string>
     <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nastavení sloupců</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Relativní odkaz</string>
@@ -1578,6 +1668,7 @@ Language: cs_CZ
     <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Více</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Stručně popište odkaz, abyste pomohli uživatelům s čtečkou obrazovky.</string>
     <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Přidat bloky</string>
+    <string name="login_no_jetpack_sites">Nebyly nalezeny žádné stránky Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Co je alternativní text?</string>
     <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Změnit %s na</string>
     <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Změnit blok…</string>
@@ -1624,6 +1715,7 @@ Language: cs_CZ
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dvojitým klepnutím otevřete spodní list, kde můžete obrázek upravit, nahradit nebo vymazat</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dvojitým klepnutím otevřete akční list, kde můžete obrázek upravit, nahradit nebo vymazat</string>
     <string name="new_site_creation_search_domain_input_hint">Zadejte název svého webu</string>
+    <string name="magic_link_not_meaning_to_create_account">Nechtěli jste vytvořit nový účet? Vraťte se zpět a znovu zadejte svou emailovou adresu.</string>
     <string name="invite_links_disable_dialog_message">Jakmile je tento odkaz s pozvánkou deaktivován, nikdo ho nebude moci použít k připojení k vašemu týmu. Jsi si jistý?</string>
     <string name="invite_links_disable_dialog_title">Zakázat zvací odkaz</string>
     <string name="invite_links_bad_format_response">Přijata neplatná odpověď</string>
@@ -1888,6 +1980,8 @@ Language: cs_CZ
     <string name="scan">Prohledat</string>
     <string name="reader_discover_empty_title">Vítejte!</string>
     <string name="reader_discover_no_posts_title">Žádné nedávné příspěvky</string>
+    <string name="login_find_your_connected_email">Najděte svůj připojený e-mail</string>
+    <string name="continue_site_credentials">Pokračujte s přihlašovacími údaji úložiště</string>
     <string name="reader_discover_no_posts_follow_subtitle">Zkuste sledovat více štítků pro rozšíření hledání</string>
     <string name="hpp_choose_button">Vybrat</string>
     <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nabídka rolovatelného bloku uzavřena.</string>
@@ -1928,6 +2022,8 @@ Language: cs_CZ
     <string name="media_browse_for_items">Vyhledejte položky</string>
     <string name="comment_unable_to_show_error">Tento komentář nelze zobrazit</string>
     <string name="permission_microphone">Mikrofon</string>
+    <string name="email_not_registered_wpcom">Hmm, nemůžeme najít účet WordPress.com připojený k této e-mailové adrese.</string>
+    <string name="login_get_link_by_email">Získejte odkaz pro přihlášení e-mailem</string>
     <string name="reader_menu_report_post">Oznámit tento příspěvek</string>
     <string name="show_n_hidden_items_desc">%1$s více položek</string>
     <string name="error_media_xmlrpc_not_allowed">Vaše akce není povolena</string>
@@ -1958,10 +2054,29 @@ Language: cs_CZ
     <string name="gutenberg_native_choose_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Zvolit video</string>
     <string name="gutenberg_native_choose_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Zvolit obrázek nebo video</string>
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Zvolit obrázek</string>
+    <string name="continue_with_google_terms_of_service_text">Pokud budete pokračovat se společností Google a ještě nemáte účet WordPress.com, vytváříte si účet a souhlasíte s našimi %1$sSmluvními podmínkami%2$s..</string>
+    <string name="signup_confirmation_title">Potvrzení registrace</string>
     <string name="enter_your_site_address">Zadejte svou stávající adresu</string>
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok odstraněn</string>
     <string name="gutenberg_native_convert_to_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Převést na odkaz</string>
+    <string name="continue_terms_of_service_text">Pokračováním vyjadřujete souhlas s našimi %1$spodmínkami služby%2$s.</string>
+    <string name="signup_confirmation_message">Tuto e-mailovou adresu použijeme k vytvoření vašeho nového účtu WordPress.com.</string>
+    <string name="signup_magic_link_message">Poslali jsme vám e-mailem odkaz na přihlášení k vytvoření nového účtu WordPress.com. Zkontrolujte svůj e-mail v tomto zařízení a klepněte na odkaz v e-mailu, který obdržíte z WordPress.com.</string>
+    <string name="enter_account_info_for_site">Zadejte informace o svém účtu pro %1$s.</string>
+    <string name="login_or">nebo</string>
+    <string name="continue_google_button_suffix">Pokračovat s Google</string>
+    <string name="login_magic_links_label">Zašleme vám e-mailem odkaz, který vás okamžitě přihlásí, není třeba žádné heslo.</string>
+    <string name="login_magic_links_sent_label">Zkontrolujte svůj e-mail v tomto zařízení a klepněte na odkaz v e-mailu, který obdržíte z WordPress.com.</string>
+    <string name="magic_link_not_seeing_email_message">Nevidíte e-mail? Zkontrolujte složku spamu nebo nevyžádané pošty.</string>
+    <string name="login_done">Hotovo</string>
+    <string name="login_find_your_site_adress">Najděte adresu svého webu</string>
     <string name="get_started" a8c-src-lib="module:login">Začínáme</string>
+    <string name="check_email">Zkontrolovat e-mail</string>
+    <string name="reset_your_password">Resetovat vaše heslo</string>
+    <string name="send_link_by_email">Odeslat odkaz e-mailem</string>
+    <string name="create_account">Vytvořit účet</string>
+    <string name="or_type_your_password">Nebo zadejte své heslo</string>
+    <string name="enter_email_to_continue_wordpress_com">Zadejte svou e-mailovou adresu pro přihlášení nebo vytvořte účet WordPress.com.</string>
     <string name="reader_error_request_failed_title">Při zpracování požadavku došlo k problému. Prosím zkuste to znovu později.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Vymazáním tohoto příspěvku také zrušíte místní změny. Opravdu chcete pokračovat?</string>
     <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s možnosti bloku</string>
@@ -2183,9 +2298,12 @@ Language: cs_CZ
     <string name="create_post_page_fab_tooltip">Vytvořte příspěvek nebo stránku</string>
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Titulek galerie. %s</string>
     <string name="gutenberg_native_replace_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nahradit obrázek</string>
+    <string name="post_signup_interstitial_subtitle">Cokoli chcete vytvořit nebo sdílet, pomůžeme vám to udělat tady.</string>
+    <string name="post_signup_interstitial_not_right_now">Teď ne</string>
     <string name="content_description_person_building_website">Web pro budování osob</string>
     <string name="photo_picker_image_thumbnail_unselected">Obrázek nebyl vybrán</string>
     <string name="stock_media_picker_list_content_description">Knihovna fotek</string>
+    <string name="post_signup_interstitial_title">Vítejte ve WordPressu!</string>
     <string name="my_site_bottom_sheet_title">Přidat nový</string>
     <string name="my_site_bottom_sheet_add_post">Blogový příspěvek</string>
     <string name="photo_picker_image_thumbnail_content_description">Náhled obrázku</string>
@@ -2197,7 +2315,13 @@ Language: cs_CZ
     <string name="dialog_confirm_scheduled_post_sync_yes">Nyní synchronizovat</string>
     <string name="negative_prefix">-%s</string>
     <string name="new_site_creation_unavailable_domain">Tato doména není k dispozici</string>
+    <string name="login_discovery_error_http_auth">Nepodařilo se nám získat přístup na váš web, protože vyžaduje &lt;b&gt;Ověření HTTP&lt;/b&gt;. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
+    <string name="login_discovery_error_ssl">Nepodařilo se nám získat přístup na váš web z důvodu problému s &lt;b&gt;certifikátem SSL&lt;/b&gt;. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
+    <string name="login_discovery_error_generic">Nepodařilo se nám získat přístup na váš web. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
     <string name="my_site_bottom_sheet_add_page">Stránka webu</string>
+    <string name="enter_credentials_for_site">Přihlaste se pomocí svých přihlašovacích údajů %1$s </string>
+    <string name="login_site_credentials_magic_link_label">Téměř tam! Musíme jen ověřit vaši e-mailovou adresu připojenou k Jetpacku &lt;b&gt;%1$s&lt;/b&gt;</string>
+    <string name="login_discovery_error_xmlrpc">Nepodařilo se nám získat přístup k &lt;b&gt;souboru XMLRPC&lt;/b&gt; na vašem webu. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
     <string name="site_cannot_be_loaded">Momentálně nemůžeme načíst data pro váš web. Prosím zkuste to znovu později</string>
     <string name="posts_cannot_be_started">Právě nemůžeme otevřít příspěvky. Prosím zkuste to znovu později</string>
     <string name="suffix_1_000">%sK</string>
@@ -2354,6 +2478,7 @@ Language: cs_CZ
     <string name="post_notification_one_hour_before">Před hodinou</string>
     <string name="post_notification_off">Off</string>
     <string name="post_settings_add_to_calendar">Přidat do kalendáře</string>
+    <string name="login_invalid_site_url">Zadejte úplnou adresu webu, například example.com.</string>
     <string name="stats_post_views_label">Zobrazení</string>
     <string name="stats_post_label">Příspěvek</string>
     <string name="stats_expand_content_description">Rozbalit</string>
@@ -2365,6 +2490,7 @@ Language: cs_CZ
     <string name="stats_overview_content_description">%1$s %2$s pro období: %3$s, změna z předchozího období - %4$s</string>
     <string name="stats_graph_updated">Graf aktualizován.</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="enter_email_for_site">Přihlaste se přes WordPress.com a připojte se k %1$s</string>
     <string name="my_site_verify_your_email">Ověřte svou e-mailovou adresu - pokyny zaslané na %s</string>
     <string name="my_site_verify_your_email_without_email">Ověřte svou e-mailovou adresu - pokyny zaslané na váš e-mail</string>
     <string name="description_collapse">Kolaps</string>
@@ -2459,6 +2585,8 @@ Language: cs_CZ
     <string name="posts_trashed_empty">Nemáte žádné příspěvky v koši</string>
     <string name="button_move_to_draft">Přesunout do konceptu</string>
     <string name="posts_published_empty">Zatím jste nezveřejnili žádné příspěvky!</string>
+    <string name="error_user_username_instead_of_email">Přihlaste se prosím pomocí svého uživatelského jména WordPress.com místo vaší e-mailové adresy.</string>
+    <string name="notification_wpcom_username_needed">Přihlaste se prosím pomocí svého uživatelského jména a hesla.</string>
     <string name="stats_insights_this_year_site_stats">Tento rok</string>
     <string name="stats_insights_posts">Příspěvky</string>
     <string name="stats_insights_year">Rok</string>
@@ -2468,6 +2596,7 @@ Language: cs_CZ
     <string name="stats_insights_average_likes">Průměr to se mi líbí/příspěvek</string>
     <string name="stats_insights_total_likes">Celkem to se mi líbí</string>
     <string name="stats_insights_average_comments">Průměr komentářů/příspěvek</string>
+    <string name="no_site_error">Web na této adrese není web WordPress. Abychom se k němu mohli připojit, musí web používat WordPress.</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Kontrola kreditů domény</string>
     <string name="plugin_check_domain_credit_error">Nepodařilo se zkontrolovat dostupné kredity domény</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Registrace domény</string>
@@ -2600,6 +2729,7 @@ Language: cs_CZ
     <string name="history_detail_button_next">Další</string>
     <string name="history_detail_button_previous">Zpět</string>
     <string name="media_space_used">Použito %1$s</string>
+    <string name="enter_wpcom_or_jetpack_site">Zadejte adresu WordPress.com stránky nebo stránky s Jetpack pluginem</string>
     <string name="history_loading_revision">Načítám revizi</string>
     <string name="history_loaded_revision">Revize načtena</string>
     <string name="history_load_dialog_button_positive">Načíst</string>
@@ -2627,7 +2757,9 @@ Language: cs_CZ
     <string name="pages_scheduled">Naplánované</string>
     <string name="pages_drafts">Koncepty</string>
     <string name="pages_published">Zveřejněné</string>
+    <string name="login_error_sms_throttled">Překročen počet pokusů na odeslání SMS s ověřovacím kódem — zkuste to znovu za minutu.</string>
     <string name="pages_view">Zobrazení</string>
+    <string name="login_error_email_not_found_v2">Nenašli jsme WordPress.com účet propojený s tímto Google účtem.</string>
     <string name="site_picker_remove_site_empty">Stránka nenalezena</string>
     <string name="page_parent_changed">Nadřazená stránka byla změněna</string>
     <string name="reader_no_followed_blogs_search_title">Žádné blogy neodpovídají vašemu hledání</string>
@@ -2648,6 +2780,7 @@ Language: cs_CZ
     <string name="reader_empty_subscribed_tags_subtitle">Přidejte zde štítky pro nalezení příspěvků o vašich oblíbených tématech</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
+    <string name="login_to_to_connect_jetpack">Přihlaste se k účtu WordPress.com, který jste použili k připojení Jetpack.</string>
     <string name="stats_jetpack_connection_setup_info">K zobrazení statistik je třeba mít nainstalovaný Jetpack plugin.</string>
     <string name="themes_empty_list">Žádné šablony neodpovídají hledanému výrazu</string>
     <string name="reader_label_post_search_explainer">Po čem se koukáte?</string>
@@ -2698,7 +2831,13 @@ Language: cs_CZ
     <string name="reader_empty_search_title">Nebyly nalezeny žádné výsledky</string>
     <string name="sites">Stránky</string>
     <string name="comment_read_source_post">Přečtěte si zdrojový příspěvek</string>
+    <string name="signup_magic_link_title">Magický odkaz odeslán</string>
+    <string name="verification_2fa_screen_title">Ověřovací kód</string>
+    <string name="selfhosted_site_login_title">Přihlašovací údaje</string>
+    <string name="magic_link_sent_login_title">Magický odkaz odeslán</string>
+    <string name="magic_link_login_title">Přihlašení magickým odkazem</string>
     <string name="site_address_login_title" a8c-src-lib="module:login">Přihlášení k webu</string>
+    <string name="email_address_login_title">E-mailová adresa přihlášení</string>
     <string name="reader_empty_saved_posts_description">Kliknutím na %s přispěvek uložíte.</string>
     <string name="reader_empty_saved_posts_title">Zatím jste neuložili žádné příspěvky.</string>
     <string name="reader_bookmark_snack_title">Příspěvek uložen</string>
@@ -2797,6 +2936,7 @@ Language: cs_CZ
     <string name="media_grid_item_image_desc">náhled obrázku, jméno souboru %s</string>
     <string name="invite_user_delete_desc">odstranit %s</string>
     <string name="comment_checkmark_desc">zaškrtnutí</string>
+    <string name="signup_with_google_progress">Registrace přes Google…</string>
     <string name="profile_picture">%s\'s profilový obrázek</string>
     <string name="open_external_link_desc">Otevřít externí odkaz</string>
     <string name="media_grid_item_retry_desc">opakovat</string>
@@ -2823,6 +2963,7 @@ Language: cs_CZ
     <string name="notif_detail_screen_title">Detail upozornění %s</string>
     <string name="edit_photo_screen_title">Upravit fotku</string>
     <string name="share_intent_screen_title">Vybrat stránku</string>
+    <string name="signup_epilogue_screen_title">Nový účet</string>
     <string name="comment_liked_talkback">Komentář se líbil</string>
     <string name="comment_unapproved_talkback">Komentář nebyl schválen</string>
     <string name="file_size_in_kilobytes">%s kB</string>
@@ -2883,9 +3024,22 @@ Language: cs_CZ
     <string name="username_changer_hint">Zadejte další návrhy</string>
     <string name="username_changer_dismiss_button_positive">Vyřadit</string>
     <string name="content_description_add_avatar">Přidat avatar</string>
+    <string name="google_error_timeout">Google delší chvíli nereaguje. Možná byste měli počkat, až budete mít silnější připojení k internetu.</string>
     <string name="username_changer_header">Vaše uživatelské jméno je %1$s%2$s%3$s. Až na pár výjimek vás ostatní  uvidí na webu pod jménem: %4$s%5$s%6$s.</string>
     <string name="username_changer_error_none">Není navrženo žádné uživatelské jméno dle %1$s%2$s%3$s. Zadejte další písmena nebo čísla pro získání návrhů.</string>
+    <string name="signup_user_exists">E-mail je již registrovaný na WordPress.com.\nPokračujte na přihlášení.</string>
+    <string name="signup_updating_account">Probíhá aktualizace účtu…</string>
+    <string name="signup_magic_link_progress">Odesílání e-mailu</string>
+    <string name="signup_magic_link_error_button_positive">Opakovat</string>
+    <string name="signup_magic_link_error_button_negative">Zavřít</string>
+    <string name="signup_epilogue_hint_username">Uživatelské jméno</string>
+    <string name="signup_epilogue_error_button_positive">Opakovat</string>
+    <string name="signup_epilogue_error_button_negative">Zpět</string>
+    <string name="signup_epilogue_hint_password">Heslo (volitelné)</string>
     <string name="signup_epilogue_error_generic">Objevili se potíže při aktualizaci vašeho účtu. Můžete to zkusit znovu nebo vrátit změny.</string>
+    <string name="signup_epilogue_hint_display">Zobrazované jméno</string>
+    <string name="signup_epilogue_hint_password_detail">Vždy se můžete přihlásit pomocí odkazu, jako je ten, který jste právě používali, ale pokud chcete, můžete také nastavit heslo.</string>
+    <string name="signup_magic_link_error">Při odesílání e-mailu došlo k určitým potížím. Můžete zkusit znovu nebo zavřít a zkusit to později.</string>
     <string name="plugin_caption_new">Nový</string>
     <string name="plugin_caption_popular">Populární</string>
     <string name="plugin_caption_search">Hledat pluginy</string>
@@ -2972,6 +3126,18 @@ Language: cs_CZ
     <string name="my_site_btn_plugins">Pluginy</string>
     <string name="media_edit_link_hint">Otevřít odkaz v novém okně/tabu\"</string>
     <string name="media_edit_link_text">Odkaz na</string>
+    <string name="notification_login_failed">Došlo k chybě.</string>
+    <string name="notification_2fa_needed">Pro pokračování zadejte ověřovací kód.</string>
+    <string name="notification_error_wrong_password">Před pokračováním si znovu překontrolujte heslo.</string>
+    <string name="notification_login_title_stopped">Přihlášení bylo zastaveno</string>
+    <string name="notification_logging_in">Počkejte prosím, probíhá přihlašování.</string>
+    <string name="notification_login_title_in_progress">Probíhá přihlašování…</string>
+    <string name="notification_logged_in">Pokračujte klepnutím.</string>
+    <string name="notification_login_title_success">Přihlášeno!</string>
+    <string name="login_error_generic_start">Přihlášení pomocí Google nemůže být spuštěno.</string>
+    <string name="login_empty_password">Zadejte heslo</string>
+    <string name="login_text_otp_another">Pošlete mi nový kód</string>
+    <string name="enter_verification_code_sms">Na telefonní číslo končící na %s byla zaslána textová zpráva. Zadejte prosím ověřovací kód z SMS.</string>
     <string name="image_size">Velikost</string>
     <string name="uploading_subtitle_media_only_one">1 zbývající soubor</string>
     <string name="uploading_subtitle_media_only">Zbývá %1$d z %2$d souborů</string>
@@ -2988,10 +3154,15 @@ Language: cs_CZ
     <string name="confirm_remove_media_image">Odstranit tento obrázek z příspěvku?</string>
     <string name="media_edit_customize_card_caption">Přizpůsobit</string>
     <string name="media_edit_file_details_card_caption">Podrobnosti souboru</string>
+    <string name="login_error_generic">Při připojování ke Google účtu se objevily nějaké potíže.</string>
+    <string name="login_error_suffix">\nMožná zkuste jiný účet?</string>
     <string name="login_error_button">Zavřít</string>
+    <string name="enter_wpcom_password_google">Abyste mohli pokračovat s tímto Google účtem, zadejte odpovídající heslo k WordPress.com. Tato žádost bude pouze jednou.</string>
     <string name="error_generic_network">Vyskytla se chyba sítě. Zkontrolujte připojení a zkuste znovu.</string>
     <string name="post_settings_remove_featured_image">Odstranit náhledový obrázek</string>
     <string name="post_settings_choose_featured_image">Zvolit náhledový obrázek</string>
+    <string name="login_log_in_for_share_intent">Pro sdílení obsahu se přihlašte na WordPress.com.</string>
+    <string name="enter_site_address_share_intent">Zadejte adresu WordPress webu, na který chcete sdílet obsah.</string>
     <string name="jetpack_disconnect_error_toast">Chyba při odpojování webové stránky</string>
     <string name="jetpack_disconnect_success_toast">Webová stránka odpojena</string>
     <string name="jetpack_disconnect_confirm">Odpojit</string>
@@ -3072,13 +3243,28 @@ Language: cs_CZ
     <string name="post_queued">Příspěvek ve frontě</string>
     <string name="uploading_post">Nuhrávání \"%s\"</string>
     <string name="connection_to_server_lost">Připojení k serveru bylo ztraceno</string>
+    <string name="login_empty_2fa">Vložte ověřovací kód</string>
+    <string name="login_email_client_not_found">Nepodařilo se najít e-mailovou aplikaci</string>
+    <string name="login_empty_username">Vložte uživatelské jméno</string>
+    <string name="login_log_in_for_deeplink">Pro přístup k příspěvku se přihlaste na WordPress.com.</string>
+    <string name="login_error_while_adding_site">Chyba při vytváření webu. Kód chyby: %s</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">Kontrola adresy webu</string>
+    <string name="login_site_address_more_help">Potřebujete poradit?</string>
+    <string name="login_site_address_help_content">Pokud navštívíte web v Chrome, adresa webu se objeví v řádku nahoře na obrazovce.</string>
+    <string name="login_site_address_help_title">Jaká je adresa mého webu?</string>
     <string name="login_site_address" a8c-src-lib="module:login">Adresa webu</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Zadejte adresu WordPress webu, ke kterému se chcete připojit.</string>
     <string name="login_already_logged_in_wpcom">Již jste přihlášeni na WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Pokračovat</string>
+    <string name="enter_wpcom_password">Zadejte heslo k WordPress.com.</string>
     <string name="connect_more">Připojit se k jinému webu</string>
+    <string name="login_magic_link_email_requesting">Je vyžadován přihlašovací e-mail</string>
+    <string name="password_incorrect">Zdá se, že zadané heslo je nesprávné. Zkontrolujte prosím své údaje a zkuste to znovu.</string>
+    <string name="requesting_otp">Vyžádání ověřovacího kódu pomocí SMS.</string>
+    <string name="login_text_otp">Pošlete mi raději kód.</string>
+    <string name="enter_verification_code">Už to skoro je! Zadejte ověřovací kód pro WordPress.com z aplikace autentizátoru.</string>
     <string name="next">Další</string>
+    <string name="enter_email_wordpress_com">Přihlaste se na stránku WordPress.com pomocí e-mailové adresy pro správu všech vašich stránek na WordPress.</string>
     <string name="me_profile_photo">Profilová fotka</string>
     <string name="error_media_parse_error">Neočekávaná odpověď ze serveru</string>
     <string name="upload_finished_toast">Nahrávání nelze zastavit, protože je již dokončeno</string>
@@ -3227,6 +3413,8 @@ Language: cs_CZ
     <string name="error_unknown_post_type">Neznámý formát příspěvku</string>
     <string name="submit_for_review">Odeslat</string>
     <string name="title_subscriber">Odběratel</string>
+    <string name="duplicate_site_detected">Bylo zjištěna duplicitní stránka.</string>
+    <string name="cannot_add_duplicate_site">Tyto stránky již v aplikaci existují, nelze je přidat.</string>
     <string name="already_logged_in_wpcom">Již jste přihlášeni do účtu WordPress.com, nemůžete přidat stránku WordPress.com vázanou na jiný účet.</string>
     <string name="error_media_load">Nelze načíst média</string>
     <string name="error_media_refresh_no_connection">Potřebujeme připojení pro obnovení knihovny</string>
@@ -3237,6 +3425,8 @@ Language: cs_CZ
     <string name="media_generic_error">Chyba médií</string>
     <string name="retry">Znovu</string>
     <string name="confirm">Potvrdit</string>
+    <string name="xmlrpc_endpoint_forbidden_error">Nelze se připojit. Při pokusu o přístup k vašemu nám došlo k chybě 403\n         koncový bod XMLRPC webu. Aplikace to potřebuje, aby mohla komunikovat s vaším webem. Požádejte svého hostitele o řešení\n         tento problém.</string>
+    <string name="xmlrpc_post_blocked_error">Nepodařilo se připojit. Váš hostitel blokuje požadavky POST, které jsou potřeba ke komunikaci s webovou stránkou. Pro vyřešení toho problému kontaktujte svého hostitele.</string>
     <string name="pending_draft_one_generic">Nenechávejte ho čekat! \'%1$s\' čeká na zveřejnění.</string>
     <string name="pending_draft_one_month">Nenechávejte ho čekat! \'%1$s\' čeká na zveřejnění.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' zůstává konceptem. Nezapomeňte ho publikovat!</string>
@@ -3319,6 +3509,8 @@ Language: cs_CZ
     <string name="error_locating_image">Chyba při umístění oříznutého obrázku</string>
     <string name="error_refreshing_gravatar">Chyba při znovu nahrání vašeho Gravataru</string>
     <string name="error_cropping_image">Chyba při oříznutí obrázku</string>
+    <string name="checking_email">Ověřuji e-mail</string>
+    <string name="magic_link_unavailable_error_message">Momentálně nedostupné. Prosím zadejte své heslo</string>
     <string name="logging_in">Přihlašování</string>
     <string name="web_address_dialog_hint">Veřejně se zobrazí při komentování.</string>
     <string name="export_your_content_message">Vaše příspěvky, stránky a nastavení budou zaslány na %s.</string>
@@ -3351,6 +3543,7 @@ Language: cs_CZ
     <string name="comments_empty_list_filtered_pending">Žádné komentáře nečekají na schválení</string>
     <string name="comments_empty_list_filtered_approved">Žádné schválené komentáře</string>
     <string name="button_skip">Přeskočit</string>
+    <string name="xmlrpc_missing_method_error">Nelze se připojit. Požadované metody XML-RPC chybí na serveru.</string>
     <string name="post_format_status">Aktualita</string>
     <string name="post_format_video">Video</string>
     <string name="alignment_center">Na střed</string>
@@ -3410,6 +3603,7 @@ Language: cs_CZ
     <string name="about_the_app">O aplikaci</string>
     <string name="error_post_account_settings">Nelze uložit nastavení účtu</string>
     <string name="error_fetch_account_settings">Nelze načíst nastavení účtu</string>
+    <string name="error_fetch_my_profile">Nelze načíst váš profil</string>
     <string name="site_settings_unknown_language_code_error">Kód jazyka nebyl rozpoznán</string>
     <string name="site_settings_threading_dialog_description">Povolit vnoření komentářů do vláken.</string>
     <string name="site_settings_threading_dialog_header">Vlákno do</string>
@@ -3599,6 +3793,9 @@ Language: cs_CZ
     <string name="reader_label_new_posts_subtitle">Klepněte pro jejich zobrazení</string>
     <string name="select_all">Vybrat vše</string>
     <string name="language">Jazyk</string>
+    <string name="verification_code">Ověřovací kód</string>
+    <string name="invalid_verification_code">Neplatný ověřovací kód</string>
+    <string name="auth_required">Pro pokračování, se přihlaste ještě jednou.</string>
     <string name="pages_fetching">Načítám stránky…</string>
     <string name="posts_fetching">Načítám příspěvky…</string>
     <string name="media_fetching">Načítám mediální soubory…</string>
@@ -3680,6 +3877,7 @@ Language: cs_CZ
     <string name="adding_cat_success">Rubrubrika úspěšně přidána</string>
     <string name="cat_name_required">Název rubriky je vyžadován</string>
     <string name="error_deleting_post">Nastala chyba při mazání příspěvku</string>
+    <string name="email_invalid">Vlož platnou e-mailovou adresu</string>
     <string name="invalid_email_message">Tvoje e-mailová adresa není platná</string>
     <string name="connection_error">Ztráta spojení</string>
     <string name="link_enter_url_text">Text odkazu</string>
@@ -3710,9 +3908,11 @@ Language: cs_CZ
     <string name="mnu_comment_approve">Schválit</string>
     <string name="mnu_comment_unapprove">Zamítnout</string>
     <string name="dlg_confirm_trash_comments">Přesunout do koše?</string>
+    <string name="fatal_db_error">Vyskytla se chyba při vytváření databáze aplikace. Zkuste přeinstalovat tuto aplikaci.</string>
     <string name="local_changes">Místní změny</string>
     <string name="reader_title_applog">Protokol aplikace</string>
     <string name="post_settings">Nastavení příspěvku</string>
+    <string name="http_authorization_required">Je vyžadována autorizace</string>
     <string name="file_error_create">Nepodařilo se vytvořit soubor temp pro nahrávání. Ujistěte se, že máte na svém zařízení dostatek volného místa.</string>
     <string name="wordpress_blog">WordPress web</string>
     <string name="select_categories">Vyberte rubriku</string>
@@ -3747,6 +3947,7 @@ Language: cs_CZ
     <string name="reader_label_added_tag">%s byl přidán</string>
     <string name="reader_likes_only_you">To se vám líbí</string>
     <string name="comments_empty_list">Zatím žádné komentáře</string>
+    <string name="sign_up_label">Zaregistrovat se</string>
     <string name="reader_view_reblog">Reblog</string>
     <string name="reader_toast_err_tag_not_valid">Toto není platný štítek</string>
     <string name="stats">Statistiky</string>
@@ -3776,6 +3977,8 @@ Language: cs_CZ
     <string name="more_notifications">a %d dalších.</string>
     <string name="sign_in">Přihlásit se</string>
     <string name="loading">Nahrávám…</string>
+    <string name="httpuser">HTTP uživ.jméno</string>
+    <string name="httppassword">HTTP heslo</string>
     <string name="error_media_upload">Došlo k chybě během nahrávání médií</string>
     <string name="incorrect_credentials">Nesprávné uživatelské jméno nebo heslo.</string>
     <string name="password">Heslo</string>
