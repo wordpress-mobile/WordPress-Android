@@ -23,7 +23,6 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
@@ -195,7 +194,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
         source: String
     ) {
         when (type) {
-            FOLLOW -> handleFollowClicked(post, source)
+            FOLLOW -> handleFollowSiteClicked(post.blogId, post.feedId, post.blogName, source)
             SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId, post.feedId)
             SHARE -> handleShareClicked(post, source)
             VISIT_SITE -> handleVisitSiteClicked(post)
@@ -304,37 +303,17 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    suspend fun handleFollowRecommendedSiteClicked(
-        recommendedBlogUiState: ReaderRecommendedBlogUiState,
+    suspend fun handleFollowSiteClicked(
+        blogId: Long,
+        feedId: Long,
+        blogName: String,
         source: String
     ) {
         if (!accountStore.hasAccessToken()) {
             showSignInPrompt()
             return
         }
-        val param = ReaderSiteFollowUseCase.Param(
-            blogId = recommendedBlogUiState.blogId,
-            blogName = recommendedBlogUiState.name,
-            feedId = recommendedBlogUiState.feedId
-        )
-        followSite(param, source)
-    }
-
-    private suspend fun handleFollowClicked(
-        post: ReaderPost,
-        source: String
-    ) {
-        if (!accountStore.hasAccessToken()) {
-            showSignInPrompt()
-            return
-        }
-        followSite(
-            ReaderSiteFollowUseCase.Param(
-                post.blogId,
-                post.feedId,
-                post.blogName
-            ), source
-        )
+        followSite(ReaderSiteFollowUseCase.Param(blogId, feedId, blogName), source)
     }
 
     private fun showSignInPrompt() {

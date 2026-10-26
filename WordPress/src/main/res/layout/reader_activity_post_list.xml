@@ -9,7 +9,7 @@
         android:id="@+id/appbar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:liftOnScrollTargetViewId="@+id/recycler_view">
+        app:liftOnScrollTargetViewId="@+id/reader_post_list">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_main"

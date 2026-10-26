@@ -2547,7 +2547,6 @@
     <string name="reader_toast_err_removing_tag">Unable to remove this tag</string>
     <string name="reader_toast_err_share_intent">Unable to share</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
-    <string name="reader_toast_err_show_blog">Unable to show this blog</string>
     <string name="reader_toast_err_blog_not_found">Error: Unable to find the blog</string>
     <string name="reader_toast_err_already_follow_this_blog">You are already subscribed to this blog</string>
     <string name="reader_toast_err_unable_to_follow_blog">Unable to subscribe to this blog</string>

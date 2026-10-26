@@ -133,7 +133,6 @@
     <dimen name="reader_thumbnail_strip_image_height">96dp</dimen>
     <dimen name="reader_a8c_avatar_margin_start_new">18dp</dimen>
 
-    <dimen name="reader_card_gutters">0dp</dimen>
     <dimen name="reader_card_elevation_new">0dp</dimen>
 
     <dimen name="reader_footer_progress_bar_size">48dp</dimen>
@@ -176,7 +175,6 @@
     <dimen name="avatar_sz_large">64dp</dimen>
     <dimen name="avatar_sz_extra_large">72dp</dimen>
     <dimen name="avatar_sz_extra_medium_with_padding">28dp</dimen>
-    <dimen name="avatar_sz_extra_small_with_padding">26dp</dimen>
     <dimen name="avatar_sz_extra_extra_small_with_padding">22dp</dimen>
     <dimen name="avatar_background_padding">1dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
@@ -219,7 +217,6 @@
     <dimen name="reader_comments_selected_indicator_width">6dp</dimen>
 
     <dimen name="reader_chip_radius">8dp</dimen>
-    <dimen name="reader_site_header_avatar_padding">1dp</dimen>
 
     <dimen name="reader_expandable_tags_view_chip_new_radius">5dp</dimen>
     <dimen name="reader_expandable_tags_view_chip_new_border">1dp</dimen>
