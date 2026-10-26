@@ -755,16 +755,4 @@ public class ReaderPost {
         }
         return mDateDisplay;
     }
-
-    /*
-     * used when a unique numeric id is required by an adapter (when hasStableIds() = true)
-     */
-    private transient long mStableId;
-
-    public long getStableId() {
-        if (mStableId == 0) {
-            mStableId = (mPseudoId != null ? mPseudoId.hashCode() : 0);
-        }
-        return mStableId;
-    }
 }

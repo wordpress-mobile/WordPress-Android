@@ -677,7 +677,6 @@ Language: sr_RS
     <string name="reader_toast_err_follow_not_authorized_to_access_blog">Немате овлашћење за приступ овом блогу</string>
     <string name="reader_toast_err_unable_to_follow_blog">Није могуће претплатити се на овај блог</string>
     <string name="reader_toast_err_already_follow_this_blog">Већ сте претплаћени на овај блог</string>
-    <string name="reader_toast_err_show_blog">Није могуће приказати овај блог</string>
     <string name="reader_label_choose_interests">Изаберите своја интересовања</string>
     <string name="reader_label_subscribers_count_single">1 претплатник</string>
     <string name="reader_activity_title_tag_preview">Ознака</string>

@@ -144,8 +144,6 @@ import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderExpandableTagsView;
 import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView;
-import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
-import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
@@ -300,10 +298,6 @@ public interface AppComponent {
 
 
     void inject(ReaderTagAdapter object);
-
-    void inject(ReaderSiteHeaderView object);
-
-    void inject(ReaderTagHeaderView object);
 
     void inject(ReaderPostDetailHeaderView object);
 

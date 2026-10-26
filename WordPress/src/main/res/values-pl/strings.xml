@@ -677,7 +677,6 @@ Language: pl
     <string name="reader_toast_err_unable_to_follow_blog">Nie można było zasubskrybować tego blogu</string>
     <string name="reader_no_recommended_blogs_title">Brak polecanych blogów</string>
     <string name="reader_toast_err_already_follow_this_blog">Zasubskrybowałeś już ten blog</string>
-    <string name="reader_toast_err_show_blog">Nie można wyświetlić tego blogu</string>
     <string name="reader_label_subscribers_count_single">1 subskrybent</string>
     <string name="reader_label_choose_interests">Wybierz swoje zainteresowania</string>
     <string name="reader_label_subscribers_count">%s subskrybentów</string>
