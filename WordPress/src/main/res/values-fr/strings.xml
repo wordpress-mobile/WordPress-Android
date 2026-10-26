@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-09 09:57:33+0000
+Translation-Revision-Date: 2026-10-23 09:58:18+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.1.0
 Language: fr
@@ -3676,6 +3676,7 @@ Language: fr
     <string name="local_changes">Changements locaux</string>
     <string name="new_media">Nouveau média</string>
     <string name="new_post">Nouvel article</string>
+    <string name="notifications_empty_all">Pas (encore) de notifications !</string>
     <string name="invalid_site_url_message">Vérifiez que l\'URL saisie est valide</string>
     <string name="file_error_create">Impossible de créer un fichier temporaire pour le téléversement de média. Veuillez vérifier que vous disposez d\'assez d\'espace libre sur votre appareil.</string>
     <string name="category_name">Nom de la catégorie</string>

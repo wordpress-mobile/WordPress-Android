@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-12 07:06:29+0000
+Translation-Revision-Date: 2026-10-23 09:56:04+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.1.0
 Language: id
@@ -339,6 +339,7 @@ Language: id
     <string name="ai_bot_time_just_now">Baru saja</string>
     <string name="ai_bot_welcome_message">Saya asisten AI pribadi Anda. Saya bisa menjawab segala pertanyaan tentang situs atau akun Anda.</string>
     <string name="ai_bot_welcome_greeting">Apa kabar %1$s 👋</string>
+    <string name="unified_support_generic_error">Terjadi kesalahan. Coba lagi nanti.</string>
     <string name="create">Buat</string>
     <string name="logs_screen_general_error">Terjadi masalah …</string>
     <string name="logs_screen_empty_state">Tidak ada log</string>
