@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.net.http.SslError
 import android.util.Base64
+import android.webkit.RenderProcessGoneDetail
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.SslErrorHandler
@@ -23,6 +24,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapItem
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.WebViewRenderProcessGone
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import com.google.android.material.R as MaterialR
 
@@ -103,6 +106,17 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                     ) {
                         super.onReceivedSslError(view, handler, error)
                         itemView.visibility = View.GONE
+                    }
+
+                    // Hide the map like the other error paths do: the render process is gone, so
+                    // it cannot draw. Returning true keeps the framework from killing the app.
+                    override fun onRenderProcessGone(
+                        view: WebView?,
+                        detail: RenderProcessGoneDetail?
+                    ): Boolean {
+                        WebViewRenderProcessGone.log(AppLog.T.STATS, detail)
+                        itemView.visibility = View.GONE
+                        return true
                     }
                 }
                 webView.settings.javaScriptEnabled = true

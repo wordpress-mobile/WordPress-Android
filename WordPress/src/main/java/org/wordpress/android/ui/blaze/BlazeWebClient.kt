@@ -1,11 +1,14 @@
 package org.wordpress.android.ui.blaze
 
 import android.graphics.Bitmap
+import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.util.WebViewRenderProcessGone
 
 class BlazeWebViewClient(
     private val blazeWebViewClientListener: OnBlazeWebViewClientListener
@@ -36,6 +39,18 @@ class BlazeWebViewClient(
             errorReceived = true
             blazeWebViewClientListener.onWebViewReceivedError(request.url.toString())
         }
+    }
+
+    /**
+     * The render process is gone, so this WebView cannot show the campaign any more. Report it as
+     * a load error so the screen shows its error state, and return true so the framework does not
+     * take the app down with the renderer.
+     */
+    override fun onRenderProcessGone(view: WebView?, detail: RenderProcessGoneDetail?): Boolean {
+        WebViewRenderProcessGone.log(AppLog.T.MAIN, detail)
+        errorReceived = true
+        blazeWebViewClientListener.onWebViewReceivedError(requestedUrl)
+        return true
     }
 
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {

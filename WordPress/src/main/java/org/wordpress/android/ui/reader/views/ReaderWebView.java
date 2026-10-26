@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
+import android.webkit.RenderProcessGoneDetail;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -24,6 +25,7 @@ import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 import org.wordpress.android.ui.WPWebView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WebViewRenderProcessGone;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.helpers.WebChromeClientWithVideoPoster;
 
@@ -316,6 +318,17 @@ public class ReaderWebView extends WPWebView {
         }
 
 
+
+        /**
+         * The render process is gone, so the post content this WebView was showing cannot be
+         * drawn again until the reader screen is reopened. Return true all the same, otherwise
+         * the framework takes the app down with the renderer.
+         */
+        @Override
+        public boolean onRenderProcessGone(WebView view, RenderProcessGoneDetail detail) {
+            WebViewRenderProcessGone.log(AppLog.T.READER, detail);
+            return true;
+        }
 
         @Override
         public void onPageFinished(WebView view, String url) {

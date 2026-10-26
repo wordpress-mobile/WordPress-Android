@@ -9,6 +9,7 @@ import android.view.Gravity.CENTER_HORIZONTAL
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -28,8 +29,10 @@ import org.wordpress.android.ui.layoutpicker.PreviewUiState.Error
 import org.wordpress.android.ui.layoutpicker.PreviewUiState.Loaded
 import org.wordpress.android.ui.layoutpicker.PreviewUiState.Loading
 import org.wordpress.android.util.AniUtils
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.WebViewRenderProcessGone
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.skip
 import javax.inject.Inject
@@ -155,6 +158,14 @@ abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
                 super.onReceivedError(view, request, error)
                 viewModel.onPreviewError()
+            }
+
+            // The preview cannot be shown once the render process is gone, so fall back to the
+            // error state. Returning true keeps the framework from taking the app down with it.
+            override fun onRenderProcessGone(view: WebView?, detail: RenderProcessGoneDetail?): Boolean {
+                WebViewRenderProcessGone.log(AppLog.T.THEMES, detail)
+                viewModel.onPreviewError()
+                return true
             }
         }
 

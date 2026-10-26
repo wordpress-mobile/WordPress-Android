@@ -1,6 +1,7 @@
 package org.wordpress.android.util
 
 import android.graphics.Bitmap
+import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -35,6 +36,18 @@ open class ErrorManagedWebViewClient(
             errorReceived = true
             baseWebViewClientListener.onWebViewReceivedError()
         }
+    }
+
+    /**
+     * The render process is gone, so this WebView cannot show anything any more. Report it as a
+     * load error - every screen using this client already has an error state for that - and
+     * return true so the framework does not take the app down with the renderer.
+     */
+    override fun onRenderProcessGone(view: WebView?, detail: RenderProcessGoneDetail?): Boolean {
+        WebViewRenderProcessGone.log(AppLog.T.UTILS, detail)
+        errorReceived = true
+        baseWebViewClientListener.onWebViewReceivedError()
+        return true
     }
 
     interface ErrorManagedWebViewClientListener {

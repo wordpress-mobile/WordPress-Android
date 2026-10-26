@@ -1,10 +1,13 @@
 package org.wordpress.android.ui.sitemonitor
 
 import android.graphics.Bitmap
+import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.WebViewRenderProcessGone
 
 class SiteMonitorWebViewClient(
     private val listener: SiteMonitorWebViewClientListener,
@@ -44,5 +47,17 @@ class SiteMonitorWebViewClient(
             errorReceived = true
             listener.onWebViewReceivedError(request.url.toString(), tabType)
         }
+    }
+
+    /**
+     * The render process is gone, so this WebView cannot show the tab any more. Report it as a
+     * load error so the tab shows its error state, and return true so the framework does not take
+     * the app down with the renderer.
+     */
+    override fun onRenderProcessGone(view: WebView?, detail: RenderProcessGoneDetail?): Boolean {
+        WebViewRenderProcessGone.log(AppLog.T.MAIN, detail)
+        errorReceived = true
+        listener.onWebViewReceivedError(requestedUrl.orEmpty(), tabType)
+        return true
     }
 }

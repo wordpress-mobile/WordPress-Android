@@ -3,6 +3,7 @@ package org.wordpress.android.ui.sitemonitor
 import android.net.Uri
 import android.webkit.WebResourceRequest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -53,6 +54,17 @@ class SiteMonitorWebViewClientTest : BaseUnitTest() {
             mock()
         )
 
+        verify(mockListener).onWebViewReceivedError(url, SiteMonitorType.METRICS)
+    }
+
+    @Test
+    fun `when onRenderProcessGone, then should invoke on web view error received`() {
+        val url = "https://some.domain"
+        webViewClient.onPageStarted(mock(), url, null)
+
+        val handled = webViewClient.onRenderProcessGone(mock(), mock())
+
+        assertThat(handled).isTrue()
         verify(mockListener).onWebViewReceivedError(url, SiteMonitorType.METRICS)
     }
 

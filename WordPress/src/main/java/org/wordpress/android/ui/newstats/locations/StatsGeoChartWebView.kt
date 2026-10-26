@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.net.http.SslError
 import android.util.Base64
+import android.webkit.RenderProcessGoneDetail
 import android.webkit.SslErrorHandler
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
@@ -27,6 +28,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 import androidx.core.content.ContextCompat
 import org.wordpress.android.R
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.WebViewRenderProcessGone
 import java.util.Locale
 
 private const val RGB_MASK = 0xFFFFFF
@@ -151,6 +154,18 @@ private fun createWebViewClientWithErrorHandlers(
             super.onReceivedSslError(view, handler, error)
             onPageLoaded()
             onError?.invoke()
+        }
+
+        // The chart cannot be drawn once the render process is gone, so stop the shimmer and
+        // degrade like the other error paths. Returning true keeps the app from being killed.
+        override fun onRenderProcessGone(
+            view: WebView?,
+            detail: RenderProcessGoneDetail?
+        ): Boolean {
+            WebViewRenderProcessGone.log(AppLog.T.STATS, detail)
+            onPageLoaded()
+            onError?.invoke()
+            return true
         }
     }
 }

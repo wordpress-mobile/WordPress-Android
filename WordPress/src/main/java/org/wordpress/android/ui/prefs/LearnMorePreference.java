@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.RenderProcessGoneDetail;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -31,7 +32,9 @@ import androidx.annotation.NonNull;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WebViewRenderProcessGone;
 
 public class LearnMorePreference extends Preference implements View.OnClickListener {
     private static final String SUPPORT_CONTENT_JS =
@@ -228,6 +231,22 @@ public class LearnMorePreference extends Preference implements View.OnClickListe
                 ToastUtils.showToast(getContext(), R.string.could_not_load_page);
                 mDialog.dismiss();
             }
+        }
+
+        /**
+         * The render process is gone, so the dialog cannot show the page any more. Close it with
+         * the same message as a load error and return true, otherwise the framework kills the app.
+         */
+        @Override
+        public boolean onRenderProcessGone(WebView view, RenderProcessGoneDetail detail) {
+            WebViewRenderProcessGone.log(AppLog.T.SETTINGS, detail);
+
+            if (mDialog != null && mDialog.isShowing()) {
+                ToastUtils.showToast(getContext(), R.string.could_not_load_page);
+                mDialog.dismiss();
+            }
+
+            return true;
         }
 
         @Override

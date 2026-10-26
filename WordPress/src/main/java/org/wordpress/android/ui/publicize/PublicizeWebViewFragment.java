@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.RenderProcessGoneDetail;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -26,6 +27,8 @@ import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.WebViewRenderProcessGone;
 import org.wordpress.android.util.WebViewUtils;
 import org.wordpress.android.util.helpers.WebChromeClientWithVideoPoster;
 
@@ -169,6 +172,20 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     private class PublicizeWebViewClient extends WebViewClient {
         PublicizeWebViewClient() {
             super();
+        }
+
+        /**
+         * The render process is gone, so the user cannot finish authorizing the service. End the
+         * flow as a failed connection and return true, otherwise the framework kills the app.
+         */
+        @Override
+        public boolean onRenderProcessGone(WebView view, RenderProcessGoneDetail detail) {
+            WebViewRenderProcessGone.log(AppLog.T.SHARING, detail);
+
+            EventBus.getDefault().post(new PublicizeEvents.ActionCompleted(false,
+                    ConnectAction.CONNECT, mServiceId));
+
+            return true;
         }
 
         @Override

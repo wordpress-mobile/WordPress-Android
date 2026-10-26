@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Web screens no longer take the app down when their renderer dies**
+  When Android shuts down the rendering process behind a WebView - usually to reclaim memory, sometimes because it crashed - the affected screen now falls back to an error state instead of the app disappearing. Blaze, campaign details, domain management, domain checkout, site creation plans, Site Monitor, Help & Support, site design previews and the Publicize connection flow show their usual "couldn't load" view; the Stats map and the new Stats locations chart hide themselves; the "Learn more" dialog in site settings closes with "Could not load page"; a Reader post keeps the screen with the post body blank.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Anywhere the app shows web content - My Site -> Stats, Reader post detail, Blaze, Site Monitor, Help & Support, domain management, site creation
+  - **Notes:** The WebView cannot recover in place, so reopening or reloading the screen is the way back. Previously the renderer dying ended the whole app process, with no error shown and no crash report attributed to it.
+
 - **Archives card in Stats**
   A new Archives card lists the views a site's archive pages received, grouped by what they archive: search terms, categories, tags, authors, dates, errors, aggregated, "other", and one "Taxonomies" group for the site's custom taxonomies. Each group expands to show the individual pages, and tapping one opens it in the browser. Taxonomies expands one level further — a row per custom taxonomy, which expands to that taxonomy's terms. The card is not shown by default — add it from "Add card" at the bottom of the Traffic tab.
   - **Apps:** Both
