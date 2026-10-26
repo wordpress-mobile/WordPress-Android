@@ -585,8 +585,10 @@ public class ReaderBlogActions {
 
     public static void undoBlockBlogFromReader(final BlockedBlogResult blockResult,
                                                final String source,
-                                               final ReaderTracker readerTracker) {
+                                               final ReaderTracker readerTracker,
+                                               final ActionListener actionListener) {
         if (blockResult == null) {
+            ReaderActions.callActionListener(actionListener, false);
             return;
         }
         undoBlockBlogLocal(blockResult);
@@ -608,12 +610,14 @@ public class ReaderBlogActions {
                 } else if (!success) {
                     AppLog.w(T.READER, "failed to unblock blog " + blockResult.blogId);
                 }
+                ReaderActions.callActionListener(actionListener, success);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 logVolleyError("unblock blog", volleyError);
+                ReaderActions.callActionListener(actionListener, false);
             }
         };
 
