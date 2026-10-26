@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-12 07:06:24+0000
+Translation-Revision-Date: 2026-10-25 20:51:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.1.0
 Language: ja_JP
@@ -348,6 +348,7 @@ Language: ja_JP
     <string name="support_screen_diagnostics_section_title">診断</string>
     <string name="support_screen_help_center_description">導入に役立つドキュメントとチュートリアル</string>
     <string name="support_screen_help_center_title">ヘルプセンター</string>
+    <string name="support_screen_how_can_we_help_title">どのようなサポートをお求めですか ?</string>
     <string name="support_screen_login_button">WordPress.com にログイン</string>
     <string name="support_screen_title">サポート</string>
     <string name="modern_support_description">新しいモダンサポート体験を有効にする</string>
@@ -727,6 +728,7 @@ Language: ja_JP
     <string name="bloganuary_dashboard_nudge_overlay_text_two">回答を公開します。</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_one">毎日インスピレーションを与える新しいプロンプトを受け取ることができます。</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">1か月間のライティングチャレンジにご参加ください</string>
+    <string name="bloganuary_dashboard_nudge_text">1月のブログ作成プロンプトは、新年にブログ投稿を習慣付けるためのコミュニティ課題「Bloganuary」から提示されます。</string>
     <string name="bloganuary_dashboard_nudge_title_december">まもなく Bloganuary が登場します !</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">このため、Web ブラウザーでブロックを編集することをお勧めします。</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">このため、Web エディターでブロックを編集することをお勧めします。</string>

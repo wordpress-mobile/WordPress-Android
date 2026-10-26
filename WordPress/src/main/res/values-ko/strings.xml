@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-09 09:56:29+0000
+Translation-Revision-Date: 2026-10-23 09:58:21+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.1.0
 Language: ko_KR
@@ -71,6 +71,7 @@ Language: ko_KR
     <string name="stats_insights_total_posts">전체 글 수</string>
     <string name="stats_insights_likes">좋아요</string>
     <string name="stats_insights_words">단어</string>
+    <string name="activity_log_mcp_agent_label">%1$s 경유</string>
     <string name="post_rs_settings_show_password">비밀번호 표시</string>
     <string name="post_rs_settings_hide_password">비밀번호 숨기기</string>
     <string name="post_rs_settings_saving">저장하기\u2026</string>
