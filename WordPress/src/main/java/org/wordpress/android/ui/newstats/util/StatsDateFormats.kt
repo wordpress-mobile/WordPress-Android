@@ -129,13 +129,20 @@ private fun fieldRuns(pattern: String): List<IntRange> {
     return runs
 }
 
-/** The index just past the literal opening at [openIndex], tolerating the "''" escape. */
+/**
+ * The index just past the literal opening at [openIndex], tolerating the "''" escape a pattern uses
+ * for a literal apostrophe: both of its quotes are stepped over, so the second one cannot be read
+ * as the one that closes the literal.
+ */
 private fun skipQuotedLiteral(pattern: String, openIndex: Int): Int {
     var index = openIndex + 1
     while (index < pattern.length) {
         if (pattern[index] == '\'') {
             index++
-            if (index < pattern.length && pattern[index] == '\'') continue
+            if (index < pattern.length && pattern[index] == '\'') {
+                index++
+                continue
+            }
             return index
         }
         index++
