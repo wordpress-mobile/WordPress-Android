@@ -130,6 +130,10 @@ apply from: './config/gradle/included_builds.gradle'
 apply from: './config/gradle/gradle_build_scan.gradle'
 
 buildCache {
+    local {
+        // Storing outputs locally costs more than the rare hits it gives; the remote cache covers fresh worktrees
+        enabled = gradle.ext.isCi
+    }
     if (gradle.ext.isCi) {
         remote(HttpBuildCache) {
             url = "http://10.0.2.214:5071/cache/"
