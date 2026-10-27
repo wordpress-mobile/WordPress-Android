@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Stats dates follow the device language, and the date selector names the dates on screen**
+  Every date in the redesigned Stats screen is now written in the order the device's language uses — "Aug 11" in US English, "11 Aug" in British English, "2026年8月11日" in Japanese — instead of always day-then-month. This covers the date selector at the top of Traffic, the Views chart's legend and axis labels, the Subscribers chart, the detail screens' subtitles, and the "Best day" and "Today" cards. The date selector also shows the dates a preset covers on a second line, so "Last 7 days" now reads with "Oct 21 - Oct 27, 2026" underneath it.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic (date selector, Views card) and Insights; My Site → Stats → Subscribers
+  - **Notes:** A refresh still keeps the period that is selected rather than jumping to today — that is deliberate, and the dates on the selector now make it visible. A span inside one month names the month once where the language allows it ("Jul 28-30", "28-30 Jul") and spells both ends out where it does not ("7月28日 - 7月30日"). Bare years stay as digits in every language.
+
 - **Reader post lists restyled**
   Reader post lists keep their content and actions, but the pieces around the posts have a Material 3 look: the "New posts" pill, the empty-state messages and their buttons, and the Subscribe buttons in the site and tag headers at the top of a blog or tag preview. When a blog or tag preview has no posts, its message now shows below the header instead of over it. A failed Subscribe or Unsubscribe from a site header now shows a snackbar instead of a toast.
   - **Apps:** Jetpack

@@ -57,9 +57,10 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.utils.horizontalFadingEdges
 import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.components.StatsCardMenu
+import org.wordpress.android.ui.newstats.util.StatsDateSkeleton
 import org.wordpress.android.ui.newstats.util.formatStatValue
-import java.text.SimpleDateFormat
-import java.util.Date
+import org.wordpress.android.ui.newstats.util.statsDateFormatter
+import java.time.LocalDate
 import java.util.Locale
 
 private val CardCornerRadius = 10.dp
@@ -329,8 +330,12 @@ private fun ErrorContent(
 
 @Composable
 private fun TitleSection() {
-    val dateFormat = remember { SimpleDateFormat("EEEE, MMM d", Locale.getDefault()) }
-    val formattedDate = remember { dateFormat.format(Date()) }
+    // Rebuilt whenever the locale changes so the weekday and month order follow the reader's
+    // locale ("Tuesday, Aug 11", "11 Aug, Tuesday", "8月11日火曜日").
+    val locale = Locale.getDefault()
+    val formattedDate = remember(locale) {
+        LocalDate.now().format(statsDateFormatter(StatsDateSkeleton.WEEKDAY_DAY_MONTH, locale))
+    }
 
     Column {
         Text(
