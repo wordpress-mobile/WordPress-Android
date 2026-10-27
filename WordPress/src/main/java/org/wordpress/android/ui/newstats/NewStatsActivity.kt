@@ -66,6 +66,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -1772,16 +1773,16 @@ private fun PeriodLabel(label: DateRangeLabel) {
             // their own centre column so they align on every row; the start/end columns hug it.
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(horizontalAlignment = Alignment.End) {
-                    Text(primary.start, style = primaryStyle, color = primaryColor, maxLines = 1)
-                    Text(secondary.start, style = secondaryStyle, color = secondaryColor, maxLines = 1)
+                    RangeEndText(primary.start, primaryStyle, primaryColor)
+                    RangeEndText(secondary.start, secondaryStyle, secondaryColor)
                 }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(text = " - ", style = primaryStyle, color = primaryColor, maxLines = 1)
                     Text(text = " - ", style = secondaryStyle, color = secondaryColor, maxLines = 1)
                 }
                 Column(horizontalAlignment = Alignment.Start) {
-                    Text(primary.end, style = primaryStyle, color = primaryColor, maxLines = 1)
-                    Text(secondary.end, style = secondaryStyle, color = secondaryColor, maxLines = 1)
+                    RangeEndText(primary.end, primaryStyle, primaryColor)
+                    RangeEndText(secondary.end, secondaryStyle, secondaryColor)
                 }
             }
         } else {
@@ -1800,7 +1801,19 @@ private fun SingleRangeLine(line: RangeLine, style: TextStyle, color: Color) {
         is RangeLine.Single -> line.text
         is RangeLine.Split -> "${line.start} - ${line.end}"
     }
-    Text(text = text, style = style, color = color, maxLines = 1)
+    RangeEndText(text, style, color)
+}
+
+/**
+ * A date line of the app bar's range label, kept to one line.
+ *
+ * Ellipsized rather than left on Compose's default clip, which breaks at a space and so drops the
+ * label's trailing words outright — a long localized range ("30 de dez. de 2025 - 2 de jan. de
+ * 2026" in pt-BR) would lose its year with nothing on screen to say so.
+ */
+@Composable
+private fun RangeEndText(text: String, style: TextStyle, color: Color) {
+    Text(text = text, style = style, color = color, maxLines = 1, overflow = TextOverflow.Ellipsis)
 }
 
 /**

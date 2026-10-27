@@ -94,16 +94,24 @@ class ViewsStatsViewModel @Inject constructor(
 
     /**
      * The dates [effectivePeriod] resolves to, shown beneath a preset's name in the Traffic
-     * selector so the label always names the window on screen. A preset's name on its own
+     * selector so the label names the window the cards were loaded for. A preset's name on its own
      * ("Last 7 days") never changes, which is what made a still-selected period look like stats
      * that had stopped updating when a user refreshed them (CMM-2540).
      *
      * Null for a Custom range — including a soft-selected bar, which is one — whose label is
      * already made of those dates; repeating them would only double the line.
      *
-     * Recomputed on every [_uiState] emission as well as on a period change, because the window is
-     * read off the clock: a session left open past midnight relabels on its next load rather than
-     * keeping yesterday's dates under "Today".
+     * Recomputed on every [_uiState] emission as well as on a period change, and the window is read
+     * off the clock each time. The [_uiState] leg is what keeps the dates right after a same-period
+     * pull-to-refresh, which moves neither [_selectedPeriod] nor [effectivePeriod] and so would
+     * otherwise leave the label untouched.
+     *
+     * The cost of reading the clock there is that emissions which do *no* fetch — [onMetricSelected],
+     * [onChartTypeChanged], [onBarTapped] — also relabel. A session left open across local midnight
+     * therefore shows today's window above data loaded yesterday until the next load. Accepted
+     * rather than fixed: it takes a session spanning midnight plus a tap on one of those controls,
+     * and dates a day ahead of the chart read as a prompt to refresh rather than as stalled stats.
+     * Deriving the label from the loaded result instead would remove the gap entirely.
      */
     val effectivePeriodDates: StateFlow<String?> =
         combine(effectivePeriod, _uiState) { period, _ -> formatPeriodDates(period) }

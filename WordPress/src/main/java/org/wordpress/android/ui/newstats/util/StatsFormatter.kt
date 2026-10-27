@@ -128,9 +128,6 @@ fun StatsPeriod.toDateRangeString(resourceProvider: ResourceProvider): String {
 /** The separator between the two ends of a span that names its month (or year) on both ends. */
 private const val RANGE_SEPARATOR = " - "
 
-/** The separator between the two ends of a span collapsed onto a single month ("28-30 Jul"). */
-private const val COLLAPSED_SEPARATOR = "-"
-
 /**
  * Formats a Custom range's dates identically wherever a year-less range is shown (the Traffic
  * top-bar label and every detail card), so the two never diverge in day/month ordering or locale.
@@ -183,7 +180,8 @@ fun formatMonthRangeWithYear(startDate: LocalDate, endDate: LocalDate): String =
         endDate = endDate,
         skeleton = StatsDateSkeleton.MONTH,
         yearSkeleton = StatsDateSkeleton.MONTH_YEAR,
-        collapsible = false
+        collapsible = false,
+        matchYearlessEndToYearPattern = true
     )
 }
 
@@ -198,13 +196,20 @@ fun formatMonthRangeWithYear(startDate: LocalDate, endDate: LocalDate): String =
  *
  * Only a day span is ever [collapsible]: the day is the field that collapsing drops, and a month
  * span has none to drop.
+ *
+ * [matchYearlessEndToYearPattern] derives the year-less end from [yearSkeleton]'s own resolved
+ * pattern (see [yearlessFormatter]) instead of resolving [skeleton] separately, so the two ends
+ * cannot disagree on how the locale writes a month. Only the month span sets it: a *day* span's two
+ * skeletons already agree everywhere, and deriving there would drop the ordinal dot Czech and
+ * Slovak put on the day ("d. M." resolved alone, "d. M" derived from "d. M. y").
  */
 private fun formatRangeWithYear(
     startDate: LocalDate,
     endDate: LocalDate,
     skeleton: String,
     yearSkeleton: String,
-    collapsible: Boolean
+    collapsible: Boolean,
+    matchYearlessEndToYearPattern: Boolean = false
 ): String {
     val withYear = statsDateFormatter(yearSkeleton)
     val placement = rangeYearPlacement(startDate.year, endDate.year)
@@ -218,7 +223,12 @@ private fun formatRangeWithYear(
         DayFieldPosition.TRAILING -> yearOnStart
         DayFieldPosition.ENCLOSED -> false
     }
-    val plain = statsDateFormatter(if (collapses) StatsDateSkeleton.DAY else skeleton)
+    val plain = when {
+        collapses -> statsDateFormatter(StatsDateSkeleton.DAY)
+        matchYearlessEndToYearPattern -> yearlessFormatter(yearSkeleton)
+            ?: statsDateFormatter(skeleton)
+        else -> statsDateFormatter(skeleton)
+    }
     val separator = if (collapses) COLLAPSED_SEPARATOR else RANGE_SEPARATOR
     return if (yearOnStart) {
         "${startDate.format(withYear)}$separator${endDate.format(plain)}"

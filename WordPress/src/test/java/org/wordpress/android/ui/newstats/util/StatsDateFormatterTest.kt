@@ -75,6 +75,16 @@ class StatsDateFormatterTest {
     }
 
     @Test
+    fun `a span does not collapse when the locale's own pattern uses the range separator`() {
+        // Uzbek writes "d-MMM", so collapsing to "28-30-iyl" would make the range marker
+        // indistinguishable from the pattern's own separator (CMM-2540).
+        setLocale(Locale.forLanguageTag("uz"))
+
+        assertThat(rangeOf(LocalDate.of(2024, 7, 28), LocalDate.of(2024, 7, 30)))
+            .isEqualTo("28-iyl - 30-iyl")
+    }
+
+    @Test
     fun `a span across a month boundary names the month on both ends`() {
         val start = LocalDate.of(2026, 7, 28)
         val end = LocalDate.of(2026, 8, 3)
@@ -87,6 +97,20 @@ class StatsDateFormatterTest {
 
         setLocale(Locale.JAPAN)
         assertThat(rangeOf(start, end)).isEqualTo("7月28日 - 8月3日")
+    }
+
+    @Test
+    fun `a span between the same month of two different years names the month on both ends`() {
+        // The collapse guard checks the year as well as the month: without that, a span a year
+        // apart would read "28-30 Jul" and hide the fact that it spans twelve months.
+        val start = LocalDate.of(2024, 7, 28)
+        val end = LocalDate.of(2025, 7, 30)
+
+        setLocale(Locale.UK)
+        assertThat(rangeOf(start, end)).isEqualTo("28 Jul - 30 Jul")
+
+        setLocale(Locale.US)
+        assertThat(rangeOf(start, end)).isEqualTo("Jul 28 - Jul 30")
     }
 
     @Test
@@ -139,6 +163,57 @@ class StatsDateFormatterTest {
 
         setLocale(Locale.JAPAN)
         assertThat(formatMonthRangeWithYear(start, end)).isEqualTo("2024年1月 - 6月")
+    }
+
+    @Test
+    fun `a month span writes both ends in the same month form`() {
+        val start = LocalDate.of(2024, 1, 1)
+        val end = LocalDate.of(2024, 6, 1)
+
+        // Slovak resolves a bare month to a name ("jan") but a month-with-year to a number
+        // ("6/2024"), so taking each end from its own skeleton read "jan - 6/2024". Both ends now
+        // come from the year-bearing pattern (CMM-2540).
+        setLocale(Locale.forLanguageTag("sk"))
+        assertThat(formatMonthRangeWithYear(start, end)).isEqualTo("1 - 6/2024")
+
+        // Czech disagreed on width instead: abbreviated alone, full with the year.
+        setLocale(Locale.forLanguageTag("cs"))
+        assertThat(formatMonthRangeWithYear(start, end)).isEqualTo("leden - červen 2024")
+
+        // German differed only in the abbreviation dot, which the derived end now keeps.
+        setLocale(Locale.GERMANY)
+        assertThat(formatMonthRangeWithYear(start, end)).isEqualTo("Jan. - Juni 2024")
+    }
+
+    @Test
+    fun `a cross-year month span carries the year on both ends, so neither is derived`() {
+        setLocale(Locale.forLanguageTag("sk"))
+
+        assertThat(
+            formatMonthRangeWithYear(LocalDate.of(2024, 12, 1), LocalDate.of(2025, 1, 1))
+        ).isEqualTo("12/2024 - 1/2025")
+    }
+
+    @Test
+    fun `a day span keeps the day form the locale resolves on its own`() {
+        // The day skeletons already agree, and deriving would drop the ordinal dot cs/sk put on
+        // the day ("d. M." alone vs "d. M" derived from "d. M. y"), so the day path is left alone.
+        setLocale(Locale.forLanguageTag("cs"))
+
+        assertThat(
+            formatDayRangeWithYear(LocalDate.of(2024, 7, 28), LocalDate.of(2024, 8, 3))
+        ).isEqualTo("28. 7. - 3. 8. 2024")
+    }
+
+    @Test
+    fun `a year-end month keeps its calendar year where ICU asks for the week-based one`() {
+        // Scottish Gaelic resolves a month-with-year to "LLL Y", and "Y" is the week-based year in
+        // java.time: December 2024 falls in ISO week-year 2025, so the label read a year ahead
+        // until the pattern's year fields were normalized (CMM-2540).
+        setLocale(Locale.forLanguageTag("gd"))
+        val december = LocalDate.of(2024, 12, 30)
+
+        assertThat(formatMonthRangeWithYear(december, december)).endsWith("2024")
     }
 
     @Test
@@ -220,6 +295,24 @@ class StatsDateFormatterTest {
         setLocale(Locale.JAPAN)
         assertThat(formatCustomDateRangeTwoLine(start, end, currentYear = 2025).primary)
             .isEqualTo(RangeLine.Split("6月14日", "6月20日"))
+    }
+
+    @Test
+    fun `the two-line label renders a single day as one line in the locale's own order`() {
+        val day = LocalDate.of(2025, 6, 14)
+
+        setLocale(Locale.UK)
+        assertThat(formatCustomDateRangeTwoLine(day, day, currentYear = 2025).primary)
+            .isEqualTo(RangeLine.Single("14 Jun"))
+
+        setLocale(Locale.US)
+        assertThat(formatCustomDateRangeTwoLine(day, day, currentYear = 2025).primary)
+            .isEqualTo(RangeLine.Single("Jun 14"))
+
+        // Nothing collapses in Japanese, but a single day has no second endpoint to split out.
+        setLocale(Locale.JAPAN)
+        assertThat(formatCustomDateRangeTwoLine(day, day, currentYear = 2025).primary)
+            .isEqualTo(RangeLine.Single("6月14日"))
     }
 
     @Test

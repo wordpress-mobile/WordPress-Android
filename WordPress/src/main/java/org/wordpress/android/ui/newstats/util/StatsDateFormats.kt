@@ -53,7 +53,100 @@ fun statsDateFormatter(
 ): DateTimeFormatter = DateTimeFormatter.ofPattern(statsDatePattern(skeleton, locale), locale)
 
 private fun statsDatePattern(skeleton: String, locale: Locale): String =
-    DateFormat.getBestDateTimePattern(locale, skeleton)
+    DateFormat.getBestDateTimePattern(locale, skeleton).withPlainYearFields()
+
+/** The CLDR pattern letters that stand for a year, including the week-based and extended forms. */
+private const val YEAR_FIELD_LETTERS = "yYuUr"
+
+/**
+ * This pattern with every year field rewritten as [java.time]'s plain calendar year, keeping each
+ * run's length so a two-digit year stays two digits.
+ *
+ * ICU and [java.time] read the other year letters differently. ICU answers Scottish Gaelic's
+ * [StatsDateSkeleton.MONTH_YEAR] with "LLL Y", and "Y" is the *week-based* year in [java.time]: the
+ * last days of December belong to the next ISO week-year, so a window ending 30 December 2024 would
+ * be dated "Dùbh 2025" (CMM-2540). "U" (cyclic year name) and "r" (related year) are not
+ * [java.time] fields at all and would throw on pattern creation.
+ */
+private fun String.withPlainYearFields(): String {
+    val years = fieldRuns(this).filter { this[it.first] in YEAR_FIELD_LETTERS && this[it.first] != 'y' }
+    if (years.isEmpty()) return this
+    val chars = toCharArray()
+    years.forEach { run -> run.forEach { chars[it] = 'y' } }
+    return String(chars)
+}
+
+/**
+ * The formatter for [yearSkeleton]'s fields *minus* its year, so the year-less end of a span is
+ * written in exactly the same month form as the end that carries the year.
+ *
+ * Resolving a year-less skeleton separately does not guarantee that: ICU answers
+ * [StatsDateSkeleton.MONTH] with the locale's *standalone* month form and
+ * [StatsDateSkeleton.MONTH_YEAR] with its *format* one, and the two can disagree on width or even
+ * on name-versus-number. Slovak gives "LLL" (jan) against "M/y" (10/2026), so a span built from
+ * both read "jan - 10/2026" — a month name against a month number (CMM-2540). Czech mixed
+ * abbreviated with full ("led - říjen"); nine shipped locales differed in all.
+ *
+ * Returns null when the year sits between two other fields, where dropping it would strand a
+ * separator mid-pattern; the caller then falls back to resolving the year-less skeleton.
+ */
+fun yearlessFormatter(
+    yearSkeleton: String,
+    locale: Locale = Locale.getDefault()
+): DateTimeFormatter? = yearlessPattern(statsDatePattern(yearSkeleton, locale))
+    ?.let { DateTimeFormatter.ofPattern(it, locale) }
+
+private fun yearlessPattern(pattern: String): String? {
+    val fields = fieldRuns(pattern)
+    if (fields.size < 2) return null
+    val yearIndex = fields.indexOfFirst { pattern[it.first] in YEAR_FIELD_LETTERS }
+    return when (yearIndex) {
+        // Year last ("MMM y", "M/y", "MMM 'de' y"): keep up to the preceding field's end.
+        fields.lastIndex -> pattern.substring(0, fields[yearIndex - 1].last + 1)
+        // Year first ("y年M月", "y. 'g'. MMM"): keep from the following field's start.
+        0 -> pattern.substring(fields[1].first)
+        else -> null
+    }
+}
+
+/**
+ * The index ranges of [pattern]'s field runs, skipping quoted literals. Only ASCII letters count as
+ * fields, so a locale that writes a literal in its own script ("年" in ja, "년" in ko) is not
+ * mistaken for one.
+ */
+private fun fieldRuns(pattern: String): List<IntRange> {
+    val runs = mutableListOf<IntRange>()
+    var index = 0
+    while (index < pattern.length) {
+        val char = pattern[index]
+        when {
+            char == '\'' -> index = skipQuotedLiteral(pattern, index)
+            char.isPatternField() -> {
+                val start = index
+                while (index < pattern.length && pattern[index] == char) index++
+                runs += start until index
+            }
+            else -> index++
+        }
+    }
+    return runs
+}
+
+/** The index just past the literal opening at [openIndex], tolerating the "''" escape. */
+private fun skipQuotedLiteral(pattern: String, openIndex: Int): Int {
+    var index = openIndex + 1
+    while (index < pattern.length) {
+        if (pattern[index] == '\'') {
+            index++
+            if (index < pattern.length && pattern[index] == '\'') continue
+            return index
+        }
+        index++
+    }
+    return index
+}
+
+private fun Char.isPatternField(): Boolean = this in 'a'..'z' || this in 'A'..'Z'
 
 /**
  * Where the day of month sits in a locale's [StatsDateSkeleton.DAY_MONTH] pattern, which decides
@@ -68,11 +161,15 @@ enum class DayFieldPosition {
 
     /**
      * The day is wrapped by something the collapsed form would drop or strand — a trailing
-     * literal ("MMM d." in Hungarian, "MMM d일" in Korean) or a per-field suffix ("M月d日"). These
-     * spell the month out on both ends ("8月28日 - 8月30日") rather than collapse.
+     * literal ("MMM d." in Hungarian, "MMM d일" in Korean) or a per-field suffix ("M月d日") — or the
+     * pattern already writes [COLLAPSED_SEPARATOR] between its own fields. These spell the month
+     * out on both ends ("8月28日 - 8月30日") rather than collapse.
      */
     ENCLOSED
 }
+
+/** The separator a collapsed span joins its two ends with ("28-30 Jul"). */
+const val COLLAPSED_SEPARATOR = "-"
 
 /**
  * Reads [DayFieldPosition] off the locale's own day-month pattern rather than off a list of
@@ -82,10 +179,37 @@ enum class DayFieldPosition {
 fun dayFieldPosition(locale: Locale = Locale.getDefault()): DayFieldPosition {
     val pattern = statsDatePattern(StatsDateSkeleton.DAY_MONTH, locale)
     return when {
+        // Uzbek writes "d-MMM", so a collapsed "28-30-iyl" would leave the range marker and the
+        // pattern's own separator indistinguishable. Spell both ends out instead (CMM-2540).
+        pattern.writesLiteral(COLLAPSED_SEPARATOR) -> DayFieldPosition.ENCLOSED
         pattern.firstOrNull() == 'd' -> DayFieldPosition.LEADING
         pattern.lastOrNull() == 'd' -> DayFieldPosition.TRAILING
         else -> DayFieldPosition.ENCLOSED
     }
+}
+
+/**
+ * Whether this pattern renders any character of [separator] as a literal, counting the ones inside
+ * quotes: those reach the output just the same, so they are equally ambiguous in a collapsed span.
+ */
+private fun String.writesLiteral(separator: String): Boolean {
+    var index = 0
+    while (index < length) {
+        val char = this[index]
+        when {
+            char == '\'' -> {
+                val end = skipQuotedLiteral(this, index)
+                if (substring(index, end).any { it in separator }) return true
+                index = end
+            }
+            char.isPatternField() -> index++
+            else -> {
+                if (char in separator) return true
+                index++
+            }
+        }
+    }
+    return false
 }
 
 /**
