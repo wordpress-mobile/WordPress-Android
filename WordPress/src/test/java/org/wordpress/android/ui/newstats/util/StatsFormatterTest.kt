@@ -30,35 +30,70 @@ class StatsFormatterTest {
     fun `toContentDescription of a single-line current-year range omits the separator`() {
         val label = DateRangeLabel(RangeLine.Single("14-20 Jun"), null)
 
-        assertThat(label.toContentDescription(RANGE_TEMPLATE)).isEqualTo("14-20 Jun")
+        assertThat(label.toContentDescription(RANGE_TEMPLATE, yearLeads = false)).isEqualTo("14-20 Jun")
     }
 
     @Test
     fun `toContentDescription of a single-line past-year range merges the year`() {
         val label = DateRangeLabel(RangeLine.Single("14-20 Jun"), RangeLine.Single("2024"))
 
-        assertThat(label.toContentDescription(RANGE_TEMPLATE)).isEqualTo("14-20 Jun 2024")
+        assertThat(label.toContentDescription(RANGE_TEMPLATE, yearLeads = false))
+            .isEqualTo("14-20 Jun 2024")
     }
 
     @Test
     fun `toContentDescription of a split current-year range spans both endpoints`() {
         val label = DateRangeLabel(RangeLine.Split("28 Jul", "3 Aug"), null)
 
-        assertThat(label.toContentDescription(RANGE_TEMPLATE)).isEqualTo("28 Jul to 3 Aug")
+        assertThat(label.toContentDescription(RANGE_TEMPLATE, yearLeads = false))
+            .isEqualTo("28 Jul to 3 Aug")
     }
 
     @Test
     fun `toContentDescription of a split past-year range merges the year onto the end`() {
         val label = DateRangeLabel(RangeLine.Split("28 Jul", "3 Aug"), RangeLine.Single("2024"))
 
-        assertThat(label.toContentDescription(RANGE_TEMPLATE)).isEqualTo("28 Jul to 3 Aug 2024")
+        assertThat(label.toContentDescription(RANGE_TEMPLATE, yearLeads = false))
+            .isEqualTo("28 Jul to 3 Aug 2024")
     }
 
     @Test
     fun `toContentDescription of a cross-year range merges each year onto its endpoint`() {
         val label = DateRangeLabel(RangeLine.Split("14 Jun", "14 Jun"), RangeLine.Split("2025", "2026"))
 
-        assertThat(label.toContentDescription(RANGE_TEMPLATE)).isEqualTo("14 Jun 2025 to 14 Jun 2026")
+        assertThat(label.toContentDescription(RANGE_TEMPLATE, yearLeads = false))
+            .isEqualTo("14 Jun 2025 to 14 Jun 2026")
+    }
+
+    @Test
+    fun `toContentDescription of a past-year range opens with the year where the year leads`() {
+        // Japanese writes a date year-first ("2024年6月14日"). The two lines can ignore that — the
+        // year has its own line — but the screen reader hears them as one string (CMM-2540).
+        val label = DateRangeLabel(RangeLine.Split("6月14日", "6月20日"), RangeLine.Single("2024"))
+
+        assertThat(label.toContentDescription(RANGE_TEMPLATE, yearLeads = true))
+            .isEqualTo("2024 6月14日 to 6月20日")
+    }
+
+    @Test
+    fun `toContentDescription of a cross-year range opens each end with its year where it leads`() {
+        val label = DateRangeLabel(
+            RangeLine.Split("12月30日", "1月2日"),
+            RangeLine.Split("2025", "2026")
+        )
+
+        assertThat(label.toContentDescription(RANGE_TEMPLATE, yearLeads = true))
+            .isEqualTo("2025 12月30日 to 2026 1月2日")
+    }
+
+    @Test
+    fun `toContentDescription of a preset keeps its name ahead of the dates it resolved to`() {
+        // Not a year line: the second line is the window the preset's name currently covers, so it
+        // follows the name in every locale.
+        val label = DateRangeLabel(RangeLine.Single("Last 7 days"), RangeLine.Single("21-27 Oct 2026"))
+
+        assertThat(label.toContentDescription(RANGE_TEMPLATE, yearLeads = true))
+            .isEqualTo("Last 7 days 21-27 Oct 2026")
     }
 
     @Test

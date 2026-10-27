@@ -320,17 +320,35 @@ fun formatPresetRange(startDate: LocalDate, endDate: LocalDate, monthGranularity
  * endpoint so a screen reader reads it as one date range instead of the four-to-six separate text
  * nodes the two-line layout renders. [rangeTemplate] is a "from – to" template (two `%s` args);
  * labels that aren't a range (a single day, a within-month span) are returned as-is.
+ *
+ * [yearLeads] is [yearLeadsDate] for the reader's locale and decides which endpoint a year attaches
+ * to. The two-line layout can ignore that, since the year has a line of its own there and so never
+ * meets the dates in one string; merging the lines for a screen reader brings the order back.
+ * Japanese opens a date with its year, so a past-year span reads "2024 6月14日 to 6月20日" rather than
+ * "6月14日 to 6月20日 2024". Taken as a parameter rather than read here so this stays a pure function,
+ * testable without an ICU lookup.
  */
-fun DateRangeLabel.toContentDescription(rangeTemplate: String): String {
+fun DateRangeLabel.toContentDescription(rangeTemplate: String, yearLeads: Boolean): String {
     val p = primary
     val s = secondary
     return when {
+        // A preset: its name over the dates it resolved to, which is not a year line.
         p is RangeLine.Single && s is RangeLine.Single -> "${p.text} ${s.text}"
         p is RangeLine.Split && s == null -> rangeTemplate.format(p.start, p.end)
-        p is RangeLine.Split && s is RangeLine.Single -> rangeTemplate.format(p.start, "${p.end} ${s.text}")
-        p is RangeLine.Split && s is RangeLine.Split ->
-            rangeTemplate.format("${p.start} ${s.start}", "${p.end} ${s.end}")
+        p is RangeLine.Split && s is RangeLine.Single -> if (yearLeads) {
+            rangeTemplate.format(p.start.withYear(s.text, yearLeads), p.end)
+        } else {
+            rangeTemplate.format(p.start, p.end.withYear(s.text, yearLeads))
+        }
+        p is RangeLine.Split && s is RangeLine.Split -> rangeTemplate.format(
+            p.start.withYear(s.start, yearLeads),
+            p.end.withYear(s.end, yearLeads)
+        )
         p is RangeLine.Single -> p.text
         else -> rangeTemplate.format((p as RangeLine.Split).start, p.end)
     }
 }
+
+/** This endpoint with [year] on the side the locale writes it: ahead of it where the year leads. */
+private fun String.withYear(year: String, yearLeads: Boolean): String =
+    if (yearLeads) "$year $this" else "$this $year"

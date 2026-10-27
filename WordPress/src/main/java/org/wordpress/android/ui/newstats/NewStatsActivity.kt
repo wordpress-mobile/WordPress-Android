@@ -137,6 +137,7 @@ import org.wordpress.android.ui.newstats.util.ProvideShimmerBrush
 import org.wordpress.android.ui.newstats.util.RangeLine
 import org.wordpress.android.ui.newstats.util.formatCustomDateRangeTwoLine
 import org.wordpress.android.ui.newstats.util.toContentDescription
+import org.wordpress.android.ui.newstats.util.yearLeadsDate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.components.NewStatsIntroBottomSheet
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -1761,7 +1762,8 @@ private fun PeriodLabel(label: DateRangeLabel) {
     }
 
     val rangeDescription = label.toContentDescription(
-        stringResource(R.string.stats_traffic_date_range_content_description)
+        rangeTemplate = stringResource(R.string.stats_traffic_date_range_content_description),
+        yearLeads = yearLeadsDate()
     )
     val primary = label.primary
     Column(
