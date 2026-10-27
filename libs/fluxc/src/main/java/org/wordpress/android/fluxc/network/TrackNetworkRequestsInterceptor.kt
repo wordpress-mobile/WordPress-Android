@@ -1,14 +1,14 @@
 package org.wordpress.android.fluxc.network
 
 import android.content.Context
+import com.chuckerteam.chucker.api.BodyDecoder
 import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.chuckerteam.chucker.api.RetentionManager
 import okhttp3.Interceptor
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import okio.ByteString
 
 /**
  * Retention period options for tracked network requests.
@@ -73,20 +73,10 @@ class TrackNetworkRequestsInterceptor(
         // 3. HashMap lookup (negligible)
         // See: https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-14.0.0_r1/core/java/android/app/SharedPreferencesImpl.java#345
         return if (preference.isEnabled()) {
-            val chucker = getOrCreateChuckerInterceptor()
-            if (shouldRedactRequestBody(chain.request())) {
-                chucker.intercept(RedactedBodyChain(chain))
-            } else {
-                chucker.intercept(chain)
-            }
+            getOrCreateChuckerInterceptor().intercept(chain)
         } else {
             chain.proceed(chain.request())
         }
-    }
-
-    private fun shouldRedactRequestBody(request: Request): Boolean {
-        val pathSegments = request.url.pathSegments
-        return REDACTED_BODY_PATHS.any { it in pathSegments }
     }
 
     private fun getOrCreateChuckerInterceptor(): ChuckerInterceptor {
@@ -117,36 +107,21 @@ class TrackNetworkRequestsInterceptor(
             .maxContentLength(MAX_CONTENT_LENGTH)
             .redactHeaders(SENSITIVE_HEADERS)
             .alwaysReadResponseBody(false)
+            .addBodyDecoder(RedactedBodyDecoder)
             .build()
     }
 
     /**
-     * A [Interceptor.Chain] wrapper that presents a redacted request body
-     * to Chucker for logging purposes, while ensuring the actual network
-     * call uses the original request with the real body intact.
-     *
-     * This achieves selective logging redaction without affecting the
-     * actual HTTP request/response.
+     * Shows a placeholder in Chucker instead of the request body for [REDACTED_BODY_PATHS].
+     * Chucker stores only the decoded string, so the real body never reaches its database,
+     * and the network request itself is untouched. Returning null defers to Chucker's
+     * built-in decoders.
      */
-    private class RedactedBodyChain(
-        private val delegate: Interceptor.Chain
-    ) : Interceptor.Chain by delegate {
-        private val redactedRequest: Request by lazy {
-            val original = delegate.request()
-            // Falls back to plain text if original has no body;
-            // the redacted placeholder still needs a content type.
-            val contentType = original.body?.contentType()
-                ?: "text/plain".toMediaType()
-            val redactedBody = REDACTED_BODY_PLACEHOLDER
-                .toRequestBody(contentType)
-            original.newBuilder().method(original.method, redactedBody).build()
-        }
+    private object RedactedBodyDecoder : BodyDecoder {
+        override fun decodeRequest(request: Request, body: ByteString): String? =
+            if (REDACTED_BODY_PATHS.any { it in request.url.pathSegments }) REDACTED_BODY_PLACEHOLDER else null
 
-        override fun request(): Request = redactedRequest
-
-        override fun proceed(request: Request): Response {
-            return delegate.proceed(delegate.request())
-        }
+        override fun decodeResponse(response: Response, body: ByteString): String? = null
     }
 
     companion object {
