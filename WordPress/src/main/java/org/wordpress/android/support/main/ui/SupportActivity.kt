@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.collectAsState
@@ -16,7 +17,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.chuckerteam.chucker.api.Chucker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -37,6 +37,14 @@ class SupportActivity : AppCompatActivity() {
     private val viewModel by viewModels<SupportViewModel>()
 
     private lateinit var composeView: ComposeView
+
+    private val loginLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            viewModel.refreshLoginState()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -132,11 +140,12 @@ private fun getRetentionPeriodStringRes(period: NetworkRequestsRetentionPeriod):
     }
 
     private fun navigateToLogin() {
-        if (BuildConfig.IS_JETPACK_APP) {
-            ActivityLauncher.showSignInForResultJetpackOnly(this)
-        } else {
-            ActivityLauncher.showSignInForResultWpComOnly(this)
-        }
+        // Support chat (Odie) requires WordPress.com authentication. Go straight to the WP.com
+        // OAuth screen instead of the login prologue: the prologue's "Enter your existing site
+        // address" option authenticates via application password, which does not grant the WP.com
+        // token support needs, so it's a dead-end here. The login finishes back to this screen so
+        // the user can carry on to support chat once authenticated. See CMM-2297.
+        loginLauncher.launch(ActivityLauncher.createWpComSignInForSupportIntent(this))
     }
 
     private fun navigateToHelpCenter() {

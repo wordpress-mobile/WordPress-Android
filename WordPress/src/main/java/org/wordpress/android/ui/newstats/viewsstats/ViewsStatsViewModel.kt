@@ -4,11 +4,15 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -16,13 +20,18 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.repository.BottomStatsAggregates
 import org.wordpress.android.ui.newstats.repository.BottomStatsResult
 import org.wordpress.android.ui.newstats.repository.PeriodAggregates
 import org.wordpress.android.ui.newstats.repository.PeriodStatsResult
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
+import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.ui.newstats.repository.ViewsDataPoint
+import org.wordpress.android.ui.newstats.util.RangeYearPlacement
+import org.wordpress.android.ui.newstats.util.rangeYearPlacement
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.LocalDate
@@ -36,6 +45,7 @@ import kotlin.math.abs
 
 private const val PERCENTAGE_BASE = 100.0
 private const val DAYS_THRESHOLD_FOR_MONTHLY_DISPLAY = 31
+private val EMPTY_BOTTOM_AGGREGATES = BottomStatsAggregates(0, 0, 0, 0, 0)
 private const val DATE_PREFIX_LENGTH = 10 // "YYYY-MM-DD".length
 
 private val HOURLY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}""")
@@ -43,6 +53,7 @@ private val DAILY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2}""")
 private val MONTHLY_FORMAT_REGEX = Regex("""\d{4}-\d{2}""")
 
 private const val KEY_CHART_TYPE = "chart_type"
+private const val KEY_SELECTED_METRIC = "selected_metric"
 
 @HiltViewModel
 class ViewsStatsViewModel @Inject constructor(
@@ -51,7 +62,8 @@ class ViewsStatsViewModel @Inject constructor(
     private val statsRepository: StatsRepository,
     private val resourceProvider: ResourceProvider,
     private val savedStateHandle: SavedStateHandle,
-    private val cardsConfigurationRepository: StatsCardsConfigurationRepository
+    private val cardsConfigurationRepository: StatsCardsConfigurationRepository,
+    private val newStatsTracker: NewStatsTracker
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<ViewsStatsCardUiState>(ViewsStatsCardUiState.Loading)
     val uiState: StateFlow<ViewsStatsCardUiState> = _uiState.asStateFlow()
@@ -62,13 +74,69 @@ class ViewsStatsViewModel @Inject constructor(
     private val _selectedPeriod = MutableStateFlow(restorePeriodFromSavedState())
     val selectedPeriod: StateFlow<StatsPeriod> = _selectedPeriod.asStateFlow()
 
+    // The narrower period of the currently soft-selected bar, or null when no bar is selected (or the
+    // selected bar is hourly, which has no representable sub-period). It never drives this card's own
+    // chart — the chart stays bound to [selectedPeriod] — only [effectivePeriod].
+    private val _selectedBarPeriod = MutableStateFlow<StatsPeriod?>(null)
+
+    /**
+     * The period the rest of the screen (all non-Views cards and the top range label) should reflect:
+     * the soft-selected bar's period when a drillable bar is selected, otherwise the committed
+     * [selectedPeriod]. Kept separate from [selectedPeriod] so a bar tap updates everything *except*
+     * the Views chart, which stays frozen with the bar highlighted.
+     */
+    val effectivePeriod: StateFlow<StatsPeriod> =
+        combine(_selectedPeriod, _selectedBarPeriod) { base, bar -> bar ?: base }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, _selectedPeriod.value)
+
     private var currentChartType: ChartType = restoreChartTypeFromSavedState()
+
+    // The user's persisted metric preference. It isn't necessarily what the chart plots: on single-day
+    // periods only views has an hourly series, so the chart falls back to it (see [chartedMetric]) while
+    // this preference is kept untouched, so the chart returns to it on the next multi-day period.
+    private var currentSelectedMetric: StatsMetric = restoreMetricFromSavedState()
+
+    // Whether [currentSelectedMetric] was picked while on [currentPeriod], as opposed to carried in from
+    // an earlier one. Only a carried-in preference is overridden by the views fallback, so a deliberate
+    // tap on a metric this period can't chart still gets that metric's own empty state. Reset on every
+    // period change: the fallback has to be re-evaluated for the period the user just moved to.
+    private var metricPickedOnCurrentPeriod = false
+
+    // The last successful chart result for the current period, cached so a metric switch can re-plot
+    // the chart from data already in memory, without a new network call.
+    private var lastChartResult: PeriodStatsResult.Success? = null
+
+    // The committed period's bottom-row state, tracked so a soft bar selection can overlay the bar's
+    // own totals and then restore the whole-period row when the selection is cleared.
+    private var wholePeriodBottom: BottomStatsUiState = BottomStatsUiState.Loading
+
+    // The period [wholePeriodBottom] holds the row for. It outlives a period change, and a single-day
+    // period loads its row from a separate call that can land well after the chart, so without this
+    // an hourly selection made in between would borrow the *previous* period's totals for the metrics
+    // an hourly response carries no series for — see [wholePeriodRowForCurrentPeriod].
+    private var wholePeriodBottomPeriod: StatsPeriod? = null
+
     private var currentPeriod: StatsPeriod = _selectedPeriod.value
+
+    // The period the user last picked themselves, kept while they page back and forth. Paging turns a
+    // preset into a concrete range, so by the time forward navigation lands back on the present edge
+    // the picked label is gone — several presets can describe that same window and the wrong one would
+    // win. Only an explicit pick (selector, custom range, bar drill-down) redefines it. Persisted with
+    // the period so paging that spans a restart still resolves against the pick.
+    private var periodOrigin: StatsPeriod = restoreOriginFromSavedState() ?: _selectedPeriod.value
+
     private var loadingPeriod: StatsPeriod? = null
     private var loadedPeriod: StatsPeriod? = null
+    private var loadJob: Job? = null
 
     private val _isPeriodInitialized = MutableStateFlow(false)
     val isPeriodInitialized: StateFlow<Boolean> = _isPeriodInitialized.asStateFlow()
+
+    private val _canNavigateBackward = MutableStateFlow(statsRepository.canNavigateBackward(currentPeriod))
+    val canNavigateBackward: StateFlow<Boolean> = _canNavigateBackward.asStateFlow()
+
+    private val _canNavigateForward = MutableStateFlow(statsRepository.canNavigateForward(currentPeriod))
+    val canNavigateForward: StateFlow<Boolean> = _canNavigateForward.asStateFlow()
 
     init {
         initializeWithPersistedPeriod()
@@ -84,10 +152,12 @@ class ViewsStatsViewModel @Inject constructor(
             // Try to restore from persisted preferences if SavedStateHandle didn't have a value
             val savedPeriodType = savedStateHandle.get<String>(KEY_PERIOD_TYPE)
             if (savedPeriodType == null) {
-                val restoredPeriod = restorePeriodFromPreferences()
-                if (restoredPeriod != null) {
-                    currentPeriod = restoredPeriod
-                    _selectedPeriod.value = restoredPeriod
+                val restored = restorePeriodFromPreferences()
+                if (restored != null) {
+                    currentPeriod = restored.period
+                    periodOrigin = restored.origin
+                    _selectedPeriod.value = restored.period
+                    updateNavigationState()
                 }
             }
             val savedChartType = savedStateHandle.get<String>(KEY_CHART_TYPE)
@@ -95,6 +165,13 @@ class ViewsStatsViewModel @Inject constructor(
                 val restoredChartType = restoreChartTypeFromPreferences()
                 if (restoredChartType != null) {
                     currentChartType = restoredChartType
+                }
+            }
+            val savedMetric = savedStateHandle.get<String>(KEY_SELECTED_METRIC)
+            if (savedMetric == null) {
+                val restoredMetric = restoreMetricFromPreferences()
+                if (restoredMetric != null) {
+                    currentSelectedMetric = restoredMetric
                 }
             }
             _isPeriodInitialized.value = true
@@ -113,19 +190,121 @@ class ViewsStatsViewModel @Inject constructor(
         loadData()
     }
 
-    fun onPeriodChanged(period: StatsPeriod) {
-        if (period == currentPeriod) return
-        currentPeriod = period
-        _selectedPeriod.value = period
-        savePeriod(period)
+    /**
+     * A preset picked from the period selector. Separate from [onPeriodChanged] so only a pick made
+     * in the menu is reported - paging and bar drill-downs reach the same range through their own
+     * entry points, and each has its own event.
+     *
+     * Reports the tap even when [period] is already the committed range: that tap is how the user
+     * returns the screen to the whole period after soft-selecting a bar, so it is a real choice
+     * rather than a no-op.
+     */
+    fun onPresetSelected(period: StatsPeriod) {
+        newStatsTracker.trackDateRangePresetSelected(period)
+        onPeriodChanged(period)
     }
 
-    private fun savePeriod(period: StatsPeriod) {
+    /** A range picked in the date-range picker dialog. */
+    fun onCustomRangeSelected(startDate: LocalDate, endDate: LocalDate) {
+        newStatsTracker.trackCustomDateRangeSelected(startDate, endDate)
+        onPeriodChanged(StatsPeriod.Custom(startDate, endDate))
+    }
+
+    /**
+     * Commits [period] as the screen's range. An explicit pick — the selector, a custom range, a bar
+     * drill-down — also becomes the origin future navigation resolves ties against; paging passes
+     * [keepOrigin] so the ranges it produces don't overwrite the preset the user chose.
+     */
+    fun onPeriodChanged(period: StatsPeriod, keepOrigin: Boolean = false) {
+        val hasSoftSelection = _selectedBarPeriod.value != null ||
+            (_uiState.value as? ViewsStatsCardUiState.Content)?.selectedBar != null
+        if (period == currentPeriod) {
+            // Re-selecting the committed range while a bar is soft-selected returns the whole screen
+            // to the full period: clearing the selection reverts effectivePeriod (reloading the other
+            // cards) and restores this card's whole-period header/bottom. The range label showed the
+            // bar's date, so this is the way back. A plain no-op when nothing is selected.
+            if (hasSoftSelection) clearSoftSelection()
+            return
+        }
+        // A real period change supersedes any soft bar selection; clear it first (restoring the
+        // whole-period header/bottom) so no stale overlay survives into the reload.
+        clearSoftSelection()
+        currentPeriod = period
+        // The pick belonged to the period being left, so it no longer suppresses the fallback here.
+        metricPickedOnCurrentPeriod = false
+        if (!keepOrigin) periodOrigin = period
+        // Drop the previous period's cached chart result so a metric switch mid-load can't re-plot from
+        // stale data or evaluate availability against the wrong period; it is repopulated on next load.
+        lastChartResult = null
+        _selectedPeriod.value = period
+        updateNavigationState()
+        savePeriod(period, periodOrigin)
+    }
+
+    /**
+     * Pages the whole screen to the range immediately before the current one (see
+     * [StatsRepository.previousPeriod]). Guarded by the same floor the button's enabled state uses,
+     * so a stray tap on a disabled control is a no-op.
+     */
+    fun onNavigatePrevious() {
+        if (!statsRepository.canNavigateBackward(currentPeriod)) return
+        // Reported before the move, so the event names the range being left.
+        newStatsTracker.trackDateNavigationButtonTapped(
+            NewStatsTracker.NavigationDirection.PREVIOUS,
+            currentPeriod
+        )
+        navigateTo(statsRepository.previousPeriod(currentPeriod, origin = periodOrigin))
+    }
+
+    /**
+     * Pages the whole screen to the range immediately after the current one (see
+     * [StatsRepository.nextPeriod]). Guarded so a tap while at the present edge is a no-op.
+     */
+    fun onNavigateNext() {
+        if (!statsRepository.canNavigateForward(currentPeriod)) return
+        newStatsTracker.trackDateNavigationButtonTapped(
+            NewStatsTracker.NavigationDirection.NEXT,
+            currentPeriod
+        )
+        navigateTo(statsRepository.nextPeriod(currentPeriod, origin = periodOrigin))
+    }
+
+    /**
+     * Applies a navigated period: dims the current content (if any) while the new range loads, then
+     * changes the period — which updates [selectedPeriod] so every other card reloads too — and
+     * reloads this card, mirroring [onBarTapped].
+     */
+    private fun navigateTo(newPeriod: StatsPeriod) {
+        if (newPeriod == currentPeriod) return
+        (_uiState.value as? ViewsStatsCardUiState.Content)?.let { content ->
+            _uiState.value = content.copy(isLoadingNewPeriod = true)
+        }
+        onPeriodChanged(newPeriod, keepOrigin = true)
+        loadingPeriod = newPeriod
+        loadData()
+    }
+
+    private fun updateNavigationState() {
+        _canNavigateBackward.value = statsRepository.canNavigateBackward(currentPeriod)
+        _canNavigateForward.value = statsRepository.canNavigateForward(currentPeriod)
+    }
+
+    /**
+     * Persists [period] together with [origin], the pick it was navigated from. Both are needed: the
+     * range alone can't say which preset the user chose, so restoring without the origin would drop
+     * paging back onto the tie-break heuristic and could resume on a different window (CMM-2415).
+     */
+    private fun savePeriod(period: StatsPeriod, origin: StatsPeriod) {
         // Save to SavedStateHandle for immediate restoration
         savedStateHandle[KEY_PERIOD_TYPE] = period.toTypeString()
         if (period is StatsPeriod.Custom) {
             savedStateHandle[KEY_CUSTOM_START_DATE] = period.startDate.toEpochDay()
             savedStateHandle[KEY_CUSTOM_END_DATE] = period.endDate.toEpochDay()
+        }
+        savedStateHandle[KEY_ORIGIN_PERIOD_TYPE] = origin.toTypeString()
+        if (origin is StatsPeriod.Custom) {
+            savedStateHandle[KEY_ORIGIN_CUSTOM_START_DATE] = origin.startDate.toEpochDay()
+            savedStateHandle[KEY_ORIGIN_CUSTOM_END_DATE] = origin.endDate.toEpochDay()
         }
 
         // Persist to preferences for cross-session restoration
@@ -140,7 +319,10 @@ class ViewsStatsViewModel @Inject constructor(
                 config.copy(
                     selectedPeriodType = periodType,
                     customPeriodStartDate = customStart,
-                    customPeriodEndDate = customEnd
+                    customPeriodEndDate = customEnd,
+                    originPeriodType = origin.toTypeString(),
+                    originCustomStartDate = (origin as? StatsPeriod.Custom)?.startDate?.toEpochDay(),
+                    originCustomEndDate = (origin as? StatsPeriod.Custom)?.endDate?.toEpochDay()
                 )
             )
         }
@@ -160,18 +342,42 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     /**
-     * Restores period from persisted preferences asynchronously.
+     * Restores the origin from SavedStateHandle only (fast, no disk I/O), or null when none was saved
+     * — an entry point that seeds only the period keys, or a process that died before the first pick.
+     * Used for property initialization.
+     */
+    private fun restoreOriginFromSavedState(): StatsPeriod? {
+        val savedOriginType = savedStateHandle.get<String>(KEY_ORIGIN_PERIOD_TYPE) ?: return null
+        return StatsPeriod.fromTypeString(
+            type = savedOriginType,
+            customStartEpochDay = savedStateHandle.get<Long>(KEY_ORIGIN_CUSTOM_START_DATE),
+            customEndEpochDay = savedStateHandle.get<Long>(KEY_ORIGIN_CUSTOM_END_DATE)
+        )
+    }
+
+    /**
+     * Restores the period and its origin from persisted preferences asynchronously.
      * Used for app restarts when SavedStateHandle doesn't have the value.
      */
-    private suspend fun restorePeriodFromPreferences(): StatsPeriod? {
+    private suspend fun restorePeriodFromPreferences(): RestoredPeriod? {
         val siteId = selectedSiteRepository.getSelectedSite()?.siteId ?: return null
         val config = cardsConfigurationRepository.getConfiguration(siteId)
         return config.selectedPeriodType?.let { periodType ->
-            StatsPeriod.fromTypeString(
+            val period = StatsPeriod.fromTypeString(
                 type = periodType,
                 customStartEpochDay = config.customPeriodStartDate,
                 customEndEpochDay = config.customPeriodEndDate
             )
+            // Configurations written before the origin was persisted have none; the stored period is
+            // the only stand-in available, and using it reproduces the previous restore behaviour.
+            val origin = config.originPeriodType?.let { originType ->
+                StatsPeriod.fromTypeString(
+                    type = originType,
+                    customStartEpochDay = config.originCustomStartDate,
+                    customEndEpochDay = config.originCustomEndDate
+                )
+            } ?: period
+            RestoredPeriod(period, origin)
         }
     }
 
@@ -206,8 +412,15 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     fun onChartTypeChanged(chartType: ChartType) {
+        // Re-picking the type already on screen changes nothing visible, so it isn't reported.
+        if (chartType != currentChartType) {
+            newStatsTracker.trackChartTypeChanged(from = currentChartType, to = chartType)
+        }
         currentChartType = chartType
         saveChartType(chartType)
+        // The bar highlight is BAR-only and the header overlay is tied to a selection, so a chart-type
+        // switch clears the soft selection and restores the full-period header before re-typing it.
+        clearSoftSelection()
         _uiState.update { current ->
             if (current is ViewsStatsCardUiState.Content && current.chart is ChartUiState.Loaded) {
                 current.copy(chart = current.chart.copy(chartType = chartType))
@@ -217,27 +430,330 @@ class ViewsStatsViewModel @Inject constructor(
         }
     }
 
+    private fun restoreMetricFromSavedState(): StatsMetric {
+        return StatsMetric.fromStorageKey(
+            savedStateHandle.get<String>(KEY_SELECTED_METRIC)
+        ) ?: StatsMetric.DEFAULT
+    }
+
+    private suspend fun restoreMetricFromPreferences(): StatsMetric? {
+        val siteId = selectedSiteRepository.getSelectedSite()?.siteId
+            ?: return null
+        val config = cardsConfigurationRepository.getConfiguration(siteId)
+        return StatsMetric.fromStorageKey(config.selectedMetric)
+    }
+
+    private fun saveMetric(metric: StatsMetric) {
+        savedStateHandle[KEY_SELECTED_METRIC] = metric.storageKey
+
+        val siteId = selectedSiteRepository.getSelectedSite()?.siteId
+            ?: return
+        viewModelScope.launch {
+            val config =
+                cardsConfigurationRepository.getConfiguration(siteId)
+            cardsConfigurationRepository.saveConfiguration(
+                siteId,
+                config.copy(
+                    selectedMetric = metric.storageKey
+                )
+            )
+        }
+    }
+
+    /**
+     * Selects a metric to chart and list. Re-plots the chart from the cached period result (no network
+     * call) and persists the choice. An explicit pick is always honoured, even on a single-day (hourly)
+     * period where only [StatsMetric.VIEWS] has a series: there the chart region shows the "no hourly
+     * data" state so the tap has a visible answer instead of appearing inert. That differs from merely
+     * *arriving* on such a period, which falls back to views — see [chartedMetric].
+     *
+     * Tapping the metric already on screen does nothing and persists nothing, so the stored preference
+     * only ever changes through a tap that visibly changes the card.
+     */
+    fun onMetricSelected(metric: StatsMetric) {
+        // Tapping the metric the card already shows is a no-op, whether it is showing because the user
+        // chose it or because the views fallback stands in for something else. Comparing against the
+        // *stored preference* instead would let a tap on the highlighted Views tab through while the
+        // fallback is up: the rebuilt state is identical, so nothing would change on screen, but the
+        // user's real preference would be silently overwritten with views.
+        if (metric == chartedMetric()) return
+        newStatsTracker.trackChartMetricSelected(metric)
+        currentSelectedMetric = metric
+        metricPickedOnCurrentPeriod = true
+        saveMetric(metric)
+        val cached = lastChartResult
+        _uiState.update { current ->
+            if (current !is ViewsStatsCardUiState.Content) return@update current
+            // Re-plot from the cached result when the chart is showing plotted content; otherwise keep
+            // the current chart region (loading/error) but still reflect the new selection so the title,
+            // header dot and icons update — the tap always has a visible effect, matching what was
+            // persisted.
+            val chart = if (current.chart.isPlotted() && cached != null) {
+                buildChartState(cached)
+            } else {
+                current.chart
+            }
+            // Keep a soft bar selection across metric switches, re-overlaying the header for the new
+            // metric. If the new metric has no chart for this period (Unavailable), there's no bar to
+            // highlight, so drop the selection (and its arrow row) instead.
+            val selectedBar = current.selectedBar
+            if (selectedBar != null && chart is ChartUiState.Loaded) {
+                current.copy(
+                    chart = buildSelectedBarHeader(chart, selectedBar.index),
+                    selectedMetric = metric
+                )
+            } else {
+                if (selectedBar != null) _selectedBarPeriod.value = null
+                current.copy(
+                    chart = chart,
+                    selectedMetric = metric,
+                    bottomStats = if (selectedBar != null) restoredWholePeriodBottom() else current.bottomStats,
+                    selectedBar = null
+                )
+            }
+        }
+    }
+
+    /** Whether the chart region currently shows plotted content (as opposed to loading/error). */
+    private fun ChartUiState.isPlotted(): Boolean =
+        this is ChartUiState.Loaded || this is ChartUiState.Unavailable
+
+    /**
+     * The metric the chart plots and the card labels itself with: the user's [currentSelectedMetric],
+     * except when a preference is *carried into* a single-day (hourly) period that has no series for it
+     * — there it falls back to [StatsMetric.VIEWS] rather than dropping the user on an empty state they
+     * never asked for (CMM-2472). The fallback is transient: the stored preference is untouched, so the
+     * chart returns to it as soon as the period spans more than a day.
+     *
+     * A pick made *while on* the period is not overridden ([metricPickedOnCurrentPeriod]); that tap gets
+     * the metric's own [ChartUiState.Unavailable] state, which explains why there is no chart.
+     */
+    private fun chartedMetric(): StatsMetric =
+        if (metricPickedOnCurrentPeriod || chartAvailableFor(currentSelectedMetric)) {
+            currentSelectedMetric
+        } else {
+            StatsMetric.VIEWS
+        }
+
+    /**
+     * Whether [metric] has a chartable series for [currentPeriod]. Every metric is chartable on
+     * multi-day periods; on single-day (hourly) periods the response only carries a views series, so
+     * only [StatsMetric.VIEWS] is chartable there.
+     */
+    private fun chartAvailableFor(metric: StatsMetric): Boolean =
+        metric == StatsMetric.VIEWS || fillsBottomFromChart(currentPeriod)
+
+    private fun PeriodAggregates.valueFor(metric: StatsMetric): Long = when (metric) {
+        StatsMetric.VIEWS -> views
+        StatsMetric.VISITORS -> visitors
+        StatsMetric.LIKES -> likes
+        StatsMetric.COMMENTS -> comments
+        StatsMetric.POSTS -> posts
+    }
+
+    private fun ViewsDataPoint.valueFor(metric: StatsMetric): Long = when (metric) {
+        StatsMetric.VIEWS -> views
+        StatsMetric.VISITORS -> visitors
+        StatsMetric.LIKES -> likes
+        StatsMetric.COMMENTS -> comments
+        StatsMetric.POSTS -> posts
+    }
+
+    /**
+     * Soft-selects the tapped bar: the chart stays frozen with the bar highlighted, this card's header
+     * reflects only that bar, and — when the bar maps to a narrower period — [effectivePeriod] shifts
+     * so the other cards and the top range label follow it. Tapping the already-selected bar clears
+     * the selection; tapping another moves it. Committing to a full drill-down is deferred to
+     * [onDrillIntoSelectedBar] (the arrow affordance). No network call happens here.
+     */
     @Suppress("ReturnCount")
     fun onBarTapped(index: Int) {
         val content = _uiState.value as? ViewsStatsCardUiState.Content ?: return
         if (content.isLoadingNewPeriod) return
-        val chart = content.chart as? ChartUiState.Loaded ?: return
-        val dataPoint = chart.chartData.currentPeriod.getOrNull(index) ?: return
-        val rawPeriod = dataPoint.rawPeriod
-        val newPeriod = drillDownPeriod(rawPeriod) ?: return
-        _uiState.value = content.copy(isLoadingNewPeriod = true)
+        val loaded = content.chart as? ChartUiState.Loaded ?: return
+        val dataPoint = loaded.chartData.currentPeriod.getOrNull(index) ?: return
+        // A bucket that hasn't happened yet has nothing to show or drill into: it only holds a slot on
+        // the axis for the previous period's comparison bar.
+        if (dataPoint.isUpcoming) return
+
+        // Tapping the selected bar again reverts to the whole period.
+        if (content.selectedBar?.index == index) {
+            clearSoftSelection()
+            return
+        }
+
+        // Only a bar becoming selected is reported; the branch above that clears a selection is the
+        // same tap undone, and would otherwise double every bar interaction.
+        lastChartResult?.let { result ->
+            newStatsTracker.trackChartBarSelected(
+                metric = chartedMetric(),
+                unit = result.unit,
+                value = dataPoint.value
+            )
+        }
+
+        // drillDownPeriod is null for hourly buckets: no sub-period to broadcast and no arrow, but the
+        // bar is still selectable for the header + highlight.
+        val barPeriod = drillDownPeriod(dataPoint.rawPeriod)
+        _selectedBarPeriod.value = barPeriod
+        _uiState.value = content.copy(
+            chart = buildSelectedBarHeader(loaded, index),
+            bottomStats = buildSelectedBarBottom(index) ?: content.bottomStats,
+            selectedBar = SelectedBar(
+                index = index,
+                label = dataPoint.label,
+                canDrillDown = barPeriod != null
+            )
+        )
+    }
+
+    /**
+     * Commits the current soft selection to a real drill-down (the arrow affordance): pages the whole
+     * screen into the selected bar's period, the same path [onNavigatePrevious]/[onNavigateNext] use.
+     * No-op when nothing is selected or the selection is an hourly bar (no narrower period).
+     */
+    @Suppress("ReturnCount")
+    fun onDrillIntoSelectedBar() {
+        val content = _uiState.value as? ViewsStatsCardUiState.Content ?: return
+        if (content.isLoadingNewPeriod) return
+        if (content.selectedBar == null) return
+        val newPeriod = _selectedBarPeriod.value ?: return
+        _uiState.value = content.copy(isLoadingNewPeriod = true, selectedBar = null)
+        // onPeriodChanged also resets _selectedBarPeriod, collapsing effectivePeriod back onto the new
+        // committed period so cards already showing that period simply keep it.
         onPeriodChanged(newPeriod)
         loadingPeriod = newPeriod
         loadData()
     }
 
+    /** Clears the soft bar selection and restores the full-period header from the cached result. */
+    private fun clearSoftSelection() {
+        val content = _uiState.value as? ViewsStatsCardUiState.Content
+        if (_selectedBarPeriod.value == null && content?.selectedBar == null) return
+        _selectedBarPeriod.value = null
+        val cached = lastChartResult
+        _uiState.update { current ->
+            if (current !is ViewsStatsCardUiState.Content) return@update current
+            val restoredChart = if (current.chart is ChartUiState.Loaded && cached != null) {
+                buildChartState(cached)
+            } else {
+                current.chart
+            }
+            current.copy(chart = restoredChart, bottomStats = restoredWholePeriodBottom(), selectedBar = null)
+        }
+    }
+
+    /**
+     * Overlays the header totals of [loaded] with the values of the bar at [index], leaving the chart
+     * series, average line and type untouched so the bars don't move. The current bucket's value and
+     * the index-aligned previous bucket's value already carry the currently selected metric, so the
+     * overlay is metric-correct with no recomputation.
+     */
+    private fun buildSelectedBarHeader(loaded: ChartUiState.Loaded, index: Int): ChartUiState.Loaded {
+        val current = loaded.chartData.currentPeriod.getOrNull(index) ?: return loaded
+        val previous = loaded.chartData.previousPeriod.getOrNull(index)
+        val currentValue = current.value
+        val previousValue = previous?.value ?: 0L
+        return loaded.copy(
+            currentPeriodTotal = currentValue,
+            previousPeriodTotal = previousValue,
+            difference = currentValue - previousValue,
+            percentageChange = calculatePercentageChange(currentValue, previousValue),
+            currentPeriodDateRange = current.label,
+            previousPeriodDateRange = previous?.label ?: loaded.previousPeriodDateRange
+        )
+    }
+
+    /**
+     * Builds the bottom-row items for the bar at [index] from the cached per-bucket data, so the row
+     * reflects the selected bar with no network call. Returns null when there's no cached result or the
+     * index is out of range (the caller keeps the existing row).
+     *
+     * Non-hourly buckets carry all five metrics. An hourly response carries only the views series, so
+     * the metrics it has no data for fall back to the whole day's own totals (matching iOS) rather than
+     * reading a misleading zero for the selected hour — see [hasPerBucketSeries].
+     */
+    @Suppress("ReturnCount")
+    private fun buildSelectedBarBottom(index: Int): BottomStatsUiState? {
+        val result = lastChartResult ?: return null
+        val current = result.currentPeriodData.getOrNull(index) ?: return null
+        val previous = result.previousPeriodData.getOrNull(index)?.toBottomAggregates()
+            ?: EMPTY_BOTTOM_AGGREGATES
+        val barItems = buildStatItems(current.toBottomAggregates(), previous)
+        if (barItems.all { hasPerBucketSeries(result, it.metric) }) return BottomStatsUiState.Loaded(barItems)
+        // Something has to be borrowed from the day's own row, so what happens next depends on whether
+        // that row has landed for *this* period.
+        val wholePeriodItems = when (val dayRow = wholePeriodRowForCurrentPeriod()) {
+            is BottomStatsUiState.Loaded -> dayRow.stats
+            // It landed and failed: there is nothing to borrow and never will be, so drop the row the
+            // same way the unselected card does instead of leaving its placeholder shimmering.
+            is BottomStatsUiState.Hidden -> return BottomStatsUiState.Hidden
+            // Still in flight, or belonging to the period before this one. Keep whatever the row shows
+            // rather than another period's totals or a zero that reads as "none this hour"; the caller
+            // reapplies this once the day totals arrive.
+            else -> return null
+        }
+        return BottomStatsUiState.Loaded(
+            barItems.map { item ->
+                if (hasPerBucketSeries(result, item.metric)) {
+                    item
+                } else {
+                    // The whole item, not just its value: a day-level total must be shown with the
+                    // day's own change, never with one computed from the selected bucket.
+                    wholePeriodItems.firstOrNull { it.metric == item.metric } ?: item
+                }
+            }
+        )
+    }
+
+    /**
+     * The committed period's bottom-row state, but only when it belongs to the period now on screen —
+     * null while it still belongs to the one before. [wholePeriodBottom] survives a period change, so
+     * without the guard a single-day period could dress its hourly selection in the row the period
+     * before it left behind.
+     */
+    private fun wholePeriodRowForCurrentPeriod(): BottomStatsUiState? =
+        wholePeriodBottom.takeIf { wholePeriodBottomPeriod == currentPeriod }
+
+    /**
+     * The row to show when a soft bar selection is dropped: the committed period's own row, or the
+     * loading placeholder while [wholePeriodBottom] still belongs to the period before this one. A
+     * single-day period fetches its row separately and can be cleared before that call lands, and
+     * showing the previous period's totals there is worse than showing the placeholder they replace.
+     */
+    private fun restoredWholePeriodBottom(): BottomStatsUiState =
+        wholePeriodRowForCurrentPeriod() ?: BottomStatsUiState.Loading
+
+    /**
+     * Whether [metric] has a per-bucket series of its own in [result], so a selected bucket can show
+     * its own value for it.
+     *
+     * Only the hourly (single-day) response is ever missing one: it populates views alone, leaving the
+     * other four metrics at zero in every bucket. Reading that as "no series" rather than hard-coding
+     * which metrics are hourly keeps the row correct if the API starts returning more of them — a
+     * metric that really is zero all day has an equally zero day total, so the fallback shows the same
+     * number either way.
+     */
+    private fun hasPerBucketSeries(result: PeriodStatsResult.Success, metric: StatsMetric): Boolean =
+        result.unit != StatsUnit.HOUR || result.currentPeriodData.any { it.valueFor(metric) > 0L }
+
+    private fun ViewsDataPoint.toBottomAggregates() = BottomStatsAggregates(
+        views = views,
+        visitors = visitors,
+        likes = likes,
+        comments = comments,
+        posts = posts
+    )
+
     @Suppress("ReturnCount", "TooGenericExceptionCaught")
     private fun drillDownPeriod(rawPeriod: String): StatsPeriod? {
-        val period = currentPeriod
-        val isMonthlyGranularity = period is StatsPeriod.Last6Months ||
-            period is StatsPeriod.Last12Months ||
-            (period is StatsPeriod.Custom &&
-                isCustomPeriodMonthly(period))
+        // The chart's actual bucket unit is the source of truth for granularity: a Custom range is
+        // charted in days, months or years depending on its span, and the rawPeriod string alone can't
+        // tell a day bucket from a month one -- the API returns a full ISO date for both. Falling back
+        // to day-level drill when no chart is loaded is the safe default.
+        val isMonthlyGranularity = lastChartResult?.unit?.let {
+            it == StatsUnit.MONTH || it == StatsUnit.YEAR
+        } ?: false
 
         // Hourly data — no smaller period available
         if (rawPeriod.matches(HOURLY_FORMAT_REGEX)) return null
@@ -282,10 +798,14 @@ class ViewsStatsViewModel @Inject constructor(
 
     fun refresh() {
         val site = selectedSiteRepository.getSelectedSite() ?: return
+        // A refresh reloads the committed period, so drop any soft bar selection first: otherwise the
+        // rebuilt whole-period header/bottom would sit alongside a still-highlighted bar and an
+        // effectivePeriod stuck on the drilled sub-period, drifting the cards out of sync.
+        clearSoftSelection()
         viewModelScope.launch {
             try {
                 _isRefreshing.value = true
-                loadDataInternal(site)
+                loadDataInternal(site, forceRefresh = true)
             } finally {
                 _isRefreshing.value = false
             }
@@ -315,20 +835,65 @@ class ViewsStatsViewModel @Inject constructor(
             return
         }
 
-        statsRepository.init(accessToken)
+        val targetPeriod = currentPeriod
         val current = _uiState.value
         // While switching to a new period we keep the previous content on screen (dimmed, with a
         // spinner) instead of resetting to placeholders; otherwise show per-region placeholders.
         if (current !is ViewsStatsCardUiState.Content || !current.isLoadingNewPeriod) {
-            _uiState.value = ViewsStatsCardUiState.Content(
-                chart = ChartUiState.Loading,
-                bottomStats = BottomStatsUiState.Loading
-            )
+            // A fresh (re)load supersedes any soft bar selection (e.g. loadVisibleCards on network
+            // regain, or a no-connection Retry). Clear its effective period in lockstep with dropping
+            // selectedBar below, so effectivePeriod can't stay stuck on the bar's sub-period.
+            _selectedBarPeriod.value = null
+            if (isCached(site.siteId, targetPeriod)) {
+                // A period already in memory repaints in the same frame, so resetting to
+                // placeholders would only flash a skeleton over data the card is about to render.
+                // The bar selection still has to go: updateChart keeps the overlay while one is set,
+                // so leaving it would freeze the card on the previous period's chart.
+                _uiState.update { state ->
+                    if (state is ViewsStatsCardUiState.Content) state.copy(selectedBar = null) else state
+                }
+            } else {
+                _uiState.value = ViewsStatsCardUiState.Content(
+                    chart = ChartUiState.Loading,
+                    bottomStats = BottomStatsUiState.Loading,
+                    selectedMetric = chartedMetric()
+                )
+            }
         }
 
-        viewModelScope.launch {
+        // Rapid paging ("back five days quickly") fires overlapping loads. Cancel the in-flight one so
+        // only the latest period's request survives — otherwise a stale older coroutine can clear the
+        // dim/loadingPeriod mid-flight (flicker) or write a stale loadedPeriod (a redundant refetch).
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
             loadDataInternal(site)
+            revalidateIfNeeded(site, targetPeriod)
         }
+    }
+
+    /**
+     * Whether everything this card shows for [period] is already in memory: the chart, plus the
+     * bottom row for the single-day periods that fetch it separately.
+     */
+    private fun isCached(siteId: Long, period: StatsPeriod): Boolean =
+        statsRepository.isCached(StatsCacheBucket.CHART, siteId, period) &&
+            (fillsBottomFromChart(period) ||
+                statsRepository.isCached(StatsCacheBucket.BOTTOM_STATS, siteId, period))
+
+    /**
+     * Refreshes a period served from a previous visit to the stats screen, once. The card already
+     * shows those numbers, so this reloads without the placeholders or the dim, and a failure leaves
+     * what's on screen alone instead of replacing it with an error.
+     */
+    private suspend fun revalidateIfNeeded(site: SiteModel, period: StatsPeriod) {
+        if (isStale(period)) return
+        val needsRevalidation =
+            statsRepository.needsRevalidation(StatsCacheBucket.CHART, site.siteId, period) ||
+                (!fillsBottomFromChart(period) && statsRepository.needsRevalidation(
+                    StatsCacheBucket.BOTTOM_STATS, site.siteId, period
+                ))
+        if (!needsRevalidation) return
+        loadDataInternal(site, forceRefresh = true, applyErrors = false)
     }
 
     /**
@@ -336,21 +901,29 @@ class ViewsStatsViewModel @Inject constructor(
      * own region of the [ViewsStatsCardUiState.Content] state as it completes, so the chart can
      * appear before (or without) the bottom row and vice versa.
      */
-    private suspend fun loadDataInternal(site: SiteModel) {
+    private suspend fun loadDataInternal(
+        site: SiteModel,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
+    ) {
         val targetPeriod = currentPeriod
         try {
             val loaded = if (fillsBottomFromChart(targetPeriod)) {
                 // Every non-hourly period uses a daily/monthly/yearly chart whose response already
                 // carries all five bottom-row metrics per bucket, so the bottom row is filled from that
                 // same fetch. This makes the card issue 2 network calls instead of 4.
-                loadChart(site, fillBottomFromChart = true)
+                loadChart(site, targetPeriod, true, forceRefresh, applyErrors)
             } else {
                 // Single-day periods fetch the bottom row from a dedicated day-level call (run in
                 // parallel with the chart), the same way the web app does it: their chart is hourly and
                 // an hourly response only populates `views`, so it can't fill the row.
                 coroutineScope {
-                    val chart = async { loadChart(site, fillBottomFromChart = false) }
-                    val bottom = async { loadBottomStats(site) }
+                    val chart = async {
+                        loadChart(site, targetPeriod, false, forceRefresh, applyErrors)
+                    }
+                    val bottom = async {
+                        loadBottomStats(site, targetPeriod, forceRefresh, applyErrors)
+                    }
                     val chartLoaded = chart.await()
                     val bottomLoaded = bottom.await()
                     chartLoaded && bottomLoaded
@@ -362,8 +935,13 @@ class ViewsStatsViewModel @Inject constructor(
                 loadedPeriod = targetPeriod
             }
         } finally {
-            loadingPeriod = null
-            clearLoadingNewPeriod()
+            // Only clear the flags if this load still owns them. A load superseded by rapid paging is
+            // cancelled and its finally runs after the newer load has already set loadingPeriod to the
+            // newer period, so clearing unconditionally here would wipe the newer load's dim.
+            if (loadingPeriod == targetPeriod) {
+                loadingPeriod = null
+                clearLoadingNewPeriod()
+            }
         }
     }
 
@@ -384,37 +962,58 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     /**
-     * Loads the chart for [currentPeriod]. When [fillBottomFromChart] is true the bottom row is filled
+     * Loads the chart for [period]. When [fillBottomFromChart] is true the bottom row is filled
      * from the same response (its per-bucket data already carries all five metrics); when false the
      * bottom row is left untouched here because a dedicated call populates it (Today and Custom).
      */
-    @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadChart(site: SiteModel, fillBottomFromChart: Boolean): Boolean {
-        var success = false
-        val chartState = try {
-            when (val result = statsRepository.fetchStatsForPeriod(site.siteId, currentPeriod)) {
-                is PeriodStatsResult.Success -> {
-                    success = true
-                    if (fillBottomFromChart) {
-                        updateBottom(BottomStatsUiState.Loaded(result.toBottomStatItems()))
-                    }
-                    buildChartLoaded(result)
-                }
-                is PeriodStatsResult.Error -> {
-                    if (fillBottomFromChart) updateBottom(BottomStatsUiState.Hidden)
-                    ChartUiState.Error
-                }
-            }
+    @Suppress("TooGenericExceptionCaught", "LongParameterList", "ReturnCount")
+    private suspend fun loadChart(
+        site: SiteModel,
+        period: StatsPeriod,
+        fillBottomFromChart: Boolean,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
+    ): Boolean {
+        // Fetch first and apply afterwards, so the staleness check sits between the two and every write
+        // below it is known to belong to the period still on screen.
+        val result = try {
+            statsRepository.fetchStatsForPeriod(site.siteId, period, forceRefresh)
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
             AppLog.e(AppLog.T.STATS, "Error loading views chart", e)
-            if (fillBottomFromChart) updateBottom(BottomStatsUiState.Hidden)
-            ChartUiState.Error
+            null
+        }
+        if (isStale(period)) return false
+        val chartState = when (result) {
+            is PeriodStatsResult.Success -> {
+                lastChartResult = result
+                if (fillBottomFromChart) {
+                    updateBottom(BottomStatsUiState.Loaded(result.toBottomStatItems()), period)
+                }
+                buildChartState(result)
+            }
+            // An API error or a thrown call: both show the error state and drop the row rather than
+            // leaving the previous period's numbers under a new range. A background revalidation
+            // instead leaves the cached numbers it was refreshing on screen.
+            else -> {
+                if (!applyErrors) return false
+                if (fillBottomFromChart) updateBottom(BottomStatsUiState.Hidden, period)
+                ChartUiState.Error
+            }
         }
         updateChart(chartState)
-        return success
+        return result is PeriodStatsResult.Success
     }
+
+    /**
+     * Whether a load started for [period] has been overtaken by a period change and must not write to
+     * the card. [loadData] cancels the load it supersedes, but [refresh] launches outside that job and
+     * so survives a period change: without this its response would repaint the chart with the previous
+     * range's data and, worse, stamp that data as the new period's in [updateBottom] — which is exactly
+     * the confusion [wholePeriodBottomPeriod] exists to prevent.
+     */
+    private fun isStale(period: StatsPeriod): Boolean = period != currentPeriod
 
     /**
      * Whether the bottom row can be filled from the chart's own response, which is true whenever the
@@ -428,8 +1027,10 @@ class ViewsStatsViewModel @Inject constructor(
     private fun fillsBottomFromChart(period: StatsPeriod): Boolean = when (period) {
         is StatsPeriod.Last7Days,
         is StatsPeriod.Last30Days,
-        is StatsPeriod.Last6Months,
-        is StatsPeriod.Last12Months -> true
+        is StatsPeriod.Last12Months,
+        is StatsPeriod.ThisWeek,
+        is StatsPeriod.ThisMonth,
+        is StatsPeriod.ThisYear -> true
         // A multi-day Custom chart shares the bottom row's unit and quantity (both derive from the
         // repository's span-based rule, year-coarsening included), so its response already holds the
         // row's totals — including visitor uniques de-duplicated at the same granularity.
@@ -453,11 +1054,16 @@ class ViewsStatsViewModel @Inject constructor(
     )
 
     /** Fetches the bottom row from a dedicated call. Used for Today and Custom (see [fillsBottomFromChart]). */
-    @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadBottomStats(site: SiteModel): Boolean {
+    @Suppress("TooGenericExceptionCaught", "ReturnCount")
+    private suspend fun loadBottomStats(
+        site: SiteModel,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
+    ): Boolean {
         var success = false
         val bottomState = try {
-            when (val result = statsRepository.fetchBottomStats(site.siteId, currentPeriod)) {
+            when (val result = statsRepository.fetchBottomStats(site.siteId, period, forceRefresh)) {
                 is BottomStatsResult.Success -> {
                     success = true
                     BottomStatsUiState.Loaded(buildStatItems(result.current, result.previous))
@@ -470,7 +1076,9 @@ class ViewsStatsViewModel @Inject constructor(
             AppLog.e(AppLog.T.STATS, "Error loading bottom stats", e)
             BottomStatsUiState.Hidden
         }
-        updateBottom(bottomState)
+        if (isStale(period)) return false
+        if (!success && !applyErrors) return false
+        updateBottom(bottomState, period)
         return success
     }
 
@@ -482,59 +1090,110 @@ class ViewsStatsViewModel @Inject constructor(
     private fun updateChart(chart: ChartUiState) {
         _uiState.update { current ->
             when (current) {
-                is ViewsStatsCardUiState.Content -> current.copy(chart = chart)
-                else -> ViewsStatsCardUiState.Content(chart = chart, bottomStats = BottomStatsUiState.Loading)
+                // Mirror updateBottom: while a bar is soft-selected the visible chart holds the bar's
+                // overlaid header. A late reload (a background refresh landing after the user tapped a
+                // bar) must not drop it while the highlight/date/arrow/effectivePeriod still point at
+                // the bar; lastChartResult already holds the fresh data for the eventual clear.
+                is ViewsStatsCardUiState.Content ->
+                    current.copy(
+                        chart = if (current.selectedBar != null) current.chart else chart,
+                        selectedMetric = chartedMetric()
+                    )
+                else -> ViewsStatsCardUiState.Content(
+                    chart = chart,
+                    bottomStats = BottomStatsUiState.Loading,
+                    selectedMetric = chartedMetric()
+                )
             }
         }
     }
 
-    /** Applies a bottom-row update, preserving the current chart state. */
-    private fun updateBottom(bottom: BottomStatsUiState) {
+    /**
+     * Applies a bottom-row update, preserving the current chart state. [period] is the period the load
+     * that produced [bottom] was started for — taken from the load rather than read from
+     * [currentPeriod] here, so the row can never be stamped with a period it doesn't describe.
+     */
+    private fun updateBottom(bottom: BottomStatsUiState, period: StatsPeriod) {
+        // This is always the committed period's row; remember it, and which period it belongs to, so a
+        // soft bar selection can restore it after overlaying the selected bar's own totals.
+        wholePeriodBottom = bottom
+        wholePeriodBottomPeriod = period
         _uiState.update { current ->
             when (current) {
-                is ViewsStatsCardUiState.Content -> current.copy(bottomStats = bottom)
-                else -> ViewsStatsCardUiState.Content(chart = ChartUiState.Loading, bottomStats = bottom)
+                // When a bar is soft-selected the visible row holds that bar's overlaid totals. A
+                // late-arriving whole-period bottom load (single-day periods fetch it separately, and it
+                // can land after the chart) must not clobber the overlay and desync it from the header;
+                // it's kept in wholePeriodBottom above and restored on clear. The overlay is rebuilt
+                // rather than kept as-is, because an hourly selection borrows the day's totals for the
+                // metrics its own response has no series for — those arrive with this very load.
+                is ViewsStatsCardUiState.Content ->
+                    current.copy(
+                        bottomStats = current.selectedBar
+                            ?.let { buildSelectedBarBottom(it.index) ?: current.bottomStats }
+                            ?: bottom,
+                        selectedMetric = chartedMetric()
+                    )
+                else -> ViewsStatsCardUiState.Content(
+                    chart = ChartUiState.Loading,
+                    bottomStats = bottom,
+                    selectedMetric = chartedMetric()
+                )
             }
         }
     }
 
+    /**
+     * Builds the chart-region state for [result] and the current selection: the plotted chart when the
+     * charted metric has a series for this period, or [ChartUiState.Unavailable] when it doesn't (a
+     * non-views metric explicitly picked on a single-day/hourly period) — see [chartedMetric].
+     */
+    private fun buildChartState(result: PeriodStatsResult.Success): ChartUiState =
+        if (chartAvailableFor(chartedMetric())) buildChartLoaded(result) else ChartUiState.Unavailable
+
     private fun buildChartLoaded(result: PeriodStatsResult.Success): ChartUiState.Loaded {
+        val metric = chartedMetric()
         val currentStats = result.currentAggregates
         val previousStats = result.previousAggregates
+        val currentValue = currentStats.valueFor(metric)
+        val previousValue = previousStats.valueFor(metric)
         val currentDataPoints = result.currentPeriodData
             .map {
                 ChartDataPoint(
                     formatDataPointLabel(it.period, result.unit),
-                    it.views,
-                    it.period
+                    it.valueFor(metric),
+                    it.period,
+                    it.isUpcoming
                 )
             }
         val previousDataPoints = result.previousPeriodData
             .map {
                 ChartDataPoint(
                     formatDataPointLabel(it.period, result.unit),
-                    it.views,
+                    it.valueFor(metric),
                     it.period
                 )
             }
 
-        val average = if (currentDataPoints.isNotEmpty()) {
-            currentStats.views / currentDataPoints.size
+        // The average is per elapsed bucket: the placeholders an unfinished calendar period is padded
+        // with carry no data, so averaging over them would drag the line down as the period fills up.
+        val elapsedPointCount = currentDataPoints.count { !it.isUpcoming }
+        val average = if (elapsedPointCount > 0) {
+            currentValue / elapsedPointCount
         } else {
-            if (currentStats.views > 0) {
+            if (currentValue > 0) {
                 AppLog.w(
                     AppLog.T.STATS,
-                    "Data inconsistency: no data points but views=${currentStats.views}"
+                    "Data inconsistency: no data points but value=$currentValue"
                 )
             }
             0L
         }
 
         return ChartUiState.Loaded(
-            currentPeriodViews = currentStats.views,
-            previousPeriodViews = previousStats.views,
-            viewsDifference = currentStats.views - previousStats.views,
-            viewsPercentageChange = calculatePercentageChange(currentStats.views, previousStats.views),
+            currentPeriodTotal = currentValue,
+            previousPeriodTotal = previousValue,
+            difference = currentValue - previousValue,
+            percentageChange = calculatePercentageChange(currentValue, previousValue),
             currentPeriodDateRange = formatDateRangeForPeriod(
                 currentStats.startDate,
                 currentStats.endDate,
@@ -559,27 +1218,27 @@ class ViewsStatsViewModel @Inject constructor(
     ): List<StatItem> {
         return listOf(
             StatItem(
-                label = resourceProvider.getString(R.string.stats_views),
+                metric = StatsMetric.VIEWS,
                 value = currentPeriod.views,
                 change = calculateStatChange(currentPeriod.views, previousPeriod.views)
             ),
             StatItem(
-                label = resourceProvider.getString(R.string.stats_visitors),
+                metric = StatsMetric.VISITORS,
                 value = currentPeriod.visitors,
                 change = calculateStatChange(currentPeriod.visitors, previousPeriod.visitors)
             ),
             StatItem(
-                label = resourceProvider.getString(R.string.stats_likes),
+                metric = StatsMetric.LIKES,
                 value = currentPeriod.likes,
                 change = calculateStatChange(currentPeriod.likes, previousPeriod.likes)
             ),
             StatItem(
-                label = resourceProvider.getString(R.string.stats_comments),
+                metric = StatsMetric.COMMENTS,
                 value = currentPeriod.comments,
                 change = calculateStatChange(currentPeriod.comments, previousPeriod.comments)
             ),
             StatItem(
-                label = resourceProvider.getString(R.string.posts),
+                metric = StatsMetric.POSTS,
                 value = currentPeriod.posts,
                 change = calculateStatChange(currentPeriod.posts, previousPeriod.posts)
             )
@@ -657,7 +1316,10 @@ class ViewsStatsViewModel @Inject constructor(
         if (unit == StatsUnit.YEAR) return formatYearRange(startDate, endDate)
         return when (period) {
             is StatsPeriod.Today -> formatSingleDayRange(endDate)
-            is StatsPeriod.Last6Months, is StatsPeriod.Last12Months -> formatMonthRange(startDate, endDate)
+            is StatsPeriod.Last12Months -> formatMonthRange(startDate, endDate)
+            // ThisYear takes its granularity from the whole calendar year, so it is always charted in
+            // month buckets -- twelve of them on 5 January just as in December.
+            is StatsPeriod.ThisYear -> formatMonthRange(startDate, endDate)
             is StatsPeriod.Custom -> {
                 if (isCustomPeriodMonthly(period)) formatMonthRange(startDate, endDate)
                 else formatDayRange(startDate, endDate)
@@ -668,7 +1330,7 @@ class ViewsStatsViewModel @Inject constructor(
 
     private fun formatSingleDayRange(date: String): String {
         val parsedDate = parsePeriodDate(date) ?: return date
-        return parsedDate.format(DateTimeFormatter.ofPattern("d MMM", Locale.getDefault()))
+        return parsedDate.format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.getDefault()))
     }
 
     @Suppress("ReturnCount")
@@ -684,11 +1346,15 @@ class ViewsStatsViewModel @Inject constructor(
         val start = parsePeriodDate(startDate) ?: return "$startDate - $endDate"
         val end = parsePeriodDate(endDate) ?: return "$startDate - $endDate"
         val monthFormat = DateTimeFormatter.ofPattern("MMM", Locale.getDefault())
+        val monthYearFormat = DateTimeFormatter.ofPattern("MMM yyyy", Locale.getDefault())
 
-        return if (start.month == end.month && start.year == end.year) {
-            start.format(monthFormat)
-        } else {
-            "${start.format(monthFormat)} - ${end.format(monthFormat)}"
+        return when (rangeYearPlacement(start.year, end.year)) {
+            // Cross-year span: show the year on both ends ("Dec 2024 - Jan 2025").
+            RangeYearPlacement.BOTH -> "${start.format(monthYearFormat)} - ${end.format(monthYearFormat)}"
+            // Same year: show the year once, on the trailing month ("Jan - Jun 2024").
+            RangeYearPlacement.TRAILING ->
+                if (start.month == end.month) start.format(monthYearFormat)
+                else "${start.format(monthFormat)} - ${end.format(monthYearFormat)}"
         }
     }
 
@@ -698,17 +1364,29 @@ class ViewsStatsViewModel @Inject constructor(
         val end = parsePeriodDate(endDate) ?: return "$startDate - $endDate"
         val dayFormat = DateTimeFormatter.ofPattern("d", Locale.getDefault())
         val dayMonthFormat = DateTimeFormatter.ofPattern("d MMM", Locale.getDefault())
+        val dayMonthYearFormat = DateTimeFormatter.ofPattern("d MMM yyyy", Locale.getDefault())
 
-        return if (start.month == end.month) {
-            "${start.format(dayFormat)}-${end.format(dayMonthFormat)}"
-        } else {
-            "${start.format(dayMonthFormat)} - ${end.format(dayMonthFormat)}"
+        return when (rangeYearPlacement(start.year, end.year)) {
+            // Cross-year span: show the year on both ends ("28 Dec 2024 - 3 Jan 2025").
+            RangeYearPlacement.BOTH ->
+                "${start.format(dayMonthYearFormat)} - ${end.format(dayMonthYearFormat)}"
+            // Same year: show the year once, on the trailing date. Collapse the leading month when
+            // both ends share it ("14-20 Jan 2024" vs "28 Jul - 3 Aug 2024").
+            RangeYearPlacement.TRAILING ->
+                if (start.month == end.month) "${start.format(dayFormat)}-${end.format(dayMonthYearFormat)}"
+                else "${start.format(dayMonthFormat)} - ${end.format(dayMonthYearFormat)}"
         }
     }
 
     fun onRetry() {
         loadData()
     }
+
+    /**
+     * A restored period paired with the pick it was navigated from, so both survive a restart
+     * together. See [periodOrigin].
+     */
+    private data class RestoredPeriod(val period: StatsPeriod, val origin: StatsPeriod)
 
     companion object {
         /**
@@ -719,5 +1397,14 @@ class ViewsStatsViewModel @Inject constructor(
         const val KEY_PERIOD_TYPE = "period_type"
         const val KEY_CUSTOM_START_DATE = "custom_start_date"
         const val KEY_CUSTOM_END_DATE = "custom_end_date"
+
+        /**
+         * Keys used to restore [periodOrigin]. Not meant as Intent extras — an entry point that seeds
+         * only the period keys gets that period as its own origin, which is what an explicit pick
+         * would have done.
+         */
+        private const val KEY_ORIGIN_PERIOD_TYPE = "origin_period_type"
+        private const val KEY_ORIGIN_CUSTOM_START_DATE = "origin_custom_start_date"
+        private const val KEY_ORIGIN_CUSTOM_END_DATE = "origin_custom_end_date"
     }
 }

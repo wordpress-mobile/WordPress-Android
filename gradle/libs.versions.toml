@@ -6,8 +6,8 @@ android-installreferrer = '2.2'
 android-security-lint = '1.0.4'
 android-volley = '1.2.1'
 androidx-activity = '1.10.1'
-androidx-annotation = '1.10.0'
-androidx-appcompat = '1.7.1'
+androidx-annotation = '1.11.0'
+androidx-appcompat = '1.8.0'
 androidx-arch-core = '2.2.0'
 androidx-browser = '1.10.0'
 androidx-camera = '1.6.1'
@@ -17,17 +17,17 @@ androidx-compose-material3 = '1.4.0'
 androidx-constraintlayout-compose = '1.1.2'
 androidx-constraintlayout-main = '2.2.2'
 androidx-core = '1.16.0'
-androidx-credentials = '1.6.0'
 androidx-exifinterface = '1.4.2'
-androidx-fragment = '1.8.9'
-androidx-lifecycle = '2.10.0'
+androidx-fragment = '1.9.1'
+androidx-lifecycle = '2.11.0'
 androidx-navigation = '2.9.8'
-androidx-paging = '2.1.2'
+androidx-paging = '3.5.3'
 androidx-percentlayout = '1.0.0'
 androidx-preference = '1.2.1'
 androidx-recyclerview = '1.3.2'
-androidx-room = '2.8.4'
+androidx-room = '2.8.5'
 androidx-security-crypto = '1.1.0'
+androidx-startup = '1.2.0'
 androidx-swiperefreshlayout = '1.2.0'
 androidx-test-core = '1.7.0'
 androidx-test-espresso = '3.7.0'
@@ -36,7 +36,7 @@ androidx-test-main = '1.7.0'
 androidx-test-uiautomator = '2.4.0'
 androidx-viewpager2 = '1.1.0'
 androidx-webkit = '1.16.0'
-androidx-work = '2.11.2'
+androidx-work = '2.12.0'
 apache-commons-text = '1.15.0'
 apache-http-client-android = '4.3.5.1'
 assertj = '3.27.7'
@@ -52,7 +52,7 @@ chucker = '4.2.0'
 coil = '2.7.0'
 commons-fileupload = '1.5'
 detekt = '1.23.8'
-dependency-analysis = '3.18.0'
+dependency-analysis = '3.19.2'
 facebook-react = '0.73.3'
 facebook-shimmer = '0.5.0'
 fastlane-screengrab = '2.1.1'
@@ -60,10 +60,10 @@ fladle = '0.21.0'
 google-autoservice = '1.1.1'
 google-dagger = '2.60.1'
 google-exoplayer = '2.13.3'
-google-firebase-bom = '34.17.0'
+google-firebase-bom = '35.1.0'
 google-firebase-iid = '21.1.0'
 google-flexboxlayout = '3.0.0'
-google-gson = '2.14.0'
+google-gson = '2.15.0'
 google-material = '1.14.0'
 google-mlkit-barcode-scanning-common = '17.0.0'
 google-mlkit-barcode-scanning-main = '17.3.0'
@@ -73,40 +73,40 @@ google-play-review = '2.0.2'
 google-services = '4.5.0'
 gravatar = '2.5.0'
 greenrobot-eventbus = '3.3.1'
-gutenberg-kit = 'v0.17.2'
+gutenberg-kit = 'v0.19.0'
 gutenberg-mobile = 'v1.121.0'
 indexos-media-for-mobile = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
 jackson-databind = '2.12.7.1'
 java = '11'
 jetty-webapp = '9.4.51.v20230217'
 json-path = '2.9.0'
-jsoup = '1.23.1'
+jsoup = '1.23.2'
 junit = '4.13.2'
 kotlin-compile-testing = '1.6.0'
-kotlin-main = '2.4.10'
+kotlin-main = '2.4.21'
 kotlinx-coroutines = '1.11.0'
-kotlinx-kover = '0.9.9'
-ksp = '2.3.11'
-mockito-android = '5.23.0'
-mockito-kotlin = '6.3.0'
+kotlinx-kover = '0.9.11'
+ksp = '2.3.12'
+mockito-android = '5.24.0'
+mockito-kotlin = '6.4.0'
 mpandroidchart = 'v3.1.0'
 photoview = '2.3.0'
 robolectric = '4.16.1'
-sentry = '6.17.0'
+sentry = '6.24.0'
 squareup-java-poet = '1.13.0'
-squareup-kotlin-poet = '2.3.0'
-squareup-okhttp3 = '5.3.2'
+squareup-kotlin-poet = '2.4.0'
+squareup-okhttp3 = '5.5.1'
 squareup-retrofit = '3.0.0'
 wellsql = '2.0.0'
 wordpress-aztec = 'v2.1.4'
 wordpress-lint = '2.2.0'
 wordpress-persistent-edittext = '1.0.2'
-wordpress-rs = '0.6.0'
+wordpress-rs = '0.10.0'
 wordpress-utils = '3.14.0'
 automattic-ucrop = '2.2.11'
 zendesk = '5.5.3'
 turbine = '1.2.1'
-commonmark = '0.29.0'
+commonmark = '0.31.0'
 vico = '3.2.3'
 
 [libraries]
@@ -147,9 +147,8 @@ androidx-constraintlayout-compose = { group = "androidx.constraintlayout", name 
 androidx-constraintlayout-main = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout-main" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
 androidx-core-main = { group = "androidx.core", name = "core", version.ref = "androidx-core" }
-androidx-credentials-main = { module = "androidx.credentials:credentials", version.ref = "androidx-credentials" }
-androidx-credentials-play-service-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "androidx-credentials" }
 androidx-exifinterface = { module = "androidx.exifinterface:exifinterface", version.ref = "androidx-exifinterface" }
+androidx-fragment-compose = { group = "androidx.fragment", name = "fragment-compose", version.ref = "androidx-fragment" }
 androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidx-fragment" }
 androidx-fragment-main = { group = "androidx.fragment", name = "fragment", version.ref = "androidx-fragment" }
 androidx-lifecycle-common = { group = "androidx.lifecycle", name = "lifecycle-common", version.ref = "androidx-lifecycle" }
@@ -171,6 +170,7 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidx-room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
 androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "androidx-security-crypto" }
+androidx-startup-runtime = { module = "androidx.startup:startup-runtime", version.ref = "androidx-startup" }
 androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "androidx-swiperefreshlayout" }
 androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test-core" }
 androidx-test-espresso-accessibility = { group = "androidx.test.espresso", name = "espresso-accessibility", version.ref = "androidx-test-espresso" }
@@ -227,7 +227,6 @@ google-mlkit-barcode-scanning-main = { group = "com.google.mlkit", name = "barco
 google-mlkit-text-recognition = { group = "com.google.mlkit", name = "text-recognition", version.ref = "google-mlkit-text-recognition" }
 google-play-app-update = { group = "com.google.android.play", name = "app-update", version.ref = "google-play-app-update" }
 google-play-review = { group = "com.google.android.play", name = "review", version.ref = "google-play-review" }
-gravatar = { module = "com.gravatar:gravatar", version.ref = "gravatar" }
 greenrobot-eventbus-java = { group = "org.greenrobot", name = "eventbus-java", version.ref = "greenrobot-eventbus" }
 greenrobot-eventbus-main = { group = "org.greenrobot", name = "eventbus", version.ref = "greenrobot-eventbus" }
 indexos-media-for-mobile-android = { group = "com.github.indexos.media-for-mobile", name = "android", version.ref = "indexos-media-for-mobile" }

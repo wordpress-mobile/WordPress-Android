@@ -19,10 +19,7 @@ import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.TermModel
 import org.wordpress.android.fluxc.model.TermsModel
-import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.TaxonomyStore
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_TAG
@@ -38,6 +35,7 @@ import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
+import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.AnyTermWithEditContext
 import uniffi.wp_api.TermCreateParams
@@ -89,23 +87,19 @@ class TermsViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val taxonomyStore: TaxonomyStore,
     private val fluxCDispatcher: Dispatcher, // Used to include FluxC in the flow (local terms store)
-    accountStore: AccountStore,
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     sharedPrefs: SharedPreferences,
     networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(IO_THREAD) ioDispatcher: CoroutineDispatcher,
-    trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor,
-    networkAvailabilityProvider: WpNetworkAvailabilityProvider,
+    wpComApiClient: WpComApiClient,
 ) : DataViewViewModel(
     mainDispatcher = mainDispatcher,
     appLogWrapper = appLogWrapper,
     sharedPrefs = sharedPrefs,
     networkUtilsWrapper = networkUtilsWrapper,
     selectedSiteRepository = selectedSiteRepository,
-    accountStore = accountStore,
     ioDispatcher = ioDispatcher,
-    trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor,
-    networkAvailabilityProvider = networkAvailabilityProvider
+    wpComApiClient = wpComApiClient
 ) {
     private var taxonomySlug: String = ""
     private var isHierarchical: Boolean = false
@@ -319,7 +313,8 @@ class TermsViewModel @Inject constructor(
             TermsModel(
                 terms.map { term ->
                     TermModel(
-                        term.id.toInt(),
+                        // Local row id: 0 lets FluxC match by remote id instead of overwriting another row
+                        0,
                         site.id,
                         term.id,
                         taxonomySlug,

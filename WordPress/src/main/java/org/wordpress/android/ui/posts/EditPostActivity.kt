@@ -120,6 +120,7 @@ import org.wordpress.android.fluxc.tools.FluxCImageLoader
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.InputData
 import org.wordpress.android.networking.NetworkConnectionMonitor
+import org.wordpress.android.support.SupportRouting
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
@@ -132,7 +133,6 @@ import org.wordpress.android.ui.Shortcut
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION
 import org.wordpress.android.ui.history.HistoryListItem.Revision
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
@@ -191,7 +191,6 @@ import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessage
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.SiteSettingsInterface
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.suggestion.SuggestionActivity
 import org.wordpress.android.ui.suggestion.SuggestionType
@@ -399,13 +398,12 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     @Inject lateinit var bloggingPromptsStore: BloggingPromptsStore
 
-    @Inject lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     @Inject lateinit var contactSupportFeatureConfig: ContactSupportFeatureConfig
 
     @Inject lateinit var postConflictResolutionFeatureConfig: PostConflictResolutionFeatureConfig
 
-    @Inject lateinit var experimentalFeatures: ExperimentalFeatures
+    @Inject lateinit var supportRouting: SupportRouting
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var storePostViewModel: StorePostViewModel
@@ -510,12 +508,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         (application as WordPress).component().inject(this)
         initializeViewModels()
 
-        // Track if this editor launch came via EditorLauncher (only on initial creation)
-        if (savedInstanceState == null
-            && intent.getBooleanExtra(EditorLauncher.EXTRA_LAUNCHED_VIA_EDITOR_LAUNCHER, false)) {
-            analyticsTrackerWrapper.track(Stat.EDITOR_LAUNCHED_VIA_EDITOR_LAUNCHER)
-        }
-
         setContentView(R.layout.new_edit_post_activity)
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -531,6 +523,13 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT)
             finish()
             return
+        }
+
+        // Track if this editor launch came via EditorLauncher (only on initial creation). Tracked after the site
+        // is resolved so the event carries the site it was launched for.
+        if (savedInstanceState == null
+            && intent.getBooleanExtra(EditorLauncher.EXTRA_LAUNCHED_VIA_EDITOR_LAUNCHER, false)) {
+            analyticsTrackerWrapper.track(Stat.EDITOR_LAUNCHED_VIA_EDITOR_LAUNCHER, siteModel)
         }
 
         isLandingEditor = intent.extras?.getBoolean(EditorConstants.EXTRA_IS_LANDING_EDITOR) ?: false
@@ -1292,7 +1291,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     override fun onPause() {
         super.onPause()
         EventBus.getDefault().unregister(this)
-        AnalyticsTracker.track(Stat.EDITOR_CLOSED)
+        analyticsTrackerWrapper.track(Stat.EDITOR_CLOSED, siteModel)
     }
 
     override fun onStop() {
@@ -1533,7 +1532,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         if (helpMenuItem != null) {
             // Support section will be disabled in WordPress app when Jetpack-powered features are removed.
             // Therefore, we have to update the Help menu item accordingly.
-            val showHelpAndSupport = jetpackFeatureRemovalPhaseHelper.shouldShowHelpAndSupportOnEditor()
+            val showHelpAndSupport = buildConfigWrapper.isJetpackApp
             val helpMenuTitle = if (showHelpAndSupport) R.string.help_and_support else R.string.help
             helpMenuItem.setTitle(helpMenuTitle)
             if (editorFragment is GutenbergEditorFragment && showMenuItems) {
@@ -2442,7 +2441,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 isNewPost,
                 gutenbergWebViewAuthorizationData,
                 gutenbergPropsBuilder,
-                jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures()
+                buildConfigWrapper.isJetpackApp
             )
         }
 
@@ -2502,8 +2501,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             val shouldUseFastImage = !siteModel.isPrivate && !siteModel.isPrivateWPComAtomic
             val hostAppNamespace = if (buildConfigWrapper.isJetpackApp) "Jetpack" else "WordPress"
 
-            // Disable Jetpack-powered editor features in WordPress app based on Jetpack Features Removal Phase helper
-            val jetpackFeaturesRemoved = !jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures()
+            // The WordPress app does not ship the Jetpack-powered editor features
+            val jetpackFeaturesRemoved = !buildConfigWrapper.isJetpackApp
             if (jetpackFeaturesRemoved) {
                 return GutenbergPropsBuilder(
                     enableContactInfoBlock = false,
@@ -2755,8 +2754,15 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 mediaId, postRepository
             ) { _: PostImmutableModel? ->
              }
-        } else if (editPostSettingsFragment != null) {
-            editPostSettingsFragment?.updateFeaturedImage(mediaId, imagePicked)
+        } else {
+            // The post settings screen may not be showing (e.g. the image was set from the
+            // pre-publish sheet), so fall back to writing the id ourselves. Either way the editor is
+            // synced below via sendToJSFeaturedImageId.
+            if (editPostSettingsFragment != null) {
+                editPostSettingsFragment?.updateFeaturedImage(mediaId, imagePicked)
+            } else {
+                updateFeaturedImageUseCase.updateFeaturedImage(mediaId, editPostRepository) { }
+            }
         }
         if (editorFragment is GutenbergEditorFragment) {
             (editorFragment as GutenbergEditorFragment).sendToJSFeaturedImageId(mediaId.toInt())
@@ -3623,7 +3629,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     override fun onGotoCustomerSupportOptions() {
-        onGotoCustomerSupportOptions(this, site, experimentalFeatures)
+        onGotoCustomerSupportOptions(this, site, supportRouting)
     }
 
     override fun onSendEventToHost(eventName: String, properties: Map<String, Any>) {
@@ -3882,6 +3888,14 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     // EditorDataProvider methods
     override fun getEditPostRepository() = editPostRepository
     override fun getSite() = siteModel
+    override fun syncFeaturedImageIdToEditor() {
+        val featuredImageId = editPostRepository.featuredImageId
+        editorFragment?.setFeaturedImageId(featuredImageId)
+        // setFeaturedImageId only stores the id; push it to the JS editor so the featured image
+        // block isn't left showing a stale image after a set/remove from the pre-publish sheet.
+        (editorFragment as? GutenbergEditorFragment)?.sendToJSFeaturedImageId(featuredImageId.toInt())
+    }
+    override fun supportsFeaturedImageEditing() = true
 
     override fun onMenuOpened(featureId: Int, menu: Menu): Boolean {
         // This is a workaround for bag discovered on Chromebooks, where Enter key will not work in the toolbar menu

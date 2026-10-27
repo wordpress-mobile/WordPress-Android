@@ -33,6 +33,7 @@ import org.wordpress.android.ui.accounts.LoginFlow;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.push.NotificationType;
+import org.wordpress.android.support.SupportRouting;
 import org.wordpress.android.support.main.ui.SupportActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
@@ -67,14 +68,12 @@ import org.wordpress.android.ui.jetpack.restore.RestoreActivity;
 import org.wordpress.android.ui.jetpack.scan.ScanActivity;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsActivity;
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryActivity;
-import org.wordpress.android.ui.jetpackoverlay.JetpackStaticPosterActivity;
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallActivity;
 import org.wordpress.android.ui.main.ChooseSiteActivity;
 import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerMode;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.main.feedbackform.FeedbackFormActivity;
-import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.pages.PageParentActivity;
@@ -99,8 +98,6 @@ import org.wordpress.android.posttypes.bridge.SiteReference;
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures;
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature;
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeaturesActivity;
 import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailActivity;
 import org.wordpress.android.ui.prefs.categories.list.CategoriesListActivity;
@@ -110,6 +107,7 @@ import org.wordpress.android.ui.navmenus.NavMenusActivity;
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
+import org.wordpress.android.ui.rs.WpRsRouting;
 import org.wordpress.android.ui.selfhostedusers.SelfHostedUsersActivity;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
@@ -129,10 +127,8 @@ import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.suggestion.SuggestionType;
 import org.wordpress.android.ui.taxonomies.TermsDataViewActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
-import org.wordpress.android.ui.utils.PreMigrationDeepLinkData;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UriWrapper;
 import org.wordpress.android.util.UrlUtils;
@@ -147,6 +143,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import dagger.hilt.InstallIn;
+import dagger.hilt.android.EntryPointAccessors;
+import dagger.hilt.components.SingletonComponent;
+
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ACCESS_ERROR;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_REBLOGGED;
@@ -155,6 +155,7 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
 import static org.wordpress.android.ui.accounts.LoginFlow.PROLOGUE;
 import static org.wordpress.android.ui.accounts.LoginFlow.JETPACK_REST_CONNECT;
+import static org.wordpress.android.ui.accounts.LoginFlow.SUPPORT;
 import static org.wordpress.android.ui.accounts.LoginFlow.WPCOM_LOGIN;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
@@ -163,8 +164,6 @@ import static org.wordpress.android.ui.blaze.blazepromote.BlazePromoteParentActi
 import static org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModelKt.KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.restore.RestoreViewModelKt.KEY_RESTORE_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.scan.ScanFragment.ARG_THREAT_ID;
-import static org.wordpress.android.ui.main.WPMainActivity.ARG_BYPASS_MIGRATION;
-import static org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity.KEY_DEEP_LINK_DATA;
 import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_LIST_TYPE_KEY;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
@@ -181,16 +180,11 @@ public class ActivityLauncher {
     public static final String CATEGORY_DETAIL_ID = "category_detail_key";
 
     public static void showMainActivity(Context context) {
-        showMainActivity(context, false, false);
+        showMainActivity(context, false);
     }
 
-    public static void showMainActivity(Context context, boolean bypassMigration) {
-        showMainActivity(context, bypassMigration, false);
-    }
-
-    public static void showMainActivity(Context context, boolean bypassMigration, boolean selectPrimarySite) {
+    public static void showMainActivity(Context context, boolean selectPrimarySite) {
         Intent intent = getMainActivityInNewStack(context);
-        intent.putExtra(ARG_BYPASS_MIGRATION, bypassMigration);
         if (selectPrimarySite) {
             intent.putExtra(WPMainActivity.ARG_SELECT_PRIMARY_SITE, true);
         }
@@ -483,10 +477,6 @@ public class ActivityLauncher {
         addNewPostForResult(editorIntent, activity, site, false, reblogSource, -1, null);
     }
 
-    public static void viewStatsInNewStack(Context context, SiteModel site, @NonNull StatsLaunchedFrom launchedFrom) {
-        viewStatsInNewStack(context, site, null, launchedFrom);
-    }
-
     public static void viewStatsInNewStack(Context context, SiteModel site, @Nullable StatsTimeframe statsTimeframe,
                                            @NonNull StatsLaunchedFrom launchedFrom) {
         viewStatsInNewStack(context, site, statsTimeframe, null, launchedFrom);
@@ -645,8 +635,15 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    private static boolean canUseWpRs(@NonNull Context context, @Nullable SiteModel site) {
+        return EntryPointAccessors
+                .fromApplication(context.getApplicationContext(), ActivityLauncherEntryPoint.class)
+                .wpRsRouting()
+                .canUseWpRs(site);
+    }
+
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {
-        if (SiteUtils.canUseWpRs(site)) {
+        if (canUseWpRs(context, site)) {
             context.startActivity(PostRsListActivity.Companion.createIntent(context));
             return;
         }
@@ -682,7 +679,7 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPages(@NonNull Context context, @NonNull SiteModel site) {
-        if (SiteUtils.canUseWpRs(site)) {
+        if (canUseWpRs(context, site)) {
             context.startActivity(PagesRsListActivity.Companion.createIntent(context));
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
             return;
@@ -729,7 +726,7 @@ public class ActivityLauncher {
 
     public static void viewUnifiedComments(Context context, SiteModel site) {
         // Neither screen reads the site from the Intent; both resolve it from SelectedSiteRepository.
-        Intent intent = SiteUtils.canUseWpRs(site)
+        Intent intent = canUseWpRs(context, site)
                 ? CommentsRsListActivity.Companion.createIntent(context)
                 : new Intent(context, UnifiedCommentsActivity.class);
         context.startActivity(intent);
@@ -1372,7 +1369,8 @@ public class ActivityLauncher {
     }
 
     public static void viewHelpInNewStack(@NonNull Context context, @NonNull Origin origin,
-                                          @Nullable SiteModel selectedSite, @Nullable List<String> extraSupportTags) {
+                                          @Nullable SiteModel selectedSite, @Nullable List<String> extraSupportTags,
+                                          @NonNull SupportRouting supportRouting) {
         Map<String, String> properties = new HashMap<>();
         properties.put("origin", origin.name());
         AnalyticsTracker.track(Stat.SUPPORT_OPENED, properties);
@@ -1382,7 +1380,12 @@ public class ActivityLauncher {
         mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         Intent meIntent = new Intent(context, MeActivity.class);
         meIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        Intent helpIntent = HelpActivity.createIntent(context, origin, selectedSite, extraSupportTags);
+        // The new support flow is a separate screen that takes no entry-point context, so origin,
+        // selectedSite and extraSupportTags are deliberately skipped when it is enabled. They only
+        // apply to the legacy HelpActivity, which forwards them to Zendesk.
+        Intent helpIntent = supportRouting.isNewSupportFlowEnabled()
+                ? SupportActivity.createIntent(context)
+                : HelpActivity.createIntent(context, origin, selectedSite, extraSupportTags);
 
         taskStackBuilder.addNextIntent(mainActivityIntent);
         taskStackBuilder.addNextIntent(meIntent);
@@ -1392,11 +1395,13 @@ public class ActivityLauncher {
 
     public static void viewHelp(@NonNull Context context, @NonNull Origin origin, @Nullable SiteModel selectedSite,
                                 @Nullable List<String> extraSupportTags,
-                                @NonNull ExperimentalFeatures experimentalFeatures) {
+                                @NonNull SupportRouting supportRouting) {
         Map<String, String> properties = new HashMap<>();
         properties.put("origin", origin.name());
         AnalyticsTracker.track(Stat.SUPPORT_OPENED, properties);
-        if (experimentalFeatures.isEnabled(Feature.MODERN_SUPPORT)) {
+        // See viewHelpInNewStack: the new flow takes no entry-point context, so origin,
+        // selectedSite and extraSupportTags are deliberately skipped here too.
+        if (supportRouting.isNewSupportFlowEnabled()) {
             context.startActivity(SupportActivity.createIntent(context));
         } else {
             context.startActivity(HelpActivity.createIntent(context, origin, selectedSite, extraSupportTags));
@@ -1416,8 +1421,9 @@ public class ActivityLauncher {
 
 
     public static void viewZendeskTickets(@NonNull Context context,
-                                          @Nullable SiteModel selectedSite) {
-        viewHelpInNewStack(context, Origin.ZENDESK_NOTIFICATION, selectedSite, null);
+                                          @Nullable SiteModel selectedSite,
+                                          @NonNull SupportRouting supportRouting) {
+        viewHelpInNewStack(context, Origin.ZENDESK_NOTIFICATION, selectedSite, null, supportRouting);
     }
 
     public static void viewSSLCerts(Context context, String certificateString) {
@@ -1502,6 +1508,17 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, LoginActivity.class);
         WPCOM_LOGIN.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+    }
+
+    /**
+     * Builds the intent for the WordPress.com login required to access support chat (Odie).
+     * Goes straight to WP.com OAuth and, once done, finishes back to the caller (the Support
+     * screen) instead of navigating to the main activity.
+     */
+    public static Intent createWpComSignInForSupportIntent(@NonNull Context context) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        SUPPORT.putInto(intent);
+        return intent;
     }
 
     /**
@@ -1789,35 +1806,10 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void startJetpackMigrationFlow(@NonNull Context context,
-                                                 @Nullable PreMigrationDeepLinkData deepLinkData) {
-        Intent intent = new Intent(context, JetpackMigrationActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        if (deepLinkData != null) {
-            intent.putExtra(KEY_DEEP_LINK_DATA, deepLinkData);
-        }
-        context.startActivity(intent);
-    }
-
-    public static void openDeepLinkAfterJPMigration(@NonNull Context context, String action, Uri uri) {
-        Intent intent = new Intent()
-                .setPackage(context.getPackageName())
-                .setAction(action)
-                .setData(uri)
-                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-    }
-
     public static void openJetpackForDeeplink(@NonNull Context context, String action, UriWrapper uri) {
-        openJetpackForDeeplink(context, action, uri, false);
-    }
-
-    public static void openJetpackForDeeplink(@NonNull Context context, String action, UriWrapper uri,
-                                              Boolean bypassMigration) {
         Intent intent = new Intent();
         intent.setAction(action);
         intent.setData(uri.getUri());
-        intent.putExtra(ARG_BYPASS_MIGRATION, bypassMigration);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
@@ -1854,11 +1846,6 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void showJetpackStaticPoster(@NonNull Context context) {
-        Intent intent = new Intent(context, JetpackStaticPosterActivity.class);
-        context.startActivity(intent);
-    }
-
     public static void openDomainManagement(@NonNull Context context) {
         Intent intent = new Intent(context, DomainManagementActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -1882,5 +1869,12 @@ public class ActivityLauncher {
                                      @NonNull String taxonomyName, boolean isHierarchical) {
         Intent intent = TermsDataViewActivity.Companion.getIntent(context, taxonomySlug, taxonomyName, isHierarchical);
         context.startActivity(intent);
+    }
+
+    // Fully qualified because PostUtils.EntryPoint is already imported under the simple name.
+    @dagger.hilt.EntryPoint
+    @InstallIn(SingletonComponent.class)
+    interface ActivityLauncherEntryPoint {
+        WpRsRouting wpRsRouting();
     }
 }

@@ -55,6 +55,14 @@
                             android:layout_width="@dimen/avatar_sz_inner_circle"
                             android:layout_height="@dimen/avatar_sz_inner_circle"
                             android:contentDescription="@string/reader_avatar_desc" />
+
+                        <ProgressBar
+                            android:id="@+id/me_avatar_progress"
+                            style="?android:attr/progressBarStyleSmall"
+                            android:layout_width="@dimen/me_list_row_icon_size"
+                            android:layout_height="@dimen/me_list_row_icon_size"
+                            android:layout_gravity="center"
+                            android:visibility="gone" />
                     </FrameLayout>
 
                     <org.wordpress.android.widgets.WPTextView
@@ -103,6 +111,19 @@
                     style="@style/MeListRowIcon"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_user_white_24dp" />
+
+                <!-- Takes the icon's place while the editor is being opened, so sizes and margins match it -->
+                <ProgressBar
+                    android:id="@+id/me_my_profile_progress"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="@dimen/me_list_row_icon_size"
+                    android:layout_height="@dimen/me_list_row_icon_size"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/margin_large"
+                    android:layout_marginTop="@dimen/margin_large"
+                    android:layout_marginEnd="@dimen/margin_extra_large"
+                    android:layout_marginBottom="@dimen/margin_large"
+                    android:visibility="gone" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/me_my_profile_text_view"
@@ -353,30 +374,6 @@
             </LinearLayout>
 
             <View style="@style/MeListSectionDividerView" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/jetpack_badge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="@dimen/jetpack_badge_footer_bottom_spacing"
-                android:layout_marginTop="@dimen/me_jetpack_badge_top_margin"
-                android:importantForAccessibility="no"
-                android:paddingEnd="15dp"
-                android:paddingStart="5dp"
-                android:paddingVertical="5dp"
-                android:text="@string/wp_jetpack_powered"
-                android:textAppearance="?attr/textAppearanceBody1"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_sz_large"
-                android:visibility="gone"
-                app:backgroundTint="@color/jetpack_badge_background"
-                app:cornerRadius="20dp"
-                app:icon="@drawable/ic_jetpack_logo_24dp"
-                app:iconPadding="10dp"
-                app:iconTint="@null"
-                tools:ignore="TextContrastCheck"
-                tools:visibility="visible" />
 
             <LinearLayout
                 android:id="@+id/gravatar_info_container"

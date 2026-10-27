@@ -45,13 +45,13 @@
             android:ellipsize="end"
             android:lineSpacingMultiplier="1.2"
             android:maxLines="5"
-            android:text="@string/jetpack_feature_card_content_phase_three"
+            android:text="@string/jetpack_feature_card_content_phase_self_hosted_and_new_users"
             android:textAlignment="viewStart"
             android:textAppearance="?attr/textAppearanceSubtitle1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/my_site_jetpack_feature_card_logo"
-            tools:text="@string/jetpack_feature_card_content_phase_three" />
+            tools:text="@string/jetpack_feature_card_content_phase_self_hosted_and_new_users" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/my_site_jetpack_feature_card_learn_more"

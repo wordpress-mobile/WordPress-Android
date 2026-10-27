@@ -49,7 +49,7 @@ import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.blaze.BlazeActionEvent
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.utils.uiStringText
-import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingState
+import org.wordpress.android.ui.compose.components.LoadingState
 import org.wordpress.android.util.extensions.getSerializableCompat
 
 private const val CAMPAIGN_DETAIL_PAGE_SOURCE = "campaign_detail_page_source"

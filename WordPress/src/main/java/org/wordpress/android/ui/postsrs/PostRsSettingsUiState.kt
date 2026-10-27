@@ -1,11 +1,10 @@
 package org.wordpress.android.ui.postsrs
 
-import org.wordpress.android.ui.postsrs.data.PostRsRestClient
+import org.wordpress.android.ui.rs.data.AuthorInfo
+import org.wordpress.android.ui.rs.data.RsSiteRestClient
 import uniffi.wp_api.PostFormat
 import uniffi.wp_api.PostStatus
 import java.util.Date
-
-data class AuthorInfo(val id: Long, val name: String)
 
 sealed interface FieldState {
     data object Empty : FieldState
@@ -53,7 +52,7 @@ data class PostRsSettingsUiState(
     val editedDate: Date? = null,
     val editedAuthor: Long? = null,
     val sitePostFormats: List<PostFormat> =
-        PostRsRestClient.DEFAULT_POST_FORMATS,
+        RsSiteRestClient.DEFAULT_POST_FORMATS,
     val isLoadingFormats: Boolean = false,
     val isSaving: Boolean = false,
     val dialogState: DialogState = DialogState.None,

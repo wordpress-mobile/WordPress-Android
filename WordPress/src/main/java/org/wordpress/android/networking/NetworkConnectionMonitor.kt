@@ -28,6 +28,9 @@ import javax.inject.Singleton
  * network. During a handover (e.g. Wi-Fi -> cellular) where the replacement is already up, it is added before
  * the old one is removed, so the set doesn't empty and the handover isn't misreported as a disconnection; a
  * genuine disconnect empties the set and is reported reliably.
+ *
+ * [isConnected] is seeded with the current state in [start], so it always has a value once the monitor is
+ * running - including when the device starts offline and no callback ever arrives.
  */
 @Singleton
 class NetworkConnectionMonitor @Inject constructor() {
@@ -45,6 +48,13 @@ class NetworkConnectionMonitor @Inject constructor() {
         val manager = context.applicationContext
             .getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager ?: return
 
+        // Publish the current state before registering. A NetworkCallback only reports networks as they appear,
+        // so on a device that starts with no connectivity nothing is ever delivered and [isConnected] would stay
+        // null - indistinguishable from "offline" to observers, and leaving the first reconnect looking like an
+        // initial value rather than a change. The CONNECTIVITY_ACTION broadcast this replaced was sticky and
+        // delivered the current state at registration; seeding here restores that.
+        onConnectivityChanged(manager.hasInternetCapability())
+
         val thread = HandlerThread("NetworkConnectionMonitor").apply { start() }
         val callback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) = onNetworkAvailable(network)
@@ -55,6 +65,11 @@ class NetworkConnectionMonitor @Inject constructor() {
             .build()
         manager.registerNetworkCallback(request, callback, Handler(thread.looper))
         started = true
+    }
+
+    private fun ConnectivityManager.hasInternetCapability(): Boolean {
+        val network = activeNetwork ?: return false
+        return getNetworkCapabilities(network)?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
     }
 
     @VisibleForTesting
@@ -70,10 +85,12 @@ class NetworkConnectionMonitor @Inject constructor() {
     }
 
     /**
-     * Called on the monitor's background thread. Updates [isConnected] on the first callback and whenever the
-     * connected state actually changes, so observers aren't spammed while connectivity churns.
+     * Called from [start] to publish the seeded state, then on the monitor's background thread for each
+     * callback. Updates [isConnected] on the first call and whenever the connected state actually changes, so
+     * observers aren't spammed while connectivity churns.
      */
-    private fun onConnectivityChanged(isConnected: Boolean) {
+    @VisibleForTesting
+    internal fun onConnectivityChanged(isConnected: Boolean) {
         if (isFirstCallback || isConnected != wasConnected) {
             isFirstCallback = false
             wasConnected = isConnected

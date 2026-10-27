@@ -7,11 +7,14 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ActivityCard.ActivityCardWithItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.ActivityLogSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PostSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
@@ -23,11 +26,17 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 class CardsShownTrackerTest {
     @Mock
     lateinit var analyticsTracker: AnalyticsTrackerWrapper
+
+    @Mock
+    lateinit var selectedSiteRepository: SelectedSiteRepository
+
+    private val site: SiteModel = mock()
     private lateinit var cardsShownTracker: CardsShownTracker
 
     @Before
     fun setUp() {
-        cardsShownTracker = CardsShownTracker(analyticsTracker)
+        cardsShownTracker = CardsShownTracker(analyticsTracker, selectedSiteRepository)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
     }
 
     @Test
@@ -50,6 +59,7 @@ class CardsShownTrackerTest {
 
         verify(analyticsTracker).track(
             Stat.MY_SITE_DASHBOARD_CARD_SHOWN,
+            site,
             mapOf(CardsTracker.TYPE to Type.ERROR.label, CardsTracker.SUBTYPE to Type.ERROR.label)
         )
     }
@@ -64,6 +74,7 @@ class CardsShownTrackerTest {
     private fun verifyCardShownTracked(type: String, subtype: String) {
         verify(analyticsTracker).track(
             Stat.MY_SITE_DASHBOARD_CARD_SHOWN,
+            site,
             mapOf(CardsTracker.TYPE to type, CardsTracker.SUBTYPE to subtype)
         )
     }

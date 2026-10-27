@@ -6,11 +6,15 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.repository.ArchiveSectionItemData
+import org.wordpress.android.ui.newstats.repository.ArchivesResult
 import org.wordpress.android.ui.newstats.repository.ClickItemData
 import org.wordpress.android.ui.newstats.repository.ClicksResult
 import org.wordpress.android.ui.newstats.repository.FileDownloadItemData
@@ -20,35 +24,31 @@ import org.wordpress.android.ui.newstats.repository.MostViewedItemData
 import org.wordpress.android.ui.newstats.repository.MostViewedResult
 import org.wordpress.android.ui.newstats.repository.SearchTermItemData
 import org.wordpress.android.ui.newstats.repository.SearchTermsResult
+import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.VideoPlayItemData
 import org.wordpress.android.ui.newstats.repository.VideoPlaysResult
+import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class MostViewedDetailFetcherTest : BaseUnitTest() {
     @Mock
     private lateinit var statsRepository: StatsRepository
 
+    @Mock
+    private lateinit var resourceProvider: ResourceProvider
+
     private lateinit var fetcher: MostViewedDetailFetcher
 
     @Before
     fun setUp() {
-        fetcher = MostViewedDetailFetcher(statsRepository)
-    }
-
-    @Test
-    fun `fetch initializes the repository with the access token`() = test {
-        whenever(statsRepository.fetchClicks(any(), any())).thenReturn(clicksSuccess())
-
-        fetcher.fetch(MostViewedDetailSource.CLICKS, SITE_ID, PERIOD, ACCESS_TOKEN)
-
-        verify(statsRepository).init(ACCESS_TOKEN)
+        fetcher = MostViewedDetailFetcher(statsRepository, resourceProvider)
     }
 
     // region Referrers
     @Test
     fun `fetch referrers maps the success result into the common shape`() = test {
-        whenever(statsRepository.fetchReferrersDetail(any(), any())).thenReturn(
+        whenever(statsRepository.fetchReferrersDetail(any(), any(), any())).thenReturn(
             MostViewedResult.Success(
                 items = listOf(
                     MostViewedItemData(
@@ -65,7 +65,7 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
             )
         )
 
-        val result = fetcher.fetch(MostViewedDetailSource.REFERRERS, SITE_ID, PERIOD, ACCESS_TOKEN)
+        val result = fetcher.fetch(MostViewedDetailSource.REFERRERS, SITE_ID, PERIOD)
 
         val success = result as StatsCardFetchResult.Success
         assertThat(success.items).hasSize(1)
@@ -79,10 +79,10 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
 
     @Test
     fun `fetch referrers maps the error result to the generic api error`() = test {
-        whenever(statsRepository.fetchReferrersDetail(any(), any()))
+        whenever(statsRepository.fetchReferrersDetail(any(), any(), any()))
             .thenReturn(MostViewedResult.Error("network"))
 
-        val result = fetcher.fetch(MostViewedDetailSource.REFERRERS, SITE_ID, PERIOD, ACCESS_TOKEN)
+        val result = fetcher.fetch(MostViewedDetailSource.REFERRERS, SITE_ID, PERIOD)
 
         val error = result as StatsCardFetchResult.Error
         assertThat(error.messageResId).isEqualTo(R.string.stats_error_api)
@@ -93,7 +93,7 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
     // region Clicks
     @Test
     fun `fetch clicks maps items with positional ids and clicks totals`() = test {
-        whenever(statsRepository.fetchClicks(any(), any())).thenReturn(
+        whenever(statsRepository.fetchClicks(any(), any(), any())).thenReturn(
             ClicksResult.Success(
                 items = listOf(
                     ClickItemData(name = "example.com", clicks = 50L, previousClicks = 20L),
@@ -105,7 +105,7 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
             )
         )
 
-        val result = fetcher.fetch(MostViewedDetailSource.CLICKS, SITE_ID, PERIOD, ACCESS_TOKEN)
+        val result = fetcher.fetch(MostViewedDetailSource.CLICKS, SITE_ID, PERIOD)
 
         val success = result as StatsCardFetchResult.Success
         assertThat(success.items).hasSize(2)
@@ -121,14 +121,14 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
     @Test
     fun `fetch clicks carries the url and children onto the detail items`() = test {
         val child = MostViewedChildData(name = "Child link", url = "child-url", views = 10L)
-        whenever(statsRepository.fetchClicks(any(), any())).thenReturn(
+        whenever(statsRepository.fetchClicks(any(), any(), any())).thenReturn(
             clicksSuccess(
                 ClickItemData("example.com", 50L, 20L, url = "link-url"),
                 ClickItemData("Grouped", 10L, 10L, children = listOf(child))
             )
         )
 
-        val result = fetcher.fetch(MostViewedDetailSource.CLICKS, SITE_ID, PERIOD, ACCESS_TOKEN)
+        val result = fetcher.fetch(MostViewedDetailSource.CLICKS, SITE_ID, PERIOD)
 
         val items = (result as StatsCardFetchResult.Success).items
         assertThat(items[0].url).isEqualTo("link-url")
@@ -137,10 +137,10 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
 
     @Test
     fun `fetch clicks passes through the error message resId and auth flag`() = test {
-        whenever(statsRepository.fetchClicks(any(), any()))
+        whenever(statsRepository.fetchClicks(any(), any(), any()))
             .thenReturn(ClicksResult.Error(R.string.stats_error_unknown, isAuthError = true))
 
-        val result = fetcher.fetch(MostViewedDetailSource.CLICKS, SITE_ID, PERIOD, ACCESS_TOKEN)
+        val result = fetcher.fetch(MostViewedDetailSource.CLICKS, SITE_ID, PERIOD)
 
         val error = result as StatsCardFetchResult.Error
         assertThat(error.messageResId).isEqualTo(R.string.stats_error_unknown)
@@ -151,7 +151,7 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
     // region Search terms
     @Test
     fun `fetch search terms maps items and totals`() = test {
-        whenever(statsRepository.fetchSearchTerms(any(), any())).thenReturn(
+        whenever(statsRepository.fetchSearchTerms(any(), any(), any())).thenReturn(
             SearchTermsResult.Success(
                 items = listOf(SearchTermItemData(name = "kotlin", views = 12L, previousViews = 4L)),
                 totalViews = 12L,
@@ -160,7 +160,7 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
             )
         )
 
-        val result = fetcher.fetch(MostViewedDetailSource.SEARCH_TERMS, SITE_ID, PERIOD, ACCESS_TOKEN)
+        val result = fetcher.fetch(MostViewedDetailSource.SEARCH_TERMS, SITE_ID, PERIOD)
 
         val success = result as StatsCardFetchResult.Success
         assertThat(success.items[0].id).isEqualTo(0L)
@@ -171,10 +171,10 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
 
     @Test
     fun `fetch search terms passes through the error`() = test {
-        whenever(statsRepository.fetchSearchTerms(any(), any()))
+        whenever(statsRepository.fetchSearchTerms(any(), any(), any()))
             .thenReturn(SearchTermsResult.Error(R.string.stats_error_api))
 
-        val error = fetcher.fetch(MostViewedDetailSource.SEARCH_TERMS, SITE_ID, PERIOD, ACCESS_TOKEN)
+        val error = fetcher.fetch(MostViewedDetailSource.SEARCH_TERMS, SITE_ID, PERIOD)
             as StatsCardFetchResult.Error
         assertThat(error.messageResId).isEqualTo(R.string.stats_error_api)
     }
@@ -183,7 +183,7 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
     // region Video plays
     @Test
     fun `fetch video plays maps the title field and totals`() = test {
-        whenever(statsRepository.fetchVideoPlays(any(), any())).thenReturn(
+        whenever(statsRepository.fetchVideoPlays(any(), any(), any())).thenReturn(
             VideoPlaysResult.Success(
                 items = listOf(VideoPlayItemData(title = "Intro.mp4", views = 9L, previousViews = 3L)),
                 totalViews = 9L,
@@ -192,7 +192,7 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
             )
         )
 
-        val result = fetcher.fetch(MostViewedDetailSource.VIDEO_PLAYS, SITE_ID, PERIOD, ACCESS_TOKEN)
+        val result = fetcher.fetch(MostViewedDetailSource.VIDEO_PLAYS, SITE_ID, PERIOD)
 
         val success = result as StatsCardFetchResult.Success
         assertThat(success.items[0].title).isEqualTo("Intro.mp4")
@@ -202,10 +202,10 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
 
     @Test
     fun `fetch video plays passes through the error`() = test {
-        whenever(statsRepository.fetchVideoPlays(any(), any()))
+        whenever(statsRepository.fetchVideoPlays(any(), any(), any()))
             .thenReturn(VideoPlaysResult.Error(R.string.stats_error_api, isAuthError = true))
 
-        val error = fetcher.fetch(MostViewedDetailSource.VIDEO_PLAYS, SITE_ID, PERIOD, ACCESS_TOKEN)
+        val error = fetcher.fetch(MostViewedDetailSource.VIDEO_PLAYS, SITE_ID, PERIOD)
             as StatsCardFetchResult.Error
         assertThat(error.messageResId).isEqualTo(R.string.stats_error_api)
         assertThat(error.isAuthError).isTrue()
@@ -215,7 +215,7 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
     // region File downloads
     @Test
     fun `fetch file downloads maps downloads into views and totals`() = test {
-        whenever(statsRepository.fetchFileDownloads(any(), any())).thenReturn(
+        whenever(statsRepository.fetchFileDownloads(any(), any(), any())).thenReturn(
             FileDownloadsResult.Success(
                 items = listOf(FileDownloadItemData(name = "guide.pdf", downloads = 15L, previousDownloads = 5L)),
                 totalDownloads = 15L,
@@ -224,7 +224,7 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
             )
         )
 
-        val result = fetcher.fetch(MostViewedDetailSource.FILE_DOWNLOADS, SITE_ID, PERIOD, ACCESS_TOKEN)
+        val result = fetcher.fetch(MostViewedDetailSource.FILE_DOWNLOADS, SITE_ID, PERIOD)
 
         val success = result as StatsCardFetchResult.Success
         assertThat(success.items[0].title).isEqualTo("guide.pdf")
@@ -235,12 +235,101 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
 
     @Test
     fun `fetch file downloads passes through the error`() = test {
-        whenever(statsRepository.fetchFileDownloads(any(), any()))
+        whenever(statsRepository.fetchFileDownloads(any(), any(), any()))
             .thenReturn(FileDownloadsResult.Error(R.string.stats_error_unknown))
 
-        val error = fetcher.fetch(MostViewedDetailSource.FILE_DOWNLOADS, SITE_ID, PERIOD, ACCESS_TOKEN)
+        val error = fetcher.fetch(MostViewedDetailSource.FILE_DOWNLOADS, SITE_ID, PERIOD)
             as StatsCardFetchResult.Error
         assertThat(error.messageResId).isEqualTo(R.string.stats_error_unknown)
+    }
+    // endregion
+
+    // region Archives
+    @Test
+    fun `fetch archives maps groups into rows with their entries as children`() = test {
+        whenever(resourceProvider.getString(R.string.stats_archives_section_search)).thenReturn("Search terms")
+        whenever(statsRepository.fetchArchivesDetail(any(), any(), any())).thenReturn(
+            ArchivesResult.Success(
+                sections = listOf(
+                    ArchiveSectionItemData(
+                        key = "search",
+                        views = 30L,
+                        previousViews = 10L,
+                        entries = listOf(
+                            MostViewedChildData(name = "kotlin", url = "https://example.com/?s=kotlin", views = 20L),
+                            MostViewedChildData(name = "coroutines", url = null, views = 10L)
+                        )
+                    )
+                ),
+                totalViews = 30L,
+                totalViewsChange = 20L,
+                totalViewsChangePercent = 200.0
+            )
+        )
+
+        val result = fetcher.fetch(MostViewedDetailSource.ARCHIVES, SITE_ID, PERIOD)
+
+        val success = result as StatsCardFetchResult.Success
+        assertThat(success.items).hasSize(1)
+        assertThat(success.items[0].id).isEqualTo(0L)
+        assertThat(success.items[0].title).isEqualTo("Search terms")
+        assertThat(success.items[0].views).isEqualTo(30L)
+        assertThat(success.items[0].children.map { it.name }).containsExactly("kotlin", "coroutines")
+        assertThat(success.totalValue).isEqualTo(30L)
+        assertThat(success.totalValueChange).isEqualTo(20L)
+    }
+
+    @Test
+    fun `fetch archives keeps every entry of a group, unlike the card`() = test {
+        whenever(resourceProvider.getString(any())).thenReturn("Search terms")
+        whenever(statsRepository.fetchArchivesDetail(any(), any(), any())).thenReturn(
+            ArchivesResult.Success(
+                sections = listOf(
+                    ArchiveSectionItemData(
+                        key = "search",
+                        views = 60L,
+                        previousViews = 0L,
+                        entries = (1..60).map { MostViewedChildData(name = "term $it", url = null, views = 1L) }
+                    )
+                ),
+                totalViews = 60L,
+                totalViewsChange = 60L,
+                totalViewsChangePercent = 100.0
+            )
+        )
+
+        val result = fetcher.fetch(MostViewedDetailSource.ARCHIVES, SITE_ID, PERIOD)
+
+        assertThat((result as StatsCardFetchResult.Success).items[0].children).hasSize(60)
+    }
+
+    @Test
+    fun `fetch archives asks for the unbounded detail list, not the card's`() = test {
+        whenever(statsRepository.fetchArchivesDetail(any(), any(), any()))
+            .thenReturn(ArchivesResult.Error(R.string.stats_error_api))
+
+        fetcher.fetch(MostViewedDetailSource.ARCHIVES, SITE_ID, PERIOD, forceRefresh = true)
+
+        verify(statsRepository).fetchArchivesDetail(eq(SITE_ID), eq(PERIOD), eq(true))
+        verify(statsRepository, never()).fetchArchives(any(), any(), any())
+    }
+
+    @Test
+    fun `archives revalidation is checked against its own cache bucket`() = test {
+        fetcher.needsRevalidation(MostViewedDetailSource.ARCHIVES, SITE_ID, PERIOD)
+
+        verify(statsRepository).needsRevalidation(StatsCacheBucket.ARCHIVES_DETAIL, SITE_ID, PERIOD)
+    }
+
+    @Test
+    fun `fetch archives passes through the error message resId and auth flag`() = test {
+        whenever(statsRepository.fetchArchivesDetail(any(), any(), any()))
+            .thenReturn(ArchivesResult.Error(R.string.stats_error_auth, isAuthError = true))
+
+        val error = fetcher.fetch(MostViewedDetailSource.ARCHIVES, SITE_ID, PERIOD)
+            as StatsCardFetchResult.Error
+        assertThat(error.messageResId).isEqualTo(R.string.stats_error_auth)
+        assertThat(error.isAuthError).isTrue()
     }
     // endregion
 
@@ -253,7 +342,6 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
 
     companion object {
         private const val SITE_ID = 123L
-        private const val ACCESS_TOKEN = "test_access_token"
         private val PERIOD = StatsPeriod.Last7Days
     }
 }

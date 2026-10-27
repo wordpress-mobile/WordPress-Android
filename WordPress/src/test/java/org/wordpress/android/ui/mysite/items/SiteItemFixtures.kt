@@ -107,11 +107,24 @@ val THEMES_ITEM = ListItem(
     onClick = ListItemInteraction.create(ListItemAction.THEMES, SITE_ITEM_ACTION),
     listItemAction = ListItemAction.THEMES
 )
+val MENUS_ITEM = ListItem(
+    R.drawable.ic_gridicons_menus,
+    UiStringRes(R.string.menus),
+    onClick = ListItemInteraction.create(ListItemAction.MENUS, SITE_ITEM_ACTION),
+    listItemAction = ListItemAction.MENUS
+)
 val DOMAINS_ITEM = ListItem(
     R.drawable.ic_domains_white_24dp,
     UiStringRes(R.string.my_site_btn_domains),
     onClick = ListItemInteraction.create(DOMAINS, SITE_ITEM_ACTION),
     listItemAction = DOMAINS
+)
+val ME_ITEM = ListItem(
+    R.drawable.ic_user_primary_white_24,
+    UiStringRes(R.string.me),
+    onClick = ListItemInteraction.create(ListItemAction.ME, SITE_ITEM_ACTION),
+    disablePrimaryIconTint = true,
+    listItemAction = ListItemAction.ME
 )
 val SITE_MONITORING_ITEM = ListItem(
     R.drawable.gb_ic_tool,

@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.domains.management.newdomainsearch.domainsfetcher
 
-import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.DomainSuggestion
@@ -14,21 +12,9 @@ import javax.inject.Inject
 private const val SUGGESTIONS_REQUEST_COUNT = 20u
 
 class NewDomainsSearchRepository @Inject constructor(
-    private val wpComApiClientProvider: WpComApiClientProvider,
-    private val accountStore: AccountStore,
+    private val wpComApiClient: WpComApiClient,
 ) {
-    private var wpComApiClient: WpComApiClient? = null
     private var products: List<Product>? = null
-
-    @Synchronized
-    private fun getOrCreateClient(): WpComApiClient {
-        val token = requireNotNull(accountStore.accessToken) {
-            "WP.com access token is required"
-        }
-        return wpComApiClient
-            ?: wpComApiClientProvider.getWpComApiClient(token)
-                .also { wpComApiClient = it }
-    }
 
     suspend fun searchForDomains(query: String): DomainsResult {
         if (products == null) fetchProducts()
@@ -42,7 +28,7 @@ class NewDomainsSearchRepository @Inject constructor(
         )
 
         return when (
-            val result = getOrCreateClient()
+            val result = wpComApiClient
                 .request { it.domains().suggestions(params).data }
         ) {
             is WpRequestResult.Success -> {
@@ -71,7 +57,7 @@ class NewDomainsSearchRepository @Inject constructor(
         val params = ProductsParams(
             productType = ProductTypeFilter.Domains
         )
-        val result = getOrCreateClient()
+        val result = wpComApiClient
             .request { it.products().list(params).data }
         if (result is WpRequestResult.Success) {
             products = result.response.values.toList()

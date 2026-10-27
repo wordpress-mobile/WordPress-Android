@@ -123,7 +123,7 @@ object DummySubscribers {
             emailsSent = random.toULong(),
             uniqueOpens = (random - 200).toULong(),
             uniqueClicks = (random - 243).toULong(),
-            blogRegistrationDate = Date(1673740800000L).toString(),
+            blogRegistrationDate = Date(1673740800000L),
         )
     }
 

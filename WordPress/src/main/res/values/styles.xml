@@ -48,7 +48,6 @@
         <item name="wpColorOnSurfaceHigh">@color/material_on_surface_emphasis_high_type</item>
         <item name="wpColorActionModeIcon">?attr/colorOnSurface</item>
         <item name="wpColorSurfaceSecondary">@color/neutral_5</item>
-        <item name="wpColorLoginPrologueBg">@color/blue_0</item>
         <item name="wpColorTextPrimary">?attr/wpColorOnSurfaceHigh</item>
         <item name="wpColorTextSecondary">@color/text_secondary</item>
 
@@ -400,11 +399,6 @@
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="textColor">?attr/colorOnSurface</item>
         <item name="textColorHint">@color/hint_text</item>
-    </style>
-
-    <style name="FilteredRecyclerViewFilterTextView.MainToolbar">
-        <item name="android:textSize">@null</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
     </style>
 
     <style name="WordPress.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Surface">

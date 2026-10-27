@@ -29,11 +29,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.newstats.StatsCardType
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.components.StatsViewChange
 import org.wordpress.android.ui.newstats.components.StatsDetailListItem
 import org.wordpress.android.ui.newstats.components.StatsListHeader
 import org.wordpress.android.ui.newstats.components.StatsSummaryCard
 import org.wordpress.android.util.extensions.getParcelableArrayListCompat
+import javax.inject.Inject
 
 private const val EXTRA_COUNTRIES = "extra_countries"
 private const val EXTRA_MAP_DATA = "extra_map_data"
@@ -49,8 +52,17 @@ private const val MAP_ASPECT_RATIO = 8f / 5f
 
 @AndroidEntryPoint
 class LocationsDetailActivity : BaseAppCompatActivity() {
+    @Inject
+    lateinit var newStatsTracker: NewStatsTracker
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Only on a fresh launch: a rotation recreates this activity from the same Intent, and
+        // re-reporting there would inflate the count. Same guard as NewStatsActivity's.
+        if (savedInstanceState == null) {
+            newStatsTracker.trackDetailScreenShown(StatsCardType.LOCATIONS)
+        }
 
         val countries = intent.extras
             ?.getParcelableArrayListCompat<LocationItem>(

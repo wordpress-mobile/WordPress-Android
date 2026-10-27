@@ -121,7 +121,6 @@ import org.wordpress.android.ui.Shortcut
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION
 import org.wordpress.android.ui.history.HistoryListItem.Revision
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
@@ -372,7 +371,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
 
     @Inject lateinit var bloggingPromptsStore: BloggingPromptsStore
 
-    @Inject lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     @Inject lateinit var contactSupportFeatureConfig: ContactSupportFeatureConfig
 
@@ -481,12 +479,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         (application as WordPress).component().inject(this)
         initializeViewModels()
 
-        // Track if this editor launch came via EditorLauncher (only on initial creation)
-        if (savedInstanceState == null
-            && intent.getBooleanExtra(EditorLauncher.EXTRA_LAUNCHED_VIA_EDITOR_LAUNCHER, false)) {
-            analyticsTrackerWrapper.track(Stat.EDITOR_LAUNCHED_VIA_EDITOR_LAUNCHER)
-        }
-
         setContentView(R.layout.new_edit_post_activity)
 
         // Handle edge-to-edge with IME insets for keyboard management
@@ -510,6 +502,13 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT)
             finish()
             return
+        }
+
+        // Track if this editor launch came via EditorLauncher (only on initial creation). Tracked after the site
+        // is resolved so the event carries the site it was launched for.
+        if (savedInstanceState == null
+            && intent.getBooleanExtra(EditorLauncher.EXTRA_LAUNCHED_VIA_EDITOR_LAUNCHER, false)) {
+            analyticsTrackerWrapper.track(Stat.EDITOR_LAUNCHED_VIA_EDITOR_LAUNCHER, siteModel)
         }
 
         if (shouldRequireApplicationPassword()) {
@@ -1258,7 +1257,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     override fun onPause() {
         super.onPause()
         EventBus.getDefault().unregister(this)
-        AnalyticsTracker.track(Stat.EDITOR_CLOSED)
+        analyticsTrackerWrapper.track(Stat.EDITOR_CLOSED, siteModel)
     }
 
     override fun onStop() {
@@ -2234,6 +2233,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 ),
                 isNetworkLoggingEnabled = AppPrefs.isTrackNetworkRequestsEnabled(),
                 post = post,
+                source = GutenbergKitSettingsBuilder.ConfigSource.EDITOR,
             )
         }
 
@@ -2471,8 +2471,19 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 mediaId, postRepository
             ) { _: PostImmutableModel? ->
              }
-        } else if (editPostSettingsFragment != null) {
-            editPostSettingsFragment?.updateFeaturedImage(mediaId, imagePicked)
+        } else {
+            // The post settings screen may not be showing (e.g. the image was set from the
+            // pre-publish sheet), so fall back to writing the id ourselves.
+            if (editPostSettingsFragment != null) {
+                editPostSettingsFragment?.updateFeaturedImage(mediaId, imagePicked)
+            } else {
+                updateFeaturedImageUseCase.updateFeaturedImage(mediaId, editPostRepository) { }
+            }
+            // Record the id on the fragment (kept across config changes). GutenbergKit's
+            // GutenbergView exposes no app->webview featured-image setter, so the already-loaded
+            // editor can only pick this up on its next load; the PostModel write above is the
+            // source of truth for saving.
+            editorFragment?.setFeaturedImageId(mediaId)
         }
     }
 
@@ -3129,6 +3140,13 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     // EditorDataProvider methods
     override fun getEditPostRepository() = editPostRepository
     override fun getSite() = siteModel
+    override fun syncFeaturedImageIdToEditor() {
+        // GutenbergKit's GutenbergView has no app->webview featured-image setter, so this only
+        // records the id on the fragment; the loaded editor reflects it on its next load. The
+        // PostModel write done by the caller is what actually persists the change.
+        editorFragment?.setFeaturedImageId(editPostRepository.featuredImageId)
+    }
+    override fun supportsFeaturedImageEditing() = true
 
     override fun onMenuOpened(featureId: Int, menu: Menu): Boolean {
         // This is a workaround for bag discovered on Chromebooks, where Enter key will not work in the toolbar menu

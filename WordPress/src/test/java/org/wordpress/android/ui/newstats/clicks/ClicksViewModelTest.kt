@@ -96,7 +96,7 @@ class ClicksViewModelTest : BaseUnitTest() {
     fun `when fetch fails, then error state is emitted`() = test {
         whenever(resourceProvider.getString(R.string.stats_error_api))
             .thenReturn("API error")
-        whenever(statsRepository.fetchClicks(any(), any()))
+        whenever(statsRepository.fetchClicks(any(), any(), any()))
             .thenReturn(
                 ClicksResult.Error(R.string.stats_error_api)
             )
@@ -116,7 +116,7 @@ class ClicksViewModelTest : BaseUnitTest() {
     @Test
     fun `when data loads successfully, then loaded state is emitted`() =
         test {
-            whenever(statsRepository.fetchClicks(any(), any()))
+            whenever(statsRepository.fetchClicks(any(), any(), any()))
                 .thenReturn(createSuccessResult())
 
             initViewModel()
@@ -129,7 +129,7 @@ class ClicksViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when data loads, then items contain correct values`() = test {
-        whenever(statsRepository.fetchClicks(any(), any()))
+        whenever(statsRepository.fetchClicks(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -147,7 +147,7 @@ class ClicksViewModelTest : BaseUnitTest() {
     @Test
     fun `when data loads, then maxViewsForBar is set to first item value`() =
         test {
-            whenever(statsRepository.fetchClicks(any(), any()))
+            whenever(statsRepository.fetchClicks(any(), any(), any()))
                 .thenReturn(createSuccessResult())
 
             initViewModel()
@@ -169,7 +169,7 @@ class ClicksViewModelTest : BaseUnitTest() {
                     previousClicks = (90 - index).toLong()
                 )
             }
-            whenever(statsRepository.fetchClicks(any(), any()))
+            whenever(statsRepository.fetchClicks(any(), any(), any()))
                 .thenReturn(
                     ClicksResult.Success(
                         items = manyItems,
@@ -190,7 +190,7 @@ class ClicksViewModelTest : BaseUnitTest() {
     @Test
     fun `when data loads with empty items, then loaded state with empty list`() =
         test {
-            whenever(statsRepository.fetchClicks(any(), any()))
+            whenever(statsRepository.fetchClicks(any(), any(), any()))
                 .thenReturn(
                     ClicksResult.Success(
                         items = emptyList(),
@@ -213,7 +213,7 @@ class ClicksViewModelTest : BaseUnitTest() {
     // region Period changes
     @Test
     fun `when period changes, then data is reloaded`() = test {
-        whenever(statsRepository.fetchClicks(any(), any()))
+        whenever(statsRepository.fetchClicks(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -223,15 +223,15 @@ class ClicksViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         verify(statsRepository, times(2))
-            .fetchClicks(any(), any())
+            .fetchClicks(any(), any(), any())
         verify(statsRepository)
-            .fetchClicks(eq(TEST_SITE_ID), eq(StatsPeriod.Last30Days))
+            .fetchClicks(eq(TEST_SITE_ID), eq(StatsPeriod.Last30Days), any())
     }
 
     @Test
     fun `when same period is selected, then data is not reloaded`() =
         test {
-            whenever(statsRepository.fetchClicks(any(), any()))
+            whenever(statsRepository.fetchClicks(any(), any(), any()))
                 .thenReturn(createSuccessResult())
 
             initViewModel()
@@ -241,7 +241,7 @@ class ClicksViewModelTest : BaseUnitTest() {
             advanceUntilIdle()
 
             verify(statsRepository, times(1))
-                .fetchClicks(any(), any())
+                .fetchClicks(any(), any(), any())
         }
     // endregion
 
@@ -249,7 +249,7 @@ class ClicksViewModelTest : BaseUnitTest() {
     @Test
     fun `when refresh is called, then isRefreshing becomes true then false`() =
         test {
-            whenever(statsRepository.fetchClicks(any(), any()))
+            whenever(statsRepository.fetchClicks(any(), any(), any()))
                 .thenReturn(createSuccessResult())
 
             initViewModel()
@@ -265,7 +265,7 @@ class ClicksViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when refresh is called, then data is fetched`() = test {
-        whenever(statsRepository.fetchClicks(any(), any()))
+        whenever(statsRepository.fetchClicks(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -275,14 +275,14 @@ class ClicksViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         verify(statsRepository, times(2))
-            .fetchClicks(eq(TEST_SITE_ID), any())
+            .fetchClicks(eq(TEST_SITE_ID), any(), any())
     }
     // endregion
 
     // region Retry
     @Test
     fun `when onRetry is called, then data is reloaded`() = test {
-        whenever(statsRepository.fetchClicks(any(), any()))
+        whenever(statsRepository.fetchClicks(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -292,7 +292,7 @@ class ClicksViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         verify(statsRepository, times(2))
-            .fetchClicks(any(), any())
+            .fetchClicks(any(), any(), any())
     }
     // endregion
 
@@ -307,7 +307,7 @@ class ClicksViewModelTest : BaseUnitTest() {
                     previousClicks = 100
                 )
             )
-            whenever(statsRepository.fetchClicks(any(), any()))
+            whenever(statsRepository.fetchClicks(any(), any(), any()))
                 .thenReturn(
                     ClicksResult.Success(
                         items = items,
@@ -340,7 +340,7 @@ class ClicksViewModelTest : BaseUnitTest() {
                     previousClicks = 100
                 )
             )
-            whenever(statsRepository.fetchClicks(any(), any()))
+            whenever(statsRepository.fetchClicks(any(), any(), any()))
                 .thenReturn(
                     ClicksResult.Success(
                         items = items,
@@ -372,7 +372,7 @@ class ClicksViewModelTest : BaseUnitTest() {
                 previousClicks = 100
             )
         )
-        whenever(statsRepository.fetchClicks(any(), any()))
+        whenever(statsRepository.fetchClicks(any(), any(), any()))
             .thenReturn(
                 ClicksResult.Success(
                     items = items,

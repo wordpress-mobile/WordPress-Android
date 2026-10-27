@@ -16,10 +16,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
@@ -38,6 +41,8 @@ import org.wordpress.android.ui.newstats.util.formatStatValue
 private val CardCornerRadius = 10.dp
 private val CardPadding = 16.dp
 private val CardMargin = 16.dp
+private val FeatureGateMessageMaxWidth = 240.dp
+private val FeatureGateIconSize = 40.dp
 
 /**
  * Common card container with border, background, and rounded corners.
@@ -121,6 +126,10 @@ fun StatsCardEmptyContent() {
 /**
  * Common error content state with retry button.
  * Displays error message and retry button.
+ *
+ * When [onExplorePlans] is not null the stat is gated behind a paid plan, so an
+ * upsell replaces the error message instead of telling the user something went
+ * wrong: there is nothing to retry until the plan is upgraded.
  */
 @Composable
 fun StatsCardErrorContent(
@@ -134,6 +143,7 @@ fun StatsCardErrorContent(
     onMoveDown: (() -> Unit)?,
     onMoveToBottom: (() -> Unit)?,
     onOpenWpAdmin: (() -> Unit)? = null,
+    onExplorePlans: (() -> Unit)? = null,
     headerExtra: @Composable (() -> Unit)? = null
 ) {
     Column(modifier = Modifier.padding(CardPadding)) {
@@ -153,33 +163,73 @@ fun StatsCardErrorContent(
         Spacer(modifier = Modifier.height(
             if (headerExtra != null) 12.dp else 24.dp
         ))
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = stringResource(errorMessageResId),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.error
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            if (onOpenWpAdmin != null) {
-                Button(onClick = onOpenWpAdmin) {
-                    Text(
-                        text = stringResource(
-                            R.string.my_site_btn_wp_admin
+        if (onExplorePlans != null) {
+            StatsCardFeatureGateContent(onExplorePlans = onExplorePlans)
+        } else {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(errorMessageResId),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                if (onOpenWpAdmin != null) {
+                    Button(onClick = onOpenWpAdmin) {
+                        Text(
+                            text = stringResource(
+                                R.string.my_site_btn_wp_admin
+                            )
                         )
-                    )
-                }
-            } else {
-                Button(onClick = onRetry) {
-                    Text(
-                        text = stringResource(R.string.retry)
-                    )
+                    }
+                } else {
+                    Button(onClick = onRetry) {
+                        Text(
+                            text = stringResource(R.string.retry)
+                        )
+                    }
                 }
             }
         }
         Spacer(modifier = Modifier.height(24.dp))
+    }
+}
+
+/**
+ * Upsell shown in place of the error message when the site's plan does not
+ * include the requested stat: a lock, the upgrade message and a button opening
+ * the plans page.
+ */
+@Composable
+private fun StatsCardFeatureGateContent(onExplorePlans: () -> Unit) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Lock,
+            contentDescription = null,
+            modifier = Modifier.size(FeatureGateIconSize),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = stringResource(R.string.stats_feature_gate_message),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.widthIn(max = FeatureGateMessageMaxWidth)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = onExplorePlans) {
+            Text(
+                text = stringResource(
+                    R.string.stats_feature_gate_explore_plans
+                )
+            )
+        }
     }
 }
 

@@ -8,9 +8,9 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NotificationType.CREATE_SITE
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.workers.notification.local.LocalNotificationHandler
 import javax.inject.Inject
@@ -21,7 +21,7 @@ class CreateSiteNotificationHandler @Inject constructor(
     private val accountStore: AccountStore,
     private val siteStore: SiteStore,
     private val notificationsTracker: SystemNotificationsTracker,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    private val buildConfigWrapper: BuildConfigWrapper
 ) : LocalNotificationHandler {
     override fun shouldShowNotification(): Boolean {
         val isNotificationSettingsEnabled = sharedPrefs.getBoolean(
@@ -31,7 +31,7 @@ class CreateSiteNotificationHandler @Inject constructor(
         return isNotificationSettingsEnabled &&
                 accountStore.hasAccessToken() &&
                 !siteStore.hasSite() &&
-                jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()
+                buildConfigWrapper.isJetpackApp
     }
 
     override fun buildFirstActionPendingIntent(context: Context, notificationId: Int): PendingIntent {
@@ -49,6 +49,7 @@ class CreateSiteNotificationHandler @Inject constructor(
     }
 
     override fun onNotificationShown() {
-        notificationsTracker.trackShownNotification(CREATE_SITE)
+        // Account-level: the user has no site yet, which is the point of this notification.
+        notificationsTracker.trackShownNotification(CREATE_SITE, blogId = null)
     }
 }

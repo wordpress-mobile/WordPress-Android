@@ -1,43 +1,41 @@
 package org.wordpress.android.ui.commentsrs
 
+import org.wordpress.android.ui.rs.contentlist.ContentDateGroup
+import org.wordpress.android.ui.rs.contentlist.ContentDateGrouper
+
 /** A rendered row in the rs comment list: either a date-group header or a comment. */
 sealed interface CommentsRsListRow {
-    /** [key] is a guaranteed-unique LazyColumn key; [label] is the (date) text shown to the user. */
-    data class DateHeader(val label: String, val key: String) : CommentsRsListRow
+    /**
+     * The bucketed header ("This week", "Earlier in July"), shared with the
+     * posts list. [key] carries an ordinal because a list that is not strictly date-ordered can
+     * reopen a bucket, and a duplicate LazyColumn key is a hard crash.
+     */
+    data class GroupHeader(val group: ContentDateGroup, val key: String) : CommentsRsListRow
+
     data class Item(val comment: CommentRsUiModel) : CommentsRsListRow
 }
 
 /**
- * Interleaves date subheaders into [comments] (already in display order), mirroring the legacy
- * list: a header before the first comment and before every comment whose date label differs from
- * the previous one. The label is the row's own [CommentRsUiModel.relativeDate] — the same
- * javaDateToTimeSpan value the legacy list groups by — so no extra date handling is needed here.
+ * Interleaves [ContentDateGroup] headers into [comments], so comments
+ * bucket the same way posts do rather than getting a header per distinct day.
  *
- * Each header carries a unique [CommentsRsListRow.DateHeader.key] for the LazyColumn. Comments are
- * date-sorted, so a label normally maps to one contiguous group and the key is just the label —
- * which keeps the header stable when a newer comment is prepended into an existing group. Should
- * the list ever arrive out of date order, a repeated label is disambiguated rather than emitting a
- * duplicate key (which LazyColumn rejects with a hard crash, unlike the legacy RecyclerView).
+ * A comment with no usable timestamp (the field defaults to 0 for anything built before the raw
+ * date was carried on the model) is emitted without opening a bucket, rather than being dropped
+ * or filed under a wrong one.
  */
-fun withDateHeaders(comments: List<CommentRsUiModel>): List<CommentsRsListRow> {
+fun withDateGroups(comments: List<CommentRsUiModel>): List<CommentsRsListRow> {
     val rows = ArrayList<CommentsRsListRow>(comments.size + 1)
-    val usedKeys = HashSet<String>()
-    var lastLabel: String? = null
+    var currentGroupKey: String? = null
+    var headerCount = 0
     for (comment in comments) {
-        if (comment.relativeDate != lastLabel) {
-            rows.add(CommentsRsListRow.DateHeader(comment.relativeDate, uniqueKey(comment.relativeDate, usedKeys)))
-            lastLabel = comment.relativeDate
+        if (comment.dateGmtMillis > 0L) {
+            val group = ContentDateGrouper.groupOf(comment.dateGmtMillis)
+            if (group.key != currentGroupKey) {
+                rows.add(CommentsRsListRow.GroupHeader(group, "header_${headerCount++}_${group.key}"))
+                currentGroupKey = group.key
+            }
         }
         rows.add(CommentsRsListRow.Item(comment))
     }
     return rows
-}
-
-/** A stable per-label key, suffixed only if the same label recurs non-contiguously (see above). */
-private fun uniqueKey(label: String, used: MutableSet<String>): String {
-    val base = "header_$label"
-    if (used.add(base)) return base
-    var n = 1
-    while (!used.add("$base#$n")) n++
-    return "$base#$n"
 }

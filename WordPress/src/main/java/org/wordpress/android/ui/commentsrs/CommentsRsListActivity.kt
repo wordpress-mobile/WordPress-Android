@@ -47,6 +47,7 @@ class CommentsRsListActivity : BaseAppCompatActivity() {
             val isSearchActive by viewModel.isSearchActive.collectAsState()
             val searchQuery by viewModel.searchQuery.collectAsState()
             val isQuerySearchable by viewModel.isQuerySearchable.collectAsState()
+            val density by viewModel.density.collectAsState()
             AppThemeM3 {
                 CommentsRsListScreen(
                     tabStates = tabStates,
@@ -70,7 +71,9 @@ class CommentsRsListActivity : BaseAppCompatActivity() {
                     onCommentLongClick = viewModel::onCommentLongClick,
                     onClearSelection = viewModel::onClearSelection,
                     onBatchAction = viewModel::onBatchAction,
-                    onConfirmPendingAction = viewModel::onConfirmPendingAction
+                    onConfirmPendingAction = viewModel::onConfirmPendingAction,
+                    onDensityToggled = viewModel::onDensityToggled,
+                    density = density
                 )
             }
         }

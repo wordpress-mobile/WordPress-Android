@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
+import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -34,6 +35,7 @@ import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.SelectedTrafficGranularityManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.trackWithGranularity
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mapNullable
@@ -52,6 +54,7 @@ abstract class StatsListViewModel(
     defaultDispatcher: CoroutineDispatcher,
     protected var statsUseCase: BaseListUseCase,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    protected val statsSiteProvider: StatsSiteProvider,
     var dateSelector: StatsDateSelector?,
     popupMenuHandler: ItemPopupMenuHandler? = null,
     private val newsCardHandler: NewsCardHandler? = null,
@@ -103,15 +106,15 @@ abstract class StatsListViewModel(
 
     val scrollTo = newsCardHandler?.scrollTo
 
+    @CallSuper
     override fun onCleared() {
         statsUseCase.onCleared()
-        super.onCleared()
     }
 
     fun onScrolledToBottom() {
         if (trackJob?.isCompleted != false) {
             trackJob = launch {
-                analyticsTracker.track(Stat.STATS_SCROLLED_TO_BOTTOM)
+                analyticsTracker.track(Stat.STATS_SCROLLED_TO_BOTTOM, statsSiteProvider.siteModel)
                 delay(SCROLL_EVENT_DELAY)
             }
         }
@@ -157,7 +160,11 @@ abstract class StatsListViewModel(
 
     fun onAddNewStatsButtonClicked() {
         newsCardHandler?.dismiss()
-        analyticsTracker.track(Stat.STATS_INSIGHTS_MANAGEMENT_ACCESSED, mapOf("source" to "button"))
+        analyticsTracker.track(
+            Stat.STATS_INSIGHTS_MANAGEMENT_ACCESSED,
+            statsSiteProvider.siteModel,
+            mapOf("source" to "button")
+        )
         mutableNavigationTarget.value = Event(ViewInsightsManagement)
     }
 
@@ -206,11 +213,13 @@ class InsightsListViewModel
     analyticsTracker: AnalyticsTrackerWrapper,
     popupMenuHandler: ItemPopupMenuHandler,
     newsCardHandler: NewsCardHandler,
-    actionCardHandler: ActionCardHandler
+    actionCardHandler: ActionCardHandler,
+    statsSiteProvider: StatsSiteProvider
 ) : StatsListViewModel(
     mainDispatcher,
     insightsUseCase,
     analyticsTracker,
+    statsSiteProvider,
     null,
     popupMenuHandler,
     newsCardHandler,
@@ -224,11 +233,13 @@ class SubscribersListViewModel
     analyticsTracker: AnalyticsTrackerWrapper,
     popupMenuHandler: ItemPopupMenuHandler,
     newsCardHandler: NewsCardHandler,
-    actionCardHandler: ActionCardHandler
+    actionCardHandler: ActionCardHandler,
+    statsSiteProvider: StatsSiteProvider
 ) : StatsListViewModel(
     mainDispatcher,
     subscribersUseCase,
     analyticsTracker,
+    statsSiteProvider,
     null,
     popupMenuHandler,
     newsCardHandler,
@@ -243,10 +254,12 @@ class TrafficListViewModel @Inject constructor(
     @Named(GRANULAR_USE_CASE_FACTORIES)
     private val useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>,
     private val selectedTrafficGranularityManager: SelectedTrafficGranularityManager,
+    statsSiteProvider: StatsSiteProvider,
 ) : StatsListViewModel(
     mainDispatcher,
     trafficStatsUseCase,
     analyticsTracker,
+    statsSiteProvider,
     dateSelectorFactory.build(
         selectedTrafficGranularityManager.getSelectedTrafficGranularity(),
         isGranularitySpinnerVisible = true
@@ -256,6 +269,7 @@ class TrafficListViewModel @Inject constructor(
         if (dateSelector?.statsGranularity != statsGranularity) {
             analyticsTracker.trackWithGranularity(
                 Stat.STATS_PERIOD_ACCESSED,
+                statsSiteProvider.siteModel,
                 selectedTrafficGranularityManager.getSelectedTrafficGranularity()
             )
 
@@ -284,11 +298,13 @@ class YearsListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(YEAR_STATS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: StatsDateSelector.Factory
+    dateSelectorFactory: StatsDateSelector.Factory,
+    statsSiteProvider: StatsSiteProvider
 ) : StatsListViewModel(
     mainDispatcher,
     statsUseCase,
     analyticsTracker,
+    statsSiteProvider,
     dateSelectorFactory.build(StatsGranularity.YEARS)
 )
 
@@ -296,11 +312,13 @@ class MonthsListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(MONTH_STATS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: StatsDateSelector.Factory
+    dateSelectorFactory: StatsDateSelector.Factory,
+    statsSiteProvider: StatsSiteProvider
 ) : StatsListViewModel(
     mainDispatcher,
     statsUseCase,
     analyticsTracker,
+    statsSiteProvider,
     dateSelectorFactory.build(StatsGranularity.MONTHS)
 )
 
@@ -308,11 +326,13 @@ class WeeksListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(WEEK_STATS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: StatsDateSelector.Factory
+    dateSelectorFactory: StatsDateSelector.Factory,
+    statsSiteProvider: StatsSiteProvider
 ) : StatsListViewModel(
     mainDispatcher,
     statsUseCase,
     analyticsTracker,
+    statsSiteProvider,
     dateSelectorFactory.build(StatsGranularity.WEEKS)
 )
 
@@ -320,11 +340,13 @@ class DaysListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(DAY_STATS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: StatsDateSelector.Factory
+    dateSelectorFactory: StatsDateSelector.Factory,
+    statsSiteProvider: StatsSiteProvider
 ) : StatsListViewModel(
     mainDispatcher,
     statsUseCase,
     analyticsTracker,
+    statsSiteProvider,
     dateSelectorFactory.build(StatsGranularity.DAYS)
 )
 
@@ -333,11 +355,13 @@ class InsightsDetailListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(VIEWS_AND_VISITORS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: StatsDateSelector.Factory
+    dateSelectorFactory: StatsDateSelector.Factory,
+    statsSiteProvider: StatsSiteProvider
 ) : StatsListViewModel(
     mainDispatcher,
     statsUseCase,
     analyticsTracker,
+    statsSiteProvider,
     dateSelectorFactory.build(StatsGranularity.WEEKS)
 )
 
@@ -345,11 +369,13 @@ class TotalLikesDetailListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(TOTAL_LIKES_DETAIL_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: StatsDateSelector.Factory
+    dateSelectorFactory: StatsDateSelector.Factory,
+    statsSiteProvider: StatsSiteProvider
 ) : StatsListViewModel(
     mainDispatcher,
     statsUseCase,
     analyticsTracker,
+    statsSiteProvider,
     dateSelectorFactory.build(StatsGranularity.WEEKS)
 )
 
@@ -357,11 +383,13 @@ class TotalCommentsDetailListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(TOTAL_COMMENTS_DETAIL_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: StatsDateSelector.Factory
+    dateSelectorFactory: StatsDateSelector.Factory,
+    statsSiteProvider: StatsSiteProvider
 ) : StatsListViewModel(
     mainDispatcher,
     statsUseCase,
     analyticsTracker,
+    statsSiteProvider,
     dateSelectorFactory.build(StatsGranularity.WEEKS)
 )
 
@@ -369,10 +397,12 @@ class TotalFollowersDetailListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(TOTAL_FOLLOWERS_DETAIL_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: StatsDateSelector.Factory
+    dateSelectorFactory: StatsDateSelector.Factory,
+    statsSiteProvider: StatsSiteProvider
 ) : StatsListViewModel(
     mainDispatcher,
     statsUseCase,
     analyticsTracker,
+    statsSiteProvider,
     dateSelectorFactory.build(StatsGranularity.WEEKS)
 )

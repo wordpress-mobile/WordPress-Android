@@ -278,6 +278,9 @@ class ActivityLogRestClient @Inject constructor(
         payload.groups.forEachIndexed { index, value ->
             params["group[$index]"] = value
         }
+        payload.notGroups.forEachIndexed { index, value ->
+            params["not_group[$index]"] = value
+        }
         return params
     }
 

@@ -1,39 +1,28 @@
 package org.wordpress.android.ui.commentsrs.screens
 
 import androidx.activity.compose.BackHandler
-import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -48,24 +37,30 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.CommentStatus
+import org.wordpress.android.ui.commentsrs.CommentRsUiModel
 import org.wordpress.android.ui.commentsrs.CommentsRsBatchAction
 import org.wordpress.android.ui.commentsrs.CommentsRsListTab
-import org.wordpress.android.ui.commentsrs.CommentsTabUiState
 import org.wordpress.android.ui.commentsrs.PendingConfirmation
 import org.wordpress.android.ui.commentsrs.batchActions
 import org.wordpress.android.ui.commentsrs.isEnabledFor
-import org.wordpress.android.ui.postsrs.SnackbarMessage
+import org.wordpress.android.ui.compose.components.FilterChipTabRow
+import org.wordpress.android.ui.compose.utils.rsDebugTitle
+import org.wordpress.android.ui.rs.RsSnackbarMessage
+import org.wordpress.android.ui.rs.RsTabUiState
+import org.wordpress.android.ui.rs.contentlist.ContentListConfirmationDialog
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults
+import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.rs.contentlist.ContentListDensityToggle
+import org.wordpress.android.ui.rs.contentlist.ContentListSearchClearButton
+import org.wordpress.android.ui.rs.contentlist.ContentListSearchField
+import org.wordpress.android.ui.rs.contentlist.ShowRsSnackbars
 
 // Material's disabled-content alpha, used to dim batch-action icons that can't apply to the
 // current selection while keeping them visible.
@@ -74,11 +69,10 @@ private const val DISABLED_ICON_ALPHA = 0.38f
 /** Which of the mutually exclusive top bars is showing: selection wins over search. */
 private enum class TopBarMode { SELECTION, SEARCH, NORMAL }
 
-@Suppress("LongMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentsRsListScreen(
-    tabStates: Map<CommentsRsListTab, CommentsTabUiState>,
+    tabStates: Map<CommentsRsListTab, RsTabUiState<CommentRsUiModel>>,
     selectedIds: Set<Long>,
     canModerate: Boolean,
     pendingConfirmation: PendingConfirmation?,
@@ -86,7 +80,7 @@ fun CommentsRsListScreen(
     searchQuery: String,
     isQuerySearchable: Boolean,
     onDismissConfirmation: () -> Unit,
-    snackbarMessages: Flow<SnackbarMessage>,
+    snackbarMessages: Flow<RsSnackbarMessage>,
     onSearchOpen: () -> Unit,
     onSearchQueryChanged: (String) -> Unit,
     onSearchClose: (CommentsRsListTab) -> Unit,
@@ -99,7 +93,9 @@ fun CommentsRsListScreen(
     onCommentLongClick: (Long) -> Unit,
     onClearSelection: () -> Unit,
     onBatchAction: (CommentsRsBatchAction, CommentsRsListTab) -> Unit,
-    onConfirmPendingAction: (CommentsRsListTab) -> Unit
+    onConfirmPendingAction: (CommentsRsListTab) -> Unit,
+    onDensityToggled: () -> Unit,
+    density: ContentListDensity = ContentListDensity.COMFORTABLE
 ) {
     val tabs = CommentsRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
@@ -120,7 +116,7 @@ fun CommentsRsListScreen(
     // Statuses of the selected comments that live on the active tab. This is empty during a tab
     // swipe (the selection still belongs to the previous tab and is about to be cleared), so gating
     // the contextual bar on it keeps it from flashing the next tab's actions mid-transition.
-    val selectedStatuses = tabStates[activeTab]?.comments
+    val selectedStatuses = tabStates[activeTab]?.items
         .orEmpty()
         .filter { it.remoteCommentId in selectedIds }
         .map { it.status }
@@ -167,19 +163,10 @@ fun CommentsRsListScreen(
         onSearchClose(activeTab)
     }
 
-    LaunchedEffect(snackbarMessages) {
-        snackbarMessages.collect { msg ->
-            val result = snackbarHostState.showSnackbar(
-                message = msg.message,
-                actionLabel = msg.actionLabel
-            )
-            if (result == SnackbarResult.ActionPerformed) {
-                msg.onAction?.invoke()
-            }
-        }
-    }
+    ShowRsSnackbars(snackbarMessages, snackbarHostState)
 
     Scaffold(
+        containerColor = ContentListDefaults.containerColor(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             AnimatedContent(targetState = topBarMode, label = "topBar") { mode ->
@@ -208,7 +195,7 @@ fun CommentsRsListScreen(
                         }
                     }
                     TopBarMode.NORMAL -> TopAppBar(
-                        title = { Text(text = stringResource(R.string.comments)) },
+                        title = { Text(text = rsDebugTitle(R.string.comments)) },
                         navigationIcon = {
                             IconButton(onClick = onNavigateBack) {
                                 Icon(
@@ -218,6 +205,12 @@ fun CommentsRsListScreen(
                             }
                         },
                         actions = {
+                            // Ahead of search, so the pre-existing icon keeps its position -
+                            // the same placement rule the posts list follows.
+                            ContentListDensityToggle(
+                                density = density,
+                                onToggle = onDensityToggled
+                            )
                             IconButton(onClick = {
                                 searchFocusPending = true
                                 onSearchOpen()
@@ -238,28 +231,20 @@ fun CommentsRsListScreen(
             // single status per request (unlike posts, which search across all statuses), so a
             // search is always scoped to one tab — keeping the tabs on screen makes that scope
             // visible and lets the user re-run the query against another status.
-            PrimaryScrollableTabRow(
-                selectedTabIndex = pagerState.settledPage,
-                edgePadding = 0.dp
-            ) {
-                tabs.forEachIndexed { index, tab ->
-                    Tab(
-                        selected = pagerState.settledPage == index,
-                        onClick = {
-                            coroutineScope.launch {
-                                if (pagerState.settledPage == index) {
-                                    // Re-tapping the active tab scrolls its list back to the top.
-                                    listStates.getValue(tab).animateScrollToItem(0)
-                                } else {
-                                    pagerState.animateScrollToPage(index)
-                                }
-                            }
-                        },
-                        unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        text = { Text(text = stringResource(tab.labelResId)) }
-                    )
+            FilterChipTabRow(
+                labels = tabs.map { stringResource(it.labelResId) },
+                selectedIndex = pagerState.settledPage,
+                onSelect = { index ->
+                    coroutineScope.launch {
+                        if (pagerState.settledPage == index) {
+                            // Re-tapping the active tab scrolls its list back to the top.
+                            listStates.getValue(tabs[index]).animateScrollToItem(0)
+                        } else {
+                            pagerState.animateScrollToPage(index)
+                        }
+                    }
                 }
-            }
+            )
 
             LaunchedEffect(pagerState) {
                 snapshotFlow { pagerState.settledPage }.collect { page ->
@@ -284,7 +269,8 @@ fun CommentsRsListScreen(
                     onRefresh = { onRefreshTab(tab) },
                     onLoadMore = { onLoadMore(tab) },
                     onCommentClick = onCommentClick,
-                    onCommentLongClick = onCommentLongClick
+                    onCommentLongClick = onCommentLongClick,
+                    density = density
                 )
             }
         }
@@ -309,7 +295,7 @@ private fun BatchConfirmationDialogs(
     // destructive action renders a dialog rather than silently stranding the selection.
     val copy = pending?.action?.confirmation ?: return
     val messageResId = if (pending.commentIds.size > 1) copy.messagePluralResId else copy.messageResId
-    ConfirmationDialog(
+    ContentListConfirmationDialog(
         titleResId = copy.titleResId,
         message = stringResource(messageResId),
         confirmTextResId = copy.confirmButtonResId,
@@ -388,23 +374,13 @@ private fun SearchTopBar(
     onQueryChanged: (String) -> Unit,
     onClose: () -> Unit
 ) {
-    val focusManager = LocalFocusManager.current
     TopAppBar(
         title = {
-            TextField(
-                value = searchQuery,
-                onValueChange = onQueryChanged,
-                placeholder = { Text(stringResource(R.string.comments_rs_search_prompt)) },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
-                keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() }),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                ),
-                modifier = Modifier.fillMaxWidth().focusRequester(focusRequester)
+            ContentListSearchField(
+                query = searchQuery,
+                onQueryChange = onQueryChanged,
+                placeholderResId = R.string.comments_rs_search_prompt,
+                modifier = Modifier.focusRequester(focusRequester)
             )
         },
         navigationIcon = {
@@ -416,14 +392,7 @@ private fun SearchTopBar(
             }
         },
         actions = {
-            if (searchQuery.isNotEmpty()) {
-                IconButton(onClick = { onQueryChanged("") }) {
-                    Icon(
-                        Icons.Default.Close,
-                        contentDescription = stringResource(R.string.clear)
-                    )
-                }
-            }
+            ContentListSearchClearButton(searchQuery) { onQueryChanged("") }
         }
     )
 }
@@ -467,37 +436,4 @@ private fun BatchActionsOverflowMenu(
             )
         }
     }
-}
-
-@Composable
-private fun ConfirmationDialog(
-    @StringRes titleResId: Int,
-    message: String,
-    @StringRes confirmTextResId: Int,
-    isDestructive: Boolean = false,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(stringResource(titleResId)) },
-        text = { Text(message) },
-        confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text(
-                    stringResource(confirmTextResId),
-                    color = if (isDestructive) {
-                        MaterialTheme.colorScheme.error
-                    } else {
-                        Color.Unspecified
-                    }
-                )
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
-            }
-        }
-    )
 }

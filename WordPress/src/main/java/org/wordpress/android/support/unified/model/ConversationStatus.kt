@@ -1,8 +1,7 @@
 package org.wordpress.android.support.unified.model
 
 enum class ConversationStatus {
-    WAITING_FOR_SUPPORT,
-    WAITING_FOR_USER,
+    ONGOING,
     CLOSED,
     SOLVED,
     UNKNOWN;
@@ -10,9 +9,8 @@ enum class ConversationStatus {
     companion object {
         fun fromStatus(status: String): ConversationStatus {
             return when (status.lowercase()) {
-                "open", "new", "hold" -> WAITING_FOR_SUPPORT
+                "open", "new", "hold", "pending" -> ONGOING
                 "closed" -> CLOSED
-                "pending" -> WAITING_FOR_USER
                 "solved" -> SOLVED
                 else -> UNKNOWN
             }

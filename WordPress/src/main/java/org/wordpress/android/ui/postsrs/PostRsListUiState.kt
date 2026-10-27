@@ -3,81 +3,36 @@ package org.wordpress.android.ui.postsrs
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
-import org.wordpress.android.util.DateTimeUtils
-import org.wordpress.android.util.HtmlUtils
-import uniffi.wp_api.AnyPostWithEditContext
-import uniffi.wp_api.PostCommentStatus
-import uniffi.wp_api.PostStatus
-import uniffi.wp_mobile.FullEntityAnyPostWithEditContext
-import uniffi.wp_mobile.PostItemState
+import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
+import org.wordpress.android.ui.rs.contentlist.ContentItemUiModel
+import org.wordpress.android.ui.rs.contentlist.ContentListQuickActionType
+import org.wordpress.android.ui.rs.contentlist.ContentListRowUiState
+import org.wordpress.android.ui.rs.contentlist.RsMenuAction
 
-data class SnackbarMessage(
-    val message: String,
-    val actionLabel: String? = null,
-    val onAction: (() -> Unit)? = null
-)
+/** A post as the rs list renders it, carrying the posts menu's own actions. */
+internal typealias PostRsUiModel = ContentItemUiModel<PostRsMenuAction>
 
-sealed interface PendingConfirmation {
-    data class Trash(val postId: Long) : PendingConfirmation
-    data class Delete(val postId: Long) : PendingConfirmation
-    data class MoveToDraft(val postId: Long) : PendingConfirmation
+sealed interface PostRsConfirmation {
+    data class Trash(val postId: Long) : PostRsConfirmation
+    data class Delete(val postId: Long) : PostRsConfirmation
+    data class MoveToDraft(val postId: Long) : PostRsConfirmation
 }
-
-data class ConfirmationDialogState(
-    val pending: PendingConfirmation? = null,
-    val onConfirm: () -> Unit = {},
-    val onDismiss: () -> Unit = {}
-)
-
-data class PostTabUiState(
-    val posts: List<PostRsUiModel> = emptyList(),
-    val isLoading: Boolean = false,
-    val isRefreshing: Boolean = false,
-    val isLoadingMore: Boolean = false,
-    val canLoadMore: Boolean = false,
-    val error: String? = null,
-    val isAuthError: Boolean = false
-)
-
-enum class PostDisplayState {
-    NORMAL,
-    FETCHING_WITH_DATA,
-    FAILED_WITH_DATA,
-    PLACEHOLDER,
-    ERROR
-}
-
-data class PostRsUiModel(
-    val remotePostId: Long,
-    val title: String,
-    val excerpt: String,
-    val date: String,
-    val lastModified: String = "",
-    val link: String = "",
-    val hasPassword: Boolean = false,
-    val commentsOpen: Boolean = false,
-    val status: PostStatus? = null,
-    @StringRes val statusLabelResId: Int = 0,
-    val authorId: Long = 0L,
-    val authorDisplayName: String? = null,
-    val featuredImageId: Long = 0L,
-    val featuredImageUrl: String? = null,
-    val actions: List<PostRsMenuAction> = emptyList(),
-    val badges: List<Int> = emptyList(),
-    val displayState: PostDisplayState =
-        PostDisplayState.NORMAL
-)
 
 enum class PostRsMenuAction(
-    @StringRes val labelResId: Int,
-    @DrawableRes val iconResId: Int,
-    val isDestructive: Boolean = false
-) {
+    @StringRes override val labelResId: Int,
+    @DrawableRes override val iconResId: Int,
+    override val isDestructive: Boolean = false,
+    override val quickActionType: ContentListQuickActionType? = null
+) : RsMenuAction {
     SETTINGS(
         R.string.post_settings,
         R.drawable.ic_settings_white_24dp
     ),
-    VIEW(R.string.button_view, R.drawable.gb_ic_external),
+    VIEW(
+        R.string.button_view,
+        R.drawable.gb_ic_external,
+        quickActionType = ContentListQuickActionType.VIEW
+    ),
     READ(
         R.string.button_read,
         R.drawable.ic_reader_glasses_white_24dp
@@ -96,7 +51,11 @@ enum class PostRsMenuAction(
         R.string.button_promote_with_blaze,
         R.drawable.ic_blaze_flame_24dp
     ),
-    STATS(R.string.button_stats, R.drawable.gb_ic_chart_bar),
+    STATS(
+        R.string.button_stats,
+        R.drawable.gb_ic_chart_bar,
+        quickActionType = ContentListQuickActionType.STATS
+    ),
     COMMENTS(
         R.string.button_comments,
         R.drawable.gb_ic_comment
@@ -113,105 +72,26 @@ enum class PostRsMenuAction(
     ),
 }
 
-fun PostItemState.toUiModel(
-    postId: Long,
-    showStatus: Boolean = false
-): PostRsUiModel {
-    return when (this) {
-        is PostItemState.Fresh ->
-            data.toUiModel(showStatus)
-        is PostItemState.Stale ->
-            data.toUiModel(showStatus)
-        is PostItemState.FetchingWithData ->
-            data.toUiModel(
-                showStatus,
-                PostDisplayState.FETCHING_WITH_DATA
-            )
-        is PostItemState.FailedWithData ->
-            data.toUiModel(
-                showStatus,
-                PostDisplayState.FAILED_WITH_DATA
-            )
-        is PostItemState.Missing,
-        is PostItemState.Fetching -> PostRsUiModel(
-            remotePostId = postId,
-            title = "",
-            excerpt = "",
-            date = "",
-            displayState = PostDisplayState.PLACEHOLDER
-        )
-        is PostItemState.Failed -> PostRsUiModel(
-            remotePostId = postId,
-            title = "",
-            excerpt = "",
-            date = "",
-            displayState = PostDisplayState.ERROR
-        )
-    }
-}
-
-private fun FullEntityAnyPostWithEditContext.toUiModel(
-    showStatus: Boolean,
-    displayState: PostDisplayState = PostDisplayState.NORMAL
-): PostRsUiModel {
-    val post: AnyPostWithEditContext = data
-    return PostRsUiModel(
-        remotePostId = post.id,
-        title = post.title?.raw?.takeIf { it.isNotBlank() }
-            ?: post.title?.rendered
-            ?: "",
-        excerpt = (
-            post.excerpt?.raw?.takeIf { it.isNotBlank() }
-                ?: post.excerpt?.rendered
-                ?: ""
-            ).let { HtmlUtils.fastStripHtml(it).trim() },
-        date = PostRsDateFormatter.format(
-            post.dateGmt, post.status
-        ),
-        lastModified = DateTimeUtils.iso8601UTCFromDate(
-            post.modifiedGmt
-        ),
-        link = post.link,
-        authorId = post.author ?: 0L,
-        featuredImageId = post.featuredMedia ?: 0L,
-        hasPassword = !post.password.isNullOrEmpty(),
-        commentsOpen =
-            post.commentStatus is PostCommentStatus.Open,
-        status = post.status,
-        statusLabelResId = if (showStatus) {
-            post.status.toLabel()
-        } else {
-            0
-        },
-        badges = buildList {
-            if (post.status is PostStatus.Private) {
-                add(R.string.post_status_post_private)
-            }
-            if (post.status is PostStatus.Pending) {
-                add(R.string.post_status_pending_review)
-            }
-            if (post.sticky == true) {
-                add(R.string.post_status_sticky)
-            }
-        },
-        displayState = displayState
-    )
-}
-
-@StringRes
-internal fun PostStatus?.toLabel(): Int = when (this) {
-    is PostStatus.Publish ->
-        R.string.post_status_post_published
-    is PostStatus.Draft -> R.string.post_status_draft
-    is PostStatus.Pending ->
-        R.string.post_status_pending_review
-    is PostStatus.Private ->
-        R.string.post_status_post_private
-    is PostStatus.Future ->
-        R.string.post_status_post_scheduled
-    is PostStatus.Trash ->
-        R.string.post_status_post_trashed
-    is PostStatus.Any -> 0
-    is PostStatus.Custom -> 0
-    null -> 0
-}
+/**
+ * Projects a post onto the shared row model the redesigned list renders. Keeping the projection
+ * here means the row component itself stays free of anything post-specific, so the pages screen
+ * can supply its own equivalent.
+ */
+fun PostRsUiModel.toContentListRowUiState() = ContentListRowUiState(
+    id = remoteId,
+    title = title,
+    excerpt = excerpt,
+    dateLabel = date,
+    authorName = authorDisplayName,
+    thumbnailImageUrl = featuredImage?.thumbnail,
+    heroImageUrl = featuredImage?.hero,
+    isImagePending = featuredImageId != 0L &&
+        featuredImage == null &&
+        !isFeaturedImageUnresolvable,
+    viewCount = viewCount,
+    commentCount = commentCount,
+    areMetricsPending = areMetricsPending,
+    badges = badges,
+    isSyncing = displayState == ContentDisplayState.FETCHING_WITH_DATA,
+    hasSyncFailed = displayState == ContentDisplayState.FAILED_WITH_DATA
+)

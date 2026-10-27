@@ -41,7 +41,8 @@ fun PostSocialSharingItem(
         iconCount = model.iconModels.size,
         modifier = Modifier
             .background(backgroundColor)
-            .then(modifier),
+            .then(modifier)
+            .padding(Margin.ExtraLarge.value),
     ) { textColumnModifier ->
         Column(modifier = textColumnModifier) {
             Text(

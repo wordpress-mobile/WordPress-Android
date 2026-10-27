@@ -11,10 +11,10 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.support.ZendeskHelper;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.BuildConfigWrapper;
 
 import java.util.Map;
 
@@ -29,6 +29,7 @@ public class GCMMessageService extends FirebaseMessagingService {
     public static final String EXTRA_VOICE_OR_INLINE_REPLY = "extra_voice_or_inline_reply";
 
     public static final String PUSH_ARG_NOTE_ID = "note_id";
+    public static final String PUSH_ARG_BLOG_ID = "blog_id";
     public static final String PUSH_ARG_NOTE_FULL_DATA = "note_full_data";
     private static final String PUSH_ARG_ZENDESK_REQUEST_ID = "zendesk_sdk_request_id";
 
@@ -37,18 +38,19 @@ public class GCMMessageService extends FirebaseMessagingService {
     @Inject ZendeskHelper mZendeskHelper;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject GCMMessageHandler mGCMMessageHandler;
-    @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
+    @Inject BuildConfigWrapper mBuildConfigWrapper;
 
     @Inject GCMRegistrationScheduler mGCMRegistrationScheduler;
 
     private void synchronizedHandleDefaultPush(@NonNull Map<String, String> data) {
         // ACTIVE_NOTIFICATIONS_MAP being static, we can't just synchronize the method
-        mSystemNotificationsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_RECEIVED_PROCESSING_START);
+        Long blogId = GCMMessageHandler.parsePushBlogId(data.get(PUSH_ARG_BLOG_ID));
+        mSystemNotificationsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_RECEIVED_PROCESSING_START, blogId);
         synchronized (GCMMessageService.class) {
             mGCMMessageHandler.handleDefaultPush(
                     this, convertMapToBundle(data), mAccountStore.getAccount().getUserId());
         }
-        mSystemNotificationsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_RECEIVED_PROCESSING_END);
+        mSystemNotificationsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_RECEIVED_PROCESSING_END, blogId);
     }
 
     // convert FCM RemoteMessage's Map into legacy GCM Bundle to keep code changes to a minimum
@@ -74,7 +76,7 @@ public class GCMMessageService extends FirebaseMessagingService {
             return;
         }
 
-        if (!mJetpackFeatureRemovalPhaseHelper.shouldShowNotifications()) {
+        if (!mBuildConfigWrapper.isJetpackApp()) {
             return;
         }
 

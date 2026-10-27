@@ -28,14 +28,10 @@ import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.models.RoleUtils;
 import org.wordpress.android.ui.ActionableEmptyView;
-import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
-import org.wordpress.android.ui.utils.UiHelpers;
-import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -60,8 +56,6 @@ public class PeopleListFragment extends Fragment {
 
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
-    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
-    @Inject UiHelpers mUiHelpers;
 
     public static PeopleListFragment newInstance(SiteModel site) {
         PeopleListFragment peopleListFragment = new PeopleListFragment();
@@ -131,34 +125,7 @@ public class PeopleListFragment extends Fragment {
                 new DividerItemDecoration(mRecyclerView.getContext(), DividerItemDecoration.VERTICAL)
         );
 
-        showJetpackBannerIfNeeded(rootView);
-
         return rootView;
-    }
-
-    private void showJetpackBannerIfNeeded(final View rootView) {
-        if (mJetpackBrandingUtils.shouldShowJetpackBrandingForPhaseTwo()) {
-            final JetpackPoweredScreen screen = JetpackPoweredScreen.WithStaticText.PERSON;
-            View jetpackBannerView = rootView.findViewById(R.id.jetpack_banner);
-            TextView jetpackBannerTextView = jetpackBannerView.findViewById(R.id.jetpack_banner_text);
-            jetpackBannerTextView.setText(
-                    mUiHelpers.getTextOfUiString(
-                            requireContext(),
-                            mJetpackBrandingUtils.getBrandingTextForScreen(screen))
-            );
-            RecyclerView scrollableView = mRecyclerView;
-
-            mJetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView);
-            mJetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView);
-
-            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                jetpackBannerView.setOnClickListener(v -> {
-                    mJetpackBrandingUtils.trackBannerTapped(screen);
-                    new JetpackPoweredBottomSheetFragment()
-                            .show(getChildFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
-                });
-            }
-        }
     }
 
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

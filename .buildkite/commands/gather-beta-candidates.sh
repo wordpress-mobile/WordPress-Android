@@ -8,8 +8,7 @@ set -eu
 echo "--- :rubygems: Setting up Gems"
 install_gems
 
-echo "--- :closed_lock_with_key: Installing Secrets"
-bundle exec fastlane run configure_apply
+"$(dirname "${BASH_SOURCE[0]}")/install-secrets.sh"
 
 echo "--- :android: Gathering candidates and opening the block step"
 bundle exec fastlane gather_beta_candidates

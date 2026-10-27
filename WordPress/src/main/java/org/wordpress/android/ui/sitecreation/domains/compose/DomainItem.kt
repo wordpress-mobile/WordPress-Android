@@ -40,7 +40,6 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Cost
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Tag.BestAlternative
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Tag.Recommended
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Tag.Sale
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Tag.Unavailable
 
 private val HighlightBgColor @Composable get() = colorScheme.primary.copy(0.1f)
@@ -107,14 +106,7 @@ fun DomainItem(uiState: DomainUiState): Unit = with(uiState) {
                 }
             }
             if (tags.none { it is Unavailable }) {
-                if (cost is Cost.OnSale) {
-                    SalePrice(
-                        cost.strikeoutTitle.asString() to cost.title.asString(),
-                        cost.subtitle.asString(),
-                        modifier = Modifier.padding(start = Margin.ExtraLarge.value)
-                    )
-                }
-                else if (cost is Cost.Paid) {
+                if (cost is Cost.Paid) {
                     Plan(
                         cost.strikeoutTitle.asString() to cost.title.asString(),
                         modifier = Modifier.padding(start = Margin.ExtraLarge.value)
@@ -152,36 +144,6 @@ private fun Price(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun SalePrice(title: Pair<String, String>, subtitle: String, modifier: Modifier = Modifier) {
-    Column(
-        modifier,
-        horizontalAlignment = Alignment.End,
-    ) {
-        title.let { (strikethroughText, normalText) ->
-            Row(verticalAlignment = Alignment.Bottom) {
-                Text(
-                    strikethroughText,
-                    color = SecondaryTextColor,
-                    fontSize = SecondaryFontSize,
-                    textDecoration = TextDecoration.LineThrough,
-                    modifier = Modifier.padding(end = 4.dp)
-                )
-                Text(
-                    normalText,
-                    color = colorScheme.primary,
-                    fontSize = PrimaryFontSize,
-                )
-            }
-        }
-        Text(
-            subtitle,
-            color = colorScheme.primary,
-            fontSize = SecondaryFontSize,
-        )
-    }
-}
-
-@Composable
 private fun Plan(title: Pair<String, String>, modifier: Modifier = Modifier) {
     Column(
         modifier,
@@ -213,7 +175,6 @@ private fun DomainItemPreview() {
             },
             cost = when {
                 it % 3 == 0 -> Cost.Paid("$${it * 5}")
-                it in 1..2 -> Cost.OnSale("$${it * 2}", "$${it * 3}")
                 else -> Cost.Free
             },
             tags = listOfNotNull(
@@ -223,7 +184,6 @@ private fun DomainItemPreview() {
                     2 -> BestAlternative
                     else -> null
                 },
-                if (it in 1..2) Sale else null,
             ),
             isSelected = it == 5,
             onClick = {}

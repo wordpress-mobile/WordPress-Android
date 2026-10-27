@@ -30,7 +30,6 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
 
     private lateinit var viewModel: TestConversationsSupportViewModel
 
-    private val testAccessToken = "test_access_token"
     private val testUserName = "Test User"
     private val testUserEmail = "test@example.com"
     private val testAvatarUrl = "https://example.com/avatar.jpg"
@@ -45,7 +44,6 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
         }
         whenever(accountStore.account).thenReturn(accountModel)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(accountStore.accessToken).thenReturn(testAccessToken)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
         viewModel = TestConversationsSupportViewModel(
@@ -442,7 +440,7 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
         }
 
         @Suppress("TooGenericExceptionThrown")
-        override fun initRepository(accessToken: String) {
+        override fun initRepository() {
             if (shouldThrowOnInit) {
                 throw RuntimeException("Init failed")
             }

@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.uploads;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.m4m.MediaComposer;
 import org.wordpress.android.WordPress;
@@ -12,7 +14,9 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.FileUtils;
+import org.wordpress.android.util.MediaFileNameUtils;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPVideoUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
@@ -26,6 +30,9 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_VIDEO_
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_VIDEO_OPTIMIZE_ERROR;
 
 public class VideoOptimizer implements org.m4m.IProgressListener {
+    private static final String OPTIMIZED_VIDEO_MIME_TYPE = "video/mp4";
+    private static final String OPTIMIZED_VIDEO_EXTENSION = "mp4";
+
     private final File mCacheDir;
     private final MediaModel mMedia;
     private final VideoOptimizationListener mListener;
@@ -41,7 +48,20 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
         mListener = listener;
         mMedia = media;
         mInputPath = mMedia.getFilePath();
-        mFilename = MediaUtils.generateTimeStampedFileName("video/mp4");
+        mFilename = buildOptimizedFileName(mMedia.getFileName());
+    }
+
+    /**
+     * Reuses the name of the original video so the media isn't renamed once uploaded, falling back to a generated
+     * name when the media has none. See https://github.com/wordpress-mobile/WordPress-Android/issues/20468
+     */
+    @NonNull
+    private static String buildOptimizedFileName(@Nullable String originalFileName) {
+        if (TextUtils.isEmpty(originalFileName)) {
+            return MediaUtils.generateTimeStampedFileName(OPTIMIZED_VIDEO_MIME_TYPE);
+        }
+
+        return MediaFileNameUtils.replaceExtension(originalFileName, OPTIMIZED_VIDEO_EXTENSION);
     }
 
     private Context getContext() {
@@ -67,7 +87,14 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
             return;
         }
 
-        mOutputPath = mCacheDir.getPath() + "/" + mFilename;
+        // the optimized video gets a directory of its own so that it can keep the original file name
+        File outputFile = WPMediaUtils.createProcessedMediaFile(getContext(), mFilename);
+        if (outputFile == null) {
+            AppLog.w(AppLog.T.MEDIA, "VideoOptimizer > cannot create output file");
+            mListener.onVideoOptimizationCompleted(mMedia);
+            return;
+        }
+        mOutputPath = outputFile.getPath();
 
         MediaComposer mediaComposer = null;
         boolean wasNpeDetected = false;

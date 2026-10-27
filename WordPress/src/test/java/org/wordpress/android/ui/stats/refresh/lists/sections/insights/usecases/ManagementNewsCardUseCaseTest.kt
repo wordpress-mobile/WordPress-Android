@@ -17,6 +17,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Image
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Tag
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -29,16 +31,22 @@ class ManagementNewsCardUseCaseTest : BaseUnitTest() {
     private lateinit var newsCardHandler: NewsCardHandler
 
     @Mock
+    private lateinit var statsSiteProvider: StatsSiteProvider
+
+    @Mock
     private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private lateinit var useCase: ManagementNewsCardUseCase
+    private val site = SiteModel()
 
     @Before
     fun setUp() {
+        whenever(statsSiteProvider.siteModel).thenReturn(site)
         useCase = ManagementNewsCardUseCase(
             testDispatcher(),
             testDispatcher(),
             resourceProvider,
             newsCardHandler,
+            statsSiteProvider,
             analyticsTrackerWrapper
         )
     }
@@ -73,12 +81,12 @@ class ManagementNewsCardUseCaseTest : BaseUnitTest() {
 
         dialogButtons.positiveAction.click()
 
-        verify(analyticsTrackerWrapper).track(Stat.STATS_INSIGHTS_MANAGEMENT_HINT_CLICKED)
+        verify(analyticsTrackerWrapper).track(Stat.STATS_INSIGHTS_MANAGEMENT_HINT_CLICKED, site)
         verify(newsCardHandler).goToEdit()
 
         dialogButtons.negativeAction.click()
 
-        verify(analyticsTrackerWrapper).track(Stat.STATS_INSIGHTS_MANAGEMENT_HINT_DISMISSED)
+        verify(analyticsTrackerWrapper).track(Stat.STATS_INSIGHTS_MANAGEMENT_HINT_DISMISSED, site)
         verify(newsCardHandler).dismiss()
     }
 

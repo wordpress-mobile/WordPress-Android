@@ -24,6 +24,7 @@ import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,7 +44,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -82,6 +82,11 @@ import kotlinx.coroutines.launch
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.ui.text.style.TextAlign
+import androidx.annotation.StringRes
+import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import org.wordpress.android.R
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.support.unified.util.formatRelativeTime
@@ -114,6 +119,7 @@ fun UnifiedConversationDetailScreen(
     onReplyMessageChange: (String) -> Unit,
     onReplyIncludeAppLogsChange: (Boolean) -> Unit,
     onReplyBottomSheetVisibilityChange: (Boolean) -> Unit,
+    onAutoRefresh: () -> Unit,
     attachmentActionsListener: AttachmentActionsListener,
 ) {
     var previewAttachment by remember { mutableStateOf<UnifiedAttachment?>(null) }
@@ -123,6 +129,24 @@ fun UnifiedConversationDetailScreen(
     val resources = LocalResources.current
     val isBot = conversation.isBot
     val isBotTyping = isBot && isSendingReply
+    val ctaLabelRes = replyCtaLabelRes(conversation)
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    // Auto-refresh the open conversation every minute so replies from support appear without the
+    // user leaving the screen. Bots update locally, so we only poll HE conversations. The poll is
+    // scoped to STARTED via repeatOnLifecycle so it pauses while the app is backgrounded (onStart
+    // already refreshes on return). Keying on the conversation id restarts the timer when a
+    // different conversation is opened.
+    if (!isBot) {
+        LaunchedEffect(conversation.id, lifecycleOwner) {
+            lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                while (true) {
+                    kotlinx.coroutines.delay(CONVERSATION_AUTO_REFRESH_INTERVAL_MS)
+                    onAutoRefresh()
+                }
+            }
+        }
+    }
 
     // Keep the conversation pinned to its last item whenever a message is added or the bot's typing
     // indicator appears/disappears. We scroll in reaction to layoutInfo.totalItemsCount rather than
@@ -164,6 +188,8 @@ fun UnifiedConversationDetailScreen(
             ConversationBottomBar(
                 isBot = isBot,
                 canAcceptReply = conversation.canAcceptReply,
+                replyLabelRes = ctaLabelRes,
+                isLoading = isLoading,
                 // The chat input is backed by the shared reply form state so the typed text is
                 // retained on send failure (the VM clears it only on success) and survives
                 // configuration changes via the ViewModel.
@@ -230,6 +256,7 @@ fun UnifiedConversationDetailScreen(
                         UnifiedMessageItem(
                             message = message,
                             timestamp = formatRelativeTime(message.createdAt, resources),
+                            currentUserName = userName,
                             onPreviewAttachment = { previewAttachment = it },
                             onDownloadAttachment = onDownloadAttachment,
                             onLinkClick = onLinkClick,
@@ -259,6 +286,7 @@ fun UnifiedConversationDetailScreen(
         }
         UnifiedReplyBottomSheet(
             sheetState = sheetState,
+            titleRes = ctaLabelRes,
             isSending = isSendingReply,
             messageText = replyFormState.message,
             includeAppLogs = replyFormState.includeAppLogs,
@@ -291,6 +319,8 @@ fun UnifiedConversationDetailScreen(
 private fun ConversationBottomBar(
     isBot: Boolean,
     canAcceptReply: Boolean,
+    @StringRes replyLabelRes: Int,
+    isLoading: Boolean,
     messageText: String,
     canSendMessage: Boolean,
     onMessageTextChange: (String) -> Unit,
@@ -316,6 +346,8 @@ private fun ConversationBottomBar(
         canAcceptReply -> {
             Box(modifier = Modifier.navigationBarsPadding()) {
                 ReplyButton(
+                    labelRes = replyLabelRes,
+                    isLoading = isLoading,
                     enabled = replyEnabled,
                     onClick = onReplyClick
                 )
@@ -374,7 +406,7 @@ private fun MessageBubble(
     ) {
         if (!message.isUser) {
             Text(
-                text = stringResource(R.string.unified_support_status_bot),
+                text = stringResource(R.string.unified_support_status_ai_assistant),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 2.dp, start = 4.dp, end = 4.dp)
@@ -412,7 +444,15 @@ private fun MessageBubble(
                 )
 
                 if (message.attachments.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(8.dp))
+                    // Bot replies cite the articles they used to answer. A divider plus a label
+                    // makes it clear where the answer ends and the extra reading starts. Only
+                    // shown when the attachments are nothing but links.
+                    val linksOnly = !message.isUser &&
+                            message.attachments.all { it.type == AttachmentType.Link }
+                    Spacer(modifier = Modifier.height(if (linksOnly) 12.dp else 8.dp))
+                    if (linksOnly) {
+                        RelatedLinksHeader()
+                    }
                     message.attachments.forEach { attachment ->
                         AttachmentRow(attachment, onLinkClick)
                     }
@@ -435,16 +475,21 @@ private fun MessageBubble(
 }
 
 @Composable
-private fun AttachmentRow(attachment: UnifiedAttachment, onLinkClick: (String) -> Unit) {
-    val isLink = attachment.type == AttachmentType.Link
-    val linkModifier = if (isLink) {
-        val linkDescription = attachmentLinkDescription(attachment)
-        Modifier
-            .clickable(role = Role.Button) { onLinkClick(attachment.url) }
-            .semantics { contentDescription = linkDescription }
-    } else {
-        Modifier
+private fun RelatedLinksHeader() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        HorizontalDivider(color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = DIVIDER_ALPHA))
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = stringResource(R.string.unified_support_related_label),
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
+}
+
+@Composable
+private fun AttachmentRow(attachment: UnifiedAttachment, onLinkClick: (String) -> Unit) {
     Column(modifier = Modifier.padding(vertical = 4.dp)) {
         if (attachment.isImage) {
             AsyncImage(
@@ -457,18 +502,24 @@ private fun AttachmentRow(attachment: UnifiedAttachment, onLinkClick: (String) -
             Spacer(modifier = Modifier.height(4.dp))
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = attachment.filename,
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.Medium,
-                color = if (isLink) MaterialTheme.colorScheme.primary else Color.Unspecified,
-                textDecoration = if (isLink) TextDecoration.Underline else null,
-                modifier = Modifier
-                    .weight(1f, fill = false)
-                    .then(linkModifier),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+            if (attachment.type == AttachmentType.Link) {
+                // The very same composable the escalated conversation uses, so a source link is
+                // pixel-identical on both sides of an escalation.
+                UnifiedAttachmentLink(
+                    attachment = attachment,
+                    onLinkClick = onLinkClick,
+                    modifier = Modifier.weight(1f, fill = false)
+                )
+            } else {
+                Text(
+                    text = attachment.filename,
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier.weight(1f, fill = false),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
             attachment.botCitationScore?.let { score ->
                 Text(
                     text = stringResource(
@@ -532,6 +583,7 @@ private fun ChatInputBar(
 @Composable
 private fun UnifiedReplyBottomSheet(
     sheetState: SheetState,
+    @StringRes titleRes: Int,
     isSending: Boolean,
     messageText: String,
     includeAppLogs: Boolean,
@@ -572,7 +624,7 @@ private fun UnifiedReplyBottomSheet(
                 }
 
                 Text(
-                    text = stringResource(R.string.he_support_reply_button),
+                    text = stringResource(titleRes),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.semantics { heading() }
@@ -611,10 +663,12 @@ private fun UnifiedReplyBottomSheet(
 
 @Composable
 private fun ReplyButton(
+    @StringRes labelRes: Int,
+    isLoading: Boolean,
     enabled: Boolean = true,
     onClick: () -> Unit
 ) {
-    val replyButtonLabel = stringResource(R.string.he_support_reply_button)
+    val replyButtonLabel = stringResource(labelRes)
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -622,23 +676,37 @@ private fun ReplyButton(
     ) {
         Button(
             onClick = onClick,
-            enabled = enabled,
+            enabled = enabled && !isLoading,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
-                .semantics { contentDescription = replyButtonLabel },
+                // Only expose the label once the conversation has loaded, so neither TalkBack nor
+                // the button flashes a transient/incorrect action while it's still being resolved.
+                .semantics { if (!isLoading) contentDescription = replyButtonLabel },
             shape = RoundedCornerShape(28.dp)
         ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.Reply,
-                contentDescription = null,
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            Text(
-                text = replyButtonLabel,
-                style = MaterialTheme.typography.titleMedium
-            )
+            if (isLoading) {
+                // The button is disabled while loading, so its container is greyed
+                // (onSurface @ 12%). Tint the spinner with the Material 3 disabled content
+                // color (onSurface @ 38%) so it stays visible in both light and dark themes,
+                // matching the greyed-out label the button shows when disabled.
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    strokeWidth = 2.dp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.Reply,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                Text(
+                    text = replyButtonLabel,
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
         }
     }
 }
@@ -692,13 +760,13 @@ private fun TypingIndicatorBubble() {
                         bottomEnd = 16.dp
                     )
                 )
-                .padding(16.dp)
+                .padding(horizontal = 12.dp, vertical = 10.dp)
                 .semantics {
                     contentDescription = typingDescription
                 }
         ) {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(3.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 TypingDot(delay = 0)
@@ -730,7 +798,7 @@ private fun TypingDot(delay: Int) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha),
                 shape = RoundedCornerShape(50)
             )
-            .padding(4.dp)
+            .size(6.dp)
     )
 }
 
@@ -774,12 +842,14 @@ private fun UnifiedConversationTitleCard(title: String) {
 private fun UnifiedMessageItem(
     message: UnifiedMessage,
     timestamp: String,
+    currentUserName: String,
     onPreviewAttachment: (UnifiedAttachment) -> Unit,
     onDownloadAttachment: (UnifiedAttachment) -> Unit,
     onLinkClick: (String) -> Unit,
     authorizationHeader: String,
 ) {
-    val messageDescription = "${message.authorName}, $timestamp. ${message.formattedText}"
+    val authorName = messageAuthorName(message, currentUserName)
+    val messageDescription = "$authorName, $timestamp. ${message.formattedText}"
 
     Box(
         modifier = Modifier
@@ -804,7 +874,7 @@ private fun UnifiedMessageItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = message.authorName,
+                    text = authorName,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = if (message.isUser) FontWeight.Bold else FontWeight.Normal,
                     color = if (message.isUser) {
@@ -834,6 +904,7 @@ private fun UnifiedMessageItem(
                 Spacer(modifier = Modifier.height(12.dp))
                 UnifiedAttachmentsList(
                     attachments = message.attachments,
+                    isUser = message.isUser,
                     onPreviewAttachment = onPreviewAttachment,
                     onDownloadAttachment = onDownloadAttachment,
                     onLinkClick = onLinkClick,
@@ -848,6 +919,7 @@ private fun UnifiedMessageItem(
 @Composable
 private fun UnifiedAttachmentsList(
     attachments: List<UnifiedAttachment>,
+    isUser: Boolean,
     onPreviewAttachment: (UnifiedAttachment) -> Unit,
     onDownloadAttachment: (UnifiedAttachment) -> Unit,
     onLinkClick: (String) -> Unit,
@@ -858,8 +930,13 @@ private fun UnifiedAttachmentsList(
     val (links, files) = attachments.partition { it.type == AttachmentType.Link }
 
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        // Same divider as the bot chat, shown only when the reply carries nothing but links.
+        if (!isUser && links.isNotEmpty() && files.isEmpty()) {
+            RelatedLinksHeader()
+        }
+
         links.forEach { attachment ->
-            UnifiedAttachmentLink(attachment, onLinkClick)
+            UnifiedAttachmentLink(attachment, onLinkClick, Modifier.fillMaxWidth())
         }
 
         if (files.isNotEmpty()) {
@@ -884,6 +961,31 @@ private fun UnifiedAttachmentsList(
     }
 }
 
+/**
+ * The name shown above a message in an escalated (Happiness Engineer) conversation. The unified
+ * conversations endpoint labels the author with raw backend values — "bot" for the assistant and the
+ * bare WP.com login for the current user — so both are replaced with the same names the bot chat
+ * uses before escalation, and only Happiness Engineers keep the name the API returns.
+ */
+@VisibleForTesting
+internal fun resolveMessageAuthorName(
+    message: UnifiedMessage,
+    currentUserName: String,
+    assistantName: String,
+): String = when {
+    message.isUser -> currentUserName.ifEmpty { message.authorName }
+    message.isBot -> assistantName
+    else -> message.authorName
+}
+
+@Composable
+private fun messageAuthorName(message: UnifiedMessage, currentUserName: String): String =
+    resolveMessageAuthorName(
+        message = message,
+        currentUserName = currentUserName,
+        assistantName = stringResource(R.string.unified_support_status_ai_assistant)
+    )
+
 @Composable
 private fun attachmentLinkDescription(attachment: UnifiedAttachment): String =
     stringResource(
@@ -892,11 +994,14 @@ private fun attachmentLinkDescription(attachment: UnifiedAttachment): String =
     )
 
 @Composable
-private fun UnifiedAttachmentLink(attachment: UnifiedAttachment, onLinkClick: (String) -> Unit) {
+private fun UnifiedAttachmentLink(
+    attachment: UnifiedAttachment,
+    onLinkClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val linkDescription = attachmentLinkDescription(attachment)
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
             .clickable(role = Role.Button) {
                 onLinkClick(attachment.url)
             }
@@ -1058,7 +1163,26 @@ private fun WelcomeHeader(userName: String) {
     }
 }
 
+/**
+ * Chooses the CTA label for an HE conversation:
+ *  - "Reply" when the last message is from support (not the user and not the bot) — it's the user's
+ *    turn to answer.
+ *  - "Add more info" when the last message is the user's own, or the bot's (a freshly created
+ *    ticket still shows the bot's opening message), i.e. the user is adding to an existing thread.
+ */
+@StringRes
+private fun replyCtaLabelRes(conversation: UnifiedConversation): Int {
+    val isSupportAwaitingReply = conversation.messages.lastOrNull()?.isSupport == true
+    return if (isSupportAwaitingReply) {
+        R.string.he_support_reply_button
+    } else {
+        R.string.he_support_add_more_info_button
+    }
+}
+
 private const val PERCENT_MULTIPLIER = 100
+private const val DIVIDER_ALPHA = 0.3f
 private const val TYPING_DOT_DELAY_STEP = 150
 private const val TYPING_DOT_PULSE_MS = 600L
 private const val TYPING_DOT_MIN_ALPHA = 0.3f
+private const val CONVERSATION_AUTO_REFRESH_INTERVAL_MS = 60_000L

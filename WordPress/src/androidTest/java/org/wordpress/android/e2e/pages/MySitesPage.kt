@@ -148,7 +148,6 @@ class MySitesPage {
         )
         WPSupportUtils.clickOn(statsButton)
         WPSupportUtils.idleFor(4000)
-        WPSupportUtils.dismissJetpackAdIfPresent()
         WPSupportUtils.waitForElementToBeDisplayedWithoutFailure(R.id.tabLayout)
 
         // Wait for the stats to load

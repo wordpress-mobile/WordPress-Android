@@ -4,7 +4,6 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteViewModel
@@ -41,7 +40,6 @@ class SiteListItemBuilder @Inject constructor(
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val themeBrowserUtils: ThemeBrowserUtils,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val siteMonitoringFeatureConfig: SiteMonitoringFeatureConfig,
     private val selfHostedUsersFeatureConfig: SelfHostedUsersFeatureConfig,
     private val siteCapabilityChecker: SiteCapabilityChecker
@@ -195,14 +193,15 @@ class SiteListItemBuilder @Inject constructor(
         } else null
     }
 
-    @Suppress("ComplexCondition")
-    fun buildMeItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
-        return if ((!buildConfigWrapper.isJetpackApp &&
-                    jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures() &&
-                    site.hasCapabilityManageOptions) ||
-            (!buildConfigWrapper.isJetpackApp &&
-                    site.isSelfHostedAdmin)
-        ) {
+    /**
+     * The Me item replaces the bottom navigation's Me tab when that nav is hidden, so it's gated on
+     * exactly the same condition WPMainActivity uses to hide it. Me is account-level, so site
+     * capabilities deliberately play no part here.
+     *
+     * The Jetpack app keeps its Me tab, so the item never builds there.
+     */
+    fun buildMeItemIfAvailable(onClick: (ListItemAction) -> Unit): ListItem? {
+        return if (!buildConfigWrapper.isJetpackApp) {
             ListItem(
                 R.drawable.ic_user_primary_white_24,
                 UiStringRes(R.string.me),

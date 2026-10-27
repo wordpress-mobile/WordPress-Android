@@ -17,11 +17,8 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.sotw2023.WpSotw2023NudgeCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.DashboardItemsViewModelSlice
-import org.wordpress.android.ui.mysite.items.jetpackBadge.JetpackBadgeViewModelSlice
-import org.wordpress.android.ui.mysite.items.jetpackSwitchmenu.JetpackSwitchMenuViewModelSlice
 import org.wordpress.android.ui.mysite.items.jetpackfeaturecard.JetpackFeatureCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsViewModelSlice
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -34,19 +31,10 @@ class DashboardItemsViewModelSliceTest: BaseUnitTest() {
     lateinit var jetpackFeatureCardViewModelSlice: JetpackFeatureCardViewModelSlice
 
     @Mock
-    lateinit var jetpackSwitchMenuViewModelSlice: JetpackSwitchMenuViewModelSlice
-
-    @Mock
-    lateinit var jetpackBadgeViewModelSlice: JetpackBadgeViewModelSlice
-
-    @Mock
     lateinit var siteItemsViewModelSlice: SiteItemsViewModelSlice
 
     @Mock
     lateinit var sotw2023NudgeCardViewModelSlice: WpSotw2023NudgeCardViewModelSlice
-
-    @Mock
-    lateinit var jetpackFeatureCardHelper: JetpackFeatureCardHelper
 
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
@@ -63,19 +51,14 @@ class DashboardItemsViewModelSliceTest: BaseUnitTest() {
     @Before
     fun setup() {
         whenever(jetpackFeatureCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
-        whenever(jetpackSwitchMenuViewModelSlice.uiModel).thenReturn(MutableLiveData())
-        whenever(jetpackBadgeViewModelSlice.uiModel).thenReturn(MutableLiveData())
         whenever(siteItemsViewModelSlice.uiModel).thenReturn(MutableLiveData())
         whenever(sotw2023NudgeCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
 
         dashboardItemsViewModelSlice = DashboardItemsViewModelSlice(
             testDispatcher(),
             jetpackFeatureCardViewModelSlice,
-            jetpackSwitchMenuViewModelSlice,
-            jetpackBadgeViewModelSlice,
             siteItemsViewModelSlice,
-            sotw2023NudgeCardViewModelSlice,
-            jetpackFeatureCardHelper
+            sotw2023NudgeCardViewModelSlice
         )
 
         navigationActions = mutableListOf()
@@ -112,8 +95,6 @@ class DashboardItemsViewModelSliceTest: BaseUnitTest() {
 
         verify(siteItemsViewModelSlice, atLeastOnce()).buildSiteItems(any())
         verify(jetpackFeatureCardViewModelSlice, atMost(1)).buildJetpackFeatureCard()
-        verify(jetpackSwitchMenuViewModelSlice, atMost(1)).buildJetpackSwitchMenu()
-        verify(jetpackBadgeViewModelSlice, atMost(1)).buildJetpackBadge()
         verify(siteItemsViewModelSlice, atMost(1)).buildSiteItems(mockSite)
         verify(sotw2023NudgeCardViewModelSlice, atMost(1)).buildCard()
     }
@@ -125,8 +106,6 @@ class DashboardItemsViewModelSliceTest: BaseUnitTest() {
 
         verify(siteItemsViewModelSlice).clearValue()
         verify(jetpackFeatureCardViewModelSlice).clearValue()
-        verify(jetpackSwitchMenuViewModelSlice).clearValue()
-        verify(jetpackBadgeViewModelSlice).clearValue()
         verify(sotw2023NudgeCardViewModelSlice).clearValue()
     }
 

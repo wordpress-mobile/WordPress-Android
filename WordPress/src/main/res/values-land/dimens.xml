@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Jetpack Migration Flow -->
-    <dimen name="help_logout_button_margin">0dp</dimen>
-    <dimen name="help_logout_button_margin_bottom">0dp</dimen>
-
     <!-- Dashboard Card Plans -->
     <dimen name="dashboard_card_plans_layout_padding">32dp</dimen>
     <dimen name="dashboard_card_plans_top_margin">16dp</dimen>

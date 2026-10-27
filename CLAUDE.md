@@ -38,7 +38,6 @@ This repository builds two apps from shared codebase:
 ├── WordPress/                 # Main app module
 ├── libs/
 │   ├── fluxc/                 # Networking and data layer (FluxC architecture)
-│   ├── login/                 # Shared login functionality
 │   ├── editor/                # Block editor integration
 │   ├── image-editor/          # Image editing functionality
 │   ├── analytics/             # Analytics and tracking
@@ -122,9 +121,10 @@ WordPress/src/main/java/org/wordpress/android/
 
 ### Development Workflow
 - Default development variant: `jetpackDebug`
-- Remote build cache available for faster builds (requires setup)
+- Remote build cache enabled by default for local builds (needs `a8c-secrets decrypt`; opt out via
+  `use_remote_build_cache_locally=false` in `developer.properties`)
 - Fastlane used for release automation and testing
-- Secrets managed via `secrets.properties` file (not in repo)
+- Secrets managed via `secrets.properties`, decrypted outside the checkout by `a8c-secrets decrypt`
 - Pre-commit hooks may modify files during commit
 
 ### Git Operations Checklist
@@ -132,6 +132,18 @@ WordPress/src/main/java/org/wordpress/android/
 - [ ] Have you explicitly asked the user for permission for THIS specific operation?
 - [ ] Did the user respond affirmatively to THIS specific request (not a previous one)?
 - [ ] Are you committing only the changes the user approved?
+
+### Editing PR Descriptions
+**IMPORTANT**: When asked to modify a PR description, always first retrieve the current
+description from the server (e.g. `gh pr view <number> --json body`) and edit that live
+content. Never rewrite the whole description from local knowledge or memory, since it may
+have been changed on the server side and those changes would be lost.
+
+## User-Facing Changes Log
+
+`docs/USER-FACING-CHANGES.md` is a rolling log of changes a customer could notice, written by the author of the change. It is not release notes. `docs/USER-FACING-CHANGES-DOCUMENTATION.md` covers what belongs in the log and the entry format.
+
+When a change could be noticed by a customer, read the documentation file and add an entry at the top of the log as part of the same change.
 
 ## Release Notes Compilation Process
 

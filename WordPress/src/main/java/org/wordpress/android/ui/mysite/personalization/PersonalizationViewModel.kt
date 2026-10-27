@@ -50,7 +50,6 @@ class PersonalizationViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         shortcutsPersonalizationViewModelSlice.onCleared()
         dashboardCardPersonalizationViewModelSlice.onCleared()
     }

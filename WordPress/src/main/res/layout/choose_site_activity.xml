@@ -67,7 +67,8 @@
         android:alpha="0"
         android:background="@android:color/black"
         android:clickable="true"
-        android:focusable="true"
+        android:focusable="false"
+        android:importantForAccessibility="no"
         android:visibility="gone"
         tools:alpha="0.4"
         tools:visibility="visible" />

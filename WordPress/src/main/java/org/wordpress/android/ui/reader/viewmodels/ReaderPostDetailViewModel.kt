@@ -1093,7 +1093,6 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         getLikesJob?.cancel()
         getLikesHandler.clear()
         readerPostCardActionsHandler.onCleared()

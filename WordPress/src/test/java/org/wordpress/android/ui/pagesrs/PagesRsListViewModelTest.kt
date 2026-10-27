@@ -14,6 +14,8 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
+import org.mockito.kotlin.timeout
+import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -28,34 +30,44 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.datasource.PostViewsDataResult
+import org.wordpress.android.ui.newstats.datasource.StatsDataSource
+import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.ui.posts.AuthorFilterSelection
-import org.wordpress.android.ui.postsrs.data.PostRsRestClient
-import org.wordpress.android.ui.postsrs.data.WpServiceProvider
+import org.wordpress.android.ui.rs.RsFluxCBridge
+import org.wordpress.android.ui.rs.RsReveal
+import org.wordpress.android.ui.rs.data.RsSiteRestClient
+import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.rs.RsPostChangeListener
+import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.SiteEditorMVPFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
+@Suppress("LargeClass")
 internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var serviceProvider: WpServiceProvider
     @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var restClient: PostRsRestClient
+    @Mock lateinit var restClient: RsSiteRestClient
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var postStore: PostStore
     @Mock lateinit var homepageSettings: PageRsHomepageSettings
     @Mock lateinit var blazeFeatureUtils: BlazeFeatureUtils
-    @Mock lateinit var fluxCBridge: PageRsFluxCBridge
+    @Mock lateinit var fluxCBridge: RsFluxCBridge
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
     @Mock lateinit var editorThemeStore: EditorThemeStore
     @Mock lateinit var siteEditorMVPFeatureConfig: SiteEditorMVPFeatureConfig
+    @Mock lateinit var statsDataSource: StatsDataSource
 
     private lateinit var site: SiteModel
+    private lateinit var changeListener: RsPostChangeListener
     private var activeViewModel: PagesRsListViewModel? = null
 
     @Before
@@ -64,6 +76,7 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
             id = 1
             siteId = 123L
         }
+        changeListener = RsPostChangeListener(dispatcher, postStore)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }
@@ -90,6 +103,8 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
         analyticsTracker = analyticsTracker,
         editorThemeStore = editorThemeStore,
         siteEditorMVPFeatureConfig = siteEditorMVPFeatureConfig,
+        changeListener = changeListener,
+        statsDataSource = statsDataSource,
     ).also { activeViewModel = it }
 
     @Test
@@ -357,47 +372,144 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     }
 
     @Test
-    fun `onPostUploaded for a page of the selected site refreshes the tabs`() {
+    fun `a page changed through FluxC refreshes the list`() = test {
         val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
 
-        viewModel.onPostUploaded(OnPostUploaded(pageUpload(), false))
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload(), false))
+        advanceUntilIdle()
 
         verify(restClient).clearCaches()
     }
 
     @Test
-    fun `onPostUploaded ignores posts`() {
+    fun `a page changed through FluxC does not refresh the list while offline`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
         val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
 
-        viewModel.onPostUploaded(OnPostUploaded(pageUpload().apply { setIsPage(false) }, false))
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload(), false))
+        advanceUntilIdle()
 
         verify(restClient, never()).clearCaches()
     }
 
     @Test
-    fun `onPostUploaded ignores pages from other sites`() {
+    fun `changes while the screen is hidden are refreshed once when it is shown`() = test {
         val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        viewModel.onScreenHidden()
+        advanceUntilIdle()
 
-        viewModel.onPostUploaded(OnPostUploaded(pageUpload().apply { setLocalSiteId(99) }, false))
-
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload(), false))
+        advanceUntilIdle()
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload(), false))
+        advanceUntilIdle()
         verify(restClient, never()).clearCaches()
+
+        viewModel.onScreenVisible()
+
+        verify(restClient).clearCaches()
     }
 
     @Test
-    fun `onPostUploaded ignores failed uploads`() {
+    fun `a change that arrived offline is refreshed when the screen is next shown`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
         val viewModel = createViewModel()
-        val event = OnPostUploaded(pageUpload(), false).apply {
-            error = PostStore.PostError(PostStore.PostErrorType.GENERIC_ERROR)
-        }
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
 
-        viewModel.onPostUploaded(event)
-
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload(), false))
+        advanceUntilIdle()
         verify(restClient, never()).clearCaches()
+
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        viewModel.onScreenHidden()
+        viewModel.onScreenVisible()
+
+        verify(restClient).clearCaches()
+    }
+
+    @Test
+    fun `clearing the view model stops the change listener`() {
+        createViewModel().onCleared()
+
+        verify(dispatcher).unregister(changeListener)
     }
 
     private fun pageUpload() = PostModel().apply {
         setIsPage(true)
         setLocalSiteId(site.id)
+    }
+
+    private fun pageUpload(status: String, remotePageId: Long = UPLOADED_PAGE_ID) =
+        pageUpload().apply {
+            setStatus(status)
+            setRemotePostId(remotePageId)
+        }
+
+    @Test
+    fun `a published page is revealed on the published tab`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload("publish"), false))
+        advanceUntilIdle()
+
+        viewModel.revealRequests.test {
+            assertThat(awaitItem())
+                .isEqualTo(RsReveal(PageRsListTab.PUBLISHED, UPLOADED_PAGE_ID))
+        }
+    }
+
+    @Test
+    fun `a new draft page is revealed on the drafts tab`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload("draft"), false))
+        advanceUntilIdle()
+
+        viewModel.revealRequests.test {
+            assertThat(awaitItem())
+                .isEqualTo(RsReveal(PageRsListTab.DRAFTS, UPLOADED_PAGE_ID))
+        }
+    }
+
+    @Test
+    fun `an upload while the screen is hidden is revealed when it is shown`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        viewModel.onScreenHidden()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload("publish"), false))
+        advanceUntilIdle()
+
+        viewModel.revealRequests.test {
+            expectNoEvents()
+
+            viewModel.onScreenVisible()
+
+            assertThat(awaitItem())
+                .isEqualTo(RsReveal(PageRsListTab.PUBLISHED, UPLOADED_PAGE_ID))
+        }
+    }
+
+    @Test
+    fun `an upload with an unrecognized status is not revealed`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload("gibberish"), false))
+        advanceUntilIdle()
+
+        viewModel.revealRequests.test { expectNoEvents() }
     }
 
     @Test
@@ -602,4 +714,135 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
         assertThat(state?.error).isNull()
         assertThat(state?.isRefreshing ?: false).isFalse
     }
+
+    // region density
+
+    @Test
+    fun `density starts from the stored preference`() = test {
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(true)
+
+        val viewModel = createViewModel()
+
+        assertThat(viewModel.density.value).isEqualTo(ContentListDensity.CONDENSED)
+    }
+
+    @Test
+    fun `density defaults to comfortable`() = test {
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(false)
+
+        val viewModel = createViewModel()
+
+        assertThat(viewModel.density.value).isEqualTo(ContentListDensity.COMFORTABLE)
+    }
+
+    @Test
+    fun `toggling density persists the new value`() = test {
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(false)
+        val viewModel = createViewModel()
+
+        viewModel.onDensityToggled(PageRsListTab.PUBLISHED)
+        advanceUntilIdle()
+
+        assertThat(viewModel.density.value).isEqualTo(ContentListDensity.CONDENSED)
+        verify(appPrefsWrapper).isContentListCondensed = true
+    }
+
+    @Test
+    fun `a condensed list fetches no view counts for its visible rows`() = test {
+        // The point of condensing: the rows show no views, so nothing is requested.
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(true)
+        val viewModel = createViewModel()
+
+        viewModel.onRowsVisible(PageRsListTab.PUBLISHED, listOf(1L, 2L))
+        advanceUntilIdle()
+
+        verify(statsDataSource, never()).fetchPostViews(any(), any())
+    }
+
+    @Test
+    fun `draft rows fetch no view counts`() = test {
+        // A draft has no view history, so a skeleton there would wait on a fetch never made.
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(false)
+        val viewModel = createViewModel()
+
+        viewModel.onRowsVisible(PageRsListTab.DRAFTS, listOf(1L, 2L))
+        advanceUntilIdle()
+
+        verify(statsDataSource, never()).fetchPostViews(any(), any())
+    }
+
+    @Test
+    fun `self-hosted sites fetch no view counts`() = test {
+        // View counts come from WordPress.com stats, which an application-password site has no
+        // access to; the rest of the row still works.
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(false)
+        whenever(accountStore.accessToken).thenReturn("token")
+        site.origin = SiteModel.ORIGIN_XMLRPC
+        val viewModel = createViewModel()
+
+        viewModel.onRowsVisible(PageRsListTab.PUBLISHED, listOf(1L))
+        advanceUntilIdle()
+
+        verify(statsDataSource, never()).fetchPostViews(any(), any())
+    }
+
+    @Test
+    fun `rows seen while condensed are fetched once the list becomes comfortable`() = test {
+        // A condensed list fetches nothing, but it must still remember what is on screen: the
+        // density toggle re-requests for those rows, and nothing else will if the same rows stay
+        // visible after the switch.
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(true)
+        whenever(accountStore.accessToken).thenReturn("token")
+        whenever(statsDataSource.fetchPostViews(any(), any()))
+            .thenReturn(PostViewsDataResult.Error(StatsErrorType.NOT_AVAILABLE))
+        site.origin = SiteModel.ORIGIN_WPCOM_REST
+        site.hasCapabilityViewStats = true
+        val viewModel = createViewModel()
+        viewModel.onRowsVisible(PageRsListTab.PUBLISHED, listOf(1L))
+        advanceUntilIdle()
+        verify(statsDataSource, never()).fetchPostViews(any(), any())
+
+        viewModel.onDensityToggled(PageRsListTab.PUBLISHED)
+        advanceUntilIdle()
+
+        // The fetch hops to Dispatchers.IO, which the test scheduler does not drive, so poll for
+        // the interaction rather than asserting it has already happened.
+        verifyBlocking(statsDataSource, timeout(FETCH_TIMEOUT_MS)) {
+            fetchPostViews(any(), any())
+        }
+    }
+
+
+    @Test
+    fun `a neighbouring tab's visible rows do not strand the published tab's fetches`() = test {
+        // The pager composes the next tab mid-drag and its visible-row stream reports against that
+        // tab. Held as one set, those ids would replace the published tab's, and the retry below
+        // would then ask for pages that were never on screen.
+        whenever(appPrefsWrapper.isContentListCondensed).thenReturn(true)
+        whenever(accountStore.accessToken).thenReturn("token")
+        whenever(statsDataSource.fetchPostViews(any(), any()))
+            .thenReturn(PostViewsDataResult.Error(StatsErrorType.NOT_AVAILABLE))
+        site.origin = SiteModel.ORIGIN_WPCOM_REST
+        site.hasCapabilityViewStats = true
+        val viewModel = createViewModel()
+
+        viewModel.onRowsVisible(PageRsListTab.PUBLISHED, listOf(PUBLISHED_ROW_ID))
+        viewModel.onRowsVisible(PageRsListTab.DRAFTS, listOf(DRAFT_ROW_ID))
+        advanceUntilIdle()
+
+        viewModel.onDensityToggled(PageRsListTab.PUBLISHED)
+        advanceUntilIdle()
+
+        verifyBlocking(statsDataSource, timeout(FETCH_TIMEOUT_MS)) {
+            fetchPostViews(any(), eq(PUBLISHED_ROW_ID))
+        }
+        verify(statsDataSource, never()).fetchPostViews(any(), eq(DRAFT_ROW_ID))
+    }
+
+    // endregion
 }
+
+private const val UPLOADED_PAGE_ID = 4242L
+private const val PUBLISHED_ROW_ID = 1L
+private const val DRAFT_ROW_ID = 99L
+private const val FETCH_TIMEOUT_MS = 2_000L

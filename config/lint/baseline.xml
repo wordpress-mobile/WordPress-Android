@@ -520,17 +520,6 @@
 
     <issue
         id="DoNotMockDataClass"
-        message="&apos;org.wordpress.android.fluxc.store.ProductsStore.OnProductsFetched&apos; is a data class, so mocking it should not be necessary"
-        errorLine1="    private val productsStore = mock&lt;ProductsStore> { on { fetchProducts(any()) } doReturn mock() }"
-        errorLine2="                                                                                           ~~~~~~">
-        <location
-            file="src/test/java/org/wordpress/android/ui/domains/DomainSuggestionsViewModelTest.kt"
-            line="50"
-            column="92"/>
-    </issue>
-
-    <issue
-        id="DoNotMockDataClass"
         message="&apos;org.wordpress.android.ui.posts.social.PostSocialConnection&apos; is a data class, so mocking it should not be necessary"
         errorLine1="        classToTest.onJetpackSocialConnectionClick(mock(), true, JetpackSocialFlow.POST_SETTINGS)"
         errorLine2="                                                   ~~~~~~">
@@ -989,28 +978,6 @@
             file="src/test/java/org/wordpress/android/ui/mysite/MySiteUiStateTest.kt"
             line="19"
             column="5"/>
-    </issue>
-
-    <issue
-        id="DoNotMockDataClass"
-        message="&apos;org.wordpress.android.fluxc.store.ProductsStore.FetchProductsError&apos; is a data class, so mocking it should not be necessary"
-        errorLine1="            ProductsStore.OnProductsFetched(error = mock())"
-        errorLine2="                                                    ~~~~~~">
-        <location
-            file="src/test/java/org/wordpress/android/ui/domains/management/newdomainsearch/domainsfetcher/NewDomainsSearchRepositoryTest.kt"
-            line="275"
-            column="53"/>
-    </issue>
-
-    <issue
-        id="DoNotMockDataClass"
-        message="&apos;org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError&apos; is a data class, so mocking it should not be necessary"
-        errorLine1="            SiteStore.OnSuggestedDomains(&quot;query&quot;, emptyList()).apply { error = mock() }"
-        errorLine2="                                                                               ~~~~~~">
-        <location
-            file="src/test/java/org/wordpress/android/ui/domains/management/newdomainsearch/domainsfetcher/NewDomainsSearchRepositoryTest.kt"
-            line="304"
-            column="80"/>
     </issue>
 
     <issue
@@ -1598,17 +1565,6 @@
 
     <issue
         id="DoNotMockDataClass"
-        message="&apos;org.wordpress.android.fluxc.store.ProductsStore.OnProductsFetched&apos; is a data class, so mocking it should not be necessary"
-        errorLine1="        whenever(productsStore.fetchProducts(any())).thenReturn(mock())"
-        errorLine2="                                                                ~~~~~~">
-        <location
-            file="src/test/java/org/wordpress/android/ui/sitecreation/domains/SiteCreationDomainsViewModelTest.kt"
-            line="358"
-            column="65"/>
-    </issue>
-
-    <issue
-        id="DoNotMockDataClass"
         message="&apos;org.wordpress.android.ui.sitecreation.domains.DomainModel&apos; is a data class, so mocking it should not be necessary"
         errorLine1="    private fun mockDomain(name: String = &quot;&quot;, free: Boolean = true) = mock&lt;DomainModel> {"
         errorLine2="                                                                      ^">
@@ -1616,28 +1572,6 @@
             file="src/test/java/org/wordpress/android/ui/sitecreation/domains/SiteCreationDomainsViewModelTest.kt"
             line="613"
             column="71"/>
-    </issue>
-
-    <issue
-        id="DoNotMockDataClass"
-        message="&apos;org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse&apos; is a data class, so mocking it should not be necessary"
-        errorLine1="val CART_SUCCESS = OnShoppingCartCreated(mock&lt;CreateShoppingCartResponse>())"
-        errorLine2="                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/test/java/org/wordpress/android/ui/sitecreation/SiteCreationFixtures.kt"
-            line="57"
-            column="42"/>
-    </issue>
-
-    <issue
-        id="DoNotMockDataClass"
-        message="&apos;org.wordpress.android.fluxc.store.TransactionsStore.CreateShoppingCartError&apos; is a data class, so mocking it should not be necessary"
-        errorLine1="val CART_ERROR = OnShoppingCartCreated(mock&lt;CreateShoppingCartError>())"
-        errorLine2="                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/test/java/org/wordpress/android/ui/sitecreation/SiteCreationFixtures.kt"
-            line="58"
-            column="40"/>
     </issue>
 
     <issue

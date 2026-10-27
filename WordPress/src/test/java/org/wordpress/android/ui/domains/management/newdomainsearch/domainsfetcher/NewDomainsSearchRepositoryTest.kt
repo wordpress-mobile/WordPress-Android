@@ -10,8 +10,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.DomainSuggestion
@@ -24,25 +22,13 @@ import uniffi.wp_api.RequestMethod
 @RunWith(MockitoJUnitRunner::class)
 class NewDomainsSearchRepositoryTest : BaseUnitTest() {
     @Mock
-    private lateinit var wpComApiClientProvider: WpComApiClientProvider
-
-    @Mock
-    private lateinit var accountStore: AccountStore
-
-    @Mock
     private lateinit var wpComApiClient: WpComApiClient
 
     private lateinit var repository: NewDomainsSearchRepository
 
     @Before
     fun setUp() {
-        whenever(accountStore.accessToken).thenReturn("test-token")
-        whenever(wpComApiClientProvider.getWpComApiClient("test-token"))
-            .thenReturn(wpComApiClient)
-        repository = NewDomainsSearchRepository(
-            wpComApiClientProvider,
-            accountStore
-        )
+        repository = NewDomainsSearchRepository(wpComApiClient)
     }
 
     @Test

@@ -67,7 +67,6 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload
 import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched
-import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
@@ -126,7 +125,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.RtlUtils
@@ -267,9 +265,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     @Inject
     lateinit var commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig
-
-    @Inject
-    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
     @Inject
     lateinit var readingPreferencesFeatureConfig: ReaderReadingPreferencesFeatureConfig
@@ -813,21 +808,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun renderUiState(state: ReaderPostDetailsUiState, binding: ReaderFragmentPostDetailBinding) {
         onPostExecuteShowPost()
-
-        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-            val screen = JetpackPoweredScreen.WithDynamicText.READER_POST_DETAIL
-            binding.jetpackBadge.root.isVisible = true
-            binding.jetpackBadge.jetpackPoweredBadge.text = uiHelpers.getTextOfUiString(
-                requireContext(),
-                jetpackBrandingUtils.getBrandingTextForScreen(screen)
-            )
-            if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                binding.jetpackBadge.jetpackPoweredBadge.setOnClickListener {
-                    jetpackBrandingUtils.trackBadgeTapped(screen)
-                    viewModel.showJetpackPoweredBottomSheet()
-                }
-            }
-        }
 
         binding.headerView.updatePost(
             state.headerUiState,

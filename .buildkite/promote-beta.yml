@@ -7,6 +7,8 @@
 agents:
   queue: "android"
 
+priority: 1
+
 steps:
   - label: ":android: Gather builds to promote to beta"
     command: ".buildkite/commands/gather-beta-candidates.sh"
@@ -14,7 +16,7 @@ steps:
 
 # Slack backstop for any failed build — its unique value is failures that abort before the lane runs
 # (gems/secrets) and can't self-report; on a lane failure it may also accompany the lane's own
-# message. Channel intentionally stays the test channel for now (see send_slack_message).
+# message.
 notify:
-  - slack: "#test-wpmobile-slack-integration"
+  - slack: "#wpmobile-team"
     if: build.state == "failed"

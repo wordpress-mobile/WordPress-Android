@@ -3,12 +3,17 @@ package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 class BloggingPromptsCardAnalyticsTrackerTest {
     private val analyticsTracker: AnalyticsTrackerWrapper = mock()
-    private val classToTest = BloggingPromptsCardAnalyticsTracker(analyticsTracker)
+    private val selectedSiteRepository: SelectedSiteRepository = mock()
+    private val site: SiteModel = mock()
+    private val classToTest = BloggingPromptsCardAnalyticsTracker(analyticsTracker, selectedSiteRepository)
 
     @Test
     fun `Should track my site card answer prompt clicked`() {
@@ -98,6 +103,20 @@ class BloggingPromptsCardAnalyticsTrackerTest {
         verify(analyticsTracker).track(
             Stat.BLOGGING_PROMPTS_MY_SITE_CARD_MENU_REMOVE_FROM_DASHBOARD_UNDO_CLICKED,
             emptyMap()
+        )
+    }
+
+    @Test
+    fun `Should track my site card viewed with the selected site`() {
+        val attribution = "attribution"
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+
+        classToTest.trackMySiteCardViewed(attribution)
+
+        verify(analyticsTracker).track(
+            Stat.BLOGGING_PROMPTS_MY_SITE_CARD_VIEWED,
+            site,
+            mapOf("attribution" to attribution)
         )
     }
 }

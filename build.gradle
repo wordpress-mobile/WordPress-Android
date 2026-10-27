@@ -25,7 +25,7 @@ plugins {
 
 ext {
     minSdkVersion = 26
-    compileSdkVersion = 36
+    compileSdkVersion = 37
     targetSdkVersion = 36
 }
 
@@ -84,10 +84,7 @@ allprojects {
             allWarningsAsErrors = true
             freeCompilerArgs.addAll(
                     "-opt-in=kotlin.RequiresOptIn",
-                    "-jvm-default=no-compatibility",
-                    // Suppress Glide KSP codegen visibility warning (bumptech/glide#5601)
-                    "-Xwarning-level=" +
-                        "EXPOSED_PACKAGE_PRIVATE_TYPE_FROM_INTERNAL_WARNING:disabled"
+                    "-jvm-default=no-compatibility"
             )
         }
     }

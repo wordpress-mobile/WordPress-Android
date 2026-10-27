@@ -5,7 +5,6 @@ import com.google.gson.Gson
 import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.prefs.AppPrefs.PrefKey
 import org.wordpress.android.ui.prefs.AppPrefs.getBoolean
@@ -52,6 +51,10 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     var postListAuthorSelection: AuthorFilterSelection
         get() = AppPrefs.getAuthorFilterSelection()
         set(value) = AppPrefs.setAuthorFilterSelection(value)
+
+    var isContentListCondensed: Boolean
+        get() = AppPrefs.isContentListCondensed()
+        set(value) = AppPrefs.setContentListCondensed(value)
 
     var pagesListAuthorSelection: AuthorFilterSelection
         get() = AppPrefs.getPagesAuthorFilterSelection()
@@ -304,8 +307,6 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
 
     fun setSelectedSite(siteLocalId: Int) = AppPrefs.setSelectedSite(siteLocalId)
 
-    fun getMySiteInitialScreen(isJetpackApp: Boolean): String = AppPrefs.getMySiteInitialScreen(isJetpackApp)
-
     fun setSkippedPromptDay(date: Date?, siteId: Int) = AppPrefs.setSkippedPromptDay(date, siteId)
 
     fun getSkippedPromptDay(siteId: Int): Date? = AppPrefs.getSkippedPromptDay(siteId)
@@ -315,36 +316,6 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun saveFirstBloggingPromptsOnboarding(isFirstTime: Boolean) {
         AppPrefs.saveFirstBloggingPromptsOnboarding(isFirstTime)
     }
-
-    fun getIsFirstTrySharedLoginJetpack(): Boolean = AppPrefs.getIsFirstTrySharedLoginJetpack()
-
-    fun saveIsFirstTrySharedLoginJetpack(isFirstTry: Boolean) = AppPrefs.saveIsFirstTrySharedLoginJetpack(isFirstTry)
-
-    fun getIsFirstTryUserFlagsJetpack(): Boolean = AppPrefs.getIsFirstTryUserFlagsJetpack()
-
-    fun saveIsFirstTryUserFlagsJetpack(isFirstTry: Boolean) = AppPrefs.saveIsFirstTryUserFlagsJetpack(isFirstTry)
-
-    fun getIsFirstTryBloggingRemindersSyncJetpack(): Boolean = AppPrefs.getIsFirstTryBloggingRemindersSyncJetpack()
-
-    fun saveIsFirstTryBloggingRemindersSyncJetpack(isFirstTry: Boolean) =
-        AppPrefs.saveIsFirstTryBloggingRemindersSyncJetpack(isFirstTry)
-
-    fun getIsFirstTryReaderSavedPostsJetpack(): Boolean = AppPrefs.getIsFirstTryReaderSavedPostsJetpack()
-
-    fun saveIsFirstTryReaderSavedPostsJetpack(isFirstTry: Boolean) =
-        AppPrefs.saveIsFirstTryReaderSavedPostsJetpack(isFirstTry)
-
-    fun setJetpackMigrationCompleted(isCompleted: Boolean) = AppPrefs.setIsJetpackMigrationCompleted(isCompleted)
-
-    fun isJetpackMigrationCompleted() = AppPrefs.getIsJetpackMigrationCompleted()
-
-    fun setJetpackMigrationInProgress(isInProgress: Boolean) = AppPrefs.setIsJetpackMigrationInProgress(isInProgress)
-
-    fun isJetpackMigrationInProgress() = AppPrefs.getIsJetpackMigrationInProgress()
-
-    fun setJetpackMigrationEligible(isEligible: Boolean) = AppPrefs.setIsJetpackMigrationEligible(isEligible)
-
-    fun isJetpackMigrationEligible() = AppPrefs.getIsJetpackMigrationEligible()
 
     fun getOpenWebLinksWithJetpackOverlayLastShownTimestamp(): Long =
         AppPrefs.getOpenWebLinksWithJetpackOverlayLastShownTimestamp()
@@ -357,35 +328,17 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack: Boolean) =
         AppPrefs.setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack)
 
-    fun getShouldHideJetpackFeatureCard(jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase): Boolean =
-        AppPrefs.getShouldHideJetpackFeatureCard(jetpackFeatureRemovalPhase)
+    fun getShouldHideJetpackFeatureCard(): Boolean =
+        AppPrefs.getShouldHideJetpackFeatureCard()
 
-    fun setShouldHideJetpackFeatureCard(jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase, isHidden: Boolean) =
-        AppPrefs.setShouldHideJetpackFeatureCard(jetpackFeatureRemovalPhase, isHidden)
+    fun setShouldHideJetpackFeatureCard(isHidden: Boolean) =
+        AppPrefs.setShouldHideJetpackFeatureCard(isHidden)
 
-    fun getJetpackFeatureCardLastShownTimestamp(jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase): Long =
-        AppPrefs.getJetpackFeatureCardLastShownTimestamp(jetpackFeatureRemovalPhase)
+    fun getJetpackFeatureCardLastShownTimestamp(): Long =
+        AppPrefs.getJetpackFeatureCardLastShownTimestamp()
 
-    fun setJetpackFeatureCardLastShownTimestamp(
-        jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase,
-        lastShownTimestamp: Long
-    ) {
-        AppPrefs.setJetpackFeatureCardLastShownTimestamp(jetpackFeatureRemovalPhase, lastShownTimestamp)
-    }
-
-    fun getSwitchToJetpackMenuCardLastShownTimestamp(): Long = AppPrefs.getSwitchToJetpackMenuCardLastShownTimestamp()
-
-    fun setSwitchToJetpackMenuCardLastShownTimestamp(lastShownTimestamp: Long) {
-        AppPrefs.setSwitchToJetpackMenuCardLastShownTimestamp(lastShownTimestamp)
-    }
-
-    fun getShouldHideSwitchToJetpackMenuCard(jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase): Boolean =
-        AppPrefs.getShouldHideSwitchToJetpackMenuCard(jetpackFeatureRemovalPhase)
-
-    fun setShouldHideSwitchToJetpackMenuCard(
-        jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase,
-        isHidden: Boolean
-    ) = AppPrefs.setShouldHideSwitchToJetpackMenuCard(jetpackFeatureRemovalPhase, isHidden)
+    fun setJetpackFeatureCardLastShownTimestamp(lastShownTimestamp: Long) =
+        AppPrefs.setJetpackFeatureCardLastShownTimestamp(lastShownTimestamp)
 
     fun getShouldHideJetpackInstallFullPluginCard(siteId: Int): Boolean =
         AppPrefs.getShouldHideJetpackInstallFullPluginCard(siteId)

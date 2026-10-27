@@ -8,6 +8,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
@@ -148,6 +151,37 @@ class SiteItemsBuilderTest {
 
             assertThat(siteDomainsItems).contains(DOMAINS_ITEM)
         }
+
+    @Test
+    fun `adds the menus item when the capability probe finds it available`() = runTest {
+        setupHeaders()
+        whenever(siteListItemBuilder.buildMenusItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(MENUS_ITEM)
+
+        val buildSiteItems = siteItemsBuilder.build(
+            SiteItemsBuilderParams(
+                site = siteModel,
+                onClick = SITE_ITEM_ACTION
+            )
+        )
+
+        assertThat(buildSiteItems).contains(MENUS_ITEM)
+    }
+
+    @Test
+    fun `skips the menus capability probe when the menus item is not wanted`() = runTest {
+        setupHeaders()
+
+        val buildSiteItems = siteItemsBuilder.build(
+            SiteItemsBuilderParams(
+                site = siteModel,
+                onClick = SITE_ITEM_ACTION,
+                includeMenusItem = false
+            )
+        )
+
+        assertThat(buildSiteItems).doesNotContain(MENUS_ITEM)
+        verify(siteListItemBuilder, never()).buildMenusItemIfAvailable(any(), any())
+    }
 
     @Suppress("ComplexMethod", "LongMethod")
     private fun setupHeaders(

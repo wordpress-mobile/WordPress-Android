@@ -8,9 +8,11 @@ class CommentDetailsActions(
     val onLikeClick: () -> Unit,
     val onEditClick: () -> Unit,
     val onTrashClick: () -> Unit,
+    val onRestoreClick: () -> Unit,
     val onDeletePermanentlyClick: () -> Unit,
     val onCopyLinkClick: () -> Unit,
     val onShareLinkClick: () -> Unit,
     val onPostTitleClick: () -> Unit,
+    val onAuthorInfoShown: () -> Unit,
     val onSendReply: (String) -> Unit
 )

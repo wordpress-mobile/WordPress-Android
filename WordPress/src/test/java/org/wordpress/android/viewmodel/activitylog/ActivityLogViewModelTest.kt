@@ -36,6 +36,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayloa
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.DownloadBackupFile
+import org.wordpress.android.ui.activitylog.GetActivityLogHiddenGroupsUseCase
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Notice
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Progress.Type.BACKUP_DOWNLOAD
@@ -127,6 +128,9 @@ class ActivityLogViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var postDismissBackupDownloadUseCase: PostDismissBackupDownloadUseCase
 
+    @Mock
+    private lateinit var getActivityLogHiddenGroupsUseCase: GetActivityLogHiddenGroupsUseCase
+
     private lateinit var fetchActivityLogCaptor: KArgumentCaptor<FetchActivityLogPayload>
     private lateinit var formatDateRangeTimezoneCaptor: KArgumentCaptor<String>
     private lateinit var viewModel: ActivityLogViewModel
@@ -152,7 +156,8 @@ class ActivityLogViewModelTest : BaseUnitTest() {
             resourceProvider,
             mStatsDateUtils,
             activityLogTracker,
-            jetpackCapabilitiesUseCase
+            jetpackCapabilitiesUseCase,
+            getActivityLogHiddenGroupsUseCase
         )
         viewModel.site = site
         viewModel.rewindableOnly = rewindableOnly
@@ -193,6 +198,25 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         assertEquals(eventListStatuses[0], ActivityLogListStatus.FETCHING)
         assertEquals(eventListStatuses[1], ActivityLogListStatus.DONE)
         assertFetchEvents()
+    }
+
+    @Test
+    fun fetchesEventsWithHiddenGroupsExcluded() = test {
+        whenever(getActivityLogHiddenGroupsUseCase.getHiddenGroups(site)).thenReturn(listOf("rewind", "scan"))
+
+        viewModel.start(site, rewindableOnly)
+
+        verify(store).fetchActivities(fetchActivityLogCaptor.capture())
+        assertEquals(listOf("rewind", "scan"), fetchActivityLogCaptor.lastValue.notGroups)
+    }
+
+    @Test
+    fun fetchesEventsWithoutHiddenGroupsWhenRewindableOnly() = test {
+        viewModel.start(site, rewindableOnly = true)
+
+        verify(store).fetchActivities(fetchActivityLogCaptor.capture())
+        assertTrue(fetchActivityLogCaptor.lastValue.notGroups.isEmpty())
+        verify(getActivityLogHiddenGroupsUseCase, never()).getHiddenGroups(anyOrNull())
     }
 
     @Test

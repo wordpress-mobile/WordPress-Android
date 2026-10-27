@@ -6,9 +6,12 @@ import androidx.work.WorkManager
 import org.wordpress.android.workers.notification.local.LocalNotification.Type
 import javax.inject.Inject
 
-class LocalNotificationScheduler(private val workManager: WorkManager) {
+class LocalNotificationScheduler(workManagerProvider: () -> WorkManager) {
     @Inject
-    constructor(context: Context) : this(WorkManager.getInstance(context))
+    constructor(context: Context) : this({ WorkManager.getInstance(context) })
+
+    // Resolved on first use so that injecting this class doesn't initialize WorkManager on the main thread
+    private val workManager by lazy(workManagerProvider)
 
     fun scheduleOneTimeNotification(vararg localNotifications: LocalNotification) {
         workManager.enqueue(localNotifications.map { buildOneTimeWorkRequest(it) })

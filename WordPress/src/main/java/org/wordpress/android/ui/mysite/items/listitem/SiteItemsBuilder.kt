@@ -121,18 +121,20 @@ class SiteItemsBuilder @Inject constructor(
                 siteListItemBuilder.buildThemesItemIfAvailable(params.site, params.onClick),
             ) else emptyList()
 
-        val menuItems = listOfNotNull(
-            siteListItemBuilder.buildMenusItemIfAvailable(params.site, params.onClick),
-        )
+        val menusItem = if (params.includeMenusItem) {
+            siteListItemBuilder.buildMenusItemIfAvailable(params.site, params.onClick)
+        } else {
+            null
+        }
 
-        return themeItems + menuItems
+        return themeItems + listOfNotNull(menusItem)
     }
 
     private fun buildNonJetpackDependantConfigurationItemsIfNeeded(params: SiteItemsBuilderParams):
             List<MySiteCardAndItem> {
         return listOfNotNull(
             siteListItemBuilder.buildDomainsItemIfAvailable(params.site, params.onClick),
-            siteListItemBuilder.buildMeItemIfAvailable(params.site, params.onClick),
+            siteListItemBuilder.buildMeItemIfAvailable(params.onClick),
             siteListItemBuilder.buildSiteSettingsItemIfAvailable(params.site, params.onClick),
             siteListItemBuilder.buildApplicationPasswordsItemIfAvailable(params.site, params.onClick),
         )

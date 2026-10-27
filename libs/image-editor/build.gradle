@@ -61,6 +61,7 @@ dependencies {
         exclude group: 'androidx.appcompat', module: 'appcompat'
     }
 
+    testImplementation(libs.mockito.core)
     testImplementation(libs.mockito.kotlin)
     testImplementation(libs.junit)
     testImplementation(libs.assertj.core)

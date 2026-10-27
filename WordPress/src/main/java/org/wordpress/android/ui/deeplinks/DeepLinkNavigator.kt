@@ -35,7 +35,6 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ViewP
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource.DEEP_LINK
 import org.wordpress.android.ui.sitemonitor.SiteMonitorType
 import org.wordpress.android.ui.stats.StatsTimeframe
-import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.UTILS
 import org.wordpress.android.util.ToastUtils
@@ -69,17 +68,12 @@ class DeepLinkNavigator
                 navigateAction.statsTimeframe
             )
 
-            is OpenStatsForSite -> ActivityLauncher.viewStatsInNewStack(
-                activity,
-                navigateAction.site,
-                StatsLaunchedFrom.LINK
-            )
+            is OpenStatsForSite -> activityNavigator.openStatsInNewStack(activity, navigateAction.site)
 
-            is OpenStatsForSiteAndTimeframe -> ActivityLauncher.viewStatsInNewStack(
+            is OpenStatsForSiteAndTimeframe -> activityNavigator.openStatsInNewStack(
                 activity,
                 navigateAction.site,
-                navigateAction.statsTimeframe,
-                StatsLaunchedFrom.LINK
+                navigateAction.statsTimeframe
             )
 
             OpenReader -> ActivityLauncher.viewReaderInNewStack(activity)
@@ -102,8 +96,6 @@ class DeepLinkNavigator
             OpenLoginPrologue -> ActivityLauncher.showLoginPrologue(activity)
             is OpenJetpackForDeepLink ->
                 ActivityLauncher.openJetpackForDeeplink(activity, navigateAction.action, navigateAction.uri)
-            is NavigateAction.OpenJetpackStaticPosterView ->
-                ActivityLauncher.showJetpackStaticPoster(activity)
             is NavigateAction.OpenMediaForSite -> activityNavigator.openMediaInNewStack(activity, navigateAction.site)
             NavigateAction.OpenMedia -> activityNavigator.openMediaInNewStack(activity)
             is NavigateAction.OpenMediaPickerForSite -> activityNavigator.openMediaPickerInNewStack(
@@ -174,7 +166,6 @@ class DeepLinkNavigator
         object OpenMySite : NavigateAction()
         object OpenLoginPrologue : NavigateAction()
         data class OpenJetpackForDeepLink(val action: String?, val uri: UriWrapper) : NavigateAction()
-        object OpenJetpackStaticPosterView : NavigateAction()
         data class OpenMediaForSite(val site: SiteModel) : NavigateAction()
         object OpenMedia : NavigateAction()
         data class OpenMediaPickerForSite(val site: SiteModel) : NavigateAction()

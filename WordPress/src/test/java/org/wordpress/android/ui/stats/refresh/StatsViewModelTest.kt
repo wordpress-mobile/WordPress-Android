@@ -23,8 +23,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
-import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.STATS
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.StatsModuleUiModel
@@ -96,9 +94,6 @@ class StatsViewModelTest : BaseUnitTest() {
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
     @Mock
-    lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
-
-    @Mock
     lateinit var trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
     private lateinit var viewModel: StatsViewModel
     private val _liveSelectedSection = MutableLiveData<StatsSection>()
@@ -126,7 +121,6 @@ class StatsViewModelTest : BaseUnitTest() {
             statsModuleActivateUseCase,
             notificationsTracker,
             jetpackBrandingUtils,
-            jetpackFeatureRemovalOverlayUtil,
             trafficSubscribersTabFeatureConfig
         )
 
@@ -139,7 +133,7 @@ class StatsViewModelTest : BaseUnitTest() {
 
         // The TRAFFIC tab is already the initial tab.
 
-        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_ACCESSED, StatsGranularity.DAYS)
+        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_ACCESSED, site, StatsGranularity.DAYS)
     }
 
     @Test
@@ -149,7 +143,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(INSIGHTS)
 
         verify(statsSectionManager).setSelectedSection(INSIGHTS)
-        verify(analyticsTracker).track(STATS_INSIGHTS_ACCESSED)
+        verify(analyticsTracker).track(STATS_INSIGHTS_ACCESSED, site)
     }
 
     @Test
@@ -159,7 +153,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(DAYS)
 
         verify(statsSectionManager).setSelectedSection(DAYS)
-        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_DAYS_ACCESSED, StatsGranularity.DAYS)
+        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_DAYS_ACCESSED, site, StatsGranularity.DAYS)
     }
 
     @Test
@@ -169,7 +163,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(WEEKS)
 
         verify(statsSectionManager).setSelectedSection(WEEKS)
-        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_WEEKS_ACCESSED, StatsGranularity.WEEKS)
+        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_WEEKS_ACCESSED, site, StatsGranularity.WEEKS)
     }
 
     @Test
@@ -179,7 +173,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(MONTHS)
 
         verify(statsSectionManager).setSelectedSection(MONTHS)
-        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_MONTHS_ACCESSED, StatsGranularity.MONTHS)
+        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_MONTHS_ACCESSED, site, StatsGranularity.MONTHS)
     }
 
     @Test
@@ -189,7 +183,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(YEARS)
 
         verify(statsSectionManager).setSelectedSection(YEARS)
-        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_YEARS_ACCESSED, StatsGranularity.YEARS)
+        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_YEARS_ACCESSED, site, StatsGranularity.YEARS)
     }
 
     @Test
@@ -309,32 +303,6 @@ class StatsViewModelTest : BaseUnitTest() {
         startViewModel()
 
         assertThat(showJetpackPoweredBottomSheetEvent.last().peekContent()).isFalse
-    }
-
-    @Test
-    fun `given wp app, when jetpack overlay feature is false, then jp fullscreen overlay is not shown`() {
-        val showJetpackOverlayEvent = mutableListOf<Event<Boolean>>(Event(false))
-        viewModel.showJetpackOverlay.observeForever {
-            showJetpackOverlayEvent.add(it)
-        }
-        whenever(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(STATS)).thenReturn(false)
-
-        startViewModel()
-
-        assertThat(showJetpackOverlayEvent.last().peekContent()).isFalse
-    }
-
-    @Test
-    fun `given wp app, when jetpack overlay feature is true, then jp fullscreen overlay is shown`() {
-        val showJetpackOverlayEvent = mutableListOf<Event<Boolean>>(Event(false))
-        viewModel.showJetpackOverlay.observeForever {
-            showJetpackOverlayEvent.add(it)
-        }
-        whenever(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(STATS)).thenReturn(true)
-
-        startViewModel()
-
-        assertThat(showJetpackOverlayEvent.last().peekContent()).isTrue()
     }
 
     private fun initObservers(): Observers {

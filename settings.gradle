@@ -13,29 +13,49 @@ pluginManagement {
 }
 
 plugins {
-    id "com.gradle.develocity" version "4.5.0"
+    id "com.gradle.develocity" version "4.6.0"
     id "com.gradle.common-custom-user-data-gradle-plugin" version "2.8.0"
 }
 
 gradle.ext {
     isCi = System.getenv('CI')?.toBoolean() ?: false
 
-    secretPath = "${System.getProperty("user.home")}/.configure/wordpress-android/secrets/secrets.properties"
+    a8cSecretsDir = resolveA8cSecretsDir(file("${rootDir}/.a8c-secrets/repo-id"))
+    secretPath = new File(a8cSecretsDir, "secrets.properties").path
     secretProperties = loadSecrets(
             logger,
             file("${rootDir}/defaults.properties"),
-            file(secretPath)
+            file(secretPath),
+            file("${rootDir}/secrets.properties")
     )
-    developerProperties = loadPropertiesFromFile(file("$rootDir/developer.properties"))
+    def developerFile = file("$rootDir/developer.properties")
+    developerProperties = loadPropertiesFromFile(
+            developerFile.exists() ? developerFile : file("$rootDir/developer.properties-example")
+    )
 }
 
-static def loadSecrets(Logger logger, File defaultsFile, File secretsFile) {
+// Mirrors `a8c-secrets which`, without spawning the command
+static def resolveA8cSecretsDir(File repoIdFile) {
+    new File("${System.getProperty("user.home")}/.a8c-secrets/${repoIdFile.text.trim()}")
+}
+
+static def loadSecrets(Logger logger, File defaultsFile, File secretsFile, File localSecretsFile) {
+    def properties
     if (secretsFile.exists()) {
-        return loadPropertiesFromFile(secretsFile)
+        properties = loadPropertiesFromFile(secretsFile)
     } else {
-        logger.warn("Secrets file not found. Using defaults.")
-        return loadPropertiesFromFile(defaultsFile)
+        logger.warn("${secretsFile} not found. Using defaults.")
+        properties = loadPropertiesFromFile(defaultsFile)
     }
+
+    // Values in the git-ignored `secrets.properties` at the root of the repository take precedence,
+    // which lets contributors supply their own credentials. See `secrets.properties-example`.
+    if (localSecretsFile.exists()) {
+        logger.lifecycle("Applying local secret overrides from ${localSecretsFile.name}.")
+        properties.putAll(loadPropertiesFromFile(localSecretsFile))
+    }
+
+    return properties
 }
 
 static def loadPropertiesFromFile(File inputFile) {
@@ -122,6 +142,10 @@ buildCache {
             }
         }
     } else if (gradle.ext.developerProperties["use_remote_build_cache_locally"]?.toBoolean() == true) {
+        if (!file(gradle.ext.secretPath).exists()) {
+            logger.warn("\nℹ️ Remote build cache is enabled, but ${gradle.ext.secretPath} is not found. Run `a8c-secrets decrypt` to use it.")
+            return
+        }
 
         checkForRemoteBuildCacheOptimizedExperience()
 
@@ -139,7 +163,6 @@ buildCache {
 }
 
 def checkForRemoteBuildCacheOptimizedExperience() {
-    assertSecretsApplied()
     assertDeveloperPropertiesMatch("${rootDir}/libs/fluxc/developer.properties")
     assertJava21Amazon()
 }
@@ -156,12 +179,6 @@ def assertDeveloperPropertiesMatch(String developerPropertiesPath) {
         def yellow = "\u001B[33m"
         def reset = "\u001B[0m"
         logger.warn("${yellow}The developer properties file $developerPropertiesPath does not match the default developer properties file. This will reduce efficiency of remote build cache.$reset")
-    }
-}
-
-def assertSecretsApplied() {
-    if (!file(gradle.ext.secretPath).exists()) {
-        throw new GradleException("The build requested remote build cache, but secrets file is not found. Please run `bundle exec fastlane run configure_apply` to apply secrets.")
     }
 }
 

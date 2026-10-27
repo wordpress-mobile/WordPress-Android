@@ -13,6 +13,8 @@ import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
+import org.wordpress.android.ui.mysite.cards.quicklinksitem.DEFAULT_QUICK_LINKS
+import org.wordpress.android.ui.mysite.cards.quicklinksitem.sortedByQuickLinkOrder
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -76,7 +78,7 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
 
     private fun groupByActiveAndInactiveShortcuts(shortcuts: List<ShortcutState>) {
         _uiState.value = ShortcutsState(
-            activeShortCuts = shortcuts.filter { it.isActive },
+            activeShortCuts = shortcuts.filter { it.isActive }.sortedByQuickLinkOrder { it.listItemAction },
             inactiveShortCuts = shortcuts.filter { !it.isActive }
         )
     }
@@ -112,7 +114,7 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
     // Note: More item is not a list item and hence the check is dropped here, it will be shown as a quick link always
     private fun isActiveShortcut(listItemAction: ListItemAction, siteId: Long): Boolean {
         return when (listItemAction) {
-            in defaultShortcuts() -> {
+            in DEFAULT_QUICK_LINKS -> {
                 appPrefsWrapper.getShouldShowDefaultQuickLink(
                     listItemAction.toString(), siteId
                 )
@@ -126,21 +128,13 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
         }
     }
 
-    private fun defaultShortcuts(): List<ListItemAction> {
-        return listOf(
-            ListItemAction.POSTS,
-            ListItemAction.PAGES,
-            ListItemAction.STATS
-        )
-    }
-
     fun removeShortcut(shortcutState: ShortcutState, siteId: Long) {
         scope.launch(bgDispatcher) {
             analyticsTrackerWrapper.track(
                 AnalyticsTracker.Stat.PERSONALIZATION_SCREEN_SHORTCUT_HIDE_QUICK_LINK_TAPPED,
                 mapOf(SHORTCUT_NAME_TRACKING_PARAMETER to shortcutState.listItemAction.trackingLabel)
             )
-            if (shortcutState.listItemAction in defaultShortcuts())
+            if (shortcutState.listItemAction in DEFAULT_QUICK_LINKS)
                 updateVisibilityOfDefaultShortcut(shortcutState.listItemAction, siteId, false)
             else updateVisibilityOfListItem(shortcutState.listItemAction, siteId, false)
             updateUiState(shortcutState, isActive = false)
@@ -153,7 +147,7 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
                 AnalyticsTracker.Stat.PERSONALIZATION_SCREEN_SHORTCUT_SHOW_QUICK_LINK_TAPPED,
                 mapOf(SHORTCUT_NAME_TRACKING_PARAMETER to shortcutState.listItemAction.trackingLabel)
             )
-            if (shortcutState.listItemAction in defaultShortcuts())
+            if (shortcutState.listItemAction in DEFAULT_QUICK_LINKS)
                 updateVisibilityOfDefaultShortcut(shortcutState.listItemAction, siteId, true)
             else updateVisibilityOfListItem(shortcutState.listItemAction, siteId, true)
             updateUiState(shortcutState, isActive = true)
@@ -174,7 +168,7 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
             inactiveShortcuts.add(updatedState)
         }
         _uiState.value = ShortcutsState(
-            activeShortCuts = activeShortcuts,
+            activeShortCuts = activeShortcuts.sortedByQuickLinkOrder { it.listItemAction },
             inactiveShortCuts = inactiveShortcuts
         )
     }

@@ -206,7 +206,6 @@ class HistoryViewModel @Inject constructor(
     override fun onCleared() {
         dispatcher.unregister(this)
         lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
-        super.onCleared()
     }
 
     fun onItemClicked(item: HistoryListItem) {

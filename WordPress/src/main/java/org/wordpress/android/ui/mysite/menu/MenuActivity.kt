@@ -133,7 +133,7 @@ class MenuActivity : BaseAppCompatActivity() {
                 StatsLaunchedFrom.ROW
             )
 
-            is SiteNavigationAction.OpenNewStats -> NewStatsActivity.start(this)
+            is SiteNavigationAction.OpenNewStats -> NewStatsActivity.start(this, StatsLaunchedFrom.ROW)
 
             is SiteNavigationAction.OpenDomains -> ActivityLauncher.viewDomainsDashboardActivity(
                 this,

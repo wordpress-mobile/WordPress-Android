@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.fluxc.network.NetworkRequestsRetentionPeriod
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -73,6 +72,15 @@ class SupportViewModel @Inject constructor(
     val networkTrackingState: StateFlow<NetworkTrackingState> = _networkTrackingState.asStateFlow()
 
     fun init() {
+        refreshLoginState()
+        initNetworkTrackingState()
+    }
+
+    /**
+     * Re-reads the account state so the screen reflects a login that happened after it was created
+     * (e.g. the user returning from the support login flow). See CMM-2297.
+     */
+    fun refreshLoginState() {
         val hasAccessToken = accountStore.hasAccessToken()
         _isLoggedIn.value = hasAccessToken
 
@@ -84,10 +92,8 @@ class SupportViewModel @Inject constructor(
         )
 
         _optionsVisibility.value = SupportOptionsVisibility(
-            showUnifiedSupport = hasAccessToken && BuildConfig.IS_JETPACK_APP,
+            showUnifiedSupport = hasAccessToken,
         )
-
-        initNetworkTrackingState()
     }
 
     private fun initNetworkTrackingState() {

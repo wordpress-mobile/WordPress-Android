@@ -9,7 +9,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.TypeConverters
-import kotlinx.coroutines.flow.Flow
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
 import org.wordpress.android.fluxc.persistence.coverters.BlazeCampaignsDateConverter
@@ -26,14 +25,8 @@ abstract class BlazeCampaignsDao {
     @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY CAST(campaignId AS int) DESC")
     abstract fun getCampaigns(siteId: Long): List<BlazeCampaignEntity>
 
-    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY CAST(campaignId AS int) DESC")
-    abstract fun observeCampaigns(siteId: Long): Flow<List<BlazeCampaignEntity>>
-
     @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY CAST(campaignId AS int) DESC LIMIT 1")
     abstract fun getMostRecentCampaignForSite(siteId: Long): BlazeCampaignEntity?
-
-    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY CAST(campaignId AS int) DESC LIMIT 1")
-    abstract fun observeMostRecentCampaignForSite(siteId: Long): Flow<BlazeCampaignEntity?>
 
     @Transaction
     open suspend fun insertCampaigns(siteId: Long, domainModel: BlazeCampaignsModel) {

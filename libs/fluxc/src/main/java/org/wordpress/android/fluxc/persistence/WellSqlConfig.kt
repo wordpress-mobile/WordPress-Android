@@ -12,6 +12,7 @@ import com.yarolegovich.wellsql.DefaultWellConfig
 import com.yarolegovich.wellsql.WellSql
 import com.yarolegovich.wellsql.WellTableManager
 import org.wordpress.android.fluxc.BuildConfig
+import org.wordpress.android.fluxc.model.WPComApiProxy
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel
 import org.wordpress.android.util.AppLog
@@ -28,6 +29,15 @@ open class WellSqlConfig : DefaultWellConfig {
         // SQLite versions prior to 3.32.0 (2020-05-22) or 32766 for SQLite versions after 3.32.0.
         // @see https://www.sqlite.org/limits.html
         const val SQLITE_MAX_VARIABLE_NUMBER = 999
+
+        /**
+         * Clears REST roots that point at the WP.com proxy, which can never be a direct-host root.
+         * Matches the same prefix [SiteSqlUtils] refuses to store, so a value the writers would
+         * reject can't survive in an older row.
+         */
+        private const val CLEAR_WPCOM_PROXY_REST_ROOTS =
+            "UPDATE SiteModel SET WP_API_REST_URL = NULL " +
+                    "WHERE WP_API_REST_URL LIKE '${WPComApiProxy.ROOT_LIKE_PATTERN}'"
     }
 
     constructor(context: Context) : super(context)
@@ -41,7 +51,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 212
+        return 213
     }
 
     override fun getDbName(): String {
@@ -2093,6 +2103,14 @@ open class WellSqlConfig : DefaultWellConfig {
                 211 -> {
                     db.execSQL("ALTER TABLE ActivityLog ADD MCP_AGENT BOOLEAN")
                     db.execSQL("ALTER TABLE ActivityLog ADD MCP_CLIENT TEXT")
+                }
+
+                // SiteModel.getWpApiRestUrl() used to synthesize a WP.com proxy root for Simple
+                // sites, and the generated mapper persisted it when the row was inserted. Nothing
+                // rewrites the column afterwards, so clear the derived values and let discovery
+                // repopulate a real REST root.
+                212 -> {
+                    db.execSQL(CLEAR_WPCOM_PROXY_REST_ROOTS)
                 }
             }
         }

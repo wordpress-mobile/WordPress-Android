@@ -36,15 +36,24 @@ import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsComments
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
-import org.wordpress.android.ui.postsrs.PostRsErrorUtils
-import org.wordpress.android.ui.postsrs.SnackbarMessage
-import org.wordpress.android.util.DateTimeUtilsWrapper
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.rs.RsDateFormatter
+import org.wordpress.android.ui.rs.RsErrorUtils
+import org.wordpress.android.ui.rs.RsSnackbarMessage
+import org.wordpress.android.ui.rs.RsTabUiState
+import org.wordpress.android.ui.rs.checkNetwork
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.MIN_SEARCH_QUERY_LENGTH
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.SEARCH_DEBOUNCE_MS
+import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.rs.sendWithRetry
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WPAvatarUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import uniffi.wp_api.CommentListParams
+import uniffi.wp_api.RequestExecutionErrorReason
+import uniffi.wp_api.WpErrorCode
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -60,14 +69,23 @@ class CommentsRsListViewModel @Inject constructor(
     private val siteCapabilityChecker: SiteCapabilityChecker,
     private val resourceProvider: ResourceProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val avatarUtilsWrapper: WPAvatarUtilsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val commentBrowsingSession: CommentBrowsingSession,
+    private val appPrefsWrapper: AppPrefsWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel() {
-    private val _tabStates = MutableStateFlow<Map<CommentsRsListTab, CommentsTabUiState>>(emptyMap())
-    val tabStates: StateFlow<Map<CommentsRsListTab, CommentsTabUiState>> = _tabStates.asStateFlow()
+    private val _tabStates = MutableStateFlow<Map<CommentsRsListTab, RsTabUiState<CommentRsUiModel>>>(emptyMap())
+    val tabStates: StateFlow<Map<CommentsRsListTab, RsTabUiState<CommentRsUiModel>>> = _tabStates.asStateFlow()
+
+    /**
+     * Row density, shared app-wide with the posts and pages lists through one pref - the three
+     * redesigned lists deliberately read as one setting. Read once at construction, like they do.
+     */
+    private val _density = MutableStateFlow(
+        ContentListDensity.of(appPrefsWrapper.isContentListCondensed)
+    )
+    val density: StateFlow<ContentListDensity> = _density.asStateFlow()
 
     private val _isSearchActive = MutableStateFlow(false)
     val isSearchActive: StateFlow<Boolean> = _isSearchActive.asStateFlow()
@@ -87,7 +105,7 @@ class CommentsRsListViewModel @Inject constructor(
     private val _events = Channel<CommentsRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
-    private val _snackbarMessages = Channel<SnackbarMessage>(Channel.BUFFERED)
+    private val _snackbarMessages = Channel<RsSnackbarMessage>(Channel.BUFFERED)
     val snackbarMessages = _snackbarMessages.receiveAsFlow()
 
     // Selection mode is active while this is non-empty.
@@ -310,6 +328,11 @@ class CommentsRsListViewModel @Inject constructor(
         val params = nextPageParams[tab]
         val isBusy = current.isLoading || current.isRefreshing || current.isLoadingMore
         if (params == null || isBusy) return
+        // As in fetchFirstPage: don't start a page request that can't reach the server.
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            onLoadMoreError(tab, message = null, reason = null)
+            return
+        }
 
         updateTabUiState(tab) { copy(isLoadingMore = true) }
         val generation = pageGenerations[tab]
@@ -327,7 +350,7 @@ class CommentsRsListViewModel @Inject constructor(
             }
             when (result) {
                 is RsCommentsPageResult.Success -> {
-                    val sizeBefore = getTabUiState(tab).comments.size
+                    val sizeBefore = getTabUiState(tab).items.size
                     applyPage(tab, result, append = true)
                     // When a page doesn't grow the visible list, the scroll position hasn't moved
                     // so the load-more trigger won't re-fire; advance to the next page directly.
@@ -336,23 +359,15 @@ class CommentsRsListViewModel @Inject constructor(
                     // count to zero — with no rows there's no scroll trigger left to resume paging.
                     // The depth cap keeps a pathological cursor chain (e.g. a proxy ignoring the
                     // page param) from firing unbounded unattended requests.
-                    if (getTabUiState(tab).comments.size <= sizeBefore &&
+                    if (getTabUiState(tab).items.size <= sizeBefore &&
                         nextPageParams[tab] != null &&
                         autoAdvanceDepth < CommentBrowsingSession.MAX_AUTO_ADVANCE_PAGES
                     ) {
                         loadMoreInternal(tab, autoAdvanceDepth + 1)
                     }
                 }
-                is RsCommentsPageResult.Error -> {
-                    updateTabUiState(tab) { copy(isLoadingMore = false) }
-                    _snackbarMessages.trySend(
-                        SnackbarMessage(
-                            message = errorMessage(result.message),
-                            actionLabel = resourceProvider.getString(R.string.retry),
-                            onAction = { loadMore(tab) }
-                        )
-                    )
-                }
+                is RsCommentsPageResult.Error ->
+                    onLoadMoreError(tab, result.message, result.reason, result.errorCode)
             }
         }
     }
@@ -366,7 +381,7 @@ class CommentsRsListViewModel @Inject constructor(
             // Seed the detail's swipe pager with the current tab's comments and paging cursor so
             // it can swipe between them and keep loading more (the cursor can't cross an Intent).
             val tab = currentTab ?: CommentsRsListTab.ALL
-            val ids = _tabStates.value[tab]?.comments?.map { it.remoteCommentId } ?: listOf(remoteCommentId)
+            val ids = _tabStates.value[tab]?.items?.map { it.remoteCommentId } ?: listOf(remoteCommentId)
             // Unreplied's rows are a client-side-threaded subset of the raw stream; the session
             // pages the raw stream, so handing it the cursor would let the pager swipe into the
             // replied-to and own comments the tab hides. Seed only the visible ids, no cursor.
@@ -454,7 +469,7 @@ class CommentsRsListViewModel @Inject constructor(
                         R.string.comments_rs_moderation_failed_multiple, failedIds.size, ids.size
                     )
                 }
-                _snackbarMessages.trySend(SnackbarMessage(message))
+                _snackbarMessages.trySend(RsSnackbarMessage(message))
                 // Failed comments kept their status and place in the list, so re-selecting them
                 // lets the user retry immediately instead of hunting them down again — unless
                 // clearTabs() ran while the batch was in flight (search opened, closed, or query
@@ -482,15 +497,8 @@ class CommentsRsListViewModel @Inject constructor(
         analyticsTracker.track(stat)
     }
 
-    private fun checkNetwork(): Boolean {
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            _snackbarMessages.trySend(
-                SnackbarMessage(resourceProvider.getString(R.string.no_network_message))
-            )
-            return false
-        }
-        return true
-    }
+    private fun checkNetwork(): Boolean =
+        _snackbarMessages.checkNetwork(networkUtilsWrapper, resourceProvider)
 
     /**
      * The pager settled on a new tab: clears any active selection (like the legacy action mode)
@@ -512,6 +520,17 @@ class CommentsRsListViewModel @Inject constructor(
     }
 
     private fun fetchFirstPage(tab: CommentsRsListTab, showErrorSnackbar: Boolean = true) {
+        // A fetch with no connection can only fail, so report it without the round trip.
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            onFirstPageError(
+                tab,
+                message = null,
+                reason = null,
+                errorCode = null,
+                showErrorSnackbar = showErrorSnackbar
+            )
+            return
+        }
         // Callers (initTab, refreshTab) guard against a null site, so the site getter below is safe.
         firstPageJobs[tab] = viewModelScope.launch {
             val base = commentsRsDataSource.firstPageParams(
@@ -527,7 +546,8 @@ class CommentsRsListViewModel @Inject constructor(
                     applyPage(tab, result, append = false)
                     advanceIfFilteredEmpty(tab)
                 }
-                is RsCommentsPageResult.Error -> onFirstPageError(tab, result.message, showErrorSnackbar)
+                is RsCommentsPageResult.Error ->
+                    onFirstPageError(tab, result.message, result.reason, result.errorCode, showErrorSnackbar)
             }
         }
     }
@@ -551,7 +571,7 @@ class CommentsRsListViewModel @Inject constructor(
         rawComments[tab] = raw
         updateTabUiState(tab) {
             copy(
-                comments = displayRows(tab, raw),
+                items = displayRows(tab, raw),
                 isLoading = false,
                 isRefreshing = false,
                 // A replacing page must clear isLoadingMore too: a load-more in flight when the
@@ -575,11 +595,12 @@ class CommentsRsListViewModel @Inject constructor(
         // resolved for the tab (keyed by post — a title is the same for every comment on a post).
         // Without this, each rebuild (load-more, re-thread) would blank titles until resolvePostTitles
         // re-fetches them, and re-thread — which never re-resolves — would lose them for good.
-        val knownTitles = getTabUiState(tab).comments
+        val knownTitles = getTabUiState(tab).items
             .filter { it.postTitle != null }
             .associate { it.postId to it.postTitle }
         val visible = if (tab == CommentsRsListTab.UNREPLIED) filterUnreplied(raw, currentUserId) else raw
-        return visible.map { it.toUiModel().copy(postTitle = knownTitles[it.postId]) }
+        val nowLabel = resourceProvider.getString(R.string.rs_date_now)
+        return visible.map { it.toUiModel(nowLabel).copy(postTitle = knownTitles[it.postId]) }
     }
 
     /** Re-derives the Unreplied tab's rows from its raw comments (e.g. once [currentUserId] resolves). */
@@ -587,7 +608,7 @@ class CommentsRsListViewModel @Inject constructor(
         val tab = CommentsRsListTab.UNREPLIED
         val raw = rawComments[tab] ?: return
         val rows = displayRows(tab, raw)
-        updateTabUiState(tab) { copy(comments = rows) }
+        updateTabUiState(tab) { copy(items = rows) }
         // Re-threading can drop rows that were over-reported while currentUserId was still null;
         // clear any selection for comments no longer shown so an off-screen id can't intercept
         // back presses or target a batch action (the same hazard refreshTab guards against).
@@ -604,9 +625,25 @@ class CommentsRsListViewModel @Inject constructor(
      * rows are on screen. Bounded by the same auto-advance cap as load-more.
      */
     private fun advanceIfFilteredEmpty(tab: CommentsRsListTab) {
-        if (getTabUiState(tab).comments.isEmpty() && nextPageParams[tab] != null) {
+        if (getTabUiState(tab).items.isEmpty() && nextPageParams[tab] != null) {
             loadMoreInternal(tab, autoAdvanceDepth = 0)
         }
+    }
+
+    /**
+     * A page that didn't arrive leaves the list as it is and offers a retry snackbar. All-null
+     * failure details mean no request was made because the device is offline.
+     */
+    private fun onLoadMoreError(
+        tab: CommentsRsListTab,
+        message: String?,
+        reason: RequestExecutionErrorReason?,
+        errorCode: WpErrorCode? = null
+    ) {
+        val authError = RsErrorUtils.isAuthError(reason, errorCode)
+        updateTabUiState(tab) { copy(isLoadingMore = false) }
+        val text = errorMessage(message, reason, errorCode)
+        _snackbarMessages.sendWithRetry(text, authError, resourceProvider) { loadMore(tab) }
     }
 
     /**
@@ -615,22 +652,27 @@ class CommentsRsListViewModel @Inject constructor(
      * from the detail) skip the snackbar — a failed background refresh shouldn't interrupt a
      * user who's still looking at a perfectly good list.
      */
-    private fun onFirstPageError(tab: CommentsRsListTab, message: String?, showErrorSnackbar: Boolean) {
-        val friendly = errorMessage(message)
-        if (getTabUiState(tab).comments.isNotEmpty()) {
-            updateTabUiState(tab) { copy(isLoading = false, isRefreshing = false, error = null) }
+    private fun onFirstPageError(
+        tab: CommentsRsListTab,
+        message: String?,
+        reason: RequestExecutionErrorReason?,
+        errorCode: WpErrorCode?,
+        showErrorSnackbar: Boolean
+    ) {
+        val friendly = errorMessage(message, reason, errorCode)
+        val authError = RsErrorUtils.isAuthError(reason, errorCode)
+        if (getTabUiState(tab).items.isNotEmpty()) {
+            updateTabUiState(tab) {
+                copy(isLoading = false, isRefreshing = false, error = null, isAuthError = authError)
+            }
             if (showErrorSnackbar) {
-                _snackbarMessages.trySend(
-                    SnackbarMessage(
-                        message = friendly,
-                        actionLabel = resourceProvider.getString(R.string.retry),
-                        onAction = { refreshTab(tab, isUserRefresh = true) }
-                    )
-                )
+                _snackbarMessages.sendWithRetry(friendly, authError, resourceProvider) {
+                    refreshTab(tab, isUserRefresh = true)
+                }
             }
         } else {
             updateTabUiState(tab) {
-                copy(comments = emptyList(), isLoading = false, isRefreshing = false, error = friendly)
+                copy(isLoading = false, isRefreshing = false, error = friendly, isAuthError = authError)
             }
         }
     }
@@ -640,7 +682,7 @@ class CommentsRsListViewModel @Inject constructor(
      * batched request per tab. Rows keep an author-only title until (or if ever) resolved.
      */
     private fun resolvePostTitles(tab: CommentsRsListTab) {
-        val unresolvedIds = getTabUiState(tab).comments
+        val unresolvedIds = getTabUiState(tab).items
             .filter { it.postTitle == null && it.postId > 0 }
             .map { it.postId }
             .distinct()
@@ -653,41 +695,69 @@ class CommentsRsListViewModel @Inject constructor(
             val titles = withContext(bgDispatcher) { commentsRsDataSource.fetchPostTitles(site, unresolvedIds) }
             if (titles.isEmpty()) return@launch
             updateTabUiState(tab) {
-                copy(comments = comments.map { it.copy(postTitle = titles[it.postId] ?: it.postTitle) })
+                copy(items = items.map { it.copy(postTitle = titles[it.postId] ?: it.postTitle) })
             }
         }
     }
 
-    /** The server message when it sent one, otherwise a friendly offline/generic message. */
-    private fun errorMessage(serverMessage: String?): String =
-        serverMessage?.takeIf { it.isNotBlank() }
-            ?: PostRsErrorUtils.friendlyErrorMessage(null, null, resourceProvider, networkUtilsWrapper)
+    /**
+     * The server message when it sent one, otherwise a friendly offline/auth/generic message.
+     *
+     * Auth failures ignore the server's wording: the retry action is withheld for those, so the
+     * message is all the user gets and a raw 401 body won't tell them their credentials are the
+     * problem. Posts and pages show the same string for the same failure.
+     */
+    private fun errorMessage(
+        serverMessage: String?,
+        reason: RequestExecutionErrorReason? = null,
+        errorCode: WpErrorCode? = null
+    ): String =
+        serverMessage?.takeIf { it.isNotBlank() && !RsErrorUtils.isAuthError(reason, errorCode) }
+            ?: RsErrorUtils.friendlyErrorMessage(
+                resourceProvider = resourceProvider,
+                networkUtilsWrapper = networkUtilsWrapper,
+                reason = reason,
+                errorCode = errorCode
+            )
 
-    private fun RsComment.toUiModel() = CommentRsUiModel(
+    private fun RsComment.toUiModel(nowLabel: String) = CommentRsUiModel(
         remoteCommentId = remoteCommentId,
         authorName = authorName.ifBlank { resourceProvider.getString(R.string.anonymous) },
         avatarUrl = avatarUtilsWrapper.rewriteAvatarUrlWithResource(authorAvatarUrl, R.dimen.avatar_sz_medium),
         snippet = HtmlUtils.fastStripHtml(contentHtml).trim(),
-        relativeDate = dateTimeUtilsWrapper.javaDateToTimeSpan(dateGmt),
+        relativeDate = RsDateFormatter.format(dateGmt, nowLabel),
         status = status,
-        postId = postId
+        postId = postId,
+        dateGmtMillis = dateGmt.time
     )
+
+    /**
+     * Flips the list between its two densities. Unlike posts and pages there are no per-row
+     * metrics to re-fetch, so nothing but the pref and the flow needs updating - the rows re-read
+     * the snippet rule at render time.
+     */
+    @MainThread
+    fun onDensityToggled() {
+        val next = ContentListDensity.of(!_density.value.isCondensed)
+        _density.value = next
+        appPrefsWrapper.isContentListCondensed = next.isCondensed
+    }
 
     private fun isSearchable(query: String) = query.trim().length >= MIN_SEARCH_QUERY_LENGTH
 
-    private fun getTabUiState(tab: CommentsRsListTab): CommentsTabUiState =
-        _tabStates.value[tab] ?: CommentsTabUiState(isLoading = true)
+    private fun getTabUiState(tab: CommentsRsListTab): RsTabUiState<CommentRsUiModel> =
+        _tabStates.value[tab] ?: RsTabUiState(isLoading = true)
 
-    private fun updateTabUiState(tab: CommentsRsListTab, update: CommentsTabUiState.() -> CommentsTabUiState) {
+    private fun updateTabUiState(
+        tab: CommentsRsListTab,
+        update: RsTabUiState<CommentRsUiModel>.() -> RsTabUiState<CommentRsUiModel>
+    ) {
         _tabStates.value += (tab to getTabUiState(tab).update())
     }
 
     companion object {
         // Same property key as the legacy list's tracking (UnifiedCommentsActivity).
         private const val SELECTED_FILTER_PROPERTY = "selected_filter"
-
-        private const val SEARCH_DEBOUNCE_MS = 250L
-        private const val MIN_SEARCH_QUERY_LENGTH = 3
 
         // Larger page for the Unreplied tab (matching the legacy list) to offset the rows that
         // client-side threading filters out.

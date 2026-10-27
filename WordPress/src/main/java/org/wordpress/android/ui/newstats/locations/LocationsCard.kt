@@ -58,7 +58,8 @@ fun LocationsCard(
     onMoveToTop: (() -> Unit)? = null,
     onMoveDown: (() -> Unit)? = null,
     onMoveToBottom: (() -> Unit)? = null,
-    onOpenWpAdmin: (() -> Unit)? = null
+    onOpenWpAdmin: (() -> Unit)? = null,
+    onExplorePlans: (() -> Unit)? = null
 ) {
     StatsCardContainer(modifier = modifier) {
         when (uiState) {
@@ -99,6 +100,7 @@ fun LocationsCard(
                     onMoveDown = onMoveDown,
                     onMoveToBottom = onMoveToBottom,
                     onOpenWpAdmin = onOpenWpAdmin,
+                    onExplorePlans = onExplorePlans,
                     headerExtra = {
                         LocationTypeSelector(
                             selectedType = selectedLocationType,

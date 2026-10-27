@@ -2,7 +2,12 @@ package org.wordpress.android.ui.comments.unified
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -31,14 +36,16 @@ import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
 import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
 import org.wordpress.android.ui.notifications.utils.NotificationsActionsWrapper
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.rs.RsDateFormatter
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.DateTimeUtilsWrapper
+import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -67,7 +74,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     private val siteCapabilityChecker: SiteCapabilityChecker,
     private val localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
+    private val resourceProvider: ResourceProvider,
     private val notificationsActionsWrapper: NotificationsActionsWrapper,
     private val notificationsTableWrapper: NotificationsTableWrapper,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
@@ -109,19 +116,32 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     // disabled and enable once confirmed, rather than flashing enabled then greying out.
     private var canModerate = false
 
+    // Resolved once and shared by the moderation controls and the edit-context fetch: separate calls
+    // would each fetch on a cold cache, and could disagree if only one of those fetches failed.
+    private lateinit var canModerateResult: Deferred<Boolean>
+
+    // Fetched the first time the author sheet opens rather than with the comment: few people open
+    // it, and the detail pager would otherwise pay for it on every comment it pages past.
+    private var authorExtrasJob: Job? = null
+
+    // A newer load supersedes an older one, so a slow first load can't land its parent and reply
+    // count on top of a refresh's.
+    private var loadJob: Job? = null
+
     fun start(site: SiteModel, remoteCommentId: Long, noteId: String? = null) {
         if (isStarted) return
         isStarted = true
         this.site = site
         this.remoteCommentId = remoteCommentId
         this.noteId = noteId
+        canModerateResult = viewModelScope.async(bgDispatcher) { siteCapabilityChecker.canModerateComments(site) }
         loadComment()
         loadModerationCapability()
     }
 
     private fun loadModerationCapability() {
         launch {
-            canModerate = withContext(bgDispatcher) { siteCapabilityChecker.canModerateComments(site) }
+            canModerate = canModerateResult.await()
             _uiState.value?.let { _uiState.value = it.copy(canModerate = canModerate) }
         }
     }
@@ -133,11 +153,56 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     fun onCommentEdited() {
         if (!isStarted) return
         _commentChanged.value = Event(Unit)
+        // The edit may have changed the author's email, which the comment count is keyed on, so the
+        // author sheet's extras are dropped and fetched afresh the next time it opens.
+        authorExtrasJob?.cancel()
+        authorExtrasJob = null
+        _uiState.value = _uiState.value?.let {
+            it.copy(authorInfo = it.authorInfo.copy(email = "", ipAddress = "", commentCount = null, bio = ""))
+        }
         loadComment()
     }
 
+    fun onAuthorInfoShown() {
+        val comment = loadedComment ?: return
+        if (authorExtrasJob != null) return
+        authorExtrasJob = launch {
+            // Best effort: a failed request just hides its row in the sheet.
+            val (details, count, bio) = withContext(bgDispatcher) {
+                coroutineScope {
+                    // Needs only the author id, which the loaded comment has, so it doesn't wait for
+                    // the edit context below.
+                    val bio = async {
+                        comment.authorId.takeIf { it > 0 }?.let { commentsRsDataSource.fetchUserBio(site, it) }
+                    }
+                    // The email and IP need the edit context, which only moderators get. Fetched here
+                    // rather than with the comment so the detail doesn't wait on the capability check.
+                    val details = if (canModerateResult.await()) {
+                        commentsRsDataSource.getComment(site, remoteCommentId, withEditContext = true) ?: comment
+                    } else {
+                        comment
+                    }
+                    val count = details.authorEmail.takeIf { it.isNotBlank() }
+                        ?.let { commentsRsDataSource.fetchAuthorCommentCount(site, it) }
+                    Triple(details, count, bio.await()?.let { HtmlUtils.fastStripHtml(it).trim() }.orEmpty())
+                }
+            }
+            _uiState.value = _uiState.value?.let {
+                it.copy(
+                    authorInfo = it.authorInfo.copy(
+                        email = details.authorEmail,
+                        ipAddress = details.authorIp,
+                        commentCount = count,
+                        bio = bio
+                    )
+                )
+            }
+        }
+    }
+
     private fun loadComment() {
-        launch {
+        loadJob?.cancel()
+        loadJob = launch {
             // On first load show the progress state. When refreshing (e.g. after an edit) keep the
             // currently displayed comment on screen instead: resetting the ui state mid-refresh
             // would make the action buttons compute toggles from a default status, and a failed
@@ -146,8 +211,15 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
             if (!isRefresh) {
                 _uiState.value = CommentDetailsUiState(showProgress = true)
             }
+            val rs = withContext(bgDispatcher) { commentsRsDataSource.getComment(site, remoteCommentId) }
+            if (rs == null) {
+                showLoadError(isRefresh)
+                return@launch
+            }
+            // Independent of the cache lookups below, so it runs alongside them, and the comment is
+            // shown without waiting for it.
+            val extras = async(bgDispatcher) { fetchParentAndReplyCount(rs) }
             val loaded = withContext(bgDispatcher) {
-                val rs = commentsRsDataSource.getComment(site, remoteCommentId)
                 var local = commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId).firstOrNull()
                 // Opened from the rs list the FluxC cache may not have this comment at all (the
                 // legacy list guaranteed a row before the detail could open). Fetch it so the
@@ -160,7 +232,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                 // Still no title (self-hosted application-password site, or the fetch failed):
                 // resolve it the way the rs list does — usually a free hit on the shared title
                 // cache the list populated moments earlier.
-                val fallbackTitle = if (local?.postTitle.isNullOrBlank() && rs != null && rs.postId > 0) {
+                val fallbackTitle = if (local?.postTitle.isNullOrBlank() && rs.postId > 0) {
                     commentsRsDataSource.fetchPostTitles(site, listOf(rs.postId))[rs.postId].orEmpty()
                 } else {
                     ""
@@ -172,45 +244,80 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                 } else {
                     false
                 }
-                CommentLoadResult(rs, local, fallbackTitle, likedFallback)
+                CommentLoadResult(local, fallbackTitle, likedFallback)
             }
-            when {
-                loaded.rsComment != null -> {
-                    loadedComment = loaded.rsComment
-                    _uiState.value = loaded.rsComment.toUiState(
-                        loaded.cached,
-                        loaded.fallbackPostTitle,
-                        loaded.fallbackIsLiked
-                    )
-                }
-                isRefresh -> showSnackbar(R.string.error_load_comment)
-                else -> _onSnackbarMessage.value = Event(
-                    SnackbarMessageHolder(
-                        message = UiStringRes(R.string.error_load_comment),
-                        onDismissAction = { _uiActionEvent.value = Event(Close) }
+            loadedComment = rs
+            val previous = _uiState.value
+            val state = rs.toUiState(loaded.cached, loaded.fallbackPostTitle, loaded.fallbackIsLiked)
+            // A refresh keeps the current parent strip and reply count until the new ones land,
+            // rather than flashing the strip away. It also keeps the author sheet's extras, which the
+            // view-context load lacks and the sheet may have fetched while the refresh was in flight.
+            _uiState.value = if (isRefresh && previous != null) {
+                state.copy(
+                    parentAuthorName = previous.parentAuthorName,
+                    parentSnippet = previous.parentSnippet,
+                    replyCount = previous.replyCount,
+                    authorInfo = state.authorInfo.copy(
+                        email = previous.authorInfo.email,
+                        ipAddress = previous.authorInfo.ipAddress,
+                        commentCount = previous.authorInfo.commentCount,
+                        bio = previous.authorInfo.bio
                     )
                 )
+            } else {
+                state
             }
+            val (parent, replies) = extras.await()
+            _uiState.value = _uiState.value?.copy(
+                parentAuthorName = parent?.authorName.orEmpty(),
+                parentSnippet = parent?.contentHtml?.let { HtmlUtils.fastStripHtml(it).trim() }.orEmpty(),
+                replyCount = replies
+            )
         }
     }
 
-    fun onApproveClicked() {
-        val newStatus = if (currentStatus() == APPROVED) UNAPPROVED else APPROVED
-        moderateComment(newStatus, closeOnSuccess = false)
+    /** A failed refresh keeps the comment on screen; a failed first load closes the screen. */
+    private fun showLoadError(isRefresh: Boolean) {
+        if (isRefresh) {
+            showSnackbar(R.string.error_load_comment)
+        } else {
+            _onSnackbarMessage.value = Event(
+                SnackbarMessageHolder(
+                    message = UiStringRes(R.string.error_load_comment),
+                    onDismissAction = { _uiActionEvent.value = Event(Close) }
+                )
+            )
+        }
     }
 
+    /** Best effort: a failure leaves the parent strip hidden and the trash prompt on generic copy. */
+    private suspend fun fetchParentAndReplyCount(rs: RsComment): Pair<RsComment?, Int?> = coroutineScope {
+        val parent = async {
+            rs.parentId.takeIf { it > 0 }?.let { commentsRsDataSource.getComment(site, it) }
+        }
+        val replies = async { commentsRsDataSource.fetchReplyCount(site, remoteCommentId) }
+        parent.await() to replies.await()
+    }
+
+    fun onApproveClicked() {
+        val approving = currentStatus() != APPROVED
+        val action = if (approving) CommentModerationAction.APPROVE else CommentModerationAction.UNAPPROVE
+        moderateComment(if (approving) APPROVED else UNAPPROVED, action)
+    }
+
+    // Only a permanent delete closes the screen; spam and trash leave the comment on screen.
     fun onSpamClicked() {
-        val newStatus = if (currentStatus() == SPAM) APPROVED else SPAM
-        moderateComment(newStatus, closeOnSuccess = newStatus == SPAM)
+        if (currentStatus() == SPAM) restoreComment() else moderateComment(SPAM, CommentModerationAction.SPAM)
     }
 
     fun onTrashClicked() {
-        val newStatus = if (currentStatus() == TRASH) APPROVED else TRASH
-        moderateComment(newStatus, closeOnSuccess = newStatus == TRASH)
+        if (currentStatus() == TRASH) restoreComment() else moderateComment(TRASH, CommentModerationAction.TRASH)
     }
 
+    fun onRestoreClicked() = restoreComment()
+
     fun onDeletePermanentlyClicked() {
-        moderateComment(DELETED, closeOnSuccess = true)
+        moderateComment(DELETED, CommentModerationAction.DELETE, closeOnSuccess = true)
     }
 
     @Suppress("ReturnCount")
@@ -267,8 +374,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
 
     @Suppress("ReturnCount")
     fun onReplyClicked(replyText: String) {
-        // Guard against a second reply while one is already in flight (fast double-tap, or the
-        // full-screen editor confirming while the inline send is still processing).
+        // Guard against a second reply while one is already in flight (e.g. a fast double-tap).
         if (_uiState.value?.isReplyInProgress == true) return
         if (replyText.isBlank()) return
         if (isOffline()) return
@@ -315,10 +421,10 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         if (isModerationInProgress) return
         isModerationInProgress = true
         try {
-            _uiState.value = _uiState.value?.copy(status = APPROVED)
+            _uiState.value = _uiState.value?.withStatus(APPROVED)
             val result = withContext(bgDispatcher) { moderate(APPROVED) }
             if (result is RsResult.Error) {
-                _uiState.value = _uiState.value?.copy(status = UNAPPROVED)
+                _uiState.value = _uiState.value?.withStatus(UNAPPROVED)
             } else {
                 // Match the legacy screen, which tracks the implicit approve when replying to an
                 // unapproved comment (this path is only reached from an unapproved comment).
@@ -333,29 +439,76 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     }
 
     @Suppress("ReturnCount")
-    private fun moderateComment(newStatus: CommentStatus, closeOnSuccess: Boolean) {
-        // The action footer stays visible while the comment loads, so ignore taps until then:
-        // before the load completes the ui state holds a default status and the toggle handlers
-        // would compute (and apply server-side) the wrong target status.
-        if (loadedComment == null) return
-        // Moderation controls are disabled without the capability; guard the action too so a stale
-        // recomposition can't fire a request the server would only reject with a 403.
-        if (!canModerate) return
-        if (isOffline()) return
-        // Guard against a second moderation while one is in flight (fast double-tap): the target
-        // status is derived from the optimistic ui state, so racing requests could compute (and
-        // apply server-side) conflicting statuses and leave the UI and server out of sync.
-        if (isModerationInProgress) return
+    /** See [CommentsRsDataSource.restore] for why the resulting status is not assumed. */
+    private fun restoreComment() {
+        if (!canStartModeration()) return
         val previousStatus = currentStatus()
         isModerationInProgress = true
+        setPendingAction(CommentModerationAction.RESTORE)
         launch {
             try {
-                _uiState.value = _uiState.value?.copy(status = newStatus)
+                when (val result = withContext(bgDispatcher) {
+                    commentsRsDataSource.restore(site, remoteCommentId)
+                }) {
+                    is CommentsRsDataSource.RsRestoreResult.Error -> {
+                        showError(result.message, R.string.error_moderate_comment)
+                    }
+                    is CommentsRsDataSource.RsRestoreResult.Success -> {
+                        _uiState.value = _uiState.value?.withStatus(result.status)
+                        withContext(bgDispatcher) { mirrorStatusToCache(result.status) }
+                        moderationStat(previousStatus, result.status)?.let { trackCommentAction(it) }
+                        _commentChanged.value = Event(Unit)
+                        if (noteId != null) _commentModerated.value = Event(result.status)
+                    }
+                }
+            } finally {
+                isModerationInProgress = false
+                setPendingAction(null)
+            }
+        }
+    }
+
+    /**
+     * Whether a moderation request may start now. One at a time matters: the target status is
+     * derived from the current ui state, so racing requests could apply conflicting statuses.
+     */
+    private fun canStartModeration(): Boolean {
+        val hasModeratableComment = loadedComment != null && canModerate
+        return hasModeratableComment && !isOffline() && !isModerationInProgress
+    }
+
+    /**
+     * Applies [status], dropping any custom-status label the previous status carried - the label
+     * only describes a status the app does not model, so it must not outlive one.
+     */
+    private fun CommentDetailsUiState.withStatus(status: CommentStatus) = copy(
+        status = status,
+        customStatusLabel = if (status == CommentStatus.ALL) customStatusLabel else ""
+    )
+
+    private fun setPendingAction(action: CommentModerationAction?) {
+        _uiState.value = _uiState.value?.copy(pendingAction = action)
+    }
+
+    private fun moderateComment(
+        newStatus: CommentStatus,
+        action: CommentModerationAction,
+        closeOnSuccess: Boolean = false
+    ) {
+        if (!canStartModeration()) return
+        val previousStatus = currentStatus()
+        isModerationInProgress = true
+        // The status changes only once the server confirms, as restore does. Flipping it first
+        // would redraw the toolbar for the destination status in the same frame, so the tapped
+        // button would be gone before its spinner could show.
+        setPendingAction(action)
+        launch {
+            try {
                 val result = withContext(bgDispatcher) { moderate(newStatus) }
                 if (result is RsResult.Error) {
-                    _uiState.value = _uiState.value?.copy(status = previousStatus)
                     showError(result.message, R.string.error_moderate_comment)
                 } else {
+                    _uiState.value = _uiState.value?.withStatus(newStatus)
                     moderationStat(previousStatus, newStatus)?.let { trackCommentAction(it) }
                     _commentChanged.value = Event(Unit)
                     if (noteId != null) {
@@ -367,6 +520,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                 }
             } finally {
                 isModerationInProgress = false
+                setPendingAction(null)
             }
         }
     }
@@ -394,6 +548,13 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
             refreshNote()
         }
         return result
+    }
+
+    /** Mirrors a server-decided status into the FluxC cache, as [moderate] does for its own writes. */
+    private suspend fun mirrorStatusToCache(newStatus: CommentStatus) {
+        commentsStore.moderateCommentLocally(site, remoteCommentId, newStatus)
+        localCommentCacheUpdateHandler.requestCommentsUpdate()
+        refreshNote()
     }
 
     /**
@@ -432,8 +593,12 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
      * a generic approve.
      */
     private fun moderationStat(previousStatus: CommentStatus, newStatus: CommentStatus): Stat? = when {
-        previousStatus == SPAM && newStatus == APPROVED -> Stat.COMMENT_UNSPAMMED
-        previousStatus == TRASH && newStatus == APPROVED -> Stat.COMMENT_UNTRASHED
+        // A restore is reported by where the comment came from, not where it landed: core returns
+        // it to its pre-spam/pre-bin status, which is pending as often as approved. Matching on
+        // APPROVED alone would file a restored-to-pending comment as a plain unapprove. Deleting
+        // from spam or the bin is not a restore, so those land on COMMENT_DELETED below.
+        previousStatus == SPAM && newStatus in RESTORED_STATUSES -> Stat.COMMENT_UNSPAMMED
+        previousStatus == TRASH && newStatus in RESTORED_STATUSES -> Stat.COMMENT_UNTRASHED
         newStatus == APPROVED -> Stat.COMMENT_APPROVED
         newStatus == UNAPPROVED -> Stat.COMMENT_UNAPPROVED
         newStatus == SPAM -> Stat.COMMENT_SPAMMED
@@ -467,17 +632,25 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         contentVisible = true,
         authorName = authorName,
         authorAvatarUrl = authorAvatarUrl,
-        datePublished = dateTimeUtilsWrapper.javaDateToTimeSpan(dateGmt),
+        // Same formatter as the rs comments list, so the date doesn't change when you open a comment.
+        datePublished = RsDateFormatter.format(dateGmt, resourceProvider.getString(R.string.rs_date_now)),
+        authorInfo = AuthorInfoUiState(
+            date = RsDateFormatter.formatDateTime(dateGmt),
+            website = authorUrl,
+            email = authorEmail,
+            ipAddress = authorIp,
+            isRegistered = if (isPingback) null else authorId > 0
+        ),
         commentText = contentHtml,
         postTitle = cached?.postTitle?.takeIf { it.isNotBlank() } ?: fallbackPostTitle,
         commentUrl = url,
         status = status,
         isLiked = cached?.iLike ?: fallbackIsLiked,
-        canModerate = canModerate
+        canModerate = canModerate,
+        customStatusLabel = if (status == CommentStatus.ALL) rawStatus else ""
     )
 
     private data class CommentLoadResult(
-        val rsComment: RsComment?,
         val cached: CommentEntity?,
         val fallbackPostTitle: String,
         val fallbackIsLiked: Boolean
@@ -489,14 +662,41 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         val authorName: String = "",
         val authorAvatarUrl: String = "",
         val datePublished: String = "",
+        val authorInfo: AuthorInfoUiState = AuthorInfoUiState(),
         val commentText: String = "",
         val postTitle: String = "",
         val commentUrl: String = "",
         val status: CommentStatus = CommentStatus.ALL,
         val isLiked: Boolean = false,
         val isReplyInProgress: Boolean = false,
-        val canModerate: Boolean = false
+        val canModerate: Boolean = false,
+        /** Blank for a top-level comment, and when the parent could not be fetched. */
+        val parentAuthorName: String = "",
+        val parentSnippet: String = "",
+        /** Set only for a status the app does not model; see [CommentsRsDataSource.RsComment]. */
+        val customStatusLabel: String = "",
+        /** The action currently in flight, so its own button can show progress. */
+        val pendingAction: CommentModerationAction? = null,
+        val replyCount: Int? = null
     )
+
+    /** The author sheet's rows; each is hidden when blank. Email and IP need edit context. */
+    data class AuthorInfoUiState(
+        val date: String = "",
+        val website: String = "",
+        val email: String = "",
+        val ipAddress: String = "",
+        /** Whether the author has an account on the site; null for a pingback, whose author is a site. */
+        val isRegistered: Boolean? = null,
+        /** Loaded when the sheet first opens; see [onAuthorInfoShown]. */
+        val commentCount: Int? = null,
+        val bio: String = ""
+    )
+
+    companion object {
+        /** Where a restore can land: core returns a comment to its pre-spam/pre-bin status. */
+        private val RESTORED_STATUSES = setOf(APPROVED, UNAPPROVED)
+    }
 }
 
 sealed class CommentDetailsActionEvent {

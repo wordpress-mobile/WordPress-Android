@@ -7,26 +7,26 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.push.NotificationType.BLOGGING_PROMPTS_ONBOARDING
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
+import org.wordpress.android.util.BuildConfigWrapper
 
 class BloggingPromptsOnboardingNotificationHandlerTest {
     private val accountStore: AccountStore = mock()
 
     private val systemNotificationsTracker: SystemNotificationsTracker = mock()
 
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper = mock()
+    private val buildConfigWrapper: BuildConfigWrapper = mock()
 
     private val classToTest = BloggingPromptsOnboardingNotificationHandler(
         accountStore,
         systemNotificationsTracker,
-        jetpackFeatureRemovalPhaseHelper
+        buildConfigWrapper
     )
 
     @Test
     fun `Should show notification if user has access token`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()).thenReturn(true)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
 
         val actual = classToTest.shouldShowNotification()
         val expected = true
@@ -45,6 +45,6 @@ class BloggingPromptsOnboardingNotificationHandlerTest {
     @Test
     fun `Should track notification shown when onNotificationShown is called`() {
         classToTest.onNotificationShown()
-        verify(systemNotificationsTracker).trackShownNotification(BLOGGING_PROMPTS_ONBOARDING)
+        verify(systemNotificationsTracker).trackShownNotification(BLOGGING_PROMPTS_ONBOARDING, null)
     }
 }

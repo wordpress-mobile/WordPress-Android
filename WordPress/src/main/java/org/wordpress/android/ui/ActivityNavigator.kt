@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import androidx.browser.customtabs.CustomTabsClient
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.app.TaskStackBuilder
 import androidx.core.net.toUri
@@ -30,11 +31,13 @@ import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomain
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
-import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
-import org.wordpress.android.ui.stats.StatsConstants
-import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity
+import org.wordpress.android.ui.newstats.NewStatsActivity
+import org.wordpress.android.ui.newstats.NewStatsRouting
+import org.wordpress.android.ui.newstats.toNewStatsTarget
+import org.wordpress.android.ui.stats.StatsTimeframe
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.sitemonitor.SiteMonitorParentActivity
 import org.wordpress.android.ui.sitemonitor.SiteMonitorType
 import org.wordpress.android.util.AppLog
@@ -45,8 +48,42 @@ import javax.inject.Singleton
 
 @Singleton
 class ActivityNavigator @Inject constructor(
-    private val selectedSiteRepository: SelectedSiteRepository
+    private val newStatsRouting: NewStatsRouting
 ) {
+    /**
+     * Opens Stats for [site], honouring the New Stats rollout. The old-stats [statsTimeframe] the
+     * deep links carry is mapped onto the closest New Stats tab and period.
+     *
+     * A null [site] falls through to the old path on purpose - it reports STATS_ACCESS_ERROR and
+     * toasts, which New Stats has no equivalent for.
+     */
+    fun openStats(context: Context, site: SiteModel?, statsTimeframe: StatsTimeframe? = null) {
+        if (site != null && newStatsRouting.isNewStatsEnabled()) {
+            val (tab, period) = statsTimeframe.toNewStatsTarget()
+            context.startActivity(
+                NewStatsActivity.buildIntent(context, StatsLaunchedFrom.LINK, tab, period, site.id)
+            )
+        } else {
+            ActivityLauncher.viewBlogStatsForTimeframe(context, site, statsTimeframe, StatsLaunchedFrom.LINK)
+        }
+    }
+
+    /**
+     * Same as [openStats], but stacked over the main activity so backing out of Stats lands on My
+     * Site rather than leaving the app. Used by the deep links that name a site.
+     */
+    fun openStatsInNewStack(context: Context, site: SiteModel, statsTimeframe: StatsTimeframe? = null) {
+        if (!newStatsRouting.isNewStatsEnabled()) {
+            ActivityLauncher.viewStatsInNewStack(context, site, statsTimeframe, StatsLaunchedFrom.LINK)
+            return
+        }
+        val (tab, period) = statsTimeframe.toNewStatsTarget()
+        TaskStackBuilder.create(context)
+            .addNextIntent(getMainActivityInNewStack(context))
+            .addNextIntent(NewStatsActivity.buildIntent(context, StatsLaunchedFrom.LINK, tab, period, site.id))
+            .startActivities()
+    }
+
     fun navigateToCampaignListingPage(context: Context, campaignListingPageSource: CampaignListingPageSource) {
         context.startActivity(
             Intent(context, BlazeCampaignParentActivity::class.java).apply {
@@ -240,6 +277,8 @@ class ActivityNavigator @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     fun openInCustomTab(activity: Activity, url: String) {
         val intent = getCustomTabsIntent(activity)
+        // Target the browser directly, otherwise our own deep-link aliases can claim WP.com post URLs
+        CustomTabsClient.getPackageName(activity, null)?.let { intent.intent.setPackage(it) }
         try {
             intent.launchUrl(activity, url.toUri())
         } catch (e: RuntimeException) {
@@ -277,26 +316,6 @@ class ActivityNavigator @Inject constructor(
             .build()
     }
 
-    /**
-     * Opens the per-post stats detail screen for a Posts & Pages item tapped in the new stats.
-     * Shows an error toast when no site is selected.
-     */
-    fun openPostDetailStats(context: Context, postId: Long, postType: String?, postTitle: String, postUrl: String?) {
-        val site = selectedSiteRepository.getSelectedSite() ?: run {
-            ToastUtils.showToast(context, R.string.blog_not_found, ToastUtils.Duration.SHORT)
-            return
-        }
-        AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED)
-        StatsDetailActivity.start(
-            context = context,
-            site = site,
-            postId = postId,
-            postType = statsDetailItemType(postType),
-            postTitle = postTitle,
-            postUrl = postUrl
-        )
-    }
-
     fun navigateToApplicationPasswordReauthentication(activity: Activity, authenticationUrl: String) {
         val intent = Intent(activity, ApplicationPasswordReauthenticateDialogActivity::class.java)
         intent.putExtra(ApplicationPasswordDialogActivity.EXTRA_SITE_URL, authenticationUrl)
@@ -308,13 +327,4 @@ class ActivityNavigator @Inject constructor(
             ApplicationPasswordRequiredDialogActivity.createIntent(activity, site, featureName)
         )
     }
-}
-
-/**
- * Maps the API post type of a Posts & Pages item to the item type expected by the post detail
- * stats screen, mirroring the old stats mapping (pages and the homepage share one detail layout).
- */
-internal fun statsDetailItemType(postType: String?): String = when (postType) {
-    StatsConstants.ITEM_TYPE_POST, StatsConstants.ITEM_TYPE_ATTACHMENT -> postType
-    else -> StatsConstants.ITEM_TYPE_HOME_PAGE
 }

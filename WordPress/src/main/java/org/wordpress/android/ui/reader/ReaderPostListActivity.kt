@@ -7,10 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.widget.Toolbar
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.os.BundleCompat
-import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -31,9 +28,9 @@ import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.EditorConstants
 import org.wordpress.android.ui.posts.EditorLauncher
+import org.wordpress.android.ui.reader.ReaderInterfaces.OnBlogInfoFailedListener
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
-import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView.OnBlogInfoFailedListener
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
@@ -137,12 +134,6 @@ class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener
         }
     }
 
-    override fun onResumeFragments() {
-        super.onResumeFragments()
-        // this particular Activity doesn't show filtering, so we'll disable the FilteredRecyclerView toolbar here
-        disableFilteredRecyclerViewToolbar()
-    }
-
     override fun onResume() {
         super.onResume()
         // We register the dispatcher in order to receive the OnPostUploaded event and show the snackbar
@@ -177,27 +168,6 @@ class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener
             binding.toolbarMain.setNavigationOnClickListener {
                 finish()
             }
-        }
-    }
-
-    /*
-     * This method hides the FilteredRecyclerView toolbar with spinner so to disable content filtering. These
-     * views are not part of this activity.
-     */
-    private fun disableFilteredRecyclerViewToolbar() {
-        // make it invisible - setting height to zero here because setting visibility to View.GONE wouldn't take the
-        // occupied space, as otherwise expected
-        findViewById<AppBarLayout>(R.id.app_bar_layout)?.let { appBarLayout ->
-            val params = appBarLayout.layoutParams as CoordinatorLayout.LayoutParams
-            params.height = 0
-            appBarLayout.layoutParams = params
-        }
-
-        // disabling any CoordinatorLayout behavior for scrolling
-        findViewById<Toolbar>(R.id.toolbar_with_spinner)?.let { toolbarWithSpinner ->
-            val params = toolbarWithSpinner.layoutParams as AppBarLayout.LayoutParams
-            params.scrollFlags = 0
-            toolbarWithSpinner.layoutParams = params
         }
     }
 

@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
+import org.wordpress.android.ui.newstats.analytics.cardMoveIndices
 import java.util.concurrent.atomic.AtomicBoolean
 import org.wordpress.android.ui.newstats.repository.SubscribersCardsConfigurationRepository
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -18,7 +20,8 @@ class SubscribersTabViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val cardConfigurationRepository:
         SubscribersCardsConfigurationRepository,
-    private val networkUtilsWrapper: NetworkUtilsWrapper
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val newStatsTracker: NewStatsTracker
 ) : ViewModel() {
     private val _visibleCards = MutableStateFlow<
         List<SubscribersCardType>>(
@@ -97,24 +100,62 @@ class SubscribersTabViewModel @Inject constructor(
         }
     }
 
-    fun removeCard(cardType: SubscribersCardType) =
+    fun removeCard(cardType: SubscribersCardType) {
+        newStatsTracker.trackCardRemoved(cardType)
         cardAction { removeCard(it, cardType) }
+    }
 
-    fun addCard(cardType: SubscribersCardType) =
+    fun addCard(cardType: SubscribersCardType) {
+        newStatsTracker.trackCardAdded(cardType)
         cardAction { addCard(it, cardType) }
+    }
 
-    fun moveCardUp(cardType: SubscribersCardType) =
+    fun moveCardUp(cardType: SubscribersCardType) {
+        trackCardMoved(
+            cardType,
+            NewStatsTracker.CardMoveDirection.UP
+        )
         cardAction { moveCardUp(it, cardType) }
+    }
 
-    fun moveCardToTop(cardType: SubscribersCardType) =
+    fun moveCardToTop(cardType: SubscribersCardType) {
+        trackCardMoved(
+            cardType,
+            NewStatsTracker.CardMoveDirection.TOP
+        )
         cardAction { moveCardToTop(it, cardType) }
+    }
 
-    fun moveCardDown(cardType: SubscribersCardType) =
+    fun moveCardDown(cardType: SubscribersCardType) {
+        trackCardMoved(
+            cardType,
+            NewStatsTracker.CardMoveDirection.DOWN
+        )
         cardAction { moveCardDown(it, cardType) }
+    }
 
     fun moveCardToBottom(
         cardType: SubscribersCardType
-    ) = cardAction { moveCardToBottom(it, cardType) }
+    ) {
+        trackCardMoved(
+            cardType,
+            NewStatsTracker.CardMoveDirection.BOTTOM
+        )
+        cardAction { moveCardToBottom(it, cardType) }
+    }
+
+    private fun trackCardMoved(
+        cardType: SubscribersCardType,
+        direction: NewStatsTracker.CardMoveDirection
+    ) {
+        _visibleCards.value
+            .cardMoveIndices(cardType, direction)
+            ?.let { (from, to) ->
+                newStatsTracker.trackCardMoved(
+                    cardType, direction, from, to
+                )
+            }
+    }
 
     private fun cardAction(
         action: suspend SubscribersCardsConfigurationRepository.(Long) -> Unit

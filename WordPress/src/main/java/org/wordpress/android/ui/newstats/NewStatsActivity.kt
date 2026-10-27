@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,22 +23,26 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -53,10 +58,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -67,6 +75,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.components.FeedbackDialog
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -100,6 +109,7 @@ import org.wordpress.android.ui.newstats.utm.UtmDetailActivity
 import org.wordpress.android.ui.newstats.utm.UtmViewModel
 import org.wordpress.android.ui.newstats.filedownloads.FileDownloadsViewModel
 import org.wordpress.android.ui.newstats.locations.LocationsCardUiState
+import org.wordpress.android.ui.newstats.archives.ArchivesViewModel
 import org.wordpress.android.ui.newstats.searchterms.SearchTermsViewModel
 import org.wordpress.android.ui.newstats.videoplays.VideoPlaysViewModel
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsCard
@@ -108,8 +118,11 @@ import org.wordpress.android.ui.newstats.subscribers.SubscribersTabContent
 import android.widget.Toast
 import org.wordpress.android.ui.newstats.alltimestats.AllTimeStatsCard
 import org.wordpress.android.ui.newstats.alltimestats.AllTimeStatsViewModel
+import org.wordpress.android.ui.newstats.latestpost.LatestPostCard
+import org.wordpress.android.ui.newstats.latestpost.LatestPostViewModel
 import org.wordpress.android.ui.newstats.mostpopularday.MostPopularDayCard
 import org.wordpress.android.ui.newstats.mostpopularday.MostPopularDayViewModel
+import org.wordpress.android.ui.newstats.poststats.PostStatsDetailActivity
 import org.wordpress.android.ui.newstats.mostpopulartime.MostPopularTimeCard
 import org.wordpress.android.ui.newstats.mostpopulartime.MostPopularTimeViewModel
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewCard
@@ -118,16 +131,29 @@ import org.wordpress.android.ui.newstats.tagsandcategories.TagsAndCategoriesDeta
 import org.wordpress.android.ui.newstats.tagsandcategories.TagsAndCategoriesViewModel
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewDetailActivity
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewViewModel
+import org.wordpress.android.ui.newstats.util.DateRangeLabel
 import org.wordpress.android.ui.newstats.util.ProvideShimmerBrush
+import org.wordpress.android.ui.newstats.util.RangeLine
+import org.wordpress.android.ui.newstats.util.formatCustomDateRangeTwoLine
+import org.wordpress.android.ui.newstats.util.toContentDescription
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.components.NewStatsIntroBottomSheet
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
+import org.wordpress.android.ui.stats.refresh.utils.trackStatsAccessed
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import java.time.Year
+import java.util.Locale
 import javax.inject.Inject
+
+// Opacity of a navigation control (forward at the present edge, back at the year floor) when it is
+// disabled. The enabled controls use full onSurface, so 50% reads as clearly dimmed against them
+// while still staying visible (rather than disappearing) at the edge, matching iOS parity.
+private const val DISABLED_CONTROL_ALPHA = 0.5f
 
 @AndroidEntryPoint
 class NewStatsActivity : BaseAppCompatActivity() {
@@ -144,18 +170,31 @@ class NewStatsActivity : BaseAppCompatActivity() {
     lateinit var analyticsTracker: AnalyticsTrackerWrapper
 
     @Inject
+    lateinit var newStatsTracker: NewStatsTracker
+
+    @Inject
     lateinit var newStatsRouting: NewStatsRouting
 
     @Inject
     lateinit var activityNavigator: ActivityNavigator
+
+    // The same instance the composables below obtain with viewModel(): both resolve against this
+    // activity's ViewModelStore.
+    private val newStatsViewModel: NewStatsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // New Stats always shows the currently selected site, so when launched for a specific
         // site (e.g. from a stats widget) we select that site before rendering the screen.
         selectSiteFromIntentIfNeeded()
+        // Only on a fresh launch - a rotation or process death recreates the activity from the same
+        // Intent, and re-tracking there would inflate the count against whichever source opened it.
+        if (savedInstanceState == null) {
+            trackStatsAccessed()
+        }
         val shouldShowIntro =
             !appPrefsWrapper.getNewStatsIntroShown()
+        val initialTab = StatsTab.fromName(intent?.getStringExtra(KEY_INITIAL_TAB))
         setContent {
             AppThemeM3 {
                 var showFeedbackDialog by rememberSaveable { mutableStateOf(false) }
@@ -175,6 +214,7 @@ class NewStatsActivity : BaseAppCompatActivity() {
                 }
 
                 NewStatsScreen(
+                    initialTab = initialTab,
                     onBackPressed =
                         onBackPressedDispatcher::onBackPressed,
                     onSwitchToOldStats = {
@@ -186,13 +226,59 @@ class NewStatsActivity : BaseAppCompatActivity() {
                         appPrefsWrapper
                             .setNewStatsIntroShown(true)
                     },
-                    onStatsUrlClick = { url ->
-                        activityNavigator.openInCustomTab(this, url)
-                    },
-                    onPostItemClick = ::openPostDetailStats
+                    onTrafficRowUrlClick = ::openTrafficRowUrl,
+                    onInsightsRowUrlClick = ::openInsightsRowUrl,
+                    onExplorePlansClick = ::openPlans,
+                    onPostItemClick = ::openPostDetailStats,
+                    onLatestPostClick = ::openLatestPostStats,
+                    onCreatePostClick = ::createNewPost
                 )
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Coming back counts as entering the screen, including after hours in the background: what
+        // the cards still hold in memory may no longer be current, so each one refreshes it once the
+        // next time it loads.
+        newStatsViewModel.onScreenEntered()
+    }
+
+    /**
+     * Mirrors what old Stats reports from StatsViewModel, so the two screens stay comparable in
+     * analytics for the length of the rollout. Called after [selectSiteFromIntentIfNeeded] so the
+     * site reported is the one about to render.
+     */
+    private fun trackStatsAccessed() {
+        // No selected site means nothing to attribute the open to, so skip rather than report a
+        // half-formed event. Old Stats toasts here instead, from ActivityLauncher.
+        val site = selectedSiteRepository.getSelectedSite() ?: return
+        val name = intent?.getStringExtra(KEY_LAUNCHED_FROM)
+        val launchedFrom = StatsLaunchedFrom.entries.firstOrNull { it.name == name }
+        analyticsTracker.trackStatsAccessed(
+            site,
+            tapSource = launchedFrom?.value.orEmpty(),
+            isNewStats = true
+        )
+        // The New-Stats-only open event, which carries no tap source. Reported alongside the shared
+        // one above rather than instead of it: that one keeps the two screens comparable, this one
+        // lines the screen up with iOS, where it is the only open event New Stats sends.
+        newStatsTracker.trackMainScreenShown()
+    }
+
+    /**
+     * Opens the page behind a stats row (a referrer, an outbound click, a tag). [cardType] is the
+     * list the row came from, which is all that is reported - never the URL itself.
+     */
+    private fun openTrafficRowUrl(cardType: StatsCardType, url: String) {
+        newStatsTracker.trackTopListItemTapped(cardType)
+        activityNavigator.openInCustomTab(this, url)
+    }
+
+    private fun openInsightsRowUrl(cardType: InsightsCardType, url: String) {
+        newStatsTracker.trackTopListItemTapped(cardType)
+        activityNavigator.openInCustomTab(this, url)
     }
 
     private fun selectSiteFromIntentIfNeeded() {
@@ -205,7 +291,46 @@ class NewStatsActivity : BaseAppCompatActivity() {
     }
 
     private fun openPostDetailStats(item: MostViewedItem) {
-        activityNavigator.openPostDetailStats(this, item.id, item.postType, item.title, item.url)
+        analyticsTracker.track(
+            Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED,
+            selectedSiteRepository.getSelectedSite()
+        )
+        newStatsTracker.trackTopListItemTapped(StatsCardType.MOST_VIEWED_POSTS_AND_PAGES)
+        PostStatsDetailActivity.start(this, item.id, item.title)
+    }
+
+    private fun openLatestPostStats(postId: Long, title: String) {
+        analyticsTracker.track(
+            Stat.STATS_LATEST_POST_SUMMARY_VIEW_POST_DETAILS_TAPPED,
+            selectedSiteRepository.getSelectedSite()
+        )
+        newStatsTracker.trackTopListItemTapped(InsightsCardType.LATEST_POST)
+        PostStatsDetailActivity.start(this, postId, title)
+    }
+
+    /**
+     * Opens the plans page for a stat the site's plan does not include, from the upsell shown in
+     * place of that card's data.
+     */
+    private fun openPlans(upgradeUrl: String, cardType: StatsCardType) {
+        analyticsTracker.track(
+            Stat.STATS_FEATURE_GATE_EXPLORE_PLANS_TAPPED,
+            mapOf("feature" to cardType.name.lowercase(Locale.ROOT))
+        )
+        activityNavigator.openInCustomTab(this, upgradeUrl)
+    }
+
+    private fun createNewPost() {
+        selectedSiteRepository.getSelectedSite()?.let { site ->
+            ActivityLauncher.addNewPostForResult(
+                this,
+                site,
+                false,
+                PagePostCreationSourcesDetail.POST_FROM_STATS,
+                -1,
+                null
+            )
+        }
     }
 
     /**
@@ -213,7 +338,7 @@ class NewStatsActivity : BaseAppCompatActivity() {
      * finishing this activity straight away would tear the dialog down with it.
      */
     private fun switchToOldStats() {
-        analyticsTracker.track(Stat.STATS_NEW_STATS_DISABLED)
+        analyticsTracker.track(Stat.STATS_NEW_STATS_DISABLED, selectedSiteRepository.getSelectedSite())
         newStatsRouting.optOut()
     }
 
@@ -238,29 +363,49 @@ class NewStatsActivity : BaseAppCompatActivity() {
     companion object {
         private const val FEEDBACK_PREFIX_STATS = "Stats"
 
+        private const val KEY_INITIAL_TAB = "initial_tab"
+        private const val KEY_LAUNCHED_FROM = "launched_from"
+
         /**
          * Opens New Stats, optionally on a specific [period]. The period is passed as an Intent
          * extra that seeds [ViewsStatsViewModel]'s SavedStateHandle, so it takes precedence over the
          * persisted period without overwriting it.
          */
-        fun start(context: Context, period: StatsPeriod? = null) {
-            val intent = Intent(context, NewStatsActivity::class.java)
+        fun start(context: Context, launchedFrom: StatsLaunchedFrom, period: StatsPeriod? = null) {
+            context.startActivity(buildIntent(context, launchedFrom, period = period))
+        }
+
+        /**
+         * [launchedFrom] is required rather than defaulted so a new entry point can't quietly ship
+         * without a tap source - New Stats reports STATS_ACCESSED the same way old Stats does.
+         *
+         * New Stats always renders the currently selected site, so [localSiteId] travels as the same
+         * LOCAL_SITE_ID extra the stats widgets use and is applied by [selectSiteFromIntentIfNeeded]
+         * before the screen is composed.
+         */
+        fun buildIntent(
+            context: Context,
+            launchedFrom: StatsLaunchedFrom,
+            tab: StatsTab = StatsTab.TRAFFIC,
+            period: StatsPeriod? = null,
+            localSiteId: Int? = null
+        ): Intent = Intent(context, NewStatsActivity::class.java).apply {
+            localSiteId?.let { putExtra(WordPress.LOCAL_SITE_ID, it) }
+            // Enums travel by name, not as Serializable. WidgetUtils uses this Intent as a
+            // setPendingIntentTemplate target, and the per-row fill-in is merged by system_server,
+            // which has no classloader for our types - Intent.fillIn would swallow the resulting
+            // exception and silently drop the row's LOCAL_SITE_ID, opening the wrong site.
+            putExtra(KEY_LAUNCHED_FROM, launchedFrom.name)
+            putExtra(KEY_INITIAL_TAB, tab.name)
             period?.let {
-                intent.putExtra(ViewsStatsViewModel.KEY_PERIOD_TYPE, it.toTypeString())
+                putExtra(ViewsStatsViewModel.KEY_PERIOD_TYPE, it.toTypeString())
                 if (it is StatsPeriod.Custom) {
-                    intent.putExtra(ViewsStatsViewModel.KEY_CUSTOM_START_DATE, it.startDate.toEpochDay())
-                    intent.putExtra(ViewsStatsViewModel.KEY_CUSTOM_END_DATE, it.endDate.toEpochDay())
+                    putExtra(ViewsStatsViewModel.KEY_CUSTOM_START_DATE, it.startDate.toEpochDay())
+                    putExtra(ViewsStatsViewModel.KEY_CUSTOM_END_DATE, it.endDate.toEpochDay())
                 }
             }
-            context.startActivity(intent)
         }
     }
-}
-
-private enum class StatsTab(val titleResId: Int) {
-    TRAFFIC(R.string.stats_traffic),
-    INSIGHTS(R.string.stats_insights),
-    SUBSCRIBERS(R.string.subscribers)
 }
 
 @Composable
@@ -302,18 +447,45 @@ private fun StatsOverflowMenu(
 @Composable
 private fun NewStatsScreen(
     onBackPressed: () -> Unit,
+    initialTab: StatsTab = StatsTab.TRAFFIC,
     onSwitchToOldStats: () -> Unit = {},
     showIntroBottomSheet: Boolean = false,
     onIntroDismissed: () -> Unit = {},
-    onStatsUrlClick: (String) -> Unit = {},
-    onPostItemClick: (MostViewedItem) -> Unit = {}
+    onTrafficRowUrlClick: (StatsCardType, String) -> Unit = { _, _ -> },
+    onInsightsRowUrlClick: (InsightsCardType, String) -> Unit = { _, _ -> },
+    onExplorePlansClick: (String, StatsCardType) -> Unit = { _, _ -> },
+    onPostItemClick: (MostViewedItem) -> Unit = {},
+    onLatestPostClick: (Long, String) -> Unit = { _, _ -> },
+    onCreatePostClick: () -> Unit = {}
 ) {
     val viewsStatsViewModel: ViewsStatsViewModel = viewModel()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
+    // The label reflects a soft bar selection (effectivePeriod) so the range shown matches the cards;
+    // the menu checkmark and paging arrows stay on the committed selectedPeriod.
+    val effectivePeriod by viewsStatsViewModel.effectivePeriod.collectAsState()
+    val canNavigateBackward by viewsStatsViewModel.canNavigateBackward.collectAsState()
+    val canNavigateForward by viewsStatsViewModel.canNavigateForward.collectAsState()
 
     val tabs = StatsTab.entries
-    val pagerState = rememberPagerState(pageCount = { tabs.size })
+    val pagerState = rememberPagerState(initialPage = initialTab.ordinal, pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
+    // The same NewStatsViewModel instance the tab contents use: both resolve against the activity's
+    // ViewModelStore, so this is where the screen-level events can reach a tracker.
+    val newStatsViewModel: NewStatsViewModel = viewModel()
+    // Keyed on settledPage, not currentPage, so a swipe the user drags back doesn't report a tab they
+    // never landed on. Saved across configuration changes so a rotation doesn't re-report the tab
+    // already on screen - the same reason onCreate only tracks on a fresh launch.
+    var lastReportedTab by rememberSaveable { mutableStateOf<String?>(null) }
+    LaunchedEffect(pagerState.settledPage) {
+        val tab = tabs[pagerState.settledPage]
+        val previous = lastReportedTab?.let(StatsTab::fromName)
+        lastReportedTab = tab.name
+        // Null on the first pass: the tab the screen opened on was not navigated to.
+        if (previous != null && previous != tab) {
+            newStatsViewModel.onTabSelected(from = previous, to = tab)
+        }
+        if (previous != tab) newStatsViewModel.onTabShown(tab)
+    }
     var showPeriodMenu by remember { mutableStateOf(false) }
     var showIntro by remember { mutableStateOf(showIntroBottomSheet) }
     val introSheetState = rememberModalBottomSheetState(
@@ -335,7 +507,7 @@ private fun NewStatsScreen(
         StatsDateRangePickerDialog(
             onDismiss = { showDateRangePicker = false },
             onDateRangeSelected = { startDate, endDate ->
-                viewsStatsViewModel.onPeriodChanged(StatsPeriod.Custom(startDate, endDate))
+                viewsStatsViewModel.onCustomRangeSelected(startDate, endDate)
                 showDateRangePicker = false
             }
         )
@@ -343,9 +515,101 @@ private fun NewStatsScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
+                // The Traffic date selector (with its paging arrows) lives in the centred title
+                // slot so it stays centred in the app bar. The other tabs have no selector, so they
+                // fall back to a centred "Stats" title rather than leaving the bar empty. Only the
+                // overflow menu stays in actions.
                 title = {
-                    Text(text = stringResource(id = R.string.stats))
+                    val currentTab = tabs[pagerState.currentPage]
+                    if (currentTab == StatsTab.TRAFFIC) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            IconButton(
+                                onClick = { viewsStatsViewModel.onNavigatePrevious() },
+                                enabled = canNavigateBackward,
+                                colors = IconButtonDefaults.iconButtonColors(
+                                    contentColor = MaterialTheme.colorScheme.onSurface,
+                                    disabledContentColor = MaterialTheme.colorScheme.onSurface
+                                        .copy(alpha = DISABLED_CONTROL_ALPHA)
+                                )
+                            ) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                                    contentDescription = stringResource(
+                                        R.string.stats_period_previous_content_description
+                                    )
+                                )
+                            }
+                            Box {
+                                Row(
+                                    verticalAlignment =
+                                        Alignment.CenterVertically,
+                                    modifier = Modifier
+                                        .clickable {
+                                            showPeriodMenu = true
+                                        }
+                                        .padding(horizontal = 8.dp)
+                                ) {
+                                    PeriodLabel(
+                                        label = effectivePeriod
+                                            .getDisplayLabel()
+                                    )
+                                    Icon(
+                                        imageVector =
+                                            Icons.Default.DateRange,
+                                        contentDescription =
+                                            stringResource(
+                                                R.string
+                                                    .stats_period_selector_content_description
+                                            ),
+                                        modifier = Modifier
+                                            .padding(start = 4.dp)
+                                    )
+                                }
+                                StatsPeriodMenu(
+                                    expanded = showPeriodMenu,
+                                    // While a bar is soft-selected effectivePeriod differs from the
+                                    // committed range, so show no item as selected (the label shows
+                                    // the bar's date instead).
+                                    selectedPeriod = selectedPeriod
+                                        .takeIf { effectivePeriod == it },
+                                    onDismiss = {
+                                        showPeriodMenu = false
+                                    },
+                                    onPresetSelected = { period ->
+                                        viewsStatsViewModel
+                                            .onPresetSelected(period)
+                                        showPeriodMenu = false
+                                    },
+                                    onCustomSelected = {
+                                        showPeriodMenu = false
+                                        showDateRangePicker = true
+                                    }
+                                )
+                            }
+                            // Forward stays visible but dimmed at the present edge (there is no later
+                            // period to page to) rather than disappearing, matching iOS. See
+                            // DISABLED_CONTROL_ALPHA for why the disabled color is set explicitly.
+                            IconButton(
+                                onClick = { viewsStatsViewModel.onNavigateNext() },
+                                enabled = canNavigateForward,
+                                colors = IconButtonDefaults.iconButtonColors(
+                                    contentColor = MaterialTheme.colorScheme.onSurface,
+                                    disabledContentColor = MaterialTheme.colorScheme.onSurface
+                                        .copy(alpha = DISABLED_CONTROL_ALPHA)
+                                )
+                            ) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                    contentDescription = stringResource(
+                                        R.string.stats_period_next_content_description
+                                    )
+                                )
+                            }
+                        }
+                    } else {
+                        Text(text = stringResource(id = R.string.stats))
+                    }
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {
@@ -356,56 +620,6 @@ private fun NewStatsScreen(
                     }
                 },
                 actions = {
-                    val currentTab = tabs[pagerState.currentPage]
-                    if (currentTab == StatsTab.TRAFFIC) {
-                        Box {
-                            Row(
-                                verticalAlignment =
-                                    Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .clickable {
-                                        showPeriodMenu = true
-                                    }
-                                    .padding(horizontal = 8.dp)
-                            ) {
-                                Text(
-                                    text = selectedPeriod
-                                        .getDisplayLabel(),
-                                    style = MaterialTheme
-                                        .typography.labelLarge,
-                                    color = MaterialTheme
-                                        .colorScheme.onSurface
-                                )
-                                Icon(
-                                    imageVector =
-                                        Icons.Default.DateRange,
-                                    contentDescription =
-                                        stringResource(
-                                            R.string
-                                                .stats_period_selector_content_description
-                                        ),
-                                    modifier = Modifier
-                                        .padding(start = 4.dp)
-                                )
-                            }
-                            StatsPeriodMenu(
-                                expanded = showPeriodMenu,
-                                selectedPeriod = selectedPeriod,
-                                onDismiss = {
-                                    showPeriodMenu = false
-                                },
-                                onPresetSelected = { period ->
-                                    viewsStatsViewModel
-                                        .onPeriodChanged(period)
-                                    showPeriodMenu = false
-                                },
-                                onCustomSelected = {
-                                    showPeriodMenu = false
-                                    showDateRangePicker = true
-                                }
-                            )
-                        }
-                    }
                     StatsOverflowMenu(
                         onSwitchToOldStats = onSwitchToOldStats
                     )
@@ -447,8 +661,12 @@ private fun NewStatsScreen(
                 StatsTabContent(
                     tab = tabs[page],
                     viewsStatsViewModel = viewsStatsViewModel,
-                    onStatsUrlClick = onStatsUrlClick,
-                    onPostItemClick = onPostItemClick
+                    onTrafficRowUrlClick = onTrafficRowUrlClick,
+                    onInsightsRowUrlClick = onInsightsRowUrlClick,
+                    onExplorePlansClick = onExplorePlansClick,
+                    onPostItemClick = onPostItemClick,
+                    onLatestPostClick = onLatestPostClick,
+                    onCreatePostClick = onCreatePostClick
                 )
             }
         }
@@ -459,17 +677,24 @@ private fun NewStatsScreen(
 private fun StatsTabContent(
     tab: StatsTab,
     viewsStatsViewModel: ViewsStatsViewModel,
-    onStatsUrlClick: (String) -> Unit = {},
-    onPostItemClick: (MostViewedItem) -> Unit = {}
+    onTrafficRowUrlClick: (StatsCardType, String) -> Unit = { _, _ -> },
+    onInsightsRowUrlClick: (InsightsCardType, String) -> Unit = { _, _ -> },
+    onExplorePlansClick: (String, StatsCardType) -> Unit = { _, _ -> },
+    onPostItemClick: (MostViewedItem) -> Unit = {},
+    onLatestPostClick: (Long, String) -> Unit = { _, _ -> },
+    onCreatePostClick: () -> Unit = {}
 ) {
     when (tab) {
         StatsTab.TRAFFIC -> TrafficTabContent(
             viewsStatsViewModel = viewsStatsViewModel,
-            onStatsUrlClick = onStatsUrlClick,
+            onRowUrlClick = onTrafficRowUrlClick,
+            onExplorePlansClick = onExplorePlansClick,
             onPostItemClick = onPostItemClick
         )
         StatsTab.INSIGHTS -> InsightsTabContent(
-            onStatsUrlClick = onStatsUrlClick
+            onRowUrlClick = onInsightsRowUrlClick,
+            onLatestPostClick = onLatestPostClick,
+            onCreatePostClick = onCreatePostClick
         )
         StatsTab.SUBSCRIBERS -> SubscribersTabContent()
     }
@@ -490,8 +715,10 @@ private fun TrafficTabContent(
     fileDownloadsViewModel: FileDownloadsViewModel = viewModel(),
     devicesViewModel: DevicesViewModel = viewModel(),
     utmViewModel: UtmViewModel = viewModel(),
+    archivesViewModel: ArchivesViewModel = viewModel(),
     newStatsViewModel: NewStatsViewModel = viewModel(),
-    onStatsUrlClick: (String) -> Unit = {},
+    onRowUrlClick: (StatsCardType, String) -> Unit = { _, _ -> },
+    onExplorePlansClick: (String, StatsCardType) -> Unit = { _, _ -> },
     onPostItemClick: (MostViewedItem) -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -510,7 +737,10 @@ private fun TrafficTabContent(
     val selectedDeviceType by devicesViewModel.selectedDeviceType.collectAsState()
     val utmUiState by utmViewModel.uiState.collectAsState()
     val selectedUtmCategory by utmViewModel.selectedCategory.collectAsState()
-    val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
+    val archivesUiState by archivesViewModel.uiState.collectAsState()
+    // The period the non-Views cards should reflect: the soft-selected bar's period when one is
+    // selected, otherwise the committed period. The Views chart itself stays bound to its own period.
+    val effectivePeriod by viewsStatsViewModel.effectivePeriod.collectAsState()
     val isTodaysStatsRefreshing by todaysStatsViewModel.isRefreshing.collectAsState()
     val isViewsStatsRefreshing by viewsStatsViewModel.isRefreshing.collectAsState()
     val isMostViewedPostsRefreshing by mostViewedViewModel
@@ -528,13 +758,14 @@ private fun TrafficTabContent(
         .isRefreshing.collectAsState()
     val isDevicesRefreshing by devicesViewModel.isRefreshing.collectAsState()
     val isUtmRefreshing by utmViewModel.isRefreshing.collectAsState()
+    val isArchivesRefreshing by archivesViewModel.isRefreshing.collectAsState()
     val isRefreshing = listOf(
         isTodaysStatsRefreshing, isViewsStatsRefreshing,
         isMostViewedPostsRefreshing, isMostViewedReferrersRefreshing,
         isLocationsRefreshing, isAuthorsRefreshing,
         isClicksRefreshing, isSearchTermsRefreshing,
         isVideoPlaysRefreshing, isFileDownloadsRefreshing,
-        isDevicesRefreshing, isUtmRefreshing
+        isDevicesRefreshing, isUtmRefreshing, isArchivesRefreshing
     ).any { it }
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -552,42 +783,47 @@ private fun TrafficTabContent(
     // preventing data fetches for the default card set before the real config is known.
     // isPeriodInitialized prevents fetching with a stale default period before the
     // persisted period is restored from preferences.
-    LaunchedEffect(selectedPeriod, cardsToLoad, isPeriodInitialized) {
+    LaunchedEffect(effectivePeriod, cardsToLoad, isPeriodInitialized) {
         if (!isPeriodInitialized) return@LaunchedEffect
         cardsToLoad.dispatchToVisibleCards(
             onTodaysStats = { todaysStatsViewModel.loadDataIfNeeded() },
+            // Views stays bound to its own committed period, so a soft bar selection (which only moves
+            // effectivePeriod) leaves the chart frozen; loadDataIfNeeded no-ops on an unchanged period.
             onViewsStats = { viewsStatsViewModel.loadDataIfNeeded() },
             onMostViewedPosts = {
-                mostViewedViewModel.onPeriodChangedPosts(selectedPeriod)
+                mostViewedViewModel.onPeriodChangedPosts(effectivePeriod)
             },
             onMostViewedReferrers = {
                 mostViewedViewModel.onPeriodChangedReferrers(
-                    selectedPeriod
+                    effectivePeriod
                 )
             },
             onLocations = {
-                locationsViewModel.onPeriodChanged(selectedPeriod)
+                locationsViewModel.onPeriodChanged(effectivePeriod)
             },
             onAuthors = {
-                authorsViewModel.onPeriodChanged(selectedPeriod)
+                authorsViewModel.onPeriodChanged(effectivePeriod)
             },
             onClicks = {
-                clicksViewModel.onPeriodChanged(selectedPeriod)
+                clicksViewModel.onPeriodChanged(effectivePeriod)
             },
             onSearchTerms = {
-                searchTermsViewModel.onPeriodChanged(selectedPeriod)
+                searchTermsViewModel.onPeriodChanged(effectivePeriod)
             },
             onVideoPlays = {
-                videoPlaysViewModel.onPeriodChanged(selectedPeriod)
+                videoPlaysViewModel.onPeriodChanged(effectivePeriod)
             },
             onFileDownloads = {
-                fileDownloadsViewModel.onPeriodChanged(selectedPeriod)
+                fileDownloadsViewModel.onPeriodChanged(effectivePeriod)
             },
             onDevices = {
-                devicesViewModel.onPeriodChanged(selectedPeriod)
+                devicesViewModel.onPeriodChanged(effectivePeriod)
             },
             onUtm = {
-                utmViewModel.onPeriodChanged(selectedPeriod)
+                utmViewModel.onPeriodChanged(effectivePeriod)
+            },
+            onArchives = {
+                archivesViewModel.onPeriodChanged(effectivePeriod)
             }
         )
     }
@@ -622,7 +858,8 @@ private fun TrafficTabContent(
             onVideoPlays = { videoPlaysViewModel.loadData() },
             onFileDownloads = { fileDownloadsViewModel.loadData() },
             onDevices = { devicesViewModel.loadData() },
-            onUtm = { utmViewModel.loadData() }
+            onUtm = { utmViewModel.loadData() },
+            onArchives = { archivesViewModel.loadData() }
         )
     }
 
@@ -655,6 +892,9 @@ private fun TrafficTabContent(
         isRefreshing = isRefreshing,
         state = pullToRefreshState,
         onRefresh = {
+            // Empty the cache first, synchronously: the refreshes dispatched below must all reach the
+            // network, and a coroutine hop here would race them.
+            newStatsViewModel.invalidateStatsCache()
             newStatsViewModel.checkNetworkStatus()
             visibleCards.dispatchToVisibleCards(
                 onTodaysStats = { todaysStatsViewModel.refresh() },
@@ -674,7 +914,8 @@ private fun TrafficTabContent(
                     fileDownloadsViewModel.refresh()
                 },
                 onDevices = { devicesViewModel.refresh() },
-                onUtm = { utmViewModel.refresh() }
+                onUtm = { utmViewModel.refresh() },
+                onArchives = { archivesViewModel.refresh() }
             )
         },
         indicator = {
@@ -729,7 +970,9 @@ private fun TrafficTabContent(
                     StatsCardType.VIEWS_STATS -> ViewsStatsCard(
                         uiState = viewsStatsUiState,
                         onChartTypeChanged = viewsStatsViewModel::onChartTypeChanged,
+                        onMetricSelected = viewsStatsViewModel::onMetricSelected,
                         onBarTapped = viewsStatsViewModel::onBarTapped,
+                        onDrillIntoSelectedBar = viewsStatsViewModel::onDrillIntoSelectedBar,
                         onRetry = viewsStatsViewModel::onRetry,
                         onRemoveCard = { newStatsViewModel.removeCard(cardType) },
                         cardPosition = cardPosition,
@@ -782,7 +1025,7 @@ private fun TrafficTabContent(
                         onMoveToTop = { newStatsViewModel.moveCardToTop(cardType) },
                         onMoveDown = { newStatsViewModel.moveCardDown(cardType) },
                         onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) },
-                        onUrlClick = onStatsUrlClick
+                        onUrlClick = { url -> onRowUrlClick(cardType, url) }
                     )
                     StatsCardType.LOCATIONS -> LocationsCard(
                         uiState = locationsUiState,
@@ -807,6 +1050,16 @@ private fun TrafficTabContent(
                                 LocationsCardUiState.Error)
                                 ?.isAuthError == true,
                             getAdminUrl = locationsViewModel::getAdminUrl,
+                            context = context
+                        ),
+                        onExplorePlans = buildExplorePlansAction(
+                            isPlanGated = (locationsUiState as?
+                                LocationsCardUiState.Error)
+                                ?.isPlanGated == true,
+                            getUpgradeUrl =
+                                locationsViewModel::getUpgradeUrl,
+                            cardType = StatsCardType.LOCATIONS,
+                            onExplorePlansClick = onExplorePlansClick,
                             context = context
                         )
                     )
@@ -841,6 +1094,16 @@ private fun TrafficTabContent(
                             getAdminUrl =
                                 devicesViewModel::getAdminUrl,
                             context = context
+                        ),
+                        onExplorePlans = buildExplorePlansAction(
+                            isPlanGated = (devicesUiState as?
+                                DevicesCardUiState.Error)
+                                ?.isPlanGated == true,
+                            getUpgradeUrl =
+                                devicesViewModel::getUpgradeUrl,
+                            cardType = StatsCardType.DEVICES,
+                            onExplorePlansClick = onExplorePlansClick,
+                            context = context
                         )
                     )
                     StatsCardType.UTM -> UtmCard(
@@ -852,7 +1115,7 @@ private fun TrafficTabContent(
                                 context = context,
                                 category =
                                     selectedUtmCategory,
-                                period = selectedPeriod
+                                period = effectivePeriod
                             )
                         },
                         onRetry = utmViewModel::onRetry,
@@ -877,6 +1140,16 @@ private fun TrafficTabContent(
                                 UtmCardUiState.Error)
                                 ?.isAuthError == true,
                             getAdminUrl = utmViewModel::getAdminUrl,
+                            context = context
+                        ),
+                        onExplorePlans = buildExplorePlansAction(
+                            isPlanGated = (utmUiState as?
+                                UtmCardUiState.Error)
+                                ?.isPlanGated == true,
+                            getUpgradeUrl =
+                                utmViewModel::getUpgradeUrl,
+                            cardType = StatsCardType.UTM,
+                            onExplorePlansClick = onExplorePlansClick,
                             context = context
                         )
                     )
@@ -939,7 +1212,7 @@ private fun TrafficTabContent(
                             getAdminUrl = clicksViewModel::getAdminUrl,
                             context = context
                         ),
-                        onUrlClick = onStatsUrlClick
+                        onUrlClick = { url -> onRowUrlClick(cardType, url) }
                     )
                     StatsCardType.SEARCH_TERMS -> MostViewedCard(
                         uiState = searchTermsUiState,
@@ -1048,6 +1321,41 @@ private fun TrafficTabContent(
                             context = context
                         )
                     )
+                    StatsCardType.ARCHIVES -> MostViewedCard(
+                        uiState = archivesUiState,
+                        cardType = cardType,
+                        onShowAllClick = {
+                            MostViewedDetailActivity.startSelfFetch(
+                                context = context,
+                                cardType = StatsCardType.ARCHIVES,
+                                source = MostViewedDetailSource.ARCHIVES,
+                                period = archivesViewModel.getCurrentPeriod()
+                            )
+                        },
+                        onRetry = archivesViewModel::onRetry,
+                        onRemoveCard = {
+                            newStatsViewModel.removeCard(cardType)
+                        },
+                        cardPosition = cardPosition,
+                        onMoveUp = { newStatsViewModel.moveCardUp(cardType) },
+                        onMoveToTop = {
+                            newStatsViewModel.moveCardToTop(cardType)
+                        },
+                        onMoveDown = {
+                            newStatsViewModel.moveCardDown(cardType)
+                        },
+                        onMoveToBottom = {
+                            newStatsViewModel.moveCardToBottom(cardType)
+                        },
+                        onOpenWpAdmin = buildOpenWpAdminAction(
+                            isAuthError = (archivesUiState as?
+                                MostViewedCardUiState.Error)
+                                ?.isAuthError == true,
+                            getAdminUrl = archivesViewModel::getAdminUrl,
+                            context = context
+                        ),
+                        onUrlClick = { url -> onRowUrlClick(cardType, url) }
+                    )
                 }
             }
 
@@ -1092,7 +1400,8 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     onVideoPlays: () -> Unit,
     onFileDownloads: () -> Unit,
     onDevices: () -> Unit,
-    onUtm: () -> Unit
+    onUtm: () -> Unit,
+    onArchives: () -> Unit
 ) {
     if (StatsCardType.TODAYS_STATS in this) onTodaysStats()
     if (StatsCardType.VIEWS_STATS in this) onViewsStats()
@@ -1110,6 +1419,7 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     if (StatsCardType.FILE_DOWNLOADS in this) onFileDownloads()
     if (StatsCardType.DEVICES in this) onDevices()
     if (StatsCardType.UTM in this) onUtm()
+    if (StatsCardType.ARCHIVES in this) onArchives()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -1121,8 +1431,11 @@ private fun InsightsTabContent(
     mostPopularDayViewModel: MostPopularDayViewModel = viewModel(),
     mostPopularTimeViewModel: MostPopularTimeViewModel = viewModel(),
     tagsAndCategoriesViewModel: TagsAndCategoriesViewModel = viewModel(),
+    latestPostViewModel: LatestPostViewModel = viewModel(),
     insightsViewModel: InsightsViewModel = viewModel(),
-    onStatsUrlClick: (String) -> Unit = {}
+    onRowUrlClick: (InsightsCardType, String) -> Unit = { _, _ -> },
+    onLatestPostClick: (Long, String) -> Unit = { _, _ -> },
+    onCreatePostClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val yearInReviewUiState by yearInReviewViewModel.uiState.collectAsState()
@@ -1130,6 +1443,7 @@ private fun InsightsTabContent(
     val mostPopularDayUiState by mostPopularDayViewModel.uiState.collectAsState()
     val mostPopularTimeUiState by mostPopularTimeViewModel.uiState.collectAsState()
     val tagsAndCategoriesUiState by tagsAndCategoriesViewModel.uiState.collectAsState()
+    val latestPostUiState by latestPostViewModel.uiState.collectAsState()
     val isRefreshing by insightsViewModel.isDataRefreshing.collectAsState()
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -1144,6 +1458,9 @@ private fun InsightsTabContent(
         insightsViewModel.loadDataIfNeeded()
         if (InsightsCardType.TAGS_AND_CATEGORIES in cardsToLoad) {
             tagsAndCategoriesViewModel.loadData()
+        }
+        if (InsightsCardType.LATEST_POST in cardsToLoad) {
+            latestPostViewModel.loadData()
         }
     }
 
@@ -1218,6 +1535,11 @@ private fun InsightsTabContent(
             ) {
                 tagsAndCategoriesViewModel.refresh()
             }
+            if (InsightsCardType.LATEST_POST
+                in visibleCards
+            ) {
+                latestPostViewModel.refresh()
+            }
         },
         indicator = {
             PullToRefreshDefaults.Indicator(
@@ -1269,6 +1591,18 @@ private fun InsightsTabContent(
                             onMoveDown = { insightsViewModel.moveCardDown(cardType) },
                             onMoveToBottom = { insightsViewModel.moveCardToBottom(cardType) }
                         )
+                        InsightsCardType.LATEST_POST -> LatestPostCard(
+                            uiState = latestPostUiState,
+                            onRemoveCard = { insightsViewModel.removeCard(cardType) },
+                            onRetry = { latestPostViewModel.refresh() },
+                            onPostClick = onLatestPostClick,
+                            onCreatePostClick = onCreatePostClick,
+                            cardPosition = pos,
+                            onMoveUp = { insightsViewModel.moveCardUp(cardType) },
+                            onMoveToTop = { insightsViewModel.moveCardToTop(cardType) },
+                            onMoveDown = { insightsViewModel.moveCardDown(cardType) },
+                            onMoveToBottom = { insightsViewModel.moveCardToBottom(cardType) }
+                        )
                         InsightsCardType.MOST_POPULAR_DAY -> MostPopularDayCard(
                             uiState = mostPopularDayUiState,
                             onRemoveCard = { insightsViewModel.removeCard(cardType) },
@@ -1310,7 +1644,7 @@ private fun InsightsTabContent(
                             onMoveToTop = { insightsViewModel.moveCardToTop(cardType) },
                             onMoveDown = { insightsViewModel.moveCardDown(cardType) },
                             onMoveToBottom = { insightsViewModel.moveCardToBottom(cardType) },
-                            onUrlClick = onStatsUrlClick
+                            onUrlClick = { url -> onRowUrlClick(cardType, url) }
                         )
                     }
                 }
@@ -1329,7 +1663,9 @@ private fun InsightsTabContent(
 @Composable
 private fun StatsPeriodMenu(
     expanded: Boolean,
-    selectedPeriod: StatsPeriod,
+    // Null while a bar is soft-selected: the effective range is a single bucket that matches no
+    // preset, so no item is checked and tapping any preset reloads the whole screen.
+    selectedPeriod: StatsPeriod?,
     onDismiss: () -> Unit,
     onPresetSelected: (StatsPeriod) -> Unit,
     onCustomSelected: () -> Unit
@@ -1338,19 +1674,12 @@ private fun StatsPeriodMenu(
         expanded = expanded,
         onDismissRequest = onDismiss
     ) {
-        // Show preset periods
-        StatsPeriod.presets().forEach { period ->
-            val isSelected = selectedPeriod == period
-            DropdownMenuItem(
-                text = { Text(text = stringResource(id = period.labelResId)) },
-                onClick = { onPresetSelected(period) },
-                trailingIcon = if (isSelected) {
-                    { Icon(Icons.Default.Check, contentDescription = null) }
-                } else {
-                    null
-                }
-            )
-        }
+        // Rolling "last N" presets
+        StatsPeriodMenuItems(StatsPeriod.rollingPresets(), selectedPeriod, onPresetSelected)
+        HorizontalDivider()
+        // Calendar-aligned presets (Today, This Week/Month/Year)
+        StatsPeriodMenuItems(StatsPeriod.calendarPresets(), selectedPeriod, onPresetSelected)
+        HorizontalDivider()
         // Show Custom option
         val isCustomSelected = selectedPeriod is StatsPeriod.Custom
         DropdownMenuItem(
@@ -1366,14 +1695,130 @@ private fun StatsPeriodMenu(
 }
 
 @Composable
-private fun StatsPeriod.getDisplayLabel(): String {
+private fun StatsPeriodMenuItems(
+    presets: List<StatsPeriod>,
+    selectedPeriod: StatsPeriod?,
+    onPresetSelected: (StatsPeriod) -> Unit
+) {
+    presets.forEach { period ->
+        val isSelected = selectedPeriod == period
+        DropdownMenuItem(
+            text = { Text(text = stringResource(id = period.labelResId)) },
+            onClick = { onPresetSelected(period) },
+            trailingIcon = if (isSelected) {
+                { Icon(Icons.Default.Check, contentDescription = null) }
+            } else {
+                null
+            }
+        )
+    }
+}
+
+@Composable
+private fun StatsPeriod.getDisplayLabel(): DateRangeLabel {
     return when (this) {
         is StatsPeriod.Custom -> {
-            val formatter = java.time.format.DateTimeFormatter.ofPattern("MMM d")
-            "${startDate.format(formatter)} - ${endDate.format(formatter)}"
+            val currentYear = remember { Year.now().value }
+            formatCustomDateRangeTwoLine(startDate, endDate, currentYear)
         }
-        else -> stringResource(id = labelResId)
+        else -> DateRangeLabel(RangeLine.Single(stringResource(id = labelResId)), null)
     }
+}
+
+/**
+ * Renders the top-bar period label. Preset periods (and any single-line label) show one line; a
+ * Custom range shows the day-month range over the year(s). When both lines are a start–end range
+ * (a cross-year span), the two "-" separators sit in their own centre column so they line up as a
+ * column regardless of the two text styles' widths — no text measuring needed. See [DateRangeLabel].
+ */
+@Composable
+private fun PeriodLabel(label: DateRangeLabel) {
+    val primaryStyle = MaterialTheme.typography.labelLarge
+    val secondaryStyle = MaterialTheme.typography.labelSmall
+    val primaryColor = MaterialTheme.colorScheme.onSurface
+    val secondaryColor = MaterialTheme.colorScheme.onSurfaceVariant
+
+    val secondary = label.secondary
+    if (secondary == null) {
+        // Single line (preset period, or a Custom range whose year is hidden). A Split renders
+        // inline here since there is no second line to align its "-" against.
+        SingleRangeLine(line = label.primary, style = primaryStyle, color = primaryColor)
+        return
+    }
+
+    val rangeDescription = label.toContentDescription(
+        stringResource(R.string.stats_traffic_date_range_content_description)
+    )
+    val primary = label.primary
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clearAndSetSemantics { contentDescription = rangeDescription }
+    ) {
+        if (primary is RangeLine.Split && secondary is RangeLine.Split) {
+            // The only case with a "-" on both lines (a cross-year span). Put the separators in
+            // their own centre column so they align on every row; the start/end columns hug it.
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(horizontalAlignment = Alignment.End) {
+                    Text(primary.start, style = primaryStyle, color = primaryColor, maxLines = 1)
+                    Text(secondary.start, style = secondaryStyle, color = secondaryColor, maxLines = 1)
+                }
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(text = " - ", style = primaryStyle, color = primaryColor, maxLines = 1)
+                    Text(text = " - ", style = secondaryStyle, color = secondaryColor, maxLines = 1)
+                }
+                Column(horizontalAlignment = Alignment.Start) {
+                    Text(primary.end, style = primaryStyle, color = primaryColor, maxLines = 1)
+                    Text(secondary.end, style = secondaryStyle, color = secondaryColor, maxLines = 1)
+                }
+            }
+        } else {
+            // No "-" shared across the two lines (a Split range over a single year, or two Single
+            // lines): a plain centred column of the two lines.
+            SingleRangeLine(line = primary, style = primaryStyle, color = primaryColor)
+            SingleRangeLine(line = secondary, style = secondaryStyle, color = secondaryColor)
+        }
+    }
+}
+
+/** A range rendered on one line, with no cross-line "-" alignment: a Split becomes "start - end". */
+@Composable
+private fun SingleRangeLine(line: RangeLine, style: TextStyle, color: Color) {
+    val text = when (line) {
+        is RangeLine.Single -> line.text
+        is RangeLine.Split -> "${line.start} - ${line.end}"
+    }
+    Text(text = text, style = style, color = color, maxLines = 1)
+}
+
+/**
+ * The "Explore Plans" action for a card the site's plan does not cover, or null when the card is
+ * not gated so the card keeps its regular error handling.
+ */
+private fun buildExplorePlansAction(
+    isPlanGated: Boolean,
+    getUpgradeUrl: () -> String?,
+    cardType: StatsCardType,
+    onExplorePlansClick: (String, StatsCardType) -> Unit,
+    context: Context
+): (() -> Unit)? = if (isPlanGated) {
+    {
+        val url = getUpgradeUrl()
+        if (url != null) {
+            onExplorePlansClick(url, cardType)
+        } else {
+            AppLog.w(
+                AppLog.T.STATS,
+                "No site selected, cannot open the plans page"
+            )
+            Toast.makeText(
+                context,
+                R.string.stats_feature_gate_plans_unavailable,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+} else {
+    null
 }
 
 private fun buildOpenWpAdminAction(

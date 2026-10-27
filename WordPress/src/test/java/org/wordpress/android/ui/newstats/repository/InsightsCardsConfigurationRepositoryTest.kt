@@ -89,12 +89,8 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
                 repository.getConfiguration(TEST_SITE_ID)
 
             assertThat(config.visibleCards)
-                .containsExactly(
-                    InsightsCardType.YEAR_IN_REVIEW,
-                    InsightsCardType.ALL_TIME_STATS,
-                    InsightsCardType.MOST_POPULAR_DAY,
-                    InsightsCardType.MOST_POPULAR_TIME,
-                    InsightsCardType.TAGS_AND_CATEGORIES
+                .containsExactlyInAnyOrderElementsOf(
+                    InsightsCardType.entries
                 )
             verify(appPrefsWrapper)
                 .setStatsInsightsCardsConfigurationJson(
@@ -105,17 +101,7 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
     @Test
     fun `when saved config has all card types, then no update is saved`() =
         test {
-            val json = """
-                {
-                    "visibleCards": [
-                        "YEAR_IN_REVIEW",
-                        "ALL_TIME_STATS",
-                        "MOST_POPULAR_DAY",
-                        "MOST_POPULAR_TIME",
-                        "TAGS_AND_CATEGORIES"
-                    ]
-                }
-            """.trimIndent()
+            val json = ALL_CARDS_JSON
             whenever(
                 appPrefsWrapper
                     .getStatsInsightsCardsConfigurationJson(
@@ -127,12 +113,8 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
                 repository.getConfiguration(TEST_SITE_ID)
 
             assertThat(config.visibleCards)
-                .containsExactly(
-                    InsightsCardType.YEAR_IN_REVIEW,
-                    InsightsCardType.ALL_TIME_STATS,
-                    InsightsCardType.MOST_POPULAR_DAY,
-                    InsightsCardType.MOST_POPULAR_TIME,
-                    InsightsCardType.TAGS_AND_CATEGORIES
+                .containsExactlyInAnyOrderElementsOf(
+                    InsightsCardType.entries
                 )
             verify(
                 appPrefsWrapper,
@@ -163,18 +145,7 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
     @Test
     fun `when addCard is called on empty config, then json is saved to prefs`() =
         test {
-            val emptyJson = """
-                {
-                    "visibleCards": [],
-                    "hiddenCards": [
-                        "YEAR_IN_REVIEW",
-                        "ALL_TIME_STATS",
-                        "MOST_POPULAR_DAY",
-                        "MOST_POPULAR_TIME",
-                        "TAGS_AND_CATEGORIES"
-                    ]
-                }
-            """.trimIndent()
+            val emptyJson = ALL_HIDDEN_JSON
             whenever(
                 appPrefsWrapper
                     .getStatsInsightsCardsConfigurationJson(
@@ -267,18 +238,7 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
     @Test
     fun `when addCard is called, then card is added to visible cards`() =
         test {
-            val initialJson = """
-                {
-                    "visibleCards": [],
-                    "hiddenCards": [
-                        "YEAR_IN_REVIEW",
-                        "ALL_TIME_STATS",
-                        "MOST_POPULAR_DAY",
-                        "MOST_POPULAR_TIME",
-                        "TAGS_AND_CATEGORIES"
-                    ]
-                }
-            """.trimIndent()
+            val initialJson = ALL_HIDDEN_JSON
             whenever(
                 appPrefsWrapper
                     .getStatsInsightsCardsConfigurationJson(
@@ -304,18 +264,7 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
     @Test
     fun `when mutation occurs, then configurationFlow emits site id and configuration`() =
         test {
-            val json = """
-                {
-                    "visibleCards": [],
-                    "hiddenCards": [
-                        "YEAR_IN_REVIEW",
-                        "ALL_TIME_STATS",
-                        "MOST_POPULAR_DAY",
-                        "MOST_POPULAR_TIME",
-                        "TAGS_AND_CATEGORIES"
-                    ]
-                }
-            """.trimIndent()
+            val json = ALL_HIDDEN_JSON
             whenever(
                 appPrefsWrapper
                     .getStatsInsightsCardsConfigurationJson(
@@ -533,12 +482,11 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
                     jsonCaptor.firstValue,
                     InsightsCardsConfiguration::class.java
                 )
+            val cards = InsightsCardType.entries
             assertThat(saved.visibleCards[1])
-                .isEqualTo(
-                    InsightsCardType.MOST_POPULAR_DAY
-                )
+                .isEqualTo(cards[2])
             assertThat(saved.visibleCards[2])
-                .isEqualTo(InsightsCardType.ALL_TIME_STATS)
+                .isEqualTo(cards[1])
         }
 
     @Test
@@ -605,16 +553,20 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
 
     companion object {
         private const val TEST_SITE_ID = 123L
-        private val ALL_CARDS_JSON = """
-            {
-                "visibleCards": [
-                    "YEAR_IN_REVIEW",
-                    "ALL_TIME_STATS",
-                    "MOST_POPULAR_DAY",
-                    "MOST_POPULAR_TIME",
-                    "TAGS_AND_CATEGORIES"
-                ]
-            }
-        """.trimIndent()
+        // Derived from the enum so adding a card type can't leave this fixture stale --
+        // loadAndMigrate() appends any missing type, which changes both the card list and
+        // whether a migration is persisted.
+        private val ALL_HIDDEN_JSON = InsightsCardType.entries
+            .joinToString(
+                separator = ",",
+                prefix = "{\"visibleCards\":[],\"hiddenCards\":[",
+                postfix = "]}"
+            ) { "\"${it.name}\"" }
+        private val ALL_CARDS_JSON = InsightsCardType.entries
+            .joinToString(
+                separator = ",",
+                prefix = "{\"visibleCards\":[",
+                postfix = "]}"
+            ) { "\"${it.name}\"" }
     }
 }

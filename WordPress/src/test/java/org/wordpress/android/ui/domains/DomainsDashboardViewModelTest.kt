@@ -8,12 +8,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.PlanModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
-import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.SiteStore.FetchedDomainsPayload
-import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched
 import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchasePlan
@@ -23,36 +18,46 @@ import org.wordpress.android.ui.domains.management.testDomainItem
 import org.wordpress.android.ui.domains.usecases.AllDomains
 import org.wordpress.android.ui.domains.usecases.FetchAllDomainsUseCase
 import org.wordpress.android.ui.domains.usecases.FetchPlansUseCase
+import org.wordpress.android.ui.domains.usecases.FetchSiteDomainsUseCase
+import org.wordpress.android.ui.domains.usecases.SiteDomainsResult
+import org.wordpress.android.ui.domains.usecases.SitePlansResult
 import org.wordpress.android.util.PlansConstants.FREE_PLAN_ID
 import org.wordpress.android.util.PlansConstants.PREMIUM_PLAN_ID
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import uniffi.wp_api.SiteDomain
+import uniffi.wp_api.SitePlan
 
 @ExperimentalCoroutinesApi
 class DomainsDashboardViewModelTest : BaseUnitTest() {
-    private val siteStore: SiteStore = mock()
     private val analyticsTracker: AnalyticsTrackerWrapper = mock()
     private val htmlMessageUtils: HtmlMessageUtils = mock()
     private val fetchPlansUseCase: FetchPlansUseCase = mock()
+    private val fetchSiteDomainsUseCase: FetchSiteDomainsUseCase = mock()
     private val fetchAllDomainsUseCase: FetchAllDomainsUseCase = mock()
 
     private lateinit var viewModel: DomainsDashboardViewModel
 
-    private val uiModel = mutableListOf<DomainsDashboardItem>()
+    private val uiStates = mutableListOf<DomainsDashboardUiState>()
+
+    private val dashboardItems: List<DomainsDashboardItem>
+        get() = (uiStates.last() as DomainsDashboardUiState.Content).items
 
     @Before
     fun setUp() {
         viewModel = DomainsDashboardViewModel(
-            siteStore,
             analyticsTracker,
             htmlMessageUtils,
             fetchPlansUseCase,
+            fetchSiteDomainsUseCase,
             fetchAllDomainsUseCase,
             testDispatcher()
         )
 
-        viewModel.uiModel.observeForever { if (it != null) uiModel += it }
+        viewModel.uiState.observeForever { if (it != null) uiStates += it }
     }
 
     @Test
@@ -62,8 +67,6 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
             hasCustomDomains = true,
             hasDomainCredits = false
         )
-
-        val dashboardItems = uiModel
 
         assertThat(dashboardItems).hasSize(5)
 
@@ -82,8 +85,6 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
             hasDomainCredits = false
         )
 
-        val dashboardItems = uiModel
-
         assertThat(dashboardItems).hasSize(3)
 
         assertThat(dashboardItems[0]).isInstanceOf(SiteDomainsHeader::class.java)
@@ -100,8 +101,6 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
             hasCustomDomains = true,
             hasDomainCredits = true
         )
-
-        val dashboardItems = uiModel
 
         assertThat(dashboardItems).hasSize(5)
 
@@ -122,8 +121,6 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
             hasDomainCredits = false
         )
 
-        val dashboardItems = uiModel
-
         assertThat(dashboardItems).hasSize(5)
 
         assertThat(dashboardItems[0]).isInstanceOf(SiteDomainsHeader::class.java)
@@ -141,8 +138,6 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
             hasDomainCredits = true
         )
 
-        val dashboardItems = uiModel
-
         assertThat(dashboardItems).hasSize(3)
 
         assertThat(dashboardItems[0]).isInstanceOf(SiteDomainsHeader::class.java)
@@ -158,8 +153,6 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
             hasDomainCredits = false
         )
 
-        val dashboardItems = uiModel
-
         assertThat(dashboardItems).hasSize(3)
 
         assertThat(dashboardItems[0]).isInstanceOf(SiteDomainsHeader::class.java)
@@ -169,27 +162,199 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
             .isEqualTo(UiStringRes(R.string.domains_paid_plan_add_your_domain_title))
     }
 
+    @Test
+    fun `custom domain row carries the values the API reported`() = test {
+        setupWith(
+            hasPaidPlan = true,
+            hasCustomDomains = true,
+            hasDomainCredits = false
+        )
+
+        val customDomainRow = dashboardItems[3] as SiteDomains
+
+        assertThat(customDomainRow.domain).isEqualTo(UiStringText("henna.tattoo"))
+        assertThat(customDomainRow.isPrimary).isFalse()
+        assertThat(customDomainRow.domainStatus).isEqualTo(UiStringText("Active"))
+        assertThat(customDomainRow.domainStatusColor).isEqualTo(R.color.jetpack_green_50)
+        assertThat(customDomainRow.expiry).isEqualTo(
+            UiStringResWithParams(
+                R.string.domains_site_domain_expires,
+                listOf(UiStringText("June 8, 2022"))
+            )
+        )
+    }
+
+    @Test
+    fun `a domain that omits the wpcom flag counts as a custom domain`() = test {
+        setupWith(
+            site = siteWithPaidPlan,
+            domains = listOf(testSiteDomain(domain = "henna.tattoo", wpcomDomain = null))
+        )
+
+        assertThat(dashboardItems).hasSize(5)
+        assertThat(dashboardItems[2]).isInstanceOf(SiteDomainsHeader::class.java)
+        assertThat((dashboardItems[3] as SiteDomains).domain).isEqualTo(UiStringText("henna.tattoo"))
+    }
+
+    @Test
+    fun `a domain that omits the registration flag has no expiry line`() = test {
+        setupWith(
+            site = siteWithPaidPlan,
+            domains = listOf(
+                testSiteDomain(
+                    domain = "henna.tattoo",
+                    hasRegistration = null,
+                    expiry = "June 8, 2022"
+                )
+            )
+        )
+
+        assertThat((dashboardItems[3] as SiteDomains).expiry).isNull()
+    }
+
+    @Test
+    fun `a failed site domains fetch reports the error instead of an empty list`() = test {
+        stubResults(
+            domainsResult = SiteDomainsResult.Error,
+            plansResult = SitePlansResult.Success(mapOf(TEST_PRODUCT_ID to planWithCredit(false)))
+        )
+
+        viewModel.start(siteWithPaidPlan)
+
+        assertThat(uiStates.last()).isEqualTo(DomainsDashboardUiState.Error)
+    }
+
+    @Test
+    fun `a failed plans fetch reports the error instead of no credit`() = test {
+        stubResults(
+            domainsResult = SiteDomainsResult.Success(listOf(customDomain)),
+            plansResult = SitePlansResult.Error
+        )
+
+        viewModel.start(siteWithPaidPlan)
+
+        assertThat(uiStates.last()).isEqualTo(DomainsDashboardUiState.Error)
+    }
+
+    @Test
+    fun `a failed all domains fetch leaves the row without a status`() = test {
+        stubResults(
+            domainsResult = SiteDomainsResult.Success(listOf(customDomain)),
+            plansResult = SitePlansResult.Success(mapOf(TEST_PRODUCT_ID to planWithCredit(false))),
+            allDomainsResult = AllDomains.Error
+        )
+
+        viewModel.start(siteWithPaidPlan)
+
+        assertThat(dashboardItems).hasSize(5)
+
+        val customDomainRow = dashboardItems[3] as SiteDomains
+
+        assertThat(customDomainRow.domain).isEqualTo(UiStringText("henna.tattoo"))
+        assertThat(customDomainRow.domainStatus).isNull()
+        assertThat(customDomainRow.domainStatusColor).isNull()
+        assertThat(customDomainRow.onDomainClick).isNull()
+        assertThat(customDomainRow.expiry).isEqualTo(
+            UiStringResWithParams(
+                R.string.domains_site_domain_expires,
+                listOf(UiStringText("June 8, 2022"))
+            )
+        )
+    }
+
+    @Test
+    fun `a domain missing from the all domains response has no status`() = test {
+        stubResults(
+            domainsResult = SiteDomainsResult.Success(listOf(customDomain)),
+            plansResult = SitePlansResult.Success(mapOf(TEST_PRODUCT_ID to planWithCredit(false))),
+            allDomainsResult = AllDomains.Success(listOf(testDomainItem(domain = "elsewhere.blog")))
+        )
+
+        viewModel.start(siteWithPaidPlan)
+
+        val customDomainRow = dashboardItems[3] as SiteDomains
+
+        assertThat(customDomainRow.domainStatus).isNull()
+        assertThat(customDomainRow.domainStatusColor).isNull()
+    }
+
+    @Test
+    fun `the screen reports loading before it reports a result`() = test {
+        setupWith(
+            hasPaidPlan = true,
+            hasCustomDomains = true,
+            hasDomainCredits = false
+        )
+
+        assertThat(uiStates.first()).isEqualTo(DomainsDashboardUiState.Loading)
+    }
+
+    @Test
+    fun `retrying after an error renders the dashboard once the requests succeed`() = test {
+        stubResults(
+            domainsResult = SiteDomainsResult.Error,
+            plansResult = SitePlansResult.Error,
+            allDomainsResult = AllDomains.Error
+        )
+        viewModel.start(siteWithPaidPlan)
+        assertThat(uiStates.last()).isEqualTo(DomainsDashboardUiState.Error)
+
+        stubResults(
+            domainsResult = SiteDomainsResult.Success(listOf(customDomain)),
+            plansResult = SitePlansResult.Success(mapOf(TEST_PRODUCT_ID to planWithCredit(false)))
+        )
+
+        viewModel.onRetryClick()
+
+        assertThat(dashboardItems).hasSize(5)
+    }
+
+    private suspend fun stubResults(
+        domainsResult: SiteDomainsResult,
+        plansResult: SitePlansResult,
+        allDomainsResult: AllDomains = AllDomains.Success(listOf(allDomainsDomain))
+    ) {
+        whenever(fetchSiteDomainsUseCase.execute(siteWithPaidPlan)).thenReturn(domainsResult)
+        whenever(fetchPlansUseCase.execute(siteWithPaidPlan)).thenReturn(plansResult)
+        whenever(fetchAllDomainsUseCase.execute()).thenReturn(allDomainsResult)
+    }
+
+    private suspend fun setupWith(site: SiteModel, domains: List<SiteDomain>) {
+        val plan = planWithCredit(false)
+        whenever(fetchSiteDomainsUseCase.execute(site)).thenReturn(SiteDomainsResult.Success(domains))
+        whenever(fetchPlansUseCase.execute(site))
+            .thenReturn(SitePlansResult.Success(mapOf(TEST_PRODUCT_ID to plan)))
+        whenever(fetchAllDomainsUseCase.execute()).thenReturn(AllDomains.Success(listOf(allDomainsDomain)))
+
+        viewModel.start(site)
+    }
+
     private suspend fun setupWith(hasPaidPlan: Boolean, hasCustomDomains: Boolean, hasDomainCredits: Boolean) {
         val site = if (hasPaidPlan) siteWithPaidPlan else siteWithFreePlan
         val domains = if (hasCustomDomains) listOf(customDomain) else emptyList()
-        whenever(siteStore.fetchSiteDomains(site)).thenReturn(FetchedDomainsPayload(site, domains))
+        whenever(fetchSiteDomainsUseCase.execute(site)).thenReturn(SiteDomainsResult.Success(domains))
 
-        val plan = if (hasDomainCredits) planWithCredits else planWithNoCredits
-        whenever(fetchPlansUseCase.execute(site)).thenReturn(OnPlansFetched(site, listOf(plan)))
+        val plan = planWithCredit(hasDomainCredits)
+        whenever(fetchPlansUseCase.execute(site))
+            .thenReturn(SitePlansResult.Success(mapOf(TEST_PRODUCT_ID to plan)))
         val allDomains = if (hasCustomDomains) listOf(allDomainsDomain) else emptyList()
         whenever(fetchAllDomainsUseCase.execute()).thenReturn(AllDomains.Success(allDomains))
 
         viewModel.start(site)
     }
 
+    private fun planWithCredit(hasDomainCredit: Boolean): SitePlan =
+        testSitePlan(currentPlan = testCurrentPlan(hasDomainCredit))
+
     companion object {
         private const val TEST_SITE_ID = 1234L
         private const val TEST_DOMAIN_NAME = "testdomain.blog"
         private const val TEST_SITE_NAME = "Test Site"
+        private const val TEST_PRODUCT_ID = 1uL
 
-        private val customDomain = Domain(
+        private val customDomain = testSiteDomain(
             domain = "henna.tattoo",
-            expired = false,
+            hasRegistration = true,
             expiry = "June 8, 2022",
             expirySoon = false,
             primaryDomain = false,
@@ -213,20 +378,5 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
             unmappedUrl = TEST_DOMAIN_NAME
             planId = PREMIUM_PLAN_ID
         }
-
-        private val planWithNoCredits = PlanModel(
-            productId = 1,
-            productSlug = "plan-1",
-            productName = "Plan 1",
-            isCurrentPlan = true,
-            hasDomainCredit = false
-        )
-        private val planWithCredits = PlanModel(
-            productId = 2,
-            productSlug = "plan-2",
-            productName = "Plan 2",
-            isCurrentPlan = true,
-            hasDomainCredit = true
-        )
     }
 }

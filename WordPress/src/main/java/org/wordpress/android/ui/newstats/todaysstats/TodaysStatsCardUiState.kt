@@ -11,8 +11,7 @@ sealed class TodaysStatsCardUiState {
         val visitors: Long,
         val likes: Long,
         val comments: Long,
-        val chartData: ChartData,
-        val onCardClick: () -> Unit
+        val chartData: ChartData
     ) : TodaysStatsCardUiState()
 
     data class Error(

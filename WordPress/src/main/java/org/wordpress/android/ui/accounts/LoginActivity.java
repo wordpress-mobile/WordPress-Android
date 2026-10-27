@@ -18,7 +18,6 @@ import androidx.annotation.Nullable;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -32,28 +31,22 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.ui.accounts.login.LoginAnalyticsListener;
+import org.wordpress.android.ui.accounts.login.LoginAnalyticsTracker;
 import org.wordpress.android.ui.accounts.login.applicationpassword.LoginSiteApplicationPasswordFragment;
+import org.wordpress.android.support.SupportRouting;
 import org.wordpress.android.support.ZendeskExtraTags;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
-import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSites;
-import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSiteAddressError;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.ui.accounts.login.LoginPrologueRevampedFragment;
 import org.wordpress.android.ui.accounts.login.WPcomLoginHelper;
-import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
-import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorFragment;
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.main.ChooseSiteActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
-import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
@@ -68,16 +61,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import dagger.android.AndroidInjector;
-import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasAndroidInjector;
 import dagger.hilt.android.AndroidEntryPoint;
 
-import static org.wordpress.android.util.ActivityUtils.hideKeyboard;
-
 @AndroidEntryPoint
-public class LoginActivity extends BaseAppCompatActivity implements
-        HasAndroidInjector, BasicDialogPositiveClickInterface {
+public class LoginActivity extends BaseAppCompatActivity {
     public static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
     public static final String MAGIC_LOGIN = "magic-login";
     public static final String TOKEN_PARAMETER = "token";
@@ -88,6 +75,8 @@ public class LoginActivity extends BaseAppCompatActivity implements
     private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
     private static final String KEY_SHARE_FLOW_LOGIN_LAUNCHED = "KEY_SHARE_FLOW_LOGIN_LAUNCHED";
     private static final String KEY_FETCHING_PRIMARY_SITE = "KEY_FETCHING_PRIMARY_SITE";
+    private static final String KEY_WPCOM_OAUTH_TAB_LAUNCHED = "KEY_WPCOM_OAUTH_TAB_LAUNCHED";
+    private static final String KEY_WPCOM_OAUTH_TAB_SHOWN = "KEY_WPCOM_OAUTH_TAB_SHOWN";
 
     private int mFragmentContainerId;
     private View mLoadingOverlay;
@@ -102,16 +91,13 @@ public class LoginActivity extends BaseAppCompatActivity implements
     }
 
     private LoginFlow mLoginFlow;
-    private LoginViewModel mViewModel;
     @Inject protected WPcomLoginHelper mLoginHelper;
 
-    @Inject DispatchingAndroidInjector<Object> mDispatchingAndroidInjector;
-    @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
+    @Inject protected LoginAnalyticsTracker mLoginAnalyticsTracker;
     @Inject UnifiedLoginTracker mUnifiedLoginTracker;
     @Inject protected SiteStore mSiteStore;
     @Inject protected AccountStore mAccountStore;
     @Inject protected Dispatcher mDispatcher;
-    @Inject protected ViewModelProvider.Factory mViewModelFactory;
 
     // Flag to track when we're waiting for account/sites to load after OAuth login
     private boolean mIsWaitingForSitesToLoad = false;
@@ -123,8 +109,22 @@ public class LoginActivity extends BaseAppCompatActivity implements
     // causeOfChange, so a spurious event here would be mistaken for our primary-site result.
     private boolean mFetchingPrimarySite = false;
     private ArrayList<Integer> mOldSitesIdsForLoginUpdate;
+    // Flags for the WordPress.com OAuth Custom Tab when it is the flow's initial screen. The tab
+    // is launched from onCreate and this activity has no UI of its own behind it, so when the user
+    // comes back without completing the login there is nothing left to show. These let us tell
+    // that case apart from the first resume (which happens before the tab is on top) and finish
+    // instead of showing a blank screen. Both are cleared once a callback arrives, so an
+    // in-flight login is never mistaken for a cancellation. See CMM-2503.
+    private boolean mWpcomOAuthTabLaunched = false;
+    private boolean mWpcomOAuthTabShown = false;
+    // Access token as it was when this instance was created. A login that completed in a different
+    // activity instance - e.g. the user moved the page to the browser's own task with "Open in
+    // browser" - must not be reported back to the caller as a cancellation. Deliberately not
+    // persisted: a recreated instance re-reads the current token, and putting a token in the saved
+    // state bundle would write it to disk.
+    @Nullable private String mAccessTokenAtStart;
 
-    @Inject ExperimentalFeatures mExperimentalFeatures;
+    @Inject SupportRouting mSupportRouting;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -132,6 +132,8 @@ public class LoginActivity extends BaseAppCompatActivity implements
 
         // Enable edge-to-edge display
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
+        mAccessTokenAtStart = mAccountStore.getAccessToken();
 
         // Attempt Login if this activity was created in response to a user confirming login
         String dataString = getIntent().getDataString();
@@ -187,7 +189,7 @@ public class LoginActivity extends BaseAppCompatActivity implements
         setContentView(rootContainer);
 
         if (savedInstanceState == null) {
-            mLoginAnalyticsListener.trackLoginAccessed();
+            mLoginAnalyticsTracker.trackLoginAccessed();
 
             mUnifiedLoginTracker.setSource(loginFlow.getAnalyticsSource());
 
@@ -196,6 +198,12 @@ public class LoginActivity extends BaseAppCompatActivity implements
                     showFragment(new LoginPrologueRevampedFragment(), LoginPrologueRevampedFragment.TAG);
                     break;
                 case WPCOM_OAUTH:
+                    // This flow has no UI of its own: the WordPress.com page opens in a Custom
+                    // Tab on top of an empty activity. Flag it so we can finish when the user
+                    // comes back without logging in, rather than showing them a blank screen.
+                    // Flows that open the same page from a fragment (the prologue, the site
+                    // address form) are not flagged: they have a screen to come back to.
+                    mWpcomOAuthTabLaunched = true;
                     showWPcomLoginScreen(this);
                     break;
                 case SELF_HOSTED:
@@ -215,6 +223,8 @@ public class LoginActivity extends BaseAppCompatActivity implements
             mShareFlowLoginLaunched = savedInstanceState.getBoolean(KEY_SHARE_FLOW_LOGIN_LAUNCHED);
             mFetchingPrimarySite = savedInstanceState.getBoolean(KEY_FETCHING_PRIMARY_SITE);
             mOldSitesIdsForLoginUpdate = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
+            mWpcomOAuthTabLaunched = savedInstanceState.getBoolean(KEY_WPCOM_OAUTH_TAB_LAUNCHED);
+            mWpcomOAuthTabShown = savedInstanceState.getBoolean(KEY_WPCOM_OAUTH_TAB_SHOWN);
         }
 
         // If we're waiting for sites (e.g. after config change during post-OAuth fetch),
@@ -222,22 +232,6 @@ public class LoginActivity extends BaseAppCompatActivity implements
         if (mIsWaitingForSitesToLoad) {
             showLoadingOverlay();
         }
-
-        initViewModel();
-    }
-
-    private void initViewModel() {
-        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(LoginViewModel.class);
-
-        // initObservers
-        mViewModel.getNavigationEvents().observe(this, event -> {
-            LoginNavigationEvents loginEvent = event.getContentIfNotHandled();
-            if (loginEvent instanceof ShowSiteAddressError) {
-                showSiteAddressError((ShowSiteAddressError) loginEvent);
-            } else if (loginEvent instanceof ShowNoJetpackSites) {
-                showNoJetpackSites();
-            }
-        });
     }
 
     @Override
@@ -252,6 +246,8 @@ public class LoginActivity extends BaseAppCompatActivity implements
         outState.putBoolean(KEY_SHARE_FLOW_LOGIN_LAUNCHED, mShareFlowLoginLaunched);
         outState.putBoolean(KEY_FETCHING_PRIMARY_SITE, mFetchingPrimarySite);
         outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIdsForLoginUpdate);
+        outState.putBoolean(KEY_WPCOM_OAUTH_TAB_LAUNCHED, mWpcomOAuthTabLaunched);
+        outState.putBoolean(KEY_WPCOM_OAUTH_TAB_SHOWN, mWpcomOAuthTabShown);
     }
 
     @Override
@@ -263,6 +259,12 @@ public class LoginActivity extends BaseAppCompatActivity implements
         // Handle OAuth callback when activity is reused (singleTop)
         String dataString = intent.getDataString();
         if (mLoginHelper.hasOAuthCallback(dataString)) {
+            // The login is under way, so this is no longer an abandoned tab. Clearing the flags
+            // here is also what survives a recreation during the post-OAuth account/site fetch
+            // (rotation, a theme change, "don't keep activities"): they are persisted, so the
+            // rebuilt activity starts out knowing the callback already arrived.
+            mWpcomOAuthTabLaunched = false;
+            mWpcomOAuthTabShown = false;
             intent.setData(null);
             if (mLoadingOverlay != null) {
                 showLoadingOverlay();
@@ -287,6 +289,11 @@ public class LoginActivity extends BaseAppCompatActivity implements
     protected void onStop() {
         super.onStop();
         mDispatcher.unregister(this);
+        if (mWpcomOAuthTabLaunched) {
+            // The Custom Tab (or the external browser) is now on top of us, so the next resume
+            // means the user came back from it
+            mWpcomOAuthTabShown = true;
+        }
     }
 
     @Override
@@ -305,7 +312,29 @@ public class LoginActivity extends BaseAppCompatActivity implements
                 && mSiteStore.hasSite()) {
             setResult(Activity.RESULT_OK);
             finish();
+            return;
         }
+
+        // The user came back from the WordPress.com Custom Tab and no OAuth callback reached this
+        // instance. This activity shows nothing in that flow, so finish either way rather than
+        // leaving the user on a blank screen. A token that appeared meanwhile means the login
+        // completed in another instance - e.g. the user moved the page to the browser's own task
+        // with "Open in browser" - and the caller is owed that success. See CMM-2503.
+        if (mWpcomOAuthTabShown) {
+            mWpcomOAuthTabLaunched = false;
+            mWpcomOAuthTabShown = false;
+            setResult(hasNewAccessToken() ? Activity.RESULT_OK : Activity.RESULT_CANCELED);
+            finish();
+        }
+    }
+
+    /**
+     * True when a WordPress.com access token appeared since this instance was created, i.e. the
+     * login completed somewhere other than this activity.
+     */
+    private boolean hasNewAccessToken() {
+        String token = mAccountStore.getAccessToken();
+        return token != null && !token.isEmpty() && !token.equals(mAccessTokenAtStart);
     }
 
     @SuppressWarnings("unused")
@@ -392,7 +421,7 @@ public class LoginActivity extends BaseAppCompatActivity implements
         LoginFlow.CompletionBehavior behavior = getLoginFlow().getCompletionBehavior();
         if (behavior == LoginFlow.CompletionBehavior.MAIN_ACTIVITY) {
             // Select the primary site after WP.com login
-            ActivityLauncher.showMainActivity(this, false, true);
+            ActivityLauncher.showMainActivity(this, true);
         }
         // For FINISH and FINISH_WITH_SITE, just finish and let the caller handle navigation
         setResult(Activity.RESULT_OK);
@@ -423,16 +452,6 @@ public class LoginActivity extends BaseAppCompatActivity implements
         View fragmentContainer = findViewById(mFragmentContainerId);
         if (fragmentContainer != null) {
             fragmentContainer.setVisibility(View.GONE);
-        }
-    }
-
-    private void hideLoadingOverlay() {
-        if (mLoadingOverlay != null) {
-            mLoadingOverlay.setVisibility(View.GONE);
-        }
-        View fragmentContainer = findViewById(mFragmentContainerId);
-        if (fragmentContainer != null) {
-            fragmentContainer.setVisibility(View.VISIBLE);
         }
     }
 
@@ -501,9 +520,6 @@ public class LoginActivity extends BaseAppCompatActivity implements
     }
 
     private void loggedInAndFinish(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
-        AppPrefs.setIsJetpackMigrationEligible(false);
-        AppPrefs.setIsJetpackMigrationInProgress(false);
-
         // If doLoginUpdate is true, we need to fetch account and sites before navigating.
         // This happens after WordPress.com OAuth login where we only have the token.
         if (doLoginUpdate) {
@@ -565,7 +581,17 @@ public class LoginActivity extends BaseAppCompatActivity implements
         Uri loginUri = mLoginHelper.getWpcomLoginUri();
         try {
             intent.launchUrl(this, loginUri);
-        } catch (SecurityException | ActivityNotFoundException e) {
+        } catch (ActivityNotFoundException e) {
+            AppLog.e(AppLog.T.UTILS, "No activity available to open the login uri", e);
+            ActivityLauncher.openUrlExternal(this, loginUri.toString());
+            // openUrlExternal sends the same ACTION_VIEW intent, so it fails the same way and only
+            // shows a toast. Nothing will ever cover this activity, so onStop never runs and the
+            // no-UI OAuth flow would be stranded on the empty screen - finish instead.
+            if (mWpcomOAuthTabLaunched) {
+                setResult(Activity.RESULT_CANCELED);
+                finish();
+            }
+        } catch (SecurityException e) {
             AppLog.e(AppLog.T.UTILS, "Error opening login uri in CustomTabsIntent, attempting external browser", e);
             ActivityLauncher.openUrlExternal(this, loginUri.toString());
         }
@@ -594,10 +620,10 @@ public class LoginActivity extends BaseAppCompatActivity implements
     private void viewHelp(Origin origin) {
         List<String> extraSupportTags = getLoginFlow() == LoginFlow.JETPACK_STATS ? Collections
                 .singletonList(ZendeskExtraTags.connectingJetpack) : null;
-        ActivityLauncher.viewHelp(this, origin, null, extraSupportTags, mExperimentalFeatures);
+        ActivityLauncher.viewHelp(this, origin, null, extraSupportTags, mSupportRouting);
     }
 
-    public void helpSiteAddress(String url) {
+    public void helpSiteAddress() {
         viewHelp(Origin.LOGIN_SITE_ADDRESS);
     }
 
@@ -609,35 +635,5 @@ public class LoginActivity extends BaseAppCompatActivity implements
 
         // Start Notification service
         NotificationsUpdateServiceStarter.startService(getApplicationContext());
-    }
-
-    @Override
-    public void onPositiveClicked(@NonNull String instanceTag) {
-        // No dialog tags currently handled
-    }
-
-    @Override public AndroidInjector<Object> androidInjector() {
-        return mDispatchingAndroidInjector;
-    }
-
-    public void handleSiteAddressError(ConnectSiteInfoPayload siteInfo) {
-        mViewModel.onHandleSiteAddressError(siteInfo);
-    }
-
-    public void handleNoJetpackSites() {
-        // hide keyboard if you can
-        hideKeyboard(this);
-        mViewModel.onHandleNoJetpackSites();
-    }
-
-
-    private void showSiteAddressError(ShowSiteAddressError event) {
-        LoginSiteCheckErrorFragment fragment = LoginSiteCheckErrorFragment.Companion.newInstance(event.getUrl());
-        slideInFragment(fragment, true, LoginSiteCheckErrorFragment.TAG);
-    }
-
-    private void showNoJetpackSites() {
-        LoginNoSitesFragment fragment = LoginNoSitesFragment.Companion.newInstance();
-        slideInFragment(fragment, false, LoginNoSitesFragment.TAG);
     }
 }

@@ -45,6 +45,15 @@ internal class PageRsMenuActionsTest {
     }
 
     @Test
+    fun `stats are offered on published pages only when the site can view them`() {
+        assertThat(computeActions(status = PostStatus.Publish, canViewStats = true))
+            .contains(PageRsMenuAction.STATS)
+        assertThat(computeActions(status = PostStatus.Publish)).doesNotContain(PageRsMenuAction.STATS)
+        assertThat(computeActions(status = PostStatus.Draft, canViewStats = true))
+            .doesNotContain(PageRsMenuAction.STATS)
+    }
+
+    @Test
     fun `homepage settings hidden when site cannot manage homepage`() {
         val actions = computeActions(status = PostStatus.Publish, canManageHomepage = false)
 
@@ -133,13 +142,15 @@ internal class PageRsMenuActionsTest {
         isPostsPage: Boolean = false,
         hasPassword: Boolean = false,
         isBlazeEligibleSite: Boolean = true,
-        canManageHomepage: Boolean = true
+        canManageHomepage: Boolean = true,
+        canViewStats: Boolean = false
     ) = computePageMenuActions(
         status = status,
         isHomepage = isHomepage,
         isPostsPage = isPostsPage,
         hasPassword = hasPassword,
         isBlazeEligibleSite = isBlazeEligibleSite,
-        canManageHomepage = canManageHomepage
+        canManageHomepage = canManageHomepage,
+        canViewStats = canViewStats
     )
 }

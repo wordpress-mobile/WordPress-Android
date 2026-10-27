@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -26,17 +25,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.flow.distinctUntilChanged
 import org.wordpress.android.R
 import org.wordpress.android.ui.pagesrs.PageRsParentPickerState
+import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
+import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
 
 /**
  * Bottom sheet for choosing a page's parent: a "Top level" entry followed by the eligible
@@ -54,16 +52,7 @@ internal fun PageRsParentPickerSheet(
 ) {
     val listState = rememberLazyListState()
 
-    LaunchedEffect(state.canLoadMore) {
-        if (!state.canLoadMore) return@LaunchedEffect
-        snapshotFlow {
-            val lastVisible = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
-            val total = listState.layoutInfo.totalItemsCount
-            lastVisible >= total - LOAD_MORE_THRESHOLD
-        }.distinctUntilChanged().collect { shouldLoad ->
-            if (shouldLoad) onLoadMoreParents()
-        }
-    }
+    LoadMoreOnScrollToEnd(listState, state.candidates.size, state.canLoadMore, onLoadMoreParents)
 
     ModalBottomSheet(onDismissRequest = onDismiss) {
         // Pin the sheet to a fixed fraction of the screen so it doesn't resize as the content
@@ -135,21 +124,7 @@ private fun CandidateList(
                 onClick = { onParentSelected(candidate.id) }
             )
         }
-        if (state.isLoadingMore) {
-            item(key = "loading_more") {
-                Box(
-                    modifier = Modifier
-                        .fillParentMaxWidth()
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        strokeWidth = 2.dp
-                    )
-                }
-            }
-        }
+        if (state.isLoadingMore) contentListLoadingMoreItem()
     }
 }
 
@@ -198,8 +173,6 @@ private fun ParentCandidateRow(
             .clickable(onClick = onClick)
     )
 }
-
-private const val LOAD_MORE_THRESHOLD = 5
 
 // Fraction of the screen height the sheet occupies, kept fixed so it doesn't resize while searching.
 private const val SHEET_HEIGHT_FRACTION = 0.75f

@@ -17,15 +17,19 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.ActivityNavigator
+import org.wordpress.android.ui.stats.StatsConstants
+import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.PAGE_FROM_PAGES_LIST
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment.Companion.MODAL_LAYOUT_PICKER_TAG
 import org.wordpress.android.ui.pagesrs.screens.PagesRsListScreen
+import org.wordpress.android.ui.rs.RsConfirmationDialogState
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.clipboardManager
 import org.wordpress.android.util.extensions.setContent
@@ -37,7 +41,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class PagesRsListActivity : BaseAppCompatActivity() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    @Inject lateinit var buildConfigWrapper: BuildConfigWrapper
+    @Inject lateinit var activityNavigator: ActivityNavigator
 
     private val viewModel: PagesRsListViewModel by viewModels()
     private lateinit var mlpViewModel: ModalLayoutPickerViewModel
@@ -57,6 +62,7 @@ class PagesRsListActivity : BaseAppCompatActivity() {
             val authorFilter by viewModel.authorFilter.collectAsState()
             val pendingConfirmation by viewModel.pendingConfirmation.collectAsState()
             val parentPicker by viewModel.parentPicker.collectAsState()
+            val density by viewModel.density.collectAsState()
             AppThemeM3 {
                 PagesRsListScreen(
                     tabStates = tabStates,
@@ -66,13 +72,14 @@ class PagesRsListActivity : BaseAppCompatActivity() {
                     authorFilter = authorFilter,
                     isAuthorFilterSupported = viewModel.isAuthorFilterSupported,
                     avatarUrl = viewModel.avatarUrl,
-                    confirmationDialog = PageRsConfirmationDialogState(
+                    confirmationDialog = RsConfirmationDialogState(
                         pending = pendingConfirmation,
                         onConfirm = viewModel::onConfirmPendingAction,
                         onDismiss = viewModel::onDismissPendingAction
                     ),
                     parentPicker = parentPicker,
                     snackbarMessages = viewModel.snackbarMessages,
+                    revealRequests = viewModel.revealRequests,
                     onSearchOpen = viewModel::onSearchOpen,
                     onSearchQueryChanged = viewModel::onSearchQueryChanged,
                     onSearchClose = viewModel::onSearchClose,
@@ -88,10 +95,24 @@ class PagesRsListActivity : BaseAppCompatActivity() {
                     onParentSearchChanged = viewModel::onParentSearchChanged,
                     onLoadMoreParents = viewModel::onLoadMoreParents,
                     onParentPickerDismissed = viewModel::onParentPickerDismissed,
-                    onAddNewPage = viewModel::onAddNewPage
+                    onAddNewPage = viewModel::onAddNewPage,
+                    onRowsVisible = viewModel::onRowsVisible,
+                    onDensityToggled = viewModel::onDensityToggled,
+                    onCancelOpeningPage = viewModel::cancelOpeningPage,
+                    density = density
                 )
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.onScreenVisible()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.onScreenHidden()
     }
 
     private fun observeEvents() {
@@ -107,10 +128,14 @@ class PagesRsListActivity : BaseAppCompatActivity() {
             is PageRsListEvent.EditPage ->
                 ActivityLauncher.editPostOrPageForResult(this, event.site, event.page)
             is PageRsListEvent.CreateNewPage -> startCreatePageFlow()
-            is PageRsListEvent.ViewPage -> ActivityLauncher.openUrlExternal(this, event.url)
+            is PageRsListEvent.ViewPage -> activityNavigator.openInCustomTab(this, event.url)
             is PageRsListEvent.SharePage ->
                 ActivityLauncher.openShareIntent(this, event.url, event.title)
             is PageRsListEvent.CopyPageUrl -> copyUrlToClipboard(event.url)
+            // The stats screen's "homepage" item type is what it uses for every page.
+            is PageRsListEvent.ViewStats -> StatsDetailActivity.start(
+                this, event.site, event.pageId, StatsConstants.ITEM_TYPE_HOME_PAGE, event.title, event.url
+            )
             is PageRsListEvent.OpenSiteEditor -> openSiteEditor(event.url, event.useWpComCredentials)
             is PageRsListEvent.PromoteWithBlaze ->
                 ActivityLauncher.openPromoteWithBlaze(this, event.page, BlazeFlowSource.PAGES_LIST)
@@ -141,7 +166,7 @@ class PagesRsListActivity : BaseAppCompatActivity() {
 
     private fun startCreatePageFlow() {
         if (mlpViewModel.canShowModalLayoutPicker() &&
-            jetpackFeatureRemovalPhaseHelper.shouldShowTemplateSelectionInPages()
+            buildConfigWrapper.isJetpackApp
         ) {
             mlpViewModel.createPageFlowTriggered()
         } else {

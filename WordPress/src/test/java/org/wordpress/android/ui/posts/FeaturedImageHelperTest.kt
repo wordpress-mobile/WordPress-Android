@@ -6,6 +6,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
+import org.mockito.Mockito.lenient
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.KArgumentCaptor
 import org.mockito.kotlin.any
@@ -300,14 +301,16 @@ class FeaturedImageHelperTest {
     }
 
     @Test
-    fun `createCurrent-State uses media url when thumbnailUrl is empty`() {
+    fun `createCurrent-State resizes the full-size media url, not the thumbnail`() {
         // Arrange
         val post: PostImmutableModel = mock()
         whenever(post.hasFeaturedImage()).thenReturn(true)
 
         val media: MediaModel = mock()
-        whenever(media.thumbnailUrl).thenReturn(null)
         whenever(media.url).thenReturn("https://testing.com/url.jpg")
+        // lenient(): the helper no longer reads thumbnailUrl, but it has to be set for this test
+        // to fail against the old behavior of preferring the thumbnail over the full-size url
+        lenient().`when`(media.thumbnailUrl).thenReturn("https://testing.com/thumbnail.jpg")
         whenever(mediaStore.getSiteMediaWithId(anyOrNull(), anyLong())).thenReturn(media)
 
         val site = createSiteModel().apply {
@@ -319,33 +322,6 @@ class FeaturedImageHelperTest {
         // Assert
         verify(readerUtilsWrapper).getResizedImageUrl(
             eq("https://testing.com/url.jpg"),
-            anyInt(),
-            anyInt(),
-            eq(siteAccessibilityInfo)
-        )
-    }
-
-    @Test
-    fun `createCurrent-State uses thumbnailUrl if it is not empty`() {
-        // Arrange
-        val post: PostImmutableModel = mock()
-        whenever(post.hasFeaturedImage()).thenReturn(true)
-
-        val media: MediaModel = mock()
-        whenever(media.thumbnailUrl).thenReturn("https://testing.com/thumbnail.jpg")
-        whenever(mediaStore.getSiteMediaWithId(anyOrNull(), anyLong())).thenReturn(media)
-
-        val site = createSiteModel().apply {
-            origin = SiteModel.ORIGIN_WPCOM_REST
-        }
-
-        // Act
-        featuredImageHelper.createCurrentFeaturedImageState(site, post)
-        // Assert
-        verify(readerUtilsWrapper).getResizedImageUrl(
-            eq(
-                "https://testing.com/thumbnail.jpg"
-            ),
             anyInt(),
             anyInt(),
             eq(siteAccessibilityInfo)

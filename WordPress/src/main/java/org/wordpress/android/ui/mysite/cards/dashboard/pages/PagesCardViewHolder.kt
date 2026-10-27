@@ -21,6 +21,8 @@ class PagesCardViewHolder(
     parent.viewBinding(MySitePagesCardWithPageItemsBinding::inflate)
 ) {
     init {
+        // the outer list already settles its cards; animating a card refining in place reads as flicker
+        binding.pagesItems.itemAnimator = null
         binding.pagesItems.adapter = PagesItemsAdapter(uiHelpers)
     }
 

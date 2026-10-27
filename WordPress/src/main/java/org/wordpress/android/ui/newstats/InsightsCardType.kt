@@ -12,6 +12,9 @@ enum class InsightsCardType(
     ALL_TIME_STATS(
         R.string.stats_insights_all_time_stats_title
     ),
+    LATEST_POST(
+        R.string.stats_insights_latest_post_summary
+    ),
     MOST_POPULAR_DAY(
         R.string.stats_insights_most_popular_day
     ),
@@ -27,6 +30,7 @@ enum class InsightsCardType(
             listOf(
                 YEAR_IN_REVIEW,
                 ALL_TIME_STATS,
+                LATEST_POST,
                 MOST_POPULAR_DAY,
                 MOST_POPULAR_TIME,
                 TAGS_AND_CATEGORIES

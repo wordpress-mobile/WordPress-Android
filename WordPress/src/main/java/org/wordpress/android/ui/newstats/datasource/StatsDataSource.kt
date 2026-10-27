@@ -6,11 +6,6 @@ package org.wordpress.android.ui.newstats.datasource
  */
 interface StatsDataSource {
     /**
-     * Initializes the data source with the access token.
-     */
-    fun init(accessToken: String)
-
-    /**
      * Fetches stats data for a specific site.
      *
      * @param siteId The WordPress.com site ID
@@ -172,6 +167,21 @@ interface StatsDataSource {
     ): FileDownloadsDataResult
 
     /**
+     * Fetches archive stats for a specific site: the views a site's archive pages (categories,
+     * tags, author and search result pages, and any custom taxonomy) received.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param dateRange The date range parameters for the query
+     * @param max Maximum number of items to return
+     * @return Result containing the archive data or an error
+     */
+    suspend fun fetchArchives(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int = 10
+    ): ArchivesDataResult
+
+    /**
      * Fetches device screen size stats for a specific site.
      *
      * @param siteId The WordPress.com site ID
@@ -244,6 +254,18 @@ interface StatsDataSource {
         siteId: Long,
         max: Int = 10
     ): StatsTagsDataResult
+
+    /**
+     * Fetches view stats for a single post.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param postId The post ID; 0 is the site's home page
+     * @return Result containing the post's view data or an error
+     */
+    suspend fun fetchPostViews(
+        siteId: Long,
+        postId: Long
+    ): PostViewsDataResult
 
     /**
      * Fetches subscriber count stats for a specific site.
@@ -422,8 +444,7 @@ data class TopPostDataItem(
     val id: Long,
     val title: String,
     val views: Long,
-    val url: String? = null,
-    val postType: String? = null
+    val url: String? = null
 )
 
 /**
@@ -652,6 +673,61 @@ data class FileDownloadDataItem(
 )
 
 /**
+ * Result wrapper for archive stats fetch operation.
+ */
+sealed class ArchivesDataResult {
+    data class Success(
+        val sections: List<ArchiveSectionDataItem>
+    ) : ArchivesDataResult()
+    data class Error(
+        val errorType: StatsErrorType
+    ) : ArchivesDataResult()
+}
+
+/**
+ * The [ArchiveSectionDataItem.key] of the one group that holds every custom taxonomy the site has.
+ * The API reports each taxonomy separately in its own `tax` map, and they are gathered under a
+ * single group, as the web does, so a site with a dozen taxonomies doesn't bury its built-in
+ * groups -- one entry per taxonomy, its terms nested under it.
+ *
+ * The name is borrowed from the API's own key for that map, which is never a built-in group key,
+ * so the synthesised group can't collide with a real one.
+ */
+const val ARCHIVE_SECTION_KEY_TAXONOMIES = "tax"
+
+/**
+ * One group of archive pages. [key] is the API's own name for the group -- one of its short
+ * built-in keys ("search", "cat", "tag", "author", "date", "err", "multiple", "other") or
+ * [ARCHIVE_SECTION_KEY_TAXONOMIES] -- which is what the UI resolves into a label.
+ *
+ * [views] is the total across every entry kept for the group, including any dropped from [entries]
+ * by the display cap, so the group's own number stays right however many of its entries are listed
+ * under it. Entries the API returned with no term are not counted: they have no label to show, and
+ * leaving them out is what the web does too.
+ */
+data class ArchiveSectionDataItem(
+    val key: String,
+    val views: Long,
+    val entries: List<ArchiveEntryDataItem>
+)
+
+/**
+ * A single archive page within a group, e.g. one category. [value] is the term itself, percent-
+ * decoded as the web decodes it, and [href] the archive page it links to -- left encoded, being a
+ * URL to open.
+ *
+ * [children] is only used by [ARCHIVE_SECTION_KEY_TAXONOMIES], whose entries are the site's custom
+ * taxonomies rather than pages: there, [value] is the taxonomy's name, [href] is null and the
+ * taxonomy's terms are the children. Empty for every other group, whose entries are pages already.
+ */
+data class ArchiveEntryDataItem(
+    val value: String,
+    val href: String?,
+    val views: Long,
+    val children: List<ArchiveEntryDataItem> = emptyList()
+)
+
+/**
  * Result wrapper for devices stats fetch operation.
  */
 sealed class DevicesDataResult {
@@ -762,6 +838,103 @@ data class TagData(
     val tagType: String,
     val name: String,
     val link: String? = null
+)
+
+/**
+ * Result wrapper for the per-post views fetch operation.
+ */
+sealed class PostViewsDataResult {
+    data class Success(
+        val data: PostViewsData
+    ) : PostViewsDataResult()
+    data class Error(
+        val errorType: StatsErrorType
+    ) : PostViewsDataResult()
+}
+
+/**
+ * View stats for a single post, along with the post's own metadata. The API returns both in one
+ * response, so no separate post fetch is needed.
+ *
+ * Post ID 0 is the site's home page, which isn't a post -- it has view stats but no [post].
+ */
+data class PostViewsData(
+    val postId: Long,
+    val totalViews: Long,
+    /** The post's complete daily view history, oldest first. */
+    val dailyViews: List<PostViewsDailyView>,
+    /** The most recent weeks of daily views, most recent first. */
+    val weeks: List<PostViewsWeek>,
+    /** Yearly totals, most recent year first. */
+    val years: List<PostViewsYear>,
+    /** Yearly averages, most recent year first. */
+    val averages: List<PostViewsYearAverage>,
+    /** The post these stats belong to, or null for the site's home page. */
+    val post: PostViewsPost?
+)
+
+/**
+ * A single day's view count. The day is kept so the chart can label its range.
+ */
+data class PostViewsDailyView(
+    /** The day the views were recorded on (format: yyyy-MM-dd). */
+    val day: String,
+    val views: Long
+)
+
+/**
+ * The editorial metadata of the post whose stats were fetched.
+ */
+data class PostViewsPost(
+    val title: String,
+    /** Publication date in the site's timezone (format: yyyy-MM-dd HH:mm:ss). */
+    val date: String,
+    val likeCount: Long,
+    val commentCount: Long
+)
+
+/**
+ * A week's view total and how it compares with the week before.
+ *
+ * [startDay] and [endDay] bound the week (format: yyyy-MM-dd); the final week may be partial. The
+ * API also breaks the week down per day, which nothing displays yet.
+ */
+data class PostViewsWeek(
+    val startDay: String,
+    val endDay: String,
+    val total: Long,
+    val change: PostViewsChange
+)
+
+/**
+ * How a week's views compare with the week before.
+ */
+sealed class PostViewsChange {
+    data class Percentage(
+        val value: Double
+    ) : PostViewsChange()
+
+    /** The previous week had no views, so the API reports an unbounded change. */
+    data object Infinite : PostViewsChange()
+
+    /** The week has no predecessor to compare against. */
+    data object None : PostViewsChange()
+}
+
+/**
+ * A year's view total. The API also breaks this down by month, which nothing displays yet.
+ */
+data class PostViewsYear(
+    val year: String,
+    val total: Long
+)
+
+/**
+ * A year's average daily views. The API also breaks this down by month, which nothing displays yet.
+ */
+data class PostViewsYearAverage(
+    val year: String,
+    val overall: Long
 )
 
 /**

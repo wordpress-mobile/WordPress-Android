@@ -149,7 +149,11 @@ class PostsAndPagesUseCase
     }
 
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
-        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_POSTS_AND_PAGES_VIEW_MORE_TAPPED, statsGranularity)
+        analyticsTracker.trackGranular(
+            AnalyticsTracker.Stat.STATS_POSTS_AND_PAGES_VIEW_MORE_TAPPED,
+            statsSiteProvider.siteModel,
+            statsGranularity
+        )
         navigateTo(
             ViewPostsAndPages(
                 statsGranularity,
@@ -164,7 +168,11 @@ class PostsAndPagesUseCase
             OTHER, PAGE, HOMEPAGE -> ITEM_TYPE_HOME_PAGE
             ATTACHMENT -> ITEM_TYPE_ATTACHMENT
         }
-        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED, statsGranularity)
+        analyticsTracker.trackGranular(
+            AnalyticsTracker.Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED,
+            statsSiteProvider.siteModel,
+            statsGranularity
+        )
         navigateTo(
             ViewPostDetailStats(
                 postId = params.postId,

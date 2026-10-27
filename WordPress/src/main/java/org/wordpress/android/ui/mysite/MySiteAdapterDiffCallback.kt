@@ -13,7 +13,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorWithinCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFullPluginCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackSwitchMenu
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PagesCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PersonalizeCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
@@ -26,7 +25,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 
 @Suppress("ComplexMethod")
 object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
@@ -52,14 +50,12 @@ object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
             oldItem is DashboardPlansCard && updatedItem is DashboardPlansCard -> true
             oldItem is PagesCard && updatedItem is PagesCard -> true
             oldItem is ActivityCard && updatedItem is ActivityCard -> true
-            oldItem is JetpackBadge && updatedItem is JetpackBadge -> true
             oldItem is SingleActionCard && updatedItem is SingleActionCard -> {
                 oldItem.textResource == updatedItem.textResource
                         && oldItem.imageResource == updatedItem.imageResource
             }
 
             oldItem is JetpackFeatureCard && updatedItem is JetpackFeatureCard -> true
-            oldItem is JetpackSwitchMenu && updatedItem is JetpackSwitchMenu -> true
             oldItem is JetpackInstallFullPluginCard && updatedItem is JetpackInstallFullPluginCard -> true
             oldItem is MySiteCardAndItem.Card.NoCardsMessage && updatedItem is
                     MySiteCardAndItem.Card.NoCardsMessage -> true

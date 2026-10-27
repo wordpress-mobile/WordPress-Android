@@ -10,10 +10,10 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.items.ACTIVITY_ITEM
 import org.wordpress.android.ui.mysite.items.ADMIN_ITEM
 import org.wordpress.android.ui.mysite.items.BACKUP_ITEM
+import org.wordpress.android.ui.mysite.items.ME_ITEM
 import org.wordpress.android.ui.mysite.items.PAGES_ITEM
 import org.wordpress.android.ui.mysite.items.PEOPLE_ITEM
 import org.wordpress.android.ui.mysite.items.PLUGINS_ITEM
@@ -50,9 +50,6 @@ class SiteListItemBuilderTest {
     lateinit var siteModel: SiteModel
 
     @Mock
-    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
-
-    @Mock
     lateinit var siteMonitoringFeatureConfig: SiteMonitoringFeatureConfig
 
     @Mock
@@ -71,7 +68,6 @@ class SiteListItemBuilderTest {
             siteUtilsWrapper,
             buildConfigWrapper,
             themeBrowserUtils,
-            jetpackFeatureRemovalPhaseHelper,
             siteMonitoringFeatureConfig,
             selfHostedUsersFeatureConfig,
             siteCapabilityChecker
@@ -333,6 +329,26 @@ class SiteListItemBuilderTest {
         setupSiteSettings(canManageOptions = false, isAccessedViaWPComRest = true)
 
         val item = siteListItemBuilder.buildSiteSettingsItemIfAvailable(siteModel, SITE_ITEM_ACTION)
+
+        assertThat(item).isNull()
+    }
+
+    // Me stands in for the bottom navigation in the WordPress app, so it is built for every site
+    // regardless of capabilities.
+    @Test
+    fun `me item built in the WordPress app, regardless of site capabilities`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+
+        val item = siteListItemBuilder.buildMeItemIfAvailable(SITE_ITEM_ACTION)
+
+        assertThat(item).isEqualTo(ME_ITEM)
+    }
+
+    @Test
+    fun `me item not built in the Jetpack app`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+
+        val item = siteListItemBuilder.buildMeItemIfAvailable(SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }

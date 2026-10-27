@@ -13,7 +13,6 @@ import org.wordpress.android.ui.debug.preferences.DebugSharedPreferenceFlagsActi
 import org.wordpress.android.ui.domains.management.DomainManagementActivity
 import org.wordpress.android.ui.domains.management.newdomainsearch.NewDomainSearchActivity
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainActivity
-import org.wordpress.android.ui.jetpackoverlay.JetpackStaticPosterActivity
 import org.wordpress.android.ui.main.feedbackform.FeedbackFormActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.media.MediaSettingsActivity
@@ -29,6 +28,7 @@ import org.wordpress.android.ui.postsrs.terms.TermSelectionActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeaturesActivity
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity
+import org.wordpress.android.ui.reader.ReaderSearchActivity
 import org.wordpress.android.ui.selfhostedusers.SelfHostedUsersActivity
 import org.wordpress.android.ui.sitemonitor.SiteMonitorParentActivity
 import org.wordpress.android.ui.subscribers.SubscribersActivity
@@ -90,7 +90,6 @@ private val excludedActivities = listOf(
     EditJetpackSocialShareMessageActivity::class.java.name,
     ExperimentalFeaturesActivity::class.java.name,
     FeedbackFormActivity::class.java.name,
-    JetpackStaticPosterActivity::class.java.name,
     MediaPreviewActivity::class.java.name,
     MenuActivity::class.java.name,
     NavMenusActivity::class.java.name,
@@ -101,6 +100,7 @@ private val excludedActivities = listOf(
     PostRsSettingsActivity::class.java.name,
     TermSelectionActivity::class.java.name,
     PurchaseDomainActivity::class.java.name,
+    ReaderSearchActivity::class.java.name,
     SelfHostedUsersActivity::class.java.name,
     SiteMonitorParentActivity::class.java.name,
     SubscribersActivity::class.java.name,

@@ -6,11 +6,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.util.MissingSplitsUtils.isMissingSplits
 import org.wordpress.android.util.ProfilingUtils
-import org.wordpress.android.util.ToastUtils
 
 @SuppressLint("CustomSplashScreen")
 class WPLaunchActivity : AppCompatActivity() {
@@ -50,11 +48,6 @@ class WPLaunchActivity : AppCompatActivity() {
     }
 
     private fun launchWPMainActivity() {
-        if (!WordPress.isWpDBInitialized) {
-            ToastUtils.showToast(this, R.string.fatal_db_error, ToastUtils.Duration.LONG)
-            finish()
-            return
-        }
         val intent = Intent(this, WPMainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.action = getIntent().action

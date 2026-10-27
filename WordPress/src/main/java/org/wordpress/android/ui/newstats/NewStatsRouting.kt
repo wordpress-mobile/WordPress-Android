@@ -6,12 +6,12 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Decides whether New Stats is shown, shared by the My Site menu and the Stats widgets so the two
- * can't drift apart.
+ * Decides whether New Stats is shown, shared by the My Site menu, the Stats widgets and the stats
+ * deep links so they can't drift apart.
  *
- * Note this does not yet govern every route into Stats: shortcuts, deep links, notifications and
- * the activity log go straight to the old [org.wordpress.android.ui.stats.refresh.StatsActivity]
- * via ActivityLauncher.viewBlogStats, regardless of this decision.
+ * Note this does not yet govern every route into Stats: shortcuts, notifications and the activity
+ * log go straight to the old [org.wordpress.android.ui.stats.refresh.StatsActivity] via
+ * ActivityLauncher.viewBlogStats, regardless of this decision.
  */
 @Singleton
 class NewStatsRouting @Inject constructor(

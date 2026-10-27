@@ -18,7 +18,6 @@
     <attr name="wpColorActionModeIcon" format="reference|color" />
 
     <attr name="wpColorSurfaceSecondary" format="reference|color" />
-    <attr name="wpColorLoginPrologueBg" format="reference|color" />
 
     <!-- Gutenberg colors-->
     <attr name="colorGutenbergDivider" format="reference|color" />
@@ -54,6 +53,7 @@
         <attr name="iconTint" format="color|reference" />
         <attr name="switchThumbTint" format="integer" />
         <attr name="startOffset" format="dimension|reference" />
+        <attr name="alignSwitchWithTitle" format="boolean" />
     </declare-styleable>
 
     <!-- DetailListPreference attributes -->
@@ -164,29 +164,6 @@
         <attr name="wpSummary" format="string" />
         <attr name="wpShowDivider" format="boolean" />
         <attr name="wpTextDialogSubtitle" format="string" />
-    </declare-styleable>
-
-    <!--
-        FilteredRecyclerView
-    -->
-    <declare-styleable name="FilteredRecyclerView">
-        <!-- Optional: Layout resource id for the Filter Spinner main TextView -->
-        <attr name="wpSpinnerItemView" format="reference"/>
-
-        <!-- Optional: Layout resource id for the Filter Spinner dropdown TextView -->
-        <attr name="wpSpinnerDropDownItemView" format="reference"/>
-
-        <!-- Optional: Default is false. Locks the toolbar and prevents scroll to hide/reveal functionality -->
-        <attr name="wpToolbarDisableScrollGestures" format="boolean"/>
-        <!-- Optional: Default to false. Hide the AppBarLayout. This flag was added as part of
-        ReaderPostListFragment refactoring. We don't need to use the FilteredRecyclerView in the
-        Reader anymore, but since it's planned to iteratively rewrite the ReaderPostListFragment
-        it's not worth replacing the FilteredRecyclerView with something else now. Therefore we
-        opted for a simple flag which hides the filtering options from the FilteredRecyclerView -->
-        <attr name="wpHideAppBarLayout" format="boolean"/>
-        <!-- Optional: Default is true. Include a default spacing between items, which can act as
-         a divider in case the RecyclerView background is different than each item's background-->
-        <attr name="wpIncludeDefaultSpacing" format="boolean"/>
     </declare-styleable>
 
     <!--

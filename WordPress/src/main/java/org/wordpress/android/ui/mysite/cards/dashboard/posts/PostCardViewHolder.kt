@@ -27,6 +27,8 @@ sealed class PostCardViewHolder<T : ViewBinding>(
         parent.viewBinding(MySitePostCardWithPostItemsBinding::inflate)
     ) {
         init {
+            // the outer list already settles its cards; animating a card refining in place reads as flicker
+            binding.postItems.itemAnimator = null
             binding.postItems.adapter = PostItemsAdapter(imageManager, uiHelpers)
         }
 

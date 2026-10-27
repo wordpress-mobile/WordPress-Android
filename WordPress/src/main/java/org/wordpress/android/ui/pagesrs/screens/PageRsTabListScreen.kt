@@ -1,82 +1,63 @@
 package org.wordpress.android.ui.pagesrs.screens
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.flow.distinctUntilChanged
 import org.wordpress.android.R
 import org.wordpress.android.ui.pagesrs.PageRsListItem
 import org.wordpress.android.ui.pagesrs.PageRsMenuAction
-import org.wordpress.android.ui.pagesrs.PageTabUiState
-import org.wordpress.android.ui.postsrs.screens.PlaceholderItem
+import org.wordpress.android.ui.pagesrs.SITE_EDITOR_PAGE_ID
+import org.wordpress.android.ui.pagesrs.hasRealPages
+import org.wordpress.android.ui.rs.RsTabUiState
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults
+import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.rs.contentlist.ContentListEmptyState
+import org.wordpress.android.ui.rs.contentlist.ContentListErrorState
+import org.wordpress.android.ui.rs.contentlist.ContentListShimmer
+import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
+import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
+import org.wordpress.android.ui.rs.contentlist.ReportVisibleRows
+import org.wordpress.android.ui.rs.contentlist.RevealRow
+import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun PageRsTabListScreen(
-    state: PageTabUiState,
+    state: RsTabUiState<PageRsListItem>,
     emptyMessageResId: Int,
+    revealPageId: Long?,
+    onRevealHandled: () -> Unit,
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit,
     onPageClick: (Long) -> Unit,
     onPageMenuAction: (Long, PageRsMenuAction) -> Unit,
+    onRowsVisible: (List<Long>) -> Unit,
     modifier: Modifier = Modifier,
     isSearchIdle: Boolean = false,
-    isSearching: Boolean = false
+    isSearching: Boolean = false,
+    density: ContentListDensity = ContentListDensity.COMFORTABLE
 ) {
-    val pullToRefreshState = rememberPullToRefreshState()
-
-    PullToRefreshBox(
-        modifier = modifier.fillMaxSize(),
+    ContentListPullToRefreshBox(
         isRefreshing = state.isRefreshing,
-        state = pullToRefreshState,
         onRefresh = onRefresh,
-        indicator = {
-            PullToRefreshDefaults.Indicator(
-                state = pullToRefreshState,
-                isRefreshing = state.isRefreshing,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.align(Alignment.TopCenter)
-            )
-        }
+        modifier = modifier,
     ) {
         when {
             isSearchIdle -> Box(Modifier.fillMaxSize())
-            state.isLoading -> ShimmerList()
-            state.error != null -> {
-                ErrorContent(
+            state.isLoading -> ContentListShimmer()
+            state.error != null && !state.items.hasRealPages -> {
+                ContentListErrorState(
                     error = state.error,
                     onRetry = if (state.isAuthError) null else onRefresh
                 )
             }
-            state.pages.isEmpty() && !state.isRefreshing -> {
-                EmptyContent(
-                    emptyMessageResId = if (isSearching) {
+            state.items.isEmpty() && !state.isRefreshing -> {
+                ContentListEmptyState(
+                    messageResId = if (isSearching) {
                         R.string.pages_empty_search_result
                     } else {
                         emptyMessageResId
@@ -84,12 +65,17 @@ internal fun PageRsTabListScreen(
                 )
             }
             else -> PageListContent(
-                pages = state.pages,
+                pages = state.items,
+                revealPageId = revealPageId,
+                onRevealHandled = onRevealHandled,
                 isLoadingMore = state.isLoadingMore,
                 canLoadMore = state.canLoadMore,
                 onLoadMore = onLoadMore,
                 onPageClick = onPageClick,
-                onPageMenuAction = onPageMenuAction
+                onPageMenuAction = onPageMenuAction,
+                onRowsVisible = onRowsVisible,
+                density = density,
+                isSearching = isSearching
             )
         }
     }
@@ -98,116 +84,56 @@ internal fun PageRsTabListScreen(
 @Composable
 private fun PageListContent(
     pages: List<PageRsListItem>,
+    revealPageId: Long?,
+    onRevealHandled: () -> Unit,
     isLoadingMore: Boolean,
     canLoadMore: Boolean,
     onLoadMore: () -> Unit,
     onPageClick: (Long) -> Unit,
-    onPageMenuAction: (Long, PageRsMenuAction) -> Unit
+    onPageMenuAction: (Long, PageRsMenuAction) -> Unit,
+    onRowsVisible: (List<Long>) -> Unit,
+    density: ContentListDensity,
+    isSearching: Boolean
 ) {
     val listState = rememberLazyListState()
 
-    LaunchedEffect(canLoadMore) {
-        if (!canLoadMore) return@LaunchedEffect
-        snapshotFlow {
-            val lastVisible = listState.layoutInfo
-                .visibleItemsInfo.lastOrNull()?.index ?: 0
-            val total = listState.layoutInfo.totalItemsCount
-            lastVisible >= total - LOAD_MORE_THRESHOLD
-        }.distinctUntilChanged().collect { shouldLoad ->
-            if (shouldLoad) onLoadMore()
+    // Scrolls to a page the user just saved, once the refresh carrying it lands. The published and
+    // draft tabs sort by title, so it can be anywhere in the list.
+    RevealRow(revealPageId, listState, onRevealHandled) { id ->
+        pages.indexOfFirst { it.remotePageId == id }
+    }
+
+    // Rows are keyed by a String, so the ids come from the entries the visible indexes land on.
+    // The Site Editor row has no page behind it and so no view count to ask for.
+    ReportVisibleRows(listState, onRowsVisible = onRowsVisible) {
+        listState.layoutInfo.visibleItemsInfo.mapNotNull { info ->
+            pages.getOrNull(info.index)
+                ?.remotePageId
+                ?.takeIf { it != SITE_EDITOR_PAGE_ID }
         }
     }
 
+    LoadMoreOnScrollToEnd(listState, pages.size, canLoadMore, onLoadMore)
+
     LazyColumn(
         state = listState,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        // The add-page FAB is hidden while searching, so there's nothing to clear.
+        contentPadding = if (isSearching) PaddingValues() else ContentListDefaults.FabClearancePadding
     ) {
         items(
             items = pages,
             key = { it.stableKey }
         ) { item ->
-            PageRsRow(
+            PageRsRedesignedRow(
                 item = item,
+                density = density,
                 onClick = { onPageClick(item.remotePageId) },
                 onMenuAction = { action -> onPageMenuAction(item.remotePageId, action) },
                 modifier = Modifier.animateItem()
             )
         }
 
-        if (isLoadingMore) {
-            item(key = "loading_more") {
-                Box(
-                    modifier = Modifier
-                        .fillParentMaxWidth()
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        strokeWidth = 2.dp
-                    )
-                }
-            }
-        }
+        if (isLoadingMore) contentListLoadingMoreItem()
     }
 }
-
-@Composable
-private fun ShimmerList() {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(SHIMMER_ITEM_COUNT) {
-            PlaceholderItem()
-        }
-    }
-}
-
-@Composable
-private fun ErrorContent(error: String, onRetry: (() -> Unit)?) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = stringResource(R.string.error_generic),
-            style = MaterialTheme.typography.titleMedium
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = error,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center
-        )
-        if (onRetry != null) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = onRetry) {
-                Text(text = stringResource(R.string.retry))
-            }
-        }
-    }
-}
-
-@Composable
-private fun EmptyContent(emptyMessageResId: Int) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = stringResource(emptyMessageResId),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}
-
-private const val LOAD_MORE_THRESHOLD = 5
-private const val SHIMMER_ITEM_COUNT = 8

@@ -2,15 +2,31 @@
 
 27.0
 -----
+* [*] Removed the retired WordPress-to-Jetpack content migration flow, along with the exported content provider and broadcast receiver that only it used.
 * [*] You can now browse Google Photos (albums, collections, and search) when adding photos or videos from your device.
+* [**] Fixed the experimental block editor failing to open on WordPress.com sites that moved to Atomic hosting after being added to the app. [https://github.com/wordpress-mobile/WordPress-Android/pull/23301]
 * [**] Fixed media uploads and the Media Library failing on Jetpack-connected self-hosted sites that have Application Passwords disabled.
 * [*] Stats now refresh when you return to the screen, so your latest data appears without a manual pull-to-refresh. [https://github.com/wordpress-mobile/WordPress-Android/pull/23112]
 * [*] Links from emails that open outside the app now show a clear message when no browser is available, instead of closing the app.
 * [*] Switching between the old and new Stats screen is available from the Stats overflow menu while we continue iterating on the new Stats design.
+* [*] Screen readers now announce the site picker's add site menu as an expandable menu and skip the content behind it. [https://github.com/wordpress-mobile/WordPress-Android/pull/23206]
+* [*] Restored the text selection highlight in the experimental block editor, kept the cursor from hiding behind the toolbar while typing, and stopped dropdown menus from running off screen.
+* [*] The experimental block editor now lays out right-to-left when the app language is a right-to-left language.
+* [*] Sharing content to the app now lists self-hosted sites connected with an application password.
+* [**] Images and videos shared to the app from the photo picker now upload instead of being silently dropped.
+* [**] Media shared from apps that generate it on the fly, such as an "Enhanced" photo from Google Photos, now keeps its correct file type instead of always uploading as a JPEG, and sharing several photos at once no longer drops some of them. [https://github.com/wordpress-mobile/WordPress-Android/issues/23047]
+* [**] Self-hosted sites added with an application password now have their Jetpack status detected, so opening Stats in the Jetpack app no longer asks you to install a plugin your site already has.
+* [*] Reworked editor capability detection to be more reliable and prevent a false "Unable to connect to your site" banner on private Atomic sites.
+* [*] Refreshed the pre-publish Tags screen with a modern chip-based UI, showing selected tags as removable pills.
+* [**] Posts and pages that have no excerpt no longer get an automatically generated one filled in and saved when you update them.
+* [**] Authors and contributors can now pick categories and tags in the post editor on Atomic and self-hosted sites, instead of hitting a category refresh error.
+* [**] Deleting a category now works on sites connected with an application password, and a category or tag that can't be deleted tells you so instead of leaving the screen loading. [https://github.com/wordpress-mobile/WordPress-Android/pull/23294]
+* [**] Photos and videos now keep their original file name when uploaded, instead of being renamed to something like "wp-1710415123456".
+* [**] Redesigned the posts, pages and comments lists with cards, filter chips and a condensed view, along with a redesigned comment detail screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/23381]
+* [*] Stats cards that your plan doesn't include - Regions, Cities, Devices and UTM - now invite you to explore plans instead of showing a permission error.
 
 26.9
 -----
-
 
 26.8
 -----

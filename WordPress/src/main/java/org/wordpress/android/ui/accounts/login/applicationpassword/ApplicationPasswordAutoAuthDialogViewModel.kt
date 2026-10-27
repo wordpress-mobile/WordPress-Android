@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.StoreCredentialsResult
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.UriLogin
+import org.wordpress.android.ui.accounts.login.DiscoverySource
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DeviceUtils
@@ -78,6 +79,7 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
                         val password = response.response.data.password
                         val apiRootUrl =
                             wpApiClientProvider.getApiRootUrlFrom(site)
+                        logResolvedApiRoot(site, apiRootUrl)
                         val result = applicationPasswordLoginHelper
                             .storeApplicationPasswordCredentialsFrom(
                                 urlLogin = UriLogin(
@@ -139,6 +141,29 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Records the REST root this mint is about to persist, alongside the classification it was
+     * derived from.
+     *
+     * [WpApiClientProvider.getApiRootUrlFrom] falls back to `"${site.url}/wp-json"` when the site
+     * has no stored root, and the value goes straight to
+     * [ApplicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom], which persists it to
+     * `WP_API_REST_URL`. That column is excluded from full-row writes, so whatever is written here
+     * outlives the site state that produced it — worth a record of both.
+     *
+     * The site comes from an intent extra, so it can be a snapshot taken before an Atomic transfer
+     * landed; a classification here that disagrees with the stored row explains a root that looks
+     * wrong later.
+     */
+    private fun logResolvedApiRoot(site: SiteModel, apiRootUrl: String) {
+        appLogWrapper.d(
+            AppLog.T.API,
+            "A_P: Resolved API root for ${site.url}: root=$apiRootUrl" +
+                " isWPCom=${site.isWPCom} isAtomic=${site.isWPComAtomic}" +
+                " isSimple=${site.isWPComSimpleSite} siteId=${site.siteId}"
+        )
+    }
+
     private fun logCreationError(siteUrl: String, detail: String) {
         appLogWrapper.e(
             AppLog.T.API,
@@ -149,7 +174,9 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     private suspend fun fallbackToManualLogin(siteUrl: String) {
         try {
-            when (val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl)) {
+            val result = applicationPasswordLoginHelper
+                .getAuthorizationUrlComplete(siteUrl, DiscoverySource.AUTO_AUTH_FALLBACK)
+            when (result) {
                 is ApplicationPasswordLoginHelper.DiscoveryResult.Authorized ->
                     _navigationEvent.emit(NavigationEvent.FallbackToManualLogin(result.authorizationUrl))
                 is ApplicationPasswordLoginHelper.DiscoveryResult.WpComSite -> {

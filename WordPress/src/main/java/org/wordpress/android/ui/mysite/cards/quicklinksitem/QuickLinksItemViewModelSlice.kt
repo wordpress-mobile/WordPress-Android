@@ -61,20 +61,15 @@ class QuickLinksItemViewModelSlice @Inject constructor(
     }
 
     private fun buildQuickLinks(site: SiteModel) {
-        scope.launch {
+        scope.launch(bgDispatcher) {
             _uiState.postValue(
                 convertToQuickLinkRibbonItem(
                     site,
-                    siteItemsBuilder.build(
-                        MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
-                            site = site,
-                            enableFocusPoints = false,
-                            onClick = this@QuickLinksItemViewModelSlice::onClick,
-                            isBlazeEligible = isSiteBlazeEligible(site),
-                            backupAvailable = true,
-                            scanAvailable = (!site.isWPCom && !site.isWPComAtomic)
-                        )
-                    ),
+                    buildSiteItems(
+                        site,
+                        backupAvailable = true,
+                        scanAvailable = (!site.isWPCom && !site.isWPComAtomic)
+                    )
                 )
             )
         }
@@ -86,22 +81,26 @@ class QuickLinksItemViewModelSlice @Inject constructor(
                 _uiState.postValue(
                     convertToQuickLinkRibbonItem(
                         site,
-                        siteItemsBuilder.build(
-                            MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
-                                site = site,
-                                enableFocusPoints = false,
-                                onClick = this@QuickLinksItemViewModelSlice::onClick,
-                                isBlazeEligible = isSiteBlazeEligible(site),
-                                backupAvailable = it.backup,
-                                scanAvailable = it.scan
-                            )
-                        ),
+                        buildSiteItems(site, backupAvailable = it.backup, scanAvailable = it.scan),
                         capabilitiesFetched = true
                     ),
                 )
             }
         }
     }
+
+    private suspend fun buildSiteItems(site: SiteModel, backupAvailable: Boolean, scanAvailable: Boolean) =
+        siteItemsBuilder.build(
+            MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
+                site = site,
+                enableFocusPoints = false,
+                onClick = this::onClick,
+                isBlazeEligible = isSiteBlazeEligible(site),
+                backupAvailable = backupAvailable,
+                scanAvailable = scanAvailable,
+                includeMenusItem = isActiveQuickLink(ListItemAction.MENUS, site.siteId)
+            )
+        )
 
     private fun convertToQuickLinkRibbonItem(
         site: SiteModel,
@@ -111,6 +110,7 @@ class QuickLinksItemViewModelSlice @Inject constructor(
         val siteId = site.siteId
         val activeListItems = listItems.filterIsInstance(MySiteCardAndItem.Item.ListItem::class.java)
             .filter { isActiveQuickLink(it.listItemAction, siteId = siteId) }
+            .sortedByQuickLinkOrder { it.listItemAction }
 
         // Only fetch the capabilities if the user has activity and back up quick link is active
         if (!capabilitiesFetched) {
@@ -159,6 +159,7 @@ class QuickLinksItemViewModelSlice @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
             analyticsTrackerWrapper.track(
                 AnalyticsTracker.Stat.QUICK_LINK_ITEM_TAPPED,
+                selectedSite,
                 mapOf(QUICK_LINK_TRACKING_PARAMETER to action.trackingLabel)
             )
             _onNavigation.postValue(Event(listItemActionHandler.handleAction(action, selectedSite)))
@@ -175,7 +176,7 @@ class QuickLinksItemViewModelSlice @Inject constructor(
 
     private fun isActiveQuickLink(listItemAction: ListItemAction, siteId: Long): Boolean {
         return when (listItemAction) {
-            in defaultShortcuts() -> {
+            in DEFAULT_QUICK_LINKS -> {
                 appPrefsWrapper.getShouldShowDefaultQuickLink(
                     listItemAction.toString(), siteId
                 )
@@ -187,14 +188,6 @@ class QuickLinksItemViewModelSlice @Inject constructor(
                 )
             }
         }
-    }
-
-    private fun defaultShortcuts(): List<ListItemAction> {
-        return listOf(
-            ListItemAction.POSTS,
-            ListItemAction.PAGES,
-            ListItemAction.STATS
-        )
     }
 
     fun clearValue() {

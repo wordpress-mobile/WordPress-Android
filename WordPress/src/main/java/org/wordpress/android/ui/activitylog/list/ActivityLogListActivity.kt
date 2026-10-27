@@ -4,13 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ActivityLogListActivityBinding
-import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.RequestCodes
-import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity
 import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_ACTION_STATE_ID
 import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID
@@ -19,23 +16,11 @@ import org.wordpress.android.ui.jetpack.common.JetpackBackupDownloadActionState
 import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_RESTORE_ID
 import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_REWIND_ID
 import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
-import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWINDABLE_ONLY_KEY
-import javax.inject.Inject
 import android.R as AndroidR
 
 @AndroidEntryPoint
-class ActivityLogListActivity : BaseAppCompatActivity(), ScrollableViewInitializedListener {
-    @Inject
-    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
-
-    @Inject
-    lateinit var uiHelpers: UiHelpers
-
-    private var binding: ActivityLogListActivityBinding? = null
-
+class ActivityLogListActivity : BaseAppCompatActivity() {
     private val isRewindableOnlyFromExtras by lazy {
         intent.getBooleanExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY, false)
     }
@@ -44,7 +29,6 @@ class ActivityLogListActivity : BaseAppCompatActivity(), ScrollableViewInitializ
         super.onCreate(savedInstanceState)
         with(ActivityLogListActivityBinding.inflate(layoutInflater)) {
             setContentView(root)
-            binding = this
             checkAndUpdateUiToBackupScreen()
 
             setSupportActionBar(toolbarMain)
@@ -52,41 +36,6 @@ class ActivityLogListActivity : BaseAppCompatActivity(), ScrollableViewInitializ
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
-        }
-    }
-
-    override fun onScrollableViewInitialized(containerId: Int) {
-        initJetpackBanner(containerId)
-    }
-
-    private fun initJetpackBanner(scrollableContainerId: Int) {
-        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-            val screen = when (isRewindableOnlyFromExtras) {
-                true -> JetpackPoweredScreen.WithDynamicText.BACKUP
-                else -> JetpackPoweredScreen.WithDynamicText.ACTIVITY_LOG
-            }
-
-            binding?.root?.post {
-                val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
-                val scrollableView = binding?.root?.findViewById<View>(scrollableContainerId) as? RecyclerView
-                    ?: return@post
-
-                jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
-                jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
-                binding?.jetpackBanner?.jetpackBannerText?.text = uiHelpers.getTextOfUiString(
-                    this,
-                    jetpackBrandingUtils.getBrandingTextForScreen(screen)
-                )
-
-                if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                    binding?.jetpackBanner?.root?.setOnClickListener {
-                        jetpackBrandingUtils.trackBannerTapped(screen)
-                        JetpackPoweredBottomSheetFragment
-                            .newInstance()
-                            .show(supportFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
-                    }
-                }
-            }
         }
     }
 

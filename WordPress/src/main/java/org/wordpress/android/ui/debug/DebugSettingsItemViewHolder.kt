@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
 import org.wordpress.android.databinding.DebugSettingsFeatureBinding
@@ -57,8 +56,6 @@ sealed class DebugSettingsItemViewHolder(
         }
         featureEnabled.setOnCheckedChangeListener { _, _ -> item.toggleAction.toggle() }
         itemView.setOnClickListener { item.toggleAction.toggle() }
-        previewIcon.isVisible = item.preview != null
-        previewIcon.setOnClickListener { item.preview?.invoke() }
     }
 
     class RemoteFieldConfigViewHolder(parent: ViewGroup) : DebugSettingsItemViewHolder(

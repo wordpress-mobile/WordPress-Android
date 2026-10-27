@@ -2,6 +2,8 @@ package org.wordpress.android.ui.newstats.mostviewed
 
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.archives.toDetailItem
+import org.wordpress.android.ui.newstats.repository.ArchivesResult
 import org.wordpress.android.ui.newstats.repository.ClickItemData
 import org.wordpress.android.ui.newstats.repository.ClicksResult
 import org.wordpress.android.ui.newstats.repository.FileDownloadItemData
@@ -9,9 +11,11 @@ import org.wordpress.android.ui.newstats.repository.FileDownloadsResult
 import org.wordpress.android.ui.newstats.repository.MostViewedResult
 import org.wordpress.android.ui.newstats.repository.SearchTermItemData
 import org.wordpress.android.ui.newstats.repository.SearchTermsResult
+import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.VideoPlayItemData
 import org.wordpress.android.ui.newstats.repository.VideoPlaysResult
+import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 /**
@@ -24,7 +28,8 @@ enum class MostViewedDetailSource {
     CLICKS,
     SEARCH_TERMS,
     VIDEO_PLAYS,
-    FILE_DOWNLOADS
+    FILE_DOWNLOADS,
+    ARCHIVES
 }
 
 /**
@@ -35,22 +40,48 @@ enum class MostViewedDetailSource {
  * shows the first N items while the detail screen shows them all.
  */
 class MostViewedDetailFetcher @Inject constructor(
-    private val statsRepository: StatsRepository
+    private val statsRepository: StatsRepository,
+    private val resourceProvider: ResourceProvider
 ) {
     suspend fun fetch(
         source: MostViewedDetailSource,
         siteId: Long,
         period: StatsPeriod,
-        accessToken: String
+        forceRefresh: Boolean = false
     ): StatsCardFetchResult {
-        statsRepository.init(accessToken)
         return when (source) {
-            MostViewedDetailSource.REFERRERS -> statsRepository.fetchReferrersDetail(siteId, period).toFetchResult()
-            MostViewedDetailSource.CLICKS -> statsRepository.fetchClicks(siteId, period).toFetchResult()
-            MostViewedDetailSource.SEARCH_TERMS -> statsRepository.fetchSearchTerms(siteId, period).toFetchResult()
-            MostViewedDetailSource.VIDEO_PLAYS -> statsRepository.fetchVideoPlays(siteId, period).toFetchResult()
-            MostViewedDetailSource.FILE_DOWNLOADS -> statsRepository.fetchFileDownloads(siteId, period).toFetchResult()
+            MostViewedDetailSource.REFERRERS ->
+                statsRepository.fetchReferrersDetail(siteId, period, forceRefresh).toFetchResult()
+            MostViewedDetailSource.CLICKS ->
+                statsRepository.fetchClicks(siteId, period, forceRefresh).toFetchResult()
+            MostViewedDetailSource.SEARCH_TERMS ->
+                statsRepository.fetchSearchTerms(siteId, period, forceRefresh).toFetchResult()
+            MostViewedDetailSource.VIDEO_PLAYS ->
+                statsRepository.fetchVideoPlays(siteId, period, forceRefresh).toFetchResult()
+            MostViewedDetailSource.FILE_DOWNLOADS ->
+                statsRepository.fetchFileDownloads(siteId, period, forceRefresh).toFetchResult()
+            MostViewedDetailSource.ARCHIVES ->
+                statsRepository.fetchArchivesDetail(siteId, period, forceRefresh).toFetchResult()
         }
+    }
+
+    /**
+     * Whether [source]'s entry for [period] came from an earlier visit to the stats screen and so
+     * should be refreshed in the background. [MostViewedDetailSource.REFERRERS] and
+     * [MostViewedDetailSource.ARCHIVES] are the sources whose cache bucket no card shares, so
+     * without their own revalidation their lists could be served from a previous visit for the
+     * rest of the day.
+     */
+    fun needsRevalidation(source: MostViewedDetailSource, siteId: Long, period: StatsPeriod) =
+        statsRepository.needsRevalidation(bucketOf(source), siteId, period)
+
+    private fun bucketOf(source: MostViewedDetailSource) = when (source) {
+        MostViewedDetailSource.REFERRERS -> StatsCacheBucket.REFERRERS_DETAIL
+        MostViewedDetailSource.CLICKS -> StatsCacheBucket.CLICKS
+        MostViewedDetailSource.SEARCH_TERMS -> StatsCacheBucket.SEARCH_TERMS
+        MostViewedDetailSource.VIDEO_PLAYS -> StatsCacheBucket.VIDEO_PLAYS
+        MostViewedDetailSource.FILE_DOWNLOADS -> StatsCacheBucket.FILE_DOWNLOADS
+        MostViewedDetailSource.ARCHIVES -> StatsCacheBucket.ARCHIVES_DETAIL
     }
 
     private fun MostViewedResult.toFetchResult() = when (this) {
@@ -101,6 +132,18 @@ class MostViewedDetailFetcher @Inject constructor(
             totalValueChangePercent = totalDownloadsChangePercent
         )
         is FileDownloadsResult.Error -> StatsCardFetchResult.Error(messageResId, isAuthError)
+    }
+
+    private fun ArchivesResult.toFetchResult() = when (this) {
+        is ArchivesResult.Success -> StatsCardFetchResult.Success(
+            // No per-group cap here, unlike the card: the screen is a lazy list and exists to show
+            // everything the group was fetched with.
+            items = sections.mapIndexed { i, section -> section.toDetailItem(i.toLong(), resourceProvider) },
+            totalValue = totalViews,
+            totalValueChange = totalViewsChange,
+            totalValueChangePercent = totalViewsChangePercent
+        )
+        is ArchivesResult.Error -> StatsCardFetchResult.Error(messageResId, isAuthError)
     }
 
     private fun SearchTermItemData.toDetailItem(id: Long) = MostViewedDetailItem(

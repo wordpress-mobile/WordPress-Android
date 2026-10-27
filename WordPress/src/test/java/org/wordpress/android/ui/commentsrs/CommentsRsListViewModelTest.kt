@@ -32,13 +32,15 @@ import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsComment
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsCommentsPageResult
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
-import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WPAvatarUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import uniffi.wp_api.CommentListParams
+import uniffi.wp_api.RequestExecutionErrorReason
+import uniffi.wp_api.WpErrorCode
 import java.util.Date
 
 @ExperimentalCoroutinesApi
@@ -48,9 +50,9 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var siteCapabilityChecker: SiteCapabilityChecker
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
     @Mock lateinit var avatarUtilsWrapper: WPAvatarUtilsWrapper
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
+    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
 
     private lateinit var site: SiteModel
     private lateinit var commentBrowsingSession: CommentBrowsingSession
@@ -65,7 +67,8 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(siteCapabilityChecker.canModerateComments(site)).thenReturn(true)
         whenever(resourceProvider.getString(any())).thenReturn("string")
-        whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(any())).thenReturn("2 hours ago")
+        // Fetches short-circuit when offline, so the default has to be a connected device.
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(avatarUtilsWrapper.rewriteAvatarUrlWithResource(any(), any())).thenAnswer { it.arguments[0] }
         whenever(commentsRsDataSource.firstPageParams(any(), anyOrNull())).thenReturn(FIRST_PAGE)
         whenever(commentsRsDataSource.fetchPostTitles(any(), any())).thenReturn(emptyMap())
@@ -84,10 +87,10 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         siteCapabilityChecker = siteCapabilityChecker,
         resourceProvider = resourceProvider,
         networkUtilsWrapper = networkUtilsWrapper,
-        dateTimeUtilsWrapper = dateTimeUtilsWrapper,
         avatarUtilsWrapper = avatarUtilsWrapper,
         analyticsTracker = analyticsTracker,
         commentBrowsingSession = commentBrowsingSession,
+        appPrefsWrapper = appPrefsWrapper,
         bgDispatcher = testDispatcher()
     ).also { activeViewModel = it }
 
@@ -141,10 +144,10 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
 
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
         assertThat(state.isLoading).isFalse()
-        assertThat(state.comments).hasSize(2)
-        assertThat(state.comments.first().remoteCommentId).isEqualTo(1)
-        assertThat(state.comments.first().authorName).isEqualTo("Jane")
-        assertThat(state.comments.first().snippet).isEqualTo("hello")
+        assertThat(state.items).hasSize(2)
+        assertThat(state.items.first().remoteCommentId).isEqualTo(1)
+        assertThat(state.items.first().authorName).isEqualTo("Jane")
+        assertThat(state.items.first().snippet).isEqualTo("hello")
         assertThat(state.canLoadMore).isTrue()
     }
 
@@ -187,6 +190,85 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
+    fun `initTab offline with no content shows the network message`() = test {
+        // The rs client reports offline as a result variant rather than a thrown exception, so
+        // the reason has to survive the trip out of the data source for this to be classified.
+        whenever(resourceProvider.getString(R.string.error_generic_network)).thenReturn("no network")
+        whenever(commentsRsDataSource.fetchCommentsPage(eq(site), any())).thenReturn(
+            RsCommentsPageResult.Error(
+                message = null,
+                reason = RequestExecutionErrorReason.DeviceIsOfflineError(errorMessage = "off")
+            )
+        )
+        val viewModel = createViewModel()
+
+        viewModel.initTab(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
+        assertThat(state.error).isEqualTo("no network")
+        assertThat(state.isAuthError).isFalse()
+        assertThat(state.isLoading).isFalse()
+    }
+
+    @Test
+    fun `initTab offline shows the error without hitting the network`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        whenever(resourceProvider.getString(R.string.error_generic_network)).thenReturn("no network")
+        val viewModel = createViewModel()
+
+        viewModel.initTab(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        verify(commentsRsDataSource, never()).fetchCommentsPage(any(), any())
+        val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
+        assertThat(state.error).isEqualTo("no network")
+        assertThat(state.isLoading).isFalse()
+    }
+
+    @Test
+    fun `initTab auth failure carried as a WP error envelope is still an auth failure`() = test {
+        // A rejected credential can come back either as a transport reason or, when the server
+        // answers with a WP error body, as an error code. Only checking the reason let a 401 keep
+        // its Retry button and show the server's raw wording.
+        whenever(resourceProvider.getString(R.string.post_rs_error_auth)).thenReturn("check login")
+        whenever(commentsRsDataSource.fetchCommentsPage(eq(site), any())).thenReturn(
+            RsCommentsPageResult.Error(
+                message = "Sorry, you are not allowed to do that.",
+                errorCode = WpErrorCode.Unauthorized()
+            )
+        )
+        val viewModel = createViewModel()
+
+        viewModel.initTab(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
+        assertThat(state.isAuthError).isTrue()
+        assertThat(state.error).isEqualTo("check login")
+    }
+
+    @Test
+    fun `initTab auth failure flags the tab so the retry is withheld`() = test {
+        whenever(commentsRsDataSource.fetchCommentsPage(eq(site), any())).thenReturn(
+            RsCommentsPageResult.Error(
+                message = null,
+                reason = RequestExecutionErrorReason.HttpAuthenticationRejectedError(
+                    hostname = "example.com",
+                    method = null
+                )
+            )
+        )
+        val viewModel = createViewModel()
+
+        viewModel.initTab(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        // Retrying rejected credentials just fails again, so the screen drops the retry button.
+        assertThat(viewModel.tabStates.value.getValue(CommentsRsListTab.ALL).isAuthError).isTrue()
+    }
+
+    @Test
     fun `loadMore appends the next page and dedupes by comment id`() = test {
         givenPage(listOf(rsItem(id = 1), rsItem(id = 2)), nextPageParams = NEXT_PAGE)
         val viewModel = createViewModel()
@@ -198,7 +280,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         advanceUntilIdle()
 
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
-        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(1L, 2L, 3L)
+        assertThat(state.items.map { it.remoteCommentId }).containsExactly(1L, 2L, 3L)
         assertThat(state.canLoadMore).isFalse()
     }
 
@@ -220,7 +302,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         advanceUntilIdle()
 
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
-        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(10L, 11L)
+        assertThat(state.items.map { it.remoteCommentId }).containsExactly(10L, 11L)
         assertThat(state.isLoadingMore).isFalse()
         assertThat(state.canLoadMore).isTrue()
     }
@@ -263,7 +345,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         advanceUntilIdle()
 
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
-        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(1L, 2L, 3L)
+        assertThat(state.items.map { it.remoteCommentId }).containsExactly(1L, 2L, 3L)
         assertThat(state.canLoadMore).isFalse()
     }
 
@@ -284,7 +366,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         advanceUntilIdle()
 
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
-        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(1L, 2L, 3L)
+        assertThat(state.items.map { it.remoteCommentId }).containsExactly(1L, 2L, 3L)
         assertThat(state.canLoadMore).isFalse()
     }
 
@@ -341,7 +423,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         // Without the cancel, the identical-ids guard defers to the hung pre-refresh job and
         // the fresh title is never fetched.
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
-        assertThat(state.comments.first().postTitle).isEqualTo("Fresh title")
+        assertThat(state.items.first().postTitle).isEqualTo("Fresh title")
         verify(commentsRsDataSource, times(2)).fetchPostTitles(eq(site), any())
     }
 
@@ -377,7 +459,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             cancelAndIgnoreRemainingEvents()
         }
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
-        assertThat(state.comments).hasSize(1)
+        assertThat(state.items).hasSize(1)
         assertThat(state.error).isNull()
     }
 
@@ -416,7 +498,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             cancelAndIgnoreRemainingEvents()
         }
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
-        assertThat(state.comments).hasSize(1)
+        assertThat(state.items).hasSize(1)
         assertThat(state.error).isNull()
     }
 
@@ -440,7 +522,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         // discarded by the generation check, so nothing else resets it promptly.
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
         assertThat(state.isLoadingMore).isFalse()
-        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(10L)
+        assertThat(state.items.map { it.remoteCommentId }).containsExactly(10L)
     }
 
     @Test
@@ -502,7 +584,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         advanceUntilIdle()
 
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
-        assertThat(state.comments.map { it.postTitle }).containsExactly("First post", "Second post")
+        assertThat(state.items.map { it.postTitle }).containsExactly("First post", "Second post")
     }
 
     @Test
@@ -564,7 +646,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         advanceUntilIdle()
 
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.UNREPLIED)
-        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(3L)
+        assertThat(state.items.map { it.remoteCommentId }).containsExactly(3L)
     }
 
     @Test
@@ -597,7 +679,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         advanceUntilIdle()
 
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.UNREPLIED)
-        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(2L)
+        assertThat(state.items.map { it.remoteCommentId }).containsExactly(2L)
     }
 
     @Test
@@ -619,7 +701,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         advanceUntilIdle()
 
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.UNREPLIED)
-        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(3L)
+        assertThat(state.items.map { it.remoteCommentId }).containsExactly(3L)
     }
 
     @Test

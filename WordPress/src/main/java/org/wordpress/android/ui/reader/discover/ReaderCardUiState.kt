@@ -3,17 +3,20 @@ package org.wordpress.android.ui.reader.discover
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.compose.runtime.Immutable
 import org.wordpress.android.R
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SPACER_NO_ACTION
 import org.wordpress.android.ui.reader.models.ReaderImageList
 
-import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.image.ImageType
 
 sealed class ReaderCardUiState {
+    // only ReaderImageList keeps the compiler from inferring this as stable, and it isn't changed once the card
+    // is built - so equal cards skip recomposition after a reload instead of recomposing because they're new
+    @Immutable
     data class ReaderPostUiState(
         val source: String,
         val postId: Long,
@@ -25,7 +28,6 @@ sealed class ReaderCardUiState {
         val title: UiString?,
         val excerpt: String?,
         val featuredImageUrl: String?,
-        val featuredImageCornerRadius: UiDimen,
         val fullVideoUrl: String?,
         val thumbnailStripSection: GalleryThumbnailStripData?,
         val videoOverlayVisibility: Boolean,
@@ -61,7 +63,7 @@ sealed class ReaderCardUiState {
         data class GalleryThumbnailStripData(
             val images: ReaderImageList,
             val isPrivate: Boolean,
-            val content: String // needs to be here as it's required by ReaderThumbnailStrip
+            val content: String // the photo viewer needs it to build the gallery
         )
     }
 

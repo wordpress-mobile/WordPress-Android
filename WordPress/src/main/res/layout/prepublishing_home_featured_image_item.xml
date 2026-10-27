@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/margin_extra_large"
+    android:paddingEnd="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/margin_extra_large"
+    android:paddingBottom="@dimen/margin_extra_large">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/featured_image_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:text="@string/post_settings_featured_image"
+        android:textAlignment="viewStart"
+        android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+    <FrameLayout
+        android:id="@+id/featured_image_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_rectangle_on_surface_emphasis_extra_low_radius_12"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:minHeight="@dimen/post_settings_featured_image_height_min">
+
+        <LinearLayout
+            android:id="@+id/featured_image_placeholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_extra_large">
+
+            <ImageView
+                android:layout_width="@dimen/avatar_sz_medium"
+                android:layout_height="@dimen/avatar_sz_medium"
+                android:contentDescription="@string/featured_image_desc"
+                android:src="@drawable/ic_image_multiple_white_24dp"
+                app:tint="?attr/colorPrimary" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                android:text="@string/post_settings_set_featured_image"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textColor="?attr/colorPrimary" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/post_featured_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/featured_image_desc"
+            android:maxHeight="@dimen/post_settings_featured_image_height_max"
+            android:minHeight="@dimen/post_settings_featured_image_height_min"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/post_featured_image_local"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/featured_image_desc"
+            android:maxHeight="@dimen/post_settings_featured_image_height_max"
+            android:minHeight="@dimen/post_settings_featured_image_height_min"
+            android:scaleType="centerCrop"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/featured_image_retry_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black_translucent_50"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="@dimen/post_settings_retry_image_size"
+                android:layout_height="@dimen/post_settings_retry_image_size"
+                android:contentDescription="@string/retry"
+                android:src="@drawable/ic_refresh_white_24dp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/editor_failed_to_insert_media_tap_to_retry"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_sz_medium" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/featured_image_progress_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black_translucent_50"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/white" />
+        </RelativeLayout>
+    </FrameLayout>
+</LinearLayout>

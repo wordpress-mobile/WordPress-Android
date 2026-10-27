@@ -38,15 +38,12 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_TAPPED
 import org.wordpress.android.databinding.NotificationsListFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.WPWebViewActivity
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionActivity
 import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionViewModel
 import org.wordpress.android.ui.main.WPMainActivity
@@ -60,8 +57,6 @@ import org.wordpress.android.ui.notifications.adapters.Filter
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity
-import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.WPPermissionUtils.NOTIFICATIONS_PERMISSION_REQUEST_CODE
@@ -76,12 +71,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
     OnScrollToTopListener {
     @Inject
     lateinit var accountStore: AccountStore
-
-    @Inject
-    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
-
-    @Inject
-    lateinit var uiHelpers: UiHelpers
 
     @Inject
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
@@ -147,13 +136,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                 .newInstance(it, PageType.NOTIFS)
                 .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
-
-        viewModel.showJetpackOverlay.observeEvent(viewLifecycleOwner) {
-            if (savedInstanceState == null)
-                JetpackFeatureFullScreenOverlayFragment
-                    .newInstance(JetpackFeatureOverlayScreenType.NOTIFICATIONS)
-                    .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
-        }
     }
 
     override fun onDestroyView() {
@@ -179,7 +161,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             setSelectedTab(lastTabPosition)
             setNotificationPermissionWarning()
         }
-        viewModel.onResume()
     }
 
     private fun fetchRemoteNotes() {
@@ -409,30 +390,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
     override fun onScrollableViewInitialized(containerId: Int) {
         this.containerId = containerId
         binding?.appBar?.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
-        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-            val screen = JetpackPoweredScreen.WithDynamicText.NOTIFICATIONS
-            binding?.root?.post {
-                // post is used to create a minimal delay here. containerId changes just before
-                // onScrollableViewInitialized is called, and findViewById can't find the new id before the delay.
-                val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
-                val scrollableView = getRecyclerViewById() ?: return@post
-                jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
-                jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
-                binding?.jetpackBanner?.jetpackBannerText?.text = uiHelpers.getTextOfUiString(
-                    requireContext(),
-                    jetpackBrandingUtils.getBrandingTextForScreen(screen)
-                )
-
-                if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                    jetpackBannerView.setOnClickListener {
-                        jetpackBrandingUtils.trackBannerTapped(screen)
-                        JetpackPoweredBottomSheetFragment
-                            .newInstance()
-                            .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
-                    }
-                }
-            }
-        }
     }
 
     private fun getRecyclerViewById() =

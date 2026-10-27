@@ -8,6 +8,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import java.time.Clock
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.newstats.StatsPeriod
@@ -30,7 +31,9 @@ class StatsRepositoryDevicesTest : BaseUnitTest() {
     fun setUp() {
         repository = StatsRepository(
             statsDataSource = statsDataSource,
+            statsResultCache = StatsResultCache(),
             appLogWrapper = appLogWrapper,
+            clock = Clock.systemDefaultZone(),
             ioDispatcher = testDispatcher()
         )
     }

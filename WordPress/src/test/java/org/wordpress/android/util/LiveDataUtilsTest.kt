@@ -1,7 +1,11 @@
 package org.wordpress.android.util
 
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.test.advanceTimeBy
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
@@ -362,5 +366,89 @@ class LiveDataUtilsTest : BaseUnitTest() {
         // Then
         assertThat(emitCount).isEqualTo(3)
         assertThat(emittedValues).isEqualTo(listOf("Alpha", "Alpha Bravo", "Alpha Bravo Charlie"))
+    }
+
+    @Test
+    fun `settle passes a value through at once when the source is quiet`() = test {
+        val source = MutableLiveData<String>()
+        val emitted = mutableListOf<String>()
+        source.settle(this, quietMs = QUIET_MS, maxHoldMs = MAX_HOLD_MS).observeForever { emitted.add(it) }
+
+        source.value = "Alpha"
+
+        assertThat(emitted).containsExactly("Alpha")
+    }
+
+    @Test
+    fun `settle holds a burst and emits only its newest value once the source goes quiet`() = test {
+        val source = MutableLiveData<String>()
+        val emitted = mutableListOf<String>()
+        source.settle(this, quietMs = QUIET_MS, maxHoldMs = MAX_HOLD_MS).observeForever { emitted.add(it) }
+
+        source.value = "Alpha"
+        advanceTimeBy(100)
+        source.value = "Bravo"
+        advanceTimeBy(100)
+        source.value = "Charlie"
+        assertThat(emitted).containsExactly("Alpha")
+
+        advanceTimeBy(QUIET_MS + 1)
+
+        assertThat(emitted).containsExactly("Alpha", "Charlie")
+    }
+
+    @Test
+    fun `settle flushes a burst that never goes quiet once the hold deadline passes`() = test {
+        val source = MutableLiveData<String>()
+        val emitted = mutableListOf<String>()
+        source.settle(this, quietMs = QUIET_MS, maxHoldMs = MAX_HOLD_MS).observeForever { emitted.add(it) }
+
+        source.value = "Alpha"
+        listOf("Bravo", "Charlie", "Delta", "Echo").forEach { value ->
+            advanceTimeBy(QUIET_MS - 100)
+            source.value = value
+        }
+        assertThat(emitted).containsExactly("Alpha")
+
+        advanceTimeBy(MAX_HOLD_MS)
+
+        assertThat(emitted).containsExactly("Alpha", "Echo")
+    }
+
+    @Test
+    fun `settle passes a value through at once after a burst has gone quiet`() = test {
+        val source = MutableLiveData<String>()
+        val emitted = mutableListOf<String>()
+        source.settle(this, quietMs = QUIET_MS, maxHoldMs = MAX_HOLD_MS).observeForever { emitted.add(it) }
+
+        source.value = "Alpha"
+        advanceTimeBy(100)
+        source.value = "Bravo"
+        advanceTimeBy(QUIET_MS + 1)
+
+        source.value = "Charlie"
+
+        assertThat(emitted).containsExactly("Alpha", "Bravo", "Charlie")
+    }
+
+    @Test
+    fun `settle drops a held value when its scope is cancelled`() = test {
+        val scope = CoroutineScope(coroutineContext + Job())
+        val source = MutableLiveData<String>()
+        val emitted = mutableListOf<String>()
+        source.settle(scope, quietMs = QUIET_MS, maxHoldMs = MAX_HOLD_MS).observeForever { emitted.add(it) }
+
+        source.value = "Alpha"
+        advanceTimeBy(100)
+        source.value = "Bravo"
+        scope.cancel()
+        advanceTimeBy(MAX_HOLD_MS + 1)
+
+        assertThat(emitted).containsExactly("Alpha")
+    }
+
+    companion object {
+        private const val QUIET_MS = 400L
+        private const val MAX_HOLD_MS = 1200L
     }
 }

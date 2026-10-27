@@ -127,6 +127,7 @@ class OverviewUseCase constructor(
                 val lastItemAge = ceil((currentCalendar.timeInMillis - lastDayDate.time) / 86400000.0)
                 analyticsTracker.track(
                     STATS_OVERVIEW_ERROR,
+                    site,
                     mapOf(
                         "stats_last_date" to statsDateFormatter.printStatsDate(lastDayDate),
                         "stats_current_date" to statsDateFormatter.printStatsDate(currentCalendar.time),
@@ -200,6 +201,7 @@ class OverviewUseCase constructor(
     private fun onBarSelected(period: String?) {
         analyticsTracker.trackGranular(
             AnalyticsTracker.Stat.STATS_OVERVIEW_BAR_CHART_TAPPED,
+            statsSiteProvider.siteModel,
             statsGranularity
         )
         if (period != null && period != "empty") {
@@ -220,7 +222,7 @@ class OverviewUseCase constructor(
             3 -> AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED_COMMENTS
             else -> null
         }
-        event?.let { analyticsTracker.trackWithGranularity(it, statsGranularity) }
+        event?.let { analyticsTracker.trackWithGranularity(it, statsSiteProvider.siteModel, statsGranularity) }
         updateUiState { it.copy(selectedPosition = position) }
     }
 

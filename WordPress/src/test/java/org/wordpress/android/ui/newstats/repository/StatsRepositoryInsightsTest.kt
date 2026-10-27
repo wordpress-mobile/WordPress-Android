@@ -9,6 +9,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import java.time.Clock
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.StatsErrorType
@@ -30,7 +31,9 @@ class StatsRepositoryInsightsTest : BaseUnitTest() {
     fun setUp() {
         repository = StatsRepository(
             statsDataSource = statsDataSource,
+            statsResultCache = StatsResultCache(),
             appLogWrapper = appLogWrapper,
+            clock = Clock.systemDefaultZone(),
             ioDispatcher = testDispatcher()
         )
     }

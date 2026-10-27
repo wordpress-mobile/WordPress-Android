@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -57,7 +56,6 @@ fun TermSelectionScreen(
     onSaveClicked: () -> Unit,
     onTermToggled: (Long) -> Unit,
     onSearchQueryChanged: (String) -> Unit,
-    onLoadMore: () -> Unit,
     onAddTermClicked: () -> Unit,
     onAddDialogDismissed: () -> Unit,
     onAddTermConfirmed: (String, Long?) -> Unit,
@@ -141,13 +139,9 @@ fun TermSelectionScreen(
                         terms = uiState.terms,
                         searchQuery = uiState.searchQuery,
                         isSearching = uiState.isSearching,
-                        canLoadMore = uiState.canLoadMore,
-                        isLoadingMore =
-                            uiState.isLoadingMore,
                         onSearchQueryChanged =
                             onSearchQueryChanged,
                         onTermToggled = onTermToggled,
-                        onLoadMore = onLoadMore,
                     )
             }
         }
@@ -194,11 +188,8 @@ private fun TermListContent(
     terms: List<SelectableTerm>,
     searchQuery: String,
     isSearching: Boolean,
-    canLoadMore: Boolean,
-    isLoadingMore: Boolean,
     onSearchQueryChanged: (String) -> Unit,
     onTermToggled: (Long) -> Unit,
-    onLoadMore: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         OutlinedTextField(
@@ -268,48 +259,7 @@ private fun TermListContent(
                             }
                         )
                     }
-                    if (canLoadMore) {
-                        item(key = "load_more") {
-                            LoadMoreItem(
-                                isLoading =
-                                    isLoadingMore,
-                                onLoadMore = onLoadMore,
-                            )
-                        }
-                    }
                 }
-        }
-    }
-}
-
-@Composable
-private fun LoadMoreItem(
-    isLoading: Boolean,
-    onLoadMore: () -> Unit,
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(
-                enabled = !isLoading,
-                onClick = onLoadMore
-            )
-            .padding(16.dp),
-        contentAlignment = Alignment.Center,
-    ) {
-        if (isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(24.dp),
-                strokeWidth = 2.dp,
-            )
-        } else {
-            Text(
-                text = stringResource(
-                    R.string.post_rs_settings_load_more
-                ),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.primary,
-            )
         }
     }
 }

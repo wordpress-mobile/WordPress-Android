@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.domains
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -42,10 +43,19 @@ sealed class DomainsDashboardViewHolder<T : ViewBinding>(
             uiHelpers.setTextOrHide(siteDomainExpiryDate, item.expiry)
             primarySiteDomainChip.isVisible = item.isPrimary
             uiHelpers.setTextOrHide(siteDomainStatus, item.domainStatus)
-            siteDomainStatus.compoundDrawablesRelative.first().setTint(
-                siteDomainStatus.context.getColor(item.domainStatusColor)
+            item.domainStatusColor?.let { color ->
+                siteDomainStatus.compoundDrawablesRelative.first().setTint(
+                    siteDomainStatus.context.getColor(color)
+                )
+            }
+            // Holders are reused across rows, so a row with nothing to open has
+            // to drop the listener the row before it left on the view.
+            root.setOnClickListener(
+                item.onDomainClick?.let { interaction ->
+                    View.OnClickListener { interaction.click() }
+                }
             )
-            item.onDomainClick?.let { interaction -> root.setOnClickListener { interaction.click() } }
+            root.isClickable = item.onDomainClick != null
         }
     }
 

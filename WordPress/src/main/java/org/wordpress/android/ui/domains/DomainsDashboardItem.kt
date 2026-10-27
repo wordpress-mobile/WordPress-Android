@@ -24,8 +24,8 @@ sealed class DomainsDashboardItem(val type: Type) {
     data class SiteDomains(
         val domain: UiString,
         val isPrimary: Boolean,
-        val domainStatus: UiString,
-        @ColorRes val domainStatusColor: Int,
+        val domainStatus: UiString?,
+        @ColorRes val domainStatusColor: Int?,
         val expiry: UiString?,
         val onDomainClick: ListItemInteraction? = null
     ) : DomainsDashboardItem(SITE_DOMAINS)

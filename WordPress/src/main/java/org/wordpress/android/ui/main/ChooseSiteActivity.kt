@@ -9,6 +9,9 @@ import android.view.View
 import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.AccessibilityDelegateCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -57,6 +60,8 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     private lateinit var refreshHelper: SwipeToRefreshHelper
     private var searchKeyword: String? = null
     private var isAddSiteMenuOpen = false
+    // Accessibility importance each covered view had before the menu hid it, keyed by view id.
+    private val contentAccessibilityImportance = mutableMapOf<Int, Int>()
     private val addSiteMenuItems by lazy {
         // ordered bottom-to-top so the stagger animates upward from the main FAB
         listOf(binding.fabMenuItemSelfHosted, binding.fabMenuItemWpcom)
@@ -113,11 +118,13 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     }
 
     private fun setupAddSiteFab() {
+        setupFabAccessibility()
+        applyFabAccessibilityState()
         binding.fabAddSite.setOnClickListener {
             AnalyticsTracker.track(Stat.SITE_SWITCHER_ADD_SITE_TAPPED)
             // when the user is signed in and can add a self-hosted site there are two choices, so
             // expand the FAB menu; otherwise there's only one action, so trigger it directly
-            if (accountStore.hasAccessToken() && BuildConfig.ENABLE_ADD_SELF_HOSTED_SITE) {
+            if (canExpandAddSiteMenu()) {
                 if (isAddSiteMenuOpen) closeAddSiteMenu() else openAddSiteMenu()
             } else {
                 AddSiteHandler.addSite(this, accountStore.hasAccessToken(), SiteCreationSource.MY_SITE)
@@ -161,6 +168,8 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
             mapOf(KEY_SOURCE to SiteCreationSource.MY_SITE.label)
         )
 
+        setContentBehindMenuAccessible(false)
+        applyFabAccessibilityState()
         binding.fabMenuScrim.animate().cancel()
         binding.fabMenuScrim.isVisible = true
         binding.fabMenuScrim.animate().alpha(SCRIM_ALPHA).setDuration(FAB_MENU_ANIM_DURATION).start()
@@ -185,6 +194,8 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         if (!isAddSiteMenuOpen) return
         isAddSiteMenuOpen = false
 
+        setContentBehindMenuAccessible(true)
+        applyFabAccessibilityState()
         binding.fabMenuScrim.animate().cancel()
         binding.fabMenuScrim.animate().alpha(0f).setDuration(FAB_MENU_ANIM_DURATION)
             .withEndAction { binding.fabMenuScrim.isVisible = false }.start()
@@ -203,6 +214,91 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     }
 
     /**
+     * Describes the FAB as the expandable menu toggle it is, labelling its click action with whether
+     * it will open or close the menu. Installed once: the delegate reads the menu state when a
+     * screen reader asks, so only the state description has to be refreshed per transition.
+     */
+    private fun setupFabAccessibility() {
+        ViewCompat.setAccessibilityDelegate(
+            binding.fabAddSite,
+            object : AccessibilityDelegateCompat() {
+                override fun onInitializeAccessibilityNodeInfo(
+                    host: View,
+                    info: AccessibilityNodeInfoCompat
+                ) {
+                    super.onInitializeAccessibilityNodeInfo(host, info)
+                    if (!canExpandAddSiteMenu()) return
+                    info.addAction(
+                        AccessibilityNodeInfoCompat.AccessibilityActionCompat(
+                            AccessibilityNodeInfoCompat.ACTION_CLICK,
+                            getString(
+                                if (isAddSiteMenuOpen) {
+                                    R.string.site_picker_add_a_site_collapse
+                                } else {
+                                    R.string.site_picker_add_a_site_expand
+                                }
+                            )
+                        )
+                    )
+                }
+            }
+        )
+    }
+
+    /**
+     * Announces whether the menu is expanded. With only one action available the FAB triggers it
+     * directly instead of expanding a menu, so it carries no expanded state in that case.
+     */
+    private fun applyFabAccessibilityState() {
+        ViewCompat.setStateDescription(
+            binding.fabAddSite,
+            if (!canExpandAddSiteMenu()) {
+                null
+            } else {
+                getString(
+                    if (isAddSiteMenuOpen) {
+                        R.string.site_picker_add_site_menu_expanded
+                    } else {
+                        R.string.site_picker_add_site_menu_collapsed
+                    }
+                )
+            }
+        )
+    }
+
+    private fun canExpandAddSiteMenu() =
+        accountStore.hasAccessToken() && BuildConfig.ENABLE_ADD_SELF_HOSTED_SITE
+
+    /**
+     * The scrim blocks touches but leaves the views behind it in the accessibility tree, so a
+     * screen reader can still reach and activate site rows hidden under the open menu. Mark them as
+     * inert while it is open, remembering each view's own importance so reopening restores what it
+     * had rather than assuming AUTO.
+     */
+    private fun setContentBehindMenuAccessible(isAccessible: Boolean) {
+        val covered = listOf(
+            binding.appbarMain,
+            binding.ptrLayout,
+            binding.actionableEmptyView,
+            binding.progress
+        )
+        if (isAccessible) {
+            covered.forEach { view ->
+                view.importantForAccessibility = contentAccessibilityImportance.getOrDefault(
+                    view.id,
+                    View.IMPORTANT_FOR_ACCESSIBILITY_AUTO
+                )
+            }
+            contentAccessibilityImportance.clear()
+        } else {
+            covered.forEach { view ->
+                contentAccessibilityImportance.getOrPut(view.id) { view.importantForAccessibility }
+                view.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+            }
+        }
+    }
+
+    /**
      * Restores the expanded menu after a configuration change by jumping straight to the open
      * end state — no entrance animation and no analytics, both of which belong to a user-initiated
      * open. Setting the FAB visible directly (rather than via show()) skips its scale animation.
@@ -211,6 +307,8 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         isAddSiteMenuOpen = true
         binding.fabAddSite.isVisible = true
         binding.fabAddSite.rotation = FAB_ICON_ROTATION
+        setContentBehindMenuAccessible(false)
+        applyFabAccessibilityState()
         binding.fabMenuScrim.isVisible = true
         binding.fabMenuScrim.alpha = SCRIM_ALPHA
         addSiteMenuItems.forEach { item ->
@@ -289,14 +387,24 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
             menuEditPin.isVisible = true
             // hide the FAB while editing pins, otherwise reveal it
             if (adapter.mode == ActionMode.Pin) {
-                binding.fabAddSite.hide()
+                hideAddSiteFab()
             } else {
                 showAddSiteFab()
             }
         } else {
             menuEditPin.isVisible = false
-            binding.fabAddSite.hide()
+            hideAddSiteFab()
         }
+    }
+
+    /**
+     * The FAB is the only way to dismiss its own menu apart from the scrim, so the menu has to come
+     * down with it. An open menu left behind would keep the scrim up and, now that the views behind
+     * it are marked inert, hide the toolbar and site list from screen readers with no way back.
+     */
+    private fun hideAddSiteFab() {
+        closeAddSiteMenu()
+        binding.fabAddSite.hide()
     }
 
     private fun showAddSiteFab() {
@@ -319,8 +427,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         searchView.maxWidth = Integer.MAX_VALUE
         menuSearch.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
-                closeAddSiteMenu()
-                binding.fabAddSite.hide()
+                hideAddSiteFab()
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String): Boolean {
                         if (!DeviceUtils.getInstance().hasHardwareKeyboard(this@ChooseSiteActivity)) {
@@ -391,8 +498,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         menuEditPin.setIcon(null)
         menuEditPin.title = getString(R.string.label_done_button)
         adapter.setActionMode(ActionMode.Pin)
-        closeAddSiteMenu()
-        binding.fabAddSite.hide()
+        hideAddSiteFab()
     }
 
     /**

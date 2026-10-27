@@ -28,6 +28,7 @@ import uniffi.wp_api.MediaListParams
 import uniffi.wp_api.MediaUpdateParams
 import uniffi.wp_api.MediaWithEditContext
 import uniffi.wp_api.RequestExecutionErrorReason
+import uniffi.wp_api.WpDateString
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Named
@@ -152,6 +153,15 @@ class MediaRSApiRestClient @Inject constructor(
                 }
             }
 
+            // The file was readable when the multipart body was built, but could not be opened or
+            // read once the upload started — deleted mid-upload, or a storage read failure.
+            is WpRequestResult.MediaFileUnreadable<*> -> {
+                appLogWrapper.e(AppLog.T.MEDIA, "Media file unreadable: $mediaResponse")
+                MediaError(MediaErrorType.GENERIC_ERROR).apply {
+                    message = "Media file could not be read"
+                }
+            }
+
             is WpRequestResult.ResponseParsingError<*> -> {
                 appLogWrapper.e(AppLog.T.MEDIA, "Response parsing error: $mediaResponse")
                 MediaError(MediaErrorType.PARSE_ERROR).apply {
@@ -257,6 +267,7 @@ class MediaRSApiRestClient @Inject constructor(
         when (reason) {
             is RequestExecutionErrorReason.HttpTimeoutError -> MediaErrorType.TIMEOUT
             is RequestExecutionErrorReason.DeviceIsOfflineError,
+            is RequestExecutionErrorReason.ConnectionError,
             is RequestExecutionErrorReason.InvalidSslError -> MediaErrorType.CONNECTION_ERROR
             is RequestExecutionErrorReason.NonExistentSiteError -> MediaErrorType.NOT_FOUND
             // Keep this aligned with MediaErrorType.fromHttpStatusCode: a 403 (forbidden) maps to
@@ -517,7 +528,7 @@ class MediaRSApiRestClient @Inject constructor(
         alt = this@toMediaModel.altText
         postId = this@toMediaModel.postId ?: 0
         mimeType = this@toMediaModel.mimeType
-        uploadDate = this@toMediaModel.date
+        uploadDate = this@toMediaModel.date.value
         authorId = this@toMediaModel.author
         uploadState = MediaUploadState.UPLOADED.toString()
 
@@ -582,7 +593,7 @@ class MediaRSApiRestClient @Inject constructor(
         description = description,
         altText = alt,
         author = if (authorId > 0) authorId else null,
-        date = uploadDate
+        date = uploadDate?.let { WpDateString(it) }
         )
 
     class FileCheckWrapper @Inject constructor() {

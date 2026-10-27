@@ -15,15 +15,19 @@ import uniffi.wp_api.CommentWithEditContext
 import uniffi.wp_api.CommentWithViewContext
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostListParams
+import uniffi.wp_api.RequestExecutionErrorReason
 import uniffi.wp_api.SparseAnyPostFieldWithViewContext
 import uniffi.wp_api.UniffiWpApiClient
 import uniffi.wp_api.UserAvatarSize
+import uniffi.wp_api.WpErrorCode
 import uniffi.wp_api.WpApiParamCommentsOrderBy
+import uniffi.wp_api.WpApiParamCommentsStatus
 import uniffi.wp_api.WpApiParamOrder
 import java.util.Date
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
+import uniffi.wp_api.CommentType
 import uniffi.wp_api.CommentStatus as RsCommentStatus
 
 /**
@@ -62,7 +66,19 @@ class CommentsRsDataSource @Inject constructor(
         val contentHtml: String,
         val url: String,
         val postId: Long,
-        val status: CommentStatus
+        val status: CommentStatus,
+        /**
+         * The status as the server sent it. [status] collapses anything the app does not model
+         * onto [CommentStatus.ALL], whose label is the word "All"; this keeps the real value so
+         * a custom status can be shown verbatim.
+         */
+        val rawStatus: String = "",
+        val authorUrl: String = "",
+        // Edit context only (see [getComment]); blank otherwise.
+        val authorEmail: String = "",
+        val authorIp: String = "",
+        /** A pingback or trackback, whose "author" is the linking site rather than a person. */
+        val isPingback: Boolean = false
     )
 
     /** Result of a write request, carrying the server error message when one is available. */
@@ -79,11 +95,40 @@ class CommentsRsDataSource @Inject constructor(
             val nextPageParams: CommentListParams?
         ) : RsCommentsPageResult
 
-        data class Error(val message: String?) : RsCommentsPageResult
+        /**
+         * [reason] is set when the request failed before a response came back (offline, DNS,
+         * TLS, rejected credentials); [errorCode] when the server answered with a WP error
+         * envelope. Together they let the caller classify the failure the same way the post and
+         * page lists do from a thrown exception - a rejected credential can arrive either way.
+         */
+        data class Error(
+            val message: String?,
+            val reason: RequestExecutionErrorReason? = null,
+            val errorCode: WpErrorCode? = null
+        ) : RsCommentsPageResult
     }
 
-    suspend fun getComment(site: SiteModel, commentId: Long): RsComment? = safe(errorValue = null) {
+    /**
+     * [withEditContext] (moderators only) adds the author's email and IP; if the server refuses it, this
+     * falls back to the view context rather than failing the load.
+     */
+    suspend fun getComment(
+        site: SiteModel,
+        commentId: Long,
+        withEditContext: Boolean = false
+    ): RsComment? = safe(errorValue = null) {
         val client = wpApiClientProvider.getWpApiClient(site)
+        if (withEditContext) {
+            when (
+                val result = client.request {
+                    it.comments().retrieveWithEditContext(commentId, CommentRetrieveParams())
+                }
+            ) {
+                is WpRequestResult.Success -> return@safe result.response.data.toRsComment()
+                is WpRequestResult.WpError -> Unit
+                else -> return@safe null
+            }
+        }
         when (
             val result = client.request {
                 it.comments().retrieveWithViewContext(commentId, CommentRetrieveParams())
@@ -124,12 +169,14 @@ class CommentsRsDataSource @Inject constructor(
                     comments = result.response.data.map { it.toRsComment() },
                     nextPageParams = result.response.nextPageParams
                 )
-                is WpRequestResult.WpError -> RsCommentsPageResult.Error(result.errorMessage)
+                is WpRequestResult.WpError ->
+                    RsCommentsPageResult.Error(result.errorMessage, errorCode = result.errorCode)
+                is WpRequestResult.RequestExecutionFailed -> RsCommentsPageResult.Error(null, result.reason)
                 else -> RsCommentsPageResult.Error(null)
             }
         }
 
-    fun firstPageParams(status: RsCommentStatus?, search: String? = null): CommentListParams =
+    fun firstPageParams(status: WpApiParamCommentsStatus?, search: String? = null): CommentListParams =
         CommentListParams(
             perPage = COMMENTS_PAGE_SIZE,
             search = search,
@@ -297,6 +344,70 @@ class CommentsRsDataSource @Inject constructor(
         it.comments().create(CommentCreateParams(post = postId, parent = parentCommentId, content = content))
     }
 
+    /** Result of a restore, carrying the status the comment actually came back as. */
+    sealed interface RsRestoreResult {
+        data class Success(val status: CommentStatus) : RsRestoreResult
+        data class Error(val message: String?) : RsRestoreResult
+    }
+
+    /**
+     * Lifts a comment out of spam or the bin, returning the status it came back as.
+     *
+     * Deliberately not a plain `status=approve` write: core restores a comment to whatever it was
+     * before it was spammed or binned, so forcing "approve" would silently publish a comment that
+     * was only ever pending. Sending `unspam`/`untrash` lets core decide, and fires the hooks a
+     * bare status write skips.
+     *
+     * The action is not idempotent - untrashing something already out of the bin would downgrade
+     * it - so the current status is probed first and a comment that has already moved on is
+     * reported rather than written to.
+     */
+    suspend fun restore(site: SiteModel, commentId: Long): RsRestoreResult =
+        safe(errorValue = RsRestoreResult.Error(null)) {
+            val current = getComment(site, commentId)
+                ?: return@safe RsRestoreResult.Error(null)
+            val restoreValue = when (current.status) {
+                CommentStatus.SPAM -> UNSPAM_STATUS
+                CommentStatus.TRASH -> UNTRASH_STATUS
+                // Someone else already restored it; report where it landed and write nothing.
+                else -> return@safe RsRestoreResult.Success(current.status)
+            }
+            val params = CommentUpdateParams(status = RsCommentStatus.Custom(restoreValue))
+            when (val result = wpApiClientProvider.getWpApiClient(site)
+                .request { it.comments().update(commentId, params) }) {
+                is WpRequestResult.Success ->
+                    RsRestoreResult.Success(result.response.data.status.toAppCommentStatus())
+                is WpRequestResult.WpError -> RsRestoreResult.Error(result.errorMessage)
+                else -> RsRestoreResult.Error(null)
+            }
+        }
+
+    /**
+     * How many replies a comment has, or null when the count could not be determined.
+     */
+    suspend fun fetchReplyCount(site: SiteModel, commentId: Long): Int? = countComments(
+        site,
+        CommentListParams(perPage = COUNT_PAGE_SIZE, parent = listOf(commentId), status = WpApiParamCommentsStatus.Any)
+    )
+
+    /** Approved comments from [authorEmail], as wp-admin counts them; filtering by email needs moderation. */
+    suspend fun fetchAuthorCommentCount(site: SiteModel, authorEmail: String): Int? =
+        countComments(site, CommentListParams(perPage = COUNT_PAGE_SIZE, authorEmail = authorEmail))
+
+    /** Null when unreadable: core only exposes users with published posts unless the caller can list users. */
+    suspend fun fetchUserBio(site: SiteModel, userId: Long): String? = safe(errorValue = null) {
+        val result = wpApiClientProvider.getWpApiClient(site)
+            .request { it.users().retrieveWithViewContext(userId) }
+        (result as? WpRequestResult.Success)?.response?.data?.description
+    }
+
+    /** Reads the `X-WP-Total` header rather than the body, so only one row is transferred. */
+    private suspend fun countComments(site: SiteModel, params: CommentListParams): Int? = safe(errorValue = null) {
+        val result = wpApiClientProvider.getWpApiClient(site)
+            .request { it.comments().listWithViewContext(params) }
+        (result as? WpRequestResult.Success)?.response?.headerMap?.wpTotal()?.toInt()
+    }
+
     private suspend fun write(site: SiteModel, request: suspend (UniffiWpApiClient) -> Any): RsResult =
         safe(errorValue = RsResult.Error(null)) {
             val client = wpApiClientProvider.getWpApiClient(site)
@@ -319,6 +430,9 @@ class CommentsRsDataSource @Inject constructor(
 
     companion object {
         internal const val COMMENTS_PAGE_SIZE = 30u
+        private const val COUNT_PAGE_SIZE = 1u
+        private const val UNSPAM_STATUS = "unspam"
+        private const val UNTRASH_STATUS = "untrash"
         private const val MAX_TITLES_PER_REQUEST = 100
     }
 }
@@ -331,15 +445,43 @@ internal fun CommentWithViewContext.toRsComment() = CommentsRsDataSource.RsComme
     authorAvatarUrl = pickAvatarUrl(),
     // dateGmt is a UTC java.util.Date (an absolute instant), so relative-time formatting is
     // correct regardless of the site's timezone — unlike the offset-less local `date` field.
-    dateGmt = dateGmt,
+    // 0.8.0 types the comment date as nullable; a comment realistically always has one, so fall
+    // back to the epoch if it is ever absent rather than propagate nullability through the model.
+    dateGmt = dateGmt ?: Date(0),
     contentHtml = content.rendered,
     url = link,
     postId = post,
-    status = status.toAppCommentStatus()
+    status = status.toAppCommentStatus(),
+    rawStatus = status.rawValue(),
+    authorUrl = authorUrl,
+    isPingback = commentType.isPingback()
 )
 
-internal fun CommentWithViewContext.pickAvatarUrl(): String =
-    (authorAvatarUrls[UserAvatarSize.Size96] ?: authorAvatarUrls.values.firstOrNull { !it.isNullOrEmpty() }).orEmpty()
+private fun CommentWithEditContext.toRsComment() = CommentsRsDataSource.RsComment(
+    remoteCommentId = id,
+    authorId = author,
+    parentId = parent,
+    authorName = authorName,
+    authorAvatarUrl = authorAvatarUrls.orEmpty().pickAvatarUrl(),
+    dateGmt = dateGmt ?: Date(0),
+    contentHtml = content.rendered,
+    url = link,
+    postId = post,
+    status = status.toAppCommentStatus(),
+    rawStatus = status.rawValue(),
+    authorUrl = authorUrl,
+    authorEmail = authorEmail,
+    authorIp = authorIp,
+    isPingback = commentType.isPingback()
+)
+
+private fun CommentType.isPingback() = this == CommentType.Pingback || this == CommentType.Trackback
+
+// Sites with "Show Avatars" disabled omit the avatar URLs field entirely.
+internal fun CommentWithViewContext.pickAvatarUrl(): String = authorAvatarUrls.orEmpty().pickAvatarUrl()
+
+private fun Map<UserAvatarSize, String?>.pickAvatarUrl(): String =
+    (this[UserAvatarSize.Size96] ?: values.firstOrNull { !it.isNullOrEmpty() }).orEmpty()
 
 internal fun CommentStatus.toRsCommentStatus(): RsCommentStatus = when (this) {
     CommentStatus.APPROVED -> RsCommentStatus.Approved
@@ -347,6 +489,14 @@ internal fun CommentStatus.toRsCommentStatus(): RsCommentStatus = when (this) {
     CommentStatus.SPAM -> RsCommentStatus.Spam
     CommentStatus.TRASH -> RsCommentStatus.Trash
     else -> RsCommentStatus.Approved
+}
+
+internal fun RsCommentStatus.rawValue(): String = when (this) {
+    is RsCommentStatus.Approved -> "approved"
+    is RsCommentStatus.Hold -> "hold"
+    is RsCommentStatus.Spam -> "spam"
+    is RsCommentStatus.Trash -> "trash"
+    is RsCommentStatus.Custom -> v1
 }
 
 internal fun RsCommentStatus.toAppCommentStatus(): CommentStatus = when (this) {

@@ -61,12 +61,18 @@ PROMOTION_STEPS_FILE = File.join(PROJECT_ROOT_FOLDER, PROMOTION_STEPS_RELATIVE_P
 BUILDKITE_ORGANIZATION = 'automattic'
 BUILDKITE_PIPELINE = 'wordpress-android'
 
-# Production staged-rollout growth (scheduled bump job).
-# The rollout ladder the scheduled job walks — it advances the live production rollout to the next
-# step each run. These are a starting point (Play accepts any fraction); adjust freely. "Next step" is
-# the smallest value strictly above the current fraction, so an off-ladder manual % still moves
-# forward. Past the top step the release is finalized to 100% (status `completed`).
-PRODUCTION_ROLLOUT_STEPS = [0.01, 0.02, 0.05, 0.10, 0.20, 0.50].freeze
+# Production staged-rollout growth.
+# The fraction the production promote starts the rollout at — the ladder's first rung, applied on
+# promotion day rather than by the bump job. A string because that's what supply's `rollout` takes.
+PRODUCTION_ROLLOUT_INITIAL_FRACTION = '0.10'
+
+# The rollout ladder the scheduled bump job walks — it advances the live production rollout to the
+# next step each run. Paired with a Monday promotion and a Tuesday–Friday schedule, so the rollout
+# reaches 100% within the working week and no step lands on a weekend. "Next step" is the smallest
+# value strictly above the current fraction, so an off-ladder manual % still moves forward. Past the
+# top step the release is finalized to 100% (status `completed`). Play accepts any fraction — adjust
+# freely, keeping the count in step with the days the bump job runs.
+PRODUCTION_ROLLOUT_STEPS = [0.25, 0.50, 0.75].freeze
 
 # Play `TrackRelease.status` values. A paused rollout — the Play Console "pause", or a Play auto-halt
 # (newer draft upload, policy/vitals) — is `halted`; there is no separate "paused" status. The growth
@@ -105,7 +111,7 @@ platform :android do
 
     UI.success("Prepared #{candidates.count} promotion candidate(s) and opened the block step.")
   rescue StandardError => e
-    notify_slack(":x: *Beta promotion* failed before the picker could open — #{e.message}")
+    notify_slack(":x: *Beta promotion* failed before the picker could open — #{e.message}", cc_release_managers: true)
     raise
   end
 
@@ -139,7 +145,7 @@ platform :android do
 
     UI.success("Promoted #{version_code} to beta for: #{results.keys.join(', ')}")
   rescue StandardError => e
-    notify_slack(":x: *Beta promotion* failed — #{e.message}") unless result_posted
+    notify_slack(":x: *Beta promotion* failed — #{e.message}", cc_release_managers: true) unless result_posted
     raise
   end
 
@@ -170,7 +176,10 @@ platform :android do
 
     UI.success("Prepared production release candidate #{version_code} and opened the block step.")
   rescue StandardError => e
-    notify_slack(":x: *Production release* failed before the confirmation could open — #{e.message}")
+    notify_slack(
+      ":x: *Production release* failed before the confirmation could open — #{e.message}",
+      cc_release_managers: true
+    )
     raise
   end
 
@@ -202,7 +211,7 @@ platform :android do
 
     UI.success("Promoted #{version_code} to production for: #{results.keys.join(', ')}")
   rescue StandardError => e
-    notify_slack(":x: *Production release* failed — #{e.message}") unless result_posted
+    notify_slack(":x: *Production release* failed — #{e.message}", cc_release_managers: true) unless result_posted
     raise
   end
 
@@ -241,13 +250,13 @@ platform :android do
     # Only failures notify (the rescue below) — anything else would just be noise.
     UI.success("Finalized #{released_version}: release #{release_url}; version bump #{bump_url || 'skipped'}")
   rescue StandardError => e
-    notify_slack(":x: *Promoted-release finalize* failed — #{e.message}")
+    notify_slack(":x: *Promoted-release finalize* failed — #{e.message}", cc_release_managers: true)
     raise
   end
 
   # Advances the live production staged rollout one step — reads the current rollout percentage back
   # from Play and bumps WordPress + Jetpack to the next ladder step, finalizing to 100% once past the
-  # top. Runs on a daily schedule; stateless (one step per run). Pause-safe: it only ever advances an
+  # top. Runs Tuesday–Friday on a schedule; stateless (one step per run). Pause-safe: it only advances an
   # `inProgress` release, so it never resumes a rollout a developer paused (a paused rollout is
   # `halted`). WordPress and Jetpack must be in the same rollout state — a mismatch stops for a
   # developer to reconcile rather than guessing.
@@ -306,7 +315,7 @@ platform :android do
 
     UI.success("Advanced production rollout #{state[:version_code]} to #{rollout_target_label(target)}")
   rescue StandardError => e
-    notify_slack(":x: *Production rollout* failed — #{e.message}") unless result_posted
+    notify_slack(":x: *Production rollout* failed — #{e.message}", cc_release_managers: true) unless result_posted
     raise
   end
 
@@ -472,8 +481,8 @@ platform :android do
       committed = false
       begin
         release = AndroidPublisher::TrackRelease.new(
-          # TODO: switch to 'completed' once the feature is ready to distribute to beta testers.
-          status: 'draft',
+          # Submitted for review and distributed to beta testers as soon as it's approved.
+          status: 'completed',
           # Keep the pinned legacy code(s) on the track, same as the AAB-upload path.
           version_codes: [Integer(version_code), *PLAY_STORE_VERSION_CODES_TO_RETAIN],
           # Carried to production automatically by the promote.
@@ -550,9 +559,9 @@ platform :android do
       track_promote_to: PRODUCTION_TRACK,
       version_code: Integer(version_code),
       # Promote as a live staged rollout: a `rollout` in (0, 1) makes supply set the promoted
-      # release to `inProgress` at that user fraction. Starting tiny (0.1%) exercises the full
-      # production flow end to end; `advance_production_rollout` grows it from there.
-      rollout: '0.001',
+      # release to `inProgress` at that user fraction. This is the ladder's first rung;
+      # `advance_production_rollout` walks the rest.
+      rollout: PRODUCTION_ROLLOUT_INITIAL_FRACTION,
       # Promotion touches only the track release, never a binary — skip every upload path.
       skip_upload_apk: true,
       skip_upload_aab: true,
@@ -721,11 +730,12 @@ platform :android do
       end
 
     notify_slack(
-      <<~MSG
+      <<~MSG,
         #{header} — `#{version_code}`
 
         #{status_lines.join("\n")}
       MSG
+      cc_release_managers: !all_ok
     )
   end
 
@@ -847,7 +857,8 @@ platform :android do
       body: "Advances the marketing version on `#{DEFAULT_BRANCH}` to `#{next_version}`, following the `#{released_version}` production release.",
       head: branch,
       base: DEFAULT_BRANCH,
-      labels: ['Releases']
+      labels: ['Releases'],
+      team_reviewers: [MOBILE_REVIEWER_TEAM]
     )
   end
 
@@ -1003,12 +1014,13 @@ platform :android do
       end
 
     notify_slack(
-      <<~MSG
+      <<~MSG,
         :android: *Beta promotion* — choose a build to release to beta testers (WordPress + Jetpack).#{choose_line}
 
         *Candidates:*
         #{candidate_lines.join("\n")}
       MSG
+      cc_release_managers: true
     )
   end
 
@@ -1024,11 +1036,12 @@ platform :android do
     header = all_ok ? ':rocket: *Promoted to beta*' : ':warning: *Beta promotion finished with errors*'
 
     notify_slack(
-      <<~MSG
+      <<~MSG,
         #{header} — `#{version_code}`
 
         #{status_lines.join("\n")}
       MSG
+      cc_release_managers: !all_ok
     )
   end
 
@@ -1047,29 +1060,46 @@ platform :android do
       end
 
     notify_slack(
-      <<~MSG
+      <<~MSG,
         :android: *Production release* — confirm releasing build `#{version_code}` to production (WordPress + Jetpack).#{confirm_line}
       MSG
+      cc_release_managers: true
     )
   end
 
-  # Posts the per-app outcome of a production release.
+  # Posts the per-app outcome of a production release, including the reminder that a submitted
+  # release still needs a manual Publish click once Play approves it (Managed Publishing).
   def post_production_result_to_slack(version_code:, results:)
+    rollout_label = rollout_target_label(
+      { status: ROLLOUT_STATUS_IN_PROGRESS, user_fraction: PRODUCTION_ROLLOUT_INITIAL_FRACTION.to_f }
+    )
+
     status_lines = results.map do |app, result|
       next "• #{app}: :x: #{result[:error]}" unless result[:ok]
 
-      "• #{app}: :white_check_mark: draft created on production"
+      "• #{app}: :white_check_mark: submitted to production at #{rollout_label}"
     end
 
     all_ok = results.values.all? { |result| result[:ok] }
-    header = all_ok ? ':rocket: *Production draft created*' : ':warning: *Production release finished with errors*'
+    header = all_ok ? ':rocket: *Promoted to production*' : ':warning: *Production release finished with errors*'
+
+    # Only worth saying when something actually landed on the track.
+    publish_note =
+      if results.values.any? { |result| result[:ok] }
+        "\n:warning: Managed Publishing is on, so nobody is being served this yet.\n" \
+          'Once Play approves the release, someone has to click *Publish* in the Play Console to start the rollout.'
+      else
+        ''
+      end
 
     notify_slack(
-      <<~MSG
+      <<~MSG,
         #{header} — `#{version_code}`
 
         #{status_lines.join("\n")}
+        #{publish_note}
       MSG
+      cc_release_managers: true
     )
   end
 

@@ -20,6 +20,7 @@ import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.AutoDiscoveryAttemptSuccess
 import uniffi.wp_api.DiscoveredAuthenticationMechanism
+import uniffi.wp_api.AutoDiscoveryAttemptFailure
 import uniffi.wp_api.ParseUrlException
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.test.assertFailsWith
@@ -82,7 +83,7 @@ class SiteApiRestUrlRecovererTest : BaseUnitTest() {
     @Test
     fun `discoverApiRootUrl returns null when discovery returns a failure`() = runTest {
         whenever(wpLoginClient.apiDiscovery(any())).thenReturn(
-            ApiDiscoveryResult.FailureParseSiteUrl(ParseUrlException.Generic(""))
+            ApiDiscoveryResult.Failure(AutoDiscoveryAttemptFailure.ParseSiteUrl(ParseUrlException.Generic("")))
         )
 
         val result = recoverer.discoverApiRootUrl(SITE_URL)

@@ -56,6 +56,13 @@ enum class LoginFlow(
         completionBehavior = CompletionBehavior.FINISH
     ),
 
+    /** WP.com login required for support chat (Odie); returns to the Support screen when done */
+    SUPPORT(
+        analyticsSource = "support",
+        initialScreen = InitialScreen.WPCOM_OAUTH,
+        completionBehavior = CompletionBehavior.FINISH
+    ),
+
     /** Re-authentication after token expiry */
     WPCOM_REAUTHENTICATE(
         analyticsSource = "reauthentication",

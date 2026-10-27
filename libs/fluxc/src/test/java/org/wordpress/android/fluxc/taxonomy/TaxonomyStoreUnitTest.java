@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.yarolegovich.wellsql.WellSql;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +13,8 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests;
+import org.wordpress.android.fluxc.action.TaxonomyAction;
+import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
@@ -20,18 +23,29 @@ import org.wordpress.android.fluxc.network.xmlrpc.taxonomy.TaxonomyXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.TaxonomySqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
+import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
+import org.wordpress.android.fluxc.store.TaxonomyStore.RemoteTermPayload;
+import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyError;
+import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY;
 import static org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_TAG;
 
 @RunWith(RobolectricTestRunner.class)
 public class TaxonomyStoreUnitTest {
+    private OnTaxonomyChanged mLastTaxonomyChanged;
+
+    private final Dispatcher mDispatcher = new Dispatcher();
+
     private final TaxonomyStore mTaxonomyStore = new TaxonomyStore(
-            new Dispatcher(),
+            mDispatcher,
             Mockito.mock(TaxonomyRestClient.class),
             Mockito.mock(TaxonomyXMLRPCClient.class),
             Mockito.mock(TaxonomyRsApiRestClient.class),
@@ -45,6 +59,54 @@ public class TaxonomyStoreUnitTest {
         WellSqlConfig config = new SingleStoreWellSqlConfigForTests(appContext, TermModel.class);
         WellSql.init(config);
         config.reset();
+    }
+
+    @Test
+    public void testFailedDeletionIsReportedAsRemoveTerm() {
+        mDispatcher.register(this);
+        try {
+            RemoteTermPayload payload = new RemoteTermPayload(
+                    new TermModel(DEFAULT_TAXONOMY_CATEGORY),
+                    new SiteModel()
+            );
+            payload.error = new TaxonomyError(TaxonomyErrorType.GENERIC_ERROR);
+
+            mTaxonomyStore.onAction(TaxonomyActionBuilder.newDeletedTermAction(payload));
+
+            assertNotNull(mLastTaxonomyChanged);
+            assertTrue(mLastTaxonomyChanged.isError());
+            // Callers subscribe to REMOVE_TERM, so both outcomes have to arrive under that cause
+            // for the screen that started the deletion to hear about either one.
+            assertEquals(TaxonomyAction.REMOVE_TERM, mLastTaxonomyChanged.causeOfChange);
+        } finally {
+            mDispatcher.unregister(this);
+        }
+    }
+
+    @Test
+    public void testSuccessfulDeletionIsReportedAsRemoveTerm() {
+        mDispatcher.register(this);
+        try {
+            TermModel category = TaxonomyTestUtils.generateSampleCategory();
+            TaxonomySqlUtils.insertOrUpdateTerm(category);
+
+            RemoteTermPayload payload = new RemoteTermPayload(category, new SiteModel());
+
+            mTaxonomyStore.onAction(TaxonomyActionBuilder.newDeletedTermAction(payload));
+
+            assertNotNull(mLastTaxonomyChanged);
+            assertFalse(mLastTaxonomyChanged.isError());
+            assertEquals(TaxonomyAction.REMOVE_TERM, mLastTaxonomyChanged.causeOfChange);
+            assertEquals(1, mLastTaxonomyChanged.rowsAffected);
+            assertEquals(0, TaxonomyTestUtils.getTermsCount());
+        } finally {
+            mDispatcher.unregister(this);
+        }
+    }
+
+    @Subscribe
+    public void onTaxonomyChanged(OnTaxonomyChanged event) {
+        mLastTaxonomyChanged = event;
     }
 
     @Test

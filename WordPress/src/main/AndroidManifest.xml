@@ -143,6 +143,11 @@
             android:exported="false" />
 
         <activity
+            android:name=".ui.newstats.poststats.PostStatsDetailActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false" />
+
+        <activity
             android:name=".ui.newstats.subscribers.subscriberslist.SubscribersListDetailActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:exported="false" />
@@ -964,11 +969,6 @@
             android:name=".ui.debug.cookies.DebugCookiesActivity"
             android:theme="@style/WordPress.NoActionBar" />
 
-        <activity
-            android:name=".ui.main.jetpack.migration.JetpackMigrationActivity"
-            android:label="@string/jp_migration_welcome_title"
-            android:theme="@style/WordPress.NoActionBar" />
-
         <!-- Notifications activities -->
         <activity
             android:name=".ui.notifications.NotificationsDetailActivity"
@@ -1384,7 +1384,24 @@
                 android:name="androidx.work.WorkManagerInitializer"
                 android:value="androidx.startup"
                 tools:node="remove" />
+            <!-- The Gravatar Quick Editor initializer builds an encrypted DataStore (AndroidKeyStore + Tink
+                 self-test) on the main thread before Application.onCreate, which shows up as background ANRs.
+                 It is initialized on demand from MeFragment instead. -->
+            <meta-data
+                android:name="com.gravatar.quickeditor.initializer.QuickEditorContainerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
         </provider>
+
+        <!-- The Gravatar Quick Editor library exports two activities the app never launches (it shows the editor
+             as a sheet inside the host activity). They would crash without the initializer removed above, so
+             drop them rather than leave an exported entry point around. -->
+        <activity
+            android:name="com.gravatar.quickeditor.ui.GravatarQuickEditorActivity"
+            tools:node="remove" />
+        <activity
+            android:name="com.gravatar.quickeditor.ui.oauth.GravatarOAuthActivity"
+            tools:node="remove" />
 
         <activity android:name=".ui.blaze.blazepromote.BlazePromoteParentActivity"
             android:exported="false"
@@ -1395,11 +1412,6 @@
             android:exported="false"
             android:label="@string/blaze_campaigns_page_title"
             android:theme="@style/WordPress.NoActionBar" />
-
-        <activity android:name=".ui.jetpackoverlay.JetpackStaticPosterActivity"
-            android:exported="false"
-            android:label="@string/stats"
-            android:theme="@style/WordPress.NoActionBar"/>
 
         <activity android:name=".ui.mysite.personalization.PersonalizationActivity"
             android:exported="false"

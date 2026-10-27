@@ -9,63 +9,53 @@ import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.action.AccountAction
 import org.wordpress.android.fluxc.action.SiteAction
-import org.wordpress.android.fluxc.action.TransactionAction
-import org.wordpress.android.fluxc.action.TransactionAction.FETCH_SUPPORTED_COUNTRIES
 import org.wordpress.android.fluxc.annotations.action.Action
-import org.wordpress.android.fluxc.model.DomainContactModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedStateResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.transactions.SupportedDomainCountry
-import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse.Extra
-import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse.Product
-import org.wordpress.android.fluxc.store.AccountStore.DomainContactError
-import org.wordpress.android.fluxc.store.AccountStore.DomainContactErrorType
-import org.wordpress.android.fluxc.store.AccountStore.OnDomainContactFetched
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainError
-import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainErrorType
-import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainPayload
-import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesError
-import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType
-import org.wordpress.android.fluxc.store.SiteStore.OnDomainSupportedStatesFetched
-import org.wordpress.android.fluxc.store.SiteStore.OnPrimaryDomainDesignated
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.store.SiteStore.SiteError
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType
-import org.wordpress.android.fluxc.store.TransactionsStore
-import org.wordpress.android.fluxc.store.TransactionsStore.CreateCartErrorType.GENERIC_ERROR
-import org.wordpress.android.fluxc.store.TransactionsStore.CreateShoppingCartError
-import org.wordpress.android.fluxc.store.TransactionsStore.CreateShoppingCartWithDomainAndPlanPayload
-import org.wordpress.android.fluxc.store.TransactionsStore.FetchSupportedCountriesError
-import org.wordpress.android.fluxc.store.TransactionsStore.FetchSupportedCountriesErrorType
-import org.wordpress.android.fluxc.store.TransactionsStore.OnShoppingCartCreated
-import org.wordpress.android.fluxc.store.TransactionsStore.OnShoppingCartRedeemed
-import org.wordpress.android.fluxc.store.TransactionsStore.OnSupportedCountriesFetched
-import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartError
-import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartPayload
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.PHONE
+import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel.DomainContactFieldError
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel.DomainContactFormModel
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel.DomainRegistrationDetailsUiState
+import org.wordpress.android.ui.domains.usecases.CreateCartResult
+import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
+import org.wordpress.android.ui.domains.usecases.DesignatePrimaryDomainResult
+import org.wordpress.android.ui.domains.usecases.DesignatePrimaryDomainUseCase
+import org.wordpress.android.ui.domains.usecases.DomainContactField
+import org.wordpress.android.ui.domains.usecases.DomainContactResult
+import org.wordpress.android.ui.domains.usecases.FetchDomainContactUseCase
+import org.wordpress.android.ui.domains.usecases.FetchSupportedCountriesUseCase
+import org.wordpress.android.ui.domains.usecases.FetchSupportedStatesUseCase
+import org.wordpress.android.ui.domains.usecases.RedeemCartResult
+import org.wordpress.android.ui.domains.usecases.RedeemCartUseCase
+import org.wordpress.android.ui.domains.usecases.SupportedCountriesResult
+import org.wordpress.android.ui.domains.usecases.SupportedStatesResult
+import org.wordpress.android.viewmodel.ResourceProvider
+import uniffi.wp_api.CartKey
+import uniffi.wp_api.DomainContactInformation
+import uniffi.wp_api.SupportedCountry
+import uniffi.wp_api.SupportedState
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
+@Suppress("LargeClass")
 class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
-    @Mock
-    private lateinit var transactionsStore: TransactionsStore
-
     @Mock
     private lateinit var siteStore: SiteStore
 
@@ -74,16 +64,37 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var analyticsTracker: AnalyticsTrackerWrapper
+
+    @Mock
+    private lateinit var fetchSupportedCountriesUseCase: FetchSupportedCountriesUseCase
+
+    @Mock
+    private lateinit var fetchDomainContactUseCase: FetchDomainContactUseCase
+
+    @Mock
+    private lateinit var fetchSupportedStatesUseCase: FetchSupportedStatesUseCase
+
+    @Mock
+    private lateinit var createCartUseCase: CreateCartUseCase
+
+    @Mock
+    private lateinit var redeemCartUseCase: RedeemCartUseCase
+
+    @Mock
+    private lateinit var designatePrimaryDomainUseCase: DesignatePrimaryDomainUseCase
+
+    @Mock
+    private lateinit var resourceProvider: ResourceProvider
     private var site: SiteModel = SiteModel()
 
     @Mock
     private lateinit var domainContactDetailsObserver: Observer<DomainContactFormModel>
 
     @Mock
-    private lateinit var countryPickerDialogObserver: Observer<List<SupportedDomainCountry>>
+    private lateinit var countryPickerDialogObserver: Observer<List<SupportedCountry>>
 
     @Mock
-    private lateinit var statePickerDialogObserver: Observer<List<SupportedStateResponse>>
+    private lateinit var statePickerDialogObserver: Observer<List<SupportedState>>
 
     @Mock
     private lateinit var tosLinkObserver: Observer<Unit?>
@@ -94,36 +105,39 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var errorMessageObserver: Observer<String>
 
+    @Mock
+    private lateinit var formErrorObserver: Observer<DomainContactFieldError>
+
     private val uiStateResults = mutableListOf<DomainRegistrationDetailsUiState>()
 
     private lateinit var viewModel: DomainRegistrationDetailsViewModel
 
-    private val primaryCountry = SupportedDomainCountry("US", "United States")
-    private val secondaryCountry = SupportedDomainCountry("AU", "Australia")
+    private val primaryCountry = testSupportedCountry("US", "United States")
+    private val secondaryCountry = testSupportedCountry("AU", "Australia")
     private val countries = listOf(primaryCountry, secondaryCountry)
 
-    private val primaryState = SupportedStateResponse("CA", "California")
-    private val secondaryState = SupportedStateResponse("NSW", "New South Wales")
+    private val primaryState = SupportedState("CA", "California")
+    private val secondaryState = SupportedState("NSW", "New South Wales")
     private val states = listOf(primaryState, secondaryState)
 
     private val siteId = 1234L
     private val productId = 76
     private val testDomainName = "testdomain.blog"
-    private val cartId = "123"
 
-    private val domainContactModel = DomainContactModel(
-        "John",
-        "Smith",
-        "",
-        "Street 1",
-        "Apt 1",
-        "10018",
-        "First City",
-        "CA",
-        "US",
-        "email@wordpress.org",
-        "+1.3124567890",
-        null
+    private val domainContactInformation = DomainContactInformation(
+        firstName = "John",
+        lastName = "Smith",
+        organization = "",
+        address1 = "Street 1",
+        address2 = "Apt 1",
+        postalCode = "10018",
+        city = "First City",
+        state = "CA",
+        countryCode = "US",
+        email = "email@wordpress.org",
+        phone = "+1.3124567890",
+        fax = null,
+        extra = null,
     )
 
     private val domainContactFormModel = DomainContactFormModel(
@@ -146,31 +160,19 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         "email@wordpress.org"
     )
 
-    private val shoppingCartCreateError = CreateShoppingCartError(GENERIC_ERROR, "Error Creating Cart")
-    private val shoppingCartRedeemError = RedeemShoppingCartError(PHONE, "Wrong phone number")
+    private val createCartErrorMessage = "Error Creating Cart"
+    private val redeemCartErrorMessage = "Wrong phone number"
     private val siteChangedError = SiteError(SiteErrorType.GENERIC_ERROR, "Error fetching site")
-    private val primaryDomainError = DesignatePrimaryDomainError(
-        DesignatePrimaryDomainErrorType.GENERIC_ERROR,
-        "Error designating primary domain"
-    )
-    private val domainContactInformationFetchError = DomainContactError(
-        DomainContactErrorType.GENERIC_ERROR,
-        "Error fetching domain contact information"
-    )
-    private val domainSupportedStatesFetchError = DomainSupportedStatesError(
-        DomainSupportedStatesErrorType.GENERIC_ERROR,
-        "Error fetching domain supported states"
-    )
-    private val fetchSupportedCountriesError = FetchSupportedCountriesError(
-        FetchSupportedCountriesErrorType.GENERIC_ERROR,
-        "Error fetching countries"
-    )
+    private val primaryDomainErrorMessage = "Error designating primary domain"
+    private val purchaseIncompleteMessage = "Your domain credit was used, but it could not be registered"
+    private val purchaseUnconfirmedMessage = "Your domain credit was used, but we could not confirm the result"
+    private val domainContactInformationFetchErrorMessage = "Error fetching domain contact information"
+    private val domainSupportedStatesFetchErrorMessage = "Error fetching domain supported states"
+    private val fetchSupportedCountriesErrorMessage = "Error fetching countries"
+    private val offlineMessage = "Check your network connection and try again"
+    private val requestFailedMessage = "There was a problem handling the request. Please try again later."
 
-    private val createShoppingCartResponse = CreateShoppingCartResponse(
-        siteId.toInt(),
-        cartId,
-        listOf(Product(productId, testDomainName, Extra(privacy = true)))
-    )
+    private val shoppingCart = testShoppingCart(CartKey.Site(siteId.toULong()))
 
     private val domainProductDetails = DomainProductDetails(productId, testDomainName)
 
@@ -183,19 +185,27 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         viewModel = DomainRegistrationDetailsViewModel(
             dispatcher,
-            transactionsStore,
             siteStore,
             analyticsTracker,
+            fetchSupportedCountriesUseCase,
+            fetchDomainContactUseCase,
+            fetchSupportedStatesUseCase,
+            createCartUseCase,
+            redeemCartUseCase,
+            designatePrimaryDomainUseCase,
+            resourceProvider,
             NoDelayCoroutineDispatcher()
         )
         // Setting up chain of actions
-        setupFetchSupportedCountriesDispatcher(false)
-        setupFetchDomainContactInformationDispatcher(false)
-        setupFetchStatesDispatcher(false)
-        setupCreateShoppingCartDispatcher(false)
-        setupRedeemShoppingCartDispatcher(false)
+        test {
+            setupFetchSupportedCountries(false)
+            setupFetchDomainContact(false)
+            setupFetchStates(false)
+            setupCreateCart(false)
+            setupRedeemCart(false)
+            setupDesignatePrimaryDomain(false)
+        }
         setupFetchSiteDispatcher(false)
-        setupPrimaryDomainDispatcher(false)
 
         uiStateResults.clear()
         viewModel.uiState.observeForever { if (it != null) uiStateResults.add(it) }
@@ -205,20 +215,15 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         viewModel.showTos.observeForever(tosLinkObserver)
         viewModel.handleCompletedDomainRegistration.observeForever(completedDomainRegistrationObserver)
         viewModel.showErrorMessage.observeForever(errorMessageObserver)
+        viewModel.formError.observeForever(formErrorObserver)
     }
 
     @Test
     fun contactDetailsPreload() = test {
         viewModel.start(site, domainProductDetails)
 
-        // Verifying that correct actions with expected payloads were dispatched
-        val captor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher, times(3)).dispatch(captor.capture())
-
-        val actionsDispatched = captor.allValues
-        validateFetchSupportedCountriesAction(actionsDispatched[0])
-        validateFetchDomainContactAction(actionsDispatched[1])
-        validateFetchStatesAction(actionsDispatched[2], primaryCountry.code)
+        verify(dispatcher, never()).dispatch(any())
+        verify(fetchSupportedStatesUseCase).execute(primaryCountry.code)
 
         assertThat(uiStateResults.size).isEqualTo(5)
 
@@ -284,7 +289,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
     @Test
     fun phoneNumberPrefixIsPrefilledDuringPreload() = test {
-        setupFetchDomainContactInformationDispatcher(false, domainContactModel.copy(phone = null))
+        setupFetchDomainContact(false, domainContactInformation.copy(phone = null))
         viewModel.start(site, domainProductDetails)
 
         var domainContactModelWithPrefilledPhonePrefix: DomainContactFormModel? = null
@@ -299,7 +304,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
     @Test
     fun phoneNumberPrefixIsNotPrefiledWhenCountryCodeIsMissingDuringPreload() = test {
-        setupFetchDomainContactInformationDispatcher(false, domainContactModel.copy(phone = null, countryCode = null))
+        setupFetchDomainContact(false, domainContactInformation.copy(phone = null, countryCode = null))
         viewModel.start(site, domainProductDetails)
 
         var domainContactModelWithPrefilledPhonePrefix: DomainContactFormModel? = null
@@ -313,17 +318,56 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun errorFetchingCountriesDuringPreload() = test {
-        setupFetchSupportedCountriesDispatcher(true)
+    fun offlineFetchingCountriesDuringPreload() = test {
+        whenever(resourceProvider.getString(R.string.error_network_connection)).thenReturn(offlineMessage)
+        whenever(fetchSupportedCountriesUseCase.execute())
+            .thenReturn(SupportedCountriesResult.Error(message = null, isDeviceOffline = true))
 
         viewModel.start(site, domainProductDetails)
 
-        // Verifying that correct actions with expected payloads were dispatched
-        val captor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher).dispatch(captor.capture())
+        verify(errorMessageObserver).onChanged(offlineMessage)
+    }
 
-        val actionsDispatched = captor.allValues
-        validateFetchSupportedCountriesAction(actionsDispatched[0])
+    @Test
+    fun offlineFetchingStates() = test {
+        whenever(resourceProvider.getString(R.string.error_network_connection)).thenReturn(offlineMessage)
+        whenever(fetchSupportedStatesUseCase.execute(any()))
+            .thenReturn(SupportedStatesResult.Error(message = null, isDeviceOffline = true))
+
+        viewModel.start(site, domainProductDetails)
+
+        verify(errorMessageObserver).onChanged(offlineMessage)
+    }
+
+    @Test
+    fun failureWithNoMessageFetchingCountriesDuringPreload() = test {
+        whenever(resourceProvider.getString(R.string.request_failed_message)).thenReturn(requestFailedMessage)
+        whenever(fetchSupportedCountriesUseCase.execute())
+            .thenReturn(SupportedCountriesResult.Error(message = null, isDeviceOffline = false))
+
+        viewModel.start(site, domainProductDetails)
+
+        verify(errorMessageObserver).onChanged(requestFailedMessage)
+    }
+
+    @Test
+    fun failureWithBlankMessageFetchingCountriesDuringPreload() = test {
+        whenever(resourceProvider.getString(R.string.request_failed_message)).thenReturn(requestFailedMessage)
+        whenever(fetchSupportedCountriesUseCase.execute())
+            .thenReturn(SupportedCountriesResult.Error(message = "", isDeviceOffline = false))
+
+        viewModel.start(site, domainProductDetails)
+
+        verify(errorMessageObserver).onChanged(requestFailedMessage)
+    }
+
+    @Test
+    fun errorFetchingCountriesDuringPreload() = test {
+        setupFetchSupportedCountries(true)
+
+        viewModel.start(site, domainProductDetails)
+
+        verify(dispatcher, never()).dispatch(any())
 
         assertThat(uiStateResults.size).isEqualTo(3)
 
@@ -337,24 +381,18 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         assertThat(errorFetchingCountriesState.selectedState).isNull()
         assertThat(errorFetchingCountriesState.selectedCountry).isNull()
 
-        verify(errorMessageObserver).onChanged(fetchSupportedCountriesError.message)
+        verify(errorMessageObserver).onChanged(fetchSupportedCountriesErrorMessage)
     }
 
     @Test
     fun errorFetchingDomainContactInformationDuringPreload() = test {
-        setupFetchDomainContactInformationDispatcher(true)
+        setupFetchDomainContact(true)
 
         viewModel.start(site, domainProductDetails)
 
-        // Verifying that correct actions with expected payloads were dispatched
-        val captor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher, times(2)).dispatch(captor.capture())
+        verify(dispatcher, never()).dispatch(any())
 
-        val actionsDispatched = captor.allValues
-        validateFetchSupportedCountriesAction(actionsDispatched[0])
-        validateFetchDomainContactAction(actionsDispatched[1])
-
-        verify(errorMessageObserver).onChanged(domainContactInformationFetchError.message ?: "")
+        verify(errorMessageObserver).onChanged(domainContactInformationFetchErrorMessage)
 
         assertThat(uiStateResults.size).isEqualTo(3)
 
@@ -375,20 +413,14 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
     @Test
     fun errorFetchingStatesDuringPreload() = test {
-        setupFetchStatesDispatcher(true)
+        setupFetchStates(true)
 
         viewModel.start(site, domainProductDetails)
 
-        // Verifying that correct actions with expected payloads were dispatched
-        val captor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher, times(3)).dispatch(captor.capture())
+        verify(dispatcher, never()).dispatch(any())
 
-        val actionsDispatched = captor.allValues
-        validateFetchSupportedCountriesAction(actionsDispatched[0])
-        validateFetchDomainContactAction(actionsDispatched[1])
-        validateFetchStatesAction(actionsDispatched[2], primaryCountry.code)
-
-        verify(errorMessageObserver).onChanged(domainSupportedStatesFetchError.message ?: "")
+        verify(fetchSupportedStatesUseCase).execute(primaryCountry.code)
+        verify(errorMessageObserver).onChanged(domainSupportedStatesFetchErrorMessage)
 
         assertThat(uiStateResults.size).isEqualTo(5)
 
@@ -414,6 +446,16 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun onCountrySelectorClickedAfterCountriesFailedToLoad() = test {
+        setupFetchSupportedCountries(true)
+        viewModel.start(site, domainProductDetails)
+
+        viewModel.onCountrySelectorClicked()
+
+        verify(countryPickerDialogObserver, never()).onChanged(any())
+    }
+
+    @Test
     fun onStateSelectorClicked() = test {
         viewModel.start(site, domainProductDetails)
 
@@ -429,11 +471,8 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         viewModel.onCountrySelected(secondaryCountry)
 
-        val captor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher, times(4)).dispatch(captor.capture())
-
-        val actionsDispatched = captor.allValues
-        validateFetchStatesAction(actionsDispatched[3], secondaryCountry.code)
+        verify(dispatcher, never()).dispatch(any())
+        verify(fetchSupportedStatesUseCase).execute(secondaryCountry.code)
 
         assertThat(viewModel.domainContactForm.value?.countryCode).isEqualTo("AU")
         assertThat(viewModel.domainContactForm.value?.state).isNull()
@@ -472,8 +511,8 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         assertThat(viewModel.uiState.value?.selectedCountry).isEqualTo(primaryCountry)
         viewModel.onCountrySelected(primaryCountry)
 
-        val captor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher, times(3)).dispatch(captor.capture())
+        // The one call is the preload's, so selecting the same country refetched nothing
+        verify(fetchSupportedStatesUseCase, times(1)).execute(any())
 
         assertThat(viewModel.uiState.value?.selectedCountry).isEqualTo(primaryCountry)
         assertThat(uiStateResults.size).isEqualTo(0)
@@ -503,15 +542,15 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         assertThat(viewModel.domainContactForm.value?.countryCode).isEqualTo(primaryCountry.code)
         assertThat(viewModel.domainContactForm.value?.state).isEqualTo(primaryState.code)
 
+        verify(createCartUseCase).execute(site, productId, testDomainName, true, true, null)
+        // The prefilled contact round-trips: the form holds the fetched details unchanged
+        verify(redeemCartUseCase).execute(shoppingCart, domainContactInformation)
+        verify(designatePrimaryDomainUseCase).execute(site, testDomainName)
+
         val captor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher, times(7)).dispatch(captor.capture())
+        verify(dispatcher, times(1)).dispatch(captor.capture())
 
-        val actionsDispatched = captor.allValues
-
-        validateCreateCartAction(actionsDispatched[3])
-        validateRedeemCartAction(actionsDispatched[4])
-        validateDesignatePrimaryDomainActions(actionsDispatched[5])
-        validateFetchSiteAction(actionsDispatched[6])
+        validateFetchSiteAction(captor.allValues[0])
 
         assertThat(uiStateResults.size).isEqualTo(2)
 
@@ -526,18 +565,15 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
     @Test
     fun onErrorCreatingCart() = test {
-        setupCreateShoppingCartDispatcher(true)
+        setupCreateCart(true)
 
         viewModel.start(site, domainProductDetails)
         clearPreLoadUiStateResult()
 
         viewModel.onRegisterDomainButtonClicked()
 
-        val captor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher, times(4)).dispatch(captor.capture())
-
-        val actionsDispatched = captor.allValues
-        validateCreateCartAction(actionsDispatched[3])
+        verifyNoInteractions(redeemCartUseCase)
+        verify(dispatcher, never()).dispatch(any())
 
         assertThat(uiStateResults.size).isEqualTo(2)
 
@@ -547,24 +583,19 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         val errorCreatingCartState = uiStateResults[1]
         assertThat(errorCreatingCartState.isRegistrationProgressIndicatorVisible).isEqualTo(false)
 
-        verify(errorMessageObserver).onChanged(shoppingCartCreateError.message)
+        verify(errorMessageObserver).onChanged(createCartErrorMessage)
     }
 
     @Test
     fun onErrorRedeemingCart() = test {
-        setupRedeemShoppingCartDispatcher(true)
+        setupRedeemCart(true)
 
         viewModel.start(site, domainProductDetails)
         clearPreLoadUiStateResult()
 
         viewModel.onRegisterDomainButtonClicked()
 
-        val captor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher, times(5)).dispatch(captor.capture())
-
-        val actionsDispatched = captor.allValues
-        validateCreateCartAction(actionsDispatched[3])
-        validateRedeemCartAction(actionsDispatched[4])
+        verify(dispatcher, never()).dispatch(any())
 
         assertThat(uiStateResults.size).isEqualTo(2)
 
@@ -574,8 +605,126 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         val errorRedeemingCartState = uiStateResults[1]
         assertThat(errorRedeemingCartState.isRegistrationProgressIndicatorVisible).isEqualTo(false)
 
-        verify(errorMessageObserver).onChanged(shoppingCartRedeemError.message)
+        verify(errorMessageObserver).onChanged(redeemCartErrorMessage)
         verify(analyticsTracker).track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_FAILED)
+    }
+
+    @Test
+    fun `with no contact details loaded, tapping register buys nothing`() = test {
+        whenever(resourceProvider.getString(R.string.request_failed_message)).thenReturn(requestFailedMessage)
+        setupFetchDomainContact(true)
+
+        viewModel.start(site, domainProductDetails)
+        viewModel.onRegisterDomainButtonClicked()
+
+        assertThat(viewModel.domainContactForm.value).isNull()
+        verifyNoInteractions(createCartUseCase)
+        verifyNoInteractions(redeemCartUseCase)
+        verify(errorMessageObserver).onChanged(requestFailedMessage)
+        assertThat(viewModel.uiState.value?.isRegistrationProgressIndicatorVisible).isFalse()
+    }
+
+    @Test
+    fun `privacy protection turned off is what the cart is created with`() = test {
+        viewModel.start(site, domainProductDetails)
+
+        viewModel.togglePrivacyProtection(false)
+        viewModel.onRegisterDomainButtonClicked()
+
+        verify(createCartUseCase).execute(site, productId, testDomainName, false, true, null)
+    }
+
+    @Test
+    fun `an edited contact detail is what the redeem call carries`() = test {
+        viewModel.start(site, domainProductDetails)
+
+        viewModel.onDomainContactDetailsChanged(domainContactFormModel.copy(phoneNumber = "647673"))
+        viewModel.onRegisterDomainButtonClicked()
+
+        verify(redeemCartUseCase).execute(shoppingCart, domainContactInformation.copy(phone = "+1.647673"))
+    }
+
+    @Test
+    fun `a rejected contact field is reported against that field`() = test {
+        setupRedeemCart(true)
+
+        viewModel.start(site, domainProductDetails)
+        viewModel.onRegisterDomainButtonClicked()
+
+        verify(formErrorObserver).onChanged(
+            DomainContactFieldError(DomainContactField.PHONE, redeemCartErrorMessage)
+        )
+    }
+
+    @Test
+    fun `a rejection naming no contact field leaves the form unmarked`() = test {
+        whenever(redeemCartUseCase.execute(any(), any()))
+            .thenReturn(RedeemCartResult.Error(field = null, message = "Not enough credits"))
+
+        viewModel.start(site, domainProductDetails)
+        viewModel.onRegisterDomainButtonClicked()
+
+        verify(formErrorObserver, never()).onChanged(any())
+        verify(errorMessageObserver).onChanged("Not enough credits")
+    }
+
+    @Test
+    fun `a charged purchase that registered nothing stops the flow and says so`() = test {
+        whenever(resourceProvider.getString(R.string.domain_registration_purchase_incomplete, testDomainName))
+            .thenReturn(purchaseIncompleteMessage)
+        whenever(redeemCartUseCase.execute(any(), any())).thenReturn(RedeemCartResult.PartialFailure)
+
+        viewModel.start(site, domainProductDetails)
+        clearPreLoadUiStateResult()
+
+        viewModel.onRegisterDomainButtonClicked()
+
+        verifyNoInteractions(designatePrimaryDomainUseCase)
+        verify(dispatcher, never()).dispatch(any())
+        verify(completedDomainRegistrationObserver, never()).onChanged(any())
+
+        verify(errorMessageObserver).onChanged(purchaseIncompleteMessage)
+        verify(analyticsTracker).track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_FAILED)
+
+        assertThat(uiStateResults.last().isRegistrationProgressIndicatorVisible).isEqualTo(false)
+    }
+
+    @Test
+    fun `a charged purchase with an unreadable receipt stops the flow and says so`() = test {
+        whenever(resourceProvider.getString(R.string.domain_registration_purchase_unconfirmed, testDomainName))
+            .thenReturn(purchaseUnconfirmedMessage)
+        whenever(redeemCartUseCase.execute(any(), any())).thenReturn(RedeemCartResult.ReceiptParsingError)
+
+        viewModel.start(site, domainProductDetails)
+        clearPreLoadUiStateResult()
+
+        viewModel.onRegisterDomainButtonClicked()
+
+        verifyNoInteractions(designatePrimaryDomainUseCase)
+        verify(dispatcher, never()).dispatch(any())
+        verify(completedDomainRegistrationObserver, never()).onChanged(any())
+
+        verify(errorMessageObserver).onChanged(purchaseUnconfirmedMessage)
+        verify(analyticsTracker).track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_UNCONFIRMED)
+        verify(analyticsTracker, never()).track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_FAILED)
+
+        assertThat(uiStateResults.last().isRegistrationProgressIndicatorVisible).isEqualTo(false)
+    }
+
+    @Test
+    fun `a failed primary domain designation is reported and the site still refreshes`() = test {
+        setupDesignatePrimaryDomain(true)
+
+        viewModel.start(site, domainProductDetails)
+        viewModel.onRegisterDomainButtonClicked()
+
+        verify(errorMessageObserver).onChanged(primaryDomainErrorMessage)
+
+        val captor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher, times(1)).dispatch(captor.capture())
+        validateFetchSiteAction(captor.allValues[0])
+
+        verify(completedDomainRegistrationObserver).onChanged(domainRegistrationCompletedEvent)
     }
 
     @Test
@@ -588,14 +737,9 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         viewModel.onRegisterDomainButtonClicked()
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher, times(7)).dispatch(captor.capture())
+        verify(dispatcher, times(1)).dispatch(captor.capture())
 
-        val actionsDispatched = captor.allValues
-
-        validateCreateCartAction(actionsDispatched[3])
-        validateRedeemCartAction(actionsDispatched[4])
-        validateDesignatePrimaryDomainActions(actionsDispatched[5])
-        validateFetchSiteAction(actionsDispatched[6])
+        validateFetchSiteAction(captor.allValues[0])
 
         assertThat(uiStateResults.size).isEqualTo(2)
 
@@ -650,75 +794,61 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
     @Test
     fun mappingOfDomainContactDetailModels() = test {
-        val convertedDomainContactModel = DomainContactFormModel.toDomainContactModel(domainContactFormModel)
-        assertThat(convertedDomainContactModel).isEqualTo(domainContactModel)
+        val convertedDomainContactInformation = domainContactFormModel.toDomainContactInformation()
+        assertThat(convertedDomainContactInformation).isEqualTo(domainContactInformation)
 
-        val convertedDomainContactFormModel = DomainContactFormModel.fromDomainContactModel(domainContactModel)
+        val convertedDomainContactFormModel =
+            DomainContactFormModel.fromDomainContactInformation(domainContactInformation)
         assertThat(convertedDomainContactFormModel).isEqualTo(domainContactFormModel)
     }
 
-    private fun setupFetchSupportedCountriesDispatcher(isError: Boolean) {
-        val event = if (isError) {
-            OnSupportedCountriesFetched(fetchSupportedCountriesError)
+    private suspend fun setupFetchSupportedCountries(isError: Boolean) {
+        val result = if (isError) {
+            SupportedCountriesResult.Error(fetchSupportedCountriesErrorMessage)
         } else {
-            OnSupportedCountriesFetched(countries)
+            SupportedCountriesResult.Success(countries)
         }
-        whenever(dispatcher.dispatch(argWhere<Action<Void>> { it.type == FETCH_SUPPORTED_COUNTRIES })).then {
-            viewModel.onSupportedCountriesFetched(event)
-        }
+        whenever(fetchSupportedCountriesUseCase.execute()).thenReturn(result)
     }
 
-    private fun setupFetchStatesDispatcher(isError: Boolean) {
-        val event = if (isError) {
-            OnDomainSupportedStatesFetched(null, domainSupportedStatesFetchError)
+    private suspend fun setupFetchStates(isError: Boolean) {
+        val result = if (isError) {
+            SupportedStatesResult.Error(domainSupportedStatesFetchErrorMessage)
         } else {
-            OnDomainSupportedStatesFetched(states, null)
+            SupportedStatesResult.Success(states)
         }
-        whenever(dispatcher.dispatch(argWhere<Action<Void>> {
-            it.type == SiteAction.FETCH_DOMAIN_SUPPORTED_STATES
-        })).then {
-            viewModel.onDomainSupportedStatesFetched(event)
-        }
+        whenever(fetchSupportedStatesUseCase.execute(any())).thenReturn(result)
     }
 
-    private fun setupFetchDomainContactInformationDispatcher(
+    private suspend fun setupFetchDomainContact(
         isError: Boolean,
-        returnModel: DomainContactModel = domainContactModel
+        contact: DomainContactInformation = domainContactInformation
     ) {
-        val event = if (isError) {
-            OnDomainContactFetched(null, domainContactInformationFetchError)
+        val result = if (isError) {
+            DomainContactResult.Error(domainContactInformationFetchErrorMessage)
         } else {
-            OnDomainContactFetched(returnModel, null)
+            DomainContactResult.Success(contact)
         }
-        whenever(dispatcher.dispatch(argWhere<Action<Void>> { it.type == AccountAction.FETCH_DOMAIN_CONTACT })).then {
-            viewModel.onDomainContactFetched(event)
-        }
+        whenever(fetchDomainContactUseCase.execute()).thenReturn(result)
     }
 
-    private fun setupCreateShoppingCartDispatcher(isError: Boolean) {
-        val event = if (isError) {
-            OnShoppingCartCreated(shoppingCartCreateError)
+    private suspend fun setupCreateCart(isError: Boolean) {
+        val result = if (isError) {
+            CreateCartResult.Error(createCartErrorMessage)
         } else {
-            OnShoppingCartCreated(createShoppingCartResponse)
+            CreateCartResult.Success(shoppingCart)
         }
-        whenever(dispatcher.dispatch(argWhere<Action<Void>> {
-            it.type == TransactionAction.CREATE_SHOPPING_CART_WITH_DOMAIN_AND_PLAN
-        })).then {
-            viewModel.onShoppingCartCreated(event)
-        }
+        whenever(createCartUseCase.execute(any(), any(), any(), any(), any(), anyOrNull()))
+            .thenReturn(result)
     }
 
-    private fun setupRedeemShoppingCartDispatcher(isError: Boolean) {
-        val event = if (isError) {
-            OnShoppingCartRedeemed(shoppingCartRedeemError)
+    private suspend fun setupRedeemCart(isError: Boolean) {
+        val result = if (isError) {
+            RedeemCartResult.Error(DomainContactField.PHONE, redeemCartErrorMessage)
         } else {
-            OnShoppingCartRedeemed(true)
+            RedeemCartResult.Success
         }
-        whenever(dispatcher.dispatch(argWhere<Action<Void>> {
-            it.type == TransactionAction.REDEEM_CART_WITH_CREDITS
-        })).then {
-            viewModel.onCartRedeemed(event)
-        }
+        whenever(redeemCartUseCase.execute(any(), any())).thenReturn(result)
     }
 
     private fun setupFetchSiteDispatcher(isError: Boolean) {
@@ -731,53 +861,13 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         }
     }
 
-    private fun setupPrimaryDomainDispatcher(isError: Boolean) {
-        val event = OnPrimaryDomainDesignated(site, isError)
-        if (isError) {
-            event.error = primaryDomainError
+    private suspend fun setupDesignatePrimaryDomain(isError: Boolean) {
+        val result = if (isError) {
+            DesignatePrimaryDomainResult.Error(primaryDomainErrorMessage)
+        } else {
+            DesignatePrimaryDomainResult.Success
         }
-        whenever(dispatcher.dispatch(argWhere<Action<Void>> {
-            it.type == SiteAction.DESIGNATE_PRIMARY_DOMAIN
-        })).then {
-            viewModel.onPrimaryDomainDesignated(event)
-        }
-    }
-
-    private fun validateFetchSupportedCountriesAction(action: Action<*>) {
-        assertThat(action.type).isEqualTo(FETCH_SUPPORTED_COUNTRIES)
-        assertThat(action.payload).isNull()
-    }
-
-    private fun validateFetchDomainContactAction(action: Action<*>) {
-        assertThat(action.type).isEqualTo(AccountAction.FETCH_DOMAIN_CONTACT)
-        assertThat(action.payload).isNull()
-    }
-
-    private fun validateFetchStatesAction(action: Action<*>, targetCountryCode: String) {
-        assertThat(action.type).isEqualTo(SiteAction.FETCH_DOMAIN_SUPPORTED_STATES)
-        assertThat(action.payload).isEqualTo(targetCountryCode)
-    }
-
-    private fun validateCreateCartAction(action: Action<*>) {
-        assertThat(action.type).isEqualTo(TransactionAction.CREATE_SHOPPING_CART_WITH_DOMAIN_AND_PLAN)
-        assertThat(action.payload).isNotNull
-        assertThat(action.payload).isInstanceOf(CreateShoppingCartWithDomainAndPlanPayload::class.java)
-
-        val createShoppingCartPayload = action.payload as CreateShoppingCartWithDomainAndPlanPayload
-        assertThat(createShoppingCartPayload.site).isEqualTo(site)
-        assertThat(createShoppingCartPayload.domainName).isEqualTo(testDomainName)
-        assertThat(createShoppingCartPayload.domainProductId).isEqualTo(productId)
-        assertThat(createShoppingCartPayload.isDomainPrivacyEnabled).isEqualTo(true)
-    }
-
-    private fun validateRedeemCartAction(action: Action<*>) {
-        assertThat(action.type).isEqualTo(TransactionAction.REDEEM_CART_WITH_CREDITS)
-        assertThat(action.payload).isNotNull
-        assertThat(action.payload).isInstanceOf(RedeemShoppingCartPayload::class.java)
-
-        val redeemShoppingCartPayload = action.payload as RedeemShoppingCartPayload
-        assertThat(redeemShoppingCartPayload.cartDetails).isEqualTo(createShoppingCartResponse)
-        assertThat(redeemShoppingCartPayload.domainContactModel).isEqualTo(domainContactModel)
+        whenever(designatePrimaryDomainUseCase.execute(any(), any())).thenReturn(result)
     }
 
     private fun validateFetchSiteAction(action: Action<*>) {
@@ -787,16 +877,6 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         val fetchSitePayload = action.payload as SiteModel
         assertThat(fetchSitePayload).isEqualTo(site)
-    }
-
-    private fun validateDesignatePrimaryDomainActions(action: Action<*>) {
-        assertThat(action.type).isEqualTo(SiteAction.DESIGNATE_PRIMARY_DOMAIN)
-        assertThat(action.payload).isNotNull
-        assertThat(action.payload).isInstanceOf(DesignatePrimaryDomainPayload::class.java)
-
-        val designatePrimaryDomainPayload = action.payload as DesignatePrimaryDomainPayload
-        assertThat(designatePrimaryDomainPayload.site).isEqualTo(site)
-        assertThat(designatePrimaryDomainPayload.domain).isEqualTo(testDomainName)
     }
 
     private fun clearPreLoadUiStateResult() {

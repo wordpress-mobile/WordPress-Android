@@ -133,11 +133,7 @@
     <dimen name="reader_thumbnail_strip_image_height">96dp</dimen>
     <dimen name="reader_a8c_avatar_margin_start_new">18dp</dimen>
 
-    <dimen name="reader_card_gutters">0dp</dimen>
-    <dimen name="reader_card_elevation">0dp</dimen>
     <dimen name="reader_card_elevation_new">0dp</dimen>
-
-    <dimen name="reader_video_overlay_size">56dp</dimen>
 
     <dimen name="reader_footer_progress_bar_size">48dp</dimen>
 
@@ -178,9 +174,7 @@
     <dimen name="avatar_sz_inner_circle">48dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
     <dimen name="avatar_sz_extra_large">72dp</dimen>
-    <dimen name="avatar_sz_login_epilogue">72dp</dimen>
     <dimen name="avatar_sz_extra_medium_with_padding">28dp</dimen>
-    <dimen name="avatar_sz_extra_small_with_padding">26dp</dimen>
     <dimen name="avatar_sz_extra_extra_small_with_padding">22dp</dimen>
     <dimen name="avatar_background_padding">1dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
@@ -189,11 +183,9 @@
     <dimen name="blavatar_sz_extra_large">72dp</dimen>
     <dimen name="my_site_blavatar_sz">56dp</dimen>
 
-    <dimen name="reader_post_header_height">40dp</dimen>
     <dimen name="reader_button_icon">24dp</dimen>
     <dimen name="reader_button_minimum_height">44dp</dimen>
     <dimen name="reader_count_icon">18dp</dimen>
-    <dimen name="reader_more_icon">36dp</dimen>
     <dimen name="reader_follow_icon">24dp</dimen>
     <dimen name="reader_follow_button_min_height">36dp</dimen>
     <dimen name="reader_follow_button_progress_size">24dp</dimen>
@@ -217,9 +209,6 @@
 
     <dimen name="reader_subfilter_empty_content_max_width">440dp</dimen>
 
-    <item name="reader_photo_title_shadow_offset" format="float" type="dimen">3.0</item>
-    <item name="reader_photo_title_shadow_radius" format="float" type="dimen">1.5</item>
-
     <!-- margin to use when indenting comment replies under their parents -->
     <dimen name="reader_comment_indent_per_level">24dp</dimen>
 
@@ -227,11 +216,7 @@
     <dimen name="reader_comments_content_line_height">24dp</dimen>
     <dimen name="reader_comments_selected_indicator_width">6dp</dimen>
 
-    <!-- Increased touch targets to make views more accessible -->
-    <dimen name="reader_more_image_extra_padding">12dp</dimen>
-
     <dimen name="reader_chip_radius">8dp</dimen>
-    <dimen name="reader_site_header_avatar_padding">1dp</dimen>
 
     <dimen name="reader_expandable_tags_view_chip_new_radius">5dp</dimen>
     <dimen name="reader_expandable_tags_view_chip_new_border">1dp</dimen>
@@ -411,18 +396,12 @@
     <!-- signup -->
     <dimen name="progress_spinner_small">24dp</dimen>
 
-    <!-- post-signup interstitial -->
-    <dimen name="post_signup_interstitial_max_width">
-        @dimen/actionable_empty_view_text_maximum_width
-    </dimen>
-
     <!--plugins-->
     <dimen name="plugin_row_width">116dp</dimen>
     <dimen name="plugin_icon_size">40dp</dimen>
     <dimen name="plugin_external_link_image_size">16dp</dimen>
     <dimen name="plugin_banner_size">192dp</dimen>
 
-    <dimen name="add_avatar_button_size">24dp</dimen>
 
     <dimen name="dialog_snackbar_content_padding">20dp</dimen>
 
@@ -435,9 +414,6 @@
     <dimen name="jetpack_icon_margin">0dp</dimen>
     <dimen name="jetpack_button_icon_size">16dp</dimen>
     <dimen name="jetpack_banner_height">40dp</dimen>
-    <dimen name="jetpack_badge_footer_bottom_spacing">36dp</dimen>
-    <dimen name="jetpack_badge_bottom_spacing">28dp</dimen>
-    <dimen name="me_jetpack_badge_top_margin">0dp</dimen>
 
     <!-- jetpack backup restore last bullet bottom margin-->
     <dimen name="jetpack_backup_restore_last_bullet_bottom_margin">20dp</dimen>
@@ -660,12 +636,6 @@
     <dimen name="user_profile_bottom_sheet_avatar_sz">56dp</dimen>
     <dimen name="user_profile_bottom_sheet_user_name_text_size">20sp</dimen>
 
-    <!-- Login empty views-->
-    <dimen name="login_empty_view_avatar_width">72dp</dimen>
-    <dimen name="login_empty_view_avatar_height">72dp</dimen>
-    <dimen name="login_empty_view_avatar_margin_bottom">12dp</dimen>
-    <dimen name="login_empty_view_line_spacing">2sp</dimen>
-
     <dimen name="blogging_reminders_days_top_margin">42dp</dimen>
     <dimen name="blogging_reminders_days_middle_margin">7dp</dimen>
     <dimen name="blogging_reminders_prompt_help_buttons_size">16dp</dimen>
@@ -679,22 +649,15 @@
     <dimen name="quick_link_ribbon_corner_radius">10dp</dimen>
     <dimen name="quick_link_ribbon_icon_padding">8dp</dimen>
 
-    <!-- Jetpack Migration Flow -->
-    <dimen name="jp_migration_padding_horizontal">30dp</dimen>
+    <!-- Used by PrimaryButtonM3/SecondaryButtonM3 and DataViewItemCard (names are historical) -->
     <dimen name="jp_migration_buttons_padding_horizontal">20dp</dimen>
     <dimen name="jp_migration_user_avatar_size">32dp</dimen>
-    <dimen name="jp_migration_site_icon_size">60dp</dimen>
-    <dimen name="help_logout_button_margin">15dp</dimen>
-    <dimen name="help_logout_button_margin_bottom">68dp</dimen>
 
     <dimen name="jetpack_bottom_sheet_button_height">52dp</dimen>
 
     <!-- Jetpack full screen overlay -->
     <dimen name="jp_migration_full_screen_overlay_padding_horizontal">32dp</dimen>
     <dimen name="jetpack_full_screen_overlay_margin_close_button">20dp</dimen>
-    <dimen name="jetpack_full_screen_overlay_new_users_content_margin">32dp</dimen>
-    <dimen name="jetpack_full_screen_overlay_new_users_content_margin_land">16dp</dimen>
-    <dimen name="jetpack_full_screen_overlay_new_users_content_text_size">15sp</dimen>
 
     <!-- Activity Log Card -->
     <dimen name="activity_card_icon_size">40dp</dimen>

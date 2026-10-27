@@ -13,6 +13,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.St
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ReferredItem
 import org.wordpress.android.ui.stats.refresh.utils.StatsPostProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.utils.ListItemInteraction.Companion
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -23,6 +24,7 @@ class PostHeaderUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val statsPostProvider: StatsPostProvider,
+    private val statsSiteProvider: StatsSiteProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatelessUseCase<String>(
     PostDetailType.POST_HEADER,
@@ -53,7 +55,7 @@ class PostHeaderUseCase
     }
 
     private fun click(clickParams: ClickParams) {
-        analyticsTracker.track(AnalyticsTracker.Stat.STATS_DETAIL_POST_TAPPED)
+        analyticsTracker.track(AnalyticsTracker.Stat.STATS_DETAIL_POST_TAPPED, statsSiteProvider.siteModel)
         if (clickParams.itemType == ITEM_TYPE_ATTACHMENT) {
             navigateTo(ViewAttachment(clickParams.postId, clickParams.postUrl))
         } else {

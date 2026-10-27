@@ -4,7 +4,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.support.unified.model.UnifiedAttachment
 import org.wordpress.android.support.unified.model.UnifiedConversation
 import org.wordpress.android.support.unified.model.UnifiedMessage
@@ -22,12 +21,9 @@ import javax.inject.Named
 
 class UnifiedSupportRepository @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
-    private val wpComApiClientProvider: WpComApiClientProvider,
+    private val wpComApiClient: WpComApiClient,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
-    @Volatile
-    private var accessToken: String? = null
-
     /**
      * User ID required by the bot conversations endpoint.
      * Marked as @Volatile to ensure visibility across threads.
@@ -35,13 +31,7 @@ class UnifiedSupportRepository @Inject constructor(
     @Volatile
     private var userId: Long = 0
 
-    private val wpComApiClient: WpComApiClient by lazy {
-        check(accessToken != null) { "Repository not initialized" }
-        wpComApiClientProvider.getWpComApiClient(accessToken!!)
-    }
-
-    fun init(accessToken: String, userId: Long) {
-        this.accessToken = accessToken
+    fun init(userId: Long) {
         this.userId = userId
     }
 

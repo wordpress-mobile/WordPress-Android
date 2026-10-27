@@ -116,9 +116,9 @@ class MostViewedViewModelTest : BaseUnitTest() {
     @Test
     fun `when posts fetch fails, then posts error state is emitted`() = test {
         stubFailedToLoadError()
-        whenever(statsRepository.fetchMostViewed(any(), any(), eq(MostViewedDataSource.POSTS_AND_PAGES)))
+        whenever(statsRepository.fetchMostViewed(any(), any(), eq(MostViewedDataSource.POSTS_AND_PAGES), any()))
             .thenReturn(MostViewedResult.Error("Network error"))
-        whenever(statsRepository.fetchMostViewed(any(), any(), eq(MostViewedDataSource.REFERRERS)))
+        whenever(statsRepository.fetchMostViewed(any(), any(), eq(MostViewedDataSource.REFERRERS), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -131,9 +131,9 @@ class MostViewedViewModelTest : BaseUnitTest() {
     @Test
     fun `when referrers fetch fails, then referrers error state is emitted`() = test {
         stubFailedToLoadError()
-        whenever(statsRepository.fetchMostViewed(any(), any(), eq(MostViewedDataSource.POSTS_AND_PAGES)))
+        whenever(statsRepository.fetchMostViewed(any(), any(), eq(MostViewedDataSource.POSTS_AND_PAGES), any()))
             .thenReturn(createSuccessResult())
-        whenever(statsRepository.fetchMostViewed(any(), any(), eq(MostViewedDataSource.REFERRERS)))
+        whenever(statsRepository.fetchMostViewed(any(), any(), eq(MostViewedDataSource.REFERRERS), any()))
             .thenReturn(MostViewedResult.Error("Network error"))
 
         initViewModel()
@@ -145,9 +145,9 @@ class MostViewedViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when exception is thrown, then error state with exception message is emitted`() = test {
-        whenever(statsRepository.fetchMostViewed(any(), any(), eq(MostViewedDataSource.POSTS_AND_PAGES)))
+        whenever(statsRepository.fetchMostViewed(any(), any(), eq(MostViewedDataSource.POSTS_AND_PAGES), any()))
             .thenThrow(RuntimeException("Test exception"))
-        whenever(statsRepository.fetchMostViewed(any(), any(), eq(MostViewedDataSource.REFERRERS)))
+        whenever(statsRepository.fetchMostViewed(any(), any(), eq(MostViewedDataSource.REFERRERS), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -162,7 +162,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
     // region Success states
     @Test
     fun `when data loads successfully, then loaded state is emitted for both data sources`() = test {
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -176,7 +176,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when data loads, then items contain correct values`() = test {
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -191,8 +191,8 @@ class MostViewedViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when data loads, then url and post type are passed to card and detail items`() = test {
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+    fun `when data loads, then url is passed to card and detail items`() = test {
+        whenever(statsRepository.fetchMostViewed(any(), any(), any(), any()))
             .thenReturn(createSuccessResult())
         whenever(resourceProvider.getString(R.string.stats_period_last_7_days))
             .thenReturn("Last 7 days")
@@ -202,11 +202,9 @@ class MostViewedViewModelTest : BaseUnitTest() {
 
         val state = viewModel.postsUiState.value as MostViewedCardUiState.Loaded
         assertThat(state.items[0].url).isEqualTo(TEST_POST_URL_1)
-        assertThat(state.items[0].postType).isEqualTo(TEST_POST_TYPE_1)
 
         val detailItems = viewModel.getPostsDetailData().items
         assertThat(detailItems[0].url).isEqualTo(TEST_POST_URL_1)
-        assertThat(detailItems[0].postType).isEqualTo(TEST_POST_TYPE_1)
     }
 
     @Test
@@ -220,7 +218,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
                 isFirst = idx == 0
             )
         }
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), any(), any()))
             .thenReturn(
                 MostViewedResult.Success(
                     items = manyItems,
@@ -247,7 +245,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
             isFirst = true,
             url = TEST_REFERRER_URL
         )
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), any(), any()))
             .thenReturn(createSuccessResult().copy(items = listOf(referrer)))
 
         initViewModel()
@@ -259,21 +257,23 @@ class MostViewedViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when init, then both data sources are fetched in parallel`() = test {
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
         advanceUntilIdle()
 
-        verify(statsRepository).fetchMostViewed(eq(TEST_SITE_ID), any(), eq(MostViewedDataSource.POSTS_AND_PAGES))
-        verify(statsRepository).fetchMostViewed(eq(TEST_SITE_ID), any(), eq(MostViewedDataSource.REFERRERS))
+        verify(statsRepository).fetchMostViewed(
+            eq(TEST_SITE_ID), any(), eq(MostViewedDataSource.POSTS_AND_PAGES), any()
+        )
+        verify(statsRepository).fetchMostViewed(eq(TEST_SITE_ID), any(), eq(MostViewedDataSource.REFERRERS), any())
     }
     // endregion
 
     // region Period changes
     @Test
     fun `when period changes, then both data sources are reloaded`() = test {
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -286,13 +286,13 @@ class MostViewedViewModelTest : BaseUnitTest() {
         verify(statsRepository, times(2)).fetchMostViewed(
             eq(TEST_SITE_ID),
             eq(StatsPeriod.Last30Days),
-            any()
+            any(), any()
         )
     }
 
     @Test
     fun `when same period is selected, then data is not reloaded`() = test {
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -302,12 +302,12 @@ class MostViewedViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Should only be called twice during init (once per data source)
-        verify(statsRepository, times(2)).fetchMostViewed(any(), any(), any())
+        verify(statsRepository, times(2)).fetchMostViewed(any(), any(), any(), any())
     }
 
     @Test
     fun `when same period is re-selected after success, then fetch is skipped`() = test {
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -318,7 +318,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         verify(statsRepository, times(2))
-            .fetchMostViewed(any(), any(), any())
+            .fetchMostViewed(any(), any(), any(), any())
         assertThat(viewModel.postsUiState.value)
             .isInstanceOf(MostViewedCardUiState.Loaded::class.java)
         assertThat(viewModel.referrersUiState.value)
@@ -328,7 +328,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
     @Test
     fun `when same period is re-selected after full error, then data is re-fetched`() = test {
         stubFailedToLoadError()
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), any(), any()))
             .thenReturn(MostViewedResult.Error("Network error"))
 
         initViewModel()
@@ -336,7 +336,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
 
         // loadedPeriod should not be set after error, so re-selecting
         // the same period should trigger a new fetch
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         viewModel.onPeriodChanged(StatsPeriod.Last7Days)
@@ -344,7 +344,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
 
         // 2 from init (both failed) + 2 from re-select
         verify(statsRepository, times(4))
-            .fetchMostViewed(any(), any(), any())
+            .fetchMostViewed(any(), any(), any(), any())
         assertThat(viewModel.postsUiState.value)
             .isInstanceOf(MostViewedCardUiState.Loaded::class.java)
         assertThat(viewModel.referrersUiState.value)
@@ -359,13 +359,15 @@ class MostViewedViewModelTest : BaseUnitTest() {
             whenever(
                 statsRepository.fetchMostViewed(
                     any(), any(),
-                    eq(MostViewedDataSource.POSTS_AND_PAGES)
+                    eq(MostViewedDataSource.POSTS_AND_PAGES),
+                    any()
                 )
             ).thenReturn(createSuccessResult())
             whenever(
                 statsRepository.fetchMostViewed(
                     any(), any(),
-                    eq(MostViewedDataSource.REFERRERS)
+                    eq(MostViewedDataSource.REFERRERS),
+                    any()
                 )
             ).thenReturn(MostViewedResult.Error("Network error"))
 
@@ -381,7 +383,8 @@ class MostViewedViewModelTest : BaseUnitTest() {
             whenever(
                 statsRepository.fetchMostViewed(
                     any(), any(),
-                    eq(MostViewedDataSource.REFERRERS)
+                    eq(MostViewedDataSource.REFERRERS),
+                    any()
                 )
             ).thenReturn(createSuccessResult())
 
@@ -391,12 +394,14 @@ class MostViewedViewModelTest : BaseUnitTest() {
             // Posts already loaded for this period — should NOT re-fetch
             verify(statsRepository, times(1)).fetchMostViewed(
                 any(), any(),
-                eq(MostViewedDataSource.POSTS_AND_PAGES)
+                eq(MostViewedDataSource.POSTS_AND_PAGES),
+                any()
             )
             // Referrers failed — should re-fetch
             verify(statsRepository, times(2)).fetchMostViewed(
                 any(), any(),
-                eq(MostViewedDataSource.REFERRERS)
+                eq(MostViewedDataSource.REFERRERS),
+                any()
             )
             assertThat(viewModel.referrersUiState.value)
                 .isInstanceOf(MostViewedCardUiState.Loaded::class.java)
@@ -406,7 +411,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
     // region Refresh
     @Test
     fun `when refresh is called, then isRefreshing becomes true then false`() = test {
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -424,7 +429,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when refresh is called, then both data sources are fetched`() = test {
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -434,14 +439,14 @@ class MostViewedViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Called 4 times: twice during init, twice during refresh
-        verify(statsRepository, times(4)).fetchMostViewed(eq(TEST_SITE_ID), any(), any())
+        verify(statsRepository, times(4)).fetchMostViewed(eq(TEST_SITE_ID), any(), any(), any())
     }
     // endregion
 
     // region Retry
     @Test
     fun `when onRetryPosts is called, then posts data is reloaded`() = test {
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -455,13 +460,14 @@ class MostViewedViewModelTest : BaseUnitTest() {
         verify(statsRepository, times(2)).fetchMostViewed(
             any(),
             any(),
-            eq(MostViewedDataSource.POSTS_AND_PAGES)
+            eq(MostViewedDataSource.POSTS_AND_PAGES),
+            any()
         )
     }
 
     @Test
     fun `when onRetryReferrers is called, then referrers data is reloaded`() = test {
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -473,7 +479,8 @@ class MostViewedViewModelTest : BaseUnitTest() {
         verify(statsRepository, times(2)).fetchMostViewed(
             any(),
             any(),
-            eq(MostViewedDataSource.REFERRERS)
+            eq(MostViewedDataSource.REFERRERS),
+            any()
         )
     }
     // endregion
@@ -481,21 +488,21 @@ class MostViewedViewModelTest : BaseUnitTest() {
     // region loadData
     @Test
     fun `when loadData is called, then data is fetched and states are updated`() = test {
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
         advanceUntilIdle()
 
         // Data was fetched during init
-        verify(statsRepository, times(2)).fetchMostViewed(any(), any(), any())
+        verify(statsRepository, times(2)).fetchMostViewed(any(), any(), any(), any())
 
         // Call loadData again
         viewModel.loadData()
         advanceUntilIdle()
 
         // Data should be fetched again (4 times total: 2 init + 2 loadData)
-        verify(statsRepository, times(4)).fetchMostViewed(any(), any(), any())
+        verify(statsRepository, times(4)).fetchMostViewed(any(), any(), any(), any())
 
         // States should be Loaded
         assertThat(viewModel.postsUiState.value).isInstanceOf(MostViewedCardUiState.Loaded::class.java)
@@ -505,7 +512,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
     @Test
     fun `when loadData is called after error, then states recover to Loaded`() = test {
         stubFailedToLoadError()
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), any(), any()))
             .thenReturn(MostViewedResult.Error("Network error"))
 
         initViewModel()
@@ -516,7 +523,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
         assertThat(viewModel.referrersUiState.value).isInstanceOf(MostViewedCardUiState.Error::class.java)
 
         // Now configure success and call loadData
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         viewModel.loadData()
@@ -531,7 +538,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
     // region getDetailData
     @Test
     fun `when getPostsDetailData is called, then returns cached posts data`() = test {
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), any(), any()))
             .thenReturn(createSuccessResult())
         whenever(resourceProvider.getString(R.string.stats_period_last_7_days))
             .thenReturn("Last 7 days")
@@ -561,7 +568,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
         }
         whenever(resourceProvider.getString(R.string.stats_period_last_7_days))
             .thenReturn("Last 7 days")
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), any(), any()))
             .thenReturn(
                 MostViewedResult.Success(
                     items = manyItems,
@@ -592,7 +599,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
                 isFirst = true
             )
         )
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), any(), any()))
             .thenReturn(
                 MostViewedResult.Success(
                     items = items,
@@ -623,7 +630,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
                 isFirst = true
             )
         )
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), any(), any()))
             .thenReturn(
                 MostViewedResult.Success(
                     items = items,
@@ -654,7 +661,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
                 isFirst = true
             )
         )
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), any(), any()))
             .thenReturn(
                 MostViewedResult.Success(
                     items = items,
@@ -681,8 +688,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
                 views = TEST_POST_VIEWS_1,
                 previousViews = TEST_POST_PREVIOUS_VIEWS_1,
                 isFirst = true,
-                url = TEST_POST_URL_1,
-                postType = TEST_POST_TYPE_1
+                url = TEST_POST_URL_1
             ),
             MostViewedItemData(
                 id = 2,
@@ -707,7 +713,6 @@ class MostViewedViewModelTest : BaseUnitTest() {
         private const val TEST_POST_TITLE_1 = "Test Post 1"
         private const val TEST_POST_TITLE_2 = "Test Post 2"
         private const val TEST_POST_URL_1 = "https://example.com/test-post-1"
-        private const val TEST_POST_TYPE_1 = "post"
         private const val TEST_POST_VIEWS_1 = 500L
         private const val TEST_POST_VIEWS_2 = 300L
         private const val TEST_REFERRER_URL = "https://google.com/"

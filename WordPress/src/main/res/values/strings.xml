@@ -3,21 +3,11 @@
 
     <string name="app_name" translatable="false">WordPress</string>
 
-    <!-- notification permission strings (used in WordPress AndroidManifest.xml) -->
-    <string name="notification_disable_broadcast_permission_label">disable WordPress notifications</string>
-    <string name="notification_disable_broadcast_permission_desc">Allows the app to disable WordPress notifications.</string>
-
     <!-- login prologue strings (used by WordPress variant) -->
     <string name="login_prologue_revamped_tagline">Write, edit, and publish from anywhere.</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress icon</string>
 
     <!-- account setup -->
-    <string name="xmlrpc_missing_method_error" a8c-src-lib="module:login">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
-    <string name="xmlrpc_post_blocked_error" a8c-src-lib="module:login">Couldn\'t connect. Your host is blocking POST requests, and the app needs
-        that in order to communicate with your site. Contact your host to solve this problem.</string>
-    <string name="xmlrpc_endpoint_forbidden_error" a8c-src-lib="module:login">Couldn\'t connect. We received a 403 error when trying to access your
-        site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve
-        this problem.</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available</string>
     <string name="request_failed_message">There was a problem handling the request. Please try again later.</string>
@@ -46,7 +36,6 @@
     <string name="publicize_buttons_screen_title">Sharing buttons</string>
     <string name="media_settings_screen_title">File details</string>
     <string name="person_detail_screen_title">Person detail</string>
-    <string name="signup_epilogue_screen_title">New account</string>
     <string name="share_intent_screen_title">Pick site</string>
     <string name="edit_photo_screen_title">Edit Photo</string>
     <string name="notif_detail_screen_title">Notification detail %s</string>
@@ -567,7 +556,6 @@
     <string name="uploading_media">Uploading media…</string>
 
     <!-- new account view -->
-    <string name="no_site_error" a8c-src-lib="module:login">The site at this address is not a WordPress site. For us to connect to it, the site must use WordPress.</string>
 
     <!-- category management -->
     <string name="categories">Categories</string>
@@ -624,8 +612,6 @@
     <string name="newest_first">Newest first</string>
     <string name="days_quantity_one">1 day</string>
     <string name="days_quantity_other">%d days</string>
-    <string name="weeks_quantity_one">1 week</string>
-    <string name="weeks_quantity_other">%d weeks</string>
     <string name="https" translatable="false">https:\/\/</string>
     <string name="close">Close</string>
     <string name="submit">Submit</string>
@@ -715,7 +701,7 @@
     <!-- GutenbergKit announcement -->
     <string name="gutenberg_kit_announcement_title">A better block editor is coming</string>
     <string name="gutenberg_kit_announcement_body_intro">The next-generation block editor is ready, and it brings more new features.</string>
-    <string name="gutenberg_kit_announcement_body_deadline">By the end of June 2026, it will become the default editor for everyone. %1$s</string>
+    <string name="gutenberg_kit_announcement_body_deadline_v2">By the end of 2026, it will become the default editor for everyone. %1$s</string>
     <string name="gutenberg_kit_announcement_activate">Activate</string>
     <string name="gutenberg_kit_announcement_maybe_later">Maybe later</string>
     <string name="gutenberg_kit_announcement_learn_more">Learn more</string>
@@ -785,6 +771,7 @@
     <string name="error_tag_exists">A tag with this name already exists</string>
     <string name="dlg_confirm_delete_tag">Permanently delete \'%s\' tag?</string>
     <string name="dlg_deleting_tag">Deleting</string>
+    <string name="deleting_tag_failed">Deleting tag failed</string>
     <string name="dlg_saving_tag">Saving</string>
 
     <!-- Jetpack settings -->
@@ -1029,6 +1016,14 @@
     <string name="new_stats_intro_trends_title">Trends at a Glance</string>
     <string name="new_stats_intro_trends_desc">Every metric shows how it\'s trending compared to the previous period, so you always know if you\'re growing.</string>
     <string name="new_stats_intro_footer">You can turn off New Stats from the overflow menu in the Stats screen.</string>
+    <!-- Timespan shown in the rs posts, pages and comments lists for anything under a minute old -->
+    <string name="rs_date_now">Now</string>
+    <!-- Date shown on rs Drafts list rows, which are sorted by when they were last modified. %s is the
+         formatted date, e.g. "2 days ago", "Yesterday", "Now" or "Dec 15, 2025" -->
+    <string name="rs_date_modified">Modified: %s</string>
+    <!-- Date shown on rs Trashed list rows, which are sorted by when they were trashed. %s is the
+         formatted date, e.g. "2 days ago", "Yesterday", "Now" or "Dec 15, 2025" -->
+    <string name="rs_date_trashed">Trashed: %s</string>
     <string name="post_rs_failed_to_load">Failed to load post</string>
     <string name="page_rs_failed_to_load">Failed to load page</string>
     <string name="page_rs_copy_url">Copy URL</string>
@@ -1137,6 +1132,8 @@
     <!-- Stats refresh -->
     <string name="stats_no_data_yet">No data yet</string>
     <string name="stats_no_data_for_period">No data for this period</string>
+    <string name="stats_hourly_data_not_available">Hourly data not available</string>
+    <string name="stats_show_views">Show Views</string>
     <string name="stats_empty_insights_title">No insights added yet</string>
     <string name="stats_manage_insights">Manage Insights</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
@@ -1159,6 +1156,8 @@
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_item_settings">Stats item settings</string>
     <string name="stats_cannot_be_started">We cannot open the statistics at the moment. Please try again later</string>
+    <!-- Spoken date range for the Traffic period selector, e.g. "14 Jun 2025 to 14 Jun 2026". -->
+    <string name="stats_traffic_date_range_content_description">%1$s to %2$s</string>
     <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="stats_traffic_change">%1$s (%2$s)</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
@@ -1253,7 +1252,6 @@
 
     <!-- Jetpack install plugin -->
     <string name="jetpack">Jetpack</string>
-    <string name="login_to_to_connect_jetpack" a8c-src-lib="module:login">Log in to the WordPress.com account you used to connect Jetpack.</string>
     <string name="jetpack_plugin_install_jp_logo_content_description">Jetpack icon</string>
     <string name="jetpack_plugin_install_initial_title">Install Jetpack</string>
     <string name="jetpack_plugin_install_initial_description">Your website credentials will not be stored and are used only for the purpose of installing Jetpack.</string>
@@ -1629,6 +1627,9 @@
     <string name="stats_detail_average_views_per_day">Avg. Views Per Day</string>
     <string name="stats_detail_recent_weeks">Recent Weeks</string>
     <string name="stats_details_top_commentators">Top Commentators</string>
+    <string name="stats_post_detail_title">Post Stats</string>
+    <string name="stats_previous_day">Previous day</string>
+    <string name="stats_next_day">Next day</string>
 
     <string name="stats_posts_and_pages">Posts and Pages</string>
     <string name="stats_referrers">Referrers</string>
@@ -1675,6 +1676,11 @@
     <string name="stats_error_not_available">These stats aren\'t available for this site</string>
     <string name="stats_error_admin_url_unavailable">Unable to open WP Admin for this site</string>
 
+    <!-- stats paid-plan feature gate -->
+    <string name="stats_feature_gate_message">Upgrade your plan to get access to advanced analytics</string>
+    <string name="stats_feature_gate_explore_plans">Explore Plans</string>
+    <string name="stats_feature_gate_plans_unavailable">Unable to open the plans page for this site</string>
+
     <!-- stats ring chart accessibility -->
     <string name="stats_ring_chart_entry_description">%1$s: %2$s</string>
 
@@ -1682,10 +1688,15 @@
     <string name="stats_period_today">Today</string>
     <string name="stats_period_last_7_days">Last 7 days</string>
     <string name="stats_period_last_30_days">Last 30 days</string>
-    <string name="stats_period_last_6_months">Last 6 months</string>
     <string name="stats_period_last_12_months">Last 12 months</string>
+    <string name="stats_period_this_week">This Week</string>
+    <string name="stats_period_this_month">This Month</string>
+    <string name="stats_period_this_year">This Year</string>
     <string name="stats_period_custom">Custom</string>
     <string name="stats_period_selector_content_description">Select stats period</string>
+    <string name="stats_period_previous_content_description">Previous period</string>
+    <string name="stats_period_next_content_description">Next period</string>
+    <string name="stats_view_selected_period_content_description">View stats for the selected period</string>
     <string name="stats_select_date_range">Select date range</string>
 
     <!-- Most Viewed Stats Card -->
@@ -1723,6 +1734,19 @@
     <string name="stats_utm_source">Source</string>
     <string name="stats_utm_medium">Medium</string>
     <string name="stats_utm_campaign">Campaign</string>
+
+    <!-- Archive Stats Card -->
+    <string name="stats_archives_title">Archives</string>
+    <string name="stats_archives_title_label">Archive pages</string>
+    <string name="stats_archives_section_search">Search terms</string>
+    <string name="stats_archives_section_categories">Categories</string>
+    <string name="stats_archives_section_tags">Tags</string>
+    <string name="stats_archives_section_authors">Authors</string>
+    <string name="stats_archives_section_dates">Dates</string>
+    <string name="stats_archives_section_error">Error</string>
+    <string name="stats_archives_section_aggregated">Aggregated</string>
+    <string name="stats_archives_section_other">Other</string>
+    <string name="stats_archives_section_taxonomies">Taxonomies</string>
 
     <!-- Subscribers Stats Cards -->
     <string name="stats_subscribers_all_time">All-time Subscribers</string>
@@ -1773,10 +1797,7 @@
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
 
     <!-- HTTP Authentication -->
-    <string name="httpuser" a8c-src-lib="module:login">HTTP username</string>
-    <string name="httppassword" a8c-src-lib="module:login">HTTP password</string>
     <string name="settings">Settings</string>
-    <string name="http_authorization_required" a8c-src-lib="module:login">Authorization required</string>
 
     <!-- post scheduling and password -->
     <string name="submit_for_review">Submit</string>
@@ -2297,7 +2318,6 @@
 
     <string name="error_refresh_unauthorized_pages">You don\'t have permission to view or edit pages</string>
     <string name="error_refresh_unauthorized_posts">You don\'t have permission to view or edit posts</string>
-    <string name="error_fetch_my_profile" a8c-src-lib="module:login">Couldn\'t retrieve your profile</string>
     <string name="error_fetch_account_settings">Couldn\'t retrieve your account settings</string>
     <string name="error_disabled_apis">Could not fetch settings: Some APIs are unavailable for this OAuth app ID + account combination.</string>
     <string name="error_post_account_settings">Couldn\'t save your account settings</string>
@@ -2339,7 +2359,6 @@
     <string name="error_media_xmlrpc_not_allowed">Your action is not allowed</string>
     <string name="error_media_xmlrcp_server_error">Internal server error occurred</string>
     <string name="error_post_does_not_exist">This post no longer exists</string>
-    <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
     <string name="error_fetch_remote_site_settings">Couldn\'t retrieve site info</string>
     <string name="error_post_remote_site_settings">Couldn\'t save site info</string>
@@ -2528,7 +2547,6 @@
     <string name="reader_toast_err_removing_tag">Unable to remove this tag</string>
     <string name="reader_toast_err_share_intent">Unable to share</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
-    <string name="reader_toast_err_show_blog">Unable to show this blog</string>
     <string name="reader_toast_err_blog_not_found">Error: Unable to find the blog</string>
     <string name="reader_toast_err_already_follow_this_blog">You are already subscribed to this blog</string>
     <string name="reader_toast_err_unable_to_follow_blog">Unable to subscribe to this blog</string>
@@ -2622,28 +2640,18 @@
 
     <!-- NUX strings -->
     <string name="invalid_email_message">Your email address isn\'t valid</string>
-    <string name="email_invalid" a8c-src-lib="module:login">Enter a valid email address</string>
     <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
     <string name="ssl_certificate_details">Details</string>
     <string name="ssl_certificate_error">Invalid SSL certificate</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
-    <string name="verification_code" a8c-src-lib="module:login">Verification code</string>
-    <string name="auth_required" a8c-src-lib="module:login">Log in again to continue.</string>
     <string name="logging_in">Logging in</string>
-    <string name="reset_your_password" a8c-src-lib="module:login">Reset your password</string>
-    <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Currently unavailable. Please enter your password</string>
-    <string name="checking_email" a8c-src-lib="module:login">Checking email</string>
     <string name="already_logged_in_wpcom">You\'re already logged in a WordPress.com account, you can\'t add a WordPress.com site bound to another account.</string>
-    <string name="cannot_add_duplicate_site" a8c-src-lib="module:login">This site already exists in the app, you can\'t add it.</string>
-    <string name="duplicate_site_detected" a8c-src-lib="module:login">A duplicate site has been detected.</string>
-    <string name="error_user_username_instead_of_email" a8c-src-lib="module:login">Please log in using your WordPress.com username instead of your email address.</string>
     <string name="error_fetching_account">Unable to fetch account: %s"</string>
 
     <!-- Help view -->
     <string name="help">Help</string>
     <string name="support_title">Support</string>
     <string name="help_and_support">Help &amp; Support</string>
-    <string name="wordpress_help_center_button">WordPress help center</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="tickets">Tickets</string>
     <string name="logs_button">Logs</string>
@@ -2653,8 +2661,6 @@
     <string name="support_push_notification_message">New message from \'Help &amp; Support\'</string>
     <string name="support_forum_title">Community forums</string>
     <string name="support_forum_caption">Get help from our group of volunteers.</string>
-    <string name="support_faq_title">Thank you for switching to the Jetpack app!</string>
-    <string name="support_faq_caption">See our FAQ for answers to common questions you may have.</string>
 
     <!-- Contact us -->
     <string name="support_ticket_subject">WordPress for Android Support</string>
@@ -2773,6 +2779,14 @@
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
     <string name="site_picker_add_a_site">Add a site</string>
+    <!-- translators: this is the accessibility label for the add site button's tap action while the menu is open, and the verb should likely be translated in the infinitive, here's the usage context in English: "Double tap to 'close the add site menu'." -->
+    <string name="site_picker_add_a_site_collapse">Close the add site menu</string>
+    <!-- translators: this is the accessibility label for the add site button's tap action while the menu is closed, and the verb should likely be translated in the infinitive, here's the usage context in English: "Double tap to 'show ways to add a site'." -->
+    <string name="site_picker_add_a_site_expand">Show ways to add a site</string>
+    <!-- translators: spoken by a screen reader to describe the add site button's current state, not an action the user can take. Announced after the menu closes. -->
+    <string name="site_picker_add_site_menu_collapsed">Add site menu collapsed</string>
+    <!-- translators: spoken by a screen reader to describe the add site button's current state, not an action the user can take. Announced after the menu opens. -->
+    <string name="site_picker_add_site_menu_expanded">Add site menu expanded</string>
     <string name="site_picker_add_self_hosted">Add self-hosted site</string>
     <string name="site_picker_create_wpcom">Create WordPress.com site</string>
     <string name="site_picker_remove_site_empty">No sites matching your search</string>
@@ -2793,6 +2807,7 @@
     <string name="support_identity_input_dialog_name_label">Name</string>
     <string name="support_screen_title">Support</string>
     <string name="support_screen_login_button">Log into WordPress.com</string>
+    <string name="support_screen_login_description">Log into WordPress.com to access support chat.</string>
     <string name="support_screen_how_can_we_help_title">How can we help?</string>
     <string name="support_screen_help_center_title">Help Center</string>
     <string name="support_screen_help_center_description">Documentation and Tutorials to help you get started</string>
@@ -3052,6 +3067,8 @@
     <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style="color:#B26200;"&gt;%1$s for the first year &lt;/span&gt;&lt;span style="color:#50575e;"&gt;&lt;s&gt;%2$s /year&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_fetch_error">Domain suggestions couldn\'t be loaded</string>
     <string name="domain_registration_contact_form_input_error">Please enter a valid %s</string>
+    <string name="domain_registration_purchase_incomplete">Your domain credit was used, but %s could not be registered. Please contact support.</string>
+    <string name="domain_registration_purchase_unconfirmed">Your domain credit was used, but we could not confirm the result. Check your domains before trying again, and contact support if %s is missing.</string>
     <string name="domain_registration_privacy_protection_title">Privacy Protection</string>
     <string name="domain_registration_privacy_protection_description">Domain owners have to share contact information in a public database of all domains.
         With Privacy Protection, we publish our own information instead of yours and privately forward any communication to you.</string>
@@ -3356,116 +3373,26 @@
     <!-- If any of these appear unused, be sure to check the same string in the login library -
     it may be used there and keeping it here is required for translation. -->
     <string name="log_in" a8c-src-lib="module:login">Log In</string>
-    <string name="invalid_verification_code" a8c-src-lib="module:login">Invalid verification code</string>
-    <string name="send_link_by_email" a8c-src-lib="module:login">Send link by email</string>
-    <string name="create_account" a8c-src-lib="module:login">Create account</string>
-    <string name="or_type_your_password" a8c-src-lib="module:login">Or type your password</string>
-    <string name="enter_email_wordpress_com" a8c-src-lib="module:login">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
-    <string name="enter_email_to_continue_wordpress_com" a8c-src-lib="module:login">Enter your email address to log in or create a WordPress.com account.</string>
-    <string name="enter_email_for_site" a8c-src-lib="module:login">Log in with WordPress.com to connect to %1$s</string>
     <string name="get_started" a8c-src-lib="module:login">Get Started</string>
     <string name="next">Next</string>
-    <string name="check_email" a8c-src-lib="module:login">Check email</string>
-    <string name="enter_verification_code" a8c-src-lib="module:login">Almost there! Please enter the verification code for WordPress.com from your authenticator app.</string>
-    <string name="enter_verification_code_sms" a8c-src-lib="module:login">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
-    <string name="login_text_otp" a8c-src-lib="module:login">Text me a code instead</string>
-    <string name="login_text_otp_another" a8c-src-lib="module:login">Text me another code instead</string>
-    <string name="requesting_otp" a8c-src-lib="module:login">Requesting a verification code via SMS.</string>
-    <string name="email_not_registered_wpcom" a8c-src-lib="module:login">Hmm, we can\'t find a WordPress.com account connected to this email address.</string>
-    <string name="password_incorrect" a8c-src-lib="module:login">It looks like this password is incorrect. Please double check your information and try again.</string>
-    <string name="login_magic_links_label" a8c-src-lib="module:login">We\'ll email you a link that\'ll log you in instantly, no password needed.</string>
-    <string name="login_magic_links_sent_label" a8c-src-lib="module:login">Check your email on this device and tap the link in the email you received from WordPress.com.</string>
-    <string name="login_magic_link_email_requesting" a8c-src-lib="module:login">Requesting log-in email</string>
-    <string name="magic_link_not_seeing_email_message" a8c-src-lib="module:login">Not seeing the email? Check your Spam or Junk Mail folder.</string>
-    <string name="magic_link_not_meaning_to_create_account" a8c-src-lib="module:login">Didn\'t mean to create a new account? Go back to re-enter your email address.</string>
-    <string name="login_get_link_by_email" a8c-src-lib="module:login">Get a login link by email</string>
-    <string name="enter_wpcom_password" a8c-src-lib="module:login">Enter your WordPress.com password.</string>
-    <string name="enter_wpcom_password_google" a8c-src-lib="module:login">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
     <string name="connect_more">Connect another site</string>
     <string name="connect_site">Connect a site</string>
     <string name="login_continue" a8c-src-lib="module:login">Continue</string>
-    <string name="login_done">Done</string>
     <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Enter the address of the WordPress site you\'d like to connect.</string>
-    <string name="enter_site_address_share_intent" a8c-src-lib="module:login">Enter the address of your WordPress site you\'d like to share the content to.</string>
     <string name="login_site_address" a8c-src-lib="module:login">Site address</string>
-    <string name="login_site_address_help_title" a8c-src-lib="module:login">What\'s my site address?</string>
-    <string name="login_site_address_help_content" a8c-src-lib="module:login">Your site address appears in the bar at the top of the screen when you visit your site in Chrome.</string>
-    <string name="login_site_address_more_help" a8c-src-lib="module:login">Need more help?</string>
-    <string name="login_find_your_site_adress" a8c-src-lib="module:login">Find your site address</string>
-    <string name="login_find_your_connected_email" a8c-src-lib="module:login">Find your connected email</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">Checking site address</string>
-    <string name="login_error_while_adding_site" a8c-src-lib="module:login">Error while adding site. Error code: %s</string>
-    <string name="login_error_xml_rpc_services_disabled" a8c-src-lib="module:login">XML-RPC services are disabled on this site.</string>
-    <string name="login_error_xml_rpc_cannot_read_site" a8c-src-lib="module:login">Unable to read the WordPress site at that URL. Tap on help icon to view the FAQ.</string>
-    <string name="login_error_xml_rpc_cannot_read_site_auth_required" a8c-src-lib="module:login">XML-RPC calls seem blocked on this site (error code 401). If attempt to login fails tap on help icon to view the FAQ.</string>
-    <string name="login_error_xml_rpc_auth_error_communicating" a8c-src-lib="module:login">There was a problem communicating with the site. An HTTP error code 401 was returned.</string>
-    <string name="login_log_in_for_deeplink" a8c-src-lib="module:login">Log in to WordPress.com to access the post.</string>
-    <string name="login_log_in_for_share_intent" a8c-src-lib="module:login">Log in to WordPress.com to share the content.</string>
-    <string name="login_invalid_site_url" a8c-src-lib="module:login">Please enter a complete website address, like example.com.</string>
-    <string name="login_empty_username" a8c-src-lib="module:login">Please enter a username</string>
-    <string name="login_empty_password" a8c-src-lib="module:login">Please enter a password</string>
-    <string name="login_empty_2fa" a8c-src-lib="module:login">Please enter a verification code</string>
-    <string name="login_email_client_not_found">Can\'t detect your email client app</string>
-    <string name="login_select_email_client">Which email app do you use?</string>
-    <string name="continue_google_button_suffix" a8c-src-lib="module:login">Continue with Google</string>
-    <string name="continue_site_credentials" a8c-src-lib="module:login">Continue with store credentials</string>
-    <string name="login_or" a8c-src-lib="module:login">or</string>
     <string name="login_error_button">Close</string>
-    <string name="login_error_email_not_found_v2" a8c-src-lib="module:login">There\'s no WordPress.com account matching this Google account.</string>
-    <string name="login_error_generic" a8c-src-lib="module:login">There was some trouble connecting with the Google account.</string>
-    <string name="login_error_sms_throttled" a8c-src-lib="module:login">We\'ve made too many attempts to send an SMS verification code — take a break, and request a new one in a minute.</string>
-    <string name="login_error_generic_start" a8c-src-lib="module:login">Google login could not be started.</string>
-    <string name="login_error_suffix" a8c-src-lib="module:login">\nMaybe try a different account?</string>
-    <string name="enter_wpcom_or_jetpack_site" a8c-src-lib="module:login">Please enter a WordPress.com or Jetpack-connected self-hosted WordPress site</string>
-    <string name="enter_credentials_for_site" a8c-src-lib="module:login">Log in with your %1$s site credentials</string>
-    <string name="enter_account_info_for_site" a8c-src-lib="module:login">Enter your account information for %1$s.</string>
-    <string name="login_site_credentials_magic_link_label" a8c-src-lib="module:login">Almost there! We just need to verify your Jetpack connected email address &lt;b&gt;%1$s&lt;/b&gt;</string>
-    <string name="login_discovery_error_xmlrpc" a8c-src-lib="module:login">We were unable to access the &lt;b&gt;XMLRPC file&lt;/b&gt; on your site. You will need to reach out to your host to resolve this.</string>
-    <string name="login_discovery_error_http_auth" a8c-src-lib="module:login">We were unable to access your site because it requires &lt;b&gt;HTTP Authentication&lt;/b&gt;. You will need to reach out to your host to resolve this.</string>
-    <string name="login_discovery_error_ssl" a8c-src-lib="module:login">We were unable to access your site because of a problem with the &lt;b&gt;SSL Certificate&lt;/b&gt;. You will need to reach out to your host to resolve this.</string>
-    <string name="login_discovery_error_generic" a8c-src-lib="module:login">We were unable to access your site. You will need to reach out to your host to resolve this.</string>
-    <string name="login_not_a_jetpack_site">To use this app for %1$s you\'ll need to have the Jetpack plugin installed and connected to your WordPress.com account.</string>
-    <string name="login_no_jetpack_sites">No Jetpack sites found</string>
-    <string name="login_empty_view_avatar_content_description">Your profile photo</string>
-    <string name="login_no_jetpack_sites_error_message">If you already have a site, you\'ll need to install the free Jetpack plugin and connect it to your WordPress.com account.</string>
-    <string name="login_empty_view_see_instructions">See instructions</string>
-    <string name="login_empty_view_try_another_account">Try with another account</string>
 
     <!-- Login Revamped -->
 
     <!-- Screen titles -->
-    <string name="email_address_login_title" a8c-src-lib="module:login">Email address login</string>
     <string name="site_address_login_title" a8c-src-lib="module:login">Site address login</string>
-    <string name="magic_link_login_title" a8c-src-lib="module:login">Magic link login</string>
-    <string name="magic_link_sent_login_title" a8c-src-lib="module:login">Magic link sent</string>
-    <string name="selfhosted_site_login_title" a8c-src-lib="module:login">Login credentials</string>
-    <string name="verification_2fa_screen_title" a8c-src-lib="module:login">Code verification</string>
 
     <!-- Signup -->
-    <string name="sign_up_label" a8c-src-lib="module:login">Sign Up</string>
     <string name="signup_epilogue_error_generic">There was some trouble updating your account. You can retry or revert your changes to continue.</string>
-    <string name="signup_epilogue_error_button_negative">Revert</string>
-    <string name="signup_epilogue_error_button_positive">Retry</string>
-    <string name="signup_epilogue_hint_display">Display Name</string>
-    <string name="signup_epilogue_hint_password">Password (optional)</string>
-    <string name="signup_epilogue_hint_password_detail">You can always log in with a link like the one you just used, but you can also set up a password if you prefer.</string>
-    <string name="signup_epilogue_hint_username">Username</string>
-    <string name="signup_magic_link_error" a8c-src-lib="module:login">There was some trouble sending the email. You can retry now or close and try again later.</string>
-    <string name="signup_magic_link_error_button_negative" a8c-src-lib="module:login">Close</string>
-    <string name="signup_magic_link_error_button_positive" a8c-src-lib="module:login">Retry</string>
-    <string name="signup_magic_link_message" a8c-src-lib="module:login">We’ve emailed you a signup link to create your new WordPress.com account. Check your email on this device, and tap the link in the email you receive from WordPress.com.</string>
-    <string name="signup_magic_link_progress" a8c-src-lib="module:login">Sending email</string>
-    <string name="signup_confirmation_message" a8c-src-lib="module:login">We’ll use this email address to create your new WordPress.com account.</string>
-    <string name="continue_terms_of_service_text" a8c-src-lib="module:login">By continuing, you agree to our %1$sTerms of Service%2$s.</string>
-    <string name="continue_with_google_terms_of_service_text" a8c-src-lib="module:login">If you continue with Google and don\'t already have a WordPress.com account, you are creating an account and you agree to our %1$sTerms of Service%2$s.</string>
-    <string name="signup_updating_account">Updating account…</string>
-    <string name="signup_user_exists">Email already exists on WordPress.com.\nProceeding with login.</string>
-    <string name="signup_with_google_progress" a8c-src-lib="module:login">Signing up with Google…</string>
     <string name="content_description_add_avatar">Add avatar</string>
     <!-- Screen titles -->
-    <string name="signup_magic_link_title" a8c-src-lib="module:login">Magic link sent</string>
-    <string name="signup_confirmation_title" a8c-src-lib="module:login">Signup confirmation</string>
 
     <string name="continue_with_wpcom">Log in or sign up with WordPress.com</string>
     <string name="enter_your_site_address">Enter your existing site address</string>
@@ -3487,14 +3414,8 @@
     <string name="settings_username_changer_toast_content">Your new username is %1$s</string>
     <string name="settings_username_changer_snackbar_cancel">This action can\'t be canceled. Username might have been already updated.</string>
 
-    <string name="google_error_timeout" a8c-src-lib="module:login">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
 
     <!-- Post-Signup Interstitial -->
-    <string name="post_signup_interstitial_title">Welcome to WordPress</string>
-    <string name="post_signup_interstitial_subtitle">Whatever you want to create or share, we’ll help you do it right here.</string>
-    <string name="post_signup_interstitial_create_new_site" translatable="false">@string/site_picker_create_wpcom</string>
-    <string name="post_signup_interstitial_add_self_hosted_site" translatable="false">@string/site_picker_add_self_hosted</string>
-    <string name="post_signup_interstitial_not_right_now">Not right now</string>
     <string name="content_description_person_building_website">Person building website</string>
 
     <!-- Android O notification channels, these show in the Android app settings -->
@@ -3511,22 +3432,12 @@
     <string name="notification_channel_weekly_roundup_id" translatable="false">wpandroid_notification_weekly_roundup_channel_id</string>
 
     <!-- Required by the login library - overwrites the placeholder value with a real channel -->
-    <string name="login_notification_channel_id" content_override="true" translatable="false">@string/notification_channel_normal_id</string>
 
     <!-- Site Creation notifications -->
     <string name="notification_site_creation_title_success">Site created!</string>
     <string name="notification_site_creation_created">Tap to continue.</string>
 
     <!-- Login notifications -->
-    <string name="notification_login_title_success" a8c-src-lib="module:login">Logged in!</string>
-    <string name="notification_logged_in" a8c-src-lib="module:login">Tap to continue.</string>
-    <string name="notification_login_title_in_progress" a8c-src-lib="module:login">Login in progress…</string>
-    <string name="notification_logging_in" a8c-src-lib="module:login">Please wait while logging in.</string>
-    <string name="notification_login_title_stopped" a8c-src-lib="module:login">Login stopped</string>
-    <string name="notification_error_wrong_password" a8c-src-lib="module:login">Please double check your password to continue.</string>
-    <string name="notification_2fa_needed" a8c-src-lib="module:login">Please provide an authentication code to continue.</string>
-    <string name="notification_login_failed" a8c-src-lib="module:login">An error has occurred.</string>
-    <string name="notification_wpcom_username_needed" a8c-src-lib="module:login">Please log in with your username and password.</string>
 
     <!-- Content description for accessibility  -->
     <string name="featured_image_desc">featured image</string>
@@ -3695,11 +3606,9 @@
     <string name="new_site_creation_site_name_header_subtitle">A good name is short and memorable.\nYou can change it later.</string>
 
     <!-- Site Creation : Domains -->
-    <string name="site_creation_domain_cost_sale">for the first year</string>
     <string name="site_creation_domain_free_with_annual_plan">Free for the first year with annual paid plans</string>
     <string name="site_creation_domain_tag_best_alternative">Best Alternative</string>
     <string name="site_creation_domain_tag_recommended">Recommended</string>
-    <string name="site_creation_domain_tag_sale">Sale</string>
     <string name="site_creation_domain_tag_unavailable">This domain is already registered</string>
     <string name="site_creation_domain_button_purchase_domain">Purchase domain</string>
     <string name="site_creation_domain_button_continue_with_subdomain">Continue with subdomain</string>
@@ -3801,6 +3710,8 @@
     <string name="prepublishing_nudges_toolbar_title_tags">Add Tags</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publish Date</string>
     <string name="prepublishing_tags_description">Tags help tell readers what a post is about</string>
+    <string name="prepublishing_tags_add_hint">Add a tag</string>
+    <string name="prepublishing_tags_remove_tag_desc">Remove tag %1$s</string>
     <string name="prepublishing_nudges_home_tags_not_set">Not set</string>
     <string name="prepublishing_nudges_home_categories_not_set">Not set</string>
     <string name="prepublishing_nudges_toolbar_title_categories">Categories</string>
@@ -4182,18 +4093,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="qrcode_auth_flow_content_description">Image indicating scan login code in process</string>
 
 
-    <!-- Jetpack Powered Banners and Badges -->
-    <string name="wp_jetpack_powered">Jetpack powered</string>
-    <string name="wp_jetpack_powered_phase_2">Get the Jetpack app</string>
-    <!-- translators: Jetpack branding text. %1$s: Feature Name, E.g.: Backup, Reader -->
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s is moving soon</string>
-    <!-- translators: Jetpack branding text. %1$s: Plural Feature Name, E.g.: Stats, Themes -->
-    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s are moving soon</string>
-    <!-- translators: Jetpack branding text. %1$s: Feature Name, E.g.: Backup, Reader; %2$s: "in n day(s) / week(s)"; Displayed as E.g.: "Reader is moving in 3 weeks" -->
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s is moving in %2$s</string>
-    <!-- translators: Jetpack branding text. %1$s: Plural Feature Name, E.g.: Stats, Themes; %2$s: "in n day(s) / week(s)"; Displayed as E.g.: "Stats are moving in 1 day" -->
-    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s are moving in %2$s</string>
-
     <!-- Jetpack awareness in WordPress App -->
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress is better with Jetpack</string>
     <string name="wp_jetpack_powered_features">The new Jetpack app has Stats, Reader, Notifications, and more that make your WordPress better.</string>
@@ -4207,38 +4106,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_continue_to_reader">Continue to Reader</string>
     <string name="wp_jetpack_continue_to_stats">Continue to Stats</string>
     <string name="wp_jetpack_continue_to_notifications">Continue to Notifications</string>
-    <string name="wp_jp_static_poster_title">Use WordPress with %s in the Jetpack\u00A0app.</string>
-    <string name="wp_jp_static_poster_title_plural">Use WordPress with %s in the Jetpack\u00A0app.</string>
-    <string name="wp_jp_static_poster_button_primary">Switch to the Jetpack app</string>
-    <string name="wp_jp_static_poster_button_secondary">Learn more at Jetpack.com</string>
-    <string name="wp_jp_static_poster_message">The Jetpack app has all the WordPress app’s functionality, and now exclusive access to Stats, Reader, Notifications and more.</string>
-    <string name="wp_jp_static_poster_footnote">Switching is free and only takes a minute.</string>
-
-    <!-- Jetpack Welcome Screen -->
-    <string name="jp_migration_welcome_title">Welcome to Jetpack!</string>
-    <string name="jp_migration_welcome_subtitle">It looks like you’re switching from the WordPress app.</string>
-    <string name="jp_migration_avatar_content_description">Your profile photo</string>
-    <string name="jp_migration_welcome_sites_found_message">We found your sites. Continue to transfer all your data and sign in to Jetpack automatically.</string>
-    <string name="jp_migration_welcome_site_found_message">We found your site. Continue to transfer all your data and sign in to Jetpack automatically.</string>
-    <string name="jp_migration_continue_button">Continue</string>
-    <string name="jp_migration_help_button">Need help?</string>
-    <string name="jp_migration_notifications_allow_title">Allow notifications to keep up with your site</string>
-    <string name="jp_migration_notifications_subtitle">You’ll get all the same notifications but now they’ll come from the Jetpack app.</string>
-    <string name="jp_migration_notifications_disabled_in_wp_message">We\'ll turn off notifications from the WordPress app.</string>
-    <string name="jp_migration_done_title">Thanks for switching to Jetpack!</string>
-    <string name="jp_migration_done_subtitle">We’ve transferred all your data and settings. Everything is right where you left it.</string>
-    <string name="jp_migration_done_delete_wp_message">We recommend &lt;b&gt;uninstalling the WordPress app&lt;/b&gt; on your device to avoid data conflicts.</string>
-    <string name="jp_migration_remove_wp_app_icon_content_description">Remove WordPress App icon</string>
-    <string name="jp_migration_finish_button">Finish</string>
-    <string name="jp_migration_try_again_button">Try again</string>
+    <!-- Site Creation Plans error state (key name is historical) -->
     <string name="jp_migration_generic_error_title">Uh oh, something went wrong..</string>
-    <string name="jp_migration_generic_error_subtitle">We’re sorry but something didn’t go as planned. Your data is safe, but we’re unable to transfer it at this time.</string>
-    <string name="jp_migration_generic_error_message">Please contact support or try again later.</string>
-    <string name="jp_migration_network_error_title">Unable to connect to the internet.</string>
-    <string name="jp_migration_network_error_subtitle">Please check to make sure your network connection is working and try again.</string>
-    <string name="jp_migration_network_error_message">We are unable to transfer your data and settings without a network connection.</string>
-    <string name="jp_migration_done_no_sites_message">It\'s time to continue your WordPress journey on the Jetpack app.</string>
-    <string name="jp_migration_lets_go_button">Let\'s go</string>
 
     <!-- Open Web Links With Jetpack -->
     <string name="preference_open_links_in_jetpack">Open links in Jetpack</string>
@@ -4246,36 +4115,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Unable to disable open links in Jetpack</string>
 
     <!-- Jetpack feature overlay strings in WordPress App -->
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Get your stats using the new Jetpack app</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Follow any site with the Jetpack app</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Get your notifications with the Jetpack app</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Switch to the Jetpack app to watch your site’s traffic grow with stats and insights.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Switch to the Jetpack app to find, follow, and like all your favorite sites and posts with Reader.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Switch to the Jetpack app to keep receiving  realtime notifications on your device.</string>
-    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Switch to the new Jetpack app</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Your stats are moving to the Jetpack app</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader is moving to the Jetpack app</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Notifications are moving to Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Jetpack features are moving soon.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack features have moved.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Stats, Reader, Notifications and other Jetpack powered features have been removed from the WordPress app.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Stats, Reader, Notifications and other Jetpack powered features will be removed from the WordPress app on %s.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Stats, Reader, Notifications and other Jetpack powered features will be removed from the WordPress app soon.</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Switching is free and only takes a minute.</string>
-    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Learn more at jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Switch to the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_continue_without_jetpack" translatable="false">@string/wp_jetpack_continue_without_jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_three_all_features_description" translatable="false">@string/wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Switch to Jetpack </string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Do this later</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Give WordPress a boost with Jetpack</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack lets you do more with your WordPress site. Switching is free and only takes a minute.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Stats &amp; Insights</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Watch your traffic grow with helpful insights and comprehensive stats.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_title" translatable="false">@string/reader</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Find and follow your favorite sites and communities, and share you content.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_title" translatable="false"> @string/notifications_screen_title</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Get notifications for new comments, likes, views, and more.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">The Jetpack mobile app is designed to work in companion with the Jetpack plugin. Switch now to get access to stats, notifications, reader, and more.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Your site has the Jetpack plugin</string>
 
@@ -4292,7 +4134,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_deep_link_open_in_wordpress">Open links in WordPress</string>
 
     <!-- Jetpack Feature Card -->
-    <string name="jetpack_feature_card_content_phase_three">Stats, Reader, Notifications and other features will soon move to the Jetpack mobile app.</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Unlock your site’s full potential. Get stats, notifications and more with Jetpack.</string>
     <string name="jetpack_feature_card_learn_more" translatable="false">@string/learn_more</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Remind me later</string>
@@ -4514,9 +4355,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="barcode_scanning_alert_dialog_dismiss_label">Cancel</string>
     <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">Go to settings</string>
 
-    <string name="login_text_security_key" a8c-src-lib="module:login">Use a security key</string>
-    <string name="login_error_security_key" a8c-src-lib="module:login">There was some trouble with the Security key login</string>
-    <string name="notification_security_key_needed" a8c-src-lib="module:login">Please provide your security key to continue.</string>
 
     <string name="in_app_update_available">Update downloaded. Restart to apply.</string>
     <string name="in_app_update_restart">Restart</string>
@@ -4568,7 +4406,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="voice_to_content_upgrade">Upgrade for more requests</string>
     <string name="voice_to_content_done_label">Done</string>
     <string name="voice_to_content_generic_error">Post from audio is unavailable at the moment, please try again later.</string>
-    <string name="default_web_client_id" a8c-src-lib="module:login">placeholder</string>
 
     <!-- Subscribers -->
     <string name="subscribers_filter_email_subscription">Email subscription</string>
@@ -4620,6 +4457,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_authorization_cancelled">Authorization cancelled</string>
     <string name="application_password_title">Authenticate using Application Password</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">The provided site does not support Application Password authentication.</string>
+    <string name="application_password_private_site_error">This site is private, so we can\'t read its settings to sign you in.</string>
+    <string name="application_password_private_site_card">This site is private, so we can\'t reconnect to it.</string>
     <string name="application_password_invalid">Invalid Application Password</string>
     <string name="application_password_invalid_description">Your application password no longer exists. Please sign in again to create a new application password.</string>
     <string name="application_password_required">Application Password Required</string>
@@ -4741,7 +4580,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- HE Support - Conversation Detail Screen -->
     <string name="he_support_last_updated">Last updated %1$s</string>
     <string name="he_support_reply_button">Reply</string>
+    <string name="he_support_add_more_info_button">Add more info</string>
     <string name="he_support_send_button">Send</string>
+    <string name="he_support_reply_sent_confirmation">Your reply has been sent. Check your email for updates.</string>
     <string name="he_support_message_label">Message</string>
     <string name="he_support_downloading_attachment">Downloading %1$s…</string>
     <string name="he_support_loading_image">Loading image</string>
@@ -4759,8 +4600,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="he_support_include_logs_description">Including logs can help our team investigate issues. Logs may contain recent app activity.</string>
     <string name="he_support_download_attachment">Download attachment</string>
     <string name="he_support_select_attachments">Select attachments</string>
-    <string name="he_support_status_waiting_for_support">Waiting for Support</string>
-    <string name="he_support_status_waiting_for_user">Waiting for User</string>
+    <string name="he_support_status_ongoing">Ongoing</string>
     <string name="he_support_status_solved">Solved</string>
     <string name="he_support_status_closed">Closed</string>
     <string name="he_support_status_unknown">Unknown</string>
@@ -4776,9 +4616,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="unified_support_message_input_placeholder">Type a message…</string>
     <string name="unified_support_bot_typing_content_description">Support bot is typing</string>
     <string name="unified_support_new_conversation_content_description">New conversation</string>
-    <string name="unified_support_status_bot">Oddie bot</string>
+    <string name="unified_support_status_ai_assistant">AI Assistant</string>
     <string name="unified_support_attachment_match_score">%1$d%% match</string>
     <string name="unified_support_attachment_link_content_description">Open link: %1$s</string>
+    <string name="unified_support_related_label">Related:</string>
     <string name="support_screen_unified_support_title">Get help</string>
     <string name="support_screen_unified_support_description">Get answers from our support team, anytime</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%1$s. %2$s is %3$s %4$s.</string>
@@ -5164,4 +5005,34 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="about_automattic_logo_description" tools:ignore="UnusedResources" a8c-src-lib="about">Automattic logo</string>
     <string name="about_automattic_back_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">Back icon</string>
     <string name="about_automattic_app_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">App icon</string>
+
+    <!-- Redesigned posts/pages list -->
+    <string name="content_list_group_today">Today</string>
+    <string name="content_list_group_yesterday">Yesterday</string>
+    <string name="content_list_group_this_week">This week</string>
+    <string name="content_list_group_earlier_in">Earlier in %1$s</string>
+    <string name="content_list_fab_write">Write</string>
+    <string name="content_list_view_count_singular">%1$s view</string>
+    <string name="content_list_view_count_plural">%1$s views</string>
+    <string name="content_list_comment_count_singular">%1$s comment</string>
+    <string name="content_list_comment_count_plural">%1$s comments</string>
+    <string name="content_list_density_show_condensed">Show condensed list</string>
+    <string name="content_list_density_show_comfortable">Show expanded list</string>
+    <string name="comment_trash_has_replies">This comment has replies. They won’t be moved to the trash with it.</string>
+    <string name="comment_reply_unsent">You have an unsent reply.</string>
+    <string name="comment_reply_keep_editing">Keep Editing</string>
+    <string name="comment_reply_delete_draft">Delete Draft</string>
+    <string name="comment_reply_save_draft">Save Draft</string>
+    <string name="comment_reply_continue">Continue reply</string>
+    <string name="comment_detail_on_post">on %1$s</string>
+    <string name="comment_author_info_show">Show author details</string>
+    <string name="comment_author_info_posted_at">Posted at</string>
+    <string name="comment_author_info_website">Website</string>
+    <string name="comment_author_info_email">Email</string>
+    <string name="comment_author_info_send_email">Send email</string>
+    <string name="comment_author_info_posted_from">Posted from</string>
+    <string name="comment_author_info_bio">Bio</string>
+    <string name="comment_author_info_registered">Registered user</string>
+    <string name="comment_author_info_guest">Guest</string>
+    <string name="comment_detail_in_reply_to">In reply to %1$s:</string>
 </resources>

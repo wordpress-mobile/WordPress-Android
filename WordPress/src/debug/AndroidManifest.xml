@@ -35,9 +35,6 @@
         tools:replace="android:name,android:supportsRtl"
         tools:ignore="MissingApplicationIcon">
         <activity
-            android:name=".ui.debug.previews.PreviewFragmentActivity"
-            android:theme="@style/WordPress.NoActionBar" />
-        <activity
             android:name=".ui.debug.preferences.DebugSharedPreferenceFlagsActivity"
             android:label="@string/debug_settings_debug_flags_screen"
             android:theme="@style/WordPress.NoActionBar" />

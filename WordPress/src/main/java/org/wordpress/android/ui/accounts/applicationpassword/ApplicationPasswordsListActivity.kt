@@ -44,6 +44,10 @@ import org.wordpress.android.ui.dataview.DataViewScreen
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import uniffi.wp_api.ApplicationPasswordWithViewContext
 import uniffi.wp_api.IpAddress
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 @AndroidEntryPoint
 class ApplicationPasswordsListActivity : BaseAppCompatActivity() {
@@ -210,7 +214,7 @@ class ApplicationPasswordsListActivity : BaseAppCompatActivity() {
 
                 DetailRow(
                     label = stringResource(R.string.application_password_created_label),
-                    value = applicationPassword.created
+                    value = formatDate(applicationPassword.created)
                 )
 
                 DetailRow(
@@ -253,13 +257,23 @@ class ApplicationPasswordsListActivity : BaseAppCompatActivity() {
     }
 
     @Composable
-    private fun formatLastUsedDetails(lastUsed: String?): String {
-        return if (lastUsed.isNullOrEmpty()) {
+    private fun formatLastUsedDetails(lastUsed: Date?): String {
+        return if (lastUsed == null) {
             stringResource(R.string.application_password_never_used)
         } else {
-            lastUsed
+            formatDate(lastUsed)
         }
     }
+
+    /**
+     * Formats a date to "yyyy/MM/dd" for display, rendered in UTC. The API reports these
+     * timestamps without an offset, so formatting in UTC keeps the displayed day equal to the one
+     * the server reported instead of shifting it by the device's timezone offset.
+     */
+    private fun formatDate(date: Date): String =
+        SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+            .apply { timeZone = TimeZone.getTimeZone("UTC") }
+            .format(date)
 
     @Composable
     private fun formatLastIp(lastIp: IpAddress?): String {

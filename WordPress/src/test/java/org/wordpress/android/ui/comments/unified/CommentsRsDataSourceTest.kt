@@ -16,11 +16,15 @@ import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.CommentContentWithEditContext
+import uniffi.wp_api.CommentContentWithViewContext
 import uniffi.wp_api.CommentStatus
 import uniffi.wp_api.CommentType
+import uniffi.wp_api.WpDateString
 import uniffi.wp_api.CommentWithEditContext
+import uniffi.wp_api.CommentWithViewContext
 import uniffi.wp_api.CommentsRequestExecutor
 import uniffi.wp_api.CommentsRequestRetrieveWithEditContextResponse
+import uniffi.wp_api.CommentsRequestRetrieveWithViewContextResponse
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostListParams
 import uniffi.wp_api.PostsRequestExecutor
@@ -29,6 +33,7 @@ import uniffi.wp_api.RequestMethod
 import uniffi.wp_api.SparseAnyPostWithViewContext
 import uniffi.wp_api.SparsePostTitleWithViewContext
 import uniffi.wp_api.UniffiWpApiClient
+import uniffi.wp_api.UserAvatarSize
 import uniffi.wp_api.WpErrorCode
 import java.util.Date
 
@@ -75,6 +80,8 @@ class CommentsRsDataSourceTest {
             // actually sees comes from the request-level stub below.
             on { retrieveWithEditContext(any(), any()) } doReturn
                 CommentsRequestRetrieveWithEditContextResponse(editContextComment(), mock())
+            on { retrieveWithViewContext(any(), any()) } doReturn
+                CommentsRequestRetrieveWithViewContextResponse(viewContextComment(), mock())
         }
         postsExecutor.stub {
             on { filterListWithViewContext(any(), any(), any()) } doSuspendableAnswer { invocation ->
@@ -287,22 +294,83 @@ class CommentsRsDataSourceTest {
         assertThat(dataSource.getCommentForEdit(siteA, 42L)).isNull()
     }
 
-    // An edit-context comment with the four fields the editor consumes; everything else dummy.
+    @Test
+    fun `getComment with edit context carries the author email and IP`() = runTest {
+        val serverComment = editContextComment(
+            authorName = "author",
+            authorEmail = "author@example.com",
+            authorUrl = "https://example.com",
+            authorIp = "203.0.113.4"
+        )
+        stubRequests(WpRequestResult.Success(CommentsRequestRetrieveWithEditContextResponse(serverComment, mock())))
+
+        val result = dataSource.getComment(siteA, 42L, withEditContext = true)
+
+        assertThat(result?.authorEmail).isEqualTo("author@example.com")
+        assertThat(result?.authorIp).isEqualTo("203.0.113.4")
+        assertThat(result?.authorUrl).isEqualTo("https://example.com")
+    }
+
+    @Test
+    fun `getComment with edit context maps missing avatar urls to an empty url`() = runTest {
+        // Sites with "Show Avatars" disabled omit the field entirely.
+        val serverComment = editContextComment(authorAvatarUrls = null)
+        stubRequests(WpRequestResult.Success(CommentsRequestRetrieveWithEditContextResponse(serverComment, mock())))
+
+        val result = dataSource.getComment(siteA, 42L, withEditContext = true)
+
+        assertThat(result).isNotNull
+        assertThat(result?.authorAvatarUrl).isEmpty()
+    }
+
+    @Test
+    fun `getComment falls back to the view context when edit context is refused`() = runTest {
+        stubRequests(
+            wpError(),
+            WpRequestResult.Success(CommentsRequestRetrieveWithViewContextResponse(viewContextComment(), mock()))
+        )
+
+        val result = dataSource.getComment(siteA, 42L, withEditContext = true)
+
+        assertThat(result?.authorName).isEqualTo("viewer")
+        assertThat(result?.authorEmail).isEmpty()
+    }
+
+    // An edit-context comment with the fields the editor and author sheet consume; everything else dummy.
     private fun editContextComment(
         authorName: String = "",
         authorEmail: String = "",
         authorUrl: String = "",
-        contentRaw: String = ""
+        contentRaw: String = "",
+        authorIp: String = "",
+        authorAvatarUrls: Map<UserAvatarSize, String?>? = emptyMap()
     ) = CommentWithEditContext(
         id = 42L,
         author = 1L,
         authorEmail = authorEmail,
-        authorIp = "",
+        authorIp = authorIp,
         authorName = authorName,
         authorUrl = authorUrl,
         authorUserAgent = "",
         content = CommentContentWithEditContext(raw = contentRaw, rendered = ""),
-        date = "",
+        date = WpDateString(""),
+        dateGmt = Date(0),
+        link = "",
+        parent = 0L,
+        post = 0L,
+        status = CommentStatus.Approved,
+        commentType = CommentType.Comment,
+        authorAvatarUrls = authorAvatarUrls,
+        additionalFields = mock()
+    )
+
+    private fun viewContextComment() = CommentWithViewContext(
+        id = 42L,
+        author = 1L,
+        authorName = "viewer",
+        authorUrl = "",
+        content = CommentContentWithViewContext(rendered = ""),
+        date = WpDateString(""),
         dateGmt = Date(0),
         link = "",
         parent = 0L,

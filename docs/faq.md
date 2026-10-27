@@ -1,10 +1,5 @@
 # Frequently Asked Questions
 
-#### I can't build/test/package the project because of a `PermGen space` error.
-
-Create a `gradle.properties` file in the project root directory with the
-following: `org.gradle.jvmargs=-XX:MaxPermSize=1024m`.
-
 #### Should I use `AppPrefs` or `SelectedSiteRepository` as the source of truth on a selected site?
 
 The short answer is to always use the `SelectedSiteRepository`, which is the in-memory mechanism.

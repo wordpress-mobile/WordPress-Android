@@ -70,4 +70,30 @@ class NetworkConnectionMonitorTest : BaseUnitTest() {
         assertThat(monitor.isConnected.value).isTrue
         assertThat(emissions).containsExactly(true, false, true)
     }
+
+    @Test
+    fun `emits the seeded state so isConnected has a value before any callback`() {
+        monitor.onConnectivityChanged(false)
+
+        assertThat(monitor.isConnected.value).isFalse
+        assertThat(emissions).containsExactly(false)
+    }
+
+    @Test
+    fun `emits connected when a network arrives after seeding offline`() {
+        // starting offline seeds false; the first network is then a genuine change, not an initial value
+        monitor.onConnectivityChanged(false)
+        monitor.onNetworkAvailable(mock())
+
+        assertThat(monitor.isConnected.value).isTrue
+        assertThat(emissions).containsExactly(false, true)
+    }
+
+    @Test
+    fun `does not re-emit when the first callback matches the seeded state`() {
+        monitor.onConnectivityChanged(true)
+        monitor.onNetworkAvailable(mock())
+
+        assertThat(emissions).containsExactly(true)
+    }
 }

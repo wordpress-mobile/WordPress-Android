@@ -16,7 +16,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.annotations.action.Action
-import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.fluxc.store.ThemeStore
 import org.wordpress.android.fluxc.store.ThemeStore.FetchStarterDesignsPayload
 import org.wordpress.android.fluxc.store.ThemeStore.OnStarterDesignsFetched
@@ -40,7 +39,7 @@ class FetchHomePageLayoutsUseCaseTest : BaseUnitTest() {
     lateinit var betaSiteDesigns: BetaSiteDesignsFeatureConfig
 
     private lateinit var useCase: FetchHomePageLayoutsUseCase
-    private lateinit var dispatchCaptor: KArgumentCaptor<Action<SuggestDomainsPayload>>
+    private lateinit var dispatchCaptor: KArgumentCaptor<Action<*>>
     private val event = OnStarterDesignsFetched(emptyList(), emptyList(), null)
 
     @Before
@@ -58,7 +57,6 @@ class FetchHomePageLayoutsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    @Suppress("CAST_NEVER_SUCCEEDS")
     fun `when beta site designs are enabled the stable and beta groups are passed to the call`() = test {
         whenever(dispatcher.dispatch(any())).then { useCase.onStarterDesignsFetched(event) }
         whenever(betaSiteDesigns.isEnabled()).thenReturn(true)
@@ -73,7 +71,6 @@ class FetchHomePageLayoutsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    @Suppress("CAST_NEVER_SUCCEEDS")
     fun `when beta site designs are disabled no groups are passed to the call`() = test {
         whenever(dispatcher.dispatch(any())).then { useCase.onStarterDesignsFetched(event) }
         whenever(betaSiteDesigns.isEnabled()).thenReturn(false)

@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.accounts.login.DiscoverySource
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
@@ -38,7 +39,9 @@ class ApplicationPasswordDialogViewModel @Inject constructor(
             }
 
             try {
-                when (val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(authenticationUrl)) {
+                val result = applicationPasswordLoginHelper
+                    .getAuthorizationUrlComplete(authenticationUrl, DiscoverySource.REAUTH_DIALOG)
+                when (result) {
                     is ApplicationPasswordLoginHelper.DiscoveryResult.Authorized ->
                         _navigationEvent.emit(NavigationEvent.NavigateToLogin(result.authorizationUrl))
                     is ApplicationPasswordLoginHelper.DiscoveryResult.WpComSite -> {

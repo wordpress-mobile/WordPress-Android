@@ -12,10 +12,13 @@ import android.webkit.WebView
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -47,7 +50,7 @@ import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.utils.uiStringText
-import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingState
+import org.wordpress.android.ui.compose.components.LoadingState
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity.Companion.ARG_STATE
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.plans.SiteCreationPlansWebViewClient.SiteCreationPlansWebViewClientListener
@@ -105,6 +108,14 @@ class SiteCreationPlansFragment : Fragment(), SiteCreationPlansWebViewClientList
     ) {
         val uiState by viewModel.uiState.collectAsState()
         Scaffold(
+            // The host activity (BaseAppCompatActivity) already pads the window for the system bars,
+            // display cutout and IME on edge-to-edge (Android 15+). Consume those same insets here
+            // (safeDrawing == systemBars ∪ displayCutout ∪ ime) so the Scaffold and TopAppBar don't
+            // apply them a second time — which pushed the whole screen down by the status bar height
+            // on first load, and (on cutout devices in landscape) indents the top bar past the
+            // notch (CMM-2371).
+            modifier = Modifier.consumeWindowInsets(WindowInsets.safeDrawing),
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
             topBar = {
                 MainTopAppBar(
                     title = stringResource(R.string.site_creation_plans_selection_title),

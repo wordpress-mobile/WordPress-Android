@@ -14,20 +14,25 @@ data class CommentRsUiModel(
     val relativeDate: String,
     val status: CommentStatus,
     val postId: Long,
+    /** The comment's publish time, for the list's date buckets. */
+    val dateGmtMillis: Long = 0L,
     /** Resolved asynchronously in a batched request; null until then. */
     val postTitle: String? = null
 ) {
-    val isPending: Boolean get() = status == CommentStatus.UNAPPROVED
+    /**
+     * The short qualifier shown above a row's title, or null for an approved comment -
+     * "Approved" on every row in a list that is mostly approved is noise. Mirrors how the pages
+     * list turns its status into a badge rather than a coloured line.
+     */
+    @get:StringRes
+    val statusBadgeResId: Int?
+        get() = when (status) {
+            CommentStatus.UNAPPROVED -> R.string.comment_status_unapproved
+            CommentStatus.SPAM -> R.string.comment_status_spam
+            CommentStatus.TRASH -> R.string.comment_status_trash
+            else -> null
+        }
 }
-
-data class CommentsTabUiState(
-    val comments: List<CommentRsUiModel> = emptyList(),
-    val isLoading: Boolean = false,
-    val isRefreshing: Boolean = false,
-    val isLoadingMore: Boolean = false,
-    val canLoadMore: Boolean = false,
-    val error: String? = null
-)
 
 /** A destructive batch [action] awaiting user confirmation, to be applied to [commentIds]. */
 data class PendingConfirmation(val action: CommentsRsBatchAction, val commentIds: List<Long>)

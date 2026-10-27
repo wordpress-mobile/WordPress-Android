@@ -1,12 +1,14 @@
 package org.wordpress.android.ui.jetpackrestconnection
 
+import okhttp3.OkHttpClient
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpRsOkHttpClient
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.wpRsErrorLogger
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpApiClient
+import rs.wordpress.api.kotlin.WpHttpClient
 import rs.wordpress.api.kotlin.WpRequestExecutor
 import uniffi.wp_api.JetpackConnectionClient
 import uniffi.wp_api.ParsedUrl
@@ -14,17 +16,48 @@ import uniffi.wp_api.WpApiClientDelegate
 import uniffi.wp_api.WpApiMiddlewarePipeline
 import uniffi.wp_api.WpAppNotifier
 import uniffi.wp_api.WpAuthenticationProvider
+import uniffi.wp_api.WpOrgSiteApiUrlResolver
 import javax.inject.Inject
 
 class JetpackConnectionHelper @Inject constructor(
-    private val wpApiClientProvider: WpApiClientProvider,
     private val appLogWrapper: AppLogWrapper,
-    private val trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor,
+    @WpRsOkHttpClient private val okHttpClient: OkHttpClient,
     private val networkAvailabilityProvider: WpNetworkAvailabilityProvider,
 ) {
-    fun initWpApiClient(site: SiteModel): WpApiClient {
+    /**
+     * Builds a **dedicated** [WpApiClient] for the Jetpack plugin-install step, talking to the site's
+     * own REST host with its application-password credentials.
+     *
+     * Unlike [org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider.getWpApiClient], a
+     * 401 from this client is handled **locally** via [onInvalidAuth] rather than broadcast on the
+     * app-wide `WpAppNotifierHandler`. An invalid-auth here is the connection flow's own concern (the
+     * view model resets and restarts it); broadcasting it would also wake the app-wide
+     * SiteProvisioningSource, whose concurrent validate / wipe / re-mint of these same credentials can
+     * race this in-flight connection — e.g. clearing the `apiRest*` columns that [requireRestCredentials]
+     * needs, mid-install. Keeping the install client off that bus leaves SiteProvisioningSource as the
+     * single global invalid-auth authority. This mirrors [initJetpackConnectionClient], whose
+     * [InvalidAuthNotifier] is likewise connection-local.
+     *
+     * [onInvalidAuth] fires at most once per client: install issues up to two requests (list, then
+     * create) and the flow should only restart once.
+     */
+    fun initWpApiClient(site: SiteModel, onInvalidAuth: () -> Unit): WpApiClient {
         requireRestCredentials(site)
-        return wpApiClientProvider.getWpApiClient(site)
+        return WpApiClient(
+            apiUrlResolver = WpOrgSiteApiUrlResolver(ParsedUrl.parse(resolveRestApiUrl(site))),
+            authProvider = createRestAuthProvider(site),
+            requestExecutor = requestExecutor(),
+            appNotifier = object : WpAppNotifier {
+                private var handled = false
+                override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {
+                    if (handled) return
+                    handled = true
+                    appLogWrapper.d(AppLog.T.API, "$TAG: requestedWithInvalidAuthentication (install client)")
+                    onInvalidAuth()
+                }
+            },
+            errorLogger = wpRsErrorLogger(),
+        )
     }
 
     fun initJetpackConnectionClient(site: SiteModel): JetpackConnectionClient {
@@ -32,10 +65,7 @@ class JetpackConnectionHelper @Inject constructor(
 
         val delegate = WpApiClientDelegate(
             authProvider = createRestAuthProvider(site),
-            requestExecutor = WpRequestExecutor(
-                interceptors = listOf(trackNetworkRequestsInterceptor),
-                networkAvailabilityProvider = networkAvailabilityProvider
-            ),
+            requestExecutor = requestExecutor(),
             middlewarePipeline = WpApiMiddlewarePipeline(emptyList()),
             appNotifier = InvalidAuthNotifier()
         )
@@ -45,6 +75,11 @@ class JetpackConnectionHelper @Inject constructor(
             delegate = delegate
         )
     }
+
+    private fun requestExecutor() = WpRequestExecutor(
+        httpClient = WpHttpClient.CustomOkHttpClient(okHttpClient),
+        networkAvailabilityProvider = networkAvailabilityProvider
+    )
 
     private fun createRestAuthProvider(site: SiteModel) =
         WpAuthenticationProvider.staticWithUsernameAndPassword(
@@ -61,8 +96,11 @@ class JetpackConnectionHelper @Inject constructor(
         }
     }
 
+    // takeIf: wpApiRestUrl can be an empty string as well as null (the column is cleared, not
+    // dropped), and ParsedUrl.parse("") throws. Mirrors WpApiClientProvider.buildUrl, which the
+    // install client used before it got its own notifier-free client.
     private fun resolveRestApiUrl(site: SiteModel) =
-        site.wpApiRestUrl ?: "${site.url}/wp-json"
+        site.wpApiRestUrl?.takeIf { it.isNotEmpty() } ?: "${site.url}/wp-json"
 
     private inner class InvalidAuthNotifier : WpAppNotifier {
         override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {

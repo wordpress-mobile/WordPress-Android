@@ -11,7 +11,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderTagList
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.LoadReaderItemsUseCase
@@ -48,9 +47,6 @@ class ReaderViewModelTest : BaseUnitTest() {
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
     @Mock
-    lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
-
-    @Mock
     lateinit var readerTagsFeedFeatureConfig: ReaderTagsFeedFeatureConfig
 
     private val urlUtilsWrapper = UrlUtilsWrapper()
@@ -66,7 +62,6 @@ class ReaderViewModelTest : BaseUnitTest() {
             readerTracker,
             accountStore,
             jetpackBrandingUtils,
-            jetpackFeatureRemovalOverlayUtil,
             ReaderTopBarMenuHelper(readerTagsFeedFeatureConfig),
             urlUtilsWrapper,
             readerTagsFeedFeatureConfig,

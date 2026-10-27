@@ -9,8 +9,7 @@ set -eu
 echo "--- :rubygems: Setting up Gems"
 install_gems
 
-echo "--- :closed_lock_with_key: Installing Secrets"
-bundle exec fastlane run configure_apply
+"$(dirname "${BASH_SOURCE[0]}")/install-secrets.sh"
 
 echo "--- :chart_with_upwards_trend: Advancing the production rollout"
 bundle exec fastlane advance_production_rollout

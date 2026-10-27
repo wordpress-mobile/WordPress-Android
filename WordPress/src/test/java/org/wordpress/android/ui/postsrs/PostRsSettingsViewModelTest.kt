@@ -18,7 +18,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.PostRsSettingsViewModel.Companion.EXTRA_POST_ID
-import org.wordpress.android.ui.postsrs.data.PostRsRestClient
+import org.wordpress.android.ui.rs.data.RsSiteRestClient
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -37,7 +37,7 @@ class PostRsSettingsViewModelTest :
     lateinit var wpApiClientProvider: WpApiClientProvider
 
     @Mock
-    lateinit var restClient: PostRsRestClient
+    lateinit var restClient: RsSiteRestClient
 
     @Mock
     lateinit var resourceProvider: ResourceProvider

@@ -54,7 +54,8 @@ fun UtmCard(
     onMoveToTop: (() -> Unit)? = null,
     onMoveDown: (() -> Unit)? = null,
     onMoveToBottom: (() -> Unit)? = null,
-    onOpenWpAdmin: (() -> Unit)? = null
+    onOpenWpAdmin: (() -> Unit)? = null,
+    onExplorePlans: (() -> Unit)? = null
 ) {
     StatsCardContainer(modifier = modifier) {
         when (uiState) {
@@ -92,6 +93,7 @@ fun UtmCard(
                     onMoveDown = onMoveDown,
                     onMoveToBottom = onMoveToBottom,
                     onOpenWpAdmin = onOpenWpAdmin,
+                    onExplorePlans = onExplorePlans,
                     headerExtra = {
                         UtmCategoryDropdown(
                             selected = selectedCategory,

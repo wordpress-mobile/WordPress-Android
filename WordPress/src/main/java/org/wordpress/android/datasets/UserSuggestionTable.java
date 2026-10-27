@@ -45,11 +45,11 @@ public class UserSuggestionTable {
     }
 
     private static SQLiteDatabase getReadableDb() {
-        return WordPress.wpDB.getDatabase();
+        return WordPress.getWpDB().getDatabase();
     }
 
     private static SQLiteDatabase getWritableDb() {
-        return WordPress.wpDB.getDatabase();
+        return WordPress.getWpDB().getDatabase();
     }
 
     public static void insertSuggestionsForSite(final long siteId, final List<UserSuggestion> suggestions) {

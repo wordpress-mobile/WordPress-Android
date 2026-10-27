@@ -93,7 +93,6 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
     override fun onCleared() {
         dispatcher.unregister(this)
-        super.onCleared()
     }
 
     override fun fetchLayouts(preferCache: Boolean) {

@@ -51,7 +51,6 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayVi
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.ForwardToJetpack
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -77,10 +76,9 @@ import org.wordpress.android.ui.reader.utils.ReaderPostSeenStatusWrapper
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
-import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils
-import org.wordpress.android.ui.utils.PreMigrationDeepLinkData
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
@@ -197,15 +195,13 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var deepLinkOpenWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
 
-    @Inject
-    lateinit var jetpackAppMigrationFlowUtils: JetpackAppMigrationFlowUtils
     private var jetpackFullScreenViewModel: JetpackFeatureFullScreenOverlayViewModel? = null
 
     @Inject
     lateinit var mAccountStore: AccountStore
 
     @Inject
-    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    lateinit var buildConfigWrapper: BuildConfigWrapper
 
     @Inject
     lateinit var getReadingPreferencesSyncUseCase: ReaderGetReadingPreferencesSyncUseCase
@@ -218,17 +214,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             ViewModelProvider(this)[JetpackFeatureFullScreenOverlayViewModel::class.java]
 
         setContentView(R.layout.reader_activity_post_pager)
-
-        // Start migration flow passing deep link data if requirements are met
-        if (jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
-            val deepLinkData = PreMigrationDeepLinkData(
-                intent.action,
-                intent.data
-            )
-            jetpackAppMigrationFlowUtils.startJetpackMigrationFlow(deepLinkData)
-            finish()
-            return
-        }
 
         viewPager = findViewById(R.id.viewpager)
         // lint complains about OFFSCREEN_PAGE_LIMIT, even through it's a valid constant (?)
@@ -419,22 +404,13 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             host = uri.host
         }
 
-        if (uri == null || jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
-            || jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()
-        ) {
+        if (uri == null || !buildConfigWrapper.isJetpackApp) {
             readerTracker.trackDeepLink(AnalyticsTracker.Stat.DEEP_LINKED, action!!, host!!, uri)
             // invalid uri so, just show the entry screen
-            if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-                val intent = Intent(this, WPMainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER)
-                startActivity(intent)
-            } else {
-                val intent = Intent(this, WPLaunchActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER)
-                startActivity(intent)
-            }
+            val intent = Intent(this, WPLaunchActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER)
+            startActivity(intent)
             finish()
             return
         }
@@ -638,9 +614,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
         deepLinkOpenWebLinksWithJetpackHelper.onOverlayShown()
         newInstance(
-            null,
             isDeepLinkOverlay = true,
-            isFeatureCollectionOverlay = false,
             featureCollectionOverlaySource = JetpackFeatureCollectionOverlaySource.UNSPECIFIED
         )
             .show(supportFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
