@@ -677,7 +677,6 @@ Language: ro
     <string name="reader_toast_posts_from_this_blog_blocked">Articolele din acest blog nu vor mai fi arătate</string>
     <string name="reader_toast_err_unable_to_unfollow_blog">Nu pot face dezabonarea la blog</string>
     <string name="reader_toast_err_already_follow_this_blog">Te-ai abonat deja la acest blog</string>
-    <string name="reader_toast_err_show_blog">Nu pot să arăt acest blog</string>
     <string name="reader_label_choose_interests">Alege ce te interesează</string>
     <string name="reader_label_subscribers_count_single">1 abonat</string>
     <string name="reader_page_followed_blogs_title">Bloguri la care te-ai abonat</string>

@@ -677,7 +677,6 @@ Language: nl
     <string name="reader_toast_err_follow_not_authorized_to_access_blog">Je hebt geen rechten om deze blog te openen</string>
     <string name="reader_toast_err_unable_to_follow_blog">Niet in staat om te abonneren op deze blog</string>
     <string name="reader_toast_err_already_follow_this_blog">Je bent al geabonneerd op deze blog</string>
-    <string name="reader_toast_err_show_blog">Niet in staat om deze blog weer te geven</string>
     <string name="reader_label_choose_interests">Je interesses kiezen</string>
     <string name="reader_label_subscribers_count_single">1 abonnee</string>
     <string name="reader_label_subscribers_count">%s abonnees</string>

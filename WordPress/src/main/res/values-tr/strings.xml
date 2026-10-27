@@ -677,7 +677,6 @@ Language: tr
     <string name="reader_toast_err_follow_not_authorized_to_access_blog">Bu bloga erişme izniniz yok</string>
     <string name="reader_toast_err_unable_to_follow_blog">Bu bloga abone olunamadı</string>
     <string name="reader_toast_err_already_follow_this_blog">Bu bloga zaten abonesiniz</string>
-    <string name="reader_toast_err_show_blog">Bu blog görüntülenemiyor</string>
     <string name="reader_label_choose_interests">İlgi alanlarınızı seçin</string>
     <string name="reader_label_subscribers_count_single">1 abone</string>
     <string name="reader_label_subscribers_count">%s abone</string>

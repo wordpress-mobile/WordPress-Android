@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +19,7 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
@@ -56,6 +59,8 @@ import org.wordpress.android.ui.reader.tracker.ReaderTab
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
+import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase.FetchSiteState
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
 import org.wordpress.android.ui.reader.utils.ReaderUtils
@@ -63,6 +68,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -80,6 +86,7 @@ class ReaderPostListViewModel @Inject constructor(
     private val emptyStateBuilder: ReaderPostListEmptyStateBuilder,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val accountStore: AccountStore,
+    private val fetchSiteUseCase: ReaderFetchSiteUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -131,7 +138,6 @@ class ReaderPostListViewModel @Inject constructor(
 
     private var posts = ReaderPostList()
     private var cardStates: List<ReaderPostUiState?> = emptyList()
-    private var postsVersion = 0
     private var isLoaded = false
     private var loadJob: Job? = null
     private var searchJob: Job? = null
@@ -142,6 +148,9 @@ class ReaderPostListViewModel @Inject constructor(
     private var isTagFollowInFlight = false
     private var moreMenu: Pair<ReaderPost, List<ReaderPostCardAction>>? = null
     private val renderedIds = HashSet<String>()
+    private var siteHeaderBlog: ReaderBlog? = null
+    private var isSiteHeaderFollowInProgress = false
+    private var siteHeaderJob: Job? = null
 
     private var isFirstItemVisible = true
     private var isViewStarted = false
@@ -752,6 +761,9 @@ class ReaderPostListViewModel @Inject constructor(
     private fun onTargetChanged() {
         updateSource()
         renderedIds.clear()
+        siteHeaderJob?.cancel()
+        siteHeaderBlog = null
+        isSiteHeaderFollowInProgress = false
         autoUpdateSkipped = false
         clearPosts()
         reload()
@@ -778,14 +790,11 @@ class ReaderPostListViewModel @Inject constructor(
 
     private suspend fun loadPosts() {
         val target = currentTarget()
-        val newPosts = target?.let { repository.getPosts(it) } ?: ReaderPostList()
+        val newPosts = target?.let { distinctPosts(repository.getPosts(it)) } ?: ReaderPostList()
         val newGapMarkerIndex = loadListDetails(newPosts)
 
         // build the cards before swapping in the new posts, since the UI can re-render while they're built
         val newCardStates = buildCardStates(newPosts)
-        if (!posts.isSameListWithBookmark(newPosts)) {
-            postsVersion++
-        }
         posts = newPosts
         cardStates = newCardStates
         gapMarkerIndex = newGapMarkerIndex
@@ -797,6 +806,119 @@ class ReaderPostListViewModel @Inject constructor(
 
         updateUiState()
         sendUiEvent(ReaderPostListUiEvent.DataLoaded)
+        // the follow state may have changed elsewhere, so re-read the header whenever the posts are
+        if (siteHeaderIds() != null && siteHeaderJob?.isActive != true) {
+            siteHeaderJob = launch { loadSiteHeader() }
+        }
+    }
+
+    // the LazyColumn crashes on duplicate keys, so drop a post that's in the list more than once
+    private fun distinctPosts(posts: ReaderPostList): ReaderPostList {
+        val keys = HashSet<String>()
+        return posts.filterTo(ReaderPostList()) { keys.add(ReaderPostListItem.postKey(it)) }
+    }
+
+    /*
+     * Returns the blog and feed ids the site header shows, or null if the list has no site header
+     */
+    private fun siteHeaderIds(): Pair<Long, Long>? {
+        val tag = currentTag
+        return when {
+            isTopLevel -> null
+            tag?.isDiscover == true -> ReaderConstants.DISCOVER_SITE_ID to 0L
+            listType == ReaderPostListType.BLOG_PREVIEW -> blogId to feedId
+            else -> null
+        }
+    }
+
+    /*
+     * Shows the stored blog info, then gets it from the server if there isn't any or it's time to update it
+     */
+    private suspend fun loadSiteHeader() {
+        val (headerBlogId, headerFeedId) = siteHeaderIds() ?: return
+        if (headerBlogId == 0L && headerFeedId == 0L) {
+            sendUiEvent(ReaderPostListUiEvent.BlogInfoFailed)
+        } else {
+            val localBlog = repository.getBlogInfo(headerBlogId, headerFeedId)
+            showSiteHeader(localBlog)
+            // a fetch stores the blog with a fresh timestamp, so this only fetches again once that's stale
+            val isStale = localBlog == null || repository.isTimeToUpdateBlogInfo(localBlog)
+            if (isStale) {
+                fetchSiteHeader(headerBlogId, headerFeedId, hasLocalBlog = localBlog != null)
+            }
+        }
+    }
+
+    private suspend fun fetchSiteHeader(headerBlogId: Long, headerFeedId: Long, hasLocalBlog: Boolean) {
+        val result = fetchSiteUseCase.fetchSite(headerBlogId, headerFeedId)
+        // the fetch can't be cancelled, so drop its result if the list moved on to another target meanwhile
+        currentCoroutineContext().ensureActive()
+        when (result) {
+            FetchSiteState.Success -> showSiteHeader(repository.getBlogInfo(headerBlogId, headerFeedId))
+            is FetchSiteState.Failed -> if (!hasLocalBlog) {
+                sendUiEvent(ReaderPostListUiEvent.BlogInfoFailed)
+            }
+            FetchSiteState.AlreadyRunning -> Unit
+        }
+    }
+
+    private fun showSiteHeader(blog: ReaderBlog?) {
+        if (blog == null) return
+        // the header owns its follow state while a follow tap is running
+        siteHeaderBlog?.takeIf { isSiteHeaderFollowInProgress }?.let { blog.isFollowing = it.isFollowing }
+        if (!blog.isSameAs(siteHeaderBlog)) {
+            siteHeaderBlog = blog
+            updateUiState()
+        }
+    }
+
+    private fun siteHeaderUiState(): ReaderSiteHeaderUiState? {
+        val blog = siteHeaderBlog
+        val ids = siteHeaderIds()
+        if (blog == null || ids == null) return null
+        val (headerBlogId, headerFeedId) = ids
+        val isFeed = ReaderUtils.isExternalFeed(headerBlogId, headerFeedId)
+        return ReaderSiteHeaderUiState(
+            name = blog.name.ifEmpty { null },
+            host = blog.url.ifEmpty { null }?.let { UrlUtils.getHost(it) }?.ifEmpty { null },
+            description = blog.description.ifEmpty { null },
+            imageUrl = blog.imageUrl.ifEmpty { null },
+            isP2orA8C = blog.isP2orA8C,
+            subscriberCount = blog.numSubscribers,
+            isFollowed = blog.isFollowing,
+            isFollowInProgress = isSiteHeaderFollowInProgress,
+            showSettings = blog.isFollowing && !isFeed && accountStore.hasAccessToken()
+        )
+    }
+
+    fun onSiteHeaderFollowClicked() {
+        val blog = siteHeaderBlog
+        val ids = siteHeaderIds()
+        if (blog == null || ids == null || isSiteHeaderFollowInProgress) return
+        val (headerBlogId, headerFeedId) = ids
+        // set right away, so a second tap can't start another follow before the first reports back
+        isSiteHeaderFollowInProgress = true
+        updateUiState()
+        launch(bgDispatcher) {
+            readerPostCardActionsHandler.handleFollowSiteClicked(headerBlogId, headerFeedId, blog.name, source)
+            // the follow has finished (or never started, when offline or logged out)
+            withContext(mainDispatcher) {
+                isSiteHeaderFollowInProgress = false
+                updateUiState()
+            }
+        }
+    }
+
+    fun onSiteHeaderSettingsClicked() {
+        val header = siteHeaderUiState() ?: return
+        val (headerBlogId, _) = siteHeaderIds() ?: return
+        sendUiEvent(
+            ReaderPostListUiEvent.ShowSubscriptionSettings(
+                headerBlogId,
+                header.name.orEmpty(),
+                header.host.orEmpty()
+            )
+        )
     }
 
     /*
@@ -871,18 +993,20 @@ class ReaderPostListViewModel @Inject constructor(
         }
     }
 
-    private fun buildItems(): List<ReaderPostListItem> {
+    /*
+     * [includePosts] is false while the empty state shows, since it replaces the posts but not the header
+     */
+    private fun buildItems(includePosts: Boolean = true): List<ReaderPostListItem> {
         val items = ArrayList<ReaderPostListItem>()
         val tag = currentTag
-        if (!isTopLevel && (tag?.isDiscover == true || listType == ReaderPostListType.BLOG_PREVIEW)) {
-            if (tag?.isDiscover == true) {
-                items.add(ReaderPostListItem.SiteHeader(ReaderConstants.DISCOVER_SITE_ID, 0, postsVersion))
-            } else {
-                items.add(ReaderPostListItem.SiteHeader(blogId, feedId, postsVersion))
-            }
+        if (siteHeaderIds() != null) {
+            // the header stays out of the list until its blog info has been read
+            siteHeaderUiState()?.let { items.add(ReaderPostListItem.SiteHeader(it)) }
         } else if (listType == ReaderPostListType.TAG_PREVIEW && tag != null && posts.isNotEmpty()) {
             items.add(ReaderPostListItem.TagHeader(tag.label, isTagHeaderFollowed, isTagFollowInFlight))
         }
+
+        if (!includePosts) return items
 
         val menu = moreMenu
         val isBookmarksList = isBookmarksList
@@ -896,9 +1020,9 @@ class ReaderPostListViewModel @Inject constructor(
                     cardState == null -> return@forEachIndexed
                     menu != null && menu.first.hasSameIds(post) -> ReaderPostListItem.Post(
                         cardState.copy(moreMenuItems = menu.second),
-                        post.stableId
+                        ReaderPostListItem.postKey(post)
                     )
-                    else -> ReaderPostListItem.Post(cardState, post.stableId)
+                    else -> ReaderPostListItem.Post(cardState, ReaderPostListItem.postKey(post))
                 }
             )
             // the gap marker appears *below* the post it's attached to
@@ -957,10 +1081,11 @@ class ReaderPostListViewModel @Inject constructor(
         val emptyState = buildEmptyState()
         val isOnlyLoadingOlder = updateActions == setOf(UpdateAction.REQUEST_OLDER)
         _uiState.value = ReaderPostListUiState(
-            items = buildItems(),
+            items = buildItems(includePosts = emptyState == null),
             isRefreshing = isPullRefreshing || (updateActions.isNotEmpty() && !isOnlyLoadingOlder),
             isLoadingMore = isOnlyLoadingOlder,
-            isUpdating = updateActions.isNotEmpty(),
+            // search results are brief snapshots, and a refresh can't start while another update is running
+            canPullToRefresh = !isSearch && updateActions.isEmpty(),
             newPostsBarVisible = isNewPostsBarVisible,
             emptyState = emptyState,
             scrollToPosition = scrollToPosition
@@ -987,7 +1112,15 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     private fun onCardClicked(postId: Long, blogId: Long) {
-        findPost(blogId, postId)?.let { sendUiEvent(ReaderPostListUiEvent.PostSelected(it)) }
+        val post = findPost(blogId, postId) ?: return
+        readerTracker.trackBlog(
+            AnalyticsTracker.Stat.READER_POST_CARD_TAPPED,
+            post.blogId,
+            post.feedId,
+            post.isFollowedByCurrentUser,
+            source
+        )
+        sendUiEvent(ReaderPostListUiEvent.PostSelected(post))
     }
 
     private fun onCardRendered(state: ReaderCardUiState) {
@@ -1025,11 +1158,10 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     private fun onFollowStatusChanged(data: FollowStatusChanged) {
+        onSiteHeaderFollowStatusChanged(data)
         val changed = posts.filter { it.blogId == data.blogId && it.isFollowedByCurrentUser != data.following }
         if (changed.isEmpty()) return
         changed.forEach { it.isFollowedByCurrentUser = data.following }
-        // the site header shows the follow state too, so make it rebind (and re-read it)
-        postsVersion++
         val postsSnapshot = posts
         launch {
             val newCardStates = buildCardStates(postsSnapshot)
@@ -1038,6 +1170,24 @@ class ReaderPostListViewModel @Inject constructor(
                 cardStates = newCardStates
                 updateUiState()
             }
+        }
+    }
+
+    private fun onSiteHeaderFollowStatusChanged(data: FollowStatusChanged) {
+        val blog = siteHeaderBlog ?: return
+        if (isSiteHeader(data.blogId, data.feedId)) {
+            blog.isFollowing = data.following
+            isSiteHeaderFollowInProgress = !data.isChangeFinal
+            updateUiState()
+        }
+    }
+
+    private fun isSiteHeader(blogId: Long, feedId: Long): Boolean {
+        val (headerBlogId, headerFeedId) = siteHeaderIds() ?: return false
+        return if (ReaderUtils.isExternalFeed(headerBlogId, headerFeedId)) {
+            feedId == headerFeedId
+        } else {
+            blogId == headerBlogId
         }
     }
 
