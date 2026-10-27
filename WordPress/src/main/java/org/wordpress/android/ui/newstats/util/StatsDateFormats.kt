@@ -194,22 +194,23 @@ fun dayFieldPosition(locale: Locale = Locale.getDefault()): DayFieldPosition {
  */
 private fun String.writesLiteral(separator: String): Boolean {
     var index = 0
-    while (index < length) {
+    var found = false
+    while (index < length && !found) {
         val char = this[index]
         when {
             char == '\'' -> {
                 val end = skipQuotedLiteral(this, index)
-                if (substring(index, end).any { it in separator }) return true
+                found = substring(index, end).any { it in separator }
                 index = end
             }
             char.isPatternField() -> index++
             else -> {
-                if (char in separator) return true
+                found = char in separator
                 index++
             }
         }
     }
-    return false
+    return found
 }
 
 /**
