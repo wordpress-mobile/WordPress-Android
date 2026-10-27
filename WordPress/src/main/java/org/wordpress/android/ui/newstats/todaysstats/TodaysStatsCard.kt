@@ -40,10 +40,12 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.os.ConfigurationCompat
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
@@ -330,9 +332,10 @@ private fun ErrorContent(
 
 @Composable
 private fun TitleSection() {
-    // Rebuilt whenever the locale changes so the weekday and month order follow the reader's
-    // locale ("Tuesday, Aug 11", "11 Aug, Tuesday", "8月11日火曜日").
-    val locale = Locale.getDefault()
+    // Read off the configuration rather than Locale.getDefault() so the composable recomposes,
+    // and so the weekday and month order follow the reader's locale ("Tuesday, Aug 11",
+    // "11 Aug, Tuesday", "8月11日火曜日").
+    val locale = ConfigurationCompat.getLocales(LocalConfiguration.current)[0] ?: Locale.ROOT
     val formattedDate = remember(locale) {
         LocalDate.now().format(statsDateFormatter(StatsDateSkeleton.WEEKDAY_DAY_MONTH, locale))
     }
