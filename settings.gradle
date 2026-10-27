@@ -184,7 +184,7 @@ def assertDeveloperPropertiesMatch(String developerPropertiesPath) {
 
 boolean assertJava21Amazon() {
     def version = System.getProperty("java.version")
-    def expectedVersion = "21.0.6"
+    def expectedVersion = "21.0.13"
     def vendor = System.getProperty("java.vendor")
 
     if (!(version.contains(expectedVersion) && vendor.toLowerCase().contains("amazon"))) {
