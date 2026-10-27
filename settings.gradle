@@ -130,10 +130,6 @@ apply from: './config/gradle/included_builds.gradle'
 apply from: './config/gradle/gradle_build_scan.gradle'
 
 buildCache {
-    local {
-        // Storing outputs locally costs more than the rare hits it gives; the remote cache covers fresh worktrees
-        enabled = gradle.ext.isCi
-    }
     if (gradle.ext.isCi) {
         remote(HttpBuildCache) {
             url = "http://10.0.2.214:5071/cache/"
@@ -160,6 +156,11 @@ buildCache {
                 username = "developer"
                 password = gradle.ext.secretProperties.get('gradleCacheNodePassword')
             }
+        }
+
+        // With the remote cache in place, storing outputs locally costs more than the rare local hits give back
+        local {
+            enabled = false
         }
     } else {
         logger.warn("\nℹ️ Remote build cache is disabled. If you have stable internet connection, consider enabling it via `developer.properties`.")
