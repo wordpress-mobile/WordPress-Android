@@ -18,9 +18,6 @@ import java.util.Locale
  * stats show one, so those stay plain digits.
  */
 object StatsDateSkeleton {
-    /** Day of month alone, for the collapsed end of a span inside one month ("28-30 Jul"). */
-    const val DAY = "d"
-
     /** Abbreviated month alone, for month-bucket chart labels. */
     const val MONTH = "MMM"
 
@@ -147,6 +144,33 @@ private fun skipQuotedLiteral(pattern: String, openIndex: Int): Int {
 }
 
 private fun Char.isPatternField(): Boolean = this in 'a'..'z' || this in 'A'..'Z'
+
+/**
+ * The formatter for the day alone, written as the locale's own [StatsDateSkeleton.DAY_MONTH] pattern
+ * writes it: the day field run plus the ordinal dot that follows it, if the locale puts one there.
+ *
+ * Derived from that pattern rather than resolved from a bare "d" skeleton so the two ends of a
+ * collapsed span agree. ICU puts the ordinal dot in the bare day skeleton for Czech, Slovak, Danish
+ * and six more, but not for German, Bulgarian, Icelandic, Latvian or Serbian, whose day-month
+ * pattern carries it all the same — so those five read "28-30. Juli" where German writes
+ * "28.-30. Juli" (CMM-2540).
+ *
+ * Only the dot carries over. A word the locale writes between the day and the month belongs to the
+ * month ("d 'de' MMM" in Galician, "d בMMM" in Hebrew), and so does a field separator ("d/MM" in
+ * European Portuguese); keeping either would read "28 de-30 de xul." or "28/-30/07".
+ */
+fun dayOnlyFormatter(locale: Locale = Locale.getDefault()): DateTimeFormatter =
+    DateTimeFormatter.ofPattern(
+        dayOnlyPattern(statsDatePattern(StatsDateSkeleton.DAY_MONTH, locale)),
+        locale
+    )
+
+private fun dayOnlyPattern(pattern: String): String {
+    val dayRun = fieldRuns(pattern).firstOrNull { pattern[it.first] == 'd' } ?: return "d"
+    var end = dayRun.last + 1
+    while (end < pattern.length && (pattern[end] == '.' || pattern[end].isWhitespace())) end++
+    return pattern.substring(dayRun.first, end).trimEnd()
+}
 
 /**
  * Where the day of month sits in a locale's [StatsDateSkeleton.DAY_MONTH] pattern, which decides

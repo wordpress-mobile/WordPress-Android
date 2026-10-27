@@ -75,6 +75,36 @@ class StatsDateFormatterTest {
     }
 
     @Test
+    fun `a collapsed span keeps the ordinal dot the locale writes on its day`() {
+        val start = LocalDate.of(2024, 7, 28)
+        val end = LocalDate.of(2024, 7, 30)
+
+        // German's day-month pattern is "d. MMM", but ICU's bare day skeleton is a plain "d", so
+        // taking the collapsed end from that skeleton dropped the dot: "28-30. Juli" (CMM-2540).
+        setLocale(Locale.GERMANY)
+        assertThat(rangeOf(start, end)).isEqualTo("28.-30. Juli")
+        assertThat(formatDayRangeWithYear(start, end)).isEqualTo("28.-30. Juli 2024")
+
+        // Bulgarian writes the month as a number with the same dot ("d.MM").
+        setLocale(Locale.forLanguageTag("bg"))
+        assertThat(rangeOf(start, end)).isEqualTo("28.-30.07")
+    }
+
+    @Test
+    fun `a collapsed span keeps a word the locale writes before the month on the month`() {
+        val start = LocalDate.of(2024, 7, 28)
+        val end = LocalDate.of(2024, 7, 30)
+
+        // Only the ordinal dot belongs to the day. Galician's "d 'de' MMM" and Hebrew's "d בMMM"
+        // put a word there that belongs to the month, so the collapsed end must not carry it.
+        setLocale(Locale.forLanguageTag("gl"))
+        assertThat(rangeOf(start, end)).isEqualTo("28-30 de xul.")
+
+        setLocale(Locale.forLanguageTag("pt-BR"))
+        assertThat(rangeOf(start, end)).isEqualTo("28-30 de jul.")
+    }
+
+    @Test
     fun `a span does not collapse when the locale's own pattern uses the range separator`() {
         // Uzbek writes "d-MMM", so collapsing to "28-30-iyl" would make the range marker
         // indistinguishable from the pattern's own separator (CMM-2540).

@@ -142,7 +142,7 @@ fun formatCustomDateRange(startDate: LocalDate, endDate: LocalDate): String {
     val dayMonth = statsDateFormatter(StatsDateSkeleton.DAY_MONTH)
     if (startDate == endDate) return startDate.format(dayMonth)
 
-    val day = statsDateFormatter(StatsDateSkeleton.DAY)
+    val day = dayOnlyFormatter()
     val sameMonth = startDate.month == endDate.month && startDate.year == endDate.year
     return when (if (sameMonth) dayFieldPosition() else DayFieldPosition.ENCLOSED) {
         DayFieldPosition.LEADING ->
@@ -224,7 +224,7 @@ private fun formatRangeWithYear(
         DayFieldPosition.ENCLOSED -> false
     }
     val plain = when {
-        collapses -> statsDateFormatter(StatsDateSkeleton.DAY)
+        collapses -> dayOnlyFormatter()
         matchYearlessEndToYearPattern -> yearlessFormatter(yearSkeleton)
             ?: statsDateFormatter(skeleton)
         else -> statsDateFormatter(skeleton)
