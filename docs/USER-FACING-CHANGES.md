@@ -9,7 +9,7 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 <!-- Add new entries directly below this line. -->
 
 - **Post preview works on sites connected with an Application Password**
-  On a self-hosted site added with an Application Password, previewing a post shows the site's own login page instead of failing with "Incorrect username or password". After logging in there, the preview loads.
+  On a self-hosted site added with an Application Password, previewing a post shows the site's own login page instead of failing with "Incorrect username or password". After logging in there, the preview loads, and later previews open directly while that login lasts.
   - **Apps:** Both
   - **Type:** Fixed
   - **Availability:** Everyone
