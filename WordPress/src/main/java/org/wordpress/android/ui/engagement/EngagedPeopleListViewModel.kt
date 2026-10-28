@@ -202,6 +202,13 @@ class EngagedPeopleListViewModel @Inject constructor(
                 emptyStateTitle = it.title
                 emptyStateAction = ::onRefreshData
             }
+        } else if (updateLikesState is LikesData && likedItem.isEmpty() && likers.isEmpty()) {
+            // A request that succeeded with nobody in it. Callers that head the list with the
+            // liked item always have that row to show; the ones that opt out of it -- Stats --
+            // would otherwise be left with a blank screen. There is nothing to retry here, so
+            // the empty state is shown without its button.
+            showEmptyState = true
+            emptyStateTitle = UiStringRes(R.string.get_likes_empty_state_no_likes)
         }
 
         return EngagedPeopleListUiState(
