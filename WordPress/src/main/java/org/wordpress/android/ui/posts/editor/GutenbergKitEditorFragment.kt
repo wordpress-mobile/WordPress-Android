@@ -54,6 +54,9 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     @Volatile
     private var editorReady = false
 
+    @Volatile
+    private var savingLocked = false
+
     private val textWatcher = LiveTextWatcher()
     private var historyChangeListener: HistoryChangeListener? = null
     private var featuredImageChangeListener: FeaturedImageChangeListener? = null
@@ -209,6 +212,9 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             }
         })
         historyChangeListener?.let(gutenbergView::setHistoryChangeListener)
+        gutenbergView.setSaveAvailabilityListener { availability ->
+            savingLocked = availability.isSavingLocked
+        }
         featuredImageChangeListener?.let(
             gutenbergView::setFeaturedImageChangeListener
         )
@@ -279,6 +285,8 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
         // that fails. Readiness returns when a reloaded editor becomes available.
         gutenbergView.setEditorDidBecomeUnavailable {
             editorReady = false
+            // A reloaded editor reports its save availability again.
+            savingLocked = false
             // A reloaded editor starts with empty history and re-enables these as the user edits.
             mEditorFragmentListener.onToggleUndo(true)
             mEditorFragmentListener.onToggleRedo(true)
@@ -559,6 +567,12 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     }
 
     fun isEditorReady(): Boolean = editorReady
+
+    /**
+     * Whether the editor has locked saving, e.g. during a media upload, so saving
+     * the post to the server now would persist temporary media URLs.
+     */
+    fun isSavingLocked(): Boolean = savingLocked
 
     fun setXPostsEnabled(enabled: Boolean) {
         isXPostsEnabled = enabled

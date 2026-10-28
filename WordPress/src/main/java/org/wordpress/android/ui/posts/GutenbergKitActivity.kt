@@ -1218,6 +1218,10 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         prepublishingViewModel.triggerOnSubmitButtonClickedListener.observe(this) { event ->
             event.getContentIfNotHandled()?.let { publishPost ->
                 AppLog.d(AppLog.T.POSTS, "GutenbergKitActivity: Handling prepublishing submit event")
+                // An upload can start after the prepublishing sheet opens.
+                if (notifyMediaUploadInProgress(editPostRepository.getPost())) {
+                    return@let
+                }
                 uploadPost(publishPost)
                 if (publishPost) {
                     incrementInteractions(Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE)
@@ -1522,15 +1526,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         get() {
             return object : RemotePreviewHelperFunctions {
                 override fun notifyUploadInProgress(post: PostImmutableModel): Boolean {
-                    return if (UploadService.hasInProgressMediaUploadsForPost(post)) {
-                        ToastUtils.showToast(
-                            this@GutenbergKitActivity,
-                            getString(R.string.editor_toast_uploading_please_wait), ToastUtils.Duration.SHORT
-                        )
-                        true
-                    } else {
-                        false
-                    }
+                    return notifyMediaUploadInProgress(post)
                 }
 
                 override fun notifyEmptyDraft() {
@@ -1557,6 +1553,21 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 }
             }
         }
+
+    /**
+     * Tells the user to wait when the post has media uploading, through the app or inside
+     * the editor, which locks saving so temporary media URLs aren't saved to the server.
+     */
+    private fun notifyMediaUploadInProgress(post: PostImmutableModel?): Boolean {
+        if (!UploadService.hasInProgressMediaUploadsForPost(post) && editorFragment?.isSavingLocked() != true) {
+            return false
+        }
+        ToastUtils.showToast(
+            this@GutenbergKitActivity,
+            getString(R.string.editor_toast_uploading_please_wait), ToastUtils.Duration.SHORT
+        )
+        return true
+    }
 
     // Menu actions
     @Suppress("LongMethod", "CyclomaticComplexMethod", "ReturnCount")
@@ -1643,11 +1654,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
 
     @Suppress("UseCheckOrError", "ReturnCount")
     private fun performSecondaryAction(): Boolean {
-        if (UploadService.hasInProgressMediaUploadsForPost(editPostRepository.getPost())) {
-            ToastUtils.showToast(
-                this@GutenbergKitActivity,
-                getString(R.string.editor_toast_uploading_please_wait), ToastUtils.Duration.SHORT
-            )
+        if (notifyMediaUploadInProgress(editPostRepository.getPost())) {
             return false
         }
         if (isDiscardable) {
@@ -1755,6 +1762,9 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     }
 
     private fun performPrimaryAction() {
+        if (notifyMediaUploadInProgress(editPostRepository.getPost())) {
+            return
+        }
         when (primaryAction) {
             PrimaryEditorAction.PUBLISH_NOW -> {
                 analyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED)
@@ -2140,7 +2150,11 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                  */
                 val isWpComOrIsLocalDraft: Boolean =
                     siteModel.isUsingWpComRestApi || editPostRepository.isLocalDraft
-                activityFinishState = if (isWpComOrIsLocalDraft) {
+                // Exiting mid-upload keeps the post local rather than saving its temporary media URLs online.
+                val isSavingLocked = editorFragment?.isSavingLocked() == true
+                activityFinishState = if (isSavingLocked) {
+                    ActivityFinishState.SAVED_LOCALLY
+                } else if (isWpComOrIsLocalDraft) {
                     savePostOnline(isFirstTimePublish)
                 } else if (forceSave) {
                     savePostOnline(false)
