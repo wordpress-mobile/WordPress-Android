@@ -1518,11 +1518,24 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 // Let the navigation ViewModel handle the back navigation
                 editPostNavigationViewModel.handleBackNavigation()
             }
+            // Leaving ends the editor's uploads, so confirm before the media is lost.
+            editorFragment?.isSavingLocked() == true -> showLeaveWhileUploadingDialog()
             else -> {
                 savePostAndOptionallyFinish(doFinish = true, forceSave = false)
             }
         }
         return true
+    }
+
+    private fun showLeaveWhileUploadingDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.editor_leave_while_uploading_title)
+            .setMessage(R.string.editor_leave_while_uploading_message)
+            .setPositiveButton(R.string.editor_leave_while_uploading_keep_editing, null)
+            .setNegativeButton(R.string.editor_leave_while_uploading_leave) { _, _ ->
+                savePostAndOptionallyFinish(doFinish = true, forceSave = false)
+            }
+            .show()
     }
 
     private val editPostActivityStrategyFunctions: RemotePreviewHelperFunctions
