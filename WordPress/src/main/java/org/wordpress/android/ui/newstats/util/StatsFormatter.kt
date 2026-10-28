@@ -36,6 +36,16 @@ fun formatStatsDate(date: String): String = parseOrLog(date) {
         .format(statsDateFormatter(StatsDateSkeleton.DAY_MONTH_YEAR))
 }
 
+/**
+ * Formats an API day ("yyyy-MM-dd") without its year, e.g. "Aug 4" in en-US and "4 Aug" in en-GB,
+ * for a date whose year is already established by the dates around it. Returns the input unchanged
+ * if it can't be parsed.
+ */
+fun formatStatsDayMonth(date: String): String = parseOrLog(date) {
+    LocalDate.parse(it, DateTimeFormatter.ISO_LOCAL_DATE)
+        .format(statsDateFormatter(StatsDateSkeleton.DAY_MONTH))
+}
+
 @Suppress("TooGenericExceptionCaught")
 private inline fun parseOrLog(
     value: String,

@@ -67,14 +67,10 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsColors
 import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.components.StatsDayViewsChart
-import org.wordpress.android.ui.newstats.components.StatsChangeIndicator
 import org.wordpress.android.ui.newstats.components.StatsCardContainer
 import org.wordpress.android.ui.newstats.components.StatsListHeader
-import org.wordpress.android.ui.newstats.components.StatsViewChange
-import org.wordpress.android.ui.newstats.datasource.PostViewsChange
 import org.wordpress.android.ui.newstats.datasource.PostViewsDailyView
 import org.wordpress.android.ui.newstats.datasource.PostViewsData
-import org.wordpress.android.ui.newstats.datasource.PostViewsWeek
 import org.wordpress.android.ui.newstats.util.ProvideShimmerBrush
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 import org.wordpress.android.ui.newstats.util.formatChangePercentage
@@ -436,10 +432,21 @@ private fun LoadedContent(
             }
         }
 
-        statsCard(
-            R.string.stats_detail_recent_weeks,
-            data.weeks
-        ) { WeekRow(it) }
+        if (data.weeks.any { it.days.isNotEmpty() }) {
+            item {
+                StatsCardContainer {
+                    Column(
+                        modifier = Modifier
+                            .padding(CardPadding)
+                    ) {
+                        SectionTitle(
+                            R.string.stats_detail_recent_weeks
+                        )
+                        WeeksCalendar(weeks = data.weeks)
+                    }
+                }
+            }
+        }
 
         statsCard(
             R.string.stats_detail_months_and_years,
@@ -953,28 +960,6 @@ private fun SectionTitle(titleResId: Int) {
 }
 
 @Composable
-private fun WeekRow(week: PostViewsWeek) {
-    DetailRow(
-        label = weekLabel(week),
-        value = formatStatValue(week.total, TEN_THOUSAND)
-    ) {
-        when (val change = week.change) {
-            is PostViewsChange.Infinite -> Text(
-                text = INFINITY,
-                style = MaterialTheme.typography
-                    .labelMedium,
-                color = MaterialTheme.colorScheme.primary
-            )
-            is PostViewsChange.Percentage ->
-                StatsChangeIndicator(
-                    change = change.value.toViewChange()
-                )
-            is PostViewsChange.None -> Unit
-        }
-    }
-}
-
-@Composable
 private fun DetailRow(
     label: String,
     value: String,
@@ -1001,20 +986,6 @@ private fun DetailRow(
             modifier = Modifier.padding(start = 12.dp)
         )
     }
-}
-
-private fun weekLabel(week: PostViewsWeek): String {
-    val start = formatStatsDate(week.startDay)
-    val end = formatStatsDate(week.endDay)
-    return if (start == end) start else "$start - $end"
-}
-
-// StatsChangeIndicator renders only the percentage, so the delta the sealed class also carries is
-// not something this screen has -- a week's change arrives as a percentage, not a view count.
-private fun Double.toViewChange(): StatsViewChange = when {
-    this > 0 -> StatsViewChange.Positive(0L, this)
-    this < 0 -> StatsViewChange.Negative(0L, -this)
-    else -> StatsViewChange.NoChange
 }
 
 private const val INFINITY = "∞"

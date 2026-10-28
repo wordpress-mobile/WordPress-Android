@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Recent Weeks is a calendar grid**
+  The Recent Weeks card on the per-item screen in the redesigned Stats screen now draws each week as a row of seven squares, one per day, shaded from pale to solid by how many views that day got. The busiest day of the range is the darkest square, and a "Less … More" key sits under the grid. Each square names its date and view count to a screen reader. This replaces the list of week totals with their week-on-week percentages.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row (or Show all → tap a row); My Site → Stats → Insights → Latest post
+  - **Notes:** The weeks run Monday to Sunday, following what the server sends. The first and last weeks of the range are usually cut short — by the day the item was published and by the days that have not happened yet — and those days are drawn as empty squares so the columns still line up by weekday. The grid no longer shows each week's total or its change against the week before; it shows per-day counts instead.
+
 - **See who liked a post from its Stats screen**
   The top card of the per-item screen in the redesigned Stats screen now shows the faces of the people who liked the item, with a "46 Likes" row beside them. Tapping that row opens the full list of likers — the same list the Reader and notifications open — where tapping someone shows their profile. The card also now reads "Published <date>" with a small link icon, and the views, likes and comments totals sit under a rule in larger type.
   - **Apps:** Both

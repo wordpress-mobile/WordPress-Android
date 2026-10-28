@@ -1492,6 +1492,12 @@ class StatsDataSourceImpl @Inject constructor(
         PostViewsWeek(
             startDay = days.firstOrNull()?.day?.value.orEmpty(),
             endDay = days.lastOrNull()?.day?.value.orEmpty(),
+            days = days.map {
+                PostViewsDailyView(
+                    day = it.day.value,
+                    views = it.count.toLong()
+                )
+            },
             total = total.toLong(),
             change = when (val change = change) {
                 is StatsPostChange.Percentage ->
