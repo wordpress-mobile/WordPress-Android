@@ -196,14 +196,16 @@ class ReaderSubsViewModel @Inject constructor(
     }
 
     private fun addAsUrl(entry: String) {
-        // if this isn't a valid URL, add the original entry as a tag
-        val url = repository.normalizeEntryUrl(entry) ?: return addAsTag(entry)
-        if (repository.isFollowedUrl(url)) {
-            showMessage(R.string.reader_toast_err_already_follow_this_blog)
-            return
+        val url = repository.normalizeEntryUrl(entry)
+        when {
+            // not a valid URL, so add the original entry as a tag
+            url == null -> addAsTag(entry)
+            repository.isFollowedUrl(url) -> showMessage(R.string.reader_toast_err_already_follow_this_blog)
+            checkConnection() -> followNewUrl(url)
         }
-        if (!checkConnection()) return
+    }
 
+    private fun followNewUrl(url: String) {
         _uiState.update { it.copy(isAdding = true) }
         launch {
             val failedStatusCode = repository.checkUrlReachable(url)
