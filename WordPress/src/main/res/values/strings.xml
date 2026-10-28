@@ -1632,6 +1632,7 @@
     <string name="stats_post_detail_more_likers">+%1$s</string>
     <string name="stats_post_detail_activity_less">Less</string>
     <string name="stats_post_detail_activity_more">More</string>
+    <string name="stats_post_detail_weeks_total">Total</string>
     <string name="stats_previous_day">Previous day</string>
     <string name="stats_next_day">Next day</string>
 

@@ -432,7 +432,8 @@ private fun LoadedContent(
             }
         }
 
-        if (data.weeks.any { it.days.isNotEmpty() }) {
+        val drawnWeeks = data.weeks.filter { it.days.isNotEmpty() }
+        if (drawnWeeks.isNotEmpty()) {
             item {
                 StatsCardContainer {
                     Column(
@@ -442,7 +443,21 @@ private fun LoadedContent(
                         SectionTitle(
                             R.string.stats_detail_recent_weeks
                         )
-                        WeeksCalendar(weeks = data.weeks)
+                        WeeksCalendar(weeks = drawnWeeks)
+                        HorizontalDivider(
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                        // The grid shades each day against the busiest one, which says nothing
+                        // about how much the weeks add up to -- so the total is spelled out.
+                        DetailRow(
+                            label = stringResource(
+                                R.string.stats_post_detail_weeks_total
+                            ),
+                            value = formatStatValue(
+                                drawnWeeks.sumOf { it.total },
+                                TEN_THOUSAND
+                            )
+                        )
                     }
                 }
             }
