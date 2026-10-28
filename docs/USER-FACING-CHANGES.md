@@ -9,7 +9,7 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 <!-- Add new entries directly below this line. -->
 
 - **Reader articles no longer get stuck on a spinner**
-  Opening a post in the Reader shows the article text without waiting on a network request for its stylesheet, so a slow or stalled connection no longer leaves a blank body behind a spinner that never stops. The comments snippet, related posts, tags and likers below the article also appear as soon as the article itself is on screen, instead of waiting for every embed and iframe in the post to finish loading.
+  Opening a post in the Reader shows the article text without waiting on a network request for its stylesheet, so a slow or stalled connection no longer leaves a blank body behind a spinner that never stops. The comments snippet, tags and likers below the article also appear as soon as the article itself is on screen, instead of waiting for every embed and iframe in the post to finish loading.
   - **Apps:** Both
   - **Type:** Fixed
   - **Availability:** Everyone

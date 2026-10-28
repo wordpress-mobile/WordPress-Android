@@ -174,11 +174,11 @@ class ReaderPostDetailViewModel @Inject constructor(
         get() = post != null
 
     /**
-     * The post the screen is currently showing. A fetch can outlive the post it was started for -
-     * the same screen is reused when navigating to a related post or back through the post history -
-     * so the result of a fetch is only applied while its post is still the one on screen.
+     * The load started by the most recent [onShowPost]. The same screen is reused when navigating
+     * to a related post or back through the post history, so a load can outlive the post it was
+     * started for - it is cancelled rather than left to resolve against a post no longer shown.
      */
-    private var currentTarget: Pair<Long, Long>? = null
+    private var showPostJob: Job? = null
 
     private data class RenderedLikesData(val blogId: Long, val postId: Long, val numLikes: Int, val iLike: Boolean) {
         fun isMatchingPostLikeStatus(post: ReaderPost): Boolean {
@@ -391,8 +391,11 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     fun onShowPost(blogId: Long, postId: Long) {
-        currentTarget = blogId to postId
-        launch { getOrFetchReaderPost(blogId = blogId, postId = postId) }
+        // Stop the previous load before starting this one. It reads from the database and then
+        // waits on the network, either of which can resolve after the user has moved on, and
+        // would otherwise render - or report an error - over the post now on screen.
+        showPostJob?.cancel()
+        showPostJob = launch { getOrFetchReaderPost(blogId = blogId, postId = postId) }
     }
 
     private suspend fun getOrFetchReaderPost(blogId: Long, postId: Long) {
@@ -411,14 +414,6 @@ class ReaderPostDetailViewModel @Inject constructor(
         // Always fetch fresh content from the server
         val oldPostText = post?.text
         val fetchState = readerFetchPostUseCase.fetchPost(blogId = blogId, postId = postId, isFeed = isFeed)
-
-        // The user may have moved to another post in this same screen while the fetch was in
-        // flight - it can take up to the fetch timeout to resolve. Applying the outcome now would
-        // error over, or replace, whatever is on screen instead.
-        if (!isCurrentTarget(blogId, postId)) {
-            AppLog.d(T.READER, "reader post detail > discarding fetch result for a post no longer shown")
-            return
-        }
 
         if (fetchState is FetchReaderPostState.Success) {
             renderFetchedPost(blogId, postId, hadRenderableContent = hasRenderableContent, oldPostText = oldPostText)
@@ -464,13 +459,6 @@ class ReaderPostDetailViewModel @Inject constructor(
      * alone would report a perfectly displayable post as empty.
      */
     private fun ReaderPost?.hasRenderableContent() = this != null && (hasText() || shouldShowExcerpt())
-
-    /**
-     * Whether the given post is still the one this screen is showing. Null means no post has been
-     * requested through [onShowPost] yet, in which case there is nothing to conflict with.
-     */
-    private fun isCurrentTarget(blogId: Long, postId: Long) =
-        currentTarget?.let { it.first == blogId && it.second == postId } ?: true
 
     private fun showFetchOutcomeWithoutContent(fetchState: FetchReaderPostState) {
         when (fetchState) {
