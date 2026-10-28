@@ -173,6 +173,13 @@ class ReaderPostDetailViewModel @Inject constructor(
     val hasPost: Boolean
         get() = post != null
 
+    /**
+     * The load started by the most recent [onShowPost]. The same screen is reused when navigating
+     * to a related post or back through the post history, so a load can outlive the post it was
+     * started for - it is cancelled rather than left to resolve against a post no longer shown.
+     */
+    private var showPostJob: Job? = null
+
     private data class RenderedLikesData(val blogId: Long, val postId: Long, val numLikes: Int, val iLike: Boolean) {
         fun isMatchingPostLikeStatus(post: ReaderPost): Boolean {
             return blogId != post.blogId || postId != post.postId ||
@@ -384,16 +391,21 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     fun onShowPost(blogId: Long, postId: Long) {
-        launch { getOrFetchReaderPost(blogId = blogId, postId = postId) }
+        // Stop the previous load before starting this one. It reads from the database and then
+        // waits on the network, either of which can resolve after the user has moved on, and
+        // would otherwise render - or report an error - over the post now on screen.
+        showPostJob?.cancel()
+        showPostJob = launch { getOrFetchReaderPost(blogId = blogId, postId = postId) }
     }
 
-    @Suppress("CyclomaticComplexMethod")
     private suspend fun getOrFetchReaderPost(blogId: Long, postId: Long) {
         getReaderPostFromDb(blogId = blogId, postId = postId)
 
-        // Show cached content immediately if available, otherwise show loading
-        val hasCachedPost = post != null
-        if (hasCachedPost) {
+        // Only render the cached copy immediately if there is actually something to render. A
+        // header-only post (whose body hasn't been fetched yet) would otherwise leave the
+        // user staring at a blank article, so keep the loading state until the fetch lands.
+        val hasRenderableContent = post.hasRenderableContent()
+        if (hasRenderableContent) {
             updatePostDetailsUi()
         } else {
             _uiState.value = LoadingUiState
@@ -401,45 +413,70 @@ class ReaderPostDetailViewModel @Inject constructor(
 
         // Always fetch fresh content from the server
         val oldPostText = post?.text
-        when (readerFetchPostUseCase.fetchPost(blogId = blogId, postId = postId, isFeed = isFeed)) {
-            FetchReaderPostState.Success -> {
-                getReaderPostFromDb(blogId, postId)
-                // Update UI if content changed, or we didn't have cached content
-                if (!hasCachedPost || post?.text != oldPostText) {
-                    updatePostDetailsUi()
-                }
-            }
+        val fetchState = readerFetchPostUseCase.fetchPost(blogId = blogId, postId = postId, isFeed = isFeed)
 
+        if (fetchState is FetchReaderPostState.Success) {
+            renderFetchedPost(blogId, postId, hadRenderableContent = hasRenderableContent, oldPostText = oldPostText)
+        } else if (!hasRenderableContent) {
+            // A non-success outcome only changes the UI when there's nothing on screen yet; a
+            // rendered post is kept rather than torn down by a failed background refresh.
+            showFetchOutcomeWithoutContent(fetchState)
+        }
+    }
+
+    private suspend fun renderFetchedPost(
+        blogId: Long,
+        postId: Long,
+        hadRenderableContent: Boolean,
+        oldPostText: String?
+    ) {
+        getReaderPostFromDb(blogId, postId)
+        if (post == null) {
+            // The fetch reported success but left us with no post at all. Surface an error
+            // rather than an endless spinner - but only when there is nothing on screen to keep.
+            if (!hadRenderableContent) {
+                _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic))
+            }
+        } else if (post.hasRenderableContent()) {
+            // Render when the body changed, or we didn't already have renderable content
+            if (!hadRenderableContent || post?.text != oldPostText) {
+                updatePostDetailsUi()
+            }
+        } else if (!hadRenderableContent) {
+            // The post exists but its body is empty. A post can't be published without at least
+            // a title, and usually has a featured image too, so render that rather than an
+            // error - the header, image and actions are all built from fields other than the
+            // body. Skipped when something is already on screen, which a refetch that blanked
+            // the body must not tear down.
+            updatePostDetailsUi()
+        }
+    }
+
+    /**
+     * Whether the post has something [org.wordpress.android.ui.reader.ReaderPostRenderer] can
+     * actually put on screen. It renders the excerpt in place of the body for Jetpack posts that
+     * ask for it, so an empty body is normal - and renderable - for those; testing `hasText()`
+     * alone would report a perfectly displayable post as empty.
+     */
+    private fun ReaderPost?.hasRenderableContent() = this != null && (hasText() || shouldShowExcerpt())
+
+    private fun showFetchOutcomeWithoutContent(fetchState: FetchReaderPostState) {
+        when (fetchState) {
             FetchReaderPostState.AlreadyRunning -> {
-                if (!hasCachedPost) {
-                    AppLog.i(T.READER, "reader post detail > fetch post already running")
-                    _uiState.value = ErrorUiState(null)
-                }
+                // A sibling fetch for this post is already in flight (e.g. a re-entry after a
+                // config change); stay on loading and let it resolve the UI.
+                AppLog.i(T.READER, "reader post detail > fetch post already running")
+                _uiState.value = LoadingUiState
             }
-
-            FetchReaderPostState.Failed.NoNetwork -> {
-                if (!hasCachedPost) {
-                    _uiState.value = ErrorUiState(UiStringRes(R.string.no_network_message))
-                }
-            }
-
-            FetchReaderPostState.Failed.RequestFailed -> {
-                if (!hasCachedPost) {
-                    _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic))
-                }
-            }
-
-            FetchReaderPostState.Failed.NotAuthorised -> {
-                if (!hasCachedPost) {
-                    trackAndUpdateNotAuthorisedErrorState()
-                }
-            }
-
-            FetchReaderPostState.Failed.PostNotFound -> {
-                if (!hasCachedPost) {
-                    _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_not_found))
-                }
-            }
+            FetchReaderPostState.Failed.NoNetwork ->
+                _uiState.value = ErrorUiState(UiStringRes(R.string.no_network_message))
+            FetchReaderPostState.Failed.RequestFailed ->
+                _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic))
+            FetchReaderPostState.Failed.NotAuthorised ->
+                trackAndUpdateNotAuthorisedErrorState()
+            FetchReaderPostState.Failed.PostNotFound ->
+                _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_not_found))
+            FetchReaderPostState.Success -> Unit // handled by renderFetchedPost
         }
     }
 

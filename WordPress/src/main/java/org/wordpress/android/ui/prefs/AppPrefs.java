@@ -148,8 +148,6 @@ public class AppPrefs {
         // Keep the local_blog_id + local_post_id values that have HW Acc. turned off
         AZTEC_EDITOR_DISABLE_HW_ACC_KEYS,
 
-        // timestamp of the last update of the reader css styles
-        READER_CSS_UPDATED_TIMESTAMP,
         // Identifier of the next page for the discover /cards endpoint
         READER_CARDS_ENDPOINT_PAGE_HANDLE,
         // used to tell the server to return a different set of data so the content on discover tab doesn't look static
@@ -1294,14 +1292,6 @@ public class AppPrefs {
 
     public static void setReaderAnalyticsCountSitesTimestamp(long timestamp) {
         setLong(DeletablePrefKey.READER_ANALYTICS_COUNT_SITES_TIMESTAMP, timestamp);
-    }
-
-    public static long getReaderCssUpdatedTimestamp() {
-        return getLong(DeletablePrefKey.READER_CSS_UPDATED_TIMESTAMP, 0);
-    }
-
-    public static void setReaderCssUpdatedTimestamp(long timestamp) {
-        setLong(DeletablePrefKey.READER_CSS_UPDATED_TIMESTAMP, timestamp);
     }
 
     public static String getReaderCardsPageHandle() {
