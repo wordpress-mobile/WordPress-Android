@@ -1480,7 +1480,10 @@ class StatsDataSourceImpl @Inject constructor(
                 likeCount = response.likeCount
                     ?.toLong() ?: 0L,
                 commentCount = response.discussion
-                    ?.commentCount?.toLong() ?: 0L
+                    ?.commentCount?.toLong() ?: 0L,
+                url = post.permalink,
+                type = post.postType,
+                status = post.status
             )
         }
     )

@@ -890,7 +890,19 @@ data class PostViewsPost(
     /** Publication date in the site's timezone (format: yyyy-MM-dd HH:mm:ss). */
     val date: String,
     val likeCount: Long,
-    val commentCount: Long
+    val commentCount: Long,
+    /**
+     * The item's public URL, or null when the API supplies no permalink -- it is derived per
+     * request rather than stored, so it can be missing even for an item that exists.
+     */
+    val url: String?,
+    /** The WordPress post type ("post", "page", "attachment"), which decides how [url] is opened. */
+    val type: String,
+    /**
+     * The WordPress post status ("publish", "draft", "trash", ...). An item keeps its view history
+     * after it stops being public, so this says whether [url] still resolves for a reader.
+     */
+    val status: String
 )
 
 /**
