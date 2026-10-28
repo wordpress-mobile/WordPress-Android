@@ -279,6 +279,9 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
         // that fails. Readiness returns when a reloaded editor becomes available.
         gutenbergView.setEditorDidBecomeUnavailable {
             editorReady = false
+            // A reloaded editor starts with empty history and re-enables these as the user edits.
+            mEditorFragmentListener.onToggleUndo(true)
+            mEditorFragmentListener.onToggleRedo(true)
         }
 
         this.gutenbergView = gutenbergView
