@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Post preview works on sites connected with an Application Password**
+  On a self-hosted site added with an Application Password, previewing a post shows the site's own login page instead of failing with "Incorrect username or password". After logging in there, the preview loads.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Post editor → ⋮ → Preview; Posts → View
+  - **Notes:** WordPress only accepts Application Passwords for API requests, so the preview needs the account's real password once. Ticking "Remember Me" keeps the login for 14 days; without it, the login lasts until the session ends. Sites added with the account password are unchanged and still log in automatically.
+
 - **Reader articles no longer get stuck on a spinner**
   Opening a post in the Reader shows the article text without waiting on a network request for its stylesheet, so a slow or stalled connection no longer leaves a blank body behind a spinner that never stops. The comments snippet, tags and likers below the article also appear as soon as the article itself is on screen, instead of waiting for every embed and iframe in the post to finish loading.
   - **Apps:** Both

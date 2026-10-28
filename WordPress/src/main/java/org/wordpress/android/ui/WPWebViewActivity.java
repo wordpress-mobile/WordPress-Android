@@ -69,6 +69,7 @@ import org.wordpress.android.widgets.WPSnackbar;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -441,10 +442,20 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
         String authURL = WPWebViewActivity.getSiteLoginUrl(site);
         Intent intent = new Intent(context, WPWebViewActivity.class);
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, site.getUsername());
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, site.getPassword());
-        intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
+        if (TextUtils.isEmpty(site.getUsername()) || TextUtils.isEmpty(site.getPassword())) {
+            // Sites connected with an Application Password have no account password, and WordPress only
+            // accepts Application Passwords on API requests. Show the site's login page instead, which
+            // redirects to the URL once the user logs in (or immediately, if they already have a session).
+            String[] allowedURLs = Arrays.copyOf(listOfAllowedURLs, listOfAllowedURLs.length + 1);
+            allowedURLs[listOfAllowedURLs.length] = url;
+            listOfAllowedURLs = allowedURLs;
+            intent.putExtra(WPWebViewActivity.URL_TO_LOAD, authURL + "?redirect_to=" + UrlUtils.urlEncode(url));
+        } else {
+            intent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, site.getUsername());
+            intent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, site.getPassword());
+            intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
+            intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
+        }
         intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, site.getId());
         intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, disableLinks);
         intent.putExtra(WPWebViewActivity.SHOW_PREVIEW_MODE_TOGGLE, allowPreviewModeSelection);
