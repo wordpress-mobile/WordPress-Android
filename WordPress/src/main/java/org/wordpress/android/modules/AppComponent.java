@@ -127,16 +127,12 @@ import org.wordpress.android.ui.publicize.PublicizeWebViewFragment;
 import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.reader.CommentNotificationsBottomSheetFragment;
-import org.wordpress.android.ui.reader.ReaderBlogFragment;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
-import org.wordpress.android.ui.reader.ReaderSubsActivity;
 import org.wordpress.android.ui.reader.SubfilterBottomSheetFragment;
 import org.wordpress.android.ui.reader.adapters.CommentSnippetAdapter;
-import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
-import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
@@ -286,8 +282,6 @@ public interface AppComponent {
 
     void inject(NotificationsDetailListFragment object);
 
-    void inject(ReaderSubsActivity object);
-
     void inject(ReaderUpdateLogic object);
 
     void inject(ReaderPostDetailFragment object);
@@ -296,8 +290,6 @@ public interface AppComponent {
 
     void inject(ReaderCommentAdapter object);
 
-
-    void inject(ReaderTagAdapter object);
 
     void inject(ReaderPostDetailHeaderView object);
 
@@ -308,10 +300,6 @@ public interface AppComponent {
     void inject(ReaderSimplePostContainerView object);
 
     void inject(ReaderPostPagerActivity object);
-
-    void inject(ReaderBlogFragment object);
-
-    void inject(ReaderBlogAdapter object);
 
     void inject(ReaderCommentsPostHeaderView object);
 

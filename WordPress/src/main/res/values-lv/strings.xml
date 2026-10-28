@@ -214,7 +214,6 @@ Language: lv
     <string name="reader_toast_posts_from_this_blog_blocked">Šī emuāra ieraksti vairs netiks rādīti</string>
     <string name="reader_toast_err_unable_to_block_blog">Nevar bloķēt šo emuāru</string>
     <string name="reader_no_posts_with_this_tag">Nav ziņu ar šo birku</string>
-    <string name="reader_no_recommended_blogs_title">Nav ieteiktu emuāru</string>
     <string name="reader_label_subscribers_count_single">1 abonents</string>
     <string name="reader_label_choose_interests">Izvēlieties savas intereses</string>
     <string name="reader_toast_err_already_follow_this_blog">Jūs jau esat abonējis šo emuāru</string>

@@ -666,7 +666,6 @@ Language: cs_CZ
     <string name="reader_empty_followed_blogs_button_subscriptions">Přejít na odběry</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Blogy, které odebíráte, nedávno nic nezveřejnily</string>
     <string name="reader_no_followed_blogs_description_subs">Přihlaste se k odběru blogů v sekci Objevovat nebo vyhledejte blog, který se vám líbí.</string>
-    <string name="reader_no_recommended_blogs_title">Žádné doporučené blogy</string>
     <string name="reader_no_posts_with_this_tag">Žádné příspěvky s tímto štítkem</string>
     <string name="reader_toast_err_unable_to_block_blog">Tento blog nelze zablokovat</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Příspěvky z tohoto blogu se již nebudou zobrazovat</string>

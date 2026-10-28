@@ -652,7 +652,6 @@ Language: ar
     <string name="reader_toast_err_unable_to_unfollow_blog">يتعذر إلغاء الاشتراك من المدونة</string>
     <string name="reader_toast_err_follow_not_authorized_to_access_blog">لا يخوَّل لك الوصول إلى هذه المدونة</string>
     <string name="reader_toast_err_unable_to_follow_blog">يتعذر الاشتراك في هذه المدونة</string>
-    <string name="reader_no_recommended_blogs_title">لا توجد مدونات موصى بها</string>
     <string name="reader_toast_err_already_follow_this_blog">لقد اشتركت في هذه المدونة بالفعل</string>
     <string name="reader_label_choose_interests">اختيار اهتماماتك</string>
     <string name="reader_label_subscribers_count_single">مشترك واحد</string>

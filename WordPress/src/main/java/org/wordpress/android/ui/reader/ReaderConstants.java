@@ -55,7 +55,7 @@ public class ReaderConstants {
     static final String ARG_SEARCH_QUERY = "search_query";
     static final String ARG_VIDEO_URL = "video_url";
     static final String ARG_IS_TOP_LEVEL = "is_top_level";
-    static final String ARG_SUBS_TAB_POSITION = "subs_tab_position";
+    public static final String ARG_SUBS_TAB_POSITION = "subs_tab_position";
     static final String ARG_IS_FILTERABLE = "is_filterable";
 
     static final String KEY_POST_SLUGS_RESOLUTION_UNDERWAY = "post_slugs_resolution_underway";

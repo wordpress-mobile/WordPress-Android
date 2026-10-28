@@ -666,7 +666,6 @@ Language: nl
     <string name="reader_empty_followed_blogs_button_subscriptions">Ga naar abonnementen</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">De blogs waarop je geabonneerd bent hebben recent niets geplaatst</string>
     <string name="reader_no_followed_blogs_description_subs">Abonneer je op blogs in Ontdek of zoek een blog die je al leuk vindt.</string>
-    <string name="reader_no_recommended_blogs_title">Geen aanbevolen blogs</string>
     <string name="reader_no_posts_with_this_tag">Geen berichten met deze tag</string>
     <string name="reader_toast_err_unable_to_block_blog">Kan deze blog niet blokkeren</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Berichten van deze blog zullen niet meer getoond worden</string>
