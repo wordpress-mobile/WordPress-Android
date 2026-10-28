@@ -13,7 +13,7 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Apps:** Jetpack
   - **Type:** Changed
   - **Availability:** Everyone
-  - **Where:** Reader → Subscriptions → filter → Edit (tags or blogs)
+  - **Where:** Reader → Subscriptions → the Blogs or Tags chip → Manage
   - **Notes:** Unsubscribing from a row still leaves it in place, so it can be re-followed until the screen is reopened.
 
 - **Open the post or picture from its Stats screen**

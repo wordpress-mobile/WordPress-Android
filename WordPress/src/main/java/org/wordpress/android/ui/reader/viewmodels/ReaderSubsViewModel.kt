@@ -17,7 +17,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.repository.ReaderSubsEvent
 import org.wordpress.android.ui.reader.repository.ReaderSubsRepository
@@ -43,7 +42,6 @@ class ReaderSubsViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val readerTracker: ReaderTracker,
     private val resourceProvider: ResourceProvider,
-    private val appPrefsWrapper: AppPrefsWrapper,
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableStateFlow(
@@ -102,7 +100,6 @@ class ReaderSubsViewModel @Inject constructor(
 
     fun onTabSelected(tab: ReaderSubsTab) {
         savedStateHandle[KEY_SELECTED_TAB] = tab
-        appPrefsWrapper.readerSubsPageTitle = resourceProvider.getString(tab.labelRes)
         _uiState.update { it.copy(selectedTab = tab) }
     }
 
@@ -330,19 +327,11 @@ class ReaderSubsViewModel @Inject constructor(
     private fun trackTag(stat: Stat, slug: String) = readerTracker.trackTag(stat, slug, ReaderTracker.SOURCE_SETTINGS)
 
     /*
-     * the tab saved in this instance, then the one the caller asked for, then the one last viewed
+     * the tab saved in this instance, else the one the caller asked for
      */
-    private fun initialTab(): ReaderSubsTab {
-        savedStateHandle.get<ReaderSubsTab>(KEY_SELECTED_TAB)?.let { return it }
-        savedStateHandle.get<Int>(ReaderConstants.ARG_SUBS_TAB_POSITION)?.let { position ->
-            val tab = ReaderSubsTab.entries.getOrElse(position) { ReaderSubsTab.TAGS }
-            appPrefsWrapper.readerSubsPageTitle = resourceProvider.getString(tab.labelRes)
-            return tab
-        }
-        val title = appPrefsWrapper.readerSubsPageTitle
-        return ReaderSubsTab.entries.firstOrNull { resourceProvider.getString(it.labelRes) == title }
-            ?: ReaderSubsTab.TAGS
-    }
+    private fun initialTab(): ReaderSubsTab = savedStateHandle.get<ReaderSubsTab>(KEY_SELECTED_TAB)
+        ?: savedStateHandle.get<Int>(ReaderConstants.ARG_SUBS_TAB_POSITION)?.let { ReaderSubsTab.entries.getOrNull(it) }
+        ?: ReaderSubsTab.TAGS
 
     private fun ReaderBlog.toSubsSite(): ReaderSubsSite {
         val host = repository.getHost(url)

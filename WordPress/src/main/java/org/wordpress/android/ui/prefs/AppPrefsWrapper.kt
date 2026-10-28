@@ -87,11 +87,6 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         AppPrefs.setReaderDiscoverStreamPageHandle(tagSlug, pageHandle)
     }
 
-    // title of the last active tab in Manage subscriptions
-    var readerSubsPageTitle: String
-        get() = AppPrefs.getReaderSubsPageTitle()
-        set(pageTitle) = AppPrefs.setReaderSubsPageTitle(pageTitle)
-
     var readerTopBarSelectedFeedItemId: String?
         get() = AppPrefs.getReaderTopBarSelectedFeedItemId()
         set(selectedFeedItemId) = AppPrefs.setReaderTopBarSelectedFeedItemId(selectedFeedItemId)

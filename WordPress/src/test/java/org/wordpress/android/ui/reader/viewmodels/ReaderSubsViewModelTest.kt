@@ -27,7 +27,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.repository.ReaderSubsRepository
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
@@ -42,7 +41,6 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var readerTracker: ReaderTracker
     @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
 
     private lateinit var viewModel: ReaderSubsViewModel
 
@@ -59,7 +57,6 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
         whenever(repository.createFollowedTag(any())).thenAnswer { tag(it.arguments[0] as String) }
         whenever(resourceProvider.getString(any())).thenAnswer { string(it.arguments[0] as Int) }
         whenever(resourceProvider.getString(any(), anyVararg())).thenAnswer { string(it.arguments[0] as Int) }
-        whenever(appPrefsWrapper.readerSubsPageTitle).thenReturn("")
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         viewModel = createViewModel()
     }
@@ -91,20 +88,21 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `opens on the tab the caller asked for and remembers it`() {
+    fun `opens on the tab the caller asked for`() {
         viewModel = createViewModel(SavedStateHandle(mapOf(ReaderConstants.ARG_SUBS_TAB_POSITION to 1)))
 
         assertThat(viewModel.uiState.value.selectedTab).isEqualTo(ReaderSubsTab.SITES)
-        verify(appPrefsWrapper).readerSubsPageTitle = string(R.string.reader_page_followed_blogs_title)
     }
 
     @Test
-    fun `otherwise opens on the tab last viewed`() {
-        whenever(appPrefsWrapper.readerSubsPageTitle).thenReturn(string(R.string.reader_page_followed_blogs_title))
+    fun `a selected tab outlives the caller's choice`() {
+        val savedStateHandle = SavedStateHandle(mapOf(ReaderConstants.ARG_SUBS_TAB_POSITION to 1))
+        viewModel = createViewModel(savedStateHandle)
 
-        viewModel = createViewModel()
+        viewModel.onTabSelected(ReaderSubsTab.TAGS)
+        viewModel = createViewModel(savedStateHandle)
 
-        assertThat(viewModel.uiState.value.selectedTab).isEqualTo(ReaderSubsTab.SITES)
+        assertThat(viewModel.uiState.value.selectedTab).isEqualTo(ReaderSubsTab.TAGS)
     }
 
     @Test
@@ -317,7 +315,6 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
         networkUtilsWrapper,
         readerTracker,
         resourceProvider,
-        appPrefsWrapper,
         testDispatcher()
     )
 
