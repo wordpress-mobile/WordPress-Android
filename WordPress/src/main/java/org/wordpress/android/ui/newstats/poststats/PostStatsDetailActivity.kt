@@ -420,7 +420,7 @@ private fun PostHeader(
     // The action carries the URL it needs, so the click lambda cannot be built for a header with
     // nothing to open.
     val onOpenClick: (() -> Unit)? =
-        (postHeaderAction(post?.url, post?.type) as? PostHeaderAction.Open)
+        (postHeaderAction(post?.url, post?.type, post?.status) as? PostHeaderAction.Open)
             ?.let { action ->
                 { onOpenItem(action) }
             }

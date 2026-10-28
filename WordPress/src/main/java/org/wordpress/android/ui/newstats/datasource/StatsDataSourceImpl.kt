@@ -1482,7 +1482,8 @@ class StatsDataSourceImpl @Inject constructor(
                 commentCount = response.discussion
                     ?.commentCount?.toLong() ?: 0L,
                 url = post.permalink,
-                type = post.postType
+                type = post.postType,
+                status = post.status
             )
         }
     )

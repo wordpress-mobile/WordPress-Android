@@ -14,7 +14,7 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Type:** Fixed
   - **Availability:** Flag: android_new_stats
   - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row (or Show all → tap a row); My Site → Stats → Insights → Latest post
-  - **Notes:** The old Stats screen offered the same thing by making the "Showing stats for:" header tappable. The title stays plain and inert, with no arrow, for the site's home page and when WordPress.com supplies no link for the item.
+  - **Notes:** The old Stats screen offered the same thing by making the "Showing stats for:" header tappable. The title stays plain and inert, with no arrow, for the site's home page, when WordPress.com supplies no link for the item, and when the item is no longer public — a post that was published, picked up views and was later moved back to a draft or to the trash keeps its view history here, but its link would no longer open.
 
 - **Re-arranged items in the settings screen.**
   - **Apps:** Both
