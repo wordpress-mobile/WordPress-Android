@@ -1761,6 +1761,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         )
     }
 
+    @Suppress("ReturnCount")
     private fun performPrimaryAction() {
         if (notifyMediaUploadInProgress(editPostRepository.getPost())) {
             return
