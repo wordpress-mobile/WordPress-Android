@@ -16,6 +16,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** Reader → Subscriptions → the Blogs or Tags chip → Manage
   - **Notes:** Unsubscribing from a row still leaves it in place, so it can be re-followed until the screen is reopened.
 
+- **Reader articles no longer get stuck on a spinner**
+  Opening a post in the Reader shows the article text without waiting on a network request for its stylesheet, so a slow or stalled connection no longer leaves a blank body behind a spinner that never stops. The comments snippet, tags and likers below the article also appear as soon as the article itself is on screen, instead of waiting for every embed and iframe in the post to finish loading.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → any post
+  - **Notes:** The stylesheet is now bundled with the app rather than fetched from wordpress.com, so the article body renders identically offline and online. Posts that were affected needed the app restarting or the post reopening to recover; that workaround is no longer documented behaviour.
+
 - **Open the post or picture from its Stats screen**
   On the per-item screen in the redesigned Stats screen, the title is shown in the link colour with an arrow icon after it, and tapping anywhere across the title and the publication date below it opens the item: a post opens in the Reader, and a page or a media attachment opens in the browser. Attachments are usually titled with bare numbers, so this is what tells you which picture a row is about.
   - **Apps:** Both

@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.reader
 
+import android.content.Context
+import android.content.res.AssetManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -8,83 +10,63 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.reader.utils.DateProvider
-import org.wordpress.android.util.NetworkUtilsWrapper
-import java.util.Date
-import java.util.concurrent.TimeUnit
+import org.wordpress.android.viewmodel.ContextProvider
+import java.io.IOException
 
 @RunWith(MockitoJUnitRunner::class)
 class ReaderCssProviderTest {
-    private val networkUtilsWrapper: NetworkUtilsWrapper = mock()
-    private val appPrefsWrapper: AppPrefsWrapper = mock()
-    private val dateProvider: DateProvider = mock()
+    private val assetManager: AssetManager = mock()
+    private val context: Context = mock()
+    private val contextProvider: ContextProvider = mock()
 
     private lateinit var cssProvider: ReaderCssProvider
 
     @Before
     fun setup() {
-        cssProvider = ReaderCssProvider(networkUtilsWrapper, appPrefsWrapper, dateProvider)
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        whenever(contextProvider.getContext()).thenReturn(context)
+        whenever(context.assets).thenReturn(assetManager)
+        cssProvider = ReaderCssProvider(contextProvider)
     }
 
     @Test
-    fun `url with current date suffix is returned when css expired`() {
-        // Arrange
-        val currentDate = TimeUnit.DAYS.toMillis(EXPIRATION_IN_DAYS + 1)
-        val lastUpdated = 0L
+    fun `bundled stylesheet is returned`() {
+        whenever(assetManager.open(CSS_ASSET_NAME)).thenReturn(CSS.byteInputStream())
 
-        whenever(dateProvider.getCurrentDate()).thenReturn(Date(currentDate))
-        whenever(appPrefsWrapper.readerCssUpdatedTimestamp).thenReturn(lastUpdated)
-        // Act
-        val result = cssProvider.getCssUrl()
-        // Assert
-        assertThat(result.substringAfter("?")).isEqualTo(currentDate.toString())
+        val result = cssProvider.getBaseCss()
+
+        assertThat(result).isEqualTo(CSS)
     }
 
     @Test
-    fun `url with lastUpdated suffix is returned when css NOT expired`() {
-        // Arrange
-        val currentDate = getNotExpiredDate()
-        val lastUpdated = 0L
+    fun `stylesheet is only read from assets once`() {
+        whenever(assetManager.open(CSS_ASSET_NAME)).thenReturn(CSS.byteInputStream())
 
-        whenever(dateProvider.getCurrentDate()).thenReturn(Date(currentDate))
-        whenever(appPrefsWrapper.readerCssUpdatedTimestamp).thenReturn(lastUpdated)
-        // Act
-        val result = cssProvider.getCssUrl()
-        // Assert
-        assertThat(result.substringAfter("?")).isEqualTo(lastUpdated.toString())
+        repeat(3) { cssProvider.getBaseCss() }
+
+        verify(assetManager).open(CSS_ASSET_NAME)
     }
 
     @Test
-    fun `url with lastUpdated suffix is returned when device offline even when expired`() {
-        // Arrange
-        val currentDate = getExpiredDate()
-        val lastUpdated = 0L
+    fun `empty css is returned when the asset cannot be read`() {
+        whenever(assetManager.open(CSS_ASSET_NAME)).thenThrow(IOException("missing"))
 
-        whenever(dateProvider.getCurrentDate()).thenReturn(Date(currentDate))
-        whenever(appPrefsWrapper.readerCssUpdatedTimestamp).thenReturn(lastUpdated)
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
-        // Act
-        val result = cssProvider.getCssUrl()
-        // Assert
-        assertThat(result.substringAfter("?")).isEqualTo(lastUpdated.toString())
+        val result = cssProvider.getBaseCss()
+
+        assertThat(result).isEmpty()
     }
 
     @Test
-    fun `currentDate is saved into shared preferences when css expired`() {
-        // Arrange
-        val currentDate = getExpiredDate()
-        val lastUpdated = 0L
+    fun `a failed read is not retried on every render`() {
+        whenever(assetManager.open(CSS_ASSET_NAME)).thenThrow(IOException("missing"))
 
-        whenever(dateProvider.getCurrentDate()).thenReturn(Date(currentDate))
-        whenever(appPrefsWrapper.readerCssUpdatedTimestamp).thenReturn(lastUpdated)
-        // Act
-        cssProvider.getCssUrl()
-        // Assert
-        verify(appPrefsWrapper).readerCssUpdatedTimestamp = currentDate
+        cssProvider.getBaseCss()
+        cssProvider.getBaseCss()
+
+        verify(assetManager).open(CSS_ASSET_NAME)
     }
 
-    private fun getExpiredDate() = TimeUnit.DAYS.toMillis(EXPIRATION_IN_DAYS + 1)
-    private fun getNotExpiredDate() = TimeUnit.DAYS.toMillis(EXPIRATION_IN_DAYS - 1)
+    companion object {
+        private const val CSS_ASSET_NAME = "reader-mobile.css"
+        private const val CSS = ".reader-full-post__story-content{color:#2c3338}"
+    }
 }
