@@ -647,9 +647,6 @@ Language: ja_JP
     <string name="notifications_action_mark_all_as_read">すべてを既読にする</string>
     <string name="notifications_unread_content_description">未読</string>
     <string name="qrcode_media_deeplink_error">サイトが見つかりません。 正しいアカウントにログインしていることを確認してください。</string>
-    <string name="gravatar_info_learn_more_link">Gravatar とは</string>
-    <string name="gravatar_info_description">自分のアバター、名前、概要情報をこちらで更新すると、Gravatar プロフィールを使用するすべてのサイトにも更新が反映されます。</string>
-    <string name="gravatar_info_title">WordPress.com のプロフィールでは Gravatar を活用できます</string>
     <string name="error_media_could_not_share_media_from_device">シェアするメディアを読み込めませんでした。 アプリの権限を確認するか\n        アプリのメディアライブラリをお使いください。</string>
     <string name="site_monitoring_cannot_be_started">現在、サイトのモニタリングを開けません。 後でもう一度お試しください</string>
     <string name="site_monitoring_tab_title_web_server_logs">Web サーバーログ</string>

@@ -657,9 +657,6 @@ Language: ro
     <string name="gutenberg_native_video_caption_empty_663aab49" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Subtitrare video. Nu există</string>
     <string name="gutenberg_native_video_caption_s_0141bd20" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Subtitrare video. %s</string>
     <string name="qrcode_media_deeplink_error">Nu am găsit site-ul. Verifică dacă ești autentificat în contul corect.</string>
-    <string name="gravatar_info_learn_more_link">Ce este Gravatar?</string>
-    <string name="gravatar_info_description">Actualizarea aici a avatarului, numelui și informațiilor despre tine, va face actualizarea lor și pe toate site-urile care folosesc profiluri Gravatar.</string>
-    <string name="gravatar_info_title">Profilul tău WordPress.com este propulsat de Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">Nu pot să încarc media pentru partajare. Te rog să verifici permisiunile aplicației\n        sau folosește biblioteca Media a aplicației.</string>
     <string name="site_monitoring_cannot_be_started">Pentru moment, nu putem să deschidem monitorizare site. Te rog să reîncerci mai târziu</string>
     <string name="site_monitoring_tab_title_web_server_logs">Jurnale server web</string>
