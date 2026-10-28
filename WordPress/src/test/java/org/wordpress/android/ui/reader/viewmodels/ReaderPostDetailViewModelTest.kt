@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.viewmodels
 
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -19,6 +20,7 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -523,7 +525,9 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given fetch succeeds but body is empty, when show post is triggered, then error is shown`() = test {
+    fun `given fetch succeeds but body is empty, when show post is triggered, then post is rendered`() = test {
+        // A post can't be published without a title, and usually has a featured image too, so an
+        // empty body still has a header, image and actions worth showing - not an error.
         val bodylessPost = createDummyReaderPost(readerPost.postId).apply { text = null }
         whenever(readerGetPostUseCase.get(anyLong(), anyLong(), anyBoolean())).thenReturn(Pair(bodylessPost, false))
         whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
@@ -532,8 +536,8 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
         viewModel.onShowPost(blogId = bodylessPost.blogId, postId = bodylessPost.postId)
 
-        assertThat(observers.uiStates.last())
-            .isEqualTo(ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic)))
+        assertThat(observers.uiStates.last()).isInstanceOf(ReaderPostDetailsUiState::class.java)
+        assertThat(observers.uiStates.none { it is ErrorUiState }).isTrue
     }
 
     @Test
@@ -571,6 +575,30 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
         assertThat(observers.uiStates.last()).isInstanceOf(ReaderPostDetailsUiState::class.java)
         assertThat(observers.uiStates.none { it is ErrorUiState }).isTrue
+    }
+
+    @Test
+    fun `given the screen moved to another post, when a stale fetch fails, then no error is shown`() = test {
+        // This screen is reused when navigating to a related post or back through the post
+        // history, so a fetch can resolve long after its post left the screen - it waits up to
+        // the fetch timeout. Its outcome must not be applied to the post now being shown.
+        val stalePost = createDummyReaderPost(99).apply { text = null }
+        val staleFetch = CompletableDeferred<FetchReaderPostState>()
+        whenever(readerGetPostUseCase.get(anyLong(), anyLong(), anyBoolean()))
+            .thenReturn(Pair(stalePost, false))
+            .thenReturn(Pair(readerPost, false))
+        whenever(readerFetchPostUseCase.fetchPost(eq(stalePost.blogId), eq(stalePost.postId), anyBoolean()))
+            .doSuspendableAnswer { staleFetch.await() }
+        whenever(readerFetchPostUseCase.fetchPost(eq(readerPost.blogId), eq(readerPost.postId), anyBoolean()))
+            .thenReturn(FetchReaderPostState.Success)
+        val observers = init(showPost = false)
+
+        viewModel.onShowPost(blogId = stalePost.blogId, postId = stalePost.postId)
+        viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+        staleFetch.complete(FetchReaderPostState.Failed.RequestFailed)
+
+        assertThat(observers.uiStates.none { it is ErrorUiState }).isTrue
+        assertThat(observers.uiStates.last()).isInstanceOf(ReaderPostDetailsUiState::class.java)
     }
 
     @Test

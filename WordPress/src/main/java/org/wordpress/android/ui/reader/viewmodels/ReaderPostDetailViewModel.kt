@@ -173,6 +173,13 @@ class ReaderPostDetailViewModel @Inject constructor(
     val hasPost: Boolean
         get() = post != null
 
+    /**
+     * The post the screen is currently showing. A fetch can outlive the post it was started for -
+     * the same screen is reused when navigating to a related post or back through the post history -
+     * so the result of a fetch is only applied while its post is still the one on screen.
+     */
+    private var currentTarget: Pair<Long, Long>? = null
+
     private data class RenderedLikesData(val blogId: Long, val postId: Long, val numLikes: Int, val iLike: Boolean) {
         fun isMatchingPostLikeStatus(post: ReaderPost): Boolean {
             return blogId != post.blogId || postId != post.postId ||
@@ -384,6 +391,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     fun onShowPost(blogId: Long, postId: Long) {
+        currentTarget = blogId to postId
         launch { getOrFetchReaderPost(blogId = blogId, postId = postId) }
     }
 
@@ -403,6 +411,15 @@ class ReaderPostDetailViewModel @Inject constructor(
         // Always fetch fresh content from the server
         val oldPostText = post?.text
         val fetchState = readerFetchPostUseCase.fetchPost(blogId = blogId, postId = postId, isFeed = isFeed)
+
+        // The user may have moved to another post in this same screen while the fetch was in
+        // flight - it can take up to the fetch timeout to resolve. Applying the outcome now would
+        // error over, or replace, whatever is on screen instead.
+        if (!isCurrentTarget(blogId, postId)) {
+            AppLog.d(T.READER, "reader post detail > discarding fetch result for a post no longer shown")
+            return
+        }
+
         if (fetchState is FetchReaderPostState.Success) {
             renderFetchedPost(blogId, postId, hadRenderableContent = hasRenderableContent, oldPostText = oldPostText)
         } else if (!hasRenderableContent) {
@@ -419,17 +436,24 @@ class ReaderPostDetailViewModel @Inject constructor(
         oldPostText: String?
     ) {
         getReaderPostFromDb(blogId, postId)
-        // Apply the same renderability test as the loading gate: a fetch that "succeeds" but
-        // leaves us with nothing to show must not fall through to a blank article.
-        if (post.hasRenderableContent()) {
+        if (post == null) {
+            // The fetch reported success but left us with no post at all. Surface an error
+            // rather than an endless spinner - but only when there is nothing on screen to keep.
+            if (!hadRenderableContent) {
+                _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic))
+            }
+        } else if (post.hasRenderableContent()) {
             // Render when the body changed, or we didn't already have renderable content
             if (!hadRenderableContent || post?.text != oldPostText) {
                 updatePostDetailsUi()
             }
         } else if (!hadRenderableContent) {
-            // Success but nothing renderable (a missing post or an empty body). Surface an
-            // error rather than a blank article or an endless spinner.
-            _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic))
+            // The post exists but its body is empty. A post can't be published without at least
+            // a title, and usually has a featured image too, so render that rather than an
+            // error - the header, image and actions are all built from fields other than the
+            // body. Skipped when something is already on screen, which a refetch that blanked
+            // the body must not tear down.
+            updatePostDetailsUi()
         }
     }
 
@@ -440,6 +464,13 @@ class ReaderPostDetailViewModel @Inject constructor(
      * alone would report a perfectly displayable post as empty.
      */
     private fun ReaderPost?.hasRenderableContent() = this != null && (hasText() || shouldShowExcerpt())
+
+    /**
+     * Whether the given post is still the one this screen is showing. Null means no post has been
+     * requested through [onShowPost] yet, in which case there is nothing to conflict with.
+     */
+    private fun isCurrentTarget(blogId: Long, postId: Long) =
+        currentTarget?.let { it.first == blogId && it.second == postId } ?: true
 
     private fun showFetchOutcomeWithoutContent(fetchState: FetchReaderPostState) {
         when (fetchState) {
