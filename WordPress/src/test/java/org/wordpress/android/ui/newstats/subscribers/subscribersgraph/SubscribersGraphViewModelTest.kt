@@ -11,7 +11,6 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -20,10 +19,11 @@ import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.SubscribersGraphDataPoint
 import org.wordpress.android.ui.newstats.repository.SubscribersGraphResult
+import org.wordpress.android.ui.newstats.util.StatsDateUnitTest
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
-class SubscribersGraphViewModelTest : BaseUnitTest() {
+class SubscribersGraphViewModelTest : StatsDateUnitTest() {
     @Mock
     private lateinit var selectedSiteRepository:
         SelectedSiteRepository

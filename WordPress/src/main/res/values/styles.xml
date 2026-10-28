@@ -51,7 +51,6 @@
         <item name="wpColorTextPrimary">?attr/wpColorOnSurfaceHigh</item>
         <item name="wpColorTextSecondary">@color/text_secondary</item>
 
-        <item name="grColorInfoBanner">@color/gravatar_info_banner</item>
         <item name="grColorSyncBanner">@color/gravatar_sync_info_banner</item>
 
         <item name="colorGutenbergDivider">@color/wp_grey_lighten_30</item>
@@ -668,8 +667,6 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:paddingEnd">@dimen/me_list_row_padding_horizontal</item>
-        <item name="android:paddingStart">@dimen/me_list_row_padding_horizontal</item>
     </style>
 
     <style name="MeListRowIcon">
@@ -699,8 +696,13 @@
         <item name="android:layout_height">@dimen/divider_size</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:background">?android:attr/listDivider</item>
-        <item name="android:layout_marginEnd">@dimen/content_margin</item>
-        <item name="android:layout_marginStart">@dimen/content_margin</item>
+    </style>
+
+    <style name="MeListCard" parent="WordPress.CardView.Unelevated">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginHorizontal">@dimen/content_margin</item>
+        <item name="android:layout_marginVertical">@dimen/margin_medium</item>
     </style>
 
     <style name="MySiteBlavatarImageView">
@@ -733,12 +735,6 @@
     <style name="NotificationsAvatarTriple" parent="NotificationsAvatarDouble">
         <item name="android:layout_width">@dimen/avatar_sz_extra_medium_with_padding</item>
         <item name="android:layout_height">@dimen/avatar_sz_extra_medium_with_padding</item>
-    </style>
-
-    <style name="MyProfileLabel">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
     </style>
 
     <!--People Management Styles-->
@@ -1584,20 +1580,6 @@
     </style>
 
 
-
-    <style name="OverlayMigrationHelperText" parent="@style/Widget.MaterialComponents.Button.TextButton.Icon">
-        <item name="android:ellipsize">end</item>
-        <item name="android:insetTop">2dp</item>
-        <item name="android:insetBottom">2dp</item>
-        <item name="android:minHeight">0dp</item>
-        <item name="android:padding">0dp</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
-        <item name="android:textColor">?attr/colorPrimary</item>
-        <item name="iconGravity">textEnd</item>
-        <item name="iconSize">@dimen/text_sz_medium</item>
-        <item name="iconTint">@color/jetpack_green_50</item>
-    </style>
 
     <!--MaterialAlertDialogBuilder Styles -->
     <style name="MaterialAlertDialogButtonCenter">

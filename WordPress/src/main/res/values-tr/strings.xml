@@ -657,9 +657,6 @@ Language: tr
     <string name="notifications_action_mark_all_as_read">Tümünü okundu olarak işaretle</string>
     <string name="notifications_unread_content_description">Okunmamış</string>
     <string name="qrcode_media_deeplink_error">Site bulunamadı. Doğru hesapta oturum açtığınızdan emin olun.</string>
-    <string name="gravatar_info_learn_more_link">Gravatar nedir?</string>
-    <string name="gravatar_info_description">Avatarınız, adınız ve hakkında bilgilerinizi güncellerseniz bunlar, Gravatar profillerini kullanan tüm sitelerde güncellenir.</string>
-    <string name="gravatar_info_title">WordPress.com profiliniz Gravatar tarafından desteklenir</string>
     <string name="error_media_could_not_share_media_from_device">Paylaşmak için ortam yüklenemedi. Lütfen uygulama izinlerini denetleyin\n        veya uygulamanın ortam kitaplığını kullanın.</string>
     <string name="site_monitoring_cannot_be_started">Şu anda site izlemeyi açamıyoruz. Lütfen bir süre sonra yeniden deneyin</string>
     <string name="site_monitoring_tab_title_web_server_logs">Site sunucusu günlükleri</string>
