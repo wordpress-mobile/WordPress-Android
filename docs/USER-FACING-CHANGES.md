@@ -8,6 +8,13 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Per-item Stats screen is laid out in cards**
+  The per-item screen in the redesigned Stats screen is now built from the same cards as the rest of Stats, instead of being one flat list on the window background. It has five cards: the item's title, date and totals; the selected day's views with its chart; Recent Weeks; Months and Years; and Avg. Views Per Day. The information shown and what you can do with it are unchanged.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row (or Show all → tap a row); My Site → Stats → Insights → Latest post
+
 - **Open the post or picture from its Stats screen**
   On the per-item screen in the redesigned Stats screen, the title is shown in the link colour with an arrow icon after it, and tapping anywhere across the title and the publication date below it opens the item: a post opens in the Reader, and a page or a media attachment opens in the browser. Attachments are usually titled with bare numbers, so this is what tells you which picture a row is about.
   - **Apps:** Both

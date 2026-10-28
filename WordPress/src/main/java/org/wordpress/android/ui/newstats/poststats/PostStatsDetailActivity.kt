@@ -65,6 +65,7 @@ import org.wordpress.android.ui.newstats.StatsColors
 import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.components.StatsDayViewsChart
 import org.wordpress.android.ui.newstats.components.StatsChangeIndicator
+import org.wordpress.android.ui.newstats.components.StatsCardContainer
 import org.wordpress.android.ui.newstats.components.StatsListHeader
 import org.wordpress.android.ui.newstats.components.StatsLabeledValue
 import org.wordpress.android.ui.newstats.components.StatsViewChange
@@ -72,6 +73,7 @@ import org.wordpress.android.ui.newstats.datasource.PostViewsChange
 import org.wordpress.android.ui.newstats.datasource.PostViewsDailyView
 import org.wordpress.android.ui.newstats.datasource.PostViewsData
 import org.wordpress.android.ui.newstats.datasource.PostViewsWeek
+import org.wordpress.android.ui.newstats.util.ProvideShimmerBrush
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 import org.wordpress.android.ui.newstats.util.formatChangePercentage
 import org.wordpress.android.ui.newstats.util.TEN_THOUSAND
@@ -83,6 +85,8 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
 private val ScreenPadding = 16.dp
+private val CardPadding = 16.dp
+private val CardListVerticalPadding = 8.dp
 private val ChartHeight = 120.dp
 private val HeaderCornerRadius = 8.dp
 private val HeaderVerticalPadding = 8.dp
@@ -95,7 +99,8 @@ private val HeaderMinHeight = 48.dp
 private val OpenItemIconSize = 0.85f.em
 private const val OPEN_ITEM_ICON_ID = "openItemIcon"
 private const val NO_BREAK_SPACE = '\u00A0'
-private const val LOADING_SHIMMER_ITEM_COUNT = 6
+private const val LOADING_SHIMMER_CARD_COUNT = 3
+private const val LOADING_SHIMMER_ROW_COUNT = 3
 
 @AndroidEntryPoint
 class PostStatsDetailActivity : BaseAppCompatActivity() {
@@ -269,20 +274,35 @@ private fun PostStatsDetailScreen(
     }
 }
 
+/**
+ * Placeholder cards, so the screen keeps the same card rhythm it will have once the data lands
+ * instead of reflowing from a flat list into cards.
+ */
 @Composable
 private fun LoadingContent() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(ScreenPadding),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        repeat(LOADING_SHIMMER_ITEM_COUNT) {
-            ShimmerBox(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(32.dp)
-            )
+    ProvideShimmerBrush {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(vertical = CardListVerticalPadding)
+        ) {
+            repeat(LOADING_SHIMMER_CARD_COUNT) {
+                StatsCardContainer {
+                    Column(
+                        modifier = Modifier.padding(CardPadding),
+                        verticalArrangement =
+                            Arrangement.spacedBy(12.dp)
+                    ) {
+                        repeat(LOADING_SHIMMER_ROW_COUNT) {
+                            ShimmerBox(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(24.dp)
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -323,43 +343,72 @@ private fun LoadedContent(
     onOpenItem: (action: PostHeaderAction.Open) -> Unit
 ) {
     val data = state.data
+    // One card per section, the way every other New Stats surface is built: the cards supply
+    // their own horizontal margin, so the list only pads the ends of the scroll.
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(ScreenPadding)
+        contentPadding =
+            PaddingValues(vertical = CardListVerticalPadding)
     ) {
-        item { PostHeader(data, fallbackTitle, onOpenItem) }
-        item { Spacer(modifier = Modifier.height(24.dp)) }
+        item {
+            StatsCardContainer {
+                // The header's own click target carries HeaderVerticalPadding, so the card takes
+                // that much off its top padding to leave the title the usual CardPadding inset.
+                Column(
+                    modifier = Modifier.padding(
+                        start = CardPadding,
+                        end = CardPadding,
+                        top = CardPadding -
+                            HeaderVerticalPadding,
+                        bottom = CardPadding
+                    )
+                ) {
+                    PostHeader(
+                        data,
+                        fallbackTitle,
+                        onOpenItem
+                    )
+                }
+            }
+        }
 
         val selectedDay = state.selectedDay
         if (selectedDay != null) {
             item {
-                DaySelector(
-                    day = selectedDay,
-                    hasPreviousDay = state.hasPreviousDay,
-                    hasNextDay = state.hasNextDay,
-                    onPreviousDay = onPreviousDay,
-                    onNextDay = onNextDay
-                )
-                SelectedDayViews(
-                    views = selectedDay.views,
-                    previousViews = state.previousDay?.views
-                )
-                DayViewsChart(
-                    days = state.chartDays,
-                    selectedIndex = state.selectedChartIndex
-                )
-                Spacer(
-                    modifier = Modifier.height(24.dp)
-                )
+                StatsCardContainer {
+                    Column(
+                        modifier = Modifier
+                            .padding(CardPadding)
+                    ) {
+                        DaySelector(
+                            day = selectedDay,
+                            hasPreviousDay =
+                                state.hasPreviousDay,
+                            hasNextDay = state.hasNextDay,
+                            onPreviousDay = onPreviousDay,
+                            onNextDay = onNextDay
+                        )
+                        SelectedDayViews(
+                            views = selectedDay.views,
+                            previousViews =
+                                state.previousDay?.views
+                        )
+                        DayViewsChart(
+                            days = state.chartDays,
+                            selectedIndex =
+                                state.selectedChartIndex
+                        )
+                    }
+                }
             }
         }
 
-        statsSection(
+        statsCard(
             R.string.stats_detail_recent_weeks,
             data.weeks
         ) { WeekRow(it) }
 
-        statsSection(
+        statsCard(
             R.string.stats_detail_months_and_years,
             data.years
         ) {
@@ -369,7 +418,7 @@ private fun LoadedContent(
             )
         }
 
-        statsSection(
+        statsCard(
             R.string.stats_detail_average_views_per_day,
             data.averages
         ) {
@@ -382,28 +431,36 @@ private fun LoadedContent(
 }
 
 /**
- * A titled list section, skipped entirely when [items] is empty.
+ * A titled list section on its own card, skipped entirely when [items] is empty.
+ *
+ * The rows share the card's single lazy item rather than being lazy items of their own: a card is
+ * one surface, and these lists are the handful of weeks and years the API returns.
  */
-private fun <T> LazyListScope.statsSection(
+private fun <T> LazyListScope.statsCard(
     @StringRes titleResId: Int,
     items: List<T>,
     row: @Composable (T) -> Unit
 ) {
     if (items.isEmpty()) return
     item {
-        SectionTitle(titleResId)
-        StatsListHeader(
-            leftHeaderResId =
-                R.string.stats_months_and_years_period_label,
-            rightHeaderResId =
-                R.string.stats_months_and_years_views_label
-        )
+        StatsCardContainer {
+            Column(modifier = Modifier.padding(CardPadding)) {
+                SectionTitle(titleResId)
+                StatsListHeader(
+                    leftHeaderResId =
+                        R.string
+                            .stats_months_and_years_period_label,
+                    rightHeaderResId =
+                        R.string
+                            .stats_months_and_years_views_label
+                )
+                items.forEachIndexed { index, item ->
+                    if (index > 0) HorizontalDivider()
+                    row(item)
+                }
+            }
+        }
     }
-    items(items.size) { index ->
-        if (index > 0) HorizontalDivider()
-        row(items[index])
-    }
-    item { Spacer(modifier = Modifier.height(24.dp)) }
 }
 
 /**
