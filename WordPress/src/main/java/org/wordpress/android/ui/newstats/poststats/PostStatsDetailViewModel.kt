@@ -153,7 +153,6 @@ class PostStatsDetailViewModel @Inject constructor(
         // GetLikesUseCase registers itself with the dispatcher on construction, so the instance
         // injected here has to be unregistered with the screen.
         getLikesUseCase.clear()
-        super.onCleared()
     }
 
     private fun showError(@StringRes messageResId: Int) {
