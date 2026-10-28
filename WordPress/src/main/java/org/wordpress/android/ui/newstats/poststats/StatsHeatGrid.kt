@@ -26,7 +26,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
@@ -57,8 +56,15 @@ private const val VERY_HIGH_LEVEL = 0.75
 private const val HIGH_LEVEL = 0.5
 private const val MEDIUM_LEVEL = 0.25
 
-/** Above this a shade counts as a light one, and takes dark ink. */
-private const val LUMINANCE_MIDPOINT = 0.5f
+/**
+ * Above this a shade counts as a light one, and takes dark ink.
+ *
+ * [Color.luminance] is WCAG *relative* luminance, so the point where a shade's contrast with
+ * white equals its contrast with black is sqrt(1.05 * 0.05) - 0.05, not the midpoint of the
+ * 0..1 range. Half way up would put white on the mid-tones -- the MEDIUM shade in the light
+ * theme and HIGH in the dark one -- at around 2:1.
+ */
+private const val LUMINANCE_CROSSOVER = 0.179f
 
 /**
  * One square of a heat grid: shaded by [value] against [busiest], with the count written in it when
@@ -82,19 +88,21 @@ internal fun HeatCell(
             .aspectRatio(1f)
             .clip(RoundedCornerShape(CellCornerRadius))
             .background(cellColor)
-            .then(
+            // Clearing rather than merging: the count inside the cell is already part of the
+            // description, so left in the tree it would be read out a second time on its own.
+            .clearAndSetSemantics {
                 if (contentDescription != null) {
-                    Modifier.semantics {
-                        this.contentDescription = contentDescription
-                    }
-                } else {
-                    Modifier.clearAndSetSemantics {}
+                    this.contentDescription = contentDescription
                 }
-            ),
+            },
         contentAlignment = Alignment.Center
     ) {
         if (value > 0) {
             Text(
+                // Abbreviated from a thousand rather than from ten, which is what the rest of
+                // this screen uses: a cell is a square with six or seven of them to a row, so it
+                // is the one place here that is short of width rather than of precision. The
+                // description a screen reader gets carries the figure in full.
                 text = formatStatValue(value),
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.SemiBold,
@@ -186,7 +194,7 @@ private fun intensityColor(value: Long, busiest: Long): Color =
  * period is the darkest square in one and the lightest in the other.
  */
 private fun contentColorOn(background: Color): Color =
-    if (background.luminance() > LUMINANCE_MIDPOINT) Color.Black else Color.White
+    if (background.luminance() > LUMINANCE_CROSSOVER) Color.Black else Color.White
 
 /**
  * The five shades a cell can take, quietest first. These are the colours the old stats
