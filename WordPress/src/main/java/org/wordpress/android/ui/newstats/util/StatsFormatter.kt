@@ -92,6 +92,17 @@ fun formatStatValue(
 const val TEN_THOUSAND = 10_000
 
 /**
+ * The figure in full, however large, e.g. 1200 -> "1,200" and 2500000 -> "2,500,000".
+ *
+ * For what a screen reader is given to read out: a description has no width to save, and the
+ * figure it reads should be the one the sentence around it was built from -- a plural is chosen
+ * on the real count, so speaking "1.2K" would announce a number the grammar does not agree with.
+ */
+fun formatStatValueExact(value: Long): String = NumberFormat
+    .getIntegerInstance(Locale.getDefault())
+    .format(value)
+
+/**
  * Formats a fractional change as a percentage, e.g. -0.25 -> "-25%".
  */
 fun formatChangePercentage(fraction: Double): String =

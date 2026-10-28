@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.datasource.PostViewsWeek
-import org.wordpress.android.ui.newstats.util.formatStatValue
+import org.wordpress.android.ui.newstats.util.formatStatValueExact
 import org.wordpress.android.ui.newstats.util.formatStatsDate
 import org.wordpress.android.ui.newstats.util.formatStatsDayMonth
 import org.wordpress.android.util.AppLog
@@ -141,7 +141,7 @@ private fun dayDescription(day: CalendarDay): String? =
             R.plurals.stats_post_detail_period_views,
             day.views.coerceAtMost(Int.MAX_VALUE.toLong()).toInt(),
             formatStatsDate(day.day),
-            formatStatValue(day.views)
+            formatStatValueExact(day.views)
         )
     } else {
         null

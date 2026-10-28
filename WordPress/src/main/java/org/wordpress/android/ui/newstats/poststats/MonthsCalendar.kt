@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import org.wordpress.android.ui.newstats.datasource.PostViewsYear
 import org.wordpress.android.ui.newstats.datasource.PostViewsYearAverage
-import org.wordpress.android.ui.newstats.util.formatStatValue
+import org.wordpress.android.ui.newstats.util.formatStatValueExact
 import java.time.LocalDate
 import java.time.Month
 import java.time.format.TextStyle as JavaTextStyle
@@ -188,7 +188,7 @@ private fun monthDescription(
             pluralResId,
             month.views.coerceAtMost(Int.MAX_VALUE.toLong()).toInt(),
             "${monthNames[month.month - 1]} $year",
-            formatStatValue(month.views)
+            formatStatValueExact(month.views)
         )
     } else {
         null
