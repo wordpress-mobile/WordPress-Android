@@ -655,9 +655,6 @@ Language: id
     <string name="notifications_action_mark_all_as_read">Tandai semua sebagai sudah dibaca</string>
     <string name="notifications_unread_content_description">Belum dibaca</string>
     <string name="qrcode_media_deeplink_error">Situs tidak ditemukan. Pastikan Anda login ke akun yang dimaksud.</string>
-    <string name="gravatar_info_learn_more_link">Apa itu Gravatar?</string>
-    <string name="gravatar_info_description">Jika avatar, nama, dan deskripsi tentang Anda di sini diubah, perubahan tersebut juga akan muncul di semua situs yang menggunakan profil Gravatar.</string>
-    <string name="gravatar_info_title">Profil WordPress.com Anda kini berbasis Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">Tidak dapat memuat media untuk dibagikan. Harap periksa perizinan aplikasi\n        atau gunakan pustaka media aplikasi.</string>
     <string name="site_monitoring_cannot_be_started">Saat ini kami tidak dapat membuka pemantauan situs. Coba lagi nanti</string>
     <string name="site_monitoring_tab_title_web_server_logs">Log Server web</string>

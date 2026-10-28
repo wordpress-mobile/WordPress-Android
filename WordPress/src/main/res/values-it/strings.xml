@@ -657,9 +657,6 @@ Language: it
     <string name="notifications_action_mark_all_as_read">Contrassegna tutte come lette</string>
     <string name="notifications_unread_content_description">Non lette</string>
     <string name="qrcode_media_deeplink_error">Nessun sito trovato. Assicurati di aver effettuato l\'accesso all\'account corretto.</string>
-    <string name="gravatar_info_learn_more_link">Cos\'è Gravatar?</string>
-    <string name="gravatar_info_description">Aggiornando il tuo avatar, il nome e le informazioni personali qui, verranno aggiornati anche su tutti i siti che utilizzano i profili Gravatar.</string>
-    <string name="gravatar_info_title">Il tuo profilo WordPress.com è gestito da Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">Impossibile caricare i media per la condivisione. Verifica le autorizzazioni dell\'app\n        o utilizza la libreria multimediale dell\'app.</string>
     <string name="site_monitoring_cannot_be_started">Al momento non è possibile aprire il monitoraggio del sito. Riprova più tardi</string>
     <string name="site_monitoring_tab_title_web_server_logs">Log del server web</string>

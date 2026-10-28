@@ -657,9 +657,6 @@ Language: de
     <string name="notifications_action_mark_all_as_read">Alle als gelesen markieren</string>
     <string name="notifications_unread_content_description">Ungelesen</string>
     <string name="qrcode_media_deeplink_error">Die Website wurde nicht gefunden. Überprüfe, ob du im richtigen Konto angemeldet bist.</string>
-    <string name="gravatar_info_learn_more_link">Was ist Gravatar?</string>
-    <string name="gravatar_info_description">Wenn du hier deinen Avatar, Namen und deine Informationen über dich aktualisierst, werden sie auch auf allen Websites aktualisiert, die Gravatar-Profile nutzen.</string>
-    <string name="gravatar_info_title">Dein WordPress.com-Profil wird bereitgestellt von Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">Die Medien können nicht zum Teilen geladen werden. Bitte überprüfe die Berechtigungen der App\n        oder verwende die Mediathek der App.</string>
     <string name="site_monitoring_cannot_be_started">Wir können die Website-Überwachung im Moment nicht öffnen. Bitte versuche es später erneut</string>
     <string name="site_monitoring_tab_title_web_server_logs">Webserver-Protokolle</string>

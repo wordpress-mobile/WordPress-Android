@@ -593,9 +593,6 @@ Language: pt_BR
     <string name="notifications_action_mark_all_as_read">Marcar todas como lidas</string>
     <string name="notifications_unread_content_description">Não lidas</string>
     <string name="qrcode_media_deeplink_error">Site não encontrado. Verifique se você está conectado à conta correta.</string>
-    <string name="gravatar_info_learn_more_link">O que é Gravatar?</string>
-    <string name="gravatar_info_description">Se você atualizar seu avatar, nome e informações pessoais aqui, eles também serão atualizados em todos os sites que usam perfis do Gravatar.</string>
-    <string name="gravatar_info_title">Seu perfil do WordPress.com usa tecnologia Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">Não foi possível carregar a mídia para compartilhamento. Verifique as permissões do aplicativo ou use a biblioteca de mídia do aplicativo.</string>
     <string name="site_monitoring_cannot_be_started">Não podemos abrir o monitoramento do site no momento. Tente novamente mais tarde</string>
     <string name="site_monitoring_tab_title_web_server_logs">Logs do servidor web</string>

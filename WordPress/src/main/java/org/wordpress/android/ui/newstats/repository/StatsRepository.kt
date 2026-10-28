@@ -1383,6 +1383,14 @@ class StatsRepository @Inject constructor(
      * Note: [calculatePeriodDates] handles the hourly cases (Today and single-day Custom) separately
      * before reaching here, so those build their own window ending at "<day> 23:00:00".
      */
+    /**
+     * The window a period covers, for callers that need to *show* the dates a preset resolves to
+     * (the Traffic selector's label) rather than fetch them. Delegates to the same
+     * [currentPeriodWindow] every request is built from, so a label can never name a different
+     * window from the one the cards below it loaded.
+     */
+    fun periodWindow(period: StatsPeriod): Pair<LocalDate, LocalDate> = currentPeriodWindow(period)
+
     private fun currentPeriodWindow(period: StatsPeriod): Pair<LocalDate, LocalDate> {
         val today = today()
         return when (period) {

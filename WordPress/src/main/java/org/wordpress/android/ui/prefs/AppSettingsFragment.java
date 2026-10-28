@@ -43,6 +43,8 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.WhatsNewStore.OnWhatsNewFetched;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewFetchPayload;
+import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.debug.DebugSettingsActivity;
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
 import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet;
 import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet.LocalePickerCallback;
@@ -137,6 +139,10 @@ public class AppSettingsFragment extends PreferenceFragment
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_device_settings))
                 .setOnPreferenceClickListener(this);
+        findPreference(getString(R.string.pref_key_experimental_features))
+                .setOnPreferenceClickListener(this);
+        findPreference(getString(R.string.pref_key_debug_settings))
+                .setOnPreferenceClickListener(this);
 
         mOptimizedImage =
                 (WPSwitchPreference) WPPrefUtils
@@ -201,6 +207,10 @@ public class AppSettingsFragment extends PreferenceFragment
 
         if (!mOpenWebLinksWithJetpackHelper.shouldShowAppSetting()) {
             removeOpenWebLinksWithJetpack();
+        }
+
+        if (!BuildConfig.DEBUG || !BuildConfig.ENABLE_DEBUG_SETTINGS) {
+            getPreferenceScreen().removePreference(findPreference(getString(R.string.pref_key_debug_settings)));
         }
 
         final boolean showPrivacySettings = getActivity()
@@ -377,6 +387,12 @@ public class AppSettingsFragment extends PreferenceFragment
             return handleFeatureAnnouncementClick();
         } else if (preference == mLanguagePreference) {
             return handleAppLocalePickerClick();
+        } else if (preferenceKey.equals(getString(R.string.pref_key_experimental_features))) {
+            ActivityLauncher.viewExperimentalFeatures(getActivity());
+            return true;
+        } else if (preferenceKey.equals(getString(R.string.pref_key_debug_settings))) {
+            startActivity(new Intent(getActivity(), DebugSettingsActivity.class));
+            return true;
         }
 
         return false;
