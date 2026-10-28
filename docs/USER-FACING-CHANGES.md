@@ -16,6 +16,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** Reader → any post
   - **Notes:** The stylesheet is now bundled with the app rather than fetched from wordpress.com, so the article body renders identically offline and online. Posts that were affected needed the app restarting or the post reopening to recover; that workaround is no longer documented behaviour.
 
+- **Open the post or picture from its Stats screen**
+  On the per-item screen in the redesigned Stats screen, the title is shown in the link colour with an arrow icon after it, and tapping anywhere across the title and the publication date below it opens the item: a post opens in the Reader, and a page or a media attachment opens in the browser. Attachments are usually titled with bare numbers, so this is what tells you which picture a row is about.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row (or Show all → tap a row); My Site → Stats → Insights → Latest post
+  - **Notes:** The old Stats screen offered the same thing by making the "Showing stats for:" header tappable. The title stays plain and inert, with no arrow, for the site's home page, when WordPress.com supplies no link for the item, and when the item is no longer public — a post that was published, picked up views and was later moved back to a draft or to the trash keeps its view history here, but its link would no longer open.
+
 - **Re-arranged items in the settings screen.**
   - **Apps:** Both
   - **Type:** Changed
