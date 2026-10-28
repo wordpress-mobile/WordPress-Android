@@ -137,6 +137,12 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     // WordPress' front-end session cookie, sent to every page on the site.
     private static final String LOGGED_IN_COOKIE_PREFIX = "wordpress_logged_in_";
     private static final String WP_LOGIN_PATH_SUFFIX = "/wp-login.php";
+    private static final String STATE_SKIPPED_SITE_LOGIN = "STATE_SKIPPED_SITE_LOGIN";
+    private static final String STATE_FELL_BACK_TO_SITE_LOGIN = "STATE_FELL_BACK_TO_SITE_LOGIN";
+    private static final String STATE_LAST_PAGE_WAS_SITE_LOGIN = "STATE_LAST_PAGE_WAS_SITE_LOGIN";
+    // Core's body_class() adds `logged-in` for a logged-in user, on error pages too.
+    private static final String IS_LOGGED_IN_SCRIPT =
+            "document.body != null && document.body.classList.contains('logged-in')";
     private static final int PREVIEW_INITIAL_SCALE = 90;
     private static final long PREVIEW_JS_EVALUATION_DELAY = 250L;
 
@@ -165,12 +171,19 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     private boolean mSkippedSiteLogin = false;
     private boolean mFellBackToSiteLogin = false;
     private boolean mLastPageWasSiteLogin = false;
+    private boolean mCheckingSiteSession = false;
     private WPWebChromeClientWithFileChooser mWPWebChromeClientWithFileChooser;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         ((WordPress) getApplication()).component().inject(this);
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mSkippedSiteLogin = savedInstanceState.getBoolean(STATE_SKIPPED_SITE_LOGIN);
+            mFellBackToSiteLogin = savedInstanceState.getBoolean(STATE_FELL_BACK_TO_SITE_LOGIN);
+            mLastPageWasSiteLogin = savedInstanceState.getBoolean(STATE_LAST_PAGE_WAS_SITE_LOGIN);
+        }
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
@@ -688,8 +701,20 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     }
 
     @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putBoolean(STATE_SKIPPED_SITE_LOGIN, mSkippedSiteLogin);
+        outState.putBoolean(STATE_FELL_BACK_TO_SITE_LOGIN, mFellBackToSiteLogin);
+        outState.putBoolean(STATE_LAST_PAGE_WAS_SITE_LOGIN, mLastPageWasSiteLogin);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onWebViewPageLoaded() {
         dropSiteLoginPagesFromHistory();
+        if (mCheckingSiteSession) {
+            mCheckingSiteSession = false;
+            checkSiteSessionOnErrorPage();
+        }
         if (mPreviewModeChangeAllowed) {
             enforcePreviewMode();
         } else {
@@ -856,17 +881,31 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     /**
      * Called when the main page of a site-login web view loads with an HTTP error. WordPress answers a draft
      * preview it won't show with 404 (or 403), which is what a stale session cookie produces, for example after
-     * a password change. Show the login page instead, once, so the user can start a fresh session.
+     * a password change. Once the error page has loaded, checkSiteSessionOnErrorPage() decides whether to show
+     * the login page.
      */
     private void onMainFrameHttpError(int statusCode) {
         if (!mSkippedSiteLogin || mFellBackToSiteLogin) {
             return;
         }
         if (statusCode == HttpURLConnection.HTTP_NOT_FOUND || statusCode == HttpURLConnection.HTTP_FORBIDDEN) {
-            AppLog.i(AppLog.T.UTILS, "Site session looks stale (HTTP " + statusCode + "), showing the login page");
-            mFellBackToSiteLogin = true;
-            mWebView.post(this::loadSiteLoginPage);
+            mCheckingSiteSession = true;
         }
+    }
+
+    /**
+     * A genuine error (e.g. a trashed post) still renders for a logged-in user, so only show the login page,
+     * once, when the error page shows the user isn't logged in.
+     */
+    private void checkSiteSessionOnErrorPage() {
+        mWebView.evaluateJavascript(IS_LOGGED_IN_SCRIPT, isLoggedIn -> {
+            if ("true".equals(isLoggedIn) || mFellBackToSiteLogin) {
+                return;
+            }
+            AppLog.i(AppLog.T.UTILS, "Site session looks stale, showing the login page");
+            mFellBackToSiteLogin = true;
+            loadSiteLoginPage();
+        });
     }
 
     /**
