@@ -647,9 +647,6 @@ Language: fr
     <string name="notifications_action_mark_all_as_read">Tout marquer comme lu</string>
     <string name="notifications_unread_content_description">Non lues</string>
     <string name="qrcode_media_deeplink_error">Site non trouvé. Vérifiez que vous êtes connecté(e) sur le bon compte.</string>
-    <string name="gravatar_info_learn_more_link">Qu’est-ce que Gravatar ?</string>
-    <string name="gravatar_info_description">Mettre à jour votre avatar, votre nom et les informations vous concernant ici les mettra également à jour sur l’ensemble des sites qui utilisent les profils Gravatar.</string>
-    <string name="gravatar_info_title">Votre profil WordPress.com est propulsé par Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">Impossible de charger le média pour le partage. Veuillez vérifier les droits de l’application\n        ou utilisez la bibliothèque de médias de l’application.</string>
     <string name="site_monitoring_cannot_be_started">Nous ne sommes pas en mesure d’ouvrir la surveillance du site actuellement. Veuillez réessayer plus tard</string>
     <string name="site_monitoring_tab_title_web_server_logs">Journaux du serveur Web</string>

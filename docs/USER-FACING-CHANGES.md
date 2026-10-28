@@ -16,6 +16,12 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row (or Show all → tap a row); My Site → Stats → Insights → Latest post
   - **Notes:** The old Stats screen offered the same thing by making the "Showing stats for:" header tappable. The title stays plain and inert, with no arrow, for the site's home page and when WordPress.com supplies no link for the item.
 
+- **Re-arranged items in the settings screen.**
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Me
+
 - **Stats dates follow the device language, and the date selector names the dates on screen**
   Every date in the redesigned Stats screen is now written in the order the device's language uses — "Aug 11" in US English, "11 Aug" in British English, "2026年8月11日" in Japanese — instead of always day-then-month. This covers the date selector at the top of Traffic, the Views chart's legend and axis labels, the Subscribers chart, the detail screens' subtitles, and the "Best day" and "Today" cards. The date selector also shows the dates a preset covers on a second line, so "Last 7 days" now reads with "Oct 21 - Oct 27, 2026" underneath it.
   - **Apps:** Both
