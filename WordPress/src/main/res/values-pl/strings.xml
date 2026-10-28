@@ -656,10 +656,7 @@ Language: pl
     <string name="gutenberg_native_video_caption_s_0141bd20" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Podpis pod filmem. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Podpis pod filmem. Pusty</string>
     <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Automatyczne odtwarzanie może spowodować problemy u niektórych użytkowników.</string>
-    <string name="gravatar_info_learn_more_link">Czym jest Gravatar?</string>
-    <string name="gravatar_info_title">Twój profil WordPress.com pochodzi z Gravatar</string>
     <string name="qrcode_media_deeplink_error">Witryna nie znaleziona. Sprawdź, czy jesteś zalogowany na właściwe konto.</string>
-    <string name="gravatar_info_description">Aktualizując tutaj swój awatar, imię i informacje o sobie, zaktualizujesz je również na wszystkich witrynach, które korzystają z profili Gravatar.</string>
     <string name="error_media_could_not_share_media_from_device">Nie mogę wczytać multimediów do udostępnienia. Sprawdź uprawnienia aplikacji\n     lub użyj biblioteki multimedialnej z  aplikacji.</string>
     <string name="site_monitoring_cannot_be_started">Nie możemy teraz otworzyć monitorowania witryny. Spróbuj ponownie później</string>
     <string name="site_monitoring_tab_title_php_logs">Dzienniki PHP</string>

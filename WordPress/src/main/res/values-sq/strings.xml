@@ -551,9 +551,6 @@ Language: sq_AL
     <string name="notifications_action_mark_all_as_read">Vëru krejt shenjë si të lexuar</string>
     <string name="notifications_unread_content_description">Të palexuar</string>
     <string name="qrcode_media_deeplink_error">Sajti s’u gjet. Kontrolloni nëse keni bërë hyrjen te llogaria e saktë.</string>
-    <string name="gravatar_info_learn_more_link">Ç’është Gravatar-i?</string>
-    <string name="gravatar_info_description">Përditësimi i gravatarit, emrit dhe hollësive tuaja këtu, do t’i përditësojë ato nëpër krejt sajtet që përdorin profile Gravatar.</string>
-    <string name="gravatar_info_title">Profili juaj WordPress.com furnizohet nga Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">S’arrihet të ngarkohet media për ndarje me të tjerë. Ju lutemi, kontrolloni lejet e aplikacionit\n        ose përdorni mediatekën e aplikacionit.</string>
     <string name="site_monitoring_cannot_be_started">S’i hapim dot mbikëqyrje sajti tani. Ju lutemi, riprovoni më vonë</string>
     <string name="site_monitoring_tab_title_web_server_logs">Regjistra Shërbyesi</string>

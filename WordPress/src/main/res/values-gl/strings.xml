@@ -656,10 +656,7 @@ Language: gl_ES
     <string name="gutenberg_native_video_caption_s_0141bd20" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Lenda do vídeo. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Lenda do vídeo. Baleiro</string>
     <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">A reprodución automática pode provocar problemas de usabilidade a algúns usuarios.</string>
-    <string name="gravatar_info_learn_more_link">Que é Gravatar?</string>
-    <string name="gravatar_info_title">O teu perfil de WordPress.com funciona con Gravatar</string>
     <string name="qrcode_media_deeplink_error">Sitio non encontrado. Comproba que iniciaches sesión coa conta correcta.</string>
-    <string name="gravatar_info_description">Se actualizas aquí o teu avatar, nome e información sobre ti, tamén se actualizarán en todos os sitios que utilicen perfís Gravatar.</string>
     <string name="error_media_could_not_share_media_from_device">No se poden cargar os medios para compartir. Comproba os permisos da aplicación\n        ou utiliza a biblioteca de medios.</string>
     <string name="site_monitoring_cannot_be_started">Non podemos abrir a monitorización do sitio neste momento. Por favor, inténtao de novo máis tarde</string>
     <string name="site_monitoring_tab_title_metrics">Métricas</string>

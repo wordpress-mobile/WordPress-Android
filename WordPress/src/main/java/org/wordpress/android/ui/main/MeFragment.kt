@@ -58,7 +58,6 @@ import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.accounts.login.WPcomLoginHelper
 import org.wordpress.android.ui.about.UnifiedAboutActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.ME_SCREEN_HELP
-import org.wordpress.android.ui.debug.DebugSettingsActivity
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper
 import org.wordpress.android.ui.main.MeViewModel.RecommendAppUiState
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
@@ -223,23 +222,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         rowSupport.setOnClickListener {
             ActivityLauncher.viewHelp(requireContext(), ME_SCREEN_HELP, viewModel.getSite(), null, supportRouting)
         }
-        learnMoreAtGravatar.setOnClickListener {
-            ActivityLauncher.openUrlExternal(activity, GRAVATAR_URL)
-        }
 
         if (BuildConfig.IS_JETPACK_APP) meAboutIcon.setImageResource(R.drawable.ic_jetpack_logo_white_24dp)
-
-        rowExperimentalFeaturesSettings.setOnClickListener {
-            context?.let { context -> ActivityLauncher.viewExperimentalFeatures(context) }
-        }
-
-        if (BuildConfig.DEBUG && BuildConfig.ENABLE_DEBUG_SETTINGS) {
-            rowDebugSettings.isVisible = true
-            debugSettingsDivider.isVisible = true
-            rowDebugSettings.setOnClickListener {
-                requireContext().startActivity(Intent(requireContext(), DebugSettingsActivity::class.java))
-            }
-        }
 
         rowAboutTheApp.setOnClickListener {
             viewModel.showUnifiedAbout()
@@ -600,6 +584,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             cardAvatar.visibility = View.VISIBLE
             rowMyProfile.visibility = View.VISIBLE
             myProfileDivider.visibility = View.VISIBLE
+            rowAccountSettings.visibility = View.VISIBLE
             accountSettingsDivider.visibility = View.VISIBLE
             loadAvatar(null)
             meUsername.text = getString(R.string.at_username, defaultAccount.userName)
@@ -736,7 +721,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     companion object {
         private const val IS_DISCONNECTING = "IS_DISCONNECTING"
         private const val OPENED_WEB_GRAVATAR_EDITOR = "OPENED_WEB_GRAVATAR_EDITOR"
-        private const val GRAVATAR_URL = "https://www.gravatar.com"
         private const val DIMMED_AVATAR_ALPHA = 0.3f
 
         // The avatars page rather than /profile, which is only a menu of sections: this is the web
