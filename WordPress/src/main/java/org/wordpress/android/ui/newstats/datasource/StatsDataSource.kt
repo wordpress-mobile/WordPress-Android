@@ -936,11 +936,13 @@ sealed class PostViewsChange {
 }
 
 /**
- * A year's view total. The API also breaks this down by month, which nothing displays yet.
+ * A year's view total, with the months it is made of.
  */
 data class PostViewsYear(
     val year: String,
-    val total: Long
+    val total: Long,
+    /** Views per month, keyed 1-12. The API leaves out months that had none. */
+    val months: Map<Int, Long> = emptyMap()
 )
 
 /**

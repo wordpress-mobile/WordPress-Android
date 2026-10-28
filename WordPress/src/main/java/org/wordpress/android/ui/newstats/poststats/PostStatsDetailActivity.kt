@@ -451,7 +451,7 @@ private fun LoadedContent(
                         // about how much the weeks add up to -- so the total is spelled out.
                         DetailRow(
                             label = stringResource(
-                                R.string.stats_post_detail_weeks_total
+                                R.string.stats_post_detail_total
                             ),
                             value = formatStatValue(
                                 drawnWeeks.sumOf { it.total },
@@ -463,14 +463,32 @@ private fun LoadedContent(
             }
         }
 
-        statsCard(
-            R.string.stats_detail_months_and_years,
-            data.years
-        ) {
-            DetailRow(
-                label = it.year,
-                value = formatStatValue(it.total, TEN_THOUSAND)
-            )
+        if (data.years.isNotEmpty()) {
+            item {
+                StatsCardContainer {
+                    Column(
+                        modifier = Modifier
+                            .padding(CardPadding)
+                    ) {
+                        SectionTitle(
+                            R.string.stats_detail_months_and_years
+                        )
+                        MonthsCalendar(years = data.years)
+                        HorizontalDivider(
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                        DetailRow(
+                            label = stringResource(
+                                R.string.stats_post_detail_total
+                            ),
+                            value = formatStatValue(
+                                data.years.sumOf { it.total },
+                                TEN_THOUSAND
+                            )
+                        )
+                    }
+                }
+            }
         }
 
         statsCard(

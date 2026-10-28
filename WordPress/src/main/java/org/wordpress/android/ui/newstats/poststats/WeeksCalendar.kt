@@ -1,42 +1,22 @@
 package org.wordpress.android.ui.newstats.poststats
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.annotation.ColorRes
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.clearAndSetSemantics
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.datasource.PostViewsWeek
 import org.wordpress.android.ui.newstats.util.formatStatValue
@@ -50,23 +30,7 @@ import java.time.temporal.TemporalAdjusters
 import java.time.format.TextStyle as JavaTextStyle
 import java.util.Locale
 
-private val CellCornerRadius = 8.dp
-private val CellGap = 3.dp
-private val LabelGap = 8.dp
-private val LegendSwatchSize = 14.dp
-private val LegendGap = 4.dp
 private const val DAYS_IN_WEEK = 7
-
-/**
- * The quartiles of the busiest day on show, matching the thresholds the old stats posting-activity
- * grid buckets by, so the app's two heat grids shade alike.
- */
-private const val VERY_HIGH_LEVEL = 0.75
-private const val HIGH_LEVEL = 0.5
-private const val MEDIUM_LEVEL = 0.25
-
-/** Above this a shade counts as a light one, and takes dark ink. */
-private const val LUMINANCE_MIDPOINT = 0.5f
 
 /**
  * "Recent Weeks" as a calendar heat grid: one row per week, one square per day, shaded by how busy
@@ -75,8 +39,8 @@ private const val LUMINANCE_MIDPOINT = 0.5f
  * Drawn as a plain [Column] of [Row]s rather than a lazy grid. The grid is a fixed seven columns by
  * however many weeks the API returned -- a few dozen cells -- so laziness buys nothing, and the
  * card is itself one item of the screen's `LazyColumn`, where a nested lazy grid would need a
- * height given to it up front. Weights give the columns equal widths at any card width, and
- * [Modifier.aspectRatio] keeps the cells square without measuring anything by hand.
+ * height given to it up front. Weights give the columns equal widths at any card width, and the
+ * cell's own aspect ratio keeps it square without measuring anything by hand.
  */
 @Composable
 internal fun WeeksCalendar(
@@ -156,40 +120,25 @@ private fun WeekRow(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = row.label,
-            style = style,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.End,
-            maxLines = 1,
-            modifier = Modifier.width(labelWidth)
-        )
+        RowLabel(text = row.label, width = labelWidth, style = style)
         Spacer(modifier = Modifier.width(LabelGap))
         row.days.forEach { day ->
-            DayCell(
-                day = day,
-                busiestDay = busiestDay,
+            HeatCell(
+                value = day.views,
+                busiest = busiestDay,
+                contentDescription = dayDescription(day),
                 modifier = Modifier.weight(1f)
             )
         }
     }
 }
 
-/**
- * One day's square. A day with views names itself and its count; an empty one is left out of the
- * accessibility tree entirely, so the grid is swiped through in a handful of steps rather than in
- * one per cell.
- */
+/** What a screen reader reads out for a day that had views, and nothing for one that had none. */
 @Composable
-private fun DayCell(
-    day: CalendarDay,
-    busiestDay: Long,
-    modifier: Modifier = Modifier
-) {
-    val cellColor = intensityColor(day.views, busiestDay)
-    val description = if (day.views > 0) {
+private fun dayDescription(day: CalendarDay): String? =
+    if (day.views > 0) {
         pluralStringResource(
-            R.plurals.stats_post_detail_day_views,
+            R.plurals.stats_post_detail_period_views,
             day.views.coerceAtMost(Int.MAX_VALUE.toLong()).toInt(),
             formatStatsDate(day.day),
             formatStatValue(day.views)
@@ -197,121 +146,6 @@ private fun DayCell(
     } else {
         null
     }
-    Box(
-        modifier = modifier
-            .padding(CellGap)
-            .aspectRatio(1f)
-            .clip(RoundedCornerShape(CellCornerRadius))
-            .background(cellColor)
-            .then(
-                if (description != null) {
-                    Modifier.semantics {
-                        contentDescription = description
-                    }
-                } else {
-                    Modifier.clearAndSetSemantics {}
-                }
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        if (day.views > 0) {
-            Text(
-                text = formatStatValue(day.views),
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = contentColorOn(cellColor)
-            )
-        }
-    }
-}
-
-/**
- * The shading scale, read left to right. It is decorative -- every shade it explains is already
- * written as a number in the grid above -- so it is hidden from screen readers.
- */
-@Composable
-private fun IntensityLegend(style: TextStyle) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clearAndSetSemantics {},
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = stringResource(R.string.stats_post_detail_activity_less),
-            style = style,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        IntensityLevel.entries.forEach { level ->
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = LegendGap)
-                    .size(LegendSwatchSize)
-                    .clip(CircleShape)
-                    .background(colorResource(level.colorResId))
-            )
-        }
-        Text(
-            text = stringResource(R.string.stats_post_detail_activity_more),
-            style = style,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}
-
-/**
- * The width of the widest week label, so every row's grid starts at the same place whatever the
- * locale writes there -- "Oct 26", "26. Okt." and "10月26日" are not the same width, and a column
- * fixed in dp would either clip one or waste space on all the others.
- */
-@Composable
-private fun rememberLabelWidth(
-    labels: List<String>,
-    style: TextStyle
-): Dp {
-    val measurer = rememberTextMeasurer()
-    val density = LocalDensity.current
-    return remember(labels, style, density) {
-        with(density) {
-            labels.maxOf { measurer.measure(it, style).size.width }.toDp()
-        }
-    }
-}
-
-@Composable
-private fun intensityColor(views: Long, busiestDay: Long): Color =
-    colorResource(IntensityLevel.of(views, busiestDay).colorResId)
-
-/**
- * Readable ink for a count written on a heat cell. Taken from the shade's own brightness rather
- * than from the level, because the scale inverts between the light and dark themes -- the busiest
- * day is the darkest square in one and the lightest in the other.
- */
-private fun contentColorOn(background: Color): Color =
-    if (background.luminance() > LUMINANCE_MIDPOINT) Color.Black else Color.White
-
-/**
- * The five shades a day can take, quietest first. These are the colours the old stats
- * posting-activity grid uses, which already have a dark-theme set of their own.
- */
-internal enum class IntensityLevel(@ColorRes val colorResId: Int) {
-    NONE(R.color.stats_activity_very_low),
-    LOW(R.color.stats_activity_low),
-    MEDIUM(R.color.stats_activity_medium),
-    HIGH(R.color.stats_activity_high),
-    VERY_HIGH(R.color.stats_activity_very_high);
-
-    companion object {
-        fun of(views: Long, busiestDay: Long): IntensityLevel = when {
-            views <= 0 || busiestDay <= 0 -> NONE
-            views > busiestDay * VERY_HIGH_LEVEL -> VERY_HIGH
-            views > busiestDay * HIGH_LEVEL -> HIGH
-            views > busiestDay * MEDIUM_LEVEL -> MEDIUM
-            else -> LOW
-        }
-    }
-}
 
 /** A week as the grid draws it: its label and exactly [DAYS_IN_WEEK] squares. */
 internal data class CalendarRow(

@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Months and Years is a calendar grid**
+  The Months and Years card on the per-item screen in the redesigned Stats screen now draws each year as twelve squares, January to December, shaded from pale to solid by how many views that month got — the same grid the Recent Weeks card above it uses. The current year is always shown, even for an item that has had no views this year. A Total row under the grid adds the years up. This replaces the list of year totals.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row (or Show all → tap a row); My Site → Stats → Insights → Latest post
+  - **Notes:** The twelve months are drawn as two rows of six, because twelve across leaves each square too narrow to write a figure in on a phone. Months the server left out — including the ones that have not happened yet — are drawn as empty squares, so the columns mean the same month in every year. Each square with views names its month, year and count to a screen reader. The shading scale is shared with Recent Weeks but the two grids are scaled separately, each against its own busiest period.
+
 - **Recent Weeks is a calendar grid**
   The Recent Weeks card on the per-item screen in the redesigned Stats screen now draws each week as a row of seven squares, one per day, shaded from pale to solid by how many views that day got. The busiest day of the range is the darkest square, a "Less … More" key sits under the grid, and a Total row under that adds the weeks up. Each square names its date and view count to a screen reader. This replaces the list of week totals with their week-on-week percentages.
   - **Apps:** Both

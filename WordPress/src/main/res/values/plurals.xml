@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- New Stats: one day of the per-item screen's Recent Weeks grid, read out by screen readers -->
-    <plurals name="stats_post_detail_day_views">
+    <plurals name="stats_post_detail_period_views">
         <item quantity="one">%1$s: %2$s view</item>
         <item quantity="other">%1$s: %2$s views</item>
     </plurals>

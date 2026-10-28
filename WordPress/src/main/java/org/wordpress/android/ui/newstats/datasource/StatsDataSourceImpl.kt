@@ -1460,7 +1460,13 @@ class StatsDataSourceImpl @Inject constructor(
             .map { (year, value) ->
                 PostViewsYear(
                     year = year,
-                    total = value.total.toLong()
+                    total = value.total.toLong(),
+                    // The API keys months "1" to "12" and leaves out the quiet ones.
+                    months = value.months
+                        .mapNotNull { (month, views) ->
+                            month.toIntOrNull()?.let { it to views.toLong() }
+                        }
+                        .toMap()
                 )
             }
             .sortedByDescending { it.year },
