@@ -172,30 +172,7 @@ class EngagedPeopleListViewModel @Inject constructor(
     }
 
     private fun buildUiState(updateLikesState: GetLikesState?, listScenario: ListScenario?): EngagedPeopleListUiState {
-        val showHeader = listScenario?.showLikedItemHeader == true
-        val likedItem = listScenario?.headerData?.takeIf { showHeader }?.let {
-            listOf(
-                LikedItem(
-                    author = it.authorName,
-                    postOrCommentText = it.snippetText,
-                    authorAvatarUrl = it.authorAvatarUrl,
-                    likedItemId = listScenario.postOrCommentId,
-                    likedItemSiteId = listScenario.siteId,
-                    likedItemSiteUrl = listScenario.commentSiteUrl,
-                    likedItemPostId = listScenario.commentPostId,
-                    authorUserId = it.authorUserId,
-                    authorPreferredSiteId = it.authorPreferredSiteId,
-                    authorPreferredSiteUrl = it.authorPreferredSiteUrl,
-                    onGravatarClick = ::onSiteLinkHolderClicked,
-                    blogPreviewSource = when (listScenario.source) {
-                        LIKE_NOTIFICATION_LIST -> ReaderTracker.SOURCE_NOTIFICATION
-                        LIKE_READER_LIST -> ReaderTracker.SOURCE_READER_LIKE_LIST
-                        LIKE_STATS_LIST -> ReaderTracker.SOURCE_STATS_LIKE_LIST
-                    },
-                    onHeaderClicked = ::onHeaderClicked
-                )
-            )
-        } ?: listOf()
+        val likedItem = buildLikedItem(listScenario)
 
         val likers = when (updateLikesState) {
             is LikesData -> {
@@ -236,6 +213,38 @@ class EngagedPeopleListViewModel @Inject constructor(
             emptyStateButtonText = emptyStateAction?.let { UiStringRes(R.string.retry) }
         )
     }
+
+    /**
+     * The header naming the thing that was liked, for the callers that have the data for it. Stats
+     * opens this list knowing only the item's id and like count, so it asks for no header.
+     */
+    private fun buildLikedItem(listScenario: ListScenario?): List<EngageItem> =
+        listScenario?.headerData
+            ?.takeIf { listScenario.showLikedItemHeader }
+            ?.let { headerData ->
+                listOf(
+                    LikedItem(
+                        author = headerData.authorName,
+                        postOrCommentText = headerData.snippetText,
+                        authorAvatarUrl = headerData.authorAvatarUrl,
+                        likedItemId = listScenario.postOrCommentId,
+                        likedItemSiteId = listScenario.siteId,
+                        likedItemSiteUrl = listScenario.commentSiteUrl,
+                        likedItemPostId = listScenario.commentPostId,
+                        authorUserId = headerData.authorUserId,
+                        authorPreferredSiteId = headerData.authorPreferredSiteId,
+                        authorPreferredSiteUrl = headerData.authorPreferredSiteUrl,
+                        onGravatarClick = ::onSiteLinkHolderClicked,
+                        blogPreviewSource = when (listScenario.source) {
+                            LIKE_NOTIFICATION_LIST -> ReaderTracker.SOURCE_NOTIFICATION
+                            LIKE_READER_LIST -> ReaderTracker.SOURCE_READER_LIKE_LIST
+                            LIKE_STATS_LIST -> ReaderTracker.SOURCE_STATS_LIKE_LIST
+                        },
+                        onHeaderClicked = ::onHeaderClicked
+                    )
+                )
+            }
+            ?: listOf()
 
     private fun appendNextPageLoaderIfNeeded(
         hasMore: Boolean,
