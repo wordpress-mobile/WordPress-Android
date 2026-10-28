@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,13 +16,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -37,14 +43,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsColors
 import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.components.StatsDayViewsChart
@@ -62,16 +78,38 @@ import org.wordpress.android.ui.newstats.util.TEN_THOUSAND
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import org.wordpress.android.ui.newstats.util.formatStatsDate
 import org.wordpress.android.ui.newstats.util.formatStatsDateTime
+import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.ui.stats.StatsConstants
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
 private val ScreenPadding = 16.dp
 private val ChartHeight = 120.dp
+private val HeaderCornerRadius = 8.dp
+private val HeaderVerticalPadding = 8.dp
+private val HeaderMinHeight = 48.dp
+
+/**
+ * Sized relative to the title's own font size, so the arrow keeps its proportion when the reader
+ * scales text up.
+ */
+private val OpenItemIconSize = 0.85f.em
+private const val OPEN_ITEM_ICON_ID = "openItemIcon"
 private const val LOADING_SHIMMER_ITEM_COUNT = 6
 
 @AndroidEntryPoint
 class PostStatsDetailActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var newStatsTracker: NewStatsTracker
+
+    @Inject
+    lateinit var analyticsTracker: AnalyticsTrackerWrapper
+
+    @Inject
+    lateinit var selectedSiteRepository: SelectedSiteRepository
+
+    @Inject
+    lateinit var activityNavigator: ActivityNavigator
 
     private val viewModel: PostStatsDetailViewModel
         by viewModels()
@@ -106,9 +144,34 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
                             ::onBackPressed,
                     onRetry = { viewModel.loadData(postId) },
                     onPreviousDay = viewModel::selectPreviousDay,
-                    onNextDay = viewModel::selectNextDay
+                    onNextDay = viewModel::selectNextDay,
+                    onOpenItem = { url, type ->
+                        openItem(postId, url, type)
+                    }
                 )
             }
+        }
+    }
+
+    /**
+     * Opens the item these stats belong to, the way the old stats header does: a post goes to the
+     * Reader, and everything else -- pages and attachments -- to its own URL, which is the only
+     * way to tell which image an attachment row refers to (CMM-2580).
+     */
+    private fun openItem(postId: Long, url: String, type: String) {
+        val site = selectedSiteRepository.getSelectedSite()
+        analyticsTracker.track(
+            Stat.STATS_DETAIL_POST_TAPPED,
+            site
+        )
+        if (type == StatsConstants.ITEM_TYPE_POST && site != null) {
+            ReaderActivityLauncher.showReaderPostDetail(
+                this,
+                site.siteId,
+                postId
+            )
+        } else {
+            activityNavigator.openInCustomTab(this, url)
         }
     }
 
@@ -147,7 +210,8 @@ private fun PostStatsDetailScreen(
     onBackPressed: () -> Unit,
     onRetry: () -> Unit,
     onPreviousDay: () -> Unit,
-    onNextDay: () -> Unit
+    onNextDay: () -> Unit,
+    onOpenItem: (url: String, type: String) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -190,7 +254,8 @@ private fun PostStatsDetailScreen(
                         state = uiState,
                         fallbackTitle = postTitle,
                         onPreviousDay = onPreviousDay,
-                        onNextDay = onNextDay
+                        onNextDay = onNextDay,
+                        onOpenItem = onOpenItem
                     )
             }
         }
@@ -247,14 +312,15 @@ private fun LoadedContent(
     state: PostStatsDetailUiState.Loaded,
     fallbackTitle: String,
     onPreviousDay: () -> Unit,
-    onNextDay: () -> Unit
+    onNextDay: () -> Unit,
+    onOpenItem: (url: String, type: String) -> Unit
 ) {
     val data = state.data
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(ScreenPadding)
     ) {
-        item { PostHeader(data, fallbackTitle) }
+        item { PostHeader(data, fallbackTitle, onOpenItem) }
         item { Spacer(modifier = Modifier.height(24.dp)) }
 
         val selectedDay = state.selectedDay
@@ -338,26 +404,68 @@ private fun <T> LazyListScope.statsSection(
  * falls back to the title the caller supplied and shows views alone.
  */
 @Composable
-private fun PostHeader(data: PostViewsData, fallbackTitle: String) {
+private fun PostHeader(
+    data: PostViewsData,
+    fallbackTitle: String,
+    onOpenItem: (url: String, type: String) -> Unit
+) {
     val post = data.post
-    Column {
-        Text(
-            text = post?.title?.takeIf { it.isNotBlank() }
-                ?: fallbackTitle,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        if (post != null) {
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = formatStatsDateTime(post.date),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme
-                    .onSurfaceVariant
-            )
+    // Held as locals so the click lambda captures them already narrowed to non-null; the home
+    // page has no post, and a post can come back without a permalink.
+    val url = post?.url?.takeIf { it.isNotBlank() }
+    val type = post?.type
+    val onOpenClick: (() -> Unit)? =
+        if (url != null && type != null) {
+            { onOpenItem(url, type) }
+        } else {
+            null
         }
-        Spacer(modifier = Modifier.height(16.dp))
+    val openLabel = stringResource(R.string.stats_open_link)
+    Column {
+        // Title and date read as one thing and open as one thing, the way the old stats
+        // "Showing stats for:" header did. Rounding and padding give the ripple a shape of its
+        // own, so a press reads as a press rather than as a full-bleed flash.
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(
+                    RoundedCornerShape(HeaderCornerRadius)
+                )
+                .then(
+                    if (onOpenClick != null) {
+                        Modifier
+                            .clickable(
+                                onClickLabel = openLabel,
+                                onClick = onOpenClick
+                            )
+                            .heightIn(min = HeaderMinHeight)
+                    } else {
+                        Modifier
+                    }
+                )
+                .padding(
+                    vertical = HeaderVerticalPadding
+                )
+                .semantics(mergeDescendants = true) {}
+        ) {
+            PostHeaderTitle(
+                title = post?.title
+                    ?.takeIf { it.isNotBlank() }
+                    ?: fallbackTitle,
+                linked = onOpenClick != null
+            )
+            if (post != null) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = formatStatsDateTime(post.date),
+                    style = MaterialTheme.typography
+                        .bodySmall,
+                    color = MaterialTheme.colorScheme
+                        .onSurfaceVariant
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(8.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement =
@@ -382,6 +490,57 @@ private fun PostHeader(data: PostViewsData, fallbackTitle: String) {
             }
         }
     }
+}
+
+/**
+ * The item's title, in the link colour and trailed by the "opens elsewhere" arrow when there is
+ * something to open. The arrow is inline text rather than a sibling icon so that it follows the
+ * last word of a wrapped title instead of stranding on a line of its own.
+ */
+@Composable
+private fun PostHeaderTitle(title: String, linked: Boolean) {
+    Text(
+        text = if (linked) {
+            buildAnnotatedString {
+                append(title)
+                append(' ')
+                appendInlineContent(OPEN_ITEM_ICON_ID)
+            }
+        } else {
+            AnnotatedString(title)
+        },
+        inlineContent = mapOf(
+            OPEN_ITEM_ICON_ID to openItemInlineIcon()
+        ),
+        style = MaterialTheme.typography.titleLarge,
+        fontWeight = FontWeight.Bold,
+        color = if (linked) {
+            MaterialTheme.colorScheme.primary
+        } else {
+            MaterialTheme.colorScheme.onSurface
+        }
+    )
+}
+
+/**
+ * The arrow carries no description of its own: the whole header is the click target, and its
+ * click label describes the action once.
+ */
+private fun openItemInlineIcon() = InlineTextContent(
+    Placeholder(
+        width = OpenItemIconSize,
+        height = OpenItemIconSize,
+        placeholderVerticalAlign =
+            PlaceholderVerticalAlign.TextCenter
+    )
+) {
+    Icon(
+        imageVector = Icons.AutoMirrored
+            .Filled.OpenInNew,
+        contentDescription = null,
+        modifier = Modifier.fillMaxSize(),
+        tint = MaterialTheme.colorScheme.primary
+    )
 }
 
 /**

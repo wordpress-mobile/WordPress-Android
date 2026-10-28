@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Open the post or picture from its Stats screen**
+  On the per-item screen in the redesigned Stats screen, the title is shown in the link colour with an arrow icon after it, and tapping anywhere across the title and the publication date below it opens the item: a post opens in the Reader, and a page or a media attachment opens in the browser. Attachments are usually titled with bare numbers, so this is what tells you which picture a row is about.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row
+  - **Notes:** The old Stats screen offered the same thing by making the "Showing stats for:" header tappable. The title stays plain and inert, with no arrow, for the site's home page and when WordPress.com supplies no link for the item.
+
 - **Stats dates follow the device language, and the date selector names the dates on screen**
   Every date in the redesigned Stats screen is now written in the order the device's language uses — "Aug 11" in US English, "11 Aug" in British English, "2026年8月11日" in Japanese — instead of always day-then-month. This covers the date selector at the top of Traffic, the Views chart's legend and axis labels, the Subscribers chart, the detail screens' subtitles, and the "Best day" and "Today" cards. The date selector also shows the dates a preset covers on a second line, so "Last 7 days" now reads with "Oct 21 - Oct 27, 2026" underneath it.
   - **Apps:** Both
