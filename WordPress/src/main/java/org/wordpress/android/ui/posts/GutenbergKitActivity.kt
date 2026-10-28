@@ -1464,6 +1464,9 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         // for GutenbergKitActivity but are hidden rather than removed to avoid duplicating
         // menu resources until a more comprehensive menu cleanup is undertaken.
 
+        // A crashed editor can't switch modes until it reloads.
+        menu.findItem(R.id.menu_html_mode)?.isEnabled = editorFragment?.isEditorUnavailable() != true
+
         // Hide "Switch to Gutenberg" - not needed since we're already using GutenbergKit
         menu.findItem(R.id.menu_switch_to_gutenberg)?.isVisible = false
 

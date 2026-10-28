@@ -57,6 +57,9 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     @Volatile
     private var savingLocked = false
 
+    @Volatile
+    private var editorUnavailable = false
+
     private val textWatcher = LiveTextWatcher()
     private var historyChangeListener: HistoryChangeListener? = null
     private var featuredImageChangeListener: FeaturedImageChangeListener? = null
@@ -276,6 +279,8 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
 
         gutenbergView.setEditorDidBecomeAvailable {
             editorReady = true
+            editorUnavailable = false
+            activity?.invalidateOptionsMenu()
             mEditorFragmentListener.onEditorFragmentContentReady(
                 ArrayList<Any?>(), false
             )
@@ -290,6 +295,8 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             // A reloaded editor starts with empty history and re-enables these as the user edits.
             mEditorFragmentListener.onToggleUndo(true)
             mEditorFragmentListener.onToggleRedo(true)
+            editorUnavailable = true
+            activity?.invalidateOptionsMenu()
         }
 
         this.gutenbergView = gutenbergView
@@ -567,6 +574,12 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     }
 
     fun isEditorReady(): Boolean = editorReady
+
+    /**
+     * Whether the editor crashed and has not reloaded yet, so controls that depend on it
+     * should be disabled. Unlike [isEditorReady], this is false while the editor first loads.
+     */
+    fun isEditorUnavailable(): Boolean = editorUnavailable
 
     /**
      * Whether the editor has locked saving, e.g. during a media upload, so saving
