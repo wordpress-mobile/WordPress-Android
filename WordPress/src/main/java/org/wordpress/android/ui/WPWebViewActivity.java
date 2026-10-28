@@ -129,6 +129,8 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     public static final String SHOW_PREVIEW_MODE_TOGGLE = "SHOW_PREVIEW_MODE_TOGGLE";
     public static final String PRIVATE_AT_SITE_ID = "PRIVATE_AT_SITE_ID";
     public static final String WEBVIEW_SOURCE = "WEBVIEW_SOURCE";
+    // WordPress' front-end session cookie, sent to every page on the site.
+    private static final String LOGGED_IN_COOKIE_PREFIX = "wordpress_logged_in_";
     private static final int PREVIEW_INITIAL_SCALE = 90;
     private static final long PREVIEW_JS_EVALUATION_DELAY = 250L;
 
@@ -444,12 +446,16 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         Intent intent = new Intent(context, WPWebViewActivity.class);
         if (TextUtils.isEmpty(site.getUsername()) || TextUtils.isEmpty(site.getPassword())) {
             // Sites connected with an Application Password have no account password, and WordPress only
-            // accepts Application Passwords on API requests. Show the site's login page instead, which
-            // redirects to the URL once the user logs in (or immediately, if they already have a session).
+            // accepts Application Passwords on API requests. Unless the web view already has a session for
+            // the site, show the site's login page instead, which redirects to the URL once the user logs in.
+            // wp-login.php can't detect an existing session itself: the cookie it checks is scoped to /wp-admin.
             String[] allowedURLs = Arrays.copyOf(listOfAllowedURLs, listOfAllowedURLs.length + 1);
             allowedURLs[listOfAllowedURLs.length] = url;
             listOfAllowedURLs = allowedURLs;
-            intent.putExtra(WPWebViewActivity.URL_TO_LOAD, authURL + "?redirect_to=" + UrlUtils.urlEncode(url));
+            String cookies = CookieManager.getInstance().getCookie(url);
+            boolean hasSession = cookies != null && cookies.contains(LOGGED_IN_COOKIE_PREFIX);
+            intent.putExtra(WPWebViewActivity.URL_TO_LOAD,
+                    hasSession ? url : authURL + "?redirect_to=" + UrlUtils.urlEncode(url));
         } else {
             intent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, site.getUsername());
             intent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, site.getPassword());
