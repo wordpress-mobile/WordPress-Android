@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.addCallback
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.material3.SnackbarDuration
@@ -43,6 +44,8 @@ class ReaderSubsActivity : BaseAppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // so the bars draw behind the system bars, and the keyboard's insets reach Compose on every API level
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         onBackPressedDispatcher.addCallback(this) { finishWithResult() }

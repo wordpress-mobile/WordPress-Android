@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.views.compose.subs
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -11,11 +12,13 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -45,6 +48,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -75,7 +79,7 @@ private val listBottomPadding = 88.dp
  * Manage subscriptions: the followed tags and sites in swipeable tabs, with a field for following a
  * tag or site by name or URL. The Sites tab can be searched.
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun ReaderSubsScreen(
     uiState: ReaderSubsUiState,
@@ -144,8 +148,11 @@ fun ReaderSubsScreen(
         },
         bottomBar = { EntryBar(uiState, actions) },
         floatingActionButton = {
-            FloatingActionButton(onClick = actions.onShowInterests) {
-                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add))
+            // hidden while typing, since it would cover the list - or the top bar in landscape
+            if (!WindowInsets.isImeVisible) {
+                FloatingActionButton(onClick = actions.onShowInterests) {
+                    Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add))
+                }
             }
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -262,6 +269,8 @@ private fun TagRow(tag: ReaderSubsTag, onFollowClick: () -> Unit) {
 
 @Composable
 private fun SitesPage(sites: List<ReaderSubsSite>?, searchQuery: String?, actions: ReaderSubsActions) {
+    // keyed by the query so each search starts at the top, rather than where the previous list was scrolled to
+    val listState = rememberSaveable(searchQuery, saver = LazyListState.Saver) { LazyListState() }
     when {
         sites == null -> LoadingState()
         sites.isEmpty() && !searchQuery.isNullOrEmpty() -> EmptyContentM3(
@@ -274,6 +283,7 @@ private fun SitesPage(sites: List<ReaderSubsSite>?, searchQuery: String?, action
             modifier = Modifier.fillMaxSize()
         )
         else -> LazyColumn(
+            state = listState,
             contentPadding = PaddingValues(bottom = listBottomPadding),
             modifier = Modifier.fillMaxSize()
         ) {
