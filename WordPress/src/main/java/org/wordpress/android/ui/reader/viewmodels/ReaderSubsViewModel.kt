@@ -60,12 +60,19 @@ class ReaderSubsViewModel @Inject constructor(
     // the tags followed when the screen opened, so the result can say whether they changed
     private var initialTagSlugs: Set<String>? = null
 
+    // follow requests in flight, keyed by tag slug or site key, so a reload keeps their buttons disabled
+    private val pendingTagFollows = mutableMapOf<String, Boolean>()
+    private val pendingSiteFollows = mutableMapOf<String, Boolean>()
+
+    // false until the tags and followed sites have been synced, which waits for a connection
+    private var hasRequestedUpdate = false
+
     private var tagsJob: Job? = null
     private var sitesJob: Job? = null
 
     init {
         readerTracker.track(Stat.READER_MANAGE_VIEW_DISPLAYED)
-        requestUpdate(EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS))
+        requestInitialUpdate()
         loadTags()
         launch {
             repository.events.collect { event ->
@@ -80,7 +87,10 @@ class ReaderSubsViewModel @Inject constructor(
     /*
      * the user may have changed what they follow from a site preview, so reload the sites
      */
-    fun onResume() = loadSites()
+    fun onResume() {
+        requestInitialUpdate()
+        loadSites()
+    }
 
     fun onBack() = readerTracker.track(Stat.READER_MANAGE_VIEW_DISMISSED)
 
@@ -96,7 +106,9 @@ class ReaderSubsViewModel @Inject constructor(
         _uiState.update { it.copy(selectedTab = tab) }
     }
 
-    fun onInterestsClosed() = requestUpdate(EnumSet.of(UpdateTask.TAGS))
+    fun onInterestsClosed() {
+        requestUpdate(EnumSet.of(UpdateTask.TAGS))
+    }
 
     fun onSiteSearchOpened() = setSiteSearchQuery("")
 
@@ -111,13 +123,15 @@ class ReaderSubsViewModel @Inject constructor(
     fun onTagFollowClicked(item: ReaderSubsTag) {
         if (!checkConnection()) return
         val follow = !item.isFollowing
+        // tracked up front, as before, so leaving the screen mid-request doesn't lose it
+        trackTag(if (follow) Stat.READER_TAG_FOLLOWED else Stat.READER_TAG_UNFOLLOWED, item.slug)
+        pendingTagFollows[item.slug] = follow
         updateTag(item.slug) { it.copy(isFollowing = follow, isFollowEnabled = false) }
         launch {
             val succeeded = repository.followTag(item.tag, follow)
+            pendingTagFollows.remove(item.slug)
             updateTag(item.slug) { it.copy(isFollowEnabled = true) }
-            if (succeeded) {
-                trackTag(if (follow) Stat.READER_TAG_FOLLOWED else Stat.READER_TAG_UNFOLLOWED, item.slug)
-            } else {
+            if (!succeeded) {
                 showMessage(R.string.reader_toast_err_removing_tag)
                 loadTags()
             }
@@ -127,9 +141,11 @@ class ReaderSubsViewModel @Inject constructor(
     fun onSiteFollowClicked(site: ReaderSubsSite) {
         if (!checkConnection()) return
         val follow = !site.isFollowing
+        pendingSiteFollows[site.key] = follow
         updateSite(site.key) { it.copy(isFollowing = follow, isFollowEnabled = false) }
         launch {
             val succeeded = repository.followSite(site.blogId, site.feedId, follow)
+            pendingSiteFollows.remove(site.key)
             updateSite(site.key) { it.copy(isFollowing = if (succeeded) follow else !follow, isFollowEnabled = true) }
             if (succeeded) {
                 requestUpdate(EnumSet.of(UpdateTask.TAGS))
@@ -228,7 +244,14 @@ class ReaderSubsViewModel @Inject constructor(
     private fun loadTags() {
         tagsJob?.cancel()
         tagsJob = launch {
-            val tags = repository.getFollowedTags().map { ReaderSubsTag(it) }
+            val tags = repository.getFollowedTags().map { tag ->
+                val pendingFollow = pendingTagFollows[tag.tagSlug]
+                if (pendingFollow == null) {
+                    ReaderSubsTag(tag)
+                } else {
+                    ReaderSubsTag(tag, isFollowing = pendingFollow, isFollowEnabled = false)
+                }
+            }
             if (initialTagSlugs == null) {
                 initialTagSlugs = tags.map { it.slug }.toSet()
             }
@@ -240,7 +263,10 @@ class ReaderSubsViewModel @Inject constructor(
         sitesJob?.cancel()
         sitesJob = launch {
             followedSites = repository.getFollowedBlogs()
-                .map { it.toSubsSite() }
+                .map { blog ->
+                    val site = blog.toSubsSite()
+                    pendingSiteFollows[site.key]?.let { site.copy(isFollowing = it, isFollowEnabled = false) } ?: site
+                }
                 .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.title })
             applySiteSearch()
         }
@@ -274,10 +300,19 @@ class ReaderSubsViewModel @Inject constructor(
         applySiteSearch()
     }
 
-    private fun requestUpdate(tasks: EnumSet<UpdateTask>) {
-        if (networkUtilsWrapper.isNetworkAvailable()) {
-            repository.requestUpdate(tasks)
+    private fun requestInitialUpdate() {
+        if (!hasRequestedUpdate) {
+            hasRequestedUpdate = requestUpdate(EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS))
         }
+    }
+
+    /*
+     * returns false if there's no connection to request the update with
+     */
+    private fun requestUpdate(tasks: EnumSet<UpdateTask>): Boolean {
+        val isAvailable = networkUtilsWrapper.isNetworkAvailable()
+        if (isAvailable) repository.requestUpdate(tasks)
+        return isAvailable
     }
 
     private fun checkConnection(): Boolean {

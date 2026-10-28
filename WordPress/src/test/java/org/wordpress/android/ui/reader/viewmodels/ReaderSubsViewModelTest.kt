@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.viewmodels
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.emptyFlow
@@ -14,6 +15,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyVararg
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -73,6 +75,19 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
         verify(repository).requestUpdate(EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS))
         assertThat(viewModel.uiState.value.tags!!.map { it.slug }).containsExactly("cats", "dogs")
         assertThat(viewModel.uiState.value.sites).isNull()
+    }
+
+    @Test
+    fun `an update that couldn't be requested offline is retried on resume`() {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        viewModel = createViewModel()
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+
+        viewModel.onResume()
+        viewModel.onResume()
+
+        // once from the first view model's init, and once from the first resume of the second
+        verify(repository, times(2)).requestUpdate(EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS))
     }
 
     @Test
@@ -148,6 +163,26 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
         viewModel.onSiteSearchClosed()
 
         assertThat(viewModel.uiState.value.sites).hasSize(2)
+    }
+
+    @Test
+    fun `a reload during a site follow keeps its button disabled`() = test {
+        whenever(repository.getFollowedBlogs()).thenReturn(listOf(blog(1, "Apple", "https://fruit.com")))
+        val follow = CompletableDeferred<Boolean>()
+        whenever(repository.followSite(1, 0, false)).doSuspendableAnswer { follow.await() }
+        viewModel.onResume()
+
+        viewModel.onSiteFollowClicked(viewModel.uiState.value.sites!!.first())
+        viewModel.onResume()
+
+        with(viewModel.uiState.value.sites!!.first()) {
+            assertThat(isFollowing).isFalse
+            assertThat(isFollowEnabled).isFalse
+        }
+
+        follow.complete(true)
+
+        assertThat(viewModel.uiState.value.sites!!.first().isFollowEnabled).isTrue
     }
 
     @Test
