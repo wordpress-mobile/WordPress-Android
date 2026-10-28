@@ -14,6 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
+import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -67,8 +70,10 @@ import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUi
 import org.wordpress.android.widgets.WPSnackbar;
 
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -128,6 +133,16 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     public static final String SHOW_PREVIEW_MODE_TOGGLE = "SHOW_PREVIEW_MODE_TOGGLE";
     public static final String PRIVATE_AT_SITE_ID = "PRIVATE_AT_SITE_ID";
     public static final String WEBVIEW_SOURCE = "WEBVIEW_SOURCE";
+    public static final String SITE_LOGIN_URL = "SITE_LOGIN_URL";
+    // WordPress' front-end session cookie, sent to every page on the site.
+    private static final String LOGGED_IN_COOKIE_PREFIX = "wordpress_logged_in_";
+    private static final String WP_LOGIN_PATH_SUFFIX = "/wp-login.php";
+    private static final String STATE_SKIPPED_SITE_LOGIN = "STATE_SKIPPED_SITE_LOGIN";
+    private static final String STATE_FELL_BACK_TO_SITE_LOGIN = "STATE_FELL_BACK_TO_SITE_LOGIN";
+    private static final String STATE_LAST_PAGE_WAS_SITE_LOGIN = "STATE_LAST_PAGE_WAS_SITE_LOGIN";
+    // Core's body_class() adds `logged-in` for a logged-in user, on error pages too.
+    private static final String IS_LOGGED_IN_SCRIPT =
+            "document.body != null && document.body.classList.contains('logged-in')";
     private static final int PREVIEW_INITIAL_SCALE = 90;
     private static final long PREVIEW_JS_EVALUATION_DELAY = 250L;
 
@@ -153,12 +168,22 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     private View mPreviewModeButton;
     private TextView mDesktopPreviewHint;
     private boolean mPreviewModeChangeAllowed = false;
+    private boolean mSkippedSiteLogin = false;
+    private boolean mFellBackToSiteLogin = false;
+    private boolean mLastPageWasSiteLogin = false;
+    private boolean mCheckingSiteSession = false;
     private WPWebChromeClientWithFileChooser mWPWebChromeClientWithFileChooser;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         ((WordPress) getApplication()).component().inject(this);
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mSkippedSiteLogin = savedInstanceState.getBoolean(STATE_SKIPPED_SITE_LOGIN);
+            mFellBackToSiteLogin = savedInstanceState.getBoolean(STATE_FELL_BACK_TO_SITE_LOGIN);
+            mLastPageWasSiteLogin = savedInstanceState.getBoolean(STATE_LAST_PAGE_WAS_SITE_LOGIN);
+        }
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
@@ -441,10 +466,20 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
         String authURL = WPWebViewActivity.getSiteLoginUrl(site);
         Intent intent = new Intent(context, WPWebViewActivity.class);
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, site.getUsername());
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, site.getPassword());
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
+        if (TextUtils.isEmpty(site.getUsername()) || TextUtils.isEmpty(site.getPassword())) {
+            // Sites connected with an Application Password have no account password, and WordPress only
+            // accepts Application Passwords on API requests, so the user logs in on the site's own login page.
+            // See loadWebContent(). Allow the login page's host too, which can differ from the post's.
+            String[] allowedURLs = Arrays.copyOf(listOfAllowedURLs, listOfAllowedURLs.length + 1);
+            allowedURLs[listOfAllowedURLs.length] = authURL;
+            listOfAllowedURLs = allowedURLs;
+            intent.putExtra(WPWebViewActivity.SITE_LOGIN_URL, authURL);
+        } else {
+            intent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, site.getUsername());
+            intent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, site.getPassword());
+            intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
+        }
         intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, site.getId());
         intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, disableLinks);
         intent.putExtra(WPWebViewActivity.SHOW_PREVIEW_MODE_TOGGLE, allowPreviewModeSelection);
@@ -649,7 +684,16 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                 AppLog.e(AppLog.T.UTILS, "No valid blog passed to WPWebViewActivity");
                 setResultIfNeededAndFinish();
             }
-            webViewClient = new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL, this);
+            webViewClient = new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL, this) {
+                @Override
+                public void onReceivedHttpError(WebView view, WebResourceRequest request,
+                                                WebResourceResponse errorResponse) {
+                    super.onReceivedHttpError(view, request, errorResponse);
+                    if (request.isForMainFrame()) {
+                        onMainFrameHttpError(errorResponse.getStatusCode());
+                    }
+                }
+            };
         } else {
             webViewClient = new URLFilteredWebViewClient(allowedURL, this);
         }
@@ -657,7 +701,20 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     }
 
     @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putBoolean(STATE_SKIPPED_SITE_LOGIN, mSkippedSiteLogin);
+        outState.putBoolean(STATE_FELL_BACK_TO_SITE_LOGIN, mFellBackToSiteLogin);
+        outState.putBoolean(STATE_LAST_PAGE_WAS_SITE_LOGIN, mLastPageWasSiteLogin);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onWebViewPageLoaded() {
+        dropSiteLoginPagesFromHistory();
+        if (mCheckingSiteSession) {
+            mCheckingSiteSession = false;
+            checkSiteSessionOnErrorPage();
+        }
         if (mPreviewModeChangeAllowed) {
             enforcePreviewMode();
         } else {
@@ -758,7 +815,18 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             }
         }
 
-        if (TextUtils.isEmpty(authURL) && TextUtils.isEmpty(username) && TextUtils.isEmpty(password)) {
+        String siteLoginUrl = extras.getString(SITE_LOGIN_URL);
+        if (!TextUtils.isEmpty(siteLoginUrl)) {
+            // wp-login.php can't detect an existing session itself, since the cookie it checks is scoped to
+            // /wp-admin. So skip the login page when the web view has a front-end session cookie for the site,
+            // and fall back to it if the session turns out to be stale (see onMainFrameHttpError()).
+            if (hasSiteSession(addressToLoad)) {
+                mSkippedSiteLogin = true;
+                loadUrl(addressToLoad);
+            } else {
+                loadSiteLoginPage();
+            }
+        } else if (TextUtils.isEmpty(authURL) && TextUtils.isEmpty(username) && TextUtils.isEmpty(password)) {
             // Only the URL to load is passed to this activity. Use the normal un-authenticated
             // loader, optionally with our referrer header
             String referrerUrl = extras.getString(REFERRER_URL);
@@ -774,16 +842,86 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                 AppLog.e(AppLog.T.UTILS, "Empty or null or invalid auth URL passed to WPWebViewActivity");
                 ToastUtils.showToast(this, R.string.invalid_site_url_message, ToastUtils.Duration.SHORT);
                 setResultIfNeededAndFinish();
+                return;
             }
 
             if (TextUtils.isEmpty(username)) {
                 AppLog.e(AppLog.T.UTILS, "Username empty/null");
                 ToastUtils.showToast(this, R.string.incorrect_credentials, ToastUtils.Duration.SHORT);
                 setResultIfNeededAndFinish();
+                return;
             }
 
             loadAuthenticatedUrl(authURL, addressToLoad, username, password);
         }
+    }
+
+    private static boolean hasSiteSession(String url) {
+        String cookies = CookieManager.getInstance().getCookie(url);
+        return cookies != null && cookies.contains(LOGGED_IN_COOKIE_PREFIX);
+    }
+
+    private void loadSiteLoginPage() {
+        Bundle extras = getIntent().getExtras();
+        String loginUrl = Uri.parse(extras.getString(SITE_LOGIN_URL)).buildUpon()
+                             .appendQueryParameter("redirect_to", extras.getString(URL_TO_LOAD))
+                             .build()
+                             .toString();
+        loadUrl(loginUrl);
+    }
+
+    private boolean isSiteLoginPage(@Nullable String url) {
+        if (url == null) {
+            return false;
+        }
+        String path = Uri.parse(url).getPath();
+        return path != null && path.endsWith(WP_LOGIN_PATH_SUFFIX);
+    }
+
+    /**
+     * Called when the main page of a site-login web view loads with an HTTP error. WordPress answers a draft
+     * preview it won't show with 404 (or 403), which is what a stale session cookie produces, for example after
+     * a password change. Once the error page has loaded, checkSiteSessionOnErrorPage() decides whether to show
+     * the login page.
+     */
+    private void onMainFrameHttpError(int statusCode) {
+        if (!mSkippedSiteLogin || mFellBackToSiteLogin) {
+            return;
+        }
+        if (statusCode == HttpURLConnection.HTTP_NOT_FOUND || statusCode == HttpURLConnection.HTTP_FORBIDDEN) {
+            mCheckingSiteSession = true;
+        }
+    }
+
+    /**
+     * A genuine error (e.g. a trashed post) still renders for a logged-in user, so only show the login page,
+     * once, when the error page shows the user isn't logged in.
+     */
+    private void checkSiteSessionOnErrorPage() {
+        mWebView.evaluateJavascript(IS_LOGGED_IN_SCRIPT, isLoggedIn -> {
+            if ("true".equals(isLoggedIn) || mFellBackToSiteLogin) {
+                return;
+            }
+            AppLog.i(AppLog.T.UTILS, "Site session looks stale, showing the login page");
+            mFellBackToSiteLogin = true;
+            loadSiteLoginPage();
+        });
+    }
+
+    /**
+     * In a site-login web view, keep the login page out of the back stack: once the user is past it, Back
+     * should close the preview rather than return to the login form. The login page itself also drops
+     * anything before it, such as the error page left by a stale session.
+     */
+    private void dropSiteLoginPagesFromHistory() {
+        if (TextUtils.isEmpty(getIntent().getStringExtra(SITE_LOGIN_URL))) {
+            return;
+        }
+        boolean isLoginPage = isSiteLoginPage(mWebView.getUrl());
+        if (isLoginPage || mLastPageWasSiteLogin) {
+            mWebView.clearHistory();
+        }
+        mLastPageWasSiteLogin = isLoginPage;
     }
 
     /**
