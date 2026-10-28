@@ -13,7 +13,7 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Apps:** Both
   - **Type:** Fixed
   - **Availability:** Flag: android_new_stats
-  - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row
+  - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row (or Show all → tap a row); My Site → Stats → Insights → Latest post
   - **Notes:** The old Stats screen offered the same thing by making the "Showing stats for:" header tappable. The title stays plain and inert, with no arrow, for the site's home page and when WordPress.com supplies no link for the item.
 
 - **Stats dates follow the device language, and the date selector names the dates on screen**

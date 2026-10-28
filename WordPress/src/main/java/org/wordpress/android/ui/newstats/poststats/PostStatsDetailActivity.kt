@@ -79,7 +79,6 @@ import org.wordpress.android.ui.newstats.util.formatStatValue
 import org.wordpress.android.ui.newstats.util.formatStatsDate
 import org.wordpress.android.ui.newstats.util.formatStatsDateTime
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
-import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
@@ -95,6 +94,7 @@ private val HeaderMinHeight = 48.dp
  */
 private val OpenItemIconSize = 0.85f.em
 private const val OPEN_ITEM_ICON_ID = "openItemIcon"
+private const val NO_BREAK_SPACE = '\u00A0'
 private const val LOADING_SHIMMER_ITEM_COUNT = 6
 
 @AndroidEntryPoint
@@ -145,8 +145,8 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
                     onRetry = { viewModel.loadData(postId) },
                     onPreviousDay = viewModel::selectPreviousDay,
                     onNextDay = viewModel::selectNextDay,
-                    onOpenItem = { url, type ->
-                        openItem(postId, url, type)
+                    onOpenItem = { action ->
+                        openItem(postId, action)
                     }
                 )
             }
@@ -154,24 +154,31 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
     }
 
     /**
-     * Opens the item these stats belong to, the way the old stats header does: a post goes to the
-     * Reader, and everything else -- pages and attachments -- to its own URL, which is the only
-     * way to tell which image an attachment row refers to (CMM-2580).
+     * Opens the item these stats belong to: a post goes to the Reader, and everything else --
+     * pages and attachments -- to its own URL, which is the only way to tell which image an
+     * attachment row refers to (CMM-2580).
+     *
+     * Only the post case matches the old stats header. That header discarded the item's type on
+     * its way to `NavigationTarget.ViewPost`, whose `postType` then defaulted to
+     * `StatsConstants.ITEM_TYPE_POST`, so it sent pages to the Reader as well. Routing them to
+     * their own URL instead is deliberate: it is what every other New Stats row does with a URL.
      */
-    private fun openItem(postId: Long, url: String, type: String) {
+    private fun openItem(postId: Long, action: PostHeaderAction.Open) {
         val site = selectedSiteRepository.getSelectedSite()
         analyticsTracker.track(
             Stat.STATS_DETAIL_POST_TAPPED,
             site
         )
-        if (type == StatsConstants.ITEM_TYPE_POST && site != null) {
+        // The Reader is addressed by blog id, so without a selected site to read it from the
+        // item's own URL is all there is to go on.
+        if (action is PostHeaderAction.OpenInReader && site != null) {
             ReaderActivityLauncher.showReaderPostDetail(
                 this,
                 site.siteId,
                 postId
             )
         } else {
-            activityNavigator.openInCustomTab(this, url)
+            activityNavigator.openInCustomTab(this, action.url)
         }
     }
 
@@ -211,7 +218,7 @@ private fun PostStatsDetailScreen(
     onRetry: () -> Unit,
     onPreviousDay: () -> Unit,
     onNextDay: () -> Unit,
-    onOpenItem: (url: String, type: String) -> Unit
+    onOpenItem: (action: PostHeaderAction.Open) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -313,7 +320,7 @@ private fun LoadedContent(
     fallbackTitle: String,
     onPreviousDay: () -> Unit,
     onNextDay: () -> Unit,
-    onOpenItem: (url: String, type: String) -> Unit
+    onOpenItem: (action: PostHeaderAction.Open) -> Unit
 ) {
     val data = state.data
     LazyColumn(
@@ -407,19 +414,16 @@ private fun <T> LazyListScope.statsSection(
 private fun PostHeader(
     data: PostViewsData,
     fallbackTitle: String,
-    onOpenItem: (url: String, type: String) -> Unit
+    onOpenItem: (action: PostHeaderAction.Open) -> Unit
 ) {
     val post = data.post
-    // Held as locals so the click lambda captures them already narrowed to non-null; the home
-    // page has no post, and a post can come back without a permalink.
-    val url = post?.url?.takeIf { it.isNotBlank() }
-    val type = post?.type
+    // The action carries the URL it needs, so the click lambda cannot be built for a header with
+    // nothing to open.
     val onOpenClick: (() -> Unit)? =
-        if (url != null && type != null) {
-            { onOpenItem(url, type) }
-        } else {
-            null
-        }
+        (postHeaderAction(post?.url, post?.type) as? PostHeaderAction.Open)
+            ?.let { action ->
+                { onOpenItem(action) }
+            }
     val openLabel = stringResource(R.string.stats_open_link)
     Column {
         // Title and date read as one thing and open as one thing, the way the old stats
@@ -495,7 +499,8 @@ private fun PostHeader(
 /**
  * The item's title, in the link colour and trailed by the "opens elsewhere" arrow when there is
  * something to open. The arrow is inline text rather than a sibling icon so that it follows the
- * last word of a wrapped title instead of stranding on a line of its own.
+ * last word of a wrapped title, and it is joined to that word by a no-break space so the two wrap
+ * together instead of leaving the arrow on a line of its own.
  */
 @Composable
 private fun PostHeaderTitle(title: String, linked: Boolean) {
@@ -503,8 +508,15 @@ private fun PostHeaderTitle(title: String, linked: Boolean) {
         text = if (linked) {
             buildAnnotatedString {
                 append(title)
-                append(' ')
-                appendInlineContent(OPEN_ITEM_ICON_ID)
+                // Both spaces are no-break: an ordinary one is a line-break opportunity, which
+                // would let the arrow strand on a line of its own after a title that just fits.
+                // The placeholder's own text is what a screen reader reads, so it is a space
+                // rather than the replacement character the default would put there.
+                append(NO_BREAK_SPACE)
+                appendInlineContent(
+                    OPEN_ITEM_ICON_ID,
+                    alternateText = NO_BREAK_SPACE.toString()
+                )
             }
         } else {
             AnnotatedString(title)
