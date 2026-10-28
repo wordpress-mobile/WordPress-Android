@@ -10,6 +10,7 @@ import org.wordpress.android.ui.engagement.BottomSheetUiState.UserProfileUiState
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.OpenUserProfileBottomSheet.UserProfile
 import org.wordpress.android.ui.engagement.EngagementNavigationSource.LIKE_NOTIFICATION_LIST
 import org.wordpress.android.ui.engagement.EngagementNavigationSource.LIKE_READER_LIST
+import org.wordpress.android.ui.engagement.EngagementNavigationSource.LIKE_STATS_LIST
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
@@ -50,6 +51,7 @@ class UserProfileViewModel @Inject constructor(
                     when (it) {
                         LIKE_NOTIFICATION_LIST -> ReaderTracker.SOURCE_NOTIF_LIKE_LIST_USER_PROFILE
                         LIKE_READER_LIST -> ReaderTracker.SOURCE_READER_LIKE_LIST_USER_PROFILE
+                        LIKE_STATS_LIST -> ReaderTracker.SOURCE_STATS_LIKE_LIST_USER_PROFILE
                     }
                 } ?: ReaderTracker.SOURCE_USER_PROFILE_UNKNOWN
             )

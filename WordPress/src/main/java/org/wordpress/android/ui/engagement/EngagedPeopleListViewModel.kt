@@ -21,6 +21,7 @@ import org.wordpress.android.ui.engagement.EngagedListServiceRequestEvent.Reques
 import org.wordpress.android.ui.engagement.EngagedListServiceRequestEvent.RequestComment
 import org.wordpress.android.ui.engagement.EngagementNavigationSource.LIKE_NOTIFICATION_LIST
 import org.wordpress.android.ui.engagement.EngagementNavigationSource.LIKE_READER_LIST
+import org.wordpress.android.ui.engagement.EngagementNavigationSource.LIKE_STATS_LIST
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
@@ -171,7 +172,8 @@ class EngagedPeopleListViewModel @Inject constructor(
     }
 
     private fun buildUiState(updateLikesState: GetLikesState?, listScenario: ListScenario?): EngagedPeopleListUiState {
-        val likedItem = listScenario?.headerData?.let {
+        val showHeader = listScenario?.showLikedItemHeader == true
+        val likedItem = listScenario?.headerData?.takeIf { showHeader }?.let {
             listOf(
                 LikedItem(
                     author = it.authorName,
@@ -188,6 +190,7 @@ class EngagedPeopleListViewModel @Inject constructor(
                     blogPreviewSource = when (listScenario.source) {
                         LIKE_NOTIFICATION_LIST -> ReaderTracker.SOURCE_NOTIFICATION
                         LIKE_READER_LIST -> ReaderTracker.SOURCE_READER_LIKE_LIST
+                        LIKE_STATS_LIST -> ReaderTracker.SOURCE_STATS_LIKE_LIST
                     },
                     onHeaderClicked = ::onHeaderClicked
                 )

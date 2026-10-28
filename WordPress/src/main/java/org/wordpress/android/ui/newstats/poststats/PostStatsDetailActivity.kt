@@ -6,6 +6,8 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,11 +20,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.InlineTextContent
-import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
@@ -44,21 +47,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.Placeholder
-import androidx.compose.ui.text.PlaceholderVerticalAlign
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
+import coil.compose.AsyncImage
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.engagement.EngagedPeopleListActivity
+import org.wordpress.android.ui.engagement.EngagementNavigationSource
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsColors
@@ -67,7 +70,6 @@ import org.wordpress.android.ui.newstats.components.StatsDayViewsChart
 import org.wordpress.android.ui.newstats.components.StatsChangeIndicator
 import org.wordpress.android.ui.newstats.components.StatsCardContainer
 import org.wordpress.android.ui.newstats.components.StatsListHeader
-import org.wordpress.android.ui.newstats.components.StatsLabeledValue
 import org.wordpress.android.ui.newstats.components.StatsViewChange
 import org.wordpress.android.ui.newstats.datasource.PostViewsChange
 import org.wordpress.android.ui.newstats.datasource.PostViewsDailyView
@@ -81,6 +83,7 @@ import org.wordpress.android.ui.newstats.util.formatStatValue
 import org.wordpress.android.ui.newstats.util.formatStatsDate
 import org.wordpress.android.ui.newstats.util.formatStatsDateTime
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.util.WPAvatarUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
@@ -92,13 +95,15 @@ private val HeaderCornerRadius = 8.dp
 private val HeaderVerticalPadding = 8.dp
 private val HeaderMinHeight = 48.dp
 
-/**
- * Sized relative to the title's own font size, so the arrow keeps its proportion when the reader
- * scales text up.
- */
-private val OpenItemIconSize = 0.85f.em
-private const val OPEN_ITEM_ICON_ID = "openItemIcon"
-private const val NO_BREAK_SPACE = '\u00A0'
+private val OpenItemIconSize = 16.dp
+private val LikerAvatarSize = 32.dp
+/** How far each face sits under the one before it, which is what makes the strip read as a pile. */
+private val LikerAvatarOverlap = 10.dp
+/** The gap punched out of a face by the one in front of it, drawn in the card's own colour. */
+private val LikerAvatarRing = 2.dp
+private val ChevronSize = 20.dp
+/** As many faces as fit beside the count on a narrow screen; the rest become the overflow disc. */
+private const val LIKERS_STRIP_MAX = 5
 private const val LOADING_SHIMMER_CARD_COUNT = 3
 private const val LOADING_SHIMMER_ROW_COUNT = 3
 
@@ -152,6 +157,9 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
                     onNextDay = viewModel::selectNextDay,
                     onOpenItem = { action ->
                         openItem(postId, action)
+                    },
+                    onShowLikes = { likeCount ->
+                        showLikes(postId, likeCount)
                     }
                 )
             }
@@ -185,6 +193,22 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
         } else {
             activityNavigator.openInCustomTab(this, action.url)
         }
+    }
+
+    /**
+     * Opens the people who liked this item, in the likes list the Reader and notifications use.
+     * It needs the site the stats are being read for, so there is nothing to open without one.
+     */
+    private fun showLikes(postId: Long, likeCount: Long) {
+        val site = selectedSiteRepository.getSelectedSite()
+            ?: return
+        EngagedPeopleListActivity.startForPostLikes(
+            context = this,
+            siteId = site.siteId,
+            postId = postId,
+            numLikes = likeCount.toInt(),
+            source = EngagementNavigationSource.LIKE_STATS_LIST
+        )
     }
 
     companion object {
@@ -223,7 +247,8 @@ private fun PostStatsDetailScreen(
     onRetry: () -> Unit,
     onPreviousDay: () -> Unit,
     onNextDay: () -> Unit,
-    onOpenItem: (action: PostHeaderAction.Open) -> Unit
+    onOpenItem: (action: PostHeaderAction.Open) -> Unit,
+    onShowLikes: (likeCount: Long) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -267,7 +292,8 @@ private fun PostStatsDetailScreen(
                         fallbackTitle = postTitle,
                         onPreviousDay = onPreviousDay,
                         onNextDay = onNextDay,
-                        onOpenItem = onOpenItem
+                        onOpenItem = onOpenItem,
+                        onShowLikes = onShowLikes
                     )
             }
         }
@@ -335,12 +361,14 @@ private fun ErrorContent(
 }
 
 @Composable
+@Suppress("LongParameterList")
 private fun LoadedContent(
     state: PostStatsDetailUiState.Loaded,
     fallbackTitle: String,
     onPreviousDay: () -> Unit,
     onNextDay: () -> Unit,
-    onOpenItem: (action: PostHeaderAction.Open) -> Unit
+    onOpenItem: (action: PostHeaderAction.Open) -> Unit,
+    onShowLikes: (likeCount: Long) -> Unit
 ) {
     val data = state.data
     // One card per section, the way every other New Stats surface is built: the cards supply
@@ -364,9 +392,14 @@ private fun LoadedContent(
                     )
                 ) {
                     PostHeader(
-                        data,
-                        fallbackTitle,
-                        onOpenItem
+                        data = data,
+                        likerAvatarUrls =
+                            state.likerAvatarUrls,
+                        fallbackTitle = fallbackTitle,
+                        onOpenItem = onOpenItem,
+                        onShowLikes = data.post?.let { post ->
+                            { onShowLikes(post.likeCount) }
+                        }
                     )
                 }
             }
@@ -466,12 +499,17 @@ private fun <T> LazyListScope.statsCard(
 /**
  * The title, date and engagement counts belong to the post. The home page has none of them, so it
  * falls back to the title the caller supplied and shows views alone.
+ *
+ * Laid out as iOS lays it out: the title and its published line, then the faces of the people who
+ * liked it, then a rule, then the totals strip.
  */
 @Composable
 private fun PostHeader(
     data: PostViewsData,
+    likerAvatarUrls: List<String>,
     fallbackTitle: String,
-    onOpenItem: (action: PostHeaderAction.Open) -> Unit
+    onOpenItem: (action: PostHeaderAction.Open) -> Unit,
+    onShowLikes: (() -> Unit)?
 ) {
     val post = data.post
     // The action carries the URL it needs, so the click lambda cannot be built for a header with
@@ -509,44 +547,55 @@ private fun PostHeader(
                 )
                 .semantics(mergeDescendants = true) {}
         ) {
-            PostHeaderTitle(
-                title = post?.title
+            Text(
+                text = post?.title
                     ?.takeIf { it.isNotBlank() }
                     ?: fallbackTitle,
-                linked = onOpenClick != null
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = if (onOpenClick != null) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                }
             )
             if (post != null) {
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = formatStatsDateTime(post.date),
-                    style = MaterialTheme.typography
-                        .bodySmall,
-                    color = MaterialTheme.colorScheme
-                        .onSurfaceVariant
+                PublishedLine(
+                    date = post.date,
+                    linked = onOpenClick != null
                 )
             }
         }
-        Spacer(modifier = Modifier.height(8.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement =
-                Arrangement.spacedBy(24.dp)
+        if (post != null && post.likeCount > 0 &&
+            onShowLikes != null
         ) {
-            StatsLabeledValue(
+            Spacer(modifier = Modifier.height(4.dp))
+            LikersRow(
+                avatarUrls = likerAvatarUrls,
+                likeCount = post.likeCount,
+                onClick = onShowLikes
+            )
+        }
+        Spacer(modifier = Modifier.height(12.dp))
+        HorizontalDivider()
+        Spacer(modifier = Modifier.height(12.dp))
+        Row(modifier = Modifier.fillMaxWidth()) {
+            HeaderMetric(
                 labelResId = R.string.stats_views,
                 value = data.totalViews,
-                abbreviateFrom = TEN_THOUSAND
+                modifier = Modifier.weight(1f)
             )
             if (post != null) {
-                StatsLabeledValue(
+                HeaderMetric(
                     labelResId = R.string.stats_likes,
                     value = post.likeCount,
-                    abbreviateFrom = TEN_THOUSAND
+                    modifier = Modifier.weight(1f)
                 )
-                StatsLabeledValue(
+                HeaderMetric(
                     labelResId = R.string.stats_comments,
                     value = post.commentCount,
-                    abbreviateFrom = TEN_THOUSAND
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
@@ -554,62 +603,201 @@ private fun PostHeader(
 }
 
 /**
- * The item's title, in the link colour and trailed by the "opens elsewhere" arrow when there is
- * something to open. The arrow is inline text rather than a sibling icon so that it follows the
- * last word of a wrapped title, and it is joined to that word by a no-break space so the two wrap
- * together instead of leaving the arrow on a line of its own.
+ * "Published <date>", with the "opens elsewhere" arrow beside it when there is something to open.
+ * The arrow sits here rather than after the title -- which can wrap to three lines -- so that the
+ * affordance stays where the eye lands, next to a line of fixed length. The whole title-and-date
+ * block is still the click target, so the arrow needs no description of its own.
  */
 @Composable
-private fun PostHeaderTitle(title: String, linked: Boolean) {
-    Text(
-        text = if (linked) {
-            buildAnnotatedString {
-                append(title)
-                // Both spaces are no-break: an ordinary one is a line-break opportunity, which
-                // would let the arrow strand on a line of its own after a title that just fits.
-                // The placeholder's own text is what a screen reader reads, so it is a space
-                // rather than the replacement character the default would put there.
-                append(NO_BREAK_SPACE)
-                appendInlineContent(
-                    OPEN_ITEM_ICON_ID,
-                    alternateText = NO_BREAK_SPACE.toString()
-                )
-            }
-        } else {
-            AnnotatedString(title)
-        },
-        inlineContent = mapOf(
-            OPEN_ITEM_ICON_ID to openItemInlineIcon()
-        ),
-        style = MaterialTheme.typography.titleLarge,
-        fontWeight = FontWeight.Bold,
-        color = if (linked) {
-            MaterialTheme.colorScheme.primary
-        } else {
-            MaterialTheme.colorScheme.onSurface
+private fun PublishedLine(date: String, linked: Boolean) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            text = stringResource(
+                R.string.stats_post_detail_published,
+                formatStatsDateTime(date)
+            ),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme
+                .onSurfaceVariant
+        )
+        if (linked) {
+            Spacer(modifier = Modifier.width(6.dp))
+            Icon(
+                imageVector = Icons.AutoMirrored
+                    .Filled.OpenInNew,
+                contentDescription = null,
+                modifier = Modifier.size(OpenItemIconSize),
+                tint = MaterialTheme.colorScheme.primary
+            )
         }
-    )
+    }
 }
 
 /**
- * The arrow carries no description of its own: the whole header is the click target, and its
- * click label describes the action once.
+ * The faces of the people who liked the item, and the count, opening the full list.
+ *
+ * The row appears as soon as the stats response says there are likes; the faces fill in when the
+ * separate likers call lands, and simply never arrive if it fails.
  */
-private fun openItemInlineIcon() = InlineTextContent(
-    Placeholder(
-        width = OpenItemIconSize,
-        height = OpenItemIconSize,
-        placeholderVerticalAlign =
-            PlaceholderVerticalAlign.TextCenter
-    )
+@Composable
+private fun LikersRow(
+    avatarUrls: List<String>,
+    likeCount: Long,
+    onClick: () -> Unit
 ) {
-    Icon(
-        imageVector = Icons.AutoMirrored
-            .Filled.OpenInNew,
+    val label = likesLabel(likeCount)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(HeaderCornerRadius))
+            .clickable(
+                onClickLabel = label,
+                onClick = onClick
+            )
+            .heightIn(min = HeaderMinHeight)
+            .padding(vertical = HeaderVerticalPadding)
+            .semantics(mergeDescendants = true) {},
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (avatarUrls.isNotEmpty()) {
+            LikersStrip(
+                avatarUrls = avatarUrls,
+                likeCount = likeCount
+            )
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        Icon(
+            imageVector = Icons.AutoMirrored
+                .Filled.KeyboardArrowRight,
+            contentDescription = null,
+            modifier = Modifier.size(ChevronSize),
+            tint = MaterialTheme.colorScheme
+                .onSurfaceVariant
+        )
+    }
+}
+
+/**
+ * The overlapping pile of faces, trailed by a disc counting whoever did not fit. The overflow is
+ * measured against the like count from the stats response rather than against how many likers
+ * were fetched, which is only ever the first page.
+ */
+@Composable
+private fun LikersStrip(
+    avatarUrls: List<String>,
+    likeCount: Long
+) {
+    val shown = avatarUrls.take(LIKERS_STRIP_MAX)
+    val overflow = likeCount - shown.size
+    Row(
+        horizontalArrangement =
+            Arrangement.spacedBy(-LikerAvatarOverlap)
+    ) {
+        shown.forEach { avatarUrl ->
+            LikerAvatar(avatarUrl)
+        }
+        if (overflow > 0) {
+            LikersOverflow(overflow)
+        }
+    }
+}
+
+@Composable
+private fun LikerAvatar(avatarUrl: String) {
+    val sizePx = with(LocalDensity.current) {
+        LikerAvatarSize.roundToPx()
+    }
+    // Gravatars are served at whatever size is asked for, and everything else goes through
+    // Photon, so the request is sized to the disc rather than to whatever the API handed back.
+    val url = remember(avatarUrl, sizePx) {
+        WPAvatarUtils.rewriteAvatarUrl(avatarUrl, sizePx)
+    }
+    AsyncImage(
+        model = url,
+        // The row describes itself once; a list of names here would only be read out twice.
         contentDescription = null,
-        modifier = Modifier.fillMaxSize(),
-        tint = MaterialTheme.colorScheme.primary
+        modifier = Modifier
+            .size(LikerAvatarSize)
+            .clip(CircleShape)
+            .background(
+                MaterialTheme.colorScheme.surfaceVariant
+            )
+            .border(
+                width = LikerAvatarRing,
+                color = MaterialTheme.colorScheme.surface,
+                shape = CircleShape
+            )
     )
+}
+
+@Composable
+private fun LikersOverflow(count: Long) {
+    Box(
+        modifier = Modifier
+            .size(LikerAvatarSize)
+            .clip(CircleShape)
+            .background(
+                MaterialTheme.colorScheme.surfaceVariant
+            )
+            .border(
+                width = LikerAvatarRing,
+                color = MaterialTheme.colorScheme.surface,
+                shape = CircleShape
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = stringResource(
+                R.string.stats_post_detail_more_likers,
+                formatStatValue(count, TEN_THOUSAND)
+            ),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme
+                .onSurfaceVariant
+        )
+    }
+}
+
+/**
+ * One of the header's totals: a quiet label over a display-sized value, echoing the metrics strip
+ * iOS puts at the foot of the same card.
+ */
+@Composable
+private fun HeaderMetric(
+    @StringRes labelResId: Int,
+    value: Long,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = stringResource(labelResId),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme
+                .onSurfaceVariant
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+        Text(
+            text = formatStatValue(value, TEN_THOUSAND),
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
+
+/** Reuses the likes list screen's own title, so the row and the screen it opens read alike. */
+@Composable
+private fun likesLabel(likeCount: Long): String = if (likeCount == 1L) {
+    stringResource(R.string.like_title_singular)
+} else {
+    stringResource(R.string.like_title_plural, likeCount)
 }
 
 /**
