@@ -946,11 +946,13 @@ data class PostViewsYear(
 )
 
 /**
- * A year's average daily views. The API also breaks this down by month, which nothing displays yet.
+ * A year's average daily views, with the months it is made of.
  */
 data class PostViewsYearAverage(
     val year: String,
-    val overall: Long
+    val overall: Long,
+    /** Average daily views per month, keyed 1-12. The API leaves out months that had none. */
+    val months: Map<Int, Long> = emptyMap()
 )
 
 /**

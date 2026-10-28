@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -68,7 +67,6 @@ import org.wordpress.android.ui.newstats.StatsColors
 import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.components.StatsDayViewsChart
 import org.wordpress.android.ui.newstats.components.StatsCardContainer
-import org.wordpress.android.ui.newstats.components.StatsListHeader
 import org.wordpress.android.ui.newstats.datasource.PostViewsDailyView
 import org.wordpress.android.ui.newstats.datasource.PostViewsData
 import org.wordpress.android.ui.newstats.util.ProvideShimmerBrush
@@ -473,7 +471,14 @@ private fun LoadedContent(
                         SectionTitle(
                             R.string.stats_detail_months_and_years
                         )
-                        MonthsCalendar(years = data.years)
+                        MonthsCalendar(
+                            years = remember(data.years) {
+                                data.years.asMonthlyTotals()
+                            },
+                            descriptionPluralResId =
+                                R.plurals
+                                    .stats_post_detail_period_views
+                        )
                         HorizontalDivider(
                             modifier = Modifier.padding(top = 8.dp)
                         )
@@ -491,49 +496,60 @@ private fun LoadedContent(
             }
         }
 
-        statsCard(
-            R.string.stats_detail_average_views_per_day,
-            data.averages
-        ) {
-            DetailRow(
-                label = it.year,
-                value = formatStatValue(it.overall, TEN_THOUSAND)
-            )
+        if (data.averages.isNotEmpty()) {
+            item {
+                StatsCardContainer {
+                    Column(
+                        modifier = Modifier
+                            .padding(CardPadding)
+                    ) {
+                        SectionTitle(
+                            R.string
+                                .stats_detail_average_views_per_day
+                        )
+                        MonthsCalendar(
+                            years = remember(data.averages) {
+                                data.averages.asMonthlyAverages()
+                            },
+                            descriptionPluralResId =
+                                R.plurals
+                                    .stats_post_detail_period_average
+                        )
+                        data.overallAverage()?.let { overall ->
+                            HorizontalDivider(
+                                modifier = Modifier
+                                    .padding(top = 8.dp)
+                            )
+                            DetailRow(
+                                label = stringResource(
+                                    R.string
+                                        .stats_post_detail_overall
+                                ),
+                                value = formatStatValue(
+                                    overall,
+                                    TEN_THOUSAND
+                                )
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }
 
 /**
- * A titled list section on its own card, skipped entirely when [items] is empty.
+ * The item's average views per day over its whole life, which the card writes under its grid of
+ * monthly averages.
  *
- * The rows share the card's single lazy item rather than being lazy items of their own: a card is
- * one surface, and these lists are the handful of weeks and years the API returns.
+ * The API reports an overall per year only, so an item that spans a single year -- most of them --
+ * takes the server's own figure. Over several years there is none to take, so it is worked out the
+ * way the server works it out: the views the item has had over the days it has existed.
  */
-private fun <T> LazyListScope.statsCard(
-    @StringRes titleResId: Int,
-    items: List<T>,
-    row: @Composable (T) -> Unit
-) {
-    if (items.isEmpty()) return
-    item {
-        StatsCardContainer {
-            Column(modifier = Modifier.padding(CardPadding)) {
-                SectionTitle(titleResId)
-                StatsListHeader(
-                    leftHeaderResId =
-                        R.string
-                            .stats_months_and_years_period_label,
-                    rightHeaderResId =
-                        R.string
-                            .stats_months_and_years_views_label
-                )
-                items.forEachIndexed { index, item ->
-                    if (index > 0) HorizontalDivider()
-                    row(item)
-                }
-            }
-        }
-    }
+private fun PostViewsData.overallAverage(): Long? = when {
+    averages.size == 1 -> averages.first().overall
+    dailyViews.isEmpty() -> null
+    else -> totalViews / dailyViews.size
 }
 
 /**

@@ -1461,12 +1461,7 @@ class StatsDataSourceImpl @Inject constructor(
                 PostViewsYear(
                     year = year,
                     total = value.total.toLong(),
-                    // The API keys months "1" to "12" and leaves out the quiet ones.
-                    months = value.months
-                        .mapNotNull { (month, views) ->
-                            month.toIntOrNull()?.let { it to views.toLong() }
-                        }
-                        .toMap()
+                    months = value.months.toMonthlyFigures()
                 )
             }
             .sortedByDescending { it.year },
@@ -1474,7 +1469,8 @@ class StatsDataSourceImpl @Inject constructor(
             .map { (year, value) ->
                 PostViewsYearAverage(
                     year = year,
-                    overall = value.overall.toLong()
+                    overall = value.overall.toLong(),
+                    months = value.months.toMonthlyFigures()
                 )
             }
             .sortedByDescending { it.year },
@@ -1493,6 +1489,12 @@ class StatsDataSourceImpl @Inject constructor(
             )
         }
     )
+
+    /** The API keys months "1" to "12" and leaves out the ones with nothing to report. */
+    private fun Map<String, ULong>.toMonthlyFigures(): Map<Int, Long> =
+        mapNotNull { (month, figure) ->
+            month.toIntOrNull()?.let { it to figure.toLong() }
+        }.toMap()
 
     private fun StatsPostWeek.toPostViewsWeek() =
         PostViewsWeek(

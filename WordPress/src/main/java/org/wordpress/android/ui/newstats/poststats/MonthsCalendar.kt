@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.newstats.poststats
 
+import androidx.annotation.PluralsRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,8 +18,8 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
-import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.datasource.PostViewsYear
+import org.wordpress.android.ui.newstats.datasource.PostViewsYearAverage
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import java.time.LocalDate
 import java.time.Month
@@ -34,16 +35,20 @@ private const val MONTHS_IN_YEAR = 12
 private const val MONTHS_PER_ROW = 6
 
 /**
- * "Months and Years" as a calendar heat grid, the sibling of [WeeksCalendar]: one block per year,
- * January to December, shaded by how busy the month was against the busiest month on show.
+ * A year-by-month calendar heat grid, the sibling of [WeeksCalendar]: one block per year, January
+ * to December, shaded by how big the month's figure was against the biggest on show.
  *
- * Every year is drawn whole even where the API sent only the months that had views, so the
+ * Used for both "Months and Years" and "Avg. Views Per Day", which differ only in what a month's
+ * figure counts -- hence [MonthlyYear] rather than either of the API's own year types.
+ *
+ * Every year is drawn whole even where the API sent only the months that had figures, so the
  * columns mean the same thing in every block and a quiet month reads as a quiet month rather than
  * as a gap.
  */
 @Composable
 internal fun MonthsCalendar(
-    years: List<PostViewsYear>,
+    years: List<MonthlyYear>,
+    @PluralsRes descriptionPluralResId: Int,
     modifier: Modifier = Modifier
 ) {
     val currentYear = remember { LocalDate.now().year }
@@ -66,6 +71,7 @@ internal fun MonthsCalendar(
                 block = block,
                 monthNames = monthNames,
                 busiestMonth = busiestMonth,
+                descriptionPluralResId = descriptionPluralResId,
                 labelWidth = labelWidth,
                 style = labelStyle
             )
@@ -84,6 +90,7 @@ private fun YearBlock(
     block: CalendarYear,
     monthNames: List<String>,
     busiestMonth: Long,
+    @PluralsRes descriptionPluralResId: Int,
     labelWidth: Dp,
     style: TextStyle
 ) {
@@ -103,7 +110,8 @@ private fun YearBlock(
                     months = monthsInRow,
                     year = block.label,
                     monthNames = monthNames,
-                    busiestMonth = busiestMonth
+                    busiestMonth = busiestMonth,
+                    descriptionPluralResId = descriptionPluralResId
                 )
             }
         }
@@ -141,7 +149,8 @@ private fun MonthRow(
     months: List<CalendarMonth>,
     year: String,
     monthNames: List<String>,
-    busiestMonth: Long
+    busiestMonth: Long,
+    @PluralsRes descriptionPluralResId: Int
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -154,7 +163,8 @@ private fun MonthRow(
                 contentDescription = monthDescription(
                     month = month,
                     year = year,
-                    monthNames = monthNames
+                    monthNames = monthNames,
+                    pluralResId = descriptionPluralResId
                 ),
                 modifier = Modifier.weight(1f)
             )
@@ -163,18 +173,19 @@ private fun MonthRow(
 }
 
 /**
- * What a screen reader reads out for a month that had views, and nothing for one that had none.
- * The year is spelled out with it, because the same square means a different month in each block.
+ * What a screen reader reads out for a month with a figure, and nothing for one without. The year
+ * is spelled out with it, because the same square means a different month in each block.
  */
 @Composable
 private fun monthDescription(
     month: CalendarMonth,
     year: String,
-    monthNames: List<String>
+    monthNames: List<String>,
+    @PluralsRes pluralResId: Int
 ): String? =
     if (month.views > 0) {
         pluralStringResource(
-            R.plurals.stats_post_detail_period_views,
+            pluralResId,
             month.views.coerceAtMost(Int.MAX_VALUE.toLong()).toInt(),
             "${monthNames[month.month - 1]} $year",
             formatStatValue(month.views)
@@ -195,6 +206,19 @@ internal data class CalendarMonth(
     val views: Long
 )
 
+/** A year's figures broken down by month, keyed 1-12, whatever those figures count. */
+internal data class MonthlyYear(
+    val year: String,
+    val months: Map<Int, Long>
+)
+
+// Named apart because the two erase to the same JVM signature.
+internal fun List<PostViewsYear>.asMonthlyTotals(): List<MonthlyYear> =
+    map { MonthlyYear(year = it.year, months = it.months) }
+
+internal fun List<PostViewsYearAverage>.asMonthlyAverages(): List<MonthlyYear> =
+    map { MonthlyYear(year = it.year, months = it.months) }
+
 /**
  * Turns the API's years into blocks of twelve months, most recent year first.
  *
@@ -205,7 +229,7 @@ internal data class CalendarMonth(
  *
  * Internal, rather than inlined into the composable, so those rules can be tested.
  */
-internal fun List<PostViewsYear>.toCalendarYears(currentYear: Int): List<CalendarYear> {
+internal fun List<MonthlyYear>.toCalendarYears(currentYear: Int): List<CalendarYear> {
     if (isEmpty()) return emptyList()
     val monthsByYear = associate { it.year to it.months }
     return (map { it.year } + currentYear.toString())
