@@ -57,7 +57,9 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.engagement.EngagedPeopleListActivity
@@ -65,6 +67,7 @@ import org.wordpress.android.ui.engagement.EngagementNavigationSource
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsColors
+import org.wordpress.android.ui.newstats.selectNewStatsSiteIfNeeded
 import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.components.StatsDayViewsChart
 import org.wordpress.android.ui.newstats.components.StatsCardContainer
@@ -122,11 +125,17 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var activityNavigator: ActivityNavigator
 
+    @Inject
+    lateinit var siteStore: SiteStore
+
     private val viewModel: PostStatsDetailViewModel
         by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Before anything reads the selected site: the view model resolves it when it
+        // fetches, and the tracking below attributes the open to it.
+        selectSiteFromIntentIfNeeded()
 
         // Only on a fresh launch: a rotation recreates this activity from the same Intent, and
         // re-reporting there would inflate the count. Same guard as NewStatsActivity's.
@@ -167,6 +176,12 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
             }
         }
     }
+
+    private fun selectSiteFromIntentIfNeeded() = selectNewStatsSiteIfNeeded(
+        intent?.getIntExtra(WordPress.LOCAL_SITE_ID, 0) ?: 0,
+        siteStore,
+        selectedSiteRepository
+    )
 
     /**
      * Opens the item these stats belong to: a post goes to the Reader, and everything else --
@@ -237,11 +252,15 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
          * @param postId the post to show stats for; 0 is the site's home page
          * @param postTitle shown until the response arrives, and kept as the title for the home
          * page, whose stats carry no post metadata
+         * @param localSiteId the site these stats are for, travelling as the same LOCAL_SITE_ID
+         * extra New Stats already uses. Omit it from inside New Stats, where the site is already
+         * the selected one; name it from anywhere that can be open for a different site.
          */
         fun start(
             context: Context,
             postId: Long,
-            postTitle: String
+            postTitle: String,
+            localSiteId: Int? = null
         ) {
             context.startActivity(
                 Intent(
@@ -250,6 +269,7 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
                 )
                     .putExtra(ARG_POST_ID, postId)
                     .putExtra(ARG_POST_TITLE, postTitle)
+                    .apply { localSiteId?.let { putExtra(WordPress.LOCAL_SITE_ID, it) } }
             )
         }
     }

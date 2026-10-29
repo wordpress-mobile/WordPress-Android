@@ -35,8 +35,11 @@ import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
 import org.wordpress.android.ui.newstats.NewStatsActivity
 import org.wordpress.android.ui.newstats.NewStatsRouting
+import org.wordpress.android.ui.newstats.poststats.PostStatsDetailActivity
 import org.wordpress.android.ui.newstats.toNewStatsTarget
+import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.StatsTimeframe
+import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.sitemonitor.SiteMonitorParentActivity
 import org.wordpress.android.ui.sitemonitor.SiteMonitorType
@@ -82,6 +85,26 @@ class ActivityNavigator @Inject constructor(
             .addNextIntent(getMainActivityInNewStack(context))
             .addNextIntent(NewStatsActivity.buildIntent(context, StatsLaunchedFrom.LINK, tab, period, site.id))
             .startActivities()
+    }
+
+    /**
+     * Opens the per-item Stats screen for a single post, honouring the New Stats rollout. Used by
+     * the Posts lists, whose overflow menu offers Stats for a published post.
+     *
+     * [postUrl] reaches only the old screen: New Stats takes the item's URL, type and status from
+     * the stats/post/<id> response instead, which is what lets it keep the header inert for an
+     * item that is no longer public. [postTitle] is a placeholder there, shown until that response
+     * arrives.
+     *
+     * The site travels as a local id rather than a SiteModel because New Stats always renders the
+     * currently selected site - see selectNewStatsSiteIfNeeded.
+     */
+    fun openPostStats(context: Context, site: SiteModel, postId: Long, postTitle: String, postUrl: String?) {
+        if (newStatsRouting.isNewStatsEnabled()) {
+            PostStatsDetailActivity.start(context, postId, postTitle, site.id)
+        } else {
+            StatsDetailActivity.start(context, site, postId, StatsConstants.ITEM_TYPE_POST, postTitle, postUrl)
+        }
     }
 
     fun navigateToCampaignListingPage(context: Context, campaignListingPageSource: CampaignListingPageSource) {
