@@ -1633,7 +1633,8 @@
     <string name="stats_post_detail_activity_less">Less</string>
     <string name="stats_post_detail_activity_more">More</string>
     <string name="stats_post_detail_total">Total</string>
-    <string name="stats_post_detail_overall">Overall</string>
+    <!-- Row under the Avg. Views Per Day grid, giving the item's average over its whole life -->
+    <string name="stats_post_detail_average">Average</string>
     <string name="stats_previous_day">Previous day</string>
     <string name="stats_next_day">Next day</string>
 

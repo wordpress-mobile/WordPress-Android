@@ -17,12 +17,12 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Notes:** The total is tappable for the same items whose title opens in the Reader, and is shown as a plain figure otherwise: pages and attachments have no Reader representation, and an item that is a draft, scheduled or trashed has no public permalink to open.
 
 - **Avg. Views Per Day is a calendar grid**
-  The Avg. Views Per Day card on the per-item screen in the redesigned Stats screen now draws each year as twelve squares, January to December, shaded by the item's average daily views that month — the same grid the two cards above it use. An Overall row under the grid gives the item's average over its whole life. This replaces the list of yearly averages, and it is what wordpress.com shows under "Average per day".
+  The Avg. Views Per Day card on the per-item screen in the redesigned Stats screen now draws each year as twelve squares, January to December, shaded by the item's average daily views that month — the same grid the two cards above it use. An Average row under the grid gives the item's average over its whole life. This replaces the list of yearly averages, and it is what wordpress.com shows under "Average per day".
   - **Apps:** Both
   - **Type:** Changed
   - **Availability:** Flag: android_new_stats
   - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row (or Show all → tap a row); My Site → Stats → Insights → Latest post
-  - **Notes:** The monthly averages are the server's own figures, and they are whole numbers — a month that averaged less than one view a day shows as an empty square, even where Months and Years above shows views for it. Overall is the server's figure for an item that spans a single year; over several years the server reports one per year only, so it is worked out as the views the item has had over the days it has existed.
+  - **Notes:** The monthly averages are the server's own figures, and they are whole numbers — a month that averaged less than one view a day shows as an empty square, even where Months and Years above shows views for it. Average is the server's figure for an item that spans a single year; over several years the server reports one per year only, so it is worked out as the views the item has had over the days it has existed.
 
 - **Months and Years is a calendar grid**
   The Months and Years card on the per-item screen in the redesigned Stats screen now draws each year as twelve squares, January to December, shaded from pale to solid by how many views that month got — the same grid the Recent Weeks card above it uses. The current year is always shown, even for an item that has had no views this year. A Total row under the grid adds the years up. This replaces the list of year totals.

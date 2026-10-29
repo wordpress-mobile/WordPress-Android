@@ -555,7 +555,7 @@ private fun LoadedContent(
                             DetailRow(
                                 label = stringResource(
                                     R.string
-                                        .stats_post_detail_overall
+                                        .stats_post_detail_average
                                 ),
                                 value = formatStatValue(
                                     overall,
