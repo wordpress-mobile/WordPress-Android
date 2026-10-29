@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Reader's likers list and photo viewer redesigned**
+  The list of people who liked a post or comment has a Material 3 top bar and rows; tapping a liker with a site still opens that site. The full-screen photo viewer still swipes between a post's images, pinches and double-taps to zoom, shows the "1 of 5" count, and hides its toolbar after a few seconds. Pages now slide rather than using the old flow animation, and double-tap zooms straight in to 2.5× and back out instead of stepping through two zoom levels.
+  - **Apps:** Jetpack
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Reader → a post → the likes row; Reader → a post → tap an image
+  - **Notes:** A zoomed photo pages to the next one only when a drag starts at the photo's edge; a drag that starts by panning stops at the edge. The full-screen video player is unchanged apart from now sending the app's user agent.
+
 - **Reader's Manage subscriptions screen redesigned**
   The screen for managing followed tags and blogs has a Material 3 look. The Followed tags and Subscribed blogs tabs still swipe, each row has a Subscribe/Subscribed button, the field for following a tag or URL stays at the bottom, and the + button still opens the topic picker. Searching subscribed blogs now uses a search icon in the top bar on the blogs tab. Errors from the Subscribe buttons in the lists now show as a snackbar instead of a toast.
   - **Apps:** Jetpack
