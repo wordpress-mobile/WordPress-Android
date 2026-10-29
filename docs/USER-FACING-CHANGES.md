@@ -14,7 +14,7 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Type:** Changed
   - **Availability:** Everyone
   - **Where:** Reader → Subscriptions → the Blogs or Tags chip → Manage
-  - **Notes:** Unsubscribing from a row still leaves it in place, so it can be re-followed until the screen is reopened.
+  - **Notes:** Unsubscribing from a row leaves it in place so it can be re-followed, but only until the list refreshes: the row goes once the screen reloads its lists, for example on returning from a blog preview, after adding a tag or blog, or when a background sync finishes. The old screen behaved the same way.
 
 - **Open a post's likes or comments from its Stats totals**
   The Likes and Comments totals on the top card of the per-item screen in the redesigned Stats screen are now tappable. Likes opens the full list of likers — the same list the likers row above it opens, and the one the Reader and notifications open. Comments opens that post's comments, the threaded comments screen the Reader and notifications open, where you can read, like and reply to them. A total you can open is shown in the same colour as the item's title, so the ones that lead somewhere are visible at a glance.
