@@ -78,6 +78,7 @@ import org.wordpress.android.ui.newstats.util.formatStatValue
 import org.wordpress.android.ui.newstats.util.formatStatsDate
 import org.wordpress.android.ui.newstats.util.formatStatsDateTime
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.util.WPAvatarUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -160,7 +161,8 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
                     },
                     onShowLikes = { likeCount ->
                         showLikes(postId, likeCount)
-                    }
+                    },
+                    onShowComments = { showComments(postId) }
                 )
             }
         }
@@ -211,6 +213,22 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
         )
     }
 
+    /**
+     * Opens the item's comments, in the threaded comments screen the Reader and notifications
+     * use. That screen addresses a post by blog id, so like the Reader case of [openItem] there
+     * is nothing to open without a selected site to read it from.
+     */
+    private fun showComments(postId: Long) {
+        val site = selectedSiteRepository.getSelectedSite()
+            ?: return
+        ReaderActivityLauncher.showReaderComments(
+            this,
+            site.siteId,
+            postId,
+            ReaderTracker.SOURCE_STATS
+        )
+    }
+
     companion object {
         private const val ARG_POST_ID = "post_id"
         private const val ARG_POST_TITLE = "post_title"
@@ -248,7 +266,8 @@ private fun PostStatsDetailScreen(
     onPreviousDay: () -> Unit,
     onNextDay: () -> Unit,
     onOpenItem: (action: PostHeaderAction.Open) -> Unit,
-    onShowLikes: (likeCount: Long) -> Unit
+    onShowLikes: (likeCount: Long) -> Unit,
+    onShowComments: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -297,7 +316,8 @@ private fun PostStatsDetailScreen(
                         onPreviousDay = onPreviousDay,
                         onNextDay = onNextDay,
                         onOpenItem = onOpenItem,
-                        onShowLikes = onShowLikes
+                        onShowLikes = onShowLikes,
+                        onShowComments = onShowComments
                     )
             }
         }
@@ -372,7 +392,8 @@ private fun LoadedContent(
     onPreviousDay: () -> Unit,
     onNextDay: () -> Unit,
     onOpenItem: (action: PostHeaderAction.Open) -> Unit,
-    onShowLikes: (likeCount: Long) -> Unit
+    onShowLikes: (likeCount: Long) -> Unit,
+    onShowComments: () -> Unit
 ) {
     val data = state.data
     // One card per section, the way every other New Stats surface is built: the cards supply
@@ -403,7 +424,8 @@ private fun LoadedContent(
                         onOpenItem = onOpenItem,
                         onShowLikes = data.post?.let { post ->
                             { onShowLikes(post.likeCount) }
-                        }
+                        },
+                        onShowComments = onShowComments
                     )
                 }
             }
@@ -575,16 +597,22 @@ private fun PostHeader(
     likerAvatarUrls: List<String>,
     fallbackTitle: String,
     onOpenItem: (action: PostHeaderAction.Open) -> Unit,
-    onShowLikes: (() -> Unit)?
+    onShowLikes: (() -> Unit)?,
+    onShowComments: () -> Unit
 ) {
     val post = data.post
     // The action carries the URL it needs, so the click lambda cannot be built for a header with
     // nothing to open.
+    val headerAction = postHeaderAction(post?.url, post?.type, post?.status)
     val onOpenClick: (() -> Unit)? =
-        (postHeaderAction(post?.url, post?.type, post?.status) as? PostHeaderAction.Open)
-            ?.let { action ->
-                { onOpenItem(action) }
-            }
+        (headerAction as? PostHeaderAction.Open)?.let { action ->
+            { onOpenItem(action) }
+        }
+    // The comments screen is a Reader screen, addressed by blog id, so it can only be reached for
+    // the items the title itself opens there -- not for a page, an attachment or an unpublished
+    // item, whose counts stay as plain figures.
+    val onCommentsClick: (() -> Unit)? =
+        onShowComments.takeIf { headerAction is PostHeaderAction.OpenInReader }
     val openLabel = stringResource(R.string.stats_open_link)
     Column {
         // Title and date read as one thing and open as one thing, the way the old stats
@@ -646,6 +674,8 @@ private fun PostHeader(
         Spacer(modifier = Modifier.height(12.dp))
         HorizontalDivider()
         Spacer(modifier = Modifier.height(12.dp))
+        // No likes here: the strip above already gives the count, with the faces behind it and a
+        // way into the full list, so a second figure for it only reads as the same number twice.
         Row(modifier = Modifier.fillMaxWidth()) {
             HeaderMetric(
                 labelResId = R.string.stats_views,
@@ -654,13 +684,12 @@ private fun PostHeader(
             )
             if (post != null) {
                 HeaderMetric(
-                    labelResId = R.string.stats_likes,
-                    value = post.likeCount,
-                    modifier = Modifier.weight(1f)
-                )
-                HeaderMetric(
                     labelResId = R.string.stats_comments,
                     value = post.commentCount,
+                    onClick = onCommentsClick,
+                    onClickLabel = stringResource(
+                        R.string.reader_view_comments
+                    ),
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -839,9 +868,31 @@ private fun LikersOverflow(count: Long) {
 private fun HeaderMetric(
     @StringRes labelResId: Int,
     value: Long,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
+    onClickLabel: String? = null
 ) {
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier
+            // A tappable metric keeps the same type and colour as a plain one -- the totals
+            // strip reads as one row of figures, and tinting one of them would make it look like
+            // a different kind of number rather than the same number you can follow. The ripple
+            // takes the column's own bounds rather than a padded box, so the two metrics stay
+            // aligned whether or not either of them is tappable.
+            .then(
+                if (onClick != null) {
+                    Modifier
+                        .clip(RoundedCornerShape(HeaderCornerRadius))
+                        .clickable(
+                            onClickLabel = onClickLabel,
+                            onClick = onClick
+                        )
+                        .semantics(mergeDescendants = true) {}
+                } else {
+                    Modifier
+                }
+            )
+    ) {
         Text(
             text = stringResource(labelResId),
             style = MaterialTheme.typography.labelMedium,

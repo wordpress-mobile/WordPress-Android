@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Open a post's comments from its Stats screen**
+  The Comments total on the top card of the per-item screen in the redesigned Stats screen is now tappable, and opens that post's comments — the same threaded comments screen the Reader and notifications open, where you can read, like and reply to them.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row (or Show all → tap a row); My Site → Stats → Insights → Latest post
+  - **Notes:** The total is tappable for the same items whose title opens in the Reader, and is shown as a plain figure otherwise: pages and attachments have no Reader representation, and an item that is a draft, scheduled or trashed has no public permalink to open.
+
 - **Avg. Views Per Day is a calendar grid**
   The Avg. Views Per Day card on the per-item screen in the redesigned Stats screen now draws each year as twelve squares, January to December, shaded by the item's average daily views that month — the same grid the two cards above it use. An Overall row under the grid gives the item's average over its whole life. This replaces the list of yearly averages, and it is what wordpress.com shows under "Average per day".
   - **Apps:** Both
@@ -33,7 +41,7 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Notes:** The weeks run Monday to Sunday, following what the server sends. The first and last weeks of the range are usually cut short — by the day the item was published and by the days that have not happened yet — and those days are drawn as empty squares so the columns still line up by weekday. The grid no longer shows each week's own total or its change against the week before; it shows per-day counts, plus one total for the whole range.
 
 - **See who liked a post from its Stats screen**
-  The top card of the per-item screen in the redesigned Stats screen now shows the faces of the people who liked the item, with a "46 Likes" row beside them. Tapping that row opens the full list of likers — the same list the Reader and notifications open — where tapping someone shows their profile. The card also now reads "Published <date>" with a small link icon, and the views, likes and comments totals sit under a rule in larger type.
+  The top card of the per-item screen in the redesigned Stats screen now shows the faces of the people who liked the item, with a "46 Likes" row beside them. Tapping that row opens the full list of likers — the same list the Reader and notifications open — where tapping someone shows their profile. The card also now reads "Published <date>" with a small link icon, and the views and comments totals sit under a rule in larger type. The like count appears once, in the likes row — not again in the totals.
   - **Apps:** Both
   - **Type:** New
   - **Availability:** Flag: android_new_stats
