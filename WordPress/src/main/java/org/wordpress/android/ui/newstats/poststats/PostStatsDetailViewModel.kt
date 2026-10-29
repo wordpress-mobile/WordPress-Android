@@ -237,10 +237,20 @@ sealed class PostStatsDetailUiState {
 }
 
 /**
- * Only the first few likers are ever drawn, so there is no reason to pull a full page of them --
- * the strip's overflow count comes from the like count the stats response already carries.
+ * Deliberately the same page as GetLikesHandler's `LIKES_PER_PAGE_DEFAULT`, which is what the
+ * likes list this screen opens asks for. The strip itself needs far fewer -- it draws five faces,
+ * and its overflow count comes from the like count the stats response already carries -- but a
+ * smaller page here is not worth what it costs.
+ *
+ * `OnPostLikesChanged` carries nothing saying which request it answers, and every `GetLikesUseCase`
+ * registers itself on the dispatcher, so this screen's instance and the likes list's both resume on
+ * whichever response for the post arrives first. Asking for the same page means it does not matter
+ * which one that is: either answer is the answer both of them wanted. Ask for fewer and tapping
+ * through to the list while this request is still in flight leaves it showing a short first page.
+ *
+ * So this is not a free number to tune: lower it and that crossed wire starts to show again.
  */
-private const val LIKERS_PAGE_LENGTH = 10
+private const val LIKERS_PAGE_LENGTH = 20
 
 // Two weeks of bars, matching the old stats post detail chart.
 private const val CHART_DAYS = 14
