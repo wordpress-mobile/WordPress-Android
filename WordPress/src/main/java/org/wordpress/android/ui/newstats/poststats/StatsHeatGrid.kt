@@ -73,15 +73,19 @@ private const val LUMINANCE_CROSSOVER = 0.179f
  * A period with views names itself through [contentDescription]; an empty one is left out of the
  * accessibility tree entirely, so a grid is swiped through in a handful of steps rather than in one
  * per cell.
+ *
+ * [blank] holds a cell's place in the grid without drawing it, for a period the data does not
+ * reach. It still takes up its square, so the columns either side of it stay in line.
  */
 @Composable
 internal fun HeatCell(
     value: Long,
     busiest: Long,
     contentDescription: String?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    blank: Boolean = false
 ) {
-    val cellColor = intensityColor(value, busiest)
+    val cellColor = if (blank) Color.Transparent else intensityColor(value, busiest)
     Box(
         modifier = modifier
             .padding(CellGap)
@@ -97,7 +101,7 @@ internal fun HeatCell(
             },
         contentAlignment = Alignment.Center
     ) {
-        if (value > 0) {
+        if (value > 0 && !blank) {
             Text(
                 // Abbreviated from a thousand rather than from ten, which is what the rest of
                 // this screen uses: a cell is a square with six or seven of them to a row, so it

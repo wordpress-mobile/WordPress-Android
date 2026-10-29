@@ -27,6 +27,7 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAdjusters
+import java.time.temporal.WeekFields
 import java.time.format.TextStyle as JavaTextStyle
 import java.util.Locale
 
@@ -47,7 +48,11 @@ internal fun WeeksCalendar(
     weeks: List<PostViewsWeek>,
     modifier: Modifier = Modifier
 ) {
-    val rows = remember(weeks) { weeks.toCalendarRows() }
+    // The reader's own first weekday, not the API's: WordPress.com buckets these weeks from
+    // Monday wherever you are, and a grid that drew them that way would start the week on the
+    // wrong day for everyone whose calendar starts on Sunday.
+    val weekStart = remember { WeekFields.of(Locale.getDefault()).firstDayOfWeek }
+    val rows = remember(weeks, weekStart) { weeks.toCalendarRows(weekStart) }
     if (rows.isEmpty()) return
 
     val busiestDay = remember(rows) {
@@ -58,7 +63,6 @@ internal fun WeeksCalendar(
         labels = rows.map { it.label },
         style = labelStyle
     )
-    val weekStart = rows.first().weekStart
     val weekdayNames = remember(weekStart) {
         weekStart.namesOfWeek(Locale.getDefault())
     }
@@ -127,7 +131,8 @@ private fun WeekRow(
                 value = day.views,
                 busiest = busiestDay,
                 contentDescription = dayDescription(day),
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                blank = !day.isInWindow
             )
         }
     }
@@ -150,84 +155,84 @@ private fun dayDescription(day: CalendarDay): String? =
 /** A week as the grid draws it: its label and exactly [DAYS_IN_WEEK] squares. */
 internal data class CalendarRow(
     val label: String,
-    val weekStart: DayOfWeek,
     val days: List<CalendarDay>
 )
 
 /**
- * One square: the day it stands for, and its views. A day the API sent nothing for -- one that has
- * not happened yet, in the week still running -- is a zero like any other, and is drawn like one.
+ * One square: the day it stands for, and its views.
+ *
+ * A day the API sent nothing for is a zero like any other and is drawn like one -- that is what
+ * the days of the running week that have not happened yet are.
+ *
+ * [isInWindow] marks the ones at the other end, before the first day we were told anything about:
+ * days the item may well have been read on, so a quiet square would be a claim rather than a
+ * reading. Those are left blank, as the old stats posting-activity grid leaves the days before the
+ * month it draws.
  */
 internal data class CalendarDay(
     val day: String,
-    val views: Long
+    val views: Long,
+    val isInWindow: Boolean = true
 )
 
 /**
- * Turns the API's weeks into rows of seven.
+ * Turns the API's days into rows of seven, each starting on [weekStart].
  *
- * Days are placed by the weekday they actually fall on rather than by their position in the
- * response, so the most recent week -- the only one the API may cut short -- leaves the days that
- * have not happened yet empty at the end of its row instead of shifting the rest left.
+ * The rows are built from the days' own dates rather than from the API's weeks. WordPress.com
+ * buckets these weeks from Monday wherever the reader is, so in a locale whose week starts on
+ * Sunday its buckets are not the rows this grid draws: flattening them and re-chunking by date
+ * gives a row that begins on the reader's own first weekday whatever the response was cut into.
  *
- * Which weekday a row starts on is read off the data for the same reason: WordPress.com buckets
- * these weeks from Monday, but a column order hardcoded to Monday would silently mis-lay the grid
- * if that ever changed.
+ * Placing every day by the date it carries also means the two rows at the ends of the range come
+ * out right without being special-cased -- the running week leaves its remaining days empty at the
+ * end of the row rather than shifting the rest left, and a row the item was published partway
+ * through starts under the weekday it actually went up on.
+ *
+ * Rows come back newest first, as the grid draws them.
  *
  * Internal, rather than inlined into the composable, so the placement rules above can be tested.
  */
-internal fun List<PostViewsWeek>.toCalendarRows(): List<CalendarRow> {
-    val weeks = filter { it.days.isNotEmpty() }
-    if (weeks.isEmpty()) return emptyList()
-    val weekStart = weeks.firstDayOfWeek()
+internal fun List<PostViewsWeek>.toCalendarRows(weekStart: DayOfWeek): List<CalendarRow> {
+    val viewsByDate = flatMap { it.days }
+        .mapNotNull { view ->
+            view.day.toLocalDayOrNull()?.let { it to view.views }
+        }
+        .toMap()
+    if (viewsByDate.isEmpty()) return emptyList()
 
-    return weeks.map { week ->
-        val viewsByDate = week.days.associate { it.day to it.views }
-        val firstDay = week.days.first().day.toLocalDayOrNull()
-        // The row is laid out from the week's own first square, which is the first day the API
-        // sent only when that day is itself the start of the week.
-        val rowStart = firstDay
-            ?.with(TemporalAdjusters.previousOrSame(weekStart))
-        CalendarRow(
-            label = formatStatsDayMonth(week.startDay),
-            weekStart = weekStart,
-            days = (0 until DAYS_IN_WEEK).map { offset ->
-                val date = rowStart?.plusDays(offset.toLong())
-                val key = date?.format(DateTimeFormatter.ISO_LOCAL_DATE)
-                CalendarDay(
-                    day = key.orEmpty(),
-                    views = key?.let { viewsByDate[it] } ?: 0L
-                )
-            }
-        )
-    }
+    val firstDay = viewsByDate.keys.min()
+    val lastDay = viewsByDate.keys.max()
+    return generateSequence(
+        firstDay.with(TemporalAdjusters.previousOrSame(weekStart))
+    ) { it.plusWeeks(1) }
+        .takeWhile { !it.isAfter(lastDay) }
+        .map { rowStart ->
+            CalendarRow(
+                label = formatStatsDayMonth(rowStart.toIsoDay()),
+                days = (0 until DAYS_IN_WEEK).map { offset ->
+                    val date = rowStart.plusDays(offset.toLong())
+                    CalendarDay(
+                        day = date.toIsoDay(),
+                        views = viewsByDate[date] ?: 0L,
+                        isInWindow = !date.isBefore(firstDay)
+                    )
+                }
+            )
+        }
+        // Newest week at the top, the order the response arrives in and the one the old stats
+        // screen draws. Building the rows forwards from the oldest is just how the dates run.
+        .toList()
+        .asReversed()
 }
-
-/**
- * Which weekday these weeks are bucketed from. WordPress.com buckets them from Monday, but reading
- * it off the data costs little and keeps the grid correct if that ever changes.
- *
- * Read from a week that has all seven days in it, because the two weeks at the ends of the range
- * can be cut short -- the most recent one by the days that have not happened yet, the oldest by the
- * item not existing before it was published -- and the oldest one's first day is then just the day
- * the item went up, not the start of a week. With no full week to go on, the most common first day
- * is as good as it gets.
- */
-private fun List<PostViewsWeek>.firstDayOfWeek(): DayOfWeek =
-    filter { it.days.size == DAYS_IN_WEEK }
-        .ifEmpty { this }
-        .mapNotNull { it.days.first().day.toLocalDayOrNull()?.dayOfWeek }
-        .groupingBy { it }
-        .eachCount()
-        .maxByOrNull { it.value }
-        ?.key
-        ?: DayOfWeek.MONDAY
 
 /** The seven weekday initials in grid order, starting at this day. */
 private fun DayOfWeek.namesOfWeek(locale: Locale): List<String> =
     (0 until DAYS_IN_WEEK).map { offset ->
         plus(offset.toLong()).getDisplayName(JavaTextStyle.NARROW, locale)
     }
+
+private fun LocalDate.toIsoDay(): String =
+    format(DateTimeFormatter.ISO_LOCAL_DATE)
 
 @Suppress("SwallowedException", "TooGenericExceptionCaught")
 private fun String.toLocalDayOrNull(): LocalDate? = try {

@@ -11,7 +11,7 @@ class WeeksCalendarTest {
     @Test
     fun `a full week lays out its seven days in order`() {
         val rows = listOf(week(MONDAY_OCT_19, views = List(7) { it.toLong() }))
-            .toCalendarRows()
+            .toCalendarRows(DayOfWeek.MONDAY)
 
         assertThat(rows).hasSize(1)
         assertThat(rows.first().days).hasSize(7)
@@ -27,25 +27,37 @@ class WeeksCalendarTest {
     fun `the week still running leaves its remaining days empty`() {
         // Oct 26 is a Monday, so a week cut short after Wednesday fills three squares of seven.
         val rows = listOf(week(MONDAY_OCT_26, views = listOf(0L, 0L, 6L)))
-            .toCalendarRows()
+            .toCalendarRows(DayOfWeek.MONDAY)
 
         val days = rows.first().days
         assertThat(days).hasSize(7)
         assertThat(days.map { it.views })
             .containsExactly(0L, 0L, 6L, 0L, 0L, 0L, 0L)
         // The days that have not happened yet still carry their date, so every square in the row
-        // can name itself to a screen reader.
+        // can name itself to a screen reader, and they are drawn rather than left blank: the item
+        // has had no views on them, which is what a quiet square says.
         assertThat(days.drop(3).map { it.day })
             .containsExactly("2026-10-29", "2026-10-30", "2026-10-31", "2026-11-01")
+        assertThat(days).allMatch { it.isInWindow }
+    }
+
+    @Test
+    fun `the newest week is the first row`() {
+        val rows = listOf(
+            week(MONDAY_OCT_26, views = listOf(1L)),
+            week(MONDAY_OCT_19, views = List(7) { 1L }),
+            week(MONDAY_OCT_12, views = List(7) { 1L })
+        ).toCalendarRows(DayOfWeek.MONDAY)
+
+        assertThat(rows.map { it.days.first().day })
+            .containsExactly("2026-10-26", "2026-10-19", "2026-10-12")
     }
 
     @Test
     fun `a week that starts mid-week is still placed by weekday`() {
         // An item published on a Thursday gets an oldest week with only four days in it. They
-        // belong under Thursday onwards, not under Monday onwards -- so the column order has to
-        // come from the full weeks, not from that week's own first day.
+        // belong under Thursday onwards, not under Monday onwards.
         val rows = listOf(
-            week(MONDAY_OCT_26, views = listOf(5L)),
             week(MONDAY_OCT_19, views = List(7) { 1L }),
             week(MONDAY_OCT_12, views = List(7) { 1L }),
             PostViewsWeek(
@@ -60,20 +72,43 @@ class WeeksCalendarTest {
                     PostViewsDailyView("2026-10-11", 4L)
                 )
             )
-        ).toCalendarRows()
+        ).toCalendarRows(DayOfWeek.MONDAY)
 
-        assertThat(rows.last().weekStart).isEqualTo(DayOfWeek.MONDAY)
-        assertThat(rows.last().days.map { it.views })
+        val oldest = rows.last()
+        assertThat(oldest.days.map { it.views })
             .containsExactly(0L, 0L, 0L, 1L, 2L, 3L, 4L)
-        assertThat(rows.last().days.first().day).isEqualTo("2026-10-05")
+        // The row is named for the Monday it starts on, not for the day the item went up.
+        assertThat(oldest.days.first().day).isEqualTo("2026-10-05")
+        // Monday to Wednesday are before anything we were told about, so they are left blank
+        // rather than drawn as days nobody read the item on.
+        assertThat(oldest.days.map { it.isInWindow })
+            .containsExactly(false, false, false, true, true, true, true)
     }
 
     @Test
-    fun `the first weekday is read off the data`() {
-        val rows = listOf(week(MONDAY_OCT_26, views = listOf(1L)))
-            .toCalendarRows()
+    fun `a Sunday-first locale starts its rows on Sunday`() {
+        // The API buckets its weeks from Monday wherever the reader is. A reader whose week starts
+        // on Sunday gets rows that start on Sunday, with each day still under its own weekday.
+        val rows = listOf(
+            week(MONDAY_OCT_19, views = List(7) { it.toLong() })
+        ).toCalendarRows(DayOfWeek.SUNDAY)
 
-        assertThat(rows.first().weekStart).isEqualTo(DayOfWeek.MONDAY)
+        // Mon 19 - Sun 25 spans two Sunday-first weeks: Oct 18-24 and Oct 25-31.
+        assertThat(rows.map { it.days.first().day })
+            .containsExactly("2026-10-25", "2026-10-18")
+
+        val oldest = rows.last()
+        assertThat(oldest.days.map { it.day }).containsExactly(
+            "2026-10-18", "2026-10-19", "2026-10-20", "2026-10-21",
+            "2026-10-22", "2026-10-23", "2026-10-24"
+        )
+        // Monday's figure sits in the second column, where Monday is in a Sunday-first week.
+        assertThat(oldest.days.map { it.views })
+            .containsExactly(0L, 0L, 1L, 2L, 3L, 4L, 5L)
+        // Oct 18 is the Sunday before anything the API sent, so it is blank, not a quiet day.
+        assertThat(oldest.days.first().isInWindow).isFalse()
+        assertThat(rows.first().days.map { it.views })
+            .containsExactly(6L, 0L, 0L, 0L, 0L, 0L, 0L)
     }
 
     @Test
@@ -81,7 +116,7 @@ class WeeksCalendarTest {
         val rows = listOf(
             week(MONDAY_OCT_19, views = emptyList()),
             week(MONDAY_OCT_26, views = listOf(1L))
-        ).toCalendarRows()
+        ).toCalendarRows(DayOfWeek.MONDAY)
 
         assertThat(rows).hasSize(1)
     }
