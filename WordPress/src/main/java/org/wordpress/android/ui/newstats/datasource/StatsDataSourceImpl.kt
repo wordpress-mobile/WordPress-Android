@@ -1460,7 +1460,8 @@ class StatsDataSourceImpl @Inject constructor(
             .map { (year, value) ->
                 PostViewsYear(
                     year = year,
-                    total = value.total.toLong()
+                    total = value.total.toLong(),
+                    months = value.months.toMonthlyFigures()
                 )
             }
             .sortedByDescending { it.year },
@@ -1468,7 +1469,8 @@ class StatsDataSourceImpl @Inject constructor(
             .map { (year, value) ->
                 PostViewsYearAverage(
                     year = year,
-                    overall = value.overall.toLong()
+                    overall = value.overall.toLong(),
+                    months = value.months.toMonthlyFigures()
                 )
             }
             .sortedByDescending { it.year },
@@ -1488,10 +1490,22 @@ class StatsDataSourceImpl @Inject constructor(
         }
     )
 
+    /** The API keys months "1" to "12" and leaves out the ones with nothing to report. */
+    private fun Map<String, ULong>.toMonthlyFigures(): Map<Int, Long> =
+        mapNotNull { (month, figure) ->
+            month.toIntOrNull()?.let { it to figure.toLong() }
+        }.toMap()
+
     private fun StatsPostWeek.toPostViewsWeek() =
         PostViewsWeek(
             startDay = days.firstOrNull()?.day?.value.orEmpty(),
             endDay = days.lastOrNull()?.day?.value.orEmpty(),
+            days = days.map {
+                PostViewsDailyView(
+                    day = it.day.value,
+                    views = it.count.toLong()
+                )
+            },
             total = total.toLong(),
             change = when (val change = change) {
                 is StatsPostChange.Percentage ->

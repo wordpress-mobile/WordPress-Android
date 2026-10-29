@@ -460,6 +460,9 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
         whenever(headerData.authorPreferredSiteUrl).thenReturn("authorPreferredSiteUrl")
 
         whenever(listScenario.commentSiteUrl).thenReturn("commentSiteUrl")
+        // Reader and notifications both head the list with the item that was liked; only New
+        // Stats, which has no author or excerpt to put there, turns it off.
+        whenever(listScenario.showLikedItemHeader).thenReturn(true)
 
         when (type) {
             LOAD_POST_LIKES -> {

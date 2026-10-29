@@ -906,16 +906,18 @@ data class PostViewsPost(
 )
 
 /**
- * A week's view total and how it compares with the week before.
+ * A week's view total, its days, and how the total compares with the week before.
  *
- * [startDay] and [endDay] bound the week (format: yyyy-MM-dd); the final week may be partial. The
- * API also breaks the week down per day, which nothing displays yet.
+ * [startDay] and [endDay] bound the week (format: yyyy-MM-dd); the most recent week may be
+ * partial, in which case [days] stops short of seven.
  */
 data class PostViewsWeek(
     val startDay: String,
     val endDay: String,
     val total: Long,
-    val change: PostViewsChange
+    val change: PostViewsChange,
+    /** The week's days, oldest first. */
+    val days: List<PostViewsDailyView> = emptyList()
 )
 
 /**
@@ -934,19 +936,23 @@ sealed class PostViewsChange {
 }
 
 /**
- * A year's view total. The API also breaks this down by month, which nothing displays yet.
+ * A year's view total, with the months it is made of.
  */
 data class PostViewsYear(
     val year: String,
-    val total: Long
+    val total: Long,
+    /** Views per month, keyed 1-12. The API leaves out months that had none. */
+    val months: Map<Int, Long> = emptyMap()
 )
 
 /**
- * A year's average daily views. The API also breaks this down by month, which nothing displays yet.
+ * A year's average daily views, with the months it is made of.
  */
 data class PostViewsYearAverage(
     val year: String,
-    val overall: Long
+    val overall: Long,
+    /** Average daily views per month, keyed 1-12. The API leaves out months that had none. */
+    val months: Map<Int, Long> = emptyMap()
 )
 
 /**
