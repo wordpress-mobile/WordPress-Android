@@ -1462,8 +1462,11 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         // for GutenbergKitActivity but are hidden rather than removed to avoid duplicating
         // menu resources until a more comprehensive menu cleanup is undertaken.
 
-        // A crashed editor can't switch modes until it reloads.
-        menu.findItem(R.id.menu_html_mode)?.isEnabled = editorFragment?.isEditorUnavailable() != true
+        // A crashed editor can't switch modes until it reloads. The primary action waits for the reload
+        // too, so the user sees the content it would send; closing still saves the last content read.
+        val isEditorUnavailable = editorFragment?.isEditorUnavailable() == true
+        menu.findItem(R.id.menu_html_mode)?.isEnabled = !isEditorUnavailable
+        if (isEditorUnavailable) menu.findItem(R.id.menu_primary_action)?.isEnabled = false
 
         // Hide "Switch to Gutenberg" - not needed since we're already using GutenbergKit
         menu.findItem(R.id.menu_switch_to_gutenberg)?.isVisible = false
