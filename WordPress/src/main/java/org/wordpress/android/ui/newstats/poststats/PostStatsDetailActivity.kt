@@ -849,9 +849,12 @@ private fun LikersOverflow(count: Long) {
         contentAlignment = Alignment.Center
     ) {
         Text(
+            // Abbreviated from a thousand rather than from the ten this screen uses elsewhere:
+            // the disc is a 32dp circle that clips what will not fit, so "+1.2K" fits where
+            // "+1,235" is cut off at both ends. The same trade as a heat cell's figure.
             text = stringResource(
                 R.string.stats_post_detail_more_likers,
-                formatStatValue(count, TEN_THOUSAND)
+                formatStatValue(count)
             ),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme
