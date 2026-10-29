@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-30 06:31:02+0000
+Translation-Revision-Date: 2026-10-28 22:26:41+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.1.0
 Language: tr
@@ -17,7 +17,7 @@ Language: tr
     <string name="page_rs_confirm_trash_message">Bu sayfayı çöpe atmak istediğinizden emin misiniz?</string>
     <string name="page_rs_copy_url">URL\'yi Kopyala</string>
     <string name="page_rs_failed_to_load">Sayfa yüklenemedi</string>
-    <string name="page_not_found">Sayfa yüklenirken hata oluştu. Sayfalarınızı yenileyip tekrar deneyin.</string>
+    <string name="page_not_found">Sayfa yüklenirken hata oluştu. Sayfalarınızı yenileyip yeniden deneyin.</string>
     <string name="xmlrpc_disabled_bottom_sheet_body">Uygulamadaki bazı özellikler XML-RPC gerektirir. Bunu çözmek için sitenizde etkinleştirin.</string>
     <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC Devre Dışı Bırakıldı</string>
     <string name="xmlrpc_disabled_card_text">XML-RPC Devre Dışı Bırakıldı\nBazı özellikler sınırlı olabilir</string>
@@ -72,8 +72,8 @@ Language: tr
     <string name="stats_insights_likes">Beğeniler</string>
     <string name="stats_insights_words">Kelime</string>
     <string name="activity_log_mcp_agent_label">%1$s ile</string>
-    <string name="post_rs_settings_show_password">Şifreyi göster</string>
-    <string name="post_rs_settings_hide_password">Şifreyi gizle</string>
+    <string name="post_rs_settings_show_password">Parolayı göster</string>
+    <string name="post_rs_settings_hide_password">Parolayı gizle</string>
     <string name="post_rs_settings_saving">Kaydediliyoru2026</string>
     <string name="post_rs_settings_search_no_results">Hiçbir sonuç bulunamadı</string>
     <string name="post_rs_settings_load_more">Daha fazla yükleu2026</string>
@@ -133,9 +133,9 @@ Language: tr
     <string name="post_rs_settings_discard_title">Değişiklikleri iptal et</string>
     <string name="post_rs_settings_status_dialog_title">Gönderi Durumu</string>
     <string name="post_rs_settings_save_error">Gönderi güncellenemedi</string>
-    <string name="post_rs_settings_remove_password">Şifreyi kaldır</string>
-    <string name="post_rs_settings_password_hint">Şifre girin</string>
-    <string name="post_rs_settings_password_dialog_title">Şifreyi Paylaş</string>
+    <string name="post_rs_settings_remove_password">Parolayı kaldır</string>
+    <string name="post_rs_settings_password_hint">Parola girin</string>
+    <string name="post_rs_settings_password_dialog_title">Parolayı Paylaş</string>
     <string name="post_rs_settings_remove_featured_image">Kaldır</string>
     <string name="post_rs_settings_edit_featured_image">Öne çıkan görseli düzenleyin</string>
     <string name="post_rs_settings_featured_image_error">Öne çıkan görsel yüklenemedi.</string>
@@ -145,7 +145,7 @@ Language: tr
     <string name="post_rs_settings_field_error">Yüklenemedi</string>
     <string name="post_rs_settings_protected">Korumalı</string>
     <string name="post_rs_sync_failed">Senkronizasyon başarısız oldu</string>
-    <string name="post_rs_error_auth">Doğrulamanızın geçerlilik süresi doldu Lütfen tekrar oturum açın.</string>
+    <string name="post_rs_error_auth">Doğrulamanızın geçerlilik süresi doldu Lütfen yeniden oturum açın.</string>
     <string name="post_rs_error_load_more">Daha fazla gönderi yüklenemedi</string>
     <string name="stats_ring_chart_entry_description">%1$s: %2$s</string>
     <string name="menu_item_accessibility_description">Seviye %1$d, %2$s, %3$s</string>
@@ -254,8 +254,8 @@ Language: tr
     <string name="post_rs_confirm_trash_message">Bu gönderiyi çöpe atmak istediğinizden emin misiniz?</string>
     <string name="post_rs_failed_to_load">Gönderi yüklenemedi</string>
     <string name="stats_error_admin_url_unavailable">Bu site için WP Yöneticisi açılamıyor</string>
-    <string name="stats_error_parsing">Veri yüklenirken bir sorun oluştu. Lütfen tekrar deneyin</string>
-    <string name="stats_error_network">Ağ hatası. Lütfen bağlantınızı kontrol edip tekrar deneyin</string>
+    <string name="stats_error_parsing">Veri yüklenirken bir sorun oluştu. Lütfen yeniden deneyin</string>
+    <string name="stats_error_network">Ağ hatası. Lütfen bağlantınızı kontrol edip yeniden deneyin</string>
     <string name="stats_error_auth">Bu istatistikleri görüntülemek için izniniz yok</string>
     <string name="stats_error_unknown">Beklenmedik bir hata oluştu</string>
     <string name="stats_error_api">İstatistikler yüklenemedi</string>
@@ -340,7 +340,7 @@ Language: tr
     <string name="ai_bot_time_just_now">Az önce</string>
     <string name="ai_bot_welcome_message">Ben sizin kişisel yapay zeka asistanınızım. Siteniz veya hesabınız hakkındaki tüm sorularınızda yardımcı olabilirim.</string>
     <string name="ai_bot_welcome_greeting">Selam %1$s 👋</string>
-    <string name="unified_support_generic_error">Bir sorun oluştu. Lütfen daha sonra tekrar deneyin.</string>
+    <string name="unified_support_generic_error">Bir sorun oluştu. Lütfen daha sonra yeniden deneyin.</string>
     <string name="create">Oluştur</string>
     <string name="logs_screen_general_error">Bir sorun oluştu…</string>
     <string name="logs_screen_empty_state">Kullanılabilir günlük yok</string>
@@ -402,7 +402,7 @@ Language: tr
     <string name="application_password_info_description_2">Uygulamaya site eklediğinizde, uygulama şifreleri gerektiğinde otomatik olarak oluşturulur.</string>
     <string name="application_password_info_description_1">Uygulama şifreleri, uygulamaların hesap şifrenizi kullanmadan sitenize erişmesinin güvenli bir yoludur.</string>
     <string name="application_password_info_title">Uygulama Şifreleri</string>
-    <string name="application_password_invalid_description">Uygulama şifreniz artık yok. Yeni bir uygulama şifresi oluşturmak için lütfen tekrar oturum açın.</string>
+    <string name="application_password_invalid_description">Uygulama şifreniz artık yok. Yeni bir uygulama parolası oluşturmak için lütfen yeniden oturum açın.</string>
     <string name="subscribers_delete_failed">Abone silinemedi</string>
     <string name="subscribers_delete_success_message">Abone silindi, ancak silmenin geçerli olması bir dakika sürebilir</string>
     <string name="subscribers_delete_success_title">Abone silindi</string>
@@ -423,8 +423,8 @@ Language: tr
     <string name="start">Başlat</string>
     <string name="descending">Azalan</string>
     <string name="ascending">Artan</string>
-    <string name="application_password_invalid">Geçersiz Uygulama Şifresi</string>
-    <string name="application_password_credentials_storing_error">%1$s Uygulama şifresi kimlik bilgileri saklanırken bir hata oluştu</string>
+    <string name="application_password_invalid">Geçersiz Uygulama Parolası</string>
+    <string name="application_password_credentials_storing_error">%1$s Uygulama parolası kimlik bilgileri saklanırken bir hata oluştu</string>
     <string name="subscribers_add_failed">Aboneler eklenemedi</string>
     <string name="subscribers_add_success">Aboneler başarıyla eklendi</string>
     <string name="subscribers_add_disclosure">\n        Gönder seçeneğine tıklayarak, her bir kişiye e-posta göndermek için uygun onayı aldığınızı beyan etmiş olursunuz. Abonelerinizden gelen spam şikayetleri veya e-postaların yüksek oranda geri dönmesi, hesabınıza işlem yapılmasına neden olabilir.\n    </string>
@@ -462,10 +462,10 @@ Language: tr
     <string name="about_update_email_unverified">Profilinizi güncellemek için öncelikle e-posta adresinizi doğrulamanız gerekir.</string>
     <string name="sort_by">Şuna göre sırala:</string>
     <string name="filter">Filtrele</string>
-    <string name="application_password_not_supported_error" a8c-src-lib="module:login">Sağlanan site Uygulama Şifresi kimlik doğrulamasını desteklemiyor.</string>
-    <string name="application_password_title">Uygulama Şifresi kullanarak yetkilendirin</string>
-    <string name="application_password_credentials_stored">Şunun için uygulama şifresi kimlik bilgileri saklandı: %1$s</string>
-    <string name="qrcode_auth_flow_timeout_subtitle">Bir kod bulmak çok uzun sürdü. Tekrar deneyin veya kodu taramak için kamera uygulamanızı kullanın.</string>
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">Sağlanan site Uygulama Parolası kimlik doğrulamasını desteklemiyor.</string>
+    <string name="application_password_title">Uygulama Parolası kullanarak yetkilendirin</string>
+    <string name="application_password_credentials_stored">Şunun için uygulama parolası kimlik bilgileri saklandı: %1$s</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">Bir kod bulmak çok uzun sürdü. Yeniden deneyin veya kodu taramak için kamera uygulamanızı kullanın.</string>
     <string name="qrcode_auth_flow_timeout_title">Tarama zaman aşımına uğradı</string>
     <string name="invite_users">Kullanıcıları davet et</string>
     <string name="cant_share_no_blog">Blogunuz olmadan WordPress ile paylaşamazsınız</string>
@@ -561,7 +561,7 @@ Language: tr
     <string name="reader_tags_feed_see_more_from_tag">%s etiketli daha fazla içerik</string>
     <string name="reader_tags_display_name">Etiketler</string>
     <string name="reader_dropdown_menu_tags">Etiketleriniz</string>
-    <string name="no_connection_error_description">Ağ bağlantınızı kontrol edip tekrar deneyin.</string>
+    <string name="no_connection_error_description">Ağ bağlantınızı kontrol edip yeniden deneyin.</string>
     <string name="no_connection_error_title">Bu içerik şu an yüklenemiyor</string>
     <string name="stats_subscribers_marker_view_plural">Aboneler</string>
     <string name="stats_subscribers_marker_view_singular">Abone</string>
@@ -2396,7 +2396,7 @@ Language: tr
     <string name="plugin_install_site_ineligible_default_error">Bir etki alanı kaydettiyseniz lütfen kayıt tamamlanana kadar bekleyin ve ardından yeniden deneyin.\n\nSorun çıkarsa, bir şeyler ters gitmiş olabilir ve eklenti özelliği bu site için kullanılamayabilir.</string>
     <string name="domain_contact_information_state_not_available_hint">İl (kullanılamıyor)</string>
     <string name="domain_registration_privacy_protection_tos">Bu etki alanını kaydederek %1$shüküm ve koşullar%2$s metnini kabul etmiş olursunuz</string>
-    <string name="error_network_connection">Ağ bağlantınızı kontrol edip tekrar deneyin</string>
+    <string name="error_network_connection">Ağ bağlantınızı kontrol edip yeniden deneyin</string>
     <string name="error_disabled_apis">Ayarlar alınamadı: Bu OAuth uygulama kimliği ile hesap birleşimi için bazı API uygulamaları kullanılamıyor.</string>
     <string name="jetpack_connection_terms_and_conditions">Jetpack kurarak %1$shüküm ve koşullar%2$s metnimizi kabul etmiş sayılırsınız</string>
     <string name="site_settings_disconnected_toast">Bağlantı yok. Düzenleme etkisizleştirildi.</string>
