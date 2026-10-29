@@ -85,21 +85,19 @@ class ReaderPhotoViewerActivity : BaseAppCompatActivity() {
         super.finish()
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
-
-    companion object {
-        /**
-         * Finds a gallery URL that matches the given URL after stripping WordPress size suffixes (e.g. -800x600) from
-         * pathnames.
-         */
-        private fun findSizeSuffixMatch(targetUrl: String, galleryUrls: List<String>): String? {
-            val basePath = stripSizeSuffix(UrlUtils.removeQuery(targetUrl))
-            return galleryUrls.firstOrNull { stripSizeSuffix(UrlUtils.removeQuery(it)) == basePath }
-        }
-
-        /**
-         * Strips WordPress size suffixes (e.g. -800x600) from a URL. Keep in sync with the JS counterpart in
-         * [ReaderPostDetailFragment.buildGalleryDetectionJs].
-         */
-        private fun stripSizeSuffix(url: String) = url.replace(Regex("-\\d+x\\d+(\\.[^.]+)$"), "$1")
-    }
 }
+
+/**
+ * Finds a gallery URL that matches the given URL after stripping WordPress size suffixes (e.g. -800x600) from
+ * pathnames.
+ */
+private fun findSizeSuffixMatch(targetUrl: String, galleryUrls: List<String>): String? {
+    val basePath = stripSizeSuffix(UrlUtils.removeQuery(targetUrl))
+    return galleryUrls.firstOrNull { stripSizeSuffix(UrlUtils.removeQuery(it)) == basePath }
+}
+
+/**
+ * Strips WordPress size suffixes (e.g. -800x600) from a URL. Keep in sync with the JS counterpart in
+ * [ReaderPostDetailFragment.buildGalleryDetectionJs].
+ */
+private fun stripSizeSuffix(url: String) = url.replace(Regex("-\\d+x\\d+(\\.[^.]+)$"), "$1")

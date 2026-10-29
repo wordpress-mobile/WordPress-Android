@@ -127,9 +127,9 @@ private suspend fun PointerInputScope.detectZoomAndPan(state: ZoomState) = await
             !state.isZoomed || isLeftToPager || pan == Offset.Zero -> false
             state.canPan(pan, size) -> true
             else -> {
+                // the pager only takes a drag that starts at the edge - once this one has panned, it's already lost
                 isLeftToPager = !hasPanned
-                // past the edge mid-drag: nothing moves, but don't let the pager start either
-                hasPanned
+                false
             }
         }
         val centroid = event.calculateCentroid()

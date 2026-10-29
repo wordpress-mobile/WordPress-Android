@@ -64,7 +64,7 @@ class ReaderUserListViewModel @Inject constructor(
                 ReaderLiker(
                     userId = user.userId,
                     name = user.displayName,
-                    urlDomain = user.urlDomain.takeIf { user.hasUrl() },
+                    urlDomain = user.urlDomain.ifEmpty { null },
                     avatarUrl = user.avatarUrl,
                     // as before, only a liker with a url can be opened
                     blogId = if (user.hasUrl() && user.hasBlogId()) user.blogId else 0L
