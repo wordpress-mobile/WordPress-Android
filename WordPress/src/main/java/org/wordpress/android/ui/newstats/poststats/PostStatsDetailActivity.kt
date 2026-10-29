@@ -69,6 +69,8 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsColors
 import org.wordpress.android.ui.newstats.selectNewStatsSiteIfNeeded
 import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
+import org.wordpress.android.ui.stats.refresh.utils.trackStatsAccessed
 import org.wordpress.android.ui.newstats.components.StatsDayViewsChart
 import org.wordpress.android.ui.newstats.components.StatsCardContainer
 import org.wordpress.android.ui.newstats.datasource.PostViewsDailyView
@@ -140,6 +142,7 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
         // Only on a fresh launch: a rotation recreates this activity from the same Intent, and
         // re-reporting there would inflate the count. Same guard as NewStatsActivity's.
         if (savedInstanceState == null) {
+            trackStatsAccessedIfLaunchedFromOutside()
             newStatsTracker.trackPostDetailsScreenShown()
         }
 
@@ -182,6 +185,24 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
         siteStore,
         selectedSiteRepository
     )
+
+    /**
+     * Reports the open under the name both Stats screens share, so the rollout cohorts stay
+     * comparable on this entry point - see [trackStatsAccessed]. The old per-post screen reported
+     * it from StatsDetailViewModel, which this screen replaces.
+     *
+     * Only for an entry point outside New Stats. One that went through [NewStatsActivity] already
+     * reported the open there, and reporting again here would count one visit twice, so the
+     * absence of the extra means "already reported" rather than "unknown source".
+     */
+    private fun trackStatsAccessedIfLaunchedFromOutside() {
+        val name = intent?.getStringExtra(ARG_LAUNCHED_FROM) ?: return
+        val launchedFrom = StatsLaunchedFrom.entries.firstOrNull { it.name == name } ?: return
+        // No selected site means nothing to attribute the open to, so skip rather than report a
+        // half-formed event. Same choice NewStatsActivity makes.
+        val site = selectedSiteRepository.getSelectedSite() ?: return
+        analyticsTracker.trackStatsAccessed(site, launchedFrom.value, isNewStats = true)
+    }
 
     /**
      * Opens the item these stats belong to: a post goes to the Reader, and everything else --
@@ -247,6 +268,7 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
     companion object {
         private const val ARG_POST_ID = "post_id"
         private const val ARG_POST_TITLE = "post_title"
+        private const val ARG_LAUNCHED_FROM = "launched_from"
 
         /**
          * @param postId the post to show stats for; 0 is the site's home page
@@ -255,12 +277,17 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
          * @param localSiteId the site these stats are for, travelling as the same LOCAL_SITE_ID
          * extra New Stats already uses. Omit it from inside New Stats, where the site is already
          * the selected one; name it from anywhere that can be open for a different site.
+         * @param launchedFrom the tap source to report STATS_ACCESSED with. Omit it from inside
+         * New Stats, where [NewStatsActivity] already reported the open; name it from an entry
+         * point that reaches this screen without passing through one that does. See
+         * [trackStatsAccessedIfLaunchedFromOutside].
          */
         fun start(
             context: Context,
             postId: Long,
             postTitle: String,
-            localSiteId: Int? = null
+            localSiteId: Int? = null,
+            launchedFrom: StatsLaunchedFrom? = null
         ) {
             context.startActivity(
                 Intent(
@@ -270,6 +297,9 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
                     .putExtra(ARG_POST_ID, postId)
                     .putExtra(ARG_POST_TITLE, postTitle)
                     .apply { localSiteId?.let { putExtra(WordPress.LOCAL_SITE_ID, it) } }
+                    // By name, not as Serializable, for the same reason NewStatsActivity's
+                    // buildIntent does it: an Intent that may be filled in outside our process.
+                    .apply { launchedFrom?.let { putExtra(ARG_LAUNCHED_FROM, it.name) } }
             )
         }
     }

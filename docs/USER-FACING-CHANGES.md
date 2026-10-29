@@ -9,12 +9,12 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 <!-- Add new entries directly below this line. -->
 
 - **A post's Stats menu item opens the redesigned Stats**
-  Posts → a published post's ⋯ menu → Stats now opens the per-item screen of the redesigned Stats, the same screen a row in Posts & pages opens, instead of the old per-post stats screen. The post's title, chart, totals and calendars are the ones the redesigned Stats shows everywhere else, and its header opens the post itself.
+  Posts → a published post's ⋯ menu → Stats now opens the per-item screen of the redesigned Stats, the same screen a row in Posts & pages opens, instead of the old per-post stats screen. The post's title, chart, totals and calendars are the ones the redesigned Stats shows everywhere else, and its header opens the post itself. A page's Stats menu item, where the Pages list offers one, opens the same screen.
   - **Apps:** Both
   - **Type:** Changed
   - **Availability:** Flag: android_new_stats
   - **Where:** My Site → Posts → a published post's ⋯ menu → Stats
-  - **Notes:** Only for people on the redesigned Stats; anyone who has switched back to the old Stats keeps the old screen here too. The menu item itself is unchanged — it still appears only for a published post with no unsynced changes, on a site whose stats you can view. Opening it for a site other than the one currently selected switches the selected site, as the Stats widgets already do.
+  - **Notes:** Only for people on the redesigned Stats; anyone who has switched back to the old Stats keeps the old screen here too. The menu item itself is unchanged — it still appears only for a published post with no unsynced changes, on a site whose stats you can view. Opening it for a site other than the one currently selected switches the selected site, as the Stats widgets already do. The Pages list offers a Stats menu item only on sites using the newer Pages screen, so most people see no change there yet.
 
 - **Open a post's likes or comments from its Stats totals**
   The Likes and Comments totals on the top card of the per-item screen in the redesigned Stats screen are now tappable. Likes opens the full list of likers — the same list the likers row above it opens, and the one the Reader and notifications open. Comments opens that post's comments, the threaded comments screen the Reader and notifications open, where you can read, like and reply to them. A total you can open is shown in the same colour as the item's title, so the ones that lead somewhere are visible at a glance.
