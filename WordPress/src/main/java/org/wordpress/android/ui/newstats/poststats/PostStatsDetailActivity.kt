@@ -196,12 +196,14 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
      * absence of the extra means "already reported" rather than "unknown source".
      */
     private fun trackStatsAccessedIfLaunchedFromOutside() {
-        val name = intent?.getStringExtra(ARG_LAUNCHED_FROM) ?: return
-        val launchedFrom = StatsLaunchedFrom.entries.firstOrNull { it.name == name } ?: return
+        val launchedFrom = intent?.getStringExtra(ARG_LAUNCHED_FROM)
+            ?.let { name -> StatsLaunchedFrom.entries.firstOrNull { it.name == name } }
         // No selected site means nothing to attribute the open to, so skip rather than report a
         // half-formed event. Same choice NewStatsActivity makes.
-        val site = selectedSiteRepository.getSelectedSite() ?: return
-        analyticsTracker.trackStatsAccessed(site, launchedFrom.value, isNewStats = true)
+        val site = selectedSiteRepository.getSelectedSite()
+        if (launchedFrom != null && site != null) {
+            analyticsTracker.trackStatsAccessed(site, launchedFrom.value, isNewStats = true)
+        }
     }
 
     /**
