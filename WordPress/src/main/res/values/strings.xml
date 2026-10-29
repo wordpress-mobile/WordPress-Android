@@ -1628,6 +1628,13 @@
     <string name="stats_detail_recent_weeks">Recent Weeks</string>
     <string name="stats_details_top_commentators">Top Commentators</string>
     <string name="stats_post_detail_title">Post Stats</string>
+    <string name="stats_post_detail_published">Published %1$s</string>
+    <string name="stats_post_detail_more_likers">+%1$s</string>
+    <string name="stats_post_detail_activity_less">Less</string>
+    <string name="stats_post_detail_activity_more">More</string>
+    <string name="stats_post_detail_total">Total</string>
+    <!-- Row under the Avg. Views Per Day grid, giving the item's average over its whole life -->
+    <string name="stats_post_detail_average">Average</string>
     <string name="stats_previous_day">Previous day</string>
     <string name="stats_next_day">Next day</string>
 
@@ -1948,6 +1955,8 @@
     <string name="get_likes_no_network_error">No network available.</string>
     <string name="get_likes_unknown_error">An unknown error occurred while getting likes.</string>
     <string name="get_likes_empty_state_title">An error occurred while getting likes data</string>
+    <!-- Shown when the likes list loads successfully but nobody has liked the item -->
+    <string name="get_likes_empty_state_no_likes">No likes yet</string>
     <string name="like_title_singular">1 Like</string>
     <string name="like_title_plural">%d Likes</string>
     <string name="like_faces_error_loading_message">Error loading like data. %s.</string>

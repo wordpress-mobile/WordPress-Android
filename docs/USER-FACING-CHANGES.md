@@ -8,6 +8,53 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Open a post's likes or comments from its Stats totals**
+  The Likes and Comments totals on the top card of the per-item screen in the redesigned Stats screen are now tappable. Likes opens the full list of likers — the same list the likers row above it opens, and the one the Reader and notifications open. Comments opens that post's comments, the threaded comments screen the Reader and notifications open, where you can read, like and reply to them. A total you can open is shown in the same colour as the item's title, so the ones that lead somewhere are visible at a glance.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row (or Show all → tap a row); My Site → Stats → Insights → Latest post
+  - **Notes:** A total of zero stays a plain figure and does nothing, since there is nothing to open. Comments is tappable only for the items whose title opens in the Reader: pages and attachments have no Reader representation, and an item that is a draft, scheduled or trashed has no public permalink to open. The Views total is never tappable.
+
+- **Avg. Views Per Day is a calendar grid**
+  The Avg. Views Per Day card on the per-item screen in the redesigned Stats screen now draws each year as twelve squares, January to December, shaded by the item's average daily views that month — the same grid the two cards above it use. An Average row under the grid gives the item's average over its whole life. This replaces the list of yearly averages, and it is what wordpress.com shows under "Average per day".
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row (or Show all → tap a row); My Site → Stats → Insights → Latest post
+  - **Notes:** The monthly averages are the server's own figures, and they are whole numbers — a month that averaged less than one view a day shows as an empty square, even where Months and Years above shows views for it. Average is the server's figure for an item that spans a single year; over several years the server reports one per year only, so it is worked out as the views the item has had over the days it has existed.
+
+- **Months and Years is a calendar grid**
+  The Months and Years card on the per-item screen in the redesigned Stats screen now draws each year as twelve squares, January to December, shaded from pale to solid by how many views that month got — the same grid the Recent Weeks card above it uses. The current year is always shown, even for an item that has had no views this year. A Total row under the grid adds the years up. This replaces the list of year totals.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row (or Show all → tap a row); My Site → Stats → Insights → Latest post
+  - **Notes:** The twelve months are drawn as two rows of six, because twelve across leaves each square too narrow to write a figure in on a phone. Months the server left out — including the ones that have not happened yet — are drawn as empty squares, so the columns mean the same month in every year. Each square with views names its month, year and count to a screen reader. The shading scale is shared with Recent Weeks but the two grids are scaled separately, each against its own busiest period.
+
+- **Recent Weeks is a calendar grid**
+  The Recent Weeks card on the per-item screen in the redesigned Stats screen now draws each week as a row of seven squares, one per day, shaded from pale to solid by how many views that day got. The busiest day of the range is the darkest square, a "Less … More" key sits under the grid, and a Total row under that adds the weeks up. Each square names its date and view count to a screen reader. This replaces the list of week totals with their week-on-week percentages.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row (or Show all → tap a row); My Site → Stats → Insights → Latest post
+  - **Notes:** The weeks start on whichever day your language starts the week on — Sunday in US English, Monday in most of Europe — not on the Monday the server buckets its weeks from. Days that have not happened yet, in the week still running, are drawn as empty squares so the columns line up by weekday; the days at the far end, before the range the server sent, are left blank instead, since the item may well have been read on them. The grid no longer shows each week's own total or its change against the week before; it shows per-day counts, plus one total for the whole range.
+
+- **See who liked a post from its Stats screen**
+  The top card of the per-item screen in the redesigned Stats screen now shows the faces of the people who liked the item, with a "46 Likes" row beside them. Tapping that row opens the full list of likers — the same list the Reader and notifications open — where tapping someone shows their profile. The card also now reads "Published <date>" with a small link icon, and the views, likes and comments totals sit under a rule in larger type.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row (or Show all → tap a row); My Site → Stats → Insights → Latest post
+  - **Notes:** The likes row appears only for items with at least one like, so never for the site's home page. The faces arrive in a second request after the screen loads; if it fails the row still shows the count, which comes from the stats response. Opened this way the likers list has no post header at the top, because Stats knows only the item's id and like count — the Reader and notifications still show theirs.
+
+- **Per-item Stats screen is laid out in cards**
+  The per-item screen in the redesigned Stats screen is now built from the same cards as the rest of Stats, instead of being one flat list on the window background. It has five cards: the item's title, date and totals; the selected day's views with its chart; Recent Weeks; Months and Years; and Avg. Views Per Day. The information shown and what you can do with it are unchanged.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row (or Show all → tap a row); My Site → Stats → Insights → Latest post
+
 - **Reader articles no longer get stuck on a spinner**
   Opening a post in the Reader shows the article text without waiting on a network request for its stylesheet, so a slow or stalled connection no longer leaves a blank body behind a spinner that never stops. The comments snippet, tags and likers below the article also appear as soon as the article itself is on screen, instead of waiting for every embed and iframe in the post to finish loading.
   - **Apps:** Both
