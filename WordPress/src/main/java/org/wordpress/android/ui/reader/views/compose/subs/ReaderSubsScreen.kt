@@ -46,9 +46,12 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -95,6 +98,9 @@ fun ReaderSubsScreen(
 
     val isSearchVisible = uiState.siteSearchQuery != null && tabs[pagerState.currentPage] == ReaderSubsTab.SITES
     BackHandler(enabled = isSearchVisible, onBack = actions.onSiteSearchClosed)
+    // set by the search icon, so only opening the search raises the keyboard - not swiping back to the
+    // Blogs tab or rotating with an empty search open
+    var shouldFocusSearch by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -102,7 +108,12 @@ fun ReaderSubsScreen(
                 TopAppBar(
                     title = {
                         if (isSearchVisible) {
-                            SiteSearchField(uiState.siteSearchQuery.orEmpty(), actions)
+                            SiteSearchField(
+                                query = uiState.siteSearchQuery.orEmpty(),
+                                shouldFocus = shouldFocusSearch,
+                                onFocused = { shouldFocusSearch = false },
+                                actions = actions
+                            )
                         } else {
                             Text(
                                 text = stringResource(R.string.reader_activity_title_manage_tags_blogs),
@@ -125,7 +136,10 @@ fun ReaderSubsScreen(
                                 actions.onSiteSearchQueryChanged("")
                             }
                         } else if (tabs[pagerState.currentPage] == ReaderSubsTab.SITES) {
-                            IconButton(onClick = actions.onSiteSearchOpened) {
+                            IconButton(onClick = {
+                                shouldFocusSearch = true
+                                actions.onSiteSearchOpened()
+                            }) {
                                 Icon(Icons.Default.Search, contentDescription = stringResource(R.string.search))
                             }
                         }
@@ -177,11 +191,18 @@ fun ReaderSubsScreen(
 }
 
 @Composable
-private fun SiteSearchField(query: String, actions: ReaderSubsActions) {
+private fun SiteSearchField(
+    query: String,
+    shouldFocus: Boolean,
+    onFocused: () -> Unit,
+    actions: ReaderSubsActions
+) {
     val focusRequester = remember { FocusRequester() }
-    // raise the keyboard when the search opens, but not when it's restored with a query
-    LaunchedEffect(Unit) {
-        if (query.isEmpty()) focusRequester.requestFocus()
+    LaunchedEffect(shouldFocus) {
+        if (shouldFocus) {
+            focusRequester.requestFocus()
+            onFocused()
+        }
     }
     ContentListSearchField(
         query = query,
@@ -269,8 +290,11 @@ private fun TagRow(tag: ReaderSubsTag, onFollowClick: () -> Unit) {
 
 @Composable
 private fun SitesPage(sites: List<ReaderSubsSite>?, searchQuery: String?, actions: ReaderSubsActions) {
-    // keyed by the query so each search starts at the top, rather than where the previous list was scrolled to
-    val listState = rememberSaveable(searchQuery, saver = LazyListState.Saver) { LazyListState() }
+    // keyed by the query so each search starts at the top, rather than where the previous list was scrolled to.
+    // An open but empty search shows the same list as no search, so the two share a key.
+    val listState = rememberSaveable(searchQuery?.takeIf { it.isNotEmpty() }, saver = LazyListState.Saver) {
+        LazyListState()
+    }
     when {
         sites == null -> LoadingState()
         sites.isEmpty() && !searchQuery.isNullOrEmpty() -> EmptyContentM3(

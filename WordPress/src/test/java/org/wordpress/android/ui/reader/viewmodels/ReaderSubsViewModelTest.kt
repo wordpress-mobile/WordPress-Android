@@ -199,6 +199,17 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `a half-typed entry survives the view model being recreated`() {
+        val savedStateHandle = SavedStateHandle()
+        viewModel = createViewModel(savedStateHandle)
+
+        viewModel.onEntryChanged("example.com")
+        viewModel = createViewModel(savedStateHandle)
+
+        assertThat(viewModel.uiState.value.entry).isEqualTo("example.com")
+    }
+
+    @Test
     fun `an invalid tag isn't followed`() = test {
         whenever(repository.isValidTagName("a#b")).thenReturn(false)
 

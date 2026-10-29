@@ -45,7 +45,11 @@ class ReaderSubsViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableStateFlow(
-        ReaderSubsUiState(selectedTab = initialTab(), siteSearchQuery = savedStateHandle[KEY_SITE_SEARCH_QUERY])
+        ReaderSubsUiState(
+            selectedTab = initialTab(),
+            siteSearchQuery = savedStateHandle[KEY_SITE_SEARCH_QUERY],
+            entry = savedStateHandle[KEY_ENTRY] ?: ""
+        )
     )
     val uiState: StateFlow<ReaderSubsUiState> = _uiState.asStateFlow()
 
@@ -158,7 +162,7 @@ class ReaderSubsViewModel @Inject constructor(
         }
     }
 
-    fun onEntryChanged(entry: String) = _uiState.update { it.copy(entry = entry.take(MAX_ENTRY_LENGTH)) }
+    fun onEntryChanged(entry: String) = setEntry(entry.take(MAX_ENTRY_LENGTH))
 
     /*
      * follow the tag or url the user typed into the entry field
@@ -236,8 +240,16 @@ class ReaderSubsViewModel @Inject constructor(
     }
 
     private fun clearEntry() {
-        _uiState.update { it.copy(entry = "") }
+        setEntry("")
         _events.trySend(ReaderSubsUiEvent.HideKeyboard)
+    }
+
+    /*
+     * saved like the tab and search query, so a half-typed entry survives process death
+     */
+    private fun setEntry(entry: String) {
+        savedStateHandle[KEY_ENTRY] = entry
+        _uiState.update { it.copy(entry = entry) }
     }
 
     private fun loadTags() {
@@ -354,6 +366,7 @@ class ReaderSubsViewModel @Inject constructor(
     companion object {
         private const val KEY_SELECTED_TAB = "selected_tab"
         private const val KEY_SITE_SEARCH_QUERY = "site_search_query"
+        private const val KEY_ENTRY = "entry"
         private const val HTTP_UNAUTHORIZED = 401
         private const val HTTP_NOT_FOUND = 404
         private const val MAX_ENTRY_LENGTH = 96
