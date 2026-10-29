@@ -47,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -83,7 +84,12 @@ import javax.inject.Inject
 
 private val ScreenPadding = 16.dp
 private val CardPadding = 16.dp
-private val CardListVerticalPadding = 8.dp
+/**
+ * Tail room under the last card. There is none at the top: [StatsCardContainer] brings a margin of
+ * its own, which is the whole gap between the app bar and the first card everywhere else in New
+ * Stats, and adding to it here left this screen's header sitting lower than any of its siblings.
+ */
+private val CardListBottomPadding = 8.dp
 private val ChartHeight = 120.dp
 private val HeaderCornerRadius = 8.dp
 private val HeaderVerticalPadding = 8.dp
@@ -247,6 +253,10 @@ private fun PostStatsDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
+                // Material 3 makes a top app bar 64dp; every toolbar in the rest of the app is
+                // the 56dp this dimen holds, and the extra 8dp is dead space under the title on
+                // a screen whose first card starts right below it.
+                expandedHeight = dimensionResource(R.dimen.toolbar_height),
                 title = {
                     Text(
                         text = stringResource(
@@ -304,7 +314,7 @@ private fun LoadingContent() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(vertical = CardListVerticalPadding)
+                .padding(bottom = CardListBottomPadding)
         ) {
             repeat(LOADING_SHIMMER_CARD_COUNT) {
                 StatsCardContainer {
@@ -366,11 +376,11 @@ private fun LoadedContent(
 ) {
     val data = state.data
     // One card per section, the way every other New Stats surface is built: the cards supply
-    // their own horizontal margin, so the list only pads the ends of the scroll.
+    // their own margins, so the list adds nothing but the tail room under the last one.
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding =
-            PaddingValues(vertical = CardListVerticalPadding)
+            PaddingValues(bottom = CardListBottomPadding)
     ) {
         item {
             StatsCardContainer {
