@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.wordpress.android.datasets.ReaderCommentTable
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.datasets.ReaderUserTable
 import org.wordpress.android.modules.BG_THREAD
@@ -35,7 +34,7 @@ data class ReaderUserListUiState(
 )
 
 /**
- * The users who like a Reader post, or a comment when the intent has a comment id
+ * The users who like a Reader post
  */
 @HiltViewModel
 class ReaderUserListViewModel @Inject constructor(
@@ -45,7 +44,6 @@ class ReaderUserListViewModel @Inject constructor(
 ) : ScopedViewModel(mainDispatcher) {
     private val blogId = savedStateHandle.get<Long>(ReaderConstants.ARG_BLOG_ID) ?: 0L
     private val postId = savedStateHandle.get<Long>(ReaderConstants.ARG_POST_ID) ?: 0L
-    private val commentId = savedStateHandle.get<Long>(ReaderConstants.ARG_COMMENT_ID) ?: 0L
 
     private val _uiState = MutableStateFlow(ReaderUserListUiState())
     val uiState: StateFlow<ReaderUserListUiState> = _uiState.asStateFlow()
@@ -57,24 +55,11 @@ class ReaderUserListViewModel @Inject constructor(
     }
 
     private fun loadUiState(): ReaderUserListUiState {
-        val isPostLikes = commentId == 0L
-        val users = if (isPostLikes) {
-            ReaderUserTable.getUsersWhoLikePost(blogId, postId, ReaderConstants.READER_MAX_USERS_TO_DISPLAY)
-        } else {
-            ReaderUserTable.getUsersWhoLikeComment(blogId, commentId, ReaderConstants.READER_MAX_USERS_TO_DISPLAY)
-        }
+        val users = ReaderUserTable.getUsersWhoLikePost(blogId, postId, ReaderConstants.READER_MAX_USERS_TO_DISPLAY)
         return ReaderUserListUiState(
             isLoaded = true,
-            numLikes = if (isPostLikes) {
-                ReaderPostTable.getNumLikesForPost(blogId, postId)
-            } else {
-                ReaderCommentTable.getNumLikesForComment(blogId, postId, commentId)
-            },
-            isLikedByCurrentUser = if (isPostLikes) {
-                ReaderPostTable.isPostLikedByCurrentUser(blogId, postId)
-            } else {
-                ReaderCommentTable.isCommentLikedByCurrentUser(blogId, postId, commentId)
-            },
+            numLikes = ReaderPostTable.getNumLikesForPost(blogId, postId),
+            isLikedByCurrentUser = ReaderPostTable.isPostLikedByCurrentUser(blogId, postId),
             likers = users.map { user ->
                 ReaderLiker(
                     userId = user.userId,

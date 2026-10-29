@@ -9,11 +9,11 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 <!-- Add new entries directly below this line. -->
 
 - **Reader's likers list and photo viewer redesigned**
-  The list of people who liked a post or comment has a Material 3 top bar and rows; tapping a liker with a site still opens that site. The full-screen photo viewer still swipes between a post's images, pinches and double-taps to zoom, shows the "1 of 5" count, and hides its toolbar after a few seconds. Pages now slide rather than using the old flow animation, and double-tap zooms straight in to 2.5× and back out instead of stepping through two zoom levels.
+  The Reader's list of people who liked a post has a Material 3 top bar and rows; tapping a liker with a site still opens that site. The full-screen photo viewer still swipes between a post's images, pinches and double-taps to zoom, shows the "1 of 5" count, and hides its toolbar after a few seconds. Pages now slide rather than using the old flow animation, and double-tap zooms straight in to 2.5× and back out instead of stepping through two zoom levels.
   - **Apps:** Jetpack
   - **Type:** Changed
   - **Availability:** Everyone
-  - **Where:** Reader → a post → the likes row; Reader → a post → tap an image
+  - **Where:** Notifications or Activity Log → tap a "like" link in an entry's text, for a post already loaded in the Reader (the likers list); Reader → a post → tap an image (the photo viewer)
   - **Notes:** A zoomed photo pages to the next one only when a drag starts at the photo's edge; a drag that starts by panning stops at the edge. The full-screen video player is unchanged apart from now sending the app's user agent.
 
 - **Reader's Manage subscriptions screen redesigned**
