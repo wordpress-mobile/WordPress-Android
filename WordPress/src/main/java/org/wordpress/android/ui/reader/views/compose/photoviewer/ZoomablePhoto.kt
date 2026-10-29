@@ -34,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntSize
 import coil.compose.AsyncImage
 import org.wordpress.android.R
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -162,7 +163,11 @@ private class ZoomState {
         scale = newScale
     }
 
-    fun canPan(pan: Offset, bounds: IntSize) = clamp(offset + pan, scale, bounds) != offset
+    /** a mostly-horizontal drag only counts if the photo can move sideways, so dragging out past an edge pages */
+    fun canPan(pan: Offset, bounds: IntSize): Boolean {
+        val panned = clamp(offset + pan, scale, bounds)
+        return if (abs(pan.x) >= abs(pan.y)) panned.x != offset.x else panned != offset
+    }
 
     fun toggle(tap: Offset, bounds: IntSize) {
         if (isZoomed) {
