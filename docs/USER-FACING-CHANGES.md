@@ -8,13 +8,13 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
-- **Open a post's comments from its Stats screen**
-  The Comments total on the top card of the per-item screen in the redesigned Stats screen is now tappable, and opens that post's comments — the same threaded comments screen the Reader and notifications open, where you can read, like and reply to them.
+- **Open a post's likes or comments from its Stats totals**
+  The Likes and Comments totals on the top card of the per-item screen in the redesigned Stats screen are now tappable. Likes opens the full list of likers — the same list the likers row above it opens, and the one the Reader and notifications open. Comments opens that post's comments, the threaded comments screen the Reader and notifications open, where you can read, like and reply to them. A total you can open is shown in the same colour as the item's title, so the ones that lead somewhere are visible at a glance.
   - **Apps:** Both
   - **Type:** New
   - **Availability:** Flag: android_new_stats
   - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row (or Show all → tap a row); My Site → Stats → Insights → Latest post
-  - **Notes:** The total is tappable for the same items whose title opens in the Reader, and is shown as a plain figure otherwise: pages and attachments have no Reader representation, and an item that is a draft, scheduled or trashed has no public permalink to open.
+  - **Notes:** A total of zero stays a plain figure and does nothing, since there is nothing to open. Comments is tappable only for the items whose title opens in the Reader: pages and attachments have no Reader representation, and an item that is a draft, scheduled or trashed has no public permalink to open. The Views total is never tappable.
 
 - **Avg. Views Per Day is a calendar grid**
   The Avg. Views Per Day card on the per-item screen in the redesigned Stats screen now draws each year as twelve squares, January to December, shaded by the item's average daily views that month — the same grid the two cards above it use. An Average row under the grid gives the item's average over its whole life. This replaces the list of yearly averages, and it is what wordpress.com shows under "Average per day".
@@ -41,7 +41,7 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Notes:** The weeks start on whichever day your language starts the week on — Sunday in US English, Monday in most of Europe — not on the Monday the server buckets its weeks from. Days that have not happened yet, in the week still running, are drawn as empty squares so the columns line up by weekday; the days at the far end, before the range the server sent, are left blank instead, since the item may well have been read on them. The grid no longer shows each week's own total or its change against the week before; it shows per-day counts, plus one total for the whole range.
 
 - **See who liked a post from its Stats screen**
-  The top card of the per-item screen in the redesigned Stats screen now shows the faces of the people who liked the item, with a "46 Likes" row beside them. Tapping that row opens the full list of likers — the same list the Reader and notifications open — where tapping someone shows their profile. The card also now reads "Published <date>" with a small link icon, and the views and comments totals sit under a rule in larger type. The like count appears once, in the likes row — not again in the totals.
+  The top card of the per-item screen in the redesigned Stats screen now shows the faces of the people who liked the item, with a "46 Likes" row beside them. Tapping that row opens the full list of likers — the same list the Reader and notifications open — where tapping someone shows their profile. The card also now reads "Published <date>" with a small link icon, and the views, likes and comments totals sit under a rule in larger type.
   - **Apps:** Both
   - **Type:** New
   - **Availability:** Flag: android_new_stats

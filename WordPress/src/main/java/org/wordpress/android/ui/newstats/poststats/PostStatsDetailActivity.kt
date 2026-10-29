@@ -611,8 +611,9 @@ private fun PostHeader(
     // The comments screen is a Reader screen, addressed by blog id, so it can only be reached for
     // the items the title itself opens there -- not for a page, an attachment or an unpublished
     // item, whose counts stay as plain figures.
-    val onCommentsClick: (() -> Unit)? =
-        onShowComments.takeIf { headerAction is PostHeaderAction.OpenInReader }
+    val onCommentsClick: (() -> Unit)? = onShowComments.takeIf {
+        headerAction is PostHeaderAction.OpenInReader && (post?.commentCount ?: 0L) > 0L
+    }
     val openLabel = stringResource(R.string.stats_open_link)
     Column {
         // Title and date read as one thing and open as one thing, the way the old stats
@@ -674,8 +675,6 @@ private fun PostHeader(
         Spacer(modifier = Modifier.height(12.dp))
         HorizontalDivider()
         Spacer(modifier = Modifier.height(12.dp))
-        // No likes here: the strip above already gives the count, with the faces behind it and a
-        // way into the full list, so a second figure for it only reads as the same number twice.
         Row(modifier = Modifier.fillMaxWidth()) {
             HeaderMetric(
                 labelResId = R.string.stats_views,
@@ -683,6 +682,16 @@ private fun PostHeader(
                 modifier = Modifier.weight(1f)
             )
             if (post != null) {
+                HeaderMetric(
+                    labelResId = R.string.stats_likes,
+                    value = post.likeCount,
+                    // Nothing to open for an item nobody has liked.
+                    onClick = onShowLikes
+                        ?.takeIf { post.likeCount > 0 },
+                    // The same words the likers row uses, since the two open the same screen.
+                    onClickLabel = likesLabel(post.likeCount),
+                    modifier = Modifier.weight(1f)
+                )
                 HeaderMetric(
                     labelResId = R.string.stats_comments,
                     value = post.commentCount,
@@ -877,11 +886,8 @@ private fun HeaderMetric(
 ) {
     Column(
         modifier = modifier
-            // A tappable metric keeps the same type and colour as a plain one -- the totals
-            // strip reads as one row of figures, and tinting one of them would make it look like
-            // a different kind of number rather than the same number you can follow. The ripple
-            // takes the column's own bounds rather than a padded box, so the two metrics stay
-            // aligned whether or not either of them is tappable.
+            // The ripple takes the column's own bounds rather than a padded box, so the
+            // metrics stay aligned whether or not any of them is tappable.
             .then(
                 if (onClick != null) {
                     Modifier
@@ -907,7 +913,14 @@ private fun HeaderMetric(
             text = formatStatValue(value, TEN_THOUSAND),
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface
+            // Tinted like the title above, and for the same reason: on this card a coloured
+            // figure is one that goes somewhere. A count of zero has nothing to open, so it is
+            // left as plain as the views beside it rather than tinted and inert.
+            color = if (onClick != null) {
+                MaterialTheme.colorScheme.primary
+            } else {
+                MaterialTheme.colorScheme.onSurface
+            }
         )
     }
 }
