@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Experimental block editor warns before saving while something is still in progress**
+  While the experimental block editor has saving locked, most often during a media upload, publishing, updating, submitting, saving a draft or previewing first asks "Your post isn't ready yet", with Keep editing and Continue. Leaving the editor asks the same question, with Keep editing and Leave; Leave closes the editor and saves as usual. If the editor stops working, undo, redo and Code Editor are disabled until it reloads.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: experimental_block_editor, or the site's Use Block Editor setting
+  - **Where:** Experimental block editor → Publish, Update, Submit for review, Save, Preview, back arrow
+  - **Notes:** Continuing or leaving mid-upload can save an empty Image block, or a Cover or Media & Text block whose media is a temporary link that doesn't work for readers. Some blocks also lock saving, so the warning can appear with no upload running: the Jetpack Donations block keeps it locked for the session if it can't reach Stripe, for example while offline. Uploads the app tracks itself still show the "You are currently uploading media" toast. The default block editor and the classic editor are unchanged.
+
 - **Reader's Manage subscriptions screen redesigned**
   The screen for managing followed tags and blogs has a Material 3 look. The Followed tags and Subscribed blogs tabs still swipe, each row has a Subscribe/Subscribed button, the field for following a tag or URL stays at the bottom, and the + button still opens the topic picker. Searching subscribed blogs now uses a search icon in the top bar on the blogs tab. Errors from the Subscribe buttons in the lists now show as a snackbar instead of a toast.
   - **Apps:** Jetpack
