@@ -12,7 +12,7 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   While the experimental block editor has saving locked, most often during a media upload, publishing, updating, submitting, saving a draft or previewing first asks "Your post isn't ready yet", with Keep editing and Continue. Leaving the editor asks the same question, with Keep editing and Leave; Leave closes the editor and saves as usual. If the editor stops working, undo, redo and Code Editor are disabled until it reloads.
   - **Apps:** Both
   - **Type:** Changed
-  - **Availability:** Flag: experimental_block_editor, or the site's Use Block Editor setting
+  - **Availability:** Opt-in: Me → App Settings → Experimental Features → Experimental block editor
   - **Where:** Experimental block editor → Publish, Update, Submit for review, Save, Preview, back arrow
   - **Notes:** Continuing or leaving mid-upload can save an empty Image block, or a Cover or Media & Text block whose media is a temporary link that doesn't work for readers. Some blocks also lock saving, so the warning can appear with no upload running: the Jetpack Donations block keeps it locked for the session if it can't reach Stripe, for example while offline. Uploads the app tracks itself still show the "You are currently uploading media" toast. The default block editor and the classic editor are unchanged.
 
