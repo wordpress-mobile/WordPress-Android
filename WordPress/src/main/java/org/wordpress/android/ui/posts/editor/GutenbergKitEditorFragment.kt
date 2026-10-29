@@ -582,8 +582,8 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     fun isEditorUnavailable(): Boolean = editorUnavailable
 
     /**
-     * Whether the editor has locked saving, e.g. during a media upload, so saving
-     * the post to the server now would persist temporary media URLs.
+     * Whether the editor has locked saving, e.g. during a media upload, so saving now may leave
+     * media missing or broken. Blocks can also hold the lock, so callers should confirm, not block.
      */
     fun isSavingLocked(): Boolean = savingLocked
 

@@ -1218,13 +1218,11 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         prepublishingViewModel.triggerOnSubmitButtonClickedListener.observe(this) { event ->
             event.getContentIfNotHandled()?.let { publishPost ->
                 AppLog.d(AppLog.T.POSTS, "GutenbergKitActivity: Handling prepublishing submit event")
-                // An upload can start after the prepublishing sheet opens.
-                if (notifyMediaUploadInProgress(editPostRepository.getPost())) {
-                    return@let
-                }
-                uploadPost(publishPost)
-                if (publishPost) {
-                    incrementInteractions(Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE)
+                confirmSaveIfSavingLocked {
+                    uploadPost(publishPost)
+                    if (publishPost) {
+                        incrementInteractions(Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE)
+                    }
                 }
             }
         }
@@ -1519,7 +1517,12 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 editPostNavigationViewModel.handleBackNavigation()
             }
             // Leaving ends the editor's uploads, so confirm before the media is lost.
-            editorFragment?.isSavingLocked() == true -> showLeaveWhileUploadingDialog()
+            editorFragment?.isSavingLocked() == true -> showSavingLockedDialog(
+                R.string.editor_saving_locked_leave_message,
+                R.string.editor_saving_locked_leave
+            ) {
+                savePostAndOptionallyFinish(doFinish = true, forceSave = false)
+            }
             else -> {
                 savePostAndOptionallyFinish(doFinish = true, forceSave = false)
             }
@@ -1527,14 +1530,32 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         return true
     }
 
-    private fun showLeaveWhileUploadingDialog() {
+    /**
+     * Runs [save] after confirmation while the editor locks saving. The lock is advisory: it can
+     * come from a media upload or from a block that never releases it, and the editor can't say which.
+     */
+    private fun confirmSaveIfSavingLocked(save: () -> Unit) {
+        if (editorFragment?.isSavingLocked() == true) {
+            showSavingLockedDialog(
+                R.string.editor_saving_locked_save_message,
+                R.string.editor_saving_locked_continue,
+                save
+            )
+        } else {
+            save()
+        }
+    }
+
+    private fun showSavingLockedDialog(
+        @StringRes messageRes: Int,
+        @StringRes proceedRes: Int,
+        onProceed: () -> Unit
+    ) {
         MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.editor_leave_while_uploading_title)
-            .setMessage(R.string.editor_leave_while_uploading_message)
-            .setPositiveButton(R.string.editor_leave_while_uploading_keep_editing, null)
-            .setNegativeButton(R.string.editor_leave_while_uploading_leave) { _, _ ->
-                savePostAndOptionallyFinish(doFinish = true, forceSave = false)
-            }
+            .setTitle(R.string.editor_saving_locked_title)
+            .setMessage(messageRes)
+            .setPositiveButton(R.string.editor_saving_locked_keep_editing, null)
+            .setNegativeButton(proceedRes) { _, _ -> onProceed() }
             .show()
     }
 
@@ -1570,12 +1591,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
             }
         }
 
-    /**
-     * Tells the user to wait when the post has media uploading, through the app or inside
-     * the editor, which locks saving so temporary media URLs aren't saved to the server.
-     */
     private fun notifyMediaUploadInProgress(post: PostImmutableModel?): Boolean {
-        if (!UploadService.hasInProgressMediaUploadsForPost(post) && editorFragment?.isSavingLocked() != true) {
+        if (!UploadService.hasInProgressMediaUploadsForPost(post)) {
             return false
         }
         ToastUtils.showToast(
@@ -1602,9 +1619,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 ActivityUtils.hideKeyboard(this)
                 editPostNavigationViewModel.navigateTo(EditPostDestination.History)
             } else if (itemId == R.id.menu_preview_post) {
-                if (!showPreview()) {
-                    return false
-                }
+                confirmSaveIfSavingLocked { showPreview() }
             } else if (itemId == R.id.menu_post_settings) {
                 editPostSettingsFragment?.refreshViews()
                 ActivityUtils.hideKeyboard(this)
@@ -1680,12 +1695,12 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         when (secondaryAction) {
             SecondaryEditorAction.SAVE_AS_DRAFT -> {
                 // Force the new Draft status
-                saveAsDraft()
+                confirmSaveIfSavingLocked { saveAsDraft() }
                 return true
             }
 
             SecondaryEditorAction.SAVE -> {
-                uploadPost(false)
+                confirmSaveIfSavingLocked { uploadPost(false) }
                 return true
             }
 
@@ -1777,11 +1792,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         )
     }
 
-    @Suppress("ReturnCount")
+    // Actions that open the prepublishing sheet confirm a save lock on submit instead.
     private fun performPrimaryAction() {
-        if (notifyMediaUploadInProgress(editPostRepository.getPost())) {
-            return
-        }
         when (primaryAction) {
             PrimaryEditorAction.PUBLISH_NOW -> {
                 analyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED)
@@ -1797,7 +1809,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 return
             }
 
-            PrimaryEditorAction.SAVE -> uploadPost(false)
+            PrimaryEditorAction.SAVE -> confirmSaveIfSavingLocked { uploadPost(false) }
         }
     }
 
@@ -2167,11 +2179,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                  */
                 val isWpComOrIsLocalDraft: Boolean =
                     siteModel.isUsingWpComRestApi || editPostRepository.isLocalDraft
-                // Exiting mid-upload keeps the post local rather than saving its temporary media URLs online.
-                val isSavingLocked = editorFragment?.isSavingLocked() == true
-                activityFinishState = if (isSavingLocked) {
-                    ActivityFinishState.SAVED_LOCALLY
-                } else if (isWpComOrIsLocalDraft) {
+                activityFinishState = if (isWpComOrIsLocalDraft) {
                     savePostOnline(isFirstTimePublish)
                 } else if (forceSave) {
                     savePostOnline(false)
