@@ -666,7 +666,6 @@ Language: sr_RS
     <string name="site_monitoring_tab_title_metrics">Мере</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Блогови на које сте претплаћени нису ништа објавили у последње време</string>
     <string name="reader_no_followed_blogs_description_subs">Претплатите се на блогове у „Откриј“ или потражите блог који вам се већ свиђа.</string>
-    <string name="reader_no_recommended_blogs_title">Нема препоручених блогова</string>
     <string name="reader_toast_err_unable_to_block_blog">Није могуће блокирати овај блог</string>
     <string name="reader_no_posts_with_this_tag">Нема чланака са овом ознаком</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Чланци са овог блога више неће бити приказивани</string>

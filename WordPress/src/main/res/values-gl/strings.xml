@@ -666,7 +666,6 @@ Language: gl_ES
     <string name="reader_empty_followed_blogs_button_subscriptions">Ir a subscricións</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Os blogs aos que estás subscrito non publicaron nada recientemente</string>
     <string name="reader_no_followed_blogs_description_subs">Subscríbete a blogs en Descubrir ou busca un blog que xa che guste.</string>
-    <string name="reader_no_recommended_blogs_title">Non hai blogs recomendados</string>
     <string name="reader_no_posts_with_this_tag">Non hai entradas con esta etiqueta</string>
     <string name="reader_toast_err_unable_to_block_blog">Non se puido bloquear este blog</string>
     <string name="reader_toast_err_unable_to_unfollow_blog">Non se puido cancelar a subscrición ao blog</string>

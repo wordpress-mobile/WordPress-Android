@@ -16,6 +16,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** My Site → Posts → a published post's ⋯ menu → Stats
   - **Notes:** Only for people on the redesigned Stats; anyone who has switched back to the old Stats keeps the old screen here too. The menu item itself is unchanged — it still appears only for a published post with no unsynced changes, on a site whose stats you can view. Opening it for a site other than the one currently selected switches the selected site, as the Stats widgets already do. The Pages list offers a Stats menu item only on sites using the newer Pages screen, so most people see no change there yet.
 
+- **Reader's Manage subscriptions screen redesigned**
+  The screen for managing followed tags and blogs has a Material 3 look. The Followed tags and Subscribed blogs tabs still swipe, each row has a Subscribe/Subscribed button, the field for following a tag or URL stays at the bottom, and the + button still opens the topic picker. Searching subscribed blogs now uses a search icon in the top bar on the blogs tab. Errors from the Subscribe buttons in the lists now show as a snackbar instead of a toast.
+  - **Apps:** Jetpack
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Reader → Subscriptions → the Blogs or Tags chip → Manage
+  - **Notes:** Unsubscribing from a row leaves it in place so it can be re-followed, but only until the list refreshes: the row goes once the screen reloads its lists, for example on returning from a blog preview, after adding a tag or blog, or when a background sync finishes. The old screen behaved the same way.
+
 - **Open a post's likes or comments from its Stats totals**
   The Likes and Comments totals on the top card of the per-item screen in the redesigned Stats screen are now tappable. Likes opens the full list of likers — the same list the likers row above it opens, and the one the Reader and notifications open. Comments opens that post's comments, the threaded comments screen the Reader and notifications open, where you can read, like and reply to them. A total you can open is shown in the same colour as the item's title, so the ones that lead somewhere are visible at a glance.
   - **Apps:** Both
