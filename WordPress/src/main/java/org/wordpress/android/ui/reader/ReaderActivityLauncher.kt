@@ -406,14 +406,6 @@ object ReaderActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.NO_REBLOG_SITE)
     }
 
-    /*
-     * show followed tags & blogs
-     */
-    fun showReaderSubs(context: Context) {
-        val intent = Intent(context, ReaderSubsActivity::class.java)
-        context.startActivity(intent)
-    }
-
     fun createIntentShowReaderSubs(context: Context, selectPosition: Int): Intent {
         val intent = Intent(context, ReaderSubsActivity::class.java)
         intent.putExtra(ReaderConstants.ARG_SUBS_TAB_POSITION, selectPosition)
@@ -422,13 +414,14 @@ object ReaderActivityLauncher {
 
     @JvmStatic
     fun showReaderInterests(activity: Activity) {
-        val intent = Intent(activity, ReaderInterestsActivity::class.java)
-        intent.putExtra(
+        activity.startActivityForResult(createReaderInterestsIntent(activity), RequestCodes.READER_INTERESTS)
+    }
+
+    fun createReaderInterestsIntent(context: Context): Intent =
+        Intent(context, ReaderInterestsActivity::class.java).putExtra(
             ReaderInterestsFragment.READER_INTEREST_ENTRY_POINT,
             ReaderInterestsFragment.EntryPoint.SETTINGS
         )
-        activity.startActivityForResult(intent, RequestCodes.READER_INTERESTS)
-    }
 
     /*
      * play an external video
