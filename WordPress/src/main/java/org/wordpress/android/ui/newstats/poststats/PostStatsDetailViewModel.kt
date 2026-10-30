@@ -11,6 +11,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.engagement.GetLikesUseCase
+import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
+import org.wordpress.android.ui.engagement.GetLikesUseCase.LikeGroupFingerPrint
+import org.wordpress.android.ui.engagement.GetLikesUseCase.PaginationParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.PostViewsData
 import org.wordpress.android.ui.newstats.datasource.PostViewsDailyView
@@ -27,7 +31,8 @@ class PostStatsDetailViewModel @Inject constructor(
         SelectedSiteRepository,
     private val statsRepository: StatsRepository,
     private val accountStore: AccountStore,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val getLikesUseCase: GetLikesUseCase
 ) : ViewModel() {
     private val _uiState =
         MutableStateFlow<PostStatsDetailUiState>(
@@ -65,7 +70,7 @@ class PostStatsDetailViewModel @Inject constructor(
                         postId = postId
                     )
                 when (result) {
-                    is PostViewsResult.Success ->
+                    is PostViewsResult.Success -> {
                         _uiState.value =
                             PostStatsDetailUiState.Loaded(
                                 data = result.data,
@@ -73,6 +78,13 @@ class PostStatsDetailViewModel @Inject constructor(
                                 selectedDayIndex = result.data
                                     .dailyViews.lastIndex
                             )
+                        loadLikers(
+                            siteId = site.siteId,
+                            postId = postId,
+                            likeCount = result.data.post
+                                ?.likeCount ?: 0
+                        )
+                    }
                     is PostViewsResult.Error ->
                         showError(R.string.stats_error_api)
                 }
@@ -87,6 +99,60 @@ class PostStatsDetailViewModel @Inject constructor(
                 showError(R.string.stats_error_unknown)
             }
         }
+    }
+
+    /**
+     * The faces for the header's likes strip, fetched only once the stats call has told us the
+     * item has likes at all. It decorates a header that is already complete without it, so a
+     * failure leaves the strip out rather than failing the screen: the like *count* comes from
+     * the stats response and is shown either way.
+     */
+    private fun loadLikers(
+        siteId: Long,
+        postId: Long,
+        likeCount: Long
+    ) {
+        if (likeCount <= 0) return
+        viewModelScope.launch {
+            getLikesUseCase.getLikesForPost(
+                LikeGroupFingerPrint(
+                    siteId,
+                    postId,
+                    likeCount.toInt()
+                ),
+                PaginationParams(
+                    requestNextPage = false,
+                    pageLength = LIKERS_PAGE_LENGTH
+                )
+            ).collect { state ->
+                val likes = when (state) {
+                    is GetLikesState.LikesData -> state.likes
+                    // Whatever was cached is better than an empty strip, and is all a failed
+                    // request leaves behind.
+                    is GetLikesState.Failure -> state.cachedLikes
+                    GetLikesState.Loading -> return@collect
+                }
+                val avatarUrls = likes.mapNotNull { like ->
+                    like.likerAvatarUrl
+                        ?.takeIf { it.isNotBlank() }
+                }
+                _uiState.update { current ->
+                    if (current is PostStatsDetailUiState.Loaded) {
+                        current.copy(
+                            likerAvatarUrls = avatarUrls
+                        )
+                    } else {
+                        current
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onCleared() {
+        // GetLikesUseCase registers itself with the dispatcher on construction, so the instance
+        // injected here has to be unregistered with the screen.
+        getLikesUseCase.clear()
     }
 
     private fun showError(@StringRes messageResId: Int) {
@@ -122,7 +188,9 @@ sealed class PostStatsDetailUiState {
     data class Loaded(
         val data: PostViewsData,
         /** Index into [PostViewsData.dailyViews]; -1 when the post has no history. */
-        val selectedDayIndex: Int
+        val selectedDayIndex: Int,
+        /** Faces for the header's likes strip; empty until -- or unless -- they arrive. */
+        val likerAvatarUrls: List<String> = emptyList()
     ) : PostStatsDetailUiState() {
         /**
          * The days the chart draws: a fixed trailing window, so stepping through days moves the
@@ -167,6 +235,22 @@ sealed class PostStatsDetailUiState {
         val message: String
     ) : PostStatsDetailUiState()
 }
+
+/**
+ * Deliberately the same page as GetLikesHandler's `LIKES_PER_PAGE_DEFAULT`, which is what the
+ * likes list this screen opens asks for. The strip itself needs far fewer -- it draws five faces,
+ * and its overflow count comes from the like count the stats response already carries -- but a
+ * smaller page here is not worth what it costs.
+ *
+ * `OnPostLikesChanged` carries nothing saying which request it answers, and every `GetLikesUseCase`
+ * registers itself on the dispatcher, so this screen's instance and the likes list's both resume on
+ * whichever response for the post arrives first. Asking for the same page means it does not matter
+ * which one that is: either answer is the answer both of them wanted. Ask for fewer and tapping
+ * through to the list while this request is still in flight leaves it showing a short first page.
+ *
+ * So this is not a free number to tune: lower it and that crossed wire starts to show again.
+ */
+private const val LIKERS_PAGE_LENGTH = 20
 
 // Two weeks of bars, matching the old stats post detail chart.
 private const val CHART_DAYS = 14

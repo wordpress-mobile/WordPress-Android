@@ -345,6 +345,13 @@ platform :android do
       source_id: 'gutenberg'
     },
     {
+      name: 'GutenbergKit',
+      import_key: 'gutenberg-kit',
+      repository: 'wordpress-mobile/GutenbergKit',
+      strings_file_path: 'android/Gutenberg/src/main/res/values/strings.xml',
+      source_id: 'gutenberg-kit'
+    },
+    {
       name: 'About Library',
       import_key: 'automattic-about',
       repository: 'Automattic/about-automattic-android',

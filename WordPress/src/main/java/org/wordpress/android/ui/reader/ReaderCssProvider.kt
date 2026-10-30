@@ -1,33 +1,46 @@
 package org.wordpress.android.ui.reader
 
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.reader.utils.DateProvider
-import org.wordpress.android.util.NetworkUtilsWrapper
-import java.util.concurrent.TimeUnit
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
+import javax.inject.Singleton
 
-const val EXPIRATION_IN_DAYS = 5L
-private const val BASE_CSS_URL = "https://wordpress.com/calypso/reader-mobile.css"
+private const val CSS_ASSET_NAME = "reader-mobile.css"
 
+/**
+ * Supplies the base stylesheet for the Reader post detail WebView.
+ *
+ * The stylesheet used to be pulled from https://wordpress.com/calypso/reader-mobile.css via a
+ * `<link>` tag. That made it a render-blocking network request: when the request was slow or
+ * stalled mid-response, the article body never painted and the spinner never stopped (CMM-2254).
+ * It is now vendored into the app's assets and inlined, so the body always paints from local data.
+ */
+@Singleton
 class ReaderCssProvider @Inject constructor(
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val appPrefsWrapper: AppPrefsWrapper,
-    private val dateProvider: DateProvider
+    private val contextProvider: ContextProvider
 ) {
-    fun getCssUrl(): String {
-        val lastUpdated = appPrefsWrapper.readerCssUpdatedTimestamp
-        val currentDate = dateProvider.getCurrentDate().time
+    @Volatile
+    private var cachedCss: String? = null
 
-        val urlSuffix = if (networkUtilsWrapper.isNetworkAvailable() && isExpired(lastUpdated, currentDate)) {
-            appPrefsWrapper.readerCssUpdatedTimestamp = currentDate
-            currentDate
-        } else {
-            lastUpdated
+    /**
+     * Returns the contents of the bundled stylesheet, read once and kept in memory. Returns an
+     * empty string if the asset can't be read - the renderer's own inline rules are enough to
+     * render a readable article, so a missing asset degrades the styling rather than the content.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    fun getBaseCss(): String {
+        cachedCss?.let { return it }
+
+        return synchronized(this) {
+            cachedCss ?: try {
+                contextProvider.getContext().assets.open(CSS_ASSET_NAME)
+                    .bufferedReader()
+                    .use { it.readText() }
+            } catch (e: Exception) {
+                AppLog.e(T.READER, "reader css > failed to read bundled stylesheet", e)
+                ""
+            }.also { cachedCss = it }
         }
-        return "$BASE_CSS_URL?$urlSuffix"
-    }
-
-    private fun isExpired(lastUpdated: Long, currentDate: Long): Boolean {
-        return lastUpdated < currentDate - TimeUnit.DAYS.toMillis(EXPIRATION_IN_DAYS)
     }
 }

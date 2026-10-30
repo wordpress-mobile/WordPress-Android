@@ -1218,9 +1218,11 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         prepublishingViewModel.triggerOnSubmitButtonClickedListener.observe(this) { event ->
             event.getContentIfNotHandled()?.let { publishPost ->
                 AppLog.d(AppLog.T.POSTS, "GutenbergKitActivity: Handling prepublishing submit event")
-                uploadPost(publishPost)
-                if (publishPost) {
-                    incrementInteractions(Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE)
+                confirmSaveIfSavingLocked {
+                    uploadPost(publishPost)
+                    if (publishPost) {
+                        incrementInteractions(Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE)
+                    }
                 }
             }
         }
@@ -1460,6 +1462,12 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         // for GutenbergKitActivity but are hidden rather than removed to avoid duplicating
         // menu resources until a more comprehensive menu cleanup is undertaken.
 
+        // A crashed editor can't switch modes until it reloads. The primary action waits for the reload
+        // too, so the user sees the content it would send; closing still saves the last content read.
+        val isEditorUnavailable = editorFragment?.isEditorUnavailable() == true
+        menu.findItem(R.id.menu_html_mode)?.isEnabled = !isEditorUnavailable
+        if (isEditorUnavailable) menu.findItem(R.id.menu_primary_action)?.isEnabled = false
+
         // Hide "Switch to Gutenberg" - not needed since we're already using GutenbergKit
         menu.findItem(R.id.menu_switch_to_gutenberg)?.isVisible = false
 
@@ -1511,6 +1519,13 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 // Let the navigation ViewModel handle the back navigation
                 editPostNavigationViewModel.handleBackNavigation()
             }
+            // Leaving ends the editor's uploads, so confirm before the media is lost.
+            editorFragment?.isSavingLocked() == true -> showSavingLockedDialog(
+                R.string.editor_saving_locked_leave_message,
+                R.string.editor_saving_locked_leave
+            ) {
+                savePostAndOptionallyFinish(doFinish = true, forceSave = false)
+            }
             else -> {
                 savePostAndOptionallyFinish(doFinish = true, forceSave = false)
             }
@@ -1518,19 +1533,40 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         return true
     }
 
+    /**
+     * Runs [save] after confirmation while the editor locks saving. The lock is advisory: it can
+     * come from a media upload or from a block that never releases it, and the editor can't say which.
+     */
+    private fun confirmSaveIfSavingLocked(save: () -> Unit) {
+        if (editorFragment?.isSavingLocked() == true) {
+            showSavingLockedDialog(
+                R.string.editor_saving_locked_save_message,
+                R.string.editor_saving_locked_continue,
+                save
+            )
+        } else {
+            save()
+        }
+    }
+
+    private fun showSavingLockedDialog(
+        @StringRes messageRes: Int,
+        @StringRes proceedRes: Int,
+        onProceed: () -> Unit
+    ) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.editor_saving_locked_title)
+            .setMessage(messageRes)
+            .setPositiveButton(R.string.editor_saving_locked_keep_editing, null)
+            .setNegativeButton(proceedRes) { _, _ -> onProceed() }
+            .show()
+    }
+
     private val editPostActivityStrategyFunctions: RemotePreviewHelperFunctions
         get() {
             return object : RemotePreviewHelperFunctions {
                 override fun notifyUploadInProgress(post: PostImmutableModel): Boolean {
-                    return if (UploadService.hasInProgressMediaUploadsForPost(post)) {
-                        ToastUtils.showToast(
-                            this@GutenbergKitActivity,
-                            getString(R.string.editor_toast_uploading_please_wait), ToastUtils.Duration.SHORT
-                        )
-                        true
-                    } else {
-                        false
-                    }
+                    return notifyMediaUploadInProgress(post)
                 }
 
                 override fun notifyEmptyDraft() {
@@ -1558,6 +1594,17 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
             }
         }
 
+    private fun notifyMediaUploadInProgress(post: PostImmutableModel?): Boolean {
+        if (!UploadService.hasInProgressMediaUploadsForPost(post)) {
+            return false
+        }
+        ToastUtils.showToast(
+            this@GutenbergKitActivity,
+            getString(R.string.editor_toast_uploading_please_wait), ToastUtils.Duration.SHORT
+        )
+        return true
+    }
+
     // Menu actions
     @Suppress("LongMethod", "CyclomaticComplexMethod", "ReturnCount")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -1575,9 +1622,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 ActivityUtils.hideKeyboard(this)
                 editPostNavigationViewModel.navigateTo(EditPostDestination.History)
             } else if (itemId == R.id.menu_preview_post) {
-                if (!showPreview()) {
-                    return false
-                }
+                confirmSaveIfSavingLocked { showPreview() }
             } else if (itemId == R.id.menu_post_settings) {
                 editPostSettingsFragment?.refreshViews()
                 ActivityUtils.hideKeyboard(this)
@@ -1643,11 +1688,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
 
     @Suppress("UseCheckOrError", "ReturnCount")
     private fun performSecondaryAction(): Boolean {
-        if (UploadService.hasInProgressMediaUploadsForPost(editPostRepository.getPost())) {
-            ToastUtils.showToast(
-                this@GutenbergKitActivity,
-                getString(R.string.editor_toast_uploading_please_wait), ToastUtils.Duration.SHORT
-            )
+        if (notifyMediaUploadInProgress(editPostRepository.getPost())) {
             return false
         }
         if (isDiscardable) {
@@ -1657,12 +1698,12 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         when (secondaryAction) {
             SecondaryEditorAction.SAVE_AS_DRAFT -> {
                 // Force the new Draft status
-                saveAsDraft()
+                confirmSaveIfSavingLocked { saveAsDraft() }
                 return true
             }
 
             SecondaryEditorAction.SAVE -> {
-                uploadPost(false)
+                confirmSaveIfSavingLocked { uploadPost(false) }
                 return true
             }
 
@@ -1754,6 +1795,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         )
     }
 
+    // Actions that open the prepublishing sheet confirm a save lock on submit instead.
     private fun performPrimaryAction() {
         when (primaryAction) {
             PrimaryEditorAction.PUBLISH_NOW -> {
@@ -1770,7 +1812,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 return
             }
 
-            PrimaryEditorAction.SAVE -> uploadPost(false)
+            PrimaryEditorAction.SAVE -> confirmSaveIfSavingLocked { uploadPost(false) }
         }
     }
 

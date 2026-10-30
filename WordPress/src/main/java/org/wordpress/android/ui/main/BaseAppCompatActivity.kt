@@ -29,6 +29,8 @@ import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessage
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeaturesActivity
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity
 import org.wordpress.android.ui.reader.ReaderSearchActivity
+import org.wordpress.android.ui.reader.ReaderSubsActivity
+import org.wordpress.android.ui.reader.ReaderUserListActivity
 import org.wordpress.android.ui.selfhostedusers.SelfHostedUsersActivity
 import org.wordpress.android.ui.sitemonitor.SiteMonitorParentActivity
 import org.wordpress.android.ui.subscribers.SubscribersActivity
@@ -101,6 +103,8 @@ private val excludedActivities = listOf(
     TermSelectionActivity::class.java.name,
     PurchaseDomainActivity::class.java.name,
     ReaderSearchActivity::class.java.name,
+    ReaderSubsActivity::class.java.name,
+    ReaderUserListActivity::class.java.name,
     SelfHostedUsersActivity::class.java.name,
     SiteMonitorParentActivity::class.java.name,
     SubscribersActivity::class.java.name,

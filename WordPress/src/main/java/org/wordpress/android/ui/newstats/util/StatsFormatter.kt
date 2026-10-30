@@ -36,6 +36,16 @@ fun formatStatsDate(date: String): String = parseOrLog(date) {
         .format(statsDateFormatter(StatsDateSkeleton.DAY_MONTH_YEAR))
 }
 
+/**
+ * Formats an API day ("yyyy-MM-dd") without its year, e.g. "Aug 4" in en-US and "4 Aug" in en-GB,
+ * for a date whose year is already established by the dates around it. Returns the input unchanged
+ * if it can't be parsed.
+ */
+fun formatStatsDayMonth(date: String): String = parseOrLog(date) {
+    LocalDate.parse(it, DateTimeFormatter.ISO_LOCAL_DATE)
+        .format(statsDateFormatter(StatsDateSkeleton.DAY_MONTH))
+}
+
 @Suppress("TooGenericExceptionCaught")
 private inline fun parseOrLog(
     value: String,
@@ -80,6 +90,17 @@ fun formatStatValue(
 
 /** Threshold for detail screens, which favour exact figures over width. */
 const val TEN_THOUSAND = 10_000
+
+/**
+ * The figure in full, however large, e.g. 1200 -> "1,200" and 2500000 -> "2,500,000".
+ *
+ * For what a screen reader is given to read out: a description has no width to save, and the
+ * figure it reads should be the one the sentence around it was built from -- a plural is chosen
+ * on the real count, so speaking "1.2K" would announce a number the grammar does not agree with.
+ */
+fun formatStatValueExact(value: Long): String = NumberFormat
+    .getIntegerInstance(Locale.getDefault())
+    .format(value)
 
 /**
  * Formats a fractional change as a percentage, e.g. -0.25 -> "-25%".

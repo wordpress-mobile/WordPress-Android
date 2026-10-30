@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.viewmodels
 
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -19,6 +20,7 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -454,7 +456,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given request already running, when post is fetched, then no error is shown`() =
+    fun `given request already running, when post is fetched, then loading is kept and no error is shown`() =
         testWithoutLocalPost {
             whenever(readerFetchPostUseCase.fetchPost(readerPost.blogId, readerPost.postId, viewModel.isFeed))
                 .thenReturn(FetchReaderPostState.Success)
@@ -464,7 +466,9 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
             viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
-            assertThat(observers.uiStates.filterIsInstance<ErrorUiState>().last().message).isNull()
+            // A sibling fetch is still in flight, so we stay on loading rather than showing
+            // a (message-less) error that would blank the screen mid-load.
+            assertThat(observers.uiStates.last()).isEqualTo(LoadingUiState)
         }
 
     @Test
@@ -479,6 +483,122 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
         assertThat(observers.uiStates.last())
             .isEqualTo(ErrorUiState(UiStringRes(R.string.reader_err_get_post_not_found)))
+    }
+
+    /* SHOW POST - LOAD ALWAYS TERMINATES (CMM-2254) */
+    @Test
+    fun `given cached post has no body, when show post is triggered, then loading state is shown`() = test {
+        val bodylessPost = createDummyReaderPost(readerPost.postId).apply { text = null }
+        whenever(readerGetPostUseCase.get(anyLong(), anyLong(), anyBoolean())).thenReturn(Pair(bodylessPost, false))
+        val observers = init(showPost = false)
+
+        viewModel.onShowPost(blogId = bodylessPost.blogId, postId = bodylessPost.postId)
+
+        assertThat(observers.uiStates.first()).isEqualTo(LoadingUiState)
+    }
+
+    @Test
+    fun `given cached post has no body and fetch fails, when show post is triggered, then error is shown`() = test {
+        val bodylessPost = createDummyReaderPost(readerPost.postId).apply { text = null }
+        whenever(readerGetPostUseCase.get(anyLong(), anyLong(), anyBoolean())).thenReturn(Pair(bodylessPost, false))
+        whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+            .thenReturn(Failed.RequestFailed)
+        val observers = init(showPost = false)
+
+        viewModel.onShowPost(blogId = bodylessPost.blogId, postId = bodylessPost.postId)
+
+        assertThat(observers.uiStates.last())
+            .isEqualTo(ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic)))
+    }
+
+    @Test
+    fun `given fetch succeeds but post is still missing, when show post is triggered, then error is shown`() =
+        testWithoutLocalPost {
+            whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                .thenReturn(FetchReaderPostState.Success)
+            val observers = init(showPost = false)
+
+            viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+            assertThat(observers.uiStates.last())
+                .isEqualTo(ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic)))
+        }
+
+    @Test
+    fun `given fetch succeeds but body is empty, when show post is triggered, then post is rendered`() = test {
+        // A post can't be published without a title, and usually has a featured image too, so an
+        // empty body still has a header, image and actions worth showing - not an error.
+        val bodylessPost = createDummyReaderPost(readerPost.postId).apply { text = null }
+        whenever(readerGetPostUseCase.get(anyLong(), anyLong(), anyBoolean())).thenReturn(Pair(bodylessPost, false))
+        whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+            .thenReturn(FetchReaderPostState.Success)
+        val observers = init(showPost = false)
+
+        viewModel.onShowPost(blogId = bodylessPost.blogId, postId = bodylessPost.postId)
+
+        assertThat(observers.uiStates.last()).isInstanceOf(ReaderPostDetailsUiState::class.java)
+        assertThat(observers.uiStates.none { it is ErrorUiState }).isTrue
+    }
+
+    @Test
+    fun `given excerpt-only post, when show post is triggered, then excerpt is rendered not an error`() = test {
+        // A Jetpack site with "Show excerpt" on: ReaderPostRenderer renders the excerpt in place
+        // of the body for these, so an empty body is normal and the post is still renderable.
+        val excerptOnlyPost = createDummyReaderPost(readerPost.postId).apply {
+            text = null
+            isJetpack = true
+            useExcerpt = true
+            setExcerpt("<p>Dummy post excerpt</p>")
+        }
+        whenever(readerGetPostUseCase.get(anyLong(), anyLong(), anyBoolean()))
+            .thenReturn(Pair(excerptOnlyPost, false))
+        whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+            .thenReturn(FetchReaderPostState.Success)
+        val observers = init(showPost = false)
+
+        viewModel.onShowPost(blogId = excerptOnlyPost.blogId, postId = excerptOnlyPost.postId)
+
+        assertThat(observers.uiStates.none { it is ErrorUiState }).isTrue
+    }
+
+    @Test
+    fun `given rendered post and empty refetch, when show post is triggered, then content is kept`() = test {
+        val bodylessPost = createDummyReaderPost(readerPost.postId).apply { text = null }
+        whenever(readerGetPostUseCase.get(anyLong(), anyLong(), anyBoolean()))
+            .thenReturn(Pair(readerPost, false))
+            .thenReturn(Pair(bodylessPost, false))
+        whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+            .thenReturn(FetchReaderPostState.Success)
+        val observers = init(showPost = false)
+
+        viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+        assertThat(observers.uiStates.last()).isInstanceOf(ReaderPostDetailsUiState::class.java)
+        assertThat(observers.uiStates.none { it is ErrorUiState }).isTrue
+    }
+
+    @Test
+    fun `given the screen moved to another post, when a stale fetch fails, then no error is shown`() = test {
+        // This screen is reused when navigating to a related post or back through the post
+        // history, so a fetch can resolve long after its post left the screen - it waits up to
+        // the fetch timeout. Its outcome must not be applied to the post now being shown.
+        val stalePost = createDummyReaderPost(99).apply { text = null }
+        val staleFetch = CompletableDeferred<FetchReaderPostState>()
+        whenever(readerGetPostUseCase.get(anyLong(), anyLong(), anyBoolean()))
+            .thenReturn(Pair(stalePost, false))
+            .thenReturn(Pair(readerPost, false))
+        whenever(readerFetchPostUseCase.fetchPost(eq(stalePost.blogId), eq(stalePost.postId), anyBoolean()))
+            .doSuspendableAnswer { staleFetch.await() }
+        whenever(readerFetchPostUseCase.fetchPost(eq(readerPost.blogId), eq(readerPost.postId), anyBoolean()))
+            .thenReturn(FetchReaderPostState.Success)
+        val observers = init(showPost = false)
+
+        viewModel.onShowPost(blogId = stalePost.blogId, postId = stalePost.postId)
+        viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+        staleFetch.complete(FetchReaderPostState.Failed.RequestFailed)
+
+        assertThat(observers.uiStates.none { it is ErrorUiState }).isTrue
+        assertThat(observers.uiStates.last()).isInstanceOf(ReaderPostDetailsUiState::class.java)
     }
 
     @Test
@@ -1241,6 +1361,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             this.blogId = id * 100
             this.feedId = id * 1000
             this.title = "DummyPost"
+            this.text = "<p>Dummy post content</p>"
             this.featuredVideo = id.toString()
             this.featuredImage = "/featured_image/$id/url"
             this.isExternal = !isWpComPost
