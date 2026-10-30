@@ -102,6 +102,11 @@ class ReaderDiscoverTabsFragment : Fragment(), OnScrollToTopListener, ReaderScro
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         contentView.view()
 
+    override fun onDestroyView() {
+        contentView.onDestroyView()
+        super.onDestroyView()
+    }
+
     @Composable
     private fun DiscoverTabs() {
         // restore the last selected sub-tab (defaults to 0 == Freshly Pressed on first open)

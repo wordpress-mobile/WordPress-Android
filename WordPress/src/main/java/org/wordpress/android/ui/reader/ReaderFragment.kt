@@ -193,6 +193,11 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         contentView.view()
 
+    override fun onDestroyView() {
+        contentView.onDestroyView()
+        super.onDestroyView()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // the view is reused when returning to the Reader tab, so show the top bar again as a new one would be
