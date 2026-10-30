@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Related posts are back at the bottom of a Reader post**
+  Opening a post in the Reader shows its related posts again — a "More from that blog" list and a "More on WordPress.com" list below the comments — instead of the post ending at the comments. Opening a post also refreshes it from the server again, so its like and comment counts are up to date without pulling to refresh.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → open a post → scroll to the bottom
+  - **Notes:** The section has been missing since 26.3.1, so documentation written since then may describe the post detail as having no related posts. It only ever appears for WordPress.com posts — never for RSS/feed posts — and only when WordPress.com has related content to suggest, so a post with no related posts is still normal.
+
 - **A post's Stats menu item opens the redesigned Stats**
   Posts → a published post's ⋯ menu → Stats now opens the per-item screen of the redesigned Stats, the same screen a row in Posts & pages opens, instead of the old per-post stats screen. The post's title, chart, totals and calendars are the ones the redesigned Stats shows everywhere else, and its header opens the post itself. A page's Stats menu item, where the Pages list offers one, opens the same screen.
   - **Apps:** Both

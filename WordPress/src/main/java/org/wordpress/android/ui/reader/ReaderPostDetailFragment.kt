@@ -216,6 +216,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private var renderWatchdogJob: Job? = null
     private var renderStartedAtMs: Long = 0
 
+    /**
+     * Set when a render starts and consumed by the [onPageFinished] that follows it, so the
+     * first-render work runs once per rendered post. Keyed off the render rather than off the URL
+     * the WebView reports: [ReaderPostRenderer] loads the article with a real base URL so embeds
+     * get a referrer, and changing that URL must not be able to silently disable this again.
+     */
+    private var isAwaitingRenderedPageFinish: Boolean = false
+
     private var isRelatedPost: Boolean = false
 
     private var hasTrackedGlobalRelatedPosts: Boolean = false
@@ -838,6 +846,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      */
     private fun beginRenderWithWatchdog() {
         startRenderWatchdog()
+        isAwaitingRenderedPageFinish = true
         renderer?.beginRender()
     }
 
@@ -1748,11 +1757,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun showPostInWebView(post: ReaderPost) {
         readerWebView.setIsPrivatePost(post.isPrivate)
         readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post.blogUrl))
-        readerProgressBar.visibility = View.VISIBLE
         // Watch for the body painting from here rather than from onPageFinished. The backstop is
         // armed with the render itself in [beginRenderWithWatchdog], not here - a private Atomic
         // post postpones its render until the access cookie arrives.
+        // A re-render over an article already on screen - updatePost() found a newer version of
+        // the post - stays silent: the spinner would otherwise cover content the reader is reading.
         if (!hasWebViewContent) {
+            readerProgressBar.visibility = View.VISIBLE
             registerWebViewLayoutListener()
         }
         renderer = ReaderPostRenderer(
@@ -1808,46 +1819,59 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             return
         }
 
+        // The blank page clearContent() loads to drop the previous post. It doesn't go through
+        // the renderer, so attach the layout listener for it, but nothing else here applies:
+        // there is no article to measure, inject into, or react to, and the render that follows
+        // arms its own watchdog.
+        if (url == ReaderWebView.BLANK_URL) {
+            if (!hasWebViewContent) {
+                registerWebViewLayoutListener()
+            }
+            return
+        }
+
         if (renderStartedAtMs > 0) {
             val elapsedMs = System.currentTimeMillis() - renderStartedAtMs
             AppLog.d(T.READER, "reader post detail > page finished after ${elapsedMs}ms - $url")
         }
+        injectFragmentLinkInterceptor(view)
+
         // The document has finished loading, but the WebView has not necessarily laid out yet -
         // the body typically paints a few hundred ms later. Hiding the spinner here would uncover
         // an empty article for that whole window, so hand over to the layout listener and keep
-        // only a short backstop for the post that never paints at all.
-        armSpinnerBackstop(PAINT_GRACE_MS)
-        injectFragmentLinkInterceptor(view)
-
-        // The listener is normally already attached from showPostInWebView; this covers the
-        // about:blank load from clearContent(), which doesn't go through the renderer.
+        // only a short backstop for the post that never paints at all. A re-render over content
+        // already on screen needs neither: the listener has done its job and the spinner is down.
         if (!hasWebViewContent) {
+            armSpinnerBackstop(PAINT_GRACE_MS)
             registerWebViewLayoutListener()
         }
 
-        if (url != null && url == "about:blank") {
-            // brief delay before showing related posts to give page time to render
-            view.postDelayed(Runnable {
-                if (!isAdded) {
-                    return@Runnable
-                }
-                if (!hasAlreadyUpdatedPost) {
-                    hasAlreadyUpdatedPost = true
-                    updatePost()
-                }
-                viewModel.post?.let {
-                    if (likesEnhancementsFeatureConfig.isEnabled()) {
-                        viewModel.onRefreshLikersData(it)
-                    }
-                    if (commentsSnippetFeatureConfig.isEnabled()) {
-                        viewModel.onRefreshCommentsData(it.blogId, it.postId)
-                    }
-                    viewModel.onRelatedPostsRequested(it)
-                }
-            }, ON_PAGE_FINISHED_DELAY_MILLIS)
-        } else {
-            url?.let { AppLog.w(T.READER, "reader post detail > page finished - $it") }
+        // Only the page-finished that belongs to a render we started does the first-render work,
+        // which also keeps the repeat calls a page full of iframes can produce from redoing it.
+        if (!isAwaitingRenderedPageFinish) {
+            return
         }
+        isAwaitingRenderedPageFinish = false
+
+        // brief delay before showing related posts to give page time to render
+        view.postDelayed(Runnable {
+            if (!isAdded) {
+                return@Runnable
+            }
+            if (!hasAlreadyUpdatedPost) {
+                hasAlreadyUpdatedPost = true
+                updatePost()
+            }
+            viewModel.post?.let {
+                if (likesEnhancementsFeatureConfig.isEnabled()) {
+                    viewModel.onRefreshLikersData(it)
+                }
+                if (commentsSnippetFeatureConfig.isEnabled()) {
+                    viewModel.onRefreshCommentsData(it.blogId, it.postId)
+                }
+                viewModel.onRelatedPostsRequested(it)
+            }
+        }, ON_PAGE_FINISHED_DELAY_MILLIS)
     }
 
     /**
