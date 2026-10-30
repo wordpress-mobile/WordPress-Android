@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.compose.AndroidFragment
 import androidx.lifecycle.Lifecycle
@@ -110,12 +111,13 @@ class ReaderDiscoverTabsFragment : Fragment(), OnScrollToTopListener {
         }
         // passes the lists' scrolling on, so the Reader's top bar still hides as they scroll
         Column(modifier = Modifier.nestedScroll(rememberNestedScrollInteropConnection())) {
-            PrimaryTabRow(selectedTabIndex = pagerState.currentPage) {
+            // scrollable, so large font sizes scroll the tabs rather than wrapping their labels mid-word
+            PrimaryScrollableTabRow(selectedTabIndex = pagerState.currentPage, edgePadding = 0.dp) {
                 tabs.forEachIndexed { index, tab ->
                     Tab(
                         selected = pagerState.currentPage == index,
                         onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
-                        text = { Text(stringResource(tab.titleRes)) }
+                        text = { Text(stringResource(tab.titleRes), maxLines = 1) }
                     )
                 }
             }
