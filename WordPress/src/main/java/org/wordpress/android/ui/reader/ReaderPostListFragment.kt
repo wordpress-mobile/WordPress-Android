@@ -134,7 +134,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListene
         savedInstanceState?.let {
             AppLog.d(AppLog.T.READER, "reader post list fragment > restoring instance state")
             wasPaused = it.getBoolean(ReaderConstants.KEY_WAS_PAUSED)
-        }
+        } ?: tagFragmentStartedWith?.let { ReaderTracker.trackTagLoaded(it) }
 
         postListViewModel = ViewModelProvider(this, viewModelFactory)[ReaderPostListViewModel::class.java]
 
@@ -917,20 +917,27 @@ class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListene
         ): ReaderPostListFragment {
             AppLog.d(AppLog.T.READER, "reader post list > newInstance (tag)")
 
-            val args = Bundle()
-            // Tag this fragment is started with
-            args.putSerializable(ReaderConstants.ARG_ORIGINAL_TAG, tag)
-            // Tag this fragment is started with but also used for savedState
-            args.putSerializable(ReaderConstants.ARG_TAG, tag)
-            args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, listType)
-            args.putBoolean(ReaderConstants.ARG_IS_TOP_LEVEL, isTopLevel)
-            args.putBoolean(ReaderConstants.ARG_IS_FILTERABLE, isFilterable)
-
             val fragment = ReaderPostListFragment()
-            fragment.arguments = args
-            ReaderTracker.trackTagLoaded(tag)
-
+            fragment.arguments = argumentsForTag(tag, listType, isTopLevel, isFilterable)
             return fragment
+        }
+
+        /*
+         * arguments for a tag's list, also used by the Reader and Discover tabs, which host it with AndroidFragment
+         */
+        fun argumentsForTag(
+            tag: ReaderTag,
+            listType: ReaderPostListType?,
+            isTopLevel: Boolean = false,
+            isFilterable: Boolean = false
+        ) = Bundle().apply {
+            // Tag this fragment is started with
+            putSerializable(ReaderConstants.ARG_ORIGINAL_TAG, tag)
+            // Tag this fragment is started with but also used for savedState
+            putSerializable(ReaderConstants.ARG_TAG, tag)
+            putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, listType)
+            putBoolean(ReaderConstants.ARG_IS_TOP_LEVEL, isTopLevel)
+            putBoolean(ReaderConstants.ARG_IS_FILTERABLE, isFilterable)
         }
 
         /*

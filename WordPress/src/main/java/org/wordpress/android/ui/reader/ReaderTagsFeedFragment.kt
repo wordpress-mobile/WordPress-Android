@@ -30,12 +30,12 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3WithoutBackground
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModelProvider
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.ActionEvent
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.ReaderTagsFeed
@@ -163,14 +163,7 @@ class ReaderTagsFeedFragment : Fragment(R.layout.reader_tag_feed_fragment_layout
                 }
 
                 ActionEvent.ShowTagsList -> {
-                    val readerInterestsFragment = childFragmentManager.findFragmentByTag(ReaderInterestsFragment.TAG)
-                    if (readerInterestsFragment == null) {
-                        (parentFragment as? ReaderFragment)?.childFragmentManager?.beginTransaction()?.replace(
-                            R.id.interests_fragment_container,
-                            ReaderInterestsFragment(),
-                            ReaderInterestsFragment.TAG
-                        )?.commitNow()
-                    }
+                    ViewModelProvider(requireParentFragment())[ReaderViewModel::class.java].onShowReaderInterests()
                 }
             }
         }
@@ -389,9 +382,14 @@ class ReaderTagsFeedFragment : Fragment(R.layout.reader_tag_feed_fragment_layout
         fun newInstance(
             feedTag: ReaderTag
         ): ReaderTagsFeedFragment = ReaderTagsFeedFragment().apply {
-            arguments = Bundle().apply {
-                putSerializable(ARG_TAGS_FEED_TAG, feedTag)
-            }
+            arguments = argumentsFor(feedTag)
+        }
+
+        /*
+         * arguments for the tags feed, which the Reader tab hosts with AndroidFragment
+         */
+        fun argumentsFor(feedTag: ReaderTag) = Bundle().apply {
+            putSerializable(ARG_TAGS_FEED_TAG, feedTag)
         }
     }
 }
