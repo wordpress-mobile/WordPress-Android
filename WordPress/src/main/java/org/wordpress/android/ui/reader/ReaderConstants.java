@@ -38,9 +38,9 @@ public class ReaderConstants {
     static final String ARG_TAG = "tag";
     static final String ARG_ORIGINAL_TAG = "original_tag";
     public static final String ARG_IS_FEED = "is_feed";
-    static final String ARG_BLOG_ID = "blog_id";
+    public static final String ARG_BLOG_ID = "blog_id";
     static final String ARG_FEED_ID = "feed_id";
-    static final String ARG_POST_ID = "post_id";
+    public static final String ARG_POST_ID = "post_id";
     public static final String ARG_INTERCEPTED_URI = "intercepted_uri";
     static final String ARG_COMMENT_ID = "comment_id";
     static final String ARG_DIRECT_OPERATION = "direct_operation";
