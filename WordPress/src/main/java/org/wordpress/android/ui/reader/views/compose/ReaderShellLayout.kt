@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.views.compose
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -16,36 +17,34 @@ import androidx.compose.ui.unit.Constraints
 import kotlin.math.roundToInt
 
 /**
- * Hides the Reader's top bar as the content scrolls down and shows it again as soon as it scrolls up, as
- * AppBarLayout's `scroll|enterAlways` did.
+ * A Reader feed whose list drives the top bar, which lifts while the list is scrolled and only hides if it can scroll
  */
-class ReaderTopBarScrollConnection : NestedScrollConnection {
+interface ReaderScrollingFeed {
+    /** The list the feed is showing, if any; reads of it are observable */
+    val feedListState: LazyListState?
+}
+
+/**
+ * Hides the Reader's top bar as the content scrolls down and shows it again as soon as it scrolls up, as
+ * AppBarLayout's `scroll|enterAlways` did. [canScroll] keeps the bar in place when the content can't scroll.
+ */
+class ReaderTopBarScrollConnection(private val canScroll: () -> Boolean) : NestedScrollConnection {
     /** How far the top bar is pushed up, from 0 (shown) to -its height (hidden) */
     var offset by mutableFloatStateOf(0f)
         private set
 
-    /** How far the content has scrolled since the last [reset], used to lift the top bar */
-    private var contentOffset by mutableFloatStateOf(0f)
-
     internal var topBarHeight = 0f
 
-    val isContentScrolled get() = contentOffset < 0f
-
     override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+        if (offset == 0f && !canScroll()) return Offset.Zero
         val newOffset = (offset + available.y).coerceIn(-topBarHeight, 0f)
         val consumed = newOffset - offset
         offset = newOffset
         return Offset(0f, consumed)
     }
 
-    override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
-        contentOffset = (contentOffset + consumed.y).coerceAtMost(0f)
-        return Offset.Zero
-    }
-
     fun reset() {
         offset = 0f
-        contentOffset = 0f
     }
 }
 

@@ -18,10 +18,12 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 @SuppressLint("ViewConstructor")
 open class MeasureOnLayoutComposeView(
     context: Context,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
+    configure: ComposeView.() -> Unit = {}
 ) : FrameLayout(context) {
     private val composeView = ComposeView(context).apply {
         setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        configure()
         setContent(content)
     }
 

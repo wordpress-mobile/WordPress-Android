@@ -12,6 +12,8 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.AndroidUiDispatcher
 import androidx.core.os.BundleCompat
 import androidx.fragment.app.Fragment
@@ -69,6 +71,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostListArgs
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListUiEvent
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
+import org.wordpress.android.ui.reader.views.compose.ReaderScrollingFeed
 import org.wordpress.android.ui.reader.views.compose.postlist.ReaderPostListActions
 import org.wordpress.android.ui.reader.views.compose.postlist.ReaderPostListComposeView
 import org.wordpress.android.ui.reader.views.compose.postlist.ReaderPostListScreen
@@ -84,7 +87,8 @@ import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
 import javax.inject.Inject
 
 @Suppress("LargeClass")
-class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScrollToTopListener {
+class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScrollToTopListener,
+    ReaderScrollingFeed {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -104,7 +108,10 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
 
     // created with each view, since it holds that view's layout. The position is kept here in between, so
     // the list keeps it when the view is recreated from the back stack.
-    private var listState: LazyListState? = null
+    // state, so the Reader's top bar can follow the list as it's recreated with the view
+    private var listState: LazyListState? by mutableStateOf(null)
+
+    override val feedListState get() = listState
     private var savedFirstVisibleIndex = 0
     private var savedFirstVisibleOffset = 0
 

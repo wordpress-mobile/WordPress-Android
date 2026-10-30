@@ -56,10 +56,11 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
-import org.wordpress.android.ui.reader.views.compose.MeasureOnLayoutComposeView
+import org.wordpress.android.ui.reader.views.compose.ReaderScrollingFeed
 import org.wordpress.android.ui.reader.views.compose.ReaderShellLayout
 import org.wordpress.android.ui.reader.views.compose.ReaderTopAppBar
 import org.wordpress.android.ui.reader.views.compose.ReaderTopBarScrollConnection
+import org.wordpress.android.ui.reader.views.compose.RetainedComposeView
 import org.wordpress.android.ui.reader.views.compose.enableNestedScrollInterop
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterType
 import org.wordpress.android.ui.utils.UiHelpers
@@ -86,7 +87,18 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
 
     private val isInterestsVisible = mutableStateOf(false)
 
-    private val topBarScrollConnection = ReaderTopBarScrollConnection()
+    // the fragment showing the selected feed, set as AndroidFragment adds it
+    private var currentFeed by mutableStateOf<Fragment?>(null)
+
+    private val topBarScrollConnection = ReaderTopBarScrollConnection(
+        canScroll = { feedListState()?.let { it.canScrollForward || it.canScrollBackward } ?: true }
+    )
+
+    private val contentView = RetainedComposeView(this) {
+        AppThemeM3 {
+            ReaderContent()
+        }
+    }
 
     private var readerSearchResultLauncher: ActivityResultLauncher<Intent>? = null
 
@@ -179,14 +191,12 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-        MeasureOnLayoutComposeView(requireContext()) {
-            AppThemeM3 {
-                ReaderContent()
-            }
-        }
+        contentView.view()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // the view is reused when returning to the Reader tab, so show the top bar again as a new one would be
+        topBarScrollConnection.reset()
         startReaderViewModel(savedInstanceState)
     }
 
@@ -252,9 +262,10 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
                 scrollConnection = topBarScrollConnection,
                 topBar = {
                     topBarState?.let { state ->
-                        // lifted while content is scrolled under it, as AppBarLayout's liftOnScroll did
+                        // lifted while the feed's list is scrolled, as AppBarLayout's liftOnScroll did
+                        val isLifted = feedListState()?.canScrollBackward == true
                         val elevation by animateDpAsState(
-                            if (topBarScrollConnection.isContentScrolled) TOP_BAR_LIFTED_ELEVATION else 0.dp,
+                            if (isLifted) TOP_BAR_LIFTED_ELEVATION else 0.dp,
                             label = "topBarElevation"
                         )
                         Surface(shadowElevation = elevation) {
@@ -300,15 +311,12 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
         }
         val modifier = Modifier.fillMaxSize()
         when {
-            tag.isDiscover -> AndroidFragment<ReaderDiscoverTabsFragment>(modifier) {
-                it.enableNestedScrollInterop()
-            }
+            tag.isDiscover -> AndroidFragment<ReaderDiscoverTabsFragment>(modifier, onUpdate = ::onFeedAdded)
             tag.isTags -> AndroidFragment<ReaderTagsFeedFragment>(
                 modifier,
-                arguments = remember { ReaderTagsFeedFragment.argumentsFor(tag) }
-            ) {
-                it.enableNestedScrollInterop()
-            }
+                arguments = remember { ReaderTagsFeedFragment.argumentsFor(tag) },
+                onUpdate = ::onFeedAdded
+            )
             else -> AndroidFragment<ReaderPostListFragment>(
                 modifier,
                 arguments = remember {
@@ -318,12 +326,18 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
                         true,
                         tag.isFilterable
                     )
-                }
-            ) {
-                it.enableNestedScrollInterop()
-            }
+                },
+                onUpdate = ::onFeedAdded
+            )
         }
     }
+
+    private fun onFeedAdded(feed: Fragment) {
+        currentFeed = feed
+        feed.enableNestedScrollInterop()
+    }
+
+    private fun feedListState() = (currentFeed as? ReaderScrollingFeed)?.feedListState
 
     private fun startReaderViewModel(savedInstanceState: Bundle?) {
         viewModel.updateTags.observeEvent(viewLifecycleOwner) {

@@ -13,13 +13,17 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -36,6 +40,8 @@ import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderPostListFragment
 import org.wordpress.android.ui.reader.ReaderTypes
+import org.wordpress.android.ui.reader.views.compose.ReaderScrollingFeed
+import org.wordpress.android.ui.reader.views.compose.RetainedComposeView
 import org.wordpress.android.ui.reader.views.compose.enableNestedScrollInterop
 import javax.inject.Inject
 
@@ -48,12 +54,21 @@ import javax.inject.Inject
  * sub-tab from [AppPrefsWrapper] on subsequent opens.
  */
 @AndroidEntryPoint
-class ReaderDiscoverTabsFragment : Fragment(), OnScrollToTopListener {
+class ReaderDiscoverTabsFragment : Fragment(), OnScrollToTopListener, ReaderScrollingFeed {
     @Inject
     lateinit var appPrefsWrapper: AppPrefsWrapper
 
-    private val pageFragments = mutableMapOf<Int, ReaderPostListFragment>()
-    private var currentPage = 0
+    // state, so the Reader's top bar follows the current page's list
+    private val pageFragments = mutableStateMapOf<Int, ReaderPostListFragment>()
+    private var currentPage by mutableIntStateOf(0)
+
+    private val contentView = RetainedComposeView(this) {
+        AppThemeM3 {
+            DiscoverTabs()
+        }
+    }
+
+    override val feedListState get() = pageFragments[currentPage]?.feedListState
 
     private val tabs: List<DiscoverSubTab> by lazy {
         listOf(
@@ -84,29 +99,27 @@ class ReaderDiscoverTabsFragment : Fragment(), OnScrollToTopListener {
         )
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        // restore the last selected sub-tab (defaults to 0 == Freshly Pressed on first open)
-        val initialPage = resolveInitialTabIndex(appPrefsWrapper.readerDiscoverSelectedSubTabIndex, tabs.size)
-        currentPage = initialPage
-        return ComposeView(requireContext()).apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                AppThemeM3 {
-                    DiscoverTabs(initialPage)
-                }
-            }
-        }
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        contentView.view()
 
     @Composable
-    private fun DiscoverTabs(initialPage: Int) {
-        val pagerState = rememberPagerState(initialPage = initialPage) { tabs.size }
+    private fun DiscoverTabs() {
+        // restore the last selected sub-tab (defaults to 0 == Freshly Pressed on first open)
+        val pagerState = rememberPagerState(
+            initialPage = resolveInitialTabIndex(appPrefsWrapper.readerDiscoverSelectedSubTabIndex, tabs.size)
+        ) { tabs.size }
+        // a page's list is only created once the page is shown, as ViewPager2 did, and then kept
+        var shownPages by rememberSaveable { mutableStateOf(listOf(pagerState.currentPage)) }
         val scope = rememberCoroutineScope()
         LaunchedEffect(pagerState) {
             snapshotFlow { pagerState.settledPage }.collect { page ->
                 currentPage = page
                 appPrefsWrapper.readerDiscoverSelectedSubTabIndex = page
-                pageFragments.forEach { (index, fragment) -> updateMaxLifecycle(index, fragment) }
+            }
+        }
+        LaunchedEffect(pagerState) {
+            snapshotFlow { pagerState.layoutInfo.visiblePagesInfo.map { it.index } }.collect { visible ->
+                if (!shownPages.containsAll(visible)) shownPages = (shownPages + visible).distinct()
             }
         }
         // passes the lists' scrolling on, so the Reader's top bar still hides as they scroll
@@ -123,45 +136,37 @@ class ReaderDiscoverTabsFragment : Fragment(), OnScrollToTopListener {
             }
             HorizontalPager(
                 state = pagerState,
-                // keeps every list alive, as ViewPager2 did, so switching tabs doesn't reload them
+                // keeps every shown list alive, as ViewPager2 did, so switching tabs doesn't reload them
                 beyondViewportPageCount = tabs.size - 1,
                 key = { tabs[it].tag.tagSlug },
                 modifier = Modifier.fillMaxSize()
             ) { page ->
-                val arguments = remember(page) {
-                    ReaderPostListFragment.argumentsForTag(
-                        tabs[page].tag,
-                        ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
-                        isTopLevel = true,
-                        isFilterable = false
-                    )
-                }
-                AndroidFragment<ReaderPostListFragment>(
-                    modifier = Modifier.fillMaxSize(),
-                    arguments = arguments
-                ) { fragment ->
-                    pageFragments[page] = fragment
-                    fragment.enableNestedScrollInterop()
-                    updateMaxLifecycle(page, fragment)
+                if (page in shownPages) {
+                    DiscoverPage(page, isCurrent = page == pagerState.settledPage)
                 }
             }
         }
     }
 
-    /**
-     * Only the current page is resumed, as FragmentStateAdapter did, since the lists refresh when they resume
-     */
-    private fun updateMaxLifecycle(page: Int, fragment: Fragment) {
-        if (!fragment.isAdded || childFragmentManager.isStateSaved) return
-        val maxState = if (page == currentPage) Lifecycle.State.RESUMED else Lifecycle.State.STARTED
-        childFragmentManager.beginTransaction()
-            .setMaxLifecycle(fragment, maxState)
-            .commit()
-    }
-
-    override fun onDestroyView() {
-        pageFragments.clear()
-        super.onDestroyView()
+    @Composable
+    private fun DiscoverPage(page: Int, isCurrent: Boolean) {
+        val arguments = remember(page) {
+            ReaderPostListFragment.argumentsForTag(
+                tabs[page].tag,
+                ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
+                isTopLevel = true,
+                isFilterable = false
+            )
+        }
+        AndroidFragment<ReaderPostListFragment>(
+            modifier = Modifier.fillMaxSize(),
+            arguments = arguments,
+            // only the current page is resumed, as FragmentStateAdapter did, since the lists refresh on resume
+            maxLifecycle = if (isCurrent) Lifecycle.State.RESUMED else Lifecycle.State.STARTED
+        ) { fragment ->
+            pageFragments[page] = fragment
+            fragment.enableNestedScrollInterop()
+        }
     }
 
     override fun onScrollToTop() {

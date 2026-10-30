@@ -106,7 +106,9 @@ fun ReaderInterestsScreen(
                             FilterChip(
                                 selected = interest.isChecked,
                                 onClick = { onInterestToggled(index, !interest.isChecked) },
-                                label = { Text(interest.title) }
+                                label = { Text(interest.title) },
+                                // not while the picks are being saved
+                                enabled = !uiState.progressBarVisible
                             )
                         }
                     }
@@ -128,7 +130,11 @@ fun ReaderInterestsScreen(
                     }
                 }
 
-                else -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                else -> Unit
+            }
+            // while the interests load, and while the picks are saved
+            if (uiState.progressBarVisible) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
             if (showBackButton) {
                 IconButton(onClick = onBackClick, modifier = Modifier.padding(Margin.Small.value)) {
