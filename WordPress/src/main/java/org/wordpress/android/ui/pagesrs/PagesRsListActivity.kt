@@ -18,8 +18,6 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
-import org.wordpress.android.ui.stats.StatsConstants
-import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.PAGE_FROM_PAGES_LIST
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.blaze.BlazeFlowSource
@@ -132,10 +130,10 @@ class PagesRsListActivity : BaseAppCompatActivity() {
             is PageRsListEvent.SharePage ->
                 ActivityLauncher.openShareIntent(this, event.url, event.title)
             is PageRsListEvent.CopyPageUrl -> copyUrlToClipboard(event.url)
-            // The stats screen's "homepage" item type is what it uses for every page.
-            is PageRsListEvent.ViewStats -> StatsDetailActivity.start(
-                this, event.site, event.pageId, StatsConstants.ITEM_TYPE_HOME_PAGE, event.title, event.url
-            )
+            is PageRsListEvent.ViewStats ->
+                activityNavigator.openPageStats(
+                    this, event.site, event.pageId, event.title, event.url
+                )
             is PageRsListEvent.OpenSiteEditor -> openSiteEditor(event.url, event.useWpComCredentials)
             is PageRsListEvent.PromoteWithBlaze ->
                 ActivityLauncher.openPromoteWithBlaze(this, event.page, BlazeFlowSource.PAGES_LIST)

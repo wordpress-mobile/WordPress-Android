@@ -32,6 +32,7 @@ import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
@@ -122,6 +123,9 @@ class PostsListActivity : BaseAppCompatActivity(),
 
     @Inject
     internal lateinit var blazeFeatureUtils: BlazeFeatureUtils
+
+    @Inject
+    internal lateinit var activityNavigator: ActivityNavigator
 
     private lateinit var site: SiteModel
     private lateinit var binding: PostListActivityBinding
@@ -276,7 +280,8 @@ class PostsListActivity : BaseAppCompatActivity(),
                     action,
                     remotePreviewLogicHelper,
                     previewStateHelper,
-                    blazeFeatureUtils
+                    blazeFeatureUtils,
+                    activityNavigator
                 )
             }
         }
