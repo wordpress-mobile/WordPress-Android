@@ -35,6 +35,7 @@ import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderPostListFragment
 import org.wordpress.android.ui.reader.ReaderTypes
+import org.wordpress.android.ui.reader.views.compose.enableNestedScrollInterop
 import javax.inject.Inject
 
 /**
@@ -138,6 +139,7 @@ class ReaderDiscoverTabsFragment : Fragment(), OnScrollToTopListener {
                     arguments = arguments
                 ) { fragment ->
                     pageFragments[page] = fragment
+                    fragment.enableNestedScrollInterop()
                     updateMaxLifecycle(page, fragment)
                 }
             }

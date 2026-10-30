@@ -60,6 +60,7 @@ import org.wordpress.android.ui.reader.views.compose.MeasureOnLayoutComposeView
 import org.wordpress.android.ui.reader.views.compose.ReaderShellLayout
 import org.wordpress.android.ui.reader.views.compose.ReaderTopAppBar
 import org.wordpress.android.ui.reader.views.compose.ReaderTopBarScrollConnection
+import org.wordpress.android.ui.reader.views.compose.enableNestedScrollInterop
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterType
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.NetworkUtils
@@ -299,11 +300,15 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
         }
         val modifier = Modifier.fillMaxSize()
         when {
-            tag.isDiscover -> AndroidFragment<ReaderDiscoverTabsFragment>(modifier)
+            tag.isDiscover -> AndroidFragment<ReaderDiscoverTabsFragment>(modifier) {
+                it.enableNestedScrollInterop()
+            }
             tag.isTags -> AndroidFragment<ReaderTagsFeedFragment>(
                 modifier,
                 arguments = remember { ReaderTagsFeedFragment.argumentsFor(tag) }
-            )
+            ) {
+                it.enableNestedScrollInterop()
+            }
             else -> AndroidFragment<ReaderPostListFragment>(
                 modifier,
                 arguments = remember {
@@ -314,7 +319,9 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
                         tag.isFilterable
                     )
                 }
-            )
+            ) {
+                it.enableNestedScrollInterop()
+            }
         }
     }
 
