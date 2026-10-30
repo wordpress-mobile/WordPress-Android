@@ -218,9 +218,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     /**
      * Set when a render starts and consumed by the [onPageFinished] that follows it, so the
-     * first-render work runs once per rendered post. Keyed off the render rather than off the URL
-     * the WebView reports: [ReaderPostRenderer] loads the article with a real base URL so embeds
-     * get a referrer, and changing that URL must not be able to silently disable this again.
+     * first-render work runs once per render. Keyed off the render rather than off the URL the
+     * WebView reports: [ReaderPostRenderer] loads the article with a real base URL so embeds get
+     * a referrer, and changing that URL must not be able to silently disable this again.
+     *
+     * Once per *render*, not once per post - a post that renders twice runs the work twice. Only
+     * [updatePost] is latched per post, by [hasAlreadyUpdatedPost]; anything added here that must
+     * not repeat needs a latch of its own.
      */
     private var isAwaitingRenderedPageFinish: Boolean = false
 
@@ -855,10 +859,17 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      * Nothing in the article HTML should block painting any more, but the spinner must not be
      * able to spin forever: if the layout listener has not fired by [RENDER_WATCHDOG_MS], give
      * up on it and log how long we waited so the next report is diagnosable.
+     *
+     * A re-render over an article already on screen gets no backstop. There is no spinner up for
+     * it to take down, and nothing could cancel it either - the layout listener removes itself on
+     * the first paint and is only re-registered while [hasWebViewContent] is false - so it would
+     * do nothing but warn about a render that in fact finished.
      */
     private fun startRenderWatchdog() {
         renderStartedAtMs = System.currentTimeMillis()
-        armSpinnerBackstop(RENDER_WATCHDOG_MS)
+        if (!hasWebViewContent) {
+            armSpinnerBackstop(RENDER_WATCHDOG_MS)
+        }
     }
 
     /**
@@ -1364,6 +1375,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val relatedPostsView = if (state.isGlobal) globalRelatedPostsView else localRelatedPostsView
         relatedPostsView.showPosts(state)
 
+        // An empty list still has to reach showPosts above - that is what drops the previous
+        // post's cards and railcars - but there is nothing to reveal here. Revealing it anyway
+        // would fade in the empty header label's margins as a gap below the article.
+        if (state.cards.isNullOrEmpty()) {
+            relatedPostsView.visibility = View.GONE
+            return
+        }
+
         // fade in this related posts view
         if (relatedPostsView.visibility != View.VISIBLE) {
             AniUtils.fadeIn(relatedPostsView, AniUtils.Duration.MEDIUM)
@@ -1455,13 +1474,19 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 if (result.isNewOrChanged) {
                     val newPost = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
                     newPost?.let {
+                        val hasNewBody = it.text != post.text
                         viewModel.post = it
                         if (likesEnhancementsFeatureConfig.isEnabled()) {
                             viewModel.onRefreshLikersData(it)
                         }
                         viewModel.onUpdatePost(it)
-                        // Re-render the WebView with updated content
-                        showPostInWebView(it)
+                        // Only a changed body needs the WebView again. isNewOrChanged also covers
+                        // the like and comment counts, and reloading an identical article for one
+                        // of those would blank it, collapse it and lose the reader's place - with
+                        // no spinner, since the render spinner stays down over content already up.
+                        if (hasNewBody) {
+                            showPostInWebView(it)
+                        }
                     }
                 }
 
