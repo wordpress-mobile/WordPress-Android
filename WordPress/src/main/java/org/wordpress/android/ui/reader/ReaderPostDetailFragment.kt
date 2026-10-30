@@ -1462,6 +1462,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             return
         }
 
+        // ReaderPostActions.updatePost copies the server's body into this very ReaderPost
+        // instance before it calls back, so by then the post can no longer be asked what it
+        // used to say. Remember the body here, while it is still the one on screen.
+        val bodyBeforeUpdate = viewModel.post?.text
+
         val resultListener = ReaderActions.UpdateResultListener { result ->
             val post = viewModel.post
             if (isAdded && post != null) {
@@ -1474,7 +1479,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 if (result.isNewOrChanged) {
                     val newPost = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
                     newPost?.let {
-                        val hasNewBody = it.text != post.text
+                        val hasNewBody = it.text != bodyBeforeUpdate
                         viewModel.post = it
                         if (likesEnhancementsFeatureConfig.isEnabled()) {
                             viewModel.onRefreshLikersData(it)
