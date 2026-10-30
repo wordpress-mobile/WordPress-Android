@@ -79,9 +79,6 @@
     <dimen name="content_margin_tablet_big">96dp</dimen>
     <dimen name="content_margin">@dimen/content_margin_normal</dimen>
 
-    <dimen name="content_margin_bottom_sheet_row_start">16dp</dimen>
-    <dimen name="content_margin_bottom_sheet_row_start_tablet">60dp</dimen>
-    <dimen name="content_margin_bottom_sheet_row_start_tablet_big">108dp</dimen>
 
     <dimen name="content_margin_none">0dp</dimen>
     <dimen name="site_creation_content_margin">@dimen/content_margin_none</dimen>
@@ -113,8 +110,6 @@
     <dimen name="negative_margin_medium">-8dp</dimen>
 
     <!-- left/right margin for reader interests content -->
-    <dimen name="interests_content_margin">@dimen/margin_medium_large</dimen>
-    <dimen name="interests_done_button_margin">@dimen/margin_medium_large</dimen>
 
     <!-- left/right margin for reader cards -->
     <dimen name="reader_card_margin_normal">0dp</dimen>
@@ -141,10 +136,6 @@
     <dimen name="reader_card_content_padding">16dp</dimen>
 
     <!-- reader follow unfollow comments dimensions -->
-    <dimen name="reader_follow_sheet_message_margin_top">20dp</dimen>
-    <dimen name="reader_follow_sheet_switch_margin_top">4dp</dimen>
-    <dimen name="reader_follow_sheet_button_margin_top">6dp</dimen>
-    <dimen name="reader_follow_sheet_margin_bottom">20dp</dimen>
 
     <!-- reader more menu spacer height -->
     <dimen name="reader_more_menu_spacer_height">16dp</dimen>
@@ -202,11 +193,7 @@
 
     <dimen name="reader_related_post_image_width">150dp</dimen>
 
-    <dimen name="reader_subfilter_url_margin_bottom">14dp</dimen>
 
-    <dimen name="reader_subfilter_unseen_count_height">30dp</dimen>
-
-    <dimen name="reader_subfilter_empty_content_max_width">440dp</dimen>
 
     <!-- margin to use when indenting comment replies under their parents -->
     <dimen name="reader_comment_indent_per_level">24dp</dimen>
@@ -221,9 +208,6 @@
     <dimen name="reader_expandable_tags_view_chip_new_border">1dp</dimen>
     <dimen name="reader_expandable_tags_view_chip_new_height">36dp</dimen>
 
-    <dimen name="reader_interest_filter_chip_radius">5dp</dimen>
-    <dimen name="reader_interest_filter_chip_border">1dp</dimen>
-    <dimen name="reader_interest_filter_chip_height">36dp</dimen>
 
     <dimen name="empty_list_title_side_margin">32dp</dimen>
     <dimen name="empty_list_title_bottom_margin">8dp</dimen>
@@ -399,7 +383,6 @@
     <dimen name="plugin_icon_size">40dp</dimen>
     <dimen name="plugin_external_link_image_size">16dp</dimen>
     <dimen name="plugin_banner_size">192dp</dimen>
-
 
     <dimen name="dialog_snackbar_content_padding">20dp</dimen>
 

@@ -26,6 +26,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
@@ -240,7 +241,8 @@ private fun EntryBar(uiState: ReaderSubsUiState, actions: ReaderSubsActions) {
                 modifier = Modifier.weight(1f)
             )
             IconButton(onClick = actions.onAddClicked, enabled = !uiState.isAdding) {
-                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add))
+                // an arrow rather than a plus, so it doesn't look like the FAB above it
+                Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = stringResource(R.string.add))
             }
         }
     }

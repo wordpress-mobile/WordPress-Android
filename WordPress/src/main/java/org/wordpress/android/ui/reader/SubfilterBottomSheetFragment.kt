@@ -6,32 +6,122 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.TextView
-import androidx.core.view.isVisible
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager.widget.ViewPager
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.reader.subfilter.ActionType
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModelProvider
+import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState.VisibleEmptyUiState
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
-import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
-import org.wordpress.android.ui.reader.subfilter.SubfilterPagerAdapter
+import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site
+import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel
+import org.wordpress.android.ui.reader.views.compose.subfilter.SubfilterSheet
+import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
+import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
 import org.wordpress.android.util.extensions.getSerializableCompat
 import javax.inject.Inject
-import com.google.android.material.R as MaterialR
 
 class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: SubFilterViewModel
+
+    @Inject
+    lateinit var seenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
+
+    @Inject
+    lateinit var statsUtils: StatsUtils
+
+    private var viewModel: SubFilterViewModel? = null
+    private var pageViewModel: SubfilterPageViewModel? = null
+    private var category: SubfilterCategory? = null
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val args = requireArguments()
+        val subfilterVmKey = args.getString(SUBFILTER_VIEW_MODEL_KEY)
+        val title = args.getCharSequence(SUBFILTER_TITLE_KEY)?.toString()
+        val category = args.getSerializableCompat<SubfilterCategory>(SUBFILTER_CATEGORY_KEY)
+            .also { this.category = it }
+
+        if (subfilterVmKey == null || category == null || title == null) {
+            dismiss()
+            return null
+        }
+
+        val viewModel = SubFilterViewModelProvider.getSubFilterViewModelForKey(this, subfilterVmKey)
+            .also { viewModel = it }
+        val pageViewModel = ViewModelProvider(this, viewModelFactory)[SubfilterPageViewModel::class.java]
+            .also { pageViewModel = it }
+        pageViewModel.start(category)
+
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                val subFilters by viewModel.subFilters.observeAsState()
+                val currentSubfilter by viewModel.currentSubFilter.observeAsState()
+                val emptyState by pageViewModel.emptyState.observeAsState()
+                AppThemeM3 {
+                    SubfilterSheet(
+                        title = title,
+                        items = subFilters.orEmpty().filter { it.type == category.type },
+                        currentSubfilter = currentSubfilter,
+                        emptyState = emptyState as? VisibleEmptyUiState,
+                        unseenCountText = ::unseenCountText,
+                        onManageClick = { onManageClicked(viewModel, category) },
+                        onEmptyStateAction = viewModel::onBottomSheetActionClicked
+                    )
+                }
+            }
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        (dialog as? BottomSheetDialog)?.behavior?.peekHeight = resources.displayMetrics.heightPixels / 2
+
+        // the page view model decides whether the list is empty, and what to show instead
+        viewModel?.subFilters?.observe(viewLifecycleOwner) { subFilters ->
+            pageViewModel?.onSubFiltersChanged(subFilters.orEmpty().none { it.type == category?.type })
+        }
+    }
+
+    private fun unseenCountText(site: Site): String? =
+        if (seenUnseenWithCounterFeatureConfig.isEnabled() && site.showUnseenCount) {
+            statsUtils.toFormattedString(site.unseenCount, ONE_THOUSAND)
+        } else {
+            null
+        }
+
+    private fun onManageClicked(viewModel: SubFilterViewModel, category: SubfilterCategory) {
+        val subsPageIndex = when (category) {
+            SITES -> ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS
+            TAGS -> ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS
+        }
+        viewModel.onBottomSheetActionClicked(ActionType.OpenSubsAtPage(subsPageIndex))
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().applicationContext as WordPress).component().inject(this)
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        viewModel?.onBottomSheetCancelled()
+    }
 
     companion object {
         const val SUBFILTER_VIEW_MODEL_KEY = "subfilter_view_model_key"
@@ -53,98 +143,5 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
             fragment.arguments = bundle
             return fragment
         }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.subfilter_bottom_sheet, container)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val subfilterVmKey = requireArguments().getString(SUBFILTER_VIEW_MODEL_KEY)
-        val bottomSheetTitle = requireArguments().getCharSequence(SUBFILTER_TITLE_KEY)
-        val category = requireArguments().getSerializableCompat<SubfilterCategory>(SUBFILTER_CATEGORY_KEY)
-
-        if (subfilterVmKey == null || category == null || bottomSheetTitle == null) {
-            dismiss()
-            return
-        }
-
-        viewModel = SubFilterViewModelProvider.getSubFilterViewModelForKey(this, subfilterVmKey)
-
-        // TODO remove the pager and support only one category
-        val pager = view.findViewById<ViewPager>(R.id.view_pager)
-        val titleContainer = view.findViewById<View>(R.id.title_container)
-        val title = view.findViewById<TextView>(R.id.title)
-        val editSubscriptions = view.findViewById<View>(R.id.manage_subscriptions)
-        title.text = bottomSheetTitle
-        pager.adapter = SubfilterPagerAdapter(
-            requireActivity(),
-            childFragmentManager,
-            subfilterVmKey,
-            listOf(category)
-        )
-        pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                // NO OP
-            }
-
-            override fun onPageSelected(position: Int) {
-                val page = (pager.adapter as SubfilterPagerAdapter).getPageTitle(position)
-                viewModel.trackOnPageSelected(page.toString())
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {
-                // NO OP
-            }
-        })
-
-        pager.currentItem = when (viewModel.getCurrentSubfilterValue()) {
-            is Tag -> TAGS.ordinal
-            else -> SITES.ordinal
-        }
-
-        editSubscriptions.setOnClickListener {
-            val subsPageIndex = when (category) {
-                SITES -> ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS
-                TAGS -> ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS
-            }
-            viewModel.onBottomSheetActionClicked(ActionType.OpenSubsAtPage(subsPageIndex))
-        }
-
-        dialog?.setOnShowListener { dialogInterface ->
-            val sheetDialog = dialogInterface as? BottomSheetDialog
-
-            val bottomSheet = sheetDialog?.findViewById<View>(
-                MaterialR.id.design_bottom_sheet
-            ) as? FrameLayout
-
-            bottomSheet?.let {
-                val behavior = BottomSheetBehavior.from(it)
-                val metrics = it.context.resources.displayMetrics
-                behavior.peekHeight = metrics.heightPixels / 2
-            }
-
-            dialog?.setOnShowListener(null)
-        }
-
-        viewModel.isTitleContainerVisible.observe(viewLifecycleOwner) { isVisible ->
-            titleContainer.isVisible = isVisible
-        }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (requireActivity().applicationContext as WordPress).component().inject(this)
-    }
-
-    override fun onCancel(dialog: DialogInterface) {
-        super.onCancel(dialog)
-        viewModel.onBottomSheetCancelled()
     }
 }
