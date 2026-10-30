@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Experimental block editor warns before saving while something is still in progress**
+  While the experimental block editor has saving locked, most often during a media upload, publishing, updating, submitting, saving a draft or previewing first asks "Your post isn't ready yet", with Keep editing and Continue. Leaving the editor asks the same question, with Keep editing and Leave; Leave closes the editor and saves as usual. If the editor stops working, undo, redo, Code Editor and the Publish or Update button are disabled until it reloads.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: experimental_block_editor
+  - **Where:** Experimental block editor → Publish, Update, Submit for review, Save, Preview, back arrow
+  - **Notes:** Customers turn the flag on in Me → App Settings → Experimental Features → Experimental block editor. Continuing or leaving mid-upload can save an empty Image block, or a Cover or Media & Text block whose media is a temporary link that doesn't work for readers. Some blocks also lock saving, so the warning can appear with no upload running: the Jetpack Donations block keeps it locked for the session if it can't reach Stripe, for example while offline. Uploads the app tracks itself still show the "You are currently uploading media" toast. The default block editor and the classic editor are unchanged.
+
 - **Related posts are back at the bottom of a Reader post**
   Opening a post in the Reader shows its related posts again — a "More from that blog" list and a "More on WordPress.com" list below the comments — instead of the post ending at the comments. Opening a post also refreshes it from the server again, so its like and comment counts are up to date without pulling to refresh.
   - **Apps:** Both
