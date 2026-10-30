@@ -1848,30 +1848,28 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         // Only the page-finished that belongs to a render we started does the first-render work,
         // which also keeps the repeat calls a page full of iframes can produce from redoing it.
-        if (!isAwaitingRenderedPageFinish) {
-            return
+        if (isAwaitingRenderedPageFinish) {
+            isAwaitingRenderedPageFinish = false
+            // brief delay before showing related posts to give page time to render
+            view.postDelayed(Runnable {
+                if (!isAdded) {
+                    return@Runnable
+                }
+                if (!hasAlreadyUpdatedPost) {
+                    hasAlreadyUpdatedPost = true
+                    updatePost()
+                }
+                viewModel.post?.let {
+                    if (likesEnhancementsFeatureConfig.isEnabled()) {
+                        viewModel.onRefreshLikersData(it)
+                    }
+                    if (commentsSnippetFeatureConfig.isEnabled()) {
+                        viewModel.onRefreshCommentsData(it.blogId, it.postId)
+                    }
+                    viewModel.onRelatedPostsRequested(it)
+                }
+            }, ON_PAGE_FINISHED_DELAY_MILLIS)
         }
-        isAwaitingRenderedPageFinish = false
-
-        // brief delay before showing related posts to give page time to render
-        view.postDelayed(Runnable {
-            if (!isAdded) {
-                return@Runnable
-            }
-            if (!hasAlreadyUpdatedPost) {
-                hasAlreadyUpdatedPost = true
-                updatePost()
-            }
-            viewModel.post?.let {
-                if (likesEnhancementsFeatureConfig.isEnabled()) {
-                    viewModel.onRefreshLikersData(it)
-                }
-                if (commentsSnippetFeatureConfig.isEnabled()) {
-                    viewModel.onRefreshCommentsData(it.blogId, it.postId)
-                }
-                viewModel.onRelatedPostsRequested(it)
-            }
-        }, ON_PAGE_FINISHED_DELAY_MILLIS)
     }
 
     /**
