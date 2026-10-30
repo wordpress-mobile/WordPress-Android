@@ -49,7 +49,6 @@ PROTOTYPE_BUILD_TYPE = 'Debug'
 
 PROJECT_ROOT_FOLDER = File.dirname(File.expand_path(__dir__))
 FASTLANE_FOLDER = File.join(PROJECT_ROOT_FOLDER, 'fastlane')
-RELEASE_NOTES_SOURCE_PATH = File.join(PROJECT_ROOT_FOLDER, 'RELEASE-NOTES.txt')
 
 # Mirrors `a8c-secrets which`, without spawning the command
 A8C_SECRETS_FOLDER = File.join(Dir.home, '.a8c-secrets', File.read(File.join(PROJECT_ROOT_FOLDER, '.a8c-secrets', 'repo-id')).strip)
@@ -60,7 +59,6 @@ VERSION_PROPERTIES_PATH = File.join(PROJECT_ROOT_FOLDER, 'version.properties')
 # Instanstiate versioning classes
 VERSION_CALCULATOR = Fastlane::Wpmreleasetoolkit::Versioning::MarketingVersionCalculator.new
 VERSION_FORMATTER = Fastlane::Wpmreleasetoolkit::Versioning::RCNotationVersionFormatter.new
-BUILD_CODE_CALCULATOR = Fastlane::Wpmreleasetoolkit::Versioning::SimpleBuildCodeCalculator.new
 BUILD_CODE_FORMATTER = Fastlane::Wpmreleasetoolkit::Versioning::SimpleBuildCodeFormatter.new
 VERSION_FILE = Fastlane::Wpmreleasetoolkit::Versioning::AndroidVersionFile.new(version_properties_path: VERSION_PROPERTIES_PATH)
 
@@ -92,13 +90,6 @@ ENV['FL_GIT_BRANCH_DONT_USE_ENV_VARS'] = 'true'
 # Version Methods
 #####################################################################################
 
-def commit_version_bump
-  Fastlane::Helper::GitHelper.commit(
-    message: 'Bump version number',
-    files: VERSION_PROPERTIES_PATH
-  )
-end
-
 # Returns the current version name from `version.properties` without needing formatting or calculations
 def current_version_name
   VERSION_FILE.read_version_name
@@ -113,39 +104,6 @@ def current_release_version
   VERSION_FORMATTER.release_version(current_version)
 end
 
-#  Returns the next release version of the app in the format `1.2` or `1.2.3` if it is a hotfix
-#
-def next_release_version
-  # Read the current release version from the .xcconfig file and parse it into an AppVersion object
-  current_version = VERSION_FORMATTER.parse(VERSION_FILE.read_version_name)
-  # Calculate the next release version
-  next_release_version = VERSION_CALCULATOR.next_release_version(version: current_version)
-  # Return the formatted release version
-  VERSION_FORMATTER.release_version(next_release_version)
-end
-
-# Returns the beta version of the app in the format `1.2-rc-1`
-#
-def current_beta_version
-  # Read the current release version from the .xcconfig file and parse it into an AppVersion object
-  current_version = VERSION_FORMATTER.parse(VERSION_FILE.read_version_name)
-  # Return the formatted release version
-  VERSION_FORMATTER.beta_version(current_version)
-end
-
-# Returns the next beta version in the format `1.2-rc-2` (increments the build number)
-#
-def next_beta_version(version_name: nil)
-  # Use provided version or read the current version from version.properties
-  version_name ||= VERSION_FILE.read_version_name
-  # Parse the version string (e.g., "1.2-rc-1") into an AppVersion object
-  current_version = VERSION_FORMATTER.parse(version_name)
-  # Increment the build number to get the next beta version
-  next_beta_version = VERSION_CALCULATOR.next_build_number(version: current_version)
-  # Format as beta version (e.g., "1.2-rc-2")
-  VERSION_FORMATTER.beta_version(next_beta_version)
-end
-
 # Returns the current build code of the app
 #
 def current_build_code
@@ -155,15 +113,19 @@ def current_build_code
   BUILD_CODE_FORMATTER.build_code(build_code: current_build_code)
 end
 
-# Returns the next build code of the app
-#
-def next_build_code
-  # Read the current build code from the version.properties file into to a BuildCode object
-  current_build_code = VERSION_FILE.read_version_code
-  # Calculate the next build code
-  next_build_code = BUILD_CODE_CALCULATOR.next_build_code(build_code: current_build_code)
-  # Return the formatted build code
-  BUILD_CODE_FORMATTER.build_code(build_code: next_build_code)
+#####################################################################################
+# App helpers
+#####################################################################################
+
+def get_app_name_option!(options)
+  app = options[:app]&.downcase
+  validate_app_name!(app)
+  app
+end
+
+def validate_app_name!(app)
+  UI.user_error!("Missing 'app' parameter. Expected 'app:wordpress' or 'app:jetpack'") if app.nil?
+  UI.user_error!("Invalid 'app' parameter #{app.inspect}. Expected 'wordpress' or 'jetpack'") unless %i[wordpress jetpack].include?(app.to_sym)
 end
 
 #####################################################################################
@@ -216,7 +178,6 @@ end
 import 'lanes/build.rb'
 import 'lanes/localization.rb'
 import 'lanes/promote.rb'
-import 'lanes/release.rb'
 import 'lanes/screenshots.rb'
 import 'lanes/test.rb'
 
