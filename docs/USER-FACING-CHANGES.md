@@ -16,6 +16,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** Reader (top bar, Discover tabs, the blog/tag filter); Reader → Discover or Tags → choose interests; Reader → a post → author name (author sheet), or the comments' follow bell (notification sheet); Reader → Reblog with no site of your own
   - **Notes:** Site icons in the filter sheet are now rounded squares, matching Reader search and Manage subscriptions, instead of circles. The "Reblog needs a site" screen keeps its illustration, text and button.
 
+- **Related posts are back at the bottom of a Reader post**
+  Opening a post in the Reader shows its related posts again — a "More from that blog" list and a "More on WordPress.com" list below the comments — instead of the post ending at the comments. Opening a post also refreshes it from the server again, so its like and comment counts are up to date without pulling to refresh.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → open a post → scroll to the bottom
+  - **Notes:** The section has been missing since 26.3.1, so documentation written since then may describe the post detail as having no related posts. It only ever appears for WordPress.com posts — never for RSS/feed posts — and only when WordPress.com has related content to suggest, so a post with no related posts is still normal.
+
 - **Reader's likers list and photo viewer redesigned**
   The Reader's list of people who liked a post has a Material 3 top bar and rows; tapping a liker with a site still opens that site. The full-screen photo viewer still swipes between a post's images, pinches and double-taps to zoom, shows the "1 of 5" count, and hides its toolbar after a few seconds. Pages now slide rather than using the old flow animation, and double-tap zooms straight in to 2.5× and back out instead of stepping through two zoom levels.
   - **Apps:** Jetpack
