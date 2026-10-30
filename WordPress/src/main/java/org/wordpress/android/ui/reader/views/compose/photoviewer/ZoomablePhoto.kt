@@ -28,7 +28,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntSize
@@ -112,32 +111,35 @@ fun ZoomablePhoto(photo: ReaderPhoto, isCurrentPage: Boolean, onTap: () -> Unit)
 }
 
 /**
- * Zooms about the pinch centroid. A one-finger drag on an unzoomed photo, or one that starts by dragging a zoomed
- * photo past its edge, isn't consumed, so the pager pages instead.
+ * Zooms about the pinch centroid. A one-finger drag on a zoomed photo picks an owner once it passes touch slop, so a
+ * tap that wobbles still taps: it pans if the photo can move that way, and otherwise (dragging out past an edge) it's
+ * left to the pager, as is any drag on an unzoomed photo. A gesture this takes stays taken, since the pager picks up
+ * a gesture again from the first event nobody consumes.
  */
 private suspend fun PointerInputScope.detectZoomAndPan(state: ZoomState) = awaitEachGesture {
     awaitFirstDown(requireUnconsumed = false)
-    var hasPanned = false
+    val touchSlop = viewConfiguration.touchSlop
+    var slopPan = Offset.Zero
+    var isTaken = false
     var isLeftToPager = false
     do {
         val event = awaitPointerEvent()
-        val isPinch = event.changes.count { it.pressed } > 1
         val pan = event.calculatePan()
-        val shouldHandle = when {
-            isPinch -> true
-            !state.isZoomed || isLeftToPager || pan == Offset.Zero -> false
-            state.canPan(pan, size) -> true
-            else -> {
-                // the pager only takes a drag that starts at the edge - once this one has panned, it's already lost
-                isLeftToPager = !hasPanned
-                false
+        if (!isTaken) {
+            if (event.changes.count { it.pressed } > 1) {
+                isTaken = true
+            } else if (state.isZoomed && !isLeftToPager) {
+                slopPan += pan
+                if (slopPan.getDistance() > touchSlop) {
+                    isTaken = state.canPan(slopPan, size)
+                    isLeftToPager = !isTaken
+                }
             }
         }
-        val centroid = event.calculateCentroid()
-        if (shouldHandle && centroid.isSpecified) {
-            state.transform(event.calculateZoom(), centroid, pan, size)
-            hasPanned = true
-            event.changes.forEach { if (it.positionChanged()) it.consume() }
+        if (isTaken) {
+            val centroid = event.calculateCentroid()
+            if (centroid.isSpecified) state.transform(event.calculateZoom(), centroid, pan, size)
+            event.changes.forEach { it.consume() }
         }
     } while (event.changes.any { it.pressed })
 }
