@@ -478,8 +478,10 @@ class ReaderTracker @Inject constructor(
         const val SOURCE_STATS = "stats"
         const val SOURCE_NOTIFICATION = "notification"
         const val SOURCE_READER_LIKE_LIST = "reader_like_list"
+        const val SOURCE_STATS_LIKE_LIST = "stats_like_list"
         const val SOURCE_READER_LIKE_LIST_USER_PROFILE = "reader_like_list_user_profile"
         const val SOURCE_NOTIF_LIKE_LIST_USER_PROFILE = "notif_like_list_user_profile"
+        const val SOURCE_STATS_LIKE_LIST_USER_PROFILE = "stats_like_list_user_profile"
         const val SOURCE_USER_PROFILE_UNKNOWN = "user_profile_source_unknown"
         const val SOURCE_ACTIVITY_LOG_DETAIL = "activity_log_detail"
         const val SOURCE_BLOGGING_PROMPTS_VIEW_ANSWERS = "blogging_prompts_my_site_card_view_answers"
@@ -518,6 +520,7 @@ class ReaderTracker @Inject constructor(
         fun isUserProfileSource(source: String): Boolean {
             return (source == SOURCE_READER_LIKE_LIST_USER_PROFILE ||
                     source == SOURCE_NOTIF_LIKE_LIST_USER_PROFILE ||
+                    source == SOURCE_STATS_LIKE_LIST_USER_PROFILE ||
                     source == SOURCE_USER_PROFILE_UNKNOWN)
         }
     }

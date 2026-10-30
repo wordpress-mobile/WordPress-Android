@@ -72,10 +72,6 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         get() = AppPrefs.getReaderAnalyticsCountTagsTimestamp()
         set(timestamp) = AppPrefs.setReaderAnalyticsCountTagsTimestamp(timestamp)
 
-    var readerCssUpdatedTimestamp: Long
-        get() = AppPrefs.getReaderCssUpdatedTimestamp()
-        set(timestamp) = AppPrefs.setReaderCssUpdatedTimestamp(timestamp)
-
     var readerCardsPageHandle: String?
         get() = AppPrefs.getReaderCardsPageHandle()
         set(pageHandle) = AppPrefs.setReaderCardsPageHandle(pageHandle)

@@ -890,20 +890,34 @@ data class PostViewsPost(
     /** Publication date in the site's timezone (format: yyyy-MM-dd HH:mm:ss). */
     val date: String,
     val likeCount: Long,
-    val commentCount: Long
+    val commentCount: Long,
+    /**
+     * The item's public URL, or null when the API supplies no permalink -- it is derived per
+     * request rather than stored, so it can be missing even for an item that exists.
+     */
+    val url: String?,
+    /** The WordPress post type ("post", "page", "attachment"), which decides how [url] is opened. */
+    val type: String,
+    /**
+     * The WordPress post status ("publish", "draft", "trash", ...). An item keeps its view history
+     * after it stops being public, so this says whether [url] still resolves for a reader.
+     */
+    val status: String
 )
 
 /**
- * A week's view total and how it compares with the week before.
+ * A week's view total, its days, and how the total compares with the week before.
  *
- * [startDay] and [endDay] bound the week (format: yyyy-MM-dd); the final week may be partial. The
- * API also breaks the week down per day, which nothing displays yet.
+ * [startDay] and [endDay] bound the week (format: yyyy-MM-dd); the most recent week may be
+ * partial, in which case [days] stops short of seven.
  */
 data class PostViewsWeek(
     val startDay: String,
     val endDay: String,
     val total: Long,
-    val change: PostViewsChange
+    val change: PostViewsChange,
+    /** The week's days, oldest first. */
+    val days: List<PostViewsDailyView> = emptyList()
 )
 
 /**
@@ -922,19 +936,23 @@ sealed class PostViewsChange {
 }
 
 /**
- * A year's view total. The API also breaks this down by month, which nothing displays yet.
+ * A year's view total, with the months it is made of.
  */
 data class PostViewsYear(
     val year: String,
-    val total: Long
+    val total: Long,
+    /** Views per month, keyed 1-12. The API leaves out months that had none. */
+    val months: Map<Int, Long> = emptyMap()
 )
 
 /**
- * A year's average daily views. The API also breaks this down by month, which nothing displays yet.
+ * A year's average daily views, with the months it is made of.
  */
 data class PostViewsYearAverage(
     val year: String,
-    val overall: Long
+    val overall: Long,
+    /** Average daily views per month, keyed 1-12. The API leaves out months that had none. */
+    val months: Map<Int, Long> = emptyMap()
 )
 
 /**

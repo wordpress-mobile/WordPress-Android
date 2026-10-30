@@ -22,8 +22,6 @@ import org.wordpress.android.ui.postsrs.screens.PostRsListScreen
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
 import org.wordpress.android.ui.rs.RsConfirmationDialogState
-import org.wordpress.android.ui.stats.StatsConstants
-import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.setContent
 import javax.inject.Inject
@@ -130,9 +128,8 @@ class PostRsListActivity : BaseAppCompatActivity() {
             is PostRsListEvent.PromoteWithBlaze ->
                 ActivityLauncher.openPromoteWithBlaze(this, event.post, BlazeFlowSource.POSTS_LIST)
             is PostRsListEvent.ViewStats ->
-                StatsDetailActivity.start(
-                    this, event.site, event.postId,
-                    StatsConstants.ITEM_TYPE_POST, event.title, event.url
+                activityNavigator.openPostStats(
+                    this, event.site, event.postId, event.title, event.url
                 )
             is PostRsListEvent.ViewComments ->
                 ReaderActivityLauncher.showReaderPostDetail(

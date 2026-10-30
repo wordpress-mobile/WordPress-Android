@@ -894,7 +894,7 @@
         <activity
             android:name=".ui.reader.ReaderSubsActivity"
             android:theme="@style/WordPress.NoActionBar"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".ui.reader.ReaderPhotoViewerActivity"
             android:theme="@style/ReaderMediaViewerTheme" />

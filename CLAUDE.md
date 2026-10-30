@@ -122,7 +122,8 @@ WordPress/src/main/java/org/wordpress/android/
 ### Development Workflow
 - Default development variant: `jetpackDebug`
 - Remote build cache enabled by default for local builds (needs `a8c-secrets decrypt`; opt out via
-  `use_remote_build_cache_locally=false` in `developer.properties`)
+  `use_remote_build_cache_locally=false` in `developer.properties`); the local build cache is disabled
+  whenever the remote one is used locally
 - Fastlane used for release automation and testing
 - Secrets managed via `secrets.properties`, decrypted outside the checkout by `a8c-secrets decrypt`
 - Pre-commit hooks may modify files during commit

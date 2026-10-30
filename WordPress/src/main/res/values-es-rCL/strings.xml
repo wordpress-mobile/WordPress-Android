@@ -189,7 +189,6 @@ Language: es_CL
     <string name="site_monitoring_tab_title_php_logs">Registros de PHP</string>
     <string name="site_monitoring_tab_title_web_server_logs">Registros del servidor webs</string>
     <string name="reader_no_posts_with_this_tag">No hay entradas con esta etiqueta</string>
-    <string name="reader_no_recommended_blogs_title">No hay blogs recomendados</string>
     <string name="reader_toast_err_follow_not_authorized_to_access_blog">No tienes autorización para acceder a este blog</string>
     <string name="reader_toast_err_unable_to_block_blog">No ha sido posible bloquear este blog</string>
     <string name="reader_toast_err_unable_to_follow_blog">No es posible suscribirse a este blog</string>

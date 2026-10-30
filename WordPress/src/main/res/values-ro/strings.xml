@@ -668,7 +668,6 @@ Language: ro
     <string name="reader_no_followed_blogs_description_subs">Abonează-te la bloguri în Descoperă sau caută un blog care ți-a plăcut.</string>
     <string name="reader_toast_err_follow_not_authorized_to_access_blog">Nu ești autorizat să accesezi acest blog</string>
     <string name="reader_toast_err_unable_to_follow_blog">Nu pot face abonarea la acest blog</string>
-    <string name="reader_no_recommended_blogs_title">Niciun blog recomandat</string>
     <string name="reader_no_posts_with_this_tag">Nu există articole cu această etichetă</string>
     <string name="reader_toast_err_unable_to_block_blog">Nu pot să blochez acest blog</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Articolele din acest blog nu vor mai fi arătate</string>

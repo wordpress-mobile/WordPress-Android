@@ -11,6 +11,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -73,6 +75,12 @@ public class ReaderWebView extends WPWebView {
      * Timeout in milliseconds for read / connect timeouts
      */
     private static final int TIMEOUT_MS = 30000;
+
+    /**
+     * The blank page {@link #clearContent()} loads to drop the previous post - the only page
+     * this WebView ever loads that isn't a rendered article.
+     */
+    public static final String BLANK_URL = "about:blank";
 
     private ReaderWebChromeClient mReaderChromeClient;
     private ReaderCustomViewListener mCustomViewListener;
@@ -140,7 +148,7 @@ public class ReaderWebView extends WPWebView {
 
 
     public void clearContent() {
-        loadUrl("about:blank");
+        loadUrl(BLANK_URL);
     }
 
     private ReaderWebViewUrlClickListener getUrlClickListener() {
@@ -321,6 +329,35 @@ public class ReaderWebView extends WPWebView {
         public void onPageFinished(WebView view, String url) {
             if (mReaderWebView.hasPageFinishedListener()) {
                 mReaderWebView.getPageFinishedListener().onPageFinished(view, url);
+            }
+        }
+
+        /*
+         * Diagnostics only - the post body renders from local data, so a failed subresource
+         * (a blocked tracker, a dead image, an unreachable embed script) is not worth
+         * surfacing to the user. It is worth recording: a stalled or failing subresource is
+         * what made CMM-2254 so hard to pin down, and nothing in the app logged it.
+         */
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            String message = "reader webView > error " + error.getErrorCode()
+                             + " (" + error.getDescription() + ") loading " + request.getUrl();
+            if (request.isForMainFrame()) {
+                AppLog.w(AppLog.T.READER, message);
+            } else {
+                AppLog.d(AppLog.T.READER, message);
+            }
+        }
+
+        @Override
+        public void onReceivedHttpError(WebView view, WebResourceRequest request,
+                                        WebResourceResponse errorResponse) {
+            String message = "reader webView > http " + errorResponse.getStatusCode()
+                             + " loading " + request.getUrl();
+            if (request.isForMainFrame()) {
+                AppLog.w(AppLog.T.READER, message);
+            } else {
+                AppLog.d(AppLog.T.READER, message);
             }
         }
 
