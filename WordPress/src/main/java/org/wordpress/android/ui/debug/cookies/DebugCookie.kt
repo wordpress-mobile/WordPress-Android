@@ -4,16 +4,17 @@ import com.google.gson.Gson
 import java.net.HttpCookie
 import java.net.URI
 
+// Persisted via Gson, so the derived values are getters rather than fields Gson would need to restore
 data class DebugCookie(
     val host: String,
     val name: String,
     val value: String?
 ) {
-    val key = host + "_" + name
+    val key get() = host + "_" + name
 
-    val oldRfcDomain = ".$host" // Append leading dot to match subdomains under RFC2109 and RFC2965
+    val oldRfcDomain get() = ".$host" // Append leading dot to match subdomains under RFC2109 and RFC2965
 
-    val headerValue = name + "=" + value.orEmpty()
+    val headerValue get() = name + "=" + value.orEmpty()
 
     fun toURI(): URI = URI(host)
 
