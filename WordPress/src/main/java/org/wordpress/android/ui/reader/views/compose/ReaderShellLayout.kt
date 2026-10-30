@@ -25,8 +25,7 @@ class ReaderTopBarScrollConnection : NestedScrollConnection {
         private set
 
     /** How far the content has scrolled since the last [reset], used to lift the top bar */
-    var contentOffset by mutableFloatStateOf(0f)
-        private set
+    private var contentOffset by mutableFloatStateOf(0f)
 
     internal var topBarHeight = 0f
 

@@ -43,6 +43,7 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
 
     private var viewModel: SubFilterViewModel? = null
     private var pageViewModel: SubfilterPageViewModel? = null
+    private var category: SubfilterCategory? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,6 +54,7 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
         val subfilterVmKey = args.getString(SUBFILTER_VIEW_MODEL_KEY)
         val title = args.getCharSequence(SUBFILTER_TITLE_KEY)?.toString()
         val category = args.getSerializableCompat<SubfilterCategory>(SUBFILTER_CATEGORY_KEY)
+            .also { this.category = it }
 
         if (subfilterVmKey == null || category == null || title == null) {
             dismiss()
@@ -91,7 +93,6 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
         (dialog as? BottomSheetDialog)?.behavior?.peekHeight = resources.displayMetrics.heightPixels / 2
 
         // the page view model decides whether the list is empty, and what to show instead
-        val category = requireArguments().getSerializableCompat<SubfilterCategory>(SUBFILTER_CATEGORY_KEY)
         viewModel?.subFilters?.observe(viewLifecycleOwner) { subFilters ->
             pageViewModel?.onSubFiltersChanged(subFilters.orEmpty().none { it.type == category?.type })
         }

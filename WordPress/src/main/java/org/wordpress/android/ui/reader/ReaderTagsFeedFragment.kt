@@ -379,12 +379,6 @@ class ReaderTagsFeedFragment : Fragment(R.layout.reader_tag_feed_fragment_layout
         private const val POST_LIST_FADE_DURATION = 250L
         private const val POST_LIST_FADE_IN_DELAY = 300L
 
-        fun newInstance(
-            feedTag: ReaderTag
-        ): ReaderTagsFeedFragment = ReaderTagsFeedFragment().apply {
-            arguments = argumentsFor(feedTag)
-        }
-
         /*
          * arguments for the tags feed, which the Reader tab hosts with AndroidFragment
          */

@@ -357,22 +357,14 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(KEY_IS_INTERESTS_VISIBLE, isInterestsVisible.value)
-        if (::viewModel.isInitialized) {
-            viewModel.onSaveInstanceState(outState)
-        }
+        viewModel.onSaveInstanceState(outState)
     }
 
     fun requestBookmarkTab() {
-        if (!::viewModel.isInitialized) {
-            viewModel = ViewModelProvider(this@ReaderFragment, viewModelFactory)[ReaderViewModel::class.java]
-        }
         viewModel.bookmarkTabRequested()
     }
 
     fun requestDiscoverTab() {
-        if (!::viewModel.isInitialized) {
-            viewModel = ViewModelProvider(this@ReaderFragment, viewModelFactory)[ReaderViewModel::class.java]
-        }
         viewModel.discoverTabRequested()
     }
 

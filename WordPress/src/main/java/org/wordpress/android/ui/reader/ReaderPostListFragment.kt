@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.AndroidUiDispatcher
 import androidx.core.os.BundleCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -36,7 +37,6 @@ import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
-import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.ChooseSiteActivity
 import org.wordpress.android.ui.main.WPMainActivity.OnActivityBackPressedListener
@@ -84,7 +84,7 @@ import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
 import javax.inject.Inject
 
 @Suppress("LargeClass")
-class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListener, OnScrollToTopListener {
+class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScrollToTopListener {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -611,8 +611,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListene
         }
         announceListStateForAccessibility()
     }
-
-    override fun getScrollableViewForUniqueIdProvision(): View? = view
 
     /*
      * called by the activity when user hits the back button - returns true if the back button
