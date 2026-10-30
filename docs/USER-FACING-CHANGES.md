@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Reader's likers list and photo viewer redesigned**
+  The Reader's list of people who liked a post has a Material 3 top bar and rows; tapping a liker with a site still opens that site. The full-screen photo viewer still swipes between a post's images, pinches and double-taps to zoom, shows the "1 of 5" count, and hides its toolbar after a few seconds. Pages now slide rather than using the old flow animation, and double-tap zooms straight in to 2.5× and back out instead of stepping through two zoom levels.
+  - **Apps:** Jetpack
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Notifications or Activity Log → tap a "like" link in an entry's text, for a post already loaded in the Reader (the likers list); Reader → a post → tap an image (the photo viewer)
+  - **Notes:** A zoomed photo pages to the next one only when a drag starts at the photo's edge; a drag that starts by panning stops at the edge. The full-screen video player is unchanged apart from now sending the app's user agent.
+
 - **A post's Stats menu item opens the redesigned Stats**
   Posts → a published post's ⋯ menu → Stats now opens the per-item screen of the redesigned Stats, the same screen a row in Posts & pages opens, instead of the old per-post stats screen. The post's title, chart, totals and calendars are the ones the redesigned Stats shows everywhere else, and its header opens the post itself. A page's Stats menu item, where the Pages list offers one, opens the same screen.
   - **Apps:** Both

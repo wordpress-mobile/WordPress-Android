@@ -133,7 +133,6 @@ import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.reader.SubfilterBottomSheetFragment;
 import org.wordpress.android.ui.reader.adapters.CommentSnippetAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
-import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
@@ -314,8 +313,6 @@ public interface AppComponent {
     void inject(ThemeBrowserFragment object);
 
     void inject(SelectCategoriesActivity object);
-
-    void inject(ReaderUserAdapter object);
 
     void inject(AddCategoryFragment object);
 
