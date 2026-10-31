@@ -110,6 +110,9 @@ Language: hu
     <string name="file_size_in_megabytes">%s MB</string>
     <string name="my_site_section_screen_title">Honlapom</string>
     <string name="username_changer_action">Mentés</string>
+    <string name="signup_magic_link_error_button_negative">Bezárás</string>
+    <string name="signup_magic_link_error_button_positive">Újra</string>
+    <string name="signup_epilogue_hint_username">Felhasználónév</string>
     <string name="plugin_caption_new">Új</string>
     <string name="plugin_caption_popular">Népszerű</string>
     <string name="my_site_btn_site_pages">Honlap oldalai</string>
@@ -120,6 +123,7 @@ Language: hu
     <string name="notification_settings_item_other_comments_other_blogs">Hozzászólások más honlapokon</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Minden honlapom</string>
     <string name="button_retry">Újra</string>
+    <string name="login_site_address_help_title">Mi a honlapom címe?</string>
     <string name="next">Következő</string>
     <string name="twitter">Twitter</string>
     <string name="photo_picker_choose_video">Videó választása a készülékről</string>
@@ -131,6 +135,7 @@ Language: hu
     <string name="preference_open_device_settings">Eszköz beállítások megnyitása</string>
     <string name="alignment_right">Jobb</string>
     <string name="alignment_left">Bal</string>
+    <string name="magic_link_unavailable_error_message">Jelenleg nem érhető el. Kérjük, írja be a jelszót</string>
     <string name="me_btn_app_settings">Alkalmazás beállítások</string>
     <string name="comments_on_my_site">Hozzászólások a honlapomon</string>
     <string name="site_settings_list_editor_summary_other">%d elem</string>
@@ -172,6 +177,9 @@ Language: hu
     <string name="my_site_btn_blog_posts">Blog bejegyzései</string>
     <string name="select_all">Mindent kijelöl</string>
     <string name="language">Nyelv</string>
+    <string name="verification_code">Helyesség ellenőrzési kód</string>
+    <string name="invalid_verification_code">Érvénytelen helyesség ellenőrzési kód</string>
+    <string name="auth_required">A folytatáshoz lépjünk be újra.</string>
     <string name="error_notification_open">Értesítések megnyitása siksertelen</string>
     <string name="stats_search_terms_unknown_search_terms">Ismeretlen keresési feltételek</string>
     <string name="stats_view_authors">Szerzők</string>
@@ -226,6 +234,7 @@ Language: hu
     <string name="gallery_error">Nem sikerült a média elemet letölteni</string>
     <string name="theme_fetch_failed">A sablonok lekérdezése nem sikerült</string>
     <string name="notifications_empty_list">Nincsenek értesítések</string>
+    <string name="email_invalid">Adjunk meg egy valós e-mail címet</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="comment_status_spam">Spam</string>
@@ -264,6 +273,7 @@ Language: hu
     <string name="category_name">Kategória név</string>
     <string name="file_error_create">Nem sikerült ideiglenes fájlt létrehozni a médiafeltöltéshez. Győződjön meg róla, hogy elegendő szabad hely van a készüléken.</string>
     <string name="invalid_site_url_message">Ellenőrizze, hogy a megadott webhely URL-je érvényes-e</string>
+    <string name="http_authorization_required">Hitelesítés szükséges</string>
     <string name="notifications_empty_all">Nincsenek értesítések… egyelőre!</string>
     <string name="share_link">Hivatkozás megosztása</string>
     <string name="reader_empty_posts_in_tag_updating">Bejegyzések betöltése…</string>
@@ -290,6 +300,7 @@ Language: hu
     <string name="reader_toast_err_tag_not_valid">Ez nem érvényes címke</string>
     <string name="reader_toast_err_view_image">A kép nem jeleníthető meg</string>
     <string name="reader_toast_err_url_intent">A(z) %s fájl nem nyitható meg</string>
+    <string name="sign_up_label">Regisztráció</string>
     <string name="themes">Sablonok</string>
     <string name="media_edit_caption_text">Felirat</string>
     <string name="media_edit_description_text">Leírás</string>
@@ -317,6 +328,8 @@ Language: hu
     <string name="new_notifications">%d új értesítés</string>
     <string name="more_notifications">és %d további.</string>
     <string name="loading">Betöltés</string>
+    <string name="httpuser">HTTP felhasználónév</string>
+    <string name="httppassword">HTTP jelszó</string>
     <string name="error_media_upload">Hiba történt a média feltöltése közben</string>
     <string name="incorrect_credentials">Hibás felhasználónév vagy jelszó.</string>
     <string name="password">Jelszó</string>
