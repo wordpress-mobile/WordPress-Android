@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-28 22:26:41+0000
+Translation-Revision-Date: 2026-10-30 21:24:11+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.1.0
 Language: tr
@@ -155,14 +155,14 @@ Language: tr
     <string name="menu_item_title_required">Başlık gereklidir</string>
     <string name="menu_name_required">Menü adı gereklidir</string>
     <string name="menu_error_no_site_selected">Site seçilmedi</string>
-    <string name="menu_item_select_required">Lütfen bağlanılacak bir öğe seçin</string>
+    <string name="menu_item_select_required">Lütfen bağlanılacak bir öge seçin</string>
     <string name="menu_item_loading_items">Yükleniyor…</string>
     <string name="menu_item_no_items_found">Hiç bir öğe bulunamadı</string>
     <string name="menu_item_select_tag">Bir etiket seçin</string>
     <string name="menu_item_select_category">Bir kategori seçin</string>
     <string name="menu_item_select_page">Bir sayfa seçin</string>
     <string name="menu_item_select_post">Bir gönderi seçin</string>
-    <string name="menu_item_select_item">Bir öğe seçin</string>
+    <string name="menu_item_select_item">Bir öge seçin</string>
     <string name="menu_item_link_to_label">Şuraya bağlantı:</string>
     <string name="menu_item_type_tag">Etiket</string>
     <string name="menu_item_type_category">Kategori</string>
