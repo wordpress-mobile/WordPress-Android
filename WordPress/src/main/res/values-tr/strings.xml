@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-28 22:26:41+0000
+Translation-Revision-Date: 2026-10-31 07:13:27+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.1.0
 Language: tr
@@ -155,14 +155,14 @@ Language: tr
     <string name="menu_item_title_required">Başlık gereklidir</string>
     <string name="menu_name_required">Menü adı gereklidir</string>
     <string name="menu_error_no_site_selected">Site seçilmedi</string>
-    <string name="menu_item_select_required">Lütfen bağlanılacak bir öğe seçin</string>
+    <string name="menu_item_select_required">Lütfen bağlanılacak bir öge seçin</string>
     <string name="menu_item_loading_items">Yükleniyor…</string>
-    <string name="menu_item_no_items_found">Hiç bir öğe bulunamadı</string>
+    <string name="menu_item_no_items_found">Hiç bir öge bulunamadı</string>
     <string name="menu_item_select_tag">Bir etiket seçin</string>
     <string name="menu_item_select_category">Bir kategori seçin</string>
     <string name="menu_item_select_page">Bir sayfa seçin</string>
     <string name="menu_item_select_post">Bir gönderi seçin</string>
-    <string name="menu_item_select_item">Bir öğe seçin</string>
+    <string name="menu_item_select_item">Bir öge seçin</string>
     <string name="menu_item_link_to_label">Şuraya bağlantı:</string>
     <string name="menu_item_type_tag">Etiket</string>
     <string name="menu_item_type_category">Kategori</string>
@@ -183,7 +183,7 @@ Language: tr
     <string name="move_down">Aşağı taşı</string>
     <string name="move_up">Yukarı çıkar</string>
     <string name="menu_items_title">%s Ürün</string>
-    <string name="no_menu_items">Bu menüde henüz öğe yok!</string>
+    <string name="no_menu_items">Bu menüde henüz öge yok!</string>
     <string name="edit_menu_item">Menü Öğesini Düzenle</string>
     <string name="add_menu_item">Menü Öğesi Ekle</string>
     <string name="delete_menu_confirmation_message">\"%1$s\" öğesini silmek istediğinizden emin misiniz?</string>
