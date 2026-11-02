@@ -9,7 +9,6 @@ Language: es_MX
     <string name="support_screen_unified_support_title">Obtener ayuda</string>
     <string name="support_screen_unified_support_description">Obtén respuestas de nuestro equipo de soporte, en cualquier momento</string>
     <string name="unified_support_attachment_match_score">%1$d%% de coincidencia</string>
-    <string name="unified_support_status_bot">Bot Oddie</string>
     <string name="unified_support_bot_typing_content_description">El bot de soporte está escribiendo</string>
     <string name="unified_support_message_input_placeholder">Escribe un mensaje…</string>
     <string name="page_rs_copy_url">Copiar URL</string>
@@ -94,7 +93,6 @@ Language: es_MX
     <string name="gutenberg_kit_announcement_learn_more">Más información</string>
     <string name="gutenberg_kit_announcement_maybe_later">Quizás más tarde</string>
     <string name="gutenberg_kit_announcement_activate">Activar</string>
-    <string name="gutenberg_kit_announcement_body_deadline">A finales de junio de 2026, se convertirá en el editor predeterminado para todos. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">El editor de bloques de nueva generación está listo y trae más funciones nuevas.</string>
     <string name="gutenberg_kit_announcement_title">Se acerca un mejor editor de bloques</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Cambia primero al editor de bloques para probar el nuevo editor.</string>
@@ -239,7 +237,6 @@ Language: es_MX
     <string name="stats_period_selector_content_description">Seleccionar periodo de estadísticas</string>
     <string name="stats_period_custom">Personalizado</string>
     <string name="stats_period_last_12_months">Últimos 12 meses</string>
-    <string name="stats_period_last_6_months">Últimos 6 meses</string>
     <string name="stats_period_last_30_days">Últimos 30 días</string>
     <string name="stats_period_last_7_days">Últimos 7 días</string>
     <string name="stats_period_today">Hoy</string>
@@ -256,8 +253,6 @@ Language: es_MX
     <string name="post_rs_confirm_delete_message">Esto eliminará esta entrada de forma permanente. Esta acción no se puede deshacer.</string>
     <string name="post_rs_confirm_trash_message">¿Estás seguro de que quieres mover esta entrada a la papelera?</string>
     <string name="post_rs_failed_to_load">No se pudo cargar la entrada</string>
-    <string name="experimental_rs_pages_list_description">Mostrar la lista de páginas en una interfaz más moderna para WordPress.com y sitios autoalojados con contraseñas de aplicación</string>
-    <string name="experimental_rs_pages_list">Nueva lista de páginas</string>
     <string name="stats_error_admin_url_unavailable">No se puede abrir WP Admin para este sitio</string>
     <string name="stats_error_parsing">Hubo un problema al cargar los datos. Inténtalo de nuevo</string>
     <string name="stats_error_network">Error de red. Revisa tu conexión e inténtalo de nuevo</string>
@@ -318,8 +313,6 @@ Language: es_MX
     <string name="he_support_status_unknown">Desconocido</string>
     <string name="he_support_status_closed">Cerrada</string>
     <string name="he_support_status_solved">Resuelta</string>
-    <string name="he_support_status_waiting_for_user">Esperando al usuario</string>
-    <string name="he_support_status_waiting_for_support">Esperando soporte</string>
     <string name="he_support_select_attachments">Seleccionar adjuntos</string>
     <string name="he_support_download_attachment">Descargar adjunto</string>
     <string name="he_support_include_logs_description">Incluir registros puede ayudar a nuestro equipo a investigar problemas. Los registros pueden contener actividad reciente de la aplicación.</string>
@@ -492,7 +485,6 @@ Language: es_MX
     <string name="experimental_block_editor_note">El editor de bloques experimental se convertirá en el predeterminado en una versión futura y se eliminará la posibilidad de desactivarlo.</string>
     <string name="avatar_update_email_unverified">Para actualizar tu avatar, primero debes verificar tu dirección de correo electrónico.</string>
     <string name="feedback_form_note_link_wordpress">foros de la comunidad.</string>
-    <string name="default_web_client_id">marcador de posición</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Alternar el atajo %s</string>
     <string name="personalization_screen_card_accessibility_label">Alternar la tarjeta %s</string>
     <string name="user_avatar_content_description">Avatar del usuario %s</string>
@@ -665,9 +657,6 @@ Language: es_MX
     <string name="notifications_action_mark_all_as_read">Marcar todo como leído</string>
     <string name="notifications_unread_content_description">No leída</string>
     <string name="qrcode_media_deeplink_error">Sitio no encontrado. Comprueba que has iniciado sesión en la cuenta correcta.</string>
-    <string name="gravatar_info_learn_more_link">¿Qué es Gravatar?</string>
-    <string name="gravatar_info_description">Actualizar tu avatar, nombre e información “acerca de” aquí también lo actualizará en todos los sitios que usan perfiles de Gravatar.</string>
-    <string name="gravatar_info_title">Tu perfil de WordPress.com funciona con Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">No se pudo cargar el medio para compartir. Revisa los permisos de la aplicación\n        o usa la biblioteca de medios de la aplicación.</string>
     <string name="site_monitoring_cannot_be_started">No podemos abrir el monitoreo del sitio en este momento. Inténtalo de nuevo más tarde</string>
     <string name="site_monitoring_tab_title_web_server_logs">Registros del servidor web</string>
@@ -677,7 +666,6 @@ Language: es_MX
     <string name="reader_empty_followed_blogs_button_subscriptions">Ir a suscripciones</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Los blogs a los que estás suscrito no han publicado nada recientemente</string>
     <string name="reader_no_followed_blogs_description_subs">Suscríbete a blogs en Descubrir o busca un blog que ya te guste.</string>
-    <string name="reader_no_recommended_blogs_title">No hay blogs recomendados</string>
     <string name="reader_no_posts_with_this_tag">No hay entradas con esta etiqueta</string>
     <string name="reader_toast_err_unable_to_block_blog">No se pudo bloquear este blog</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Las entradas de este blog ya no se mostrarán</string>
@@ -685,7 +673,6 @@ Language: es_MX
     <string name="reader_toast_err_follow_not_authorized_to_access_blog">No estás autorizado a acceder a este blog</string>
     <string name="reader_toast_err_unable_to_follow_blog">No se pudo suscribir a este blog</string>
     <string name="reader_toast_err_already_follow_this_blog">Ya estás suscrito a este blog</string>
-    <string name="reader_toast_err_show_blog">No se pudo mostrar este blog</string>
     <string name="reader_label_choose_interests">Elige tus intereses</string>
     <string name="reader_label_subscribers_count_single">1 suscriptor</string>
     <string name="reader_label_subscribers_count">%s suscriptores</string>
@@ -760,13 +747,8 @@ Language: es_MX
     <string name="barcode_scanning_alert_dialog_rationale_message">Se requiere permiso de cámara para escanear el código de barras</string>
     <string name="barcode_scanning_alert_dialog_title">Conceder permiso de cámara</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Los bloques anidados a más de %d niveles pueden no mostrarse correctamente en el editor móvil.</string>
-    <string name="jp_migration_lets_go_button">Vamos</string>
-    <string name="jp_migration_done_no_sites_message">Es hora de continuar tu viaje con WordPress en la aplicación Jetpack.</string>
     <string name="domain_management_clear_search">Borrar búsqueda</string>
     <string name="media_encoder_quality_very_high">Muy alta</string>
-    <string name="notification_security_key_needed">Proporciona tu llave de seguridad para continuar.</string>
-    <string name="login_error_security_key">Hubo algún problema con el inicio de sesión con llave de seguridad</string>
-    <string name="login_text_security_key">Usar una llave de seguridad</string>
     <string name="new_domain_search_screen_error_title">No se pudieron obtener los dominios</string>
     <string name="new_domain_search_screen_list_item_sale_price">%s el primer año</string>
     <string name="new_domain_search_screen_list_item_regular_price">%s / año</string>
@@ -946,22 +928,16 @@ Language: es_MX
     <string name="sharing_twitter_deprecation_notice_find_out_more">Más información</string>
     <string name="sharing_twitter_deprecation_notice_description">El uso compartido automático en Twitter ya no está disponible debido a los cambios de Twitter en términos y precios.</string>
     <string name="sharing_twitter_deprecation_notice_title">El uso compartido automático en Twitter ya no está disponible</string>
-    <string name="jp_migration_notifications_allow_title">Permite las notificaciones para mantenerte al día con tu sitio</string>
-    <string name="wp_jp_static_poster_message">La aplicación Jetpack tiene toda la funcionalidad de la aplicación WordPress, y ahora acceso exclusivo a Estadísticas, Reader, Notificaciones y más.</string>
-    <string name="wp_jp_static_poster_title_plural">Usa WordPress con %s en la aplicación\u00A0Jetpack.</string>
-    <string name="wp_jp_static_poster_title">Usa WordPress con %s en la aplicación\u00A0Jetpack.</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Color sin etiqueta. %s</string>
     <string name="dashboard_activity_card_title">Actividad reciente</string>
     <string name="site_creation_search_domain_example_body">Como el ejemplo anterior, un dominio permite a las personas encontrar y visitar tu sitio desde su navegador web.</string>
     <string name="site_creation_search_domain_example_title">TuSitio.com</string>
     <string name="site_creation_domain_search_input_hint">Buscar con palabras clave</string>
     <string name="site_creation_domain_header_subtitle">Busca un dominio corto y memorable para ayudar a las personas a encontrar y visitar tu sitio.</string>
-    <string name="site_creation_domain_cost_sale">el primer año</string>
     <string name="site_creation_error_cart_subtitle">Tu sitio web se creó correctamente, pero encontramos un problema al preparar tu dominio personalizado para el pago. Inténtalo de nuevo o contacta con soporte para obtener ayuda.</string>
     <string name="new_site_creation_preview_caption_paid">Puede tardar hasta 30 minutos para que tu dominio personalizado empiece a funcionar.</string>
     <string name="new_site_creation_preview_subtitle_paid">Te hemos enviado tu recibo por correo. %s</string>
     <string name="notifications_disabled_permission_dialog">Las notificaciones de la aplicación se han desactivado. Toca aquí para habilitarlas.</string>
-    <string name="jp_migration_done_delete_wp_message">Recomendamos &lt;b&gt;desinstalar la aplicación WordPress&lt;/b&gt; de tu dispositivo para evitar conflictos de datos.</string>
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Eliminar bloques</string>
     <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Privacidad y clasificación</string>
     <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ajustes de reproducción</string>
@@ -1004,9 +980,6 @@ Language: es_MX
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Este sitio</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s está usando %2$s, que aún no admiten todas las funciones de la aplicación. Instala el %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s está usando %2$s, que aún no admite todas las funciones de la aplicación. Instala el %3$s.</string>
-    <string name="wp_jp_static_poster_footnote">Cambiar es gratis y solo toma un minuto.</string>
-    <string name="wp_jp_static_poster_button_secondary">Más información en Jetpack.com</string>
-    <string name="wp_jp_static_poster_button_primary">Cambiar a la aplicación Jetpack</string>
     <string name="my_site_btn_wp_admin">WP Admin</string>
     <string name="my_site_header_manage">Administrar</string>
     <string name="my_site_header_traffic">Tráfico</string>
@@ -1023,11 +996,8 @@ Language: es_MX
     <string name="blaze_promotional_text">Atrae más tráfico a tu sitio con Blaze</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="site_creation_domain_tag_unavailable">Este dominio ya está registrado</string>
-    <string name="site_creation_domain_tag_sale">Oferta</string>
     <string name="site_creation_domain_tag_recommended">Recomendado</string>
     <string name="site_creation_domain_tag_best_alternative">Mejor alternativa</string>
-    <string name="support_faq_caption">Consulta nuestras FAQ para obtener respuestas a preguntas comunes que puedas tener.</string>
-    <string name="support_faq_title">¡Gracias por cambiar a la aplicación Jetpack!</string>
     <string name="logs_button">Registros</string>
     <string name="tickets">Tickets</string>
     <string name="free">Gratis</string>
@@ -1063,12 +1033,6 @@ Language: es_MX
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Desbloquea todo el potencial de tu sitio. Obtén estadísticas, notificaciones y más con Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Tu sitio tiene el plugin Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">La aplicación móvil Jetpack está diseñada para funcionar junto con el plugin Jetpack. Cambia ahora para acceder a estadísticas, notificaciones, Reader y más.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Recibe notificaciones de nuevos comentarios, me gusta, vistas y más.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Encuentra y sigue tus sitios y comunidades favoritos, y comparte tu contenido.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Observa crecer tu tráfico con perspectivas útiles y estadísticas completas.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Estadísticas y perspectivas</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack te permite hacer más con tu sitio de WordPress. Cambiar es gratis y solo toma un minuto.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Da un impulso a WordPress con Jetpack</string>
     <string name="blogging_prompts_onboarding_content_note_content">Puedes controlar las consignas de blogueo y los recordatorios en cualquier momento en Mi sitio &gt; Ajustes &gt; Blogueo</string>
     <string name="blogging_reminders_prompt_subtitle">La notificación incluirá una palabra o frase corta para inspirarte</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Visita &lt;b&gt;Ajustes del sitio&lt;/b&gt; para volver a activarlas</string>
@@ -1080,15 +1044,6 @@ Language: es_MX
     <string name="site_settings_blogging_prompts_title">Mostrar consignas</string>
     <string name="site_settings_blogging">Blogueo</string>
     <string name="install_play_store_to_get_jetpack">Instala Google Play Store para obtener la aplicación Jetpack</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Hacerlo más tarde</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Cambiar a Jetpack </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Las estadísticas, Reader, Notificaciones y otras funciones impulsadas por Jetpack se han eliminado de la aplicación WordPress.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Las funciones de Jetpack se han trasladado.</string>
-    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s se trasladan en %2$s</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s se traslada en %2$s</string>
-    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s se trasladan pronto</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s se traslada pronto</string>
-    <string name="wp_jetpack_powered_phase_2">Obtén la aplicación Jetpack</string>
     <string name="my_site_blogging_prompt_card_view_answers">Ver todas las respuestas</string>
     <string name="stats_insights_total_stats_seven_days_negative">%1$s menos que los últimos 7 días</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s más que los últimos 7 días</string>
@@ -1098,21 +1053,10 @@ Language: es_MX
     <string name="stats_insights_views_and_visitors_seven_days_views_positive">Tus vistas en los últimos 7 días son %1$s más que en los 7 días anteriores.</string>
     <string name="stats_timeframe_previous_seven_days">7 días anteriores</string>
     <string name="stats_timeframe_last_seven_days">Últimos 7 días</string>
-    <string name="weeks_quantity_other">%d semanas</string>
-    <string name="weeks_quantity_one">1 semana</string>
     <string name="my_site_blogging_prompt_card_attribution_day_one">De &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Recuérdamelo más tarde</string>
-    <string name="jetpack_feature_card_content_phase_three">Las estadísticas, Reader, Notificaciones y otras funciones se trasladarán pronto a la aplicación móvil Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Cambiar a la aplicación Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Más información en jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Cambiar es gratis y solo toma un minuto.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Las estadísticas, Reader, Notificaciones y otras funciones impulsadas por Jetpack se eliminarán de la aplicación WordPress pronto.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Las estadísticas, Reader, Notificaciones y otras funciones impulsadas por Jetpack se eliminarán de la aplicación WordPress el %s.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Las funciones de Jetpack se trasladan pronto.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Las notificaciones se trasladan a Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader se traslada a la aplicación Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Tus estadísticas se trasladan a la aplicación Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Cambiar a la nueva aplicación Jetpack</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Se produjo un error al cargar las consignas.</string>
     <string name="blogging_prompts_list_error_fetch_title">Vaya</string>
     <string name="blogging_prompts_list_no_prompts">Aún no hay consignas</string>
@@ -1138,39 +1082,11 @@ Language: es_MX
     <string name="wp_jetpack_continue_without_jetpack">Continúe sin Jetpack</string>
     <string name="deep_linking_weblinks_alias_label">Enlances</string>
     <string name="deep_linking_urilinks_alias_label">Enlances URI</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Cambia a la aplicación de Jetpack para continuar recibiendo las notificaciones actualizadas en su dispositivo.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Cambia a la aplicación de Jetpack para encontrar, seguir y poner like en todos sus sitios favoritos y posts con el Lector.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Cambiar a la aplicación de Jetpack para ver el tráfico de su sitio crece con estadísticas y detalles.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Recibir sus notificaciones en la aplicación de Jetpack.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Seguir cualquier sitio con la aplicación de Jetpack.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Recibir sus estadísticas de la aplicación nuevo Jetpack.</string>
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">No se puede deshabilitar las ligas abiertas en Jetpack.</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">No se puede activar las ligas abiertas en Jetpack.</string>
     <string name="preference_open_links_in_jetpack">Abrir las ligas en Jetpack.</string>
-    <string name="jp_migration_network_error_message">No pudimos cambiar sus datos y configuraciones sin conexión con la red.</string>
-    <string name="jp_migration_network_error_subtitle">Por favor, cheque para asegurar que su conexión de red está funcionando y inténtelo de nuevo.</string>
-    <string name="jp_migration_network_error_title">No se puede conectar al internet.</string>
-    <string name="jp_migration_generic_error_message">Por favor, contacte al apoyo o inténtelo más tarde.</string>
-    <string name="jp_migration_generic_error_subtitle">Lo siento que algo no salió como estuvo planeado. Sus datos están seguros, pero no podemos cambiarlos en este momento.</string>
     <string name="jp_migration_generic_error_title">Ups, algo salió mal.</string>
-    <string name="jp_migration_try_again_button">Inténtelo de nuevo.</string>
-    <string name="jp_migration_finish_button">Finalizar</string>
-    <string name="jp_migration_remove_wp_app_icon_content_description">Quitar el ícono de la aplicación WordPress</string>
-    <string name="jp_migration_done_subtitle">Hemos transferido todos tus datos y ajustes. Todo está justo donde lo dejaste.</string>
-    <string name="jp_migration_done_title">¡Gracias por cambiar a Jetpack!</string>
-    <string name="jp_migration_notifications_disabled_in_wp_message">Desactivaremos las notificaciones de la aplicación WordPress.</string>
-    <string name="jp_migration_notifications_subtitle">Recibirás las mismas notificaciones, pero ahora vendrán de la aplicación Jetpack.</string>
-    <string name="wordpress_help_center_button">Centro de ayuda de WordPress</string>
     <string name="support_title">Soporte</string>
-    <string name="notification_disable_broadcast_permission_desc">Permite que la aplicación desactive las notificaciones de WordPress.</string>
-    <string name="notification_disable_broadcast_permission_label">desactivar notificaciones de WordPress</string>
-    <string name="jp_migration_help_button">¿Necesitas ayuda?</string>
-    <string name="jp_migration_continue_button">Continuar</string>
-    <string name="jp_migration_welcome_site_found_message">Encontramos tu sitio. Continúa para transferir todos tus datos e iniciar sesión en Jetpack automáticamente.</string>
-    <string name="jp_migration_welcome_sites_found_message">Encontramos tus sitios. Continúa para transferir todos tus datos e iniciar sesión en Jetpack automáticamente.</string>
-    <string name="jp_migration_avatar_content_description">Tu foto de perfil</string>
-    <string name="jp_migration_welcome_subtitle">Parece que estás cambiando desde la aplicación WordPress.</string>
-    <string name="jp_migration_welcome_title">¡Bienvenido a Jetpack!</string>
     <string name="icon_desc">ícono</string>
     <string name="post_settings_parent">Página superior</string>
     <string name="post_settings_page_attributes">Atributos de página</string>
@@ -1206,7 +1122,6 @@ Language: es_MX
     <string name="weekly_roundup_notification_text_views_only">La semana pasada tuviste %1$s vistas.</string>
     <string name="weekly_roundup_notification_text_all">La semana pasada tuviste %1$s vistas, %2$s me gusta y %3$s comentarios.</string>
     <string name="stats_insights_like_guide_card">⭐️ Tu última entrada %1$s ha recibido %2$s me gusta.</string>
-    <string name="wp_jetpack_powered">Con la tecnología de Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Imagen que indica el escaneo del código de inicio de sesión en proceso</string>
     <string name="qrcode_auth_flow_error_content_description">Imagen que indica un error</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">Error de autenticación</string>
@@ -1381,12 +1296,7 @@ Language: es_MX
     <string name="my_site_dashboard_tab_title">Inicio</string>
     <string name="notification_channel_weekly_roundup_title">Resumen semanal</string>
     <string name="adding_cat">Agregando categoría</string>
-    <string name="login_select_email_client">¿Qué aplicación de correo usas?</string>
-    <string name="login_error_xml_rpc_auth_error_communicating">Hubo un problema al comunicarse con el sitio. Se devolvió un código de error HTTP 401.</string>
-    <string name="login_error_xml_rpc_cannot_read_site_auth_required">Las llamadas XML-RPC parecen estar bloqueadas en este sitio (código de error 401). Si falla el intento de inicio de sesión, toca el ícono de ayuda para ver las FAQ.</string>
-    <string name="login_error_xml_rpc_cannot_read_site">No se puede leer el sitio de WordPress en esa URL. Toca el ícono de ayuda para ver las FAQ.</string>
     <string name="my_site_menu_tab_title">Menú</string>
-    <string name="login_error_xml_rpc_services_disabled">Los servicios XML-RPC están desactivados en este sitio.</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Tu búsqueda incluye caracteres no compatibles con los dominios de WordPress.com. Se permiten los siguientes caracteres: A–Z, a–z, 0–9.</string>
     <string name="my_site_todays_stat_card_title">Estadísticas de hoy</string>
     <string name="my_site_error_within_card_subtitle">Revisa tu conexión a internet y actualiza la página.</string>
@@ -1627,12 +1537,7 @@ Language: es_MX
     <string name="error_media_unexpected_null_value">El medio estaba vacío</string>
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Ingresa tus credenciales del servidor&lt;/a&gt; para solucionar las amenazas.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Ingresa tus credenciales del servidor&lt;/a&gt; para solucionar la amenaza.</string>
-    <string name="login_empty_view_see_instructions">Ver las instrucciones</string>
     <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Toca dos veces para agregar un enlace.</string>
-    <string name="login_empty_view_try_another_account">Probar con otra cuenta</string>
-    <string name="login_no_jetpack_sites_error_message">Si ya tienes un sitio, necesitas instalar el plugin gratuito Jetpack y conectarlo a tu cuenta de WordPress.com.</string>
-    <string name="login_empty_view_avatar_content_description">Tu foto de perfil</string>
-    <string name="login_not_a_jetpack_site">Para usar esta aplicación con %1$s, necesitas tener el plugin Jetpack instalado y conectado a tu cuenta de WordPress.com.</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">rel del enlace</string>
     <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ajustes de medios</string>
     <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ajustes de columna</string>
@@ -1668,7 +1573,6 @@ Language: es_MX
     <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Más</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Describe brevemente el enlace para ayudar al usuario de lector de pantalla</string>
     <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Agregar bloques</string>
-    <string name="login_no_jetpack_sites">No se encontraron sitios de Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">¿Qué es el texto alternativo?</string>
     <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Transformar %s a</string>
     <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Transformar bloque…</string>
@@ -1715,7 +1619,6 @@ Language: es_MX
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Toca dos veces para abrir la hoja de acción y editar, reemplazar o borrar la imagen</string>
     <string name="new_site_creation_search_domain_input_hint">Introduce un nombre para tu sitio</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
-    <string name="magic_link_not_meaning_to_create_account">¿No querías crear una nueva cuenta? Vuelve atrás para volver a ingresar tu dirección de correo electrónico.</string>
     <string name="invite_links_disable_dialog_message">Una vez que se desactive este enlace de invitación, nadie podrá usarlo para unirse a tu equipo. ¿Estás seguro?</string>
     <string name="invite_links_null_response">No se ha recibido ninguna respuesta</string>
     <string name="invite_links_disable_dialog_title">Desactivar enlace de invitación</string>
@@ -1980,8 +1883,6 @@ Language: es_MX
     <string name="scan">Explorar</string>
     <string name="reader_discover_empty_title">¡Bienvenido!</string>
     <string name="reader_discover_no_posts_title">No hay entradas recientes</string>
-    <string name="login_find_your_connected_email">Encuentra tu correo electrónico conectado</string>
-    <string name="continue_site_credentials">Continuar con las credenciales de la tienda</string>
     <string name="reader_discover_no_posts_follow_subtitle">Intenta seguir más etiquetas para ampliar la búsqueda</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Se ha abierto el menú de bloques desplazable. Selecciona un bloque.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Se ha cerrado el menú de bloques desplazable.</string>
@@ -2022,8 +1923,6 @@ Language: es_MX
     <string name="media_browse_for_items">Navegar por elementos</string>
     <string name="comment_unable_to_show_error">No se puede mostrar este comentario</string>
     <string name="permission_microphone">Micrófono</string>
-    <string name="email_not_registered_wpcom">Vaya, no encontramos una cuenta de WordPress.com conectada a esta dirección de correo electrónico.</string>
-    <string name="login_get_link_by_email">Obtener un enlace de acceso por correo electrónico</string>
     <string name="reader_menu_report_post">Informar de esta entrada</string>
     <string name="show_n_hidden_items_desc">%1$s elementos más</string>
     <string name="error_media_xmlrpc_not_allowed">Tu acción no está permitida</string>
@@ -2051,32 +1950,13 @@ Language: es_MX
     <string name="pick_file">Añadir un archivo</string>
     <string name="gutenberg_native_replace_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Reemplazar el video</string>
     <string name="gutenberg_native_replace_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Reemplazar la imagen o video</string>
-    <string name="continue_with_google_terms_of_service_text">Si continúas con Google y aún no tienes una cuenta de WordPress.com, crearás una cuenta y aceptas nuestros %1$stérminos del servicio%2$s.</string>
-    <string name="signup_confirmation_title">Confirmación del registro</string>
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bloque eliminado</string>
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Elegir una imagen</string>
     <string name="gutenberg_native_choose_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Elegir una imagen o video</string>
     <string name="gutenberg_native_choose_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Elegir un video</string>
     <string name="enter_your_site_address">Ingresa la dirección de tu sitio existente</string>
     <string name="gutenberg_native_convert_to_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Convertir en enlace</string>
-    <string name="continue_terms_of_service_text">Si continúas, aceptas nuestros %1$stérminos del servicio%2$s.</string>
-    <string name="signup_confirmation_message">Usaremos esta dirección de correo electrónico para crear tu nueva cuenta de WordPress.com.</string>
-    <string name="signup_magic_link_message">Te hemos enviado por correo electrónico un enlace de registro para crear tu nueva cuenta de WordPress.com. Comprueba tu correo electrónico en este dispositivo y toca el enlace en el correo electrónico que has recibido de WordPress.com.</string>
-    <string name="enter_account_info_for_site">Introduce la información de tu cuenta para %1$s.</string>
-    <string name="login_magic_links_sent_label">Comprueba tu correo electrónico en este dispositivo y toca el enlace en el correo electrónico que has recibido de WordPress.com.</string>
-    <string name="magic_link_not_seeing_email_message">¿No ves el correo electrónico? Comprueba tu carpeta de spam o correo no deseado.</string>
-    <string name="login_done">Hecho</string>
-    <string name="login_find_your_site_adress">Encuentra la dirección de tu sitio</string>
-    <string name="continue_google_button_suffix">Continuar con Google</string>
-    <string name="login_or">o</string>
-    <string name="login_magic_links_label">Te enviaremos por correo electrónico un enlace que te hará acceder automáticamente, sin necesidad de contraseña.</string>
-    <string name="reset_your_password">Restablecer tu contraseña</string>
-    <string name="send_link_by_email">Enviar el enlace por correo electrónico</string>
-    <string name="create_account">Crear una cuenta</string>
-    <string name="or_type_your_password">O escribe tu contraseña</string>
-    <string name="enter_email_to_continue_wordpress_com">Introduce tu dirección de correo electrónico para acceder o crear una cuenta de WordPress.com.</string>
     <string name="get_started" a8c-src-lib="module:login">Primeros pasos</string>
-    <string name="check_email">Comprobar el correo electrónico</string>
     <string name="reader_error_request_failed_title">Ha habido un problema al gestionar la solicitud. Por favor, inténtalo de nuevo más tarde.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Al enviar esta entrada a la papelera también se descartarán los cambios locales, ¿estás seguro de que quieres continuar?</string>
     <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Opciones del bloque %s</string>
@@ -2299,9 +2179,6 @@ Language: es_MX
     <string name="create_post_page_fab_tooltip">Crear una entrada o página</string>
     <string name="gutenberg_native_replace_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Reemplazar imagen</string>
     <string name="content_description_person_building_website">Creador de la web</string>
-    <string name="post_signup_interstitial_not_right_now">Ahorita No</string>
-    <string name="post_signup_interstitial_subtitle">Cualquier cosa que quieras crear o compartir, te ayudaremos a hacerlo aquí mismo.</string>
-    <string name="post_signup_interstitial_title">Bienvenido a WordPress</string>
     <string name="stock_media_picker_list_content_description">Biblioteca de fotos</string>
     <string name="photo_picker_image_thumbnail_unselected">Imagen no seleccionada</string>
     <string name="photo_picker_image_selected">, seleccionada</string>
@@ -2315,12 +2192,6 @@ Language: es_MX
     <string name="dialog_confirm_scheduled_post_sync_title">¿Preparado para sincronizar?</string>
     <string name="new_site_creation_unavailable_domain">Este dominio no está disponible</string>
     <string name="negative_prefix">-%s</string>
-    <string name="login_discovery_error_generic">No hemos podido acceder a tu sitio. Tendrás que contactar con tu alojamiento para solucionarlo.</string>
-    <string name="login_discovery_error_ssl">No hemos podido acceder a tu sitio debido a un problema con el &lt;b&gt;certificado SSL&lt;/b&gt;. Tendrás que contactar con tu alojamiento para solucionarlo.</string>
-    <string name="login_discovery_error_http_auth">No hemos podido acceder a tu sitio porque necesita &lt;b&gt;identificación HTTP&lt;/b&gt;. Tendrás que contactar con tu alojamiento para solucionarlo.</string>
-    <string name="login_discovery_error_xmlrpc">No hemos podido acceder en tu sitio al &lt;b&gt;archivo XMLRCP&lt;/b&gt;. Tendrás que contactar con tu alojamiento para solucionarlo.</string>
-    <string name="login_site_credentials_magic_link_label">¡Ya casi estamos! Solo necesitamos verificar tu dirección de correo electrónico conectada a Jetpack &lt;b&gt;%1$s&lt;/b&gt;</string>
-    <string name="enter_credentials_for_site">Accede con las credenciales del sitio %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Página del sitio</string>
     <string name="posts_cannot_be_started">No podemos abrir las entradas en este momento. Por favor, inténtalo de nuevo más tarde</string>
     <string name="suffix_1_000_000_000">%sB</string>
@@ -2478,8 +2349,6 @@ Language: es_MX
     <string name="post_settings_notification">Notificación</string>
     <string name="post_settings_add_to_calendar">Añadir al calendario</string>
     <string name="post_settings_time_and_date">Fecha y hora</string>
-    <string name="login_invalid_site_url">Por favor, introduce una dirección completa de un sitio web, como example.com.</string>
-    <string name="enter_email_for_site">Inicia sesión con WordPress.com para conectar con %1$s</string>
     <string name="stats_post_views_label">Visitas</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
     <string name="stats_expand_content_description">Expandir</string>
@@ -2585,14 +2454,11 @@ Language: es_MX
     <string name="posts_scheduled_empty">No tienes ninguna entrada programada</string>
     <string name="button_move_to_draft">Mover a borradores</string>
     <string name="posts_published_empty">Aún no has publicado ninguna entrada.</string>
-    <string name="notification_wpcom_username_needed">Por favor inicia sesión con tu nombre de usuario y contraseña.</string>
-    <string name="error_user_username_instead_of_email">Por favor, inicia sesión usando tu nombre de usuario de WordPress.com en vez de tu dirección de correo electrónico.</string>
     <string name="stats_insights_total_words">Total de palabras</string>
     <string name="stats_insights_total_likes">Total de me gusta</string>
     <string name="stats_insights_total_comments">Total de comentarios</string>
     <string name="stats_insights_year">Año</string>
     <string name="stats_insights_this_year_site_stats">Este año</string>
-    <string name="no_site_error">El sitio de esta dirección no es un sitio WordPress. Para que nos podamos conectar el sitio debe usar WordPress.</string>
     <string name="stats_insights_average_words">Promedio de palabras/entrada</string>
     <string name="stats_insights_average_likes">Promedio de me gusta/entrada</string>
     <string name="stats_insights_average_comments">Promedio de comentarios/entrada</string>
@@ -2729,7 +2595,6 @@ Language: es_MX
     <string name="history_detail_button_previous">Anterior</string>
     <string name="history_detail_button_next">Siguiente</string>
     <string name="media_space_used">%1$s utilizado</string>
-    <string name="enter_wpcom_or_jetpack_site">Por favor ingresa un sitio de WordPress.com o auto-alojado conectado a Jetpack</string>
     <string name="history_loading_revision">Cargando revisión</string>
     <string name="history_loaded_revision">Revisión cargada</string>
     <string name="history_load_dialog_button_positive">Cargar</string>
@@ -2758,8 +2623,6 @@ Language: es_MX
     <string name="pages_scheduled">Programada</string>
     <string name="pages_drafts">Borradores</string>
     <string name="pages_published">Publicadas</string>
-    <string name="login_error_sms_throttled">Hemos hecho demasiados intentos para enviar un código de verificación por SMS - tómate un descanso y solicita uno nuevo dentro de un minuto.</string>
-    <string name="login_error_email_not_found_v2">No hay ninguna cuenta de WordPress.com que coincida con esta cuenta de Google.</string>
     <string name="site_picker_remove_site_empty">Ningún sitio coincide con tu búsqueda</string>
     <string name="page_parent_changed">La página superior ha cambiado</string>
     <string name="reader_no_followed_blogs_search_title">No hay blogs que coincidan con tu búsqueda</string>
@@ -2778,7 +2641,6 @@ Language: es_MX
     <string name="my_site_create_new_site_title">No tienes sitios</string>
     <string name="content_description_more">Más</string>
     <string name="reader_empty_subscribed_tags_subtitle">Agrega etiquetas aquí para encontrar entradas sobre tus temas favoritos</string>
-    <string name="login_to_to_connect_jetpack">Accede a la cuenta de WordPress.com que usaste para conectar Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ de Jetpack</string>
     <string name="stats_jetpack_connection_setup_info">Para usar las estadísticas en tu sitio WordPress necesitas instalar el plugin Jetpack.</string>
@@ -2831,13 +2693,7 @@ Language: es_MX
     <string name="reader_empty_search_title">No se han encontrado resultados</string>
     <string name="comment_read_source_post">Lee la entrada de origen</string>
     <string name="sites">Sitios</string>
-    <string name="signup_magic_link_title">Enlace mágico enviado</string>
-    <string name="verification_2fa_screen_title">Verificación del código</string>
-    <string name="selfhosted_site_login_title">Credenciales de acceso</string>
-    <string name="magic_link_sent_login_title">Enlace mágico enviado</string>
-    <string name="magic_link_login_title">Acceso por enlace mágico</string>
     <string name="site_address_login_title" a8c-src-lib="module:login">Acceso mediante la dirección del sitio</string>
-    <string name="email_address_login_title">Acceso mediante dirección de correo electrónico</string>
     <string name="reader_empty_saved_posts_description">Toca %s para guardar una entrada en tu lista.</string>
     <string name="reader_empty_saved_posts_title">¡Aún no hay entradas guardadas!</string>
     <string name="reader_bookmark_snack_title">Entrada guardada</string>
@@ -2938,7 +2794,6 @@ Language: es_MX
     <string name="invite_user_delete_desc">eliminar %s</string>
     <string name="profile_picture">Imagen de perfil de %s</string>
     <string name="comment_checkmark_desc">marca de verificación</string>
-    <string name="signup_with_google_progress">Registrarse con Google…</string>
     <string name="open_external_link_desc">Abrir enlace externo</string>
     <string name="jetpack_connection_failed_with_reason">Se ha producido un error en la conexión a Jetpack: %s</string>
     <string name="jetpack_already_connected_toast">Ya estás conectado a Jetpack</string>
@@ -2965,7 +2820,6 @@ Language: es_MX
     <string name="notif_detail_screen_title">Detalle de notificación %s</string>
     <string name="edit_photo_screen_title">Editar foto</string>
     <string name="share_intent_screen_title">Elige el sitio</string>
-    <string name="signup_epilogue_screen_title">Cuenta nueva</string>
     <string name="file_size_in_kilobytes">%s KB</string>
     <string name="person_detail_screen_title">Detalle de la persona</string>
     <string name="media_settings_screen_title">Detalles del archivo</string>
@@ -3017,7 +2871,6 @@ Language: es_MX
     <string name="site_creation_domain_finish_button">Crear sitio</string>
     <string name="notification_site_creation_created">Toca para continuar.</string>
     <string name="notification_site_creation_title_success">¡Sitio creado!</string>
-    <string name="google_error_timeout">A Google le llevó demasiado tiempo responder. Puede que tengas que esperar hasta que tengas una conexión a internet más rápida.</string>
     <string name="username_changer_title">Cambiar nombre de usuario</string>
     <string name="username_changer_hint">Teclea para obtener más sugerencias</string>
     <string name="username_changer_header">Tu nombre de usuario actual es %1$s%2$s%3$s. Con pocas excepciones, otros solo verán tu nombre a mostrar, %4$s%5$s%6$s.</string>
@@ -3027,19 +2880,7 @@ Language: es_MX
     <string name="username_changer_dismiss_button_positive">Descartar</string>
     <string name="username_changer_action">Guardar</string>
     <string name="content_description_add_avatar">Añadir avatar</string>
-    <string name="signup_user_exists">El correo electrónico ya existe en WordPress.com.\nAcceder.</string>
-    <string name="signup_updating_account">Actualizando cuenta…</string>
-    <string name="signup_magic_link_progress">Enviando correo</string>
-    <string name="signup_magic_link_error_button_positive">Reintentar</string>
-    <string name="signup_magic_link_error_button_negative">Cerrar</string>
-    <string name="signup_magic_link_error">Hubo algún problema al enviar el correo. Puedes reintentarlo ahora o cerrar e intentarlo más tarde.</string>
-    <string name="signup_epilogue_hint_username">Nombre de usuario</string>
-    <string name="signup_epilogue_hint_password">Contraseña (opcional)</string>
-    <string name="signup_epilogue_hint_display">Nombre a mostrar</string>
-    <string name="signup_epilogue_error_button_positive">Reintentar</string>
-    <string name="signup_epilogue_error_button_negative">Revertir</string>
     <string name="signup_epilogue_error_generic">Hubo algún problema al actualizar tu cuenta. Puedes reintentarlo o revertir tus cambios para continuar.</string>
-    <string name="signup_epilogue_hint_password_detail">Siempre puedes acceder con un enlace como el que acabas de usar, pero también puedes configurar una contraseña si lo prefieres.</string>
     <string name="plugin_needs_update">Necesita actualizarse</string>
     <string name="plugin_caption_search">Buscar plugins</string>
     <string name="plugin_caption_new">Nuevo</string>
@@ -3126,18 +2967,6 @@ Language: es_MX
     <string name="my_site_btn_plugins">Plugins</string>
     <string name="media_edit_link_hint">Abrir enlace en nueva ventana/pestaña</string>
     <string name="media_edit_link_text">Enlace a</string>
-    <string name="notification_login_failed">Ocurrió un error.</string>
-    <string name="notification_2fa_needed">Por favor, facilita un código de identificación para continuar.</string>
-    <string name="notification_error_wrong_password">Por favor, vuelve a teclear tu contraseña para continuar.</string>
-    <string name="notification_login_title_stopped">Acceso detenido</string>
-    <string name="notification_logging_in">Por favor, espera mientras se accede.</string>
-    <string name="notification_login_title_in_progress">Acceso en progreso…</string>
-    <string name="notification_logged_in">Toca para continuar.</string>
-    <string name="notification_login_title_success">¡Conectado!</string>
-    <string name="login_error_generic_start">No se pudo iniciar el acceso desde Google.</string>
-    <string name="login_empty_password">Por favor, introduce una contraseña</string>
-    <string name="login_text_otp_another">Envíame un mensaje con otro código en su lugar</string>
-    <string name="enter_verification_code_sms">Hemos enviado un mensaje de texto al número de teléfono terminado en %s. Por favor, introduce el código de verificación del SMS.</string>
     <string name="image_size">Tamaño</string>
     <string name="uploading_subtitle_media_only_one">Queda 1 archivo</string>
     <string name="uploading_subtitle_media_only">Quedan %1$d de %2$d archivos</string>
@@ -3154,15 +2983,10 @@ Language: es_MX
     <string name="confirm_remove_media_image">¿Quitamos esta imagen de la entrada?</string>
     <string name="media_edit_customize_card_caption">Personalizar</string>
     <string name="media_edit_file_details_card_caption">Detalles del archivo</string>
-    <string name="login_error_suffix">\n¿Quizás probando con otra cuenta?</string>
-    <string name="login_error_generic">Hubo algún problema al conectar con la cuenta de Google.</string>
     <string name="login_error_button">Cerrar</string>
-    <string name="enter_wpcom_password_google">Para seguir con esta cuenta de Google, por favor, facilita la contraseña correspondiente de WordPress.com. Solo se te pedirá una vez.</string>
     <string name="error_generic_network">Ocurrió un error en la red. Por favor, revisa tu conexión e inténtalo de nuevo.</string>
     <string name="post_settings_remove_featured_image">Quitar imagen destacada</string>
     <string name="post_settings_choose_featured_image">Elegir imagen destacada</string>
-    <string name="login_log_in_for_share_intent">Accede a WordPress.com para compartir el contenido.</string>
-    <string name="enter_site_address_share_intent">Introduce la dirección de tu sitio WordPress en el que quieras compartir el contenido.</string>
     <string name="jetpack_disconnect_error_toast">Error al desconectar el sitio</string>
     <string name="jetpack_disconnect_success_toast">Sitio desconectado</string>
     <string name="jetpack_disconnect_confirm">Desconectar</string>
@@ -3243,28 +3067,13 @@ Language: es_MX
     <string name="post_queued">Entrada a la espera</string>
     <string name="uploading_post">Subiendo \"%s\"</string>
     <string name="connection_to_server_lost">Se ha perdido la conexión al servidor</string>
-    <string name="login_email_client_not_found">No se pudo detectar una aplicación cliente de correo electrónico</string>
-    <string name="login_empty_2fa">Por favor, introduce un código de verificación</string>
-    <string name="login_empty_username">Por favor, introduce un nombre de usuario</string>
-    <string name="login_log_in_for_deeplink">Accede a WordPress.com para acceder a la entrada.</string>
-    <string name="login_error_while_adding_site">Error al añadir el sitio. Código de error: %s</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">Comprobando dirección del sitio</string>
-    <string name="login_site_address_more_help">¿Necesitas más ayuda?</string>
-    <string name="login_site_address_help_content">La dirección de tu sitio aparece en la barra de la parte superior de la pantalla cuando visitas tu sitio en Chrome.</string>
-    <string name="login_site_address_help_title">¿Cuál es la dirección de mi sitio?</string>
     <string name="login_site_address" a8c-src-lib="module:login">Dirección del sitio</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Introduce la dirección del sitio WordPress con el que te gustaría conectar.</string>
     <string name="login_already_logged_in_wpcom">Ya estás conectado a WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Seguir</string>
-    <string name="enter_wpcom_password">Introduce tu contraseña de WordPress.com</string>
     <string name="connect_more">Conectar otro sitio</string>
-    <string name="login_magic_link_email_requesting">Solicitando el correo electrónico de acceso</string>
-    <string name="password_incorrect">Parece que esta contraseña es incorrecta. Por favor, vuelve a comprobar tu información e inténtalo de nuevo.</string>
-    <string name="requesting_otp">Solicitando un código de verificación por SMS.</string>
-    <string name="login_text_otp">Envíame un mensaje con un código en su lugar</string>
-    <string name="enter_verification_code">¡Casi listo! Ingresa el código de verificación de WordPress.com desde tu aplicación de autenticación.</string>
     <string name="next">Siguiente</string>
-    <string name="enter_email_wordpress_com">Accede a WordPress.com usando una dirección de correo electrónico para gestionar todos tus sitios WordPress.</string>
     <string name="error_media_parse_error">Respuesta inesperada del servidor</string>
     <string name="me_profile_photo">Foto de perfil</string>
     <string name="upload_finished_toast">No se puede detener la subida porque ya ha finalizado</string>
@@ -3413,8 +3222,6 @@ Language: es_MX
     <string name="error_unknown_post_type">Formato de entrada desconocido</string>
     <string name="submit_for_review">Enviar</string>
     <string name="title_subscriber">Suscriptor</string>
-    <string name="duplicate_site_detected">Se ha detectado un sitio duplicado.</string>
-    <string name="cannot_add_duplicate_site">Este sitio ya existe en la aplicación, no se puede Agregar.</string>
     <string name="already_logged_in_wpcom">Ya estás registrado en una cuenta de WordPress.com, no se puede agregar un sitio de WordPress.com a otra cuenta.</string>
     <string name="error_media_load">No se puede cargar archivos multimedia</string>
     <string name="error_media_refresh_no_connection">Se necesita estar conectado para actualizar la biblioteca</string>
@@ -3425,8 +3232,6 @@ Language: es_MX
     <string name="media_generic_error">Error de los archivos multimedia</string>
     <string name="confirm">Confirmar</string>
     <string name="retry">Reintentar</string>
-    <string name="xmlrpc_endpoint_forbidden_error">No se pudo conectar. Se ha recibido un error 403 cuando se intenta acceder a \n        tu endpoint del XMLRPC de sitio. La aplicación lo necesita para comunicarse con tu sitio. Ponte en contacto con tu proveedor para solucionar este problema.</string>
-    <string name="xmlrpc_post_blocked_error">No se pudo conectar. Su alojamiento está bloqueando las peticiones POST, y la aplicación las necesita \n        para comunicarse con su sitio. Póngase en contacto con su alojamiento para solucionar este problema.</string>
     <string name="pending_draft_one_generic">No dejes el trabajo a medias; \"%1$s\" está pendiente de publicarse.</string>
     <string name="pending_draft_one_month">No dejes el trabajo a medias; \"%1$s\" está pendiente de publicarse.</string>
     <string name="pending_draft_one_week_2">\"%1$s\" se ha guardado como borrador. Acuérdate de publicarla.</string>
@@ -3509,8 +3314,6 @@ Language: es_MX
     <string name="error_locating_image">Error al localizar la imagen recortada</string>
     <string name="error_refreshing_gravatar">Error al recargar tu Gravatar</string>
     <string name="error_cropping_image">Error al recortar la imagen</string>
-    <string name="checking_email">Comprobando correo electrónico</string>
-    <string name="magic_link_unavailable_error_message">Actualmente no disponible. Por favor, introduce tu contraseña</string>
     <string name="logging_in">Accediendo</string>
     <string name="web_address_dialog_hint">Cuando comentes se hará público</string>
     <string name="export_your_content_message">Tus entradas, páginas y ajustes te serán enviadas por correo electrónico a %s.</string>
@@ -3543,7 +3346,6 @@ Language: es_MX
     <string name="comments_empty_list_filtered_pending">No hay comentarios pendientes</string>
     <string name="comments_empty_list_filtered_approved">No hay comentarios aprobados</string>
     <string name="button_skip">Saltar</string>
-    <string name="xmlrpc_missing_method_error">No se pudo conectar. Los métodos requeridos en el XML-RPC faltan en el servidor.</string>
     <string name="alignment_center">Centrado</string>
     <string name="post_format_video">Video</string>
     <string name="post_format_status">Estado</string>
@@ -3603,7 +3405,6 @@ Language: es_MX
     <string name="about_the_app">Sobre la app</string>
     <string name="error_post_account_settings">No se pudieron guardar los ajustes de la cuenta</string>
     <string name="error_fetch_account_settings">No se pudieron recuperar los ajustes de tu cuenta</string>
-    <string name="error_fetch_my_profile">No se pudo recuperar tu perfil</string>
     <string name="site_settings_unknown_language_code_error">No se pudo reconocer el código del idioma</string>
     <string name="site_settings_threading_dialog_description">Permite los comentarios anidados.</string>
     <string name="site_settings_threading_dialog_header">Anidar hasta</string>
@@ -3793,9 +3594,6 @@ Language: es_MX
     <string name="reader_label_new_posts_subtitle">Toca para mostrarlos</string>
     <string name="select_all">Seleccionar todo</string>
     <string name="language">Idioma</string>
-    <string name="verification_code">Código de verificación</string>
-    <string name="auth_required">Accede de nuevo para continuar.</string>
-    <string name="invalid_verification_code">Código de verificación no válido</string>
     <string name="stats_view_authors">Autores</string>
     <string name="error_notification_open">No se pudo abrir la notificación</string>
     <string name="media_fetching">Recuperando medios…</string>
@@ -3860,7 +3658,6 @@ Language: es_MX
     <string name="adding_cat_failed">No se pudo añadir la categoría</string>
     <string name="error_refresh_comments">No se pudieron actualizar los comentarios</string>
     <string name="error_load_comment">No se pudo cargar el comentario</string>
-    <string name="email_invalid">Ingresa una dirección de correo electrónico válida</string>
     <string name="mnu_comment_unspam">No es spam</string>
     <string name="error_refresh_posts">Las entradas no pueden ser actualizadas en este momento</string>
     <string name="username_or_password_incorrect">El usuario o contraseña que ingresaste no son correctos.</string>
@@ -3882,7 +3679,6 @@ Language: es_MX
     <string name="add_new_category">Añadir nueva categoría</string>
     <string name="mnu_comment_approve">Aprobar</string>
     <string name="comment_status_approved">Aprobado</string>
-    <string name="http_authorization_required">Se necesita autorización</string>
     <string name="category_name">Nombre de la categoría</string>
     <string name="connection_error">Error de conexión</string>
     <string name="edit_comment">Editar comentario</string>
@@ -3901,7 +3697,6 @@ Language: es_MX
     <string name="mnu_comment_unapprove">Rechazar</string>
     <string name="wordpress_blog">Blog de WordPress</string>
     <string name="reader_title_applog">Registro de la aplicación</string>
-    <string name="fatal_db_error">Hubo un error al crear la base de datos de la app. Por favor, intenta reinstalar la app. </string>
     <string name="error_refresh_media">No se pueden actualizar los medios en este momento</string>
     <string name="new_media">Nuevo elemento multimedia</string>
     <string name="new_post">Nueva entrada</string>
@@ -3948,7 +3743,6 @@ Language: es_MX
     <string name="reader_untitled_post">Sin título</string>
     <string name="comments_empty_list">No hay comentarios aún</string>
     <string name="reader_view_reblog">Reblog</string>
-    <string name="sign_up_label">Registro</string>
     <string name="reader_toast_err_tag_not_valid">Esa no es una etiqueta válida</string>
     <string name="theme_activate_button">Activar</string>
     <string name="media_edit_caption_text">Leyenda</string>
@@ -3977,8 +3771,6 @@ Language: es_MX
     <string name="new_notifications">%d nuevas notificaciones</string>
     <string name="sign_in">Acceder</string>
     <string name="loading">Cargando…</string>
-    <string name="httppassword">Contraseña HTTP</string>
-    <string name="httpuser">Usuario HTTP</string>
     <string name="error_media_upload">Se ha producido un error al cargar los archivos</string>
     <string name="incorrect_credentials">Nombre de usuario o contraseña incorrecta</string>
     <string name="password">Contraseña</string>
