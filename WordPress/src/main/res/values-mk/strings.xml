@@ -62,6 +62,7 @@ Language: mk
     <string name="invalid_email_message">Вашата е-пошта е невалидна</string>
     <string name="adding_cat_failed">Додавањето категорија е неуспешно</string>
     <string name="cat_name_required">Полето со името на категоријата е задолжително</string>
+    <string name="email_invalid">Воведи валидна е-поштта</string>
     <string name="username_or_password_incorrect">Корисничкото име или лозинката се неточни</string>
     <string name="error_downloading_image">Грешно превземање на слика</string>
     <string name="sdcard_message">Сврзана SD карта е потребна за качување на медиа</string>
@@ -77,6 +78,7 @@ Language: mk
     <string name="post_not_found">Настана грешка при вчитување на написот. Освежи ги написите и обиди се повторно.</string>
     <string name="learn_more">Научи повеќе</string>
     <string name="page_settings">Подесувања на страницата</string>
+    <string name="http_authorization_required">Ауторизација е потребна</string>
     <string name="mnu_comment_spam">Спам</string>
     <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Хоризонтално порамнување</string>
     <string name="dlg_confirm_trash_comments">Испрати во корпа?</string>
@@ -86,6 +88,7 @@ Language: mk
     <string name="saving_changes">Зачувување на подесувањата</string>
     <string name="wordpress_blog">WordPress блог</string>
     <string name="select_categories">Избери категории</string>
+    <string name="fatal_db_error">Настана грешка при креирање на базата на податоци за апликацијата. Направи преинсталирање на апликацијата.</string>
     <string name="reader_title_applog">Дневник на апликацијата</string>
     <string name="edit_comment">Измени коментар</string>
     <string name="mnu_comment_approve">Одобри</string>
@@ -150,6 +153,8 @@ Language: mk
     <string name="more_notifications">и уште %d .</string>
     <string name="note_reply_successful">Одговори на објавено</string>
     <string name="loading">Вчитување…</string>
+    <string name="httpuser">HTTP корисничко име</string>
+    <string name="httppassword">HTTP лозинка</string>
     <string name="error_media_upload">Настана грешка при качување на медиа</string>
     <string name="incorrect_credentials">Невалидно корисничко име или лозинка.</string>
     <string name="password">Лозинка</string>
