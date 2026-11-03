@@ -1,11 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-05-15 08:19:40+0000
+Translation-Revision-Date: 2026-11-01 16:17:31+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: sq_AL
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="support_screen_unified_support_description">Merrni përgjigje nga ekipi ynë i asistencës, kurdo</string>
+    <string name="support_screen_unified_support_title">Merrni ndihmë</string>
+    <string name="unified_support_message_input_placeholder">Shtypni një mesazh…</string>
+    <string name="unified_support_conversations_title">Merrni ndihmë</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_message">Faqet e shpëna në hedhurina s’mund të përpunohen. Doni të ndryshohet gjendja e kësaj faqeje në “skicë”, që të mund të merreni me të?</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_title">Të kalohet faqja te Skicat?</string>
+    <string name="page_rs_confirm_trash_message">Jeni i sigurt se doni të shpihet në hedhurina kjo faqe?</string>
+    <string name="page_rs_copy_url">Kopjoji URL-në</string>
+    <string name="page_rs_failed_to_load">S’u arrit të ngarkohet faqe</string>
+    <string name="page_not_found">Ndodhi një gabim teksa ngarkohej faqja. Rifreskoni faqet tuaja dhe riprovoni.</string>
+    <string name="application_password_reauthentication_banner">Kredencialet tuaja për sajtin janë të pavlefshme. Prekeni, që të ribëhet mirëfilltësimi.</string>
+    <string name="application_password_app_name_wordpress">Aplikacion WordPress Android në %s</string>
+    <string name="application_password_app_name_jetpack">Aplikacioni Jetpack Android në %s</string>
+    <string name="application_password_authorization_cancelled">Autorizimi u anulua</string>
+    <string name="reader_label_view">Shiheni sajtin</string>
+    <string name="reader_excerpt_view_more">Shihni më tepër</string>
+    <string name="reader_reading_time">%s min. lexim</string>
+    <string name="reader_discover_tab_latest">Më të rejat</string>
+    <string name="reader_discover_tab_recommended">Të rekomanduara</string>
+    <string name="stats_subscriber_years_and_days">%1$s, %2$s</string>
+    <string name="stats_subscriber_since_today">sot</string>
+    <string name="stats_subscribers_graph_years">Vjet</string>
+    <string name="stats_subscribers_graph_months">Muaj</string>
+    <string name="stats_subscribers_graph_weeks">Javë</string>
+    <string name="stats_subscribers_graph_days">Ditë</string>
+    <string name="stats_emails_clicks_header">Klikime</string>
+    <string name="stats_emails_opens_header">Hapje</string>
+    <string name="stats_emails_latest_header">Email-et më të rinj</string>
+    <string name="stats_subscribers_since_header">Që prej</string>
+    <string name="stats_subscribers_90_days_ago">90 ditësh më parë</string>
+    <string name="stats_subscribers_60_days_ago">60 ditësh më parë</string>
+    <string name="stats_subscribers_30_days_ago">30 ditësh më parë</string>
+    <string name="stats_subscribers_current">Të tanishëm</string>
+    <string name="stats_subscribers_emails">Email-e</string>
+    <string name="stats_subscribers_list">Pajtimtarë</string>
+    <string name="stats_subscribers_graph">Grafik Pajtimtarësh</string>
+    <string name="stats_subscribers_all_time">Pajtimtarë të Krejt Kohës</string>
+    <string name="stats_utm_campaign">Fushatë</string>
+    <string name="stats_utm_source">Burim</string>
+    <string name="stats_utm_campaign_source_medium">Fushatë / Burim / Medium</string>
+    <string name="stats_utm_source_medium">Burim / Medium</string>
+    <string name="stats_utm_title">UTM</string>
+    <string name="stats_collapse_group">Palose</string>
+    <string name="stats_expand_group">Zgjeroje</string>
+    <string name="stats_tag_type_tag">Etiketë</string>
+    <string name="stats_tag_type_category">Kategori</string>
+    <string name="stats_insights_tags_empty">S’u gjetën etiketa apo kategori</string>
+    <string name="stats_insights_most_popular_day_label">Ditë</string>
+    <string name="stats_insights_all_time_stats_title">Statistika për krejt kohën</string>
+    <string name="stats_insights_year_in_review_title">%s në shqyrtim</string>
+    <string name="stats_insights_year_in_review">Viti në Shqyrtim</string>
+    <string name="stats_insights_avg_words_per_post">Mesatare fjalësh për postim</string>
+    <string name="stats_insights_avg_likes_per_post">Mesatare pëlqimesh për postim</string>
+    <string name="stats_insights_avg_comments_per_post">Mesatare komentesh për postim</string>
+    <string name="stats_insights_total_posts">Postime gjithsej</string>
+    <string name="stats_insights_likes">Pëlqime</string>
+    <string name="stats_insights_words">Fjalë</string>
+    <string name="activity_log_mcp_agent_label">përmes %1$s</string>
+    <string name="post_rs_settings_show_password">Shfaqe fjalëkalimin</string>
+    <string name="post_rs_settings_hide_password">Fshihe fjalëkalimin</string>
+    <string name="post_rs_settings_search_no_results">S’u gjetën përfundime</string>
+    <string name="post_rs_settings_term_create_error">S’u arrit të krijohet term</string>
+    <string name="post_rs_settings_search_authors">Kërkoni te autorë</string>
+    <string name="post_rs_settings_search_terms">Kërko</string>
+    <string name="post_rs_settings_no_parent">Asnjë</string>
+    <string name="post_rs_settings_parent_category">Kategori Mëmë</string>
+    <string name="post_rs_settings_term_name_hint">Emër</string>
+    <string name="post_rs_settings_add_term">Shto të Ri</string>
+    <string name="post_rs_settings_choose_from_device">Zgjidhni nga pajisje</string>
+    <string name="stats_new_stats_suggestion_negative">Ndoshta më vonë</string>
+    <string name="stats_new_stats_suggestion_positive">Provojeni</string>
+    <string name="gutenberg_kit_announcement_learn_more">Mësoni më tepër</string>
+    <string name="gutenberg_kit_announcement_maybe_later">Ndoshta më vonë</string>
+    <string name="gutenberg_kit_announcement_activate">Aktivizoje</string>
+    <string name="site_settings_gutenberg_kit_enabled">Provoni përpunuesin e ri</string>
+    <string name="site_connectivity_banner_text">S’arrihet të lidhet me sajtin tuaj. Disa funksione mund të jenë kufizuar.</string>
+    <string name="site_settings_use_third_party_blocks_unsupported">Sajti juaj s’mbulon ngarkim te përpunuesi blloqe nga palë të treta.</string>
+    <string name="new_stats_intro_footer">Statistikat e Reja mund t’i çaktivizoni që nga menuja e mundësive, te skena e Statistikave.</string>
     <string name="new_stats_intro_trends_desc">Secila matje tregon se ç’prirje ka, krahasuar me periudhën e mëparshme, që ta dini përherë nëse po fuqizoheni.</string>
     <string name="new_stats_intro_trends_title">Prirje Me Një Vështrim</string>
     <string name="new_stats_intro_on_par_desc">Pajisje, UTM, vendndodhje, WordAds (s’afërmi) — të njëjtat të dhëna që merrni në WordPress.com.</string>
@@ -174,6 +252,7 @@ Language: sq_AL
     <string name="error_browser_no_network">S’arrihet të ngarkohet kjo faqe</string>
     <string name="history_empty_subtitle_post">Do të shihni historikun e këtij postimi kur të bëni ndryshime në të</string>
     <string name="history_empty_subtitle_page">Do të shihni historikun e kësaj faqeje kur të bëni ndryshime në të</string>
+    <string name="reader_discover_tab_freshly_pressed">Të saposhtypura</string>
     <string name="notifications_empty_action_comments">Hyni në një bisedë! Komentoni te postime te Lexuesi.</string>
     <string name="notifications_empty_action_all">Bëhuni aktiv! Komentoni te postime te Lexuesi.</string>
     <string name="more_options">Më tepër mundësi</string>
@@ -235,9 +314,11 @@ Language: sq_AL
     <string name="he_support_empty_conversations_button">Nisni Bisedë</string>
     <string name="he_support_empty_conversations_message">Nisni një bisedë me ekipin tonë të asistencës, për të marrë ndihmë lidhur me pyetjet tuaja.</string>
     <string name="he_support_empty_conversations_title">Ende pa biseda</string>
+    <string name="unified_support_new_conversation_content_description">Bisedë e re</string>
     <string name="ai_bot_time_just_now">Mu tani</string>
     <string name="ai_bot_welcome_message">Jam asistenti juaj IA personal. Mund t’ju ndihmoj me çfarëdo pyetjesh rreth sajtit apo llogarisë tuaj.</string>
     <string name="ai_bot_welcome_greeting">Njatjeta %1$s 👋</string>
+    <string name="unified_support_generic_error">Diç shkoi ters. Ju lutemi, riprovoni më vonë.</string>
     <string name="create">Krijoje</string>
     <string name="logs_screen_general_error">Diç shkoi ters…</string>
     <string name="logs_screen_empty_state">S’ka regjistra</string>
@@ -252,6 +333,7 @@ Language: sq_AL
     <string name="support_screen_title">Asistencë</string>
     <string name="modern_support_description">Aktivizoni funksionimin e ri, modern të asistencës</string>
     <string name="modern_support">Asistencë Moderne</string>
+    <string name="site_settings_use_theme_styles_summary">Bëjeni përpunuesin me blloqe të duket si tema juaj.</string>
     <string name="site_settings_use_theme_styles">Përdorni Stile Teme</string>
     <string name="error_deleting_term">Pati një gabim gjatë fshirjes së termit</string>
     <string name="error_saving_term">Pati një gabim gjatë ruajtjes së termit</string>
@@ -493,6 +575,7 @@ Language: sq_AL
     <string name="page_upload_conflict_error">Për këtë faqe ka një rishikim që është më i freskët</string>
     <string name="editor_updating_content">Po përditësohet lëndë</string>
     <string name="stats_subscribers">Pajtimtarë</string>
+    <string name="stats_subscribers_subscriber_header">Pajtimtar</string>
     <string name="weekly_roundup_notification_text_views_and_comment">Javën e fundit patët %1$s parje dhe 1 koment</string>
     <string name="weekly_roundup_notification_text_views_and_like">Javën e fundit patët %1$s parje dhe 1 pëlqim</string>
     <string name="weekly_roundup_notification_text_views_like_comment">Javën e fundit patët %1$s parje, 1 pëlqim dhe 1 koment.</string>
@@ -3462,6 +3545,7 @@ Language: sq_AL
     <string name="push_auth_expired">Kërkesa skadoi. Hyni te WordPress.com që të riprovoni.</string>
     <string name="ignore">Shpërfille</string>
     <string name="stats_insights_best_ever">Parjet Më të Mira Ndonjëherë</string>
+    <string name="stats_insights_most_popular_time">Koha më popullore</string>
     <string name="stats_insights_most_popular_day">Dita më popullore</string>
     <string name="stats_insights_today">Statistikat e Sotme</string>
     <string name="stats_insights_all_time">Postimet, parjet dhe vizitorët gjatë gjithë kohës</string>
@@ -3517,6 +3601,7 @@ Language: sq_AL
     <string name="browse_our_faq_button">Shfletoni PBR tonat</string>
     <string name="reader_empty_comments">Ende pa komente</string>
     <string name="reader_label_like">Pëlqim</string>
+    <string name="reader_label_view_original">Shihni origjinalin</string>
     <string name="reader_label_comments_closed">Komentet janë mbyllur</string>
     <string name="reader_title_photo_viewer">%1$d nga %2$d</string>
     <string name="error_publish_empty_post">S’botohet dot një postim i zbrazët</string>
