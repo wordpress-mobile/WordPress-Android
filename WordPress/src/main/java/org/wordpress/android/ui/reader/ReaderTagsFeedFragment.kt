@@ -278,17 +278,20 @@ class ReaderTagsFeedFragment : Fragment(R.layout.reader_tag_feed_fragment_layout
     private fun observeErrorMessageEvents() {
         viewModel.errorMessageEvents.observeEvent(viewLifecycleOwner) { stringRes ->
             if (isAdded) {
-                WPSnackbar.make(binding.root, getString(stringRes), Snackbar.LENGTH_LONG).show()
+                WPSnackbar.make(snackbarParent(), getString(stringRes), Snackbar.LENGTH_LONG).show()
             }
         }
     }
+
+    // the main activity's coordinator, which sits above the bottom navigation
+    private fun snackbarParent(): View = requireActivity().findViewById(R.id.coordinator) ?: binding.root
 
     private fun observeSnackbarEvents() {
         viewModel.snackbarEvents.observeEvent(viewLifecycleOwner) { snackbarMessageHolder ->
             if (isAdded) {
                 with(snackbarMessageHolder) {
                     val snackbar = WPSnackbar.make(
-                        binding.root,
+                        snackbarParent(),
                         uiHelpers.getTextOfUiString(requireContext(), message),
                         Snackbar.LENGTH_LONG
                     )

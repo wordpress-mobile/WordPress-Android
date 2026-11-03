@@ -577,8 +577,10 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
      * parent to be the main activity's CoordinatorLayout
      */
     private fun getSnackbarParent(): View? {
-        val coordinator =
-            requireActivity().findViewById<View>(R.id.coordinator_layout)
+        // coordinator_layout in standalone hosts; in the Reader tab, the main activity's coordinator, which sits
+        // above the bottom navigation
+        val coordinator: View? = requireActivity().findViewById(R.id.coordinator_layout)
+            ?: requireActivity().findViewById(R.id.coordinator)
         return coordinator ?: view
     }
 

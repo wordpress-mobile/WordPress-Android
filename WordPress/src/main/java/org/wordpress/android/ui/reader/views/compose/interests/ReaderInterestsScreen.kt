@@ -60,6 +60,17 @@ fun ReaderInterestsScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         // hosted in a fragment, so the activity has already handled the insets
         contentWindowInsets = WindowInsets(0),
+        // in the top bar rather than over the content, so the chips scroll below it rather than under it
+        topBar = {
+            if (showBackButton) {
+                IconButton(onClick = onBackClick, modifier = Modifier.padding(Margin.Small.value)) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.reader_label_toolbar_back)
+                    )
+                }
+            }
+        },
         bottomBar = {
             val doneButton = uiState.doneButtonUiState
             if (doneButton.visible) {
@@ -88,7 +99,7 @@ fun ReaderInterestsScreen(
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
                         .padding(horizontal = Margin.ExtraLarge.value)
-                        .padding(top = if (showBackButton) 56.dp else Margin.ExtraLarge.value)
+                        .padding(top = Margin.ExtraLarge.value)
                 ) {
                     if (uiState.titleVisible) {
                         Text(
@@ -135,14 +146,6 @@ fun ReaderInterestsScreen(
             // while the interests load, and while the picks are saved
             if (uiState.progressBarVisible) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
-            if (showBackButton) {
-                IconButton(onClick = onBackClick, modifier = Modifier.padding(Margin.Small.value)) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.reader_label_toolbar_back)
-                    )
-                }
             }
         }
     }
