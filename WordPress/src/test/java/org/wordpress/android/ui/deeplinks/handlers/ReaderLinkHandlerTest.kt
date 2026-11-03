@@ -403,6 +403,15 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
     }
 
     @Test
+    fun `wordpress com tag with invalid slug opens reader`() {
+        val uri = buildUri("wordpress.com", "tag", "some/tag.name?x=1#z")
+
+        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
+
+        assertThat(navigateAction).isEqualTo(OpenReader)
+    }
+
+    @Test
     fun `correctly strips wordpress com tag URI`() {
         val uri = buildUri("wordpress.com", "tag", tagSlug)
 
