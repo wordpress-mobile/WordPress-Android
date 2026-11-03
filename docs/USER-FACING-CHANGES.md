@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Reader's tabs, filter sheet and interests picker restyled**
+  The Reader's Discover sub-tabs (Freshly Pressed, Recommended, Latest), the blog and tag filter sheet, the "Choose your interests" picker, and the author, login-required and comment-notification sheets now use Material 3 components. They work as before: the top bar still hides as you scroll and comes back when you scroll up, the filter sheet still marks the current blog or tag and offers Manage, and the selected Discover tab is still remembered.
+  - **Apps:** Jetpack
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Reader (top bar, Discover tabs, the blog/tag filter); Reader → Discover or Tags → choose interests; Reader → a post → author name (author sheet), or the comments' follow bell (notification sheet); Reader → Reblog with no site of your own
+  - **Notes:** Site icons in the filter sheet are now rounded squares, matching Reader search and Manage subscriptions, instead of circles. The "Reblog needs a site" screen keeps its illustration, text and button.
+
 - **Experimental block editor warns before saving while something is still in progress**
   While the experimental block editor has saving locked, most often during a media upload, publishing, updating, submitting, saving a draft or previewing first asks "Your post isn't ready yet", with Keep editing and Continue. Leaving the editor asks the same question, with Keep editing and Leave; Leave closes the editor and saves as usual. If the editor stops working, undo, redo, Code Editor and the Publish or Update button are disabled until it reloads.
   - **Apps:** Both

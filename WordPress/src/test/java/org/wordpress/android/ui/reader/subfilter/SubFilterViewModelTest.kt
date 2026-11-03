@@ -21,7 +21,6 @@ import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderTagTableWrapper
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.getOrAwaitValue
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
@@ -534,14 +533,6 @@ class SubFilterViewModelTest : BaseUnitTest() {
             stat = AnalyticsTracker.Stat.READER_FILTER_SHEET_ITEM_SELECTED,
             properties = mutableMapOf("type" to "topic"),
         )
-    }
-
-    @Test
-    fun `Should propagate title container visibility state properly`() {
-        listOf(true, false).forEach { isTitleContainerVisible ->
-            viewModel.setTitleContainerVisibility(isTitleContainerVisible)
-            assertThat(viewModel.isTitleContainerVisible.getOrAwaitValue()).isEqualTo(isTitleContainerVisible)
-        }
     }
 
     private fun mockReaderTableEmpty() {
