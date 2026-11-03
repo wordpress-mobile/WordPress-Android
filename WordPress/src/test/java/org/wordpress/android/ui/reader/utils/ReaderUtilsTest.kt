@@ -120,7 +120,7 @@ class ReaderUtilsTest {
 
     @Test
     fun `given unicode or underscore slug, when sanitize string is invoked, then string is not sanitized`() {
-        listOf("日本", "हिंदी", "my_tag").forEach {
+        listOf("日本", "हिंदी", "my_tag", "✨", "🎉", "ハリー・ポッター", "می\u200Cخواهم").forEach {
             assertThat(ReaderUtils.sanitizeWithDashes(it)).isEqualTo(it)
         }
     }

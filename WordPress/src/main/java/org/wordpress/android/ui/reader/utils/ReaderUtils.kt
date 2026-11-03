@@ -18,7 +18,7 @@ import org.wordpress.android.util.UrlUtils
 import androidx.core.net.toUri
 
 object ReaderUtils {
-    private val VALID_TAG_SLUG_REGEX = "(?:[\\p{L}\\p{M}\\p{Nd}_-]|%[89a-fA-F][0-9a-fA-F])+".toRegex()
+    private val VALID_TAG_SLUG_REGEX = "(?:[A-Za-z0-9_-]|[^\\x00-\\x7F\\p{Z}\\p{Cc}]|%[89a-fA-F][0-9a-fA-F])+".toRegex()
 
     @JvmStatic
     fun getResizedImageUrl(
@@ -165,8 +165,9 @@ object ReaderUtils {
     }
 
     /*
-     * returns true if the passed slug only contains letters, digits, dashes, underscores and
-     * percent-encoded non-ASCII bytes, so slugs that are already URL encoded are kept as-is
+     * returns true if the passed slug only contains ASCII letters, digits, dashes and underscores, non-ASCII
+     * characters other than spaces and control characters, and percent-encoded non-ASCII bytes, so slugs
+     * that are already URL encoded are kept as-is
      */
     @JvmStatic
     fun isValidTagSlug(slug: String): Boolean = VALID_TAG_SLUG_REGEX.matches(slug)
