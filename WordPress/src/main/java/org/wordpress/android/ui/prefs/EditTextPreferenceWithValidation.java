@@ -64,7 +64,7 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
                             positiveButton.setEnabled(ValidationUtils.validatePassword(s));
                             break;
                         case URL:
-                            positiveButton.setEnabled(ValidationUtils.validateUrl(s));
+                            positiveButton.setEnabled(ValidationUtils.validateOptionalUrl(s));
                             break;
                         case PASSWORD_SELF_HOSTED:
                             positiveButton.setEnabled(ValidationUtils.validatePasswordSelfHosted(s));
