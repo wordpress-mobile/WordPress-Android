@@ -107,6 +107,25 @@ class ReaderUtilsTest {
     }
 
     @Test
+    fun `given slug with invalid characters, when sanitize string is invoked, then they are removed`() {
+        listOf(
+            "some/tag.name?x=1&y=2#z",
+            "a%2Fb",
+            "a%2eb",
+            "a%3Fb%23c%25"
+        ).forEach {
+            assertThat(ReaderUtils.sanitizeWithDashes(it)).doesNotContain("/", ".", "?", "#", "&", "%")
+        }
+    }
+
+    @Test
+    fun `given unicode or underscore slug, when sanitize string is invoked, then string is not sanitized`() {
+        listOf("日本", "हिंदी", "my_tag", "✨", "🎉", "ハリー・ポッター", "می\u200Cخواهم").forEach {
+            assertThat(ReaderUtils.sanitizeWithDashes(it)).isEqualTo(it)
+        }
+    }
+
+    @Test
     fun `given valid reader tag link, when isTagUrl is invoked, then returns true`() {
         val tagLink = "https://wordpress.com/tag/dailyprompt-123"
         val result = ReaderUtils.isTagUrl(tagLink)

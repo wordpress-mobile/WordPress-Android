@@ -15,10 +15,11 @@ import org.wordpress.android.util.FormatUtils
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.UrlUtils
-import java.net.URI
 import androidx.core.net.toUri
 
 object ReaderUtils {
+    private val VALID_TAG_SLUG_REGEX = "(?:[A-Za-z0-9_-]|[^\\x00-\\x7F\\p{Z}\\p{Cc}]|%[89a-fA-F][0-9a-fA-F])+".toRegex()
+
     @JvmStatic
     fun getResizedImageUrl(
         imageUrl: String,
@@ -149,8 +150,7 @@ object ReaderUtils {
     @JvmStatic
     fun sanitizeWithDashes(title: String): String {
         val trimmedTitle = title.trim()
-        return if (isValidUrlEncodedString(trimmedTitle)
-        ) {
+        return if (isValidTagSlug(trimmedTitle)) {
             trimmedTitle
         } else {
             trimmedTitle
@@ -164,15 +164,13 @@ object ReaderUtils {
         }
     }
 
-    @Suppress("SwallowedException")
-    private fun isValidUrlEncodedString(title: String): Boolean {
-        try {
-            URI.create(title)
-            return true
-        } catch (e: IllegalArgumentException) {
-            return false
-        }
-    }
+    /*
+     * returns true if the passed slug only contains ASCII letters, digits, dashes and underscores, non-ASCII
+     * characters other than spaces and control characters, and percent-encoded non-ASCII bytes, so slugs
+     * that are already URL encoded are kept as-is
+     */
+    @JvmStatic
+    fun isValidTagSlug(slug: String): Boolean = VALID_TAG_SLUG_REGEX.matches(slug)
 
     /*
      * returns the long text to use for a like label ("Liked by 3 people", etc.)
