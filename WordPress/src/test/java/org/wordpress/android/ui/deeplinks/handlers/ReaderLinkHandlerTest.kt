@@ -415,11 +415,17 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
 
     @Test
     fun `wordpress com tag with invalid slug opens reader`() {
-        val uri = buildUri("wordpress.com", "tag", "some/tag.name?x=1#z")
+        listOf(
+            "some/tag.name?x=1#z",
+            "../../me?x=1#",
+            "..%2F..%2Fme%3Fx%3D1%23"
+        ).forEach {
+            val uri = buildUri("wordpress.com", "tag", it)
 
-        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
+            val navigateAction = readerLinkHandler.buildNavigateAction(uri)
 
-        assertThat(navigateAction).isEqualTo(OpenReader)
+            assertThat(navigateAction).isEqualTo(OpenReader)
+        }
     }
 
     @Test
