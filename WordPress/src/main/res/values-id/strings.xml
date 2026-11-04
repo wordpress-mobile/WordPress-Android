@@ -2005,7 +2005,6 @@ Language: id
     <string name="publish_date">Tanggal Publikasi</string>
     <string name="ccpa_privacy_notice_read">Baca pemberitahuan privasi CCPA</string>
     <string name="ccpa_privacy_notice_caption">Undang-Undang Privasi Konsumen California (CCPA) meminta kami untuk menyediakan kepada warga negara California informasi tambahan tentang kategori informasi pribadi yang kami kumpulkan dan bagikan, di mana kami mendapatkan informasi tersebut, dan bagaimana dan mengapa kami menggunakannya.</string>
-    <string name="ccpa_privacy_notice_header">Pemberitahuan privasi untuk pengguna di California</string>
     <string name="status_and_visibility">Status &amp; Keterlihatan</string>
     <string name="update_now">Perbarui Sekarang</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2720,11 +2719,8 @@ Language: id
     <string name="activity_log">Log Aktivitas</string>
     <string name="privacy_policy_read">Baca kebijakan privasi</string>
     <string name="third_party_policy_learn_more_caption">Kami menggunakan alat pelacakan lainnya, termasuk beberapa dari pihak ketiga. Baca tentang hal ini dan cara mengontrolnya.</string>
-    <string name="third_party_policy_learn_more_header">Kebijakan Pihak Ketiga</string>
     <string name="privacy_policy_learn_more_caption">Informasi ini membantu kami menyempurnakan produk, membuat pemasaran kepada Anda jadi lebih relevan, menyesuaikan pengalaman WordPress.com Anda, dan lainnya seperti yang dijelaskan dalam kebijakan privasi kami.</string>
-    <string name="privacy_policy_learn_more_header">Kebijakan Privasi</string>
     <string name="cookie_policy_learn_more_caption">Berbagi informasi dengan alat analitik kami tentang penggunaan layanan Anda saat sudah login ke akun WordPress.com Anda.</string>
-    <string name="cookie_policy_learn_more_header">Kebijakan Cookie</string>
     <string name="preference_privacy_settings">Pengaturan privasi</string>
     <string name="preference_collect_information">Kumpulkan informasi</string>
     <string name="post_submitted">Pos telah dikirim</string>
@@ -3118,8 +3114,6 @@ Language: id
     <string name="media_all">Semua</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s ditolak untuk mengakses berkas media Anda. Untuk memperbaiki ini, edit perizinan Anda dan aktifkan %2$s.</string>
     <string name="reader_view_comments">Lihat komentar</string>
-    <string name="site_settings_video_quality_hint">Kualitas video. Semakin tinggi nilainya, semakin bagus kualitas videonya.</string>
-    <string name="site_settings_video_width_hint">Ubah ukuran video dalam pos menjadi ukuran ini</string>
     <string name="site_settings_optimize_video_summary">Memungkinkan pengubahan ukuran dan kompresi video</string>
     <string name="site_settings_optimize_videos">Optimalkan Video</string>
     <string name="draft_uploaded">Konsep diunggah</string>
@@ -3203,7 +3197,6 @@ Language: id
     <string name="photo_picker_title">Pilih foto</string>
     <string name="error_publish_no_network">Perangkat offline. Pos disimpan secara lokal.</string>
     <string name="editor_post_saved_online">Pos disimpan secara online</string>
-    <string name="site_settings_image_quality_hint">Kualitas gambar. Semakin tinggi nilainya, semakin bagus kualitas gambarnya.</string>
     <string name="site_settings_optimize_images_summary">Memungkinkan pengubahan ukuran dan kompresi gambar</string>
     <string name="media_encoder_quality_maximum">Maksimum</string>
     <string name="media_encoder_quality_high">Tinggi</string>
@@ -3455,7 +3448,6 @@ Language: id
     <string name="site_settings_discussion_hint">Tampilkan dan ubah pengaturan diskusi situs</string>
     <string name="site_settings_more_hint">Tampilkan semua pengaturan Diskusi yang ada</string>
     <string name="site_settings_related_posts_hint">Tampilkan atau sembunyikan pos terkait di pembaca</string>
-    <string name="site_settings_image_width_hint">Ubah ukuran gambar dalam pos ke lebar berikut</string>
     <string name="site_settings_format_hint">Tentukan format pos baru</string>
     <string name="site_settings_category_hint">Tentukan kategori pos baru</string>
     <string name="site_settings_password_hint">Ubah kata sandi Anda</string>

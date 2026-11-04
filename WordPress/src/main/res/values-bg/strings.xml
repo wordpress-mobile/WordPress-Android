@@ -285,7 +285,6 @@ Language: bg
     <string name="media_videos">Видео файлове</string>
     <string name="media_picker_soft_ask_media_permissions_denied">Достъпът на %1$s до вашите файлове беше ограничен. За да поправите това редактирайте вашите правомощия и включете %2$s.</string>
     <string name="reader_view_comments">Преглед на коментарите</string>
-    <string name="site_settings_video_width_hint">Променя размера на видеоклиповете в публикациите до този</string>
     <string name="site_settings_optimize_video_summary">Включва преоразмеряването и компресията на видеото</string>
     <string name="site_settings_optimize_videos">Оптимизиране на видео файловете</string>
     <string name="draft_uploaded">Черновата е качена</string>
@@ -351,7 +350,6 @@ Language: bg
     <string name="photo_picker_title">Избор на изображение</string>
     <string name="error_publish_no_network">Устройството е офлайн. Промените бяха запазени в локален режим.</string>
     <string name="editor_post_saved_online">Публикацията е запазена онлайн.</string>
-    <string name="site_settings_image_quality_hint">Качество на изображенията. Високите стойности означават снимки с по-високо качество.</string>
     <string name="media_upload_state_uploaded">Качено</string>
     <string name="media_encoder_quality_maximum">Максимално</string>
     <string name="media_upload_state_deleted">Изтрито</string>
@@ -571,7 +569,6 @@ Language: bg
     <string name="site_settings_discussion_hint">Разглеждане и промяна на настройките за коментари на вашите сайтове</string>
     <string name="site_settings_more_hint">Разглеждане на всички настройки за коментарите</string>
     <string name="site_settings_related_posts_hint">Показване или скриване на свързани публикации в четеца</string>
-    <string name="site_settings_image_width_hint">Преоразмерява изображенията в публикациите до тази ширина</string>
     <string name="site_settings_format_hint">Задава нов формат на публикацията</string>
     <string name="site_settings_category_hint">Задава нова категория на публикацията</string>
     <string name="site_settings_password_hint">Промяна на вашата парола</string>

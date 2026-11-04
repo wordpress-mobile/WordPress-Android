@@ -890,7 +890,6 @@ Language: es_VE
     <string name="ccpa_privacy_notice_caption">La Ley de Privacidad del Consumidor de California («CCPA») nos obliga a que proporcionemos información adicional a los residentes de California sobre las categorías de información personal que recopilamos y compartimos, dónde obtenemos esa información personal y cómo y por qué la usamos.</string>
     <string name="update_now">Actualizar ahora</string>
     <string name="status_and_visibility">Estado y visibilidad</string>
-    <string name="ccpa_privacy_notice_header">Aviso de privacidad para usuarios de California</string>
     <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Abrir el menú de acciones de bloques</string>
     <string name="gutenberg_native_move_to_top" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Mover arriba</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Toca dos veces para abrir la hoja inferior con las opciones disponibles</string>
@@ -1572,11 +1571,8 @@ Language: es_VE
     <string name="activity_log">Registro de actividad</string>
     <string name="privacy_policy_read">Lee la política de privacidad</string>
     <string name="third_party_policy_learn_more_caption">Usamos otras herramientas de seguimiento, incluidas algunas de terceros. Lee acerca de estas y cómo controlarlas.</string>
-    <string name="third_party_policy_learn_more_header">Política de terceros</string>
     <string name="privacy_policy_learn_more_caption">Esta información nos ayuda a mejorar nuestros productos, hacer que el marketing sea más relevante, personalizar tu experiencia en WordPress.com y más, tal como se detalla en nuestra política de privacidad.</string>
-    <string name="privacy_policy_learn_more_header">Política de privacidad</string>
     <string name="cookie_policy_learn_more_caption">Comparte información con nuestra herramienta de análisis acerca del uso que haces de los servicios mientras estás conectado a tu cuenta de WordPress.com.</string>
-    <string name="cookie_policy_learn_more_header">Política de cookies</string>
     <string name="preference_privacy_settings">Ajustes de privacidad</string>
     <string name="preference_collect_information">Recopilar información</string>
     <string name="post_submitted">Entrada enviada</string>
@@ -1961,9 +1957,7 @@ Language: es_VE
     <string name="media_all">Todos</string>
     <string name="media_videos">Videos</string>
     <string name="reader_view_comments">Ver comentarios</string>
-    <string name="site_settings_video_quality_hint">Calidad de los videos. Valores más altos implican videos de mejor calidad.</string>
     <string name="site_settings_optimize_video_summary">Activar para redimensionar y comprimir los videos</string>
-    <string name="site_settings_video_width_hint">Redimensiona los videos en las entradas a este tamaño</string>
     <string name="site_settings_optimize_videos">Optimizar videos</string>
     <string name="draft_uploaded">Borrador subido</string>
     <string name="video_quality">Calidad del video</string>
@@ -2045,7 +2039,6 @@ Language: es_VE
     <string name="photo_picker_title">Elegir foto</string>
     <string name="error_publish_no_network">El dispositivo está desconectado. La entrada se guardará localmente.</string>
     <string name="editor_post_saved_online">La entrada se ha guardado online</string>
-    <string name="site_settings_image_quality_hint">Calidad de las imágenes: cuanto más alto es el valor, más calidad tienen las imágenes.</string>
     <string name="site_settings_optimize_images_summary">Activa la opción para cambiar el tamaño de las imágenes y comprimirlas</string>
     <string name="media_upload_state_uploaded">Subido</string>
     <string name="media_upload_state_failed">Fallo al subir</string>
@@ -2290,7 +2283,6 @@ Language: es_VE
     <string name="site_settings_discussion_hint">Ver y cambiar la configuración de discusiones de tu sitio</string>
     <string name="site_settings_more_hint">Ver todos los ajustes disponibles de las discusiones</string>
     <string name="site_settings_related_posts_hint">Mostrar u ocultar entradas relacionadas en el lector</string>
-    <string name="site_settings_image_width_hint">Redimensionar imágenes en las entradas a esta anchura</string>
     <string name="site_settings_format_hint">Establece formato para nuevas entradas</string>
     <string name="site_settings_category_hint">Establece categoría para nuevas entradas</string>
     <string name="site_settings_password_hint">Cambiar tu contraseña</string>

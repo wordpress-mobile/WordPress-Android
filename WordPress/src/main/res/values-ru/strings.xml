@@ -2007,7 +2007,6 @@ Language: ru
     <string name="publish_date">Дата публикации</string>
     <string name="ccpa_privacy_notice_read">Прочитать уведомление о конфиденциальности CCPA</string>
     <string name="ccpa_privacy_notice_caption">Калифорнийский закон о защите прав потребителей («CCPA») обязывает нас предоставлять жителям Калифорнии некоторую дополнительную информацию о категориях личной информации, которую мы собираем и передаем, где мы получаем эту личную информацию, а также как и почему мы ее используем.</string>
-    <string name="ccpa_privacy_notice_header">Уведомление о конфиденциальности для жителей Калифорнии</string>
     <string name="status_and_visibility">Статус и видимость</string>
     <string name="update_now">Обновить сейчас</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2722,11 +2721,8 @@ Language: ru
     <string name="activity_log">Журнал активности</string>
     <string name="privacy_policy_read">Прочитать политику конфиденциальности</string>
     <string name="third_party_policy_learn_more_caption">Мы используем другие инструменты отслеживания, включая и инструменты третьих сторон. Прочитайте о них и как их контролировать.</string>
-    <string name="third_party_policy_learn_more_header">Политики третьих сторон</string>
     <string name="privacy_policy_learn_more_caption">Эта информация позволит нам улушать наши продукты, уточнять маркетинг, персонализировать ваш опыт взаимодействия с WordPress.com, и далее как указано в нашей политике конфиденциальности.</string>
-    <string name="privacy_policy_learn_more_header">Политика конфиденциальности</string>
     <string name="cookie_policy_learn_more_caption">Поделиться информацией с нашей аналитикой по использованию сервисов при входе в вашу учетную запись WordPress.</string>
-    <string name="cookie_policy_learn_more_header">Политика куки</string>
     <string name="preference_privacy_settings">Настройки конфиденциальности</string>
     <string name="preference_collect_information">Сбор информации</string>
     <string name="post_submitted">Запись отправлена</string>
@@ -3120,8 +3116,6 @@ Language: ru
     <string name="media_all">Все</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s было отказано в доступе к вашим медиафайлам. Чтобы исправить это, измените настройки доступа и включите %2$s.</string>
     <string name="reader_view_comments">Посмотреть комментарии</string>
-    <string name="site_settings_video_quality_hint">Качество видео. Чем выше значение, тем выше качество видео.</string>
-    <string name="site_settings_video_width_hint">Приведение видео в записях к этому размеру</string>
     <string name="site_settings_optimize_video_summary">Включить функцию изменения размера и сжатия видео</string>
     <string name="site_settings_optimize_videos">Оптимизировать видеофайлы</string>
     <string name="draft_uploaded">Черновик загружен</string>
@@ -3205,7 +3199,6 @@ Language: ru
     <string name="photo_picker_title">Выбрать фото</string>
     <string name="error_publish_no_network">Нет доступа к сети. Запись сохранена локально.</string>
     <string name="editor_post_saved_online">Запись сохранена в Интернете.</string>
-    <string name="site_settings_image_quality_hint">Качество фотографий. Чем выше значение, тем выше качество изображений.</string>
     <string name="site_settings_optimize_images_summary">Включить функцию изменения размера и сжатия изображений</string>
     <string name="media_encoder_quality_maximum">Максимальное</string>
     <string name="media_encoder_quality_high">Высокое</string>
@@ -3457,7 +3450,6 @@ Language: ru
     <string name="site_settings_discussion_hint">Просмотр и изменение настроек ваших сайтов в разделе «Обсуждение»</string>
     <string name="site_settings_more_hint">Показывать все настройки в разделе «Обсуждение»</string>
     <string name="site_settings_related_posts_hint">Отображение похожих записей в приложении «Чтиво»</string>
-    <string name="site_settings_image_width_hint">Изменение ширины изображений в записи</string>
     <string name="site_settings_format_hint">Добавление нового формата записи</string>
     <string name="site_settings_category_hint">Добавление новой рубрики для записей</string>
     <string name="site_settings_password_hint">Изменить пароль</string>

@@ -108,7 +108,6 @@ import org.wordpress.android.ui.posts.prepublishing.social.PrepublishingSocialFr
 import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsFragment;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
-import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -211,7 +210,6 @@ public interface AppComponent {
 
     void inject(BlogPreferencesActivity object);
 
-    void inject(AppSettingsFragment object);
 
     void inject(PeopleListFragment object);
 

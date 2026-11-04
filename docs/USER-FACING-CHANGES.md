@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **App Settings grouped into cards**
+  App Settings now groups its rows into outlined cards, matching the Me screen. The first card holds Interface Language, Appearance, Open links in Jetpack and Open device settings. Privacy settings has a card of its own. The Media card has the image and video options. The last card holds What's New, Experimental Features and Debug Settings. Privacy settings opens as a page with the same card style. Its policy text and links are unchanged.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Me → App Settings; Me → App Settings → Privacy settings
+  - **Notes:** Appearance and the media size and quality options now open a Material 3 dialog with OK and Cancel. The headings "Cookie Policy", "Privacy Policy", "Privacy notice for California users" and "Third Party Policy" were never shown on screen and are gone. Open links in Jetpack only appears in the WordPress app when Jetpack is installed. Debug Settings only appears in debug builds.
+
 - **Reader's tabs, filter sheet and interests picker restyled**
   The Reader's Discover sub-tabs (Freshly Pressed, Recommended, Latest), the blog and tag filter sheet, the "Choose your interests" picker, and the author, login-required and comment-notification sheets now use Material 3 components. They work as before: the top bar still hides as you scroll and comes back when you scroll up, the filter sheet still marks the current blog or tag and offers Manage, and the selected Discover tab is still remembered.
   - **Apps:** Jetpack

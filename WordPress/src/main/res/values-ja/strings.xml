@@ -1994,7 +1994,6 @@ Language: ja_JP
     <string name="publish_date">公開日</string>
     <string name="ccpa_privacy_notice_read">CCPA のプライバシー通知を読む</string>
     <string name="ccpa_privacy_notice_caption">カリフォルニア州消費者プライバシー法 (CCPA) は、収集および共有する個人情報の分類、その個人情報を取得する場所、その使用方法と目的についての詳細情報をカリフォルニア州の住民に提供することを企業に義務づけています。</string>
-    <string name="ccpa_privacy_notice_header">カリフォルニア州のユーザーへのプライバシー通知</string>
     <string name="status_and_visibility">ステータスと公開状態</string>
     <string name="update_now">今すぐ更新</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2708,11 +2707,8 @@ Language: ja_JP
     <string name="activity_log">アクティビティログ</string>
     <string name="privacy_policy_read">個人情報保護方針を読む</string>
     <string name="third_party_policy_learn_more_caption">サードパーティのものを含め、他の追跡ツールを使用します。それらについての詳細と設定方法についてお読みください。</string>
-    <string name="third_party_policy_learn_more_header">サードパーティのポリシー</string>
     <string name="privacy_policy_learn_more_caption">この情報は、製品を改善し、マーケティングをより関連性の高いものとし、WordPress.com の利用をパーソナライズするのに役立ちます。さらに詳しくは、個人情報保護方針をご覧ください。</string>
-    <string name="privacy_policy_learn_more_header">個人情報保護方針</string>
     <string name="cookie_policy_learn_more_caption">WordPress.com アカウントへのログイン中のサービス利用の情報を分析ツールと共有してください。</string>
-    <string name="cookie_policy_learn_more_header">Cookie ポリシー</string>
     <string name="preference_privacy_settings">プライバシー設定</string>
     <string name="preference_collect_information">情報を収集</string>
     <string name="post_submitted">投稿を送信しました</string>
@@ -3106,8 +3102,6 @@ Language: ja_JP
     <string name="media_all">すべて</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s はメディアファイルへのアクセスを拒否されました。 これを解決するには、権限を編集して %2$s をオンにします。</string>
     <string name="reader_view_comments">コメントを表示</string>
-    <string name="site_settings_video_quality_hint">動画の画質。値が高いほど、画質が良いことを意味します。</string>
-    <string name="site_settings_video_width_hint">投稿の動画をこのサイズにする</string>
     <string name="site_settings_optimize_video_summary">サイズ変更と動画圧縮を可能にするには有効化してください</string>
     <string name="site_settings_optimize_videos">ビデオを最適化</string>
     <string name="draft_uploaded">下書きをアップロードしました</string>
@@ -3191,7 +3185,6 @@ Language: ja_JP
     <string name="photo_picker_title">写真を選択</string>
     <string name="error_publish_no_network">端末がオフラインです。変更をローカルで保存しました。</string>
     <string name="editor_post_saved_online">投稿をオンラインで保存しました</string>
-    <string name="site_settings_image_quality_hint">写真の画質。値が高いほど、画質が良いことを意味します。</string>
     <string name="site_settings_optimize_images_summary">写真をリサイズして圧縮できます</string>
     <string name="media_encoder_quality_maximum">最高</string>
     <string name="media_encoder_quality_high">高い</string>
@@ -3442,7 +3435,6 @@ Language: ja_JP
     <string name="site_settings_discussion_hint">サイトのディスカッション設定を表示して変更します</string>
     <string name="site_settings_more_hint">使用可能なディスカッション設定をすべて表示します</string>
     <string name="site_settings_related_posts_hint">Reader で関連記事を表示または非表示にします</string>
-    <string name="site_settings_image_width_hint">投稿の画像のサイズを幅に合わせて変更します</string>
     <string name="site_settings_format_hint">新しい投稿のフォーマットを設定します</string>
     <string name="site_settings_category_hint">新しい投稿のカテゴリーを設定します</string>
     <string name="site_settings_password_hint">パスワードを変更します</string>

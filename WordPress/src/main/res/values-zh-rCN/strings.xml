@@ -2003,7 +2003,6 @@ Language: zh_CN
     <string name="publish_date">发布日期</string>
     <string name="ccpa_privacy_notice_read">请阅读 CCPA 隐私声明</string>
     <string name="ccpa_privacy_notice_caption">根据《加州消费者隐私法案》（“CCPA”）的要求，我们需要在以下方面为加州居民提供一些额外信息：我们收集和分享的个人信息的类别、我们从何处获取这些个人信息，以及我们使用这些信息的方式和原因。</string>
-    <string name="ccpa_privacy_notice_header">面向加州用户的隐私声明</string>
     <string name="status_and_visibility">状态和可见性</string>
     <string name="update_now">现在更新</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2717,11 +2716,8 @@ Language: zh_CN
     <string name="activity_log">活动日志</string>
     <string name="privacy_policy_read">阅读隐私政策</string>
     <string name="third_party_policy_learn_more_caption">我们使用其他跟踪工具，其中包括来自第三方的工具。了解这些工具及其使用方法。</string>
-    <string name="third_party_policy_learn_more_header">第三方政策</string>
     <string name="privacy_policy_learn_more_caption">该信息有助于我们改善产品、开展与您更加相关的营销活动、个性化您的 WordPress.com 体验等，请参阅隐私政策以了解详情。</string>
-    <string name="privacy_policy_learn_more_header">隐私政策</string>
     <string name="cookie_policy_learn_more_caption">登录到您的 WordPress.com 账户时，使用分析工具共享关于您使用服务的信息。</string>
-    <string name="cookie_policy_learn_more_header">Cookie 政策</string>
     <string name="preference_privacy_settings">隐私设置</string>
     <string name="preference_collect_information">收集信息</string>
     <string name="post_submitted">文章已提交</string>
@@ -3114,8 +3110,6 @@ Language: zh_CN
     <string name="media_all">全部</string>
     <string name="media_picker_soft_ask_media_permissions_denied">已拒绝 %1$s 访问您的媒体文件。 要解决此问题，请编辑您的权限，然后启用“%2$s”。</string>
     <string name="reader_view_comments">查看评论</string>
-    <string name="site_settings_video_quality_hint">视频画质。值越高，视频画质越好。</string>
-    <string name="site_settings_video_width_hint">将文章中的视频调整为此大小</string>
     <string name="site_settings_optimize_video_summary">启用可调整视频分辨率并压缩视频</string>
     <string name="site_settings_optimize_videos">优化视频</string>
     <string name="draft_uploaded">已上传草稿</string>
@@ -3199,7 +3193,6 @@ Language: zh_CN
     <string name="photo_picker_title">选择照片</string>
     <string name="error_publish_no_network">设备未连接网络。已在本地保存文章。</string>
     <string name="editor_post_saved_online">文章已在线保存</string>
-    <string name="site_settings_image_quality_hint">图片质量。值越高，表示图片质量越好。</string>
     <string name="site_settings_optimize_images_summary">启用以调整图片大小和压缩图片</string>
     <string name="media_encoder_quality_maximum">最高</string>
     <string name="media_encoder_quality_high">高</string>
@@ -3451,7 +3444,6 @@ Language: zh_CN
     <string name="site_settings_discussion_hint">查看并更改您的站点讨论设置</string>
     <string name="site_settings_more_hint">查看所有可用的讨论设置</string>
     <string name="site_settings_related_posts_hint">在阅读器中显示或隐藏相关文章</string>
-    <string name="site_settings_image_width_hint">将文章中的图片大小调整至此宽度</string>
     <string name="site_settings_format_hint">设置新的文章格式</string>
     <string name="site_settings_category_hint">设置新的文章类别</string>
     <string name="site_settings_password_hint">更改您的密码</string>

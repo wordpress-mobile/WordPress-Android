@@ -8,17 +8,9 @@
 
     <!-- Preference keys -->
     <string name="pref_key_account_settings_root" translatable="false">wp_pref_root</string>
-    <string name="pref_key_app_settings_root" translatable="false">wp_pref_root</string>
-    <string name="pref_key_privacy_settings" translatable="false">wp_pref_privacy_settings</string>
     <string name="pref_key_send_usage" translatable="false">wp_pref_send_usage_stats</string>
     <string name="pref_key_send_crash" translatable="false">wp_pref_send_crash_stats</string>
-    <string name="pref_key_device_settings" translatable="false">wp_pref_device_settings</string>
-    <string name="pref_key_experimental_section" translatable="false">wp_pref_app_experimental_section</string>
-    <string name="pref_key_language" translatable="false">wp_pref_language</string>
     <string name="pref_key_app_theme" translatable="false">wp_pref_app_theme</string>
-    <string name="pref_key_whats_new" translatable="false">wp_pref_whats_new</string>
-    <string name="pref_key_experimental_features" translatable="false">wp_pref_experimental_features</string>
-    <string name="pref_key_debug_settings" translatable="false">wp_pref_debug_settings</string>
     <string name="pref_key_taxonomies" translatable="false">wp_pref_taxonomies</string>
     <string name="pref_notification_blogs" translatable="false">wp_pref_notification_blogs</string>
     <string name="pref_notification_blogs_followed" translatable="false">pref_notification_blogs_followed</string>
@@ -50,18 +42,10 @@
     <string name="pref_key_site_posts_per_page" translatable="false">wp_pref_site_post_per_page</string>
     <string name="pref_key_site_amp" translatable="false">wp_pref_site_amp</string>
     <string name="pref_key_site_traffic" translatable="false">wp_pref_site_traffic</string>
-    <string name="pref_key_optimize_media" translatable="false">wp_pref_optimize_media</string>
-    <string name="pref_key_optimize_image" translatable="false">wp_pref_key_optimize_image</string>
-    <string name="pref_key_strip_image_location" translatable="false">wp_pref_key_strip_image_location</string>
-    <string name="pref_key_site_image_width" translatable="false">wp_pref_site_default_image_width</string>
-    <string name="pref_key_site_image_quality" translatable="false">wp_pref_site_default_image_quality</string>
-    <string name="pref_key_optimize_video" translatable="false">wp_pref_key_optimize_video</string>
     <string name="pref_key_gutenberg_default_for_new_posts" translatable="false">wp_pref_key_gutenberg_default_for_new_posts</string>
     <string name="pref_key_use_theme_styles" translatable="false">wp_pref_key_use_theme_styles</string>
     <string name="pref_key_use_third_party_blocks" translatable="false">wp_pref_key_use_third_party_blocks</string>
     <string name="pref_key_gutenberg_kit_enabled" translatable="false">wp_pref_key_gutenberg_kit_enabled</string>
-    <string name="pref_key_site_video_width" translatable="false">wp_pref_site_default_video_width</string>
-    <string name="pref_key_site_video_encoder_bitrate" translatable="false">wp_pref_site_default_encoder_bitrate</string>
     <string name="pref_key_site_discussion" translatable="false">wp_pref_site_discussion</string>
     <string name="pref_key_site_allow_comments" translatable="false">wp_pref_site_allow_comments</string>
     <string name="pref_key_site_allow_comments_nested" translatable="false">wp_pref_site_allow_comments_nested</string>
@@ -136,7 +120,6 @@
     <string name="pref_key_jetpack_learn_more" translatable="false">wp_pref_jetpack_learn_more</string>
 
     <!-- Open web links with Jetpack -->
-    <string name="pref_key_open_web_links_with_jetpack" translatable="false">pref_key_open_web_links_with_jetpack</string>
 
     <string name="wp_pref_notifications_root" translatable="false">wp_pref_notifications_root</string>
     <string name="wp_pref_notifications_main" translatable="false">wp_pref_notifications_master</string>
