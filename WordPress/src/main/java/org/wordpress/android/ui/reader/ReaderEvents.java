@@ -1,14 +1,11 @@
 package org.wordpress.android.ui.reader;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.util.StringUtils;
 
 /**
@@ -96,104 +93,6 @@ public class ReaderEvents {
 
         public boolean didSucceed() {
             return mDidSucceed;
-        }
-    }
-
-    public static class UpdatePostsStarted {
-        private final ReaderTag mReaderTag;
-        private final ReaderPostServiceStarter.UpdateAction mAction;
-
-        public UpdatePostsStarted(ReaderPostServiceStarter.UpdateAction action, final ReaderTag readerTag) {
-            mAction = action;
-            mReaderTag = readerTag;
-        }
-
-        public UpdatePostsStarted(ReaderPostServiceStarter.UpdateAction action) {
-            mAction = action;
-            mReaderTag = null;
-        }
-
-        public ReaderPostServiceStarter.UpdateAction getAction() {
-            return mAction;
-        }
-
-        public @Nullable ReaderTag getReaderTag() {
-            return mReaderTag;
-        }
-    }
-
-    public static class UpdatePostsEnded {
-        private final ReaderTag mReaderTag;
-        private final ReaderActions.UpdateResult mResult;
-        private final ReaderPostServiceStarter.UpdateAction mAction;
-
-        public UpdatePostsEnded(ReaderActions.UpdateResult result,
-                                ReaderPostServiceStarter.UpdateAction action) {
-            mResult = result;
-            mAction = action;
-            mReaderTag = null;
-        }
-
-        public UpdatePostsEnded(ReaderTag readerTag,
-                                ReaderActions.UpdateResult result,
-                                ReaderPostServiceStarter.UpdateAction action) {
-            mReaderTag = readerTag;
-            mResult = result;
-            mAction = action;
-        }
-
-        public ReaderTag getReaderTag() {
-            return mReaderTag;
-        }
-
-        public ReaderActions.UpdateResult getResult() {
-            return mResult;
-        }
-
-        public ReaderPostServiceStarter.UpdateAction getAction() {
-            return mAction;
-        }
-    }
-
-    public static class SearchPostsStarted {
-        private final String mQuery;
-        private final int mOffset;
-
-        public SearchPostsStarted(@NonNull String query, int offset) {
-            mQuery = query;
-            mOffset = offset;
-        }
-
-        public String getQuery() {
-            return mQuery;
-        }
-
-        public int getOffset() {
-            return mOffset;
-        }
-    }
-
-    public static class SearchPostsEnded {
-        private final String mQuery;
-        private final boolean mDidSucceed;
-        private final int mOffset;
-
-        public SearchPostsEnded(@NonNull String query, int offset, boolean didSucceed) {
-            mQuery = query;
-            mOffset = offset;
-            mDidSucceed = didSucceed;
-        }
-
-        public boolean didSucceed() {
-            return mDidSucceed;
-        }
-
-        public String getQuery() {
-            return mQuery;
-        }
-
-        public int getOffset() {
-            return mOffset;
         }
     }
 

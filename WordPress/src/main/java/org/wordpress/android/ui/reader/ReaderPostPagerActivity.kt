@@ -16,8 +16,10 @@ import androidx.core.os.BundleCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
@@ -59,8 +61,6 @@ import org.wordpress.android.ui.posts.EditorLauncher
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderEvents.DoSignIn
 import org.wordpress.android.ui.reader.ReaderEvents.PostSlugsRequestCompleted
-import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsEnded
-import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsStarted
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment.Companion.newInstance
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.actions.ReaderActions
@@ -68,7 +68,10 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.OnRequestListener
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
+import org.wordpress.android.ui.reader.repository.ReaderPostListEvent
+import org.wordpress.android.ui.reader.repository.ReaderPostListTarget
+import org.wordpress.android.ui.reader.repository.ReaderPostUpdater
+import org.wordpress.android.ui.reader.repository.UpdateAction
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
 import org.wordpress.android.ui.reader.usecases.ReaderGetReadingPreferencesSyncUseCase
@@ -206,6 +209,9 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var getReadingPreferencesSyncUseCase: ReaderGetReadingPreferencesSyncUseCase
 
+    @Inject
+    lateinit var readerPostUpdater: ReaderPostUpdater
+
     @Suppress("LongMethod")
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -221,6 +227,18 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         viewPager.offscreenPageLimit = OFFSCREEN_PAGE_LIMIT
 
         progressBar = findViewById(R.id.progress_loading)
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                readerPostUpdater.events.collect { event ->
+                    when (event) {
+                        is ReaderPostListEvent.UpdateStarted -> onUpdatePostsStarted()
+                        is ReaderPostListEvent.UpdateEnded -> onUpdatePostsEnded(event)
+                        else -> Unit
+                    }
+                }
+            }
+        }
 
         if (savedInstanceState != null) {
             isFeed = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_FEED)
@@ -938,17 +956,13 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         AppLog.d(AppLog.T.READER, "reader pager > requesting older posts")
         when (postListType) {
             ReaderPostListType.TAG_PREVIEW,
-            ReaderPostListType.TAG_FOLLOWED ->
-                ReaderPostServiceStarter.startServiceForTag(
-                    this,
-                    currentTag,
-                    ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
-                )
+            ReaderPostListType.TAG_FOLLOWED -> currentTag?.let {
+                readerPostUpdater.updatePosts(ReaderPostListTarget.Tag(it), UpdateAction.REQUEST_OLDER)
+            }
 
-            ReaderPostListType.BLOG_PREVIEW -> ReaderPostServiceStarter.startServiceForBlog(
-                this,
-                blogId,
-                ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
+            ReaderPostListType.BLOG_PREVIEW -> readerPostUpdater.updatePosts(
+                ReaderPostListTarget.Blog(blogId),
+                UpdateAction.REQUEST_OLDER
             )
 
             ReaderPostListType.SEARCH_RESULTS -> {}
@@ -959,9 +973,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMainThread(event: UpdatePostsStarted?) {
+    private fun onUpdatePostsStarted() {
         if (isFinishing) {
             return
         }
@@ -970,8 +982,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         progressBar!!.visibility = View.VISIBLE
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMainThread(event: UpdatePostsEnded) {
+    private fun onUpdatePostsEnded(event: ReaderPostListEvent.UpdateEnded) {
         if (isFinishing) {
             return
         }

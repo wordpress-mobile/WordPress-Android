@@ -28,7 +28,6 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListene
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.usecases.ParseDiscoverCardsJsonUseCase
 import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
 import org.wordpress.android.ui.reader.sources.ReaderPostLocalSource
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.AppLog
@@ -67,13 +66,13 @@ class ReaderPostRepository @Inject constructor(
                     cont.resume(posts)
                 }
             }
-            requestPostsWithTag(tag, ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER, resultListener)
+            requestPostsWithTag(tag, UpdateAction.REQUEST_NEWER, resultListener)
         }
     }
 
     fun requestPostsWithTag(
         tag: ReaderTag,
-        updateAction: ReaderPostServiceStarter.UpdateAction,
+        updateAction: UpdateAction,
         resultListener: UpdateResultListener
     ) {
         if (routeDiscoverSubTab(tag, updateAction, resultListener)) return
@@ -91,18 +90,18 @@ class ReaderPostRepository @Inject constructor(
         sb.append("&order=DESC")
 
         val beforeDate: String? = when (updateAction) {
-            ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER -> {
+            UpdateAction.REQUEST_OLDER -> {
                 // request posts older than the oldest existing post with this tag
                 ReaderPostTable.getOldestDateWithTag(tag)
             }
 
-            ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER_THAN_GAP -> {
+            UpdateAction.REQUEST_OLDER_THAN_GAP -> {
                 // request posts older than the post with the gap marker for this tag
                 ReaderPostTable.getGapMarkerDateForTag(tag)
             }
 
-            ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER,
-            ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH -> null
+            UpdateAction.REQUEST_NEWER,
+            UpdateAction.REQUEST_REFRESH -> null
         }
 
         if (!beforeDate.isNullOrBlank()) {
@@ -113,8 +112,8 @@ class ReaderPostRepository @Inject constructor(
 
         val listener = RestRequest.Listener { jsonObject: JSONObject? ->
             // remember when this tag was updated if newer posts were requested
-            if (updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER ||
-                updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH
+            if (updateAction == UpdateAction.REQUEST_NEWER ||
+                updateAction == UpdateAction.REQUEST_REFRESH
             ) {
                 applicationScope.launch(ioDispatcher) { ReaderTagTable.setTagLastUpdated(tag) }
             }
@@ -131,13 +130,13 @@ class ReaderPostRepository @Inject constructor(
 
     fun requestPostsForBlog(
         blogId: Long,
-        updateAction: ReaderPostServiceStarter.UpdateAction,
+        updateAction: UpdateAction,
         resultListener: UpdateResultListener
     ) {
         var path = "read/sites/$blogId/posts/?meta=site,likes"
 
         // append the date of the oldest cached post in this blog when requesting older posts
-        if (updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER) {
+        if (updateAction == UpdateAction.REQUEST_OLDER) {
             val dateOldest = ReaderPostTable.getOldestPubDateInBlog(blogId)
             if (!dateOldest.isNullOrBlank()) {
                 path += "&before=" + UrlUtils.urlEncode(dateOldest)
@@ -156,11 +155,11 @@ class ReaderPostRepository @Inject constructor(
 
     fun requestPostsForFeed(
         feedId: Long,
-        updateAction: ReaderPostServiceStarter.UpdateAction,
+        updateAction: UpdateAction,
         resultListener: UpdateResultListener
     ) {
         var path = "read/feed/$feedId/posts/?meta=site,likes"
-        if (updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER) {
+        if (updateAction == UpdateAction.REQUEST_OLDER) {
             val dateOldest = ReaderPostTable.getOldestPubDateInFeed(feedId)
             if (!dateOldest.isNullOrBlank()) {
                 path += "&before=" + UrlUtils.urlEncode(dateOldest)
@@ -178,6 +177,36 @@ class ReaderPostRepository @Inject constructor(
     }
 
     /**
+     * Searches WordPress.com for posts matching the passed query, saves the results under the
+     * query's search tag and returns whether the search succeeded
+     */
+    suspend fun searchPosts(query: String, offset: Int): Boolean {
+        val path = "read/search?q=" + UrlUtils.urlEncode(query) +
+                "&number=" + ReaderConstants.READER_MAX_SEARCH_RESULTS_TO_REQUEST +
+                "&offset=" + offset +
+                "&meta=site,likes" +
+                "&lang=" + perAppLocaleManager.getCurrentLocaleLanguageCode()
+
+        AppLog.d(AppLog.T.READER, "reader search > starting search for $query")
+        val jsonObject = suspendCancellableCoroutine<JSONObject?> { cont ->
+            val listener = RestRequest.Listener { json: JSONObject? ->
+                if (cont.isActive) cont.resume(json)
+            }
+            val errorListener = RestRequest.ErrorListener { volleyError ->
+                AppLog.e(AppLog.T.READER, volleyError)
+                if (cont.isActive) cont.resume(null)
+            }
+            getRestClientUtilsV1_2().get(path, null, null, listener, errorListener)
+        } ?: return false
+
+        withContext(ioDispatcher) {
+            val serverPosts = ReaderPostList.fromJson(jsonObject)
+            ReaderPostTable.addOrUpdatePosts(ReaderUtils.getTagForSearchQuery(query), serverPosts)
+        }
+        return true
+    }
+
+    /**
      * called after requesting posts with a specific tag or in a specific blog/feed
      *
      * @param requestedFeedId If provided, ensures all posts have this feedId set. This is needed
@@ -187,7 +216,7 @@ class ReaderPostRepository @Inject constructor(
     private fun handleUpdatePostsResponse(
         tag: ReaderTag?,
         jsonObject: JSONObject?,
-        updateAction: ReaderPostServiceStarter.UpdateAction,
+        updateAction: UpdateAction,
         resultListener: UpdateResultListener,
         requestedFeedId: Long? = null
     ) {
@@ -223,7 +252,7 @@ class ReaderPostRepository @Inject constructor(
      */
     private fun routeDiscoverSubTab(
         tag: ReaderTag,
-        updateAction: ReaderPostServiceStarter.UpdateAction,
+        updateAction: UpdateAction,
         resultListener: UpdateResultListener,
     ): Boolean {
         if (tag.tagType != ReaderTagType.DEFAULT) return false
@@ -251,7 +280,7 @@ class ReaderPostRepository @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     private fun requestPostsForDiscoverStream(
         tag: ReaderTag,
-        updateAction: ReaderPostServiceStarter.UpdateAction,
+        updateAction: UpdateAction,
         resultListener: UpdateResultListener
     ) {
         applicationScope.launch(ioDispatcher) {
@@ -264,9 +293,9 @@ class ReaderPostRepository @Inject constructor(
                 // the cursor-based streams endpoint has no equivalent to ReaderPostTable's
                 // gap markers, so starting fresh is the safest recovery path.
                 val isFirstPage =
-                    updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER ||
-                        updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH ||
-                        updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER_THAN_GAP
+                    updateAction == UpdateAction.REQUEST_NEWER ||
+                        updateAction == UpdateAction.REQUEST_REFRESH ||
+                        updateAction == UpdateAction.REQUEST_OLDER_THAN_GAP
 
                 if (isFirstPage) {
                     // Clear the stored cursor so the next "load more" starts from the new first
@@ -324,7 +353,7 @@ class ReaderPostRepository @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     private fun requestPostsForLatestStream(
         tag: ReaderTag,
-        updateAction: ReaderPostServiceStarter.UpdateAction,
+        updateAction: UpdateAction,
         resultListener: UpdateResultListener
     ) {
         applicationScope.launch(ioDispatcher) {
@@ -337,9 +366,9 @@ class ReaderPostRepository @Inject constructor(
                 params["number"] = ReaderConstants.READER_MAX_POSTS_TO_REQUEST.toString()
 
                 val beforeDate = when (updateAction) {
-                    ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER ->
+                    UpdateAction.REQUEST_OLDER ->
                         ReaderPostTable.getOldestDateWithTag(tag)
-                    ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER_THAN_GAP ->
+                    UpdateAction.REQUEST_OLDER_THAN_GAP ->
                         ReaderPostTable.getGapMarkerDateForTag(tag)
                     else -> null
                 }
@@ -349,8 +378,8 @@ class ReaderPostRepository @Inject constructor(
                 params["_locale"] = perAppLocaleManager.getCurrentLocaleLanguageCode()
 
                 val listener = RestRequest.Listener { jsonObject: JSONObject? ->
-                    if (updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER ||
-                        updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH
+                    if (updateAction == UpdateAction.REQUEST_NEWER ||
+                        updateAction == UpdateAction.REQUEST_REFRESH
                     ) {
                         applicationScope.launch(ioDispatcher) { ReaderTagTable.setTagLastUpdated(tag) }
                     }
@@ -386,7 +415,7 @@ class ReaderPostRepository @Inject constructor(
     private fun handleDiscoverStreamResponse(
         tag: ReaderTag,
         jsonObject: JSONObject?,
-        updateAction: ReaderPostServiceStarter.UpdateAction,
+        updateAction: UpdateAction,
         resultListener: UpdateResultListener
     ) {
         if (jsonObject == null) {
@@ -398,8 +427,8 @@ class ReaderPostRepository @Inject constructor(
 
             // Remember when the tag was last updated for first-page requests, matching the
             // behavior of the regular tag-based flow in requestPostsWithTag.
-            if (updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER ||
-                updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH
+            if (updateAction == UpdateAction.REQUEST_NEWER ||
+                updateAction == UpdateAction.REQUEST_REFRESH
             ) {
                 ReaderTagTable.setTagLastUpdated(tag)
             }
@@ -445,12 +474,12 @@ class ReaderPostRepository @Inject constructor(
     private fun stampServerOrderOnPosts(
         serverPosts: ReaderPostList,
         tag: ReaderTag,
-        updateAction: ReaderPostServiceStarter.UpdateAction,
+        updateAction: UpdateAction,
     ) {
         if (serverPosts.isEmpty()) return
         val nowSeconds = System.currentTimeMillis() / MILLIS_PER_SECOND
         val baseTimestampSeconds: Long =
-            if (updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER) {
+            if (updateAction == UpdateAction.REQUEST_OLDER) {
                 // Read the raw date_tagged column rather than SELECT datetime(date_tagged),
                 // since SQLite's datetime() returns a normalized "YYYY-MM-DD HH:MM:SS" string
                 // that DateTimeUtils can't parse back to a Date.

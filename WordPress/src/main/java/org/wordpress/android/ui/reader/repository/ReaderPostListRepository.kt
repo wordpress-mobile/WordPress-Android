@@ -5,6 +5,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.onFailure
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
@@ -25,9 +26,6 @@ import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult
 import org.wordpress.android.ui.reader.actions.ReaderTagActions
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction
-import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
 import org.wordpress.android.ui.reader.utils.ReaderUtils
@@ -40,17 +38,18 @@ import javax.inject.Named
 import kotlin.coroutines.resume
 
 /**
- * Data access for the Reader post list. Reads run on the IO dispatcher, and the EventBus events the
- * Reader services post are exposed as a single [Flow].
+ * Data access for the Reader post list. Reads run on the IO dispatcher, and post updates plus the
+ * EventBus events the Reader update service posts are exposed as a single [Flow].
  */
 class ReaderPostListRepository @Inject constructor(
     private val contextProvider: ContextProvider,
     private val eventBusWrapper: EventBusWrapper,
+    private val readerPostUpdater: ReaderPostUpdater,
     private val accountStore: AccountStore,
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) {
-    val events: Flow<ReaderPostListEvent> = callbackFlow {
+    private val eventBusEvents: Flow<ReaderPostListEvent> = callbackFlow {
         val subscriber = EventSubscriber { event ->
             trySend(event).onFailure {
                 AppLog.w(AppLog.T.READER, "reader post list > failed to deliver $event")
@@ -59,6 +58,8 @@ class ReaderPostListRepository @Inject constructor(
         eventBusWrapper.register(subscriber)
         awaitClose { eventBusWrapper.unregister(subscriber) }
     }
+
+    val events: Flow<ReaderPostListEvent> = merge(readerPostUpdater.events, eventBusEvents)
 
     suspend fun getPosts(target: ReaderPostListTarget): ReaderPostList = withContext(ioDispatcher) {
         when (target) {
@@ -135,18 +136,10 @@ class ReaderPostListRepository @Inject constructor(
         ReaderBlogTable.isTimeToUpdateBlogInfo(blog)
     }
 
-    fun requestPosts(target: ReaderPostListTarget, action: UpdateAction) {
-        val context = contextProvider.getContext()
-        when (target) {
-            is ReaderPostListTarget.Tag -> ReaderPostServiceStarter.startServiceForTag(context, target.tag, action)
-            is ReaderPostListTarget.Blog -> ReaderPostServiceStarter.startServiceForBlog(context, target.blogId, action)
-            is ReaderPostListTarget.Feed -> ReaderPostServiceStarter.startServiceForFeed(context, target.feedId, action)
-        }
-    }
+    fun requestPosts(target: ReaderPostListTarget, action: UpdateAction) =
+        readerPostUpdater.updatePosts(target, action)
 
-    fun searchPosts(query: String, offset: Int) {
-        ReaderSearchServiceStarter.startService(contextProvider.getContext(), query, offset)
-    }
+    fun searchPosts(query: String, offset: Int) = readerPostUpdater.searchPosts(query, offset)
 
     /**
      * Updates followed tags and blogs, since following some sites (like P2s) changes both
@@ -179,26 +172,6 @@ class ReaderPostListRepository @Inject constructor(
 
     // EventBus invokes subscriber methods reflectively, so this class has to stay public
     class EventSubscriber(private val onEvent: (ReaderPostListEvent) -> Unit) {
-        @Subscribe(threadMode = ThreadMode.MAIN)
-        fun onEvent(event: ReaderEvents.UpdatePostsStarted) {
-            onEvent(ReaderPostListEvent.UpdateStarted(event.readerTag, event.action))
-        }
-
-        @Subscribe(threadMode = ThreadMode.MAIN)
-        fun onEvent(event: ReaderEvents.UpdatePostsEnded) {
-            onEvent(ReaderPostListEvent.UpdateEnded(event.readerTag, event.action, event.result))
-        }
-
-        @Subscribe(threadMode = ThreadMode.MAIN)
-        fun onEvent(event: ReaderEvents.SearchPostsStarted) {
-            onEvent(ReaderPostListEvent.SearchStarted(event.query, event.offset))
-        }
-
-        @Subscribe(threadMode = ThreadMode.MAIN)
-        fun onEvent(event: ReaderEvents.SearchPostsEnded) {
-            onEvent(ReaderPostListEvent.SearchEnded(event.query, event.offset, event.didSucceed()))
-        }
-
         @Subscribe(threadMode = ThreadMode.MAIN)
         fun onEvent(event: ReaderEvents.FollowedTagsFetched) {
             onEvent(ReaderPostListEvent.FollowedTagsFetched(event.didChange()))

@@ -49,7 +49,7 @@ import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderPostListEvent
 import org.wordpress.android.ui.reader.repository.ReaderPostListRepository
 import org.wordpress.android.ui.reader.repository.ReaderPostListTarget
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction
+import org.wordpress.android.ui.reader.repository.UpdateAction
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase.FetchSiteState

@@ -53,7 +53,7 @@ import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderPostListEvent
 import org.wordpress.android.ui.reader.repository.ReaderPostListRepository
 import org.wordpress.android.ui.reader.repository.ReaderPostListTarget
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction
+import org.wordpress.android.ui.reader.repository.UpdateAction
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.tracker.ReaderTab
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -577,7 +577,7 @@ class ReaderPostListViewModel @Inject constructor(
      */
     fun onSearchSubmitted(query: String) {
         resetSearch(query)
-        // show the search as running until the service reports back, so "no results" doesn't flash first
+        // show the search as running until the search reports back, so "no results" doesn't flash first
         setIsUpdating(true, searchAction(0))
         searchJob = launch {
             // search results are ephemeral, so each search starts from scratch
