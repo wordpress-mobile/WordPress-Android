@@ -151,10 +151,8 @@ public class OkHttpStack extends BaseHttpStack {
     static boolean hasDotSegment(@NonNull String url) {
         // OkHttp trims leading and trailing whitespace before parsing
         Matcher matcher = URL_PATH.matcher(url.trim());
-        if (!matcher.lookingAt()) {
-            return false;
-        }
-        return DOT_SEGMENT.matcher(IGNORED_PATH_CHARS.matcher(matcher.group(1)).replaceAll("")).find();
+        return matcher.lookingAt()
+               && DOT_SEGMENT.matcher(IGNORED_PATH_CHARS.matcher(matcher.group(1)).replaceAll("")).find();
     }
 
     private List<Header> mapHeaders(Headers responseHeaders) {
