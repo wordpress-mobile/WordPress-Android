@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-12 07:06:24+0000
+Translation-Revision-Date: 2026-10-25 20:51:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.1.0
 Language: ja_JP
@@ -348,6 +348,7 @@ Language: ja_JP
     <string name="support_screen_diagnostics_section_title">診断</string>
     <string name="support_screen_help_center_description">導入に役立つドキュメントとチュートリアル</string>
     <string name="support_screen_help_center_title">ヘルプセンター</string>
+    <string name="support_screen_how_can_we_help_title">どのようなサポートをお求めですか ?</string>
     <string name="support_screen_login_button">WordPress.com にログイン</string>
     <string name="support_screen_title">サポート</string>
     <string name="modern_support_description">新しいモダンサポート体験を有効にする</string>
@@ -646,9 +647,6 @@ Language: ja_JP
     <string name="notifications_action_mark_all_as_read">すべてを既読にする</string>
     <string name="notifications_unread_content_description">未読</string>
     <string name="qrcode_media_deeplink_error">サイトが見つかりません。 正しいアカウントにログインしていることを確認してください。</string>
-    <string name="gravatar_info_learn_more_link">Gravatar とは</string>
-    <string name="gravatar_info_description">自分のアバター、名前、概要情報をこちらで更新すると、Gravatar プロフィールを使用するすべてのサイトにも更新が反映されます。</string>
-    <string name="gravatar_info_title">WordPress.com のプロフィールでは Gravatar を活用できます</string>
     <string name="error_media_could_not_share_media_from_device">シェアするメディアを読み込めませんでした。 アプリの権限を確認するか\n        アプリのメディアライブラリをお使いください。</string>
     <string name="site_monitoring_cannot_be_started">現在、サイトのモニタリングを開けません。 後でもう一度お試しください</string>
     <string name="site_monitoring_tab_title_web_server_logs">Web サーバーログ</string>
@@ -658,7 +656,6 @@ Language: ja_JP
     <string name="reader_empty_followed_blogs_button_subscriptions">サブスクリプションに移動</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">購読しているブログには、最近の投稿はありません</string>
     <string name="reader_no_followed_blogs_description_subs">「ディスカバー」でブログを購読するか、すでに気に入っているブログを検索します。</string>
-    <string name="reader_no_recommended_blogs_title">おすすめのブログはありません</string>
     <string name="reader_no_posts_with_this_tag">このタグを使った投稿はありません</string>
     <string name="reader_toast_err_unable_to_block_blog">このブログをブロックできませんでした</string>
     <string name="reader_toast_posts_from_this_blog_blocked">このブログからの投稿は今後表示されません</string>
@@ -666,7 +663,6 @@ Language: ja_JP
     <string name="reader_toast_err_follow_not_authorized_to_access_blog">このブログにアクセスする権限がありません</string>
     <string name="reader_toast_err_unable_to_follow_blog">このブログを購読できません</string>
     <string name="reader_toast_err_already_follow_this_blog">このブログをすでに購読済みです</string>
-    <string name="reader_toast_err_show_blog">このブログを表示できません</string>
     <string name="reader_label_choose_interests">関心のあるものを選択</string>
     <string name="reader_label_subscribers_count_single">1人の購読者</string>
     <string name="reader_label_subscribers_count">%s人の購読者</string>
@@ -727,6 +723,7 @@ Language: ja_JP
     <string name="bloganuary_dashboard_nudge_overlay_text_two">回答を公開します。</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_one">毎日インスピレーションを与える新しいプロンプトを受け取ることができます。</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">1か月間のライティングチャレンジにご参加ください</string>
+    <string name="bloganuary_dashboard_nudge_text">1月のブログ作成プロンプトは、新年にブログ投稿を習慣付けるためのコミュニティ課題「Bloganuary」から提示されます。</string>
     <string name="bloganuary_dashboard_nudge_title_december">まもなく Bloganuary が登場します !</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">このため、Web ブラウザーでブロックを編集することをお勧めします。</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">このため、Web エディターでブロックを編集することをお勧めします。</string>

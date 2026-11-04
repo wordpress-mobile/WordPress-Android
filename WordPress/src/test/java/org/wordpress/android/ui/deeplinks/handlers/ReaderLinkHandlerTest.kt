@@ -403,6 +403,32 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
     }
 
     @Test
+    fun `wordpress com tag with non-letter unicode slug opens tag in reader`() {
+        listOf("✨", "ハリー・ポッター", "می\u200Cخواهم").forEach {
+            val uri = buildUri("wordpress.com", "tag", it)
+
+            val navigateAction = readerLinkHandler.buildNavigateAction(uri)
+
+            assertThat(navigateAction).isEqualTo(OpenTagInReader(it))
+        }
+    }
+
+    @Test
+    fun `wordpress com tag with invalid slug opens reader`() {
+        listOf(
+            "some/tag.name?x=1#z",
+            "../../me?x=1#",
+            "..%2F..%2Fme%3Fx%3D1%23"
+        ).forEach {
+            val uri = buildUri("wordpress.com", "tag", it)
+
+            val navigateAction = readerLinkHandler.buildNavigateAction(uri)
+
+            assertThat(navigateAction).isEqualTo(OpenReader)
+        }
+    }
+
+    @Test
     fun `correctly strips wordpress com tag URI`() {
         val uri = buildUri("wordpress.com", "tag", tagSlug)
 

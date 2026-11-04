@@ -4,9 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
@@ -14,7 +12,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
-import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -28,6 +25,7 @@ import org.wordpress.android.ui.newstats.repository.PeriodStatsResult
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.ViewsDataPoint
+import org.wordpress.android.ui.newstats.util.StatsDateUnitTest
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.LocalDate
 
@@ -38,8 +36,7 @@ import java.time.LocalDate
  * those would inflate its event.
  */
 @ExperimentalCoroutinesApi
-@RunWith(MockitoJUnitRunner.Silent::class)
-class ViewsStatsViewModelTrackingTest : BaseUnitTest() {
+class ViewsStatsViewModelTrackingTest : StatsDateUnitTest() {
     @Mock
     private lateinit var selectedSiteRepository: SelectedSiteRepository
 
@@ -70,6 +67,10 @@ class ViewsStatsViewModelTrackingTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(testSite)
         whenever(accountStore.accessToken).thenReturn("test_access_token")
         whenever(resourceProvider.getString(any())).thenReturn("")
+        // The selector's date line resolves a preset's window through the repository. These tests
+        // assert what is tracked, not that line, so one fixed window stands in for every period.
+        whenever(statsRepository.periodWindow(any()))
+            .thenReturn(LocalDate.of(2024, 1, 14) to LocalDate.of(2024, 1, 20))
     }
 
     // region Date range

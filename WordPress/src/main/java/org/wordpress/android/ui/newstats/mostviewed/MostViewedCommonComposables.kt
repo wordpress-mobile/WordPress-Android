@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -155,6 +156,10 @@ internal fun MostViewedExpandChevron(expanded: Boolean) {
 /**
  * Indented, animated list of child rows shown when a Most Viewed group is expanded.
  * Shared by the card and the detail screen; only the [startPadding] indent differs.
+ *
+ * A child carrying children of its own is itself expandable, indenting them by [startPadding]
+ * again. Only the archives card goes that deep -- the terms of one custom taxonomy, under that
+ * taxonomy -- so for every other source this renders exactly the one level it always has.
  */
 @Composable
 internal fun MostViewedExpandableChildren(
@@ -173,7 +178,16 @@ internal fun MostViewedExpandableChildren(
                 val childPercentage = if (maxChildViews > 0) {
                     child.views.toFloat() / maxChildViews.toFloat()
                 } else 0f
-                MostViewedChildRow(child = child, percentage = childPercentage, onUrlClick = onUrlClick)
+                // Keyed by name so an expanded child keeps its state across recomposition and
+                // rotation, and doesn't hand it to whatever row later takes its position.
+                key(child.name) {
+                    MostViewedChildRow(
+                        child = child,
+                        percentage = childPercentage,
+                        startPadding = startPadding,
+                        onUrlClick = onUrlClick
+                    )
+                }
             }
         }
     }
@@ -183,37 +197,56 @@ internal fun MostViewedExpandableChildren(
 private fun MostViewedChildRow(
     child: MostViewedChildItem,
     percentage: Float,
+    startPadding: Dp,
     onUrlClick: (String) -> Unit
 ) {
-    val url = child.url
-    val isClickable = !url.isNullOrBlank()
-    val clickModifier = if (isClickable) Modifier.clickable { onUrlClick(url) } else Modifier
+    val hasChildren = child.children.isNotEmpty()
+    // A row that expands doesn't also open a link, matching how a group row behaves.
+    val linkUrl = child.url?.takeIf { it.isNotBlank() && !hasChildren }
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    val clickModifier = when {
+        hasChildren -> Modifier.clickable { expanded = !expanded }
+        linkUrl != null -> Modifier.clickable { onUrlClick(linkUrl) }
+        else -> Modifier
+    }
 
-    StatsListRowContainer(percentage = percentage, modifier = clickModifier) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 10.dp, horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = child.name,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = formatStatValue(child.views),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            if (isClickable) {
-                Spacer(modifier = Modifier.width(4.dp))
-                StatsOpenLinkIcon()
+    Column {
+        StatsListRowContainer(percentage = percentage, modifier = clickModifier) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp, horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = child.name,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = formatStatValue(child.views),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                if (hasChildren) {
+                    Spacer(modifier = Modifier.width(4.dp))
+                    MostViewedExpandChevron(expanded = expanded)
+                } else if (linkUrl != null) {
+                    Spacer(modifier = Modifier.width(4.dp))
+                    StatsOpenLinkIcon()
+                }
             }
         }
+
+        MostViewedExpandableChildren(
+            children = child.children,
+            expanded = expanded,
+            startPadding = startPadding,
+            onUrlClick = onUrlClick
+        )
     }
 }

@@ -10,14 +10,15 @@ import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.repository.SubscribersGraphResult
 import org.wordpress.android.ui.newstats.subscribers.BaseSubscribersCardViewModel
+import org.wordpress.android.ui.newstats.util.StatsDateSkeleton
 import org.wordpress.android.ui.newstats.util.formatCustomDateRange
+import org.wordpress.android.ui.newstats.util.statsDateFormatter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.DateTimeException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -124,17 +125,14 @@ class SubscribersGraphViewModel @Inject constructor(
         tab: SubscribersGraphTab
     ): String {
         val start = point.start ?: return point.raw
-        val pattern = when (tab) {
+        return when (tab) {
             SubscribersGraphTab.DAYS,
-            SubscribersGraphTab.WEEKS -> DAY_PATTERN
-            SubscribersGraphTab.MONTHS -> MONTH_PATTERN
-            SubscribersGraphTab.YEARS -> YEAR_PATTERN
+            SubscribersGraphTab.WEEKS -> start.format(statsDateFormatter(StatsDateSkeleton.DAY_MONTH))
+            SubscribersGraphTab.MONTHS -> start.format(statsDateFormatter(StatsDateSkeleton.MONTH))
+            // A bare four-digit year reads the same everywhere; the localized form ("2026年") would
+            // only cost axis width.
+            SubscribersGraphTab.YEARS -> start.year.toString()
         }
-        return start.format(
-            DateTimeFormatter.ofPattern(
-                pattern, Locale.getDefault()
-            )
-        )
     }
 
     /**
@@ -203,10 +201,6 @@ class SubscribersGraphViewModel @Inject constructor(
     }
 
     companion object {
-        private const val DAY_PATTERN = "MMM d"
-        private const val MONTH_PATTERN = "MMM"
-        private const val YEAR_PATTERN = "yyyy"
-
         private const val FIRST_MONTH = 1
         private const val FIRST_DAY = 1
         private const val DAYS_IN_WEEK = 7L

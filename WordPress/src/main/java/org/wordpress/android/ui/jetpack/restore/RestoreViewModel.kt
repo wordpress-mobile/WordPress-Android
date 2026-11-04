@@ -502,7 +502,6 @@ class RestoreViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         wizardManager.navigatorLiveData.removeObserver(wizardObserver)
     }
 

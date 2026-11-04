@@ -88,7 +88,6 @@ class SiteCreationProgressViewModel @Inject constructor(
     val onCartCreated: LiveData<CheckoutDetails> = _onCartCreated
 
     override fun onCleared() {
-        super.onCleared()
         loadingAnimationJob?.cancel()
     }
 

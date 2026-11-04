@@ -167,6 +167,21 @@ interface StatsDataSource {
     ): FileDownloadsDataResult
 
     /**
+     * Fetches archive stats for a specific site: the views a site's archive pages (categories,
+     * tags, author and search result pages, and any custom taxonomy) received.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param dateRange The date range parameters for the query
+     * @param max Maximum number of items to return
+     * @return Result containing the archive data or an error
+     */
+    suspend fun fetchArchives(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int = 10
+    ): ArchivesDataResult
+
+    /**
      * Fetches device screen size stats for a specific site.
      *
      * @param siteId The WordPress.com site ID
@@ -658,6 +673,61 @@ data class FileDownloadDataItem(
 )
 
 /**
+ * Result wrapper for archive stats fetch operation.
+ */
+sealed class ArchivesDataResult {
+    data class Success(
+        val sections: List<ArchiveSectionDataItem>
+    ) : ArchivesDataResult()
+    data class Error(
+        val errorType: StatsErrorType
+    ) : ArchivesDataResult()
+}
+
+/**
+ * The [ArchiveSectionDataItem.key] of the one group that holds every custom taxonomy the site has.
+ * The API reports each taxonomy separately in its own `tax` map, and they are gathered under a
+ * single group, as the web does, so a site with a dozen taxonomies doesn't bury its built-in
+ * groups -- one entry per taxonomy, its terms nested under it.
+ *
+ * The name is borrowed from the API's own key for that map, which is never a built-in group key,
+ * so the synthesised group can't collide with a real one.
+ */
+const val ARCHIVE_SECTION_KEY_TAXONOMIES = "tax"
+
+/**
+ * One group of archive pages. [key] is the API's own name for the group -- one of its short
+ * built-in keys ("search", "cat", "tag", "author", "date", "err", "multiple", "other") or
+ * [ARCHIVE_SECTION_KEY_TAXONOMIES] -- which is what the UI resolves into a label.
+ *
+ * [views] is the total across every entry kept for the group, including any dropped from [entries]
+ * by the display cap, so the group's own number stays right however many of its entries are listed
+ * under it. Entries the API returned with no term are not counted: they have no label to show, and
+ * leaving them out is what the web does too.
+ */
+data class ArchiveSectionDataItem(
+    val key: String,
+    val views: Long,
+    val entries: List<ArchiveEntryDataItem>
+)
+
+/**
+ * A single archive page within a group, e.g. one category. [value] is the term itself, percent-
+ * decoded as the web decodes it, and [href] the archive page it links to -- left encoded, being a
+ * URL to open.
+ *
+ * [children] is only used by [ARCHIVE_SECTION_KEY_TAXONOMIES], whose entries are the site's custom
+ * taxonomies rather than pages: there, [value] is the taxonomy's name, [href] is null and the
+ * taxonomy's terms are the children. Empty for every other group, whose entries are pages already.
+ */
+data class ArchiveEntryDataItem(
+    val value: String,
+    val href: String?,
+    val views: Long,
+    val children: List<ArchiveEntryDataItem> = emptyList()
+)
+
+/**
  * Result wrapper for devices stats fetch operation.
  */
 sealed class DevicesDataResult {
@@ -820,20 +890,34 @@ data class PostViewsPost(
     /** Publication date in the site's timezone (format: yyyy-MM-dd HH:mm:ss). */
     val date: String,
     val likeCount: Long,
-    val commentCount: Long
+    val commentCount: Long,
+    /**
+     * The item's public URL, or null when the API supplies no permalink -- it is derived per
+     * request rather than stored, so it can be missing even for an item that exists.
+     */
+    val url: String?,
+    /** The WordPress post type ("post", "page", "attachment"), which decides how [url] is opened. */
+    val type: String,
+    /**
+     * The WordPress post status ("publish", "draft", "trash", ...). An item keeps its view history
+     * after it stops being public, so this says whether [url] still resolves for a reader.
+     */
+    val status: String
 )
 
 /**
- * A week's view total and how it compares with the week before.
+ * A week's view total, its days, and how the total compares with the week before.
  *
- * [startDay] and [endDay] bound the week (format: yyyy-MM-dd); the final week may be partial. The
- * API also breaks the week down per day, which nothing displays yet.
+ * [startDay] and [endDay] bound the week (format: yyyy-MM-dd); the most recent week may be
+ * partial, in which case [days] stops short of seven.
  */
 data class PostViewsWeek(
     val startDay: String,
     val endDay: String,
     val total: Long,
-    val change: PostViewsChange
+    val change: PostViewsChange,
+    /** The week's days, oldest first. */
+    val days: List<PostViewsDailyView> = emptyList()
 )
 
 /**
@@ -852,19 +936,23 @@ sealed class PostViewsChange {
 }
 
 /**
- * A year's view total. The API also breaks this down by month, which nothing displays yet.
+ * A year's view total, with the months it is made of.
  */
 data class PostViewsYear(
     val year: String,
-    val total: Long
+    val total: Long,
+    /** Views per month, keyed 1-12. The API leaves out months that had none. */
+    val months: Map<Int, Long> = emptyMap()
 )
 
 /**
- * A year's average daily views. The API also breaks this down by month, which nothing displays yet.
+ * A year's average daily views, with the months it is made of.
  */
 data class PostViewsYearAverage(
     val year: String,
-    val overall: Long
+    val overall: Long,
+    /** Average daily views per month, keyed 1-12. The API leaves out months that had none. */
+    val months: Map<Int, Long> = emptyMap()
 )
 
 /**

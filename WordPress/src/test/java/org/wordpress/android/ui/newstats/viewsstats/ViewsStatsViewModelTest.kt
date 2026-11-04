@@ -7,7 +7,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
@@ -17,8 +16,6 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.junit.runner.RunWith
-import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -34,13 +31,13 @@ import org.wordpress.android.ui.newstats.repository.BottomStatsAggregates
 import org.wordpress.android.ui.newstats.repository.BottomStatsResult
 import org.wordpress.android.ui.newstats.repository.PeriodAggregates
 import org.wordpress.android.ui.newstats.repository.PeriodStatsResult
+import org.wordpress.android.ui.newstats.util.StatsDateUnitTest
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.LocalDate
 
 @ExperimentalCoroutinesApi
 @Suppress("LargeClass")
-@RunWith(MockitoJUnitRunner.Silent::class)
-class ViewsStatsViewModelTest : BaseUnitTest() {
+class ViewsStatsViewModelTest : StatsDateUnitTest() {
     @Mock
     private lateinit var selectedSiteRepository: SelectedSiteRepository
 
@@ -87,6 +84,10 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             .thenReturn("Comments")
         whenever(resourceProvider.getString(R.string.posts))
             .thenReturn("Posts")
+        // The selector's date line resolves a preset's window through the repository. These tests
+        // assert the chart, not that line, so one fixed window stands in for every period.
+        whenever(statsRepository.periodWindow(any()))
+            .thenReturn(LocalDate.of(2024, 1, 14) to LocalDate.of(2024, 1, 20))
     }
 
     private suspend fun initViewModel(periodType: String? = null) {
@@ -212,7 +213,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange).isEqualTo("14-20 Jan 2024")
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange).isEqualTo("Jan 14 - Jan 20, 2024")
     }
 
     @Test
@@ -228,7 +229,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange)
-            .isEqualTo("29 Dec 2024 - 4 Jan 2025")
+            .isEqualTo("Dec 29, 2024 - Jan 4, 2025")
     }
 
     @Test
@@ -285,6 +286,42 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange).isEqualTo("Jan - Jun 2024")
+    }
+
+    @Test
+    fun `a preset's label names the dates it resolves to`() = test {
+        whenever(statsRepository.periodWindow(StatsPeriod.Last7Days))
+            .thenReturn(LocalDate.of(2026, 10, 21) to LocalDate.of(2026, 10, 27))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.effectivePeriodDates.value).isEqualTo("Oct 21 - Oct 27, 2026")
+    }
+
+    @Test
+    fun `a month-bucketed preset's label names its dates by month`() = test {
+        whenever(statsRepository.periodWindow(StatsPeriod.Last12Months))
+            .thenReturn(LocalDate.of(2025, 11, 1) to LocalDate.of(2026, 10, 27))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.Last12Months)
+        advanceUntilIdle()
+
+        assertThat(viewModel.effectivePeriodDates.value).isEqualTo("Nov 2025 - Oct 2026")
+    }
+
+    @Test
+    fun `a custom range gets no second line of dates, since its label is already made of them`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onCustomRangeSelected(LocalDate.of(2026, 10, 1), LocalDate.of(2026, 10, 7))
+        advanceUntilIdle()
+
+        assertThat(viewModel.effectivePeriodDates.value).isNull()
     }
 
     @Test

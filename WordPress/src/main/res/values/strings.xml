@@ -1018,6 +1018,12 @@
     <string name="new_stats_intro_footer">You can turn off New Stats from the overflow menu in the Stats screen.</string>
     <!-- Timespan shown in the rs posts, pages and comments lists for anything under a minute old -->
     <string name="rs_date_now">Now</string>
+    <!-- Date shown on rs Drafts list rows, which are sorted by when they were last modified. %s is the
+         formatted date, e.g. "2 days ago", "Yesterday", "Now" or "Dec 15, 2025" -->
+    <string name="rs_date_modified">Modified: %s</string>
+    <!-- Date shown on rs Trashed list rows, which are sorted by when they were trashed. %s is the
+         formatted date, e.g. "2 days ago", "Yesterday", "Now" or "Dec 15, 2025" -->
+    <string name="rs_date_trashed">Trashed: %s</string>
     <string name="post_rs_failed_to_load">Failed to load post</string>
     <string name="page_rs_failed_to_load">Failed to load page</string>
     <string name="page_rs_copy_url">Copy URL</string>
@@ -1622,6 +1628,13 @@
     <string name="stats_detail_recent_weeks">Recent Weeks</string>
     <string name="stats_details_top_commentators">Top Commentators</string>
     <string name="stats_post_detail_title">Post Stats</string>
+    <string name="stats_post_detail_published">Published %1$s</string>
+    <string name="stats_post_detail_more_likers">+%1$s</string>
+    <string name="stats_post_detail_activity_less">Less</string>
+    <string name="stats_post_detail_activity_more">More</string>
+    <string name="stats_post_detail_total">Total</string>
+    <!-- Row under the Avg. Views Per Day grid, giving the item's average over its whole life -->
+    <string name="stats_post_detail_average">Average</string>
     <string name="stats_previous_day">Previous day</string>
     <string name="stats_next_day">Next day</string>
 
@@ -1728,6 +1741,19 @@
     <string name="stats_utm_source">Source</string>
     <string name="stats_utm_medium">Medium</string>
     <string name="stats_utm_campaign">Campaign</string>
+
+    <!-- Archive Stats Card -->
+    <string name="stats_archives_title">Archives</string>
+    <string name="stats_archives_title_label">Archive pages</string>
+    <string name="stats_archives_section_search">Search terms</string>
+    <string name="stats_archives_section_categories">Categories</string>
+    <string name="stats_archives_section_tags">Tags</string>
+    <string name="stats_archives_section_authors">Authors</string>
+    <string name="stats_archives_section_dates">Dates</string>
+    <string name="stats_archives_section_error">Error</string>
+    <string name="stats_archives_section_aggregated">Aggregated</string>
+    <string name="stats_archives_section_other">Other</string>
+    <string name="stats_archives_section_taxonomies">Taxonomies</string>
 
     <!-- Subscribers Stats Cards -->
     <string name="stats_subscribers_all_time">All-time Subscribers</string>
@@ -1929,6 +1955,8 @@
     <string name="get_likes_no_network_error">No network available.</string>
     <string name="get_likes_unknown_error">An unknown error occurred while getting likes.</string>
     <string name="get_likes_empty_state_title">An error occurred while getting likes data</string>
+    <!-- Shown when the likes list loads successfully but nobody has liked the item -->
+    <string name="get_likes_empty_state_no_likes">No likes yet</string>
     <string name="like_title_singular">1 Like</string>
     <string name="like_title_plural">%d Likes</string>
     <string name="like_faces_error_loading_message">Error loading like data. %s.</string>
@@ -2528,7 +2556,6 @@
     <string name="reader_toast_err_removing_tag">Unable to remove this tag</string>
     <string name="reader_toast_err_share_intent">Unable to share</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
-    <string name="reader_toast_err_show_blog">Unable to show this blog</string>
     <string name="reader_toast_err_blog_not_found">Error: Unable to find the blog</string>
     <string name="reader_toast_err_already_follow_this_blog">You are already subscribed to this blog</string>
     <string name="reader_toast_err_unable_to_follow_blog">Unable to subscribe to this blog</string>
@@ -2566,7 +2593,6 @@
     <string name="reader_empty_blogs_posts_in_custom_list">The blogs in this list have not posted anything recently</string>
     <string name="reader_empty_subscribed_tags_subtitle">Add tags here to find posts about your favorite topics</string>
     <string name="reader_no_followed_tags_text_title">No followed tags</string>
-    <string name="reader_no_recommended_blogs_title">No recommended blogs</string>
     <string name="reader_no_followed_blogs_title" translatable="false">@string/reader_filter_empty_blogs_list_title</string>
     <string name="reader_no_followed_blogs_search_title">No blogs matching your search</string>
     <string name="reader_no_followed_blogs_description" translatable="false">@string/reader_filter_empty_blogs_list_text</string>
@@ -3211,9 +3237,6 @@
     <string name="premium_upgrades_message">You have active premium upgrades on your site. Please cancel your upgrades prior to deleting your site.</string>
     <string name="show_purchases">Show purchases</string>
     <string name="checking_purchases">Checking purchases</string>
-    <string name="gravatar_info_title">Your WordPress.com profile is powered by Gravatar</string>
-    <string name="gravatar_info_description">Updating your avatar, name, and about info here will also update it across all sites that use Gravatar profiles.</string>
-    <string name="gravatar_info_learn_more_link">What is Gravatar?</string>
 
 
     <!-- Self-hosted Users -->
@@ -3284,6 +3307,12 @@
         in this state. Remove all failed uploads and continue?</string>
     <string name="editor_toast_uploading_please_wait">You are currently uploading media. Please wait until this completes.</string>
     <string name="editor_remove_failed_uploads">Remove failed uploads</string>
+    <string name="editor_saving_locked_title">Your post isn\'t ready yet</string>
+    <string name="editor_saving_locked_save_message">Something in the editor, like a media upload, is still in progress. If you continue, it may be missing or broken in your post.</string>
+    <string name="editor_saving_locked_leave_message">If you leave now, anything still in progress, like a media upload, stops and may be missing or broken in your post.</string>
+    <string name="editor_saving_locked_keep_editing">Keep editing</string>
+    <string name="editor_saving_locked_continue">Continue</string>
+    <string name="editor_saving_locked_leave">Leave</string>
     <string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
 
     <string name="photo_picker_title">Choose photo</string>
@@ -4994,6 +5023,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="content_list_group_this_week">This week</string>
     <string name="content_list_group_earlier_in">Earlier in %1$s</string>
     <string name="content_list_fab_write">Write</string>
+    <string name="content_list_view_count_singular">%1$s view</string>
+    <string name="content_list_view_count_plural">%1$s views</string>
+    <string name="content_list_comment_count_singular">%1$s comment</string>
+    <string name="content_list_comment_count_plural">%1$s comments</string>
     <string name="content_list_density_show_condensed">Show condensed list</string>
     <string name="content_list_density_show_comfortable">Show expanded list</string>
     <string name="comment_trash_has_replies">This comment has replies. They won’t be moved to the trash with it.</string>

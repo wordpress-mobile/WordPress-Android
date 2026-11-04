@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-09 09:57:33+0000
+Translation-Revision-Date: 2026-10-23 09:58:18+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.1.0
 Language: fr
@@ -647,9 +647,6 @@ Language: fr
     <string name="notifications_action_mark_all_as_read">Tout marquer comme lu</string>
     <string name="notifications_unread_content_description">Non lues</string>
     <string name="qrcode_media_deeplink_error">Site non trouvé. Vérifiez que vous êtes connecté(e) sur le bon compte.</string>
-    <string name="gravatar_info_learn_more_link">Qu’est-ce que Gravatar ?</string>
-    <string name="gravatar_info_description">Mettre à jour votre avatar, votre nom et les informations vous concernant ici les mettra également à jour sur l’ensemble des sites qui utilisent les profils Gravatar.</string>
-    <string name="gravatar_info_title">Votre profil WordPress.com est propulsé par Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">Impossible de charger le média pour le partage. Veuillez vérifier les droits de l’application\n        ou utilisez la bibliothèque de médias de l’application.</string>
     <string name="site_monitoring_cannot_be_started">Nous ne sommes pas en mesure d’ouvrir la surveillance du site actuellement. Veuillez réessayer plus tard</string>
     <string name="site_monitoring_tab_title_web_server_logs">Journaux du serveur Web</string>
@@ -659,7 +656,6 @@ Language: fr
     <string name="reader_empty_followed_blogs_button_subscriptions">Accéder aux abonnements</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Les blogs auxquels vous êtes abonné(e) n’ont rien publié récemment</string>
     <string name="reader_no_followed_blogs_description_subs">Abonnez-vous à des blogs dans Découvrir ou cherchez un blog que vous aimez déjà.</string>
-    <string name="reader_no_recommended_blogs_title">Aucun blog recommandé</string>
     <string name="reader_no_posts_with_this_tag">Pas d’articles avec cette étiquette</string>
     <string name="reader_toast_err_unable_to_block_blog">Impossible de bloquer ce blog</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Les articles de ce blog ne seront plus affichés</string>
@@ -667,7 +663,6 @@ Language: fr
     <string name="reader_toast_err_follow_not_authorized_to_access_blog">Vous n’êtes pas autorisé(e) à accéder à ce blog</string>
     <string name="reader_toast_err_unable_to_follow_blog">Impossible de s’abonner à ce blog</string>
     <string name="reader_toast_err_already_follow_this_blog">Ce blog fait déjà partie de vos abonnements</string>
-    <string name="reader_toast_err_show_blog">Impossible d’afficher ce blog</string>
     <string name="reader_label_choose_interests">Choisissez vos centres d’intérêt</string>
     <string name="reader_label_subscribers_count_single">1 abonné</string>
     <string name="reader_label_subscribers_count">%s abonnés</string>
@@ -3677,6 +3672,7 @@ Language: fr
     <string name="local_changes">Changements locaux</string>
     <string name="new_media">Nouveau média</string>
     <string name="new_post">Nouvel article</string>
+    <string name="notifications_empty_all">Pas (encore) de notifications !</string>
     <string name="invalid_site_url_message">Vérifiez que l\'URL saisie est valide</string>
     <string name="file_error_create">Impossible de créer un fichier temporaire pour le téléversement de média. Veuillez vérifier que vous disposez d\'assez d\'espace libre sur votre appareil.</string>
     <string name="category_name">Nom de la catégorie</string>

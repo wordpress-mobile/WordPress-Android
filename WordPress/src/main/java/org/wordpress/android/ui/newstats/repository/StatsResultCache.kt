@@ -16,8 +16,9 @@ private const val LOAD_FACTOR = 0.75f
  * can't evict every other card's entries: selecting a chart bar reloads every card for the bar's
  * own sub-period, so a scrub across a month's chart costs one entry per bar per card.
  *
- * [WIDE_CAPACITY] is for the two endpoints that request unbounded lists (`max = 0`): the referrers
- * detail screen (groups with nested children) and UTM (which also carries a per-post map).
+ * [WIDE_CAPACITY] is for the endpoints that request unbounded lists (`max = 0`): the referrers and
+ * archives detail screens (groups with nested children) and UTM (which also carries a per-post
+ * map).
  */
 enum class StatsCacheBucket(val capacity: Int) {
     CHART(DEFAULT_CAPACITY),
@@ -36,6 +37,8 @@ enum class StatsCacheBucket(val capacity: Int) {
     DEVICES_BROWSER(DEFAULT_CAPACITY),
     DEVICES_PLATFORM(DEFAULT_CAPACITY),
     UTM(WIDE_CAPACITY),
+    ARCHIVES(DEFAULT_CAPACITY),
+    ARCHIVES_DETAIL(WIDE_CAPACITY),
     TODAY_AGGREGATES(DEFAULT_CAPACITY),
     HOURLY_VIEWS(DEFAULT_CAPACITY)
 }

@@ -87,7 +87,8 @@ internal val StatsCardType.cardAnalyticsName: String
         StatsCardType.VIDEO_PLAYS,
         StatsCardType.FILE_DOWNLOADS,
         StatsCardType.DEVICES,
-        StatsCardType.UTM -> "top_list"
+        StatsCardType.UTM,
+        StatsCardType.ARCHIVES -> "top_list"
     }
 
 /**
@@ -116,6 +117,7 @@ internal val StatsCardType.analyticsName: String
         StatsCardType.FILE_DOWNLOADS -> "file_downloads"
         StatsCardType.DEVICES -> "devices"
         StatsCardType.UTM -> "utm"
+        StatsCardType.ARCHIVES -> "archive"
     }
 
 /** Insights cards are Android-only, so these names have no iOS counterpart to match. */

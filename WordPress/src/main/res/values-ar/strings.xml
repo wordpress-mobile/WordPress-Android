@@ -637,9 +637,6 @@ Language: ar
     <string name="notifications_action_mark_all_as_read">وسم الكل بأنه مقروء</string>
     <string name="notifications_unread_content_description">غير مقروء</string>
     <string name="qrcode_media_deeplink_error">الموقع غير موجود. تحقق من تسجيلك الدخول إلى الحساب الصحيح.</string>
-    <string name="gravatar_info_learn_more_link">ما المقصود بخدمة جرافتار؟</string>
-    <string name="gravatar_info_description">سيؤدي أيضًا تحديث الأفاتار الخاص بك واسمك والمعلومات حولك هنا إلى تحديثها عبر كل المواقع التي تستخدم ملفات جرافتار الشخصية.</string>
-    <string name="gravatar_info_title">يكون ملفك الشخصي على ووردبريس.كوم مدعومًا من خدمة جرافتار</string>
     <string name="error_media_could_not_share_media_from_device">يتعذر تحميل الوسائط للمشاركة. يرجى التحقق من صلاحيات التطبيق\n        أو استخدم مكتبة وسائط التطبيق.</string>
     <string name="site_monitoring_cannot_be_started">يتعذر علينا فتح مراقبة الموقع في الوقت الحالي. يرجى المحاولة مجددًا في وقت لاحق</string>
     <string name="site_monitoring_tab_title_web_server_logs">سجلات خادم الويب</string>
@@ -655,9 +652,7 @@ Language: ar
     <string name="reader_toast_err_unable_to_unfollow_blog">يتعذر إلغاء الاشتراك من المدونة</string>
     <string name="reader_toast_err_follow_not_authorized_to_access_blog">لا يخوَّل لك الوصول إلى هذه المدونة</string>
     <string name="reader_toast_err_unable_to_follow_blog">يتعذر الاشتراك في هذه المدونة</string>
-    <string name="reader_no_recommended_blogs_title">لا توجد مدونات موصى بها</string>
     <string name="reader_toast_err_already_follow_this_blog">لقد اشتركت في هذه المدونة بالفعل</string>
-    <string name="reader_toast_err_show_blog">يتعذر إظهار هذه المدونة</string>
     <string name="reader_label_choose_interests">اختيار اهتماماتك</string>
     <string name="reader_label_subscribers_count_single">مشترك واحد</string>
     <string name="reader_label_subscribers_count">%s من المشتركين</string>

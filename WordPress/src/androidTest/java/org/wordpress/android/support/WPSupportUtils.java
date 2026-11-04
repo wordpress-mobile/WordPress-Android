@@ -528,15 +528,6 @@ public class WPSupportUtils {
         });
     }
 
-    public static void waitForRecyclerViewToStopReloading() {
-        waitForConditionToBeTrue(new Supplier<Boolean>() {
-            @Override
-            public Boolean get() {
-                return hasLoadedRecyclerView();
-            }
-        });
-    }
-
     public static void waitForSwipeRefreshLayoutToStopReloading() {
         waitForConditionToBeTrue(new Supplier<Boolean>() {
             @Override
@@ -646,21 +637,6 @@ public class WPSupportUtils {
             return true;
         } catch (Throwable e) {
             return false; // There are still unloaded images
-        }
-    }
-
-    public static boolean hasLoadedRecyclerView() {
-        try {
-            onView(
-                    allOf(
-                            new RefreshingRecyclerViewMatcher(false),
-                            first()
-                    )
-            ).check(matches(isDisplayed()));
-
-            return true;
-        } catch (Throwable e) {
-            return false;
         }
     }
 

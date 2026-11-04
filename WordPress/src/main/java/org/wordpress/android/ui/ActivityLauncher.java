@@ -112,7 +112,6 @@ import org.wordpress.android.ui.selfhostedusers.SelfHostedUsersActivity;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
-import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
@@ -1541,15 +1540,6 @@ public class ActivityLauncher {
                 Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PROLOGUE.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
-    }
-
-    public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post) {
-        if (post == null || site == null) {
-            return;
-        }
-        StatsDetailActivity.Companion
-                .start(context, site, post.getRemotePostId(), StatsConstants.ITEM_TYPE_POST, post.getTitle(),
-                        post.getLink());
     }
 
     public static void viewInsightsDetail(

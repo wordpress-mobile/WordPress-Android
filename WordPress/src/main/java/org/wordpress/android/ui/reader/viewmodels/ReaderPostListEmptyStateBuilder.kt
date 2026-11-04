@@ -11,7 +11,6 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState.NoPos
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState.NoPostsInList
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState.NoPostsWithTag
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState.RequestFailed
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState.SearchExplainer
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState.SearchNoResults
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState.SearchUpdating
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState.SelfHostedCta
@@ -30,8 +29,7 @@ class ReaderPostListEmptyStateBuilder @Inject constructor() {
         val requestFailed: Boolean,
         val isUpdating: Boolean,
         val hasFollowedBlogs: Boolean,
-        val searchQuery: String?,
-        val isSearchViewEmpty: Boolean = false
+        val searchQuery: String?
     )
 
     fun build(input: Input): ReaderPostListEmptyState {
@@ -49,11 +47,8 @@ class ReaderPostListEmptyStateBuilder @Inject constructor() {
     private fun buildForListType(input: Input): ReaderPostListEmptyState = when (input.listType) {
         ReaderPostListType.TAG_FOLLOWED -> buildForFollowedTag(input)
         ReaderPostListType.BLOG_PREVIEW -> NoPostsInBlog
-        ReaderPostListType.SEARCH_RESULTS -> when {
-            input.isSearchViewEmpty || input.searchQuery.isNullOrEmpty() -> SearchExplainer
-            input.isUpdating -> SearchUpdating
-            else -> SearchNoResults(input.searchQuery)
-        }
+        ReaderPostListType.SEARCH_RESULTS ->
+            if (input.isUpdating) SearchUpdating else SearchNoResults(input.searchQuery.orEmpty())
         ReaderPostListType.TAG_PREVIEW,
         ReaderPostListType.TAGS_FEED -> NoPostsWithTag
     }

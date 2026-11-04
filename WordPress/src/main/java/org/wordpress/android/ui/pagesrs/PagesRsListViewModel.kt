@@ -1784,7 +1784,6 @@ internal class PagesRsListViewModel @Inject constructor(
     }
 
     public override fun onCleared() {
-        super.onCleared()
         changeListener.stop()
         dispatcher.unregister(this)
         clearCollections()

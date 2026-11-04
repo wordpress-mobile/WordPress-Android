@@ -8,7 +8,6 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
-import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -16,6 +15,7 @@ import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.SubscribersGraphDataPoint
 import org.wordpress.android.ui.newstats.repository.SubscribersGraphResult
+import org.wordpress.android.ui.newstats.util.StatsDateUnitTest
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Locale
 
@@ -25,7 +25,7 @@ import java.util.Locale
  * [SubscribersGraphViewModelTest], which covers loading, errors and tab selection.
  */
 @ExperimentalCoroutinesApi
-class SubscribersGraphLabelTest : BaseUnitTest() {
+class SubscribersGraphLabelTest : StatsDateUnitTest() {
     @Mock
     private lateinit var selectedSiteRepository:
         SelectedSiteRepository
@@ -190,18 +190,20 @@ class SubscribersGraphLabelTest : BaseUnitTest() {
 
             // 27 Jul 2026 is a Monday; the span must read as seven days, not one.
             assertThat(loadedMarkerLabels())
-                .containsExactly("27 Jul - 2 Aug")
+                .containsExactly("Jul 27 - Aug 2")
         }
 
     @Test
-    fun `given a week inside one month, when selected, then the marker omits the first month`() =
+    fun `given a week inside one month, when selected, then the marker names the month once`() =
         test {
             stubDataPoints("2026W07W20" to TEST_COUNT_1)
 
             loadWithTab(SubscribersGraphTab.WEEKS)
 
+            // en-US names the month at the head of a date, so the collapsed span drops the
+            // trailing one; a day-first locale drops the leading one instead.
             assertThat(loadedMarkerLabels())
-                .containsExactly("20-26 Jul")
+                .containsExactly("Jul 20-26")
         }
 
     @Test

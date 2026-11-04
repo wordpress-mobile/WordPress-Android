@@ -66,6 +66,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -109,6 +110,7 @@ import org.wordpress.android.ui.newstats.utm.UtmDetailActivity
 import org.wordpress.android.ui.newstats.utm.UtmViewModel
 import org.wordpress.android.ui.newstats.filedownloads.FileDownloadsViewModel
 import org.wordpress.android.ui.newstats.locations.LocationsCardUiState
+import org.wordpress.android.ui.newstats.archives.ArchivesViewModel
 import org.wordpress.android.ui.newstats.searchterms.SearchTermsViewModel
 import org.wordpress.android.ui.newstats.videoplays.VideoPlaysViewModel
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsCard
@@ -135,6 +137,7 @@ import org.wordpress.android.ui.newstats.util.ProvideShimmerBrush
 import org.wordpress.android.ui.newstats.util.RangeLine
 import org.wordpress.android.ui.newstats.util.formatCustomDateRangeTwoLine
 import org.wordpress.android.ui.newstats.util.toContentDescription
+import org.wordpress.android.ui.newstats.util.yearLeadsDate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.components.NewStatsIntroBottomSheet
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -280,14 +283,11 @@ class NewStatsActivity : BaseAppCompatActivity() {
         activityNavigator.openInCustomTab(this, url)
     }
 
-    private fun selectSiteFromIntentIfNeeded() {
-        val localSiteId = intent?.getIntExtra(WordPress.LOCAL_SITE_ID, 0) ?: 0
-        if (localSiteId != 0 && localSiteId != selectedSiteRepository.getSelectedSiteLocalId()) {
-            siteStore.getSiteByLocalId(localSiteId)?.let { site ->
-                selectedSiteRepository.updateSite(site)
-            }
-        }
-    }
+    private fun selectSiteFromIntentIfNeeded() = selectNewStatsSiteIfNeeded(
+        intent?.getIntExtra(WordPress.LOCAL_SITE_ID, 0) ?: 0,
+        siteStore,
+        selectedSiteRepository
+    )
 
     private fun openPostDetailStats(item: MostViewedItem) {
         analyticsTracker.track(
@@ -462,6 +462,8 @@ private fun NewStatsScreen(
     // The label reflects a soft bar selection (effectivePeriod) so the range shown matches the cards;
     // the menu checkmark and paging arrows stay on the committed selectedPeriod.
     val effectivePeriod by viewsStatsViewModel.effectivePeriod.collectAsState()
+    // The dates a preset resolves to, shown under its name so the label names the window on screen.
+    val effectivePeriodDates by viewsStatsViewModel.effectivePeriodDates.collectAsState()
     val canNavigateBackward by viewsStatsViewModel.canNavigateBackward.collectAsState()
     val canNavigateForward by viewsStatsViewModel.canNavigateForward.collectAsState()
 
@@ -551,7 +553,7 @@ private fun NewStatsScreen(
                                 ) {
                                     PeriodLabel(
                                         label = effectivePeriod
-                                            .getDisplayLabel()
+                                            .getDisplayLabel(effectivePeriodDates)
                                     )
                                     Icon(
                                         imageVector =
@@ -714,6 +716,7 @@ private fun TrafficTabContent(
     fileDownloadsViewModel: FileDownloadsViewModel = viewModel(),
     devicesViewModel: DevicesViewModel = viewModel(),
     utmViewModel: UtmViewModel = viewModel(),
+    archivesViewModel: ArchivesViewModel = viewModel(),
     newStatsViewModel: NewStatsViewModel = viewModel(),
     onRowUrlClick: (StatsCardType, String) -> Unit = { _, _ -> },
     onExplorePlansClick: (String, StatsCardType) -> Unit = { _, _ -> },
@@ -735,6 +738,7 @@ private fun TrafficTabContent(
     val selectedDeviceType by devicesViewModel.selectedDeviceType.collectAsState()
     val utmUiState by utmViewModel.uiState.collectAsState()
     val selectedUtmCategory by utmViewModel.selectedCategory.collectAsState()
+    val archivesUiState by archivesViewModel.uiState.collectAsState()
     // The period the non-Views cards should reflect: the soft-selected bar's period when one is
     // selected, otherwise the committed period. The Views chart itself stays bound to its own period.
     val effectivePeriod by viewsStatsViewModel.effectivePeriod.collectAsState()
@@ -755,13 +759,14 @@ private fun TrafficTabContent(
         .isRefreshing.collectAsState()
     val isDevicesRefreshing by devicesViewModel.isRefreshing.collectAsState()
     val isUtmRefreshing by utmViewModel.isRefreshing.collectAsState()
+    val isArchivesRefreshing by archivesViewModel.isRefreshing.collectAsState()
     val isRefreshing = listOf(
         isTodaysStatsRefreshing, isViewsStatsRefreshing,
         isMostViewedPostsRefreshing, isMostViewedReferrersRefreshing,
         isLocationsRefreshing, isAuthorsRefreshing,
         isClicksRefreshing, isSearchTermsRefreshing,
         isVideoPlaysRefreshing, isFileDownloadsRefreshing,
-        isDevicesRefreshing, isUtmRefreshing
+        isDevicesRefreshing, isUtmRefreshing, isArchivesRefreshing
     ).any { it }
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -817,6 +822,9 @@ private fun TrafficTabContent(
             },
             onUtm = {
                 utmViewModel.onPeriodChanged(effectivePeriod)
+            },
+            onArchives = {
+                archivesViewModel.onPeriodChanged(effectivePeriod)
             }
         )
     }
@@ -851,7 +859,8 @@ private fun TrafficTabContent(
             onVideoPlays = { videoPlaysViewModel.loadData() },
             onFileDownloads = { fileDownloadsViewModel.loadData() },
             onDevices = { devicesViewModel.loadData() },
-            onUtm = { utmViewModel.loadData() }
+            onUtm = { utmViewModel.loadData() },
+            onArchives = { archivesViewModel.loadData() }
         )
     }
 
@@ -906,7 +915,8 @@ private fun TrafficTabContent(
                     fileDownloadsViewModel.refresh()
                 },
                 onDevices = { devicesViewModel.refresh() },
-                onUtm = { utmViewModel.refresh() }
+                onUtm = { utmViewModel.refresh() },
+                onArchives = { archivesViewModel.refresh() }
             )
         },
         indicator = {
@@ -1312,6 +1322,41 @@ private fun TrafficTabContent(
                             context = context
                         )
                     )
+                    StatsCardType.ARCHIVES -> MostViewedCard(
+                        uiState = archivesUiState,
+                        cardType = cardType,
+                        onShowAllClick = {
+                            MostViewedDetailActivity.startSelfFetch(
+                                context = context,
+                                cardType = StatsCardType.ARCHIVES,
+                                source = MostViewedDetailSource.ARCHIVES,
+                                period = archivesViewModel.getCurrentPeriod()
+                            )
+                        },
+                        onRetry = archivesViewModel::onRetry,
+                        onRemoveCard = {
+                            newStatsViewModel.removeCard(cardType)
+                        },
+                        cardPosition = cardPosition,
+                        onMoveUp = { newStatsViewModel.moveCardUp(cardType) },
+                        onMoveToTop = {
+                            newStatsViewModel.moveCardToTop(cardType)
+                        },
+                        onMoveDown = {
+                            newStatsViewModel.moveCardDown(cardType)
+                        },
+                        onMoveToBottom = {
+                            newStatsViewModel.moveCardToBottom(cardType)
+                        },
+                        onOpenWpAdmin = buildOpenWpAdminAction(
+                            isAuthError = (archivesUiState as?
+                                MostViewedCardUiState.Error)
+                                ?.isAuthError == true,
+                            getAdminUrl = archivesViewModel::getAdminUrl,
+                            context = context
+                        ),
+                        onUrlClick = { url -> onRowUrlClick(cardType, url) }
+                    )
                 }
             }
 
@@ -1356,7 +1401,8 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     onVideoPlays: () -> Unit,
     onFileDownloads: () -> Unit,
     onDevices: () -> Unit,
-    onUtm: () -> Unit
+    onUtm: () -> Unit,
+    onArchives: () -> Unit
 ) {
     if (StatsCardType.TODAYS_STATS in this) onTodaysStats()
     if (StatsCardType.VIEWS_STATS in this) onViewsStats()
@@ -1374,6 +1420,7 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     if (StatsCardType.FILE_DOWNLOADS in this) onFileDownloads()
     if (StatsCardType.DEVICES in this) onDevices()
     if (StatsCardType.UTM in this) onUtm()
+    if (StatsCardType.ARCHIVES in this) onArchives()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -1668,22 +1715,32 @@ private fun StatsPeriodMenuItems(
     }
 }
 
+/**
+ * The selector's label: a Custom range reads as its own dates, a preset as its name over
+ * [presetDates] — the window that name currently resolves to, so the label still says which dates
+ * are on screen when the name alone ("Last 7 days") never changes. See
+ * [ViewsStatsViewModel.effectivePeriodDates].
+ */
 @Composable
-private fun StatsPeriod.getDisplayLabel(): DateRangeLabel {
+private fun StatsPeriod.getDisplayLabel(presetDates: String?): DateRangeLabel {
     return when (this) {
         is StatsPeriod.Custom -> {
             val currentYear = remember { Year.now().value }
             formatCustomDateRangeTwoLine(startDate, endDate, currentYear)
         }
-        else -> DateRangeLabel(RangeLine.Single(stringResource(id = labelResId)), null)
+        else -> DateRangeLabel(
+            primary = RangeLine.Single(stringResource(id = labelResId)),
+            secondary = presetDates?.let { RangeLine.Single(it) }
+        )
     }
 }
 
 /**
- * Renders the top-bar period label. Preset periods (and any single-line label) show one line; a
- * Custom range shows the day-month range over the year(s). When both lines are a start–end range
- * (a cross-year span), the two "-" separators sit in their own centre column so they line up as a
- * column regardless of the two text styles' widths — no text measuring needed. See [DateRangeLabel].
+ * Renders the top-bar period label. A preset shows its name over the dates it resolves to; a
+ * Custom range shows the day-month range over the year(s); a label with nothing to put on the
+ * second line shows one line. When both lines are a start–end range (a cross-year span), the two
+ * "-" separators sit in their own centre column so they line up as a column regardless of the two
+ * text styles' widths — no text measuring needed. See [DateRangeLabel].
  */
 @Composable
 private fun PeriodLabel(label: DateRangeLabel) {
@@ -1694,14 +1751,16 @@ private fun PeriodLabel(label: DateRangeLabel) {
 
     val secondary = label.secondary
     if (secondary == null) {
-        // Single line (preset period, or a Custom range whose year is hidden). A Split renders
-        // inline here since there is no second line to align its "-" against.
+        // Single line (a Custom range whose year is hidden, or a preset whose dates have not been
+        // resolved yet). A Split renders inline here since there is no second line to align its
+        // "-" against.
         SingleRangeLine(line = label.primary, style = primaryStyle, color = primaryColor)
         return
     }
 
     val rangeDescription = label.toContentDescription(
-        stringResource(R.string.stats_traffic_date_range_content_description)
+        rangeTemplate = stringResource(R.string.stats_traffic_date_range_content_description),
+        yearLeads = yearLeadsDate()
     )
     val primary = label.primary
     Column(
@@ -1713,16 +1772,16 @@ private fun PeriodLabel(label: DateRangeLabel) {
             // their own centre column so they align on every row; the start/end columns hug it.
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(horizontalAlignment = Alignment.End) {
-                    Text(primary.start, style = primaryStyle, color = primaryColor, maxLines = 1)
-                    Text(secondary.start, style = secondaryStyle, color = secondaryColor, maxLines = 1)
+                    RangeEndText(primary.start, primaryStyle, primaryColor)
+                    RangeEndText(secondary.start, secondaryStyle, secondaryColor)
                 }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(text = " - ", style = primaryStyle, color = primaryColor, maxLines = 1)
                     Text(text = " - ", style = secondaryStyle, color = secondaryColor, maxLines = 1)
                 }
                 Column(horizontalAlignment = Alignment.Start) {
-                    Text(primary.end, style = primaryStyle, color = primaryColor, maxLines = 1)
-                    Text(secondary.end, style = secondaryStyle, color = secondaryColor, maxLines = 1)
+                    RangeEndText(primary.end, primaryStyle, primaryColor)
+                    RangeEndText(secondary.end, secondaryStyle, secondaryColor)
                 }
             }
         } else {
@@ -1741,7 +1800,19 @@ private fun SingleRangeLine(line: RangeLine, style: TextStyle, color: Color) {
         is RangeLine.Single -> line.text
         is RangeLine.Split -> "${line.start} - ${line.end}"
     }
-    Text(text = text, style = style, color = color, maxLines = 1)
+    RangeEndText(text, style, color)
+}
+
+/**
+ * A date line of the app bar's range label, kept to one line.
+ *
+ * Ellipsized rather than left on Compose's default clip, which breaks at a space and so drops the
+ * label's trailing words outright — a long localized range ("30 de dez. de 2025 - 2 de jan. de
+ * 2026" in pt-BR) would lose its year with nothing on screen to say so.
+ */
+@Composable
+private fun RangeEndText(text: String, style: TextStyle, color: Color) {
+    Text(text = text, style = style, color = color, maxLines = 1, overflow = TextOverflow.Ellipsis)
 }
 
 /**

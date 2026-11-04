@@ -68,6 +68,12 @@ class CommentsRsListMappingTest {
     }
 
     @Test
+    fun `pickAvatarUrl returns empty when avatar urls are missing`() {
+        // Sites with "Show Avatars" disabled omit the field entirely.
+        assertThat(rsComment(avatarUrls = null).pickAvatarUrl()).isEmpty()
+    }
+
+    @Test
     fun `firstPageParams requests newest comments with the given status and search`() {
         val dataSource = CommentsRsDataSource(mock())
 
@@ -83,7 +89,7 @@ class CommentsRsListMappingTest {
     private fun rsComment(
         status: RsCommentStatus = RsCommentStatus.Approved,
         parent: Long = 0L,
-        avatarUrls: Map<UserAvatarSize, String> = mapOf(
+        avatarUrls: Map<UserAvatarSize, String>? = mapOf(
             UserAvatarSize.Size96 to "https://example.com/avatar96.png"
         )
     ) = CommentWithViewContext(

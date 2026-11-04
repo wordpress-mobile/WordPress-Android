@@ -694,7 +694,6 @@ class MediaPickerViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         searchJob?.cancel()
     }
 

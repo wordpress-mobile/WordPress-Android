@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.usecases
 
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withTimeoutOrNull
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.AlreadyRunning
@@ -11,50 +12,61 @@ import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchRead
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
 import java.net.HttpURLConnection
+import java.util.Collections
 import javax.inject.Inject
-import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 
 class ReaderFetchPostUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val readerPostActionsWrapper: ReaderPostActionsWrapper
 ) {
-    private val continuations: MutableMap<FetchPostRequestParams, Continuation<Int>?> = mutableMapOf()
+    // Tracks in-flight fetches so a second request for the same post short-circuits to
+    // AlreadyRunning. Synchronized because the request callbacks fire on a background thread.
+    private val inFlightRequests = Collections.synchronizedSet(mutableSetOf<FetchPostRequestParams>())
 
+    @Suppress("ReturnCount") // early guard clauses (no network / already in flight) read cleaner than nesting
     suspend fun fetchPost(blogId: Long, postId: Long, isFeed: Boolean): FetchReaderPostState {
-        return if (!networkUtilsWrapper.isNetworkAvailable()) {
-            NoNetwork
-        } else {
-            val requestParams = FetchPostRequestParams(blogId, postId, isFeed)
-            // There is already an action running for this request
-            if (continuations[requestParams] != null) {
-                AlreadyRunning
-            } else {
-                when (fetchPostAndWaitForResult(requestParams)) {
-                    HttpURLConnection.HTTP_OK -> Success
-                    HttpURLConnection.HTTP_UNAUTHORIZED, HttpURLConnection.HTTP_FORBIDDEN -> NotAuthorised
-                    HttpURLConnection.HTTP_NOT_FOUND -> PostNotFound
-                    else -> RequestFailed
-                }
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            return NoNetwork
+        }
+
+        val requestParams = FetchPostRequestParams(blogId, postId, isFeed)
+        // add() returns false when an identical request is already in flight
+        if (!inFlightRequests.add(requestParams)) {
+            return AlreadyRunning
+        }
+
+        return try {
+            // Never wait forever: a request that neither succeeds nor fails (e.g. a stalled
+            // connection) resolves to RequestFailed so the caller can leave the loading state.
+            val statusCode = withTimeoutOrNull(FETCH_TIMEOUT_MS) {
+                fetchPostAndWaitForResult(requestParams)
             }
+            when (statusCode) {
+                HttpURLConnection.HTTP_OK -> Success
+                HttpURLConnection.HTTP_UNAUTHORIZED, HttpURLConnection.HTTP_FORBIDDEN -> NotAuthorised
+                HttpURLConnection.HTTP_NOT_FOUND -> PostNotFound
+                else -> RequestFailed
+            }
+        } finally {
+            // Always release the slot, including on timeout or coroutine cancellation, so a
+            // later retry of the same post isn't wrongly rejected as AlreadyRunning.
+            inFlightRequests.remove(requestParams)
         }
     }
 
-    private suspend fun fetchPostAndWaitForResult(requestParams: FetchPostRequestParams): Int {
-        val listener = object : ReaderActions.OnRequestListener<String> {
-            override fun onSuccess(result: String?) {
-                continuations[requestParams]?.resume(HttpURLConnection.HTTP_OK)
-                continuations[requestParams] = null
-            }
+    private suspend fun fetchPostAndWaitForResult(requestParams: FetchPostRequestParams): Int =
+        suspendCancellableCoroutine { cont ->
+            val listener = object : ReaderActions.OnRequestListener<String> {
+                override fun onSuccess(result: String?) {
+                    // Guard against resuming an already-cancelled (e.g. timed-out) request
+                    if (cont.isActive) cont.resume(HttpURLConnection.HTTP_OK)
+                }
 
-            override fun onFailure(statusCode: Int) {
-                continuations[requestParams]?.resume(statusCode)
-                continuations[requestParams] = null
+                override fun onFailure(statusCode: Int) {
+                    if (cont.isActive) cont.resume(statusCode)
+                }
             }
-        }
-
-        return suspendCancellableCoroutine { cont ->
-            continuations[requestParams] = cont
 
             if (requestParams.isFeed) {
                 readerPostActionsWrapper.requestFeedPost(
@@ -70,7 +82,6 @@ class ReaderFetchPostUseCase @Inject constructor(
                 )
             }
         }
-    }
 
     sealed class FetchReaderPostState {
         object Success : FetchReaderPostState()
@@ -88,4 +99,8 @@ class ReaderFetchPostUseCase @Inject constructor(
         val postId: Long,
         val isFeed: Boolean
     )
+
+    companion object {
+        private const val FETCH_TIMEOUT_MS = 30_000L
+    }
 }

@@ -141,7 +141,6 @@ class SuggestionViewModel @Inject constructor(
 
     override fun onCleared() {
         suggestionSource.onCleared()
-        super.onCleared()
     }
 }
 

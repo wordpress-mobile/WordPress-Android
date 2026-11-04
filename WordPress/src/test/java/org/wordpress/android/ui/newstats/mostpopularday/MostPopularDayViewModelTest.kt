@@ -7,15 +7,15 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito.lenient
-import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
 import org.wordpress.android.ui.newstats.repository.StatsSummaryResult
+import org.wordpress.android.ui.newstats.util.StatsDateUnitTest
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Locale
 
 @ExperimentalCoroutinesApi
-class MostPopularDayViewModelTest : BaseUnitTest() {
+class MostPopularDayViewModelTest : StatsDateUnitTest() {
     @Mock
     private lateinit var resourceProvider:
         ResourceProvider

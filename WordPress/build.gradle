@@ -421,6 +421,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.fragment.main)
     implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.fragment.compose)
     implementation(libs.androidx.appcompat.main)
     implementation(libs.androidx.appcompat.resources)
     implementation(libs.androidx.cardview)

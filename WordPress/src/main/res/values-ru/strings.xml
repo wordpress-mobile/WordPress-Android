@@ -657,9 +657,6 @@ Language: ru
     <string name="notifications_action_mark_all_as_read">Отметить все как прочитанные</string>
     <string name="notifications_unread_content_description">Не прочитано</string>
     <string name="qrcode_media_deeplink_error">Сайт не найден. Убедитесь в том, что выполнили вход в нужную учётную запись.</string>
-    <string name="gravatar_info_learn_more_link">Что такое Gravatar?</string>
-    <string name="gravatar_info_description">Если вы обновите свой аватар, имя пользователя и личные данные на этом сайте, всё это будет автоматически обновлено на других сайтах, где используются профили Gravatar.</string>
-    <string name="gravatar_info_title">Ваш профиль WordPress.com создан при поддержке Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">Не удалось загрузить медиафайл для публикации в соцсетях. Проверьте разрешения приложения\n        или воспользуйтесь библиотекой файлов приложения.</string>
     <string name="site_monitoring_cannot_be_started">Не удалось открыть страницу мониторинга сайтов. Повторите попытку позже</string>
     <string name="site_monitoring_tab_title_web_server_logs">Журналы веб-сервера</string>
@@ -669,7 +666,6 @@ Language: ru
     <string name="reader_empty_followed_blogs_button_subscriptions">Перейти в «Подписки»</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">В блогах, на которые вы подписаны, в последнее время ничего нового не публиковалось</string>
     <string name="reader_no_followed_blogs_description_subs">Подписывайтесь на блоги с помощью раздела «Поиск» или найдите блог, который вам уже понравился.</string>
-    <string name="reader_no_recommended_blogs_title">Нет рекомендуемых блогов</string>
     <string name="reader_no_posts_with_this_tag">Нет записей с этой меткой</string>
     <string name="reader_toast_err_unable_to_block_blog">Не удалось заблокировать этот блог</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Записи из этого блога больше не будут отображаться</string>
@@ -677,7 +673,6 @@ Language: ru
     <string name="reader_toast_err_follow_not_authorized_to_access_blog">У вас нет разрешения на доступ к этому блогу</string>
     <string name="reader_toast_err_unable_to_follow_blog">Не удалось подписаться на этот блог</string>
     <string name="reader_toast_err_already_follow_this_blog">Вы уже подписаны на этот блог</string>
-    <string name="reader_toast_err_show_blog">Не удалось отобразить этот блог</string>
     <string name="reader_label_choose_interests">Выберите ваши интересы</string>
     <string name="reader_label_subscribers_count_single">1 подписчик</string>
     <string name="reader_label_subscribers_count">Подписчиков: %s</string>

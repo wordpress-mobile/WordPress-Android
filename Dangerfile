@@ -7,8 +7,6 @@ rubocop.lint(files: [], force_exclusion: true, inline_comment: true, fail_on_inl
 
 manifest_pr_checker.check_gemfile_lock_updated
 
-android_release_checker.check_release_notes_and_play_store_strings
-
 android_strings_checker.check_strings_do_not_refer_resource
 
 # skip remaining checks if we're in a release-process PR
@@ -18,8 +16,6 @@ if github.pr_labels.include?('Releases')
 end
 
 android_strings_checker.check_existing_strings_not_modified unless github.pr_labels.include?('Allow String Modifications')
-
-common_release_checker.check_internal_release_notes_changed(report_type: :message)
 
 view_changes_checker.check
 
@@ -58,4 +54,6 @@ labels_checker.check(
 )
 
 # runs the milestone check if this is not a WIP feature and the PR is against the main branch or the release branch
-milestone_checker.check_milestone_due_date(days_before_due: 4) if (github_utils.main_branch? || github_utils.release_branch?) && !github_utils.wip_feature?
+if (github_utils.main_branch? || github_utils.release_branch?) && !github_utils.wip_feature?
+  milestone_checker.check_milestone_due_date(days_before_due: 4, report_type_if_no_milestone: :none)
+end

@@ -88,9 +88,6 @@ public class AppPrefs {
         // last selected subfilter in the reader
         READER_SUBFILTER,
 
-        // title of the last active page in ReaderSubsActivity
-        READER_SUBS_PAGE_TITLE,
-
         // index of the last active page in main activity
         MAIN_PAGE_INDEX,
 
@@ -148,8 +145,6 @@ public class AppPrefs {
         // Keep the local_blog_id + local_post_id values that have HW Acc. turned off
         AZTEC_EDITOR_DISABLE_HW_ACC_KEYS,
 
-        // timestamp of the last update of the reader css styles
-        READER_CSS_UPDATED_TIMESTAMP,
         // Identifier of the next page for the discover /cards endpoint
         READER_CARDS_ENDPOINT_PAGE_HANDLE,
         // used to tell the server to return a different set of data so the content on discover tab doesn't look static
@@ -488,18 +483,6 @@ public class AppPrefs {
 
     public static void setReaderSubfilter(@NonNull String json) {
         setString(DeletablePrefKey.READER_SUBFILTER, json);
-    }
-
-    /**
-     * title of the last active page in ReaderSubsActivity - this is stored rather than
-     * the index of the page so we can re-order pages without affecting this value
-     */
-    public static String getReaderSubsPageTitle() {
-        return getString(DeletablePrefKey.READER_SUBS_PAGE_TITLE);
-    }
-
-    public static void setReaderSubsPageTitle(String pageTitle) {
-        setString(DeletablePrefKey.READER_SUBS_PAGE_TITLE, pageTitle);
     }
 
     // Store the version code of the app. Used to check it the app was upgraded.
@@ -1294,14 +1277,6 @@ public class AppPrefs {
 
     public static void setReaderAnalyticsCountSitesTimestamp(long timestamp) {
         setLong(DeletablePrefKey.READER_ANALYTICS_COUNT_SITES_TIMESTAMP, timestamp);
-    }
-
-    public static long getReaderCssUpdatedTimestamp() {
-        return getLong(DeletablePrefKey.READER_CSS_UPDATED_TIMESTAMP, 0);
-    }
-
-    public static void setReaderCssUpdatedTimestamp(long timestamp) {
-        setLong(DeletablePrefKey.READER_CSS_UPDATED_TIMESTAMP, timestamp);
     }
 
     public static String getReaderCardsPageHandle() {

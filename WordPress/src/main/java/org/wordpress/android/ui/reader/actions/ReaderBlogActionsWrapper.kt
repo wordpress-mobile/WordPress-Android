@@ -50,9 +50,26 @@ class ReaderBlogActionsWrapper @Inject constructor(
         readerTracker
     )
 
+    @Suppress("LongParameterList")
+    fun followFeedById(
+        blogId: Long,
+        feedId: Long,
+        isAskingToFollow: Boolean,
+        actionListener: ActionListener,
+        source: String,
+        readerTracker: ReaderTracker
+    ): Boolean = ReaderBlogActions.followFeedById(
+        blogId,
+        feedId,
+        isAskingToFollow,
+        actionListener,
+        source,
+        readerTracker
+    )
+
     fun updateBlogInfo(blogId: Long, feedId: Long, blogUrl: String?, infoListener: UpdateBlogInfoListener) =
         if (readerUtilsWrapper.isExternalFeed(blogId, feedId)) {
-            ReaderBlogActions.updateFeedInfo(blogId, blogUrl, infoListener)
+            ReaderBlogActions.updateFeedInfo(feedId, blogUrl, infoListener)
         } else {
             ReaderBlogActions.updateBlogInfo(blogId, blogUrl, infoListener)
         }

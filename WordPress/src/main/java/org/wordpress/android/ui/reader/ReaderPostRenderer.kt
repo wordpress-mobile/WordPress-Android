@@ -383,10 +383,13 @@ class ReaderPostRenderer(
 
         // title isn't necessary, but it's invalid html5 without one
         sbHtml.append("<title>Reader Post</title>")
-            .append(
-                ("""<link rel="stylesheet" type="text/css"
-          href="${cssProvider.getCssUrl()}">""")
-            )
+            // The base stylesheet is inlined from a bundled asset rather than linked from
+            // wordpress.com. A linked stylesheet is render-blocking, so a slow or stalled
+            // response left the article body blank behind an endless spinner (CMM-2254).
+            // It stays ahead of the rules below so those keep overriding it.
+            .append("<style type='text/css'>")
+            .append(cssProvider.getBaseCss())
+            .append("</style>")
 
         // https://developers.google.com/chrome/mobile/docs/webview/pixelperfect
         sbHtml.append("<meta name='viewport' content='width=device-width, initial-scale=1'>")

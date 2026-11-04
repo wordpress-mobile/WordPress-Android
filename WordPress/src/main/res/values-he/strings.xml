@@ -654,9 +654,6 @@ Language: he_IL
     <string name="notifications_action_mark_all_as_read">לסמן את כל ההודעות כ\'נקרא\'</string>
     <string name="notifications_unread_content_description">לא נקרא</string>
     <string name="qrcode_media_deeplink_error">האתר לא נמצא. יש לוודא שהתחברת לחשבון הנכון.</string>
-    <string name="gravatar_info_learn_more_link">מה זה Gravatar?</string>
-    <string name="gravatar_info_description">עדכון של תמונת הפרופיל, השם והמידע עליך כאן יעדכן את הפרטים בכל האתרים שמשתמשים בפרופילים של Gravatar.</string>
-    <string name="gravatar_info_title">הפרופיל שלך ב-WordPress.com מופעל באמצעות Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">לא ניתן לטעון את המדיה לשיתוף. יש לבדוק את ההרשאות שניתנו לאפליקציה\n        או להשתמש בספריית המדיה של האפליקציה.</string>
     <string name="site_monitoring_cannot_be_started">אין לנו אפשרות לפתוח את ניטור האתר כעת. יש לנסות שוב מאוחר יותר</string>
     <string name="site_monitoring_tab_title_web_server_logs">קובצי יומן של שרתי אינטרנט</string>
@@ -666,7 +663,6 @@ Language: he_IL
     <string name="reader_empty_followed_blogs_button_subscriptions">לעבור למינויים</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">הבלוגים שנרשמת אליהם לא פרסמו תוכן לאחרונה</string>
     <string name="reader_no_followed_blogs_description_subs">אפשר להירשם לעדכונים מבלוגים דרך \'היכרות\' או לחפש בלוג שכבר מצא חן בעיניך.</string>
-    <string name="reader_no_recommended_blogs_title">אין בלוגים מומלצים</string>
     <string name="reader_no_posts_with_this_tag">אין פוסטים עם התגית הזו</string>
     <string name="reader_toast_err_unable_to_block_blog">לא ניתן לחסום את הבלוג הזה</string>
     <string name="reader_toast_posts_from_this_blog_blocked">פוסטים מהבלוג הזה לא יוצגו עוד</string>
@@ -674,7 +670,6 @@ Language: he_IL
     <string name="reader_toast_err_follow_not_authorized_to_access_blog">אין לך הרשאה לגשת לבלוג זה</string>
     <string name="reader_toast_err_unable_to_follow_blog">לא ניתן להירשם לעדכונים מהבלוג הזה</string>
     <string name="reader_toast_err_already_follow_this_blog">כבר נרשמת לעדכונים מבלוג זה</string>
-    <string name="reader_toast_err_show_blog">לא ניתן להציג בלוג זה</string>
     <string name="reader_label_choose_interests">לבחור את תחומי העניין שלך</string>
     <string name="reader_label_subscribers_count_single">מנוי אחד</string>
     <string name="reader_label_subscribers_count">%s מנויים</string>

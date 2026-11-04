@@ -43,6 +43,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -51,6 +52,9 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -209,6 +213,20 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private var isWebViewPaused: Boolean = false
     private var hasWebViewContent: Boolean = false
     private var webViewLayoutListener: View.OnLayoutChangeListener? = null
+    private var renderWatchdogJob: Job? = null
+    private var renderStartedAtMs: Long = 0
+
+    /**
+     * Set when a render starts and consumed by the [onPageFinished] that follows it, so the
+     * first-render work runs once per render. Keyed off the render rather than off the URL the
+     * WebView reports: [ReaderPostRenderer] loads the article with a real base URL so embeds get
+     * a referrer, and changing that URL must not be able to silently disable this again.
+     *
+     * Once per *render*, not once per post - a post that renders twice runs the work twice. Only
+     * [updatePost] is latched per post, by [hasAlreadyUpdatedPost]; anything added here that must
+     * not repeat needs a latch of its own.
+     */
+    private var isAwaitingRenderedPageFinish: Boolean = false
 
     private var isRelatedPost: Boolean = false
 
@@ -776,27 +794,44 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      * re-invokes [renderUiState] and [manageCommentSnippetUiState] so that tags and
      * comments appear only after the WebView has laid out, preventing them from
      * briefly showing near the top then jumping below the fold.
+     *
+     * Registered when the render *starts* rather than from [onPageFinished]. The page's
+     * load event waits on every subresource - third-party embed scripts and iframes
+     * included - so gating the article chrome on it meant a single slow embed could keep
+     * tags, comments, related posts and the likers row hidden over a fully painted
+     * article. The WebView gaining height is the signal we actually care about.
      */
     private fun registerWebViewLayoutListener() {
         removeWebViewLayoutListener()
         webViewLayoutListener = View.OnLayoutChangeListener {
                 _, _, _, _, _, _, _, _, _ ->
             if (readerWebView.height > 0 && !hasWebViewContent) {
-                hasWebViewContent = true
-                removeWebViewLayoutListener()
-                (viewModel.uiState.value as? ReaderPostDetailsUiState)
-                    ?.let { state ->
-                        binding?.let { renderUiState(state, it) }
-                    }
-                viewModel.commentSnippetState.value?.let {
-                    manageCommentSnippetUiState(it)
-                }
-                if (likesEnhancementsFeatureConfig.isEnabled()) {
-                    viewModel.likesUiState.value?.let { manageLikesUiState(it) }
-                }
+                onWebViewContentShown()
             }
         }
         readerWebView.addOnLayoutChangeListener(webViewLayoutListener)
+    }
+
+    /**
+     * Called once the WebView has laid out with content. Hides the render spinner and
+     * reveals the parts of the detail screen that are deliberately held back until the
+     * article body is on screen.
+     */
+    private fun onWebViewContentShown() {
+        hasWebViewContent = true
+        removeWebViewLayoutListener()
+        cancelRenderWatchdog()
+        readerProgressBar.visibility = View.GONE
+        (viewModel.uiState.value as? ReaderPostDetailsUiState)
+            ?.let { state ->
+                binding?.let { renderUiState(state, it) }
+            }
+        viewModel.commentSnippetState.value?.let {
+            manageCommentSnippetUiState(it)
+        }
+        if (likesEnhancementsFeatureConfig.isEnabled()) {
+            viewModel.likesUiState.value?.let { manageLikesUiState(it) }
+        }
     }
 
     private fun removeWebViewLayoutListener() {
@@ -804,6 +839,59 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             readerWebView.removeOnLayoutChangeListener(it)
         }
         webViewLayoutListener = null
+    }
+
+    /**
+     * Starts the render and arms its backstop together. The watchdog measures the render, so it
+     * must not be started before one that is still waiting on something else: a private Atomic
+     * post postpones rendering until its access cookie arrives, and that wait has its own
+     * progress dialog. Arming the two together also keeps [renderStartedAtMs] - and so the
+     * elapsed time logged by [onPageFinished] - measuring the render rather than the network.
+     */
+    private fun beginRenderWithWatchdog() {
+        startRenderWatchdog()
+        isAwaitingRenderedPageFinish = true
+        renderer?.beginRender()
+    }
+
+    /**
+     * Starts the render clock, and the backstop for a render that never produces content.
+     * Nothing in the article HTML should block painting any more, but the spinner must not be
+     * able to spin forever: if the layout listener has not fired by [RENDER_WATCHDOG_MS], give
+     * up on it and log how long we waited so the next report is diagnosable.
+     *
+     * A re-render over an article already on screen gets no backstop. There is no spinner up for
+     * it to take down, and nothing could cancel it either - the layout listener removes itself on
+     * the first paint and is only re-registered while [hasWebViewContent] is false - so it would
+     * do nothing but warn about a render that in fact finished.
+     */
+    private fun startRenderWatchdog() {
+        renderStartedAtMs = System.currentTimeMillis()
+        if (!hasWebViewContent) {
+            armSpinnerBackstop(RENDER_WATCHDOG_MS)
+        }
+    }
+
+    /**
+     * Arms the single backstop that hides the spinner if [onWebViewContentShown] never runs,
+     * replacing any previous one. The timeout differs by what we are still waiting for: a whole
+     * render, or just the paint that follows a document that has already finished loading.
+     */
+    private fun armSpinnerBackstop(timeoutMs: Long) {
+        cancelRenderWatchdog()
+        renderWatchdogJob = viewLifecycleOwner.lifecycleScope.launch {
+            delay(timeoutMs)
+            AppLog.w(
+                T.READER,
+                "reader post detail > no rendered content after ${timeoutMs}ms, hiding spinner"
+            )
+            readerProgressBar.visibility = View.GONE
+        }
+    }
+
+    private fun cancelRenderWatchdog() {
+        renderWatchdogJob?.cancel()
+        renderWatchdogJob = null
     }
 
     private fun renderUiState(state: ReaderPostDetailsUiState, binding: ReaderFragmentPostDetailBinding) {
@@ -1287,6 +1375,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val relatedPostsView = if (state.isGlobal) globalRelatedPostsView else localRelatedPostsView
         relatedPostsView.showPosts(state)
 
+        // An empty list still has to reach showPosts above - that is what drops the previous
+        // post's cards and railcars - but there is nothing to reveal here. Revealing it anyway
+        // would fade in the empty header label's margins as a gap below the article.
+        if (state.cards.isNullOrEmpty()) {
+            relatedPostsView.visibility = View.GONE
+            return
+        }
+
         // fade in this related posts view
         if (relatedPostsView.visibility != View.VISIBLE) {
             AniUtils.fadeIn(relatedPostsView, AniUtils.Duration.MEDIUM)
@@ -1366,6 +1462,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             return
         }
 
+        // ReaderPostActions.updatePost copies the server's body into this very ReaderPost
+        // instance before it calls back, so by then the post can no longer be asked what it
+        // used to say. Remember the body here, while it is still the one on screen.
+        val bodyBeforeUpdate = viewModel.post?.text
+
         val resultListener = ReaderActions.UpdateResultListener { result ->
             val post = viewModel.post
             if (isAdded && post != null) {
@@ -1378,13 +1479,19 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 if (result.isNewOrChanged) {
                     val newPost = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
                     newPost?.let {
+                        val hasNewBody = it.text != bodyBeforeUpdate
                         viewModel.post = it
                         if (likesEnhancementsFeatureConfig.isEnabled()) {
                             viewModel.onRefreshLikersData(it)
                         }
                         viewModel.onUpdatePost(it)
-                        // Re-render the WebView with updated content
-                        showPostInWebView(it)
+                        // Only a changed body needs the WebView again. isNewOrChanged also covers
+                        // the like and comment counts, and reloading an identical article for one
+                        // of those would blank it, collapse it and lose the reader's place - with
+                        // no spinner, since the render spinner stays down over content already up.
+                        if (hasNewBody) {
+                            showPostInWebView(it)
+                        }
                     }
                 }
 
@@ -1633,7 +1740,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         PrivateAtCookieRefreshProgressDialog.dismissIfNecessary(childFragmentManager)
-        renderer?.beginRender()
+        beginRenderWithWatchdog()
     }
 
     override fun onCookieProgressDialogCancelled() {
@@ -1646,7 +1753,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             R.string.media_accessing_failed,
             Snackbar.LENGTH_LONG
         ).show()
-        renderer?.beginRender()
+        beginRenderWithWatchdog()
     }
 
     // overridePendingTransition is deprecated in SDK 34 in favor of overrideActivityTransition, but the latter requires
@@ -1680,7 +1787,15 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun showPostInWebView(post: ReaderPost) {
         readerWebView.setIsPrivatePost(post.isPrivate)
         readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post.blogUrl))
-        readerProgressBar.visibility = View.VISIBLE
+        // Watch for the body painting from here rather than from onPageFinished. The backstop is
+        // armed with the render itself in [beginRenderWithWatchdog], not here - a private Atomic
+        // post postpones its render until the access cookie arrives.
+        // A re-render over an article already on screen - updatePost() found a newer version of
+        // the post - stays silent: the spinner would otherwise cover content the reader is reading.
+        if (!hasWebViewContent) {
+            readerProgressBar.visibility = View.VISIBLE
+            registerWebViewLayoutListener()
+        }
         renderer = ReaderPostRenderer(
             readerWebView,
             post,
@@ -1711,9 +1826,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             CookieManager.getInstance().setCookie(
                 privateAtomicCookie.getDomain(), privateAtomicCookie.getCookieContent()
             )
-            renderer?.beginRender()
+            beginRenderWithWatchdog()
         } else {
-            renderer?.beginRender()
+            beginRenderWithWatchdog()
         }
     }
 
@@ -1734,14 +1849,37 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             return
         }
 
-        readerProgressBar.visibility = View.GONE
+        // The blank page clearContent() loads to drop the previous post. It doesn't go through
+        // the renderer, so attach the layout listener for it, but nothing else here applies:
+        // there is no article to measure, inject into, or react to, and the render that follows
+        // arms its own watchdog.
+        if (url == ReaderWebView.BLANK_URL) {
+            if (!hasWebViewContent) {
+                registerWebViewLayoutListener()
+            }
+            return
+        }
+
+        if (renderStartedAtMs > 0) {
+            val elapsedMs = System.currentTimeMillis() - renderStartedAtMs
+            AppLog.d(T.READER, "reader post detail > page finished after ${elapsedMs}ms - $url")
+        }
         injectFragmentLinkInterceptor(view)
 
+        // The document has finished loading, but the WebView has not necessarily laid out yet -
+        // the body typically paints a few hundred ms later. Hiding the spinner here would uncover
+        // an empty article for that whole window, so hand over to the layout listener and keep
+        // only a short backstop for the post that never paints at all. A re-render over content
+        // already on screen needs neither: the listener has done its job and the spinner is down.
         if (!hasWebViewContent) {
+            armSpinnerBackstop(PAINT_GRACE_MS)
             registerWebViewLayoutListener()
         }
 
-        if (url != null && url == "about:blank") {
+        // Only the page-finished that belongs to a render we started does the first-render work,
+        // which also keeps the repeat calls a page full of iframes can produce from redoing it.
+        if (isAwaitingRenderedPageFinish) {
+            isAwaitingRenderedPageFinish = false
             // brief delay before showing related posts to give page time to render
             view.postDelayed(Runnable {
                 if (!isAdded) {
@@ -1761,8 +1899,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     viewModel.onRelatedPostsRequested(it)
                 }
             }, ON_PAGE_FINISHED_DELAY_MILLIS)
-        } else {
-            url?.let { AppLog.w(T.READER, "reader post detail > page finished - $it") }
         }
     }
 
@@ -2069,6 +2205,20 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     companion object {
         private const val ON_PAGE_FINISHED_DELAY_MILLIS = 300L
+
+        /**
+         * How long the render spinner may stay up without the WebView producing content
+         * before we hide it anyway. Generous enough not to pre-empt a slow but working
+         * render, short enough that the screen can't look stuck indefinitely.
+         */
+        private const val RENDER_WATCHDOG_MS = 15_000L
+
+        /**
+         * How long to wait for the body to paint once the document has finished loading. Several
+         * times the delay measured between onPageFinished and the WebView gaining height, while
+         * still clearing the spinner promptly for a post whose body is empty and never will.
+         */
+        private const val PAINT_GRACE_MS = 2_000L
 
         private const val KEY_LIKERS_LIST_STATE = "likers_list_state"
         private const val KEY_COMMENTS_SNIPPET_LIST_STATE = "comments_snippet_list_state"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-08-25 17:56:31+0000
+Translation-Revision-Date: 2026-10-21 09:05:05+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.1.0
 Language: ro
@@ -657,9 +657,6 @@ Language: ro
     <string name="gutenberg_native_video_caption_empty_663aab49" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Subtitrare video. Nu există</string>
     <string name="gutenberg_native_video_caption_s_0141bd20" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Subtitrare video. %s</string>
     <string name="qrcode_media_deeplink_error">Nu am găsit site-ul. Verifică dacă ești autentificat în contul corect.</string>
-    <string name="gravatar_info_learn_more_link">Ce este Gravatar?</string>
-    <string name="gravatar_info_description">Actualizarea aici a avatarului, numelui și informațiilor despre tine, va face actualizarea lor și pe toate site-urile care folosesc profiluri Gravatar.</string>
-    <string name="gravatar_info_title">Profilul tău WordPress.com este propulsat de Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">Nu pot să încarc media pentru partajare. Te rog să verifici permisiunile aplicației\n        sau folosește biblioteca Media a aplicației.</string>
     <string name="site_monitoring_cannot_be_started">Pentru moment, nu putem să deschidem monitorizare site. Te rog să reîncerci mai târziu</string>
     <string name="site_monitoring_tab_title_web_server_logs">Jurnale server web</string>
@@ -671,13 +668,11 @@ Language: ro
     <string name="reader_no_followed_blogs_description_subs">Abonează-te la bloguri în Descoperă sau caută un blog care ți-a plăcut.</string>
     <string name="reader_toast_err_follow_not_authorized_to_access_blog">Nu ești autorizat să accesezi acest blog</string>
     <string name="reader_toast_err_unable_to_follow_blog">Nu pot face abonarea la acest blog</string>
-    <string name="reader_no_recommended_blogs_title">Niciun blog recomandat</string>
     <string name="reader_no_posts_with_this_tag">Nu există articole cu această etichetă</string>
     <string name="reader_toast_err_unable_to_block_blog">Nu pot să blochez acest blog</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Articolele din acest blog nu vor mai fi arătate</string>
     <string name="reader_toast_err_unable_to_unfollow_blog">Nu pot face dezabonarea la blog</string>
     <string name="reader_toast_err_already_follow_this_blog">Te-ai abonat deja la acest blog</string>
-    <string name="reader_toast_err_show_blog">Nu pot să arăt acest blog</string>
     <string name="reader_label_choose_interests">Alege ce te interesează</string>
     <string name="reader_label_subscribers_count_single">1 abonat</string>
     <string name="reader_page_followed_blogs_title">Bloguri la care te-ai abonat</string>
@@ -2206,9 +2201,9 @@ Language: ro
     <string name="suffix_1_000_000_000_000_000_000">exa%s</string>
     <string name="suffix_1_000">kilo%s</string>
     <string name="suffix_1_000_000_000">giga%s</string>
-    <string name="suffix_1_000_000">mega%s</string>
     <string name="posts_cannot_be_started">Nu putem deschide articolele acum. Te rog reîncearcă mai târziu</string>
     <string name="site_cannot_be_loaded">Nu putem încărca datele pentru site-ul tău chiar acum. Te rog reîncearcă mai târziu</string>
+    <string name="suffix_1_000_000">%s milioane</string>
     <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bibliotecă Media WordPress</string>
     <string name="gutenberg_native_unsupported" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Neacceptat</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Atinge pentru a ascunde tastatura</string>
@@ -3071,7 +3066,7 @@ Language: ro
     <string name="button_retry">Reîncearcă</string>
     <string name="post_queued">Articolul este în coada de așteptare</string>
     <string name="uploading_post">Încarc „%s”</string>
-    <string name="connection_to_server_lost">Conexiunea cu serverul s-a pierdut</string>
+    <string name="connection_to_server_lost">Conexiunea la server s-a pierdut</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">Verific adresa site-ului</string>
     <string name="login_site_address" a8c-src-lib="module:login">Adresă site</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Introdu adresa site-ului WordPress pe care vrei să-l conectezi.</string>

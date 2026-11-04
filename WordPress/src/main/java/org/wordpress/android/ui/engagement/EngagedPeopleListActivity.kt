@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.engagement
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import org.wordpress.android.R
@@ -70,5 +72,42 @@ class EngagedPeopleListActivity : BaseAppCompatActivity() {
     companion object {
         const val KEY_LIST_SCENARIO = "list_scenario"
         private const val TAG_LIKE_LIST_FRAGMENT = "tag_like_list_fragment"
+
+        /**
+         * Opens the likers of a post for a caller that has nothing to head the list with. New
+         * Stats knows an item only by its id and its like count -- no author, no excerpt -- and
+         * the screen it is opened from already names the item, so the list is shown on its own.
+         */
+        fun startForPostLikes(
+            context: Context,
+            siteId: Long,
+            postId: Long,
+            numLikes: Int,
+            source: EngagementNavigationSource
+        ) {
+            context.startActivity(
+                Intent(context, EngagedPeopleListActivity::class.java)
+                    .putExtra(
+                        KEY_LIST_SCENARIO,
+                        ListScenario(
+                            type = ListScenarioType.LOAD_POST_LIKES,
+                            source = source,
+                            siteId = siteId,
+                            postOrCommentId = postId,
+                            commentSiteUrl = "",
+                            headerData = HeaderData(
+                                authorName = AuthorName.AuthorNameString(null),
+                                snippetText = "",
+                                authorAvatarUrl = "",
+                                authorUserId = 0,
+                                authorPreferredSiteId = 0,
+                                authorPreferredSiteUrl = "",
+                                numLikes = numLikes
+                            ),
+                            showLikedItemHeader = false
+                        )
+                    )
+            )
+        }
     }
 }

@@ -172,7 +172,6 @@ class PrepublishingTagsViewModel @Inject constructor(
         // promote any typed-but-uncommitted text before the final synchronous flush so it is saved.
         commitPendingTag()
         flushPendingTags()
-        super.onCleared()
     }
 
     private fun updateUiState() {

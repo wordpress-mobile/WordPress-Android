@@ -56,12 +56,16 @@ data class MostViewedItem(
  * @param name The name of the child item
  * @param url The URL opened when the child row is tapped (null if not linkable)
  * @param views The number of views
+ * @param children Rows nested one level deeper, revealed when this child is expanded. Only the
+ * archives card goes this deep (its "Taxonomies" group lists a taxonomy's terms under it); empty
+ * for every other source, which leaves the child row a plain link row.
  */
 @Parcelize
 data class MostViewedChildItem(
     val name: String,
     val url: String?,
-    val views: Long
+    val views: Long,
+    val children: List<MostViewedChildItem> = emptyList()
 ) : Parcelable
 
 /**

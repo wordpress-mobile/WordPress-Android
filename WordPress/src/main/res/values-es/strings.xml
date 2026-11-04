@@ -657,9 +657,6 @@ Language: es
     <string name="notifications_action_mark_all_as_read">Marcar todo como leído</string>
     <string name="notifications_unread_content_description">No leído</string>
     <string name="qrcode_media_deeplink_error">Sitio no encontrado. Comprueba que has iniciado sesión con la cuenta correcta.</string>
-    <string name="gravatar_info_learn_more_link">¿Qué es Gravatar?</string>
-    <string name="gravatar_info_description">Si actualizas aquí tu avatar, nombre e información sobre ti, también se actualizarán en todos los sitios que utilicen perfiles Gravatar.</string>
-    <string name="gravatar_info_title">Tu perfil de WordPress.com funciona con Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">No se pueden cargar los medios para compartir. Comprueba los permisos de la aplicación\n        o utiliza la biblioteca de medios.</string>
     <string name="site_monitoring_cannot_be_started">No podemos abrir las estadísticas en este momento. Por favor, inténtalo de nuevo más tarde</string>
     <string name="site_monitoring_tab_title_web_server_logs">Registros del servidor webs</string>
@@ -669,7 +666,6 @@ Language: es
     <string name="reader_empty_followed_blogs_button_subscriptions">Ir a suscripciones</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Los blogs a los que estás suscrito no han publicado nada recientemente</string>
     <string name="reader_no_followed_blogs_description_subs">Suscríbete a blogs en Descubrir o busca un blog que ya te guste.</string>
-    <string name="reader_no_recommended_blogs_title">No hay blogs recomendados</string>
     <string name="reader_no_posts_with_this_tag">No hay entradas con esta etiqueta</string>
     <string name="reader_toast_err_unable_to_block_blog">No ha sido posible bloquear este blog</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Las entradas de este blog ya no se mostrarán</string>
@@ -677,7 +673,6 @@ Language: es
     <string name="reader_toast_err_follow_not_authorized_to_access_blog">No tienes autorización para acceder a este blog</string>
     <string name="reader_toast_err_unable_to_follow_blog">No es posible suscribirse a este blog</string>
     <string name="reader_toast_err_already_follow_this_blog">Ya estás suscrito a este blog.</string>
-    <string name="reader_toast_err_show_blog">No se puede mostrar este blog</string>
     <string name="reader_label_choose_interests">Elige tus intereses</string>
     <string name="reader_label_subscribers_count_single">1 suscriptor</string>
     <string name="reader_label_subscribers_count">%s suscriptores</string>

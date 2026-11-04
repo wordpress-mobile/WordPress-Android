@@ -30,8 +30,11 @@ import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepos
 import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.ViewsDataPoint
-import org.wordpress.android.ui.newstats.util.RangeYearPlacement
-import org.wordpress.android.ui.newstats.util.rangeYearPlacement
+import org.wordpress.android.ui.newstats.util.StatsDateSkeleton
+import org.wordpress.android.ui.newstats.util.formatDayRangeWithYear
+import org.wordpress.android.ui.newstats.util.formatMonthRangeWithYear
+import org.wordpress.android.ui.newstats.util.formatPresetRange
+import org.wordpress.android.ui.newstats.util.statsDateFormatter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.LocalDate
@@ -88,6 +91,37 @@ class ViewsStatsViewModel @Inject constructor(
     val effectivePeriod: StateFlow<StatsPeriod> =
         combine(_selectedPeriod, _selectedBarPeriod) { base, bar -> bar ?: base }
             .stateIn(viewModelScope, SharingStarted.Eagerly, _selectedPeriod.value)
+
+    /**
+     * The dates [effectivePeriod] resolves to, shown beneath a preset's name in the Traffic
+     * selector so the label names the window the cards were loaded for. A preset's name on its own
+     * ("Last 7 days") never changes, which is what made a still-selected period look like stats
+     * that had stopped updating when a user refreshed them (CMM-2540).
+     *
+     * Null for a Custom range — including a soft-selected bar, which is one — whose label is
+     * already made of those dates; repeating them would only double the line.
+     *
+     * Recomputed on every [_uiState] emission as well as on a period change, and the window is read
+     * off the clock each time. The [_uiState] leg is what keeps the dates right after a same-period
+     * pull-to-refresh, which moves neither [_selectedPeriod] nor [effectivePeriod] and so would
+     * otherwise leave the label untouched.
+     *
+     * The cost of reading the clock there is that emissions which do *no* fetch — [onMetricSelected],
+     * [onChartTypeChanged], [onBarTapped] — also relabel. A session left open across local midnight
+     * therefore shows today's window above data loaded yesterday until the next load. Accepted
+     * rather than fixed: it takes a session spanning midnight plus a tap on one of those controls,
+     * and dates a day ahead of the chart read as a prompt to refresh rather than as stalled stats.
+     * Deriving the label from the loaded result instead would remove the gap entirely.
+     */
+    val effectivePeriodDates: StateFlow<String?> =
+        combine(effectivePeriod, _uiState) { period, _ -> formatPeriodDates(period) }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, formatPeriodDates(_selectedPeriod.value))
+
+    private fun formatPeriodDates(period: StatsPeriod): String? {
+        if (period is StatsPeriod.Custom) return null
+        val (start, end) = statsRepository.periodWindow(period)
+        return formatPresetRange(start, end, monthGranularity = period.isMonthBucketed())
+    }
 
     private var currentChartType: ChartType = restoreChartTypeFromSavedState()
 
@@ -1270,15 +1304,15 @@ class ViewsStatsViewModel @Inject constructor(
      */
     private fun formatDataPointLabel(period: String, unit: StatsUnit): String = when {
         period.matches(HOURLY_FORMAT_REGEX) -> formatHourlyLabel(period)
-        else -> parsePeriodDate(period)
-            ?.format(DateTimeFormatter.ofPattern(labelPatternFor(unit), Locale.getDefault()))
-            ?: period
-    }
-
-    private fun labelPatternFor(unit: StatsUnit): String = when (unit) {
-        StatsUnit.YEAR -> "yyyy"
-        StatsUnit.MONTH -> "MMM"
-        else -> "MMM d"
+        else -> parsePeriodDate(period)?.let { date ->
+            when (unit) {
+                // A bare four-digit year reads the same everywhere; the localized form ("2026年")
+                // would only cost axis width.
+                StatsUnit.YEAR -> date.year.toString()
+                StatsUnit.MONTH -> date.format(statsDateFormatter(StatsDateSkeleton.MONTH))
+                else -> date.format(statsDateFormatter(StatsDateSkeleton.DAY_MONTH))
+            }
+        } ?: period
     }
 
     /** Parses a bucket's period string, tolerating both the "yyyy-MM" and "yyyy-MM-dd" shapes. */
@@ -1316,21 +1350,26 @@ class ViewsStatsViewModel @Inject constructor(
         if (unit == StatsUnit.YEAR) return formatYearRange(startDate, endDate)
         return when (period) {
             is StatsPeriod.Today -> formatSingleDayRange(endDate)
-            is StatsPeriod.Last12Months -> formatMonthRange(startDate, endDate)
-            // ThisYear takes its granularity from the whole calendar year, so it is always charted in
-            // month buckets -- twelve of them on 5 January just as in December.
-            is StatsPeriod.ThisYear -> formatMonthRange(startDate, endDate)
-            is StatsPeriod.Custom -> {
+            is StatsPeriod.Custom ->
                 if (isCustomPeriodMonthly(period)) formatMonthRange(startDate, endDate)
                 else formatDayRange(startDate, endDate)
-            }
-            else -> formatDayRange(startDate, endDate)
+            else ->
+                if (period.isMonthBucketed()) formatMonthRange(startDate, endDate)
+                else formatDayRange(startDate, endDate)
         }
     }
 
+    /**
+     * Whether a preset period is charted — and so named — in whole months rather than days. Last 12
+     * Months is twelve month buckets by definition, and This Year takes its granularity from the
+     * whole calendar year, so it is twelve of them on 5 January just as in December.
+     */
+    private fun StatsPeriod.isMonthBucketed(): Boolean =
+        this is StatsPeriod.Last12Months || this is StatsPeriod.ThisYear
+
     private fun formatSingleDayRange(date: String): String {
         val parsedDate = parsePeriodDate(date) ?: return date
-        return parsedDate.format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.getDefault()))
+        return parsedDate.format(statsDateFormatter(StatsDateSkeleton.DAY_MONTH_YEAR))
     }
 
     @Suppress("ReturnCount")
@@ -1345,37 +1384,14 @@ class ViewsStatsViewModel @Inject constructor(
     private fun formatMonthRange(startDate: String, endDate: String): String {
         val start = parsePeriodDate(startDate) ?: return "$startDate - $endDate"
         val end = parsePeriodDate(endDate) ?: return "$startDate - $endDate"
-        val monthFormat = DateTimeFormatter.ofPattern("MMM", Locale.getDefault())
-        val monthYearFormat = DateTimeFormatter.ofPattern("MMM yyyy", Locale.getDefault())
-
-        return when (rangeYearPlacement(start.year, end.year)) {
-            // Cross-year span: show the year on both ends ("Dec 2024 - Jan 2025").
-            RangeYearPlacement.BOTH -> "${start.format(monthYearFormat)} - ${end.format(monthYearFormat)}"
-            // Same year: show the year once, on the trailing month ("Jan - Jun 2024").
-            RangeYearPlacement.TRAILING ->
-                if (start.month == end.month) start.format(monthYearFormat)
-                else "${start.format(monthFormat)} - ${end.format(monthYearFormat)}"
-        }
+        return formatMonthRangeWithYear(start, end)
     }
 
     @Suppress("ReturnCount")
     private fun formatDayRange(startDate: String, endDate: String): String {
         val start = parsePeriodDate(startDate) ?: return "$startDate - $endDate"
         val end = parsePeriodDate(endDate) ?: return "$startDate - $endDate"
-        val dayFormat = DateTimeFormatter.ofPattern("d", Locale.getDefault())
-        val dayMonthFormat = DateTimeFormatter.ofPattern("d MMM", Locale.getDefault())
-        val dayMonthYearFormat = DateTimeFormatter.ofPattern("d MMM yyyy", Locale.getDefault())
-
-        return when (rangeYearPlacement(start.year, end.year)) {
-            // Cross-year span: show the year on both ends ("28 Dec 2024 - 3 Jan 2025").
-            RangeYearPlacement.BOTH ->
-                "${start.format(dayMonthYearFormat)} - ${end.format(dayMonthYearFormat)}"
-            // Same year: show the year once, on the trailing date. Collapse the leading month when
-            // both ends share it ("14-20 Jan 2024" vs "28 Jul - 3 Aug 2024").
-            RangeYearPlacement.TRAILING ->
-                if (start.month == end.month) "${start.format(dayFormat)}-${end.format(dayMonthYearFormat)}"
-                else "${start.format(dayMonthFormat)} - ${end.format(dayMonthYearFormat)}"
-        }
+        return formatDayRangeWithYear(start, end)
     }
 
     fun onRetry() {
