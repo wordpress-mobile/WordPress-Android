@@ -8,12 +8,16 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.BaseHttpStack;
 import com.android.volley.toolbox.HttpResponse;
 
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import okhttp3.Call;
 import okhttp3.Headers;
@@ -29,6 +33,11 @@ import okhttp3.ResponseBody;
  * use okhttp-urlconnection
  */
 public class OkHttpStack extends BaseHttpStack {
+    // OkHttp treats a backslash like "/" and drops tabs and newlines inside path segments
+    private static final Pattern DOT_SEGMENT = Pattern.compile("(?:^|[/\\\\])(?:\\.|%2e){1,2}(?:[/\\\\]|$)",
+            Pattern.CASE_INSENSITIVE);
+    private static final Pattern IGNORED_PATH_CHARS = Pattern.compile("[\\t\\n\\f\\r]");
+
     private final OkHttpClient mOkHttpClient;
 
     public OkHttpStack(final OkHttpClient okHttpClient) {
@@ -94,6 +103,13 @@ public class OkHttpStack extends BaseHttpStack {
                                                              .writeTimeout(timeoutMs, TimeUnit.MILLISECONDS)
                                                              .build();
 
+        // OkHttp resolves "." and ".." path segments, even percent-encoded ones, so a request whose path
+        // contains one would otherwise be sent to a different endpoint than the one it was built for
+        if (hasDotSegment(request.getUrl())) {
+            AppLog.e(T.API, "Rejected request whose URL path contains a dot segment");
+            throw new IOException("URL contains a dot path segment");
+        }
+
         okhttp3.Request.Builder okHttpRequestBuilder = new okhttp3.Request.Builder();
         okHttpRequestBuilder.url(request.getUrl());
 
@@ -125,6 +141,30 @@ public class OkHttpStack extends BaseHttpStack {
         int contentLength = body == null ? 0 : (int) body.contentLength();
         List<Header> responseHeaders = mapHeaders(okHttpResponse.headers());
         return new HttpResponse(code, responseHeaders, contentLength, content);
+    }
+
+    static boolean hasDotSegment(@NonNull String url) {
+        int schemeEnd = url.indexOf("://");
+        int authorityStart = schemeEnd < 0 ? 0 : schemeEnd + 3;
+        int pathEnd = indexOfAny(url, "?#", authorityStart, url.length());
+        if (pathEnd < 0) {
+            pathEnd = url.length();
+        }
+        int pathStart = indexOfAny(url, "/\\", authorityStart, pathEnd);
+        if (pathStart < 0) {
+            return false;
+        }
+        String path = IGNORED_PATH_CHARS.matcher(url.substring(pathStart, pathEnd)).replaceAll("");
+        return DOT_SEGMENT.matcher(path).find();
+    }
+
+    private static int indexOfAny(@NonNull String s, @NonNull String chars, int start, int end) {
+        for (int i = start; i < end; i++) {
+            if (chars.indexOf(s.charAt(i)) >= 0) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private List<Header> mapHeaders(Headers responseHeaders) {
