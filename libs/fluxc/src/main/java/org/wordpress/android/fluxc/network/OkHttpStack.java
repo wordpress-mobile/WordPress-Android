@@ -104,10 +104,11 @@ public class OkHttpStack extends BaseHttpStack {
                                                              .build();
 
         // OkHttp resolves "." and ".." path segments, even percent-encoded ones, so a request whose path
-        // contains one would otherwise be sent to a different endpoint than the one it was built for
+        // contains one would otherwise be sent to a different endpoint than the one it was built for. This isn't
+        // an IOException because Volley would report that as a NoConnectionError
         if (hasDotSegment(request.getUrl())) {
             AppLog.e(T.API, "Rejected request whose URL path contains a dot segment");
-            throw new IOException("URL contains a dot path segment");
+            throw new IllegalArgumentException("URL contains a dot path segment");
         }
 
         okhttp3.Request.Builder okHttpRequestBuilder = new okhttp3.Request.Builder();
@@ -143,7 +144,9 @@ public class OkHttpStack extends BaseHttpStack {
         return new HttpResponse(code, responseHeaders, contentLength, content);
     }
 
-    static boolean hasDotSegment(@NonNull String url) {
+    static boolean hasDotSegment(@NonNull String rawUrl) {
+        // OkHttp trims leading and trailing whitespace before parsing
+        String url = rawUrl.trim();
         int schemeEnd = url.indexOf("://");
         int authorityStart = schemeEnd < 0 ? 0 : schemeEnd + 3;
         int pathEnd = indexOfAny(url, "?#", authorityStart, url.length());

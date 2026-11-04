@@ -9,7 +9,6 @@ import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import java.io.IOException
 
 @RunWith(RobolectricTestRunner::class)
 class OkHttpStackTest {
@@ -24,6 +23,8 @@ class OkHttpStackTest {
             "https://h/rest/v1.1/read/tags/.\t./me",
             "https://h\\..\\me",
             "https://h/rest/v1.1/read/tags/..",
+            "https://h/rest/v1.1/read/tags/.. ",
+            "https://h/rest/v1.1/read/tags/..\n",
             "https://h/rest/v1.1/read/tags/..?x=1",
             "https://h/rest/v1.1/read/tags/..#x"
         ).forEach {
@@ -39,6 +40,7 @@ class OkHttpStackTest {
             "https://h/rest/v1.1/read/tags/..dogs/posts",
             "https://h/rest/v1.1/read/tags/%2e%2e%2fme/posts",
             "https://h/rest/v1.1/read/tags/ハリー・ポッター/posts",
+            "https://h/rest/v1.1/read/tags/.. /posts",
             "https://h/rest/v1.1/me?redirect_to=/x/../y",
             "https://h/rest/v1.1/me#/../y",
             "https://h?redirect_to=/x/../y",
@@ -56,7 +58,7 @@ class OkHttpStackTest {
         val request = TestRequest("https://public-api.wordpress.com/rest/v1.1/read/tags/../../me/mine/delete")
 
         assertThatThrownBy { OkHttpStack(client).executeRequest(request, emptyMap()) }
-            .isInstanceOf(IOException::class.java)
+            .isInstanceOf(IllegalArgumentException::class.java)
     }
 
     private class TestRequest(url: String) : Request<String>(Method.POST, url, null) {
