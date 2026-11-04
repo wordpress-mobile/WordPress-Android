@@ -281,7 +281,8 @@ public class ReaderPostActions {
     public static void requestBlogPost(final String blogSlug,
                                        final String postSlug,
                                        final ReaderActions.OnRequestListener<String> requestListener) {
-        String path = "sites/" + blogSlug + "/posts/slug:" + postSlug + "/?meta=site,likes";
+        // The blog slug can come from an app link host, so encode it as a single path segment
+        String path = "sites/" + UrlUtils.urlEncode(blogSlug) + "/posts/slug:" + postSlug + "/?meta=site,likes";
         requestPost(WordPress.getRestClientUtilsV1_1(), path, requestListener);
     }
 
