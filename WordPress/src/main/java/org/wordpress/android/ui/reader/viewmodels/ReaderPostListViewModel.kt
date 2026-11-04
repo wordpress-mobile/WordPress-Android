@@ -730,6 +730,9 @@ class ReaderPostListViewModel @Inject constructor(
             AppLog.i(T.READER, "reader post list > network unavailable, canceled update")
             return
         }
+        // show the update as running now: its UpdateStarted can be emitted before this starts collecting events
+        requestFailed = false
+        setIsUpdating(true, action)
         repository.requestPosts(target, action)
     }
 

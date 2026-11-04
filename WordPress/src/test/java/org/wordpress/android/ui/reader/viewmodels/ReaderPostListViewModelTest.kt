@@ -171,6 +171,13 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
+    fun `blog preview shows progress as soon as it requests posts`() = test {
+        startAndLoad(ReaderPostListArgs(listType = ReaderPostListType.BLOG_PREVIEW, blogId = BLOG_ID))
+
+        assertThat(viewModel.uiState.value.isRefreshing).isTrue
+    }
+
+    @Test
     fun `following a site from a card updates its posts and the site header`() = test {
         whenever(repository.getPosts(ReaderPostListTarget.Blog(BLOG_ID))).thenReturn(posts(1, 2))
         whenever(repository.getBlogInfo(BLOG_ID, 0)).thenReturn(blog())
