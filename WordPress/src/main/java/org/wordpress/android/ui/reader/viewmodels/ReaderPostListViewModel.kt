@@ -461,7 +461,7 @@ class ReaderPostListViewModel @Inject constructor(
             sendUiEvent(ReaderPostListUiEvent.NoConnection)
             return
         }
-        // EventBus tells us when the gap is filled, and the reload that follows resets the marker
+        // the updater tells us when the gap is filled, and the reload that follows resets the marker
         repository.requestPosts(ReaderPostListTarget.Tag(tag), UpdateAction.REQUEST_OLDER_THAN_GAP)
         isGapFilling = true
         updateUiState()
@@ -606,7 +606,6 @@ class ReaderPostListViewModel @Inject constructor(
     private fun onRepositoryEvent(event: ReaderPostListEvent) {
         when (event) {
             is ReaderPostListEvent.UpdateStarted -> if (isCurrentTarget(event.tag)) {
-                requestFailed = false
                 setIsUpdating(true, event.action)
             }
 
@@ -616,7 +615,6 @@ class ReaderPostListViewModel @Inject constructor(
 
             is ReaderPostListEvent.SearchStarted -> if (isCurrentSearch(event.query)) {
                 // a re-run of the same query can follow a failed end from the run it replaced
-                requestFailed = false
                 setIsUpdating(true, searchAction(event.offset))
             }
 
@@ -705,6 +703,7 @@ class ReaderPostListViewModel @Inject constructor(
 
     private fun setIsUpdating(isUpdating: Boolean, action: UpdateAction) {
         isPullRefreshing = false
+        if (isUpdating) requestFailed = false
         if (isUpdating) updateActions.add(action) else updateActions.remove(action)
         updateUiState()
     }
@@ -731,7 +730,6 @@ class ReaderPostListViewModel @Inject constructor(
             return
         }
         // show the update as running now: its UpdateStarted can be emitted before this starts collecting events
-        requestFailed = false
         setIsUpdating(true, action)
         repository.requestPosts(target, action)
     }
