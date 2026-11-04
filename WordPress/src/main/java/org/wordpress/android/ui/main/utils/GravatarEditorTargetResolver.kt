@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main.utils
 
+import com.gravatar.Gravatar
 import com.gravatar.BuildConfig as GravatarBuildConfig
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -56,11 +57,11 @@ class GravatarProbeClientFactory @Inject constructor() {
  * send the user to the web editor instead and so the real status code reaches our logs.
  *
  * The probe only predicts the SDK's result if it looks the same on the wire, so it mirrors the SDK
- * deliberately: a fresh client per call, the same headers, and OkHttp's default User-Agent. Do not
- * swap in the app's shared OkHttp client — that one sends `wp-android/...` as its User-Agent, reuses
- * connections and carries our interceptors, which are exactly the properties the block is suspected
- * of keying on, so it could well succeed while the SDK is still refused. Re-check this against the
- * SDK's `SdkVersionInterceptor` whenever the gravatar dependency moves.
+ * deliberately: a fresh client per call, the same headers, and the same User-Agent the SDK sends,
+ * read from [Gravatar.userAgent] so it cannot drift. Do not swap in the app's shared OkHttp client —
+ * that one reuses connections and carries our interceptors, which are exactly the properties the
+ * block is suspected of keying on, so it could well succeed while the SDK is still refused. Re-check
+ * this against the SDK's `SdkVersionInterceptor` whenever the gravatar dependency moves.
  *
  * One divergence is deliberate: the probe caps the whole call at [GravatarProbeClientFactory]'s
  * timeout, where the SDK leaves OkHttp's 10s-per-phase defaults. A refusal that arrives later than
@@ -97,6 +98,10 @@ class GravatarEditorTargetResolver @Inject constructor(
         .header("Accept", "application/json")
         .header("X-Platform", "Android")
         .header("X-SDK-Version", GravatarBuildConfig.SDK_VERSION)
+        .header("User-Agent", Gravatar.userAgent)
+        // The SDK omits X-Source entirely when it has no usable app name, so mirror that rather
+        // than sending an empty one.
+        .apply { Gravatar.appName?.let { appName -> header("X-Source", appName) } }
         .build()
 
     private fun Response.toTarget(): GravatarEditorTarget = when {
