@@ -510,7 +510,7 @@ class ReaderPostRepository @Inject constructor(
                 // never hand craft the endpoint for default tags, since these MUST be updated using their endpoints
                 null
             } else {
-                formatRelativeEndpointForTag(tag.tagSlug)
+                ReaderUtils.getTagApiPath(tag.tagSlug, "posts")
             }
     }
 
@@ -543,10 +543,7 @@ class ReaderPostRepository @Inject constructor(
     companion object {
         private const val MILLIS_PER_SECOND = 1000L
 
-        private fun formatRelativeEndpointForTag(tagSlug: String): String? =
-            ReaderUtils.getTagApiPath(tagSlug, "posts")
-
         fun formatFullEndpointForTag(tagSlug: String): String? =
-            formatRelativeEndpointForTag(tagSlug)?.let { getRestClientUtilsV1_2().restClient.endpointURL + it }
+            ReaderUtils.getTagApiPath(tagSlug, "posts")?.let { getRestClientUtilsV1_2().restClient.endpointURL + it }
     }
 }

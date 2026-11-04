@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import okhttp3.Call;
@@ -37,6 +38,9 @@ public class OkHttpStack extends BaseHttpStack {
     private static final Pattern DOT_SEGMENT = Pattern.compile("(?:^|[/\\\\])(?:\\.|%2e){1,2}(?:[/\\\\]|$)",
             Pattern.CASE_INSENSITIVE);
     private static final Pattern IGNORED_PATH_CHARS = Pattern.compile("[\\t\\n\\f\\r]");
+    // group 1 is the path, without the scheme, authority, query or fragment
+    private static final Pattern URL_PATH = Pattern.compile("^(?:[a-z][a-z0-9+.-]*://)?[^/\\\\?#]*([^?#]*)",
+            Pattern.CASE_INSENSITIVE);
 
     private final OkHttpClient mOkHttpClient;
 
@@ -144,30 +148,13 @@ public class OkHttpStack extends BaseHttpStack {
         return new HttpResponse(code, responseHeaders, contentLength, content);
     }
 
-    static boolean hasDotSegment(@NonNull String rawUrl) {
+    static boolean hasDotSegment(@NonNull String url) {
         // OkHttp trims leading and trailing whitespace before parsing
-        String url = rawUrl.trim();
-        int schemeEnd = url.indexOf("://");
-        int authorityStart = schemeEnd < 0 ? 0 : schemeEnd + 3;
-        int pathEnd = indexOfAny(url, "?#", authorityStart, url.length());
-        if (pathEnd < 0) {
-            pathEnd = url.length();
-        }
-        int pathStart = indexOfAny(url, "/\\", authorityStart, pathEnd);
-        if (pathStart < 0) {
+        Matcher matcher = URL_PATH.matcher(url.trim());
+        if (!matcher.lookingAt()) {
             return false;
         }
-        String path = IGNORED_PATH_CHARS.matcher(url.substring(pathStart, pathEnd)).replaceAll("");
-        return DOT_SEGMENT.matcher(path).find();
-    }
-
-    private static int indexOfAny(@NonNull String s, @NonNull String chars, int start, int end) {
-        for (int i = start; i < end; i++) {
-            if (chars.indexOf(s.charAt(i)) >= 0) {
-                return i;
-            }
-        }
-        return -1;
+        return DOT_SEGMENT.matcher(IGNORED_PATH_CHARS.matcher(matcher.group(1)).replaceAll("")).find();
     }
 
     private List<Header> mapHeaders(Headers responseHeaders) {
