@@ -28,6 +28,7 @@ import androidx.preference.PreferenceManager
 import com.android.volley.RequestQueue
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import com.google.firebase.iid.FirebaseInstanceId
+import com.gravatar.Gravatar
 import com.wordpress.rest.RestClient
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -334,6 +335,11 @@ class AppInitializer @Inject constructor(
         }
 
         RestClientUtils.setUserAgent(userAgent.apiUserAgent)
+
+        // Names the app to the Gravatar SDK, which otherwise sends a bare `GravatarAndroid/<version>`
+        // that no edge rule can key on (CMM-1100). The same name the rest of our traffic already
+        // carries, so Gravatar sees us under one identity. Must run before the first SDK request.
+        Gravatar.appIdentifier(WordPress.USER_AGENT_APPNAME, buildConfig.getAppVersionName())
 
         if (!initialized) {
             initZendeskAsync()

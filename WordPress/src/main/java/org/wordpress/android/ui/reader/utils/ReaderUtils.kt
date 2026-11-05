@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.reader.utils
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
+import okhttp3.HttpUrl
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderCommentTable
@@ -171,6 +173,29 @@ object ReaderUtils {
      */
     @JvmStatic
     fun isValidTagSlug(slug: String): Boolean = VALID_TAG_SLUG_REGEX.matches(slug)
+
+    /*
+     * returns the API path for the passed tag followed by the passed path segments, ex: read/tags/dogs/posts,
+     * or null if the tag slug can't be used as a single path segment
+     */
+    @JvmStatic
+    fun getTagApiPath(tagSlug: String, vararg segments: String): String? =
+        buildApiPath(listOf("read", "tags", sanitizeWithDashes(tagSlug)) + segments)
+
+    /*
+     * HttpUrl.Builder encodes "/", "?" and "#" in each segment, but it resolves "." and ".." segments (even
+     * percent-encoded ones) instead of encoding them, so those are detected by the path ending up with fewer
+     * segments than were added. Only the path of the built URL is used, so the host is a placeholder
+     */
+    @VisibleForTesting
+    internal fun buildApiPath(segments: List<String>): String? {
+        val url = HttpUrl.Builder()
+            .scheme("https")
+            .host("localhost")
+            .apply { segments.forEach { addEncodedPathSegment(it) } }
+            .build()
+        return url.encodedPath.removePrefix("/").takeIf { url.pathSize == segments.size }
+    }
 
     /*
      * returns the long text to use for a like label ("Liked by 3 people", etc.)
