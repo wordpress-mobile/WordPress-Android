@@ -935,6 +935,28 @@ class TaxonomyRsApiRestClientTest {
         verifyBlocking(termsExecutor, never()) { create(any(), any()) }
     }
 
+    /**
+     * WordPress stores a term name HTML-encoded (`pre_term_name` runs `_wp_specialchars`), so
+     * `search` has to carry the encoded form or the `LIKE` matches nothing, and the comparison has
+     * to decode before matching. Without both, a tag like `AT&T` is looked for in vain on every
+     * save, re-created, refused as `term_exists`, and then dropped from the post.
+     */
+    @Test
+    fun `resolveTagIds matches a tag whose name the site stores HTML-encoded`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), any()) } doReturn listResponse(listOf(term(9L, "AT&amp;T")))
+        }
+        driveRequestsThrough(termsExecutor)
+
+        val ids = taxonomyClient.resolveTagIds(testSite, listOf("AT&T"))
+
+        assertEquals(listOf(9L), ids)
+        verifyBlocking(termsExecutor) {
+            listWithViewContext(TermEndpointType.Tags, TermListParams(search = "AT&amp;T", perPage = 100u))
+        }
+        verifyBlocking(termsExecutor, never()) { create(any(), any()) }
+    }
+
     @Test
     fun `resolveTagIds creates a tag when only a substring of the name matches`() = runTest {
         val termsExecutor = mock<TermsRequestExecutor> {
@@ -977,6 +999,20 @@ class TaxonomyRsApiRestClientTest {
         )
 
         assertTrue(taxonomyClient.resolveTagIds(testSite, listOf("news")).isEmpty())
+    }
+
+    /**
+     * The decoded name is what the tag picker shows and what [resolveTagIds] expects back, so
+     * storing the encoded form on the PostModel would re-encode it on the next save.
+     */
+    @Test
+    fun `resolveTagNames decodes a name the site stores HTML-encoded`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), any()) } doReturn listResponse(listOf(term(9L, "AT&amp;T")))
+        }
+        driveRequestsThrough(termsExecutor)
+
+        assertEquals(listOf("AT&T"), taxonomyClient.resolveTagNames(testSite, listOf(9L)))
     }
 
     @Test

@@ -91,6 +91,7 @@ class PostRsApiRestClientTest {
         MockitoAnnotations.openMocks(this)
         taxonomyRsApiRestClient = mock {
             onBlocking { resolveTagIds(any(), any()) } doReturn emptyList()
+            onBlocking { resolveTagNames(any(), any()) } doReturn emptyList()
         }
         val testScope = CoroutineScope(UnconfinedTestDispatcher(TestCoroutineScheduler()))
         whenever(wpApiClientProvider.getWpApiClient(site)).thenReturn(wpApiClient)
@@ -198,6 +199,29 @@ class PostRsApiRestClientTest {
         verify(additionalFieldsBuilder, never()).emptyArrays(any())
     }
 
+    /**
+     * The guard for the other half of that gap: a tag the site would not resolve also leaves
+     * `tagIds` empty, and treating that as "the author cleared every tag" would send the explicit
+     * empty array and delete tags from the post that the author never touched (CMM-2502).
+     */
+    @Test
+    fun `a post whose tags could not be resolved leaves the ones on the site alone`() = runTest {
+        val executor = executor()
+        stubRequests(executor)
+        whenever(taxonomyRsApiRestClient.resolveTagIds(site, listOf("alpha"))).thenReturn(emptyList())
+        val post = existingPost().apply {
+            setCategoryIdList(listOf(5L))
+            setTagNameList(listOf("alpha"))
+        }
+
+        restClient.pushPost(post, site, false, true, null)
+
+        // Nothing resolved, so the typed field is empty and wordpress-rs drops it from the body —
+        // which wp/v2 reads as "leave the tags as they are".
+        assertThat(captureUpdateParams(executor).tags).isEmpty()
+        verify(additionalFieldsBuilder, never()).emptyArrays(any())
+    }
+
     @Test
     fun `a page is written without taxonomies`() = runTest {
         val executor = executor()
@@ -289,6 +313,28 @@ class PostRsApiRestClientTest {
         assertThat(payload.deletedPostResponse).isNull()
     }
 
+    /**
+     * A site that turns the trash off (`EMPTY_TRASH_DAYS = 0`) refuses the non-forced delete, and
+     * Trash is the only action the UI offers for a live post — so without the retry the post could
+     * not be removed at all, where `wp.deletePost` used to fall through to a permanent delete.
+     */
+    @Test
+    fun `a site that refuses to trash deletes the post permanently instead`() = runTest {
+        val executor = executor()
+        stubTrashRefusedThenSucceeds(executor)
+
+        restClient.deletePost(existingPost(), site, PostDeleteActionType.TRASH)
+
+        verifyBlocking(executor) { trash(PostEndpointType.Posts, REMOTE_POST_ID) }
+        verifyBlocking(executor) { delete(PostEndpointType.Posts, REMOTE_POST_ID) }
+        val payload = dispatchedPayload<DeletedPostPayload>(PostAction.DELETED_POST)
+        assertThat(payload.error).isNull()
+        // Reported as the permanent delete it turned out to be, so PostStore removes the local row
+        // instead of keeping a trashed one for a post that no longer exists.
+        assertThat(payload.postDeleteActionType).isEqualTo(PostDeleteActionType.DELETE)
+        assertThat(payload.deletedPostResponse).isNull()
+    }
+
     @Test
     fun `fetchPostStatus asks only for the status field and reports its slug`() = runTest {
         val executor = executor(remoteStatus = PostStatus.Pending)
@@ -329,6 +375,23 @@ class PostRsApiRestClientTest {
         assertThat(payload.post.remotePostId).isEqualTo(REMOTE_POST_ID)
     }
 
+    /**
+     * A fetch has no author-supplied tag names to reuse, and PostFetcher fetches with a bare
+     * PostModel, so taking the names from the local copy would cache the post with no tags at all —
+     * and the next save would then clear them on the site.
+     */
+    @Test
+    fun `a fetched post takes its tag names from the response ids`() = runTest {
+        stubRequests(executor(remoteTags = listOf(7L, 3L)))
+        whenever(taxonomyRsApiRestClient.resolveTagNames(site, listOf(7L, 3L)))
+            .thenReturn(listOf("alpha", "beta"))
+
+        restClient.fetchPost(existingPost(), site)
+
+        val payload = dispatchedPayload<RemotePostPayload>(PostAction.FETCHED_POST)
+        assertThat(payload.post.tagNameList).containsExactly("alpha", "beta")
+    }
+
     @Test
     fun `a rejected credential reports an unauthorized error`() = runTest {
         stubFailure(
@@ -362,6 +425,27 @@ class PostRsApiRestClientTest {
 
         assertThat(dispatchedPayload<RemotePostPayload>(UploadAction.PUSHED_POST).error?.type)
             .isEqualTo(PostErrorType.UNKNOWN_POST)
+    }
+
+    /**
+     * A 404 on its own cannot tell a deleted post from a route the host blocks, and only the error
+     * code is conclusive. Claiming the post is gone when it is fine also suppresses the retry
+     * wording a generic failure gets.
+     */
+    @Test
+    fun `a bare 404 reports a generic error rather than a missing post`() = runTest {
+        stubFailure(
+            WpRequestResult.InvalidHttpStatusCode<Any>(
+                statusCode = 404u,
+                requestUrl = "",
+                requestMethod = RequestMethod.POST
+            )
+        )
+
+        restClient.pushPost(existingPost(), site, false, true, null)
+
+        assertThat(dispatchedPayload<RemotePostPayload>(UploadAction.PUSHED_POST).error?.type)
+            .isEqualTo(PostErrorType.GENERIC_ERROR)
     }
 
     @Test
@@ -406,7 +490,8 @@ class PostRsApiRestClientTest {
      */
     private fun executor(
         remoteModifiedGmt: Date = Date(MODIFIED_MILLIS),
-        remoteStatus: PostStatus? = PostStatus.Publish
+        remoteStatus: PostStatus? = PostStatus.Publish,
+        remoteTags: List<Long> = emptyList()
     ): PostsRequestExecutor {
         val headers = mock<WpNetworkHeaderMap>()
         @Suppress("DoNotMockDataClass") // 29 nullable fields; only two are read back here.
@@ -414,14 +499,15 @@ class PostRsApiRestClientTest {
             on { modifiedGmt } doReturn remoteModifiedGmt
             on { status } doReturn remoteStatus
         }
+        val post = serverPost(tags = remoteTags)
         return mock {
-            onBlocking { create(any(), any()) } doReturn PostsRequestCreateResponse(serverPost(), headers)
-            onBlocking { update(any(), any(), any()) } doReturn PostsRequestUpdateResponse(serverPost(), headers)
-            onBlocking { trash(any(), any()) } doReturn PostsRequestTrashResponse(serverPost(), headers)
+            onBlocking { create(any(), any()) } doReturn PostsRequestCreateResponse(post, headers)
+            onBlocking { update(any(), any(), any()) } doReturn PostsRequestUpdateResponse(post, headers)
+            onBlocking { trash(any(), any()) } doReturn PostsRequestTrashResponse(post, headers)
             onBlocking { delete(any(), any()) } doReturn
-                    PostsRequestDeleteResponse(PostDeleteResponse(true, serverPost()), headers)
+                    PostsRequestDeleteResponse(PostDeleteResponse(true, post), headers)
             onBlocking { retrieveWithEditContext(any(), any(), any()) } doReturn
-                    uniffi.wp_api.PostsRequestRetrieveWithEditContextResponse(serverPost(), headers)
+                    uniffi.wp_api.PostsRequestRetrieveWithEditContextResponse(post, headers)
             onBlocking { filterRetrieveWithEditContext(any(), any(), any(), any()) } doReturn
                     PostsRequestFilterRetrieveWithEditContextResponse(sparse, headers)
         }
@@ -437,6 +523,33 @@ class PostRsApiRestClientTest {
 
     private suspend fun stubFailure(result: WpRequestResult<Any>) {
         whenever(wpApiClient.request<Any>(any())).thenReturn(result)
+    }
+
+    /**
+     * Answers the first request with wp/v2's refusal to trash and every later one normally, so the
+     * client's fallback to a forced delete can be observed. The request lambda runs either way, so
+     * the route it picked is still verifiable on the executor.
+     */
+    private suspend fun stubTrashRefusedThenSucceeds(executor: PostsRequestExecutor) {
+        val uniffiClient = mock<UniffiWpApiClient> { on { posts() } doReturn executor }
+        var refuseNext = true
+        whenever(wpApiClient.request<Any>(any())).doSuspendableAnswer { invocation ->
+            val executeRequest = invocation.getArgument<suspend (UniffiWpApiClient) -> Any>(0)
+            val response = executeRequest(uniffiClient)
+            if (refuseNext) {
+                refuseNext = false
+                WpRequestResult.WpError(
+                    errorCode = WpErrorCode.TrashNotSupported(),
+                    errorMessage = "The post does not support trashing.",
+                    statusCode = 501u,
+                    response = "",
+                    requestUrl = "",
+                    requestMethod = RequestMethod.DELETE
+                )
+            } else {
+                WpRequestResult.Success(response = response)
+            }
+        }
     }
 
     private fun captureCreateParams(executor: PostsRequestExecutor): PostCreateParams {
@@ -458,7 +571,7 @@ class PostRsApiRestClientTest {
         return captor.firstValue.payload as T
     }
 
-    private fun serverPost() = AnyPostWithEditContext(
+    private fun serverPost(tags: List<Long> = emptyList()) = AnyPostWithEditContext(
         id = REMOTE_POST_ID,
         date = WpDateString("2026-10-01T10:00:00"),
         dateGmt = Date(MODIFIED_MILLIS),
@@ -484,7 +597,7 @@ class PostRsApiRestClientTest {
         sticky = false,
         template = "",
         categories = emptyList(),
-        tags = emptyList(),
+        tags = tags,
         parent = null,
         menuOrder = null,
         additionalFields = null,

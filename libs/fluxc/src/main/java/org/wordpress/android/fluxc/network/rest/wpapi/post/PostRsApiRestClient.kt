@@ -74,7 +74,12 @@ class PostRsApiRestClient @Inject constructor(
             }
             val payload = when (response) {
                 is WpRequestResult.Success -> {
-                    val fetched = toPostModel(response.response.data, site, post)
+                    val data = response.response.data
+                    // A fetch carries no author-supplied names to reuse, and the local copy may
+                    // hold none at all - PostFetcher fetches with a bare PostModel - so the
+                    // response's tag ids are the only source of truth for this post's tags.
+                    val tagNames = taxonomyRsApiRestClient.resolveTagNames(site, data.tags ?: emptyList())
+                    val fetched = toPostModel(data, site, post, tagNames)
                     FetchPostResponsePayload(fetched, site)
                 }
                 else -> FetchPostResponsePayload(post, site).apply {
@@ -220,41 +225,57 @@ class PostRsApiRestClient @Inject constructor(
     fun deletePost(post: PostModel, site: SiteModel, postDeleteActionType: PostDeleteActionType) {
         scope.launch {
             val client = wpApiClientProvider.getWpApiClient(site)
-            val endpointType = post.endpointType()
             // `wp.deletePost` and WP.com's `/posts/{id}/delete` both trash a live post and
             // permanently delete one that is already trashed. wp/v2 splits that into two routes, and
             // PostStore has already worked out which of the two this is.
             when (postDeleteActionType) {
-                PostDeleteActionType.TRASH -> {
-                    val response = client.request { requestBuilder ->
-                        requestBuilder.posts().trash(postEndpointType = endpointType, postId = post.remotePostId)
-                    }
-                    dispatchDeleteResult(
-                        post = post,
-                        site = site,
-                        postDeleteActionType = postDeleteActionType,
-                        trashedPost = (response as? WpRequestResult.Success)?.let {
-                            toPostModel(it.response.data, site, post)
-                        },
-                        response = response
-                    )
-                }
-                PostDeleteActionType.DELETE -> {
-                    val response = client.request { requestBuilder ->
-                        requestBuilder.posts().delete(postEndpointType = endpointType, postId = post.remotePostId)
-                    }
-                    // A permanent delete leaves nothing to store locally — PostStore removes the row —
-                    // so the returned `previous` post is intentionally dropped.
-                    dispatchDeleteResult(
-                        post = post,
-                        site = site,
-                        postDeleteActionType = postDeleteActionType,
-                        trashedPost = null,
-                        response = response
-                    )
-                }
+                PostDeleteActionType.TRASH -> trashPost(client, post, site)
+                PostDeleteActionType.DELETE -> deletePostPermanently(client, post, site)
             }
         }
+    }
+
+    private suspend fun trashPost(client: WpApiClient, post: PostModel, site: SiteModel) {
+        val response = client.request { requestBuilder ->
+            requestBuilder.posts().trash(postEndpointType = post.endpointType(), postId = post.remotePostId)
+        }
+        if (response is WpRequestResult.WpError<*> && response.errorCode is WpErrorCode.TrashNotSupported) {
+            // A site that turns the trash off (`EMPTY_TRASH_DAYS = 0`) refuses a non-forced delete,
+            // and the UI offers no other way to remove a live post. `wp.deletePost` fell through to
+            // a permanent delete on such a site, so retry as one: reported as a DELETE because that
+            // is what happened, which also stops PostStore keeping a trashed row for a post that is
+            // already gone.
+            appLogWrapper.w(
+                AppLog.T.POSTS,
+                "Trash is disabled on ${site.url}, deleting post ${post.remotePostId} permanently instead"
+            )
+            deletePostPermanently(client, post, site)
+            return
+        }
+        dispatchDeleteResult(
+            post = post,
+            site = site,
+            postDeleteActionType = PostDeleteActionType.TRASH,
+            trashedPost = (response as? WpRequestResult.Success)?.let {
+                toPostModel(it.response.data, site, post, post.tagNameList)
+            },
+            response = response
+        )
+    }
+
+    private suspend fun deletePostPermanently(client: WpApiClient, post: PostModel, site: SiteModel) {
+        val response = client.request { requestBuilder ->
+            requestBuilder.posts().delete(postEndpointType = post.endpointType(), postId = post.remotePostId)
+        }
+        // A permanent delete leaves nothing to store locally — PostStore removes the row —
+        // so the returned `previous` post is intentionally dropped.
+        dispatchDeleteResult(
+            post = post,
+            site = site,
+            postDeleteActionType = PostDeleteActionType.DELETE,
+            trashedPost = null,
+            response = response
+        )
     }
 
     /**
@@ -266,6 +287,7 @@ class PostRsApiRestClient @Inject constructor(
      * race rather than closing it. A failed check returns `null` so a network blip reads as "no
      * conflict" instead of blocking the save behind a conflict dialog the server never asked for.
      */
+    @Suppress("ReturnCount")
     private suspend fun findConflictError(
         client: WpApiClient,
         post: PostModel,
@@ -348,7 +370,7 @@ class PostRsApiRestClient @Inject constructor(
         parent = if (post.isPage) post.parentId else null,
         categories = if (post.isPage) emptyList() else post.categoryIdList,
         tags = if (post.isPage) emptyList() else tagIds,
-        additionalFields = clearedTaxonomies(post, tagIds),
+        additionalFields = clearedTaxonomies(post),
     )
 
     /**
@@ -361,11 +383,14 @@ class PostRsApiRestClient @Inject constructor(
      * `additionalFields` is flattened into the same JSON object, so it can express what the typed
      * field cannot. Pages carry no taxonomies, matching the XML-RPC client.
      */
-    private fun clearedTaxonomies(post: PostModel, tagIds: List<Long>): WpAdditionalFields? {
+    private fun clearedTaxonomies(post: PostModel): WpAdditionalFields? {
         if (post.isPage) return null
         val clearedKeys = buildList {
             if (post.categoryIdList.isEmpty()) add(FIELD_CATEGORIES)
-            if (tagIds.isEmpty()) add(FIELD_TAGS)
+            // Keyed on the author's own names rather than on `tagIds`: a name that could not be
+            // resolved leaves `tagIds` empty too, and clearing the post's tags because a lookup
+            // failed would delete server-side data the author never asked to remove.
+            if (post.tagNameList.isEmpty()) add(FIELD_TAGS)
         }
         return if (clearedKeys.isEmpty()) null else additionalFieldsBuilder.emptyArrays(clearedKeys)
     }
@@ -374,15 +399,21 @@ class PostRsApiRestClient @Inject constructor(
      * Builds a [PostModel] from a server response, keeping the local row and site this post belongs
      * to. Mirrors `PostRestClient`, which also copies the local id onto the parsed post.
      *
-     * Tag names are left as the local copy's: turning the returned tag ids into names would cost an
-     * extra request on every save, and the names are the ones this client just resolved ids for.
+     * [tagNames] is the caller's, because the right source differs per path: a save already holds
+     * the author's names, having just resolved ids for them, while a fetch has to turn the
+     * response's ids back into names.
      */
-    private fun toPostModel(data: AnyPostWithEditContext, site: SiteModel, localPost: PostModel): PostModel =
+    private fun toPostModel(
+        data: AnyPostWithEditContext,
+        site: SiteModel,
+        localPost: PostModel,
+        tagNames: List<String>
+    ): PostModel =
         postMapper.applyTo(
             target = PostModel(),
             post = data,
             site = site,
-            tagNames = localPost.tagNameList,
+            tagNames = tagNames,
             isPage = localPost.isPage
         ).apply {
             setId(localPost.id)
@@ -484,9 +515,15 @@ class PostRsApiRestClient @Inject constructor(
         return PostError(type, message)
     }
 
+    /**
+     * A 404 is deliberately not mapped to [PostErrorType.UNKNOWN_POST]: on its own it cannot tell a
+     * deleted post from a blocked or missing route, and only the latter is plausible once
+     * [postErrorTypeFromWpError] has already recognised `rest_post_invalid_id`. Claiming "this post
+     * no longer exists" about a post that is fine is the more misleading of the two answers, and it
+     * would also suppress the retry wording a generic failure gets.
+     */
     private fun postErrorTypeFromHttpStatus(statusCode: Int): PostErrorType = when (statusCode) {
         HTTP_UNAUTHORIZED, HTTP_FORBIDDEN -> PostErrorType.UNAUTHORIZED
-        HTTP_NOT_FOUND -> PostErrorType.UNKNOWN_POST
         else -> PostErrorType.GENERIC_ERROR
     }
 
@@ -548,7 +585,6 @@ class PostRsApiRestClient @Inject constructor(
     companion object {
         private const val HTTP_UNAUTHORIZED = 401
         private const val HTTP_FORBIDDEN = 403
-        private const val HTTP_NOT_FOUND = 404
 
         private const val COMMENT_STATUS_OPEN = "open"
         private const val COMMENT_STATUS_CLOSED = "closed"

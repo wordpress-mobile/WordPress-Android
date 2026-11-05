@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpapi.taxonomy
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
@@ -346,14 +347,16 @@ class TaxonomyRsApiRestClient @Inject constructor(
         val response = client.request { requestBuilder ->
             requestBuilder.terms().listWithViewContext(
                 termEndpointType = TermEndpointType.Tags,
-                params = TermListParams(search = name, perPage = TAG_SEARCH_PER_PAGE)
+                params = TermListParams(search = name.htmlEncodedLikeWordPress(), perPage = TAG_SEARCH_PER_PAGE)
             )
         }
         return when (response) {
             is WpRequestResult.Success ->
                 // `search` is a substring match, so "news" also returns "newsletter". Only an
-                // exact name is the tag the author typed.
-                response.response.data.firstOrNull { it.name.equals(name, ignoreCase = true) }?.id
+                // exact name is the tag the author typed, compared with both sides decoded.
+                response.response.data.firstOrNull {
+                    StringEscapeUtils.unescapeHtml4(it.name).equals(name, ignoreCase = true)
+                }?.id
             else -> {
                 appLogWrapper.e(
                     AppLog.T.POSTS,
@@ -363,6 +366,18 @@ class TaxonomyRsApiRestClient @Inject constructor(
             }
         }
     }
+
+    /**
+     * Encodes a term name the way WordPress stores one, so a `search` can match it.
+     *
+     * `pre_term_name` runs the name through `_wp_specialchars` with `ENT_NOQUOTES`, so a tag typed
+     * as `AT&T` is stored - and returned by wp/v2 - as `AT&amp;T`, while quotes and accented
+     * characters are left alone. `search` is a `LIKE` against that stored text, so searching for the
+     * decoded name finds nothing at all. Deliberately not `escapeHtml4`, which would also turn
+     * `Hermès` into `Herm&egrave;s` and miss the tag for the opposite reason.
+     */
+    private fun String.htmlEncodedLikeWordPress(): String =
+        replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
     private suspend fun createTagReturningId(
         client: WpApiClient,
@@ -394,6 +409,9 @@ class TaxonomyRsApiRestClient @Inject constructor(
      * Paginates because the REST API caps how many terms one page returns, so a post carrying more
      * than a page of tags would otherwise lose every name past the first page (same reasoning as
      * CMM-2122).
+     *
+     * Names come back decoded, which is the form the tag picker shows and [resolveTagIds] expects;
+     * storing the encoded `AT&amp;T` would re-encode it on the next save.
      */
     suspend fun resolveTagNames(site: SiteModel, tagIds: List<Long>): List<String> {
         if (tagIds.isEmpty()) return emptyList()
@@ -411,7 +429,9 @@ class TaxonomyRsApiRestClient @Inject constructor(
             }
             when (response) {
                 is WpRequestResult.Success -> {
-                    response.response.data.forEach { namesById[it.id] = it.name }
+                    response.response.data.forEach {
+                        namesById[it.id] = StringEscapeUtils.unescapeHtml4(it.name)
+                    }
                     params = response.response.nextPageParams
                 }
                 else -> {
