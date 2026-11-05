@@ -59,6 +59,7 @@ import org.wordpress.android.ui.accounts.login.WPcomLoginHelper
 import org.wordpress.android.ui.about.UnifiedAboutActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.ME_SCREEN_HELP
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper
+import org.wordpress.android.ui.localcontent.LocalContentActivity
 import org.wordpress.android.ui.main.MeViewModel.RecommendAppUiState
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.emailverificationbanner.EmailVerificationBanner
@@ -69,6 +70,8 @@ import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.GravatarQuickEditorInitializer
@@ -140,6 +143,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     @Inject
     lateinit var gravatarEditorTargetResolver: GravatarEditorTargetResolver
+
+    @Inject
+    lateinit var experimentalFeatures: ExperimentalFeatures
 
     // Started in onCreate so the KeyStore-backed Gravatar init is usually finished before the avatar is tapped
     private lateinit var quickEditorReady: Deferred<Boolean>
@@ -218,6 +224,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
         rowAppSettings.setOnClickListener {
             ActivityLauncher.viewAppSettingsForResult(activity)
+        }
+        rowLocalContent.setOnClickListener {
+            startActivity(LocalContentActivity.createIntent(requireContext()))
         }
         rowSupport.setOnClickListener {
             ActivityLauncher.viewHelp(requireContext(), ME_SCREEN_HELP, viewModel.getSite(), null, supportRouting)
@@ -550,6 +559,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     override fun onResume() {
         super.onResume()
         binding?.refreshAccountDetails()
+        // The experimental feature is turned on and off in App Settings, which returns here.
+        binding?.refreshLocalContentVisibility()
         // The web editor has no updateHandler, so without this the avatar would keep being served from
         // Glide's cache: the hash-based URL and the avatarVersion signature are both unchanged by an edit
         // made on gravatar.com. Runs after refreshAccountDetails so the forced load is the one that sticks.
@@ -600,6 +611,12 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             accountSettingsDivider.visibility = View.GONE
             meLoginLogoutTextView.setText(R.string.me_connect_to_wordpress_com)
         }
+    }
+
+    private fun MeFragmentBinding.refreshLocalContentVisibility() {
+        val isEnabled = experimentalFeatures.isEnabled(Feature.LOCAL_WORKING_COPIES)
+        rowLocalContent.isVisible = isEnabled
+        localContentDivider.isVisible = isEnabled
     }
 
     private fun MeFragmentBinding.loadAvatar(injectFilePath: String?, forceRefresh: Boolean = false) {

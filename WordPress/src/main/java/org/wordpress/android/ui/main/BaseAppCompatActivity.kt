@@ -13,6 +13,9 @@ import org.wordpress.android.ui.debug.preferences.DebugSharedPreferenceFlagsActi
 import org.wordpress.android.ui.domains.management.DomainManagementActivity
 import org.wordpress.android.ui.domains.management.newdomainsearch.NewDomainSearchActivity
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainActivity
+import org.wordpress.android.ui.localcontent.LocalContentActivity
+import org.wordpress.android.ui.localcontent.WorkingCopyDetailActivity
+import org.wordpress.android.ui.localcontent.WorkingCopyListActivity
 import org.wordpress.android.ui.main.feedbackform.FeedbackFormActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.media.MediaSettingsActivity
@@ -92,6 +95,7 @@ private val excludedActivities = listOf(
     EditJetpackSocialShareMessageActivity::class.java.name,
     ExperimentalFeaturesActivity::class.java.name,
     FeedbackFormActivity::class.java.name,
+    LocalContentActivity::class.java.name,
     MediaPreviewActivity::class.java.name,
     MenuActivity::class.java.name,
     NavMenusActivity::class.java.name,
@@ -110,6 +114,8 @@ private val excludedActivities = listOf(
     SubscribersActivity::class.java.name,
     TermsDataViewActivity::class.java.name,
     ApplicationPasswordsListActivity::class.java.name,
+    WorkingCopyDetailActivity::class.java.name,
+    WorkingCopyListActivity::class.java.name,
 
     // these are excluded because they explicitly enable edge-to-edge
     ApplicationPasswordLoginActivity::class.java.name,

@@ -289,6 +289,16 @@
             android:label="@string/me_btn_experimental_features"
             android:theme="@style/WordPress.NoActionBar" />
         <activity
+            android:name=".ui.localcontent.LocalContentActivity"
+            android:label="@string/local_content"
+            android:theme="@style/WordPress.NoActionBar" />
+        <activity
+            android:name=".ui.localcontent.WorkingCopyListActivity"
+            android:theme="@style/WordPress.NoActionBar" />
+        <activity
+            android:name=".ui.localcontent.WorkingCopyDetailActivity"
+            android:theme="@style/WordPress.NoActionBar" />
+        <activity
             android:name=".ui.accounts.applicationpassword.ApplicationPasswordsListActivity"
             android:label="@string/application_password_info_title"
             android:theme="@style/WordPress.NoActionBar" />

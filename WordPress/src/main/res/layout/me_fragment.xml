@@ -210,6 +210,31 @@
                             android:text="@string/me_btn_app_settings" />
 
                     </LinearLayout>
+
+                    <View
+                        android:id="@+id/local_content_divider"
+                        android:visibility="gone"
+                        style="@style/MeListSectionDividerView"
+                        tools:visibility="visible"/>
+
+                    <LinearLayout
+                        android:id="@+id/row_local_content"
+                        style="@style/MeListRowLayout"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                        <ImageView
+                            android:id="@+id/me_local_content_icon"
+                            style="@style/MeListRowIcon"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_folder_white_24dp" />
+
+                        <org.wordpress.android.widgets.WPTextView
+                            android:id="@+id/me_local_content_text_view"
+                            style="@style/MeListRowTextView"
+                            android:text="@string/local_content" />
+
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
