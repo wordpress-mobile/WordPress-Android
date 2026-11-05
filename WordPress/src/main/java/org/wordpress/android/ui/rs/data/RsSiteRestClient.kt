@@ -63,8 +63,15 @@ class RsSiteRestClient @Inject constructor(
     )
     /** Keyed by site and user ID, since self-hosted user IDs are per site (user 1 is every admin). */
     private val userNameCache = ConcurrentHashMap<String, String>()
-    private val categoryNameCache = ConcurrentHashMap<Long, String>()
-    private val tagNameCache = ConcurrentHashMap<Long, String>()
+    /**
+     * Keyed by site and term ID, since term IDs are per site:
+     * on a self-hosted site they start at 1, so the same ID
+     * names a different tag on every site. Sharing a key would
+     * hand one site's tag name to another, and saving the post
+     * would then resolve that name and drop the real tag.
+     */
+    private val categoryNameCache = ConcurrentHashMap<String, String>()
+    private val tagNameCache = ConcurrentHashMap<String, String>()
 
     private val displayMetrics get() = context.resources.displayMetrics
 
@@ -263,7 +270,7 @@ class RsSiteRestClient @Inject constructor(
         val result = mutableMapOf<Long, String>()
         val uncached = mutableListOf<Long>()
         for (id in termIds) {
-            val cached = cache[id]
+            val cached = cache[termCacheKey(site, id)]
             if (cached != null) result[id] = cached else uncached.add(id)
         }
         if (uncached.isEmpty()) return result
@@ -288,7 +295,7 @@ class RsSiteRestClient @Inject constructor(
             when (response) {
                 is WpRequestResult.Success -> {
                     for (term in response.response.data) {
-                        cache[term.id] = term.name
+                        cache[termCacheKey(site, term.id)] = term.name
                         result[term.id] = term.name
                     }
                     params = response.response.nextPageParams
@@ -412,7 +419,7 @@ class RsSiteRestClient @Inject constructor(
             is WpRequestResult.Success -> {
                 val terms = response.response.data
                 for (term in terms) {
-                    cache[term.id] = term.name
+                    cache[termCacheKey(site, term.id)] = term.name
                 }
                 TermsPageResult(
                     terms = terms,
@@ -465,7 +472,7 @@ class RsSiteRestClient @Inject constructor(
         return when (response) {
             is WpRequestResult.Success -> {
                 val term = response.response.data
-                cache[term.id] = term.name
+                cache[termCacheKey(site, term.id)] = term.name
                 term.id
             }
             else -> {
@@ -544,6 +551,8 @@ class RsSiteRestClient @Inject constructor(
 
     private fun userCacheKey(site: SiteModel, userId: Long): String = "${site.id}:$userId"
 
+    private fun termCacheKey(site: SiteModel, termId: Long): String = "${site.id}:$termId"
+
     /**
      * Reads the source URL and the available renders off the media
      * object. The `mediaDetails` handle is owned by the response, so
@@ -571,7 +580,7 @@ class RsSiteRestClient @Inject constructor(
 
     private fun termCache(
         endpointType: TermEndpointType,
-    ): ConcurrentHashMap<Long, String> =
+    ): ConcurrentHashMap<String, String> =
         if (endpointType is TermEndpointType.Categories) {
             categoryNameCache
         } else {
