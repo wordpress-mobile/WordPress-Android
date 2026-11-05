@@ -20,7 +20,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
+import org.wordpress.android.ui.reader.repository.UpdateAction
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ReaderPostLocalSourceTest : BaseUnitTest() {
@@ -45,7 +45,7 @@ class ReaderPostLocalSourceTest : BaseUnitTest() {
         whenever(readerPostTableWrapper.comparePosts(serverPosts)).thenReturn(UpdateResult.UNCHANGED)
 
         // it doesn't matter which update action was used, so let's test all of them
-        ReaderPostServiceStarter.UpdateAction.values().forEach { updateAction ->
+        UpdateAction.values().forEach { updateAction ->
             clearInvocations(readerPostTableWrapper)
 
             // When
@@ -67,8 +67,8 @@ class ReaderPostLocalSourceTest : BaseUnitTest() {
         whenever(readerPostTableWrapper.comparePosts(serverPosts)).thenReturn(UpdateResult.UNCHANGED)
 
         // if the action is any but REQUEST_OLDER_THAN_GAP we should not do anything
-        ReaderPostServiceStarter.UpdateAction.values()
-            .filterNot { it == ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER_THAN_GAP }
+        UpdateAction.values()
+            .filterNot { it == UpdateAction.REQUEST_OLDER_THAN_GAP }
             .forEach { updateAction ->
                 clearInvocations(readerPostTableWrapper)
 
@@ -93,7 +93,7 @@ class ReaderPostLocalSourceTest : BaseUnitTest() {
         // When
         val result = localSource.saveUpdatedPosts(
             serverPosts,
-            ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER_THAN_GAP,
+            UpdateAction.REQUEST_OLDER_THAN_GAP,
             requestedTag,
         )
 
@@ -111,7 +111,7 @@ class ReaderPostLocalSourceTest : BaseUnitTest() {
         whenever(readerPostTableWrapper.comparePosts(serverPosts)).thenReturn(UpdateResult.HAS_NEW)
 
         // it doesn't matter which update action was used, so let's test all of them
-        ReaderPostServiceStarter.UpdateAction.values().forEach { updateAction ->
+        UpdateAction.values().forEach { updateAction ->
             clearInvocations(readerPostTableWrapper)
 
             // When
@@ -137,7 +137,7 @@ class ReaderPostLocalSourceTest : BaseUnitTest() {
             // When
             val result = localSource.saveUpdatedPosts(
                 serverPosts,
-                ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER_THAN_GAP,
+                UpdateAction.REQUEST_OLDER_THAN_GAP,
                 requestedTag,
             )
 
@@ -163,7 +163,7 @@ class ReaderPostLocalSourceTest : BaseUnitTest() {
             // When
             val result = localSource.saveUpdatedPosts(
                 serverPosts,
-                ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH,
+                UpdateAction.REQUEST_REFRESH,
                 requestedTag,
             )
 
@@ -189,7 +189,7 @@ class ReaderPostLocalSourceTest : BaseUnitTest() {
             // When
             val result = localSource.saveUpdatedPosts(
                 serverPosts,
-                ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER,
+                UpdateAction.REQUEST_OLDER,
                 requestedTag,
             )
 
@@ -218,7 +218,7 @@ class ReaderPostLocalSourceTest : BaseUnitTest() {
             // When
             val result = localSource.saveUpdatedPosts(
                 serverPosts,
-                ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER,
+                UpdateAction.REQUEST_NEWER,
                 requestedTag,
             )
 
@@ -247,7 +247,7 @@ class ReaderPostLocalSourceTest : BaseUnitTest() {
             // When
             val result = localSource.saveUpdatedPosts(
                 serverPosts,
-                ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER,
+                UpdateAction.REQUEST_NEWER,
                 requestedTag,
             )
 
@@ -280,7 +280,7 @@ class ReaderPostLocalSourceTest : BaseUnitTest() {
             // When
             val result = localSource.saveUpdatedPosts(
                 serverPosts,
-                ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER,
+                UpdateAction.REQUEST_NEWER,
                 requestedTag,
             )
 
@@ -305,7 +305,7 @@ class ReaderPostLocalSourceTest : BaseUnitTest() {
             whenever(appPrefsWrapper.shouldUpdateBookmarkPostsPseudoIds(requestedTag)).thenReturn(true)
 
             // it doesn't matter which update action was used, so let's test all of them
-            ReaderPostServiceStarter.UpdateAction.values().forEach { updateAction ->
+            UpdateAction.values().forEach { updateAction ->
                 clearInvocations(readerPostTableWrapper, appPrefsWrapper)
 
                 // When

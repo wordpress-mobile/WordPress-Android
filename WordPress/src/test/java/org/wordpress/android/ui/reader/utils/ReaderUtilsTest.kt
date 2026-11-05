@@ -126,6 +126,29 @@ class ReaderUtilsTest {
     }
 
     @Test
+    fun `given tag slug, when tag api path is built, then slug is a single encoded segment`() {
+        assertThat(ReaderUtils.getTagApiPath("dogs", "posts")).isEqualTo("read/tags/dogs/posts")
+        assertThat(ReaderUtils.getTagApiPath("日本", "mine", "delete"))
+            .isEqualTo("read/tags/%E6%97%A5%E6%9C%AC/mine/delete")
+        assertThat(ReaderUtils.getTagApiPath("%e7%be%8e%e9%a3%9f", "posts"))
+            .isEqualTo("read/tags/%e7%be%8e%e9%a3%9f/posts")
+        assertThat(ReaderUtils.getTagApiPath("   ", "posts")).isNull()
+    }
+
+    @Test
+    fun `given segment that url builder would resolve, when api path is built, then returns null`() {
+        listOf("..", ".", "%2e%2e", "%2E", ".%2e", ".\t.", "").forEach {
+            assertThat(ReaderUtils.buildApiPath(listOf("read", "tags", it, "posts"))).describedAs(it).isNull()
+        }
+    }
+
+    @Test
+    fun `given segment with path or query characters, when api path is built, then they are encoded`() {
+        assertThat(ReaderUtils.buildApiPath(listOf("read", "tags", "a/b?x#y\\z", "posts")))
+            .isEqualTo("read/tags/a%2Fb%3Fx%23y%5Cz/posts")
+    }
+
+    @Test
     fun `given valid reader tag link, when isTagUrl is invoked, then returns true`() {
         val tagLink = "https://wordpress.com/tag/dailyprompt-123"
         val result = ReaderUtils.isTagUrl(tagLink)

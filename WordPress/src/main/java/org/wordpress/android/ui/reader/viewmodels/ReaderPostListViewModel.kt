@@ -53,7 +53,7 @@ import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderPostListEvent
 import org.wordpress.android.ui.reader.repository.ReaderPostListRepository
 import org.wordpress.android.ui.reader.repository.ReaderPostListTarget
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction
+import org.wordpress.android.ui.reader.repository.UpdateAction
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.tracker.ReaderTab
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -461,7 +461,7 @@ class ReaderPostListViewModel @Inject constructor(
             sendUiEvent(ReaderPostListUiEvent.NoConnection)
             return
         }
-        // EventBus tells us when the gap is filled, and the reload that follows resets the marker
+        // the updater tells us when the gap is filled, and the reload that follows resets the marker
         repository.requestPosts(ReaderPostListTarget.Tag(tag), UpdateAction.REQUEST_OLDER_THAN_GAP)
         isGapFilling = true
         updateUiState()
@@ -577,7 +577,7 @@ class ReaderPostListViewModel @Inject constructor(
      */
     fun onSearchSubmitted(query: String) {
         resetSearch(query)
-        // show the search as running until the service reports back, so "no results" doesn't flash first
+        // show the search as running until the search reports back, so "no results" doesn't flash first
         setIsUpdating(true, searchAction(0))
         searchJob = launch {
             // search results are ephemeral, so each search starts from scratch
@@ -606,7 +606,6 @@ class ReaderPostListViewModel @Inject constructor(
     private fun onRepositoryEvent(event: ReaderPostListEvent) {
         when (event) {
             is ReaderPostListEvent.UpdateStarted -> if (isCurrentTarget(event.tag)) {
-                requestFailed = false
                 setIsUpdating(true, event.action)
             }
 
@@ -616,7 +615,6 @@ class ReaderPostListViewModel @Inject constructor(
 
             is ReaderPostListEvent.SearchStarted -> if (isCurrentSearch(event.query)) {
                 // a re-run of the same query can follow a failed end from the run it replaced
-                requestFailed = false
                 setIsUpdating(true, searchAction(event.offset))
             }
 
@@ -705,6 +703,7 @@ class ReaderPostListViewModel @Inject constructor(
 
     private fun setIsUpdating(isUpdating: Boolean, action: UpdateAction) {
         isPullRefreshing = false
+        if (isUpdating) requestFailed = false
         if (isUpdating) updateActions.add(action) else updateActions.remove(action)
         updateUiState()
     }
@@ -730,6 +729,8 @@ class ReaderPostListViewModel @Inject constructor(
             AppLog.i(T.READER, "reader post list > network unavailable, canceled update")
             return
         }
+        // show the update as running now: its UpdateStarted can be emitted before this starts collecting events
+        setIsUpdating(true, action)
         repository.requestPosts(target, action)
     }
 
