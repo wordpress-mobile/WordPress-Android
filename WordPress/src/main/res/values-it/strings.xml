@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-28 16:12:19+0000
+Translation-Revision-Date: 2026-11-04 18:07:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: it
@@ -44,7 +44,7 @@ Language: it
     <string name="stats_subscribers_60_days_ago">60 giorni fa</string>
     <string name="stats_subscribers_30_days_ago">30 giorni fa</string>
     <string name="stats_subscribers_current">Attuale</string>
-    <string name="stats_subscribers_emails">E-mail</string>
+    <string name="stats_subscribers_emails">Email</string>
     <string name="stats_subscribers_list">Iscritti</string>
     <string name="stats_subscribers_graph">Grafico iscritti</string>
     <string name="stats_subscribers_all_time">Iscritti di sempre</string>
@@ -452,7 +452,7 @@ Language: it
     <string name="subscribers_newsletter_label">Abbonamento alla newsletter</string>
     <string name="subscribers_clicked_label">Clic effettuato</string>
     <string name="subscribers_opened_label">Aperta</string>
-    <string name="subscribers_emails_sent_label">E-mail</string>
+    <string name="subscribers_emails_sent_label">Email</string>
     <string name="subscribers_error_title">Si è verificato un problema</string>
     <string name="subscribers_empty_search">Nessun risultato trovato</string>
     <string name="subscribers_empty">Non ci sono abbonati</string>
@@ -583,7 +583,7 @@ Language: it
     <string name="notifications_tab_title_subscribers">Iscritti</string>
     <string name="subscribers">Iscritti</string>
     <string name="notifications_empty_subscribers">Ancora nessun abbonato</string>
-    <string name="stats_view_emails">E-mail</string>
+    <string name="stats_view_emails">Email</string>
     <string name="stats_view_subscribers">Iscritti</string>
     <string name="stats_view_total_subscribers">Totale abbonati</string>
     <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
