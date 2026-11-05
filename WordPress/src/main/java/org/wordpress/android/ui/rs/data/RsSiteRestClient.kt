@@ -248,12 +248,17 @@ class RsSiteRestClient @Inject constructor(
      * call using the `include` parameter, returning a map of term ID
      * to name. IDs already in the local cache are returned immediately
      * without a network round-trip.
+     *
+     * Returns `null` if a page failed, rather than the names it did
+     * manage to read: a short map otherwise reads as "the site no
+     * longer has those terms", and a caller that stores it would drop
+     * tags the post really has.
      */
     suspend fun fetchTermNames(
         site: SiteModel,
         termIds: List<Long>,
         endpointType: TermEndpointType,
-    ): Map<Long, String> {
+    ): Map<Long, String>? {
         val cache = termCache(endpointType)
         val result = mutableMapOf<Long, String>()
         val uncached = mutableListOf<Long>()
@@ -272,6 +277,7 @@ class RsSiteRestClient @Inject constructor(
             include = uncached,
             perPage = PER_PAGE,
         )
+        var failed = false
         while (params != null) {
             val currentParams = params
             val response = client.request {
@@ -295,11 +301,12 @@ class RsSiteRestClient @Inject constructor(
                         AppLog.T.POSTS,
                         "fetchTermNames failed: $msg"
                     )
+                    failed = true
                     params = null
                 }
             }
         }
-        return result
+        return if (failed) null else result
     }
 
     /**

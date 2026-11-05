@@ -149,6 +149,28 @@ class RsFluxCBridgeTest {
         verify(postSqlUtils).insertOrUpdatePost(any(), eq(false))
     }
 
+    /**
+     * The mapper refuses a post whose tag names it could not read, because a row stored without
+     * them reads as "the author removed every tag" and deletes them on the next save. The bridge
+     * has to insert nothing at all then, rather than a row mapped without its tags (CMM-2502).
+     */
+    @Test
+    fun `a post whose tag names cannot be read is not inserted`() = runTest {
+        val client: WpApiClient = mock()
+        val fetched = mockRsPost()
+        whenever(postStore.getPostByRemotePostId(REMOTE_ID, site)).thenReturn(null)
+        whenever(wpApiClientProvider.getWpApiClient(eq(site), anyOrNull())).thenReturn(client)
+        whenever(client.request<PostsRequestRetrieveWithEditContextResponse>(any()))
+            .thenReturn(fetchSuccess(fetched))
+        whenever(mapper.map(eq(fetched), eq(site), any()))
+            .doSuspendableAnswer { throw RsBridgeException("Failed to fetch the tag names") }
+
+        val error = runCatching { bridge.fetchAndBridgePost(REMOTE_ID, site) }.exceptionOrNull()
+
+        assertThat(error).isInstanceOf(RsBridgeException::class.java)
+        verify(postSqlUtils, never()).insertOrUpdatePost(any(), any())
+    }
+
     @Test
     fun `slow path throws with the server error message and does not insert`() = runTest {
         val client: WpApiClient = mock()

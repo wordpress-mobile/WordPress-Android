@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -45,6 +46,25 @@ class RsToFluxCMapperTest {
             .thenReturn(mapOf(7L to "first"))
 
         assertThat(mapper.map(post, site, isPage = false).tagNameList).containsExactly("first")
+    }
+
+    /**
+     * The row the bridge inserts from this is what the editor saves back, and wp/v2 replaces a
+     * post's whole tag set, so mapping the post with the names that did arrive would delete the
+     * missing ones from the site on the next save. Failing instead leaves the row untouched
+     * (CMM-2502).
+     */
+    @Test
+    fun `a failed name lookup aborts the mapping rather than dropping tags`() = runTest {
+        val post = rsPost(tags = listOf(7L, 3L))
+        // A nullable-returning mock answers null on its own, so the lookup is verified below
+        // rather than stubbed: without that this would pass for a mapper that never asks at all.
+        val error = runCatching { mapper.map(post, site, isPage = false) }.exceptionOrNull()
+
+        assertThat(error)
+            .isInstanceOf(RsBridgeException::class.java)
+            .hasMessageContaining("tag names")
+        verify(restClient).fetchTermNames(site, listOf(7L, 3L), TermEndpointType.Tags)
     }
 
     @Test

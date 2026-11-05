@@ -25,6 +25,8 @@ class RsToFluxCMapper @Inject constructor(
      * [isPage] has to be known here rather than set on the result: [RsPostMapper.applyTo] only
      * copies the parent across for a page, so passing `false` for one would leave `parentId` at 0
      * and the next save would detach the page from its parent.
+     *
+     * @throws RsBridgeException if the post's tag names cannot be read. See [resolveTagNames].
      */
     suspend fun map(
         post: AnyPostWithEditContext,
@@ -46,6 +48,12 @@ class RsToFluxCMapper @Inject constructor(
      * comes back as `AT&amp;T`. Decoding it here keeps [PostModel.tagNameList] holding the text the
      * author actually typed, which is what the editor shows and what the REST post client encodes
      * again when it looks the tag up by name on save.
+     *
+     * A lookup that failed aborts the bridge rather than mapping the post with the names it did
+     * read. The row the bridge inserts is what the editor then saves, and wp/v2 replaces a post's
+     * whole tag set, so a short list - or no list at all - would delete the missing tags from the
+     * site on the next save. Failing here surfaces a retryable error instead, which is what the
+     * bridge already does when the post itself cannot be fetched.
      */
     private suspend fun resolveTagNames(
         ids: List<Long>?,
@@ -54,7 +62,7 @@ class RsToFluxCMapper @Inject constructor(
         if (ids.isNullOrEmpty()) return emptyList()
         val nameMap = restClient.fetchTermNames(
             site, ids, TermEndpointType.Tags
-        )
+        ) ?: throw RsBridgeException("Failed to fetch the tag names of a post with ${ids.size} tags")
         return ids.mapNotNull { id ->
             nameMap[id]?.let { StringEscapeUtils.unescapeHtml4(it) }
         }

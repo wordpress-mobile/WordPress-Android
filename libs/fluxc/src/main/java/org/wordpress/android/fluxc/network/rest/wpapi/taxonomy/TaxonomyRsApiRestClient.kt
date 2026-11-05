@@ -3,6 +3,8 @@ package org.wordpress.android.fluxc.network.rest.wpapi.taxonomy
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.apache.commons.text.StringEscapeUtils
+import org.json.JSONException
+import org.json.JSONObject
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
@@ -25,6 +27,7 @@ import uniffi.wp_api.TermCreateParams
 import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.TermListParams
 import uniffi.wp_api.TermUpdateParams
+import uniffi.wp_api.WpErrorCode
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -346,7 +349,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
      * The ids [resolveTagIds] could resolve, and whether that is all of them.
      *
      * [complete] is `false` when a name could neither be found nor created - a transient lookup
-     * error, or a name WordPress refuses because an existing term already owns its slug. The ids
+     * error, or a create the site refused outright, such as a role without `edit_terms`. The ids
      * are still usable for a post being created, which has no tags to lose, but an update must not
      * send them: wp/v2 replaces a post's whole tag set, so a short list removes the tags that are
      * missing from it.
@@ -404,15 +407,47 @@ class TaxonomyRsApiRestClient @Inject constructor(
                 params = TermCreateParams(name = name)
             )
         }
-        return when (response) {
-            is WpRequestResult.Success -> response.response.data.id
-            else -> {
-                appLogWrapper.e(
-                    AppLog.T.POSTS,
-                    "Creating tag '$name' on ${site.url} failed: ${response.toTaxonomyError().toLogString()}"
-                )
-                null
-            }
+        if (response is WpRequestResult.Success) return response.response.data.id
+        val existingId = (response as? WpRequestResult.WpError<*>)?.existingTermId()
+        if (existingId == null) {
+            appLogWrapper.e(
+                AppLog.T.POSTS,
+                "Creating tag '$name' on ${site.url} failed: ${response.toTaxonomyError().toLogString()}"
+            )
+        }
+        return existingId
+    }
+
+    /**
+     * The id a `term_exists` error carries, or `null` for any other error.
+     *
+     * `wp_insert_term` refuses a name it already holds, case-insensitively, and puts the existing
+     * term's id in the error data - so the tag is recoverable, and dropping the error would drop
+     * the tag from the post instead. A name [findTagIdByName] missed can still hit this, because
+     * the two compare different things: the lookup is a `LIKE` against one page of `search`
+     * results, while the create compares the submitted name after WordPress has normalised it.
+     * A name typed with a doubled space resolves this way - `_sanitize_text_fields` collapses the
+     * run of whitespace, so `my  tag` is refused as the already-stored `my tag` - and so does an
+     * exact name sitting past the single page `search` reads.
+     *
+     * Note this is a name conflict, not a slug conflict: the slug branch of `wp_insert_term` only
+     * applies when the create supplies a slug, which this one does not, or to a hierarchical
+     * taxonomy, which tags are not. A name whose *slug* collides is created as a separate term.
+     *
+     * 0.10.0 has no [WpErrorCode] variant for `term_exists`, so it arrives as a
+     * [WpErrorCode.CustomException] holding the raw code, and exposes no typed error data: reading
+     * the response body is the only way to the id.
+     */
+    private fun WpRequestResult.WpError<*>.existingTermId(): Long? {
+        if ((errorCode as? WpErrorCode.CustomException)?.v1 != TERM_EXISTS_CODE) return null
+        return try {
+            JSONObject(response).optJSONObject("data")?.optLong("term_id")?.takeIf { it > 0 }
+        } catch (e: JSONException) {
+            appLogWrapper.e(
+                AppLog.T.POSTS,
+                "A $TERM_EXISTS_CODE error carried no readable term id: ${e.message}"
+            )
+            null
         }
     }
 
@@ -525,6 +560,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
         // `search` is a substring match, so a short tag name can return many rows; this only has
         // to be wide enough to contain the exact match among them.
         private const val TAG_SEARCH_PER_PAGE = 100u
+        private const val TERM_EXISTS_CODE = "term_exists"
         private const val HTTP_UNAUTHORIZED = 401u
         private const val HTTP_FORBIDDEN = 403u
     }

@@ -75,16 +75,26 @@ class PostRsApiRestClient @Inject constructor(
             val payload = when (response) {
                 is WpRequestResult.Success -> {
                     val data = response.response.data
-                    // A fetch carries no author-supplied names to reuse, and the local copy may
-                    // hold none at all - PostFetcher fetches with a bare PostModel - so the
-                    // response's tag ids are the only source of truth for this post's tags.
-                    // A failed lookup keeps the names already held rather than storing a partial
-                    // list: this fetch still reports success, so an emptied list would read as
-                    // "the author removed every tag" and delete them all on the next save.
+                    // A fetch carries no author-supplied names to reuse, so the response's tag ids
+                    // are the only source of truth for this post's tags. A failed lookup keeps the
+                    // names already held, because a success that stored a shorter list would read
+                    // as "the author removed those tags" and delete them on the next save - this
+                    // payload overwrites the stored row through PostStore.updatePost.
+                    // The local copy may hold no names at all to keep - PostFetcher fetches with a
+                    // bare PostModel - and a tagless row is just as destructive, so with nothing
+                    // to fall back on the fetch fails instead and the row is left alone.
                     val tagNames = taxonomyRsApiRestClient.resolveTagNames(site, data.tags ?: emptyList())
-                        ?: post.tagNameList
-                    val fetched = toPostModel(data, site, post, tagNames)
-                    FetchPostResponsePayload(fetched, site)
+                        ?: post.tagNameList.takeIf { it.isNotEmpty() }
+                    if (tagNames == null) {
+                        FetchPostResponsePayload(post, site).apply {
+                            error = PostError(
+                                PostErrorType.GENERIC_ERROR,
+                                "Failed to resolve the tags of post ${post.remotePostId}"
+                            )
+                        }
+                    } else {
+                        FetchPostResponsePayload(toPostModel(data, site, post, tagNames), site)
+                    }
                 }
                 else -> FetchPostResponsePayload(post, site).apply {
                     error = parsePostError(response, "Fetching post ${post.remotePostId}")

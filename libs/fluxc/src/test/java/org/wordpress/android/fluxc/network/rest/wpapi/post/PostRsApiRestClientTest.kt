@@ -453,6 +453,28 @@ class PostRsApiRestClientTest {
         assertThat(payload.post.tagNameList).containsExactly("alpha", "beta")
     }
 
+    /**
+     * With no local names to keep there is nothing to fall back on, and a successful payload
+     * carrying no tags overwrites the stored row through `PostStore.updatePost`, deleting the
+     * post's tags on the next save. PostFetcher fetches with a bare PostModel, so this is the
+     * common shape of the case rather than a corner of it.
+     */
+    @Test
+    fun `a fetch whose tag lookup fails reports an error when there are no names to keep`() = runTest {
+        stubRequests(executor(remoteTags = listOf(7L, 3L)))
+        whenever(taxonomyRsApiRestClient.resolveTagNames(site, listOf(7L, 3L))).thenReturn(null)
+        val bare = PostModel().apply { setRemotePostId(REMOTE_POST_ID) }
+
+        restClient.fetchPost(bare, site)
+
+        val payload = dispatchedPayload<RemotePostPayload>(PostAction.FETCHED_POST)
+        assertThat(payload.error?.type).isEqualTo(PostErrorType.GENERIC_ERROR)
+        // The caller's model goes back untouched rather than the mapped response, which is what
+        // stops PostStore storing it: `serverPost` carries a title, and this must not have it.
+        assertThat(payload.post).isSameAs(bare)
+        assertThat(payload.post.title).isEmpty()
+    }
+
     @Test
     fun `a rejected credential reports an unauthorized error`() = runTest {
         stubFailure(

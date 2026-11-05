@@ -972,6 +972,59 @@ class TaxonomyRsApiRestClientTest {
         verifyBlocking(termsExecutor) { create(TermEndpointType.Tags, TermCreateParams(name = "news")) }
     }
 
+    /**
+     * `wp_insert_term` refuses a name it already holds, case-insensitively, after WordPress has
+     * normalised what was submitted - so a name the single-page `search` missed can still come
+     * back as `term_exists`. The error carries the existing id, so reading it keeps the tag on the
+     * post instead of dropping it. This is a name conflict, not a slug conflict.
+     */
+    @Test
+    fun `resolveTagIds recovers the id a term_exists error carries`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), any()) } doReturn listResponse(emptyList())
+            onBlocking { create(any(), any()) } doReturn createResponse(term(99L, "news"))
+        }
+        driveRequestsThrough(termsExecutor, failingRequest = 2, error = termExistsError(termId = 42L))
+
+        val resolution = taxonomyClient.resolveTagIds(testSite, listOf("news"))
+
+        // 42 is only in the error body; 99 is the response the create would have returned, so this
+        // also pins that the failing request really was the create.
+        assertEquals(listOf(42L), resolution.ids)
+        assertTrue(resolution.complete)
+        verifyBlocking(termsExecutor) { create(TermEndpointType.Tags, TermCreateParams(name = "news")) }
+    }
+
+    /**
+     * Only `term_exists` carries an id to recover; any other failure still drops the name, which
+     * is what marks the resolution incomplete so an update leaves the site's tags alone.
+     */
+    @Test
+    fun `resolveTagIds does not read an id out of an unrelated error`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), any()) } doReturn listResponse(emptyList())
+            onBlocking { create(any(), any()) } doReturn createResponse(term(99L, "news"))
+        }
+        driveRequestsThrough(
+            termsExecutor,
+            failingRequest = 2,
+            error = WpRequestResult.WpError(
+                errorCode = WpErrorCode.CannotCreate(),
+                errorMessage = "Sorry, you are not allowed to create terms in this taxonomy.",
+                statusCode = 403u,
+                response = """{"code":"rest_cannot_create","message":"not allowed",""" +
+                        """"data":{"status":403,"term_id":42}}""",
+                requestUrl = "",
+                requestMethod = RequestMethod.POST
+            )
+        )
+
+        val resolution = taxonomyClient.resolveTagIds(testSite, listOf("news"))
+
+        assertTrue(resolution.ids.isEmpty())
+        assertFalse(resolution.complete)
+    }
+
     @Test
     fun `resolveTagIds trims blank names and keeps each name once`() = runTest {
         val termsExecutor = mock<TermsRequestExecutor> {
@@ -1108,6 +1161,39 @@ class TaxonomyRsApiRestClientTest {
             WpRequestResult.Success(response = executeRequest(uniffiClient))
         }
     }
+
+    /**
+     * As [driveRequestsThrough], but the [failingRequest]th request comes back as [error] while
+     * still being run against the executor - so a test can fail one specific request and still
+     * assert, with `verifyBlocking`, which request that was. Positional stubbing alone cannot:
+     * it would keep passing if another request were ever added ahead of the one under test.
+     */
+    private suspend fun driveRequestsThrough(
+        termsExecutor: TermsRequestExecutor,
+        failingRequest: Int,
+        error: WpRequestResult<Any>
+    ) {
+        val uniffiClient = mock<UniffiWpApiClient> { on { terms() } doReturn termsExecutor }
+        var requests = 0
+        whenever(wpApiClient.request<Any>(any())).doSuspendableAnswer { invocation ->
+            requests++
+            val executeRequest = invocation.getArgument<suspend (UniffiWpApiClient) -> Any>(0)
+            val response = executeRequest(uniffiClient)
+            if (requests == failingRequest) error else WpRequestResult.Success(response)
+        }
+    }
+
+    /** The shape WordPress answers a create for a name it already holds with. */
+    private fun termExistsError(termId: Long) = WpRequestResult.WpError<Any>(
+        errorCode = WpErrorCode.CustomException("term_exists"),
+        errorMessage = "A term with the name provided already exists in this taxonomy.",
+        statusCode = 400u,
+        response = """{"code":"term_exists","message":"A term with the name provided already """ +
+                """exists in this taxonomy.","data":{"status":400,"term_id":$termId},""" +
+                """"additional_data":[$termId,$termId]}""",
+        requestUrl = "",
+        requestMethod = RequestMethod.POST
+    )
 
     private fun listResponse(
         terms: List<AnyTermWithViewContext>,
