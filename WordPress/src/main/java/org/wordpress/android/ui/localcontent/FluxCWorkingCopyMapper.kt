@@ -11,6 +11,7 @@ import uniffi.wp_mobile_local_content.FeaturedImage
 import uniffi.wp_mobile_local_content.PageWorkingCopyFields
 import uniffi.wp_mobile_local_content.PostWorkingCopyFields
 import uniffi.wp_mobile_local_content.PublishDate
+import uniffi.wp_mobile_local_content.RemotePostReference
 import uniffi.wp_mobile_local_content.SiteIdentity
 import uniffi.wp_mobile_local_content.StatusSetting
 import uniffi.wp_mobile_local_content.WorkingCopyCommonFields
@@ -41,6 +42,18 @@ class FluxCWorkingCopyMapper @Inject constructor(
     /** Returns `null` for a trashed page, which isn't edited. */
     fun toPageFields(post: PostModel): PageWorkingCopyFields? = common(post)?.let { common ->
         PageWorkingCopyFields(common = common, parent = post.parentId.takeIf { it > 0 })
+    }
+
+    /**
+     * The post on the server that FluxC's [post] was fetched from or uploaded to, with FluxC's
+     * `lastModified` as its base version.
+     *
+     * Returns `null` for a post that isn't on the server, and for one FluxC has no `lastModified` for.
+     */
+    fun toRemotePostReference(post: PostModel): RemotePostReference? {
+        if (post.remotePostId <= 0) return null
+        val lastModified = DateTimeUtils.dateFromIso8601(post.lastModified) ?: return null
+        return RemotePostReference(postId = post.remotePostId, baseModifiedGmt = lastModified)
     }
 
     /** A site has a WordPress.com site ID only when FluxC's `siteId` isn't 0. */

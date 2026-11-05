@@ -18,6 +18,10 @@ import org.wordpress.android.util.AppLog.T
 import uniffi.wp_api.ParseUrlException
 import uniffi.wp_mobile.LocalContentService
 import uniffi.wp_mobile_local_content.LocalContentException
+import uniffi.wp_mobile_local_content.PageWorkingCopyFields
+import uniffi.wp_mobile_local_content.PostWorkingCopyFields
+import uniffi.wp_mobile_local_content.RemotePostReference
+import uniffi.wp_mobile_local_content.SiteIdentity
 import uniffi.wp_mobile_local_content.WorkingCopyId
 import uniffi.wp_mobile_local_content.WorkingCopyRemoteTarget
 import javax.inject.Inject
@@ -29,8 +33,11 @@ import javax.inject.Singleton
  * [Feature.LOCAL_WORKING_COPIES] experimental feature is on.
  *
  * A post's working copy is found by the FluxC local post ID it was first saved under, kept in shared
- * preferences. Each working copy is made as a new post on the site: none points at the remote post
- * it was edited from.
+ * preferences, or else by its remote post. A post that isn't on the server yet gets a working copy
+ * with no remote post.
+ *
+ * FluxC uploads the post, not this class. So that the working copy follows FluxC, a save records a
+ * push when FluxC has a remote post or `lastModified` that the working copy doesn't have yet.
  */
 @Singleton
 class FluxCWorkingCopySaver @Inject constructor(
@@ -59,36 +66,22 @@ class FluxCWorkingCopySaver @Inject constructor(
             appLogWrapper.e(T.POSTS, "Local content: can't parse the site URL ${site.url}: $e")
             return
         }
-        val newPost = WorkingCopyRemoteTarget(site = siteIdentity, remotePost = null)
-        if (post.isPage) {
-            val fields = mapper.toPageFields(post) ?: return
-            launchSave(
-                localPostId,
-                create = { it.createPageWorkingCopy(newPost, fields).id },
-                save = { service, id -> service.savePageWorkingCopy(id, fields) }
-            )
-        } else {
-            val fields = mapper.toPostFields(post) ?: return
-            launchSave(
-                localPostId,
-                create = { it.createPostWorkingCopy(newPost, fields).id },
-                save = { service, id -> service.savePostWorkingCopy(id, fields) }
-            )
+        val remotePost = mapper.toRemotePostReference(post)
+        if (post.remotePostId > 0 && remotePost == null) {
+            appLogWrapper.e(T.POSTS, "Local content: local post $localPostId has no last modified date")
+            return
         }
-    }
+        val edit = if (post.isPage) {
+            mapper.toPageFields(post)?.let { Edit.Page(it) }
+        } else {
+            mapper.toPostFields(post)?.let { Edit.Post(it) }
+        } ?: return
+        val remoteTarget = WorkingCopyRemoteTarget(site = siteIdentity, remotePost = remotePost)
 
-    private fun launchSave(
-        localPostId: String,
-        create: (LocalContentService) -> WorkingCopyId,
-        save: (LocalContentService, WorkingCopyId) -> Unit
-    ) {
         appScope.launch(ioDispatcher) {
             saveLock.withLock {
                 try {
-                    val service = serviceProvider.getService()
-                    val id = workingCopyIds.getString(localPostId, null)
-                        ?.takeIf { saveIfFound(service, it, save) }
-                        ?: create(service)
+                    val id = saveOrCreate(serviceProvider.getService(), localPostId, remoteTarget, edit)
                     workingCopyIds.edit().putString(localPostId, id).apply()
                     appLogWrapper.d(T.POSTS, "Local content: saved local post $localPostId as working copy $id")
                 } catch (e: LocalContentException) {
@@ -98,15 +91,64 @@ class FluxCWorkingCopySaver @Inject constructor(
         }
     }
 
-    /** Returns `false` if the working copy is gone, for example because it was deleted. */
-    private fun saveIfFound(
+    /** Saves [edit] to the local post's working copy, creating one if it has none, and returns its ID. */
+    private fun saveOrCreate(
         service: LocalContentService,
-        id: WorkingCopyId,
-        save: (LocalContentService, WorkingCopyId) -> Unit
-    ): Boolean = try {
-        save(service, id)
-        true
-    } catch (e: LocalContentException.WorkingCopyNotFound) {
-        false
+        localPostId: String,
+        remoteTarget: WorkingCopyRemoteTarget,
+        edit: Edit
+    ): WorkingCopyId {
+        val remotePost = remoteTarget.remotePost
+        val stored = workingCopyIds.getString(localPostId, null)?.let { service.read(edit, it) }
+            ?: remotePost?.let { service.readForRemotePost(edit, remoteTarget.site, it.postId) }
+            ?: return service.create(edit, remoteTarget)
+
+        service.save(edit, stored.id)
+        if (remotePost != null && remotePost != stored.remotePost) {
+            service.recordPush(edit, stored.id, remotePost)
+        }
+        return stored.id
     }
 }
+
+/** The fields the editor saved, as a post's or as a page's. */
+private sealed interface Edit {
+    data class Post(val fields: PostWorkingCopyFields) : Edit
+    data class Page(val fields: PageWorkingCopyFields) : Edit
+}
+
+/** A stored working copy's ID, and the remote post it points at. */
+private data class StoredWorkingCopy(val id: WorkingCopyId, val remotePost: RemotePostReference?)
+
+private fun LocalContentService.read(edit: Edit, id: WorkingCopyId): StoredWorkingCopy? = when (edit) {
+    is Edit.Post -> readPostWorkingCopy(id)?.let { StoredWorkingCopy(it.id, it.remoteTarget.remotePost) }
+    is Edit.Page -> readPageWorkingCopy(id)?.let { StoredWorkingCopy(it.id, it.remoteTarget.remotePost) }
+}
+
+private fun LocalContentService.readForRemotePost(
+    edit: Edit,
+    site: SiteIdentity,
+    postId: Long
+): StoredWorkingCopy? = when (edit) {
+    is Edit.Post -> readPostWorkingCopyForRemotePost(site, postId)
+        ?.let { StoredWorkingCopy(it.id, it.remoteTarget.remotePost) }
+    is Edit.Page -> readPageWorkingCopyForRemotePost(site, postId)
+        ?.let { StoredWorkingCopy(it.id, it.remoteTarget.remotePost) }
+}
+
+private fun LocalContentService.create(edit: Edit, remoteTarget: WorkingCopyRemoteTarget): WorkingCopyId =
+    when (edit) {
+        is Edit.Post -> createPostWorkingCopy(remoteTarget, edit.fields).id
+        is Edit.Page -> createPageWorkingCopy(remoteTarget, edit.fields).id
+    }
+
+private fun LocalContentService.save(edit: Edit, id: WorkingCopyId) = when (edit) {
+    is Edit.Post -> savePostWorkingCopy(id, edit.fields)
+    is Edit.Page -> savePageWorkingCopy(id, edit.fields)
+}
+
+private fun LocalContentService.recordPush(edit: Edit, id: WorkingCopyId, remotePost: RemotePostReference) =
+    when (edit) {
+        is Edit.Post -> recordPostWorkingCopyPush(id, remotePost)
+        is Edit.Page -> recordPageWorkingCopyPush(id, remotePost)
+    }
