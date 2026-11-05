@@ -40,8 +40,7 @@ import javax.inject.Inject;
 
 public class ReaderUpdateLogic {
     /***
-     * This class holds the business logic for Reader Updates, serving both ReaderUpdateService (<API26)
-     * and ReaderUpdateJobService (API26+).
+     * This class holds the business logic for Reader Updates, run by ReaderUpdateJobService.
      * Updates followedtags and blogs for the Reader, relies
      * on EventBus to notify of changes
      */
