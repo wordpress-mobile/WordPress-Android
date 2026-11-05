@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpAdditionalFieldsBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.network.rest.wpapi.taxonomy.TaxonomyRsApiRestClient
+import org.wordpress.android.fluxc.network.rest.wpapi.taxonomy.TaxonomyRsApiRestClient.TagResolution
 import org.wordpress.android.fluxc.store.PostStore.DeletedPostPayload
 import org.wordpress.android.fluxc.store.PostStore.FetchPostStatusResponsePayload
 import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType
@@ -90,7 +91,7 @@ class PostRsApiRestClientTest {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         taxonomyRsApiRestClient = mock {
-            onBlocking { resolveTagIds(any(), any()) } doReturn emptyList()
+            onBlocking { resolveTagIds(any(), any()) } doReturn TagResolution(emptyList(), complete = true)
             onBlocking { resolveTagNames(any(), any()) } doReturn emptyList()
         }
         val testScope = CoroutineScope(UnconfinedTestDispatcher(TestCoroutineScheduler()))
@@ -185,7 +186,8 @@ class PostRsApiRestClientTest {
     fun `updating a post that still has terms sends them in the typed fields`() = runTest {
         val executor = executor()
         stubRequests(executor)
-        whenever(taxonomyRsApiRestClient.resolveTagIds(site, listOf("alpha"))).thenReturn(listOf(77L))
+        whenever(taxonomyRsApiRestClient.resolveTagIds(site, listOf("alpha")))
+            .thenReturn(TagResolution(listOf(77L), complete = true))
         val post = existingPost().apply {
             setCategoryIdList(listOf(5L))
             setTagNameList(listOf("alpha"))
@@ -208,7 +210,8 @@ class PostRsApiRestClientTest {
     fun `a post whose tags could not be resolved leaves the ones on the site alone`() = runTest {
         val executor = executor()
         stubRequests(executor)
-        whenever(taxonomyRsApiRestClient.resolveTagIds(site, listOf("alpha"))).thenReturn(emptyList())
+        whenever(taxonomyRsApiRestClient.resolveTagIds(site, listOf("alpha")))
+            .thenReturn(TagResolution(emptyList(), complete = false))
         val post = existingPost().apply {
             setCategoryIdList(listOf(5L))
             setTagNameList(listOf("alpha"))
@@ -220,6 +223,47 @@ class PostRsApiRestClientTest {
         // which wp/v2 reads as "leave the tags as they are".
         assertThat(captureUpdateParams(executor).tags).isEmpty()
         verify(additionalFieldsBuilder, never()).emptyArrays(any())
+    }
+
+    /**
+     * The harder half of the same trap: some names resolved, so the ids look usable, but wp/v2
+     * replaces the whole tag set and would delete the tags behind the names that did not.
+     */
+    @Test
+    fun `a post whose tags resolved only partly leaves the ones on the site alone`() = runTest {
+        val executor = executor()
+        stubRequests(executor)
+        whenever(taxonomyRsApiRestClient.resolveTagIds(site, listOf("alpha", "beta")))
+            .thenReturn(TagResolution(listOf(77L), complete = false))
+        val post = existingPost().apply {
+            setCategoryIdList(listOf(5L))
+            setTagNameList(listOf("alpha", "beta"))
+        }
+
+        restClient.pushPost(post, site, false, true, null)
+
+        assertThat(captureUpdateParams(executor).tags).isEmpty()
+        verify(additionalFieldsBuilder, never()).emptyArrays(any())
+    }
+
+    /**
+     * A post being created has no tags to lose, so a partial resolution is still worth sending:
+     * dropping them would publish the post with no tags at all.
+     */
+    @Test
+    fun `creating a post sends the tags that resolved even when some did not`() = runTest {
+        val executor = executor()
+        stubRequests(executor)
+        whenever(taxonomyRsApiRestClient.resolveTagIds(site, listOf("alpha", "beta")))
+            .thenReturn(TagResolution(listOf(77L), complete = false))
+        val post = existingPost().apply {
+            setIsLocalDraft(true)
+            setTagNameList(listOf("alpha", "beta"))
+        }
+
+        restClient.pushPost(post, site, false, true, null)
+
+        assertThat(captureCreateParams(executor).tags).containsExactly(77L)
     }
 
     @Test
@@ -389,6 +433,23 @@ class PostRsApiRestClientTest {
         restClient.fetchPost(existingPost(), site)
 
         val payload = dispatchedPayload<RemotePostPayload>(PostAction.FETCHED_POST)
+        assertThat(payload.post.tagNameList).containsExactly("alpha", "beta")
+    }
+
+    /**
+     * The fetch itself still succeeds, so an emptied list would be stored as the truth and read as
+     * "the author removed every tag" by the next save, deleting them all on the site (CMM-2502).
+     */
+    @Test
+    fun `a fetch whose tag lookup fails keeps the names already held`() = runTest {
+        stubRequests(executor(remoteTags = listOf(7L, 3L)))
+        whenever(taxonomyRsApiRestClient.resolveTagNames(site, listOf(7L, 3L))).thenReturn(null)
+        val local = existingPost().apply { setTagNameList(listOf("alpha", "beta")) }
+
+        restClient.fetchPost(local, site)
+
+        val payload = dispatchedPayload<RemotePostPayload>(PostAction.FETCHED_POST)
+        assertThat(payload.error).isNull()
         assertThat(payload.post.tagNameList).containsExactly("alpha", "beta")
     }
 

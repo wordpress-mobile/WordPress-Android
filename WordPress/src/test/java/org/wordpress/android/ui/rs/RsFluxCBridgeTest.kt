@@ -6,6 +6,7 @@ import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -118,7 +119,7 @@ class RsFluxCBridgeTest {
 
         // The bridge returns the re-read row, not the mapper output.
         assertThat(result).isSameAs(stored)
-        // The bridge flips isPage on the mapper output before inserting.
+        // The mapper is told it is a page, so what it returns is inserted as one.
         verify(postSqlUtils).insertOrUpdatePost(argThat { isPage }, eq(false))
     }
 
@@ -193,8 +194,14 @@ class RsFluxCBridgeTest {
         whenever(wpApiClientProvider.getWpApiClient(eq(site), anyOrNull())).thenReturn(client)
         whenever(client.request<PostsRequestRetrieveWithEditContextResponse>(any()))
             .thenReturn(fetchSuccess(fetched))
-        whenever(mapper.map(eq(fetched), eq(site)))
-            .thenReturn(PostModel().apply { setRemotePostId(REMOTE_ID) })
+        // The mapper owns isPage: it only copies a page's parent across when told it has one, so
+        // the stub has to reflect the flag it is given rather than returning a fixed model.
+        whenever(mapper.map(eq(fetched), eq(site), any())).doSuspendableAnswer { invocation ->
+            PostModel().apply {
+                setRemotePostId(REMOTE_ID)
+                setIsPage(invocation.getArgument(2))
+            }
+        }
     }
 
     // The fetched item is a pass-through to the mocked mapper, so its contents are never

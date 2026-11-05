@@ -327,17 +327,31 @@ class TaxonomyRsApiRestClient @Inject constructor(
      * duplicates and blanks dropped.
      *
      * A name that can neither be found nor created is skipped rather than failing the whole call:
-     * losing one tag is a better outcome than losing the post edit that carried it.
+     * losing one tag is a better outcome than losing the post edit that carried it. The result
+     * reports whether every name resolved, because the ids alone cannot say so and an update that
+     * sent an incomplete set would delete the tags missing from it - see [TagResolution].
      */
-    suspend fun resolveTagIds(site: SiteModel, tagNames: List<String>): List<Long> {
+    suspend fun resolveTagIds(site: SiteModel, tagNames: List<String>): TagResolution {
         val wanted = tagNames.map { it.trim() }.filter { it.isNotEmpty() }.distinct()
-        if (wanted.isEmpty()) return emptyList()
+        if (wanted.isEmpty()) return TagResolution(emptyList(), complete = true)
 
         val client = wpApiClientProvider.getWpApiClient(site)
-        return wanted.mapNotNull { name ->
+        val ids = wanted.mapNotNull { name ->
             findTagIdByName(client, name, site) ?: createTagReturningId(client, name, site)
         }
+        return TagResolution(ids, complete = ids.size == wanted.size)
     }
+
+    /**
+     * The ids [resolveTagIds] could resolve, and whether that is all of them.
+     *
+     * [complete] is `false` when a name could neither be found nor created - a transient lookup
+     * error, or a name WordPress refuses because an existing term already owns its slug. The ids
+     * are still usable for a post being created, which has no tags to lose, but an update must not
+     * send them: wp/v2 replaces a post's whole tag set, so a short list removes the tags that are
+     * missing from it.
+     */
+    data class TagResolution(val ids: List<Long>, val complete: Boolean)
 
     private suspend fun findTagIdByName(
         client: WpApiClient,
@@ -412,12 +426,18 @@ class TaxonomyRsApiRestClient @Inject constructor(
      *
      * Names come back decoded, which is the form the tag picker shows and [resolveTagIds] expects;
      * storing the encoded `AT&amp;T` would re-encode it on the next save.
+     *
+     * Returns `null` if any page failed, rather than the names it did manage to read. A partial
+     * list is indistinguishable from the real one, and wp/v2 replaces a post's whole tag set on
+     * save, so storing one would quietly delete the tags missing from it the next time the post is
+     * written. The caller is expected to keep whatever names it already holds instead.
      */
-    suspend fun resolveTagNames(site: SiteModel, tagIds: List<Long>): List<String> {
+    suspend fun resolveTagNames(site: SiteModel, tagIds: List<Long>): List<String>? {
         if (tagIds.isEmpty()) return emptyList()
 
         val client = wpApiClientProvider.getWpApiClient(site)
         val namesById = mutableMapOf<Long, String>()
+        var failed = false
         var params: TermListParams? = TermListParams(include = tagIds, perPage = TERMS_PER_PAGE)
         while (params != null) {
             val currentParams = params
@@ -439,11 +459,12 @@ class TaxonomyRsApiRestClient @Inject constructor(
                         AppLog.T.POSTS,
                         "Tag name lookup on ${site.url} failed: ${response.toTaxonomyError().toLogString()}"
                     )
+                    failed = true
                     params = null
                 }
             }
         }
-        return tagIds.mapNotNull { namesById[it] }
+        return if (failed) null else tagIds.mapNotNull { namesById[it] }
     }
 
     private fun AnyTermWithViewContext.toTermModel(site: SiteModel, taxonomyName: String) = TermModel(

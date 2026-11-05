@@ -929,9 +929,10 @@ class TaxonomyRsApiRestClientTest {
         }
         driveRequestsThrough(termsExecutor)
 
-        val ids = taxonomyClient.resolveTagIds(testSite, listOf("news"))
+        val resolution = taxonomyClient.resolveTagIds(testSite, listOf("news"))
 
-        assertEquals(listOf(9L), ids)
+        assertEquals(listOf(9L), resolution.ids)
+        assertTrue(resolution.complete)
         verifyBlocking(termsExecutor, never()) { create(any(), any()) }
     }
 
@@ -948,7 +949,7 @@ class TaxonomyRsApiRestClientTest {
         }
         driveRequestsThrough(termsExecutor)
 
-        val ids = taxonomyClient.resolveTagIds(testSite, listOf("AT&T"))
+        val ids = taxonomyClient.resolveTagIds(testSite, listOf("AT&T")).ids
 
         assertEquals(listOf(9L), ids)
         verifyBlocking(termsExecutor) {
@@ -965,7 +966,7 @@ class TaxonomyRsApiRestClientTest {
         }
         driveRequestsThrough(termsExecutor)
 
-        val ids = taxonomyClient.resolveTagIds(testSite, listOf("news"))
+        val ids = taxonomyClient.resolveTagIds(testSite, listOf("news")).ids
 
         assertEquals(listOf(31L), ids)
         verifyBlocking(termsExecutor) { create(TermEndpointType.Tags, TermCreateParams(name = "news")) }
@@ -978,7 +979,7 @@ class TaxonomyRsApiRestClientTest {
         }
         driveRequestsThrough(termsExecutor)
 
-        val ids = taxonomyClient.resolveTagIds(testSite, listOf(" news ", "", "news", "   "))
+        val ids = taxonomyClient.resolveTagIds(testSite, listOf(" news ", "", "news", "   ")).ids
 
         assertEquals(listOf(9L), ids)
         verifyBlocking(termsExecutor, times(1)) { listWithViewContext(any(), any()) }
@@ -998,7 +999,43 @@ class TaxonomyRsApiRestClientTest {
             )
         )
 
-        assertTrue(taxonomyClient.resolveTagIds(testSite, listOf("news")).isEmpty())
+        assertTrue(taxonomyClient.resolveTagIds(testSite, listOf("news")).ids.isEmpty())
+    }
+
+    /**
+     * The ids on their own cannot say a name was dropped, and the post client has to know: wp/v2
+     * replaces a post's whole tag set, so sending a short list deletes the tags missing from it.
+     */
+    @Test
+    fun `resolveTagIds reports an incomplete resolution when a name is dropped`() = runTest {
+        whenever(wpApiClient.request<Any>(any())).thenReturn(
+            WpRequestResult.UnknownError(
+                statusCode = 500u,
+                response = "Internal Server Error",
+                requestUrl = "",
+                requestMethod = RequestMethod.GET
+            )
+        )
+
+        assertFalse(taxonomyClient.resolveTagIds(testSite, listOf("news")).complete)
+    }
+
+    /**
+     * A partial list is indistinguishable from the real one, so returning one would have the
+     * caller store it and delete the names it is missing on the next save.
+     */
+    @Test
+    fun `resolveTagNames reports failure rather than the names it did read`() = runTest {
+        whenever(wpApiClient.request<Any>(any())).thenReturn(
+            WpRequestResult.UnknownError(
+                statusCode = 500u,
+                response = "Internal Server Error",
+                requestUrl = "",
+                requestMethod = RequestMethod.GET
+            )
+        )
+
+        assertNull(taxonomyClient.resolveTagNames(testSite, listOf(7L, 3L)))
     }
 
     /**
@@ -1056,7 +1093,7 @@ class TaxonomyRsApiRestClientTest {
 
     @Test
     fun `resolveTagNames asks for nothing when there are no ids`() = runTest {
-        assertTrue(taxonomyClient.resolveTagNames(testSite, emptyList()).isEmpty())
+        assertEquals(emptyList<String>(), taxonomyClient.resolveTagNames(testSite, emptyList()))
         verifyBlocking(wpApiClient, never()) { request<Any>(any()) }
     }
 

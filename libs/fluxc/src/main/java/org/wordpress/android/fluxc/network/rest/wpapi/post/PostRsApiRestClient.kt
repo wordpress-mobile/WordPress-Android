@@ -78,7 +78,11 @@ class PostRsApiRestClient @Inject constructor(
                     // A fetch carries no author-supplied names to reuse, and the local copy may
                     // hold none at all - PostFetcher fetches with a bare PostModel - so the
                     // response's tag ids are the only source of truth for this post's tags.
+                    // A failed lookup keeps the names already held rather than storing a partial
+                    // list: this fetch still reports success, so an emptied list would read as
+                    // "the author removed every tag" and delete them all on the next save.
                     val tagNames = taxonomyRsApiRestClient.resolveTagNames(site, data.tags ?: emptyList())
+                        ?: post.tagNameList
                     val fetched = toPostModel(data, site, post, tagNames)
                     FetchPostResponsePayload(fetched, site)
                 }
@@ -172,25 +176,31 @@ class PostRsApiRestClient @Inject constructor(
             // The author's own tag names, kept before the response overwrites the model: they are
             // what the resolved ids were created from, so there is no need to read them back.
             val authoredTagNames = post.tagNameList
-            val tagIds = if (post.isPage) {
-                emptyList()
+            val tagResolution = if (post.isPage) {
+                null
             } else {
                 taxonomyRsApiRestClient.resolveTagIds(site, authoredTagNames)
             }
+            // A create takes whatever resolved: a post that does not exist yet has no tags to lose.
+            // An update must not, unless every name resolved - wp/v2 replaces the whole tag set, so
+            // a short list would delete the tags missing from it because a lookup failed. An empty
+            // list is omitted from the request body, which leaves the site's tags as they are.
+            val createTagIds = tagResolution?.ids.orEmpty()
+            val updateTagIds = if (tagResolution?.complete == false) emptyList() else createTagIds
 
             // Create and update return different response types, so the saved post is pulled out
             // in each branch and the raw result only kept to describe a failure.
             val response: WpRequestResult<*>
             val savedPost: AnyPostWithEditContext?
             if (post.isLocalDraft) {
-                val params = buildCreateParams(post, site, tagIds)
+                val params = buildCreateParams(post, site, createTagIds)
                 val result = client.request { requestBuilder ->
                     requestBuilder.posts().create(postEndpointType = post.endpointType(), params = params)
                 }
                 response = result
                 savedPost = (result as? WpRequestResult.Success)?.response?.data
             } else {
-                val params = buildUpdateParams(post, tagIds)
+                val params = buildUpdateParams(post, updateTagIds)
                 val result = client.request { requestBuilder ->
                     requestBuilder.posts().update(
                         postEndpointType = post.endpointType(),
@@ -205,6 +215,12 @@ class PostRsApiRestClient @Inject constructor(
             if (savedPost != null) {
                 // Unlike XML-RPC, wp/v2 answers a write with the saved post, so the model can be
                 // brought in sync here instead of costing a follow-up fetch.
+                //
+                // The caller's own model is updated in place, as `PostXMLRPCClient` does on the
+                // path this replaces: it carries FluxC's local row id and local-only bookkeeping
+                // (`dateLocallyChanged`, `changesConfirmedContentHashcode`, `customFields`, the
+                // autosave fields), which a freshly mapped model would drop. Those fields are
+                // deliberately left as they are; only server-owned ones are overwritten.
                 postMapper.applyTo(
                     target = post,
                     post = savedPost,
@@ -387,9 +403,11 @@ class PostRsApiRestClient @Inject constructor(
         if (post.isPage) return null
         val clearedKeys = buildList {
             if (post.categoryIdList.isEmpty()) add(FIELD_CATEGORIES)
-            // Keyed on the author's own names rather than on `tagIds`: a name that could not be
-            // resolved leaves `tagIds` empty too, and clearing the post's tags because a lookup
-            // failed would delete server-side data the author never asked to remove.
+            // Keyed on the author's own names rather than on the resolved ids: a name that could
+            // not be resolved leaves those empty too, and clearing the post's tags because a
+            // lookup failed would delete server-side data the author never asked to remove. This
+            // is also what keeps an incomplete resolution harmless - the names are still there, so
+            // nothing is cleared, and `updateTagIds` omits the field instead.
             if (post.tagNameList.isEmpty()) add(FIELD_TAGS)
         }
         return if (clearedKeys.isEmpty()) null else additionalFieldsBuilder.emptyArrays(clearedKeys)

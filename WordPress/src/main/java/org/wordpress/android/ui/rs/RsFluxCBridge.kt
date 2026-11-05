@@ -74,7 +74,7 @@ class RsFluxCBridge @Inject constructor(
             }
         }
 
-        val model = mapper.map(response.response.data, site).apply { setIsPage(isPage) }
+        val model = mapper.map(response.response.data, site, isPage)
         postSqlUtils.insertOrUpdatePost(model, false)
 
         // Re-read to get the auto-assigned local ID
