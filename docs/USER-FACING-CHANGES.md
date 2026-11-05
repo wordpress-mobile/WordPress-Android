@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Saving posts on a self-hosted site uses the REST API**
+  Creating, opening, saving, trashing and restoring a post or page on a self-hosted site added with an application password now goes through the site's own REST API instead of XML-RPC. Sites whose host blocks password-authenticated logins on `xmlrpc.php` — a two-factor plugin is the usual cause — could not save a draft or publish at all; they can now. Media uploads on these sites already worked this way.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** My Site → Posts (or Pages) → the editor → Save/Publish
+  - **Notes:** Only affects self-hosted sites signed in with an application password. WordPress.com and Jetpack sites are unchanged, and a self-hosted site without an application password still uses XML-RPC. A conflict with a newer copy on the server is now detected by reading the server's modified date just before saving, rather than by the server refusing the write, so a conflict created in the moment between that read and the save is no longer caught. New tags typed in the editor are created on the site before the post is saved; a tag that cannot be created is dropped rather than failing the save.
+
 - **A post's Stats menu item opens the redesigned Stats**
   Posts → a published post's ⋯ menu → Stats now opens the per-item screen of the redesigned Stats, the same screen a row in Posts & pages opens, instead of the old per-post stats screen. The post's title, chart, totals and calendars are the ones the redesigned Stats shows everywhere else, and its header opens the post itself. A page's Stats menu item, where the Pages list offers one, opens the same screen.
   - **Apps:** Both

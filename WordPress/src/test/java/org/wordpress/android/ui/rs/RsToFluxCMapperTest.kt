@@ -3,65 +3,75 @@ package org.wordpress.android.ui.rs
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpapi.post.RsPostMapper
 import org.wordpress.android.ui.rs.data.RsSiteRestClient
 import uniffi.wp_api.AnyPostWithEditContext
 import uniffi.wp_api.PostContentWithEditContext
 import uniffi.wp_api.SparsePostExcerpt
+import uniffi.wp_api.TermEndpointType
 
+// PostModel stores the tag list as a joined string via android.text.TextUtils, so these need a
+// Robolectric runtime.
+@RunWith(RobolectricTestRunner::class)
+@Config(application = android.app.Application::class)
 class RsToFluxCMapperTest {
     private val restClient: RsSiteRestClient = mock()
-    private val mapper = RsToFluxCMapper(restClient)
+    private val mapper = RsToFluxCMapper(restClient, RsPostMapper())
     private val site = SiteModel()
 
     /**
-     * The regression guard for CMM-2392: `rendered` is the summary WordPress generates from the
-     * content when the post has no excerpt, so mapping it would hand the editor an excerpt the
-     * author never wrote — which the next Update would then save to the server.
+     * The field-by-field mapping is covered by `RsPostMapperTest` in FluxC; what this class adds is
+     * turning the payload's tag ids into the names the editor shows.
      */
     @Test
-    fun `blank raw excerpt does not fall back to the auto-generated rendered excerpt`() = runTest {
-        val post = rsPost(SparsePostExcerpt("", AUTO_GENERATED, false))
+    fun `tag ids are mapped to names in the order the payload lists them`() = runTest {
+        val post = rsPost(tags = listOf(7L, 3L))
+        whenever(restClient.fetchTermNames(site, listOf(7L, 3L), TermEndpointType.Tags))
+            .thenReturn(mapOf(3L to "second", 7L to "first"))
 
-        assertThat(mapper.map(post, site).excerpt).isEmpty()
+        assertThat(mapper.map(post, site).tagNameList).containsExactly("first", "second")
     }
 
     @Test
-    fun `author-written excerpt is mapped as-is`() = runTest {
-        val post = rsPost(SparsePostExcerpt("Written by hand", AUTO_GENERATED, false))
+    fun `a tag id the site no longer has is dropped`() = runTest {
+        val post = rsPost(tags = listOf(7L, 3L))
+        whenever(restClient.fetchTermNames(site, listOf(7L, 3L), TermEndpointType.Tags))
+            .thenReturn(mapOf(7L to "first"))
 
-        assertThat(mapper.map(post, site).excerpt).isEqualTo("Written by hand")
+        assertThat(mapper.map(post, site).tagNameList).containsExactly("first")
     }
 
     @Test
-    fun `missing excerpt maps to an empty excerpt`() = runTest {
-        val post = rsPost(excerpt = null)
+    fun `a post without tags is mapped without asking the site for names`() = runTest {
+        val post = rsPost(tags = emptyList())
 
-        assertThat(mapper.map(post, site).excerpt).isEmpty()
+        assertThat(mapper.map(post, site).tagNameList).isEmpty()
     }
 
     @Test
-    fun `null raw excerpt does not fall back to the rendered excerpt`() = runTest {
-        val post = rsPost(SparsePostExcerpt(null, AUTO_GENERATED, false))
+    fun `a mapped post is not a local draft and carries no local changes`() = runTest {
+        val mapped = mapper.map(rsPost(tags = emptyList()), site)
 
-        assertThat(mapper.map(post, site).excerpt).isEmpty()
+        assertThat(mapped.isLocalDraft).isFalse()
+        assertThat(mapped.isLocallyChanged).isFalse()
     }
 
-    // Only the excerpt and content are read in these tests; mocking avoids building the
-    // ~29-field data class by hand.
+    // Only a few fields are read in these tests; mocking avoids building the ~29-field data class
+    // by hand.
     @Suppress("DoNotMockDataClass")
-    private fun rsPost(excerpt: SparsePostExcerpt?): AnyPostWithEditContext {
+    private fun rsPost(tags: List<Long>): AnyPostWithEditContext {
         val post: AnyPostWithEditContext = mock()
-        whenever(post.excerpt).thenReturn(excerpt)
+        whenever(post.tags).thenReturn(tags)
+        whenever(post.excerpt).thenReturn(SparsePostExcerpt("", "", false))
         whenever(post.content).thenReturn(
             PostContentWithEditContext("Post content", "<p>Post content</p>", false, null)
         )
         return post
-    }
-
-    companion object {
-        private const val AUTO_GENERATED = "<p>Post content&hellip;</p>"
     }
 }

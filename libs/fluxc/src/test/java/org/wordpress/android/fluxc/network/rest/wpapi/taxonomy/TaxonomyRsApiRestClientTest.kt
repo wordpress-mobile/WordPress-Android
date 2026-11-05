@@ -20,6 +20,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
@@ -49,6 +50,7 @@ import uniffi.wp_api.TermsRequestListWithViewContextResponse
 import uniffi.wp_api.UniffiWpApiClient
 import uniffi.wp_api.TermsRequestUpdateResponse
 import uniffi.wp_api.TaxonomyType
+import uniffi.wp_api.TermCreateParams
 import uniffi.wp_api.TermListParams
 import uniffi.wp_api.WpErrorCode
 import uniffi.wp_api.WpNetworkHeaderMap
@@ -914,6 +916,156 @@ class TaxonomyRsApiRestClientTest {
         assertNotNull(payload.error)
         assertEquals(TaxonomyErrorType.GENERIC_ERROR, payload.error?.type)
     }
+
+    /**
+     * The post REST client needs tag *ids*, but PostModel (and XML-RPC before it) carries tag
+     * *names*, so these cover the name/id translation it depends on.
+     */
+    @Test
+    fun `resolveTagIds returns the id of an exactly matching tag without creating one`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), any()) } doReturn
+                    listResponse(listOf(term(5L, "newsletter"), term(9L, "News")))
+        }
+        driveRequestsThrough(termsExecutor)
+
+        val ids = taxonomyClient.resolveTagIds(testSite, listOf("news"))
+
+        assertEquals(listOf(9L), ids)
+        verifyBlocking(termsExecutor, never()) { create(any(), any()) }
+    }
+
+    @Test
+    fun `resolveTagIds creates a tag when only a substring of the name matches`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), any()) } doReturn listResponse(listOf(term(5L, "newsletter")))
+            onBlocking { create(any(), any()) } doReturn createResponse(term(31L, "news"))
+        }
+        driveRequestsThrough(termsExecutor)
+
+        val ids = taxonomyClient.resolveTagIds(testSite, listOf("news"))
+
+        assertEquals(listOf(31L), ids)
+        verifyBlocking(termsExecutor) { create(TermEndpointType.Tags, TermCreateParams(name = "news")) }
+    }
+
+    @Test
+    fun `resolveTagIds trims blank names and keeps each name once`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), any()) } doReturn listResponse(listOf(term(9L, "news")))
+        }
+        driveRequestsThrough(termsExecutor)
+
+        val ids = taxonomyClient.resolveTagIds(testSite, listOf(" news ", "", "news", "   "))
+
+        assertEquals(listOf(9L), ids)
+        verifyBlocking(termsExecutor, times(1)) { listWithViewContext(any(), any()) }
+    }
+
+    /**
+     * Losing one tag is a better outcome than losing the post edit that carried it.
+     */
+    @Test
+    fun `resolveTagIds drops a name it can neither find nor create`() = runTest {
+        whenever(wpApiClient.request<Any>(any())).thenReturn(
+            WpRequestResult.UnknownError(
+                statusCode = 500u,
+                response = "Internal Server Error",
+                requestUrl = "",
+                requestMethod = RequestMethod.GET
+            )
+        )
+
+        assertTrue(taxonomyClient.resolveTagIds(testSite, listOf("news")).isEmpty())
+    }
+
+    @Test
+    fun `resolveTagNames returns the names in the order the ids were given`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), any()) } doReturn
+                    listResponse(listOf(term(3L, "beta"), term(7L, "alpha")))
+        }
+        driveRequestsThrough(termsExecutor)
+
+        assertEquals(listOf("alpha", "beta"), taxonomyClient.resolveTagNames(testSite, listOf(7L, 3L)))
+    }
+
+    @Test
+    fun `resolveTagNames drops an id the site no longer has`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), any()) } doReturn listResponse(listOf(term(7L, "alpha")))
+        }
+        driveRequestsThrough(termsExecutor)
+
+        assertEquals(listOf("alpha"), taxonomyClient.resolveTagNames(testSite, listOf(7L, 3L)))
+    }
+
+    /**
+     * The REST API caps how many terms one page returns, so a post carrying more than a page of
+     * tags would otherwise lose every name past the first page (the same trap as CMM-2122).
+     */
+    @Test
+    fun `resolveTagNames follows pagination`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), any()) }.doReturn(
+                listResponse(listOf(term(7L, "alpha")), nextPageParams = TermListParams(page = 2u)),
+                listResponse(listOf(term(3L, "beta")))
+            )
+        }
+        driveRequestsThrough(termsExecutor)
+
+        assertEquals(listOf("alpha", "beta"), taxonomyClient.resolveTagNames(testSite, listOf(7L, 3L)))
+        verifyBlocking(termsExecutor, times(2)) { listWithViewContext(any(), any()) }
+    }
+
+    @Test
+    fun `resolveTagNames asks for nothing when there are no ids`() = runTest {
+        assertTrue(taxonomyClient.resolveTagNames(testSite, emptyList()).isEmpty())
+        verifyBlocking(wpApiClient, never()) { request<Any>(any()) }
+    }
+
+    /**
+     * Runs the client's request lambdas against [termsExecutor] instead of stubbing `request`
+     * wholesale, so the params the client builds are observable.
+     */
+    private suspend fun driveRequestsThrough(termsExecutor: TermsRequestExecutor) {
+        val uniffiClient = mock<UniffiWpApiClient> { on { terms() } doReturn termsExecutor }
+        whenever(wpApiClient.request<Any>(any())).doSuspendableAnswer { invocation ->
+            val executeRequest = invocation.getArgument<suspend (UniffiWpApiClient) -> Any>(0)
+            WpRequestResult.Success(response = executeRequest(uniffiClient))
+        }
+    }
+
+    private fun listResponse(
+        terms: List<AnyTermWithViewContext>,
+        nextPageParams: TermListParams? = null
+    ) = TermsRequestListWithViewContextResponse(terms, mock<WpNetworkHeaderMap>(), nextPageParams, null)
+
+    private fun createResponse(term: AnyTermWithViewContext) =
+        TermsRequestCreateResponse(
+            AnyTermWithEditContext(
+                id = term.id,
+                count = term.count,
+                description = term.description,
+                link = term.link,
+                name = term.name,
+                slug = term.slug,
+                taxonomy = TaxonomyType.PostTag,
+                parent = term.parent
+            ),
+            mock<WpNetworkHeaderMap>()
+        )
+
+    private fun term(id: Long, name: String) = AnyTermWithViewContext(
+        id = id,
+        count = 0L,
+        description = "",
+        link = "https://example.com/tag/$name",
+        name = name,
+        slug = name,
+        taxonomy = TaxonomyType.PostTag,
+        parent = 0L
+    )
 
     private fun createListResponse(
         terms: List<AnyTermWithViewContext>,

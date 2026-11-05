@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyError
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
+import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.AnyTermWithViewContext
 import uniffi.wp_api.TermCreateParams
@@ -316,6 +317,115 @@ class TaxonomyRsApiRestClient @Inject constructor(
         dispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermsAction(termsResponsePayload))
     }
 
+    /**
+     * Turns tag *names* into tag ids, creating the ones the site doesn't have yet.
+     *
+     * XML-RPC accepts tags by name (`terms_names`) and lets WordPress create the missing ones
+     * server-side; wp/v2 only accepts term ids, so the REST post client has to do that resolution
+     * itself before it can write a post. Returned in the order the names were given, with
+     * duplicates and blanks dropped.
+     *
+     * A name that can neither be found nor created is skipped rather than failing the whole call:
+     * losing one tag is a better outcome than losing the post edit that carried it.
+     */
+    suspend fun resolveTagIds(site: SiteModel, tagNames: List<String>): List<Long> {
+        val wanted = tagNames.map { it.trim() }.filter { it.isNotEmpty() }.distinct()
+        if (wanted.isEmpty()) return emptyList()
+
+        val client = wpApiClientProvider.getWpApiClient(site)
+        return wanted.mapNotNull { name ->
+            findTagIdByName(client, name, site) ?: createTagReturningId(client, name, site)
+        }
+    }
+
+    private suspend fun findTagIdByName(
+        client: WpApiClient,
+        name: String,
+        site: SiteModel
+    ): Long? {
+        val response = client.request { requestBuilder ->
+            requestBuilder.terms().listWithViewContext(
+                termEndpointType = TermEndpointType.Tags,
+                params = TermListParams(search = name, perPage = TAG_SEARCH_PER_PAGE)
+            )
+        }
+        return when (response) {
+            is WpRequestResult.Success ->
+                // `search` is a substring match, so "news" also returns "newsletter". Only an
+                // exact name is the tag the author typed.
+                response.response.data.firstOrNull { it.name.equals(name, ignoreCase = true) }?.id
+            else -> {
+                appLogWrapper.e(
+                    AppLog.T.POSTS,
+                    "Tag lookup for '$name' on ${site.url} failed: ${response.toTaxonomyError().toLogString()}"
+                )
+                null
+            }
+        }
+    }
+
+    private suspend fun createTagReturningId(
+        client: WpApiClient,
+        name: String,
+        site: SiteModel
+    ): Long? {
+        val response = client.request { requestBuilder ->
+            requestBuilder.terms().create(
+                termEndpointType = TermEndpointType.Tags,
+                params = TermCreateParams(name = name)
+            )
+        }
+        return when (response) {
+            is WpRequestResult.Success -> response.response.data.id
+            else -> {
+                appLogWrapper.e(
+                    AppLog.T.POSTS,
+                    "Creating tag '$name' on ${site.url} failed: ${response.toTaxonomyError().toLogString()}"
+                )
+                null
+            }
+        }
+    }
+
+    /**
+     * Turns tag *ids* back into names, which is the form `PostModel.getTagNameList` stores.
+     *
+     * Returned in the order the ids were given; an id the site no longer has is skipped.
+     * Paginates because the REST API caps how many terms one page returns, so a post carrying more
+     * than a page of tags would otherwise lose every name past the first page (same reasoning as
+     * CMM-2122).
+     */
+    suspend fun resolveTagNames(site: SiteModel, tagIds: List<Long>): List<String> {
+        if (tagIds.isEmpty()) return emptyList()
+
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val namesById = mutableMapOf<Long, String>()
+        var params: TermListParams? = TermListParams(include = tagIds, perPage = TERMS_PER_PAGE)
+        while (params != null) {
+            val currentParams = params
+            val response = client.request { requestBuilder ->
+                requestBuilder.terms().listWithViewContext(
+                    termEndpointType = TermEndpointType.Tags,
+                    params = currentParams
+                )
+            }
+            when (response) {
+                is WpRequestResult.Success -> {
+                    response.response.data.forEach { namesById[it.id] = it.name }
+                    params = response.response.nextPageParams
+                }
+                else -> {
+                    appLogWrapper.e(
+                        AppLog.T.POSTS,
+                        "Tag name lookup on ${site.url} failed: ${response.toTaxonomyError().toLogString()}"
+                    )
+                    params = null
+                }
+            }
+        }
+        return tagIds.mapNotNull { namesById[it] }
+    }
+
     private fun AnyTermWithViewContext.toTermModel(site: SiteModel, taxonomyName: String) = TermModel(
         NEW_LOCAL_TERM_ID,
         site.id,
@@ -371,6 +481,9 @@ class TaxonomyRsApiRestClient @Inject constructor(
         // row happened to have that local id, even one belonging to another site or taxonomy.
         private const val NEW_LOCAL_TERM_ID = 0
         private const val TERMS_PER_PAGE = 100u
+        // `search` is a substring match, so a short tag name can return many rows; this only has
+        // to be wide enough to contain the exact match among them.
+        private const val TAG_SEARCH_PER_PAGE = 100u
         private const val HTTP_UNAUTHORIZED = 401u
         private const val HTTP_FORBIDDEN = 403u
     }
