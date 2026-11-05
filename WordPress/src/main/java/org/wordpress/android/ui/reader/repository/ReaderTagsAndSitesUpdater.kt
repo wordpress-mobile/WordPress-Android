@@ -39,9 +39,9 @@ import kotlin.coroutines.resume
 
 /**
  * Updates the Reader's followed tags and followed sites from the network and reports changes to them,
- * including follows and unfollows made in the app, through [events]. Updates run in the application scope
- * so they finish, and their results are saved, even if the screen that asked for them goes away. A request
- * for an update that's already running joins it rather than starting another one.
+ * including follows and unfollows made in the app, through [events]. Updates and follows run in the
+ * application scope so they finish, and their results are saved and reported, even if the screen that asked
+ * for them goes away.
  */
 @Singleton
 class ReaderTagsAndSitesUpdater @Inject constructor(
@@ -54,8 +54,6 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
 ) {
     private val _events = MutableSharedFlow<ReaderTagsAndSitesEvent>(extraBufferCapacity = EVENT_BUFFER)
     val events: SharedFlow<ReaderTagsAndSitesEvent> = _events.asSharedFlow()
-
-    private val runningUpdates = mutableMapOf<UpdateTask, Deferred<Boolean>>()
 
     fun update(tasks: Set<UpdateTask>) {
         // tags go first (they're first in UpdateTask) since without them the Reader can't show anything
@@ -101,7 +99,7 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
      */
     private suspend fun awaitTagAction(
         start: (ReaderActions.ActionListener, Boolean) -> Boolean
-    ): Boolean = withContext(ioDispatcher) {
+    ): Boolean = launchInAppScope {
         val succeeded = suspendCancellableCoroutine { continuation ->
             val listener = ReaderActions.ActionListener { succeeded ->
                 if (continuation.isActive) continuation.resume(succeeded)
@@ -113,25 +111,27 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
         // a failed action is reverted locally, so it's a change too
         _events.emit(ReaderTagsAndSitesEvent.FollowedTagsChanged(ReaderTagTable.getFollowedTags().size, true))
         succeeded
+    }.await()
+
+    /*
+     * always sends a new request, since one that's already running may have been sent before a change the
+     * caller wants reflected
+     */
+    private fun start(task: UpdateTask): Deferred<Boolean> = launchInAppScope {
+        when (task) {
+            UpdateTask.TAGS -> requestTags()
+            UpdateTask.FOLLOWED_BLOGS -> requestFollowedBlogs()
+        }
     }
 
     /*
-     * starts the passed update, or returns the running one. This doesn't use async since a failure would
-     * cancel the application scope.
+     * runs [block] in the application scope so the caller going away doesn't cancel it. This uses launch rather
+     * than async so an exception crashes the app, as the update service did, instead of being held in the result.
      */
-    private fun start(task: UpdateTask): Deferred<Boolean> = synchronized(runningUpdates) {
-        runningUpdates[task]?.takeIf { it.isActive } ?: CompletableDeferred<Boolean>().also { result ->
-            runningUpdates[task] = result
-            applicationScope.launch(ioDispatcher) {
-                result.complete(
-                    when (task) {
-                        UpdateTask.TAGS -> requestTags()
-                        UpdateTask.FOLLOWED_BLOGS -> requestFollowedBlogs()
-                    }
-                )
-            }
+    private fun launchInAppScope(block: suspend () -> Boolean): Deferred<Boolean> =
+        CompletableDeferred<Boolean>().also { result ->
+            applicationScope.launch(ioDispatcher) { result.complete(block()) }
         }
-    }
 
     /*
      * updates the tags the user follows - this also handles the default tags (such as Discover) since
