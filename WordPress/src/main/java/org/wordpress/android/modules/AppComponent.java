@@ -107,7 +107,6 @@ import org.wordpress.android.networking.GlideAuthInterceptor;
 import org.wordpress.android.ui.posts.prepublishing.social.PrepublishingSocialFragment;
 import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsFragment;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
-import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -405,8 +404,6 @@ public interface AppComponent {
     void inject(PostSettingsTagsFragment object);
 
     void inject(PrepublishingPublishSettingsFragment object);
-
-    void inject(AppSettingsActivity object);
 
     void inject(FeatureAnnouncementDialogFragment object);
 

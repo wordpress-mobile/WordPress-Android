@@ -59,7 +59,7 @@ class AppSettingsActivity : BaseAppCompatActivity(), LocalePickerCallback {
                     uiState = uiState,
                     languageSummary = languageSummary,
                     onNavigateBack = onBackPressedDispatcher::onBackPressed,
-                    onLanguageClick = viewModel::onLanguageClick,
+                    onLanguageClick = ::openLanguagePicker,
                     onThemeSelected = viewModel::onThemeSelected,
                     onOpenLinksInJetpackChanged = viewModel::onOpenLinksInJetpackChanged,
                     onDeviceSettingsClick = viewModel::onDeviceSettingsClick,
@@ -70,8 +70,8 @@ class AppSettingsActivity : BaseAppCompatActivity(), LocalePickerCallback {
                     onVideoOptimizeChanged = viewModel::onVideoOptimizeChanged,
                     onMediaChoiceSelected = viewModel::onMediaChoiceSelected,
                     onWhatsNewClick = viewModel::onWhatsNewClick,
-                    onExperimentalFeaturesClick = viewModel::onExperimentalFeaturesClick,
-                    onDebugSettingsClick = viewModel::onDebugSettingsClick,
+                    onExperimentalFeaturesClick = { ActivityLauncher.viewExperimentalFeatures(this) },
+                    onDebugSettingsClick = { startActivity(Intent(this, DebugSettingsActivity::class.java)) },
                     onSendUsageStatsChanged = viewModel::onSendUsageStatsChanged,
                     onSendCrashReportsChanged = viewModel::onSendCrashReportsChanged,
                     onLearnMoreClick = viewModel::onLearnMoreClick,
@@ -93,10 +93,7 @@ class AppSettingsActivity : BaseAppCompatActivity(), LocalePickerCallback {
 
     private fun handleEvent(event: AppSettingsEvent) {
         when (event) {
-            AppSettingsEvent.OpenLanguagePicker -> openLanguagePicker()
             AppSettingsEvent.OpenDeviceSettings -> openDeviceSettings()
-            AppSettingsEvent.OpenExperimentalFeatures -> ActivityLauncher.viewExperimentalFeatures(this)
-            AppSettingsEvent.OpenDebugSettings -> startActivity(Intent(this, DebugSettingsActivity::class.java))
             AppSettingsEvent.ShowWhatsNew -> FeatureAnnouncementDialogFragment()
                 .show(supportFragmentManager, FeatureAnnouncementDialogFragment.TAG)
             is AppSettingsEvent.OpenUrl -> openUrl(event.url)
@@ -161,7 +158,5 @@ class AppSettingsActivity : BaseAppCompatActivity(), LocalePickerCallback {
     companion object {
         const val LANGUAGE_CHANGED = 1000
         const val EXTRA_SHOW_PRIVACY_SETTINGS = "extra_show_privacy_settings"
-        const val EXTRA_REQUESTED_ANALYTICS_VALUE_FROM_ERROR =
-            "extra_requested_analytics_value_from_error"
     }
 }

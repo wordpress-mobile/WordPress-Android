@@ -91,182 +91,147 @@ fun AppSettingsScreen(
                     onLearnMoreClick = onLearnMoreClick,
                 )
             } else {
-                AppSettingsContent(
-                    uiState = uiState,
-                    languageSummary = languageSummary,
-                    onLanguageClick = onLanguageClick,
-                    onThemeSelected = onThemeSelected,
-                    onOpenLinksInJetpackChanged = onOpenLinksInJetpackChanged,
-                    onDeviceSettingsClick = onDeviceSettingsClick,
-                    onPrivacySettingsClick = onPrivacySettingsClick,
-                    onImageOptimizeChanged = onImageOptimizeChanged,
-                    onStripImageLocationChanged = onStripImageLocationChanged,
-                    onVideoOptimizeChanged = onVideoOptimizeChanged,
-                    onMediaChoiceSelected = onMediaChoiceSelected,
-                    onWhatsNewClick = onWhatsNewClick,
-                    onExperimentalFeaturesClick = onExperimentalFeaturesClick,
-                    onDebugSettingsClick = onDebugSettingsClick,
-                )
-            }
-        }
-    }
-}
+                var showThemeDialog by rememberSaveable { mutableStateOf(false) }
+                var openMediaChoice by rememberSaveable { mutableStateOf<MediaChoice?>(null) }
 
-@Composable
-private fun AppSettingsContent(
-    uiState: AppSettingsUiState,
-    languageSummary: String,
-    onLanguageClick: () -> Unit,
-    onThemeSelected: (String) -> Unit,
-    onOpenLinksInJetpackChanged: (Boolean) -> Unit,
-    onDeviceSettingsClick: () -> Unit,
-    onPrivacySettingsClick: () -> Unit,
-    onImageOptimizeChanged: (Boolean) -> Unit,
-    onStripImageLocationChanged: (Boolean) -> Unit,
-    onVideoOptimizeChanged: (Boolean) -> Unit,
-    onMediaChoiceSelected: (MediaChoice, Int) -> Unit,
-    onWhatsNewClick: () -> Unit,
-    onExperimentalFeaturesClick: () -> Unit,
-    onDebugSettingsClick: () -> Unit,
-) {
-    var showThemeDialog by rememberSaveable { mutableStateOf(false) }
-    var openMediaChoice by rememberSaveable { mutableStateOf<MediaChoice?>(null) }
+                val themeEntries = stringArrayResource(R.array.app_theme_entries).toList()
+                val themeValues = stringArrayResource(R.array.app_theme_entry_values).toList()
 
-    val themeEntries = stringArrayResource(R.array.app_theme_entries).toList()
-    val themeValues = stringArrayResource(R.array.app_theme_entry_values).toList()
+                SettingsCard(
+                    rows = buildList<@Composable () -> Unit> {
+                        add {
+                            SettingsRow(
+                                title = stringResource(R.string.interface_language),
+                                summary = languageSummary,
+                                onClick = onLanguageClick
+                            )
+                        }
+                        add {
+                            SettingsRow(
+                                title = stringResource(R.string.app_theme),
+                                summary = labelFor(uiState.themeValue, themeEntries, themeValues),
+                                onClick = { showThemeDialog = true }
+                            )
+                        }
+                        if (uiState.showOpenLinksInJetpack) {
+                            add {
+                                SettingsSwitchRow(
+                                    title = stringResource(R.string.preference_open_links_in_jetpack),
+                                    checked = uiState.isOpenLinksInJetpack,
+                                    onCheckedChange = onOpenLinksInJetpackChanged
+                                )
+                            }
+                        }
+                        add {
+                            SettingsRow(
+                                title = stringResource(R.string.preference_open_device_settings),
+                                onClick = onDeviceSettingsClick
+                            )
+                        }
+                    }
+                )
 
-    SettingsCard(
-        rows = buildList<@Composable () -> Unit> {
-            add {
-                SettingsRow(
-                    title = stringResource(R.string.interface_language),
-                    summary = languageSummary,
-                    onClick = onLanguageClick
+                SettingsCard(
+                    rows = listOf<@Composable () -> Unit> {
+                        SettingsRow(
+                            title = stringResource(R.string.preference_privacy_settings),
+                            onClick = onPrivacySettingsClick
+                        )
+                    }
                 )
-            }
-            add {
-                SettingsRow(
-                    title = stringResource(R.string.app_theme),
-                    summary = labelFor(uiState.themeValue, themeEntries, themeValues),
-                    onClick = { showThemeDialog = true }
+
+                SettingsCard(
+                    title = stringResource(R.string.media),
+                    rows = listOf<@Composable () -> Unit>(
+                        {
+                            SettingsSwitchRow(
+                                title = stringResource(R.string.site_settings_optimize_images),
+                                summary = stringResource(R.string.site_settings_optimize_images_summary),
+                                checked = uiState.isImageOptimize,
+                                onCheckedChange = onImageOptimizeChanged
+                            )
+                        },
+                        {
+                            MediaChoiceRow(MediaChoice.IMAGE_MAX_SIZE, uiState) { openMediaChoice = it }
+                        },
+                        {
+                            MediaChoiceRow(MediaChoice.IMAGE_QUALITY, uiState) { openMediaChoice = it }
+                        },
+                        {
+                            SettingsSwitchRow(
+                                title = stringResource(R.string.preference_strip_image_location),
+                                checked = uiState.isStripImageLocation,
+                                onCheckedChange = onStripImageLocationChanged
+                            )
+                        },
+                        {
+                            SettingsSwitchRow(
+                                title = stringResource(R.string.site_settings_optimize_videos),
+                                summary = stringResource(R.string.site_settings_optimize_video_summary),
+                                checked = uiState.isVideoOptimize,
+                                onCheckedChange = onVideoOptimizeChanged
+                            )
+                        },
+                        {
+                            MediaChoiceRow(MediaChoice.VIDEO_WIDTH, uiState) { openMediaChoice = it }
+                        },
+                        {
+                            MediaChoiceRow(MediaChoice.VIDEO_QUALITY, uiState) { openMediaChoice = it }
+                        },
+                    )
                 )
-            }
-            if (uiState.showOpenLinksInJetpack) {
-                add {
-                    SettingsSwitchRow(
-                        title = stringResource(R.string.preference_open_links_in_jetpack),
-                        checked = uiState.isOpenLinksInJetpack,
-                        onCheckedChange = onOpenLinksInJetpackChanged
+
+                SettingsCard(
+                    rows = buildList<@Composable () -> Unit> {
+                        uiState.whatsNewVersion?.let { version ->
+                            add {
+                                SettingsRow(
+                                    title = stringResource(R.string.whats_new_in_version_title),
+                                    summary = stringResource(R.string.version_with_name_param, version),
+                                    onClick = onWhatsNewClick
+                                )
+                            }
+                        }
+                        add {
+                            SettingsRow(
+                                title = stringResource(R.string.experimental_features_screen_title),
+                                onClick = onExperimentalFeaturesClick
+                            )
+                        }
+                        if (uiState.showDebugSettings) {
+                            add {
+                                SettingsRow(
+                                    title = stringResource(R.string.preference_open_debug_settings),
+                                    onClick = onDebugSettingsClick
+                                )
+                            }
+                        }
+                    }
+                )
+
+                if (showThemeDialog) {
+                    ChoiceDialog(
+                        title = stringResource(R.string.app_theme),
+                        entries = themeEntries,
+                        values = themeValues,
+                        currentValue = uiState.themeValue,
+                        onSelected = onThemeSelected,
+                        onDismiss = { showThemeDialog = false }
                     )
                 }
-            }
-            add {
-                SettingsRow(
-                    title = stringResource(R.string.preference_open_device_settings),
-                    onClick = onDeviceSettingsClick
-                )
-            }
-        }
-    )
 
-    SettingsCard(
-        rows = listOf<@Composable () -> Unit> {
-            SettingsRow(
-                title = stringResource(R.string.preference_privacy_settings),
-                onClick = onPrivacySettingsClick
-            )
-        }
-    )
-
-    SettingsCard(
-        title = stringResource(R.string.media),
-        rows = listOf<@Composable () -> Unit>(
-            {
-                SettingsSwitchRow(
-                    title = stringResource(R.string.site_settings_optimize_images),
-                    summary = stringResource(R.string.site_settings_optimize_images_summary),
-                    checked = uiState.isImageOptimize,
-                    onCheckedChange = onImageOptimizeChanged
-                )
-            },
-            {
-                MediaChoiceRow(MediaChoice.IMAGE_MAX_SIZE, uiState, uiState.isImageOptimize) { openMediaChoice = it }
-            },
-            {
-                MediaChoiceRow(MediaChoice.IMAGE_QUALITY, uiState, uiState.isImageOptimize) { openMediaChoice = it }
-            },
-            {
-                SettingsSwitchRow(
-                    title = stringResource(R.string.preference_strip_image_location),
-                    checked = uiState.isStripImageLocation,
-                    onCheckedChange = onStripImageLocationChanged
-                )
-            },
-            {
-                SettingsSwitchRow(
-                    title = stringResource(R.string.site_settings_optimize_videos),
-                    summary = stringResource(R.string.site_settings_optimize_video_summary),
-                    checked = uiState.isVideoOptimize,
-                    onCheckedChange = onVideoOptimizeChanged
-                )
-            },
-            {
-                MediaChoiceRow(MediaChoice.VIDEO_WIDTH, uiState, uiState.isVideoOptimize) { openMediaChoice = it }
-            },
-            {
-                MediaChoiceRow(MediaChoice.VIDEO_QUALITY, uiState, uiState.isVideoOptimize) { openMediaChoice = it }
-            },
-        )
-    )
-
-    SettingsCard(
-        rows = buildList<@Composable () -> Unit> {
-            uiState.whatsNewVersion?.let { version ->
-                add {
-                    SettingsRow(
-                        title = stringResource(R.string.whats_new_in_version_title),
-                        summary = stringResource(R.string.version_with_name_param, version),
-                        onClick = onWhatsNewClick
-                    )
-                }
-            }
-            add {
-                SettingsRow(
-                    title = stringResource(R.string.experimental_features_screen_title),
-                    onClick = onExperimentalFeaturesClick
-                )
-            }
-            if (uiState.showDebugSettings) {
-                add {
-                    SettingsRow(
-                        title = stringResource(R.string.preference_open_debug_settings),
-                        onClick = onDebugSettingsClick
+                openMediaChoice?.let { choice ->
+                    ChoiceDialog(
+                        title = stringResource(choice.titleRes),
+                        entries = stringArrayResource(choice.entriesRes).toList(),
+                        values = stringArrayResource(choice.valuesRes).toList(),
+                        currentValue = uiState.mediaValues[choice].toString(),
+                        onSelected = { onMediaChoiceSelected(choice, it.toInt()) },
+                        onDismiss = { openMediaChoice = null }
                     )
                 }
             }
         }
-    )
-
-    if (showThemeDialog) {
-        ChoiceDialog(
-            title = stringResource(R.string.app_theme),
-            entries = themeEntries,
-            values = themeValues,
-            currentValue = uiState.themeValue,
-            onSelected = onThemeSelected,
-            onDismiss = { showThemeDialog = false }
-        )
-    }
-
-    openMediaChoice?.let { choice ->
-        ChoiceDialog(
-            title = stringResource(choice.titleRes),
-            entries = stringArrayResource(choice.entriesRes).toList(),
-            values = stringArrayResource(choice.valuesRes).toList(),
-            currentValue = uiState.mediaValues[choice].toString(),
-            onSelected = { onMediaChoiceSelected(choice, it.toInt()) },
-            onDismiss = { openMediaChoice = null }
-        )
     }
 }
 
@@ -274,9 +239,13 @@ private fun AppSettingsContent(
 private fun MediaChoiceRow(
     choice: MediaChoice,
     uiState: AppSettingsUiState,
-    enabled: Boolean,
     onClick: (MediaChoice) -> Unit,
 ) {
+    // Each size and quality row is only enabled while its optimize switch is on
+    val enabled = when (choice) {
+        MediaChoice.IMAGE_MAX_SIZE, MediaChoice.IMAGE_QUALITY -> uiState.isImageOptimize
+        MediaChoice.VIDEO_WIDTH, MediaChoice.VIDEO_QUALITY -> uiState.isVideoOptimize
+    }
     SettingsRow(
         title = stringResource(choice.titleRes),
         summary = labelFor(

@@ -116,8 +116,6 @@ class AppSettingsViewModel @Inject constructor(
         }
     }
 
-    fun onLanguageClick() = sendEvent(AppSettingsEvent.OpenLanguagePicker)
-
     fun onThemeSelected(themeValue: String) {
         if (themeValue == _uiState.value.themeValue) return
         sharedPreferences.edit {
@@ -219,10 +217,6 @@ class AppSettingsViewModel @Inject constructor(
         analyticsTrackerWrapper.track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_FROM_APP_SETTINGS)
         sendEvent(AppSettingsEvent.ShowWhatsNew)
     }
-
-    fun onExperimentalFeaturesClick() = sendEvent(AppSettingsEvent.OpenExperimentalFeatures)
-
-    fun onDebugSettingsClick() = sendEvent(AppSettingsEvent.OpenDebugSettings)
 
     fun onSendUsageStatsChanged(enabled: Boolean) {
         // Stores the pref and syncs the opt-out with WordPress.com

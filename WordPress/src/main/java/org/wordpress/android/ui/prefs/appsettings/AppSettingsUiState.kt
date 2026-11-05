@@ -51,10 +51,7 @@ enum class MediaChoice(
 }
 
 sealed interface AppSettingsEvent {
-    data object OpenLanguagePicker : AppSettingsEvent
     data object OpenDeviceSettings : AppSettingsEvent
-    data object OpenExperimentalFeatures : AppSettingsEvent
-    data object OpenDebugSettings : AppSettingsEvent
     data object ShowWhatsNew : AppSettingsEvent
     data class OpenUrl(val url: String) : AppSettingsEvent
     data class ShowToast(@StringRes val messageRes: Int) : AppSettingsEvent
