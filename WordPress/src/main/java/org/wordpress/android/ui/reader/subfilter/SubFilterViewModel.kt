@@ -6,8 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderTagTableWrapper
@@ -17,9 +15,10 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
+import org.wordpress.android.ui.reader.repository.ReaderTagsAndSitesEvent
+import org.wordpress.android.ui.reader.repository.ReaderTagsAndSitesUpdater
+import org.wordpress.android.ui.reader.repository.UpdateTask
 import org.wordpress.android.ui.reader.subfilter.BottomSheetUiState.BottomSheetHidden
 import org.wordpress.android.ui.reader.subfilter.BottomSheetUiState.BottomSheetVisible
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site
@@ -32,13 +31,12 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.EventBusWrapper
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
-import java.util.EnumSet
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -47,7 +45,8 @@ class SubFilterViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val subfilterListItemMapper: SubfilterListItemMapper,
-    private val eventBusWrapper: EventBusWrapper,
+    private val tagsAndSitesUpdater: ReaderTagsAndSitesUpdater,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val accountStore: AccountStore,
     private val readerTracker: ReaderTracker,
     private val readerTagTableWrapper: ReaderTagTableWrapper,
@@ -67,9 +66,6 @@ class SubFilterViewModel @Inject constructor(
 
     private val _bottomSheetAction = MutableLiveData<Event<ActionType>>()
     val bottomSheetAction: LiveData<Event<ActionType>> = _bottomSheetAction
-
-    private val _updateTagsAndSites = MutableLiveData<Event<EnumSet<UpdateTask>>>()
-    val updateTagsAndSites: LiveData<Event<EnumSet<UpdateTask>>> = _updateTagsAndSites
 
     private var lastKnownUserId: Long? = null
     private var lastTokenAvailableStatus: Boolean? = null
@@ -97,7 +93,21 @@ class SubFilterViewModel @Inject constructor(
             subfilterJson = it.getString(ARG_CURRENT_SUBFILTER_JSON)
         }
 
-        eventBusWrapper.register(this)
+        launch(mainDispatcher) {
+            tagsAndSitesUpdater.events.collect { event ->
+                when (event) {
+                    is ReaderTagsAndSitesEvent.FollowedTagsChanged -> {
+                        AppLog.d(T.READER, "Subfilter bottom sheet > followed tags changed")
+                        loadSubFilters()
+                    }
+
+                    is ReaderTagsAndSitesEvent.FollowedBlogsChanged -> if (event.didChange) {
+                        AppLog.d(T.READER, "Subfilter bottom sheet > followed blogs changed")
+                        loadSubFilters()
+                    }
+                }
+            }
+        }
 
         tag?.let {
             val currentSubfilter = subfilterJson?.let { json ->
@@ -253,12 +263,9 @@ class SubFilterViewModel @Inject constructor(
     }
 
     fun updateTagsAndSites() {
-        _updateTagsAndSites.value = Event(
-            EnumSet.of(
-                UpdateTask.TAGS,
-                UpdateTask.FOLLOWED_BLOGS
-            )
-        )
+        if (networkUtilsWrapper.isNetworkAvailable()) {
+            tagsAndSitesUpdater.update(setOf(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS))
+        }
     }
 
     fun onBottomSheetCancelled() {
@@ -382,12 +389,7 @@ class SubFilterViewModel @Inject constructor(
         }
 
         if (userIdChanged || accessTokenStatusChanged) {
-            _updateTagsAndSites.value = Event(
-                EnumSet.of(
-                    UpdateTask.TAGS,
-                    UpdateTask.FOLLOWED_BLOGS
-                )
-            )
+            updateTagsAndSites()
 
             setDefaultSubfilter(false)
         }
@@ -398,26 +400,6 @@ class SubFilterViewModel @Inject constructor(
             ARG_CURRENT_SUBFILTER_JSON, getCurrentSubfilterJson()
         )
         outState.putBoolean(ARG_IS_FIRST_LOAD, isFirstLoad)
-    }
-
-    @Suppress("unused", "UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMainThread(event: ReaderEvents.FollowedTagsFetched) {
-        AppLog.d(T.READER, "Subfilter bottom sheet > followed tags changed")
-        loadSubFilters()
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMainThread(event: ReaderEvents.FollowedBlogsFetched) {
-        if (event.didChange()) {
-            AppLog.d(T.READER, "Subfilter bottom sheet > followed blogs changed")
-            loadSubFilters()
-        }
-    }
-
-    override fun onCleared() {
-        eventBusWrapper.unregister(this)
     }
 
     companion object {

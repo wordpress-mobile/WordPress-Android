@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.subfilter
 
 import android.os.Bundle
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -11,6 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.reset
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -30,7 +32,8 @@ import org.wordpress.android.ui.Organization
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderSubsActivity
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
+import org.wordpress.android.ui.reader.repository.ReaderTagsAndSitesUpdater
+import org.wordpress.android.ui.reader.repository.UpdateTask
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenLoginPage
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSubsAtPage
 import org.wordpress.android.ui.reader.subfilter.BottomSheetUiState.BottomSheetHidden
@@ -46,8 +49,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
 import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.EventBusWrapper
-import java.util.EnumSet
+import org.wordpress.android.util.NetworkUtilsWrapper
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -68,7 +70,10 @@ class SubFilterViewModelTest : BaseUnitTest() {
     private lateinit var subfilterListItemMapper: SubfilterListItemMapper
 
     @Mock
-    private lateinit var eventBusWrapper: EventBusWrapper
+    private lateinit var tagsAndSitesUpdater: ReaderTagsAndSitesUpdater
+
+    @Mock
+    private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     @Mock
     private lateinit var accountStore: AccountStore
@@ -90,13 +95,15 @@ class SubFilterViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         whenever(savedTag.label).thenReturn("tag-label")
+        whenever(tagsAndSitesUpdater.events).thenReturn(MutableSharedFlow())
 
         viewModel = SubFilterViewModel(
             testDispatcher(),
             testDispatcher(),
             appPrefsWrapper,
             subfilterListItemMapper,
-            eventBusWrapper,
+            tagsAndSitesUpdater,
+            networkUtilsWrapper,
             accountStore,
             readerTracker,
             readerTagTableWrapper,
@@ -122,7 +129,8 @@ class SubFilterViewModelTest : BaseUnitTest() {
             testDispatcher(),
             appPrefsWrapper,
             subfilterListItemMapper,
-            eventBusWrapper,
+            tagsAndSitesUpdater,
+            networkUtilsWrapper,
             accountStore,
             readerTracker,
             readerTagTableWrapper,
@@ -233,15 +241,14 @@ class SubFilterViewModelTest : BaseUnitTest() {
         val account = AccountModel()
         account.userId = 100
         whenever(accountStore.account).thenReturn(account)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
         viewModel.onUserComesToReader()
 
         verify(appPrefsWrapper, times(1)).setLastReaderKnownUserId(any())
         verify(appPrefsWrapper, times(0)).setLastReaderKnownAccessTokenStatus(any())
 
-        assertThat(viewModel.updateTagsAndSites.value!!.peekContent()).isEqualTo(
-            EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS)
-        )
+        verify(tagsAndSitesUpdater).update(setOf(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS))
 
         assertThat(viewModel.currentSubFilter.value).isInstanceOf(SiteAll::class.java)
     }
@@ -251,15 +258,14 @@ class SubFilterViewModelTest : BaseUnitTest() {
         whenever(appPrefsWrapper.getLastReaderKnownUserId()).thenReturn(100)
         whenever(appPrefsWrapper.getLastReaderKnownAccessTokenStatus()).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(false)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
         viewModel.onUserComesToReader()
 
         verify(appPrefsWrapper, times(0)).setLastReaderKnownUserId(any())
         verify(appPrefsWrapper, times(1)).setLastReaderKnownAccessTokenStatus(any())
 
-        assertThat(viewModel.updateTagsAndSites.value!!.peekContent()).isEqualTo(
-            EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS)
-        )
+        verify(tagsAndSitesUpdater).update(setOf(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS))
 
         assertThat(viewModel.currentSubFilter.value).isInstanceOf(SiteAll::class.java)
     }
@@ -278,7 +284,7 @@ class SubFilterViewModelTest : BaseUnitTest() {
         verify(appPrefsWrapper, times(0)).setLastReaderKnownUserId(any())
         verify(appPrefsWrapper, times(0)).setLastReaderKnownAccessTokenStatus(any())
 
-        assertThat(viewModel.updateTagsAndSites.value).isEqualTo(null)
+        verify(tagsAndSitesUpdater, never()).update(any())
 
         assertThat(viewModel.currentSubFilter.value).isInstanceOf(SiteAll::class.java)
     }
@@ -294,7 +300,7 @@ class SubFilterViewModelTest : BaseUnitTest() {
         verify(appPrefsWrapper, times(0)).setLastReaderKnownUserId(any())
         verify(appPrefsWrapper, times(0)).setLastReaderKnownAccessTokenStatus(any())
 
-        assertThat(viewModel.updateTagsAndSites.value).isEqualTo(null)
+        verify(tagsAndSitesUpdater, never()).update(any())
 
         assertThat(viewModel.currentSubFilter.value).isInstanceOf(SiteAll::class.java)
     }
@@ -302,19 +308,11 @@ class SubFilterViewModelTest : BaseUnitTest() {
     @Test
     fun `view model updates the tags and sites and asks to show the bottom sheet when filters button is tapped`() {
         mockReaderTableEmpty()
-
-        var updateTasks: EnumSet<UpdateTask>? = null
-
-        viewModel.updateTagsAndSites.observeForever { updateTasks = it.peekContent() }
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
         viewModel.onSubFiltersListButtonClicked(SubfilterCategory.SITES)
 
-        assertThat(updateTasks).isEqualTo(
-            EnumSet.of(
-                UpdateTask.TAGS,
-                UpdateTask.FOLLOWED_BLOGS
-            )
-        )
+        verify(tagsAndSitesUpdater).update(setOf(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS))
     }
 
     @Test
@@ -395,11 +393,6 @@ class SubFilterViewModelTest : BaseUnitTest() {
 
         verify(outState, times(1)).putString(eq(Companion.ARG_CURRENT_SUBFILTER_JSON), any())
         verify(outState, times(1)).putBoolean(eq(Companion.ARG_IS_FIRST_LOAD), any())
-    }
-
-    @Test
-    fun `view model start register event bus`() {
-        verify(eventBusWrapper, times(1)).register(viewModel)
     }
 
     @Test

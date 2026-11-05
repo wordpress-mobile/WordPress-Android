@@ -134,7 +134,6 @@ import org.wordpress.android.ui.reader.SubfilterBottomSheetFragment;
 import org.wordpress.android.ui.reader.adapters.CommentSnippetAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment;
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderExpandableTagsView;
 import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
@@ -280,8 +279,6 @@ public interface AppComponent {
     void inject(NotificationsPendingDraftsReceiver object);
 
     void inject(NotificationsDetailListFragment object);
-
-    void inject(ReaderUpdateLogic object);
 
     void inject(ReaderPostDetailFragment object);
 

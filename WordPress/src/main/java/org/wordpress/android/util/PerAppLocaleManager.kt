@@ -8,15 +8,14 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.net.toUri
 import androidx.core.os.LocaleListCompat
-import org.wordpress.android.WordPress.Companion.getContext
+import dagger.Lazy
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
+import org.wordpress.android.ui.reader.repository.ReaderTagsAndSitesUpdater
+import org.wordpress.android.ui.reader.repository.UpdateTask
 import org.wordpress.android.util.analytics.AnalyticsUtils
-import java.util.EnumSet
 import java.util.Locale
 import javax.inject.Inject
 
@@ -28,6 +27,8 @@ class PerAppLocaleManager @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
     private val siteStore: SiteStore,
     private val accountStore: AccountStore,
+    // lazy since the updater depends on this class
+    private val readerTagsAndSitesUpdater: Lazy<ReaderTagsAndSitesUpdater>,
 ) {
     fun getCurrentLocale(): Locale {
         val locales = AppCompatDelegate.getApplicationLocales()
@@ -89,7 +90,7 @@ class PerAppLocaleManager @Inject constructor(
         AnalyticsUtils.refreshMetadata(accountStore, siteStore)
 
         // update Reader tags as they need be localized
-        ReaderUpdateServiceStarter.startService(getContext(), EnumSet.of(UpdateTask.TAGS))
+        readerTagsAndSitesUpdater.get().update(setOf(UpdateTask.TAGS))
     }
 
     /**

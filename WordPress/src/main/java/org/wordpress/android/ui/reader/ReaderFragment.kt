@@ -39,10 +39,6 @@ import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFra
 import org.wordpress.android.ui.reader.SubfilterBottomSheetFragment.Companion.newInstance
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverTabsFragment
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.FOLLOWED_BLOGS
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.TAGS
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
 import org.wordpress.android.ui.reader.subfilter.ActionType
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenLoginPage
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSearchPage
@@ -64,12 +60,10 @@ import org.wordpress.android.ui.reader.views.compose.RetainedComposeView
 import org.wordpress.android.ui.reader.views.compose.enableNestedScrollInterop
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterType
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel
 import org.wordpress.android.viewmodel.observeEvent
-import java.util.EnumSet
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -116,14 +110,6 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
     // duplication, and ensuring they are properly removed when the Fragment is destroyed
     private val currentSubfilterObserver = Observer<SubfilterListItem> { subfilterListItem ->
         viewModel.onSubFilterItemSelected(subfilterListItem)
-    }
-
-    private val updateTagsAndSitesObserver = Observer<Event<EnumSet<UpdateTask>>> { event ->
-        event.applyIfNotHandled {
-            if (NetworkUtils.isNetworkAvailable(activity)) {
-                ReaderUpdateServiceStarter.startService(activity, this)
-            }
-        }
     }
 
     private val subFiltersObserver = Observer<List<SubfilterListItem>> { subFilters ->
@@ -345,10 +331,6 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
     private fun feedListState() = (currentFeed as? ReaderScrollingFeed)?.feedListState
 
     private fun startReaderViewModel(savedInstanceState: Bundle?) {
-        viewModel.updateTags.observeEvent(viewLifecycleOwner) {
-            ReaderUpdateServiceStarter.startService(context, EnumSet.of(TAGS, FOLLOWED_BLOGS))
-        }
-
         viewModel.showSearch.observeEvent(viewLifecycleOwner) {
             context?.let {
                 val intent = ReaderActivityLauncher.createReaderSearchIntent(it)
@@ -480,12 +462,6 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
         currentSubFilter.observe(
             viewLifecycleOwner,
             currentSubfilterObserver
-        )
-
-
-        updateTagsAndSites.observe(
-            viewLifecycleOwner,
-            updateTagsAndSitesObserver
         )
 
         if (startedTag.isFilterable) {
