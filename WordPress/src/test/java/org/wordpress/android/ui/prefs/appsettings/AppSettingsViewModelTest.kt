@@ -174,9 +174,15 @@ class AppSettingsViewModelTest : BaseUnitTest() {
         return editor
     }
 
-    private fun announcement(version: String) = mock<FeatureAnnouncement>().also {
-        whenever(it.appVersionName).thenReturn(version)
-    }
+    private fun announcement(version: String) = FeatureAnnouncement(
+        appVersionName = version,
+        announcementVersion = 1,
+        minimumAppVersion = version,
+        maximumAppVersion = version,
+        appVersionTargets = emptyList(),
+        detailsUrl = null,
+        features = emptyList(),
+    )
 
     private fun key(resId: Int) = "key_$resId"
 

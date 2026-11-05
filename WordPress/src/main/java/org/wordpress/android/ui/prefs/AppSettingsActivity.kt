@@ -2,7 +2,6 @@ package org.wordpress.android.ui.prefs
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -10,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -128,7 +128,7 @@ class AppSettingsActivity : BaseAppCompatActivity(), LocalePickerCallback {
         try {
             // open specific app info screen
             startActivity(
-                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(Uri.parse("package:$packageName"))
+                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData("package:$packageName".toUri())
             )
         } catch (e: ActivityNotFoundException) {
             AppLog.w(AppLog.T.SETTINGS, e.message)
@@ -139,7 +139,7 @@ class AppSettingsActivity : BaseAppCompatActivity(), LocalePickerCallback {
 
     private fun openUrl(url: String) {
         @Suppress("UnsafeImplicitIntentLaunch")
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        val intent = Intent(Intent.ACTION_VIEW, url.toUri())
         if (intent.resolveActivity(packageManager) != null) {
             startActivity(intent)
         }

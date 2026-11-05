@@ -70,7 +70,6 @@ class AppSettingsViewModel @Inject constructor(
 
     override fun onCleared() {
         dispatcher.unregister(this)
-        super.onCleared()
     }
 
     private fun createInitialState(savedStateHandle: SavedStateHandle) = AppSettingsUiState(
