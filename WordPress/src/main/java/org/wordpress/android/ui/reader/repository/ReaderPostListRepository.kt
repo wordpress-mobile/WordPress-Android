@@ -35,8 +35,7 @@ class ReaderPostListRepository @Inject constructor(
         readerPostUpdater.events,
         tagsAndSitesUpdater.events.map { event ->
             when (event) {
-                is ReaderTagsAndSitesEvent.FollowedTagsChanged ->
-                    ReaderPostListEvent.FollowedTagsFetched(event.didChange)
+                is ReaderTagsAndSitesEvent.FollowedTagsChanged -> ReaderPostListEvent.FollowedTagsFetched
 
                 is ReaderTagsAndSitesEvent.FollowedBlogsChanged ->
                     ReaderPostListEvent.FollowedBlogsFetched(event.didChange)
@@ -160,6 +159,6 @@ sealed class ReaderPostListEvent {
 
     data class SearchStarted(val query: String, val offset: Int) : ReaderPostListEvent()
     data class SearchEnded(val query: String, val offset: Int, val didSucceed: Boolean) : ReaderPostListEvent()
-    data class FollowedTagsFetched(val didChange: Boolean) : ReaderPostListEvent()
+    data object FollowedTagsFetched : ReaderPostListEvent()
     data class FollowedBlogsFetched(val didChange: Boolean) : ReaderPostListEvent()
 }

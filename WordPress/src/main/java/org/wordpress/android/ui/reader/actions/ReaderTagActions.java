@@ -89,14 +89,6 @@ public class ReaderTagActions {
         return true;
     }
 
-    public static boolean addTag(@NonNull final ReaderTag tag,
-                                 final ReaderActions.ActionListener actionListener,
-                                 final boolean isLoggedIn) {
-        ReaderTagList tags = new ReaderTagList();
-        tags.add(tag);
-        return addTags(tags, actionListener, isLoggedIn);
-    }
-
     public static boolean addTags(@NonNull final List<ReaderTag> tags,
                                   final ReaderActions.ActionListener actionListener,
                                   final boolean isLoggedIn) {

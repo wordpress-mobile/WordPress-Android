@@ -24,7 +24,6 @@ import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.modules.IO_THREAD
-import org.wordpress.android.networking.RestClientUtils
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.actions.ReaderActions
@@ -56,19 +55,17 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
     private val _events = MutableSharedFlow<ReaderTagsAndSitesEvent>(extraBufferCapacity = EVENT_BUFFER)
     val events: SharedFlow<ReaderTagsAndSitesEvent> = _events.asSharedFlow()
 
-    private var tagsUpdate: Deferred<Boolean>? = null
-    private var followedBlogsUpdate: Deferred<Boolean>? = null
+    private val runningUpdates = mutableMapOf<UpdateTask, Deferred<Boolean>>()
 
     fun update(tasks: Set<UpdateTask>) {
-        // tags go first since without them the Reader can't show anything
-        if (UpdateTask.TAGS in tasks) startTagsUpdate()
-        if (UpdateTask.FOLLOWED_BLOGS in tasks) startFollowedBlogsUpdate()
+        // tags go first (they're first in UpdateTask) since without them the Reader can't show anything
+        tasks.sorted().forEach { start(it) }
     }
 
     /**
      * Updates the followed tags and returns whether the update succeeded
      */
-    suspend fun updateTags(): Boolean = startTagsUpdate().await()
+    suspend fun updateTags(): Boolean = start(UpdateTask.TAGS).await()
 
     /**
      * Returns the interests (tags) the user can pick from, or null if the request failed
@@ -118,21 +115,21 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
         succeeded
     }
 
-    private fun startTagsUpdate(): Deferred<Boolean> = startOnce({ tagsUpdate }, { tagsUpdate = it }) {
-        requestTags()
-    }
-
-    private fun startFollowedBlogsUpdate(): Deferred<Boolean> =
-        startOnce({ followedBlogsUpdate }, { followedBlogsUpdate = it }) { requestFollowedBlogs() }
-
-    private fun startOnce(
-        get: () -> Deferred<Boolean>?,
-        set: (Deferred<Boolean>) -> Unit,
-        block: suspend () -> Boolean
-    ): Deferred<Boolean> = synchronized(this) {
-        get()?.takeIf { it.isActive } ?: CompletableDeferred<Boolean>().also { result ->
-            set(result)
-            applicationScope.launch(ioDispatcher) { result.complete(block()) }
+    /*
+     * starts the passed update, or returns the running one. This doesn't use async since a failure would
+     * cancel the application scope.
+     */
+    private fun start(task: UpdateTask): Deferred<Boolean> = synchronized(runningUpdates) {
+        runningUpdates[task]?.takeIf { it.isActive } ?: CompletableDeferred<Boolean>().also { result ->
+            runningUpdates[task] = result
+            applicationScope.launch(ioDispatcher) {
+                result.complete(
+                    when (task) {
+                        UpdateTask.TAGS -> requestTags()
+                        UpdateTask.FOLLOWED_BLOGS -> requestFollowedBlogs()
+                    }
+                )
+            }
         }
     }
 

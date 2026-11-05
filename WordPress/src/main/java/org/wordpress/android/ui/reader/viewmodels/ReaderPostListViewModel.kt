@@ -619,7 +619,7 @@ class ReaderPostListViewModel @Inject constructor(
                 onSearchEnded(event)
             }
 
-            is ReaderPostListEvent.FollowedTagsFetched -> if (listType == ReaderPostListType.TAG_FOLLOWED) {
+            ReaderPostListEvent.FollowedTagsFetched -> if (listType == ReaderPostListType.TAG_FOLLOWED) {
                 onFollowedTagsFetched()
             }
 
