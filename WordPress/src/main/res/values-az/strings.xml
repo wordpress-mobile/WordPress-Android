@@ -40,8 +40,6 @@ Language: az
     <string name="reader_label_new_posts_subtitle">Göstərmək üçün toxunun</string>
     <string name="select_all">Tamamını seç</string>
     <string name="language">Dil</string>
-    <string name="verification_code">Təsdiqləmə kodu</string>
-    <string name="invalid_verification_code">Keçərsiz təsdiqləmə kodu</string>
     <string name="reader_empty_posts_request_failed">Yazılar geri alına bilmir</string>
     <string name="error_notification_open">Bildiriş açılmadı</string>
     <string name="stats_search_terms_unknown_search_terms">Bilinməyən Axtarış Kriteriyaları</string>
@@ -116,7 +114,6 @@ Language: az
     <string name="error_downloading_image">Təsvir endirilərkən xəta baş verdi</string>
     <string name="error_edit_comment">Şərh redaktəsi sırasında xəta baş verdi</string>
     <string name="invalid_email_message">Keçərsiz e-poçt ünvanı</string>
-    <string name="email_invalid">Etibarlı e-poçt ünvanı daxil edin</string>
     <string name="username_or_password_incorrect">Yanlış istifadəçi adı və ya parol daxil etdiniz</string>
     <string name="select_categories">Kateqoriyaları seç</string>
     <string name="connection_error">Qoşulma xətası</string>
@@ -125,8 +122,6 @@ Language: az
     <string name="reader_title_applog">Proqram jurnalı</string>
     <string name="local_changes">Yerli dəyişikliklər</string>
     <string name="wordpress_blog">WordPress bloqu</string>
-    <string name="fatal_db_error">Proqram üçün verilənlər bazası yaradılarkən bir xəta baş verdi. Proqramı təkrar qurmağa cəhd edin.</string>
-    <string name="http_authorization_required">Qeydiyyat gərəklidir</string>
     <string name="view_in_browser">Brauzerdə bax</string>
     <string name="add_new_category">Yeni kateqoriya əlavə et</string>
     <string name="category_name">Kateqoriya adı</string>
@@ -201,8 +196,6 @@ Language: az
     <string name="more_notifications">və %d daha çox.</string>
     <string name="new_notifications">%d yeni bildirişlər</string>
     <string name="loading">Yüklənir…</string>
-    <string name="httpuser">HTTP istifadəçi adı</string>
-    <string name="httppassword">HTTP parolu</string>
     <string name="error_media_upload">Media faylının yüklənməsi zamanı xəta baş verdi.</string>
     <string name="incorrect_credentials">Yanlış istifadəçi adı və ya parol</string>
     <string name="password">Parol</string>

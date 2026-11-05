@@ -101,7 +101,6 @@ Language: nb_NO
     <string name="new_site_creation_intents_header_title">Hva handler ditt nettsted om?</string>
     <string name="my_site_dashboard_tab_title">Hjem</string>
     <string name="adding_cat">Legger til kategori</string>
-    <string name="login_select_email_client">Hvilken e-postapp bruker du?</string>
     <string name="my_site_menu_tab_title">Meny</string>
     <string name="my_site_todays_stat_card_title">Dagens statistikk</string>
     <string name="reader_comment_menu_edit">Redigér</string>
@@ -181,7 +180,6 @@ Language: nb_NO
     <string name="gutenberg_native_four" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Fire</string>
     <string name="gutenberg_native_custom_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tilpasset URL</string>
     <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Legg til blokker</string>
-    <string name="login_no_jetpack_sites">Ingen Jetpack-nettsteder funnet</string>
     <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Hva er alt-tekst?</string>
     <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Omform %s til</string>
     <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Omform blokk…</string>
@@ -318,7 +316,6 @@ Language: nb_NO
     <string name="gutenberg_native_add_this_email_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Legg til denne e-postlenken</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s valgt</string>
-    <string name="login_get_link_by_email">Få en innloggingslenke med e-post</string>
     <string name="permission_microphone">Mikrofon</string>
     <string name="reader_menu_report_post">Rapporter dette innlegget</string>
     <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Velg et oppsett</string>
@@ -343,23 +340,9 @@ Language: nb_NO
     <string name="gutenberg_native_choose_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Velg bilde eller video</string>
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Velg bilde</string>
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blokk fjernet</string>
-    <string name="signup_confirmation_title">Registreringsbekreftelse</string>
     <string name="enter_your_site_address">Oppgi din eksisterende nettstedsadresse</string>
     <string name="gutenberg_native_convert_to_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Konverter til lenke</string>
-    <string name="signup_confirmation_message">Vi vil bruke denne e-postadressen til å lage din nye WordPress.com-konto.</string>
-    <string name="signup_magic_link_message">Vi har sendt deg en registreringslenke for å lage din nye WordPres.com-konto. Sjekk din e-post på denne enheten og trykk lenken i e-posten du mottar fra WordPress.com.</string>
-    <string name="enter_account_info_for_site">Oppgi din kontoinformasjon for %1$s.</string>
-    <string name="login_or">eller</string>
-    <string name="continue_google_button_suffix">Fortsett med Google</string>
-    <string name="login_find_your_site_adress">Finn din nettstedsadresse</string>
-    <string name="login_done">Fullført</string>
-    <string name="check_email">Sjekk e-post</string>
     <string name="get_started" a8c-src-lib="module:login">Kom i gang</string>
-    <string name="enter_email_to_continue_wordpress_com">Oppgi din e-postadresse for å logge inn på eller opprette en WordPress.com-konto.</string>
-    <string name="or_type_your_password">Eller oppgi dit passord</string>
-    <string name="create_account">Opprett konto</string>
-    <string name="send_link_by_email">Send lenke med e-post</string>
-    <string name="reset_your_password">Tilbakestill ditt passord</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Å kaste dette innlegget vil også forkaste lokale endringer. Er du sikker på at du vil fortsette?</string>
     <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s blokk-alternativer</string>
     <string name="gutenberg_native_remove_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Fjern blokk</string>
@@ -534,9 +517,6 @@ Language: nb_NO
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Galleribeskrivelse. %s</string>
     <string name="create_post_page_fab_tooltip">Lag et innlegg eller en side</string>
-    <string name="post_signup_interstitial_not_right_now">Ikke akkurat nå</string>
-    <string name="post_signup_interstitial_subtitle">Hva du enn vil lage eller dele vil vi hjelpe deg å gjøre det her.</string>
-    <string name="post_signup_interstitial_title">Velkommen til WordPress</string>
     <string name="stock_media_picker_list_content_description">Fotobibiliotek</string>
     <string name="photo_picker_image_thumbnail_unselected">Bilde fravalgt</string>
     <string name="photo_picker_image_selected">Valgt</string>
@@ -550,9 +530,6 @@ Language: nb_NO
     <string name="dialog_confirm_scheduled_post_sync_title">Klar til å synkronisere?</string>
     <string name="negative_prefix">-%s</string>
     <string name="new_site_creation_unavailable_domain">Dette domenet er ikke tilgengelig</string>
-    <string name="login_discovery_error_generic">Vi klarte ikke å få tilgang til nettstedet ditt. Du må kontakte din nettvert for å løse dette.</string>
-    <string name="enter_credentials_for_site">Logg inn med din innlggingsinformasjon fra nettstedet %1$s</string>
-    <string name="login_site_credentials_magic_link_label">Straks ferdig! Vi må bare få bekreftet din e-postadresse koblet til Jetpack &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="my_site_bottom_sheet_add_page">Nettstedsside</string>
     <string name="reader_save_for_later_display_name">Lagret</string>
     <string name="reader_discover_display_name">Oppdag</string>
@@ -707,8 +684,6 @@ Language: nb_NO
     <string name="post_notification_off">Av</string>
     <string name="post_settings_add_to_calendar">Legg til på kalender</string>
     <string name="post_settings_notification">Varsling</string>
-    <string name="login_invalid_site_url">Vennligst oppgi en fullstendig nettstedsadresse, f.eks example.com.</string>
-    <string name="enter_email_for_site">Logg inn med WordPress.com for å koble til %1$s</string>
     <string name="stats_post_views_label">Visninger</string>
     <string name="stats_post_label">Innlegg</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -808,8 +783,6 @@ Language: nb_NO
     <string name="posts_trashed_empty">Du har ingen kastede innlegg</string>
     <string name="posts_draft_empty">Du har ingen kladder til innlegg</string>
     <string name="posts_scheduled_empty">Du har ingen planlagte innlegg</string>
-    <string name="notification_wpcom_username_needed">Vennligst logg inn med ditt brukernavn og passord.</string>
-    <string name="error_user_username_instead_of_email">Vennligst logg inn med ditt brukernavn på WordPress.com i stedet for din e-postadresse.</string>
     <string name="stats_insights_average_words">Gj.sn. ord/innlegg</string>
     <string name="stats_insights_total_words">Totalt antall ord</string>
     <string name="stats_insights_average_likes">Gj.sn. likinger/innlegg</string>
@@ -819,7 +792,6 @@ Language: nb_NO
     <string name="stats_insights_posts">Innlegg</string>
     <string name="stats_insights_year">År</string>
     <string name="stats_insights_this_year_site_stats">Dette år</string>
-    <string name="no_site_error">Nettstedet på denne adressen er ikke et WordPress-nettsted. For at vi skal kunne koble til det må nettstedet bruke WordPress.</string>
     <string name="plugin_check_domain_credit_error">Mislyktes i å kontrollere tilgjengelig tilgodehavende for domene</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Kontrollerer tilgodehavende for domene</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Registrer domene</string>
@@ -951,7 +923,6 @@ Language: nb_NO
     <string name="media_space_used">%1$s er brukt</string>
     <string name="history_empty_title">Ingen historikk ennå</string>
     <string name="history_load_dialog_button_positive">Last inn</string>
-    <string name="enter_wpcom_or_jetpack_site">Vennligst opp et nettsted på WordPress.com eller et Jetpack-tilkoblet WordPress-nettsted</string>
     <string name="history_loading_revision">Laster revisjon</string>
     <string name="history_loaded_revision">Revisjon lastet</string>
     <string name="history_footer_post">Innlegg laget %1$s kl %2$s</string>
@@ -977,10 +948,8 @@ Language: nb_NO
     <string name="pages_scheduled">Planlagt</string>
     <string name="pages_drafts">Kladder</string>
     <string name="pages_published">Publisert</string>
-    <string name="login_error_sms_throttled">Vi har gjort for mange forsøk på å sende en verifiseringskode via SMS — ta en pause og be om en ny om et minutt.</string>
     <string name="site_picker_remove_site_empty">Ingen nettsteder passer med ditt søk</string>
     <string name="page_parent_changed">Siden forelder har blitt endret</string>
-    <string name="login_error_email_not_found_v2">Det er ingen WordPress.com-konto som passer til denne Google-kontoen.</string>
     <string name="page_moved_to_published">Siden har blitt publisert</string>
     <string name="page_moved_to_trash">Siden er slettet</string>
     <string name="page_moved_to_draft">Siden er flyttet til kladder</string>
@@ -996,7 +965,6 @@ Language: nb_NO
     <string name="content_description_more">Mer</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
-    <string name="login_to_to_connect_jetpack">Logg inn på dem WordPres.com-kontoen du brukte til koble til Jetpack.</string>
     <string name="stats_jetpack_connection_setup_info">For å se statistikk på ditt nettsted trenger du å installere utvidelsen Jetpack.</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">Logg ut av WordPress?</string>
     <string name="site_settings_tags_empty_button">Lag et stikkord</string>
@@ -1042,13 +1010,7 @@ Language: nb_NO
     <string name="reader_empty_search_request_failed">Kan ikke utføre søk</string>
     <string name="sites">Nettsteder</string>
     <string name="comment_read_source_post">Les kildeinnlegget</string>
-    <string name="signup_magic_link_title">Magisk lenke sendt</string>
-    <string name="selfhosted_site_login_title">Legitimasjoner for innlogging</string>
-    <string name="magic_link_sent_login_title">Magisk lenke sendt</string>
-    <string name="magic_link_login_title">Innlogging med magisk lenke</string>
     <string name="site_address_login_title" a8c-src-lib="module:login">Innlogging på nettstedsadresse</string>
-    <string name="email_address_login_title">Innlogging med epost</string>
-    <string name="verification_2fa_screen_title">Kodebekreftelse</string>
     <string name="reader_bookmark_snack_title">Innlegg lagret</string>
     <string name="reader_bookmark_snack_btn">Vis alle</string>
     <string name="reader_empty_saved_posts_title">Ingen innlegg lagret — ennå!</string>
@@ -1134,7 +1096,6 @@ Language: nb_NO
     <string name="plugin_detail_banner_desc">toppbilde for utvidelse</string>
     <string name="photo_picker_wpmedia_desc">velg fra media i WordPress</string>
     <string name="profile_picture">%s sitt profilbilde</string>
-    <string name="signup_with_google_progress">Registrering hos Google…</string>
     <string name="people_invite_role_info_desc">rolleinformasjon</string>
     <string name="media_grid_item_image_desc">forhåndsvisning av media, filnavn %s</string>
     <string name="comment_checkmark_desc">avkrysningsmerke</string>
@@ -1150,7 +1111,6 @@ Language: nb_NO
     <string name="site_settings_quota_space_value">%1$s av %2$s</string>
     <string name="site_settings_quota_header">Media</string>
     <string name="share_intent_screen_title">Velg nettsted</string>
-    <string name="signup_epilogue_screen_title">Ny konto</string>
     <string name="edit_photo_screen_title">Rediger bilde</string>
     <string name="comment_approved_talkback">Kommentar godkjent</string>
     <string name="site_settings_quota_space_title">Plass brukt</string>
@@ -1217,17 +1177,7 @@ Language: nb_NO
     <string name="username_changer_header">Ditt nåværende brukernavn er %1$s%2$s%3$s. Med få unntak vil andre brukere kun se ditt vsiningsnavn, %4$s%5$s%6$s.</string>
     <string name="username_changer_error_none">Ingen brukernavn er foreslått fra %1$s%2$s%3$s. Vennligst skriv inn flere bokstaver for å få flere forslag.</string>
     <string name="username_changer_dismiss_message">Forkast endring av brukernavn</string>
-    <string name="signup_user_exists">Epost-adressen finnes allerede påWordPress.com.\nFortsett med innlogging.</string>
     <string name="notification_site_creation_created">Trykk for å fortsette.</string>
-    <string name="signup_updating_account">Oppdaterer konto…</string>
-    <string name="signup_magic_link_progress">Sender epost</string>
-    <string name="signup_magic_link_error_button_positive">Prøv igjen</string>
-    <string name="signup_magic_link_error_button_negative">Lukk</string>
-    <string name="signup_epilogue_hint_username">Brukernavn</string>
-    <string name="signup_epilogue_hint_password">Passord (frivillig)</string>
-    <string name="signup_epilogue_hint_display">Visningsnavn</string>
-    <string name="signup_epilogue_error_button_positive">Prøv igjen</string>
-    <string name="signup_epilogue_error_button_negative">Tilbakestill</string>
     <string name="plugin_caption_new">Ny</string>
     <string name="plugin_caption_popular">Populær</string>
     <string name="plugins_empty_search_list">Ingen treff</string>
@@ -1313,17 +1263,6 @@ Language: nb_NO
     <string name="plugin_inactive">Inaktiv</string>
     <string name="media_edit_link_hint">Åpne lenke i nytt vindu eller ny fane</string>
     <string name="media_edit_link_text">Lenk til</string>
-    <string name="notification_login_failed">En feil har oppstått.</string>
-    <string name="notification_2fa_needed">Vennligst skriv inn en autentiseringskode for å fortsette.</string>
-    <string name="notification_error_wrong_password">Vennligst dobbeltsjekk passordet ditt for å fortsette.</string>
-    <string name="notification_login_title_stopped">Innlogging avsluttet</string>
-    <string name="notification_login_title_in_progress">Logger inn…</string>
-    <string name="notification_logging_in">Vennligst vent mens innlogging skjer.</string>
-    <string name="notification_logged_in">Trykk for å fortsette.</string>
-    <string name="notification_login_title_success">Innlogget!</string>
-    <string name="login_empty_password">Vennligst skriv inn et passord</string>
-    <string name="login_text_otp_another">Send meg en annen kode i stedet</string>
-    <string name="enter_verification_code_sms">Vi sendte en tekstmelding til telefonnummeret som slutter på %s. Vennligst oppgi bekreftelseskoden o SMS-en.</string>
     <string name="image_size">Størrelse</string>
     <string name="uploading_subtitle_media_only_one">1 fil igjen</string>
     <string name="uploading_subtitle_media_only">%1$d av %2$d filer igjen</string>
@@ -1340,13 +1279,10 @@ Language: nb_NO
     <string name="confirm_remove_media_image">Fjern dette bildet fra innlegget?</string>
     <string name="media_edit_customize_card_caption">Tilpass</string>
     <string name="media_edit_file_details_card_caption">Fildetaljer</string>
-    <string name="login_error_suffix">\nKanskje prøve en annen brukerkonto?</string>
     <string name="login_error_button">Lukk</string>
     <string name="error_generic_network">Det oppsto en nettverksfeil. Vennligst kontroller din nettforbindelse og prøv igjen.</string>
     <string name="post_settings_remove_featured_image">Fjern fremhevet bilde</string>
     <string name="post_settings_choose_featured_image">Velg fremhevet bilde</string>
-    <string name="login_log_in_for_share_intent">Logg inn på WordPress.com for å dele innholdet.</string>
-    <string name="enter_site_address_share_intent">Skriv inn adressen til WordPress-siden din som du ønsker å dele innholdet til.</string>
     <string name="jetpack_disconnect_error_toast">Feil under frakobling av siden.</string>
     <string name="jetpack_disconnect_success_toast">Siden ble frakoblet</string>
     <string name="jetpack_disconnect_confirm">Koble fra</string>
@@ -1427,27 +1363,13 @@ Language: nb_NO
     <string name="post_queued">Køoppstilt innlegg</string>
     <string name="connection_to_server_lost">Tilkoblingen til tjeneren forsvant</string>
     <string name="uploading_post">Laster opp «%s»</string>
-    <string name="login_email_client_not_found">Klarte ikke å oppdage E-postklientappen din</string>
-    <string name="login_empty_2fa">Vennligst skriv inn en verifiseringskode</string>
-    <string name="login_empty_username">Vennligst skriv inn et brukernavn</string>
-    <string name="login_log_in_for_deeplink">Logg inn til WordPress.com for å få tilgang til dette innlegget.</string>
-    <string name="login_error_while_adding_site">Feil ved tillegging av nettsted. Feilkode: %s</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">Sjekker sideadressen</string>
-    <string name="login_site_address_more_help">Trenger du mere hjelp?</string>
-    <string name="login_site_address_help_content">Nettstedsadressen din dukker opp i linjen på toppen av skjermen, når du besøker siden din på Chrome.</string>
-    <string name="login_site_address_help_title">Hva er nettstedsadressen min?</string>
     <string name="login_site_address" a8c-src-lib="module:login">Nettstedsadresse</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Oppgi adressen til det WordPress-nettstedet du ønsker å koble til.</string>
     <string name="login_already_logged_in_wpcom">Du er allerede logget på WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Fortsett</string>
-    <string name="enter_wpcom_password">Skriv inn WordPress.com-passordet ditt.</string>
     <string name="connect_more">Koble til et annet nettsted</string>
-    <string name="login_magic_link_email_requesting">Ber om innloggings-E-post</string>
-    <string name="password_incorrect">Det ser ut til at dette passordet er feil. Vennligst dobbeltsjekk informasjonen din og prøv igjen.</string>
-    <string name="requesting_otp">Ber om en verifiseringskode via SMS.</string>
-    <string name="login_text_otp">Send meg en kode i stedet</string>
     <string name="next">Neste</string>
-    <string name="enter_email_wordpress_com">Logg inn på WordPress.com ved å bruke en E-postadresse, for å behandle alle dine WordPress-nettsteder.</string>
     <string name="me_profile_photo">Profilbilde</string>
     <string name="error_media_parse_error">Uventet tilbakemelding fra tjeneren</string>
     <string name="upload_finished_toast">Kan ikke avbryte opplastningen, ettersom den allerede er fullført</string>
@@ -1585,8 +1507,6 @@ Language: nb_NO
     <string name="error_all_media_upload_canceled">Alle medieopplastninger har blitt avbrutt på grunn av en ukjent feil. Vennligst prøv på nytt</string>
     <string name="error_unknown_post_type">Ukjent innleggsformat</string>
     <string name="submit_for_review">Send inn</string>
-    <string name="duplicate_site_detected">En duplikatside har blitt oppdaget.</string>
-    <string name="cannot_add_duplicate_site">Dette nettstedet finnes allerede i appen, så du kan ikke legge den til.</string>
     <string name="already_logged_in_wpcom">Du er allerede logget inn med en WordPress.com-konto, og du kan ikke legge til en WordPress.com-nettsted som er knyttet til en annen konto.</string>
     <string name="error_media_load">Klarte ikke å laste inn mediet</string>
     <string name="error_media_refresh_no_connection">Tilkobling er påkrevd for å oppfriske biblioteket</string>
@@ -1597,8 +1517,6 @@ Language: nb_NO
     <string name="media_generic_error">Mediefeil oppstod</string>
     <string name="retry">Prøv igjen</string>
     <string name="confirm">Bekreft</string>
-    <string name="xmlrpc_endpoint_forbidden_error">Klarte ikke å koble til. Vi mottok en 403-feil når vi prøvde å få tilgang til ditt nettsteds XMLRPC-sluttpunkt.\nAppen behøver det for å kunne kommunisere med nettstedet ditt. Kontakt verten din for å løse dette problemet.</string>
-    <string name="xmlrpc_post_blocked_error">Klarte ikke å koble til. Verten din blokkerer POST-forespørsler, og appen trenger den for\nå kunne kommunisere med nettstedet ditt. Kontakt verten din for å løse dette problemet.</string>
     <string name="pending_draft_one_generic">Ikke la den henge og slenge! \'%1$s\' venter på å bli publisert.</string>
     <string name="pending_draft_one_month">Ikke la den daffe rundt! \'%1$s\' venter på å bli publisert.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' er fortsatt et utkast. Husk på å publisere den!</string>
@@ -1679,8 +1597,6 @@ Language: nb_NO
     <string name="error_refreshing_gravatar">Feil ved gjeninnlasting av din Gravatar</string>
     <string name="error_locating_image">Feil under oppsøking av det beskjærte bildet</string>
     <string name="error_cropping_image">Feil under beskjæring av bildet</string>
-    <string name="checking_email">Sjekker E-posten</string>
-    <string name="magic_link_unavailable_error_message">Ikke tilgjengelig for øyeblikket. Vennligst skriv inn passordet ditt</string>
     <string name="logging_in">Logger inn</string>
     <string name="web_address_dialog_hint">Vises offentlig når du kommenterer.</string>
     <string name="export_your_content_message">Dine innlegg, sider og innstillinger vil bli sendt med E-post til deg til %s.</string>
@@ -1713,7 +1629,6 @@ Language: nb_NO
     <string name="comments_empty_list_filtered_pending">Ingen ventende kommentarer</string>
     <string name="comments_empty_list_filtered_approved">Ingen godkjente kommentarer</string>
     <string name="button_skip">Hopp over</string>
-    <string name="xmlrpc_missing_method_error">Klarte ikke å koble til. De påkrevde XML-RPC-metodene mangler på denne tjeneren.</string>
     <string name="alignment_center">Midten</string>
     <string name="post_format_video">Video</string>
     <string name="post_format_status">Status</string>
@@ -1773,7 +1688,6 @@ Language: nb_NO
     <string name="about_the_app">Om appen</string>
     <string name="error_post_account_settings">Klarte ikke å lagre kontoinnstillingene dine</string>
     <string name="error_fetch_account_settings">Klarte ikke å hente inn dine kontoinnstillinger</string>
-    <string name="error_fetch_my_profile">Klarte ikke å hente inn din profil</string>
     <string name="site_settings_unknown_language_code_error">Språkkoden ble ikke gjenkjent</string>
     <string name="site_settings_threading_dialog_description">Tillat at kommentar blir nøstet opp i tråder.</string>
     <string name="site_settings_threading_dialog_header">Trådfør opp til</string>
@@ -1958,9 +1872,6 @@ Language: nb_NO
     <string name="reader_label_new_posts_subtitle">Trykk for å vise dem</string>
     <string name="select_all">Velg alle</string>
     <string name="language">Språk</string>
-    <string name="verification_code">Verifikasjonskode</string>
-    <string name="invalid_verification_code">Ugyldig verifikasjonskode</string>
-    <string name="auth_required">Logg på igjen for å fortsette.</string>
     <string name="stats_search_terms_unknown_search_terms">Ukjente Søkeord</string>
     <string name="error_notification_open">Kunne ikke åpne varsling</string>
     <string name="reader_empty_posts_request_failed">Ute av stand til å hente innlegg</string>
@@ -2031,7 +1942,6 @@ Language: nb_NO
     <string name="error_load_comment">Klarte ikke å laste inn kommentaren</string>
     <string name="error_generic">En feil oppstod</string>
     <string name="username_or_password_incorrect">Brukernavnet og/eller passordet du skrev inn er feil</string>
-    <string name="email_invalid">Skriv inn en gyldig E-postadresse</string>
     <string name="error_edit_comment">En feil oppstod under redigering av kommentaren</string>
     <string name="error_moderate_comment">En feil oppstod under moderering</string>
     <string name="error_refresh_comments">Kommentarer kunne ikke bli oppfrisket for øyeblikket</string>
@@ -2069,14 +1979,12 @@ Language: nb_NO
     <string name="saving_changes">Lagrer endringer</string>
     <string name="new_media">Nytt medie</string>
     <string name="view_in_browser">Åpne i nettleseren</string>
-    <string name="http_authorization_required">Autorisasjon påkrevd</string>
     <string name="post_settings">Innleggsinnstillinger</string>
     <string name="remove_account">Fjern nettsted</string>
     <string name="invalid_site_url_message">Sjekk at nettadressen som du skrev inn for nettstedet, er gyldig</string>
     <string name="media_error_no_permission">Du har ikke tillatelse til å se mediebiblioteket</string>
     <string name="post_not_found">En feil oppstod under innlastning av innlegget. Oppfrisk innleggene dine, og prøv igjen.</string>
     <string name="error_refresh_media">Media kunne ikke bli oppfrisket for øyeblikket</string>
-    <string name="fatal_db_error">En feil oppstod under oppretting av app-databasen. Prøv å reinstallere appen.</string>
     <string name="media_gallery_type_thumbnail_grid">Forhåndsvisningsnetting</string>
     <string name="file_error_create">Klarte ikke å lage en midlertidig fil for medieopplastning. Vennligst sørg for at det er nok ledig lagring på enheten din.</string>
     <string name="file_not_found">Klarte ikke å finne filen som skulle lastes opp. Ble den kanskje slettet eller flyttet?</string>
@@ -2106,7 +2014,6 @@ Language: nb_NO
     <string name="reader_label_added_tag">La til %s</string>
     <string name="comments_empty_list">Ingen kommentarer ennå</string>
     <string name="reader_view_reblog">Reblogg</string>
-    <string name="sign_up_label">Registrer deg</string>
     <string name="themes">Temaer</string>
     <string name="media_edit_title_text">Tittel</string>
     <string name="media_edit_description_text">Beskrivelse</string>
@@ -2134,8 +2041,6 @@ Language: nb_NO
     <string name="new_notifications">%d nye varsler</string>
     <string name="more_notifications">og %d flere.</string>
     <string name="loading">Laster inn …</string>
-    <string name="httppassword">HTTP-passord</string>
-    <string name="httpuser">HTTP-brukernavn</string>
     <string name="error_media_upload">Det oppsto en feil under opplasting av media.</string>
     <string name="incorrect_credentials">Feil brukernavn eller passord</string>
     <string name="log_in" a8c-src-lib="module:login">Logg inn</string>
