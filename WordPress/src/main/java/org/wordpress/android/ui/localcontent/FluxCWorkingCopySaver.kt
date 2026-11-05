@@ -19,6 +19,7 @@ import uniffi.wp_api.ParseUrlException
 import uniffi.wp_mobile.LocalContentService
 import uniffi.wp_mobile_local_content.LocalContentException
 import uniffi.wp_mobile_local_content.WorkingCopyId
+import uniffi.wp_mobile_local_content.WorkingCopyRemoteTarget
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -58,19 +59,20 @@ class FluxCWorkingCopySaver @Inject constructor(
             appLogWrapper.e(T.POSTS, "Local content: can't parse the site URL ${site.url}: $e")
             return
         }
+        val newPost = WorkingCopyRemoteTarget(site = siteIdentity, remotePost = null)
         if (post.isPage) {
-            val page = mapper.toPageWorkingCopy(post) ?: return
+            val fields = mapper.toPageFields(post) ?: return
             launchSave(
                 localPostId,
-                create = { it.createPageWorkingCopy(page, siteIdentity) },
-                save = { service, id -> service.savePageWorkingCopy(id, page) }
+                create = { it.createPageWorkingCopy(newPost, fields).id },
+                save = { service, id -> service.savePageWorkingCopy(id, fields) }
             )
         } else {
-            val workingCopy = mapper.toPostWorkingCopy(post) ?: return
+            val fields = mapper.toPostFields(post) ?: return
             launchSave(
                 localPostId,
-                create = { it.createPostWorkingCopy(workingCopy, siteIdentity) },
-                save = { service, id -> service.savePostWorkingCopy(id, workingCopy) }
+                create = { it.createPostWorkingCopy(newPost, fields).id },
+                save = { service, id -> service.savePostWorkingCopy(id, fields) }
             )
         }
     }

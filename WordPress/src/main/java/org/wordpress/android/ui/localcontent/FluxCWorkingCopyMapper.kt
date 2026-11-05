@@ -8,39 +8,39 @@ import org.wordpress.android.util.DateTimeUtils
 import uniffi.wp_api.ParsedUrl
 import uniffi.wp_api.PostFormat
 import uniffi.wp_mobile_local_content.FeaturedImage
-import uniffi.wp_mobile_local_content.PageWorkingCopy
-import uniffi.wp_mobile_local_content.PostWorkingCopy
+import uniffi.wp_mobile_local_content.PageWorkingCopyFields
+import uniffi.wp_mobile_local_content.PostWorkingCopyFields
 import uniffi.wp_mobile_local_content.PublishDate
 import uniffi.wp_mobile_local_content.SiteIdentity
 import uniffi.wp_mobile_local_content.StatusSetting
-import uniffi.wp_mobile_local_content.Tag
-import uniffi.wp_mobile_local_content.WorkingCopyCommon
+import uniffi.wp_mobile_local_content.WorkingCopyCommonFields
+import uniffi.wp_mobile_local_content.WorkingCopyTag
 import javax.inject.Inject
 
 /**
- * Maps a FluxC [PostModel] to a working copy, so a post the editor saves through FluxC can be
+ * Maps a FluxC [PostModel] to working copy fields, so a post the editor saves through FluxC can be
  * saved to the local content database too.
  *
  * FluxC doesn't hold everything a working copy can: tags are names, not IDs, so they map to
- * [Tag.New], and comment and ping status aren't mapped.
+ * [WorkingCopyTag.New], and comment and ping status aren't mapped.
  */
 class FluxCWorkingCopyMapper @Inject constructor(
     private val postUtils: PostUtilsWrapper,
 ) {
     /** Returns `null` for a trashed post, which isn't edited. */
-    fun toPostWorkingCopy(post: PostModel): PostWorkingCopy? = common(post)?.let { common ->
-        PostWorkingCopy(
+    fun toPostFields(post: PostModel): PostWorkingCopyFields? = common(post)?.let { common ->
+        PostWorkingCopyFields(
             common = common,
             categories = post.categoryIdList,
-            tags = post.tagNameList.map { Tag.New(name = it) },
+            tags = post.tagNameList.map { WorkingCopyTag.New(name = it) },
             format = postFormat(post.postFormat),
             sticky = post.sticky
         )
     }
 
     /** Returns `null` for a trashed page, which isn't edited. */
-    fun toPageWorkingCopy(post: PostModel): PageWorkingCopy? = common(post)?.let { common ->
-        PageWorkingCopy(common = common, parent = post.parentId.takeIf { it > 0 })
+    fun toPageFields(post: PostModel): PageWorkingCopyFields? = common(post)?.let { common ->
+        PageWorkingCopyFields(common = common, parent = post.parentId.takeIf { it > 0 })
     }
 
     /** A site has a WordPress.com site ID only when FluxC's `siteId` isn't 0. */
@@ -49,7 +49,7 @@ class FluxCWorkingCopyMapper @Inject constructor(
         wordpressComSiteId = site.siteId.takeIf { it > 0 }?.toULong()
     )
 
-    private fun common(post: PostModel): WorkingCopyCommon? {
+    private fun common(post: PostModel): WorkingCopyCommonFields? {
         val password = post.password.takeIf { it.isNotEmpty() }
         val status = when (post.status) {
             // A post FluxC hasn't given a status yet is a new draft.
@@ -61,7 +61,7 @@ class FluxCWorkingCopyMapper @Inject constructor(
             "trash" -> return null
             else -> StatusSetting.Custom(status = post.status, password = password)
         }
-        return WorkingCopyCommon(
+        return WorkingCopyCommonFields(
             title = post.title,
             content = post.content,
             excerpt = post.excerpt,
