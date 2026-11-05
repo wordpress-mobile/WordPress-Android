@@ -20,7 +20,6 @@ import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener
 import org.wordpress.android.ui.reader.repository.usecases.ParseDiscoverCardsJsonUseCase
 import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
 import org.wordpress.android.ui.reader.sources.ReaderPostLocalSource
 import org.wordpress.android.util.PerAppLocaleManager
 
@@ -56,7 +55,7 @@ class ReaderPostRepositoryTest : BaseUnitTest() {
 
         repository.requestPostsWithTag(
             recommendedTag(),
-            ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER,
+            UpdateAction.REQUEST_OLDER,
             listener,
         )
         advanceUntilIdle()
@@ -77,7 +76,7 @@ class ReaderPostRepositoryTest : BaseUnitTest() {
 
         repository.requestPostsWithTag(
             recommendedTag(),
-            ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER,
+            UpdateAction.REQUEST_OLDER,
             listener,
         )
         advanceUntilIdle()
