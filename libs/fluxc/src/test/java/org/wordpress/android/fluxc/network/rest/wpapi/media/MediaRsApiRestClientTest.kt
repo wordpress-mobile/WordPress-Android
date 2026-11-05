@@ -40,6 +40,7 @@ import org.wordpress.android.fluxc.utils.MimeType
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.CloudflareErrorKind
 import uniffi.wp_api.MediaCaptionWithEditContext
 import uniffi.wp_api.RequestExecutionErrorReason
 import uniffi.wp_api.RequestMethod
@@ -597,6 +598,40 @@ class MediaRsApiRestClientTest {
         val payload = actionCaptor.value.payload as ProgressPayload
         assertNotNull(payload.error)
         assertEquals(MediaErrorType.NOT_AUTHENTICATED, payload.error?.type)
+    }
+
+    @Test
+    fun `uploadMedia with a Cloudflare 413 dispatches request too large error`() = runTest {
+        val testSite = createTestSite()
+        val testMedia = createTestMedia().apply {
+            filePath = "/valid/path/file.jpg"
+        }
+
+        whenever(fileCheckWrapper.canReadFile(any())).thenReturn(true)
+        whenever(wpApiClient.request<Any>(any())).thenReturn(
+            WpRequestResult.RequestExecutionFailed(
+                statusCode = 413u,
+                redirects = null,
+                reason = RequestExecutionErrorReason.CloudflareError(
+                    statusCode = 413u,
+                    cloudflareCode = null,
+                    kind = CloudflareErrorKind.REQUEST_TOO_LARGE,
+                    rayId = null,
+                    retryAfter = null
+                ),
+                requestUrl = "",
+                requestMethod = RequestMethod.POST
+            )
+        )
+
+        restClient.uploadMedia(testSite, testMedia)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val payload = actionCaptor.value.payload as ProgressPayload
+        assertNotNull(payload.error)
+        assertEquals(MediaErrorType.REQUEST_TOO_LARGE, payload.error?.type)
     }
 
     @Test

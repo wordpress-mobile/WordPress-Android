@@ -278,6 +278,10 @@ class MediaRSApiRestClient @Inject constructor(
             is RequestExecutionErrorReason.HttpAuthenticationRejectedError,
             is RequestExecutionErrorReason.MisconfiguredHttpAuthenticationError ->
                 MediaErrorType.AUTHORIZATION_REQUIRED
+            // A response Cloudflare generated itself is mapped by its status code, as parseWpError
+            // and parseUnknownError map theirs: 413 is REQUEST_TOO_LARGE and a 5xx is SERVER_ERROR.
+            is RequestExecutionErrorReason.CloudflareError ->
+                MediaErrorType.fromHttpStatusCode(reason.statusCode.toInt())
             is RequestExecutionErrorReason.MisconfiguredRateLimitError,
             is RequestExecutionErrorReason.CancellationError,
             is RequestExecutionErrorReason.HttpError,
