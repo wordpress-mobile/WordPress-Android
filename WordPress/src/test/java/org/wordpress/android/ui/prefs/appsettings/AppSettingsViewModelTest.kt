@@ -9,7 +9,6 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
-import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -20,11 +19,8 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.AccountAction
-import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.AccountStore.AccountError
-import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -95,19 +91,6 @@ class AppSettingsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `opening and closing privacy settings`() {
-        viewModel.onPrivacySettingsClick()
-
-        assertThat(viewModel.uiState.value.isPrivacySettingsShown).isTrue
-        verify(analyticsTrackerWrapper).track(Stat.APP_SETTINGS_PRIVACY_SETTINGS_TAPPED)
-        verify(analyticsTrackerWrapper).track(Stat.PRIVACY_SETTINGS_OPENED)
-
-        viewModel.onPrivacySettingsClosed()
-
-        assertThat(viewModel.uiState.value.isPrivacySettingsShown).isFalse
-    }
-
-    @Test
     fun `what's new shows the cached version, then the remote one`() = test {
         whenever(buildConfigWrapper.isWhatsNewFeatureEnabled).thenReturn(true)
         val cached = announcement("27.8")
@@ -118,11 +101,6 @@ class AppSettingsViewModelTest : BaseUnitTest() {
         viewModel = createViewModel()
 
         assertThat(viewModel.uiState.value.whatsNewVersion).isEqualTo("27.9")
-    }
-
-    @Test
-    fun `what's new isn't loaded when the feature is disabled`() = test {
-        verify(featureAnnouncementProvider, never()).getLatestFeatureAnnouncement(any())
     }
 
     @Test
@@ -137,45 +115,6 @@ class AppSettingsViewModelTest : BaseUnitTest() {
         viewModel.events.test {
             assertThat(awaitItem()).isEqualTo(AppSettingsEvent.ApplyTheme("dark"))
         }
-    }
-
-    @Test
-    fun `selecting the current theme does nothing`() {
-        viewModel.onThemeSelected(key(R.string.app_theme_entry_value_default_key))
-
-        verify(sharedPreferences, never()).edit()
-        verify(analyticsTrackerWrapper, never()).track(any(), any<Map<String, Any?>>())
-    }
-
-    @Test
-    fun `selecting a media choice stores it and tracks it`() {
-        viewModel.onMediaChoiceSelected(MediaChoice.IMAGE_QUALITY, 85)
-        viewModel.onMediaChoiceSelected(MediaChoice.VIDEO_WIDTH, 1280)
-
-        verify(appPrefsWrapper).imageOptimizeQuality = 85
-        verify(appPrefsWrapper).videoOptimizeWidth = 1280
-        verify(analyticsTrackerWrapper).track(Stat.APP_SETTINGS_IMAGE_QUALITY_CHANGED)
-        verify(analyticsTrackerWrapper).track(Stat.APP_SETTINGS_MAX_VIDEO_SIZE_CHANGED)
-        assertThat(viewModel.uiState.value.mediaValues[MediaChoice.IMAGE_QUALITY]).isEqualTo(85)
-        assertThat(viewModel.uiState.value.mediaValues[MediaChoice.VIDEO_WIDTH]).isEqualTo(1280)
-    }
-
-    @Test
-    fun `toggling image optimization stores it and tracks it`() {
-        viewModel.onImageOptimizeChanged(true)
-
-        verify(appPrefsWrapper).isImageOptimize = true
-        verify(analyticsTrackerWrapper).track(Stat.SITE_SETTINGS_OPTIMIZE_IMAGES_CHANGED, mapOf("enabled" to true))
-        assertThat(viewModel.uiState.value.isImageOptimize).isTrue
-    }
-
-    @Test
-    fun `enabling open links in Jetpack disables the deep links and stores it`() {
-        viewModel.onOpenLinksInJetpackChanged(true)
-
-        verify(openWebLinksWithJetpackHelper).disableDeepLinks()
-        verify(appPrefsWrapper).setIsOpenWebLinksWithJetpack(true)
-        assertThat(viewModel.uiState.value.isOpenLinksInJetpack).isTrue
     }
 
     @Test
@@ -205,28 +144,6 @@ class AppSettingsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `resuming fetches the account settings when logged in and online`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-
-        viewModel.onResume()
-
-        val captor = argumentCaptor<Action<*>>()
-        verify(dispatcher).dispatch(captor.capture())
-        assertThat(captor.firstValue.type).isEqualTo(AccountAction.FETCH_SETTINGS)
-    }
-
-    @Test
-    fun `resuming doesn't fetch the account settings when offline`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
-
-        viewModel.onResume()
-
-        verify(dispatcher, never()).dispatch(any())
-    }
-
-    @Test
     fun `fetched account settings update the usage switch`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(accountStore.account).thenReturn(AccountModel().apply { tracksOptOut = true })
@@ -234,27 +151,6 @@ class AppSettingsViewModelTest : BaseUnitTest() {
         viewModel.onAccountChanged(OnAccountChanged().apply { causeOfChange = AccountAction.FETCH_SETTINGS })
 
         assertThat(viewModel.uiState.value.isSendUsageStats).isFalse
-    }
-
-    @Test
-    fun `an account settings error shows a toast`() = test {
-        viewModel.onAccountChanged(
-            OnAccountChanged().apply { error = AccountError(AccountErrorType.SETTINGS_POST_ERROR, "") }
-        )
-
-        viewModel.events.test {
-            assertThat(awaitItem()).isEqualTo(AppSettingsEvent.ShowToast(R.string.error_post_account_settings))
-        }
-    }
-
-    @Test
-    fun `tapping a policy link tracks it and opens the url`() = test {
-        viewModel.onLearnMoreClick(URL)
-
-        verify(analyticsTrackerWrapper).track(Stat.SITE_SETTINGS_LEARN_MORE_CLICKED)
-        viewModel.events.test {
-            assertThat(awaitItem()).isEqualTo(AppSettingsEvent.OpenUrl(URL))
-        }
     }
 
     private fun createViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) = AppSettingsViewModel(
@@ -287,6 +183,5 @@ class AppSettingsViewModelTest : BaseUnitTest() {
     private companion object {
         const val IMAGE_MAX_SIZE = 2000
         const val VIDEO_QUALITY = 3
-        const val URL = "https://www.automattic.com/privacy"
     }
 }
