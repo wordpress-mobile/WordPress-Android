@@ -63,7 +63,7 @@ class AppSettingsViewModelTest : BaseUnitTest() {
     fun `initial state reads the stored settings`() {
         val state = viewModel.uiState.value
 
-        assertThat(state.themeValue).isEqualTo(key(R.string.app_theme_entry_value_default_key))
+        assertThat(state.themeValue).isEqualTo(key(R.string.app_theme_entry_value_default))
         assertThat(state.mediaValues[MediaChoice.IMAGE_MAX_SIZE]).isEqualTo(IMAGE_MAX_SIZE)
         assertThat(state.mediaValues[MediaChoice.VIDEO_QUALITY]).isEqualTo(VIDEO_QUALITY)
         assertThat(state.isSendUsageStats).isTrue
@@ -84,7 +84,10 @@ class AppSettingsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `privacy settings extra opens privacy settings and tracks it once`() {
-        viewModel = createViewModel(SavedStateHandle(mapOf(EXTRA_SHOW_PRIVACY_SETTINGS to true)))
+        val savedStateHandle = SavedStateHandle(mapOf(EXTRA_SHOW_PRIVACY_SETTINGS to true))
+        viewModel = createViewModel(savedStateHandle)
+        // Simulates restoring the saved state after process death
+        viewModel = createViewModel(savedStateHandle)
 
         assertThat(viewModel.uiState.value.isPrivacySettingsShown).isTrue
         verify(analyticsTrackerWrapper, times(1)).track(Stat.PRIVACY_SETTINGS_OPENED)

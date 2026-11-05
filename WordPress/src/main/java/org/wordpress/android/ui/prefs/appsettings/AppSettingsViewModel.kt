@@ -39,7 +39,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AppSettingsViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val sharedPreferences: SharedPreferences,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
@@ -52,31 +52,30 @@ class AppSettingsViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val contextProvider: ContextProvider,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(createInitialState(savedStateHandle))
+    private val _uiState = MutableStateFlow(createInitialState())
     val uiState: StateFlow<AppSettingsUiState> = _uiState.asStateFlow()
 
     private val _events = Channel<AppSettingsEvent>(Channel.BUFFERED)
     val events: Flow<AppSettingsEvent> = _events.receiveAsFlow()
 
     init {
-        dispatcher.register(this)
-        if (_uiState.value.isPrivacySettingsShown) {
-            analyticsTrackerWrapper.track(Stat.PRIVACY_SETTINGS_OPENED)
+        // Only track on first launch, not when the saved state is restored after process death
+        if (savedStateHandle.get<Boolean>(KEY_PRIVACY_SETTINGS_SHOWN) == null) {
+            if (_uiState.value.isPrivacySettingsShown) {
+                analyticsTrackerWrapper.track(Stat.PRIVACY_SETTINGS_OPENED)
+            }
+            savedStateHandle[KEY_PRIVACY_SETTINGS_SHOWN] = _uiState.value.isPrivacySettingsShown
         }
         if (buildConfigWrapper.isWhatsNewFeatureEnabled) {
             viewModelScope.launch { loadWhatsNew() }
         }
     }
 
-    override fun onCleared() {
-        dispatcher.unregister(this)
-    }
-
-    private fun createInitialState(savedStateHandle: SavedStateHandle) = AppSettingsUiState(
+    private fun createInitialState() = AppSettingsUiState(
         themeValue = sharedPreferences.getString(
             resourceProvider.getString(R.string.pref_key_app_theme),
             null
-        ) ?: resourceProvider.getString(R.string.app_theme_entry_value_default_key),
+        ) ?: resourceProvider.getString(R.string.app_theme_entry_value_default),
         showOpenLinksInJetpack = openWebLinksWithJetpackHelper.shouldShowAppSetting(),
         isOpenLinksInJetpack = appPrefsWrapper.getIsOpenWebLinksWithJetpack(),
         isImageOptimize = appPrefsWrapper.isImageOptimize,
@@ -98,7 +97,8 @@ class AppSettingsViewModel @Inject constructor(
             resourceProvider.getString(R.string.pref_key_send_crash),
             true
         ),
-        isPrivacySettingsShown = savedStateHandle.get<Boolean>(EXTRA_SHOW_PRIVACY_SETTINGS) == true,
+        isPrivacySettingsShown = savedStateHandle.get<Boolean>(KEY_PRIVACY_SETTINGS_SHOWN)
+            ?: (savedStateHandle.get<Boolean>(EXTRA_SHOW_PRIVACY_SETTINGS) == true),
     )
 
     private suspend fun loadWhatsNew() {
@@ -110,10 +110,19 @@ class AppSettingsViewModel @Inject constructor(
         }
     }
 
-    fun onResume() {
+    /**
+     * Account events are only handled while the screen is visible, so errors caused elsewhere don't queue up and
+     * show as stale toasts when the user returns
+     */
+    fun onStart() {
+        dispatcher.register(this)
         if (accountStore.hasAccessToken() && networkUtilsWrapper.isNetworkAvailable()) {
             dispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction())
         }
+    }
+
+    fun onStop() {
+        dispatcher.unregister(this)
     }
 
     fun onThemeSelected(themeValue: String) {
@@ -162,11 +171,14 @@ class AppSettingsViewModel @Inject constructor(
     fun onPrivacySettingsClick() {
         analyticsTrackerWrapper.track(Stat.APP_SETTINGS_PRIVACY_SETTINGS_TAPPED)
         analyticsTrackerWrapper.track(Stat.PRIVACY_SETTINGS_OPENED)
-        _uiState.update { it.copy(isPrivacySettingsShown = true) }
+        setPrivacySettingsShown(true)
     }
 
-    fun onPrivacySettingsClosed() {
-        _uiState.update { it.copy(isPrivacySettingsShown = false) }
+    fun onPrivacySettingsClosed() = setPrivacySettingsShown(false)
+
+    private fun setPrivacySettingsShown(shown: Boolean) {
+        savedStateHandle[KEY_PRIVACY_SETTINGS_SHOWN] = shown
+        _uiState.update { it.copy(isPrivacySettingsShown = shown) }
     }
 
     fun onImageOptimizeChanged(enabled: Boolean) {
@@ -263,5 +275,6 @@ class AppSettingsViewModel @Inject constructor(
     companion object {
         private const val TRACK_STYLE = "style"
         private const val TRACK_ENABLED = "enabled"
+        private const val KEY_PRIVACY_SETTINGS_SHOWN = "privacy_settings_shown"
     }
 }

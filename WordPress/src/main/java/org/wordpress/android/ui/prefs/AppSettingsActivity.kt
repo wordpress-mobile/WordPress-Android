@@ -86,9 +86,14 @@ class AppSettingsActivity : BaseAppCompatActivity(), LocalePickerCallback {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.onResume()
+    override fun onStart() {
+        super.onStart()
+        viewModel.onStart()
+    }
+
+    override fun onStop() {
+        viewModel.onStop()
+        super.onStop()
     }
 
     private fun handleEvent(event: AppSettingsEvent) {
