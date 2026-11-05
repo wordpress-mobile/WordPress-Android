@@ -16,6 +16,38 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** My Site → Posts (or Pages) → the editor → Save/Publish
   - **Notes:** Only affects self-hosted sites signed in with an application password. WordPress.com and Jetpack sites are unchanged, and a self-hosted site without an application password still uses XML-RPC. A conflict with a newer copy on the server is now detected by reading the server's modified date just before saving, rather than by the server refusing the write, so a conflict created in the moment between that read and the save is no longer caught. New tags typed in the editor are created on the site before the post is saved; a tag that cannot be created is dropped rather than failing the save, and the post's other tags are left as they are. On a site that has turned the trash off, trashing a post deletes it permanently, which is what the site does with any delete and what the app did here before.
 
+- **Reader's tabs, filter sheet and interests picker restyled**
+  The Reader's Discover sub-tabs (Freshly Pressed, Recommended, Latest), the blog and tag filter sheet, the "Choose your interests" picker, and the author, login-required and comment-notification sheets now use Material 3 components. They work as before: the top bar still hides as you scroll and comes back when you scroll up, the filter sheet still marks the current blog or tag and offers Manage, and the selected Discover tab is still remembered.
+  - **Apps:** Jetpack
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Reader (top bar, Discover tabs, the blog/tag filter); Reader → Discover or Tags → choose interests; Reader → a post → author name (author sheet), or the comments' follow bell (notification sheet); Reader → Reblog with no site of your own
+  - **Notes:** Site icons in the filter sheet are now rounded squares, matching Reader search and Manage subscriptions, instead of circles. The "Reblog needs a site" screen keeps its illustration, text and button.
+
+- **Experimental block editor warns before saving while something is still in progress**
+  While the experimental block editor has saving locked, most often during a media upload, publishing, updating, submitting, saving a draft or previewing first asks "Your post isn't ready yet", with Keep editing and Continue. Leaving the editor asks the same question, with Keep editing and Leave; Leave closes the editor and saves as usual. If the editor stops working, undo, redo, Code Editor and the Publish or Update button are disabled until it reloads.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: experimental_block_editor
+  - **Where:** Experimental block editor → Publish, Update, Submit for review, Save, Preview, back arrow
+  - **Notes:** Customers turn the flag on in Me → App Settings → Experimental Features → Experimental block editor. Continuing or leaving mid-upload can save an empty Image block, or a Cover or Media & Text block whose media is a temporary link that doesn't work for readers. Some blocks also lock saving, so the warning can appear with no upload running: the Jetpack Donations block keeps it locked for the session if it can't reach Stripe, for example while offline. Uploads the app tracks itself still show the "You are currently uploading media" toast. The default block editor and the classic editor are unchanged.
+
+- **Related posts are back at the bottom of a Reader post**
+  Opening a post in the Reader shows its related posts again — a "More from that blog" list and a "More on WordPress.com" list below the comments — instead of the post ending at the comments. Opening a post also refreshes it from the server again, so its like and comment counts are up to date without pulling to refresh.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → open a post → scroll to the bottom
+  - **Notes:** The section has been missing since 26.3.1, so documentation written since then may describe the post detail as having no related posts. It only ever appears for WordPress.com posts — never for RSS/feed posts — and only when WordPress.com has related content to suggest, so a post with no related posts is still normal.
+
+- **Reader's likers list and photo viewer redesigned**
+  The Reader's list of people who liked a post has a Material 3 top bar and rows; tapping a liker with a site still opens that site. The full-screen photo viewer still swipes between a post's images, pinches and double-taps to zoom, shows the "1 of 5" count, and hides its toolbar after a few seconds. Pages now slide rather than using the old flow animation, and double-tap zooms straight in to 2.5× and back out instead of stepping through two zoom levels.
+  - **Apps:** Jetpack
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Notifications or Activity Log → tap a "like" link in an entry's text, for a post already loaded in the Reader (the likers list); Reader → a post → tap an image (the photo viewer)
+  - **Notes:** A zoomed photo pages to the next one only when a drag starts at the photo's edge; a drag that starts by panning stops at the edge. The full-screen video player is unchanged apart from now sending the app's user agent.
+
 - **A post's Stats menu item opens the redesigned Stats**
   Posts → a published post's ⋯ menu → Stats now opens the per-item screen of the redesigned Stats, the same screen a row in Posts & pages opens, instead of the old per-post stats screen. The post's title, chart, totals and calendars are the ones the redesigned Stats shows everywhere else, and its header opens the post itself. A page's Stats menu item, where the Pages list offers one, opens the same screen.
   - **Apps:** Both

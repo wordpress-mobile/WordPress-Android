@@ -76,6 +76,12 @@ public class ReaderWebView extends WPWebView {
      */
     private static final int TIMEOUT_MS = 30000;
 
+    /**
+     * The blank page {@link #clearContent()} loads to drop the previous post - the only page
+     * this WebView ever loads that isn't a rendered article.
+     */
+    public static final String BLANK_URL = "about:blank";
+
     private ReaderWebChromeClient mReaderChromeClient;
     private ReaderCustomViewListener mCustomViewListener;
     private ReaderWebViewUrlClickListener mUrlClickListener;
@@ -142,7 +148,7 @@ public class ReaderWebView extends WPWebView {
 
 
     public void clearContent() {
-        loadUrl("about:blank");
+        loadUrl(BLANK_URL);
     }
 
     private ReaderWebViewUrlClickListener getUrlClickListener() {

@@ -777,6 +777,11 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun updateRelatedPostsUiState(sourcePost: ReaderPost, state: FetchRelatedPostsState.Success) {
+        // The displayed post can have been replaced while the request was in flight - a tapped
+        // related post, or back out of one. These cards belong to the post that asked for them,
+        // and their clicks are tracked against it, so they must not land on a different post.
+        if (sourcePost.blogId != post?.blogId || sourcePost.postId != post?.postId) return
+
         (_uiState.value as? ReaderPostDetailsUiState)?.let {
             _uiState.value = it.copy(
                 localRelatedPosts = convertRelatedPostsToUiState(

@@ -157,6 +157,9 @@ buildCache {
                 password = gradle.ext.secretProperties.get('gradleCacheNodePassword')
             }
         }
+
+        // With the remote cache in place, storing outputs locally costs more than the rare local hits give back
+        local.enabled = false
     } else {
         logger.warn("\nℹ️ Remote build cache is disabled. If you have stable internet connection, consider enabling it via `developer.properties`.")
     }

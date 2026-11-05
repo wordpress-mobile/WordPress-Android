@@ -3307,6 +3307,12 @@
         in this state. Remove all failed uploads and continue?</string>
     <string name="editor_toast_uploading_please_wait">You are currently uploading media. Please wait until this completes.</string>
     <string name="editor_remove_failed_uploads">Remove failed uploads</string>
+    <string name="editor_saving_locked_title">Your post isn\'t ready yet</string>
+    <string name="editor_saving_locked_save_message">Something in the editor, like a media upload, is still in progress. If you continue, it may be missing or broken in your post.</string>
+    <string name="editor_saving_locked_leave_message">If you leave now, anything still in progress, like a media upload, stops and may be missing or broken in your post.</string>
+    <string name="editor_saving_locked_keep_editing">Keep editing</string>
+    <string name="editor_saving_locked_continue">Continue</string>
+    <string name="editor_saving_locked_leave">Leave</string>
     <string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
 
     <string name="photo_picker_title">Choose photo</string>
