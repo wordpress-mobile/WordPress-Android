@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.reader.repository
 
+import com.android.volley.Request
+import com.android.volley.RequestQueue
 import com.wordpress.rest.RestRequest
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineDispatcher
@@ -59,6 +61,9 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
     private val runningUpdates = mutableMapOf<UpdateTask, Deferred<Boolean>>()
     private val staleUpdates = mutableSetOf<UpdateTask>()
 
+    // the number of tags responses saved, so a tag action can tell whether one was saved while it ran
+    private var tagsResponsesSaved = 0
+
     fun update(tasks: Set<UpdateTask>) {
         // tags go first (they're first in UpdateTask) since without them the Reader can't show anything
         tasks.sorted().forEach { start(it) }
@@ -104,6 +109,7 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
     private suspend fun awaitTagAction(
         start: (ReaderActions.ActionListener, Boolean) -> Boolean
     ): Boolean = launchInAppScope {
+        val savedBefore = synchronized(updateLock) { tagsResponsesSaved }
         var started = true
         val succeeded = suspendCancellableCoroutine { continuation ->
             val listener = ReaderActions.ActionListener { succeeded ->
@@ -113,8 +119,13 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
             if (!started && continuation.isActive) continuation.resume(false)
         }
         if (started) {
-            // a tags update that's running may have been sent before this change reached the server
-            markStale(UpdateTask.TAGS)
+            // a tags response that's on its way, or that was saved while this action ran, may have been sent
+            // before this change reached the server and so may have undone it locally, so the tags are fetched
+            // again now that the server has it
+            val isOverlapped = synchronized(updateLock) {
+                UpdateTask.TAGS in runningUpdates || tagsResponsesSaved != savedBefore
+            }
+            if (isOverlapped) start(UpdateTask.TAGS)
             // a failed action is reverted locally, so it's a change too
             _events.emit(ReaderTagsAndSitesEvent.FollowedTagsChanged(ReaderTagTable.getFollowedTags().size, true))
         }
@@ -146,7 +157,7 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
                 do {
                     synchronized(updateLock) { staleUpdates -= task }
                     response = fetch()
-                } while (!endIfCurrent(task))
+                } while (!endIfCurrent(task, willSave = response != null))
                 response?.let { save(it) }
                 result.complete(response != null)
             }
@@ -156,12 +167,13 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
     /*
      * ends the running request for [task] and returns true, or returns false if it was marked stale
      */
-    private fun endIfCurrent(task: UpdateTask): Boolean = synchronized(updateLock) {
-        (task !in staleUpdates).also { isCurrent -> if (isCurrent) runningUpdates.remove(task) }
-    }
-
-    private fun markStale(task: UpdateTask) = synchronized(updateLock) {
-        if (task in runningUpdates) staleUpdates += task
+    private fun endIfCurrent(task: UpdateTask, willSave: Boolean): Boolean = synchronized(updateLock) {
+        (task !in staleUpdates).also { isCurrent ->
+            if (isCurrent) {
+                runningUpdates.remove(task)
+                if (willSave && task == UpdateTask.TAGS) tagsResponsesSaved++
+            }
+        }
     }
 
     /*
@@ -286,18 +298,35 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
     }
 
     /*
-     * runs a Volley request and returns its response, or null if it failed
+     * runs a Volley request and returns its response, or null if it failed or was cancelled
      */
     private suspend fun request(
-        start: (RestRequest.Listener, RestRequest.ErrorListener) -> Unit
-    ): JSONObject? = suspendCancellableCoroutine { continuation ->
-        start(
-            { json -> if (continuation.isActive) continuation.resume(json) },
-            { volleyError ->
-                AppLog.e(AppLog.T.READER, volleyError)
-                if (continuation.isActive) continuation.resume(null)
+        start: (RestRequest.Listener, RestRequest.ErrorListener) -> Request<*>
+    ): JSONObject? {
+        val queue = WordPress.requestQueue
+        var cancelListener: RequestQueue.RequestEventListener? = null
+        try {
+            return suspendCancellableCoroutine { continuation ->
+                val request = start(
+                    { json -> if (continuation.isActive) continuation.resume(json) },
+                    { volleyError ->
+                        AppLog.e(AppLog.T.READER, volleyError)
+                        if (continuation.isActive) continuation.resume(null)
+                    }
+                )
+                // Volley calls neither listener for a cancelled request (every request is cancelled at sign-out),
+                // so this watches for it finishing instead. Otherwise the update would never end, and every later
+                // one would join it.
+                cancelListener = RequestQueue.RequestEventListener { finished, event ->
+                    val isCancelled = finished === request && event == RequestQueue.RequestEvent.REQUEST_FINISHED &&
+                        finished.isCanceled
+                    if (isCancelled && continuation.isActive) continuation.resume(null)
+                }.also { queue?.addRequestEventListener(it) }
+                if (request.isCanceled && continuation.isActive) continuation.resume(null)
             }
-        )
+        } finally {
+            cancelListener?.let { queue?.removeRequestEventListener(it) }
+        }
     }
 
     private fun parseTags(json: JSONObject, name: String, tagType: ReaderTagType): ReaderTagList {

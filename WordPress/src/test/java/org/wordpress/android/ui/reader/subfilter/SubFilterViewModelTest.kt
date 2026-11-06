@@ -8,6 +8,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito.lenient
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
@@ -279,6 +280,9 @@ class SubFilterViewModelTest : BaseUnitTest() {
         account.userId = 100
         whenever(accountStore.account).thenReturn(account)
 
+        // so the update below is only skipped because nothing changed
+        lenient().whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+
         viewModel.onUserComesToReader()
 
         verify(appPrefsWrapper, times(0)).setLastReaderKnownUserId(any())
@@ -294,6 +298,9 @@ class SubFilterViewModelTest : BaseUnitTest() {
         whenever(appPrefsWrapper.getLastReaderKnownUserId()).thenReturn(100)
         whenever(appPrefsWrapper.getLastReaderKnownAccessTokenStatus()).thenReturn(false)
         whenever(accountStore.hasAccessToken()).thenReturn(false)
+
+        // so the update below is only skipped because nothing changed
+        lenient().whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
         viewModel.onUserComesToReader()
 
@@ -382,6 +389,16 @@ class SubFilterViewModelTest : BaseUnitTest() {
         viewModel.getCurrentSubfilterValue().onClickAction!!.invoke(filter)
 
         assertThat(uiState).isInstanceOf(BottomSheetHidden::class.java)
+    }
+
+    @Test
+    fun `tags and sites aren't updated without a connection`() {
+        mockReaderTableEmpty()
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        viewModel.onSubFiltersListButtonClicked(SubfilterCategory.SITES)
+
+        verify(tagsAndSitesUpdater, never()).update(any())
     }
 
     @Test
