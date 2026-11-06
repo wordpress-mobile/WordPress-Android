@@ -55,6 +55,10 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
     private val _events = MutableSharedFlow<ReaderTagsAndSitesEvent>(extraBufferCapacity = EVENT_BUFFER)
     val events: SharedFlow<ReaderTagsAndSitesEvent> = _events.asSharedFlow()
 
+    private val updateLock = Any()
+    private val runningUpdates = mutableMapOf<UpdateTask, Deferred<Boolean>>()
+    private val staleUpdates = mutableSetOf<UpdateTask>()
+
     fun update(tasks: Set<UpdateTask>) {
         // tags go first (they're first in UpdateTask) since without them the Reader can't show anything
         tasks.sorted().forEach { start(it) }
@@ -108,20 +112,54 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
                 continuation.resume(false)
             }
         }
+        // a tags update that's running may have been sent before this change reached the server
+        markStale(UpdateTask.TAGS)
         // a failed action is reverted locally, so it's a change too
         _events.emit(ReaderTagsAndSitesEvent.FollowedTagsChanged(ReaderTagTable.getFollowedTags().size, true))
         succeeded
     }.await()
 
-    /*
-     * always sends a new request, since one that's already running may have been sent before a change the
-     * caller wants reflected
-     */
-    private fun start(task: UpdateTask): Deferred<Boolean> = launchInAppScope {
-        when (task) {
-            UpdateTask.TAGS -> requestTags()
-            UpdateTask.FOLLOWED_BLOGS -> requestFollowedBlogs()
+    private fun start(task: UpdateTask): Deferred<Boolean> = when (task) {
+        UpdateTask.TAGS -> start(task, ::fetchTags, ::saveTags)
+        UpdateTask.FOLLOWED_BLOGS -> start(task, ::fetchFollowedBlogs) { (blogs, total) ->
+            saveFollowedBlogs(blogs, total)
         }
+    }
+
+    /*
+     * runs one request per task at a time. Asking for an update while one is running joins it but marks it
+     * stale, since it may have been sent before a change the caller wants reflected, so its response is
+     * dropped and the request is sent again. Without this, an older response could undo a newer change.
+     */
+    private fun <T : Any> start(
+        task: UpdateTask,
+        fetch: suspend () -> T?,
+        save: suspend (T) -> Unit
+    ): Deferred<Boolean> = synchronized(updateLock) {
+        runningUpdates[task]?.also { staleUpdates += task } ?: CompletableDeferred<Boolean>().also { result ->
+            runningUpdates[task] = result
+            // launch rather than async so an exception crashes the app, as the update service did
+            applicationScope.launch(ioDispatcher) {
+                var response: T?
+                do {
+                    synchronized(updateLock) { staleUpdates -= task }
+                    response = fetch()
+                } while (!endIfCurrent(task))
+                response?.let { save(it) }
+                result.complete(response != null)
+            }
+        }
+    }
+
+    /*
+     * ends the running request for [task] and returns true, or returns false if it was marked stale
+     */
+    private fun endIfCurrent(task: UpdateTask): Boolean = synchronized(updateLock) {
+        (task !in staleUpdates).also { isCurrent -> if (isCurrent) runningUpdates.remove(task) }
+    }
+
+    private fun markStale(task: UpdateTask) = synchronized(updateLock) {
+        if (task in runningUpdates) staleUpdates += task
     }
 
     /*
@@ -134,17 +172,18 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
         }
 
     /*
-     * updates the tags the user follows - this also handles the default tags (such as Discover) since
-     * they're included in the response
+     * requests the tags the user follows - the response also includes the default tags (such as Discover)
      */
-    private suspend fun requestTags(): Boolean {
+    private suspend fun fetchTags(): JSONObject? {
         AppLog.d(AppLog.T.READER, "reader updater > updating tags")
         val params = mapOf("locale" to perAppLocaleManager.getCurrentLocaleLanguageCode())
-        val json = request { listener, errorListener ->
+        return request { listener, errorListener ->
             clientUtilsProvider.getRestClientForTagUpdate()
                 .getWithLocale("read/menu", params, null, listener, errorListener)
-        } ?: return false
+        }
+    }
 
+    private suspend fun saveTags(json: JSONObject) {
         val serverTopics = ReaderTagList()
         serverTopics.addAll(parseTags(json, "default", ReaderTagType.DEFAULT))
         updateDisplayNames(serverTopics)
@@ -185,7 +224,6 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
         }
         _events.emit(ReaderTagsAndSitesEvent.FollowedTagsChanged(ReaderTagTable.getFollowedTags().size, didChange))
         AppPrefs.setReaderTagsUpdatedTimestamp(System.currentTimeMillis())
-        return true
     }
 
     /*
@@ -203,9 +241,9 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
     }
 
     /*
-     * requests every page of the sites the user follows, then saves them if they changed
+     * requests every page of the sites the user follows and returns them with the total number of sites
      */
-    private suspend fun requestFollowedBlogs(): Boolean {
+    private suspend fun fetchFollowedBlogs(): Pair<ReaderBlogList, Int>? {
         val serverBlogs = ReaderBlogList()
         var page = 1
         while (true) {
@@ -214,7 +252,7 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
             val path = "read/following/mine?number=100&page=$page&meta=site%2Cfeed"
             val json = request { listener, errorListener ->
                 WordPress.getRestClientUtilsV1_2().getWithLocale(path, listener, errorListener)
-            } ?: return false
+            } ?: return null
 
             // under rare circumstances the server returns duplicates
             serverBlogs.addAll(ReaderBlogList.fromJson(json).distinctBy { it.blogId })
@@ -223,8 +261,7 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
             if (json.optInt("number", 0) > MIN_SITES_FOR_NEXT_PAGE) {
                 page = json.optInt("page", 1) + 1
             } else {
-                saveFollowedBlogs(serverBlogs, json.optInt("total_subscriptions", 0))
-                return true
+                return serverBlogs to json.optInt("total_subscriptions", 0)
             }
         }
     }
