@@ -233,8 +233,10 @@ class AppInitializer @Inject constructor(
     @Inject
     lateinit var wpApiClientProvider: WpApiClientProvider
 
+    // Lazy so the wordpress-rs native library isn't loaded on the main thread during every process start
+    // (SiteProvisioningSource -> WpLoginClient -> UniffiLib), which showed up as startup ANRs. Only sign-out uses it.
     @Inject
-    lateinit var siteProvisioningSource: SiteProvisioningSource
+    lateinit var siteProvisioningSource: dagger.Lazy<SiteProvisioningSource>
 
     @Inject
     lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
@@ -749,7 +751,7 @@ class AppInitializer @Inject constructor(
         wpApiClientProvider.clearAllClients()
 
         // Drop per-site provisioning + capability state for the signed-out user
-        siteProvisioningSource.clear()
+        siteProvisioningSource.get().clear()
     }
 
     /*
