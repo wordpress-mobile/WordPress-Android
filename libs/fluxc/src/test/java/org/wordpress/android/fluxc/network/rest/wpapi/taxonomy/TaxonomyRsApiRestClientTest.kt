@@ -17,9 +17,11 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argThat
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
@@ -49,6 +51,7 @@ import uniffi.wp_api.TermsRequestListWithViewContextResponse
 import uniffi.wp_api.UniffiWpApiClient
 import uniffi.wp_api.TermsRequestUpdateResponse
 import uniffi.wp_api.TaxonomyType
+import uniffi.wp_api.TermCreateParams
 import uniffi.wp_api.TermListParams
 import uniffi.wp_api.WpErrorCode
 import uniffi.wp_api.WpNetworkHeaderMap
@@ -914,6 +917,384 @@ class TaxonomyRsApiRestClientTest {
         assertNotNull(payload.error)
         assertEquals(TaxonomyErrorType.GENERIC_ERROR, payload.error?.type)
     }
+
+    /**
+     * The post REST client needs tag *ids*, but PostModel (and XML-RPC before it) carries tag
+     * *names*, so these cover the name/id translation it depends on.
+     */
+    @Test
+    fun `resolveTagIds returns the id of an exactly matching tag without creating one`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), any()) } doReturn
+                    listResponse(listOf(term(5L, "newsletter"), term(9L, "News")))
+        }
+        driveRequestsThrough(termsExecutor)
+
+        val resolution = taxonomyClient.resolveTagIds(testSite, listOf("news"))
+
+        assertEquals(listOf(9L), resolution.ids)
+        assertTrue(resolution.complete)
+        verifyBlocking(termsExecutor, never()) { create(any(), any()) }
+    }
+
+    /**
+     * WordPress stores a term name HTML-encoded (`pre_term_name` runs `_wp_specialchars`), so
+     * `search` has to carry the encoded form or the `LIKE` matches nothing, and the comparison has
+     * to decode before matching. Without both, a tag like `AT&T` is looked for in vain on every
+     * save, re-created, refused as `term_exists`, and then dropped from the post.
+     */
+    @Test
+    fun `resolveTagIds matches a tag whose name the site stores HTML-encoded`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), any()) } doReturn listResponse(listOf(term(9L, "AT&amp;T")))
+        }
+        driveRequestsThrough(termsExecutor)
+
+        val ids = taxonomyClient.resolveTagIds(testSite, listOf("AT&T")).ids
+
+        assertEquals(listOf(9L), ids)
+        verifyBlocking(termsExecutor) {
+            listWithViewContext(TermEndpointType.Tags, TermListParams(search = "AT&amp;T", perPage = 100u))
+        }
+        verifyBlocking(termsExecutor, never()) { create(any(), any()) }
+    }
+
+    @Test
+    fun `resolveTagIds creates a tag when only a substring of the name matches`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), any()) } doReturn listResponse(listOf(term(5L, "newsletter")))
+            onBlocking { create(any(), any()) } doReturn createResponse(term(31L, "news"))
+        }
+        driveRequestsThrough(termsExecutor)
+
+        val ids = taxonomyClient.resolveTagIds(testSite, listOf("news")).ids
+
+        assertEquals(listOf(31L), ids)
+        verifyBlocking(termsExecutor) { create(TermEndpointType.Tags, TermCreateParams(name = "news")) }
+    }
+
+    /**
+     * `wp_insert_term` refuses a name it already holds, case-insensitively, after WordPress has
+     * normalised what was submitted - so a name the single-page `search` missed can still come
+     * back as `term_exists`. The error carries the existing id, so reading it keeps the tag on the
+     * post instead of dropping it. This is a name conflict, not a slug conflict.
+     */
+    @Test
+    fun `resolveTagIds recovers the id a term_exists error carries`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), any()) } doReturn listResponse(emptyList())
+            onBlocking { create(any(), any()) } doReturn createResponse(term(99L, "news"))
+        }
+        driveRequestsThrough(termsExecutor, failingRequest = 2, error = termExistsError(termId = 42L))
+
+        val resolution = taxonomyClient.resolveTagIds(testSite, listOf("news"))
+
+        // 42 is only in the error body; 99 is the response the create would have returned, so this
+        // also pins that the failing request really was the create.
+        assertEquals(listOf(42L), resolution.ids)
+        assertTrue(resolution.complete)
+        verifyBlocking(termsExecutor) { create(TermEndpointType.Tags, TermCreateParams(name = "news")) }
+    }
+
+    /**
+     * Only `term_exists` carries an id to recover, however term-id-shaped another error's data
+     * happens to look.
+     */
+    @Test
+    fun `resolveTagIds does not read an id out of an unrelated error`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), any()) } doReturn listResponse(emptyList())
+            onBlocking { create(any(), any()) } doReturn createResponse(term(99L, "news"))
+        }
+        driveRequestsThrough(
+            termsExecutor,
+            failingRequest = 2,
+            error = WpRequestResult.WpError(
+                errorCode = WpErrorCode.CannotCreate(),
+                errorMessage = "Sorry, you are not allowed to create terms in this taxonomy.",
+                statusCode = 403u,
+                response = """{"code":"rest_cannot_create","message":"not allowed",""" +
+                        """"data":{"status":403,"term_id":42}}""",
+                requestUrl = "",
+                requestMethod = RequestMethod.POST
+            )
+        )
+
+        val resolution = taxonomyClient.resolveTagIds(testSite, listOf("news"))
+
+        assertTrue(resolution.ids.isEmpty())
+    }
+
+    /**
+     * A create the site turns down on permissions - an Author, say, whose role has no
+     * `manage_categories` - is as resolved as that name is ever going to get. Holding the whole
+     * tag set back for it would throw away every other tag edit in the save, and in every save
+     * after it, so only the refused name is dropped.
+     */
+    @Test
+    fun `a name the site refuses to create is dropped without blocking the other tags`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), argThat { search == "news" }) } doReturn
+                    listResponse(listOf(term(9L, "news")))
+            onBlocking { listWithViewContext(any(), argThat { search == "new-tag" }) } doReturn
+                    listResponse(emptyList())
+            onBlocking { create(any(), any()) } doReturn createResponse(term(31L, "new-tag"))
+        }
+        driveRequestsThrough(
+            termsExecutor,
+            failingRequest = 3,
+            error = WpRequestResult.WpError(
+                errorCode = WpErrorCode.CannotCreate(),
+                errorMessage = "Sorry, you are not allowed to create terms in this taxonomy.",
+                statusCode = 403u,
+                response = """{"code":"rest_cannot_create","message":"not allowed","data":{"status":403}}""",
+                requestUrl = "",
+                requestMethod = RequestMethod.POST
+            )
+        )
+
+        val resolution = taxonomyClient.resolveTagIds(testSite, listOf("news", "new-tag"))
+
+        // Only the found tag: 31 is what the create would have returned, so its absence pins that
+        // the request the 403 answered really was the create.
+        assertEquals(listOf(9L), resolution.ids)
+        assertTrue(resolution.complete)
+        verifyBlocking(termsExecutor) { create(TermEndpointType.Tags, TermCreateParams(name = "new-tag")) }
+    }
+
+    /**
+     * A lookup that never got an answer says nothing about whether the site has the tag, so
+     * creating one would be as likely to duplicate a tag it already holds as to add a missing
+     * one - and a duplicate is a second tag the author never asked for, on a site they may share.
+     */
+    @Test
+    fun `resolveTagIds does not create a tag when the lookup itself failed`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), any()) } doReturn listResponse(emptyList())
+            onBlocking { create(any(), any()) } doReturn createResponse(term(31L, "news"))
+        }
+        driveRequestsThrough(
+            termsExecutor,
+            failingRequest = 1,
+            error = WpRequestResult.WpError(
+                errorCode = WpErrorCode.CustomException("http_request_failed"),
+                errorMessage = "cURL error 28: Operation timed out",
+                statusCode = 500u,
+                response = "",
+                requestUrl = "",
+                requestMethod = RequestMethod.GET
+            )
+        )
+
+        val resolution = taxonomyClient.resolveTagIds(testSite, listOf("news"))
+
+        assertTrue(resolution.ids.isEmpty())
+        // Unresolved, not refused: an update has to leave the site's tags alone until a retry
+        // either finds the tag or settles that it is not there.
+        assertFalse(resolution.complete)
+        verifyBlocking(termsExecutor, never()) { create(any(), any()) }
+    }
+
+    @Test
+    fun `resolveTagIds trims blank names and keeps each name once`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), any()) } doReturn listResponse(listOf(term(9L, "news")))
+        }
+        driveRequestsThrough(termsExecutor)
+
+        val ids = taxonomyClient.resolveTagIds(testSite, listOf(" news ", "", "news", "   ")).ids
+
+        assertEquals(listOf(9L), ids)
+        verifyBlocking(termsExecutor, times(1)) { listWithViewContext(any(), any()) }
+    }
+
+    /**
+     * Losing one tag is a better outcome than losing the post edit that carried it.
+     */
+    @Test
+    fun `resolveTagIds drops a name it can neither find nor create`() = runTest {
+        whenever(wpApiClient.request<Any>(any())).thenReturn(
+            WpRequestResult.UnknownError(
+                statusCode = 500u,
+                response = "Internal Server Error",
+                requestUrl = "",
+                requestMethod = RequestMethod.GET
+            )
+        )
+
+        assertTrue(taxonomyClient.resolveTagIds(testSite, listOf("news")).ids.isEmpty())
+    }
+
+    /**
+     * The ids on their own cannot say a name was dropped, and the post client has to know: wp/v2
+     * replaces a post's whole tag set, so sending a short list deletes the tags missing from it.
+     */
+    @Test
+    fun `resolveTagIds reports an incomplete resolution when a name is dropped`() = runTest {
+        whenever(wpApiClient.request<Any>(any())).thenReturn(
+            WpRequestResult.UnknownError(
+                statusCode = 500u,
+                response = "Internal Server Error",
+                requestUrl = "",
+                requestMethod = RequestMethod.GET
+            )
+        )
+
+        assertFalse(taxonomyClient.resolveTagIds(testSite, listOf("news")).complete)
+    }
+
+    /**
+     * A partial list is indistinguishable from the real one, so returning one would have the
+     * caller store it and delete the names it is missing on the next save.
+     */
+    @Test
+    fun `resolveTagNames reports failure rather than the names it did read`() = runTest {
+        whenever(wpApiClient.request<Any>(any())).thenReturn(
+            WpRequestResult.UnknownError(
+                statusCode = 500u,
+                response = "Internal Server Error",
+                requestUrl = "",
+                requestMethod = RequestMethod.GET
+            )
+        )
+
+        assertNull(taxonomyClient.resolveTagNames(testSite, listOf(7L, 3L)))
+    }
+
+    /**
+     * The decoded name is what the tag picker shows and what [resolveTagIds] expects back, so
+     * storing the encoded form on the PostModel would re-encode it on the next save.
+     */
+    @Test
+    fun `resolveTagNames decodes a name the site stores HTML-encoded`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), any()) } doReturn listResponse(listOf(term(9L, "AT&amp;T")))
+        }
+        driveRequestsThrough(termsExecutor)
+
+        assertEquals(listOf("AT&T"), taxonomyClient.resolveTagNames(testSite, listOf(9L)))
+    }
+
+    @Test
+    fun `resolveTagNames returns the names in the order the ids were given`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), any()) } doReturn
+                    listResponse(listOf(term(3L, "beta"), term(7L, "alpha")))
+        }
+        driveRequestsThrough(termsExecutor)
+
+        assertEquals(listOf("alpha", "beta"), taxonomyClient.resolveTagNames(testSite, listOf(7L, 3L)))
+    }
+
+    @Test
+    fun `resolveTagNames drops an id the site no longer has`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), any()) } doReturn listResponse(listOf(term(7L, "alpha")))
+        }
+        driveRequestsThrough(termsExecutor)
+
+        assertEquals(listOf("alpha"), taxonomyClient.resolveTagNames(testSite, listOf(7L, 3L)))
+    }
+
+    /**
+     * The REST API caps how many terms one page returns, so a post carrying more than a page of
+     * tags would otherwise lose every name past the first page (the same trap as CMM-2122).
+     */
+    @Test
+    fun `resolveTagNames follows pagination`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), any()) }.doReturn(
+                listResponse(listOf(term(7L, "alpha")), nextPageParams = TermListParams(page = 2u)),
+                listResponse(listOf(term(3L, "beta")))
+            )
+        }
+        driveRequestsThrough(termsExecutor)
+
+        assertEquals(listOf("alpha", "beta"), taxonomyClient.resolveTagNames(testSite, listOf(7L, 3L)))
+        verifyBlocking(termsExecutor, times(2)) { listWithViewContext(any(), any()) }
+    }
+
+    @Test
+    fun `resolveTagNames asks for nothing when there are no ids`() = runTest {
+        assertEquals(emptyList<String>(), taxonomyClient.resolveTagNames(testSite, emptyList()))
+        verifyBlocking(wpApiClient, never()) { request<Any>(any()) }
+    }
+
+    /**
+     * Runs the client's request lambdas against [termsExecutor] instead of stubbing `request`
+     * wholesale, so the params the client builds are observable.
+     */
+    private suspend fun driveRequestsThrough(termsExecutor: TermsRequestExecutor) {
+        val uniffiClient = mock<UniffiWpApiClient> { on { terms() } doReturn termsExecutor }
+        whenever(wpApiClient.request<Any>(any())).doSuspendableAnswer { invocation ->
+            val executeRequest = invocation.getArgument<suspend (UniffiWpApiClient) -> Any>(0)
+            WpRequestResult.Success(response = executeRequest(uniffiClient))
+        }
+    }
+
+    /**
+     * As [driveRequestsThrough], but the [failingRequest]th request comes back as [error] while
+     * still being run against the executor - so a test can fail one specific request and still
+     * assert, with `verifyBlocking`, which request that was. Positional stubbing alone cannot:
+     * it would keep passing if another request were ever added ahead of the one under test.
+     */
+    private suspend fun driveRequestsThrough(
+        termsExecutor: TermsRequestExecutor,
+        failingRequest: Int,
+        error: WpRequestResult<Any>
+    ) {
+        val uniffiClient = mock<UniffiWpApiClient> { on { terms() } doReturn termsExecutor }
+        var requests = 0
+        whenever(wpApiClient.request<Any>(any())).doSuspendableAnswer { invocation ->
+            requests++
+            val executeRequest = invocation.getArgument<suspend (UniffiWpApiClient) -> Any>(0)
+            val response = executeRequest(uniffiClient)
+            if (requests == failingRequest) error else WpRequestResult.Success(response)
+        }
+    }
+
+    /** The shape WordPress answers a create for a name it already holds with. */
+    private fun termExistsError(termId: Long) = WpRequestResult.WpError<Any>(
+        errorCode = WpErrorCode.CustomException("term_exists"),
+        errorMessage = "A term with the name provided already exists in this taxonomy.",
+        statusCode = 400u,
+        response = """{"code":"term_exists","message":"A term with the name provided already """ +
+                """exists in this taxonomy.","data":{"status":400,"term_id":$termId},""" +
+                """"additional_data":[$termId,$termId]}""",
+        requestUrl = "",
+        requestMethod = RequestMethod.POST
+    )
+
+    private fun listResponse(
+        terms: List<AnyTermWithViewContext>,
+        nextPageParams: TermListParams? = null
+    ) = TermsRequestListWithViewContextResponse(terms, mock<WpNetworkHeaderMap>(), nextPageParams, null)
+
+    private fun createResponse(term: AnyTermWithViewContext) =
+        TermsRequestCreateResponse(
+            AnyTermWithEditContext(
+                id = term.id,
+                count = term.count,
+                description = term.description,
+                link = term.link,
+                name = term.name,
+                slug = term.slug,
+                taxonomy = TaxonomyType.PostTag,
+                parent = term.parent
+            ),
+            mock<WpNetworkHeaderMap>()
+        )
+
+    private fun term(id: Long, name: String) = AnyTermWithViewContext(
+        id = id,
+        count = 0L,
+        description = "",
+        link = "https://example.com/tag/$name",
+        name = name,
+        slug = name,
+        taxonomy = TaxonomyType.PostTag,
+        parent = 0L
+    )
 
     private fun createListResponse(
         terms: List<AnyTermWithViewContext>,

@@ -20,7 +20,6 @@ import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener
 import org.wordpress.android.ui.reader.repository.usecases.ParseDiscoverCardsJsonUseCase
 import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
 import org.wordpress.android.ui.reader.sources.ReaderPostLocalSource
 import org.wordpress.android.util.PerAppLocaleManager
 
@@ -56,7 +55,7 @@ class ReaderPostRepositoryTest : BaseUnitTest() {
 
         repository.requestPostsWithTag(
             recommendedTag(),
-            ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER,
+            UpdateAction.REQUEST_OLDER,
             listener,
         )
         advanceUntilIdle()
@@ -77,7 +76,7 @@ class ReaderPostRepositoryTest : BaseUnitTest() {
 
         repository.requestPostsWithTag(
             recommendedTag(),
-            ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER,
+            UpdateAction.REQUEST_OLDER,
             listener,
         )
         advanceUntilIdle()
@@ -88,13 +87,13 @@ class ReaderPostRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `given tag slug with path and query characters, when building tag endpoint, then it stays on tag posts`() {
-        val expected = ReaderPostRepository.formatFullEndpointForTag("dogs").toHttpUrl()
+        val expected = ReaderPostRepository.formatFullEndpointForTag("dogs")!!.toHttpUrl()
         listOf(
             "../../me?x=1#",
             "..%2F..%2Fme%3Fx%3D1%23",
             "%2e%2e/%2e%2e/me?x=1#"
         ).forEach { slug ->
-            val url = ReaderPostRepository.formatFullEndpointForTag(slug).toHttpUrl()
+            val url = ReaderPostRepository.formatFullEndpointForTag(slug)!!.toHttpUrl()
             val segments = url.encodedPathSegments.toMutableList()
             if (segments.size == expected.encodedPathSegments.size) segments[segments.size - 2] = "dogs"
 

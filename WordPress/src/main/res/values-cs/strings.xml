@@ -2009,7 +2009,6 @@ Language: cs_CZ
     <string name="reader_choose_interests_tags_content_description">Vyberte své štítky</string>
     <string name="status_and_visibility">Stav &amp; Viditelnost</string>
     <string name="update_now">Aktualizovat nyní</string>
-    <string name="ccpa_privacy_notice_header">Oznámení o ochraně osobních údajů pro uživatele Kalifornie</string>
     <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Otevřete nabídku blokovat akce</string>
     <string name="gutenberg_native_move_to_top" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Přesunout nahoru</string>
@@ -2720,11 +2719,8 @@ Language: cs_CZ
     <string name="activity_log">Activity Log</string>
     <string name="privacy_policy_read">Přečtěte si zásady ochrany soukromí</string>
     <string name="third_party_policy_learn_more_caption">Používáme další nástroje pro měření, včetně některých nástrojů od třetích stran. Přečtěte si více o těchto nástrojích a jak je ovládat.</string>
-    <string name="third_party_policy_learn_more_header">Zásady třetích stran</string>
     <string name="privacy_policy_learn_more_caption">Tyto informace nám pomáhají vylepšovat naše produkty, činit marketing relevantnějším, zlepšit zkušenosti se službou WordPress.com a podrobněji popsané v našich zásadách ochrany osobních údajů.</string>
-    <string name="privacy_policy_learn_more_header">Zásady ochrany osobních údajů</string>
     <string name="cookie_policy_learn_more_caption">Sdílejte informace o využívání služeb s našim analytickým nástrojem jak využíváte naše služby</string>
-    <string name="cookie_policy_learn_more_header">Cookie Policy</string>
     <string name="preference_privacy_settings">Nastavení ochrany osobních údajů</string>
     <string name="preference_collect_information">Sbírat informace</string>
     <string name="reader_btn_blog_notifications_on">Zapnout oznámení blogu</string>
@@ -3120,8 +3116,6 @@ Language: cs_CZ
     <string name="media_images">Obrázky</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s byl odepřen přístup k vašim fotografiím. Chcete-li to vyřešit, upravte oprávnění a zapněte %2$s.</string>
     <string name="reader_view_comments">Zobrazit komentáře</string>
-    <string name="site_settings_video_quality_hint">Kvalita videí. Vyšší hodnoty znamenají lepší kvalitu videí.</string>
-    <string name="site_settings_video_width_hint">Změní velikost videí v příspěvcích na tuto velikost</string>
     <string name="site_settings_optimize_video_summary">Povolit změnu velikosti a kompresi videí</string>
     <string name="site_settings_optimize_videos">Optimalizovat videa</string>
     <string name="video_quality">Kvalita videa</string>
@@ -3205,7 +3199,6 @@ Language: cs_CZ
     <string name="photo_picker_title">Zvolit obrázek</string>
     <string name="error_publish_no_network">Zařízení je offline. Příspěvek byl uložen lokálně.</string>
     <string name="editor_post_saved_online">Příspěvek je uložený online</string>
-    <string name="site_settings_image_quality_hint">Kvalita obrázků. Vyšší hodnoty znamenají lepší kvalitu obrázků.</string>
     <string name="site_settings_optimize_images_summary">Povolit změnu velikosti a kompresi obrázků</string>
     <string name="media_encoder_quality_maximum">Maximální</string>
     <string name="media_encoder_quality_high">Vysoká</string>
@@ -3457,7 +3450,6 @@ Language: cs_CZ
     <string name="site_settings_discussion_hint">Prohlédněte a změňte si nastavení vašich webových diskusí</string>
     <string name="site_settings_more_hint">Zobrazit veškerá dostupná nastavení diskusí</string>
     <string name="site_settings_related_posts_hint">Zobrazte nebo skryjte podobné příspěvky ve čtečce</string>
-    <string name="site_settings_image_width_hint">Změní velikost obrázků v příspěvcích na tuto šířku</string>
     <string name="site_settings_format_hint">Nastaví nový formát příspěvku</string>
     <string name="site_settings_category_hint">Nastaví novou rubriku příspěvku</string>
     <string name="site_settings_password_hint">Změňte si své heslo</string>

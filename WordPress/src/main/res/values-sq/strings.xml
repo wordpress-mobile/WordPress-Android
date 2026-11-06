@@ -1977,7 +1977,6 @@ Language: sq_AL
     <string name="publish_date">Datë Botimi</string>
     <string name="ccpa_privacy_notice_read">Lexoni shënimin CCPA mbi privatësinë</string>
     <string name="ccpa_privacy_notice_caption">Ligji i Privatësisë së Konsumatorit në Kaliforni (\"CCPA\") kërkon prej nesh t’u japim banuesve në Kaliforni disa të dhëna shtesë rreth kategorive të të dhënave personale që grumbullojmë dhe ndajmë me të tjerë, prej nga i marrim këto të dhëna personale, dhe si dhe pse i përdorim.</string>
-    <string name="ccpa_privacy_notice_header">Shënim mbi privatësinë për përdorues në Kaliforni</string>
     <string name="status_and_visibility">Gjendje &amp; Dukshmëri</string>
     <string name="update_now">Përditësojeni Tani</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2692,11 +2691,8 @@ Language: sq_AL
     <string name="activity_log">Regjistër Veprimtarish</string>
     <string name="privacy_policy_read">Lexoni rregullat e privatësisë</string>
     <string name="third_party_policy_learn_more_caption">Përdorim mjete të tjera gjurmimi, përfshi disa të tillë nga palë të treta. Lexoni rreth tyre dhe se si t’i mbani nën kontroll.</string>
-    <string name="third_party_policy_learn_more_header">Rregulla Palësh të Treta</string>
     <string name="privacy_policy_learn_more_caption">Këto të dhëna na ndihmojnë të përmirësojmë produktet tona, ta bëjmë marketingun më specifik për ju, më personal punimin tuaj në WordPress.com, etj, siç përshkruhet hollësisht te rregullat tona mbi privatësinë.</string>
-    <string name="privacy_policy_learn_more_header">Rregulla Privatësie</string>
     <string name="cookie_policy_learn_more_caption">Ndani me mjetin tuaj të analizave të dhëna rreth përdorimit tuaj të shërbimeve, teksa jeni i futur në llogarinë tuaj WordPress.com.</string>
-    <string name="cookie_policy_learn_more_header">Rregulla mbi Cookie-t</string>
     <string name="preference_privacy_settings">Rregullime privatësie</string>
     <string name="preference_collect_information">Grumbullo të dhëna</string>
     <string name="post_submitted">Postimi u parashtrua</string>
@@ -3090,8 +3086,6 @@ Language: sq_AL
     <string name="media_all">Krejt</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s-it iu mohua hyrja te kartelat tuaja media. Që të ndreqet kjo, përpunoni lejet tuaj dhe aktivizoni %2$s.</string>
     <string name="reader_view_comments">Shihni komentet</string>
-    <string name="site_settings_video_quality_hint">Cilësi videosh. Vlera më të mëdha do të thotë cilësi më e lartë videosh.</string>
-    <string name="site_settings_video_width_hint">Ripërmason video në postime sa kjo madhësi</string>
     <string name="site_settings_optimize_video_summary">Aktivizojeni që të ripërmasohen dhe ngjeshen video</string>
     <string name="site_settings_optimize_videos">Optimizoni Video</string>
     <string name="draft_uploaded">Skica u ngarkua</string>
@@ -3175,7 +3169,6 @@ Language: sq_AL
     <string name="photo_picker_title">Zgjidhni foto</string>
     <string name="error_publish_no_network">Pajisja është e palidhur në internet. Postimi u ruajt lokalisht.</string>
     <string name="editor_post_saved_online">Postimi u ruajt në internet</string>
-    <string name="site_settings_image_quality_hint">Cilësi fotosh. Vlera më të mëdha do të thotë cilësi më e lartë fotosh.</string>
     <string name="site_settings_optimize_images_summary">Aktivizojeni që të ripërmasoni dhe ngjeshni foto</string>
     <string name="media_encoder_quality_maximum">Maksimum</string>
     <string name="media_encoder_quality_high">E lartë</string>
@@ -3427,7 +3420,6 @@ Language: sq_AL
     <string name="site_settings_discussion_hint">Shihni dhe ndryshoni rregullimet mbi diskutimet në sajtin tuaj</string>
     <string name="site_settings_more_hint">Shihni krejt rregullimet e mundshme për Diskutimet</string>
     <string name="site_settings_related_posts_hint">Shfaqni ose fshihni te lexuesi postime të afërta</string>
-    <string name="site_settings_image_width_hint">Figurat në postime ripërmasoji sa kjo gjerësi</string>
     <string name="site_settings_format_hint">Cakton format të ri postimesh</string>
     <string name="site_settings_category_hint">Cakton kategori të re postimesh</string>
     <string name="site_settings_password_hint">Ndryshoni fjalëkalimin tuaj</string>

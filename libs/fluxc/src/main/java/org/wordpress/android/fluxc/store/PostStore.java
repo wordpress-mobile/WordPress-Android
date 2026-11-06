@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 import com.wellsql.generated.PostModelTable;
 import com.yarolegovich.wellsql.SelectQuery;
@@ -43,6 +44,7 @@ import org.wordpress.android.fluxc.model.revisions.LocalRevisionModel;
 import org.wordpress.android.fluxc.model.revisions.RevisionModel;
 import org.wordpress.android.fluxc.model.revisions.RevisionsModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.rest.wpapi.post.PostRsApiRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRemoteAutoSaveModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
@@ -450,6 +452,7 @@ public class PostStore extends Store {
     }
 
     private final PostRestClient mPostRestClient;
+    private final PostRsApiRestClient mPostRsApiRestClient;
     private final PostXMLRPCClient mPostXMLRPCClient;
     private final PostSqlUtils mPostSqlUtils;
     // Ensures that the UploadStore is initialized whenever the PostStore is,
@@ -457,12 +460,50 @@ public class PostStore extends Store {
     @SuppressWarnings("unused")
     @Inject UploadStore mUploadStore;
 
-    @Inject public PostStore(Dispatcher dispatcher, PostRestClient postRestClient, PostXMLRPCClient postXMLRPCClient,
+    @Inject public PostStore(Dispatcher dispatcher, PostRestClient postRestClient,
+                     PostRsApiRestClient postRsApiRestClient, PostXMLRPCClient postXMLRPCClient,
                      PostSqlUtils postSqlUtils) {
         super(dispatcher);
         mPostRestClient = postRestClient;
+        mPostRsApiRestClient = postRsApiRestClient;
         mPostXMLRPCClient = postXMLRPCClient;
         mPostSqlUtils = postSqlUtils;
+    }
+
+    /**
+     * Identifies which network client should handle post requests for a given site.
+     */
+    public enum PostRestClientType {
+        WPCOM_REST,
+        SELF_HOSTED_RS,
+        XMLRPC
+    }
+
+    /**
+     * Resolves the network client to use for post requests for the given site.
+     *
+     * A self-hosted site holding application-password credentials talks to its own wp/v2 REST API
+     * rather than XML-RPC. Hosts that refuse password-authenticated API logins on xmlrpc.php - a
+     * 2FA plugin is the usual cause - accept the very same application password over REST, so the
+     * XML-RPC path leaves those sites unable to save a post at all (see CMM-2502). Media already
+     * routes this way, see {@link MediaStore#getMediaRestClientType(SiteModel)}.
+     *
+     * IMPORTANT: {@link SiteModel#isUsingWpComRestApi()} must be checked before
+     * {@link SiteModel#isUsingSelfHostedRestApi()}, for the same reason it is in MediaStore: a
+     * Jetpack-connected site can have Application Password credentials stored (e.g. auto-generated
+     * for taxonomies or navigation menus), which makes {@code isUsingSelfHostedRestApi()} return
+     * {@code true}. Such sites must still go through the WP.com REST API (the Jetpack tunnel)
+     * rather than talking to the self-hosted REST API directly (see CMM-2114).
+     */
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    public PostRestClientType getPostRestClientType(@NonNull SiteModel site) {
+        if (site.isUsingWpComRestApi()) {
+            return PostRestClientType.WPCOM_REST;
+        } else if (site.isUsingSelfHostedRestApi()) {
+            return PostRestClientType.SELF_HOSTED_RS;
+        } else {
+            return PostRestClientType.XMLRPC;
+        }
     }
 
     @Override
@@ -816,33 +857,50 @@ public class PostStore extends Store {
     private void deletePost(RemotePostPayload payload) {
         PostDeleteActionType postDeleteActionType = PostStatus.fromPost(payload.post) == PostStatus.TRASHED
                 ? PostDeleteActionType.DELETE : PostDeleteActionType.TRASH;
-        if (payload.site.isUsingWpComRestApi()) {
-            mPostRestClient.deletePost(payload.post, payload.site, postDeleteActionType);
-        } else {
-            // TODO: check for WP-REST-API plugin and use it here
-            mPostXMLRPCClient.deletePost(payload.post, payload.site, postDeleteActionType);
+        switch (getPostRestClientType(payload.site)) {
+            case WPCOM_REST:
+                mPostRestClient.deletePost(payload.post, payload.site, postDeleteActionType);
+                break;
+            case SELF_HOSTED_RS:
+                mPostRsApiRestClient.deletePost(payload.post, payload.site, postDeleteActionType);
+                break;
+            case XMLRPC:
+            default:
+                mPostXMLRPCClient.deletePost(payload.post, payload.site, postDeleteActionType);
+                break;
         }
     }
 
     private void handleRestorePost(RemotePostPayload payload) {
-        if (payload.site.isUsingWpComRestApi()) {
+        if (getPostRestClientType(payload.site) == PostRestClientType.WPCOM_REST) {
             mPostRestClient.restorePost(payload.post, payload.site);
+            return;
+        }
+        // Both self-hosted transports restore by writing the post back with a live status, so the
+        // trashed status has to be replaced first; WP.com has a dedicated restore endpoint instead.
+        PostModel postToRestore = payload.post;
+        if (PostStatus.fromPost(postToRestore) == PostStatus.TRASHED) {
+            postToRestore.setStatus(PostStatus.PUBLISHED.toString());
+        }
+        if (getPostRestClientType(payload.site) == PostRestClientType.SELF_HOSTED_RS) {
+            mPostRsApiRestClient.restorePost(postToRestore, payload.site);
         } else {
-            // TODO: check for WP-REST-API plugin and use it here
-            PostModel postToRestore = payload.post;
-            if (PostStatus.fromPost(postToRestore) == PostStatus.TRASHED) {
-                postToRestore.setStatus(PostStatus.PUBLISHED.toString());
-            }
             mPostXMLRPCClient.restorePost(postToRestore, payload.site);
         }
     }
 
     private void fetchPost(RemotePostPayload payload) {
-        if (payload.site.isUsingWpComRestApi()) {
-            mPostRestClient.fetchPost(payload.post, payload.site);
-        } else {
-            // TODO: check for WP-REST-API plugin and use it here
-            mPostXMLRPCClient.fetchPost(payload.post, payload.site);
+        switch (getPostRestClientType(payload.site)) {
+            case WPCOM_REST:
+                mPostRestClient.fetchPost(payload.post, payload.site);
+                break;
+            case SELF_HOSTED_RS:
+                mPostRsApiRestClient.fetchPost(payload.post, payload.site, PostAction.FETCH_POST);
+                break;
+            case XMLRPC:
+            default:
+                mPostXMLRPCClient.fetchPost(payload.post, payload.site);
+                break;
         }
     }
 
@@ -855,11 +913,17 @@ public class PostStore extends Store {
             mDispatcher.dispatch(PostActionBuilder.newFetchedPostStatusAction(responsePayload));
             return;
         }
-        if (payload.site.isUsingWpComRestApi()) {
-            mPostRestClient.fetchPostStatus(payload.post, payload.site);
-        } else {
-            // TODO: check for WP-REST-API plugin and use it here
-            mPostXMLRPCClient.fetchPostStatus(payload.post, payload.site);
+        switch (getPostRestClientType(payload.site)) {
+            case WPCOM_REST:
+                mPostRestClient.fetchPostStatus(payload.post, payload.site);
+                break;
+            case SELF_HOSTED_RS:
+                mPostRsApiRestClient.fetchPostStatus(payload.post, payload.site);
+                break;
+            case XMLRPC:
+            default:
+                mPostXMLRPCClient.fetchPostStatus(payload.post, payload.site);
+                break;
         }
     }
 
@@ -1094,9 +1158,10 @@ public class PostStore extends Store {
             onPostUploaded.error = payload.error;
             emitChange(onPostUploaded);
         } else {
-            if (payload.site.isUsingWpComRestApi()) {
-                // The WP.COM REST API response contains the modified post, so we're already in sync with the server
-                // All we need to do is store it and emit OnPostChanged
+            if (getPostRestClientType(payload.site) != PostRestClientType.XMLRPC) {
+                // Both REST APIs answer a new/edit post call with the modified post, so we're
+                // already in sync with the server. All we need to do is store it and emit
+                // OnPostChanged
                 updatePost(payload.post, false);
                 emitChange(new OnPostUploaded(payload.post, payload.isFirstTimePublish));
             } else {
@@ -1117,7 +1182,7 @@ public class PostStore extends Store {
             event.error = payload.error;
             emitChange(event);
         } else {
-            if (payload.site.isUsingWpComRestApi() || syncingNonWpComPost) {
+            if (getPostRestClientType(payload.site) != PostRestClientType.XMLRPC || syncingNonWpComPost) {
                 restorePost(payload.post);
             } else {
                 // XML-RPC responds to post restore request with status boolean
@@ -1130,7 +1195,7 @@ public class PostStore extends Store {
     }
 
     private void pushPost(RemotePostPayload payload) {
-        if (payload.site.isUsingWpComRestApi()) {
+        if (getPostRestClientType(payload.site) == PostRestClientType.WPCOM_REST) {
             mPostRestClient.pushPost(
                     payload.post,
                     payload.site,
@@ -1138,13 +1203,21 @@ public class PostStore extends Store {
                     payload.shouldSkipConflictResolutionCheck,
                     payload.lastModifiedForConflictResolution
             );
+            return;
+        }
+        PostModel postToPush = payload.post;
+        // empty status indicates that the post is new
+        if (TextUtils.isEmpty(postToPush.getStatus())) {
+            postToPush.setStatus(PostStatus.PUBLISHED.toString());
+        }
+        if (getPostRestClientType(payload.site) == PostRestClientType.SELF_HOSTED_RS) {
+            mPostRsApiRestClient.pushPost(
+                    postToPush,
+                    payload.site,
+                    payload.isFirstTimePublish,
+                    payload.shouldSkipConflictResolutionCheck,
+                    payload.lastModifiedForConflictResolution);
         } else {
-            // TODO: check for WP-REST-API plugin and use it here
-            PostModel postToPush = payload.post;
-            // empty status indicates that the post is new
-            if (TextUtils.isEmpty(postToPush.getStatus())) {
-                postToPush.setStatus(PostStatus.PUBLISHED.toString());
-            }
             mPostXMLRPCClient.pushPost(
                     postToPush,
                     payload.site,

@@ -2007,7 +2007,6 @@ Language: sv_SE
     <string name="publish_date">Publiceringsdatum</string>
     <string name="ccpa_privacy_notice_read">Läs CCPA-sekretessmeddelandet</string>
     <string name="ccpa_privacy_notice_caption">Enligt California Consumer Privacy Act (CCPA) måste vi delge boende i Kalifornien med viss ytterligare information om de kategorier av personuppgifter som vi samlar in och delar, var vi får de uppgifterna från samt hur och varför vi använder dem.</string>
-    <string name="ccpa_privacy_notice_header">Integritetsnotis för användare i Kalifornien</string>
     <string name="status_and_visibility">Status och synlighet</string>
     <string name="update_now">Uppdatera nu</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2722,11 +2721,8 @@ Language: sv_SE
     <string name="activity_log">Aktivitetslogg</string>
     <string name="privacy_policy_read">Läs integritetspolicy</string>
     <string name="third_party_policy_learn_more_caption">Vi använder spårningsverktyg, inklusive vissa från tredje part. Läs mer om dessa och hur du styr dem.</string>
-    <string name="third_party_policy_learn_more_header">Policyer från tredje part</string>
     <string name="privacy_policy_learn_more_caption">Denna information hjälper oss att förbättra våra produkter, visa dig marknadsinformation som är mer relevant, anpassa din upplevelse av WordPress.com och annat som finns beskrivet i vår integritetspolicy.</string>
-    <string name="privacy_policy_learn_more_header">Integritetspolicy</string>
     <string name="cookie_policy_learn_more_caption">Dela information till vårt analysverktyg om din användning av tjänster medan du är inloggad på ditt konto på WordPress.com.</string>
-    <string name="cookie_policy_learn_more_header">Cookie-policy</string>
     <string name="preference_privacy_settings">Integritetsinställningar</string>
     <string name="preference_collect_information">Samla in information</string>
     <string name="post_submitted">Inlägget har skickats</string>
@@ -3120,8 +3116,6 @@ Language: sv_SE
     <string name="media_all">Allt</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s nekades åtkomst till dina mediefiler. För att åtgärda detta, redigera dina behörigheter och aktivera %2$s.</string>
     <string name="reader_view_comments">Visa kommentarer</string>
-    <string name="site_settings_video_quality_hint">Videokvalitet. Högre värde innebär video med högre kvalitet.</string>
-    <string name="site_settings_video_width_hint">Ändrar storleken på videoklipp i inlägg till denna storlek</string>
     <string name="site_settings_optimize_video_summary">Aktivera för att storleksändra och komprimera videoklipp</string>
     <string name="site_settings_optimize_videos">Optimera videoklipp</string>
     <string name="draft_uploaded">Utkastet uppladdat</string>
@@ -3205,7 +3199,6 @@ Language: sv_SE
     <string name="photo_picker_title">Välj foto</string>
     <string name="error_publish_no_network">Enheten är offline. Inlägg sparad lokalt.</string>
     <string name="editor_post_saved_online">Inlägget har sparats on-line</string>
-    <string name="site_settings_image_quality_hint">Bildkvalitet. Ett högre värde innebär bilder med högre kvalitet.</string>
     <string name="site_settings_optimize_images_summary">Gör det möjligt att ändra storlek på och komprimera bildfiler</string>
     <string name="media_encoder_quality_maximum">Max</string>
     <string name="media_encoder_quality_high">Hög</string>
@@ -3457,7 +3450,6 @@ Language: sv_SE
     <string name="site_settings_discussion_hint">Visa och ändra dina webbplatsers diskussionsinställningar</string>
     <string name="site_settings_more_hint">Visa alla tillgängliga diskussionsinställningar</string>
     <string name="site_settings_related_posts_hint">Visa eller dölj relaterade inlägg i läsaren</string>
-    <string name="site_settings_image_width_hint">Ändrar bildstorlek i inlägg till denna bredd</string>
     <string name="site_settings_format_hint">Anger nytt inläggsformat</string>
     <string name="site_settings_category_hint">Anger ny inläggskategori</string>
     <string name="site_settings_password_hint">Ändra ditt lösenord</string>

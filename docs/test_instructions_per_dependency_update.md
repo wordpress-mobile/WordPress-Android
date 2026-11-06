@@ -173,7 +173,7 @@ rather than strict requirements.
 </details>
 
 <details>
-  <summary>2. [JP/WP] App Settings [AppSettingsFragment.java]</summary>
+  <summary>2. [JP/WP] App Settings [AppSettingsActivity.kt]</summary>
 
 - Go to `Me` tab.
 - Click on the `App Settings` button.

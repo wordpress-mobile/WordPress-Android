@@ -57,8 +57,12 @@ public class ReaderTagActions {
     }
 
     private static boolean deleteTagsLocallyAndRemotely(ActionListener actionListener, ReaderTag tag) {
-        final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getTagSlug());
-        final String path = "read/tags/" + tagNameForApi + "/mine/delete";
+        final String path = ReaderUtils.getTagApiPath(tag.getTagSlug(), "mine", "delete");
+        if (path == null) {
+            AppLog.w(T.READER, "delete tag failed, invalid tag slug");
+            ReaderActions.callActionListener(actionListener, false);
+            return false;
+        }
 
         com.wordpress.rest.RestRequest.Listener listener = jsonObject -> {
             AppLog.i(T.READER, "delete tag succeeded");
@@ -106,8 +110,8 @@ public class ReaderTagActions {
                                   final boolean isLoggedIn) {
         ReaderTagList newTags = new ReaderTagList();
         for (ReaderTag tag : tags) {
-            final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getTagSlug());
-            String endpoint = "/read/tags/" + tagNameForApi + "/posts";
+            final String path = ReaderUtils.getTagApiPath(tag.getTagSlug(), "posts");
+            String endpoint = path != null ? "/" + path : null;
 
             ReaderTag newTag = new ReaderTag(
                     tag.getTagSlug(),
