@@ -2007,7 +2007,6 @@ Language: ro
     <string name="ccpa_privacy_notice_caption">Legea privind confidențialitatea consumatorilor din California (CCPA) ne obligă să oferim rezidenților din California câteva informații suplimentare despre categoriile de informații cu caracter personal pe care le colectăm și le partajăm, de unde și cum obținem aceste informații cu caracter personal și de ce le folosim.</string>
     <string name="post_status_post_trashed">Aruncate la gunoi</string>
     <string name="reader_choose_interests_tags_content_description">Alege etichetele</string>
-    <string name="ccpa_privacy_notice_header">Notificări de confidențialitate pentru utilizatorii din California</string>
     <string name="status_and_visibility">Stare și vizibilitate</string>
     <string name="update_now">Actualizează acum</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2716,15 +2715,12 @@ Language: ro
     <string name="activity_log_jetpack_icon">Icon Jetpack</string>
     <string name="activity_log_event">Eveniment</string>
     <string name="privacy_policy_read">Citește politica de confidențialitate</string>
-    <string name="cookie_policy_learn_more_header">Politică cookie-uri</string>
-    <string name="privacy_policy_learn_more_header">Politică de confidențialitate</string>
     <string name="activity_log">Jurnal de activități</string>
     <string name="activity_log_icon">Icon activități</string>
     <string name="preference_collect_information">Colectează informații</string>
     <string name="reader_followed_blog_notifications">Activezi notificările pentru %1$s%2$s%3$s?</string>
     <string name="cookie_policy_learn_more_caption">Partajează informații cu instrumentul nostru de analitice despre utilizarea serviciilor în timp ce ești autentificat în contul tău WordPress.com.</string>
     <string name="third_party_policy_learn_more_caption">Folosim și alte instrumente de urmărire, inclusiv unele de la terți. Citește despre ele și despre cum le controlăm.</string>
-    <string name="third_party_policy_learn_more_header">Politică părți terțe</string>
     <string name="privacy_policy_learn_more_caption">Aceste informații ne ajută să ne îmbunătățim produsele, să facem un marketing mai relevant pentru tine, să-ți personalizăm experiența WordPress.com și altele, așa cum am detaliat în politica noastră de confidențialitate.</string>
     <string name="reader_btn_blog_notifications_on">Activează notificările pe blog</string>
     <string name="reader_btn_blog_notifications_off">Dezactivează notificările pe blog</string>
@@ -3120,8 +3116,6 @@ Language: ro
     <string name="media_all">Toată</string>
     <string name="media_picker_soft_ask_media_permissions_denied">Accesul la fișierele tale Media a fost refuzat pentru %1$s. Pentru a corecta asta, editează-ți permisiunile și activează %2$s.</string>
     <string name="reader_view_comments">Vezi comentariile</string>
-    <string name="site_settings_video_quality_hint">Calitatea videourilor. Valorile mai mari înseamnă videouri de calitate mai bună.</string>
-    <string name="site_settings_video_width_hint">Redimensionează videourile în articole la această dimensiune</string>
     <string name="site_settings_optimize_video_summary">Activează pentru a redimensiona și comprima videourile</string>
     <string name="site_settings_optimize_videos">Optimizează videourile</string>
     <string name="draft_uploaded">Ciornă încărcată</string>
@@ -3205,7 +3199,6 @@ Language: ro
     <string name="photo_picker_title">Alege fotografie</string>
     <string name="error_publish_no_network">Dispozitivul este offline. Articolul a fost salvat local.</string>
     <string name="editor_post_saved_online">Articol salvat online</string>
-    <string name="site_settings_image_quality_hint">Calitatea imaginilor. Valorile mai mari înseamnă imagini de calitate mai bună.</string>
     <string name="site_settings_optimize_images_summary">Activează pentru a redimensiona și comprima imagini</string>
     <string name="media_encoder_quality_maximum">Maximă</string>
     <string name="media_encoder_quality_medium">Medie</string>
@@ -3457,7 +3450,6 @@ Language: ro
     <string name="site_settings_discussion_hint">Vezi și modifică setările pentru discuții ale site-urilor tale</string>
     <string name="site_settings_more_hint">Vezi toate setările disponibile pentru discuții</string>
     <string name="site_settings_related_posts_hint">Arată sau ascunde articolele similare în cititor</string>
-    <string name="site_settings_image_width_hint">Rescalează imaginile în articole la această lățime</string>
     <string name="site_settings_format_hint">Setare format nou de articol</string>
     <string name="site_settings_category_hint">Setare categorie nouă de articol</string>
     <string name="site_settings_password_hint">Schimbă-ți parola</string>

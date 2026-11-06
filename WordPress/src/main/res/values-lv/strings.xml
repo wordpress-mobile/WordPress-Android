@@ -1546,7 +1546,6 @@ Language: lv
     <string name="reader_choose_interests_tags_content_description">Izvēlieties savas birkas</string>
     <string name="update_now">Atjaunināt tagad</string>
     <string name="status_and_visibility">Statuss un redzamība</string>
-    <string name="ccpa_privacy_notice_header">Konfidencialitātes paziņojums Kalifornijas lietotājiem</string>
     <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_move_to_top" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pāriet uz augšu</string>
     <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Atvērt bloka darbību izvēlni</string>
@@ -2248,11 +2247,8 @@ Language: lv
     <string name="reader_followed_blog_notifications">Vai iespējot paziņojumus par %1$s%2$s%3$s?</string>
     <string name="preference_collect_information">Vākt informāciju</string>
     <string name="preference_privacy_settings">Privātuma iestatījumi</string>
-    <string name="cookie_policy_learn_more_header">Sīkdatņu politika</string>
     <string name="cookie_policy_learn_more_caption">Kopīgojiet informāciju ar mūsu analīzes rīku par pakalpojumu izmantošanu, piesakoties savā WordPress.com kontā.</string>
-    <string name="privacy_policy_learn_more_header">Privātuma politika</string>
     <string name="privacy_policy_learn_more_caption">Šī informācija palīdz mums uzlabot mūsu produktus, padarīt mārketingu jums atbilstošāku, personalizēt jūsu WordPress.com pieredzi un vēl vairāk, kā detalizēti aprakstīts mūsu privātuma politikā.</string>
-    <string name="third_party_policy_learn_more_header">Trešo pušu politika</string>
     <string name="third_party_policy_learn_more_caption">Mēs izmantojam citus izsekošanas rīkus, tostarp dažus no trešajām pusēm. Lasiet par šiem un kā tos kontrolēt.</string>
     <string name="privacy_policy_read">Izlasiet konfidencialitātes politiku</string>
     <string name="activity_log">Aktivitāšu vēsture</string>
@@ -2644,9 +2640,7 @@ Language: lv
     <string name="media_audio">Audio</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s tika liegta piekļuve jūsu mediju failiem. Lai to novērstu, rediģējiet savas atļaujas un ieslēdziet %2$s.</string>
     <string name="reader_view_comments">Skatīt komentārus</string>
-    <string name="site_settings_video_quality_hint">Video kvalitāte. Augstākas vērtības nozīmē labākas kvalitātes videoklipus.</string>
     <string name="site_settings_optimize_video_summary">Iespējojiet videoklipu lieluma maiņu un saspiešanu</string>
-    <string name="site_settings_video_width_hint">Maina videoklipu izmērus ziņās līdz šim izmēram</string>
     <string name="site_settings_optimize_videos">Optimizēt videoklipus</string>
     <string name="video_quality">Video kvalitāte</string>
     <string name="draft_uploaded">Melnraksts ir augšupielādēts</string>
@@ -2729,7 +2723,6 @@ Language: lv
     <string name="error_publish_no_network">Ierīce ir bezsaistē. Ziņa saglabāta lokāli.</string>
     <string name="photo_picker_title">Izvēlieties fotoattēlu</string>
     <string name="editor_post_saved_online">Ziņa saglabāta tiešsaistē</string>
-    <string name="site_settings_image_quality_hint">Attēlu kvalitāte. Augstākas vērtības nozīmē labākas kvalitātes attēlus.</string>
     <string name="site_settings_optimize_images_summary">Iespējot attēlu lieluma maiņu un saspiešanu</string>
     <string name="media_upload_state_uploaded">Augšupielādēts</string>
     <string name="media_encoder_quality_low">Zema</string>
@@ -2981,7 +2974,6 @@ Language: lv
     <string name="site_settings_discussion_hint">Skatiet un mainiet savu vietņu diskusiju iestatījumus</string>
     <string name="site_settings_more_hint">Skatiet visus pieejamos diskusiju iestatījumus</string>
     <string name="site_settings_related_posts_hint">Rādīt vai paslēpt saistītās ziņas lasītājā</string>
-    <string name="site_settings_image_width_hint">Maina ziņu attēlu izmēru uz šo platumu</string>
     <string name="site_settings_format_hint">Iestata jaunu ziņas formātu</string>
     <string name="site_settings_category_hint">Iestata jaunu ziņu kategoriju</string>
     <string name="site_settings_password_hint">Nomainiet paroli</string>

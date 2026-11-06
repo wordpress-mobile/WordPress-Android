@@ -1997,7 +1997,6 @@ Language: he_IL
     <string name="publish_date">תאריך פרסום</string>
     <string name="ccpa_privacy_notice_read">לעיון בהצהרת הפרטיות של CCPA</string>
     <string name="ccpa_privacy_notice_caption">לפי החוק California Consumer Privacy Act (החוק לפרטיות צרכנים של קליפורניה – CCPA), עלינו לספק לתושבי קליפורניה פרטים נוספים אודות הקטגוריות של המידע האישי שאנחנו אוספים ומשתפים, המקום שממנו אנחנו מקבלים את המידע האישי, האופן שבו אנחנו משתמשים בו והסיבה לשימוש.</string>
-    <string name="ccpa_privacy_notice_header">הצהרת פרטיות למשתמשים מקליפורניה</string>
     <string name="status_and_visibility">מצב וניראות</string>
     <string name="update_now">לעדכן עכשיו</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2710,11 +2709,8 @@ Language: he_IL
     <string name="activity_log">יומן פעילות</string>
     <string name="privacy_policy_read">עיון במדיניות פרטיות</string>
     <string name="third_party_policy_learn_more_caption">אנחנו משתמשים בכלים למעקב, כולל כלים של צד שלישי. אפשר לקרוא פרטים על אלו על אלו ועל אופן השליטה בהם.</string>
-    <string name="third_party_policy_learn_more_header">מדיניות של צד שלישי</string>
     <string name="privacy_policy_learn_more_caption">המידע הזה עוזר לנו לשפר את המוצרים שלנו, להציג שיווק רלוונטי יותר, לספק לך חוויית שימוש אישית ב-WordPress.com ועוד, כפי שמפורט במדיניות הפרטיות שלנו.</string>
-    <string name="privacy_policy_learn_more_header">מדיניות פרטיות</string>
     <string name="cookie_policy_learn_more_caption">שיתוף של פרטי השימוש שלך בשירותים השונים עם כלי הניתוח שלנו לאחר ההתחברות לחשבון שלך ב-WordPress.com.</string>
-    <string name="cookie_policy_learn_more_header">מדיניות קובצי ה-Cookie</string>
     <string name="preference_privacy_settings">הגדרות פרטיות</string>
     <string name="preference_collect_information">איסוף מידע</string>
     <string name="post_submitted">הפוסט נשלח</string>
@@ -3108,8 +3104,6 @@ Language: he_IL
     <string name="media_all">הכל</string>
     <string name="media_picker_soft_ask_media_permissions_denied">הגישה של ⁦%1$s⁩ אל קובצי המדיה שלך נדחתה. כדי לתקן זאת, יש לערוך את ההרשאות ולהפעיל את ⁦%2$s⁩.</string>
     <string name="reader_view_comments">הצגת התגובות</string>
-    <string name="site_settings_video_quality_hint">איכות קובצי הווידאו. ערכים גבוהים יותר מאפשרים איכות טובה יותר של קובצי הווידאו.</string>
-    <string name="site_settings_video_width_hint">שינוי גודל של קובצי וידאו בפוסטים לממדים אלו</string>
     <string name="site_settings_optimize_video_summary">הפעלת עריכה של גודל קובצי הווידאו ודחיסתם</string>
     <string name="site_settings_optimize_videos">מיטוב קובצי וידאו</string>
     <string name="draft_uploaded">הטיוטה הועלתה</string>
@@ -3193,7 +3187,6 @@ Language: he_IL
     <string name="photo_picker_title">בחירת תמונה</string>
     <string name="error_publish_no_network">המכשיר אינו מחובר. השינויים נשמרו בשרת המקומי.</string>
     <string name="editor_post_saved_online">הפוסט נשמר ברשת</string>
-    <string name="site_settings_image_quality_hint">איכות תמונות. ערכים גבוהים יותר מאפשרים איכות טובה יותר של התמונות.</string>
     <string name="site_settings_optimize_images_summary">הפעלת עריכה של גודל תמונות ודחיסתן</string>
     <string name="media_encoder_quality_high">High</string>
     <string name="media_encoder_quality_medium">בינוני</string>
@@ -3444,7 +3437,6 @@ Language: he_IL
     <string name="site_settings_discussion_hint">הצגה ושינוי של הגדרות הדיון באתרים שלך</string>
     <string name="site_settings_more_hint">הצגת כל הגדרות הדיון הזמינות</string>
     <string name="site_settings_related_posts_hint">הצגה/הסתרה של פוסטים קשורים ב-Reader</string>
-    <string name="site_settings_image_width_hint">שינוי גודל של תמונות בפוסטים לרוחב זה</string>
     <string name="site_settings_format_hint">הגדרת סוג פוסט חדש</string>
     <string name="site_settings_category_hint">הגדרת קטגוריית פוסט חדשה</string>
     <string name="site_settings_password_hint">שינוי סיסמה</string>

@@ -192,7 +192,6 @@ Language: ku_TR
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Bila şandî veguheze nav Reşnivîsan?</string>
     <string name="reader_btn_select_few_interests">Ji bo domandinê hinekan hilbijêre</string>
     <string name="ccpa_privacy_notice_caption">Qanûna Ewlehiya Mezêxeran a Kalîforniyayê (\"CCPA\") li me ferz dike ji bo em zêdetir agahiyan bidin şêniyên Kalîforniyayê; derbarê kategoriyên agahiyên şexsî de yên ku em kom dikin û parve dikin, em wan agahiyên şexsî ji ku bi dest dixin û em wan çawa û çima bi kar tînin.</string>
-    <string name="ccpa_privacy_notice_header">Hişyariya nihêniyê ji bo bikarhênerên Kalîforniyayê</string>
     <string name="status_and_visibility">Rewş &amp; Xuyanî</string>
     <string name="update_now">Aniha Hildemîne</string>
     <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Menuya çalakiyên blokê veke</string>
@@ -842,8 +841,6 @@ Language: ku_TR
     <string name="preference_collect_information">Agahî berhev bike</string>
     <string name="reader_followed_blog_notifications">Bila ji bo \"%1$s%2$s%3$s\"ê danezan çalak bibin?</string>
     <string name="privacy_policy_read">Polîtîkaya nihêniyê bixwîne</string>
-    <string name="third_party_policy_learn_more_header">Polîtîkaya Aliyên Sêyem</string>
-    <string name="privacy_policy_learn_more_header">Polîtîkaya Nihêniyê</string>
     <string name="preference_privacy_settings">Sazkariyên nihêniyê</string>
     <string name="activity_log_jetpack_icon">Îkona Jetpackê</string>
     <string name="activity_log_event">Çalakî</string>
@@ -851,7 +848,6 @@ Language: ku_TR
     <string name="activity_log">Tomargeha Çalakiyan</string>
     <string name="third_party_policy_learn_more_caption">Hin aliyên sêyem jî tê de, em alavên şopandinê yên din bi kar tînin. Di derheqê wan û kontrolkirina wan de bixwîne.</string>
     <string name="privacy_policy_learn_more_caption">Ev agahî ji bo ku em berhemên xwe çêtir bikin, bazarê ji bo we têkildartir bikin û tecrûbeya we ya WordPress.com\'ê kesane bikin ji me re dibin alîkar. Zêdetirî wan di polîtîkaya nihêniyê de bi hûrgulî hatiye ravekirin.</string>
-    <string name="cookie_policy_learn_more_header">Polîtîkaya Xurekê</string>
     <string name="post_submitted">Şandî hat şandin</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Taybetiya pêvekê hewce dike ku malper di rewşeke baş de be.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Taybetiya pêvekê hewce dike ku abonetiya bingehîn a domainê bi vî bikarhênerî ve girêdayî be.</string>
@@ -1225,8 +1221,6 @@ Language: ku_TR
     <string name="media_all">Hemû</string>
     <string name="media_documents">Dosye</string>
     <string name="reader_view_comments">Şîroveyan bibîne</string>
-    <string name="site_settings_video_quality_hint">Kalîteya vîdeoyan. Nirxên bilind tê wateya vîdyoyên kalîteya çêtir.</string>
-    <string name="site_settings_video_width_hint">Mezinahiya vîdeoyên di şandiyê de dike bi qasî vê mezinahiyê</string>
     <string name="site_settings_optimize_video_summary">Dewisandin û ji nû ve rehendina vîdyoyan biçalakîne</string>
     <string name="site_settings_optimize_videos">Vîdyoyan Optîmîze Bike</string>
     <string name="video_quality">Kalîteya Vîdyoyê</string>
@@ -1309,7 +1303,6 @@ Language: ku_TR
     <string name="photo_picker_title">Wêne hilbijêre</string>
     <string name="error_publish_no_network">Cîhaz derhêl e. Şandî bi cîgehî hat tomarkirin.</string>
     <string name="editor_post_saved_online">Şandî bi serhêlî hat tomarkirin</string>
-    <string name="site_settings_image_quality_hint">Kalîteya wêneyan. Nirxên bilindtir tê wateya wêneyên kalîteya wan çêtir.</string>
     <string name="site_settings_optimize_images_summary">Dewisandin û ji nû ve rehendina wêneyan biçalakîne</string>
     <string name="media_upload_state_uploaded">Hat hilxistin</string>
     <string name="media_upload_state_deleted">Hat jêbirin</string>
@@ -1548,7 +1541,6 @@ Language: ku_TR
     <string name="site_settings_discussion_hint">Sazkariyên gotûbêjê yên malpera xwe bibîne û biguherîne</string>
     <string name="site_settings_more_hint">Hemû sazkariyên Gotûbêjê yên berdest bibîne</string>
     <string name="site_settings_related_posts_hint">Di xwînerê de şandiyên têkildar nîşan bide an jî veşêre</string>
-    <string name="site_settings_image_width_hint">Mezinahiya wêneyên di şandiyê de dike bi qasî vê firehiyê</string>
     <string name="site_settings_format_hint">Formata şandiya nû saz dike</string>
     <string name="site_settings_category_hint">Kategoriya şandiya nû saz dike</string>
     <string name="site_settings_password_hint">Pêborîna xwe biguherîne</string>

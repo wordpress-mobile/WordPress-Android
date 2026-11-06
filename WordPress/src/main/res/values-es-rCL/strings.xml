@@ -2007,7 +2007,6 @@ Language: es_CL
     <string name="reader_btn_done">Hecho</string>
     <string name="reader_btn_select_few_interests">Selecciona algunos para continuar</string>
     <string name="reader_choose_interests_tags_content_description">Elige tus etiquetas</string>
-    <string name="ccpa_privacy_notice_header">Aviso de privacidad para usuarios de California</string>
     <string name="status_and_visibility">Estado y visibilidad</string>
     <string name="update_now">Actualizar ahora</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2714,8 +2713,6 @@ Language: es_CL
     <string name="my_site_icon_dialog_change_message">¿Cómo te gustaría editar el icono?</string>
     <string name="my_site_icon_dialog_change_requires_permission_message">No tienes permiso para editar el icono del sitio.</string>
     <string name="activity_log_jetpack_icon">Icono de jetpack</string>
-    <string name="privacy_policy_learn_more_header">Política de Privacidad</string>
-    <string name="cookie_policy_learn_more_header">Política de Cookies</string>
     <string name="activity_log">Registro de actividades</string>
     <string name="activity_log_event">Evento</string>
     <string name="activity_log_icon">Icono de actividad</string>
@@ -2726,7 +2723,6 @@ Language: es_CL
     <string name="privacy_policy_read">Leer la política de privacidad</string>
     <string name="reader_followed_blog_notifications">¿Habilitar notificaciones para %1$s%2$s%3$s?</string>
     <string name="third_party_policy_learn_more_caption">Usamos otras herramientas de rastreo, incluyendo algunas de terceras partes. Lee acerca de estos y cómo controlarlos.</string>
-    <string name="third_party_policy_learn_more_header">Política de Terceras Partes</string>
     <string name="reader_btn_blog_notifications_off">Desactivar los avisos del blog</string>
     <string name="reader_btn_blog_notifications_on">Activar los avisos del blog</string>
     <string name="post_submitted">Entrada enviada</string>
@@ -3120,9 +3116,7 @@ Language: es_CL
     <string name="media_audio">Audio</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s denegó el acceso a tus archivos de medios. Para solucionar esto modifica tus permisos y activa %2$s.</string>
     <string name="reader_view_comments">Ver comentarios</string>
-    <string name="site_settings_video_quality_hint">Calidad de los vídeos. Los valores más altos significan una mejor calidad de video.</string>
     <string name="site_settings_optimize_video_summary">Habilitar para cambiar el tamaño y comprimir vídeos</string>
-    <string name="site_settings_video_width_hint">Redimensiona vídeos en entradas a este tamaño</string>
     <string name="site_settings_optimize_videos">Optimizar Vídeos</string>
     <string name="draft_uploaded">Borrador cargado</string>
     <string name="video_quality">Calidad de Vídeo</string>
@@ -3205,7 +3199,6 @@ Language: es_CL
     <string name="photo_picker_title">Elige la foto</string>
     <string name="error_publish_no_network">El dispositivo está desconectado. La entrada se guardará localmente.</string>
     <string name="editor_post_saved_online">Entrada guardada en línea</string>
-    <string name="site_settings_image_quality_hint">Calidad de las imágenes. Valores más altos significan imágenes de mejor calidad.</string>
     <string name="site_settings_optimize_images_summary">Habilitar para cambiar el tamaño y comprimir imágenes</string>
     <string name="media_upload_state_uploaded">Subido</string>
     <string name="media_encoder_quality_high">Alta</string>
@@ -3457,7 +3450,6 @@ Language: es_CL
     <string name="site_settings_discussion_hint">Ver y cambiar la configuración de discusión de tus sitios</string>
     <string name="site_settings_more_hint">Ver todos los ajustes de Discusión disponibles</string>
     <string name="site_settings_related_posts_hint">Mostrar u ocultar entradas relacionadas en el lector</string>
-    <string name="site_settings_image_width_hint">Cambia el tamaño de las imágenes en mensajes a este ancho</string>
     <string name="site_settings_format_hint">Establece un nuevo formato de entrada</string>
     <string name="site_settings_category_hint">Establece la categoría de nuevas entradas</string>
     <string name="site_settings_password_hint">Cambia tu contraseña</string>
