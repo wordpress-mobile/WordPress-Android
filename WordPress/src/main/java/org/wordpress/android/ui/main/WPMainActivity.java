@@ -111,7 +111,6 @@ import org.wordpress.android.ui.posts.EditorLauncher;
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
-import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.privacy.banner.PrivacyBannerFragment;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
@@ -608,8 +607,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
         // Setup Observers
         mViewModel.getAskForPrivacyConsent().observe(this, action -> showPrivacyConsentDialog());
-        mViewModel.getShowPrivacySettings().observe(this, action -> showPrivacySettingsScreen(null));
-        mViewModel.getShowPrivacySettingsWithError().observe(this, this::showPrivacySettingsScreen);
+        mViewModel.getShowPrivacySettings().observe(this, action -> showPrivacySettingsScreen());
+        mViewModel.getShowPrivacySettingsWithError().observe(this, action -> showPrivacySettingsScreen());
         mViewModel.getFabUiState().observe(this, fabUiState -> {
             String message = getResources().getString(fabUiState.getCreateContentMessageId());
 
@@ -1332,7 +1331,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                 }
                 break;
             case RequestCodes.APP_SETTINGS:
-                if (resultCode == AppSettingsFragment.LANGUAGE_CHANGED) {
+                if (resultCode == AppSettingsActivity.LANGUAGE_CHANGED) {
                     appLanguageChanged();
                 }
                 break;
@@ -1710,15 +1709,9 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         }
     }
 
-    private void showPrivacySettingsScreen(@Nullable Boolean requestedAnalyticsValue) {
+    private void showPrivacySettingsScreen() {
         Intent intent = new Intent(this, AppSettingsActivity.class);
         intent.putExtra(AppSettingsActivity.EXTRA_SHOW_PRIVACY_SETTINGS, true);
-        if (requestedAnalyticsValue != null) {
-            intent.putExtra(
-                    AppSettingsActivity.EXTRA_REQUESTED_ANALYTICS_VALUE_FROM_ERROR,
-                    requestedAnalyticsValue
-            );
-        }
 //        startActivityForResult(intent, RequestCodes.SETTINGS); // TODO: do we need to handle the result?
         startActivity(intent);
     }

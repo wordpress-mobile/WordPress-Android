@@ -1998,7 +1998,6 @@ Language: zh_TW
     <string name="publish_date">發表日期</string>
     <string name="ccpa_privacy_notice_read">閱讀《加州消費者隱私保護法》(CCPA) 隱私權聲明</string>
     <string name="ccpa_privacy_notice_caption">根據《加州消費者隱私保護法》(以下稱「CCPA」) 規定，我們必須提供加州使用者一些額外資訊，說明我們收集和分享的個人資訊種類、從哪裡取得這些資訊，以及這些資訊的使用方式及用途。</string>
-    <string name="ccpa_privacy_notice_header">加州使用者的隱私權聲明</string>
     <string name="status_and_visibility">狀態及可見度</string>
     <string name="update_now">立即更新</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2710,11 +2709,8 @@ Language: zh_TW
     <string name="activity_log">活動記錄</string>
     <string name="privacy_policy_read">閱讀隱私權政策</string>
     <string name="third_party_policy_learn_more_caption">我們會使用其他的追蹤工具，包括由第三方所提供的追蹤工具。瞭解相關資訊及其控制方式。</string>
-    <string name="third_party_policy_learn_more_header">第三方政策</string>
     <string name="privacy_policy_learn_more_caption">這類資訊有助我們改進產品、提供與你更加相關的行銷活動、帶來更為個人化的 WordPress.com 使用體驗；若要瞭解更多詳細內容，請參見我們的「隱私權政策」。</string>
-    <string name="privacy_policy_learn_more_header">隱私權政策</string>
     <string name="cookie_policy_learn_more_caption">在登入你的 WordPress.com 帳號時，請將你的服務使用情況相關資訊與我們的分析工具分享。</string>
-    <string name="cookie_policy_learn_more_header">Cookie 政策</string>
     <string name="preference_privacy_settings">隱私權設定</string>
     <string name="preference_collect_information">收集資訊</string>
     <string name="post_submitted">文章已提交。</string>
@@ -3108,8 +3104,6 @@ Language: zh_TW
     <string name="media_all">全部</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s 要求存取你的媒體檔案時遭拒絕。 若要解決此問題，請編輯存取權限並開啟「%2$s」。</string>
     <string name="reader_view_comments">檢視留言</string>
-    <string name="site_settings_video_quality_hint">影片的品質。數值愈高，表示影片品質愈好。</string>
-    <string name="site_settings_video_width_hint">將文章中的影片調整到符合以下大小</string>
     <string name="site_settings_optimize_video_summary">啟用即可調整影片大小和壓縮影片</string>
     <string name="site_settings_optimize_videos">最佳化影片</string>
     <string name="draft_uploaded">草稿已上傳</string>
@@ -3193,7 +3187,6 @@ Language: zh_TW
     <string name="photo_picker_title">選擇照片</string>
     <string name="error_publish_no_network">裝置已離線。文章已儲存在本機上。</string>
     <string name="editor_post_saved_online">文章已在線上儲存</string>
-    <string name="site_settings_image_quality_hint">照片品質。越高的值代表越高的照片品質。</string>
     <string name="site_settings_optimize_images_summary">啟用即可調整照片大小和壓縮照片</string>
     <string name="media_encoder_quality_maximum">最高</string>
     <string name="media_encoder_quality_medium">中等</string>
@@ -3442,7 +3435,6 @@ Language: zh_TW
     <string name="site_settings_discussion_hint">檢視及變更你的網站討論設定</string>
     <string name="site_settings_more_hint">檢視所有可變更的討論設定</string>
     <string name="site_settings_related_posts_hint">在讀取器中顯示或隱藏相關文章</string>
-    <string name="site_settings_image_width_hint">將文章中的圖片調整為符合以下寬度</string>
     <string name="site_settings_format_hint">設定新的文章格式</string>
     <string name="site_settings_category_hint">設定新的文章類別</string>
     <string name="site_settings_password_hint">變更你的密碼</string>

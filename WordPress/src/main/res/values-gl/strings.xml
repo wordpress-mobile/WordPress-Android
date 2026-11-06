@@ -2009,7 +2009,6 @@ Language: gl_ES
     <string name="reader_choose_interests_tags_content_description">Elixe as túas etiquetas</string>
     <string name="update_now">Actualizar agora</string>
     <string name="status_and_visibility">Estado e visibilidade</string>
-    <string name="ccpa_privacy_notice_header">Aviso de privacidade para usuarios de California</string>
     <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Abrir o menú de accións de bloques</string>
     <string name="gutenberg_native_move_to_top" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Mover arriba</string>
@@ -2717,10 +2716,7 @@ Language: gl_ES
     <string name="activity_log_jetpack_icon">Icona de Jetpack</string>
     <string name="activity_log">Rexistro de actividade</string>
     <string name="activity_log_icon">Icona de actividade</string>
-    <string name="cookie_policy_learn_more_header">Política de cookies</string>
-    <string name="privacy_policy_learn_more_header">Política de privacidade</string>
     <string name="preference_privacy_settings">Axustes de privacidade</string>
-    <string name="third_party_policy_learn_more_header">Política de terceiros</string>
     <string name="preference_collect_information">Recompilar información</string>
     <string name="privacy_policy_read">Le a política de privacidade</string>
     <string name="reader_followed_blog_notifications">Activar avisos para %1$s%2$s%3$s?</string>
@@ -3120,9 +3116,7 @@ Language: gl_ES
     <string name="media_documents">Documentos</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s denegou o acceso aos teus arquivos de medios. Para solucionar, isto modifica os teus permisos e activa %2$s.</string>
     <string name="reader_view_comments">Ver comentarios</string>
-    <string name="site_settings_video_quality_hint">Calidade dos vídeos. Valores máis altos implican vídeos de mellor calidade.</string>
     <string name="site_settings_optimize_video_summary">Activa o redimensionado e a compresión de vídeos</string>
-    <string name="site_settings_video_width_hint">Redimensiona os vídeos nas entradas a este tamaño</string>
     <string name="site_settings_optimize_videos">Optimizar vídeos</string>
     <string name="video_quality">Calidade do vídeo</string>
     <string name="draft_uploaded">Borrador subido</string>
@@ -3205,7 +3199,6 @@ Language: gl_ES
     <string name="photo_picker_title">Elixir foto</string>
     <string name="error_publish_no_network">O dispositivo está desconectado. A entrada guardarase localmente.</string>
     <string name="editor_post_saved_online">A entrada gardouse en liña</string>
-    <string name="site_settings_image_quality_hint">Calidade das imaxes: canto máis alto é o valor, máis calidade teñen as imaxes.</string>
     <string name="site_settings_optimize_images_summary">Activa a opción para cambiar o tamaño das imaxes e comprimilas</string>
     <string name="media_encoder_quality_maximum">Máxima</string>
     <string name="media_encoder_quality_high">Alta</string>
@@ -3457,7 +3450,6 @@ Language: gl_ES
     <string name="site_settings_discussion_hint">Ver e cambiar a configuración de conversa do sitio</string>
     <string name="site_settings_more_hint">Ver todas as opcións de conversa dispoñibles</string>
     <string name="site_settings_related_posts_hint">Mostrar ou ocultar artigos relacionados na Guía de Lectura</string>
-    <string name="site_settings_image_width_hint">Escala as imaxes nos artigos a este largo</string>
     <string name="site_settings_format_hint">Establece o formato do novo artigo</string>
     <string name="site_settings_category_hint">Establece a categoría do novo artigo</string>
     <string name="site_settings_password_hint">Cambiar o contrasinal</string>

@@ -1996,7 +1996,6 @@ Language: fr
     <string name="publish_date">Date de publication</string>
     <string name="ccpa_privacy_notice_read">Lisez l’avis de confidentialité CCPA</string>
     <string name="ccpa_privacy_notice_caption">Loi sur la protection du consommateur de Californie (« CCPA ») nous oblige à fournir aux résidents de Californie certaines informations supplémentaires sur les catégories d’informations personnelles que nous recueillons et partageons, où nous obtenons ces informations personnelles, et comment et pourquoi nous les utilisons.</string>
-    <string name="ccpa_privacy_notice_header">Avis de confidentialité pour les utilisateurs californiens</string>
     <string name="status_and_visibility">État et visibilité</string>
     <string name="update_now">Mettre à jour maintenant</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2710,11 +2709,8 @@ Language: fr
     <string name="activity_log">Journal d\'activités</string>
     <string name="privacy_policy_read">Lire la politique de confidentialité</string>
     <string name="third_party_policy_learn_more_caption">Nous utilisons d\'autres outils de suivi, notamment des outils provenant de tiers. Découvrez-les et apprenez à les contrôler.</string>
-    <string name="third_party_policy_learn_more_header">Politique de tiers</string>
     <string name="privacy_policy_learn_more_caption">Ces informations nous permettent d\'améliorer nos produits, de mieux cibler nos campagnes marketing, de personnaliser votre expérience WordPress.com et plus encore, comme indiqué dans notre politique de confidentialité.</string>
-    <string name="privacy_policy_learn_more_header">Politique de confidentialité</string>
     <string name="cookie_policy_learn_more_caption">Partagez les informations concernant votre utilisation des services avec notre outil d\'analyse tout en étant connecté à votre compte WordPress.com.</string>
-    <string name="cookie_policy_learn_more_header">Politique relative aux cookies</string>
     <string name="preference_privacy_settings">Paramètres de confidentialité</string>
     <string name="preference_collect_information">Collecter des informations</string>
     <string name="post_submitted">Article envoyé</string>
@@ -3108,8 +3104,6 @@ Language: fr
     <string name="media_all">Tous</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s s’est vu refuser l’accès à vos fichiers multimédia. Pour corriger cela, modifiez vos autorisations et activez %2$s.</string>
     <string name="reader_view_comments">Afficher les commentaires</string>
-    <string name="site_settings_video_quality_hint">Qualité des vidéos. Des valeurs élevées signifient une meilleure qualité des vidéos.</string>
-    <string name="site_settings_video_width_hint">Redimensionne les vidéos des articles à cette taille</string>
     <string name="site_settings_optimize_video_summary">Autoriser le redimensionnement et la compression des vidéos</string>
     <string name="site_settings_optimize_videos">Optimiser les vidéos</string>
     <string name="draft_uploaded">Brouillon téléversé</string>
@@ -3193,7 +3187,6 @@ Language: fr
     <string name="photo_picker_title">Choisir une photo</string>
     <string name="error_publish_no_network">L’appareil est hors ligne. L’article a été enregistré localement.</string>
     <string name="editor_post_saved_online">Article enregistré en ligne</string>
-    <string name="site_settings_image_quality_hint">Qualité des images. Des valeurs élevées signifient une meilleure qualité d’image.</string>
     <string name="site_settings_optimize_images_summary">Autoriser le redimensionnement et la compression des images</string>
     <string name="media_encoder_quality_maximum">Maximale</string>
     <string name="media_encoder_quality_high">Élevée</string>
@@ -3445,7 +3438,6 @@ Language: fr
     <string name="site_settings_discussion_hint">Voir et modifier les réglages de discussion de votre site</string>
     <string name="site_settings_more_hint">Voir tous les réglages de discussion disponibles</string>
     <string name="site_settings_related_posts_hint">Afficher ou cacher les articles similaires dans le lecteur</string>
-    <string name="site_settings_image_width_hint">Redimensionner les images dans les articles dans cette largeur. </string>
     <string name="site_settings_format_hint">Configure le nouveau format d\'article</string>
     <string name="site_settings_category_hint">Configure la nouvelle catégorie d\'articles</string>
     <string name="site_settings_password_hint">Changez votre mot de passe</string>

@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.PostStore.PostListItem
+import org.wordpress.android.fluxc.store.PostStore.PostRestClientType
 
 @RunWith(MockitoJUnitRunner::class)
 class PostStoreTest {
@@ -41,10 +42,81 @@ class PostStoreTest {
 
     @Before
     fun setUp() {
-        store = PostStore(dispatcher, mock(), mock(), postSqlUtils)
+        store = PostStore(dispatcher, mock(), mock(), mock(), postSqlUtils)
         whenever(mockedListDescriptor.site).thenReturn(mock())
         // verify "register" so we can use verifyNoMoreInteractions in all the test methods
         verify(dispatcher).register(any())
+    }
+
+    /**
+     * CMM-2502: a self-hosted site authenticated with an application password talks to its own
+     * wp/v2 REST API. Hosts that refuse password-authenticated API logins on xmlrpc.php - a 2FA
+     * plugin is the usual cause - accept the same credential over REST, so the XML-RPC path left
+     * those sites unable to save a post at all.
+     */
+    @Test
+    fun `a self-hosted site with an application password routes posts through the REST client`() {
+        val appPasswordSite = SiteModel().apply {
+            setIsWPCom(false)
+            setIsJetpackConnected(false)
+            origin = SiteModel.ORIGIN_WPAPI
+            apiRestUsernamePlain = "username"
+            apiRestPasswordPlain = "app-password"
+        }
+
+        assertEquals(PostRestClientType.SELF_HOSTED_RS, store.getPostRestClientType(appPasswordSite))
+    }
+
+    /**
+     * The application-password browser login leaves the origin at ORIGIN_XMLRPC, so the routing has
+     * to key off the stored credentials rather than the origin.
+     */
+    @Test
+    fun `a self-hosted site added through the browser flow still routes posts through the REST client`() {
+        val browserAddedSite = SiteModel().apply {
+            setIsWPCom(false)
+            setIsJetpackConnected(false)
+            origin = SiteModel.ORIGIN_XMLRPC
+            apiRestUsernamePlain = "username"
+            apiRestPasswordPlain = "app-password"
+        }
+
+        assertEquals(PostRestClientType.SELF_HOSTED_RS, store.getPostRestClientType(browserAddedSite))
+    }
+
+    /**
+     * The ambiguous case from CMM-2114: a Jetpack site can hold an auto-minted application password,
+     * which makes isUsingSelfHostedRestApi() true, but it must keep using the WP.com tunnel.
+     */
+    @Test
+    fun `a Jetpack site with an application password still routes posts through the WPcom client`() {
+        val jetpackSite = SiteModel().apply {
+            setIsWPCom(false)
+            setIsJetpackConnected(true)
+            origin = SiteModel.ORIGIN_WPCOM_REST
+            apiRestUsernamePlain = "username"
+            apiRestPasswordPlain = "app-password"
+        }
+
+        assertEquals(PostRestClientType.WPCOM_REST, store.getPostRestClientType(jetpackSite))
+    }
+
+    @Test
+    fun `a WPcom site routes posts through the WPcom client`() {
+        val wpComSite = SiteModel().apply { setIsWPCom(true) }
+
+        assertEquals(PostRestClientType.WPCOM_REST, store.getPostRestClientType(wpComSite))
+    }
+
+    @Test
+    fun `a self-hosted site without an application password still routes posts through XML-RPC`() {
+        val xmlRpcSite = SiteModel().apply {
+            setIsWPCom(false)
+            setIsJetpackConnected(false)
+            origin = SiteModel.ORIGIN_XMLRPC
+        }
+
+        assertEquals(PostRestClientType.XMLRPC, store.getPostRestClientType(xmlRpcSite))
     }
 
     @Test

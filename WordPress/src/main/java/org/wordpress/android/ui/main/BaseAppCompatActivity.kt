@@ -26,6 +26,7 @@ import org.wordpress.android.ui.postsrs.PostRsListActivity
 import org.wordpress.android.ui.postsrs.PostRsSettingsActivity
 import org.wordpress.android.ui.postsrs.terms.TermSelectionActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
+import org.wordpress.android.ui.prefs.AppSettingsActivity
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeaturesActivity
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity
 import org.wordpress.android.ui.reader.ReaderSearchActivity
@@ -84,6 +85,7 @@ private fun isExcludedActivity(activity: BaseAppCompatActivity) =
  * approach as we add more Compose-based activities to the project.
  */
 private val excludedActivities = listOf(
+    AppSettingsActivity::class.java.name,
     BlazeCampaignParentActivity::class.java.name,
     BloggingPromptsListActivity::class.java.name,
     CommentsRsListActivity::class.java.name,

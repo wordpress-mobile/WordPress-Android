@@ -324,6 +324,34 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack: Boolean) =
         AppPrefs.setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack)
 
+    var isImageOptimize: Boolean
+        get() = AppPrefs.isImageOptimize()
+        set(value) = AppPrefs.setImageOptimize(value)
+
+    var imageOptimizeMaxSize: Int
+        get() = AppPrefs.getImageOptimizeMaxSize()
+        set(value) = AppPrefs.setImageOptimizeMaxSize(value)
+
+    var imageOptimizeQuality: Int
+        get() = AppPrefs.getImageOptimizeQuality()
+        set(value) = AppPrefs.setImageOptimizeQuality(value)
+
+    var isStripImageLocation: Boolean
+        get() = AppPrefs.isStripImageLocation()
+        set(value) = AppPrefs.setStripImageLocation(value)
+
+    var isVideoOptimize: Boolean
+        get() = AppPrefs.isVideoOptimize()
+        set(value) = AppPrefs.setVideoOptimize(value)
+
+    var videoOptimizeWidth: Int
+        get() = AppPrefs.getVideoOptimizeWidth()
+        set(value) = AppPrefs.setVideoOptimizeWidth(value)
+
+    var videoOptimizeQuality: Int
+        get() = AppPrefs.getVideoOptimizeQuality()
+        set(value) = AppPrefs.setVideoOptimizeQuality(value)
+
     fun getShouldHideJetpackFeatureCard(): Boolean =
         AppPrefs.getShouldHideJetpackFeatureCard()
 

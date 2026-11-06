@@ -6,7 +6,7 @@ import android.view.MenuItem
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.RequestCodes
-import org.wordpress.android.ui.prefs.AppSettingsFragment.LANGUAGE_CHANGED
+import org.wordpress.android.ui.prefs.AppSettingsActivity.Companion.LANGUAGE_CHANGED
 import android.R as AndroidR
 
 @AndroidEntryPoint
