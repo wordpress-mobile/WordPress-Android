@@ -1,17 +1,22 @@
 package org.wordpress.android.ui.reader.viewmodels
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.assertj.core.api.Assertions.assertThat
+import kotlinx.coroutines.flow.MutableSharedFlow
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.repository.ReaderTagsAndSitesUpdater
+import org.wordpress.android.ui.reader.repository.UpdateTask
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.LoadReaderItemsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
@@ -49,10 +54,14 @@ class ReaderViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var readerTagsFeedFeatureConfig: ReaderTagsFeedFeatureConfig
 
+    @Mock
+    lateinit var tagsAndSitesUpdater: ReaderTagsAndSitesUpdater
+
     private val urlUtilsWrapper = UrlUtilsWrapper()
 
     @Before
     fun setup() {
+        whenever(tagsAndSitesUpdater.events).thenReturn(MutableSharedFlow())
         viewModel = ReaderViewModel(
             testDispatcher(),
             testDispatcher(),
@@ -65,6 +74,7 @@ class ReaderViewModelTest : BaseUnitTest() {
             ReaderTopBarMenuHelper(readerTagsFeedFeatureConfig),
             urlUtilsWrapper,
             readerTagsFeedFeatureConfig,
+            tagsAndSitesUpdater,
         )
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
@@ -78,7 +88,7 @@ class ReaderViewModelTest : BaseUnitTest() {
         // Act
         viewModel.start()
         // Assert
-        assertThat(viewModel.updateTags.value?.getContentIfNotHandled()).isNotNull
+        verify(tagsAndSitesUpdater).update(setOf(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS))
     }
 
     @Test
@@ -89,7 +99,7 @@ class ReaderViewModelTest : BaseUnitTest() {
         // Act
         viewModel.start()
         // Assert
-        assertThat(viewModel.updateTags.value?.getContentIfNotHandled()).isNull()
+        verify(tagsAndSitesUpdater, never()).update(any())
     }
 
     @Test
@@ -100,7 +110,7 @@ class ReaderViewModelTest : BaseUnitTest() {
         // Act
         viewModel.start()
         // Assert
-        assertThat(viewModel.updateTags.value?.getContentIfNotHandled()).isNotNull
+        verify(tagsAndSitesUpdater).update(setOf(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS))
     }
 
     private companion object {

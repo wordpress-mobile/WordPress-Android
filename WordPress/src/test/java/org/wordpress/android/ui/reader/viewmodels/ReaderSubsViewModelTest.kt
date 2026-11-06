@@ -29,7 +29,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.repository.ReaderSubsRepository
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
+import org.wordpress.android.ui.reader.repository.UpdateTask
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider

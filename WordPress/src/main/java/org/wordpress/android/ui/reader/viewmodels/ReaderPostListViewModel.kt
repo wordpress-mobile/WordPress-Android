@@ -310,17 +310,14 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     /*
-     * Called when the fragment resumes after having been paused. [addedTagName] is the name of a tag
-     * the user just followed, and [siteSubfilter] is the site being filtered on, if any.
+     * Called when the fragment resumes after having been paused. [siteSubfilter] is the site being
+     * filtered on, if any.
      */
-    fun onResumeAfterPause(addedTagName: String?, siteSubfilter: SubfilterListItem.Site?) {
+    fun onResumeAfterPause(siteSubfilter: SubfilterListItem.Site?) {
         when {
             listType == ReaderPostListType.TAG_FOLLOWED -> launch {
                 val tag = currentTag
-                if (isFollowingScreen && addedTagName != null) {
-                    // user just added a tag so switch to it
-                    sendUiEvent(ReaderPostListUiEvent.SetSubfilterFromTag(repository.getFollowedTag(addedTagName)))
-                } else if (isFollowingScreen && (tag == null || !repository.tagExists(tag))) {
+                if (isFollowingScreen && (tag == null || !repository.tagExists(tag))) {
                     // user just removed a tag which was selected in the subfilter
                     sendUiEvent(ReaderPostListUiEvent.SetDefaultSubfilter)
                 } else {
@@ -622,7 +619,7 @@ class ReaderPostListViewModel @Inject constructor(
                 onSearchEnded(event)
             }
 
-            is ReaderPostListEvent.FollowedTagsFetched -> if (listType == ReaderPostListType.TAG_FOLLOWED) {
+            ReaderPostListEvent.FollowedTagsFetched -> if (listType == ReaderPostListType.TAG_FOLLOWED) {
                 onFollowedTagsFetched()
             }
 

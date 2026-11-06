@@ -1,65 +1,47 @@
 package org.wordpress.android.ui.reader.repository
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.onFailure
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.datasets.ReaderTagTable
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
-import org.wordpress.android.ui.reader.ReaderEvents
-import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult
-import org.wordpress.android.ui.reader.actions.ReaderTagActions
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
 import org.wordpress.android.ui.reader.utils.ReaderUtils
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.EventBusWrapper
-import org.wordpress.android.viewmodel.ContextProvider
-import java.util.EnumSet
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.resume
 
 /**
- * Data access for the Reader post list. Reads run on the IO dispatcher, and post updates plus the
- * EventBus events the Reader update service posts are exposed as a single [Flow].
+ * Data access for the Reader post list. Reads run on the IO dispatcher, and post updates plus changes to
+ * the followed tags and sites are exposed as a single [Flow].
  */
 class ReaderPostListRepository @Inject constructor(
-    private val contextProvider: ContextProvider,
-    private val eventBusWrapper: EventBusWrapper,
     private val readerPostUpdater: ReaderPostUpdater,
-    private val accountStore: AccountStore,
+    private val tagsAndSitesUpdater: ReaderTagsAndSitesUpdater,
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) {
-    private val eventBusEvents: Flow<ReaderPostListEvent> = callbackFlow {
-        val subscriber = EventSubscriber { event ->
-            trySend(event).onFailure {
-                AppLog.w(AppLog.T.READER, "reader post list > failed to deliver $event")
+    val events: Flow<ReaderPostListEvent> = merge(
+        readerPostUpdater.events,
+        tagsAndSitesUpdater.events.map { event ->
+            when (event) {
+                is ReaderTagsAndSitesEvent.FollowedTagsChanged -> ReaderPostListEvent.FollowedTagsFetched
+
+                is ReaderTagsAndSitesEvent.FollowedBlogsChanged ->
+                    ReaderPostListEvent.FollowedBlogsFetched(event.didChange)
             }
         }
-        eventBusWrapper.register(subscriber)
-        awaitClose { eventBusWrapper.unregister(subscriber) }
-    }
-
-    val events: Flow<ReaderPostListEvent> = merge(readerPostUpdater.events, eventBusEvents)
+    )
 
     suspend fun getPosts(target: ReaderPostListTarget): ReaderPostList = withContext(ioDispatcher) {
         when (target) {
@@ -144,44 +126,14 @@ class ReaderPostListRepository @Inject constructor(
     /**
      * Updates followed tags and blogs, since following some sites (like P2s) changes both
      */
-    fun updateTagsAndFollowedBlogs() {
-        ReaderUpdateServiceStarter.startService(
-            contextProvider.getContext(),
-            EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS)
-        )
-    }
+    fun updateTagsAndFollowedBlogs() = tagsAndSitesUpdater.update(setOf(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS))
 
     /**
      * Follows or unfollows the passed tag and returns whether it succeeded. The local write happens
      * right away, so callers can read the new follow state before this returns.
      */
-    suspend fun followTag(tag: ReaderTag, follow: Boolean): Boolean = withContext(ioDispatcher) {
-        suspendCancellableCoroutine { continuation ->
-            val isLoggedIn = accountStore.hasAccessToken()
-            val listener = ReaderActions.ActionListener { succeeded ->
-                if (continuation.isActive) continuation.resume(succeeded)
-            }
-            val started = if (follow) {
-                ReaderTagActions.addTag(tag, listener, isLoggedIn)
-            } else {
-                ReaderTagActions.deleteTag(tag, listener, isLoggedIn)
-            }
-            if (!started && continuation.isActive) continuation.resume(false)
-        }
-    }
-
-    // EventBus invokes subscriber methods reflectively, so this class has to stay public
-    class EventSubscriber(private val onEvent: (ReaderPostListEvent) -> Unit) {
-        @Subscribe(threadMode = ThreadMode.MAIN)
-        fun onEvent(event: ReaderEvents.FollowedTagsFetched) {
-            onEvent(ReaderPostListEvent.FollowedTagsFetched(event.didChange()))
-        }
-
-        @Subscribe(threadMode = ThreadMode.MAIN)
-        fun onEvent(event: ReaderEvents.FollowedBlogsFetched) {
-            onEvent(ReaderPostListEvent.FollowedBlogsFetched(event.didChange()))
-        }
-    }
+    suspend fun followTag(tag: ReaderTag, follow: Boolean): Boolean =
+        if (follow) tagsAndSitesUpdater.followTags(listOf(tag)) else tagsAndSitesUpdater.unfollowTag(tag)
 
     companion object {
         private const val MAX_ROWS = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
@@ -207,6 +159,6 @@ sealed class ReaderPostListEvent {
 
     data class SearchStarted(val query: String, val offset: Int) : ReaderPostListEvent()
     data class SearchEnded(val query: String, val offset: Int, val didSucceed: Boolean) : ReaderPostListEvent()
-    data class FollowedTagsFetched(val didChange: Boolean) : ReaderPostListEvent()
+    data object FollowedTagsFetched : ReaderPostListEvent()
     data class FollowedBlogsFetched(val didChange: Boolean) : ReaderPostListEvent()
 }
