@@ -437,11 +437,15 @@ class PostRsApiRestClientTest {
     }
 
     /**
-     * The fetch itself still succeeds, so an emptied list would be stored as the truth and read as
-     * "the author removed every tag" by the next save, deleting them all on the site (CMM-2502).
+     * A successful payload carrying an emptied list would be stored as the truth and read as "the
+     * author removed every tag" by the next save, deleting them all on the site (CMM-2502).
+     * Reporting success while keeping the names already held is no safer: everything else in the
+     * row would be refreshed around them, including the modified dates the push conflict
+     * pre-check compares, so the stale tags would go out on the next save with nothing left to
+     * flag them. The fetch fails instead, and the stored row is left exactly as it was.
      */
     @Test
-    fun `a fetch whose tag lookup fails keeps the names already held`() = runTest {
+    fun `a fetch whose tag lookup fails leaves the row alone rather than refreshing it`() = runTest {
         stubRequests(executor(remoteTags = listOf(7L, 3L)))
         whenever(taxonomyRsApiRestClient.resolveTagNames(site, listOf(7L, 3L))).thenReturn(null)
         val local = existingPost().apply { setTagNameList(listOf("alpha", "beta")) }
@@ -449,18 +453,18 @@ class PostRsApiRestClientTest {
         restClient.fetchPost(local, site)
 
         val payload = dispatchedPayload<RemotePostPayload>(PostAction.FETCHED_POST)
-        assertThat(payload.error).isNull()
+        assertThat(payload.error?.type).isEqualTo(PostErrorType.GENERIC_ERROR)
+        assertThat(payload.post).isSameAs(local)
         assertThat(payload.post.tagNameList).containsExactly("alpha", "beta")
     }
 
     /**
-     * With no local names to keep there is nothing to fall back on, and a successful payload
-     * carrying no tags overwrites the stored row through `PostStore.updatePost`, deleting the
-     * post's tags on the next save. PostFetcher fetches with a bare PostModel, so this is the
-     * common shape of the case rather than a corner of it.
+     * PostFetcher fetches with a bare PostModel, so the error branch has to hand that model back
+     * untouched rather than anything mapped from the response - which is what stops PostStore
+     * storing a row whose tags were never read.
      */
     @Test
-    fun `a fetch whose tag lookup fails reports an error when there are no names to keep`() = runTest {
+    fun `a fetch whose tag lookup fails returns the caller's model, not the mapped response`() = runTest {
         stubRequests(executor(remoteTags = listOf(7L, 3L)))
         whenever(taxonomyRsApiRestClient.resolveTagNames(site, listOf(7L, 3L))).thenReturn(null)
         val bare = PostModel().apply { setRemotePostId(REMOTE_POST_ID) }
@@ -469,8 +473,7 @@ class PostRsApiRestClientTest {
 
         val payload = dispatchedPayload<RemotePostPayload>(PostAction.FETCHED_POST)
         assertThat(payload.error?.type).isEqualTo(PostErrorType.GENERIC_ERROR)
-        // The caller's model goes back untouched rather than the mapped response, which is what
-        // stops PostStore storing it: `serverPost` carries a title, and this must not have it.
+        // `serverPost` carries a title, so an empty one proves nothing was mapped in.
         assertThat(payload.post).isSameAs(bare)
         assertThat(payload.post.title).isEmpty()
     }

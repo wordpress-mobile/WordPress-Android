@@ -76,15 +76,14 @@ class PostRsApiRestClient @Inject constructor(
                 is WpRequestResult.Success -> {
                     val data = response.response.data
                     // A fetch carries no author-supplied names to reuse, so the response's tag ids
-                    // are the only source of truth for this post's tags. A failed lookup keeps the
-                    // names already held, because a success that stored a shorter list would read
-                    // as "the author removed those tags" and delete them on the next save - this
-                    // payload overwrites the stored row through PostStore.updatePost.
-                    // The local copy may hold no names at all to keep - PostFetcher fetches with a
-                    // bare PostModel - and a tagless row is just as destructive, so with nothing
-                    // to fall back on the fetch fails instead and the row is left alone.
+                    // are the only source of truth for this post's tags, and a lookup that fails
+                    // has to fail the whole fetch: this payload overwrites the stored row through
+                    // PostStore.updatePost, so a row stored with a shorter list would read as "the
+                    // author removed those tags" and delete them on the next save. Keeping the
+                    // names already held is no safer - everything else in the row, including the
+                    // modified dates the conflict pre-check compares, would be refreshed around
+                    // them, so stale tags would then be pushed with nothing left to flag them.
                     val tagNames = taxonomyRsApiRestClient.resolveTagNames(site, data.tags ?: emptyList())
-                        ?: post.tagNameList.takeIf { it.isNotEmpty() }
                     if (tagNames == null) {
                         FetchPostResponsePayload(post, site).apply {
                             error = PostError(
