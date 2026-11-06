@@ -233,8 +233,8 @@ class AppInitializer @Inject constructor(
     @Inject
     lateinit var wpApiClientProvider: WpApiClientProvider
 
-    // Lazy so the wordpress-rs native library isn't loaded on the main thread during every process start
-    // (SiteProvisioningSource -> WpLoginClient -> UniffiLib), which showed up as startup ANRs. Only sign-out uses it.
+    // Lazy because building it loads the wordpress-rs native library (via WpLoginClient), which caused startup
+    // ANRs when done on the main thread. It's built off main in warmUpSiteProvisioningSource() instead.
     @Inject
     lateinit var siteProvisioningSource: dagger.Lazy<SiteProvisioningSource>
 
@@ -322,6 +322,7 @@ class AppInitializer @Inject constructor(
 
         WordPress.versionName = PackageUtils.getVersionName(application)
         warmUpWpDb()
+        warmUpSiteProvisioningSource()
         context?.let { enableHttpResponseCache(it) }
 
         AppReviewManager.init(application)
@@ -489,6 +490,15 @@ class AppInitializer @Inject constructor(
      */
     private fun warmUpWpDb() {
         launchIo(T.DB, "Failed to open the app database") { WordPress.wpDB }
+    }
+
+    /**
+     * Builds [SiteProvisioningSource] off the main thread. Constructing it registers the app-wide listener that heals
+     * wordpress-rs 401s, and loads the wordpress-rs native library so that My Site, which also depends on it, usually
+     * finds the library already loaded instead of loading it on the main thread.
+     */
+    private fun warmUpSiteProvisioningSource() {
+        launchIo(T.MAIN, "Failed to build the site provisioning source") { siteProvisioningSource.get() }
     }
 
     @Suppress("TooGenericExceptionCaught")
