@@ -53,8 +53,8 @@ show_skip_message() {
 job_type="$2"
 case "$job_type" in
   library-lint)
-    # These library tasks do not consume the app's sources. Keep all libraries,
-    # Gradle/lint configuration, CI scripts and unknown paths relevant.
+    # Extend the existing lint exclusions with app-only paths.
+    # Library sources and module build files still matter.
     if [[ "${BUILDKITE_SOURCE:-}" != webhook || ! "${BUILDKITE_PULL_REQUEST:-}" =~ ^[0-9]+$ ]]; then
       exit 1
     fi
@@ -65,10 +65,9 @@ case "$job_type" in
     export "GIT_CONFIG_KEY_${config_index}=diff.renames" "GIT_CONFIG_VALUE_${config_index}=false"
 
     PATTERNS=(
+      "${COMMON_PATTERNS[@]}"
       'WordPress/src/*' 'WordPress/metadata/*' 'WordPress/jetpack_metadata/*'
-      'docs/*' '!(*/*).md' '.gitignore'
-      # This job invokes Gradle directly, without Ruby/Fastlane.
-      'fastlane/*' 'Gemfile' 'Gemfile.lock'
+      'docs/*'
     )
     if pr_changed_files --all-match "${PATTERNS[@]}"; then
       show_skip_message "$job_type"
