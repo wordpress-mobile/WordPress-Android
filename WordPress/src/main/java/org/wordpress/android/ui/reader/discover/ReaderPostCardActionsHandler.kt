@@ -22,6 +22,7 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
@@ -78,6 +79,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.widgets.AppReviewsManagerWrapper
@@ -103,6 +105,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase,
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
     private val accountStore: AccountStore,
+    private val eventBusWrapper: EventBusWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     private lateinit var coroutineScope: CoroutineScope
@@ -417,6 +420,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
             when (it) {
                 is BlockSiteState.SiteBlockedInLocalDb -> {
                     _refreshPosts.postValue(Event(Unit))
+                    notifyFollowedBlogsChanged()
                     updateBlockedStateFunction?.let { func -> func(true) }
                     _snackbarEvents.postValue(
                         Event(
@@ -426,7 +430,12 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                 {
                                     coroutineScope.launch {
                                         val blogId = it.blockedBlogData.blogId
-                                        undoBlockBlogUseCase.undoBlockBlog(it.blockedBlogData, source)
+                                        undoBlockBlogUseCase.undoBlockBlog(
+                                            it.blockedBlogData,
+                                            source
+                                        ) {
+                                            notifyFollowedBlogsChanged()
+                                        }
                                         _refreshPosts.postValue(Event(Unit))
                                         _scrollToSiteId.emit(blogId)
                                         _snackbarEvents.postValue(
@@ -451,6 +460,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 }
                 BlockSiteState.Failed.RequestFailed -> {
                     _refreshPosts.postValue(Event(Unit))
+                    notifyFollowedBlogsChanged()
                     _snackbarEvents.postValue(
                         Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_unable_to_block_blog)))
                     )
@@ -459,6 +469,17 @@ class ReaderPostCardActionsHandler @Inject constructor(
             }
         }
     }
+
+    private fun notifyFollowedBlogsChanged() {
+        eventBusWrapper.post(
+            ReaderEvents.FollowedBlogsFetched(
+                getFollowedBlogsCount(),
+                true
+            )
+        )
+    }
+
+    private fun getFollowedBlogsCount(): Int = readerBlogTableWrapper.getFollowedBlogs().size
 
     private suspend fun handleBlockUserClicked(
         authorId: Long,
