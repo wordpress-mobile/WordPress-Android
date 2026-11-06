@@ -8,9 +8,17 @@ fi
 
 # Use Debug for PR builds (faster), Release for trunk and release-branch builds.
 # PRs targeting a release branch use Release to catch release-only issues before merge.
-if [[ "${BUILDKITE_PULL_REQUEST:-false}" != "false" && "${BUILDKITE_PULL_REQUEST_BASE_BRANCH:-}" =~ ^release/ ]]; then
-  BUILD_VARIANT="Release"
-elif [ "${BUILDKITE_PULL_REQUEST:-false}" != "false" ]; then
+# Merge queue builds have no PR env vars: they count as PR builds, with the base taken from the `gh-readonly-queue/<base>/pr-<N>-<sha>` branch name.
+PR_BASE_BRANCH="${BUILDKITE_PULL_REQUEST_BASE_BRANCH:-}"
+IS_PR_BUILD=false
+if [ "${BUILDKITE_PULL_REQUEST:-false}" != "false" ]; then
+  IS_PR_BUILD=true
+elif [[ "${BUILDKITE_BRANCH:-}" =~ ^gh-readonly-queue/(.+)/pr-[0-9]+-[0-9a-f]+$ ]]; then
+  IS_PR_BUILD=true
+  PR_BASE_BRANCH="${BASH_REMATCH[1]}"
+fi
+
+if [[ "$IS_PR_BUILD" == true && ! "$PR_BASE_BRANCH" =~ ^release/ ]]; then
   BUILD_VARIANT="Debug"
 else
   BUILD_VARIANT="Release"
