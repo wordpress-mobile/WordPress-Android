@@ -99,23 +99,25 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
 
     /*
      * runs a tag action and reports the change to the followed tags. [start] returns false if the action
-     * didn't start.
+     * didn't start, in which case nothing changed.
      */
     private suspend fun awaitTagAction(
         start: (ReaderActions.ActionListener, Boolean) -> Boolean
     ): Boolean = launchInAppScope {
+        var started = true
         val succeeded = suspendCancellableCoroutine { continuation ->
             val listener = ReaderActions.ActionListener { succeeded ->
                 if (continuation.isActive) continuation.resume(succeeded)
             }
-            if (!start(listener, accountStore.hasAccessToken()) && continuation.isActive) {
-                continuation.resume(false)
-            }
+            started = start(listener, accountStore.hasAccessToken())
+            if (!started && continuation.isActive) continuation.resume(false)
         }
-        // a tags update that's running may have been sent before this change reached the server
-        markStale(UpdateTask.TAGS)
-        // a failed action is reverted locally, so it's a change too
-        _events.emit(ReaderTagsAndSitesEvent.FollowedTagsChanged(ReaderTagTable.getFollowedTags().size, true))
+        if (started) {
+            // a tags update that's running may have been sent before this change reached the server
+            markStale(UpdateTask.TAGS)
+            // a failed action is reverted locally, so it's a change too
+            _events.emit(ReaderTagsAndSitesEvent.FollowedTagsChanged(ReaderTagTable.getFollowedTags().size, true))
+        }
         succeeded
     }.await()
 
