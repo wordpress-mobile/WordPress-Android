@@ -1,111 +1,83 @@
 package org.wordpress.android.ui.reader.discover.interests
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.chip.Chip
-import com.google.android.material.snackbar.Snackbar
-import org.wordpress.android.R
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import org.wordpress.android.WordPress
-import org.wordpress.android.databinding.ReaderInterestsFragmentLayoutBinding
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.InitialLoadingUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
+import org.wordpress.android.ui.reader.views.compose.interests.ReaderInterestsScreen
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.viewmodel.observeEvent
-import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
-class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layout) {
+class ReaderInterestsFragment : Fragment() {
     @Inject
     lateinit var uiHelpers: UiHelpers
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ReaderInterestsViewModel
-    private var parentViewModel: ReaderViewModel? = null
 
     @Inject
     lateinit var perAppLocaleManager: PerAppLocaleManager
 
+    private val snackbarHostState = SnackbarHostState()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
+        viewModel = ViewModelProvider(this, viewModelFactory)[ReaderInterestsViewModel::class.java]
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        val entryPoint = entryPoint()
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                val uiState by viewModel.uiState.observeAsState()
+                AppThemeM3 {
+                    uiState?.let { state ->
+                        ReaderInterestsScreen(
+                            uiState = state,
+                            snackbarHostState = snackbarHostState,
+                            showBackButton = entryPoint == EntryPoint.DISCOVER,
+                            onBackClick = viewModel::onBackButtonClick,
+                            onInterestToggled = viewModel::onInterestAtIndexToggled,
+                            onDoneClick = viewModel::onDoneButtonClick,
+                            onRetryClick = viewModel::onRetryButtonClick
+                        )
+                    }
+                }
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val entryPoint = requireActivity().intent.getSerializableExtraCompat(READER_INTEREST_ENTRY_POINT)
-            ?: EntryPoint.DISCOVER
-        with(ReaderInterestsFragmentLayoutBinding.bind(view)) {
-            initDoneButton()
-            initRetryButton()
-            initBackButton(entryPoint)
-            initViewModel(entryPoint)
-        }
-    }
-
-    private fun ReaderInterestsFragmentLayoutBinding.initDoneButton() {
-        doneButton.setOnClickListener {
-            viewModel.onDoneButtonClick()
-        }
-    }
-
-    private fun ReaderInterestsFragmentLayoutBinding.initRetryButton() {
-        includeErrorLayout.errorRetry.setOnClickListener {
-            viewModel.onRetryButtonClick()
-        }
-    }
-
-    private fun ReaderInterestsFragmentLayoutBinding.initBackButton(entryPoint: EntryPoint) {
-        if (entryPoint == EntryPoint.DISCOVER) {
-            backButton.visibility = View.VISIBLE
-            backButton.setOnClickListener {
-                viewModel.onBackButtonClick()
-            }
-        }
-    }
-
-    private fun ReaderInterestsFragmentLayoutBinding.initViewModel(entryPoint: EntryPoint) {
-        viewModel = ViewModelProvider(
-            this@ReaderInterestsFragment,
-            viewModelFactory
-        ).get(ReaderInterestsViewModel::class.java)
-        if (entryPoint == EntryPoint.DISCOVER) {
-            parentViewModel = ViewModelProvider(requireParentFragment()).get(ReaderViewModel::class.java)
-        }
-        startObserving(entryPoint)
-    }
-
-    private fun ReaderInterestsFragmentLayoutBinding.startObserving(entryPoint: EntryPoint) {
-        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-            when (uiState) {
-                is InitialLoadingUiState -> {
-                }
-                is ContentUiState -> {
-                    updateInterests(uiState.interestsUiState)
-                }
-                is ErrorUiState -> {
-                    updateErrorLayout(uiState)
-                }
-            }
-            updateDoneButton(uiState.doneButtonUiState)
-            with(uiHelpers) {
-                updateVisibility(progressBar, uiState.progressBarVisible)
-                updateVisibility(title, uiState.titleVisible)
-                updateVisibility(includeErrorLayout.errorLayout, uiState.errorLayoutVisible)
-            }
+        val entryPoint = entryPoint()
+        val parentViewModel = if (entryPoint == EntryPoint.DISCOVER) {
+            ViewModelProvider(requireParentFragment())[ReaderViewModel::class.java]
+        } else {
+            null
         }
 
-        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner) {
-            it.showSnackbar(bottomBar)
-        }
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner) { showSnackbar(it) }
 
         viewModel.closeReaderInterests.observeEvent(viewLifecycleOwner) {
             requireActivity().finish()
@@ -118,62 +90,18 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
         )
     }
 
-    private fun ReaderInterestsFragmentLayoutBinding.updateDoneButton(doneButtonUiState: DoneButtonUiState) {
-        with(doneButton) {
-            isEnabled = doneButtonUiState.enabled
-            text = getString(doneButtonUiState.titleRes)
-        }
-        uiHelpers.updateVisibility(doneButton, doneButtonUiState.visible)
-    }
+    private fun entryPoint() =
+        requireActivity().intent.getSerializableExtraCompat(READER_INTEREST_ENTRY_POINT) ?: EntryPoint.DISCOVER
 
-    private fun ReaderInterestsFragmentLayoutBinding.updateInterests(interestsUiState: List<TagUiState>) {
-        interestsUiState.forEachIndexed { index, interestTagUiState ->
-            val chip = interestsChipGroup.findViewWithTag(interestTagUiState.slug)
-                ?: createChipView(interestTagUiState.slug, index)
-            with(chip) {
-                text = interestTagUiState.title
-                isChecked = interestTagUiState.isChecked
+    private fun showSnackbar(holder: SnackbarMessageHolder) {
+        val message = uiHelpers.getTextOfUiString(requireContext(), holder.message).toString()
+        val actionLabel = holder.buttonTitle?.let { uiHelpers.getTextOfUiString(requireContext(), it).toString() }
+        viewLifecycleOwner.lifecycleScope.launch {
+            val result = snackbarHostState.showSnackbar(message, actionLabel, duration = SnackbarDuration.Long)
+            if (result == SnackbarResult.ActionPerformed) {
+                holder.buttonAction.invoke()
             }
         }
-    }
-
-    private fun ReaderInterestsFragmentLayoutBinding.updateErrorLayout(uiState: ErrorUiState) {
-        with(uiHelpers) {
-            setTextOrHide(includeErrorLayout.errorTitle, uiState.titleRes)
-        }
-    }
-
-    private fun SnackbarMessageHolder.showSnackbar(anchorView: View) {
-        val snackbar = WPSnackbar.make(
-            anchorView,
-            uiHelpers.getTextOfUiString(requireContext(), this.message),
-            Snackbar.LENGTH_LONG
-        )
-        if (this.buttonTitle != null) {
-            snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), this.buttonTitle)) {
-                this.buttonAction.invoke()
-            }
-        }
-        snackbar.anchorView = anchorView
-        snackbar.show()
-    }
-
-    private fun ReaderInterestsFragmentLayoutBinding.createChipView(slug: String, index: Int): Chip {
-        val chip = layoutInflater.inflate(
-            R.layout.reader_interest_filter_chip,
-            interestsChipGroup,
-            false
-        ) as Chip
-        with(chip) {
-            tag = slug
-            setOnCheckedChangeListener { compoundButton, isChecked ->
-                if (compoundButton.isPressed) {
-                    viewModel.onInterestAtIndexToggled(index, isChecked)
-                }
-            }
-            interestsChipGroup.addView(this)
-        }
-        return chip
     }
 
     companion object {

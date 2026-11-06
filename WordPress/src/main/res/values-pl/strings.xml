@@ -2007,7 +2007,6 @@ Language: pl
     <string name="ccpa_privacy_notice_caption">Akt CPA wymaga aby dostarczyć rezydentom Kaliforni dodakowej informacji o danych które pozyskujemy.</string>
     <string name="post_status_post_trashed">W koszu</string>
     <string name="reader_choose_interests_tags_content_description">Wybierz tagi</string>
-    <string name="ccpa_privacy_notice_header">Notka dotycząca prywatności dla użytkowników Kaliforni</string>
     <string name="status_and_visibility">Status i widoczność</string>
     <string name="update_now">Aktualizuj teraz</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2720,13 +2719,10 @@ Language: pl
     <string name="activity_log">Dziennik aktywności</string>
     <string name="privacy_policy_read">Przeczytaj politykę prywatności</string>
     <string name="third_party_policy_learn_more_caption">Korzystamy z narzędzi do śledzenia, w tym z narzędzi od podmiotów trzecich. Przeczytaj więcej i dowiedz się jak je kontrolować.</string>
-    <string name="third_party_policy_learn_more_header">Polityka prywatności podmiotów trzecich</string>
-    <string name="privacy_policy_learn_more_header">Polityka prywatności</string>
     <string name="preference_privacy_settings">Ustawienia prywatności</string>
     <string name="preference_collect_information">Zbieranie informacji</string>
     <string name="privacy_policy_learn_more_caption">Ta informacja pomaga nam ulepszyć nasze produkty, oferować bardziej spersonalizowany marketing, dostosować działanie WordPressa oraz uszczegółowić politykę prywatności.</string>
     <string name="cookie_policy_learn_more_caption">Udostępnij informacje przy pomocy naszego narzędzia analitycznego dotyczące wykorzystania usług podczas zalogowania to konta WordPressowego.</string>
-    <string name="cookie_policy_learn_more_header">Polityka ciasteczek</string>
     <string name="reader_btn_blog_notifications_on">Włącz powiadomienia dla bloga</string>
     <string name="reader_btn_blog_notifications_off">Wyłącz powiadomienia dla bloga</string>
     <string name="post_submitted">Zamieszczono wpis</string>
@@ -3120,8 +3116,6 @@ Language: pl
     <string name="media_audio">Plik dźwiękowy</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s odmówiono dostępu do twoich plików multimedialnych. Aby to naprawić, edytuj uprawnienia i włącz %2$s.</string>
     <string name="reader_view_comments">Zobacz komentarze</string>
-    <string name="site_settings_video_quality_hint">Jakość filmów. Wyższa wartość oznacza lepszą jakość filmów.</string>
-    <string name="site_settings_video_width_hint">Zmień rozmiar filmów we wpisie do tego rozmiaru</string>
     <string name="site_settings_optimize_video_summary">Włącz aby zmienić rozmiar i skompresować filmy</string>
     <string name="site_settings_optimize_videos">Optymalizuj filmy</string>
     <string name="video_quality">Jakość filmu</string>
@@ -3205,7 +3199,6 @@ Language: pl
     <string name="photo_picker_title">Wybierz zdjęcie</string>
     <string name="error_publish_no_network">Urządzenie jest w trybie offline. Wpis zapisany lokalnie.</string>
     <string name="editor_post_saved_online">Wpis został zapisany online</string>
-    <string name="site_settings_image_quality_hint">Jakość obrazków. Wyższa wartość oznacza lepszą jakość.</string>
     <string name="site_settings_optimize_images_summary">Uaktywnij aby zmienić rozmiar i skompresować obrazki</string>
     <string name="media_upload_state_uploaded">Wysłano</string>
     <string name="media_encoder_quality_medium">Średnia</string>
@@ -3457,7 +3450,6 @@ Language: pl
     <string name="site_settings_discussion_hint">Pokaż i zmień ustawienia dyskusji twoich witryn</string>
     <string name="site_settings_more_hint">Pokaż wszystkie dostępne ustawienia Dyskusji</string>
     <string name="site_settings_related_posts_hint">Pokaż lub ukryj powiązane wpisy w czytniku</string>
-    <string name="site_settings_image_width_hint">Zmienia rozmiar obrazka do zadanej szerokości</string>
     <string name="site_settings_format_hint">Ustawia format dla nowych wpisów</string>
     <string name="site_settings_category_hint">Ustawia kategorię dla nowego wpisu</string>
     <string name="site_settings_password_hint">Zmień hasło</string>

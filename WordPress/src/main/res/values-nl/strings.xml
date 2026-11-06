@@ -2007,7 +2007,6 @@ Language: nl
     <string name="publish_date">Publicatiedatum</string>
     <string name="ccpa_privacy_notice_read">Lees CCPA privacy bericht</string>
     <string name="ccpa_privacy_notice_caption">De Californische Consumer Privacy Act (\"CCPA\") vereist dat je ons de Californische inwonenden aanlevert met enige toegevoegde informatie over de categorieën van de persoonlijke informatie die we verzamelen en delen, daar waar we persoonlijke informatie krijgen, en waarom we het gebruiken.</string>
-    <string name="ccpa_privacy_notice_header">Privacy bericht voor gebruikers in Californië</string>
     <string name="status_and_visibility">Status &amp; zichtbaarheid</string>
     <string name="update_now">Update nu</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2722,11 +2721,8 @@ Language: nl
     <string name="activity_log">Activiteitenlog</string>
     <string name="privacy_policy_read">Privacybeleid lezen</string>
     <string name="third_party_policy_learn_more_caption">We gebruiken ook andere volgingstools, waaronder een aantal van derden. Bekijk meer informatie over deze tools en hoe je ze kunt beheren.</string>
-    <string name="third_party_policy_learn_more_header">Beleid van derden</string>
     <string name="privacy_policy_learn_more_caption">Deze informatie helpt ons om onze producten te verbeteren, marketing naar je relevanter te maken, je WordPress.com ervaring te personaliseren, en meer zoals gedetailleerd in ons privacybeleid.</string>
-    <string name="privacy_policy_learn_more_header">Privacybeleid</string>
     <string name="cookie_policy_learn_more_caption">Deel informatie met onze analysetool over je gebruik van diensten terwijl je bent ingelogd op je WordPress.com account.</string>
-    <string name="cookie_policy_learn_more_header">Cookiebeleid</string>
     <string name="preference_privacy_settings">Privacyinstellingen</string>
     <string name="preference_collect_information">Gegevens verzamelen</string>
     <string name="post_submitted">Bericht geplaatst</string>
@@ -3120,8 +3116,6 @@ Language: nl
     <string name="media_all">Alles</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s kon geen toegang krijgen tot je mediabestanden. Bewerk je toestemmingen en schakel %2$s in om dit op te lossen.</string>
     <string name="reader_view_comments">Reacties bekijken</string>
-    <string name="site_settings_video_quality_hint">Kwaliteit van video\'s. Hoe hoger de waarde, hoe beter de kwaliteit van je video\'s.</string>
-    <string name="site_settings_video_width_hint">Past het formaat aan van video\'s in berichten naar deze grootte</string>
     <string name="site_settings_optimize_video_summary">Video\'s formaat aanpassen en comprimeren</string>
     <string name="site_settings_optimize_videos">Video\'s optimaliseren</string>
     <string name="draft_uploaded">Concept toegevoegd</string>
@@ -3205,7 +3199,6 @@ Language: nl
     <string name="photo_picker_title">Foto kiezen</string>
     <string name="error_publish_no_network">Apparaat is offline. Bericht lokaal opgeslagen.</string>
     <string name="editor_post_saved_online">Bericht is online opgeslagen</string>
-    <string name="site_settings_image_quality_hint">Kwaliteit van afbeeldingen. Hoe hoger de waarde, hoe beter de kwaliteit van je afbeeldingen.</string>
     <string name="site_settings_optimize_images_summary">Het formaat aanpassen en comprimeren van afbeeldingen inschakelen</string>
     <string name="media_encoder_quality_maximum">Maximum</string>
     <string name="media_encoder_quality_high">Hoog</string>
@@ -3457,7 +3450,6 @@ Language: nl
     <string name="site_settings_discussion_hint">De discussie instellingen van je sites bekijken en wijzigen</string>
     <string name="site_settings_more_hint">Alle beschikbare discussie instellingen bekijken</string>
     <string name="site_settings_related_posts_hint">Gerelateerde berichten weergeven of verbergen in reader</string>
-    <string name="site_settings_image_width_hint">Past het formaat van afbeeldingen aan in berichten tot deze breedte</string>
     <string name="site_settings_format_hint">Stelt een nieuw bericht format in</string>
     <string name="site_settings_category_hint">Stelt een nieuwe berichtcategorie in</string>
     <string name="site_settings_password_hint">Je wachtwoord wijzigen</string>

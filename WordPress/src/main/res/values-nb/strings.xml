@@ -1034,12 +1034,10 @@ Language: nb_NO
     <string name="activity_log">Aktivitetslogg</string>
     <string name="preference_privacy_settings">Innstillinger for personvern</string>
     <string name="preference_collect_information">Samle informasjon</string>
-    <string name="privacy_policy_learn_more_header">Personvernerklæring</string>
     <string name="reader_followed_blog_notifications">Aktiver varsler for %1$s%2$s%3$s?</string>
     <string name="privacy_policy_read">Les personvernerklæringen</string>
     <string name="activity_log_jetpack_icon">Jetpack-ikon</string>
     <string name="activity_log_icon">Aktivtitetsikon</string>
-    <string name="cookie_policy_learn_more_header">Policy for informasjonskapsler</string>
     <string name="post_submitted">Innlegg sendt inn</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Utvidelsesfunksjonen krever at nettstedet er i god stand.</string>
     <string name="plugin_install_site_ineligible_non_admin_user">Funksjonen i utvidelsen krever administraror-rettigheter.</string>
@@ -1411,9 +1409,7 @@ Language: nb_NO
     <string name="media_videos">Videoer</string>
     <string name="media_all">Alle</string>
     <string name="reader_view_comments">Vis kommentarer</string>
-    <string name="site_settings_video_quality_hint">Kvaliteten til videoer. Høyere verdier = bedre kvalitet.</string>
     <string name="site_settings_optimize_video_summary">Aktiver for å komprimere og endre størrelsen på videoer</string>
-    <string name="site_settings_video_width_hint">Endrer størrelsen til videoer i innlegg til denne størrelsen</string>
     <string name="site_settings_optimize_videos">Optimaliser videoer</string>
     <string name="draft_uploaded">Utkastet ble lastet opp</string>
     <string name="video_quality">Videokvalitet</string>
@@ -1495,7 +1491,6 @@ Language: nb_NO
     <string name="photo_picker_title">Velg bilde</string>
     <string name="error_publish_no_network">Enheten er ikke på nett. Endringene er lagret lokalt.</string>
     <string name="editor_post_saved_online">Innlegget ble lagret på nettet</string>
-    <string name="site_settings_image_quality_hint">Bildenes kvalitet. Høyere verdier = bedre kvalitet.</string>
     <string name="site_settings_optimize_images_summary">Aktiver for å komprimere og endre størrelsen på bilder</string>
     <string name="media_upload_state_uploaded">Lastet opp</string>
     <string name="media_upload_state_queued">Stilt opp i kø</string>
@@ -1740,7 +1735,6 @@ Language: nb_NO
     <string name="site_settings_discussion_hint">Se og endre dine nettsteders diskusjonsinnstillinger</string>
     <string name="site_settings_more_hint">Vis alle tilgjengelige diskusjonsinnstillinger</string>
     <string name="site_settings_related_posts_hint">Vis eller skjul relaterte innlegg i leseren</string>
-    <string name="site_settings_image_width_hint">Endrer størrelsen på bilder i innlegg til denne bredden</string>
     <string name="site_settings_format_hint">Bestemmer nytt innleggsformat</string>
     <string name="site_settings_category_hint">Bestemmer ny innleggskategori</string>
     <string name="site_settings_password_hint">Endre passordet ditt</string>

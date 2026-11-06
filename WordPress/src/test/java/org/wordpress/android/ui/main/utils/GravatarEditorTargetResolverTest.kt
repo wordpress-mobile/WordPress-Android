@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main.utils
 
+import com.gravatar.Gravatar
 import com.gravatar.BuildConfig as GravatarBuildConfig
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okhttp3.Call
@@ -133,8 +134,10 @@ class GravatarEditorTargetResolverTest : BaseUnitTest() {
             assertThat(header("Accept")).isEqualTo("application/json")
             assertThat(header("X-Platform")).isEqualTo("Android")
             assertThat(header("X-SDK-Version")).isEqualTo(GravatarBuildConfig.SDK_VERSION)
-            // Left unset on purpose so OkHttp stamps its own, exactly as the SDK's client does
-            assertThat(header("User-Agent")).isNull()
+            // Read from the SDK rather than hardcoded, so this cannot drift as the dependency moves
+            assertThat(header("User-Agent")).isEqualTo(Gravatar.userAgent)
+            assertThat(header("User-Agent")).contains("GravatarAndroid/")
+            assertThat(header("X-Source")).isEqualTo(Gravatar.appName)
         }
     }
 

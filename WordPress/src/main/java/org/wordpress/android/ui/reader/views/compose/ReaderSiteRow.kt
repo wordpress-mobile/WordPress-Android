@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.views.compose
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,8 +16,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -28,8 +31,8 @@ import org.wordpress.android.util.image.ImageType
 private val blavatarPlaceholders = ImagePlaceholderManager()
 
 /**
- * A site with its icon, title, host and a Subscribe/Subscribed button, used by Reader search and
- * Manage subscriptions
+ * A site with its icon, title and host, used by Reader search, Manage subscriptions and the filter sheet.
+ * It ends with a Subscribe/Subscribed button when [onFollowClick] is set, or with [badge] otherwise.
  */
 @Composable
 @Suppress("LongParameterList")
@@ -37,10 +40,12 @@ fun ReaderSiteRow(
     title: String,
     subtitle: String,
     iconUrl: String?,
-    isFollowing: Boolean,
-    isFollowEnabled: Boolean,
     onClick: () -> Unit,
-    onFollowClick: () -> Unit
+    isFollowing: Boolean = false,
+    isFollowEnabled: Boolean = true,
+    onFollowClick: (() -> Unit)? = null,
+    isSelected: Boolean = false,
+    badge: String? = null
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -70,6 +75,7 @@ fun ReaderSiteRow(
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
+                color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Unspecified,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -83,8 +89,26 @@ fun ReaderSiteRow(
                 )
             }
         }
-        ReaderFollowToggleButton(isFollowing, isFollowEnabled, onFollowClick)
+        if (onFollowClick != null) {
+            ReaderFollowToggleButton(isFollowing, isFollowEnabled, onFollowClick)
+        } else if (badge != null) {
+            ReaderCountBadge(badge)
+        }
     }
+}
+
+@Composable
+private fun ReaderCountBadge(text: String) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.labelMedium,
+        maxLines = 1,
+        modifier = Modifier
+            .clip(RoundedCornerShape(4.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            .padding(horizontal = 12.dp, vertical = 4.dp)
+            .clearAndSetSemantics { }
+    )
 }
 
 @Composable

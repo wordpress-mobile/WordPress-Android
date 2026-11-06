@@ -225,11 +225,8 @@ Language: sk
     <string name="activity_log">Log aktivity</string>
     <string name="privacy_policy_read">Prečítajte si zásady ochrany osobných údajov</string>
     <string name="third_party_policy_learn_more_caption">Používame ďalšie nástroje na sledovanie, vrátane niektorých od tretích strán. Prečítajte si o nich a o možnostiach ako ich ovládať.</string>
-    <string name="third_party_policy_learn_more_header">Pravidlá tretej strany</string>
     <string name="privacy_policy_learn_more_caption">Tieto informácie nám pomáhajú vylepšiť naše produkty, urobiť ich marketing relevantneiším, prispôsobiť vaše skúsenosti s WordPress.com, podrobnejšie informácie nájdete v našich zásadách ochrany osobných údajov.</string>
-    <string name="privacy_policy_learn_more_header">Zásady ochrany osobných údajov</string>
     <string name="cookie_policy_learn_more_caption">Zdieľajte informácie s našim analytickým nástrojom o vašom používaní služieb, kým sa prihlasujete do svojho účtu WordPress.com.</string>
-    <string name="cookie_policy_learn_more_header">Pravidlá pre cookie</string>
     <string name="preference_privacy_settings">Nastavenia súkromia</string>
     <string name="preference_collect_information">Zbierajte informácie</string>
     <string name="reader_btn_blog_notifications_on">Zapnutie upozornení na blog</string>
@@ -620,8 +617,6 @@ Language: sk
     <string name="media_all">Všetko</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s bol zamietnutý prístup k vašim mediálnym súborom. Ak to chcete napraviť, upravte svoje oprávnenia a zapnite %2$s.</string>
     <string name="reader_view_comments">Zobraziť komentáre</string>
-    <string name="site_settings_video_quality_hint">Kvalita videí. Čím vyššie hodnoty, tým kvalitnejšie videá.</string>
-    <string name="site_settings_video_width_hint">Zmeňte veľkosť článkov na požadovanú veľkosť</string>
     <string name="site_settings_optimize_video_summary">Povolené meniť veľkosť a komprimovať videá</string>
     <string name="site_settings_optimize_videos">Optimalizovať videá</string>
     <string name="draft_uploaded">Nahraný koncept</string>
@@ -705,7 +700,6 @@ Language: sk
     <string name="photo_picker_title">Vybrať fotografiu</string>
     <string name="error_publish_no_network">Zariadenie je offline. Článok sa uložili lokálne.</string>
     <string name="editor_post_saved_online">článok uložený online.</string>
-    <string name="site_settings_image_quality_hint">Kvalita obrázkov. Vyššie hodnoty znamenajú lepšiu kvalitu obrázkov.</string>
     <string name="site_settings_optimize_images_summary">Povoliť zmenu veľkosti a komprimovanie obrázkov.</string>
     <string name="media_upload_state_uploaded">Nahraté</string>
     <string name="media_encoder_quality_maximum">Maximálne</string>
@@ -956,7 +950,6 @@ Language: sk
     <string name="site_settings_discussion_hint">Zobraziť a zmeniť nastavenia diskusií na vašej stránke</string>
     <string name="site_settings_more_hint">Zobraziť všetky dostupné nastavenia diskusií</string>
     <string name="site_settings_related_posts_hint">Zobraziť alebo skryť podobné články v čítačke</string>
-    <string name="site_settings_image_width_hint">Zmení šírku obrázkov v článkoch na túto hodnotu</string>
     <string name="site_settings_format_hint">Nastavuje formát nového článku</string>
     <string name="site_settings_category_hint">Nastavuje kategóriu nového článku</string>
     <string name="site_settings_password_hint">Zmeňte si heslo</string>

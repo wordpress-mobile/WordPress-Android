@@ -49,7 +49,7 @@ import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderPostListEvent
 import org.wordpress.android.ui.reader.repository.ReaderPostListRepository
 import org.wordpress.android.ui.reader.repository.ReaderPostListTarget
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction
+import org.wordpress.android.ui.reader.repository.UpdateAction
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase.FetchSiteState
@@ -168,6 +168,13 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         assertThat(viewModel.uiState.value.items.first())
             .isInstanceOf(ReaderPostListItem.SiteHeader::class.java)
         verify(repository).requestPosts(blogTarget, UpdateAction.REQUEST_NEWER)
+    }
+
+    @Test
+    fun `blog preview shows progress as soon as it requests posts`() = test {
+        startAndLoad(ReaderPostListArgs(listType = ReaderPostListType.BLOG_PREVIEW, blogId = BLOG_ID))
+
+        assertThat(viewModel.uiState.value.isRefreshing).isTrue
     }
 
     @Test

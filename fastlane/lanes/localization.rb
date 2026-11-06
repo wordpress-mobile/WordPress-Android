@@ -86,23 +86,6 @@ platform :android do
   # PlayStore Metadata
   ########################################################################
 
-  # Updates the `PlayStoreStrings.po` files for both apps, commits, pushes, and creates a backmerge PR.
-  #
-  # @param [String] app The app to update. If nil, updates both WordPress and Jetpack.
-  # @param [String] version The current `x.y` version of the app. Defaults to current release version.
-  #
-  lane :update_appstore_strings do |app: nil, version: current_release_version|
-    apps = app.nil? ? %i[wordpress jetpack] : Array(app.to_s.downcase.to_sym)
-
-    apps.each do |current_app|
-      generate_playstore_strings(app: current_app, version: version)
-    end
-
-    push_to_git_remote(tags: false)
-
-    create_backmerge_pr(source_branch: git_branch, target_branch: "release/#{version}")
-  end
-
   # Generates the `PlayStoreStrings.po` file for a given app from the metadata text sources.
   # The updated `.po` file is then picked up by GlotPress for translations.
   #
@@ -124,8 +107,6 @@ platform :android do
 
     # <key in po file> => <path to txt file> or <{ path:, comment: } hash>
     files = {
-      release_note: File.join(metadata_folder, 'release_notes.txt'),
-      release_note_short: File.join(metadata_folder, 'release_notes_short.txt'),
       play_store_app_title: {
         path: File.join(metadata_folder, 'title.txt'),
         comment: 'translators: Title to be displayed in the Play Store. Limit to 30 characters including spaces and commas!'
@@ -149,7 +130,7 @@ platform :android do
     end
 
     # The beta-promotion picker's "what's new" options. Stable keys (no version suffix) so each is
-    # translated once, unlike the per-version `release_note_*` keys.
+    # translated once.
     STATIC_RELEASE_NOTE_OPTIONS.each do |option|
       files[:"release_note_static_#{option[:key]}"] = {
         path: File.join(metadata_folder, 'release_notes_static', "#{option[:key]}.txt"),
@@ -191,20 +172,15 @@ platform :android do
     )
   end
 
-  # Downloads the translated metadata (release notes, app store strings, title, etc.)
+  # Downloads the translated metadata (app store strings, title, etc.)
   # from GlotPress, and updates the local `.txt` files with them.
   #
   # @param [Symbol|String] app The app to download metadata for. If nil, downloads for both WordPress and Jetpack
-  # @param [String] version The `versionName` of the app, used to extract release notes from GlotPress.
-  #                         Defaults to current `versionName`. Only required if skip_release_notes is false
-  # @param [Boolean] skip_release_notes Whether to skip downloading release notes. Default false
   # @param [Boolean] skip_commit If true, will skip the `git add`, `git commit` and `git push` operations. Default to false.
   #
   # @return [void]
   #
-  lane :download_metadata_strings do |app: nil, version: current_release_version, skip_release_notes: false, skip_commit: false|
-    version = nil if skip_release_notes
-
+  lane :download_metadata_strings do |app: nil, skip_commit: false|
     # If no `app:` is specified, call this for both WordPress and Jetpack
     apps = if app.nil?
              %i[wordpress jetpack]
@@ -224,28 +200,6 @@ platform :android do
         play_store_desc: { desc: 'full_description.txt', max_size: 4000 }
       }
 
-      unless skip_release_notes
-        version_suffix = version.split('.').join
-
-        source_notes_file = File.join(metadata_source_dir, 'release_notes.txt')
-        if !File.exist?(source_notes_file) || File.read(source_notes_file).strip.empty?
-          # Clear release notes if the source file is empty
-          all_app_locales = locales + [%w[en en-US]]
-          all_app_locales.each_value do |google_play_locale|
-            changelog_dir = File.join(metadata_download_path, google_play_locale, 'changelogs')
-            FileUtils.mkdir_p(changelog_dir)
-            File.write(File.join(changelog_dir, 'default.txt'), '')
-          end
-        else
-          # Make sure to also download the release notes translations as the source file (release_notes.txt) is not empty
-          files["release_note_#{version_suffix}"] = {
-            desc: 'changelogs/default.txt',
-            max_size: 500,
-            alternate_key: "release_note_short_#{version_suffix}"
-          }
-        end
-      end
-
       # Add key mappings for `screenshots_*` files too
       Dir.glob('screenshot_*.txt', base: metadata_source_dir).each do |f|
         key = "play_store_#{File.basename(f, '.txt')}"
@@ -262,16 +216,14 @@ platform :android do
 
       # Copy the source `.txt` files (used as source of truth when we generated the `.po`) to the `fastlane/*metadata/android/en-US` dir,
       # as `en-US` is the source language, and isn't exported from GlotPress during `gp_downloadmetadata`
-      files.each do |key, h|
-        source_file = key.to_s.start_with?('release_note_') ? 'release_notes.txt' : h[:desc]
-        FileUtils.cp(File.join(metadata_source_dir, source_file), File.join(metadata_download_path, 'en-US', h[:desc]))
+      files.each_value do |h|
+        FileUtils.cp(File.join(metadata_source_dir, h[:desc]), File.join(metadata_download_path, 'en-US', h[:desc]))
       end
 
       next if skip_commit
 
       git_add(path: metadata_download_path)
       message = "Update #{app_values[:display_name]} metadata translations"
-      message += " for #{version}" unless version.nil?
       git_commit(path: metadata_download_path, message: message, allow_nothing_to_commit: true)
     end
   end

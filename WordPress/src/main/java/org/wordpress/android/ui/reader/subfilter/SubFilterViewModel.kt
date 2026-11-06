@@ -71,9 +71,6 @@ class SubFilterViewModel @Inject constructor(
     private val _updateTagsAndSites = MutableLiveData<Event<EnumSet<UpdateTask>>>()
     val updateTagsAndSites: LiveData<Event<EnumSet<UpdateTask>>> = _updateTagsAndSites
 
-    private val _isTitleContainerVisible = MutableLiveData<Boolean>(true)
-    val isTitleContainerVisible: LiveData<Boolean> = _isTitleContainerVisible
-
     private var lastKnownUserId: Long? = null
     private var lastTokenAvailableStatus: Boolean? = null
 
@@ -396,19 +393,11 @@ class SubFilterViewModel @Inject constructor(
         }
     }
 
-    fun trackOnPageSelected(tab: String) {
-        readerTracker.track(Stat.READER_FILTER_SHEET_TAB_SELECTED, mutableMapOf(TRACK_TAB to tab))
-    }
-
     fun onSaveInstanceState(outState: Bundle) {
         outState.putString(
             ARG_CURRENT_SUBFILTER_JSON, getCurrentSubfilterJson()
         )
         outState.putBoolean(ARG_IS_FIRST_LOAD, isFirstLoad)
-    }
-
-    fun setTitleContainerVisibility(isVisible: Boolean) {
-        _isTitleContainerVisible.value = isVisible
     }
 
     @Suppress("unused", "UNUSED_PARAMETER")
@@ -436,8 +425,6 @@ class SubFilterViewModel @Inject constructor(
 
         const val ARG_CURRENT_SUBFILTER_JSON = "current_subfilter_json"
         const val ARG_IS_FIRST_LOAD = "is_first_load"
-
-        const val TRACK_TAB = "tab"
 
         @JvmStatic
         fun getViewModelKeyForTag(tag: ReaderTag): String {

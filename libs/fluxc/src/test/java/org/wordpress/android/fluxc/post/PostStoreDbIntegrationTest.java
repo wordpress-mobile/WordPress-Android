@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.model.revisions.DiffOperations;
 import org.wordpress.android.fluxc.model.revisions.LocalDiffModel;
 import org.wordpress.android.fluxc.model.revisions.LocalRevisionModel;
 import org.wordpress.android.fluxc.model.revisions.RevisionModel;
+import org.wordpress.android.fluxc.network.rest.wpapi.post.PostRsApiRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
@@ -49,7 +50,7 @@ import static org.junit.Assert.assertNotEquals;
 public class PostStoreDbIntegrationTest {
     private PostSqlUtils mPostSqlUtils = new PostSqlUtils();
     private PostStore mPostStore = new PostStore(new Dispatcher(), Mockito.mock(PostRestClient.class),
-            Mockito.mock(PostXMLRPCClient.class), mPostSqlUtils);
+            Mockito.mock(PostRsApiRestClient.class), Mockito.mock(PostXMLRPCClient.class), mPostSqlUtils);
 
     @Before
     public void setUp() {
