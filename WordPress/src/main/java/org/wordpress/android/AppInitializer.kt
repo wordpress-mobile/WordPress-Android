@@ -336,10 +336,7 @@ class AppInitializer @Inject constructor(
 
         RestClientUtils.setUserAgent(userAgent.apiUserAgent)
 
-        // Names the app to the Gravatar SDK, which otherwise sends a bare `GravatarAndroid/<version>`
-        // that no edge rule can key on (CMM-1100). The same name the rest of our traffic already
-        // carries, so Gravatar sees us under one identity. Must run before the first SDK request.
-        Gravatar.appIdentifier(WordPress.USER_AGENT_APPNAME, buildConfig.getAppVersionName())
+        initGravatarAppIdentifier()
 
         if (!initialized) {
             initZendeskAsync()
@@ -400,6 +397,32 @@ class AppInitializer @Inject constructor(
         if (buildConfig.isDebugSettingsEnabled()) {
             debugCookieManager = DebugCookieManager(application, cookieManager, buildConfig)
             debugCookieManager.sync()
+        }
+    }
+
+    // Names the app to the Gravatar SDK, which otherwise sends a bare `GravatarAndroid/<version>`
+    // that no edge rule can key on (CMM-1100). The same name the rest of our traffic already
+    // carries, so Gravatar sees us under one identity. Must run before the first SDK request.
+    //
+    // Guarded because the SDK validates both arguments and throws, and this runs on the startup
+    // path. No automated build can produce a bad value: `versionName` is read from
+    // version.properties, and the prototype override fastlane passes is sanitised ASCII. A
+    // hand-supplied `-PprototypeBuildVersionName` still can be, and a crash on every launch is
+    // not worth an attribution header.
+    //
+    // The version is optional to the SDK, so a rejected version alone still leaves the app named:
+    // that keeps `wp-android` in the User-Agent and the `X-Source` header the edge rule keys on.
+    // Only a rejected name drops us to the SDK's unnamed default.
+    private fun initGravatarAppIdentifier() {
+        try {
+            Gravatar.appIdentifier(WordPress.USER_AGENT_APPNAME, buildConfig.getAppVersionName())
+        } catch (versionError: IllegalArgumentException) {
+            AppLog.e(T.MAIN, "Gravatar: app version rejected, naming the app without it", versionError)
+            try {
+                Gravatar.appIdentifier(WordPress.USER_AGENT_APPNAME)
+            } catch (nameError: IllegalArgumentException) {
+                AppLog.e(T.MAIN, "Gravatar: app name rejected, falling back to the SDK default", nameError)
+            }
         }
     }
 
