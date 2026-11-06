@@ -8,6 +8,22 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Tag and category names no longer come from the wrong site**
+  Opening a post or page could show another site's tag and category names, because the names were remembered by term ID alone and those IDs are per site — on a self-hosted site they start at 1, so two sites routinely share them. Saving such a post applied the name that was shown and removed the tag the post really had. Names are now remembered per site.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** My Site → Posts (or Pages) → open a post → the editor, and Post settings → Tags / Categories
+  - **Notes:** Needed two sites that share a term ID and a session that had already opened a post on the first of them, since the names are only cached for the session. Switching sites did not clear that cache; pull-to-refresh did, which is why it could look intermittent.
+
+- **Saving posts on a self-hosted site uses the REST API**
+  Creating, opening, saving, trashing and restoring a post or page on a self-hosted site added with an application password now goes through the site's own REST API instead of XML-RPC. Sites whose host blocks password-authenticated logins on `xmlrpc.php` — a two-factor plugin is the usual cause — could not save a draft or publish at all; they can now. Media uploads on these sites already worked this way.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** My Site → Posts (or Pages) → the editor → Save/Publish
+  - **Notes:** Only affects self-hosted sites signed in with an application password. WordPress.com and Jetpack sites are unchanged, and a self-hosted site without an application password still uses XML-RPC. A conflict with a newer copy on the server is now detected by reading the server's modified date just before saving, rather than by the server refusing the write, so a conflict created in the moment between that read and the save is no longer caught. New tags typed in the editor are created on the site before the post is saved; a tag the site refuses to create, such as one typed by an author whose role cannot add tags, is dropped rather than failing the save, and the post's other tag changes are still saved, while a tag the site reports as already existing is matched to the existing one instead of being dropped. If a tag request fails outright, so the app cannot tell whether the tag exists, the save leaves the post's tags on the site as they were rather than risk removing them. On a site that has turned the trash off, trashing a post deletes it permanently, which is what the site does with any delete and what the app did here before. A tag whose name contains `&`, `<` or `>` now shows the way it was typed rather than in its encoded form, and keeps its place on the post across saves. A child page opened from the Pages list also keeps its parent when saved, instead of moving to the top level. When the app cannot read a post's tag names, it no longer stores the post without them, which would have removed every tag from the post on the next save: opening the post reports an error you can retry, and a list refresh leaves the post showing as it was until a later refresh succeeds.
+
 - **Reader's tabs, filter sheet and interests picker restyled**
   The Reader's Discover sub-tabs (Freshly Pressed, Recommended, Latest), the blog and tag filter sheet, the "Choose your interests" picker, and the author, login-required and comment-notification sheets now use Material 3 components. They work as before: the top bar still hides as you scroll and comes back when you scroll up, the filter sheet still marks the current blog or tag and offers Manage, and the selected Discover tab is still remembered.
   - **Apps:** Jetpack
