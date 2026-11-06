@@ -3,10 +3,8 @@ package org.wordpress.android.ui.reader;
 import androidx.annotation.NonNull;
 
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
-import org.wordpress.android.util.StringUtils;
 
 /**
  * Reader-related EventBus event classes
@@ -19,81 +17,6 @@ public class ReaderEvents {
 
     private ReaderEvents() {
         throw new AssertionError();
-    }
-
-    public static class FollowedTagsFetched {
-        private final boolean mDidSucceed;
-        private final boolean mDidChange;
-        private final int mTotalTags;
-
-        public FollowedTagsFetched(boolean didSucceed, int tagsFollowed) {
-            mDidSucceed = didSucceed;
-            mDidChange = true;
-            mTotalTags = tagsFollowed;
-        }
-
-        public FollowedTagsFetched(boolean didSucceed, int tagsFollowed, boolean didChange) {
-            mDidSucceed = didSucceed;
-            mDidChange = didChange;
-            mTotalTags = tagsFollowed;
-        }
-
-        public boolean didSucceed() {
-            return mDidSucceed;
-        }
-
-        public boolean didChange() {
-            return mDidChange;
-        }
-        public int getTotalTags() {
-            return mTotalTags;
-        }
-    }
-
-    public static class TagAdded {
-        private final String mTagName;
-
-        public TagAdded(String tagName) {
-            mTagName = tagName;
-        }
-
-        public String getTagName() {
-            return StringUtils.notNullStr(mTagName);
-        }
-    }
-
-    public static class FollowedBlogsFetched {
-        private final int mTotalSubscriptions;
-        private final boolean mDidChange;
-
-        public boolean didChange() {
-            return mDidChange;
-        }
-        public int getTotalSubscriptions() {
-            return mTotalSubscriptions;
-        }
-        public FollowedBlogsFetched(int totalSubscriptions, boolean didChange) {
-            mTotalSubscriptions = totalSubscriptions;
-            mDidChange = didChange;
-        }
-    }
-
-    public static class InterestTagsFetchEnded {
-        private final ReaderTagList mInterestTags;
-        private final boolean mDidSucceed;
-
-        public InterestTagsFetchEnded(ReaderTagList interestTags, boolean didSucceed) {
-            mInterestTags = interestTags;
-            mDidSucceed = didSucceed;
-        }
-
-        public ReaderTagList getInterestTags() {
-            return mInterestTags;
-        }
-
-        public boolean didSucceed() {
-            return mDidSucceed;
-        }
     }
 
     public static class UpdateCommentsStarted {

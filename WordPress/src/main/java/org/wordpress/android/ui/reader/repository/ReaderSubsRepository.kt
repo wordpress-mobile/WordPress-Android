@@ -2,57 +2,40 @@ package org.wordpress.android.ui.reader.repository
 
 import android.webkit.URLUtil
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.onFailure
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderTagTable
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.modules.IO_THREAD
-import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions
-import org.wordpress.android.ui.reader.actions.ReaderTagActions
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtils
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.UrlUtils
-import org.wordpress.android.viewmodel.ContextProvider
-import java.util.EnumSet
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.resume
 
 /**
  * Data access for Manage subscriptions: the followed tags and sites, and following them by name or URL.
- * The Volley callbacks are bridged to suspend functions and the EventBus events to a [Flow].
+ * The Volley callbacks are bridged to suspend functions, and changes to the followed tags and sites are
+ * exposed as a [Flow].
  */
 class ReaderSubsRepository @Inject constructor(
-    private val contextProvider: ContextProvider,
-    private val eventBusWrapper: EventBusWrapper,
-    private val accountStore: AccountStore,
+    private val tagsAndSitesUpdater: ReaderTagsAndSitesUpdater,
     private val readerTracker: ReaderTracker,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) {
-    val events: Flow<ReaderSubsEvent> = callbackFlow {
-        val subscriber = EventSubscriber { event ->
-            trySend(event).onFailure {
-                AppLog.w(AppLog.T.READER, "reader subs > failed to deliver $event")
-            }
+    val events: Flow<ReaderSubsEvent> = tagsAndSitesUpdater.events.map { event ->
+        when (event) {
+            is ReaderTagsAndSitesEvent.FollowedTagsChanged -> ReaderSubsEvent.FollowedTagsFetched
+            is ReaderTagsAndSitesEvent.FollowedBlogsChanged -> ReaderSubsEvent.FollowedBlogsFetched(event.didChange)
         }
-        eventBusWrapper.register(subscriber)
-        awaitClose { eventBusWrapper.unregister(subscriber) }
     }
 
     suspend fun getFollowedTags(): List<ReaderTag> = withContext(ioDispatcher) {
@@ -82,17 +65,10 @@ class ReaderSubsRepository @Inject constructor(
 
     fun getHost(url: String): String = UrlUtils.getHost(url)
 
-    fun requestUpdate(tasks: EnumSet<UpdateTask>) =
-        ReaderUpdateServiceStarter.startService(contextProvider.getContext(), tasks)
+    fun requestUpdate(tasks: Set<UpdateTask>) = tagsAndSitesUpdater.update(tasks)
 
-    suspend fun followTag(tag: ReaderTag, follow: Boolean): Boolean = awaitAction { listener ->
-        val isLoggedIn = accountStore.hasAccessToken()
-        if (follow) {
-            ReaderTagActions.addTag(tag, listener, isLoggedIn)
-        } else {
-            ReaderTagActions.deleteTag(tag, listener, isLoggedIn)
-        }
-    }
+    suspend fun followTag(tag: ReaderTag, follow: Boolean): Boolean =
+        if (follow) tagsAndSitesUpdater.followTags(listOf(tag)) else tagsAndSitesUpdater.unfollowTag(tag)
 
     suspend fun followSite(blogId: Long, feedId: Long, follow: Boolean): Boolean = awaitAction { listener ->
         val source = ReaderTracker.SOURCE_SETTINGS
@@ -143,19 +119,6 @@ class ReaderSubsRepository @Inject constructor(
                 if (!start(listener) && continuation.isActive) continuation.resume(false)
             }
         }
-
-    // EventBus invokes subscriber methods reflectively, so this class has to stay public
-    class EventSubscriber(private val onEvent: (ReaderSubsEvent) -> Unit) {
-        @Subscribe(threadMode = ThreadMode.MAIN)
-        fun onEvent(@Suppress("UNUSED_PARAMETER") event: ReaderEvents.FollowedTagsFetched) {
-            onEvent(ReaderSubsEvent.FollowedTagsFetched)
-        }
-
-        @Subscribe(threadMode = ThreadMode.MAIN)
-        fun onEvent(event: ReaderEvents.FollowedBlogsFetched) {
-            onEvent(ReaderSubsEvent.FollowedBlogsFetched(event.didChange()))
-        }
-    }
 }
 
 sealed class ReaderSubsEvent {

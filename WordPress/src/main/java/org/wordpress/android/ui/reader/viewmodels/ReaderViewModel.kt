@@ -11,9 +11,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderTag
@@ -23,7 +20,9 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.views.compose.dropdown.JetpackMenuElementData
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.reader.ReaderEvents
+import org.wordpress.android.ui.reader.repository.ReaderTagsAndSitesEvent
+import org.wordpress.android.ui.reader.repository.ReaderTagsAndSitesUpdater
+import org.wordpress.android.ui.reader.repository.UpdateTask
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.tracker.ReaderTab
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -64,6 +63,7 @@ class ReaderViewModel @Inject constructor(
     private val readerTopBarMenuHelper: ReaderTopBarMenuHelper,
     private val urlUtilsWrapper: UrlUtilsWrapper,
     private val readerTagsFeedFeatureConfig: ReaderTagsFeedFeatureConfig,
+    private val tagsAndSitesUpdater: ReaderTagsAndSitesUpdater,
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
     private var wasPaused: Boolean = false
@@ -75,9 +75,6 @@ class ReaderViewModel @Inject constructor(
 
     private val _topBarUiState = MutableLiveData<TopBarUiState>()
     val topBarUiState: LiveData<TopBarUiState> = _topBarUiState.distinct()
-
-    private val _updateTags = MutableLiveData<Event<Unit>>()
-    val updateTags: LiveData<Event<Unit>> = _updateTags
 
     private val _showSearch = MutableLiveData<Event<Unit>>()
     val showSearch: LiveData<Event<Unit>> = _showSearch
@@ -94,11 +91,18 @@ class ReaderViewModel @Inject constructor(
     private var readerTagsList = ReaderTagList()
 
     init {
-        EventBus.getDefault().register(this)
+        launch {
+            tagsAndSitesUpdater.events.collect { event ->
+                when (event) {
+                    is ReaderTagsAndSitesEvent.FollowedTagsChanged -> onTagsUpdated(event)
+                    is ReaderTagsAndSitesEvent.FollowedBlogsChanged -> onSubscribedSitesUpdated(event)
+                }
+            }
+        }
     }
 
     fun start(savedInstanceState: Bundle? = null) {
-        if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
+        if (tagsRequireUpdate()) tagsAndSitesUpdater.update(setOf(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS))
         if (initialized) return
         loadTabs(savedInstanceState)
         if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
@@ -161,10 +165,6 @@ class ReaderViewModel @Inject constructor(
         _showReaderInterests.value = Event(Unit)
     }
 
-    override fun onCleared() {
-        EventBus.getDefault().unregister(this)
-    }
-
     private fun tagsRequireUpdate(): Boolean {
         val lastUpdated = appPrefsWrapper.readerTagsUpdatedTimestamp
         val now = dateProvider.getCurrentDate().time
@@ -219,13 +219,11 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
-    @Suppress("unused", "UNUSED_PARAMETER")
-    @Subscribe(threadMode = MAIN)
-    fun onTagsUpdated(event: ReaderEvents.FollowedTagsFetched) {
+    private fun onTagsUpdated(event: ReaderTagsAndSitesEvent.FollowedTagsChanged) {
         loadTabs()
         // Determine if analytics should be bumped either due to tags changed or time elapsed since last bump
         val now = DateProvider().getCurrentDate().time
-        val shouldBumpAnalytics = event.didChange()
+        val shouldBumpAnalytics = event.didChange
                 || (now - appPrefsWrapper.readerAnalyticsCountTagsTimestamp > ONE_HOUR_MILLIS)
 
         if (shouldBumpAnalytics) {
@@ -234,12 +232,10 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
-    @Suppress("unused", "UNUSED_PARAMETER")
-    @Subscribe(threadMode = MAIN)
-    fun onSubscribedSitesUpdated(event: ReaderEvents.FollowedBlogsFetched) {
+    private fun onSubscribedSitesUpdated(event: ReaderTagsAndSitesEvent.FollowedBlogsChanged) {
         // Determine if analytics should be bumped either due to sites changed or time elapsed since last bump
         val now = DateProvider().getCurrentDate().time
-        val shouldBumpAnalytics = event.didChange()
+        val shouldBumpAnalytics = event.didChange
                 || (now - AppPrefs.getReaderAnalyticsCountSitesTimestamp() > ONE_HOUR_MILLIS)
 
         if (shouldBumpAnalytics) {
