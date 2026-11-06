@@ -153,13 +153,18 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
             runningUpdates[task] = result
             // launch rather than async so an exception crashes the app, as the update service did
             applicationScope.launch(ioDispatcher) {
-                var response: T?
-                do {
+                while (true) {
                     synchronized(updateLock) { staleUpdates -= task }
-                    response = fetch()
-                } while (!endIfCurrent(task, willSave = response != null))
-                response?.let { save(it) }
-                result.complete(response != null)
+                    val response = fetch()
+                    if (synchronized(updateLock) { task in staleUpdates }) continue
+                    response?.let { save(it) }
+                    // the update stays registered until it's saved, so a change made during the save marks it
+                    // stale and it's sent again, since the save may have undone that change
+                    if (endIfCurrent(task, didSave = response != null)) {
+                        result.complete(response != null)
+                        break
+                    }
+                }
             }
         }
     }
@@ -167,11 +172,11 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
     /*
      * ends the running request for [task] and returns true, or returns false if it was marked stale
      */
-    private fun endIfCurrent(task: UpdateTask, willSave: Boolean): Boolean = synchronized(updateLock) {
+    private fun endIfCurrent(task: UpdateTask, didSave: Boolean): Boolean = synchronized(updateLock) {
         (task !in staleUpdates).also { isCurrent ->
             if (isCurrent) {
                 runningUpdates.remove(task)
-                if (willSave && task == UpdateTask.TAGS) tagsResponsesSaved++
+                if (didSave && task == UpdateTask.TAGS) tagsResponsesSaved++
             }
         }
     }
