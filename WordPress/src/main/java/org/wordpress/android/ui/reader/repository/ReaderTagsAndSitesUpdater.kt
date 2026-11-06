@@ -153,18 +153,16 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
             runningUpdates[task] = result
             // launch rather than async so an exception crashes the app, as the update service did
             applicationScope.launch(ioDispatcher) {
-                while (true) {
+                var response: T?
+                do {
                     synchronized(updateLock) { staleUpdates -= task }
-                    val response = fetch()
-                    if (synchronized(updateLock) { task in staleUpdates }) continue
-                    response?.let { save(it) }
+                    response = fetch()
+                    val isCurrent = synchronized(updateLock) { task !in staleUpdates }
+                    if (isCurrent) response?.let { save(it) }
                     // the update stays registered until it's saved, so a change made during the save marks it
                     // stale and it's sent again, since the save may have undone that change
-                    if (endIfCurrent(task, didSave = response != null)) {
-                        result.complete(response != null)
-                        break
-                    }
-                }
+                } while (!isCurrent || !endIfCurrent(task, didSave = response != null))
+                result.complete(response != null)
             }
         }
     }
