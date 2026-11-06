@@ -8,6 +8,13 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **App Settings grouped into cards**
+  App Settings now groups its rows into outlined cards, matching the Me screen.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Me → App Settings; Me → App Settings → Privacy settings
+
 - **Tag and category names no longer come from the wrong site**
   Opening a post or page could show another site's tag and category names, because the names were remembered by term ID alone and those IDs are per site — on a self-hosted site they start at 1, so two sites routinely share them. Saving such a post applied the name that was shown and removed the tag the post really had. Names are now remembered per site.
   - **Apps:** Both

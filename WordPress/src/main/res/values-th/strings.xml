@@ -35,7 +35,6 @@ Language: th
     <string name="site_settings_discussion_hint">ดูและเปลี่ยนการตั้งค่าการสนทนาเว็บของคุณ</string>
     <string name="site_settings_more_hint">ดูการตั้งค่าการสนทนาทั้งหมดที่มีอยู่</string>
     <string name="site_settings_related_posts_hint">แสดงหรือซ่อนเรื่องในตัวอ่าน</string>
-    <string name="site_settings_image_width_hint">เปลี่ยนขนาดรูปภาพในเรื่องมาที่ขนาดความกว้างนี้</string>
     <string name="site_settings_format_hint">ตั้งค่ารูปแบบเรื่องใหม่</string>
     <string name="site_settings_category_hint">ตั้งค่าหมวดหมู่เรื่องใหม่</string>
     <string name="site_settings_password_hint">เปลี่ยนรหัสผ่านของคุณ</string>

@@ -279,7 +279,6 @@ Language: hr
     <string name="site_settings_discussion_hint">Pregledajte i promijenite postavke rasprave na web-stranici</string>
     <string name="site_settings_more_hint">Pregledajte sve dostupne postavke resprave</string>
     <string name="site_settings_related_posts_hint">Prikažite ili sakrijte srodne objave u čitaču</string>
-    <string name="site_settings_image_width_hint">Redimenzionirajte slike u objavama na ovu širinu</string>
     <string name="site_settings_format_hint">Postavlja novi format objave</string>
     <string name="site_settings_category_hint">Postavlja novu kategoriju objave</string>
     <string name="site_settings_password_hint">Promijenite svoju lozinku</string>

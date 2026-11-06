@@ -2007,7 +2007,6 @@ Language: tr
     <string name="publish_date">Yayınlanma tarihi</string>
     <string name="ccpa_privacy_notice_read">CCPA gizlilik notunu okuyun</string>
     <string name="ccpa_privacy_notice_caption">California Tüketici Gizlilik Yasası (\"CCPA\"), California sakinlerine topladığımız ve paylaştığımız kişisel bilgi kategorileri, bu kişisel bilgileri nereden aldığımız ve bunları nasıl ve neden kullandığımız hakkında bazı ek bilgiler sağlamamızı zorunlu kılar.</string>
-    <string name="ccpa_privacy_notice_header">Californiya kullanıcıları için gizlilik notu</string>
     <string name="status_and_visibility">Durum ve görünürlük</string>
     <string name="update_now">Şimdi güncelle</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2722,11 +2721,8 @@ Language: tr
     <string name="activity_log">Etkinlik günlüğü</string>
     <string name="privacy_policy_read">Gizlilik ilkesini okuyun</string>
     <string name="third_party_policy_learn_more_caption">Üçüncü tarafların da sahibi olduğu çeşitli izleme araçları kullanıyoruz. Bunlar ve nasıl kontrol edilecekleri hakkında bilgi alın.</string>
-    <string name="third_party_policy_learn_more_header">Üçüncü taraf ilkesi</string>
     <string name="privacy_policy_learn_more_caption">Bu bilgiler, ürünlerimizi geliştirmemize, sizin için daha iyi pazarlama yapmamıza, WordPress.com deneyiminizi kişiselleştirmemize ve ayrıntılı olarak gizlilik ilkemizde belirttiğimiz şekilde başka şeyler yapmamıza yardımcı olur.</string>
-    <string name="privacy_policy_learn_more_header">Gizlilik ilkesi</string>
     <string name="cookie_policy_learn_more_caption">WordPress.com hesabınızda oturum açmışken, hizmetlerimizi kullanma bilgilerinizi istatistikler aracımızla paylaşın.</string>
-    <string name="cookie_policy_learn_more_header">Çerez ilkesi</string>
     <string name="preference_privacy_settings">Gizlilik ayarları</string>
     <string name="preference_collect_information">Bilgiler toplansın</string>
     <string name="post_submitted">Yazı gönderildi</string>
@@ -3120,8 +3116,6 @@ Language: tr
     <string name="media_all">Tümü</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s için ortam dosyalarınıza erişim reddedildi. Bunu düzeltmek için izinlerinizi düzenleyip %2$s özelliğini açın.</string>
     <string name="reader_view_comments">Yorumları görüntüle</string>
-    <string name="site_settings_video_quality_hint">Videoların kalitesi. Daha yüksek değerler daha kaliteli videolar demektir.</string>
-    <string name="site_settings_video_width_hint">Yazılardaki videoların boyutunu bu boyuta değiştirir</string>
     <string name="site_settings_optimize_video_summary">Videoları yeniden boyutlandırmak ve sıkıştırmak için etkinleştirin</string>
     <string name="site_settings_optimize_videos">Videoları iyileştir</string>
     <string name="draft_uploaded">Taslak yüklendi</string>
@@ -3205,7 +3199,6 @@ Language: tr
     <string name="photo_picker_title">Fotoğraf seçin</string>
     <string name="error_publish_no_network">Aygıt çevrim dışı. Yazılar yerel olarak kaydedildi.</string>
     <string name="editor_post_saved_online">Yazı çevrim içi kaydedildi</string>
-    <string name="site_settings_image_quality_hint">Görüntülerin kalitesi. Daha yüksek değerler daha kaliteli görüntü anlamına gelir.</string>
     <string name="site_settings_optimize_images_summary">Görüntülerin boyutlandırılıp sıkıştırılabilmelerini etkinleştir</string>
     <string name="media_encoder_quality_maximum">En fazla</string>
     <string name="media_encoder_quality_high">Yüksek</string>
@@ -3457,7 +3450,6 @@ Language: tr
     <string name="site_settings_discussion_hint">Sitenizin tartışma ayarlarını görüntüleyin ve değiştirin</string>
     <string name="site_settings_more_hint">Tüm kullanılabilir tartışma ayarlarını görüntüler</string>
     <string name="site_settings_related_posts_hint">İlgili yazıları okuyucuda görüntüle ya da gizler</string>
-    <string name="site_settings_image_width_hint">Yazılardaki görsellerin boyutunu bu genişliğe değiştirir</string>
     <string name="site_settings_format_hint">Yeni yazı biçimini ayarlar</string>
     <string name="site_settings_category_hint">Yeni yazı kategorisini ayarlar</string>
     <string name="site_settings_password_hint">Parolanızı değiştirin</string>

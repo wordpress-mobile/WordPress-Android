@@ -1988,7 +1988,6 @@ Language: ar
     <string name="post_status_post_scheduled">مجدولة</string>
     <string name="reader_choose_interests_tags_content_description">اختيار وسومك</string>
     <string name="status_and_visibility">الحالة والظهور</string>
-    <string name="ccpa_privacy_notice_header">إشعار الخصوصية الخاص بالمستخدمين في كاليفورنيا</string>
     <string name="update_now">قم بالتحديث الآن</string>
     <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">فتح قائمة إجراءات المكوِّن</string>
@@ -2699,9 +2698,6 @@ Language: ar
     <string name="activity_log">سجل النشاط</string>
     <string name="privacy_policy_read">قراءة سياسة الخصوصية</string>
     <string name="third_party_policy_learn_more_caption">نستخدم أدوات تتبع أخرى، بما في ذلك بعض الأدوات التي تنتمي إلى أطراف ثالثة. اقرأ عن هذه الأدوات وكيفية التحكم فيها.</string>
-    <string name="third_party_policy_learn_more_header">سياسة الطرف الثالث</string>
-    <string name="privacy_policy_learn_more_header">سياسة الخصوصية</string>
-    <string name="cookie_policy_learn_more_header">سياسة ملفات تعريف الارتباط</string>
     <string name="preference_privacy_settings">إعدادات الخصوصية</string>
     <string name="preference_collect_information">جمع المعلومات</string>
     <string name="cookie_policy_learn_more_caption">شارك المعلومات مع أداة التحليلات لدينا حول استخدامك الخدمات أثناء تسجيل الدخول إلى حساب WordPress.com الخاص بك.</string>
@@ -3098,8 +3094,6 @@ Language: ar
     <string name="media_all">الكل</string>
     <string name="media_picker_soft_ask_media_permissions_denied">تم رفض وصول ⁦%1$s⁩ إلى ملفات الوسائط الاجتماعية الخاصة بك. لإصلاح ذلك، حرّر صلاحياتك وشغِّل ⁦%2$s⁩.</string>
     <string name="reader_view_comments">عرض التعليقات</string>
-    <string name="site_settings_video_quality_hint">جودة الفيديوهات تُشير القيم الأعلى إلى الفيديوهات ذات الجودة الأفضل.</string>
-    <string name="site_settings_video_width_hint">تغيير حجم الفيديوهات في المقالات إلى هذا الحجم</string>
     <string name="site_settings_optimize_video_summary">التمكين لتغيير حجم الفيديوهات وضغطها</string>
     <string name="site_settings_optimize_videos">تحسين مقاطع الفيديو</string>
     <string name="video_quality">جودة الفيديو</string>
@@ -3183,7 +3177,6 @@ Language: ar
     <string name="photo_picker_title">اختيار صورة</string>
     <string name="error_publish_no_network">الجهاز غير متصل بالإنترنت. تمّ حفظ المقالة محليًا.</string>
     <string name="editor_post_saved_online">تم حفظ المقالة على الإنترنت</string>
-    <string name="site_settings_image_quality_hint">جودة الصور. تُشير القيم الأعلى إلى الصور ذات الجودة الأفضل.</string>
     <string name="site_settings_optimize_images_summary">تمكين تغيير حجم الصور وضغطها</string>
     <string name="media_encoder_quality_maximum">الحد الأقصى</string>
     <string name="media_encoder_quality_medium">متوسط</string>
@@ -3435,7 +3428,6 @@ Language: ar
     <string name="site_settings_discussion_hint">عرض إعدادات المناقشة على موقعك وتغييرها</string>
     <string name="site_settings_more_hint">عرض جميع إعدادات المناقشة المتوفرة</string>
     <string name="site_settings_related_posts_hint">إظهار المقالات ذات الصلة أو إخفاؤها في القارئ</string>
-    <string name="site_settings_image_width_hint">تغيير حجم الصور في المقالات إلى هذا العرض</string>
     <string name="site_settings_format_hint">يُعيّن تنسيق مقالة جديدة</string>
     <string name="site_settings_category_hint">تعيين تصنيف مقالة جديد</string>
     <string name="site_settings_password_hint">تغيير كلمة مرورك</string>

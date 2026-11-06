@@ -858,7 +858,6 @@ Language: vi_VN
     <string name="publish_date">Ngày đăng</string>
     <string name="ccpa_privacy_notice_read">Đọc lưu ý CCPA</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Chuyển về nháp?</string>
-    <string name="ccpa_privacy_notice_header">Lưu ý bảo mật cho người dùng California</string>
     <string name="update_now">Cập Nhật</string>
     <string name="status_and_visibility">Trạng thái</string>
     <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Menu mở khối hành động</string>
@@ -1539,11 +1538,8 @@ Language: vi_VN
     <string name="activity_log_jetpack_icon">Biểu tượng Jetpack</string>
     <string name="activity_log_event">Sự kiện</string>
     <string name="privacy_policy_read">Đọc chính sách bảo mật</string>
-    <string name="third_party_policy_learn_more_header">Chính sách bên thứ ba</string>
     <string name="privacy_policy_learn_more_caption">Thông tin này giúp chúng tôi cải thiện sản phẩm, tiếp thị cho bạn phù hợp hơn, cá nhân hóa trải nghiệm WordPress.com của bạn và nhiều thông tin chi tiết khác trong chính sách bảo mật của chúng tôi.</string>
-    <string name="privacy_policy_learn_more_header">Chính sách bảo mật</string>
     <string name="cookie_policy_learn_more_caption">Chia sẻ thông tin với công cụ phân tích của chúng tôi về việc sử dụng dịch vụ WordPress.com của bạn.</string>
-    <string name="cookie_policy_learn_more_header">Chính sách cookie</string>
     <string name="activity_log_icon">Biểu tượng hoạt động</string>
     <string name="preference_collect_information">Thu thập thông tin</string>
     <string name="preference_privacy_settings">Bảo mật</string>
@@ -1930,8 +1926,6 @@ Language: vi_VN
     <string name="media_images">Ảnh</string>
     <string name="media_all">Tất cả</string>
     <string name="reader_view_comments">Đọc bình luận</string>
-    <string name="site_settings_video_quality_hint">Chất lượng video. Thông số càng cao thì chất lượng video càng tốt.</string>
-    <string name="site_settings_video_width_hint">Thay đổi video trong bài đăng thành kích thước này</string>
     <string name="site_settings_optimize_video_summary">Thay đổi độ phân giải và nén video</string>
     <string name="site_settings_optimize_videos">Tối ưu hóa video</string>
     <string name="video_quality">Chất lượng video</string>
@@ -2014,7 +2008,6 @@ Language: vi_VN
     <string name="photo_picker_title">Chọn ảnh</string>
     <string name="error_publish_no_network">Thiết bị ngoại tuyến. Đã lưu bài viết cục bộ.</string>
     <string name="editor_post_saved_online">Đã lưu bài viết online</string>
-    <string name="site_settings_image_quality_hint">Chất lượng ảnh. Thông số càng cao thì chất lượng ảnh càng cao.</string>
     <string name="site_settings_optimize_images_summary">Thay đổi kích thước và nén hình</string>
     <string name="media_upload_state_uploaded">Đã tải lên</string>
     <string name="media_upload_state_failed">Tải lên thất bại</string>
@@ -2259,7 +2252,6 @@ Language: vi_VN
     <string name="site_settings_discussion_hint">Xem và thay đổi các cài đặt bình luận trên blog của bạn</string>
     <string name="site_settings_more_hint">Xem tất cả cài đặt bình luận</string>
     <string name="site_settings_related_posts_hint">Hiện hoặc ẩn bài viết liên quan cho độc giả</string>
-    <string name="site_settings_image_width_hint">Giảm chiều rộng ảnh trong bài viết xuống kích cỡ này</string>
     <string name="site_settings_format_hint">Đặt định dạng bài viết mới</string>
     <string name="site_settings_category_hint">Đặt chuyên mục mới</string>
     <string name="site_settings_password_hint">Đổi mật khẩu</string>

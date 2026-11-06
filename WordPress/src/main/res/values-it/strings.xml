@@ -2007,7 +2007,6 @@ Language: it
     <string name="publish_date">Data di pubblicazione</string>
     <string name="ccpa_privacy_notice_read">Leggi la nota sulla privacy del CCPA</string>
     <string name="ccpa_privacy_notice_caption">Il California Consumer Privacy Act (\"CCPA\") ci impone di fornire ai residenti in California alcune informazioni aggiuntive sulle categorie di informazioni personali che raccogliamo e condividiamo, dove otteniamo tali informazioni personali e come e perché le usiamo.</string>
-    <string name="ccpa_privacy_notice_header">Nota sulla privacy per utenti in California</string>
     <string name="status_and_visibility">Stato e visibilità</string>
     <string name="update_now">Aggiorna ora</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2722,11 +2721,8 @@ Language: it
     <string name="activity_log">Log attività</string>
     <string name="privacy_policy_read">Leggi l’informativa sulla privacy</string>
     <string name="third_party_policy_learn_more_caption">Utilizziamo altri strumenti di tracciamento, compresi alcuni di terzi. Leggi le informazioni sugli strumenti e come controllarli.</string>
-    <string name="third_party_policy_learn_more_header">Informativa sulla privacy di terze parti</string>
     <string name="privacy_policy_learn_more_caption">Queste informazioni ci aiutano a migliorare i prodotti, offrire proposte di marketing più pertinenti, personalizzare l’esperienza WordPress.com e molto altro, come indicato nel dettaglio nella nostra informativa sulla privacy.</string>
-    <string name="privacy_policy_learn_more_header">Privacy Policy</string>
     <string name="cookie_policy_learn_more_caption">Condividi informazioni con il nostro strumento di analisi relativamente al tuo uso dei servizi mentre sei connesso con il tuo account WordPress.com.</string>
-    <string name="cookie_policy_learn_more_header">Informativa sui cookie</string>
     <string name="preference_privacy_settings">Impostazioni della privacy</string>
     <string name="preference_collect_information">Raccogli informazioni</string>
     <string name="post_submitted">Articolo inviato</string>
@@ -3120,8 +3116,6 @@ Language: it
     <string name="media_all">Tutto</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s è stato negato l\'accesso ai tuoi file multimediali. Per risolvere questo problema, modifica le tue autorizzazioni e attiva %2$s.</string>
     <string name="reader_view_comments">Visualizza commenti</string>
-    <string name="site_settings_video_quality_hint">Qualità dei video. Valori più alti comportano una migliore qualità dei video.</string>
-    <string name="site_settings_video_width_hint">Ridimensiona i video negli articoli secondo queste dimensioni</string>
     <string name="site_settings_optimize_video_summary">Consenti di ridimensionare e comprimere i video</string>
     <string name="site_settings_optimize_videos">Ottimizza video</string>
     <string name="draft_uploaded">Bozza caricata</string>
@@ -3205,7 +3199,6 @@ Language: it
     <string name="photo_picker_title">Scegli foto</string>
     <string name="error_publish_no_network">Il dispositivo è offline. Le modifiche sono state salvate a livello locale.</string>
     <string name="editor_post_saved_online">L\'articolo è stato salvato online</string>
-    <string name="site_settings_image_quality_hint">Qualità delle immagini. Valori più elevati indicano una migliore qualità delle immagini.</string>
     <string name="site_settings_optimize_images_summary">Consenti di ridimensionare e comprimere le immagini</string>
     <string name="media_encoder_quality_maximum">Massima</string>
     <string name="media_encoder_quality_high">Alta</string>
@@ -3457,7 +3450,6 @@ Language: it
     <string name="site_settings_discussion_hint">Visualizza e modifica le impostazioni di discussione del sito</string>
     <string name="site_settings_more_hint">Visualizza tutte le impostazioni di discussione disponibili</string>
     <string name="site_settings_related_posts_hint">Mostra o nascondi gli articoli correlati nel Reader</string>
-    <string name="site_settings_image_width_hint">Ridimensiona le immagini negli articoli secondo questa larghezza</string>
     <string name="site_settings_format_hint">Imposta nuovo formato articolo</string>
     <string name="site_settings_category_hint">Imposta nuova categoria articolo</string>
     <string name="site_settings_password_hint">Modifica la password</string>

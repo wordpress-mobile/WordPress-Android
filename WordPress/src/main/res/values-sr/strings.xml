@@ -2009,7 +2009,6 @@ Language: sr_RS
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Преместити чланак у нацрте?</string>
     <string name="update_now">Ажурирај сада</string>
     <string name="status_and_visibility">Стање и видљивост</string>
-    <string name="ccpa_privacy_notice_header">Обавештење о приватности за кориснике из Калифорније</string>
     <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Отвори изборник радњи блока</string>
     <string name="gutenberg_native_move_to_top" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Помери на врх</string>
@@ -2717,15 +2716,12 @@ Language: sr_RS
     <string name="activity_log_event">Догађај</string>
     <string name="activity_log">Дневник активности</string>
     <string name="preference_privacy_settings">Подешавања приватности</string>
-    <string name="third_party_policy_learn_more_header">Правила трећих страна</string>
     <string name="privacy_policy_learn_more_caption">Ове информације нам помажу да побољшамо своје производе, учинимо маркетинг битнијим за вас, прилагодимо ваше WordPress.com искуство и још много тога, како је описано у нашим правилима о приватности.</string>
     <string name="third_party_policy_learn_more_caption">Користимо и друге алатке за праћење, укључујући неке од трећих страна. Прочитајте о њима и како да их контролишете.</string>
     <string name="cookie_policy_learn_more_caption">Делите са нашом аналитичком алатком информације о томе како користите услуге док сте пријављени на свој WordPress.com налог.</string>
     <string name="reader_btn_blog_notifications_on">Укључи обавештења блога</string>
     <string name="reader_btn_blog_notifications_off">Искључи обавештења блога</string>
-    <string name="privacy_policy_learn_more_header">Правила о приватности</string>
     <string name="activity_log_jetpack_icon">Jetpack иконица</string>
-    <string name="cookie_policy_learn_more_header">Правила о колачићима</string>
     <string name="privacy_policy_read">Прочитај правила о приватности</string>
     <string name="preference_collect_information">Прикупљај информације</string>
     <string name="reader_followed_blog_notifications">Омогућити обавештења за %1$s%2$s%3$s?</string>
@@ -3120,9 +3116,7 @@ Language: sr_RS
     <string name="media_videos">Видео снимци</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s је ускраћен приступ вашим медијским датотекама. Да бисте ово поправили, уредите дозволе и укључите %2$s.</string>
     <string name="reader_view_comments">Погледај коментаре</string>
-    <string name="site_settings_video_quality_hint">Квалитет видео снимака. Веће вредности значе квалитетније видео снимке.</string>
     <string name="site_settings_optimize_video_summary">Омогућите за промену величине и сажимање видео снимака</string>
-    <string name="site_settings_video_width_hint">Мења величину видео снимака у чланцима на ову величину</string>
     <string name="site_settings_optimize_videos">Оптимизуј видео снимке</string>
     <string name="video_quality">Квалитет видеа</string>
     <string name="draft_uploaded">Нацрт је отпремљен</string>
@@ -3205,7 +3199,6 @@ Language: sr_RS
     <string name="error_publish_no_network">Уређај није на мрежи. Чланак је сачуван локално.</string>
     <string name="photo_picker_title">Изабери фотографију</string>
     <string name="editor_post_saved_online">Чланак је сачуван на мрежи</string>
-    <string name="site_settings_image_quality_hint">Квалитет слика. Веће вредности значе квалитетније слике.</string>
     <string name="site_settings_optimize_images_summary">Омогућите за промену величине и сажимање слика</string>
     <string name="media_encoder_quality_high">Висок</string>
     <string name="media_encoder_quality_medium">Средњи</string>
@@ -3457,7 +3450,6 @@ Language: sr_RS
     <string name="site_settings_discussion_hint">Погледајте и промените подешавања разговора на сајту</string>
     <string name="site_settings_more_hint">Погледај сва доступна подешавања разговора</string>
     <string name="site_settings_related_posts_hint">Прикажи или сакриј повезане чланке у читачу</string>
-    <string name="site_settings_image_width_hint">Мења ширину слика у чланцима на ову ширину</string>
     <string name="site_settings_format_hint">Поставља нови облик чланка</string>
     <string name="site_settings_category_hint">Поставља нову категорију чланка</string>
     <string name="site_settings_password_hint">Промените своју лозинку</string>

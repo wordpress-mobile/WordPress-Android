@@ -2003,7 +2003,6 @@ Language: ko_KR
     <string name="publish_date">발행일</string>
     <string name="ccpa_privacy_notice_read">CCPA 개인정보보호 고지 읽기</string>
     <string name="ccpa_privacy_notice_caption">캘리포니아 소비자 개인정보 보호법(“CCPA”)이 수집하고 공유하는 개인 정보의 범주에 대한 개인 정보를 어떤 것을 얻고,  어떻게 왜 쓰는 지에 대한 일부 추가 정보를 캘리포니아 거주자에게 제공할 것을 요구합니다.</string>
-    <string name="ccpa_privacy_notice_header">캘리포니아 사용자를 위한 개인정보보호 고지</string>
     <string name="status_and_visibility">상태 &amp; 가시성</string>
     <string name="update_now">지금 업데이트하기</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2718,11 +2717,8 @@ Language: ko_KR
     <string name="activity_log">활동 로그</string>
     <string name="privacy_policy_read">개인정보 취급방침 읽기</string>
     <string name="third_party_policy_learn_more_caption">워드프레스는 타사 제품을 포함한 다른 추적 도구를 사용합니다. 이 도구에 대해 읽고 제어하는 방법에 대해 알아보세요.</string>
-    <string name="third_party_policy_learn_more_header">타사 정책</string>
     <string name="privacy_policy_learn_more_caption">이 정보는 개인정보 취급방침에 명시된 것처럼 제품을 개선하고, 보다 관련된 마케팅을 제공하며, 워드프레스닷컴 환경을 개인 설정하는 데 도움을 줍니다.</string>
-    <string name="privacy_policy_learn_more_header">개인정보 취급방침</string>
     <string name="cookie_policy_learn_more_caption">워드프레스닷컴 계정에 로그인되어 있는 동안 이용하는 서비스에 대한 정보를 워드프레스의 분석 도구와 공유합니다.</string>
-    <string name="cookie_policy_learn_more_header">쿠키 정책</string>
     <string name="preference_privacy_settings">개인 정보 설정</string>
     <string name="preference_collect_information">정보 수집</string>
     <string name="post_submitted">글이 제출됨</string>
@@ -3116,8 +3112,6 @@ Language: ko_KR
     <string name="media_all">모두</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s의 미디어 파일 접근이 거부되었습니다. 이 문제를 해결하려면 권한을 편집하고 %2$s을(를) 켜세요.</string>
     <string name="reader_view_comments">댓글 보기</string>
-    <string name="site_settings_video_quality_hint">비디오 품질. 값이 클수록 비디오가 고품질이라는 것을 의미합니다.</string>
-    <string name="site_settings_video_width_hint">글의 비디오를 이 크기로 조정</string>
     <string name="site_settings_optimize_video_summary">비디오 크기 조정 및 압축</string>
     <string name="site_settings_optimize_videos">비디오 최적화</string>
     <string name="draft_uploaded">임시글이 업로드됨</string>
@@ -3201,7 +3195,6 @@ Language: ko_KR
     <string name="photo_picker_title">사진 선택</string>
     <string name="error_publish_no_network">기기가 오프라인 상태입니다. 변경사항이 로컬로 저장되었습니다.</string>
     <string name="editor_post_saved_online">글이 온라인으로 저장되었습니다.</string>
-    <string name="site_settings_image_quality_hint">사진 품질. 값이 클수록 고품질의 사진을 의미합니다.</string>
     <string name="site_settings_optimize_images_summary">사진 크기를 조정하고 압축할 수 있습니다.</string>
     <string name="media_encoder_quality_maximum">최대</string>
     <string name="media_encoder_quality_high">높음</string>
@@ -3453,7 +3446,6 @@ Language: ko_KR
     <string name="site_settings_discussion_hint">사이트 토론 설정 보기 및 변경</string>
     <string name="site_settings_more_hint">사용 가능한 모든 토론 설정 보기</string>
     <string name="site_settings_related_posts_hint">리더에서 관련 글 표시 또는 숨기기</string>
-    <string name="site_settings_image_width_hint">글의 이미지를 이 폭으로 크기 조정합니다.</string>
     <string name="site_settings_format_hint">새 글 형식을 설정합니다.</string>
     <string name="site_settings_category_hint">새 글 카테고리를 설정합니다.</string>
     <string name="site_settings_password_hint">비밀번호 변경</string>
