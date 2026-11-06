@@ -17,6 +17,7 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argThat
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.mock
@@ -996,8 +997,8 @@ class TaxonomyRsApiRestClientTest {
     }
 
     /**
-     * Only `term_exists` carries an id to recover; any other failure still drops the name, which
-     * is what marks the resolution incomplete so an update leaves the site's tags alone.
+     * Only `term_exists` carries an id to recover, however term-id-shaped another error's data
+     * happens to look.
      */
     @Test
     fun `resolveTagIds does not read an id out of an unrelated error`() = runTest {
@@ -1022,7 +1023,76 @@ class TaxonomyRsApiRestClientTest {
         val resolution = taxonomyClient.resolveTagIds(testSite, listOf("news"))
 
         assertTrue(resolution.ids.isEmpty())
+    }
+
+    /**
+     * A create the site turns down on permissions - an Author, say, whose role has no
+     * `manage_categories` - is as resolved as that name is ever going to get. Holding the whole
+     * tag set back for it would throw away every other tag edit in the save, and in every save
+     * after it, so only the refused name is dropped.
+     */
+    @Test
+    fun `a name the site refuses to create is dropped without blocking the other tags`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), argThat { search == "news" }) } doReturn
+                    listResponse(listOf(term(9L, "news")))
+            onBlocking { listWithViewContext(any(), argThat { search == "new-tag" }) } doReturn
+                    listResponse(emptyList())
+            onBlocking { create(any(), any()) } doReturn createResponse(term(31L, "new-tag"))
+        }
+        driveRequestsThrough(
+            termsExecutor,
+            failingRequest = 3,
+            error = WpRequestResult.WpError(
+                errorCode = WpErrorCode.CannotCreate(),
+                errorMessage = "Sorry, you are not allowed to create terms in this taxonomy.",
+                statusCode = 403u,
+                response = """{"code":"rest_cannot_create","message":"not allowed","data":{"status":403}}""",
+                requestUrl = "",
+                requestMethod = RequestMethod.POST
+            )
+        )
+
+        val resolution = taxonomyClient.resolveTagIds(testSite, listOf("news", "new-tag"))
+
+        // Only the found tag: 31 is what the create would have returned, so its absence pins that
+        // the request the 403 answered really was the create.
+        assertEquals(listOf(9L), resolution.ids)
+        assertTrue(resolution.complete)
+        verifyBlocking(termsExecutor) { create(TermEndpointType.Tags, TermCreateParams(name = "new-tag")) }
+    }
+
+    /**
+     * A lookup that never got an answer says nothing about whether the site has the tag, so
+     * creating one would be as likely to duplicate a tag it already holds as to add a missing
+     * one - and a duplicate is a second tag the author never asked for, on a site they may share.
+     */
+    @Test
+    fun `resolveTagIds does not create a tag when the lookup itself failed`() = runTest {
+        val termsExecutor = mock<TermsRequestExecutor> {
+            onBlocking { listWithViewContext(any(), any()) } doReturn listResponse(emptyList())
+            onBlocking { create(any(), any()) } doReturn createResponse(term(31L, "news"))
+        }
+        driveRequestsThrough(
+            termsExecutor,
+            failingRequest = 1,
+            error = WpRequestResult.WpError(
+                errorCode = WpErrorCode.CustomException("http_request_failed"),
+                errorMessage = "cURL error 28: Operation timed out",
+                statusCode = 500u,
+                response = "",
+                requestUrl = "",
+                requestMethod = RequestMethod.GET
+            )
+        )
+
+        val resolution = taxonomyClient.resolveTagIds(testSite, listOf("news"))
+
+        assertTrue(resolution.ids.isEmpty())
+        // Unresolved, not refused: an update has to leave the site's tags alone until a retry
+        // either finds the tag or settles that it is not there.
         assertFalse(resolution.complete)
+        verifyBlocking(termsExecutor, never()) { create(any(), any()) }
     }
 
     @Test

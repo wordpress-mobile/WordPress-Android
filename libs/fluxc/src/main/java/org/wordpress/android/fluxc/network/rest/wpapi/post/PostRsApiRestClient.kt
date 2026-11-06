@@ -191,9 +191,11 @@ class PostRsApiRestClient @Inject constructor(
                 taxonomyRsApiRestClient.resolveTagIds(site, authoredTagNames)
             }
             // A create takes whatever resolved: a post that does not exist yet has no tags to lose.
-            // An update must not, unless every name resolved - wp/v2 replaces the whole tag set, so
-            // a short list would delete the tags missing from it because a lookup failed. An empty
-            // list is omitted from the request body, which leaves the site's tags as they are.
+            // An update must not, while any name is still unresolved - wp/v2 replaces the whole tag
+            // set, so a short list would delete the tags missing from it because a lookup failed.
+            // An empty list is omitted from the request body, which leaves the site's tags as they
+            // are. A name the site refused outright is already left out of the ids and does not
+            // hold the update back, so the author's other tag edits still reach the site.
             val createTagIds = tagResolution?.ids.orEmpty()
             val updateTagIds = if (tagResolution?.complete == false) emptyList() else createTagIds
 

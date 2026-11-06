@@ -339,28 +339,56 @@ class TaxonomyRsApiRestClient @Inject constructor(
         if (wanted.isEmpty()) return TagResolution(emptyList(), complete = true)
 
         val client = wpApiClientProvider.getWpApiClient(site)
-        val ids = wanted.mapNotNull { name ->
-            findTagIdByName(client, name, site) ?: createTagReturningId(client, name, site)
-        }
-        return TagResolution(ids, complete = ids.size == wanted.size)
+        val outcomes = wanted.map { name -> resolveTagId(client, name, site) }
+        return TagResolution(
+            ids = outcomes.filterIsInstance<TagOutcome.Resolved>().map { it.id },
+            complete = outcomes.none { it is TagOutcome.Unknown }
+        )
     }
 
     /**
      * The ids [resolveTagIds] could resolve, and whether that is all of them.
      *
-     * [complete] is `false` when a name could neither be found nor created - a transient lookup
-     * error, or a create the site refused outright, such as a role without `edit_terms`. The ids
-     * are still usable for a post being created, which has no tags to lose, but an update must not
-     * send them: wp/v2 replaces a post's whole tag set, so a short list removes the tags that are
-     * missing from it.
+     * [complete] is `false` only while a name's fate is still open - a lookup or a create that
+     * failed for a reason a retry might clear. The ids are still usable for a post being created,
+     * which has no tags to lose, but an update must not send them: wp/v2 replaces a post's whole
+     * tag set, so a short list removes the tags that are missing from it.
+     *
+     * A name the site refuses outright, such as a create rejected because the author's role lacks
+     * `manage_categories`, is left out of the ids and leaves [complete] `true`. That answer will
+     * not change on a retry, so treating it as still open would discard the author's other tag
+     * edits on every save from then on, not just this one.
      */
     data class TagResolution(val ids: List<Long>, val complete: Boolean)
+
+    private suspend fun resolveTagId(client: WpApiClient, name: String, site: SiteModel): TagOutcome =
+        when (val lookup = findTagIdByName(client, name, site)) {
+            is TagLookup.Found -> TagOutcome.Resolved(lookup.id)
+            // A lookup that failed says nothing about whether the site has the tag, so creating
+            // one now would be as likely to duplicate a tag it already holds as to add a new one.
+            TagLookup.Failed -> TagOutcome.Unknown
+            TagLookup.Missing -> createTag(client, name, site)
+        }
+
+    /** What became of one name: an id, a name the site will not give one, or no answer yet. */
+    private sealed interface TagOutcome {
+        data class Resolved(val id: Long) : TagOutcome
+        data object Unavailable : TagOutcome
+        data object Unknown : TagOutcome
+    }
+
+    /** Whether the site has a tag by this name, kept apart from having failed to ask. */
+    private sealed interface TagLookup {
+        data class Found(val id: Long) : TagLookup
+        data object Missing : TagLookup
+        data object Failed : TagLookup
+    }
 
     private suspend fun findTagIdByName(
         client: WpApiClient,
         name: String,
         site: SiteModel
-    ): Long? {
+    ): TagLookup {
         val response = client.request { requestBuilder ->
             requestBuilder.terms().listWithViewContext(
                 termEndpointType = TermEndpointType.Tags,
@@ -368,18 +396,20 @@ class TaxonomyRsApiRestClient @Inject constructor(
             )
         }
         return when (response) {
-            is WpRequestResult.Success ->
+            is WpRequestResult.Success -> {
                 // `search` is a substring match, so "news" also returns "newsletter". Only an
                 // exact name is the tag the author typed, compared with both sides decoded.
-                response.response.data.firstOrNull {
+                val match = response.response.data.firstOrNull {
                     StringEscapeUtils.unescapeHtml4(it.name).equals(name, ignoreCase = true)
-                }?.id
+                }
+                match?.let { TagLookup.Found(it.id) } ?: TagLookup.Missing
+            }
             else -> {
                 appLogWrapper.e(
                     AppLog.T.POSTS,
                     "Tag lookup for '$name' on ${site.url} failed: ${response.toTaxonomyError().toLogString()}"
                 )
-                null
+                TagLookup.Failed
             }
         }
     }
@@ -396,26 +426,30 @@ class TaxonomyRsApiRestClient @Inject constructor(
     private fun String.htmlEncodedLikeWordPress(): String =
         replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
-    private suspend fun createTagReturningId(
+    private suspend fun createTag(
         client: WpApiClient,
         name: String,
         site: SiteModel
-    ): Long? {
+    ): TagOutcome {
         val response = client.request { requestBuilder ->
             requestBuilder.terms().create(
                 termEndpointType = TermEndpointType.Tags,
                 params = TermCreateParams(name = name)
             )
         }
-        if (response is WpRequestResult.Success) return response.response.data.id
-        val existingId = (response as? WpRequestResult.WpError<*>)?.existingTermId()
-        if (existingId == null) {
-            appLogWrapper.e(
-                AppLog.T.POSTS,
-                "Creating tag '$name' on ${site.url} failed: ${response.toTaxonomyError().toLogString()}"
-            )
+        val id = when (response) {
+            is WpRequestResult.Success -> response.response.data.id
+            is WpRequestResult.WpError<*> -> response.existingTermId()
+            else -> null
         }
-        return existingId
+        if (id != null) return TagOutcome.Resolved(id)
+
+        val error = response.toTaxonomyError()
+        appLogWrapper.e(AppLog.T.POSTS, "Creating tag '$name' on ${site.url} failed: ${error.toLogString()}")
+        // A site that turned the create down on the author's permissions has given its final
+        // answer, so only that name is dropped. Any other failure might be the connection, and
+        // could resolve on a retry, so it holds the whole tag set back instead.
+        return if (error.type == TaxonomyErrorType.UNAUTHORIZED) TagOutcome.Unavailable else TagOutcome.Unknown
     }
 
     /**
