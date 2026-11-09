@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-21 09:05:05+0000
+Translation-Revision-Date: 2026-11-08 09:36:40+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.1.0
 Language: ro
@@ -2903,11 +2903,11 @@ Language: ro
     <string name="plugin_two_stars">2 stele</string>
     <string name="plugin_one_stars">O stea</string>
     <string name="plugin_info_version">Versiune</string>
-    <string name="plugin_empty_text">Niciuna oferită</string>
     <string name="plugin_num_downloads">%s de descărcări</string>
     <string name="plugin_num_ratings">%s evaluări</string>
     <string name="plugin_read_reviews">Citește recenziile</string>
     <string name="plugin_faq">Întrebări frecvente</string>
+    <string name="plugin_empty_text">Nu ai furnizat nimic</string>
     <string name="plugin_whatsnew">Ce este nou</string>
     <string name="plugin_installation">Instalare</string>
     <string name="plugin_description">Descriere</string>
