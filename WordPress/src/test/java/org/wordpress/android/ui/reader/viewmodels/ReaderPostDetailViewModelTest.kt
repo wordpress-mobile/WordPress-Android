@@ -331,7 +331,8 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         whenever(getLikesHandler.likesStatusUpdate).thenReturn(getLikesState)
 
         whenever(commentsSnippetFeatureConfig.isEnabled()).thenReturn(true)
-        lenient().whenever(readerCommentRepository.fetchCommentsForSnippet(any(), any())).thenReturn(UpdateResult.UNCHANGED)
+        lenient().whenever(readerCommentRepository.fetchCommentsForSnippet(any(), any()))
+            .thenReturn(UpdateResult.UNCHANGED)
 
         likesCaptor = argumentCaptor()
 

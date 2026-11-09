@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.repository
 
+import androidx.core.database.sqlite.transaction
 import com.android.volley.Request
 import com.wordpress.rest.RestRequest
 import kotlinx.coroutines.CoroutineDispatcher
@@ -227,9 +228,7 @@ class ReaderCommentRepository @Inject constructor(
 
     private fun saveComments(json: JSONObject, blogId: Long, postId: Long, page: Int): UpdateResult {
         val comments = ReaderCommentList()
-        val db = ReaderDatabase.getWritableDb()
-        db.beginTransaction()
-        try {
+        ReaderDatabase.getWritableDb().transaction {
             // the first page replaces whatever was stored
             if (page == 1) {
                 ReaderCommentTable.purgeCommentsForPost(blogId, postId)
@@ -248,9 +247,6 @@ class ReaderCommentRepository @Inject constructor(
             }
             // saved even if none are new, so changes to likes are stored
             ReaderCommentTable.addOrUpdateComments(comments)
-            db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
         }
         return if (comments.isNotEmpty()) UpdateResult.HAS_NEW else UpdateResult.UNCHANGED
     }

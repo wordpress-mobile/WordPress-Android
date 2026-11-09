@@ -261,11 +261,14 @@ class ReaderCommentListViewModel @Inject constructor(
     }
 
     fun onEditClicked(commentId: Long) {
-        val comment = findComment(commentId) ?: return
-        val site = postSite ?: return
+        val comment = findComment(commentId)
+        val site = postSite
         // the editor loads and saves the comment over the network, so don't open it offline
-        if (!checkConnection()) return
-        _events.trySend(ReaderCommentListEvent.EditComment(comment.blogId, comment.postId, comment.commentId, site))
+        if (comment != null && site != null && checkConnection()) {
+            _events.trySend(
+                ReaderCommentListEvent.EditComment(comment.blogId, comment.postId, comment.commentId, site)
+            )
+        }
     }
 
     fun onShareClicked(commentId: Long) {

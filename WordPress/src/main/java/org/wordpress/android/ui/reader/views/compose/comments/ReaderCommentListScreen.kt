@@ -79,26 +79,6 @@ import org.wordpress.android.util.WPAvatarUtils
 import org.wordpress.android.util.image.ImagePlaceholderManager
 import org.wordpress.android.util.image.ImageType
 
-data class ReaderCommentListActions(
-    val onBack: () -> Unit,
-    val onRefresh: () -> Unit,
-    val onLoadMore: () -> Unit,
-    val onScrollHandled: () -> Unit,
-    val onHeaderClick: () -> Unit,
-    val onAuthorClick: (Long) -> Unit,
-    val onReplyClick: (Long) -> Unit,
-    val onLikeClick: (Long) -> Unit,
-    val onModerateClick: (Long, ReaderCommentModeration) -> Unit,
-    val onEditClick: (Long) -> Unit,
-    val onShareClick: (Long) -> Unit,
-    val onImageClick: (String) -> Unit,
-    val onComposerClick: () -> Unit,
-    val onReplyTextChange: (TextFieldValue) -> Unit,
-    val onSendReply: () -> Unit,
-    val onDeleteDraft: () -> Unit,
-    val onReplySheetDismissed: () -> Unit
-)
-
 private val avatarPlaceholders = ImagePlaceholderManager()
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -271,8 +251,9 @@ private fun CommentAuthorRow(comment: ReaderCommentItem, actions: ReaderCommentL
                 model = ImageRequest.Builder(context)
                     .data(WPAvatarUtils.rewriteAvatarUrl(comment.avatarUrl, avatarSizePx))
                     .apply {
-                        avatarPlaceholders.getPlaceholderResource(ImageType.AVATAR_WITH_BACKGROUND)?.let { placeholder(it) }
-                        avatarPlaceholders.getErrorResource(ImageType.AVATAR_WITH_BACKGROUND)?.let { error(it) }
+                        val type = ImageType.AVATAR_WITH_BACKGROUND
+                        avatarPlaceholders.getPlaceholderResource(type)?.let { placeholder(it) }
+                        avatarPlaceholders.getErrorResource(type)?.let { error(it) }
                     }
                     .build(),
                 contentDescription = null,

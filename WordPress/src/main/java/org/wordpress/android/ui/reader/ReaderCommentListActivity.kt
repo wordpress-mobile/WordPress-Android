@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -191,7 +192,6 @@ class ReaderCommentListActivity : BaseAppCompatActivity() {
         supportFragmentManager.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG)
             as? CommentNotificationsBottomSheetFragment
 
-    @Suppress("CyclomaticComplexMethod")
     private fun observeEvents() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -204,55 +204,58 @@ class ReaderCommentListActivity : BaseAppCompatActivity() {
                         }
                     }
                 }
-                viewModel.events.collect { event ->
-                    when (event) {
-                        is ReaderCommentListEvent.FinishWithError -> {
-                            ToastUtils.showToast(this@ReaderCommentListActivity, event.messageRes)
-                            finish()
-                        }
-                        is ReaderCommentListEvent.ShowToast -> ToastUtils.showToast(
-                            this@ReaderCommentListActivity,
-                            event.messageRes,
-                            if (event.isLong) ToastUtils.Duration.LONG else ToastUtils.Duration.SHORT
-                        )
-                        is ReaderCommentListEvent.ShowModerationUndo -> launch {
-                            showModerationUndo(event.commentId, getString(event.messageRes))
-                        }
-                        ReaderCommentListEvent.ShowSignInPrompt -> showSnackbar(
-                            message = getString(R.string.reader_snackbar_err_cannot_like_post_logged_out),
-                            actionLabel = getString(R.string.sign_in),
-                            duration = SnackbarDuration.Indefinite,
-                            onAction = viewModel::onSignInClicked
-                        )
-                        ReaderCommentListEvent.SignIn -> ActivityLauncher.loginWithoutMagicLink(
-                            this@ReaderCommentListActivity
-                        )
-                        ReaderCommentListEvent.ClearReply -> replyText.value = TextFieldValue("")
-                        is ReaderCommentListEvent.RestoreReply ->
-                            replyText.value = TextFieldValue(event.text, TextRange(event.text.length))
-                        is ReaderCommentListEvent.OpenPostDetail -> ReaderActivityLauncher.showReaderPostDetail(
-                            this@ReaderCommentListActivity,
-                            event.blogId,
-                            event.postId
-                        )
-                        is ReaderCommentListEvent.OpenBlogPreview -> ReaderActivityLauncher.showReaderBlogPreview(
-                            this@ReaderCommentListActivity,
-                            event.blogId,
-                            event.isFollowed,
-                            ReaderTracker.SOURCE_COMMENT,
-                            readerTracker
-                        )
-                        is ReaderCommentListEvent.EditComment -> startActivity(
-                            UnifiedCommentsEditActivity.createIntent(
-                                this@ReaderCommentListActivity,
-                                ReaderCommentIdentifier(event.blogId, event.postId, event.commentId),
-                                event.site
-                            )
-                        )
-                        is ReaderCommentListEvent.ShareComment -> shareComment(event.url)
-                    }
-                }
+                viewModel.events.collect { handleEvent(it) }
             }
+        }
+    }
+
+    @Suppress("CyclomaticComplexMethod")
+    private fun CoroutineScope.handleEvent(event: ReaderCommentListEvent) {
+        when (event) {
+            is ReaderCommentListEvent.FinishWithError -> {
+                ToastUtils.showToast(this@ReaderCommentListActivity, event.messageRes)
+                finish()
+            }
+            is ReaderCommentListEvent.ShowToast -> ToastUtils.showToast(
+                this@ReaderCommentListActivity,
+                event.messageRes,
+                if (event.isLong) ToastUtils.Duration.LONG else ToastUtils.Duration.SHORT
+            )
+            is ReaderCommentListEvent.ShowModerationUndo -> launch {
+                showModerationUndo(event.commentId, getString(event.messageRes))
+            }
+            ReaderCommentListEvent.ShowSignInPrompt -> showSnackbar(
+                message = getString(R.string.reader_snackbar_err_cannot_like_post_logged_out),
+                actionLabel = getString(R.string.sign_in),
+                duration = SnackbarDuration.Indefinite,
+                onAction = viewModel::onSignInClicked
+            )
+            ReaderCommentListEvent.SignIn -> ActivityLauncher.loginWithoutMagicLink(
+                this@ReaderCommentListActivity
+            )
+            ReaderCommentListEvent.ClearReply -> replyText.value = TextFieldValue("")
+            is ReaderCommentListEvent.RestoreReply ->
+                replyText.value = TextFieldValue(event.text, TextRange(event.text.length))
+            is ReaderCommentListEvent.OpenPostDetail -> ReaderActivityLauncher.showReaderPostDetail(
+                this@ReaderCommentListActivity,
+                event.blogId,
+                event.postId
+            )
+            is ReaderCommentListEvent.OpenBlogPreview -> ReaderActivityLauncher.showReaderBlogPreview(
+                this@ReaderCommentListActivity,
+                event.blogId,
+                event.isFollowed,
+                ReaderTracker.SOURCE_COMMENT,
+                readerTracker
+            )
+            is ReaderCommentListEvent.EditComment -> startActivity(
+                UnifiedCommentsEditActivity.createIntent(
+                    this@ReaderCommentListActivity,
+                    ReaderCommentIdentifier(event.blogId, event.postId, event.commentId),
+                    event.site
+                )
+            )
+            is ReaderCommentListEvent.ShareComment -> shareComment(event.url)
         }
     }
 

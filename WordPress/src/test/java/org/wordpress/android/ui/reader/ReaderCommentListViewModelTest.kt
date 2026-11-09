@@ -58,15 +58,18 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
     private val second = comment(2)
 
     @Before
-    fun setUp() = runBlocking {
-        val account = mock<AccountModel>()
-        whenever(account.userId).thenReturn(USER_ID)
-        whenever(accountStore.account).thenReturn(account)
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        whenever(repository.getPost(BLOG_ID, POST_ID)).thenReturn(post)
-        whenever(repository.getComments(post)).thenReturn(ReaderComments(listOf(first, second), hasMore = false))
-        whenever(repository.fetchComments(eq(BLOG_ID), eq(POST_ID), any())).thenReturn(UpdateResult.UNCHANGED)
+    fun setUp() {
+        runBlocking {
+            val account = mock<AccountModel>()
+            whenever(account.userId).thenReturn(USER_ID)
+            whenever(accountStore.account).thenReturn(account)
+            whenever(accountStore.hasAccessToken()).thenReturn(true)
+            whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+            whenever(repository.getPost(BLOG_ID, POST_ID)).thenReturn(post)
+            whenever(repository.getSuggestions(BLOG_ID)).thenReturn(emptyList())
+            whenever(repository.getComments(post)).thenReturn(ReaderComments(listOf(first, second), hasMore = false))
+            whenever(repository.fetchComments(eq(BLOG_ID), eq(POST_ID), any())).thenReturn(UpdateResult.UNCHANGED)
+        }
     }
 
     @After
@@ -89,7 +92,8 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
         viewModel = createViewModel()
 
         viewModel.events.test {
-            assertThat(awaitItem()).isEqualTo(ReaderCommentListEvent.FinishWithError(R.string.reader_toast_err_get_post))
+            assertThat(awaitItem())
+                .isEqualTo(ReaderCommentListEvent.FinishWithError(R.string.reader_toast_err_get_post))
         }
     }
 
