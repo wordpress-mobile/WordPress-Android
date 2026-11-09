@@ -16,6 +16,8 @@ import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.datasets.ReaderUserTable
 import org.wordpress.android.datasets.UserSuggestionTable
 import org.wordpress.android.fluxc.model.CommentStatus
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderComment
 import org.wordpress.android.models.ReaderCommentList
 import org.wordpress.android.models.ReaderPost
@@ -41,6 +43,7 @@ import kotlin.coroutines.resume
  * already arrived isn't cancelled.
  */
 class ReaderCommentRepository @Inject constructor(
+    private val siteStore: SiteStore,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) {
     suspend fun getPost(blogId: Long, postId: Long): ReaderPost? = withContext(ioDispatcher) {
@@ -48,14 +51,14 @@ class ReaderCommentRepository @Inject constructor(
     }
 
     /**
-     * Returns the post's approved comments with replies beneath their parents, and whether the server has
-     * more than are stored locally
+     * Returns the post's approved comments, oldest first, and whether the server has more than are stored
+     * locally
      */
     suspend fun getComments(post: ReaderPost): ReaderComments = withContext(ioDispatcher) {
         val numServerComments = ReaderPostTable.getNumCommentsForPost(post)
         val numLocalComments = ReaderCommentTable.getNumCommentsForPost(post)
         ReaderComments(
-            comments = levelComments(ReaderCommentTable.getCommentsForPost(post)),
+            comments = ReaderCommentTable.getCommentsForPost(post),
             hasMore = numServerComments > numLocalComments
         )
     }
@@ -63,10 +66,7 @@ class ReaderCommentRepository @Inject constructor(
     suspend fun getComment(blogId: Long, postId: Long, commentId: Long): ReaderComment? =
         withContext(ioDispatcher) { ReaderCommentTable.getComment(blogId, postId, commentId) }
 
-    suspend fun getCommentsForSnippet(post: ReaderPost): ReaderCommentList = withContext(ioDispatcher) {
-        ReaderCommentTable.getCommentsForPostSnippet(post, ReaderConstants.READER_COMMENTS_TO_REQUEST_FOR_POST_SNIPPET)
-            ?: ReaderCommentList()
-    }
+    suspend fun getSite(blogId: Long): SiteModel? = withContext(ioDispatcher) { siteStore.getSiteBySiteId(blogId) }
 
     suspend fun getSuggestions(blogId: Long): List<Suggestion> = withContext(ioDispatcher) {
         Suggestion.fromUserSuggestions(UserSuggestionTable.getSuggestionsForSite(blogId) ?: emptyList())
@@ -277,18 +277,3 @@ class ReaderCommentRepository @Inject constructor(
 
 data class ReaderComments(val comments: List<ReaderComment>, val hasMore: Boolean)
 
-/**
- * Orders the comments so each reply follows its parent, setting each one's level. Replies whose parent
- * isn't in the list are dropped.
- */
-internal fun levelComments(comments: List<ReaderComment>): List<ReaderComment> {
-    val childrenByParent = comments.groupBy { it.parentId }
-    val result = ArrayList<ReaderComment>(comments.size)
-    fun addWithReplies(comment: ReaderComment, level: Int) {
-        comment.level = level
-        result.add(comment)
-        childrenByParent[comment.commentId]?.forEach { addWithReplies(it, level + 1) }
-    }
-    childrenByParent[0L]?.forEach { addWithReplies(it, 0) }
-    return result
-}

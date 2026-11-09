@@ -160,7 +160,7 @@ private fun CommentList(uiState: ReaderCommentListUiState, actions: ReaderCommen
     LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
         item(key = "header") { PostHeader(uiState, actions.onHeaderClick) }
         items(uiState.comments, key = { it.commentId }) { comment ->
-            CommentRow(comment, uiState.isLoggedIn, actions)
+            CommentRow(comment, actions)
         }
         if (uiState.isLoadingMore) contentListLoadingMoreItem()
     }
@@ -189,7 +189,7 @@ private fun PostHeader(uiState: ReaderCommentListUiState, onClick: () -> Unit) {
 }
 
 @Composable
-private fun CommentRow(comment: ReaderCommentItem, isLoggedIn: Boolean, actions: ReaderCommentListActions) {
+private fun CommentRow(comment: ReaderCommentItem, actions: ReaderCommentListActions) {
     val indentPerLevel = dimensionResource(R.dimen.reader_comment_indent_per_level)
     Column {
         // replies sit under their parent without a divider
@@ -222,7 +222,7 @@ private fun CommentRow(comment: ReaderCommentItem, isLoggedIn: Boolean, actions:
                         .padding(end = 12.dp)
                         .padding(vertical = 4.dp)
                 )
-                CommentActionRow(comment, isLoggedIn, actions)
+                CommentActionRow(comment, actions)
             }
         }
     }
@@ -363,7 +363,7 @@ private fun ReaderCommentModeration.iconRes() = when (this) {
 }
 
 @Composable
-private fun CommentActionRow(comment: ReaderCommentItem, isLoggedIn: Boolean, actions: ReaderCommentListActions) {
+private fun CommentActionRow(comment: ReaderCommentItem, actions: ReaderCommentListActions) {
     val mutedColor = MaterialTheme.colorScheme.onSurfaceVariant
     Row(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -389,7 +389,7 @@ private fun CommentActionRow(comment: ReaderCommentItem, isLoggedIn: Boolean, ac
                 },
                 label = if (comment.numLikes > 0) comment.numLikes.toString() else stringResource(R.string.like),
                 color = if (comment.isLiked) MaterialTheme.colorScheme.primary else mutedColor,
-                isEnabled = isLoggedIn,
+                isEnabled = comment.isLikeEnabled,
                 isSelected = comment.isLiked,
                 description = ReaderUtils.getLongLikeLabelText(context, comment.numLikes, comment.isLiked),
                 onClick = { actions.onLikeClick(comment.commentId) }

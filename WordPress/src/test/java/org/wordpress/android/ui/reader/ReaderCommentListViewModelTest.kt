@@ -23,7 +23,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderComment
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
@@ -40,7 +39,6 @@ import org.wordpress.android.util.config.ReaderCommentsModerationFeatureConfig
 class ReaderCommentListViewModelTest : BaseUnitTest() {
     @Mock lateinit var repository: ReaderCommentRepository
     @Mock lateinit var accountStore: AccountStore
-    @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var moderationFeatureConfig: ReaderCommentsModerationFeatureConfig
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var readerTracker: ReaderTracker
@@ -155,6 +153,8 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
         viewModel.onReplyClicked(1)
 
         viewModel.events.test {
+            // sent on opening, since the post is on WP.com
+            assertThat(awaitItem()).isEqualTo(ReaderCommentListEvent.BindSuggestionService)
             viewModel.onSendReply(" hello ")
 
             assertThat(awaitItem()).isEqualTo(ReaderCommentListEvent.ClearReply)
@@ -163,7 +163,7 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
         verify(readerTracker).trackPost(Stat.READER_ARTICLE_COMMENT_REPLIED_TO, post)
         val state = viewModel.uiState.value
         assertThat(state.isSubmitting).isFalse
-        assertThat(state.pendingCommentId).isNull()
+        assertThat(state.comments.none { it.isPending }).isTrue
         assertThat(state.replyHint).isEqualTo(R.string.reader_hint_comment_on_post)
     }
 
@@ -175,6 +175,8 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
         viewModel = createViewModel()
 
         viewModel.events.test {
+            // sent on opening, since the post is on WP.com
+            assertThat(awaitItem()).isEqualTo(ReaderCommentListEvent.BindSuggestionService)
             viewModel.onSendReply("hello")
 
             assertThat(awaitItem()).isEqualTo(ReaderCommentListEvent.ClearReply)
@@ -225,7 +227,6 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
         savedStateHandle,
         repository,
         accountStore,
-        siteStore,
         moderationFeatureConfig,
         networkUtilsWrapper,
         readerTracker,

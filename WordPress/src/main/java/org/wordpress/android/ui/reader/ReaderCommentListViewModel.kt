@@ -19,14 +19,12 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderComment
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
 import org.wordpress.android.ui.reader.repository.ReaderCommentRepository
-import org.wordpress.android.ui.reader.repository.levelComments
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.suggestion.Suggestion
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -47,7 +45,6 @@ class ReaderCommentListViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val repository: ReaderCommentRepository,
     private val accountStore: AccountStore,
-    private val siteStore: SiteStore,
     private val moderationFeatureConfig: ReaderCommentsModerationFeatureConfig,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val readerTracker: ReaderTracker,
@@ -59,9 +56,18 @@ class ReaderCommentListViewModel @Inject constructor(
     val postId: Long = savedStateHandle[ReaderConstants.ARG_POST_ID] ?: 0L
     private val interceptedUri: String? = savedStateHandle[ReaderConstants.ARG_INTERCEPTED_URI]
 
-    // the jump, reply or like asked for by the intent - performed once, after the first fetch
-    private var directOperation: DirectOperation? = savedStateHandle[ReaderConstants.ARG_DIRECT_OPERATION]
-    private var directCommentId: Long = savedStateHandle[ReaderConstants.ARG_COMMENT_ID] ?: 0L
+    // the jump, reply or like asked for by the intent - performed once, after the first fetch. Kept in the
+    // saved state, so it isn't repeated after process death.
+    private var directOperation: DirectOperation?
+        get() = savedStateHandle[ReaderConstants.ARG_DIRECT_OPERATION]
+        set(value) {
+            savedStateHandle[ReaderConstants.ARG_DIRECT_OPERATION] = value
+        }
+    private var directCommentId: Long
+        get() = savedStateHandle[ReaderConstants.ARG_COMMENT_ID] ?: 0L
+        set(value) {
+            savedStateHandle[ReaderConstants.ARG_COMMENT_ID] = value
+        }
 
     private val _uiState = MutableStateFlow(
         ReaderCommentListUiState(isHeaderClickable = directOperation != null)
@@ -75,6 +81,8 @@ class ReaderCommentListViewModel @Inject constructor(
     private var comments = emptyList<ReaderComment>()
     private var isFetching = false
     private var postSite: SiteModel? = null
+    private var highlightedCommentId = 0L
+    private var pendingCommentId: Long? = null
 
     // comments removed by a moderation that's waiting on its undo snackbar
     private val pendingModerations = mutableMapOf<Long, PendingModeration>()
@@ -94,12 +102,7 @@ class ReaderCommentListViewModel @Inject constructor(
     private val isLoggedIn get() = accountStore.hasAccessToken()
 
     init {
-        // after process death the intent's direct operation has already been performed
         val isNewScreen = savedStateHandle.get<Boolean>(KEY_HAS_STARTED) != true
-        if (!isNewScreen) {
-            directOperation = null
-            directCommentId = 0
-        }
         savedStateHandle[KEY_HAS_STARTED] = true
         launch { start(isNewScreen) }
     }
@@ -111,7 +114,6 @@ class ReaderCommentListViewModel @Inject constructor(
             return
         }
         this.post = post
-        postSite = siteStore.getSiteBySiteId(post.blogId)
         if (isNewScreen) {
             savedStateHandle.get<String>(ReaderConstants.ARG_SOURCE)?.let { source ->
                 readerTracker.trackPost(Stat.READER_ARTICLE_COMMENTS_OPENED, post, source)
@@ -122,31 +124,38 @@ class ReaderCommentListViewModel @Inject constructor(
                 postAuthorName = post.authorName,
                 postTitle = post.title,
                 isLoggedIn = isLoggedIn,
-                isCommentsOpen = post.isCommentsOpen,
-                areSuggestionsEnabled = isLoggedIn && post.isWP,
-                isPrivatePost = post.isPrivate,
-                replyHint = replyHint()
+                isCommentsOpen = post.isCommentsOpen
             )
         }
-        loadSuggestions()
         loadComments()
         if (!hasUpdatedComments) {
-            refresh(isPullToRefresh = false)
+            launch { refresh(isPullToRefresh = false) }
+        }
+        postSite = repository.getSite(post.blogId)
+        rebuildItems()
+        if (areSuggestionsEnabled()) {
+            _events.trySend(ReaderCommentListEvent.BindSuggestionService)
+            loadSuggestions()
         }
     }
 
     /*
-     * reload from the database, which picks up a comment edited in another screen, and start over if the
-     * user has just signed in
+     * starts over if the user has just signed in
      */
     fun onResume() {
-        if (post == null) return
-        if (isLoggedIn != _uiState.value.isLoggedIn) {
+        if (post != null && isLoggedIn != _uiState.value.isLoggedIn) {
             hasUpdatedComments = false
             launch { start(isNewScreen = false) }
-        } else {
-            launch { loadComments() }
         }
+    }
+
+    fun onCommentEdited() {
+        val commentId = savedStateHandle.get<Long>(KEY_EDITED_COMMENT_ID) ?: return
+        findComment(commentId)?.let { launch { reloadComment(it) } }
+    }
+
+    fun onImageClicked(imageUrl: String) {
+        _events.trySend(ReaderCommentListEvent.OpenPhoto(imageUrl, post?.isPrivate == true))
     }
 
     fun onRefresh() {
@@ -158,7 +167,7 @@ class ReaderCommentListViewModel @Inject constructor(
     }
 
     fun onLoadMore() {
-        if (_uiState.value.canLoadMore && !isFetching) {
+        if (_uiState.value.canLoadMore) {
             launch { fetchComments(nextPage = true) }
         }
     }
@@ -217,16 +226,16 @@ class ReaderCommentListViewModel @Inject constructor(
 
         launch {
             val pending = repository.addPendingComment(post, trimmed, replyToCommentId, accountStore.account.userId)
-            _uiState.update { it.copy(pendingCommentId = pending.commentId) }
+            pendingCommentId = pending.commentId
             loadComments()
             _uiState.update { it.copy(scrollToCommentId = pending.commentId) }
 
             val posted = repository.submitComment(post, pending)
-            _uiState.update { it.copy(isSubmitting = false, pendingCommentId = null) }
+            pendingCommentId = null
+            _uiState.update { it.copy(isSubmitting = false) }
             if (posted != null) {
                 // the target is kept until now, so a reply that fails is sent to the same comment again
                 setReplyTarget(0)
-                reloadPost()
             } else {
                 _events.trySend(ReaderCommentListEvent.RestoreReply(trimmed))
                 _events.trySend(
@@ -259,7 +268,7 @@ class ReaderCommentListViewModel @Inject constructor(
             trackModeration(Stat.COMMENT_MODERATION_UNDO)
             rebuildItems()
         } else {
-            commitModeration(pending)
+            commitModeration(pending, isScreenShown = true)
         }
     }
 
@@ -268,6 +277,7 @@ class ReaderCommentListViewModel @Inject constructor(
         val site = postSite
         // the editor loads and saves the comment over the network, so don't open it offline
         if (comment != null && site != null && checkConnection()) {
+            savedStateHandle[KEY_EDITED_COMMENT_ID] = commentId
             _events.trySend(
                 ReaderCommentListEvent.EditComment(comment.blogId, comment.postId, comment.commentId, site)
             )
@@ -287,15 +297,11 @@ class ReaderCommentListViewModel @Inject constructor(
 
     override fun onCleared() {
         // the screen went away while an undo snackbar was showing, so the moderation goes ahead
-        pendingModerations.values.forEach { commitModeration(it) }
+        pendingModerations.values.forEach { commitModeration(it, isScreenShown = false) }
         pendingModerations.clear()
     }
 
     private suspend fun refresh(isPullToRefresh: Boolean) {
-        if (isFetching) {
-            _uiState.update { it.copy(isRefreshing = false) }
-            return
-        }
         if (isPullToRefresh) _uiState.update { it.copy(isRefreshing = true) }
         fetchComments(nextPage = false)
         _uiState.update { it.copy(isRefreshing = false) }
@@ -333,11 +339,13 @@ class ReaderCommentListViewModel @Inject constructor(
     }
 
     private suspend fun loadSuggestions() {
-        if (_uiState.value.areSuggestionsEnabled) {
+        if (areSuggestionsEnabled()) {
             val suggestions = repository.getSuggestions(blogId)
             _uiState.update { it.copy(suggestions = suggestions) }
         }
     }
+
+    private fun areSuggestionsEnabled() = isLoggedIn && post?.isWP == true
 
     private fun performDirectOperation() {
         val operation = directOperation ?: return
@@ -398,27 +406,25 @@ class ReaderCommentListViewModel @Inject constructor(
 
     private suspend fun reloadComment(comment: ReaderComment) {
         val updated = repository.getComment(comment.blogId, comment.postId, comment.commentId) ?: return
-        comments = comments.map { existing ->
-            if (existing.commentId == updated.commentId) {
-                // the level isn't stored, so it's copied over
-                updated.also { it.level = existing.level }
-            } else {
-                existing
-            }
-        }
+        comments = comments.map { if (it.commentId == updated.commentId) updated else it }
         rebuildItems()
     }
 
-    private fun commitModeration(pending: PendingModeration) {
+    private fun commitModeration(pending: PendingModeration, isScreenShown: Boolean) {
         trackModeration(pending.action.stat)
+        if (isScreenShown) {
+            // removed here, so it stays hidden while the request is in flight
+            comments = comments.filterNot { it.commentId == pending.comment.commentId }
+            rebuildItems()
+        }
         // the application scope, so it's sent even if the screen has gone
         applicationScope.launch {
             val succeeded = repository.moderateComment(pending.comment, pending.action.status)
-            withContext(mainDispatcher) {
-                if (!succeeded) {
+            if (!succeeded && isScreenShown) {
+                withContext(mainDispatcher) {
                     _events.trySend(ReaderCommentListEvent.ShowToast(R.string.comment_moderation_error))
+                    loadComments()
                 }
-                loadComments()
             }
         }
     }
@@ -428,18 +434,12 @@ class ReaderCommentListViewModel @Inject constructor(
 
     private fun setReplyTarget(commentId: Long) {
         replyToCommentId = commentId
-        _uiState.update { it.copy(replyHint = replyHint()) }
         rebuildItems()
     }
 
-    private fun replyHint() = if (replyToCommentId == 0L) {
-        R.string.reader_hint_comment_on_post
-    } else {
-        R.string.reader_hint_comment_on_comment
-    }
-
     private fun highlight(commentId: Long) {
-        _uiState.update { it.copy(highlightedCommentId = commentId, scrollToCommentId = commentId) }
+        highlightedCommentId = commentId
+        _uiState.update { it.copy(scrollToCommentId = commentId) }
         rebuildItems()
     }
 
@@ -455,31 +455,39 @@ class ReaderCommentListViewModel @Inject constructor(
 
     private fun rebuildItems() {
         val post = post ?: return
-        val state = _uiState.value
         val canModerate = moderationFeatureConfig.isEnabled() && postSite?.hasCapabilityEditOthersPosts == true
-        // re-leveled so replies to a comment hidden by a pending moderation are hidden with it
+        val showLike = post.canLikePost()
+        val isLoggedIn = isLoggedIn
+        val canReply = canReply()
+        // leveled after filtering, so replies to a comment hidden by a pending moderation are hidden with it
         val items = levelComments(comments.filterNot { pendingModerations.containsKey(it.commentId) })
             .map { comment ->
                 ReaderCommentItem(
                     commentId = comment.commentId,
-                    indentLevel = if (comment.parentId != 0L) comment.level.coerceAtMost(MAX_INDENT_LEVEL) else 0,
+                    indentLevel = comment.level.coerceAtMost(MAX_INDENT_LEVEL),
                     authorName = comment.authorName.orEmpty(),
                     avatarUrl = comment.authorAvatar.orEmpty(),
                     published = comment.published.orEmpty(),
                     html = comment.text.orEmpty(),
                     isPostAuthor = comment.authorId == post.authorId,
-                    showLike = post.canLikePost(),
+                    showLike = showLike,
+                    isLikeEnabled = isLoggedIn,
                     isLiked = comment.isLikedByCurrentUser,
                     numLikes = comment.numLikes,
-                    canReply = canReply(),
+                    canReply = canReply,
                     isReplyTarget = comment.commentId == replyToCommentId,
-                    isHighlighted = comment.commentId == state.highlightedCommentId ||
-                        comment.commentId == replyToCommentId || comment.commentId == state.pendingCommentId,
-                    isPending = comment.commentId == state.pendingCommentId,
+                    isHighlighted = comment.commentId == highlightedCommentId ||
+                        comment.commentId == replyToCommentId || comment.commentId == pendingCommentId,
+                    isPending = comment.commentId == pendingCommentId,
                     canModerate = canModerate
                 )
             }
-        _uiState.update { it.copy(comments = items) }
+        val replyHint = if (replyToCommentId == 0L) {
+            R.string.reader_hint_comment_on_post
+        } else {
+            R.string.reader_hint_comment_on_comment
+        }
+        _uiState.update { it.copy(comments = items, replyHint = replyHint) }
         updateEmptyMessage()
     }
 
@@ -501,6 +509,7 @@ class ReaderCommentListViewModel @Inject constructor(
         private const val KEY_HAS_STARTED = "has_started"
         private const val KEY_HAS_UPDATED_COMMENTS = "has_updated_comments"
         private const val KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id"
+        private const val KEY_EDITED_COMMENT_ID = "edited_comment_id"
     }
 }
 
@@ -516,14 +525,10 @@ data class ReaderCommentListUiState(
     @StringRes val emptyMessage: Int? = null,
     val isLoggedIn: Boolean = false,
     val isCommentsOpen: Boolean = true,
-    val isPrivatePost: Boolean = false,
     @StringRes val replyHint: Int = R.string.reader_hint_comment_on_post,
     val isReplySheetShown: Boolean = false,
     val isSubmitting: Boolean = false,
-    val pendingCommentId: Long? = null,
-    val highlightedCommentId: Long = 0,
     val scrollToCommentId: Long? = null,
-    val areSuggestionsEnabled: Boolean = false,
     val suggestions: List<Suggestion> = emptyList()
 )
 
@@ -536,6 +541,7 @@ data class ReaderCommentItem(
     val html: String,
     val isPostAuthor: Boolean,
     val showLike: Boolean,
+    val isLikeEnabled: Boolean,
     val isLiked: Boolean,
     val numLikes: Int,
     val canReply: Boolean,
@@ -567,6 +573,7 @@ sealed class ReaderCommentListEvent {
     data class ShowModerationUndo(val commentId: Long, @StringRes val messageRes: Int) : ReaderCommentListEvent()
     data object ShowSignInPrompt : ReaderCommentListEvent()
     data object SignIn : ReaderCommentListEvent()
+    data object BindSuggestionService : ReaderCommentListEvent()
     data object ClearReply : ReaderCommentListEvent()
     data class RestoreReply(val text: String) : ReaderCommentListEvent()
     data class OpenPostDetail(val blogId: Long, val postId: Long) : ReaderCommentListEvent()
@@ -574,4 +581,21 @@ sealed class ReaderCommentListEvent {
     data class EditComment(val blogId: Long, val postId: Long, val commentId: Long, val site: SiteModel) :
         ReaderCommentListEvent()
     data class ShareComment(val url: String) : ReaderCommentListEvent()
+    data class OpenPhoto(val imageUrl: String, val isPrivate: Boolean) : ReaderCommentListEvent()
+}
+
+/**
+ * Orders the comments so each reply follows its parent, setting each one's level. Replies whose parent
+ * isn't in the list are dropped.
+ */
+private fun levelComments(comments: List<ReaderComment>): List<ReaderComment> {
+    val childrenByParent = comments.groupBy { it.parentId }
+    val result = ArrayList<ReaderComment>(comments.size)
+    fun addWithReplies(comment: ReaderComment, level: Int) {
+        comment.level = level
+        result.add(comment)
+        childrenByParent[comment.commentId]?.forEach { addWithReplies(it, level + 1) }
+    }
+    childrenByParent[0L]?.forEach { addWithReplies(it, 0) }
+    return result
 }

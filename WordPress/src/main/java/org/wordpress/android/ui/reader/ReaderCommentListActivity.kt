@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -28,6 +29,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.ReaderCommentIdentifier
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditActivity
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.compose.utils.showMessage
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
@@ -65,6 +67,11 @@ class ReaderCommentListActivity : BaseAppCompatActivity() {
 
     private val snackbarHostState = SnackbarHostState()
 
+    // the list picks up an edited comment when the editor saves it
+    private val editCommentLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == RESULT_OK) viewModel.onCommentEdited()
+    }
+
     // the reply is kept here rather than in the ViewModel so typing updates the text field synchronously
     private val replyText = mutableStateOf(TextFieldValue(""))
     private val draftDatabase by lazy { PersistentEditTextDatabase(this) }
@@ -96,7 +103,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity() {
             onModerateClick = viewModel::onModerateClicked,
             onEditClick = viewModel::onEditClicked,
             onShareClick = viewModel::onShareClicked,
-            onImageClick = ::showPhoto,
+            onImageClick = viewModel::onImageClicked,
             onComposerClick = viewModel::onComposerClicked,
             onReplyTextChange = { replyText.value = it },
             onSendReply = { viewModel.onSendReply(replyText.value.text) },
@@ -156,14 +163,11 @@ class ReaderCommentListActivity : BaseAppCompatActivity() {
         conversationViewModel.snackbarEvents.observe(this) { event ->
             // the bottom sheet shows its own changes
             if (getBottomSheetFragment() != null) return@observe
-            event.applyIfNotHandled {
-                showSnackbar(
-                    message = uiHelpers.getTextOfUiString(this@ReaderCommentListActivity, message).toString(),
-                    actionLabel = buttonTitle?.let {
-                        uiHelpers.getTextOfUiString(this@ReaderCommentListActivity, it).toString()
-                    },
-                    onAction = buttonAction
-                )
+            event.getContentIfNotHandled()?.let { holder ->
+                lifecycleScope.launch {
+                    snackbarHostState.currentSnackbarData?.dismiss()
+                    snackbarHostState.showMessage(holder, this@ReaderCommentListActivity, uiHelpers)
+                }
             }
         }
         conversationViewModel.showBottomSheetEvent.observe(this) { event ->
@@ -195,15 +199,6 @@ class ReaderCommentListActivity : BaseAppCompatActivity() {
     private fun observeEvents() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    viewModel.uiState.collect { state ->
-                        if (state.areSuggestionsEnabled && suggestionServiceConnectionManager == null) {
-                            suggestionServiceConnectionManager =
-                                SuggestionServiceConnectionManager(this@ReaderCommentListActivity, viewModel.blogId)
-                                    .also { it.bindToService() }
-                        }
-                    }
-                }
                 viewModel.events.collect { handleEvent(it) }
             }
         }
@@ -248,14 +243,21 @@ class ReaderCommentListActivity : BaseAppCompatActivity() {
                 ReaderTracker.SOURCE_COMMENT,
                 readerTracker
             )
-            is ReaderCommentListEvent.EditComment -> startActivity(
+            is ReaderCommentListEvent.EditComment -> editCommentLauncher.launch(
                 UnifiedCommentsEditActivity.createIntent(
                     this@ReaderCommentListActivity,
                     ReaderCommentIdentifier(event.blogId, event.postId, event.commentId),
                     event.site
                 )
             )
-            is ReaderCommentListEvent.ShareComment -> shareComment(event.url)
+            is ReaderCommentListEvent.ShareComment ->
+                ActivityLauncher.openShareIntent(this@ReaderCommentListActivity, event.url, null)
+            is ReaderCommentListEvent.OpenPhoto -> showPhoto(event.imageUrl, event.isPrivate)
+            ReaderCommentListEvent.BindSuggestionService -> if (suggestionServiceConnectionManager == null) {
+                suggestionServiceConnectionManager =
+                    SuggestionServiceConnectionManager(this@ReaderCommentListActivity, viewModel.blogId)
+                        .also { it.bindToService() }
+            }
         }
     }
 
@@ -290,17 +292,10 @@ class ReaderCommentListActivity : BaseAppCompatActivity() {
         }
     }
 
-    private fun showPhoto(imageUrl: String) {
+    private fun showPhoto(imageUrl: String, isPrivate: Boolean) {
         val options = EnumSet.noneOf(PhotoViewerOption::class.java)
-        if (viewModel.uiState.value.isPrivatePost) options.add(PhotoViewerOption.IS_PRIVATE_IMAGE)
+        if (isPrivate) options.add(PhotoViewerOption.IS_PRIVATE_IMAGE)
         ReaderActivityLauncher.showReaderPhotoViewer(this, imageUrl, null, null, options, 0, 0)
-    }
-
-    private fun shareComment(url: String) {
-        val intent = Intent(Intent.ACTION_SEND)
-            .setType("text/plain")
-            .putExtra(Intent.EXTRA_TEXT, url)
-        startActivity(Intent.createChooser(intent, getString(R.string.share_link)))
     }
 
     private fun loadDraft() {
