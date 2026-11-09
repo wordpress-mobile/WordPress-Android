@@ -308,16 +308,19 @@ class ReaderCommentListViewModel @Inject constructor(
 
     private suspend fun refresh(isPullToRefresh: Boolean) {
         if (isPullToRefresh) _uiState.update { it.copy(isRefreshing = true) }
-        fetchComments(nextPage = false)
+        val didFetch = fetchComments(nextPage = false)
         _uiState.update { it.copy(isRefreshing = false) }
-        performDirectOperation()
+        // only once the comments have loaded, so the operation can find its comment
+        if (didFetch) performDirectOperation()
     }
 
-    private suspend fun fetchComments(nextPage: Boolean) {
-        if (isFetching) return
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
+    /*
+     * returns false if it didn't fetch, because it's offline or a fetch is already running
+     */
+    private suspend fun fetchComments(nextPage: Boolean): Boolean {
+        if (isFetching || !networkUtilsWrapper.isNetworkAvailable()) {
             updateEmptyMessage()
-            return
+            return false
         }
         isFetching = true
         _uiState.update { it.copy(isLoadingMore = nextPage, isLoading = !nextPage && comments.isEmpty()) }
@@ -326,6 +329,7 @@ class ReaderCommentListViewModel @Inject constructor(
         hasUpdatedComments = true
         _uiState.update { it.copy(isLoadingMore = false, isLoading = false) }
         if (result.isNewOrChanged) loadComments() else updateEmptyMessage()
+        return true
     }
 
     private suspend fun loadComments() {
@@ -469,7 +473,8 @@ class ReaderCommentListViewModel @Inject constructor(
         return isAvailable
     }
 
-    private fun canReply() = isLoggedIn && post?.isCommentsOpen == true
+    // not while a comment is being sent, so its reply target can't change under it
+    private fun canReply() = isLoggedIn && post?.isCommentsOpen == true && !_uiState.value.isSubmitting
 
     private fun findComment(commentId: Long) = comments.firstOrNull { it.commentId == commentId }
 
