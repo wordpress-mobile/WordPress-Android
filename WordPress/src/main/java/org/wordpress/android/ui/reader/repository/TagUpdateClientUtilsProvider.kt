@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader.services.update
+package org.wordpress.android.ui.reader.repository
 
 import org.wordpress.android.WordPress
 import org.wordpress.android.networking.RestClientUtils

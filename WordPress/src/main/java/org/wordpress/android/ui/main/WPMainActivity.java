@@ -116,8 +116,8 @@ import org.wordpress.android.ui.prefs.privacy.banner.PrivacyBannerFragment;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderFragment;
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
+import org.wordpress.android.ui.reader.repository.ReaderTagsAndSitesUpdater;
+import org.wordpress.android.ui.reader.repository.UpdateTask;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.stats.StatsTimeframe;
@@ -276,6 +276,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Inject ApplicationPasswordReauthNotifier mReauthNotifier;
 
     @Inject NetworkConnectionMonitor mNetworkConnectionMonitor;
+    @Inject ReaderTagsAndSitesUpdater mReaderTagsAndSitesUpdater;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -1377,7 +1378,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
     private void startWithNewAccount() {
         mGCMRegistrationScheduler.scheduleRegistration();
-        ReaderUpdateServiceStarter.startService(this, EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
+        mReaderTagsAndSitesUpdater.update(EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
     }
 
     private MySiteFragment getMySiteFragment() {

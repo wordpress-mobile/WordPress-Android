@@ -24,7 +24,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
@@ -46,7 +45,6 @@ import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
-import org.wordpress.android.ui.reader.ReaderEvents.TagAdded
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnBlogInfoFailedListener
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
@@ -321,7 +319,6 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
                     R.string.reader_toast_err_removing_tag
                 }
             )
-            is ReaderPostListUiEvent.SetSubfilterFromTag -> subFilterViewModel?.setSubfilterFromTag(event.tag)
             ReaderPostListUiEvent.SetDefaultSubfilter -> subFilterViewModel?.setDefaultSubfilter(false)
             ReaderPostListUiEvent.NoConnection -> NetworkUtils.checkConnection(requireContext())
             ReaderPostListUiEvent.DataLoaded -> onDataLoaded()
@@ -406,12 +403,7 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
             AppLog.d(AppLog.T.READER, "reader post list > resumed from paused state")
             wasPaused = false
 
-            postListViewModel.onResumeAfterPause(consumeAddedTagName(), getSiteIfBlogPreview())
-
-            if (isTopLevel) {
-                // Remove sticky event if not consumed
-                EventBus.getDefault().removeStickyEvent(TagAdded::class.java)
-            }
+            postListViewModel.onResumeAfterPause(getSiteIfBlogPreview())
         }
 
         // the user may have logged in or out, which changes whether the self-hosted CTA shows
@@ -423,19 +415,6 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
             isTopLevel, isSearching, isFilterableScreen,
             if (isFilterableScreen) subFilterViewModel!!.getCurrentSubfilterValue() else null
         )
-    }
-
-    /*
-     * returns the name of the tag the user just followed, if any, so the Following screen can switch to it
-     */
-    private fun consumeAddedTagName(): String? {
-        if (!isFollowingScreen || postListViewModel.listType != ReaderPostListType.TAG_FOLLOWED) {
-            return null
-        }
-        return EventBus.getDefault().getStickyEvent(TagAdded::class.java)?.let { addedTag ->
-            EventBus.getDefault().removeStickyEvent(addedTag)
-            addedTag.tagName
-        }
     }
 
     private fun getSiteIfBlogPreview(): SubfilterListItem.Site? {
