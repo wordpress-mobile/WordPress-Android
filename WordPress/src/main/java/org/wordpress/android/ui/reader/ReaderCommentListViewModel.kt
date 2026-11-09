@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -82,6 +84,7 @@ class ReaderCommentListViewModel @Inject constructor(
     private var isFetching = false
     private var postSite: SiteModel? = null
     private var highlightedCommentId = 0L
+    private val likeMutex = Mutex()
     private var pendingCommentId: Long? = null
 
     // comments removed by a moderation that's waiting on its undo snackbar
@@ -224,7 +227,9 @@ class ReaderCommentListViewModel @Inject constructor(
         _uiState.update { it.copy(isSubmitting = true, isReplySheetShown = false) }
         _events.trySend(ReaderCommentListEvent.ClearReply)
 
-        launch {
+        // the application scope, so leaving the screen can't strand the placeholder or drop the reply after
+        // its text has been cleared
+        applicationScope.launch(mainDispatcher) {
             val pending = repository.addPendingComment(post, trimmed, replyToCommentId, accountStore.account.userId)
             pendingCommentId = pending.commentId
             loadComments()
@@ -247,9 +252,7 @@ class ReaderCommentListViewModel @Inject constructor(
     }
 
     fun onLikeClicked(commentId: Long) {
-        val comment = findComment(commentId) ?: return
-        if (!checkConnection()) return
-        likeComment(comment, isLiked = !comment.isLikedByCurrentUser)
+        if (findComment(commentId) != null && checkConnection()) likeComment(commentId)
     }
 
     fun onModerateClicked(commentId: Long, action: ReaderCommentModeration) {
@@ -263,11 +266,13 @@ class ReaderCommentListViewModel @Inject constructor(
      * the moderation is only sent once its undo snackbar goes away without being used
      */
     fun onModerationUndoFinished(commentId: Long, isUndone: Boolean) {
-        val pending = pendingModerations.remove(commentId) ?: return
+        val pending = pendingModerations[commentId]?.takeUnless { it.isSent } ?: return
         if (isUndone) {
+            pendingModerations.remove(commentId)
             trackModeration(Stat.COMMENT_MODERATION_UNDO)
             rebuildItems()
         } else {
+            pendingModerations[commentId] = pending.copy(isSent = true)
             commitModeration(pending, isScreenShown = true)
         }
     }
@@ -297,7 +302,7 @@ class ReaderCommentListViewModel @Inject constructor(
 
     override fun onCleared() {
         // the screen went away while an undo snackbar was showing, so the moderation goes ahead
-        pendingModerations.values.forEach { commitModeration(it, isScreenShown = false) }
+        pendingModerations.values.filterNot { it.isSent }.forEach { commitModeration(it, isScreenShown = false) }
         pendingModerations.clear()
     }
 
@@ -379,28 +384,37 @@ class ReaderCommentListViewModel @Inject constructor(
                 _events.trySend(ReaderCommentListEvent.ShowToast(R.string.reader_toast_err_comment_not_found))
             comment.isLikedByCurrentUser ->
                 _events.trySend(ReaderCommentListEvent.ShowToast(R.string.reader_toast_err_already_liked))
-            else -> likeComment(comment, isLiked = true)
+            else -> likeComment(commentId, isLiked = true)
         }
     }
 
-    private fun likeComment(comment: ReaderComment, isLiked: Boolean) {
+    /*
+     * likes or unlikes the comment, or toggles it when [isLiked] is null. Likes are applied one at a time to the
+     * stored comment, so a quick second tap toggles back instead of repeating the first.
+     */
+    private fun likeComment(commentId: Long, isLiked: Boolean? = null) {
         val userId = accountStore.account.userId
         launch {
-            if (!repository.setLikeLocally(comment, isLiked, userId)) {
-                _events.trySend(ReaderCommentListEvent.ShowToast(R.string.reader_toast_err_generic))
-                return@launch
+            val (comment, like) = likeMutex.withLock {
+                val comment = repository.getComment(blogId, postId, commentId) ?: return@launch
+                val like = isLiked ?: !comment.isLikedByCurrentUser
+                if (!repository.setLikeLocally(comment, like, userId)) {
+                    _events.trySend(ReaderCommentListEvent.ShowToast(R.string.reader_toast_err_generic))
+                    return@launch
+                }
+                reloadComment(comment)
+                comment to like
             }
-            reloadComment(comment)
             readerTracker.trackPost(
-                if (isLiked) Stat.READER_ARTICLE_COMMENT_LIKED else Stat.READER_ARTICLE_COMMENT_UNLIKED,
+                if (like) Stat.READER_ARTICLE_COMMENT_LIKED else Stat.READER_ARTICLE_COMMENT_UNLIKED,
                 post
             )
             readerTracker.trackPost(
-                if (isLiked) Stat.COMMENT_LIKED else Stat.COMMENT_UNLIKED,
+                if (like) Stat.COMMENT_LIKED else Stat.COMMENT_UNLIKED,
                 post,
                 AnalyticsCommentActionSource.READER.toString()
             )
-            if (!repository.sendLike(comment, isLiked, userId)) reloadComment(comment)
+            if (!repository.sendLike(comment, like, userId)) reloadComment(comment)
         }
     }
 
@@ -410,20 +424,26 @@ class ReaderCommentListViewModel @Inject constructor(
         rebuildItems()
     }
 
+    /*
+     * the comment stays in [pendingModerations], and so hidden, until the request finishes - a reload while it's
+     * in flight would otherwise bring it back, since it's still approved in the database
+     */
     private fun commitModeration(pending: PendingModeration, isScreenShown: Boolean) {
         trackModeration(pending.action.stat)
-        if (isScreenShown) {
-            // removed here, so it stays hidden while the request is in flight
-            comments = comments.filterNot { it.commentId == pending.comment.commentId }
-            rebuildItems()
-        }
+        val commentId = pending.comment.commentId
         // the application scope, so it's sent even if the screen has gone
         applicationScope.launch {
             val succeeded = repository.moderateComment(pending.comment, pending.action.status)
-            if (!succeeded && isScreenShown) {
+            if (isScreenShown) {
                 withContext(mainDispatcher) {
-                    _events.trySend(ReaderCommentListEvent.ShowToast(R.string.comment_moderation_error))
-                    loadComments()
+                    pendingModerations.remove(commentId)
+                    if (succeeded) {
+                        comments = comments.filterNot { it.commentId == commentId }
+                        rebuildItems()
+                    } else {
+                        _events.trySend(ReaderCommentListEvent.ShowToast(R.string.comment_moderation_error))
+                        loadComments()
+                    }
                 }
             }
         }
@@ -502,7 +522,11 @@ class ReaderCommentListViewModel @Inject constructor(
         _uiState.update { it.copy(emptyMessage = message) }
     }
 
-    private data class PendingModeration(val comment: ReaderComment, val action: ReaderCommentModeration)
+    private data class PendingModeration(
+        val comment: ReaderComment,
+        val action: ReaderCommentModeration,
+        val isSent: Boolean = false
+    )
 
     companion object {
         private const val MAX_INDENT_LEVEL = 2
