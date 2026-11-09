@@ -370,7 +370,7 @@ private fun CommentActionRow(comment: ReaderCommentItem, isLoggedIn: Boolean, ac
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.heightIn(min = 40.dp)
     ) {
-        if (isLoggedIn) {
+        if (comment.canReply) {
             val color = if (comment.isReplyTarget) MaterialTheme.colorScheme.primary else mutedColor
             ActionButton(
                 iconRes = R.drawable.ic_reply_material_white_24dp,

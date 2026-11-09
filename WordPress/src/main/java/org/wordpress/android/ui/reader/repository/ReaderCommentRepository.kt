@@ -145,16 +145,17 @@ class ReaderCommentRepository @Inject constructor(
 
     /**
      * Posts the pending comment and replaces it with the one the server returns, or removes it if posting
-     * fails. Returns the posted comment, or null if it failed.
+     * fails. Returns the posted comment, or null if it failed. The POST itself can't be cancelled, so this
+     * isn't either: the placeholder is replaced even if the caller goes away.
      */
-    suspend fun submitComment(post: ReaderPost, pending: ReaderComment): ReaderComment? {
-        val path = if (pending.parentId == 0L) {
-            "sites/${post.blogId}/posts/${post.postId}/replies/new"
-        } else {
-            "sites/${post.blogId}/comments/${pending.parentId}/replies/new"
-        }
-        val json = post(path, mapOf("content" to pending.text))
-        return withContext(NonCancellable + ioDispatcher) {
+    suspend fun submitComment(post: ReaderPost, pending: ReaderComment): ReaderComment? =
+        withContext(NonCancellable + ioDispatcher) {
+            val path = if (pending.parentId == 0L) {
+                "sites/${post.blogId}/posts/${post.postId}/replies/new"
+            } else {
+                "sites/${post.blogId}/comments/${pending.parentId}/replies/new"
+            }
+            val json = post(path, mapOf("content" to pending.text))
             ReaderCommentTable.deleteComment(post, pending.commentId)
             json?.let {
                 ReaderComment.fromJson(it, post.blogId).also { comment ->
@@ -164,7 +165,6 @@ class ReaderCommentRepository @Inject constructor(
                 }
             }
         }
-    }
 
     /**
      * Stores the like locally, so it shows right away. Returns false if the comment's like status
@@ -184,21 +184,20 @@ class ReaderCommentRepository @Inject constructor(
 
     /**
      * Sends a like stored by [setLikeLocally], where [comment] is the comment as it was before. Restores
-     * the comment's previous like status and returns false if it fails.
+     * the comment's previous like status and returns false if it fails, even if the caller has gone away.
      */
-    suspend fun sendLike(comment: ReaderComment, isLiked: Boolean, wpComUserId: Long): Boolean {
-        val path = "sites/${comment.blogId}/comments/${comment.commentId}/likes/" +
-            if (isLiked) "new" else "mine/delete"
-        val succeeded = post(path, null)?.let { JSONUtils.getBool(it, "success") } == true
-        if (!succeeded) {
-            AppLog.w(T.READER, "comment ${if (isLiked) "like" else "unlike"} failed")
-            withContext(NonCancellable + ioDispatcher) {
+    suspend fun sendLike(comment: ReaderComment, isLiked: Boolean, wpComUserId: Long): Boolean =
+        withContext(NonCancellable + ioDispatcher) {
+            val path = "sites/${comment.blogId}/comments/${comment.commentId}/likes/" +
+                if (isLiked) "new" else "mine/delete"
+            val succeeded = post(path, null)?.let { JSONUtils.getBool(it, "success") } == true
+            if (!succeeded) {
+                AppLog.w(T.READER, "comment ${if (isLiked) "like" else "unlike"} failed")
                 ReaderCommentTable.setLikesForComment(comment, comment.numLikes, comment.isLikedByCurrentUser)
                 ReaderLikeTable.setCurrentUserLikesComment(comment, comment.isLikedByCurrentUser, wpComUserId)
             }
+            succeeded
         }
-        return succeeded
-    }
 
     suspend fun moderateComment(comment: ReaderComment, newStatus: CommentStatus): Boolean {
         val params = mapOf(

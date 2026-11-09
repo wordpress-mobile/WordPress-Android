@@ -26,6 +26,7 @@ import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
 import org.wordpress.android.ui.reader.repository.ReaderCommentRepository
+import org.wordpress.android.ui.reader.repository.levelComments
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.suggestion.Suggestion
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -189,6 +190,7 @@ class ReaderCommentListViewModel @Inject constructor(
     }
 
     fun onReplyClicked(commentId: Long) {
+        if (!canReply()) return
         setReplyTarget(commentId)
         _uiState.update { it.copy(isReplySheetShown = true, scrollToCommentId = commentId) }
     }
@@ -215,7 +217,6 @@ class ReaderCommentListViewModel @Inject constructor(
 
         launch {
             val pending = repository.addPendingComment(post, trimmed, replyToCommentId, accountStore.account.userId)
-            setReplyTarget(0)
             _uiState.update { it.copy(pendingCommentId = pending.commentId) }
             loadComments()
             _uiState.update { it.copy(scrollToCommentId = pending.commentId) }
@@ -223,6 +224,8 @@ class ReaderCommentListViewModel @Inject constructor(
             val posted = repository.submitComment(post, pending)
             _uiState.update { it.copy(isSubmitting = false, pendingCommentId = null) }
             if (posted != null) {
+                // the target is kept until now, so a reply that fails is sent to the same comment again
+                setReplyTarget(0)
                 reloadPost()
             } else {
                 _events.trySend(ReaderCommentListEvent.RestoreReply(trimmed))
@@ -339,14 +342,18 @@ class ReaderCommentListViewModel @Inject constructor(
     private fun performDirectOperation() {
         val operation = directOperation ?: return
         val commentId = directCommentId
-        directOperation = null
-        directCommentId = 0
+        // a like that has to wait for the user to sign in is kept, so it runs when the screen restarts after
+        // sign-in
+        if (operation != DirectOperation.COMMENT_LIKE || isLoggedIn) {
+            directOperation = null
+            directCommentId = 0
+        }
         if (commentId == 0L) return
         when (operation) {
             DirectOperation.COMMENT_JUMP -> highlight(commentId)
             DirectOperation.COMMENT_REPLY -> {
                 setReplyTarget(commentId)
-                _uiState.update { it.copy(scrollToCommentId = commentId, isReplySheetShown = isLoggedIn) }
+                _uiState.update { it.copy(scrollToCommentId = commentId, isReplySheetShown = canReply()) }
             }
             DirectOperation.COMMENT_LIKE -> {
                 highlight(commentId)
@@ -442,14 +449,16 @@ class ReaderCommentListViewModel @Inject constructor(
         return isAvailable
     }
 
+    private fun canReply() = isLoggedIn && post?.isCommentsOpen == true
+
     private fun findComment(commentId: Long) = comments.firstOrNull { it.commentId == commentId }
 
     private fun rebuildItems() {
         val post = post ?: return
         val state = _uiState.value
         val canModerate = moderationFeatureConfig.isEnabled() && postSite?.hasCapabilityEditOthersPosts == true
-        val items = comments
-            .filterNot { pendingModerations.containsKey(it.commentId) }
+        // re-leveled so replies to a comment hidden by a pending moderation are hidden with it
+        val items = levelComments(comments.filterNot { pendingModerations.containsKey(it.commentId) })
             .map { comment ->
                 ReaderCommentItem(
                     commentId = comment.commentId,
@@ -462,6 +471,7 @@ class ReaderCommentListViewModel @Inject constructor(
                     showLike = post.canLikePost(),
                     isLiked = comment.isLikedByCurrentUser,
                     numLikes = comment.numLikes,
+                    canReply = canReply(),
                     isReplyTarget = comment.commentId == replyToCommentId,
                     isHighlighted = comment.commentId == state.highlightedCommentId ||
                         comment.commentId == replyToCommentId || comment.commentId == state.pendingCommentId,
@@ -528,6 +538,7 @@ data class ReaderCommentItem(
     val showLike: Boolean,
     val isLiked: Boolean,
     val numLikes: Int,
+    val canReply: Boolean,
     val isReplyTarget: Boolean,
     val isHighlighted: Boolean,
     val isPending: Boolean,
