@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **New block editor uploads follow the Media settings**
+  Photos and videos added from the device in the new block editor are now resized, compressed, and stripped of location as set in App Settings, as they already were in the classic editors. Before, they uploaded unchanged. On free WordPress.com plans, an audio file or document the plan doesn't allow is refused up front with a notice in the app's language.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Me → App Settings → Media (Optimize Images, Maximum Image Size, Image Quality, Remove location from media, Optimize Videos, Maximum Video Size, Video Quality); new block editor → Add media
+  - **Notes:** Only applies to sites using the new block editor, which is opt-in. Video optimization stays off unless the user turns it on, as in the classic editors. GIFs always upload unchanged so they keep animating.
+
 - **Referrers and Clicks in Stats show each source's icon**
   Rows in the redesigned Stats' Referrers and Clicks cards, and their full lists, now show the site icon the Stats API already reports for the referrer or link, matching the web version. A row the API has no icon for shows none, and its title stays where it was. Expanding a referrer group, such as Search Engines, shows an icon for each entry under it too.
   - **Apps:** Both
