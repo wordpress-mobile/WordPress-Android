@@ -33,6 +33,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -55,6 +56,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val readerImageScannerProvider: ReaderImageScannerProvider,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
+    private val savedPostsRepository: ReaderSavedPostsRepository,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     @Suppress("LongParameterList")
@@ -316,8 +318,9 @@ class ReaderPostUiStateBuilder @Inject constructor(
         post: ReaderPost,
         onClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): PrimaryAction {
+        val isSaved = savedPostsRepository.isSaved(post)
         val contentDescription = UiStringRes(
-            if (post.isBookmarked) {
+            if (isSaved) {
                 R.string.reader_remove_bookmark
             } else {
                 R.string.reader_add_bookmark
@@ -326,7 +329,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         return if (post.postId != 0L && post.blogId != 0L) {
             PrimaryAction(
                 isEnabled = true,
-                isSelected = post.isBookmarked,
+                isSelected = isSaved,
                 contentDescription = contentDescription,
                 onClicked = onClicked,
                 type = BOOKMARK

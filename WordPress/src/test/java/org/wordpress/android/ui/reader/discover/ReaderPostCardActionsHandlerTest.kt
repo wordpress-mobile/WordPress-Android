@@ -161,6 +161,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
             seenStatusToggleUseCase,
             readerBlogTableWrapper,
             accountStore,
+            mock(),
             testDispatcher()
         )
         actionHandler.initScope(testScope())

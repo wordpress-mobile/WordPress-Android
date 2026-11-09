@@ -39,6 +39,11 @@ class ExperimentalFeatures @Inject constructor(
             "experimental_post_types",
             R.string.experimental_post_types,
             R.string.experimental_post_types_description
+        ),
+        READER_SAVED_POSTS_SYNC(
+            "reader_saved_posts_sync",
+            R.string.experimental_reader_saved_posts_sync,
+            R.string.experimental_reader_saved_posts_sync_description
         )
     }
 }

@@ -75,6 +75,15 @@ class WpServiceProvider @Inject constructor(
         return WpService(siteInfo, delegate, wpApiCache.cache)
     }
 
+    /**
+     * A delegate authenticated as the signed-in WordPress.com account, for services that belong to
+     * the account rather than a site.
+     */
+    fun createWpComDelegate(): WpApiClientDelegate = createDelegate(
+        authProvider = createWpComAuthProvider(accountStore),
+        appNotifier = createAppNotifier(site = null)
+    )
+
     private fun createDelegate(site: SiteModel): WpApiClientDelegate {
         val authProvider = if (site.isUsingWpComRestApi) {
             createWpComAuthProvider(accountStore)
@@ -86,7 +95,13 @@ class WpServiceProvider @Inject constructor(
             }
             WpAuthenticationProvider.staticWithUsernameAndPassword(username, password)
         }
+        return createDelegate(authProvider, createAppNotifier(site))
+    }
 
+    private fun createDelegate(
+        authProvider: WpAuthenticationProvider,
+        appNotifier: WpAppNotifier
+    ): WpApiClientDelegate {
         return WpApiClientDelegate(
             authProvider = authProvider,
             requestExecutor = WpRequestExecutor(
@@ -94,7 +109,7 @@ class WpServiceProvider @Inject constructor(
                 networkAvailabilityProvider = networkAvailabilityProvider
             ),
             middlewarePipeline = WpApiMiddlewarePipeline(emptyList()),
-            appNotifier = createAppNotifier(site)
+            appNotifier = appNotifier
         )
     }
 
@@ -104,7 +119,7 @@ class WpServiceProvider @Inject constructor(
      * transport means an expired or revoked OAuth token — the rs screens surface that error
      * themselves — so bearer-authenticated services don't report to the handler at all.
      */
-    private fun createAppNotifier(site: SiteModel): WpAppNotifier = if (site.isUsingWpComRestApi) {
+    private fun createAppNotifier(site: SiteModel?): WpAppNotifier = if (site == null || site.isUsingWpComRestApi) {
         object : WpAppNotifier {
             override suspend fun requestedWithInvalidAuthentication(requestUrl: String) = Unit
         }
@@ -116,8 +131,9 @@ class WpServiceProvider @Inject constructor(
         }
     }
 
+    /** The cache shared by every wordpress-rs service in the app. Opens the database on first use. */
     @Synchronized
-    private fun getOrCreateCache(): WordPressApiCache {
+    fun getOrCreateCache(): WordPressApiCache {
         return cache ?: run {
             val cacheDir = File(context.filesDir, "wp_rs_cache")
             if (!cacheDir.exists()) cacheDir.mkdirs()

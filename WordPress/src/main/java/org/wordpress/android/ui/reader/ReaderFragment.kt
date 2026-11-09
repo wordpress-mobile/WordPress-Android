@@ -57,6 +57,8 @@ import org.wordpress.android.ui.reader.views.compose.ReaderShellLayout
 import org.wordpress.android.ui.reader.views.compose.ReaderTopAppBar
 import org.wordpress.android.ui.reader.views.compose.ReaderTopBarScrollConnection
 import org.wordpress.android.ui.reader.views.compose.RetainedComposeView
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsFragment
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.wordpress.android.ui.reader.views.compose.enableNestedScrollInterop
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterType
 import org.wordpress.android.ui.utils.UiHelpers
@@ -76,6 +78,9 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
 
     @Inject
     lateinit var snackbarSequencer: SnackbarSequencer
+
+    @Inject
+    lateinit var savedPostsRepository: ReaderSavedPostsRepository
 
     private lateinit var viewModel: ReaderViewModel
 
@@ -189,6 +194,7 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
         // the view is reused when returning to the Reader tab, so show the top bar again as a new one would be
         topBarScrollConnection.reset()
         startReaderViewModel(savedInstanceState)
+        savedPostsRepository.sync()
     }
 
     override fun onResume() {
@@ -301,6 +307,8 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
             }
         }
         val modifier = Modifier.fillMaxSize()
+        // until this device's saves are imported to the account, the device's own list shows them
+        val isSyncedSavedList = remember(tag) { tag.isBookmarked && savedPostsRepository.isSyncedListReady() }
         when {
             tag.isDiscover -> AndroidFragment<ReaderDiscoverTabsFragment>(modifier, onUpdate = ::onFeedAdded)
             tag.isTags -> AndroidFragment<ReaderTagsFeedFragment>(
@@ -308,6 +316,7 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
                 arguments = remember { ReaderTagsFeedFragment.argumentsFor(tag) },
                 onUpdate = ::onFeedAdded
             )
+            isSyncedSavedList -> AndroidFragment<ReaderSavedPostsFragment>(modifier, onUpdate = ::onFeedAdded)
             else -> AndroidFragment<ReaderPostListFragment>(
                 modifier,
                 arguments = remember {
@@ -383,7 +392,8 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
      */
     private fun getCurrentFeedFragment(): Fragment? {
         return childFragmentManager.fragments.lastOrNull {
-            it is ReaderPostListFragment || it is ReaderTagsFeedFragment || it is ReaderDiscoverTabsFragment
+            it is ReaderPostListFragment || it is ReaderTagsFeedFragment || it is ReaderDiscoverTabsFragment ||
+                it is ReaderSavedPostsFragment
         }
     }
 

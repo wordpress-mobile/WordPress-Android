@@ -10,12 +10,16 @@ import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -39,14 +43,70 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var readerPostTableWrapper: ReaderPostTableWrapper
 
+    @Mock
+    lateinit var savedPostsRepository: ReaderSavedPostsRepository
+
     @Before
     fun setup() {
         useCase = ReaderPostBookmarkUseCase(
             readerTracker,
             networkUtilsWrapper,
             readerPostActionsWrapper,
-            readerPostTableWrapper
+            readerPostTableWrapper,
+            savedPostsRepository
         )
+    }
+
+    @Test
+    fun `when synced and offline, nothing changes and NoNetwork is emitted`() = test {
+        whenever(savedPostsRepository.isEnabled).thenReturn(true)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        val result = useCase.toggleBookmark(post(), false, SOURCE).toList(mutableListOf())
+
+        assertThat(result).containsExactly(BookmarkPostState.NoNetwork)
+        verify(readerPostActionsWrapper, never()).addToBookmarked(any())
+        verify(savedPostsRepository, never()).setSaved(any(), any())
+    }
+
+    @Test
+    fun `when synced, saving follows the account state and saves locally and on the account`() = test {
+        val dummyPost = init(isBookmarked = false)
+        whenever(savedPostsRepository.isEnabled).thenReturn(true)
+        whenever(savedPostsRepository.isSaved(dummyPost)).thenReturn(false)
+        whenever(savedPostsRepository.setSaved(any(), eq(true))).thenReturn(true)
+
+        val result = useCase.toggleBookmark(post(), true, SOURCE).toList(mutableListOf())
+
+        verify(readerPostActionsWrapper).addToBookmarked(dummyPost)
+        assertThat(result).containsExactly(BookmarkPostState.Success(true))
+    }
+
+    @Test
+    fun `when synced, unsaving a post saved elsewhere doesn't touch the local flag that's already clear`() = test {
+        val dummyPost = init(isBookmarked = false)
+        whenever(savedPostsRepository.isEnabled).thenReturn(true)
+        whenever(savedPostsRepository.isSaved(dummyPost)).thenReturn(true)
+        whenever(savedPostsRepository.setSaved(any(), eq(false))).thenReturn(true)
+
+        val result = useCase.toggleBookmark(post(), true, SOURCE).toList(mutableListOf())
+
+        verify(readerPostActionsWrapper, never()).removeFromBookmarked(any())
+        assertThat(result).containsExactly(BookmarkPostState.Success(false))
+    }
+
+    @Test
+    fun `when synced and the account write fails, the local flag is restored and Failed is emitted`() = test {
+        val dummyPost = init(isBookmarked = false)
+        whenever(savedPostsRepository.isEnabled).thenReturn(true)
+        whenever(savedPostsRepository.isSaved(dummyPost)).thenReturn(false)
+        whenever(savedPostsRepository.setSaved(any(), eq(true))).thenReturn(false)
+
+        val result = useCase.toggleBookmark(post(), false, SOURCE).toList(mutableListOf())
+
+        verify(readerPostActionsWrapper).addToBookmarked(dummyPost)
+        verify(readerPostTableWrapper).setBookmarkFlag(anyLong(), anyLong(), eq(false))
+        assertThat(result).containsExactly(BookmarkPostState.Failed)
     }
 
     @Test

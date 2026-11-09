@@ -6,7 +6,11 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
+import org.wordpress.android.ui.reader.saved.toSaveIdentity
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Failed
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.NoNetwork
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -20,14 +24,26 @@ class ReaderPostBookmarkUseCase @Inject constructor(
     private val readerTracker: ReaderTracker,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val readerPostActionsWrapper: ReaderPostActionsWrapper,
-    private val readerPostTableWrapper: ReaderPostTableWrapper
+    private val readerPostTableWrapper: ReaderPostTableWrapper,
+    private val savedPostsRepository: ReaderSavedPostsRepository
 ) {
     suspend fun toggleBookmark(
         post: ReaderPost,
         isBookmarkList: Boolean,
         source: String
     ) = flow {
-        val bookmarked = updatePostInDb(post.blogId, post.postId)
+        val bookmarked = if (savedPostsRepository.isEnabled) {
+            if (!networkUtilsWrapper.isNetworkAvailable()) {
+                emit(NoNetwork)
+                return@flow
+            }
+            updatePostOnAccount(post.blogId, post.postId) ?: run {
+                emit(Failed)
+                return@flow
+            }
+        } else {
+            updatePostInDb(post.blogId, post.postId)
+        }
         trackEvent(bookmarked, isBookmarkList, post, source)
         preloadPostContentIfNecessary(bookmarked, isBookmarkList, post.blogId, post.postId)
         emit(Success(bookmarked))
@@ -45,10 +61,41 @@ class ReaderPostBookmarkUseCase @Inject constructor(
         }
     }
 
+    /**
+     * Saves or unsaves the post on the account, keeping the local copy in step so it can still be
+     * read offline. Returns whether the post is now saved, or null if the account couldn't be updated,
+     * in which case the local copy is put back as it was.
+     */
+    private suspend fun updatePostOnAccount(blogId: Long, postId: Long): Boolean? {
+        val post = getPostFromDb(blogId, postId)
+        val setToBookmarked = !savedPostsRepository.isSaved(post)
+        val localWasBookmarked = post.isBookmarked
+        setLocalBookmark(post, setToBookmarked)
+        if (!savedPostsRepository.setSaved(post.toSaveIdentity(), setToBookmarked)) {
+            if (localWasBookmarked != setToBookmarked) {
+                readerPostTableWrapper.setBookmarkFlag(blogId, postId, localWasBookmarked)
+            }
+            return null
+        }
+        return setToBookmarked
+    }
+
+    /** The local flag can disagree with the account, so only change it when it differs. */
+    private fun setLocalBookmark(post: ReaderPost, bookmarked: Boolean) {
+        when {
+            post.isBookmarked == bookmarked -> Unit
+            bookmarked -> readerPostActionsWrapper.addToBookmarked(post)
+            else -> readerPostActionsWrapper.removeFromBookmarked(post)
+        }
+    }
+
     @Suppress("UseCheckOrError")
-    private fun updatePostInDb(blogId: Long, postId: Long): Boolean {
-        val post = readerPostTableWrapper.getBlogPost(blogId, postId, true)
+    private fun getPostFromDb(blogId: Long, postId: Long): ReaderPost =
+        readerPostTableWrapper.getBlogPost(blogId, postId, true)
             ?: throw IllegalStateException("Post displayed on the UI not found in DB.")
+
+    private fun updatePostInDb(blogId: Long, postId: Long): Boolean {
+        val post = getPostFromDb(blogId, postId)
 
         val setToBookmarked = !post.isBookmarked
 
@@ -90,4 +137,6 @@ class ReaderPostBookmarkUseCase @Inject constructor(
 sealed class BookmarkPostState {
     data class PreLoadPostContent(val blogId: Long, val postId: Long) : BookmarkPostState()
     data class Success(val bookmarked: Boolean) : BookmarkPostState()
+    data object NoNetwork : BookmarkPostState()
+    data object Failed : BookmarkPostState()
 }

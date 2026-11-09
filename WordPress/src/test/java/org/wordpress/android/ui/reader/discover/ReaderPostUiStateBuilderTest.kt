@@ -8,6 +8,9 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
+import org.mockito.Mockito.lenient
+import org.mockito.kotlin.any
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
@@ -74,6 +77,9 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     @Mock
     lateinit var readerUtilsWrapper: ReaderUtilsWrapper
 
+    @Mock
+    lateinit var savedPostsRepository: ReaderSavedPostsRepository
+
     @Before
     fun setUp() = test {
         builder = ReaderPostUiStateBuilder(
@@ -83,8 +89,12 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
             dateTimeUtilsWrapper,
             readerImageScannerProvider,
             readerUtilsWrapper,
+            savedPostsRepository,
             testDispatcher()
         )
+        lenient().whenever(savedPostsRepository.isSaved(any())).thenAnswer {
+            (it.arguments[0] as ReaderPost).isBookmarked
+        }
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(anyOrNull())).thenReturn("")
         whenever(avatarUtilsWrapper.rewriteAvatarUrlWithResource(anyOrNull(), anyInt())).thenReturn("")
         val imageScanner: ReaderImageScanner = mock()

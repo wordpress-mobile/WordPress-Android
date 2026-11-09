@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Reader saved posts sync with your WordPress.com account**
+  Posts saved in the Reader are saved to the WordPress.com account instead of only on the device, so they appear on the web and in the iOS app, and saves made there appear here. Posts already saved on the device are added to the account the first time the Reader opens. Saving or unsaving now needs a connection.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Internal (debug builds only, via the "Sync saved Reader posts" experimental feature)
+  - **Where:** Reader → Saved; the bookmark button on Reader posts
+  - **Notes:** Until the device's saves have been added to the account, the Saved tab keeps showing the device's own list. Saves the account refuses (it holds at most 1,000) stay on the device, marked "On this device only". The one-time "saved only on this device" dialog no longer appears. Signing out removes the saved posts from the device once they're on the account. A post saved elsewhere can't be opened offline.
+
 - **App Settings grouped into cards**
   App Settings now groups its rows into outlined cards, matching the Me screen.
   - **Apps:** Both

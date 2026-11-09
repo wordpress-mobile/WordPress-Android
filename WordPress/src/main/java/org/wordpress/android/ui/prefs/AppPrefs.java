@@ -66,6 +66,9 @@ public class AppPrefs {
 
         NEW_STATS_INTRO_SHOWN,
 
+        // WP.com user id whose local Reader saved posts were imported to their account
+        READER_SAVED_POSTS_IMPORTED_USER_ID,
+
         NEW_STATS_USER_OPTED_IN,
 
         STATS_NEW_STATS_SUGGESTION_SHOWN,
@@ -590,6 +593,14 @@ public class AppPrefs {
 
     public static void setBookmarksSavedLocallyDialogShown() {
         setBoolean(UndeletablePrefKey.BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN, false);
+    }
+
+    public static boolean isReaderSavedPostsImported(long userId) {
+        return userId > 0 && getLong(DeletablePrefKey.READER_SAVED_POSTS_IMPORTED_USER_ID, 0) == userId;
+    }
+
+    public static void setReaderSavedPostsImported(long userId) {
+        setLong(DeletablePrefKey.READER_SAVED_POSTS_IMPORTED_USER_ID, userId);
     }
 
     /**

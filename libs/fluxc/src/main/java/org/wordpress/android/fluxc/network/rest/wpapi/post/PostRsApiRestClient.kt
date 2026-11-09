@@ -591,6 +591,7 @@ class PostRsApiRestClient @Inject constructor(
         is RequestExecutionErrorReason.NonExistentSiteError,
         is RequestExecutionErrorReason.MisconfiguredRateLimitError,
         is RequestExecutionErrorReason.CancellationError,
+        is RequestExecutionErrorReason.CloudflareError,
         is RequestExecutionErrorReason.HttpError,
         is RequestExecutionErrorReason.GenericError -> PostErrorType.GENERIC_ERROR
     }

@@ -989,6 +989,8 @@
     <string name="network_requests_disable">Disable</string>
     <string name="experimental_post_types">Post Types</string>
     <string name="experimental_post_types_description">Enable experimental post types screen</string>
+    <string name="experimental_reader_saved_posts_sync">Sync saved Reader posts</string>
+    <string name="experimental_reader_saved_posts_sync_description">Save Reader posts to your WordPress.com account, so they also appear on the web and your other devices</string>
     <!-- New Stats switch controls -->
     <string name="stats_try_new_stats">Try new stats</string>
     <string name="stats_switch_to_old_stats">Disable new stats</string>
@@ -2472,6 +2474,8 @@
     <string name="reader_secondary_bookmarked">Saved</string>
     <string name="reader_add_bookmark">Add to saved posts</string>
     <string name="reader_remove_bookmark">Remove from saved posts</string>
+    <string name="reader_saved_post_local_only">On this device only</string>
+    <string name="reader_saved_post_removed">Removed from saved posts</string>
     <string name="reader_bookmark_snack_btn">View All</string>
     <string name="reader_bookmark_snack_title">Post saved</string>
     <string name="reader_btn_blog_notifications_off">Turn off blog notifications</string>
