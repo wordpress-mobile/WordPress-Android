@@ -26,6 +26,7 @@ import org.wordpress.android.editor.EditorFragmentAbstract
 import org.wordpress.android.editor.EditorImagePreviewListener
 import org.wordpress.android.editor.LiveTextWatcher
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.posts.GutenbergEditorPreloader
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.PermissionUtils
@@ -47,6 +48,12 @@ import javax.inject.Inject
 class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     @Inject
     lateinit var gutenbergEditorPreloader: GutenbergEditorPreloader
+
+    @Inject
+    lateinit var mediaProcessorFactory: GBKMediaProcessor.Factory
+
+    @Inject
+    lateinit var siteStore: SiteStore
 
     private var gutenbergView: GutenbergView? = null
     private var isHtmlModeEnabled = false
@@ -195,6 +202,10 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             coroutineScope = this.lifecycleScope,
             context = requireContext()
         )
+        // GutenbergKit captures the processor when the page starts loading, so it must be set here.
+        siteStore.getSiteByLocalId(siteLocalId)?.let { site ->
+            gutenbergView.mediaProcessor = mediaProcessorFactory.create(site)
+        }
 
         gutenbergViewContainer.addView(
             gutenbergView,
