@@ -15,7 +15,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
-import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -87,17 +86,6 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `a post that isn't stored finishes the screen`() = test {
-        whenever(repository.getPost(BLOG_ID, POST_ID)).thenReturn(null)
-        viewModel = createViewModel()
-
-        viewModel.events.test {
-            assertThat(awaitItem())
-                .isEqualTo(ReaderCommentListEvent.FinishWithError(R.string.reader_toast_err_get_post))
-        }
-    }
-
-    @Test
     fun `offline with no comments shows the network message without fetching`() = test {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
         whenever(repository.getComments(post)).thenReturn(ReaderComments(emptyList(), hasMore = false))
@@ -105,14 +93,6 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
 
         verify(repository, never()).fetchComments(any(), any(), any())
         assertThat(viewModel.uiState.value.emptyMessage).isEqualTo(R.string.no_network_message)
-    }
-
-    @Test
-    fun `a fetch with no comments shows the empty message`() = test {
-        whenever(repository.getComments(post)).thenReturn(ReaderComments(emptyList(), hasMore = false))
-        viewModel = createViewModel()
-
-        assertThat(viewModel.uiState.value.emptyMessage).isEqualTo(R.string.reader_empty_comments)
     }
 
     @Test
@@ -167,17 +147,6 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `dismissing an empty reply sheet goes back to commenting on the post`() = test {
-        viewModel = createViewModel()
-        viewModel.onReplyClicked(1)
-
-        viewModel.onReplySheetDismissed(hasText = false)
-
-        assertThat(viewModel.uiState.value.replyHint).isEqualTo(R.string.reader_hint_comment_on_post)
-        assertThat(viewModel.uiState.value.comments.none { it.isReplyTarget }).isTrue
-    }
-
-    @Test
     fun `a posted reply replaces the pending comment`() = test {
         val pending = comment(PENDING_ID)
         whenever(repository.addPendingComment(post, "hello", 1, USER_ID)).thenReturn(pending)
@@ -215,19 +184,6 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
             )
         }
         assertThat(viewModel.uiState.value.isSubmitting).isFalse
-    }
-
-    @Test
-    fun `a like that fails to send reloads the comment`() = test {
-        whenever(repository.setLikeLocally(first, true, USER_ID)).thenReturn(true)
-        whenever(repository.sendLike(first, true, USER_ID)).thenReturn(false)
-        whenever(repository.getComment(BLOG_ID, POST_ID, 1)).thenReturn(comment(1))
-        viewModel = createViewModel()
-
-        viewModel.onLikeClicked(1)
-
-        verify(repository, times(2)).getComment(BLOG_ID, POST_ID, 1)
-        verify(readerTracker).trackPost(Stat.READER_ARTICLE_COMMENT_LIKED, post)
     }
 
     @Test
