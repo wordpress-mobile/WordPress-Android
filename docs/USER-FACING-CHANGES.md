@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Reader comments: replies are written in a sheet**
+  The Reader's comments screen was rebuilt. The always-visible comment box at the bottom is now a bar that opens a reply sheet, the same one site comments use, with @-mention suggestions; the full-screen expand button is gone. Closing the sheet with text typed asks whether to save the draft, delete it or keep editing. Tapping Reply under a comment opens the sheet for that comment.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Reader → any post → Comments
+  - **Notes:** Drafts typed in the old comment box aren't carried over. Moderating a comment (unapprove, spam, trash) still offers Undo; leaving the screen while Undo is showing now completes the moderation.
+
 - **App Settings grouped into cards**
   App Settings now groups its rows into outlined cards, matching the Me screen.
   - **Apps:** Both
