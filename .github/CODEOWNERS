@@ -1,5 +1,8 @@
 # Dependabot
-/gradle/libs.versions.toml @wordpress-mobile/android-developers
+/gradle/libs.versions.toml @wordpress-mobile/wpmobile-team
+
+# UI tests
+/WordPress/src/androidTest/ @wordpress-mobile/wpmobile-team
 
 Gemfile*       @wordpress-mobile/apps-infra-tooling
 .ruby-version  @wordpress-mobile/apps-infra-tooling
