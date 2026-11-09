@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-09 05:01:49+0000
+Translation-Revision-Date: 2026-11-07 23:10:26+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: de
@@ -1305,7 +1305,7 @@ Language: de
     <string name="comment_moderation_error">Das Moderieren der Kommentare ist fehlgeschlagen</string>
     <string name="reader_comment_menu_trash">In den Papierkorb verschieben</string>
     <string name="reader_comment_menu_spam">Als Spam markieren</string>
-    <string name="reader_comment_menu_unapprove">Zurückweisen</string>
+    <string name="reader_comment_menu_unapprove">Freigabe aufheben</string>
     <string name="gutenberg_native_tiled_gallery_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Einstellungen der Kachel-Galerie</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Navigiert zur Layout-Auswahlansicht</string>
     <string name="gutenberg_native_gallery_style" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Galerie-Stil</string>
@@ -3688,7 +3688,7 @@ Language: de
     <string name="dlg_confirm_trash_comments">In Papierkorb verschieben?</string>
     <string name="mnu_comment_trash">Papierkorb</string>
     <string name="mnu_comment_spam">Spam</string>
-    <string name="mnu_comment_unapprove">Zurückweisen</string>
+    <string name="mnu_comment_unapprove">Freigabe aufheben</string>
     <string name="mnu_comment_approve">Freigeben</string>
     <string name="edit_comment">Kommentar bearbeiten</string>
     <string name="comment_status_trash">Im Papierkorb</string>
