@@ -439,12 +439,17 @@ sealed class TopPostsDataResult {
 
 /**
  * A single top post item from the API.
+ *
+ * @param postType The API's item type -- "post", "page", "homepage" or "attachment". It decides
+ * which glyph the detail screen draws for the item and which REST endpoint, if any, its featured
+ * image can be looked up from.
  */
 data class TopPostDataItem(
     val id: Long,
     val title: String,
     val views: Long,
-    val url: String? = null
+    val url: String? = null,
+    val postType: String? = null
 )
 
 /**

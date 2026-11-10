@@ -56,6 +56,9 @@ import org.wordpress.android.ui.newstats.util.formatStatValue
  * @param onItemClick Invoked when a childless row is tapped, e.g. opens a post's detail stats
  * @param position Optional 1-based position number shown on the detail screen
  * @param childStartPadding Indent applied to the expanded child rows
+ * @param leadingContent Optional content drawn between [position] and the title, e.g. a post's
+ * thumbnail on the Posts & Pages detail screen. Null on every other source, which leaves the row
+ * exactly as it was.
  */
 @Composable
 internal fun MostViewedExpandableRow(
@@ -68,7 +71,8 @@ internal fun MostViewedExpandableRow(
     url: String? = null,
     onItemClick: (() -> Unit)? = null,
     position: Int? = null,
-    childStartPadding: Dp = 24.dp
+    childStartPadding: Dp = 24.dp,
+    leadingContent: (@Composable () -> Unit)? = null
 ) {
     val hasChildren = children.isNotEmpty()
     val action = statsRowAction(hasChildren, url, onItemClick)
@@ -97,6 +101,10 @@ internal fun MostViewedExpandableRow(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.width(32.dp)
                     )
+                }
+                if (leadingContent != null) {
+                    leadingContent()
+                    Spacer(modifier = Modifier.width(12.dp))
                 }
                 Text(
                     text = title,

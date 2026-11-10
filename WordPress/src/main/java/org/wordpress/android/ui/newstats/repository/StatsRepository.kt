@@ -1625,7 +1625,8 @@ class StatsRepository @Inject constructor(
                         views = item.views,
                         previousViews = previousViews,
                         isFirst = index == 0,
-                        url = item.url
+                        url = item.url,
+                        postType = item.postType
                     )
                 },
                 totalViews = totalViews,
@@ -3249,7 +3250,9 @@ data class MostViewedItemData(
     val previousViews: Long,
     val isFirst: Boolean,
     val children: List<MostViewedChildData> = emptyList(),
-    val url: String? = null
+    val url: String? = null,
+    /** The API item type -- "post", "page", "homepage" or "attachment". Posts and pages only. */
+    val postType: String? = null
 ) {
     val viewsChange: Long get() = views - previousViews
     val viewsChangePercent: Double

@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Posts & Pages in Stats shows a thumbnail per row**
+  The full Posts & Pages list in the redesigned Stats now draws a small square at the start of each row: the post's featured image, or a glyph telling a post apart from a page when there is no featured image. The old Stats used the same two glyphs, and the web version of this screen shows featured images, so the list now reads the way both of those do. The Posts & Pages card on the main Stats screen is unchanged.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Posts & Pages card → View all
+  - **Notes:** The glyph appears immediately and the featured images fill in a moment later, so a row can briefly show a glyph for a post that does have an image. The list can run to hundreds of rows, so images are resolved for the rows you have scrolled to rather than all of them at once. A post whose featured image can't be loaded keeps its glyph rather than showing an empty square. Only posts and pages are looked up; a site's homepage and attachments have no featured image of their own and always show the page glyph. Images are fetched from the site's own REST API, not from Stats, so a site the app can't reach for posts shows glyphs throughout.
+
 - **Reader comments: replies are written in a sheet**
   The Reader's comments screen was rebuilt. The always-visible comment box at the bottom is now a bar that opens a reply sheet, the same one site comments use, with @-mention suggestions; the full-screen expand button is gone. Closing the sheet with text typed asks whether to save the draft, delete it or keep editing. Tapping Reply under a comment opens the sheet for that comment.
   - **Apps:** Both

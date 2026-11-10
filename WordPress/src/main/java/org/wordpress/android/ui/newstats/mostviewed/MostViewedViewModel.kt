@@ -427,6 +427,7 @@ internal fun MostViewedItemData.toDetailItem(): MostViewedDetailItem {
         children = children.map { child ->
             MostViewedChildItem(name = child.name, url = child.url, views = child.views)
         },
-        url = url
+        url = url,
+        postType = postType
     )
 }

@@ -101,6 +101,10 @@ sealed class MostViewedChange : Parcelable {
 /**
  * Data class for passing items to the detail screen via Intent.
  * Implements Parcelable for efficient Intent extras.
+ *
+ * @param postType Posts and pages only: the API's item type -- "post", "page", "homepage" or
+ * "attachment". The detail screen draws a glyph for it and uses it to pick the REST endpoint its
+ * featured image is looked up from. Null for every other source, which shows no thumbnail.
  */
 @Parcelize
 data class MostViewedDetailItem(
@@ -109,5 +113,6 @@ data class MostViewedDetailItem(
     val views: Long,
     val change: MostViewedChange,
     val children: List<MostViewedChildItem> = emptyList(),
-    val url: String? = null
+    val url: String? = null,
+    val postType: String? = null
 ) : Parcelable
