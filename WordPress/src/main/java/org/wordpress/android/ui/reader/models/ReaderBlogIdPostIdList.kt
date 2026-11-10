@@ -1,0 +1,9 @@
+package org.wordpress.android.ui.reader.models
+
+class ReaderBlogIdPostIdList : ArrayList<ReaderBlogIdPostId>() {
+    fun indexOf(blogId: Long, postId: Long) = indexOfFirst { it.blogId == blogId && it.postId == postId }
+
+    companion object {
+        private const val serialVersionUID = 0L
+    }
+}

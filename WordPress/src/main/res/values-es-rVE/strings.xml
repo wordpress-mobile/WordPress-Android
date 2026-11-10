@@ -767,7 +767,6 @@ Language: es_VE
     <string name="hpp_choose_error">Se ha producido un error al elegir el tema.</string>
     <string name="scan">Explorar</string>
     <string name="reader_discover_empty_title">¡Bienvenido!</string>
-    <string name="reader_discover_no_posts_title">No hay entradas recientes</string>
     <string name="hpp_choose_button">Elegir</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Se ha abierto el menú de bloques desplazable. Selecciona un bloque.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Se ha cerrado el menú de bloques desplazable.</string>

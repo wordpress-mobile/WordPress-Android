@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -49,7 +50,6 @@ import org.wordpress.android.ui.reader.ReaderConstants.THUMBNAIL_STRIP_IMG_COUNT
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
-import org.wordpress.android.ui.reader.utils.ReaderVideoUtils.VideoThumbnailUrlListener
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.PhotonUtils
 import java.util.EnumSet
@@ -110,29 +110,21 @@ private fun FeaturedImage(uiState: ReaderPostUiState) {
 }
 
 /**
- * Resolves a video's thumbnail through [ReaderVideoUtils], caching what it finds just as the
- * View-based card did. Null until resolved, or when there's no thumbnail and the placeholder shows.
+ * Resolves a video's thumbnail through [ReaderVideoUtils]. Null until resolved, or when there's no thumbnail
+ * and the placeholder shows.
  *
- * This runs during composition rather than in an effect because YouTube and cached thumbnails resolve
- * synchronously, so the first frame already has them; only Vimeo's arrives later.
+ * YouTube and cached thumbnails resolve during composition, so the first frame already has them; only a
+ * Vimeo thumbnail is fetched, and it's cached once found.
  */
 @Composable
 private fun rememberVideoThumbnail(postId: Long, videoUrl: String): String? {
-    val thumbnail = remember(videoUrl) {
-        mutableStateOf<String?>(null).also { state ->
-            ReaderVideoUtils.retrieveVideoThumbnailUrl(videoUrl, object : VideoThumbnailUrlListener {
-                override fun showThumbnail(thumbnailUrl: String) {
-                    state.value = thumbnailUrl
-                }
-
-                override fun showPlaceholder() {
-                    state.value = null
-                }
-
-                override fun cacheThumbnailUrl(thumbnailUrl: String) {
-                    ReaderThumbnailTable.addThumbnail(postId, videoUrl, thumbnailUrl)
-                }
-            })
+    val thumbnail = remember(videoUrl) { mutableStateOf(ReaderVideoUtils.getThumbnailUrlWithoutRequest(videoUrl)) }
+    LaunchedEffect(videoUrl) {
+        if (thumbnail.value == null && ReaderVideoUtils.isVimeoLink(videoUrl)) {
+            ReaderVideoUtils.fetchVimeoThumbnailUrl(videoUrl)?.let { thumbnailUrl ->
+                ReaderThumbnailTable.addThumbnail(postId, videoUrl, thumbnailUrl)
+                thumbnail.value = thumbnailUrl
+            }
         }
     }
     return thumbnail.value
