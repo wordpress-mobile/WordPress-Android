@@ -20,13 +20,16 @@ object ReaderVideoUtils {
         val uri = link.toUri()
         return try {
             when (uri.host) {
-                // if link contains "watch" in the path, then the id is in the "v=" query param; if it
-                // contains "embed" then the id is the last path segment,
+                // if the path contains "watch" then the id is in the "v=" query param; if it contains
+                // "embed" then the id is the last path segment,
                 // ex: https://www.youtube.com/embed/fw3w68YrKwc?version=3&#038;rel=1&#038;
-                "youtube.com", "www.youtube.com" -> when {
-                    link.contains("watch") -> uri.getQueryParameter("v")
-                    link.contains("/embed/") -> uri.lastPathSegment
-                    else -> null
+                "youtube.com", "www.youtube.com" -> {
+                    val path = uri.path.orEmpty()
+                    when {
+                        path.contains("watch") -> uri.getQueryParameter("v")
+                        path.contains("/embed/") -> uri.lastPathSegment
+                        else -> null
+                    }
                 }
                 // youtu.be urls have the videoId as the path - ex: http://youtu.be/pEnXclbO9jg
                 "youtu.be" -> uri.path?.replace("/", "")
