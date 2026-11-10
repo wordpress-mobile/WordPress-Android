@@ -51,6 +51,7 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePaylo
 import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
 import org.wordpress.android.ui.WPWebChromeClientWithFileChooser.OnShowFileChooserListener;
+import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AniUtils;
@@ -470,11 +471,16 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         if (TextUtils.isEmpty(site.getUsername()) || TextUtils.isEmpty(site.getPassword())) {
             // Sites connected with an Application Password have no account password, and WordPress only
             // accepts Application Passwords on API requests, so the user logs in on the site's own login page.
-            // See loadWebContent(). Allow the login page's host too, which can differ from the post's.
-            String[] allowedURLs = Arrays.copyOf(listOfAllowedURLs, listOfAllowedURLs.length + 1);
-            allowedURLs[listOfAllowedURLs.length] = authURL;
-            listOfAllowedURLs = allowedURLs;
-            intent.putExtra(WPWebViewActivity.SITE_LOGIN_URL, authURL);
+            // Skip that for a URL the site serves to anyone, which needs no session at all.
+            if (!PostUtils.isPreviewPubliclyViewable(post, url)) {
+                // See loadWebContent(). Allow the login page's host too, which can differ from the post's.
+                String[] allowedURLs = Arrays.copyOf(listOfAllowedURLs, listOfAllowedURLs.length + 1);
+                allowedURLs[listOfAllowedURLs.length] = authURL;
+                listOfAllowedURLs = allowedURLs;
+                intent.putExtra(WPWebViewActivity.SITE_LOGIN_URL, authURL);
+            }
+            // Otherwise nothing authentication-related goes in the intent, so loadWebContent() falls through
+            // to its un-authenticated loader and shows the preview as a visitor sees it.
         } else {
             intent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, site.getUsername());
             intent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, site.getPassword());
@@ -856,6 +862,13 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         }
     }
 
+    /**
+     * Whether the web view already holds a front-end session for the site.
+     *
+     * This is the web view's own cookie jar. Authorizing an Application Password happens in a Custom Tab,
+     * which has the browser's jar instead, so the login the user did when connecting the site never counts
+     * here: the first preview on an Application Password site always shows the login page.
+     */
     private static boolean hasSiteSession(String url) {
         String cookies = CookieManager.getInstance().getCookie(url);
         return cookies != null && cookies.contains(LOGGED_IN_COOKIE_PREFIX);

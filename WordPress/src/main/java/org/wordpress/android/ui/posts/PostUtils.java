@@ -549,6 +549,24 @@ public class PostUtils {
         return previewUrl;
     }
 
+    /**
+     * Whether the preview URL is served to any visitor, so showing it needs no logged-in session on the site.
+     *
+     * WordPress serves a published post to anyone, which makes `?preview=true` on its permalink enough.
+     * Everything else needs a session: a draft, a pending or a scheduled post and a private one are only
+     * served to a user allowed to read them, a password-protected post asks for its password, and the
+     * auto-save preview URL carries a nonce that is only valid for the user who created it.
+     */
+    public static boolean isPreviewPubliclyViewable(@Nullable PostImmutableModel post, @Nullable String previewUrl) {
+        if (post == null) {
+            return false;
+        }
+        if (previewUrl != null && previewUrl.equals(post.getAutoSavePreviewUrl())) {
+            return false;
+        }
+        return PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.getPassword().isEmpty();
+    }
+
     public static void preparePostForPublish(PostModel post, SiteModel site) {
         PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
         post.setDateLocallyChanged(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
