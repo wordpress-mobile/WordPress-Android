@@ -10,14 +10,10 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
-
-
     <!-- TextViews -->
     <style name="ReaderTextView" parent="android:Widget.TextView">
         <item name="android:textColorLink">?attr/colorPrimary</item>
     </style>
-
-
 
     <style name="ReaderTextView.Post.Title" parent="ReaderTextView">
         <item name="android:layout_width">match_parent</item>
@@ -143,7 +139,6 @@
     <!-- progress bars -->
     <style name="ReaderProgressBar" parent="Widget.AppCompat.ProgressBar" />
 
-
     <!-- chips -->
     <style name="ReaderChip" parent="@style/Widget.MaterialComponents.Chip.Filter">
         <item name="android:textAppearance">@style/TextAppearance.Material3.BodyMedium</item>
@@ -167,7 +162,6 @@
         <item name="chipStrokeColor">@color/reader_chip_stroke_color</item>
         <item name="chipStrokeWidth">@dimen/reader_expandable_tags_view_chip_new_border</item>
     </style>
-
 
     <!-- Post Details -->
     <style name="ReaderTextView.PostDetail" />

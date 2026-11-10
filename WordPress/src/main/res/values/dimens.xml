@@ -128,8 +128,6 @@
     <dimen name="reader_thumbnail_strip_image_height">96dp</dimen>
     <dimen name="reader_a8c_avatar_margin_start_new">18dp</dimen>
 
-
-
     <!-- padding inside the card (space between card border and card content) -->
     <dimen name="reader_card_content_padding">16dp</dimen>
 

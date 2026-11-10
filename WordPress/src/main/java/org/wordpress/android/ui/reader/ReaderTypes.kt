@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 
 object ReaderTypes {
-    @JvmField
     val DEFAULT_POST_LIST_TYPE = ReaderPostListType.TAG_FOLLOWED
 
     enum class ReaderPostListType(val source: String) {

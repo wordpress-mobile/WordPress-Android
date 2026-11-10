@@ -22,17 +22,11 @@ import org.wordpress.android.models.ReaderCardType.DEFAULT
 import org.wordpress.android.models.ReaderCardType.GALLERY
 import org.wordpress.android.models.ReaderCardType.PHOTO
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.Organization.NO_ORGANIZATION
 import org.wordpress.android.ui.Organization.P2
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.BLOG_PREVIEW
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleGreen
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleOrange
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStylePurple
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleYellow
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
@@ -859,69 +853,6 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
     // endregion
 
-    @Test
-    fun `Ensures that there are 5 interests within the uiState even though the ReaderTagList contains 6`() = test {
-        // arrange
-        val expectedInterestListSize = 5
-        val currentReaderTagListSize = 6
-
-        val readerTagList = createReaderTagList(currentReaderTagListSize)
-
-        // act
-        val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
-
-        // assert
-        assertThat(result.interest.size).isEqualTo(expectedInterestListSize)
-    }
-
-    @Test
-    fun `Ensures that there are three interests within the uiState when the ReaderTagList contains 3`() = test {
-        // arrange
-        val expectedInterestListSize = 3
-        val currentReaderTagListSize = 3
-
-        val readerTagList = createReaderTagList(currentReaderTagListSize)
-
-        // act
-        val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
-
-        // assert
-        assertThat(result.interest.size).isEqualTo(expectedInterestListSize)
-    }
-
-    @Test
-    fun `given a tag list with 4 elements, then the uiState contains each style`() = test {
-        // arrange
-        val currentReaderTagListSize = 4
-        val expectedListStyles = listOf(ChipStyleGreen, ChipStylePurple, ChipStyleYellow, ChipStyleOrange)
-
-        val readerTagList = createReaderTagList(currentReaderTagListSize)
-
-        // act
-        val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
-
-        // assert
-        for ((index, interest) in result.interest.withIndex()) {
-            assertThat(interest.chipStyle).isEqualTo(expectedListStyles[index])
-        }
-    }
-
-    @Test
-    fun `given a tag list with 5 elements, then the 5th interest within the uiState is styled green`() = test {
-        // arrange
-        val currentReaderTagListSize = 5
-
-        val readerTagList = createReaderTagList(currentReaderTagListSize)
-
-        // act
-        val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
-
-        // assert
-        assertThat(result.interest.last().chipStyle).isInstanceOf(ChipStyleGreen::class.java)
-    }
-
-    // endregion
-
     // region Private methods
     private suspend fun mapPostToUiState(
         post: ReaderPost,
@@ -992,21 +923,6 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         post.authorName = authorName
         return post
     }
-
-    private fun createReaderTagList(numOfTags: Int) = ReaderTagList().apply {
-        (0 until numOfTags).forEach {
-            add(createReaderTag())
-        }
-    }
-
-    private fun createReaderTag() = ReaderTag(
-        "",
-        "",
-        "",
-        null,
-        mock(),
-        false
-    )
 
     // endregion
 }

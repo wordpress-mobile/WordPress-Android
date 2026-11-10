@@ -6,22 +6,11 @@ import org.wordpress.android.util.UrlUtils
  * used by ReaderImageScanner to compile a list of images in a specific post
  */
 class ReaderImageList(val isPrivate: Boolean) : ArrayList<String>() {
-    fun indexOfImageUrl(imageUrl: String?): Int {
-        if (imageUrl == null || isEmpty()) {
-            return -1
-        }
-        return indexOf(fixImageUrl(imageUrl))
-    }
+    fun indexOfImageUrl(imageUrl: String?) = imageUrl?.let { indexOf(fixImageUrl(it)) } ?: -1
 
     fun hasImageUrl(imageUrl: String?) = indexOfImageUrl(imageUrl) > -1
 
-    fun addImageUrl(imageUrl: String?) {
-        if (imageUrl != null && imageUrl.startsWith("http")) {
-            add(fixImageUrl(imageUrl))
-        }
-    }
-
-    fun addImageUrl(index: Int, imageUrl: String?) {
+    fun addImageUrl(imageUrl: String?, index: Int = size) {
         if (imageUrl != null && imageUrl.startsWith("http")) {
             add(index, fixImageUrl(imageUrl))
         }

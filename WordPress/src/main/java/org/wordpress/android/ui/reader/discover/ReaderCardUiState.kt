@@ -1,16 +1,13 @@
 package org.wordpress.android.ui.reader.discover
 
 import androidx.annotation.AttrRes
-import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable
-import org.wordpress.android.R
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SPACER_NO_ACTION
 import org.wordpress.android.ui.reader.models.ReaderImageList
 
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.image.ImageType
 
 sealed class ReaderCardUiState {
@@ -64,75 +61,6 @@ sealed class ReaderCardUiState {
         )
     }
 
-    data class ReaderInterestsCardUiState(val interest: List<ReaderInterestUiState>) : ReaderCardUiState() {
-        data class ReaderInterestUiState(
-            val interest: String,
-            val slug: String,
-            val onClicked: ((String) -> Unit),
-            val chipStyle: ChipStyle
-        )
-
-        sealed class ChipStyle(
-            @ColorRes val chipStrokeColorResId: Int,
-            @ColorRes val chipFontColorResId: Int,
-            @ColorRes val chipFillColorResId: Int
-        ) {
-            object ChipStyleGreen : ChipStyle(
-                chipStrokeColorResId = R.color.reader_topics_you_might_like_chip_green_stroke,
-                chipFontColorResId = R.color.reader_topics_you_might_like_chip_green_font,
-                chipFillColorResId = R.color.reader_topics_you_might_like_chip_green_fill
-            )
-
-            object ChipStylePurple : ChipStyle(
-                chipStrokeColorResId = R.color.reader_topics_you_might_like_chip_purple_stroke,
-                chipFontColorResId = R.color.reader_topics_you_might_like_chip_purple_font,
-                chipFillColorResId = R.color.reader_topics_you_might_like_chip_purple_fill
-            )
-
-            object ChipStyleYellow : ChipStyle(
-                chipStrokeColorResId = R.color.reader_topics_you_might_like_chip_yellow_stroke,
-                chipFontColorResId = R.color.reader_topics_you_might_like_chip_yellow_font,
-                chipFillColorResId = R.color.reader_topics_you_might_like_chip_yellow_fill
-            )
-
-            object ChipStyleOrange : ChipStyle(
-                chipStrokeColorResId = R.color.reader_topics_you_might_like_chip_orange_stroke,
-                chipFontColorResId = R.color.reader_topics_you_might_like_chip_orange_font,
-                chipFillColorResId = R.color.reader_topics_you_might_like_chip_orange_fill
-            )
-        }
-    }
-
-    enum class ReaderInterestChipStyleColor(val id: Int) {
-        GREEN(0),
-        PURPLE(1),
-        YELLOW(2),
-        ORANGE(3)
-    }
-
-    data class ReaderRecommendedBlogsCardUiState(
-        val blogs: List<ReaderRecommendedBlogUiState>
-    ) : ReaderCardUiState() {
-        data class ReaderRecommendedBlogUiState(
-            val name: String,
-            val url: String,
-            val blogId: Long,
-            val feedId: Long,
-            val description: String?,
-            val iconUrl: String?,
-            val isFollowed: Boolean,
-            val isFollowActionRunning: Boolean = false,
-            val onItemClicked: (Long, Long, Boolean) -> Unit,
-            val onFollowClicked: (ReaderRecommendedBlogUiState) -> Unit
-        ) {
-            val followContentDescription: UiStringRes by lazy {
-                when (isFollowed) {
-                    true -> R.string.reader_btn_subscribed
-                    false -> R.string.reader_btn_subscribe
-                }.let(::UiStringRes)
-            }
-        }
-    }
 }
 
 data class ReaderPostActions(
