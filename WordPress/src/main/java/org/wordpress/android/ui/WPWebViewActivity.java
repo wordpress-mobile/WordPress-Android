@@ -135,6 +135,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     public static final String PRIVATE_AT_SITE_ID = "PRIVATE_AT_SITE_ID";
     public static final String WEBVIEW_SOURCE = "WEBVIEW_SOURCE";
     public static final String SITE_LOGIN_URL = "SITE_LOGIN_URL";
+    private static final String SITE_LOGIN_OPTIONAL = "SITE_LOGIN_OPTIONAL";
     // WordPress' front-end session cookie, sent to every page on the site.
     private static final String LOGGED_IN_COOKIE_PREFIX = "wordpress_logged_in_";
     private static final String WP_LOGIN_PATH_SUFFIX = "/wp-login.php";
@@ -472,16 +473,15 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         if (TextUtils.isEmpty(site.getUsername()) || TextUtils.isEmpty(site.getPassword())) {
             // Sites connected with an Application Password have no account password, and WordPress only
             // accepts Application Passwords on API requests, so the user logs in on the site's own login page.
-            // Skip that for a URL the site serves to anyone, which needs no session at all.
-            if (!PostUtils.isPreviewPubliclyViewable(post, url)) {
-                // See loadWebContent(). Allow the login page's host too, which can differ from the post's.
-                String[] allowedURLs = Arrays.copyOf(listOfAllowedURLs, listOfAllowedURLs.length + 1);
-                allowedURLs[listOfAllowedURLs.length] = authURL;
-                listOfAllowedURLs = allowedURLs;
-                intent.putExtra(WPWebViewActivity.SITE_LOGIN_URL, authURL);
-            }
-            // Otherwise nothing authentication-related goes in the intent, so loadWebContent() falls through
-            // to its un-authenticated loader and shows the preview as a visitor sees it.
+            // See loadWebContent(). Allow the login page's host too, which can differ from the post's.
+            String[] allowedURLs = Arrays.copyOf(listOfAllowedURLs, listOfAllowedURLs.length + 1);
+            allowedURLs[listOfAllowedURLs.length] = authURL;
+            listOfAllowedURLs = allowedURLs;
+            intent.putExtra(WPWebViewActivity.SITE_LOGIN_URL, authURL);
+            // A URL the site serves to anyone needs no session, so the login page is only the fallback for
+            // a site that turns out not to serve this one publicly after all, e.g. one behind a membership
+            // plugin. See loadWebContent() and onMainFrameHttpError().
+            intent.putExtra(WPWebViewActivity.SITE_LOGIN_OPTIONAL, PostUtils.isPreviewPubliclyViewable(post, url));
         } else {
             intent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, site.getUsername());
             intent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, site.getPassword());
@@ -826,8 +826,9 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         if (!TextUtils.isEmpty(siteLoginUrl)) {
             // wp-login.php can't detect an existing session itself, since the cookie it checks is scoped to
             // /wp-admin. So skip the login page when the web view has a front-end session cookie for the site,
-            // and fall back to it if the session turns out to be stale (see onMainFrameHttpError()).
-            if (hasSiteSession(addressToLoad)) {
+            // or when the site serves this URL to anyone, and fall back to it if the page turns out to need a
+            // session after all (see onMainFrameHttpError()).
+            if (hasSiteSession(addressToLoad) || extras.getBoolean(SITE_LOGIN_OPTIONAL)) {
                 mSkippedSiteLogin = true;
                 loadUrl(addressToLoad);
             } else {
@@ -868,7 +869,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
      *
      * This is the web view's own cookie jar. Authorizing an Application Password happens in a Custom Tab,
      * which has the browser's jar instead, so the login the user did when connecting the site never counts
-     * here: the first preview on an Application Password site always shows the login page.
+     * here: the first preview of content the site doesn't serve publicly always shows the login page.
      */
     private static boolean hasSiteSession(String url) {
         String cookies = CookieManager.getInstance().getCookie(url);
@@ -893,10 +894,10 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     }
 
     /**
-     * Called when the main page of a site-login web view loads with an HTTP error. WordPress answers a draft
-     * preview it won't show with 404 (or 403), which is what a stale session cookie produces, for example after
-     * a password change. Once the error page has loaded, checkSiteSessionOnErrorPage() decides whether to show
-     * the login page.
+     * Called when the main page of a site-login web view loads with an HTTP error. WordPress answers a preview
+     * it won't show with 404 (or 403), which is what a stale session cookie produces, for example after a
+     * password change, and what a site that doesn't serve a published post to visitors answers too. Once the
+     * error page has loaded, checkSiteSessionOnErrorPage() decides whether to show the login page.
      */
     private void onMainFrameHttpError(int statusCode) {
         if (!mSkippedSiteLogin || mFellBackToSiteLogin) {

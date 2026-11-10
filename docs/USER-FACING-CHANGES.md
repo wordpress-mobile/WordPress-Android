@@ -9,7 +9,7 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 <!-- Add new entries directly below this line. -->
 
 - **Post preview works on sites connected with an Application Password**
-  On a self-hosted site added with an Application Password, previewing a post no longer fails with "Incorrect username or password". A published post opens straight away, as a visitor sees it. A draft, or any other post the site doesn't serve publicly, shows the site's own login page first; after logging in there the preview loads, and later previews open directly while that login lasts.
+  On a self-hosted site added with an Application Password, previewing a post no longer fails with "Incorrect username or password". A published post opens straight away, as a visitor sees it; if the site doesn't serve it to visitors, the login page follows. A draft, or any other post the site doesn't serve publicly, shows the site's own login page first; after logging in there the preview loads, and later previews open directly while that login lasts.
   - **Apps:** Both
   - **Type:** Fixed
   - **Availability:** Everyone
