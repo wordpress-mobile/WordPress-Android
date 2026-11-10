@@ -1034,7 +1034,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             is ReaderNavigationEvents.ShowAuthorProfile -> showAuthorProfile(this)
 
             is ReaderNavigationEvents.ShowPostDetail,
-            is ReaderNavigationEvents.ShowVideoViewer,
             is ReaderNavigationEvents.ShowReaderSubs -> Unit // Do Nothing
             is ReaderNavigationEvents.ShowLoginRequiredBottomSheet -> showLoginRequiredBottomSheet()
         }

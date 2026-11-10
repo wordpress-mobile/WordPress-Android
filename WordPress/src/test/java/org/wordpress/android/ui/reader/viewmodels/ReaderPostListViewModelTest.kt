@@ -99,7 +99,7 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         whenever(readerTracker.getSource(any(), anyOrNull())).thenReturn("source")
         whenever(
             postUiStateBuilder.mapPostToUiStateBlocking(
-                any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull()
+                any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull()
             )
         ).thenAnswer { createUiState(it) }
 
@@ -871,20 +871,17 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             title = null,
             excerpt = null,
             featuredImageUrl = null,
-            fullVideoUrl = null,
             thumbnailStripSection = null,
-            videoOverlayVisibility = false,
             featuredImageVisibility = false,
             moreMenuVisibility = true,
             likeAction = PrimaryAction(true, type = ReaderPostCardActionType.LIKE),
             reblogAction = PrimaryAction(true, type = ReaderPostCardActionType.REBLOG),
             commentsAction = PrimaryAction(true, type = ReaderPostCardActionType.COMMENTS),
-            moreMenuItems = invocation.getArgument(12),
+            moreMenuItems = invocation.getArgument(11),
             onItemClicked = invocation.getArgument(6),
             onItemRendered = invocation.getArgument(7),
             onMoreButtonClicked = invocation.getArgument(8),
-            onMoreDismissed = invocation.getArgument(9),
-            onVideoOverlayClicked = invocation.getArgument(10)
+            onMoreDismissed = invocation.getArgument(9)
         )
     }
 

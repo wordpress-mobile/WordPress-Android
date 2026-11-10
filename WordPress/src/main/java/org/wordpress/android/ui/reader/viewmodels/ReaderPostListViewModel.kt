@@ -170,7 +170,6 @@ class ReaderPostListViewModel @Inject constructor(
     private val cardRendered: (ReaderCardUiState) -> Unit = ::onCardRendered
     private val moreButtonClicked: (ReaderPostUiState) -> Unit = ::onMoreButtonClicked
     private val moreMenuDismissed: (ReaderPostUiState) -> Unit = { closeMoreMenu() }
-    private val videoOverlayClicked: (Long, Long) -> Unit = ::onVideoOverlayClicked
     private val postHeaderClicked: (Long, Long) -> Unit = ::onPostHeaderClicked
 
     private val refreshPostsObserver = Observer<Event<Unit>> { event ->
@@ -983,7 +982,6 @@ class ReaderPostListViewModel @Inject constructor(
                         onItemRendered = cardRendered,
                         onMoreButtonClicked = moreButtonClicked,
                         onMoreDismissed = moreMenuDismissed,
-                        onVideoOverlayClicked = videoOverlayClicked,
                         onPostHeaderViewClicked = postHeaderClicked
                     )
                 }
@@ -1145,10 +1143,6 @@ class ReaderPostListViewModel @Inject constructor(
             moreMenu = null
             updateUiState()
         }
-    }
-
-    private fun onVideoOverlayClicked(postId: Long, blogId: Long) {
-        findPost(blogId, postId)?.let { sendUiEvent(ReaderPostListUiEvent.VideoOverlayClicked(it)) }
     }
 
     private fun onPostHeaderClicked(postId: Long, blogId: Long) {

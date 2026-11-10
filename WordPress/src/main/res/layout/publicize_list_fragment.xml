@@ -45,10 +45,11 @@
                     android:text="@string/connections_description"
                     android:textAppearance="?attr/textAppearanceCaption" />
 
-                <org.wordpress.android.ui.reader.views.ReaderRecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/empty_view"

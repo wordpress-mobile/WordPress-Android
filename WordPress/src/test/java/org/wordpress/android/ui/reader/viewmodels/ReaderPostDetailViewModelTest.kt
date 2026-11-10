@@ -1357,7 +1357,6 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             this.feedId = id * 1000
             this.title = "DummyPost"
             this.text = "<p>Dummy post content</p>"
-            this.featuredVideo = id.toString()
             this.featuredImage = "/featured_image/$id/url"
             this.isExternal = !isWpComPost
             this.numReplies = 1

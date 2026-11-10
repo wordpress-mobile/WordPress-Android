@@ -700,7 +700,6 @@ Language: cs_CZ
     <string name="reader_dropdown_menu_subscriptions">Odběry</string>
     <string name="reader_dropdown_menu_discover">Objevovat</string>
     <string name="reader_search_content_description">Hledat</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Sledovat štítky</string>
     <string name="reader_filter_empty_tags_action_suggested">Navrhované štítky</string>
     <string name="reader_filter_empty_blogs_action_search">Hledat blog</string>
     <string name="reader_filter_empty_tags_list_follow_text">Sledujte štítek a uvidíte zde nejlepší příspěvky z něj.</string>
@@ -795,7 +794,6 @@ Language: cs_CZ
     <string name="site_creation_domain_free_with_annual_plan">Zdarma za první rok s ročními placeným plány</string>
     <string name="reader_secondary_bookmarked">Uloženo</string>
     <string name="reader_secondary_bookmark">Uložit</string>
-    <string name="reader_discover_recommended_header_new">Možná se vám bude líbit</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Odeskupit blok</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Klepnutím zde zobrazíte více podrobností.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Synchronizované vzory</string>
@@ -1882,8 +1880,6 @@ Language: cs_CZ
     <string name="hpp_choose_error">Při výběru designu došlo k chybě.</string>
     <string name="scan">Prohledat</string>
     <string name="reader_discover_empty_title">Vítejte!</string>
-    <string name="reader_discover_no_posts_title">Žádné nedávné příspěvky</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Zkuste sledovat více štítků pro rozšíření hledání</string>
     <string name="hpp_choose_button">Vybrat</string>
     <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nabídka rolovatelného bloku uzavřena.</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bylo otevřeno rolovací blok menu. Vyberte blok.</string>
@@ -2769,7 +2765,6 @@ Language: cs_CZ
     <string name="reader_photo_view_desc">fotka</string>
     <string name="reader_list_item_suggestion_remove_desc">smazat</string>
     <string name="photo_picker_thumbnail_desc">Přehrát video</string>
-    <string name="reader_cardview_post_play_video_desc">přehrát doporučené video</string>
     <string name="plugin_detail_logo_desc">plugin logo</string>
     <string name="plugin_detail_banner_desc">plugin banner</string>
     <string name="photo_picker_wpmedia_desc">Vybrat z WordPress media</string>

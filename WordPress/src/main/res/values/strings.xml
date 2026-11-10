@@ -1971,14 +1971,10 @@
     <string name="reader_error_request_failed_title">There was a problem handling the request. Please try again later.</string>
     <string name="reader_expandable_tags_view_overflow_indicator_expand_title_new" translatable="false">+%1$s</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Hide</string>
-    <string name="reader_discover_recommended_header_new">You might like</string>
     <string name="show_n_hidden_items_desc">%1$s more items</string>
     <string name="reader_discover_empty_title">Welcome!</string>
     <string name="reader_discover_empty_subtitle_follow">Follow tags to discover new blogs</string>
-    <string name="reader_discover_no_posts_title">No recent posts</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Try following more tags to broaden the search</string>
     <string name="reader_discover_empty_button_text">Get Started</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Follow tags</string>
     <string name="reader_author_with_blog_name" translatable="false">%1$s ▸ %2$s</string>
     <string name="reader_follow_comments_null_response">No response received</string>
     <string name="reader_follow_comments_bad_format_response">Invalid response received</string>
@@ -3463,7 +3459,6 @@
     <string name="photo_picker_wpmedia_desc">pick from WordPress media</string>
     <string name="plugin_detail_banner_desc">plugin banner</string>
     <string name="plugin_detail_logo_desc">plugin logo</string>
-    <string name="reader_cardview_post_play_video_desc">play featured video</string>
     <string name="photo_picker_thumbnail_desc">Play video</string>
     <string name="reader_list_item_suggestion_remove_desc">delete</string>
     <string name="reader_photo_view_desc">photo</string>

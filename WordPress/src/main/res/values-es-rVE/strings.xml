@@ -767,7 +767,6 @@ Language: es_VE
     <string name="hpp_choose_error">Se ha producido un error al elegir el tema.</string>
     <string name="scan">Explorar</string>
     <string name="reader_discover_empty_title">¡Bienvenido!</string>
-    <string name="reader_discover_no_posts_title">No hay entradas recientes</string>
     <string name="hpp_choose_button">Elegir</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Se ha abierto el menú de bloques desplazable. Selecciona un bloque.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Se ha cerrado el menú de bloques desplazable.</string>
@@ -1639,7 +1638,6 @@ Language: es_VE
     <string name="comment_checkmark_desc">marca de verificación</string>
     <string name="notification_settings_switch_desc">Avisos</string>
     <string name="media_grid_item_play_video_desc">reproducir video</string>
-    <string name="reader_cardview_post_play_video_desc">reproducir video destacado</string>
     <string name="photo_picker_thumbnail_desc">Reproducir video</string>
     <string name="jetpack_connection_failed_with_reason">Se ha producido un error en la conexión a Jetpack: %s</string>
     <string name="jetpack_already_connected_toast">Ya estás conectado a Jetpack</string>

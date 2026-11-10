@@ -32,7 +32,6 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReade
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReadingPreferences
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportUser
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_USER
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
@@ -231,12 +230,6 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 )
             }
             _navigationEvents.postValue(Event(ShowPostDetail(post)))
-        }
-    }
-
-    suspend fun handleVideoOverlayClicked(videoUrl: String) {
-        withContext(bgDispatcher) {
-            _navigationEvents.postValue(Event(ShowVideoViewer(videoUrl)))
         }
     }
 

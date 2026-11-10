@@ -73,7 +73,6 @@ Language: ku_TR
     <string name="hpp_retry_error">Ji kerema xwe, girêdana înterneta xwe kontrol bike û dîsa biceribîne.</string>
     <string name="hpp_error_title">Di derhêlbûnê(offline) de raxistin ne berdest in</string>
     <string name="hpp_error_subtitle">Dema ku tu ji nû ve serhêl bû li dîsa biceribîneyê bitikîne.</string>
-    <string name="reader_discover_no_posts_title">Şandiyên nû tune ye</string>
     <string name="reader_discover_empty_title">Bi xêr hatî!</string>
     <string name="scan">venerîn</string>
     <string name="hpp_choose_button">Hilbijêre</string>
@@ -912,7 +911,6 @@ Language: ku_TR
     <string name="media_grid_item_image_desc">pêşdîtina medyayê, navê dosyeyê %s</string>
     <string name="profile_picture">wêneyê profîla %s</string>
     <string name="photo_picker_wpmedia_desc">ji nav medyayên WordPress\'ê hilbijêre</string>
-    <string name="reader_cardview_post_play_video_desc">vîdyoya bijarde bilîzîne</string>
     <string name="jetpack_connection_failed_with_reason">Bi Jetpack\'ê ve nehat girêdan: %s</string>
     <string name="jetpack_already_connected_toast">Jixwe tu bi Jetpack\'ê ve girêdayî ye</string>
     <string name="menu_preview">Pêşdîtin</string>
