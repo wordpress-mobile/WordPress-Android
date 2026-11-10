@@ -40,6 +40,8 @@ sealed class MostViewedCardUiState {
  * @param change The percentage change compared to previous period
  * @param url The item's URL. Posts open it as detail stats; referrers and clicks open it in a
  * Custom Tab. Null when the item has no link of its own.
+ * @param iconUrl A favicon the API supplied for the item, shown at the start of the row.
+ * Referrers and clicks carry one; null everywhere else, and for an item the API knows no icon for.
  */
 data class MostViewedItem(
     val id: Long,
@@ -47,7 +49,8 @@ data class MostViewedItem(
     val views: Long,
     val change: MostViewedChange,
     val children: List<MostViewedChildItem> = emptyList(),
-    val url: String? = null
+    val url: String? = null,
+    val iconUrl: String? = null
 )
 
 /**
@@ -65,7 +68,9 @@ data class MostViewedChildItem(
     val name: String,
     val url: String?,
     val views: Long,
-    val children: List<MostViewedChildItem> = emptyList()
+    val children: List<MostViewedChildItem> = emptyList(),
+    /** A favicon the API supplied for the child. Referrers only; null everywhere else. */
+    val iconUrl: String? = null
 ) : Parcelable
 
 /**
@@ -101,6 +106,10 @@ sealed class MostViewedChange : Parcelable {
 /**
  * Data class for passing items to the detail screen via Intent.
  * Implements Parcelable for efficient Intent extras.
+ *
+ * @param postType Posts and pages only: the API's item type -- "post", "page", "homepage" or
+ * "attachment". The detail screen draws a glyph for it and uses it to pick the REST endpoint its
+ * featured image is looked up from. Null for every other source, which shows no thumbnail.
  */
 @Parcelize
 data class MostViewedDetailItem(
@@ -109,5 +118,8 @@ data class MostViewedDetailItem(
     val views: Long,
     val change: MostViewedChange,
     val children: List<MostViewedChildItem> = emptyList(),
-    val url: String? = null
+    val url: String? = null,
+    val postType: String? = null,
+    /** See [MostViewedItem.iconUrl]. */
+    val iconUrl: String? = null
 ) : Parcelable
