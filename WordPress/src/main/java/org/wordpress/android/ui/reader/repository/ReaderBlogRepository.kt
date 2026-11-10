@@ -62,27 +62,24 @@ class ReaderBlogRepository @Inject constructor(
     suspend fun followBlog(blogId: Long, feedId: Long, follow: Boolean, source: String): Boolean {
         if (blogId == 0L) return false
         return withContext(ioDispatcher + NonCancellable) {
-            ReaderBlogTable.setIsFollowedBlogId(blogId, follow)
-            ReaderPostTable.setFollowStatusForPostsInBlog(blogId, follow)
+            setBlogFollowedLocal(blogId, follow)
             trackFollow(blogId, feedId, follow, source)
 
             val path = "sites/$blogId/follows/" + if (follow) "new?source=android" else "mine/delete"
             val result = post(path)
-            if (result is RestResult.Failure) logVolleyError("blog ${actionName(follow)}", result)
-            val succeeded = when {
-                result is RestResult.Success -> isFollowActionSuccessful(result.json, follow).also {
-                    if (!it) AppLog.w(T.READER, "blog ${actionName(follow)} failed - ${result.json} - $path")
-                }
+            if (result is RestResult.Failure) {
+                logVolleyError("blog ${actionName(follow)}", result.error)
                 // a 403 when unfollowing means the site no longer exists, so it's unfollowed by URL instead (the
                 // v1.2 endpoint returns a 404 in this case)
-                !follow && (result as RestResult.Failure).statusCode == HttpURLConnection.HTTP_FORBIDDEN ->
+                if (!follow && result.statusCode == HttpURLConnection.HTTP_FORBIDDEN) {
                     return@withContext unfollowBlogByUrl(blogId)
-                else -> false
+                }
             }
-            if (!succeeded) {
-                ReaderBlogTable.setIsFollowedBlogId(blogId, !follow)
-                ReaderPostTable.setFollowStatusForPostsInBlog(blogId, !follow)
+            val succeeded = isFollowActionSuccessful(result.response, follow)
+            if (result is RestResult.Success && !succeeded) {
+                AppLog.w(T.READER, "blog ${actionName(follow)} failed - ${result.json} - $path")
             }
+            if (!succeeded) setBlogFollowedLocal(blogId, !follow)
             succeeded
         }
     }
@@ -182,7 +179,7 @@ class ReaderBlogRepository @Inject constructor(
             AppLog.i(T.READER, "blocking blog ${blockResult.blogId}")
             val result = post("me/block/sites/${blockResult.blogId}/new")
             if (result is RestResult.Failure) {
-                logVolleyError("block blog", result)
+                logVolleyError("block blog", result.error)
                 undoBlockBlogLocal(blockResult)
                 if (blockResult.wasFollowing) ReaderBlogTable.setIsFollowedBlogId(blockResult.blogId, true)
             }
@@ -199,7 +196,7 @@ class ReaderBlogRepository @Inject constructor(
             AppLog.i(T.READER, "unblocking blog ${blockResult.blogId}")
             val result = post("me/block/sites/${blockResult.blogId}/delete")
             when {
-                result is RestResult.Failure -> logVolleyError("unblock blog", result)
+                result is RestResult.Failure -> logVolleyError("unblock blog", result.error)
                 result.response?.optBoolean("success") != true ->
                     AppLog.w(T.READER, "failed to unblock blog ${blockResult.blogId}")
                 blockResult.wasFollowing -> followBlog(blockResult.blogId, blockResult.feedId, true, source)
@@ -235,25 +232,19 @@ class ReaderBlogRepository @Inject constructor(
     ): Boolean {
         if (feedUrl.isNullOrEmpty()) return false
         return withContext(ioDispatcher + NonCancellable) {
-            if (feedId != 0L) {
-                ReaderBlogTable.setIsFollowedFeedId(feedId, follow)
-                ReaderPostTable.setFollowStatusForPostsInFeed(feedId, follow)
-            }
+            if (feedId != 0L) setFeedFollowedLocal(feedId, follow)
             trackFollow(blogId, feedId, follow, source)
 
             val path = "read/following/mine/" + (if (follow) "new?source=android&url=" else "delete?url=") +
                 UrlUtils.urlEncode(feedUrl)
             val result = post(path)
-            val succeeded = result is RestResult.Success && isFollowActionSuccessful(result.json, follow)
+            val succeeded = isFollowActionSuccessful(result.response, follow)
             if (result is RestResult.Failure) {
-                logVolleyError("feed ${actionName(follow)}", result)
+                logVolleyError("feed ${actionName(follow)}", result.error)
             } else if (!succeeded) {
                 AppLog.w(T.READER, "feed ${actionName(follow)} failed - ${result.response} - $path")
             }
-            if (!succeeded) {
-                ReaderBlogTable.setIsFollowedFeedId(feedId, !follow)
-                ReaderPostTable.setFollowStatusForPostsInFeed(feedId, !follow)
-            }
+            if (!succeeded) setFeedFollowedLocal(feedId, !follow)
             succeeded
         }
     }
@@ -265,7 +256,7 @@ class ReaderBlogRepository @Inject constructor(
             return false
         }
         val result = post("/read/following/mine/delete?url=" + UrlUtils.urlEncode(blogUrl))
-        if (result is RestResult.Failure) logVolleyError("unfollow blog by url", result)
+        if (result is RestResult.Failure) logVolleyError("unfollow blog by url", result.error)
         return result is RestResult.Success
     }
 
@@ -281,19 +272,15 @@ class ReaderBlogRepository @Inject constructor(
         } else {
             "read/sites/" + UrlUtils.urlEncode(UrlUtils.getHost(blogUrl))
         }
-        return when (val result = get(path)) {
-            is RestResult.Success -> saveBlogInfo(result.json)
-            is RestResult.Failure -> {
-                // an auth error may mean API access is disabled for the site, otherwise it's retried by domain
-                if (result.statusCode != HttpURLConnection.HTTP_FORBIDDEN && hasBlogId && hasBlogUrl) {
-                    AppLog.w(T.READER, "failed to get blog info by id, retrying with url")
-                    fetchBlogInfo(0, blogUrl)
-                } else {
-                    logVolleyError("update blog info", result)
-                    null
-                }
-            }
+        val result = get(path)
+        // an auth error may mean API access is disabled for the site, otherwise it's retried by domain
+        if (result is RestResult.Failure && result.statusCode != HttpURLConnection.HTTP_FORBIDDEN &&
+            hasBlogId && hasBlogUrl
+        ) {
+            AppLog.w(T.READER, "failed to get blog info by id, retrying with url")
+            return fetchBlogInfo(0, blogUrl)
         }
+        return saveBlogInfo(result, "update blog info")
     }
 
     private suspend fun fetchFeedInfo(feedId: Long, feedUrl: String?): ReaderBlog? {
@@ -302,20 +289,28 @@ class ReaderBlogRepository @Inject constructor(
             return null
         }
         val path = if (feedId != 0L) "read/feed/$feedId" else "read/feed/" + UrlUtils.urlEncode(feedUrl)
-        return when (val result = get(path)) {
-            is RestResult.Success -> saveBlogInfo(result.json)
-            is RestResult.Failure -> {
-                logVolleyError("update feed info", result)
-                null
-            }
-        }
+        return saveBlogInfo(get(path), "update feed info")
     }
 
-    private suspend fun saveBlogInfo(json: JSONObject?): ReaderBlog? {
-        json ?: return null
+    /*
+     * saves and returns the site from a site or feed info response, or logs the failure and returns null
+     */
+    private suspend fun saveBlogInfo(result: RestResult, action: String): ReaderBlog? {
+        if (result is RestResult.Failure) logVolleyError(action, result.error)
+        val json = result.response ?: return null
         val blogInfo = ReaderBlog.fromJson(json)
         withContext(ioDispatcher) { ReaderBlogTable.addOrUpdateBlog(blogInfo) }
         return blogInfo
+    }
+
+    private fun setBlogFollowedLocal(blogId: Long, follow: Boolean) {
+        ReaderBlogTable.setIsFollowedBlogId(blogId, follow)
+        ReaderPostTable.setFollowStatusForPostsInBlog(blogId, follow)
+    }
+
+    private fun setFeedFollowedLocal(feedId: Long, follow: Boolean) {
+        ReaderBlogTable.setIsFollowedFeedId(feedId, follow)
+        ReaderPostTable.setFollowStatusForPostsInFeed(feedId, follow)
     }
 
     private fun undoBlockBlogLocal(blockResult: BlockedBlogResult) {
@@ -361,9 +356,6 @@ class ReaderBlogRepository @Inject constructor(
     }
 
     private fun actionName(follow: Boolean) = if (follow) "follow" else "unfollow"
-
-    private fun logVolleyError(action: String, failure: RestResult.Failure) =
-        logVolleyError(action, failure.error)
 
     private fun logVolleyError(action: String, error: VolleyError?) {
         AppLog.e(T.READER, "$action failed with error: ${VolleyUtils.statusCodeFromVolleyError(error)}")

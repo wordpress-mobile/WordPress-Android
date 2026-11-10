@@ -257,10 +257,8 @@ class ReaderPostRepository @Inject constructor(
     suspend fun setBookmarked(post: ReaderPost, bookmarked: Boolean) = withContext(ioDispatcher) {
         if (bookmarked) {
             val posts = ReaderPostList().apply { add(post) }
-            ReaderTagTable.getBookmarkTags().forEach { tag ->
-                post.dateTagged = DateTimeUtils.iso8601UTCFromDate(Date())
-                ReaderPostTable.addOrUpdatePosts(tag, posts)
-            }
+            post.dateTagged = DateTimeUtils.iso8601UTCFromDate(Date())
+            ReaderTagTable.getBookmarkTags().forEach { tag -> ReaderPostTable.addOrUpdatePosts(tag, posts) }
         }
         ReaderPostTable.setBookmarkFlag(post.blogId, post.postId, bookmarked)
     }

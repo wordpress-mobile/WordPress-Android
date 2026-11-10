@@ -79,20 +79,11 @@ class PostLikeUseCase @Inject constructor(
         post: ReaderPost,
         request: PostLikeRequest
     ) {
-        val response = readerPostRepository.likePostLocal(post, request.isAskingToLike, request.wpComUserId)
-        if (response) {
-            emit(PostLikeState.PostLikedInLocalDb)
-            val postLikeState = performLikeAndWaitForResult(post, request)
-            emit(postLikeState)
-        } else {
+        if (!readerPostRepository.likePostLocal(post, request.isAskingToLike, request.wpComUserId)) {
             emit(Unchanged)
+            return
         }
-    }
-
-    private suspend fun performLikeAndWaitForResult(
-        post: ReaderPost,
-        request: PostLikeRequest
-    ): PostLikeState {
+        emit(PostLikeState.PostLikedInLocalDb)
         runningRequests += request
         val succeeded = try {
             readerPostRepository.likePostRemote(
@@ -105,7 +96,7 @@ class PostLikeUseCase @Inject constructor(
         } finally {
             runningRequests -= request
         }
-        return if (succeeded) Success else RequestFailed
+        emit(if (succeeded) Success else RequestFailed)
     }
 
     sealed class PostLikeState {

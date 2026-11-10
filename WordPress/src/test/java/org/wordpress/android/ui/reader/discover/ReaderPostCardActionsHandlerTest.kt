@@ -55,15 +55,14 @@ import org.wordpress.android.ui.reader.reblog.ReblogState.SingleSite
 import org.wordpress.android.ui.reader.reblog.ReblogState.Unknown
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.BlockedBlogResult
+import org.wordpress.android.ui.reader.repository.ReaderBlogRepository
 import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.Failed
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.SiteBlockedInLocalDb
-import org.wordpress.android.ui.reader.repository.usecases.BlockUserState.UserBlockedInLocalDb
 import org.wordpress.android.ui.reader.repository.usecases.BlockUserUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.PostLikedInLocalDb
-import org.wordpress.android.ui.reader.repository.usecases.UndoBlockBlogUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
@@ -117,7 +116,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     private lateinit var seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase
 
     @Mock
-    private lateinit var undoBlockBlogUseCase: UndoBlockBlogUseCase
+    private lateinit var readerBlogRepository: ReaderBlogRepository
 
     @Mock
     private lateinit var fetchSiteUseCase: ReaderFetchSiteUseCase
@@ -151,7 +150,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
             blockUserUseCase,
             likeUseCase,
             siteNotificationsUseCase,
-            undoBlockBlogUseCase,
+            readerBlogRepository,
             fetchSiteUseCase,
             appPrefsWrapper,
             dispatcher,
@@ -827,7 +826,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Act
         observedValues.snackbarMsgs[0].buttonAction.invoke()
         // Assert
-        verify(undoBlockBlogUseCase).undoBlockBlog(anyOrNull(), any())
+        verify(readerBlogRepository).undoBlockBlog(anyOrNull(), any())
     }
 
     @Test
@@ -880,7 +879,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Posts are refreshed when user blocked in local db`() = test {
         // Arrange
         whenever(blockUserUseCase.blockUser(any(), any()))
-            .thenReturn(flowOf(UserBlockedInLocalDb(mock())))
+            .thenReturn(mock())
         val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
@@ -898,7 +897,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Snackbar shown when user blocked in local db`() = test {
         // Arrange
         whenever(blockUserUseCase.blockUser(any(), any()))
-            .thenReturn(flowOf(UserBlockedInLocalDb(mock())))
+            .thenReturn(mock())
         val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
@@ -916,7 +915,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Undo action is invoked when user clicks on undo block user action in snackbar`() = test {
         // Arrange
         whenever(blockUserUseCase.blockUser(any(), any()))
-            .thenReturn(flowOf(UserBlockedInLocalDb(mock())))
+            .thenReturn(mock())
         val observedValues = startObserving(backgroundScope)
         actionHandler.onAction(
             mock(),
@@ -927,14 +926,14 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Act
         observedValues.snackbarMsgs[0].buttonAction.invoke()
         // Assert
-        verify(blockUserUseCase).undoBlockUser(anyOrNull())
+        verify(readerBlogRepository).undoBlockUser(anyOrNull())
     }
 
     @Test
     fun `Post refreshed when user clicks on undo block user action in snackbar`() = test {
         // Arrange
         whenever(blockUserUseCase.blockUser(any(), any()))
-            .thenReturn(flowOf(UserBlockedInLocalDb(mock())))
+            .thenReturn(mock())
         val observedValues = startObserving(backgroundScope)
         actionHandler.onAction(
             mock(),

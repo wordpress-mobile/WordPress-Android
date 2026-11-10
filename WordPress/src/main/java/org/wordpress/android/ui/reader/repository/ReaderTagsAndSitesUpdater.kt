@@ -142,23 +142,10 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
         val result = awaitRestRequest { listener, errorListener ->
             WordPress.getRestClientUtilsV1_2().post("read/tags/mine/new", params, null, listener, errorListener)
         }
-        return when {
-            result is RestResult.Success -> {
-                AppLog.i(AppLog.T.READER, "add tag succeeded")
-                // the response contains the list of the user's followed tags
-                ReaderTagTable.replaceFollowedTags(parseFollowedTags(result.json))
-                true
-            }
-            // treat it as a success if the user is already following the tag
-            (result as RestResult.Failure).errorString == "already_subscribed" -> {
-                AppLog.w(AppLog.T.READER, "add tag succeeded with error already_subscribed")
-                true
-            }
-            else -> {
-                AppLog.w(AppLog.T.READER, "add tag failed")
-                ReaderTagTable.replaceFollowedTags(existingFollowedTags)
-                false
-            }
+        // the response contains the list of the user's followed tags
+        (result as? RestResult.Success)?.let { ReaderTagTable.replaceFollowedTags(parseFollowedTags(it.json)) }
+        return isTagActionSuccessful(result, "add tag", alreadyDoneError = "already_subscribed") {
+            ReaderTagTable.replaceFollowedTags(existingFollowedTags)
         }
     }
 
@@ -181,21 +168,33 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
         val result = awaitRestRequest { listener, errorListener ->
             WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener)
         }
-        return when {
-            result is RestResult.Success -> {
-                AppLog.i(AppLog.T.READER, "delete tag succeeded")
-                true
-            }
-            // treat it as a success if the user isn't following the tag
-            (result as RestResult.Failure).errorString == "not_subscribed" -> {
-                AppLog.w(AppLog.T.READER, "delete tag succeeded with error not_subscribed")
-                true
-            }
-            else -> {
-                AppLog.w(AppLog.T.READER, "delete tag failed")
-                ReaderTagTable.addOrUpdateTag(tag)
-                false
-            }
+        return isTagActionSuccessful(result, "delete tag", alreadyDoneError = "not_subscribed") {
+            ReaderTagTable.addOrUpdateTag(tag)
+        }
+    }
+
+    /*
+     * returns whether a tag action succeeded, treating [alreadyDoneError] (the server saying the tag was already
+     * followed or unfollowed) as a success, and calls [revert] if it failed
+     */
+    private fun isTagActionSuccessful(
+        result: RestResult,
+        action: String,
+        alreadyDoneError: String,
+        revert: () -> Unit
+    ): Boolean = when {
+        result is RestResult.Success -> {
+            AppLog.i(AppLog.T.READER, "$action succeeded")
+            true
+        }
+        (result as RestResult.Failure).errorString == alreadyDoneError -> {
+            AppLog.w(AppLog.T.READER, "$action succeeded with error $alreadyDoneError")
+            true
+        }
+        else -> {
+            AppLog.w(AppLog.T.READER, "$action failed")
+            revert()
+            false
         }
     }
 
@@ -379,9 +378,6 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
         val jsonTopics = json.optJSONObject(name) ?: return topics
         jsonTopics.keys().forEach { internalName ->
             val jsonTopic = jsonTopics.optJSONObject(internalName) ?: return@forEach
-            val title = JSONUtils.getStringDecoded(jsonTopic, ReaderConstants.JSON_TAG_TITLE)
-            val displayName = JSONUtils.getStringDecoded(jsonTopic, ReaderConstants.JSON_TAG_DISPLAY_NAME)
-            val slug = JSONUtils.getStringDecoded(jsonTopic, ReaderConstants.JSON_TAG_SLUG)
             val endpoint = JSONUtils.getString(jsonTopic, ReaderConstants.JSON_TAG_URL)
             // custom lists are included in the response as default tags
             val type = if (tagType == ReaderTagType.DEFAULT && endpoint.contains("/read/list/")) {
@@ -389,10 +385,18 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
             } else {
                 tagType
             }
-            topics.add(ReaderTag(slug, displayName, title, endpoint, type))
+            topics.add(parseTag(jsonTopic, type))
         }
         return topics
     }
+
+    private fun parseTag(json: JSONObject?, type: ReaderTagType) = ReaderTag(
+        JSONUtils.getStringDecoded(json, ReaderConstants.JSON_TAG_SLUG),
+        JSONUtils.getStringDecoded(json, ReaderConstants.JSON_TAG_DISPLAY_NAME),
+        JSONUtils.getStringDecoded(json, ReaderConstants.JSON_TAG_TITLE),
+        JSONUtils.getString(json, ReaderConstants.JSON_TAG_URL),
+        type
+    )
 
     /*
      * returns the user's followed tags from the response to read/tags/mine/new, or null if it has none
@@ -402,12 +406,7 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
         if (jsonTags == null || jsonTags.length() == 0) return null
         val tags = ReaderTagList()
         for (i in 0 until jsonTags.length()) {
-            val jsonTag = jsonTags.optJSONObject(i)
-            val title = JSONUtils.getStringDecoded(jsonTag, ReaderConstants.JSON_TAG_TITLE)
-            val displayName = JSONUtils.getStringDecoded(jsonTag, ReaderConstants.JSON_TAG_DISPLAY_NAME)
-            val slug = JSONUtils.getStringDecoded(jsonTag, ReaderConstants.JSON_TAG_SLUG)
-            val endpoint = JSONUtils.getString(jsonTag, ReaderConstants.JSON_TAG_URL)
-            tags.add(ReaderTag(slug, displayName, title, endpoint, ReaderTagType.FOLLOWED))
+            tags.add(parseTag(jsonTags.optJSONObject(i), ReaderTagType.FOLLOWED))
         }
         return tags
     }
