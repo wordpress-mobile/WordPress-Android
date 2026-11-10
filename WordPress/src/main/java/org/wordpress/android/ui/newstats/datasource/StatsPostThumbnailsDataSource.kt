@@ -34,9 +34,9 @@ class StatsPostThumbnailsDataSource @Inject constructor(
         val byEndpoint = items
             .mapNotNull { item -> item.postType.toEndpointType()?.let { it to item.postId } }
             .groupBy({ it.first }, { it.second })
-        if (byEndpoint.isEmpty()) return emptyMap()
 
-        // Post id -> featured media id, across both endpoints.
+        // Post id -> featured media id, across both endpoints. An item type with no featured image
+        // of its own contributed no endpoint above, so nothing is requested for it.
         val mediaIdByPostId = mutableMapOf<Long, Long>()
         for ((endpointType, postIds) in byEndpoint) {
             mediaIdByPostId += rsSiteRestClient.fetchFeaturedMediaIds(site, endpointType, postIds)

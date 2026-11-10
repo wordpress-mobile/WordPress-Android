@@ -218,11 +218,9 @@ class RsSiteRestClient @Inject constructor(
                 )
             }
             if (response is WpRequestResult.Success) {
-                for (post in response.response.data) {
-                    val id = post.id ?: continue
-                    // 0 is how the REST API spells "no featured image".
-                    val mediaId = post.featuredMedia?.takeIf { it != 0L } ?: continue
-                    result[id] = mediaId
+                result += response.response.data.mapNotNull { post ->
+                    val mediaId = post.featuredMedia?.takeIf { it != NO_FEATURED_MEDIA }
+                    post.id?.let { id -> mediaId?.let { id to it } }
                 }
             } else {
                 // The wordpress-rs client already logged the status, method and URL through
@@ -640,6 +638,9 @@ class RsSiteRestClient @Inject constructor(
     companion object {
         internal const val AUTHORS_PER_PAGE: UInt = 20u
         private const val PER_PAGE = 100u
+
+        /** How the REST API spells "this post has no featured image". */
+        private const val NO_FEATURED_MEDIA = 0L
 
         private const val MEDIA_CACHE_MAX_ENTRIES = 500
         private const val MEDIA_CACHE_CAPACITY = 64
