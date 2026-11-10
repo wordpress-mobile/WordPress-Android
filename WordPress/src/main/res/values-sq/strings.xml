@@ -677,7 +677,6 @@ Language: sq_AL
     <string name="reader_dropdown_menu_subscriptions">Pajtime</string>
     <string name="reader_dropdown_menu_discover">Zbuloni</string>
     <string name="reader_search_content_description">Kërko</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Ndiqni etiketa</string>
     <string name="reader_filter_empty_tags_action_suggested">Etiketa të sugjeruara</string>
     <string name="reader_filter_empty_blogs_action_search">Kërkoni për një blog</string>
     <string name="reader_filter_empty_tags_list_follow_text">Ndiqni një etiketë dhe do të jeni në gjendje të shihni këtu postimet më të mira.</string>
@@ -772,7 +771,6 @@ Language: sq_AL
     <string name="site_creation_domain_free_with_annual_plan">Falas për vitin e parë, me plane vjetore të paguar</string>
     <string name="reader_secondary_bookmarked">U ruajt</string>
     <string name="reader_secondary_bookmark">Ruaje</string>
-    <string name="reader_discover_recommended_header_new">Mund t’ju pëlqente edhe</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Hiqe bllokun nga grupi</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Prekeni këtu, që të shihni më tepër hollësi.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Modele të njëkohësuar</string>
@@ -1850,8 +1848,6 @@ Language: sq_AL
     <string name="hpp_retry_error">Ju lutemi, Kontrolloni lidhjen tuaj në internet dhe riprovoni.</string>
     <string name="hpp_error_subtitle">Kur të jeni sërish i lidhur, prekni Riprovo.</string>
     <string name="hpp_error_title">S’mund të kihen skema, teksa jeni jashtë linje</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Provoni të ndiqni më tepër etiketa që të zgjerohet kërkimi</string>
-    <string name="reader_discover_no_posts_title">Pa postime së fundi</string>
     <string name="reader_discover_empty_title">Mirë se vini!</string>
     <string name="scan">Skanoje</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">U hap me blloqesh. Përzgjidhni një bllok.</string>
@@ -2743,7 +2739,6 @@ Language: sq_AL
     <string name="reader_photo_view_desc">foto</string>
     <string name="reader_list_item_suggestion_remove_desc">fshije</string>
     <string name="photo_picker_thumbnail_desc">Luaje videon</string>
-    <string name="reader_cardview_post_play_video_desc">luaje videon e zgjedhur</string>
     <string name="plugin_detail_logo_desc">stemë shtojce</string>
     <string name="plugin_detail_banner_desc">banderolë shtojce</string>
     <string name="photo_picker_wpmedia_desc">zgjidhni nga media WordPress</string>

@@ -696,7 +696,6 @@ Language: zh_CN
     <string name="reader_dropdown_menu_subscriptions">订阅</string>
     <string name="reader_dropdown_menu_discover">发现</string>
     <string name="reader_search_content_description">搜索</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">关注标签</string>
     <string name="reader_filter_empty_tags_action_suggested">建议标签</string>
     <string name="reader_filter_empty_blogs_action_search">搜索博客</string>
     <string name="reader_filter_empty_tags_list_follow_text">关注一个标签，您就能在此处看到该标签下的最佳文章。</string>
@@ -791,7 +790,6 @@ Language: zh_CN
     <string name="site_creation_domain_free_with_annual_plan">订阅年度付费套餐即可享受首年免费使用权</string>
     <string name="reader_secondary_bookmarked">已保存</string>
     <string name="reader_secondary_bookmark">保存</string>
-    <string name="reader_discover_recommended_header_new">您可能会喜欢</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">取消区块分组</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">轻点此处以显示更多详细信息。</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">已同步的样板</string>
@@ -1876,8 +1874,6 @@ Language: zh_CN
     <string name="hpp_retry_error">请检查您的互联网连接，然后重试。</string>
     <string name="hpp_error_subtitle">当您恢复在线时，请点击重试。</string>
     <string name="hpp_error_title">离线时无法使用布局</string>
-    <string name="reader_discover_no_posts_follow_subtitle">尝试关注更多标签以扩大搜索范围</string>
-    <string name="reader_discover_no_posts_title">无近期文章</string>
     <string name="reader_discover_empty_title">欢迎！</string>
     <string name="scan">扫描</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">滚动区块菜单打开。 选择区块。</string>
@@ -2768,7 +2764,6 @@ Language: zh_CN
     <string name="reader_photo_view_desc">照片</string>
     <string name="reader_list_item_suggestion_remove_desc">删除</string>
     <string name="photo_picker_thumbnail_desc">播放视频</string>
-    <string name="reader_cardview_post_play_video_desc">播放推荐视频</string>
     <string name="plugin_detail_logo_desc">插件徽标</string>
     <string name="plugin_detail_banner_desc">插件横幅</string>
     <string name="photo_picker_wpmedia_desc">选择 WordPress 媒体</string>

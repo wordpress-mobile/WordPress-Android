@@ -697,7 +697,6 @@ Language: zh_TW
     <string name="reader_dropdown_menu_subscriptions">訂閱</string>
     <string name="reader_dropdown_menu_discover">探索</string>
     <string name="reader_search_content_description">搜尋</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">追蹤標籤</string>
     <string name="reader_filter_empty_tags_action_suggested">已建議的標籤</string>
     <string name="reader_filter_empty_blogs_action_search">搜尋網誌</string>
     <string name="reader_filter_empty_tags_list_follow_text">只要追蹤標籤，就能從此處看到最佳文章。</string>
@@ -790,7 +789,6 @@ Language: zh_TW
     <string name="site_creation_domain_free_with_annual_plan">選購任何年繳方案，第一年完全免費</string>
     <string name="reader_secondary_bookmarked">已儲存</string>
     <string name="reader_secondary_bookmark">儲存</string>
-    <string name="reader_discover_recommended_header_new">你可能會喜歡</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">取消區塊群組</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">點選此處以顯示更多詳細資訊。</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">同步的版面配置</string>
@@ -1871,8 +1869,6 @@ Language: zh_TW
     <string name="hpp_retry_error">請檢查你的網際網路連線，然後再試一次。</string>
     <string name="hpp_error_subtitle">請在重新上線時點選重試。</string>
     <string name="hpp_error_title">版面配置在離線時無法使用</string>
-    <string name="reader_discover_no_posts_follow_subtitle">嘗試追蹤更多標籤，即可擴大搜尋範圍</string>
-    <string name="reader_discover_no_posts_title">沒有近期文章</string>
     <string name="reader_discover_empty_title">歡迎！</string>
     <string name="scan">掃瞄</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">已開啟可捲動的區塊選單。 請選取一個區塊。</string>
@@ -2761,7 +2757,6 @@ Language: zh_TW
     <string name="reader_photo_view_desc">圖片</string>
     <string name="reader_list_item_suggestion_remove_desc">刪除</string>
     <string name="photo_picker_thumbnail_desc">播放影片</string>
-    <string name="reader_cardview_post_play_video_desc">播放特色影片</string>
     <string name="plugin_detail_logo_desc">外掛程式標誌</string>
     <string name="plugin_detail_banner_desc">外掛程式橫幅</string>
     <string name="photo_picker_wpmedia_desc">從 WordPress 媒體中挑選</string>

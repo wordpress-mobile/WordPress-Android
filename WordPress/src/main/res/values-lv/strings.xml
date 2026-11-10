@@ -233,7 +233,6 @@ Language: lv
     <string name="reader_filter_empty_blogs_action_search">Meklēt emuāru</string>
     <string name="reader_filter_empty_tags_action_suggested">Ieteiktās atzīmes</string>
     <string name="reader_search_content_description">Meklēt</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Sekot birkām</string>
     <string name="reader_dropdown_menu_discover">Atklājiet</string>
     <string name="reader_dropdown_menu_subscriptions">Abonementi</string>
     <string name="reader_dropdown_menu_saved">Saglabāts</string>
@@ -335,7 +334,6 @@ Language: lv
     <string name="site_creation_domain_free_with_annual_plan">Pirmo gadu bez maksas, izmantojot gada maksas plānus</string>
     <string name="site_creation_plans_selection_title">Izvēlieties plānu</string>
     <string name="account_and_settings">Konts un iestatījumi</string>
-    <string name="reader_discover_recommended_header_new">Jums varētu patikt</string>
     <string name="reader_secondary_bookmark">Saglabāt</string>
     <string name="reader_secondary_bookmarked">Saglabāts</string>
     <string name="gutenberg_native_deeply_nested_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dziļi ligzdots bloks</string>
@@ -1419,8 +1417,6 @@ Language: lv
     <string name="hpp_choose_error">Izvēloties tēmu, radās kļūda.</string>
     <string name="scan">Skenēt</string>
     <string name="reader_discover_empty_title">Laipni lūdzam!</string>
-    <string name="reader_discover_no_posts_title">Nav pēdējo ziņu</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Lai paplašinātu meklēšanu, mēģiniet izmantot vairākas birkas</string>
     <string name="hpp_choose_button">Izvēlieties</string>
     <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ritināmā bloķēšanas izvēlne ir aizvērta.</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Atvērta ritināmā bloķēšanas izvēlne. Atlasiet bloku.</string>
@@ -2320,7 +2316,6 @@ Language: lv
     <string name="photo_picker_wpmedia_desc">izvēlēties no WordPress multivides</string>
     <string name="plugin_detail_banner_desc">spraudņa reklāmkarogs</string>
     <string name="plugin_detail_logo_desc">spraudņa logotips</string>
-    <string name="reader_cardview_post_play_video_desc">atskaņot piedāvāto video</string>
     <string name="jetpack_already_connected_toast">Jūs jau esat izveidojis savienojumu ar Jetpack</string>
     <string name="jetpack_connection_failed_with_reason">Neizdevās izveidot savienojumu ar Jetpack: %s</string>
     <string name="file_size_in_terabytes">%s TB</string>

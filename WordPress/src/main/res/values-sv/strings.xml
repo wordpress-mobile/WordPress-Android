@@ -700,7 +700,6 @@ Language: sv_SE
     <string name="reader_dropdown_menu_subscriptions">Prenumerationer</string>
     <string name="reader_dropdown_menu_discover">Upptäck</string>
     <string name="reader_search_content_description">Sök</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Prenumerera på etiketter</string>
     <string name="reader_filter_empty_tags_action_suggested">Föreslagna etiketter</string>
     <string name="reader_filter_empty_blogs_action_search">Sök efter en blogg</string>
     <string name="reader_filter_empty_tags_list_follow_text">Prenumerera på en etikett så kommer du att se dess bästa inlägg här.</string>
@@ -795,7 +794,6 @@ Language: sv_SE
     <string name="site_creation_domain_free_with_annual_plan">Gratis första året med årliga betalda paket</string>
     <string name="reader_secondary_bookmarked">Sparat</string>
     <string name="reader_secondary_bookmark">Spara</string>
-    <string name="reader_discover_recommended_header_new">Du kanske gillar</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Avgruppera block</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tryck här för att visa mer information.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Synkroniserade mönster</string>
@@ -1880,8 +1878,6 @@ Language: sv_SE
     <string name="hpp_retry_error">Kontrollera din internet-anslutning och försök igen.</string>
     <string name="hpp_error_subtitle">Tryck på ”Försök igen” när du har förbindelse med internet igen.</string>
     <string name="hpp_error_title">Layouter är inte tillgängliga när du saknar internetförbindelse</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Försök att följa fler etiketter för att söka bredare</string>
-    <string name="reader_discover_no_posts_title">Inga nya inlägg</string>
     <string name="reader_discover_empty_title">Välkommen!</string>
     <string name="scan">Skanna</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Den rullningsbara blockmenyn har öppnats. Välj ett block.</string>
@@ -2773,7 +2769,6 @@ Language: sv_SE
     <string name="reader_photo_view_desc">foto</string>
     <string name="reader_list_item_suggestion_remove_desc">ta bort</string>
     <string name="photo_picker_thumbnail_desc">Spela video</string>
-    <string name="reader_cardview_post_play_video_desc">spela utvald video</string>
     <string name="plugin_detail_logo_desc">tilläggets logga</string>
     <string name="plugin_detail_banner_desc">tilläggets banner-bild</string>
     <string name="photo_picker_wpmedia_desc">välj från WordPress mediakatalog</string>

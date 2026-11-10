@@ -699,7 +699,6 @@ Language: pl
     <string name="reader_dropdown_menu_subscriptions">Subskrypcje</string>
     <string name="reader_dropdown_menu_discover">Odkrywaj</string>
     <string name="reader_search_content_description">Szukaj</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Obserwuj tagi</string>
     <string name="reader_filter_empty_tags_action_suggested">Sugerowane tagi</string>
     <string name="reader_filter_empty_blogs_action_search">Szukaj blogu</string>
     <string name="reader_filter_chip_tag_other">%d tagów</string>
@@ -795,7 +794,6 @@ Language: pl
     <string name="site_creation_domain_free_with_annual_plan">Za darmo w pierwszym roku z płatnymi rocznymi planami subskrypcji</string>
     <string name="reader_secondary_bookmark">Zapisz</string>
     <string name="reader_secondary_bookmarked">Zapisano</string>
-    <string name="reader_discover_recommended_header_new">Może polubisz</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Rozgrupuj blok</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Stuknij tutaj aby wyświetlić więcej szczegółów.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Zsynchronizowane wzorce</string>
@@ -1880,10 +1878,8 @@ Language: pl
     <string name="hpp_error_title">Szablony nie są dostępne w trybie offline</string>
     <string name="hpp_choose_error">Wystąpił błąd podczas wyboru szablonu.</string>
     <string name="hpp_error_subtitle">Kliknij przycisk Ponów próbę, gdy znów będziesz online.</string>
-    <string name="reader_discover_no_posts_title">Brak ostatnich wpisów</string>
     <string name="reader_discover_empty_title">Witaj!</string>
     <string name="scan">Skanuj</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Spróbuj zastosować więcej tagów, aby poszerzyć wyszukiwanie</string>
     <string name="hpp_choose_button">Wybierz</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Otwarto przewijalne menu blokowe. Wybierz blok.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Przewijane menu blokowe zamknięte.</string>
@@ -2771,7 +2767,6 @@ Language: pl
     <string name="reader_photo_view_desc">zdjęcie</string>
     <string name="reader_list_item_suggestion_remove_desc">usuń</string>
     <string name="photo_picker_thumbnail_desc">Odtwórz film</string>
-    <string name="reader_cardview_post_play_video_desc">odtwórz film wyróżniający</string>
     <string name="plugin_detail_logo_desc">logo wtyczki</string>
     <string name="plugin_detail_banner_desc">baner wtyczki</string>
     <string name="photo_picker_wpmedia_desc">wybierz z mediów WordPressa</string>

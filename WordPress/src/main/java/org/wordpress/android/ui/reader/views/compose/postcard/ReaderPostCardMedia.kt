@@ -15,25 +15,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.core.graphics.createBitmap
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -42,14 +36,11 @@ import coil.size.Size
 import coil.transform.Transformation
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.unit.Margin
-import org.wordpress.android.datasets.ReaderThumbnailTable
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption
 import org.wordpress.android.ui.reader.ReaderConstants.THUMBNAIL_STRIP_IMG_COUNT
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
-import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
-import org.wordpress.android.ui.reader.utils.ReaderVideoUtils.VideoThumbnailUrlListener
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.PhotonUtils
 import java.util.EnumSet
@@ -57,7 +48,7 @@ import java.util.EnumSet
 private const val FEATURED_IMAGE_ASPECT_RATIO = 16f / 9f
 
 /**
- * The featured image (with the video overlay for video posts) or, for gallery posts, the thumbnail strip.
+ * The featured image or, for gallery posts, the thumbnail strip.
  */
 @Composable
 fun ReaderPostCardMedia(uiState: ReaderPostUiState) {
@@ -69,9 +60,6 @@ fun ReaderPostCardMedia(uiState: ReaderPostUiState) {
 
 @Composable
 private fun FeaturedImage(uiState: ReaderPostUiState) {
-    // A video post shows its thumbnail once resolved, and only the placeholder if there isn't one
-    val videoUrl = uiState.fullVideoUrl
-    val imageUrl = if (videoUrl != null) rememberVideoThumbnail(uiState.postId, videoUrl) else uiState.featuredImageUrl
     val backgroundColor = colorResource(R.color.reader_featured_image_background)
     val transformation = remember(backgroundColor) { PortraitAwareCropTransformation(backgroundColor.toArgb()) }
 
@@ -86,7 +74,7 @@ private fun FeaturedImage(uiState: ReaderPostUiState) {
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(imageUrl)
+                .data(uiState.featuredImageUrl)
                 .placeholder(R.drawable.bg_rectangle_placeholder_radius_4dp)
                 .error(R.drawable.bg_rectangle_placeholder_radius_4dp)
                 .fallback(R.color.placeholder)
@@ -96,46 +84,7 @@ private fun FeaturedImage(uiState: ReaderPostUiState) {
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop,
         )
-        if (uiState.videoOverlayVisibility) {
-            Icon(
-                painter = painterResource(R.drawable.ic_play_white_black_24dp),
-                contentDescription = stringResource(R.string.reader_cardview_post_play_video_desc),
-                tint = Color.Unspecified,
-                modifier = Modifier
-                    .size(56.dp)
-                    .clickable { uiState.onVideoOverlayClicked(uiState.postId, uiState.blogId) },
-            )
-        }
     }
-}
-
-/**
- * Resolves a video's thumbnail through [ReaderVideoUtils], caching what it finds just as the
- * View-based card did. Null until resolved, or when there's no thumbnail and the placeholder shows.
- *
- * This runs during composition rather than in an effect because YouTube and cached thumbnails resolve
- * synchronously, so the first frame already has them; only Vimeo's arrives later.
- */
-@Composable
-private fun rememberVideoThumbnail(postId: Long, videoUrl: String): String? {
-    val thumbnail = remember(videoUrl) {
-        mutableStateOf<String?>(null).also { state ->
-            ReaderVideoUtils.retrieveVideoThumbnailUrl(videoUrl, object : VideoThumbnailUrlListener {
-                override fun showThumbnail(thumbnailUrl: String) {
-                    state.value = thumbnailUrl
-                }
-
-                override fun showPlaceholder() {
-                    state.value = null
-                }
-
-                override fun cacheThumbnailUrl(thumbnailUrl: String) {
-                    ReaderThumbnailTable.addThumbnail(postId, videoUrl, thumbnailUrl)
-                }
-            })
-        }
-    }
-    return thumbnail.value
 }
 
 /**

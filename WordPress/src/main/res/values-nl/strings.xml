@@ -700,7 +700,6 @@ Language: nl
     <string name="reader_dropdown_menu_subscriptions">Abonnementen</string>
     <string name="reader_dropdown_menu_discover">Ontdek</string>
     <string name="reader_search_content_description">Zoeken</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Tags volgen</string>
     <string name="reader_filter_empty_tags_action_suggested">Voorgestelde tags</string>
     <string name="reader_filter_empty_blogs_action_search">Een blog zoeken</string>
     <string name="reader_filter_empty_tags_list_follow_text">Een tag volgen en je zult de beste berichten ervan hier kunnen zien.</string>
@@ -795,7 +794,6 @@ Language: nl
     <string name="site_creation_domain_free_with_annual_plan">Het eerste jaar gratis bij elk betaald abonnement</string>
     <string name="reader_secondary_bookmarked">Opgeslagen</string>
     <string name="reader_secondary_bookmark">Opslaan</string>
-    <string name="reader_discover_recommended_header_new">Je zult ook leuk vinden</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Groeperen blok ongedaan maken</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Hier tikken om meer details weer te geven.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Gesynchroniseerde patronen</string>
@@ -1880,8 +1878,6 @@ Language: nl
     <string name="hpp_retry_error">Controleer je internetverbinding en probeer het opnieuw.</string>
     <string name="hpp_error_subtitle">Tikken op opnieuw proberen wanneer je weer online bent.</string>
     <string name="hpp_error_title">Lay-outs zijn niet beschikbaar indien offline</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Probeer meer tags te volgen om de zoekopdracht te verbreden</string>
-    <string name="reader_discover_no_posts_title">Geen recente berichten</string>
     <string name="reader_discover_empty_title">Welkom!</string>
     <string name="scan">Scan</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Scrolbaar blokmenu geopend. Selecteer een blok.</string>
@@ -2773,7 +2769,6 @@ Language: nl
     <string name="reader_photo_view_desc">foto</string>
     <string name="reader_list_item_suggestion_remove_desc">verwijderen</string>
     <string name="photo_picker_thumbnail_desc">Video afspelen</string>
-    <string name="reader_cardview_post_play_video_desc">aanbevolen video afspelen</string>
     <string name="plugin_detail_logo_desc">plugin logo</string>
     <string name="plugin_detail_banner_desc">plugin banner</string>
     <string name="photo_picker_wpmedia_desc">kiezen uit media op WordPress</string>

@@ -29,7 +29,7 @@ import java.util.Locale;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 156;
+    private static final int DB_VERSION = 157;
     private static final int DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT = 136; // do not change this value
 
     /*
@@ -119,6 +119,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      * 154 - added tbl_blocked_authors table
      * 155 - added tbl_blocked_blogs table
      * 156 - dropped tbl_discover_cards (Reader Discover legacy code removed)
+     * 157 - dropped tbl_thumbnails (Reader video cards removed)
      */
 
     /*
@@ -288,6 +289,9 @@ public class ReaderDatabase extends SQLiteOpenHelper {
             case 155:
                 db.execSQL("DROP TABLE IF EXISTS tbl_discover_cards;");
                 currentVersion++;
+            case 156:
+                db.execSQL("DROP TABLE IF EXISTS tbl_thumbnails;");
+                currentVersion++;
         }
         if (currentVersion != newVersion) {
             throw new RuntimeException(
@@ -311,7 +315,6 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         BlockedAuthorTable.createTables(db);
         ReaderTagTable.createTables(db);
         ReaderUserTable.createTables(db);
-        ReaderThumbnailTable.createTables(db);
         ReaderBlogTable.createTables(db);
         ReaderSearchTable.createTables(db);
         ReaderBlockedBlogTable.createTables(db);
@@ -324,7 +327,6 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         BlockedAuthorTable.dropTables(db);
         ReaderTagTable.dropTables(db);
         ReaderUserTable.dropTables(db);
-        ReaderThumbnailTable.dropTables(db);
         ReaderBlogTable.dropTables(db);
         ReaderSearchTable.dropTables(db);
         ReaderBlockedBlogTable.dropTables(db);
@@ -367,12 +369,6 @@ public class ReaderDatabase extends SQLiteOpenHelper {
                 int numLikesDeleted = ReaderLikeTable.purge(db);
                 if (numLikesDeleted > 0) {
                     AppLog.i(T.READER, String.format(Locale.ENGLISH, "%d likes purged", numLikesDeleted));
-                }
-
-                // purge unattached thumbnails
-                int numThumbsPurged = ReaderThumbnailTable.purge(db);
-                if (numThumbsPurged > 0) {
-                    AppLog.i(T.READER, String.format(Locale.ENGLISH, "%d thumbnails purged", numThumbsPurged));
                 }
             }
             db.setTransactionSuccessful();

@@ -296,7 +296,6 @@ Language: nb_NO
     <string name="label_done_button">Fullført</string>
     <string name="reader_discover_empty_title">Velkommen!</string>
     <string name="scan">Skann</string>
-    <string name="reader_discover_no_posts_title">Ingen nylige innlegg</string>
     <string name="hpp_choose_button">Velg</string>
     <string name="prepublishing_nudges_add_category_button">Legg til kategori</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Legg til ny kategori</string>
@@ -1087,7 +1086,6 @@ Language: nb_NO
     <string name="invite_user_delete_desc">fjern %s</string>
     <string name="reader_photo_view_desc">bilde</string>
     <string name="photo_picker_thumbnail_desc">Spill video</string>
-    <string name="reader_cardview_post_play_video_desc">spill fremhevet video</string>
     <string name="show_more_desc">vis mer</string>
     <string name="navigate_up_desc">naviger opp</string>
     <string name="plugin_detail_logo_desc">logo for utvidelse</string>

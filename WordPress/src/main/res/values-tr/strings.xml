@@ -700,7 +700,6 @@ Language: tr
     <string name="reader_dropdown_menu_subscriptions">Abonelikler</string>
     <string name="reader_dropdown_menu_discover">Keşfet</string>
     <string name="reader_search_content_description">Ara</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Etiketleri takip edin</string>
     <string name="reader_filter_empty_tags_action_suggested">Önerilen etiketler</string>
     <string name="reader_filter_empty_blogs_action_search">Blog ara</string>
     <string name="reader_filter_empty_tags_list_follow_text">Bir etiketi takip ettiğinizde en iyi gönderiler burada görünür.</string>
@@ -795,7 +794,6 @@ Language: tr
     <string name="site_creation_domain_free_with_annual_plan">Yıllık ücretli paketlerde ilk yıl ücretsizdir</string>
     <string name="reader_secondary_bookmarked">Kaydedildi</string>
     <string name="reader_secondary_bookmark">Kaydet</string>
-    <string name="reader_discover_recommended_header_new">Şunları beğenebilirsiniz</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok gruplamasını kaldır</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Daha fazla ayrıntı görüntülemek için buraya dokunun.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Eşitlenmiş modeller</string>
@@ -1880,8 +1878,6 @@ Language: tr
     <string name="hpp_retry_error">Lütfen İnternet bağlantınızı denetleyip yeniden deneyin.</string>
     <string name="hpp_error_subtitle">Çevrim içi olduğunuzda yeniden dene üzerine dokunun.</string>
     <string name="hpp_error_title">Çevrim dışıyken yerleşimler kullanılamaz</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Arama kapsamını genişletmek için daha fazla etiketi takip etmeyi deneyin</string>
-    <string name="reader_discover_no_posts_title">Yeni yazı yok</string>
     <string name="reader_discover_empty_title">Hoş geldiniz!</string>
     <string name="scan">Tarama</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Kaydırılabilir blok menüsü açıldı. Bir blok seçin.</string>
@@ -2773,7 +2769,6 @@ Language: tr
     <string name="reader_photo_view_desc">fotoğraf</string>
     <string name="reader_list_item_suggestion_remove_desc">sil</string>
     <string name="photo_picker_thumbnail_desc">Videoyu oynat</string>
-    <string name="reader_cardview_post_play_video_desc">öne çıkarılmış videoyu oynat</string>
     <string name="plugin_detail_logo_desc">eklenti logosu</string>
     <string name="plugin_detail_banner_desc">eklenti başlığı</string>
     <string name="photo_picker_wpmedia_desc">WordPress ortamlarından seçin</string>

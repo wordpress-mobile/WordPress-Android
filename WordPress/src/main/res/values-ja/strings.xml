@@ -690,7 +690,6 @@ Language: ja_JP
     <string name="reader_dropdown_menu_subscriptions">サブスクリプション</string>
     <string name="reader_dropdown_menu_discover">ディスカバー</string>
     <string name="reader_search_content_description">検索</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">タグをフォローする</string>
     <string name="reader_filter_empty_tags_action_suggested">おすすめのタグ</string>
     <string name="reader_filter_empty_blogs_action_search">ブログを検索</string>
     <string name="reader_filter_empty_tags_list_follow_text">タグをフォローすると、そのタグの最適の投稿がこちらに表示されます。</string>
@@ -783,7 +782,6 @@ Language: ja_JP
     <string name="site_creation_domain_free_with_annual_plan">年間有料プランでは初年度無料</string>
     <string name="reader_secondary_bookmarked">保存しました</string>
     <string name="reader_secondary_bookmark">保存</string>
-    <string name="reader_discover_recommended_header_new">おすすめ</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">グループ解除ブロック</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">こちらをタップすると詳細が表示されます。</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">同期済みパターン</string>
@@ -1867,8 +1865,6 @@ Language: ja_JP
     <string name="hpp_retry_error">ネットワーク接続を確認して、もう一度お試しください。</string>
     <string name="hpp_error_subtitle">オンラインに戻ったら、「再試行」をタップします。</string>
     <string name="hpp_error_title">レイアウトはオフラインでは利用できません</string>
-    <string name="reader_discover_no_posts_follow_subtitle">もっと多くのタグをフォローして、検索範囲を広げてみてください</string>
-    <string name="reader_discover_no_posts_title">最近の投稿はありません</string>
     <string name="reader_discover_empty_title">ようこそ !</string>
     <string name="scan">スキャン</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">スクロール可能なブロックメニューが開きました。 ブロックを選択します。</string>
@@ -2759,7 +2755,6 @@ Language: ja_JP
     <string name="reader_photo_view_desc">写真</string>
     <string name="reader_list_item_suggestion_remove_desc">削除</string>
     <string name="photo_picker_thumbnail_desc">動画を再生</string>
-    <string name="reader_cardview_post_play_video_desc">おすすめ動画を再生</string>
     <string name="plugin_detail_logo_desc">プラグインロゴ</string>
     <string name="plugin_detail_banner_desc">プラグインバナー</string>
     <string name="photo_picker_wpmedia_desc">WordPress メディアから選択</string>

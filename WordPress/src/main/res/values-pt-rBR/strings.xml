@@ -636,7 +636,6 @@ Language: pt_BR
     <string name="reader_dropdown_menu_subscriptions">Assinaturas</string>
     <string name="reader_dropdown_menu_discover">Descobrir</string>
     <string name="reader_search_content_description">Pesquisar</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Seguir tags</string>
     <string name="reader_filter_empty_tags_action_suggested">Tags sugeridas</string>
     <string name="reader_filter_empty_blogs_action_search">Buscar um blog</string>
     <string name="reader_filter_empty_tags_list_follow_text">Siga uma tag para ver aqui os melhores posts relacionados a ela.</string>
@@ -731,7 +730,6 @@ Language: pt_BR
     <string name="site_creation_domain_free_with_annual_plan">Gratuito no primeiro ano com planos anuais pagos</string>
     <string name="reader_secondary_bookmarked">Salvo</string>
     <string name="reader_secondary_bookmark">Salvar</string>
-    <string name="reader_discover_recommended_header_new">Você pode gostar</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Desagrupar bloco</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Toque aqui para mostrar mais detalhes.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Padrões sincronizados</string>
@@ -1816,8 +1814,6 @@ Language: pt_BR
     <string name="hpp_retry_error">Verifique sua conexão com a internet e tente novamente.</string>
     <string name="hpp_error_subtitle">Toque em tentar novamente quando estiver online.</string>
     <string name="hpp_error_title">Modelos não estão disponíveis off-line</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Tente seguir mais tags para melhorar a pesquisa</string>
-    <string name="reader_discover_no_posts_title">Nenhum post recente</string>
     <string name="reader_discover_empty_title">Desejamos boas-vindas!</string>
     <string name="scan">Examinar</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Menu de blocos aberto. Escolha um bloco.</string>
@@ -2708,7 +2704,6 @@ Language: pt_BR
     <string name="reader_photo_view_desc">foto</string>
     <string name="reader_list_item_suggestion_remove_desc">excluir</string>
     <string name="photo_picker_thumbnail_desc">Reproduzir vídeo</string>
-    <string name="reader_cardview_post_play_video_desc">reproduzir vídeo em destaque</string>
     <string name="plugin_detail_logo_desc">logo do plugin</string>
     <string name="plugin_detail_banner_desc">banner do plugin</string>
     <string name="photo_picker_wpmedia_desc">escolher na biblioteca de arquivos do WordPress</string>

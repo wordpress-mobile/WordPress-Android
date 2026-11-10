@@ -701,7 +701,6 @@ Language: sr_RS
     <string name="reader_dropdown_menu_subscriptions">Претплате</string>
     <string name="reader_dropdown_menu_discover">Откриј</string>
     <string name="reader_filter_empty_tags_action_suggested">Предложене ознаке</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Прати ознаке</string>
     <string name="reader_filter_empty_tags_list_follow_text">Пратите ознаку и овде ћете видети њене најбоље чланке.</string>
     <string name="reader_filter_empty_blogs_action_search">Потражи блог</string>
     <string name="reader_filter_empty_tags_list_title">Нема ознака</string>
@@ -795,7 +794,6 @@ Language: sr_RS
     <string name="site_creation_domain_free_with_annual_plan">Бесплатно прве године уз годишње плаћене планове</string>
     <string name="reader_secondary_bookmarked">Сачувано</string>
     <string name="reader_secondary_bookmark">Сачувај</string>
-    <string name="reader_discover_recommended_header_new">Можда ће вам се свидети</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Разгрупиши блок</string>
     <string name="gutenberg_native_deeply_nested_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Дубоко угњежден блок</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Додирните овде за више појединости.</string>
@@ -1881,9 +1879,7 @@ Language: sr_RS
     <string name="hpp_choose_error">Дошло је до грешке при избору теме.</string>
     <string name="hpp_retry_error">Проверите интернет везу и покушајте поново.</string>
     <string name="reader_discover_empty_title">Добродошли!</string>
-    <string name="reader_discover_no_posts_title">Нема недавних чланака</string>
     <string name="scan">Скенирај</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Покушајте да пратите више ознака да бисте проширили претрагу</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Отворен је изборник блокова који се може померати. Изаберите блок.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Изборник блокова који се може померати је затворен.</string>
     <string name="hpp_choose_button">Изабери</string>
@@ -2787,7 +2783,6 @@ Language: sr_RS
     <string name="media_grid_item_image_desc">преглед медија, име датотеке %s</string>
     <string name="reader_list_item_suggestion_remove_desc">избриши</string>
     <string name="plugin_detail_logo_desc">логотип додатка</string>
-    <string name="reader_cardview_post_play_video_desc">пусти истакнути видео</string>
     <string name="photo_picker_device_desc">изабери са уређаја</string>
     <string name="profile_picture">Слика профила корисника %s</string>
     <string name="media_grid_item_trash_desc">отпад</string>

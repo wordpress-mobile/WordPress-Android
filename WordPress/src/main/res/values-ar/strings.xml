@@ -682,7 +682,6 @@ Language: ar
     <string name="reader_filter_empty_tags_action_suggested">الوسوم المقترحة</string>
     <string name="reader_filter_empty_blogs_action_search">البحث في مدونة</string>
     <string name="reader_dropdown_menu_automattic">Automattic</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">متابعة الوسوم</string>
     <string name="reader_filter_empty_tags_list_follow_text">تابع وسمًا وستتمكن من الاطلاع على أفضل التدوينات الواردة منه هنا.</string>
     <string name="reader_filter_empty_tags_list_title">لا توجد وسوم</string>
     <string name="reader_filter_empty_blogs_list_text">اشترك في المدونات ضمن \"اكتشاف\" وسترى أحدث تدوينات فيها هنا. أو ابحث عن مدونة تنال إعجابك بالفعل.</string>
@@ -775,7 +774,6 @@ Language: ar
     <string name="site_creation_domain_free_with_annual_plan">مجاني للعام الأول مع الخطط السنوية المدفوعة</string>
     <string name="reader_secondary_bookmarked">تم الحفظ</string>
     <string name="reader_secondary_bookmark">حفظ</string>
-    <string name="reader_discover_recommended_header_new">ربما ينال إعجابك</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">مكوّن الترقية</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">اضغط هنا لعرض مزيد من التفاصيل.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الأنماط التي تمت مزامنتها</string>
@@ -1862,8 +1860,6 @@ Language: ar
     <string name="hpp_choose_error">حدث خطأ في أثناء تحديد القالب.</string>
     <string name="scan">فحص</string>
     <string name="reader_discover_empty_title">مرحبًا!</string>
-    <string name="reader_discover_no_posts_title">لا توجد مقالات حديثة</string>
-    <string name="reader_discover_no_posts_follow_subtitle">حاول متابعة مزيد من الوسوم لتوسيع نطاق البحث</string>
     <string name="hpp_choose_button">اختيار</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تم فتح قائمة المكوّن القابلة للتمرير. حدد مكوّنًا.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تم قفل قائمة المكوّن القابلة للتمرير.</string>
@@ -2767,7 +2763,6 @@ Language: ar
     <string name="photo_picker_wpmedia_desc">اختر من وسائط ووردبريس</string>
     <string name="plugin_detail_banner_desc">لافتة الإضافة</string>
     <string name="plugin_detail_logo_desc">شعار الإضافة</string>
-    <string name="reader_cardview_post_play_video_desc">تشغيل الفيديو المميز</string>
     <string name="open_external_link_desc">فتح الرابط الخارجي</string>
     <string name="notification_settings_switch_desc">الإشعارات</string>
     <string name="jetpack_connection_failed_with_reason">فشل الاتصال بـ Jetpack: %s</string>

@@ -700,7 +700,6 @@ Language: ru
     <string name="reader_dropdown_menu_subscriptions">Подписки</string>
     <string name="reader_dropdown_menu_discover">Раздел «Поиск»</string>
     <string name="reader_search_content_description">Поиск</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Подписаться на метки</string>
     <string name="reader_filter_empty_tags_action_suggested">Рекомендуемые метки</string>
     <string name="reader_filter_empty_blogs_action_search">Искать блог</string>
     <string name="reader_filter_empty_tags_list_follow_text">Подпишитесь на метку, и лучшие записи с ней станут отображаться здесь.</string>
@@ -795,7 +794,6 @@ Language: ru
     <string name="site_creation_domain_free_with_annual_plan">Бесплатно на первый год при покупке любого годового тарифного плана</string>
     <string name="reader_secondary_bookmarked">Сохранено</string>
     <string name="reader_secondary_bookmark">Сохранить</string>
-    <string name="reader_discover_recommended_header_new">Вам может понравиться</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Разгруппировать блок</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Коснитесь, чтобы увидеть больше сведений.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Синхронизированные паттерны</string>
@@ -1880,8 +1878,6 @@ Language: ru
     <string name="hpp_retry_error">Проверьте подключение к Интернету и повторите попытку.</string>
     <string name="hpp_error_subtitle">Нажмите повторить при появлении подключения к сети.</string>
     <string name="hpp_error_title">Макеты недоступны при отсутствии подключения к сети</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Для расширения поиска попробуйте подписаться на больше меток</string>
-    <string name="reader_discover_no_posts_title">Нет свежих записей</string>
     <string name="reader_discover_empty_title">Добро пожаловать!</string>
     <string name="scan">Сканировать</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Прокручиваемое меню блоков открыто. Выберите блок.</string>
@@ -2773,7 +2769,6 @@ Language: ru
     <string name="reader_photo_view_desc">фото</string>
     <string name="reader_list_item_suggestion_remove_desc">удалить</string>
     <string name="photo_picker_thumbnail_desc">Воспроизвести видео</string>
-    <string name="reader_cardview_post_play_video_desc">воспроизвести видео</string>
     <string name="plugin_detail_logo_desc">логотип плагина</string>
     <string name="plugin_detail_banner_desc">баннер плагина</string>
     <string name="photo_picker_wpmedia_desc">выбрать из медиатеки WordPress</string>

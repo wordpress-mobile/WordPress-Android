@@ -702,7 +702,6 @@ Language: gl_ES
     <string name="reader_dropdown_menu_subscriptions">Subscricións</string>
     <string name="reader_filter_empty_tags_action_suggested">Etiquetas recomendadas</string>
     <string name="reader_filter_empty_blogs_action_search">Buscar un blog</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Seguir etiquetas</string>
     <string name="reader_filter_empty_tags_list_follow_text">Sigue unha etiqueta e poderás ve as mellores publicacións asociadas a ela.</string>
     <string name="reader_filter_empty_tags_list_title">Sen etiquetas</string>
     <string name="reader_filter_empty_blogs_list_text">Subscríbete a blogs en Descubrir e verás as súas últimas publicacións aquí. Ou busca un blog que xa che guste.</string>
@@ -795,7 +794,6 @@ Language: gl_ES
     <string name="site_creation_domain_free_with_annual_plan">Gratis durante o primeiro ano cos plans de pago anuais</string>
     <string name="reader_secondary_bookmarked">Gardado</string>
     <string name="reader_secondary_bookmark">Gardar</string>
-    <string name="reader_discover_recommended_header_new">Pode que che guste</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Desagrupar o bloque</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Toca aquí para mostrar máis detalles.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Padróns sincronizados</string>
@@ -1882,8 +1880,6 @@ Language: gl_ES
     <string name="hpp_choose_error">Ocorreu un erro ao seleccionar o tema.</string>
     <string name="scan">Explorar</string>
     <string name="reader_discover_empty_title">Benvido!</string>
-    <string name="reader_discover_no_posts_title">Non hai entradas recentes</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Proba a seguir máis etiquetas para ampliar a busca</string>
     <string name="hpp_choose_button">Elixir</string>
     <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pechouse o menú de bloques desprazable.</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Abriuse o menú de bloques desprazable. Selecciona un bloque.</string>
@@ -2787,7 +2783,6 @@ Language: gl_ES
     <string name="media_settings_image_preview_desc">previsualizar imaxe</string>
     <string name="photo_picker_device_desc">elixe desde o dispositivo</string>
     <string name="open_external_link_desc">Abrir enlace externo</string>
-    <string name="reader_cardview_post_play_video_desc">reproducir vídeo destacado</string>
     <string name="profile_picture">Imaxe de perfil de %s</string>
     <string name="photo_picker_wpmedia_desc">elixe desde medios de WordPress</string>
     <string name="media_grid_item_image_desc">vista previa de medios, nome do arquivo %s</string>

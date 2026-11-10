@@ -13,21 +13,6 @@ class ReaderIframeScanner(private val content: String) {
         }
     }
 
-    /*
-     * scans the post for iframes containing usable videos, returns the first one found
-     */
-    fun getFirstUsableVideo(): String? {
-        val matcher =
-            IFRAME_TAG_PATTERN.matcher(content)
-        while (matcher.find()) {
-            val src = matcher.group(1)
-            if (ReaderVideoUtils.canShowVideoThumbnail(src)) {
-                return src
-            }
-        }
-        return null
-    }
-
     companion object {
         private val IFRAME_TAG_PATTERN: Pattern = Pattern.compile(
             "<iframe[^>]* src=['\"]([^'\"]*)['\"][^>]*>",
