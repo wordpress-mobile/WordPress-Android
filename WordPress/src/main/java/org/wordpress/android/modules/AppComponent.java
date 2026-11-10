@@ -107,8 +107,6 @@ import org.wordpress.android.networking.GlideAuthInterceptor;
 import org.wordpress.android.ui.posts.prepublishing.social.PrepublishingSocialFragment;
 import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsFragment;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
-import org.wordpress.android.ui.prefs.AppSettingsActivity;
-import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -127,20 +125,12 @@ import org.wordpress.android.ui.publicize.PublicizeWebViewFragment;
 import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.reader.CommentNotificationsBottomSheetFragment;
-import org.wordpress.android.ui.reader.ReaderBlogFragment;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
-import org.wordpress.android.ui.reader.ReaderSubsActivity;
 import org.wordpress.android.ui.reader.SubfilterBottomSheetFragment;
 import org.wordpress.android.ui.reader.adapters.CommentSnippetAdapter;
-import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
-import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
-import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
-import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment;
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
-import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderExpandableTagsView;
 import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView;
@@ -216,7 +206,6 @@ public interface AppComponent {
 
     void inject(BlogPreferencesActivity object);
 
-    void inject(AppSettingsFragment object);
 
     void inject(PeopleListFragment object);
 
@@ -286,18 +275,11 @@ public interface AppComponent {
 
     void inject(NotificationsDetailListFragment object);
 
-    void inject(ReaderSubsActivity object);
-
-    void inject(ReaderUpdateLogic object);
-
     void inject(ReaderPostDetailFragment object);
 
     void inject(ReaderPostListFragment object);
 
-    void inject(ReaderCommentAdapter object);
 
-
-    void inject(ReaderTagAdapter object);
 
     void inject(ReaderPostDetailHeaderView object);
 
@@ -309,11 +291,6 @@ public interface AppComponent {
 
     void inject(ReaderPostPagerActivity object);
 
-    void inject(ReaderBlogFragment object);
-
-    void inject(ReaderBlogAdapter object);
-
-    void inject(ReaderCommentsPostHeaderView object);
 
     void inject(WPWebViewActivity object);
 
@@ -326,8 +303,6 @@ public interface AppComponent {
     void inject(ThemeBrowserFragment object);
 
     void inject(SelectCategoriesActivity object);
-
-    void inject(ReaderUserAdapter object);
 
     void inject(AddCategoryFragment object);
 
@@ -422,8 +397,6 @@ public interface AppComponent {
     void inject(PostSettingsTagsFragment object);
 
     void inject(PrepublishingPublishSettingsFragment object);
-
-    void inject(AppSettingsActivity object);
 
     void inject(FeatureAnnouncementDialogFragment object);
 

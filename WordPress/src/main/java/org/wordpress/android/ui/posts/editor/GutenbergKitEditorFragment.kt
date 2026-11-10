@@ -54,6 +54,12 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     @Volatile
     private var editorReady = false
 
+    @Volatile
+    private var savingLocked = false
+
+    @Volatile
+    private var editorUnavailable = false
+
     private val textWatcher = LiveTextWatcher()
     private var historyChangeListener: HistoryChangeListener? = null
     private var featuredImageChangeListener: FeaturedImageChangeListener? = null
@@ -209,6 +215,9 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             }
         })
         historyChangeListener?.let(gutenbergView::setHistoryChangeListener)
+        gutenbergView.setSaveAvailabilityListener { availability ->
+            savingLocked = availability.isSavingLocked
+        }
         featuredImageChangeListener?.let(
             gutenbergView::setFeaturedImageChangeListener
         )
@@ -270,9 +279,24 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
 
         gutenbergView.setEditorDidBecomeAvailable {
             editorReady = true
+            editorUnavailable = false
+            activity?.invalidateOptionsMenu()
             mEditorFragmentListener.onEditorFragmentContentReady(
                 ArrayList<Any?>(), false
             )
+        }
+
+        // A crashed editor can't be read, so saves skip it instead of waiting on a read
+        // that fails. Readiness returns when a reloaded editor becomes available.
+        gutenbergView.setEditorDidBecomeUnavailable {
+            editorReady = false
+            // A reloaded editor reports its save availability again.
+            savingLocked = false
+            // A reloaded editor starts with empty history and re-enables these as the user edits.
+            mEditorFragmentListener.onToggleUndo(true)
+            mEditorFragmentListener.onToggleRedo(true)
+            editorUnavailable = true
+            activity?.invalidateOptionsMenu()
         }
 
         this.gutenbergView = gutenbergView
@@ -437,6 +461,16 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
                     result[0] = Pair(title, content)
                     latch.countDown()
                 }
+
+                override fun onError(error: Throwable) {
+                    // Logs only the type: a parse failure's message can quote post content.
+                    AppLog.w(
+                        AppLog.T.EDITOR,
+                        "Unable to read title and content from Gutenberg editor: " +
+                            error::class.java.simpleName
+                    )
+                    latch.countDown()
+                }
             },
             completeComposition
         )
@@ -540,6 +574,18 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     }
 
     fun isEditorReady(): Boolean = editorReady
+
+    /**
+     * Whether the editor crashed and has not reloaded yet, so controls that depend on it
+     * should be disabled. Unlike [isEditorReady], this is false while the editor first loads.
+     */
+    fun isEditorUnavailable(): Boolean = editorUnavailable
+
+    /**
+     * Whether the editor has locked saving, e.g. during a media upload, so saving now may leave
+     * media missing or broken. Blocks can also hold the lock, so callers should confirm, not block.
+     */
+    fun isSavingLocked(): Boolean = savingLocked
 
     fun setXPostsEnabled(enabled: Boolean) {
         isXPostsEnabled = enabled

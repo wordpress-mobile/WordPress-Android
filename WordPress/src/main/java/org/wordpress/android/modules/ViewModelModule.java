@@ -48,7 +48,6 @@ import org.wordpress.android.ui.prefs.language.LocalePickerViewModel;
 import org.wordpress.android.ui.prefs.taxonomies.TaxonomiesNavMenuViewModel;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneViewModel;
 import org.wordpress.android.ui.publicize.PublicizeListViewModel;
-import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel;
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewModel;
@@ -291,10 +290,6 @@ abstract class ViewModelModule {
     @ViewModelKey(EditPostSettingsViewModel.class)
     abstract ViewModel editPostSettingsViewModel(EditPostSettingsViewModel viewModel);
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(ReaderCommentListViewModel.class)
-    abstract ViewModel readerCommentListViewModel(ReaderCommentListViewModel viewModel);
 
     @Binds
     @IntoMap

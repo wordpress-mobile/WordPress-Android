@@ -47,8 +47,8 @@ import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.main.ChooseSiteActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
+import org.wordpress.android.ui.reader.repository.ReaderTagsAndSitesUpdater;
+import org.wordpress.android.ui.reader.repository.UpdateTask;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
@@ -95,6 +95,7 @@ public class LoginActivity extends BaseAppCompatActivity {
 
     @Inject protected LoginAnalyticsTracker mLoginAnalyticsTracker;
     @Inject UnifiedLoginTracker mUnifiedLoginTracker;
+    @Inject ReaderTagsAndSitesUpdater mReaderTagsAndSitesUpdater;
     @Inject protected SiteStore mSiteStore;
     @Inject protected AccountStore mAccountStore;
     @Inject protected Dispatcher mDispatcher;
@@ -631,7 +632,7 @@ public class LoginActivity extends BaseAppCompatActivity {
         // Get reader tags so they're available as soon as the Reader is accessed - done for
         // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this
         // uses the application context since the activity is finished immediately below
-        ReaderUpdateServiceStarter.startService(getApplicationContext(), EnumSet.of(ReaderUpdateLogic.UpdateTask.TAGS));
+        mReaderTagsAndSitesUpdater.update(EnumSet.of(UpdateTask.TAGS));
 
         // Start Notification service
         NotificationsUpdateServiceStarter.startService(getApplicationContext());

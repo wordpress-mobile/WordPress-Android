@@ -1,21 +1,48 @@
 package org.wordpress.android.ui.reader.discover
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.PrimaryScrollableTabRow
+import androidx.compose.material3.Tab
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayoutMediator
+import androidx.fragment.compose.AndroidFragment
+import androidx.lifecycle.Lifecycle
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.databinding.ReaderDiscoverTabsFragmentBinding
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
-import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderPostListFragment
 import org.wordpress.android.ui.reader.ReaderTypes
+import org.wordpress.android.ui.reader.views.compose.ReaderScrollingFeed
+import org.wordpress.android.ui.reader.views.compose.RetainedComposeView
+import org.wordpress.android.ui.reader.views.compose.enableNestedScrollInterop
 import javax.inject.Inject
 
 /**
@@ -27,13 +54,21 @@ import javax.inject.Inject
  * sub-tab from [AppPrefsWrapper] on subsequent opens.
  */
 @AndroidEntryPoint
-class ReaderDiscoverTabsFragment : Fragment(R.layout.reader_discover_tabs_fragment),
-    OnScrollToTopListener, ScrollableViewInitializedListener {
+class ReaderDiscoverTabsFragment : Fragment(), OnScrollToTopListener, ReaderScrollingFeed {
     @Inject
     lateinit var appPrefsWrapper: AppPrefsWrapper
 
-    private var binding: ReaderDiscoverTabsFragmentBinding? = null
-    private var pageChangeCallback: ViewPager2.OnPageChangeCallback? = null
+    // state, so the Reader's top bar follows the current page's list
+    private val pageFragments = mutableStateMapOf<Int, ReaderPostListFragment>()
+    private var currentPage by mutableIntStateOf(0)
+
+    private val contentView = RetainedComposeView(this) {
+        AppThemeM3 {
+            DiscoverTabs()
+        }
+    }
+
+    override val feedListState get() = pageFragments[currentPage]?.feedListState
 
     private val tabs: List<DiscoverSubTab> by lazy {
         listOf(
@@ -64,75 +99,83 @@ class ReaderDiscoverTabsFragment : Fragment(R.layout.reader_discover_tabs_fragme
         )
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val binding = ReaderDiscoverTabsFragmentBinding.bind(view).also { this.binding = it }
-
-        binding.viewPager.adapter = DiscoverTabsAdapter(this, tabs.map { it.tag })
-
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = getString(tabs[position].titleRes)
-        }.attach()
-
-        // Restore last selected sub-tab (defaults to 0 == Freshly Pressed on first open).
-        val initialIndex = resolveInitialTabIndex(
-            appPrefsWrapper.readerDiscoverSelectedSubTabIndex,
-            tabs.size,
-        )
-        binding.viewPager.setCurrentItem(initialIndex, false)
-
-        val callback = object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                appPrefsWrapper.readerDiscoverSelectedSubTabIndex = position
-            }
-        }
-        pageChangeCallback = callback
-        binding.viewPager.registerOnPageChangeCallback(callback)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        contentView.view()
 
     override fun onDestroyView() {
-        pageChangeCallback?.let {
-            binding?.viewPager?.unregisterOnPageChangeCallback(it)
-        }
-        pageChangeCallback = null
-        binding = null
+        contentView.onDestroyView()
         super.onDestroyView()
     }
 
-    /**
-     * Forwards the scrollable view id notification from the active inner
-     * [ReaderPostListFragment] up to the outer [org.wordpress.android.ui.reader.ReaderFragment]
-     * so that the Reader's lift-on-scroll AppBar keeps working.
-     */
-    override fun onScrollableViewInitialized(containerId: Int) {
-        (parentFragment as? ScrollableViewInitializedListener)
-            ?.onScrollableViewInitialized(containerId)
+    @Composable
+    private fun DiscoverTabs() {
+        // restore the last selected sub-tab (defaults to 0 == Freshly Pressed on first open)
+        val pagerState = rememberPagerState(
+            initialPage = resolveInitialTabIndex(appPrefsWrapper.readerDiscoverSelectedSubTabIndex, tabs.size)
+        ) { tabs.size }
+        // a page's list is only created once the page is shown, as ViewPager2 did, and then kept
+        var shownPages by rememberSaveable { mutableStateOf(listOf(pagerState.currentPage)) }
+        val scope = rememberCoroutineScope()
+        LaunchedEffect(pagerState) {
+            snapshotFlow { pagerState.settledPage }.collect { page ->
+                currentPage = page
+                appPrefsWrapper.readerDiscoverSelectedSubTabIndex = page
+            }
+        }
+        LaunchedEffect(pagerState) {
+            snapshotFlow { pagerState.layoutInfo.visiblePagesInfo.map { it.index } }.collect { visible ->
+                if (!shownPages.containsAll(visible)) shownPages = (shownPages + visible).distinct()
+            }
+        }
+        // passes the lists' scrolling on, so the Reader's top bar still hides as they scroll
+        Column(modifier = Modifier.nestedScroll(rememberNestedScrollInteropConnection())) {
+            // scrollable, so large font sizes scroll the tabs rather than wrapping their labels mid-word
+            PrimaryScrollableTabRow(selectedTabIndex = pagerState.currentPage, edgePadding = 0.dp) {
+                tabs.forEachIndexed { index, tab ->
+                    Tab(
+                        selected = pagerState.currentPage == index,
+                        onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
+                        text = { Text(stringResource(tab.titleRes), maxLines = 1) }
+                    )
+                }
+            }
+            HorizontalPager(
+                state = pagerState,
+                // keeps every shown list alive, as ViewPager2 did, so switching tabs doesn't reload them
+                beyondViewportPageCount = tabs.size - 1,
+                key = { tabs[it].tag.tagSlug },
+                modifier = Modifier.fillMaxSize()
+            ) { page ->
+                if (page in shownPages) {
+                    DiscoverPage(page, isCurrent = page == pagerState.settledPage)
+                }
+            }
+        }
     }
 
-    /**
-     * Forwards scroll-to-top to the currently-visible child fragment using the
-     * default [FragmentStateAdapter] tag convention ("f{position}").
-     */
-    override fun onScrollToTop() {
-        val currentItem = binding?.viewPager?.currentItem ?: return
-        val tag = "f$currentItem"
-        (childFragmentManager.findFragmentByTag(tag) as? OnScrollToTopListener)?.onScrollToTop()
-    }
-
-    private class DiscoverTabsAdapter(
-        fragment: Fragment,
-        private val tags: List<ReaderTag>,
-    ) : FragmentStateAdapter(fragment) {
-        override fun getItemCount(): Int = tags.size
-
-        override fun createFragment(position: Int): Fragment {
-            return ReaderPostListFragment.newInstanceForTag(
-                tags[position],
+    @Composable
+    private fun DiscoverPage(page: Int, isCurrent: Boolean) {
+        val arguments = remember(page) {
+            ReaderPostListFragment.argumentsForTag(
+                tabs[page].tag,
                 ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
-                /* isTopLevel = */ true,
-                /* isFilterable = */ false,
+                isTopLevel = true,
+                isFilterable = false
             )
         }
+        AndroidFragment<ReaderPostListFragment>(
+            modifier = Modifier.fillMaxSize(),
+            arguments = arguments,
+            // only the current page is resumed, as FragmentStateAdapter did, since the lists refresh on resume
+            maxLifecycle = if (isCurrent) Lifecycle.State.RESUMED else Lifecycle.State.STARTED
+        ) { fragment ->
+            pageFragments[page] = fragment
+            fragment.enableNestedScrollInterop()
+        }
+    }
+
+    override fun onScrollToTop() {
+        pageFragments[currentPage]?.onScrollToTop()
     }
 
     private data class DiscoverSubTab(val tag: ReaderTag, val titleRes: Int)

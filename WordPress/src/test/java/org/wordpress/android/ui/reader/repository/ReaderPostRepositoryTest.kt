@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.reader.repository
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import okhttp3.HttpUrl.Companion.toHttpUrl
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
@@ -18,7 +20,6 @@ import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener
 import org.wordpress.android.ui.reader.repository.usecases.ParseDiscoverCardsJsonUseCase
 import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
 import org.wordpress.android.ui.reader.sources.ReaderPostLocalSource
 import org.wordpress.android.util.PerAppLocaleManager
 
@@ -54,7 +55,7 @@ class ReaderPostRepositoryTest : BaseUnitTest() {
 
         repository.requestPostsWithTag(
             recommendedTag(),
-            ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER,
+            UpdateAction.REQUEST_OLDER,
             listener,
         )
         advanceUntilIdle()
@@ -75,13 +76,32 @@ class ReaderPostRepositoryTest : BaseUnitTest() {
 
         repository.requestPostsWithTag(
             recommendedTag(),
-            ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER,
+            UpdateAction.REQUEST_OLDER,
             listener,
         )
         advanceUntilIdle()
 
         verify(listener).onUpdateResult(ReaderActions.UpdateResult.UNCHANGED)
         verifyNoInteractions(localSource)
+    }
+
+    @Test
+    fun `given tag slug with path and query characters, when building tag endpoint, then it stays on tag posts`() {
+        val expected = ReaderPostRepository.formatFullEndpointForTag("dogs")!!.toHttpUrl()
+        listOf(
+            "../../me?x=1#",
+            "..%2F..%2Fme%3Fx%3D1%23",
+            "%2e%2e/%2e%2e/me?x=1#"
+        ).forEach { slug ->
+            val url = ReaderPostRepository.formatFullEndpointForTag(slug)!!.toHttpUrl()
+            val segments = url.encodedPathSegments.toMutableList()
+            if (segments.size == expected.encodedPathSegments.size) segments[segments.size - 2] = "dogs"
+
+            assertThat(url.host).isEqualTo(expected.host)
+            assertThat(segments).isEqualTo(expected.encodedPathSegments)
+            assertThat(url.query).isNull()
+            assertThat(url.fragment).isNull()
+        }
     }
 
     private fun recommendedTag() = ReaderTag(
