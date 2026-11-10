@@ -15,8 +15,11 @@ import uniffi.wp_api.AnyTermWithViewContext
 import uniffi.wp_api.MediaDetailsPayload
 import uniffi.wp_api.MediaListParams
 import uniffi.wp_api.MediaWithEditContext
+import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostFormat
+import uniffi.wp_api.PostListParams
 import uniffi.wp_api.RequestExecutionErrorReason
+import uniffi.wp_api.SparseAnyPostFieldWithViewContext
 import uniffi.wp_api.TermCreateParams
 import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.TermListParams
@@ -181,6 +184,51 @@ class RsSiteRestClient @Inject constructor(
             if (attemptsLeft > 0) delay(MEDIA_RETRY_DELAY_MS)
         }
         return emptyMap()
+    }
+
+    /**
+     * The featured image id of each post in [ids], for posts that have one. Ids missing from the
+     * result either have no featured image, don't exist on [endpointType], or couldn't be fetched -
+     * the caller can't tell those apart and shouldn't need to, since all three mean "no image".
+     *
+     * [PostListParams.perPage] is set explicitly, because the server's default of 10 would silently
+     * truncate a larger batch, and ids are chunked to the server's per_page maximum of 100, above
+     * which the request is rejected outright with `rest_invalid_param`.
+     *
+     * Posts and pages live on separate endpoints, so a caller holding a mix of both calls this once
+     * per [endpointType].
+     */
+    suspend fun fetchFeaturedMediaIds(
+        site: SiteModel,
+        endpointType: PostEndpointType,
+        ids: List<Long>,
+    ): Map<Long, Long> {
+        if (ids.isEmpty()) return emptyMap()
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val result = mutableMapOf<Long, Long>()
+        for (chunk in ids.distinct().chunked(PER_PAGE.toInt())) {
+            val response = client.request {
+                it.posts().filterListWithViewContext(
+                    endpointType,
+                    PostListParams(include = chunk, perPage = chunk.size.toUInt()),
+                    listOf(
+                        SparseAnyPostFieldWithViewContext.ID,
+                        SparseAnyPostFieldWithViewContext.FEATURED_MEDIA,
+                    ),
+                )
+            }
+            if (response is WpRequestResult.Success) {
+                result += response.response.data.mapNotNull { post ->
+                    val mediaId = post.featuredMedia?.takeIf { it != NO_FEATURED_MEDIA }
+                    post.id?.let { id -> mediaId?.let { id to it } }
+                }
+            } else {
+                // The wordpress-rs client already logged the status, method and URL through
+                // wpRsErrorLogger; this only names which call it was.
+                AppLog.w(AppLog.T.POSTS, "fetchFeaturedMediaIds ($endpointType) failed")
+            }
+        }
+        return result
     }
 
     /**
@@ -590,6 +638,9 @@ class RsSiteRestClient @Inject constructor(
     companion object {
         internal const val AUTHORS_PER_PAGE: UInt = 20u
         private const val PER_PAGE = 100u
+
+        /** How the REST API spells "this post has no featured image". */
+        private const val NO_FEATURED_MEDIA = 0L
 
         private const val MEDIA_CACHE_MAX_ENTRIES = 500
         private const val MEDIA_CACHE_CAPACITY = 64

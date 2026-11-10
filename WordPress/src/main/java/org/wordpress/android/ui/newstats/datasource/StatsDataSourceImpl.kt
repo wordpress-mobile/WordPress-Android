@@ -181,7 +181,8 @@ class StatsDataSourceImpl @Inject constructor(
                             id = post.id.toLong(),
                             title = post.title.orEmpty(),
                             views = post.views?.toLong() ?: 0L,
-                            url = post.href
+                            url = post.href,
+                            postType = post.postType
                         )
                     }
                 )
@@ -234,7 +235,8 @@ class StatsDataSourceImpl @Inject constructor(
                             name = group.name.orEmpty(),
                             url = group.url,
                             views = group.total?.toLong() ?: 0L,
-                            children = group.results.toChildren()
+                            children = group.results.toChildren(),
+                            iconUrl = group.icon
                         )
                     }
                 )
@@ -251,7 +253,8 @@ class StatsDataSourceImpl @Inject constructor(
                 ReferrerChildDataItem(
                     name = child.name.orEmpty(),
                     url = child.url,
-                    views = child.views?.toLong() ?: 0L
+                    views = child.views?.toLong() ?: 0L,
+                    iconUrl = child.icon
                 )
             }
             else -> emptyList()
@@ -607,7 +610,8 @@ class StatsDataSourceImpl @Inject constructor(
                             url = entry.url,
                             clicks = entry.views?.toLong()
                                 ?: 0L,
-                            children = entry.children.toClickChildren()
+                            children = entry.children.toClickChildren(),
+                            iconUrl = entry.icon
                         )
                     }
                 )

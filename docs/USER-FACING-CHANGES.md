@@ -8,6 +8,22 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Referrers and Clicks in Stats show each source's icon**
+  Rows in the redesigned Stats' Referrers and Clicks cards, and their full lists, now show the site icon the Stats API already reports for the referrer or link, matching the web version. A row the API has no icon for shows none, and its title stays where it was. Expanding a referrer group, such as Search Engines, shows an icon for each entry under it too.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Referrers card and Clicks card, and each card's View all
+  - **Notes:** The icons come from the existing Stats response, so nothing extra is fetched. The Search Engines group uses the app's own magnifying-glass icon rather than the one the API points at, which is a web-sized image; this is what the old Stats did too. Entries nested under a link in Clicks have no icon, because the API does not report one for them. When the API does name an icon that then can't be loaded, the row shows a plain globe rather than an empty square.
+
+- **Posts & Pages in Stats shows a thumbnail per row**
+  The full Posts & Pages list in the redesigned Stats now draws a small square at the start of each row: the post's featured image, or a glyph telling a post apart from a page when there is no featured image. The old Stats used the same two glyphs, and the web version of this screen shows featured images, so the list now reads the way both of those do. The Posts & Pages card on the main Stats screen is unchanged.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Posts & Pages card → View all
+  - **Notes:** The glyph appears immediately and the featured images fill in a moment later, so a row can briefly show a glyph for a post that does have an image. The list can run to hundreds of rows, so images are resolved for the rows you have scrolled to rather than all of them at once. A post whose featured image can't be loaded keeps its glyph rather than showing an empty square. Only posts and pages are looked up; a site's homepage and attachments have no featured image of their own and always show the page glyph. Images are fetched from the site's own REST API, not from Stats, so a site the app can't reach for posts shows glyphs throughout.
+
 - **Post preview works on sites connected with an Application Password**
   On a self-hosted site added with an Application Password, previewing a post shows the site's own login page instead of failing with "Incorrect username or password". After logging in there, the preview loads, and later previews open directly while that login lasts.
   - **Apps:** Both
