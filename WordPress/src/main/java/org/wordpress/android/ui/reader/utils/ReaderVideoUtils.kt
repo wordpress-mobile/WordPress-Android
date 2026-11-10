@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.reader.utils
 
-import android.net.Uri
+import androidx.core.net.toUri
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 
@@ -17,7 +17,7 @@ object ReaderVideoUtils {
         if (link == null) {
             return ""
         }
-        val uri = Uri.parse(link)
+        val uri = link.toUri()
         return try {
             when (uri.host) {
                 // if link contains "watch" in the path, then the id is in the "v=" query param; if it
