@@ -8,6 +8,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -15,6 +19,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
 import org.wordpress.android.R
 
 // Sized well under the featured image on the Latest Post card, which is a hero: here the glyph is
@@ -54,7 +59,8 @@ internal fun postTypeIconRes(postType: String?): Int =
  *
  * The glyph is drawn underneath rather than in an `else` branch, so it also stands in while the
  * image is still loading and stays put if the image can't be loaded at all -- a row is never left
- * with an empty box.
+ * with an empty box. It is dropped once the image has actually loaded, because a featured image
+ * with transparency would otherwise leave the glyph showing through for good.
  *
  * No content description: the post's title sits immediately beside it, so announcing the thumbnail
  * as well would only repeat it.
@@ -66,6 +72,7 @@ internal fun StatsPostThumbnail(
     modifier: Modifier = Modifier
 ) {
     val shape = RoundedCornerShape(ThumbnailCorner)
+    var imageLoaded by remember(imageUrl) { mutableStateOf(false) }
     Box(
         modifier = modifier
             .size(ThumbnailSize)
@@ -75,17 +82,20 @@ internal fun StatsPostThumbnail(
             ),
         contentAlignment = Alignment.Center
     ) {
-        Icon(
-            painter = painterResource(postTypeIconRes(postType)),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = GLYPH_ALPHA),
-            modifier = Modifier.size(ThumbnailIconSize)
-        )
+        if (!imageLoaded) {
+            Icon(
+                painter = painterResource(postTypeIconRes(postType)),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = GLYPH_ALPHA),
+                modifier = Modifier.size(ThumbnailIconSize)
+            )
+        }
         if (imageUrl != null) {
             AsyncImage(
                 model = imageUrl,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
+                onState = { imageLoaded = it is AsyncImagePainter.State.Success },
                 modifier = Modifier.size(ThumbnailSize)
             )
         }

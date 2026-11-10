@@ -18,6 +18,15 @@ import org.wordpress.android.R
 private val FaviconSize = 20.dp
 private val FaviconCorner = 4.dp
 
+/** The gap between a row's leading content and its title. */
+internal val LeadingContentGap = 12.dp
+
+/**
+ * What a favicon and its gap occupy, so a row with no icon can reserve the same space when one of
+ * its siblings has one and the titles would otherwise not line up.
+ */
+internal val FaviconSlotWidth = FaviconSize + LeadingContentGap
+
 /** The glyph tint matches the one the post thumbnails use, so the two read as the same family. */
 private const val GLYPH_ALPHA = 0.6f
 

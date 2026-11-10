@@ -26,7 +26,7 @@ class StatsPostThumbnailsDataSourceTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        dataSource = StatsPostThumbnailsDataSource(rsSiteRestClient)
+        dataSource = StatsPostThumbnailsDataSource(rsSiteRestClient, testDispatcher())
     }
 
     @Test

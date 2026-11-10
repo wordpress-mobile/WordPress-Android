@@ -1,9 +1,13 @@
 package org.wordpress.android.ui.newstats.datasource
 
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.rs.data.RsSiteRestClient
 import uniffi.wp_api.PostEndpointType
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Resolves the featured image thumbnails shown on the Posts & Pages detail screen.
@@ -21,16 +25,21 @@ import javax.inject.Inject
  * row falls back to the type glyph it was already showing.
  */
 class StatsPostThumbnailsDataSource @Inject constructor(
-    private val rsSiteRestClient: RsSiteRestClient
+    private val rsSiteRestClient: RsSiteRestClient,
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) {
     /**
      * Thumbnail URLs for [items] that have a featured image, keyed by post id. Ids left out of the
      * result have no thumbnail to show.
+     *
+     * Runs on [ioDispatcher]: the wordpress-rs client dispatches each request itself, but maps the
+     * response on whichever thread called it, and that mapping parses every media object's details
+     * through the Rust bindings. The other callers of these lookups wrap them the same way.
      */
     suspend fun fetchThumbnails(
         site: SiteModel,
         items: List<StatsThumbnailRequest>
-    ): Map<Long, String> {
+    ): Map<Long, String> = withContext(ioDispatcher) {
         val byEndpoint = items
             .mapNotNull { item -> item.postType.toEndpointType()?.let { it to item.postId } }
             .groupBy({ it.first }, { it.second })
@@ -41,7 +50,7 @@ class StatsPostThumbnailsDataSource @Inject constructor(
         for ((endpointType, postIds) in byEndpoint) {
             mediaIdByPostId += rsSiteRestClient.fetchFeaturedMediaIds(site, endpointType, postIds)
         }
-        if (mediaIdByPostId.isEmpty()) return emptyMap()
+        if (mediaIdByPostId.isEmpty()) return@withContext emptyMap()
 
         // One media call for every image on the screen. Already chunked, retried and LRU-cached by
         // RsSiteRestClient, so revisiting the screen usually resolves without a request at all.
@@ -51,7 +60,7 @@ class StatsPostThumbnailsDataSource @Inject constructor(
             thumbnailDp = THUMBNAIL_DP,
             heroHeightDp = NO_HERO,
         )
-        return mediaIdByPostId.mapNotNull { (postId, mediaId) ->
+        mediaIdByPostId.mapNotNull { (postId, mediaId) ->
             urlsByMediaId[mediaId]?.thumbnail?.let { postId to it }
         }.toMap()
     }

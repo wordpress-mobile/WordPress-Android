@@ -9,7 +9,7 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 <!-- Add new entries directly below this line. -->
 
 - **Referrers and Clicks in Stats show each source's icon**
-  Rows in the redesigned Stats' Referrers and Clicks cards, and their full lists, now show the site icon the Stats API already reports for the referrer or link, matching the web version. A row the API has no icon for shows none, and its title stays where it was. Expanding a referrer group, such as Search Engines, shows an icon for each entry under it too.
+  Rows in the redesigned Stats' Referrers and Clicks cards, and their full lists, now show the site icon the Stats API already reports for the referrer or link, matching the web version. A row the API has no icon for shows none, and its title stays where it was -- except among the entries under an expanded referrer group, where if any of them has an icon the rest line up with it rather than sitting further left. Expanding a referrer group, such as Search Engines, shows an icon for each entry under it too.
   - **Apps:** Both
   - **Type:** Changed
   - **Availability:** Flag: android_new_stats
