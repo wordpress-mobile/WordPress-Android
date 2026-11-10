@@ -24,6 +24,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** My Site → Stats → Posts & Pages card → View all
   - **Notes:** The glyph appears immediately and the featured images fill in a moment later, so a row can briefly show a glyph for a post that does have an image. The list can run to hundreds of rows, so images are resolved for the rows you have scrolled to rather than all of them at once. A post whose featured image can't be loaded keeps its glyph rather than showing an empty square. Only posts and pages are looked up; a site's homepage and attachments have no featured image of their own and always show the page glyph. Images are fetched from the site's own REST API, not from Stats, so a site the app can't reach for posts shows glyphs throughout.
 
+- **Post preview works on sites connected with an Application Password**
+  On a self-hosted site added with an Application Password, previewing a post shows the site's own login page instead of failing with "Incorrect username or password". After logging in there, the preview loads, and later previews open directly while that login lasts.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Post editor → ⋮ → Preview; Posts → View
+  - **Notes:** WordPress only accepts Application Passwords for API requests, so the preview needs the account's real password once. Ticking "Remember Me" keeps the login for 14 days; without it, the login lasts until the session ends. Sites added with the account password are unchanged and still log in automatically.
+
 - **Reader comments: replies are written in a sheet**
   The Reader's comments screen was rebuilt. The always-visible comment box at the bottom is now a bar that opens a reply sheet, the same one site comments use, with @-mention suggestions; the full-screen expand button is gone. Closing the sheet with text typed asks whether to save the draft, delete it or keep editing. Tapping Reply under a comment opens the sheet for that comment.
   - **Apps:** Both
