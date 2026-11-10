@@ -29,11 +29,6 @@
         <item name="android:alpha">@dimen/material_emphasis_high_type</item>
     </style>
 
-    <style name="ReaderTextView.Label.Large" parent="ReaderTextView.Label">
-        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
-        <item name="textColor">?attr/textColor</item>
-    </style>
-
     <style name="ReaderTextView.Label.Medium" parent="ReaderTextView">
         <item name="android:textAlignment">viewStart</item>
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
