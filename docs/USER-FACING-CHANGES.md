@@ -16,6 +16,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** Reader → Saved; the bookmark button on Reader posts
   - **Notes:** Until the device's saves have been added to the account, the Saved tab keeps showing the device's own list. Saves the account refuses (it holds at most 1,000) stay on the device, marked "On this device only". The one-time "saved only on this device" dialog no longer appears. Signing out removes the saved posts from the device once they're on the account. A post saved elsewhere can't be opened offline.
 
+- **Reader comments: replies are written in a sheet**
+  The Reader's comments screen was rebuilt. The always-visible comment box at the bottom is now a bar that opens a reply sheet, the same one site comments use, with @-mention suggestions; the full-screen expand button is gone. Closing the sheet with text typed asks whether to save the draft, delete it or keep editing. Tapping Reply under a comment opens the sheet for that comment.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Reader → any post → Comments
+  - **Notes:** Drafts typed in the old comment box aren't carried over. Moderating a comment (unapprove, spam, trash) still offers Undo; leaving the screen while Undo is showing now completes the moderation.
+
 - **App Settings grouped into cards**
   App Settings now groups its rows into outlined cards, matching the Me screen.
   - **Apps:** Both

@@ -11,8 +11,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
@@ -40,9 +38,6 @@ import org.wordpress.android.ui.engagement.GetLikesUseCase.LikeGroupFingerPrint
 import org.wordpress.android.ui.engagement.HeaderData
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderConstants.READER_COMMENTS_TO_REQUEST_FOR_POST_SNIPPET
-import org.wordpress.android.ui.reader.ReaderEvents.UpdateCommentsEnded
-import org.wordpress.android.ui.reader.ReaderEvents.UpdateCommentsScenario.COMMENT_SNIPPET
-import org.wordpress.android.ui.reader.ReaderEvents.UpdateCommentsStarted
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.CHANGED
@@ -65,7 +60,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
-import org.wordpress.android.ui.reader.services.comment.wrapper.ReaderCommentServiceStarterWrapper
+import org.wordpress.android.ui.reader.repository.ReaderCommentRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState
@@ -94,7 +89,6 @@ import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
 import org.wordpress.android.util.config.ReaderReadingPreferencesFeatureConfig
 import org.wordpress.android.util.mapSafe
-import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -124,14 +118,14 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig,
     private val engagementUtils: EngagementUtils,
     private val htmlMessageUtils: HtmlMessageUtils,
-    private val contextProvider: ContextProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig,
     private val readerCommentTableWrapper: ReaderCommentTableWrapper,
-    private val readerCommentServiceStarterWrapper: ReaderCommentServiceStarterWrapper,
+    private val readerCommentRepository: ReaderCommentRepository,
     private val readingPreferencesFeatureConfig: ReaderReadingPreferencesFeatureConfig,
 ) : ScopedViewModel(mainDispatcher) {
     private var getLikesJob: Job? = null
+    private var commentSnippetJob: Job? = null
 
     private val _uiState = MediatorLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
@@ -231,9 +225,6 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     init {
         eventBusWrapper.register(readerFetchRelatedPostsUseCase)
-        if (commentsSnippetFeatureConfig.isEnabled()) {
-            eventBusWrapper.register(this)
-        }
     }
 
     fun start(isRelatedPost: Boolean, isFeed: Boolean, interceptedUri: String?) {
@@ -330,11 +321,7 @@ class ReaderPostDetailViewModel @Inject constructor(
 
                 if (!isRepliesDataChanged) return
 
-                readerCommentServiceStarterWrapper.startServiceForCommentSnippet(
-                    contextProvider.getContext(),
-                    blogId,
-                    postId
-                )
+                fetchCommentSnippet(blogId, postId)
             }
         }
     }
@@ -1018,24 +1005,12 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    @Suppress("unused")
-    @Subscribe(threadMode = MAIN)
-    fun onEventMainThread(event: UpdateCommentsStarted?) {
-        if (!commentsSnippetFeatureConfig.isEnabled() || event == null || event.scenario != COMMENT_SNIPPET) return
-        if (post?.blogId != event.blogId || post?.postId != event.postId) return
-
-        _commentSnippetState.value = CommentSnippetState.Loading
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = MAIN)
-    fun onEventMainThread(event: UpdateCommentsEnded?) {
-        if (!commentsSnippetFeatureConfig.isEnabled() || event == null || event.scenario != COMMENT_SNIPPET) return
-        if (event.result == null || post?.blogId != event.blogId || post?.postId != event.postId) return
-
-        launch(mainDispatcher) {
-            // Check the cache
-            val comments: ReaderCommentList? = post?.let {
+    private fun fetchCommentSnippet(blogId: Long, postId: Long) {
+        commentSnippetJob?.cancel()
+        commentSnippetJob = launch(mainDispatcher) {
+            _commentSnippetState.value = CommentSnippetState.Loading
+            val result = readerCommentRepository.fetchCommentsForSnippet(blogId, postId)
+            val comments = post?.let {
                 withContext(bgDispatcher) {
                     readerCommentTableWrapper.getCommentsForPostSnippet(
                         it,
@@ -1043,8 +1018,7 @@ class ReaderPostDetailViewModel @Inject constructor(
                     ) ?: ReaderCommentList()
                 }
             }
-
-            _commentSnippetState.value = getUpdatedSnippetState(comments, event.result)
+            _commentSnippetState.value = getUpdatedSnippetState(comments, result)
         }
     }
 
@@ -1128,9 +1102,6 @@ class ReaderPostDetailViewModel @Inject constructor(
         getLikesHandler.clear()
         readerPostCardActionsHandler.onCleared()
         eventBusWrapper.unregister(readerFetchRelatedPostsUseCase)
-        if (commentsSnippetFeatureConfig.isEnabled()) {
-            eventBusWrapper.unregister(this)
-        }
     }
 
     fun onArticleTextCopied() {
