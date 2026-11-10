@@ -20,6 +20,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult
+import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
 import org.wordpress.android.ui.reader.repository.UpdateAction
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -271,7 +272,7 @@ class ReaderPostLocalSourceTest : BaseUnitTest() {
 
         whenever(readerPostTableWrapper.getNumPostsWithTag(requestedTag)).thenReturn(5)
         whenever(readerPostTableWrapper.hasOverlap(serverPosts, requestedTag)).thenReturn(false)
-        whenever(readerPostTableWrapper.getGapMarkerIdsForTag(requestedTag)).thenReturn(mock())
+        whenever(readerPostTableWrapper.getGapMarkerIdsForTag(requestedTag)).thenReturn(ReaderBlogIdPostId(0, 0))
 
         listOf(UpdateResult.CHANGED, UpdateResult.HAS_NEW).forEach { updateResult ->
             whenever(readerPostTableWrapper.comparePosts(serverPosts)).thenReturn(updateResult)
