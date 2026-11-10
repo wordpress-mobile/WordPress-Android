@@ -281,7 +281,6 @@ Language: sk
     <string name="photo_picker_camera_desc">otvoriť fotoaparát</string>
     <string name="photo_picker_device_desc">vybrať zo zariadenia</string>
     <string name="navigate_up_desc">navigovať hore</string>
-    <string name="reader_cardview_post_play_video_desc">prehrať odporúčané video</string>
     <string name="plugin_detail_banner_desc">banner pluginu</string>
     <string name="photo_picker_wpmedia_desc">vybrať z WordPress súborov</string>
     <string name="people_invite_role_info_desc">informácie o role</string>

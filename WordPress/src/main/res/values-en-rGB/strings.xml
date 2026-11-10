@@ -700,7 +700,6 @@ Language: en_GB
     <string name="reader_dropdown_menu_subscriptions">Subscriptions</string>
     <string name="reader_dropdown_menu_discover">Discover</string>
     <string name="reader_search_content_description">Search</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Follow tags</string>
     <string name="reader_filter_empty_tags_action_suggested">Suggested tags</string>
     <string name="reader_filter_empty_blogs_action_search">Search for a blog</string>
     <string name="reader_filter_empty_tags_list_follow_text">Follow a tag and you’ll be able to see the best posts from it here.</string>
@@ -795,7 +794,6 @@ Language: en_GB
     <string name="site_creation_domain_free_with_annual_plan">Free for the first year with annual paid plans</string>
     <string name="reader_secondary_bookmarked">Saved</string>
     <string name="reader_secondary_bookmark">Save</string>
-    <string name="reader_discover_recommended_header_new">You might like</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ungroup block</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tap here to show more details.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Synced patterns</string>
@@ -1880,8 +1878,6 @@ Language: en_GB
     <string name="hpp_retry_error">Please check your internet connection and retry.</string>
     <string name="hpp_error_subtitle">Tap retry when you\'re back online.</string>
     <string name="hpp_error_title">Layouts not available while offline</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Try following more tags to broaden the search</string>
-    <string name="reader_discover_no_posts_title">No recent posts</string>
     <string name="reader_discover_empty_title">Welcome!</string>
     <string name="scan">Scan</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Scrollable block menu opened. Select a block.</string>
@@ -2773,7 +2769,6 @@ Language: en_GB
     <string name="reader_photo_view_desc">photo</string>
     <string name="reader_list_item_suggestion_remove_desc">delete</string>
     <string name="photo_picker_thumbnail_desc">Play video</string>
-    <string name="reader_cardview_post_play_video_desc">play featured video</string>
     <string name="plugin_detail_logo_desc">plugin logo</string>
     <string name="plugin_detail_banner_desc">plugin banner</string>
     <string name="photo_picker_wpmedia_desc">pick from WordPress media</string>

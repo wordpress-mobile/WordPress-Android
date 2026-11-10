@@ -702,7 +702,6 @@ Language: es_CO
     <string name="reader_search_content_description">Buscar</string>
     <string name="reader_filter_empty_tags_action_suggested">Etiquetas recomendadas</string>
     <string name="reader_filter_empty_blogs_action_search">Buscar un blog</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Seguir etiquetas</string>
     <string name="reader_filter_empty_tags_list_follow_text">Sigue una etiqueta y podrás ve las mejores publicaciones asociadas a ella.</string>
     <string name="reader_filter_empty_tags_list_title">Sin etiquetas</string>
     <string name="reader_filter_empty_blogs_list_text">Suscríbete a blogs en Descubrir y verás sus últimas publicaciones aquí. O busca un blog que ya te guste.</string>
@@ -795,7 +794,6 @@ Language: es_CO
     <string name="site_creation_domain_free_with_annual_plan">Gratis durante el primer año con los planes de pago anuales</string>
     <string name="reader_secondary_bookmarked">Guardado</string>
     <string name="reader_secondary_bookmark">Guardar</string>
-    <string name="reader_discover_recommended_header_new">Puede que te guste</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Desagrupar bloque</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Toca aquí para mostrar más detalles.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Patrones sincronizados</string>
@@ -1882,8 +1880,6 @@ Language: es_CO
     <string name="hpp_choose_error">Se ha producido un error al elegir el tema.</string>
     <string name="scan">Explorar</string>
     <string name="reader_discover_empty_title">¡Bienvenido!</string>
-    <string name="reader_discover_no_posts_title">No hay entradas recientes</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Prueba a seguir más etiquetas para ampliar la búsqueda</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Se ha abierto el menú de bloques desplazable. Selecciona un bloque.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Se ha cerrado el menú de bloques desplazable.</string>
     <string name="hpp_choose_button">Elegir</string>
@@ -2789,7 +2785,6 @@ Language: es_CO
     <string name="profile_picture">Imagen de perfil de %s</string>
     <string name="comment_checkmark_desc">marca de verificación</string>
     <string name="media_grid_item_play_video_desc">reproducir video</string>
-    <string name="reader_cardview_post_play_video_desc">reproducir video destacado</string>
     <string name="photo_picker_thumbnail_desc">Reproducir video</string>
     <string name="jetpack_connection_failed_with_reason">Se ha producido un error en la conexión a Jetpack: %s</string>
     <string name="jetpack_already_connected_toast">Ya estás conectado a Jetpack</string>

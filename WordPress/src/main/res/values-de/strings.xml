@@ -700,7 +700,6 @@ Language: de
     <string name="reader_dropdown_menu_subscriptions">Abonnements</string>
     <string name="reader_dropdown_menu_discover">Entdecken</string>
     <string name="reader_search_content_description">Suche</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Schlagwörtern folgen</string>
     <string name="reader_filter_empty_tags_action_suggested">Vorgeschlagene Schlagwörter</string>
     <string name="reader_filter_empty_blogs_action_search">Suche nach einem Blog</string>
     <string name="reader_filter_empty_tags_list_follow_text">Folge einem Schlagwort und du siehst hier die besten Beiträge dazu.</string>
@@ -795,7 +794,6 @@ Language: de
     <string name="site_creation_domain_free_with_annual_plan">Bei kostenpflichtigen Jahrestarifen im ersten Jahr kostenlos</string>
     <string name="reader_secondary_bookmarked">Gespeichert</string>
     <string name="reader_secondary_bookmark">Speichern</string>
-    <string name="reader_discover_recommended_header_new">Das gefällt dir vielleicht</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blockgruppierung aufheben</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Hier tippen, um mehr Details anzuzeigen.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Synchronisierte Vorlagen</string>
@@ -1880,8 +1878,6 @@ Language: de
     <string name="hpp_retry_error">Bitte überprüfe deine Internetverbindung und versuche es erneut.</string>
     <string name="hpp_error_subtitle">Tippe auf „Erneut versuchen“, wenn du wieder online bist.</string>
     <string name="hpp_error_title">Layouts sind offline nicht verfügbar</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Folge mehreren Schlagwörtern, um deine Suche zu erweitern</string>
-    <string name="reader_discover_no_posts_title">Keine aktuellen Beiträge</string>
     <string name="reader_discover_empty_title">Willkommen!</string>
     <string name="scan">Scan</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Scrollbares Block-Menü geöffnet. Wähle einen Block aus.</string>
@@ -2773,7 +2769,6 @@ Language: de
     <string name="reader_photo_view_desc">Foto</string>
     <string name="reader_list_item_suggestion_remove_desc">löschen</string>
     <string name="photo_picker_thumbnail_desc">Video abspielen</string>
-    <string name="reader_cardview_post_play_video_desc">Hervorgehobenes Video abspielen</string>
     <string name="plugin_detail_logo_desc">Plugin-Logo</string>
     <string name="plugin_detail_banner_desc">Plugin-Banner</string>
     <string name="photo_picker_wpmedia_desc">aus WordPress-Medien auswählen</string>

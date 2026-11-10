@@ -10,32 +10,9 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
-    <style name="ReaderRecyclerView">
-        <item name="android:background">@color/reader_post_list_background</item>
-    </style>
-
-    <style name="ReaderCardViewNew" parent="Widget.MaterialComponents.CardView">
-        <item name="cardElevation">@dimen/reader_card_elevation_new</item>
-        <item name="cardCornerRadius">0dp</item>
-    </style>
-
     <!-- TextViews -->
     <style name="ReaderTextView" parent="android:Widget.TextView">
         <item name="android:textColorLink">?attr/colorPrimary</item>
-    </style>
-
-    <style name="ReaderTextView.Label" parent="ReaderTextView">
-        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
-        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
-    </style>
-
-    <style name="ReaderTextView.Label.Medium" parent="ReaderTextView">
-        <item name="android:textAlignment">viewStart</item>
-        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
     </style>
 
     <style name="ReaderTextView.Post.Title" parent="ReaderTextView">
@@ -162,16 +139,6 @@
     <!-- progress bars -->
     <style name="ReaderProgressBar" parent="Widget.AppCompat.ProgressBar" />
 
-    <style name="ReaderFooterProgressBar" parent="Widget.AppCompat.ProgressBar" >
-        <item name="android:layout_width">@dimen/reader_footer_progress_bar_size</item>
-        <item name="android:layout_height">@dimen/reader_footer_progress_bar_size</item>
-        <item name="android:background">@drawable/bg_oval_surface</item>
-        <item name="android:backgroundTint">@color/reader_footer_progress_background</item>
-        <item name="android:elevation">@dimen/card_elevation</item>
-        <item name="android:padding">@dimen/margin_medium</item>
-        <item name="android:layout_margin">@dimen/margin_large</item>
-    </style>
-
     <!-- chips -->
     <style name="ReaderChip" parent="@style/Widget.MaterialComponents.Chip.Filter">
         <item name="android:textAppearance">@style/TextAppearance.Material3.BodyMedium</item>
@@ -194,12 +161,6 @@
         <item name="chipBackgroundColor">@color/transparent</item>
         <item name="chipStrokeColor">@color/reader_chip_stroke_color</item>
         <item name="chipStrokeWidth">@dimen/reader_expandable_tags_view_chip_new_border</item>
-    </style>
-
-    <style name="ReaderExpandableTagsViewChipInterest" parent="@style/ReaderExpandableTagsViewChip">
-        <item name="android:textColor">@color/material_on_background_emphasis_high_type</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
-        <item name="chipBackgroundColor">@color/reader_you_might_like_background</item>
     </style>
 
     <!-- Post Details -->

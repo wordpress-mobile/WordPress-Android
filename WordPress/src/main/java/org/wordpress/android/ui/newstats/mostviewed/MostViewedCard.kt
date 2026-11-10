@@ -217,7 +217,8 @@ private fun LoadedContent(
                         percentage = percentage,
                         onUrlClick = onUrlClick,
                         url = item.url,
-                        onItemClick = onItemClick?.let { { it(item) } }
+                        onItemClick = onItemClick?.let { { it(item) } },
+                        leadingContent = faviconSlot(item.iconUrl)
                     )
                 }
                 if (index < state.items.lastIndex) {

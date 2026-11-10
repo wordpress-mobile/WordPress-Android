@@ -698,7 +698,6 @@ Language: id
     <string name="reader_dropdown_menu_subscriptions">Langganan</string>
     <string name="reader_dropdown_menu_discover">Temukan</string>
     <string name="reader_search_content_description">Pencarian</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Ikuti tag</string>
     <string name="reader_filter_empty_tags_action_suggested">Tag yang diusulkan</string>
     <string name="reader_filter_empty_blogs_action_search">Cari blog</string>
     <string name="reader_filter_empty_tags_list_follow_text">Ikuti tag dan Anda akan dapat melihat pos dengan tag terbaik di sini.</string>
@@ -793,7 +792,6 @@ Language: id
     <string name="site_creation_domain_free_with_annual_plan">Gratis selama satu tahun pertama dengan paket berbayar tahunan</string>
     <string name="reader_secondary_bookmarked">Tersimpan</string>
     <string name="reader_secondary_bookmark">Simpan</string>
-    <string name="reader_discover_recommended_header_new">Anda mungkin suka</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Batalkan pengelompokan blok</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk di sini untuk menampilkan detail selengkapnya.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pola tersinkron</string>
@@ -1878,8 +1876,6 @@ Language: id
     <string name="hpp_retry_error">Harap periksa koneksi internet Anda lalu coba lagi.</string>
     <string name="hpp_error_subtitle">Ketuk coba lagi saat  Anda kembali online.</string>
     <string name="hpp_error_title">Tata letak tidak tersedia saat offline</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Coba ikuti lebih banyak tag untuk memperluas pencarian</string>
-    <string name="reader_discover_no_posts_title">Tak ada pos terbaru</string>
     <string name="reader_discover_empty_title">Selamat datang!</string>
     <string name="scan">Pindai</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Menu blok yang dapat digulir terbuka. Pilih blok.</string>
@@ -2771,7 +2767,6 @@ Language: id
     <string name="reader_photo_view_desc">foto</string>
     <string name="reader_list_item_suggestion_remove_desc">hapus</string>
     <string name="photo_picker_thumbnail_desc">putar video</string>
-    <string name="reader_cardview_post_play_video_desc">putar video andalan</string>
     <string name="plugin_detail_logo_desc">logo plugin</string>
     <string name="plugin_detail_banner_desc">banner plugin</string>
     <string name="photo_picker_wpmedia_desc">pilih dari media WordPress</string>

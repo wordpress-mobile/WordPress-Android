@@ -702,7 +702,6 @@ Language: ro
     <string name="reader_filter_chip_blog_one">1 blog</string>
     <string name="reader_filter_chip_blog_zero">Niciun blog</string>
     <string name="reader_dropdown_menu_lists">Liste</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Urmărește etichetele</string>
     <string name="reader_filter_empty_tags_list_follow_text">Urmărește o etichetă și vei putea să vezi aici cele mai bune articole cu această etichetă.</string>
     <string name="reader_filter_empty_blogs_list_text">Abonează-te la bloguri în Descoperă și vei vedea aici ultimele articole publicate pe ele. Sau caută un blog care ți-a plăcut.</string>
     <string name="reader_filter_empty_tags_list_title">Nicio etichetă</string>
@@ -795,7 +794,6 @@ Language: ro
     <string name="site_creation_domain_free_with_annual_plan">Gratuit în primul an, cu orice plan cu plată anuală</string>
     <string name="reader_secondary_bookmarked">Salvat</string>
     <string name="reader_secondary_bookmark">Salvează</string>
-    <string name="reader_discover_recommended_header_new">S-ar putea să-ți placă</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Anulează gruparea blocului</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Atinge aici pentru a arăta mai multe detalii.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Modele sincronizate</string>
@@ -1880,10 +1878,8 @@ Language: ro
     <string name="hpp_error_subtitle">Atinge reîncearcă când ești din nou online.</string>
     <string name="hpp_error_title">Aranjamentele nu sunt disponibile când ești offline</string>
     <string name="hpp_choose_error">A fost o eroare în timpul selectării temei.</string>
-    <string name="reader_discover_no_posts_title">Niciun articol recent</string>
     <string name="reader_discover_empty_title">Bine ai venit!</string>
     <string name="scan">Scanează</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Încearcă să urmărești mai multe etichete pentru a extinde căutarea</string>
     <string name="hpp_choose_button">Alege</string>
     <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Meniul derulabil cu blocuri este închis.</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Meniul derulabil cu blocuri este deschis. Selectează un bloc.</string>
@@ -2771,7 +2767,6 @@ Language: ro
     <string name="reader_photo_view_desc">fotografie</string>
     <string name="reader_list_item_suggestion_remove_desc">șterge</string>
     <string name="photo_picker_thumbnail_desc">Rulează videoul</string>
-    <string name="reader_cardview_post_play_video_desc">rulează videoul reprezentativ</string>
     <string name="plugin_detail_logo_desc">logo modul</string>
     <string name="plugin_detail_banner_desc">banner modul</string>
     <string name="photo_picker_wpmedia_desc">alege din media WordPress</string>

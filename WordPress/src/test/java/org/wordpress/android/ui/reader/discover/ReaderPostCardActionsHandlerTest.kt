@@ -38,7 +38,6 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReadi
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportUser
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_USER
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
@@ -1273,18 +1272,6 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
 
         // Assert
         assertThat(observedValues.navigation[0]).isInstanceOf(ShowPostDetail::class.java)
-    }
-
-    @Test
-    fun `Clicking on a video overlay opens video viewer`() = test {
-        // Arrange
-        val observedValues = startObserving(backgroundScope)
-
-        // Act
-        actionHandler.handleVideoOverlayClicked("mock")
-
-        // Assert
-        assertThat(observedValues.navigation[0]).isInstanceOf(ShowVideoViewer::class.java)
     }
 
     @Test

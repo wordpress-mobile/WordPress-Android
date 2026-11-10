@@ -439,12 +439,17 @@ sealed class TopPostsDataResult {
 
 /**
  * A single top post item from the API.
+ *
+ * @param postType The API's item type -- "post", "page", "homepage" or "attachment". It decides
+ * which glyph the detail screen draws for the item and which REST endpoint, if any, its featured
+ * image can be looked up from.
  */
 data class TopPostDataItem(
     val id: Long,
     val title: String,
     val views: Long,
-    val url: String? = null
+    val url: String? = null,
+    val postType: String? = null
 )
 
 /**
@@ -463,7 +468,9 @@ data class ReferrerDataItem(
     val name: String,
     val url: String?,
     val views: Long,
-    val children: List<ReferrerChildDataItem> = emptyList()
+    val children: List<ReferrerChildDataItem> = emptyList(),
+    /** The referrer's favicon, as the API supplies it. Null when it doesn't know one. */
+    val iconUrl: String? = null
 )
 
 /**
@@ -472,7 +479,9 @@ data class ReferrerDataItem(
 data class ReferrerChildDataItem(
     val name: String,
     val url: String?,
-    val views: Long
+    val views: Long,
+    /** The referrer's favicon, as the API supplies it. Null when it doesn't know one. */
+    val iconUrl: String? = null
 )
 
 /**
@@ -603,7 +612,9 @@ data class ClickDataItem(
     val name: String,
     val url: String?,
     val clicks: Long,
-    val children: List<ClickChildDataItem> = emptyList()
+    val children: List<ClickChildDataItem> = emptyList(),
+    /** The linked site's favicon, as the API supplies it. Null when it doesn't know one. */
+    val iconUrl: String? = null
 )
 
 data class ClickChildDataItem(

@@ -503,7 +503,6 @@ class ReaderTagsFeedViewModel @Inject constructor(
                             onItemRendered = {},
                             onMoreButtonClicked = {},
                             onMoreDismissed = {},
-                            onVideoOverlayClicked = { _, _ -> },
                             onPostHeaderViewClicked = { _, _ -> },
                         ),
                         readerPostCardActions = items,

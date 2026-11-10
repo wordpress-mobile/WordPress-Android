@@ -1104,6 +1104,28 @@ class StatsRepositoryTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given items with a type, when fetchMostViewed, then the type reaches the result`() = test {
+        val currentData = listOf(
+            TopPostDataItem(id = 1, title = "Post 1", views = 150, postType = "post"),
+            TopPostDataItem(id = 2, title = "Page 1", views = 100, postType = "page"),
+            TopPostDataItem(id = 3, title = "Home", views = 50, postType = null)
+        )
+
+        whenever(statsDataSource.fetchTopPostsAndPages(any(), any(), any()))
+            .thenReturn(TopPostsDataResult.Success(currentData))
+            .thenReturn(TopPostsDataResult.Success(emptyList()))
+
+        val result = repository.fetchMostViewed(
+            TEST_SITE_ID,
+            StatsPeriod.Last7Days,
+            MostViewedDataSource.POSTS_AND_PAGES
+        )
+
+        val success = result as MostViewedResult.Success
+        assertThat(success.items.map { it.postType }).containsExactly("post", "page", null)
+    }
+
+    @Test
     fun `given current and previous data, when fetchMostViewed, then change is calculated correctly`() = test {
         val currentData = listOf(
             TopPostDataItem(id = 1, title = "Post 1", views = 150),
