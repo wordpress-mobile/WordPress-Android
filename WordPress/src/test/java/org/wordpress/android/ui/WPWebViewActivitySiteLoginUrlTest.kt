@@ -45,11 +45,36 @@ class WPWebViewActivitySiteLoginUrlTest {
     @Test
     fun `the admin URL is used without its trailing slash`() {
         val site = SiteModel().apply {
-            adminUrl = "https://example.com/wp-admin"
+            // A subdirectory install, so the result differs from the site's address
+            adminUrl = "https://example.com/wp/wp-admin"
             url = "https://example.com"
         }
 
-        assertThat(WPWebViewActivity.getSiteLoginUrl(site)).isEqualTo("https://example.com/wp-login.php")
+        assertThat(WPWebViewActivity.getSiteLoginUrl(site)).isEqualTo("https://example.com/wp/wp-login.php")
+    }
+
+    @Test
+    fun `an empty stored login URL falls through to the admin URL`() {
+        val site = SiteModel().apply {
+            // The XML-RPC site options store an empty string when they carry no login URL
+            loginUrl = ""
+            adminUrl = "https://example.com/wp/wp-admin/"
+            url = "https://example.com"
+        }
+
+        assertThat(WPWebViewActivity.getSiteLoginUrl(site)).isEqualTo("https://example.com/wp/wp-login.php")
+    }
+
+    @Test
+    fun `the admin URL is used even when its host differs from the site's address`() {
+        val site = SiteModel().apply {
+            // The admin URL comes from the site's own Application Password authorization endpoint, so a
+            // mapped domain or a WP_SITEURL on another host puts the login page there
+            adminUrl = "https://admin.example.com/wp-admin/"
+            url = "https://www.example.com"
+        }
+
+        assertThat(WPWebViewActivity.getSiteLoginUrl(site)).isEqualTo("https://admin.example.com/wp-login.php")
     }
 
     @Test
