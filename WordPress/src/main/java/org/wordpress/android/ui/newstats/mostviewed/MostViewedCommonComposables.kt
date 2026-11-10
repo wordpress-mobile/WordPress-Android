@@ -178,10 +178,6 @@ internal fun MostViewedExpandableChildren(
 ) {
     AnimatedVisibility(visible = expanded) {
         val maxChildViews = children.maxOfOrNull { it.views } ?: 0L
-        // The API gives a favicon for some referrers and not others, so one group can hold both.
-        // When it does, the icon-less children reserve the slot instead of collapsing it, or their
-        // titles would sit 32dp left of their siblings'.
-        val anyChildHasIcon = children.any { !it.iconUrl.isNullOrBlank() }
         Column(
             modifier = Modifier.padding(start = startPadding, top = 4.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -197,8 +193,7 @@ internal fun MostViewedExpandableChildren(
                         child = child,
                         percentage = childPercentage,
                         startPadding = startPadding,
-                        onUrlClick = onUrlClick,
-                        reserveLeadingSpace = anyChildHasIcon
+                        onUrlClick = onUrlClick
                     )
                 }
             }
@@ -211,8 +206,7 @@ private fun MostViewedChildRow(
     child: MostViewedChildItem,
     percentage: Float,
     startPadding: Dp,
-    onUrlClick: (String) -> Unit,
-    reserveLeadingSpace: Boolean = false
+    onUrlClick: (String) -> Unit
 ) {
     val hasChildren = child.children.isNotEmpty()
     // A row that expands doesn't also open a link, matching how a group row behaves.
@@ -232,12 +226,9 @@ private fun MostViewedChildRow(
                     .padding(vertical = 10.dp, horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                val leadingContent = faviconSlot(child.iconUrl)
-                if (leadingContent != null) {
+                faviconSlot(child.iconUrl)?.let { leadingContent ->
                     leadingContent()
                     Spacer(modifier = Modifier.width(LeadingContentGap))
-                } else if (reserveLeadingSpace) {
-                    Spacer(modifier = Modifier.width(FaviconSlotWidth))
                 }
                 Text(
                     text = child.name,
