@@ -8,6 +8,13 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Reader: Vimeo videos show their thumbnails**
+  Posts whose featured video is on Vimeo now show the video's thumbnail in the Reader post list. Before, they showed only the grey placeholder.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → any feed → a post with an embedded Vimeo video
+
 - **Reader comments: replies are written in a sheet**
   The Reader's comments screen was rebuilt. The always-visible comment box at the bottom is now a bar that opens a reply sheet, the same one site comments use, with @-mention suggestions; the full-screen expand button is gone. Closing the sheet with text typed asks whether to save the draft, delete it or keep editing. Tapping Reply under a comment opens the sheet for that comment.
   - **Apps:** Both
