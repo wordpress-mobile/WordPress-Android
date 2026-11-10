@@ -2769,7 +2769,6 @@ Language: de
     <string name="reader_photo_view_desc">Foto</string>
     <string name="reader_list_item_suggestion_remove_desc">löschen</string>
     <string name="photo_picker_thumbnail_desc">Video abspielen</string>
-    <string name="reader_cardview_post_play_video_desc">Hervorgehobenes Video abspielen</string>
     <string name="plugin_detail_logo_desc">Plugin-Logo</string>
     <string name="plugin_detail_banner_desc">Plugin-Banner</string>
     <string name="photo_picker_wpmedia_desc">aus WordPress-Medien auswählen</string>

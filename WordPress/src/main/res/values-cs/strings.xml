@@ -2765,7 +2765,6 @@ Language: cs_CZ
     <string name="reader_photo_view_desc">fotka</string>
     <string name="reader_list_item_suggestion_remove_desc">smazat</string>
     <string name="photo_picker_thumbnail_desc">Přehrát video</string>
-    <string name="reader_cardview_post_play_video_desc">přehrát doporučené video</string>
     <string name="plugin_detail_logo_desc">plugin logo</string>
     <string name="plugin_detail_banner_desc">plugin banner</string>
     <string name="photo_picker_wpmedia_desc">Vybrat z WordPress media</string>

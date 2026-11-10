@@ -2765,7 +2765,6 @@ Language: ko_KR
     <string name="reader_photo_view_desc">사진</string>
     <string name="reader_list_item_suggestion_remove_desc">삭제</string>
     <string name="photo_picker_thumbnail_desc">비디오 재생</string>
-    <string name="reader_cardview_post_play_video_desc">특성 비디오 재생</string>
     <string name="plugin_detail_logo_desc">플러그인 로고</string>
     <string name="plugin_detail_banner_desc">플러그인 배너</string>
     <string name="photo_picker_wpmedia_desc">워드프레스 미디어에서 선택</string>

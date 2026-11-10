@@ -2763,7 +2763,6 @@ Language: ar
     <string name="photo_picker_wpmedia_desc">اختر من وسائط ووردبريس</string>
     <string name="plugin_detail_banner_desc">لافتة الإضافة</string>
     <string name="plugin_detail_logo_desc">شعار الإضافة</string>
-    <string name="reader_cardview_post_play_video_desc">تشغيل الفيديو المميز</string>
     <string name="open_external_link_desc">فتح الرابط الخارجي</string>
     <string name="notification_settings_switch_desc">الإشعارات</string>
     <string name="jetpack_connection_failed_with_reason">فشل الاتصال بـ Jetpack: %s</string>

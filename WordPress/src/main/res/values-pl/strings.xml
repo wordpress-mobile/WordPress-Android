@@ -2767,7 +2767,6 @@ Language: pl
     <string name="reader_photo_view_desc">zdjęcie</string>
     <string name="reader_list_item_suggestion_remove_desc">usuń</string>
     <string name="photo_picker_thumbnail_desc">Odtwórz film</string>
-    <string name="reader_cardview_post_play_video_desc">odtwórz film wyróżniający</string>
     <string name="plugin_detail_logo_desc">logo wtyczki</string>
     <string name="plugin_detail_banner_desc">baner wtyczki</string>
     <string name="photo_picker_wpmedia_desc">wybierz z mediów WordPressa</string>

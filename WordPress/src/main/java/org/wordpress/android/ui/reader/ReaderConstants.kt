@@ -50,7 +50,6 @@ object ReaderConstants {
     internal const val ARG_IS_SINGLE_POST = "is_single_post"
     internal const val ARG_IS_RELATED_POST = "is_related_post"
     internal const val ARG_SEARCH_QUERY = "search_query"
-    internal const val ARG_VIDEO_URL = "video_url"
     internal const val ARG_IS_TOP_LEVEL = "is_top_level"
     const val ARG_SUBS_TAB_POSITION = "subs_tab_position"
     internal const val ARG_IS_FILTERABLE = "is_filterable"

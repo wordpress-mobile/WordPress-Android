@@ -2757,7 +2757,6 @@ Language: zh_TW
     <string name="reader_photo_view_desc">圖片</string>
     <string name="reader_list_item_suggestion_remove_desc">刪除</string>
     <string name="photo_picker_thumbnail_desc">播放影片</string>
-    <string name="reader_cardview_post_play_video_desc">播放特色影片</string>
     <string name="plugin_detail_logo_desc">外掛程式標誌</string>
     <string name="plugin_detail_banner_desc">外掛程式橫幅</string>
     <string name="photo_picker_wpmedia_desc">從 WordPress 媒體中挑選</string>

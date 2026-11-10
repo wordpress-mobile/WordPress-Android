@@ -6,7 +6,6 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderCardType.GALLERY
-import org.wordpress.android.models.ReaderCardType.VIDEO
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
@@ -69,7 +68,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onItemRendered: (ReaderCardUiState) -> Unit,
         onMoreButtonClicked: (ReaderPostUiState) -> Unit,
         onMoreDismissed: (ReaderPostUiState) -> Unit,
-        onVideoOverlayClicked: (Long, Long) -> Unit,
         onPostHeaderViewClicked: (Long, Long) -> Unit,
         moreMenuItems: List<SecondaryAction>? = null,
     ): ReaderPostUiState {
@@ -85,7 +83,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 onItemRendered,
                 onMoreButtonClicked,
                 onMoreDismissed,
-                onVideoOverlayClicked,
                 onPostHeaderViewClicked,
                 moreMenuItems,
             )
@@ -104,7 +101,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onItemRendered: (ReaderCardUiState) -> Unit,
         onMoreButtonClicked: (ReaderPostUiState) -> Unit,
         onMoreDismissed: (ReaderPostUiState) -> Unit,
-        onVideoOverlayClicked: (Long, Long) -> Unit,
         onPostHeaderViewClicked: (Long, Long) -> Unit,
         moreMenuItems: List<ReaderPostCardAction>? = null,
     ): ReaderPostUiState {
@@ -119,9 +115,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
             title = buildTitle(post),
             excerpt = buildExcerpt(post),
             featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
-            fullVideoUrl = buildFullVideoUrl(post),
             thumbnailStripSection = buildThumbnailStripUrls(post),
-            videoOverlayVisibility = buildVideoOverlayVisibility(post),
             featuredImageVisibility = buildFeaturedImageVisibility(post),
             moreMenuVisibility = accountStore.hasAccessToken(),
             likeAction = buildLikeSection(post, onButtonClicked, isReaderImprovementsEnabled = true),
@@ -132,7 +126,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
             onItemRendered = onItemRendered,
             onMoreButtonClicked = onMoreButtonClicked,
             onMoreDismissed = onMoreDismissed,
-            onVideoOverlayClicked = onVideoOverlayClicked,
         )
     }
 
@@ -245,20 +238,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
         ?.blogUrl
         ?.let { urlUtilsWrapper.removeScheme(it) }
 
-    private fun buildFullVideoUrl(post: ReaderPost) =
-        post.takeIf { post.cardType == VIDEO }
-            ?.let { post.featuredVideo }
-
-    // TODO malinjir show overlay when buildFullVideoUrl != null
-    private fun buildVideoOverlayVisibility(post: ReaderPost) = post.cardType == VIDEO
-
-    private fun buildFeaturedImageVisibility(post: ReaderPost): Boolean {
-        return when (post.cardType) {
-            GALLERY -> false
-            VIDEO -> post.hasFeaturedVideo() || post.hasFeaturedImage()
-            else -> post.hasFeaturedImage()
-        }
-    }
+    private fun buildFeaturedImageVisibility(post: ReaderPost) =
+        post.cardType != GALLERY && post.hasFeaturedImage()
 
     private fun buildThumbnailStripUrls(post: ReaderPost) =
         post.takeIf { it.cardType == GALLERY }

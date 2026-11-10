@@ -2767,7 +2767,6 @@ Language: ro
     <string name="reader_photo_view_desc">fotografie</string>
     <string name="reader_list_item_suggestion_remove_desc">șterge</string>
     <string name="photo_picker_thumbnail_desc">Rulează videoul</string>
-    <string name="reader_cardview_post_play_video_desc">rulează videoul reprezentativ</string>
     <string name="plugin_detail_logo_desc">logo modul</string>
     <string name="plugin_detail_banner_desc">banner modul</string>
     <string name="photo_picker_wpmedia_desc">alege din media WordPress</string>

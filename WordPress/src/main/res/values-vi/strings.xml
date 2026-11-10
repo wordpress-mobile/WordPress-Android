@@ -1592,7 +1592,6 @@ Language: vi_VN
     <string name="reader_photo_view_desc">ảnh</string>
     <string name="reader_list_item_suggestion_remove_desc">xóa</string>
     <string name="photo_picker_thumbnail_desc">Phát video</string>
-    <string name="reader_cardview_post_play_video_desc">phát video nổi bật</string>
     <string name="plugin_detail_logo_desc">plugin logo</string>
     <string name="plugin_detail_banner_desc">plugin banner</string>
     <string name="photo_picker_wpmedia_desc">chọn từ media của WordPress</string>

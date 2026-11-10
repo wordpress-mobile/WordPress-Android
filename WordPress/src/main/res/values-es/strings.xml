@@ -2769,7 +2769,6 @@ Language: es
     <string name="reader_photo_view_desc">foto</string>
     <string name="reader_list_item_suggestion_remove_desc">borrar</string>
     <string name="photo_picker_thumbnail_desc">Reproducir vídeo</string>
-    <string name="reader_cardview_post_play_video_desc">reproducir vídeo destacado</string>
     <string name="plugin_detail_logo_desc">logo del plugin</string>
     <string name="plugin_detail_banner_desc">banner del plugin</string>
     <string name="photo_picker_wpmedia_desc">elige desde medios de WordPress</string>

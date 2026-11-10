@@ -2764,7 +2764,6 @@ Language: zh_CN
     <string name="reader_photo_view_desc">照片</string>
     <string name="reader_list_item_suggestion_remove_desc">删除</string>
     <string name="photo_picker_thumbnail_desc">播放视频</string>
-    <string name="reader_cardview_post_play_video_desc">播放推荐视频</string>
     <string name="plugin_detail_logo_desc">插件徽标</string>
     <string name="plugin_detail_banner_desc">插件横幅</string>
     <string name="photo_picker_wpmedia_desc">选择 WordPress 媒体</string>

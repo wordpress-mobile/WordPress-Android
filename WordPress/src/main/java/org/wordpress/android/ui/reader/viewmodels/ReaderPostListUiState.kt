@@ -110,7 +110,6 @@ sealed class ReaderPostListUiEvent {
     data class PostSelected(val post: ReaderPost) : ReaderPostListUiEvent()
     data class PostButtonClicked(val post: ReaderPost, val type: ReaderPostCardActionType) : ReaderPostListUiEvent()
     data class PostHeaderClicked(val post: ReaderPost) : ReaderPostListUiEvent()
-    data class VideoOverlayClicked(val post: ReaderPost) : ReaderPostListUiEvent()
     data class TagFollowFailed(val isFollowRequest: Boolean) : ReaderPostListUiEvent()
     data object SetDefaultSubfilter : ReaderPostListUiEvent()
     data object NoConnection : ReaderPostListUiEvent()

@@ -2769,7 +2769,6 @@ Language: sv_SE
     <string name="reader_photo_view_desc">foto</string>
     <string name="reader_list_item_suggestion_remove_desc">ta bort</string>
     <string name="photo_picker_thumbnail_desc">Spela video</string>
-    <string name="reader_cardview_post_play_video_desc">spela utvald video</string>
     <string name="plugin_detail_logo_desc">tilläggets logga</string>
     <string name="plugin_detail_banner_desc">tilläggets banner-bild</string>
     <string name="photo_picker_wpmedia_desc">välj från WordPress mediakatalog</string>

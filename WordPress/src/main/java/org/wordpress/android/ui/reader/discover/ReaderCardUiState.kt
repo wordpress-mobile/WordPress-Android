@@ -28,9 +28,7 @@ sealed class ReaderCardUiState {
         val title: UiString?,
         val excerpt: String?,
         val featuredImageUrl: String?,
-        val fullVideoUrl: String?,
         val thumbnailStripSection: GalleryThumbnailStripData?,
-        val videoOverlayVisibility: Boolean,
         val featuredImageVisibility: Boolean,
         val moreMenuVisibility: Boolean,
         val likeAction: PrimaryAction,
@@ -41,7 +39,6 @@ sealed class ReaderCardUiState {
         val onItemRendered: (ReaderPostUiState) -> Unit,
         val onMoreButtonClicked: (ReaderPostUiState) -> Unit,
         val onMoreDismissed: (ReaderPostUiState) -> Unit,
-        val onVideoOverlayClicked: (Long, Long) -> Unit,
     ) : ReaderCardUiState() {
         data class CompactBlogSectionData(
             val postId: Long,

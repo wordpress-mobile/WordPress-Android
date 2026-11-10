@@ -2783,7 +2783,6 @@ Language: gl_ES
     <string name="media_settings_image_preview_desc">previsualizar imaxe</string>
     <string name="photo_picker_device_desc">elixe desde o dispositivo</string>
     <string name="open_external_link_desc">Abrir enlace externo</string>
-    <string name="reader_cardview_post_play_video_desc">reproducir vídeo destacado</string>
     <string name="profile_picture">Imaxe de perfil de %s</string>
     <string name="photo_picker_wpmedia_desc">elixe desde medios de WordPress</string>
     <string name="media_grid_item_image_desc">vista previa de medios, nome do arquivo %s</string>

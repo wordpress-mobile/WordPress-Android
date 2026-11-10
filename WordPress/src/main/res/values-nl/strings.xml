@@ -2769,7 +2769,6 @@ Language: nl
     <string name="reader_photo_view_desc">foto</string>
     <string name="reader_list_item_suggestion_remove_desc">verwijderen</string>
     <string name="photo_picker_thumbnail_desc">Video afspelen</string>
-    <string name="reader_cardview_post_play_video_desc">aanbevolen video afspelen</string>
     <string name="plugin_detail_logo_desc">plugin logo</string>
     <string name="plugin_detail_banner_desc">plugin banner</string>
     <string name="photo_picker_wpmedia_desc">kiezen uit media op WordPress</string>

@@ -309,8 +309,6 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
                 postListViewModel.source,
                 readerTracker
             )
-            is ReaderPostListUiEvent.VideoOverlayClicked ->
-                ReaderActivityLauncher.showReaderVideoViewer(requireContext(), event.post.featuredVideo)
             is ReaderPostListUiEvent.TagFollowFailed -> ToastUtils.showToast(
                 requireContext(),
                 if (event.isFollowRequest) {

@@ -2757,7 +2757,6 @@ Language: he_IL
     <string name="reader_photo_view_desc">תמונה</string>
     <string name="reader_list_item_suggestion_remove_desc">מחיקה</string>
     <string name="photo_picker_thumbnail_desc">הפעלת וידאו</string>
-    <string name="reader_cardview_post_play_video_desc">הפעלת הווידאו המרכזי</string>
     <string name="plugin_detail_logo_desc">סמל הלוגו של התוסף</string>
     <string name="plugin_detail_banner_desc">הבאנר של התוסף</string>
     <string name="photo_picker_wpmedia_desc">בחירה מתוך קובצי המדיה של WordPress</string>

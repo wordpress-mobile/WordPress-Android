@@ -416,9 +416,7 @@ private fun previewUiState(): ReaderPostUiState {
         title = UiStringText("This is the title of this post, which runs long enough to wrap"),
         excerpt = "This is the post excerpt. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
         featuredImageUrl = null,
-        fullVideoUrl = null,
         thumbnailStripSection = null,
-        videoOverlayVisibility = false,
         featuredImageVisibility = false,
         moreMenuVisibility = true,
         likeAction = action(ReaderPostCardActionType.LIKE, isSelected = true),
@@ -428,6 +426,5 @@ private fun previewUiState(): ReaderPostUiState {
         onItemRendered = {},
         onMoreButtonClicked = {},
         onMoreDismissed = {},
-        onVideoOverlayClicked = { _, _ -> },
     )
 }

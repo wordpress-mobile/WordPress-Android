@@ -2316,7 +2316,6 @@ Language: lv
     <string name="photo_picker_wpmedia_desc">izvēlēties no WordPress multivides</string>
     <string name="plugin_detail_banner_desc">spraudņa reklāmkarogs</string>
     <string name="plugin_detail_logo_desc">spraudņa logotips</string>
-    <string name="reader_cardview_post_play_video_desc">atskaņot piedāvāto video</string>
     <string name="jetpack_already_connected_toast">Jūs jau esat izveidojis savienojumu ar Jetpack</string>
     <string name="jetpack_connection_failed_with_reason">Neizdevās izveidot savienojumu ar Jetpack: %s</string>
     <string name="file_size_in_terabytes">%s TB</string>

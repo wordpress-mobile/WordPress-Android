@@ -2769,7 +2769,6 @@ Language: tr
     <string name="reader_photo_view_desc">fotoğraf</string>
     <string name="reader_list_item_suggestion_remove_desc">sil</string>
     <string name="photo_picker_thumbnail_desc">Videoyu oynat</string>
-    <string name="reader_cardview_post_play_video_desc">öne çıkarılmış videoyu oynat</string>
     <string name="plugin_detail_logo_desc">eklenti logosu</string>
     <string name="plugin_detail_banner_desc">eklenti başlığı</string>
     <string name="photo_picker_wpmedia_desc">WordPress ortamlarından seçin</string>

@@ -1086,7 +1086,6 @@ Language: nb_NO
     <string name="invite_user_delete_desc">fjern %s</string>
     <string name="reader_photo_view_desc">bilde</string>
     <string name="photo_picker_thumbnail_desc">Spill video</string>
-    <string name="reader_cardview_post_play_video_desc">spill fremhevet video</string>
     <string name="show_more_desc">vis mer</string>
     <string name="navigate_up_desc">naviger opp</string>
     <string name="plugin_detail_logo_desc">logo for utvidelse</string>

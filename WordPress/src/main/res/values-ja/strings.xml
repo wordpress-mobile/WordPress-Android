@@ -2755,7 +2755,6 @@ Language: ja_JP
     <string name="reader_photo_view_desc">写真</string>
     <string name="reader_list_item_suggestion_remove_desc">削除</string>
     <string name="photo_picker_thumbnail_desc">動画を再生</string>
-    <string name="reader_cardview_post_play_video_desc">おすすめ動画を再生</string>
     <string name="plugin_detail_logo_desc">プラグインロゴ</string>
     <string name="plugin_detail_banner_desc">プラグインバナー</string>
     <string name="photo_picker_wpmedia_desc">WordPress メディアから選択</string>

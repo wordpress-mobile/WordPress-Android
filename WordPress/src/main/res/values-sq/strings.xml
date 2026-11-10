@@ -2739,7 +2739,6 @@ Language: sq_AL
     <string name="reader_photo_view_desc">foto</string>
     <string name="reader_list_item_suggestion_remove_desc">fshije</string>
     <string name="photo_picker_thumbnail_desc">Luaje videon</string>
-    <string name="reader_cardview_post_play_video_desc">luaje videon e zgjedhur</string>
     <string name="plugin_detail_logo_desc">stemë shtojce</string>
     <string name="plugin_detail_banner_desc">banderolë shtojce</string>
     <string name="photo_picker_wpmedia_desc">zgjidhni nga media WordPress</string>

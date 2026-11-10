@@ -2769,7 +2769,6 @@ Language: ru
     <string name="reader_photo_view_desc">фото</string>
     <string name="reader_list_item_suggestion_remove_desc">удалить</string>
     <string name="photo_picker_thumbnail_desc">Воспроизвести видео</string>
-    <string name="reader_cardview_post_play_video_desc">воспроизвести видео</string>
     <string name="plugin_detail_logo_desc">логотип плагина</string>
     <string name="plugin_detail_banner_desc">баннер плагина</string>
     <string name="photo_picker_wpmedia_desc">выбрать из медиатеки WordPress</string>

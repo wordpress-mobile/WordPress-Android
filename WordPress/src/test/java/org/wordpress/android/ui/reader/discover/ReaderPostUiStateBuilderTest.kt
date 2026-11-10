@@ -21,7 +21,6 @@ import org.wordpress.android.models.ReaderCardType
 import org.wordpress.android.models.ReaderCardType.DEFAULT
 import org.wordpress.android.models.ReaderCardType.GALLERY
 import org.wordpress.android.models.ReaderCardType.PHOTO
-import org.wordpress.android.models.ReaderCardType.VIDEO
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
@@ -168,100 +167,6 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
 
     // endregion
 
-    // region VIDEO
-    @Test
-    fun `videoUrl gets initialized for video cards`() = test {
-        // Arrange
-        val post = createPost(cardType = VIDEO, featuredVideoUrl = "12345")
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.fullVideoUrl).isEqualTo("12345")
-    }
-
-    @Test
-    fun `videoUrl gets initialized for video cards for new UI`() = test {
-        // Arrange
-        val post = createPost(cardType = VIDEO, featuredVideoUrl = "12345")
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.fullVideoUrl).isEqualTo("12345")
-    }
-
-    @Test
-    fun `videoUrl does not get initialized for other than video cards`() = test {
-        // Arrange
-        val types = ReaderCardType.values()
-        types.filter { it != VIDEO }.forEach {
-            val post = createPost(cardType = it, featuredVideoUrl = "12345")
-            // Act
-            val uiState = mapPostToUiState(post)
-            // Assert
-            assertThat(uiState.fullVideoUrl).isNull()
-        }
-    }
-
-    @Test
-    fun `videoUrl does not get initialized for other than video cards for new UI`() = test {
-        // Arrange
-        val types = ReaderCardType.values()
-        types.filter { it != VIDEO }.forEach {
-            val post = createPost(cardType = it, featuredVideoUrl = "12345")
-            // Act
-            val uiState = mapPostToUiState(post)
-            // Assert
-            assertThat(uiState.fullVideoUrl).isNull()
-        }
-    }
-
-    @Test
-    fun `video overlay is displayed for video cards`() = test {
-        // Arrange
-        val post = createPost(cardType = VIDEO)
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.videoOverlayVisibility).isTrue
-    }
-
-    @Test
-    fun `video overlay is displayed for video cards for new UI`() = test {
-        // Arrange
-        val post = createPost(cardType = VIDEO)
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.videoOverlayVisibility).isTrue
-    }
-
-    @Test
-    fun `video overlay is not displayed for other than video cards`() = test {
-        // Arrange
-        val types = ReaderCardType.values()
-        types.filter { it != VIDEO }.forEach {
-            val post = createPost(cardType = it)
-            // Act
-            val uiState = mapPostToUiState(post)
-            // Assert
-            assertThat(uiState.videoOverlayVisibility).isFalse()
-        }
-    }
-
-    @Test
-    fun `video overlay is not displayed for other than video cards for new UI`() = test {
-        // Arrange
-        val types = ReaderCardType.values()
-        types.filter { it != VIDEO }.forEach {
-            val post = createPost(cardType = it)
-            // Act
-            val uiState = mapPostToUiState(post)
-            // Assert
-            assertThat(uiState.videoOverlayVisibility).isFalse()
-        }
-    }
-    // endregion
-
     // region THUMBNAIL STRIP
     @Test
     fun `thumbnail strip is not empty for GALLERY`() = test {
@@ -373,21 +278,6 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.featuredImageUrl).isNull()
-    }
-
-    @Test
-    fun `video card shows featured media area when only video is available`() = test {
-        // Arrange
-        val post = createPost(
-            cardType = VIDEO,
-            hasFeaturedVideo = true,
-            featuredVideoUrl = "video://example",
-            hasFeaturedImage = false
-        )
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.featuredImageVisibility).isTrue
     }
     // endregion
 
@@ -1048,7 +938,6 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
             onItemClicked = mock(),
             onItemRendered = mock(),
             onMoreButtonClicked = mock(),
-            onVideoOverlayClicked = mock(),
             onPostHeaderViewClicked = mock(),
             onMoreDismissed = mock()
         )
@@ -1061,7 +950,6 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         blogUrl: String = "",
         isDiscoverPost: Boolean = false,
         cardType: ReaderCardType = DEFAULT,
-        featuredVideoUrl: String? = null,
         postId: Long = 1L,
         blogId: Long = 2L,
         isBookmarked: Boolean = false,
@@ -1073,7 +961,6 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         isCanLikePost: Boolean = true,
         hasFeaturedImage: Boolean = false,
         featuredImageUrlForDisplay: String? = null,
-        hasFeaturedVideo: Boolean = false,
         isp2Post: Boolean = false,
         blogName: String = "",
         authorFirstName: String = "",
@@ -1082,7 +969,6 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         val post = spy(ReaderPost().apply {
             this.blogUrl = blogUrl
             this.cardType = cardType
-            this.featuredVideo = featuredVideoUrl
             this.blogId = blogId
             this.postId = postId
             this.isBookmarked = isBookmarked
@@ -1100,7 +986,6 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         post.isCommentsOpen = isCommentsOpen
         whenever(post.getFeaturedImageForDisplay(anyInt(), anyInt())).thenReturn(featuredImageUrlForDisplay)
         whenever(post.hasFeaturedImage()).thenReturn(hasFeaturedImage)
-        whenever(post.hasFeaturedVideo()).thenReturn(hasFeaturedVideo)
         post.organization = if (isp2Post) P2 else NO_ORGANIZATION
         post.blogName = blogName
         post.authorFirstName = authorFirstName

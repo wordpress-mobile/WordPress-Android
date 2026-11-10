@@ -2783,7 +2783,6 @@ Language: sr_RS
     <string name="media_grid_item_image_desc">преглед медија, име датотеке %s</string>
     <string name="reader_list_item_suggestion_remove_desc">избриши</string>
     <string name="plugin_detail_logo_desc">логотип додатка</string>
-    <string name="reader_cardview_post_play_video_desc">пусти истакнути видео</string>
     <string name="photo_picker_device_desc">изабери са уређаја</string>
     <string name="profile_picture">Слика профила корисника %s</string>
     <string name="media_grid_item_trash_desc">отпад</string>
