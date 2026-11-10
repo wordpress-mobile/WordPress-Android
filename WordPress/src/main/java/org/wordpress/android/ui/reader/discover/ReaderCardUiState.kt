@@ -60,7 +60,6 @@ sealed class ReaderCardUiState {
             val content: String // the photo viewer needs it to build the gallery
         )
     }
-
 }
 
 data class ReaderPostActions(

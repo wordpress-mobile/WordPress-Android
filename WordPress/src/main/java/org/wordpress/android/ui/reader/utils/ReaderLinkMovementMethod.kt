@@ -16,37 +16,43 @@ import java.util.EnumSet
  */
 class ReaderLinkMovementMethod private constructor(private val isPrivate: Boolean) : LinkMovementMethod() {
     override fun onTouchEvent(textView: TextView, buffer: Spannable, event: MotionEvent): Boolean {
-        if (event.action == MotionEvent.ACTION_UP) {
-            val x = event.x.toInt() - textView.totalPaddingLeft + textView.scrollX
-            val y = event.y.toInt() - textView.totalPaddingTop + textView.scrollY
-            val layout = textView.layout
-            val offset = layout.getOffsetForHorizontal(layout.getLineForVertical(y), x.toFloat())
-
-            val image = buffer.getSpans(offset, offset, ImageSpan::class.java).firstOrNull()
-            if (image != null) {
-                val options = EnumSet.noneOf(PhotoViewerOption::class.java)
-                if (isPrivate) {
-                    options.add(PhotoViewerOption.IS_PRIVATE_IMAGE)
-                }
-                ReaderActivityLauncher.showReaderPhotoViewer(
-                    textView.context,
-                    image.source.orEmpty(),
-                    null,
-                    textView,
-                    options,
-                    event.x.toInt(),
-                    event.y.toInt()
-                )
-                return true
-            }
+        if (event.action == MotionEvent.ACTION_UP && showPhotoViewerForTappedImage(textView, buffer, event)) {
+            return true
         }
-
         return try {
             super.onTouchEvent(textView, buffer, event)
         } catch (e: ActivityNotFoundException) {
             AppLog.e(AppLog.T.UTILS, e)
             false
         }
+    }
+
+    /*
+     * opens the photo viewer if the touch is on an image span, returning false if it isn't (or if the text
+     * hasn't been laid out yet, so there's no way to tell)
+     */
+    private fun showPhotoViewerForTappedImage(textView: TextView, buffer: Spannable, event: MotionEvent): Boolean {
+        val image = textView.layout?.let { layout ->
+            val x = event.x.toInt() - textView.totalPaddingLeft + textView.scrollX
+            val y = event.y.toInt() - textView.totalPaddingTop + textView.scrollY
+            val offset = layout.getOffsetForHorizontal(layout.getLineForVertical(y), x.toFloat())
+            buffer.getSpans(offset, offset, ImageSpan::class.java).firstOrNull()
+        } ?: return false
+
+        val options = EnumSet.noneOf(PhotoViewerOption::class.java)
+        if (isPrivate) {
+            options.add(PhotoViewerOption.IS_PRIVATE_IMAGE)
+        }
+        ReaderActivityLauncher.showReaderPhotoViewer(
+            textView.context,
+            image.source.orEmpty(),
+            null,
+            textView,
+            options,
+            event.x.toInt(),
+            event.y.toInt()
+        )
+        return true
     }
 
     companion object {
