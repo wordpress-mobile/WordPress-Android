@@ -3,9 +3,8 @@ package org.wordpress.android.ui.reader.repository.usecases
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
-import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult
-import org.wordpress.android.ui.reader.actions.ReaderBlogActionsWrapper
+import org.wordpress.android.ui.reader.repository.BlockedBlogResult
+import org.wordpress.android.ui.reader.repository.ReaderBlogRepository
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.Failed.AlreadyRunning
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.Failed.RequestFailed
@@ -14,16 +13,13 @@ import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.Succes
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
-import kotlin.coroutines.Continuation
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 class BlockBlogUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val readerTracker: ReaderTracker,
-    private val readerBlogActionsWrapper: ReaderBlogActionsWrapper
+    private val readerBlogRepository: ReaderBlogRepository
 ) {
-    private var continuation: Continuation<Boolean>? = null
+    private var isRunning = false
 
     // TODO use .flowOn(ioDispatcher) when the experimental flag is removed
     suspend fun blockBlog(
@@ -31,7 +27,7 @@ class BlockBlogUseCase @Inject constructor(
         feedId: Long
     ) = flow {
         // Blocking multiple sites in parallel isn't supported as the user would lose the ability to undo the action
-        if (continuation == null) {
+        if (!isRunning) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 emit(NoNetwork)
             } else {
@@ -52,27 +48,20 @@ class BlockBlogUseCase @Inject constructor(
             blogId,
             feedId
         )
-        val blockedBlogData = readerBlogActionsWrapper.blockBlogFromReaderLocal(blogId, feedId)
+        val blockedBlogData = readerBlogRepository.blockBlogLocal(blogId, feedId)
         emit(SiteBlockedInLocalDb(blockedBlogData))
 
-        val succeeded = blockBlogAndWaitForResult(blockedBlogData)
+        isRunning = true
+        val succeeded = try {
+            readerBlogRepository.blockBlogRemote(blockedBlogData)
+        } finally {
+            isRunning = false
+        }
 
         if (succeeded) {
             emit(Success)
         } else {
             emit(RequestFailed)
-        }
-    }
-
-    private suspend fun blockBlogAndWaitForResult(blockedBlogResult: BlockedBlogResult): Boolean {
-        val actionListener = ActionListener { succeeded ->
-            continuation?.resume(succeeded)
-            continuation = null
-        }
-
-        return suspendCoroutine { cont ->
-            continuation = cont
-            readerBlogActionsWrapper.blockBlogFromReaderRemote(blockedBlogResult, actionListener)
         }
     }
 }

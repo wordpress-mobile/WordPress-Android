@@ -27,6 +27,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -52,6 +53,7 @@ class NotificationsListViewModel @Inject constructor(
     private val commentStore: CommentsStore,
     private val readerPostTableWrapper: ReaderPostTableWrapper,
     private val readerPostActionsWrapper: ReaderPostActionsWrapper,
+    private val readerPostRepository: ReaderPostRepository,
     private val notificationsTableWrapper: NotificationsTableWrapper,
     private val notificationsActionsWrapper: NotificationsActionsWrapper,
     private val eventBusWrapper: EventBusWrapper,
@@ -160,19 +162,18 @@ class NotificationsListViewModel @Inject constructor(
         // for updating the UI in other tabs
         eventBusWrapper.postSticky(NotificationEvents.OnNotePostLikeChanged(note, liked))
         val post = readerPostTableWrapper.getBlogPost(note.siteId.toLong(), note.postId.toLong(), true)
-        readerPostActionsWrapper.performLikeActionRemote(
+        val success = readerPostRepository.likePostRemote(
             post = post,
-            postId = note.postId.toLong(),
             blogId = note.siteId.toLong(),
-            isAskingToLike = liked,
+            postId = note.postId.toLong(),
+            like = liked,
             wpComUserId = accountStore.account.userId
-        ) { success ->
-            if (success) {
-                notificationsTableWrapper.saveNote(note)
-                if (post == null) {
-                    // sync post from server
-                    readerPostActionsWrapper.requestBlogPost(note.siteId.toLong(), note.postId.toLong(), null)
-                }
+        )
+        if (success) {
+            notificationsTableWrapper.saveNote(note)
+            if (post == null) {
+                // sync post from server
+                readerPostActionsWrapper.requestBlogPost(note.siteId.toLong(), note.postId.toLong(), null)
             }
         }
     }

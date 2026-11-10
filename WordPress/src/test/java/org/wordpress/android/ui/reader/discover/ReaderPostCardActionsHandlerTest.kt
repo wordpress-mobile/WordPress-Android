@@ -54,6 +54,7 @@ import org.wordpress.android.ui.reader.reblog.ReblogState.NoSite
 import org.wordpress.android.ui.reader.reblog.ReblogState.SingleSite
 import org.wordpress.android.ui.reader.reblog.ReblogState.Unknown
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.repository.BlockedBlogResult
 import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.Failed
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.SiteBlockedInLocalDb
@@ -851,10 +852,12 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Scroll to site emitted when user clicks on undo action in snackbar`() = test {
         // Arrange
         val expectedBlogId = 123L
-        val blockedBlogResult =
-            org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult().apply {
-                blogId = expectedBlogId
-            }
+        val blockedBlogResult = BlockedBlogResult(
+            blogId = expectedBlogId,
+            feedId = 0L,
+            deletedRows = emptyMap(),
+            wasFollowing = false
+        )
         whenever(blockBlogUseCase.blockBlog(any(), any()))
             .thenReturn(flowOf(SiteBlockedInLocalDb(blockedBlogResult)))
         val observedValues = startObserving(backgroundScope)

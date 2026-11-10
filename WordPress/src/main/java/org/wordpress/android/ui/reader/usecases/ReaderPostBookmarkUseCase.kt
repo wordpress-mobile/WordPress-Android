@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.flow
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
@@ -19,7 +19,7 @@ import javax.inject.Inject
 class ReaderPostBookmarkUseCase @Inject constructor(
     private val readerTracker: ReaderTracker,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val readerPostActionsWrapper: ReaderPostActionsWrapper,
+    private val readerPostRepository: ReaderPostRepository,
     private val readerPostTableWrapper: ReaderPostTableWrapper
 ) {
     suspend fun toggleBookmark(
@@ -46,17 +46,13 @@ class ReaderPostBookmarkUseCase @Inject constructor(
     }
 
     @Suppress("UseCheckOrError")
-    private fun updatePostInDb(blogId: Long, postId: Long): Boolean {
+    private suspend fun updatePostInDb(blogId: Long, postId: Long): Boolean {
         val post = readerPostTableWrapper.getBlogPost(blogId, postId, true)
             ?: throw IllegalStateException("Post displayed on the UI not found in DB.")
 
         val setToBookmarked = !post.isBookmarked
 
-        if (setToBookmarked) {
-            readerPostActionsWrapper.addToBookmarked(post)
-        } else {
-            readerPostActionsWrapper.removeFromBookmarked(post)
-        }
+        readerPostRepository.setBookmarked(post, setToBookmarked)
         return setToBookmarked
     }
 

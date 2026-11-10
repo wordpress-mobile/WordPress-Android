@@ -1,0 +1,393 @@
+package org.wordpress.android.ui.reader.repository
+
+import android.util.Pair
+import com.android.volley.AuthFailureError
+import com.android.volley.Request
+import com.android.volley.VolleyError
+import com.android.volley.toolbox.StringRequest
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.datasets.BlockedAuthorTable
+import org.wordpress.android.datasets.ReaderBlockedBlogTable
+import org.wordpress.android.datasets.ReaderBlogTable
+import org.wordpress.android.datasets.ReaderPostTable
+import org.wordpress.android.datasets.ReaderTagTable
+import org.wordpress.android.models.ReaderBlog
+import org.wordpress.android.models.ReaderPostList
+import org.wordpress.android.models.ReaderTagType
+import org.wordpress.android.modules.APPLICATION_SCOPE
+import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.UrlUtils
+import org.wordpress.android.util.VolleyUtils
+import java.net.HttpURLConnection
+import javax.inject.Inject
+import javax.inject.Named
+import kotlin.coroutines.resume
+
+/**
+ * Following, blocking and fetching Reader sites and feeds. Follows and blocks are optimistic: the local change
+ * is made first and reverted if the request fails. The request and the revert finish even if the caller is
+ * cancelled.
+ */
+class ReaderBlogRepository @Inject constructor(
+    private val readerTracker: ReaderTracker,
+    private val readerUtilsWrapper: ReaderUtilsWrapper,
+    @Named(APPLICATION_SCOPE) private val applicationScope: CoroutineScope,
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
+) {
+    /**
+     * Follows or unfollows a site, or a feed if it's an external feed, and returns whether it succeeded
+     */
+    suspend fun followSite(blogId: Long, feedId: Long, follow: Boolean, source: String): Boolean =
+        if (readerUtilsWrapper.isExternalFeed(blogId, feedId)) {
+            followFeed(feedId, follow, source)
+        } else {
+            followBlog(blogId, feedId, follow, source)
+        }
+
+    /**
+     * Follows or unfollows a site by its ID and returns whether it succeeded
+     */
+    suspend fun followBlog(blogId: Long, feedId: Long, follow: Boolean, source: String): Boolean {
+        if (blogId == 0L) return false
+        return withContext(ioDispatcher + NonCancellable) {
+            ReaderBlogTable.setIsFollowedBlogId(blogId, follow)
+            ReaderPostTable.setFollowStatusForPostsInBlog(blogId, follow)
+            trackFollow(blogId, feedId, follow, source)
+
+            val path = "sites/$blogId/follows/" + if (follow) "new?source=android" else "mine/delete"
+            val result = post(path)
+            if (result is RestResult.Failure) logVolleyError("blog ${actionName(follow)}", result)
+            val succeeded = when {
+                result is RestResult.Success -> isFollowActionSuccessful(result.json, follow).also {
+                    if (!it) AppLog.w(T.READER, "blog ${actionName(follow)} failed - ${result.json} - $path")
+                }
+                // a 403 when unfollowing means the site no longer exists, so it's unfollowed by URL instead (the
+                // v1.2 endpoint returns a 404 in this case)
+                !follow && (result as RestResult.Failure).statusCode == HttpURLConnection.HTTP_FORBIDDEN ->
+                    return@withContext unfollowBlogByUrl(blogId)
+                else -> false
+            }
+            if (!succeeded) {
+                ReaderBlogTable.setIsFollowedBlogId(blogId, !follow)
+                ReaderPostTable.setFollowStatusForPostsInBlog(blogId, !follow)
+            }
+            succeeded
+        }
+    }
+
+    /**
+     * Follows or unfollows a feed by its ID and returns whether it succeeded
+     */
+    suspend fun followFeed(feedId: Long, follow: Boolean, source: String): Boolean {
+        val blogInfo = withContext(ioDispatcher) { ReaderBlogTable.getFeedInfo(feedId) }
+            ?: fetchFeedInfo(feedId, null)
+            ?: return false
+        return followFeed(blogInfo.blogId, blogInfo.feedId, blogInfo.feedUrl, follow, source)
+    }
+
+    /**
+     * Follows the passed feed URL and returns whether it succeeded
+     */
+    suspend fun followFeedUrl(feedUrl: String, source: String): Boolean {
+        if (feedUrl.isEmpty()) return false
+        val blogInfo = withContext(ioDispatcher) {
+            ReaderBlogTable.getFeedInfo(ReaderBlogTable.getFeedIdFromUrl(feedUrl))
+        }
+        if (blogInfo != null) {
+            return followFeed(blogInfo.blogId, blogInfo.feedId, blogInfo.feedUrl, true, source)
+        }
+        // this follows even if the lookup fails, since the lookup doesn't do feed discovery but the follow does
+        val fetchedInfo = fetchFeedInfo(0, feedUrl)
+        return followFeed(
+            blogId = fetchedInfo?.blogId ?: 0,
+            feedId = fetchedInfo?.feedId ?: 0,
+            feedUrl = fetchedInfo?.takeIf { it.hasFeedUrl() }?.feedUrl ?: feedUrl,
+            follow = true,
+            source = source
+        )
+    }
+
+    /**
+     * Fetches and saves the passed site, or feed if it's an external feed, and returns it, or null if that
+     * failed
+     */
+    suspend fun fetchSiteInfo(blogId: Long, feedId: Long, blogUrl: String?): ReaderBlog? =
+        if (readerUtilsWrapper.isExternalFeed(blogId, feedId)) {
+            fetchFeedInfo(feedId, blogUrl)
+        } else {
+            fetchBlogInfo(blogId, blogUrl)
+        }
+
+    /**
+     * Returns null if the URL is reachable, otherwise the status code. This doesn't use authentication, and
+     * doesn't catch the 404 replacement pages some ISPs serve.
+     */
+    suspend fun checkUrlReachable(url: String): Int? = suspendCancellableCoroutine { continuation ->
+        // this should be a HEAD request, but Volley throws "Unknown method type" for those
+        val request = StringRequest(
+            Request.Method.GET,
+            url,
+            { if (continuation.isActive) continuation.resume(null) },
+            { volleyError ->
+                logVolleyError("check url reachable", volleyError)
+                // an auth failure is checked by class, since a redirect to an unauthorized URL may return a 301
+                val statusCode = if (volleyError is AuthFailureError) {
+                    HttpURLConnection.HTTP_UNAUTHORIZED
+                } else {
+                    VolleyUtils.statusCodeFromVolleyError(volleyError)
+                }
+                // Volley treats a 301 as a failure, but it means the URL is reachable
+                val result = statusCode.takeIf { it != HttpURLConnection.HTTP_MOVED_PERM }
+                if (continuation.isActive) continuation.resume(result)
+            }
+        )
+        val queue = WordPress.requestQueue ?: return@suspendCancellableCoroutine continuation.resume(0)
+        queue.add(request)
+        continuation.invokeOnCancellation { request.cancel() }
+    }
+
+    /**
+     * Blocks a site locally, removing its posts, and returns what's needed to undo it
+     */
+    fun blockBlogLocal(blogId: Long, feedId: Long): BlockedBlogResult {
+        val result = BlockedBlogResult(
+            blogId = blogId,
+            feedId = feedId,
+            deletedRows = ReaderPostTable.getTagPostMap(blogId),
+            wasFollowing = ReaderBlogTable.isFollowedBlog(blogId)
+        )
+        ReaderPostTable.deletePostsInBlog(blogId)
+        ReaderBlogTable.setIsFollowedBlogId(blogId, false)
+        ReaderBlockedBlogTable.blacklistBlogLocally(blogId)
+        return result
+    }
+
+    /**
+     * Blocks a site on the server, undoing the local block if that fails, and returns whether it succeeded
+     */
+    suspend fun blockBlogRemote(blockResult: BlockedBlogResult): Boolean =
+        withContext(ioDispatcher + NonCancellable) {
+            AppLog.i(T.READER, "blocking blog ${blockResult.blogId}")
+            val result = post("me/block/sites/${blockResult.blogId}/new")
+            if (result is RestResult.Failure) {
+                logVolleyError("block blog", result)
+                undoBlockBlogLocal(blockResult)
+                if (blockResult.wasFollowing) ReaderBlogTable.setIsFollowedBlogId(blockResult.blogId, true)
+            }
+            result is RestResult.Success
+        }
+
+    /**
+     * Undoes a site block locally, then unblocks it on the server and follows it again if it was followed.
+     * Only the local undo is waited for.
+     */
+    suspend fun undoBlockBlog(blockResult: BlockedBlogResult, source: String) {
+        withContext(ioDispatcher) { undoBlockBlogLocal(blockResult) }
+        applicationScope.launch(ioDispatcher) {
+            AppLog.i(T.READER, "unblocking blog ${blockResult.blogId}")
+            val result = post("me/block/sites/${blockResult.blogId}/delete")
+            when {
+                result is RestResult.Failure -> logVolleyError("unblock blog", result)
+                result.response?.optBoolean("success") != true ->
+                    AppLog.w(T.READER, "failed to unblock blog ${blockResult.blogId}")
+                blockResult.wasFollowing -> followBlog(blockResult.blogId, blockResult.feedId, true, source)
+            }
+        }
+    }
+
+    /**
+     * Blocks a user locally, removing their posts, and returns what's needed to undo it
+     */
+    fun blockUserLocal(authorId: Long, feedId: Long): BlockedUserResult {
+        val result = BlockedUserResult(
+            authorId = authorId,
+            feedId = feedId,
+            deletedRows = ReaderPostTable.getAuthorPostMap(authorId)
+        )
+        BlockedAuthorTable.blacklistAuthorLocally(authorId)
+        ReaderPostTable.deletePostsForAuthor(authorId)
+        return result
+    }
+
+    fun undoBlockUser(blockResult: BlockedUserResult) {
+        BlockedAuthorTable.whitelistAuthorLocally(blockResult.authorId)
+        restorePosts(blockResult.deletedRows)
+    }
+
+    private suspend fun followFeed(
+        blogId: Long,
+        feedId: Long,
+        feedUrl: String?,
+        follow: Boolean,
+        source: String
+    ): Boolean {
+        if (feedUrl.isNullOrEmpty()) return false
+        return withContext(ioDispatcher + NonCancellable) {
+            if (feedId != 0L) {
+                ReaderBlogTable.setIsFollowedFeedId(feedId, follow)
+                ReaderPostTable.setFollowStatusForPostsInFeed(feedId, follow)
+            }
+            trackFollow(blogId, feedId, follow, source)
+
+            val path = "read/following/mine/" + (if (follow) "new?source=android&url=" else "delete?url=") +
+                UrlUtils.urlEncode(feedUrl)
+            val result = post(path)
+            val succeeded = result is RestResult.Success && isFollowActionSuccessful(result.json, follow)
+            if (result is RestResult.Failure) {
+                logVolleyError("feed ${actionName(follow)}", result)
+            } else if (!succeeded) {
+                AppLog.w(T.READER, "feed ${actionName(follow)} failed - ${result.response} - $path")
+            }
+            if (!succeeded) {
+                ReaderBlogTable.setIsFollowedFeedId(feedId, !follow)
+                ReaderPostTable.setFollowStatusForPostsInFeed(feedId, !follow)
+            }
+            succeeded
+        }
+    }
+
+    private suspend fun unfollowBlogByUrl(blogId: Long): Boolean {
+        val blogUrl = ReaderBlogTable.getBlogUrl(blogId)
+        if (blogUrl.isNullOrEmpty()) {
+            AppLog.w(T.READER, "URL not found for blogId $blogId")
+            return false
+        }
+        val result = post("/read/following/mine/delete?url=" + UrlUtils.urlEncode(blogUrl))
+        if (result is RestResult.Failure) logVolleyError("unfollow blog by url", result)
+        return result is RestResult.Success
+    }
+
+    private suspend fun fetchBlogInfo(blogId: Long, blogUrl: String?): ReaderBlog? {
+        val hasBlogId = blogId != 0L
+        val hasBlogUrl = !blogUrl.isNullOrEmpty()
+        if (!hasBlogId && !hasBlogUrl) {
+            AppLog.w(T.READER, "cannot get blog info without either id or url")
+            return null
+        }
+        val path = if (hasBlogId) {
+            "read/sites/$blogId"
+        } else {
+            "read/sites/" + UrlUtils.urlEncode(UrlUtils.getHost(blogUrl))
+        }
+        return when (val result = get(path)) {
+            is RestResult.Success -> saveBlogInfo(result.json)
+            is RestResult.Failure -> {
+                // an auth error may mean API access is disabled for the site, otherwise it's retried by domain
+                if (result.statusCode != HttpURLConnection.HTTP_FORBIDDEN && hasBlogId && hasBlogUrl) {
+                    AppLog.w(T.READER, "failed to get blog info by id, retrying with url")
+                    fetchBlogInfo(0, blogUrl)
+                } else {
+                    logVolleyError("update blog info", result)
+                    null
+                }
+            }
+        }
+    }
+
+    private suspend fun fetchFeedInfo(feedId: Long, feedUrl: String?): ReaderBlog? {
+        if (feedId == 0L && feedUrl.isNullOrEmpty()) {
+            AppLog.w(T.READER, "cannot update Feed info without either id or url")
+            return null
+        }
+        val path = if (feedId != 0L) "read/feed/$feedId" else "read/feed/" + UrlUtils.urlEncode(feedUrl)
+        return when (val result = get(path)) {
+            is RestResult.Success -> saveBlogInfo(result.json)
+            is RestResult.Failure -> {
+                logVolleyError("update feed info", result)
+                null
+            }
+        }
+    }
+
+    private suspend fun saveBlogInfo(json: JSONObject?): ReaderBlog? {
+        json ?: return null
+        val blogInfo = ReaderBlog.fromJson(json)
+        withContext(ioDispatcher) { ReaderBlogTable.addOrUpdateBlog(blogInfo) }
+        return blogInfo
+    }
+
+    private fun undoBlockBlogLocal(blockResult: BlockedBlogResult) {
+        ReaderBlockedBlogTable.whitelistBlogLocally(blockResult.blogId)
+        restorePosts(blockResult.deletedRows)
+    }
+
+    private fun restorePosts(deletedRows: Map<Pair<String, ReaderTagType>, ReaderPostList>) {
+        deletedRows.forEach { (tagInfo, posts) ->
+            ReaderPostTable.addOrUpdatePosts(ReaderTagTable.getTag(tagInfo.first, tagInfo.second), posts)
+        }
+    }
+
+    private fun trackFollow(blogId: Long, feedId: Long, follow: Boolean, source: String) {
+        val stat = if (follow) {
+            AnalyticsTracker.Stat.READER_BLOG_FOLLOWED
+        } else {
+            AnalyticsTracker.Stat.READER_BLOG_UNFOLLOWED
+        }
+        readerTracker.trackBlog(stat, blogId, feedId, source)
+    }
+
+    private suspend fun post(path: String): RestResult = awaitRestRequest { listener, errorListener ->
+        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener)
+    }
+
+    private suspend fun get(path: String): RestResult = awaitRestRequest { listener, errorListener ->
+        WordPress.getRestClientUtilsV1_1().getWithLocale(path, listener, errorListener)
+    }
+
+    /*
+     * returns whether a follow or unfollow succeeded, from the response to read/following/mine/ (which has
+     * "subscribed") or sites/$site/follows/ (which has "is_following")
+     */
+    private fun isFollowActionSuccessful(json: JSONObject?, follow: Boolean): Boolean {
+        json ?: return false
+        val isSubscribed = if (json.has("subscribed")) {
+            json.optBoolean("subscribed", false)
+        } else {
+            json.optBoolean("is_following", false)
+        }
+        return isSubscribed == follow
+    }
+
+    private fun actionName(follow: Boolean) = if (follow) "follow" else "unfollow"
+
+    private fun logVolleyError(action: String, failure: RestResult.Failure) =
+        logVolleyError(action, failure.error)
+
+    private fun logVolleyError(action: String, error: VolleyError?) {
+        AppLog.e(T.READER, "$action failed with error: ${VolleyUtils.statusCodeFromVolleyError(error)}")
+        AppLog.e(T.READER, error?.message ?: "No error message available")
+    }
+}
+
+/**
+ * What a site block removed, so it can be undone
+ */
+data class BlockedBlogResult(
+    val blogId: Long,
+    val feedId: Long,
+    // key: (tag slug, tag type)
+    val deletedRows: Map<Pair<String, ReaderTagType>, ReaderPostList>,
+    val wasFollowing: Boolean
+)
+
+/**
+ * What a user block removed, so it can be undone
+ */
+data class BlockedUserResult(
+    val authorId: Long,
+    val feedId: Long,
+    // key: (tag slug, tag type)
+    val deletedRows: Map<Pair<String, ReaderTagType>, ReaderPostList>
+)

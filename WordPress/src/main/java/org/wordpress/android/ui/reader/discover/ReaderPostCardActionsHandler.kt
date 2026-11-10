@@ -50,7 +50,6 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_S
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState
-import org.wordpress.android.ui.reader.repository.usecases.BlockUserState
 import org.wordpress.android.ui.reader.repository.usecases.BlockUserUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState
@@ -458,25 +457,20 @@ class ReaderPostCardActionsHandler @Inject constructor(
         feedId: Long,
     ) {
         blockUserUseCase.blockUser(authorId, feedId).collect {
-            when (it) {
-                is BlockUserState.UserBlockedInLocalDb -> {
-                    _refreshPosts.postValue(Event(Unit))
-                    _snackbarEvents.postValue(
-                        Event(
-                            SnackbarMessageHolder(
-                                UiStringRes(R.string.reader_toast_user_blocked),
-                                UiStringRes(R.string.undo),
-                                {
-                                    coroutineScope.launch {
-                                        blockUserUseCase.undoBlockUser(it.blockedUserData)
-                                        _refreshPosts.postValue(Event(Unit))
-                                    }
-                                })
-                        )
-                    )
-                }
-                BlockUserState.Failed.AlreadyRunning -> Unit // do nothing
-            }
+            _refreshPosts.postValue(Event(Unit))
+            _snackbarEvents.postValue(
+                Event(
+                    SnackbarMessageHolder(
+                        UiStringRes(R.string.reader_toast_user_blocked),
+                        UiStringRes(R.string.undo),
+                        {
+                            coroutineScope.launch {
+                                blockUserUseCase.undoBlockUser(it.blockedUserData)
+                                _refreshPosts.postValue(Event(Unit))
+                            }
+                        })
+                )
+            )
         }
     }
 
