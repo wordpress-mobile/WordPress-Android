@@ -106,7 +106,7 @@ class StorePostViewModel
             AppLog.i(
                 AppLog.T.POSTS,
                 "StorePostViewModel > savePostOnline: no network, post ${editPostRepository.id} " +
-                    "saved locally and not uploaded"
+                    "(status=${editPostRepository.status}) saved locally and not uploaded"
             )
             SAVED_LOCALLY
         }
