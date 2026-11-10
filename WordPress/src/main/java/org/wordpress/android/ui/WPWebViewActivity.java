@@ -138,6 +138,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     // WordPress' front-end session cookie, sent to every page on the site.
     private static final String LOGGED_IN_COOKIE_PREFIX = "wordpress_logged_in_";
     private static final String WP_LOGIN_PATH_SUFFIX = "/wp-login.php";
+    private static final String WP_ADMIN_PATH_SUFFIX = "/wp-admin";
     private static final String STATE_SKIPPED_SITE_LOGIN = "STATE_SKIPPED_SITE_LOGIN";
     private static final String STATE_FELL_BACK_TO_SITE_LOGIN = "STATE_FELL_BACK_TO_SITE_LOGIN";
     private static final String STATE_LAST_PAGE_WAS_SITE_LOGIN = "STATE_LAST_PAGE_WAS_SITE_LOGIN";
@@ -982,17 +983,37 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
      */
     public static String getSiteLoginUrl(SiteModel site) {
         String loginURL = site.getLoginUrl();
-
-        // Try to guess the login URL if blogOptions is null (blog not added to the app), or WP version is < 3.6
-        if (loginURL == null) {
-            if (site.getUrl() != null) {
-                return site.getUrl() + "/wp-login.php";
-            } else {
-                return site.getXmlRpcUrl().replace("xmlrpc.php", "wp-login.php");
-            }
+        if (!TextUtils.isEmpty(loginURL)) {
+            return loginURL;
         }
 
-        return loginURL;
+        // The login URL is only ever stored from the XML-RPC site options or the WordPress.com REST response,
+        // so it is empty on a site connected with an Application Password whose XML-RPC is disabled. The admin
+        // URL is filled from the REST API's Application Password authorization endpoint on those sites, and it
+        // carries the path WordPress is actually installed at.
+        String loginUrlFromAdminUrl = getLoginUrlFromAdminUrl(site.getAdminUrl());
+        if (loginUrlFromAdminUrl != null) {
+            return loginUrlFromAdminUrl;
+        }
+
+        // Try to guess the login URL if blogOptions is null (blog not added to the app), or WP version is < 3.6.
+        // The site's address is the home URL, so this guess is wrong on a subdirectory install.
+        if (site.getUrl() != null) {
+            return site.getUrl() + WP_LOGIN_PATH_SUFFIX;
+        } else {
+            return site.getXmlRpcUrl().replace("xmlrpc.php", "wp-login.php");
+        }
+    }
+
+    private static @Nullable String getLoginUrlFromAdminUrl(@Nullable String adminUrl) {
+        if (TextUtils.isEmpty(adminUrl)) {
+            return null;
+        }
+        String adminPath = StringUtils.removeTrailingSlash(adminUrl);
+        if (!adminPath.endsWith(WP_ADMIN_PATH_SUFFIX)) {
+            return null;
+        }
+        return adminPath.substring(0, adminPath.length() - WP_ADMIN_PATH_SUFFIX.length()) + WP_LOGIN_PATH_SUFFIX;
     }
 
     private boolean isActionableDirectUsage() {
