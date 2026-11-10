@@ -177,5 +177,6 @@ internal fun ClickItemData.toDetailItem(id: Long) = MostViewedDetailItem(
     children = children.map { child ->
         MostViewedChildItem(name = child.name, url = child.url, views = child.views)
     },
-    url = url
+    url = url,
+    iconUrl = iconUrl
 )

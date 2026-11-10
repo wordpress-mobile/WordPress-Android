@@ -468,7 +468,9 @@ data class ReferrerDataItem(
     val name: String,
     val url: String?,
     val views: Long,
-    val children: List<ReferrerChildDataItem> = emptyList()
+    val children: List<ReferrerChildDataItem> = emptyList(),
+    /** The referrer's favicon, as the API supplies it. Null when it doesn't know one. */
+    val iconUrl: String? = null
 )
 
 /**
@@ -477,7 +479,9 @@ data class ReferrerDataItem(
 data class ReferrerChildDataItem(
     val name: String,
     val url: String?,
-    val views: Long
+    val views: Long,
+    /** The referrer's favicon, as the API supplies it. Null when it doesn't know one. */
+    val iconUrl: String? = null
 )
 
 /**
@@ -608,7 +612,9 @@ data class ClickDataItem(
     val name: String,
     val url: String?,
     val clicks: Long,
-    val children: List<ClickChildDataItem> = emptyList()
+    val children: List<ClickChildDataItem> = emptyList(),
+    /** The linked site's favicon, as the API supplies it. Null when it doesn't know one. */
+    val iconUrl: String? = null
 )
 
 data class ClickChildDataItem(

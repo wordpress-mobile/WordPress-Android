@@ -226,6 +226,11 @@ private fun MostViewedChildRow(
                     .padding(vertical = 10.dp, horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                val leadingContent = faviconSlot(child.iconUrl)
+                if (leadingContent != null) {
+                    leadingContent()
+                    Spacer(modifier = Modifier.width(12.dp))
+                }
                 Text(
                     text = child.name,
                     style = MaterialTheme.typography.bodyMedium,

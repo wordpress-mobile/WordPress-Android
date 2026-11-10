@@ -1689,10 +1689,12 @@ class StatsRepository @Inject constructor(
                             MostViewedChildData(
                                 name = child.name,
                                 url = child.url,
-                                views = child.views
+                                views = child.views,
+                                iconUrl = child.iconUrl
                             )
                         },
-                        url = item.url
+                        url = item.url,
+                        iconUrl = item.iconUrl
                     )
                 },
                 totalViews = totalViews,
@@ -2225,7 +2227,8 @@ class StatsRepository @Inject constructor(
                         url = child.url,
                         views = child.clicks
                     )
-                }
+                },
+                iconUrl = item.iconUrl
             )
         },
         buildSuccess = { items, total, change, pct ->
@@ -3252,7 +3255,9 @@ data class MostViewedItemData(
     val children: List<MostViewedChildData> = emptyList(),
     val url: String? = null,
     /** The API item type -- "post", "page", "homepage" or "attachment". Posts and pages only. */
-    val postType: String? = null
+    val postType: String? = null,
+    /** A favicon the API supplied for the item. Referrers and clicks only. */
+    val iconUrl: String? = null
 ) {
     val viewsChange: Long get() = views - previousViews
     val viewsChangePercent: Double
@@ -3269,7 +3274,9 @@ data class MostViewedChildData(
     val name: String,
     val url: String?,
     val views: Long,
-    val children: List<MostViewedChildData> = emptyList()
+    val children: List<MostViewedChildData> = emptyList(),
+    /** A favicon the API supplied for the child. Referrers only. */
+    val iconUrl: String? = null
 )
 
 /**
@@ -3422,7 +3429,9 @@ data class ClickItemData(
     val clicks: Long,
     val previousClicks: Long,
     val url: String? = null,
-    val children: List<MostViewedChildData> = emptyList()
+    val children: List<MostViewedChildData> = emptyList(),
+    /** The linked site's favicon, as the API supplied it. */
+    val iconUrl: String? = null
 ) {
     val clicksChange: Long get() = clicks - previousClicks
     val clicksChangePercent: Double

@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Referrers and Clicks in Stats show each source's icon**
+  Rows in the redesigned Stats' Referrers and Clicks cards, and their full lists, now show the site icon the Stats API already reports for the referrer or link, matching the web version. A row the API has no icon for shows none, and its title stays where it was. Expanding a referrer group, such as Search Engines, shows an icon for each entry under it too.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Referrers card and Clicks card, and each card's View all
+  - **Notes:** The icons come from the existing Stats response, so nothing extra is fetched. The Search Engines group uses the app's own magnifying-glass icon rather than the one the API points at, which is a web-sized image; this is what the old Stats did too. Entries nested under a link in Clicks have no icon, because the API does not report one for them.
+
 - **Posts & Pages in Stats shows a thumbnail per row**
   The full Posts & Pages list in the redesigned Stats now draws a small square at the start of each row: the post's featured image, or a glyph telling a post apart from a page when there is no featured image. The old Stats used the same two glyphs, and the web version of this screen shows featured images, so the list now reads the way both of those do. The Posts & Pages card on the main Stats screen is unchanged.
   - **Apps:** Both

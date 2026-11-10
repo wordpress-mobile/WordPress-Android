@@ -361,7 +361,9 @@ private fun DetailLoadedContent(
                 onItemClick = onItemClick?.let { { it(item) } },
                 position = index + 1,
                 childStartPadding = 32.dp,
-                leadingContent = if (showThumbnails) {
+                // Referrers and clicks carry a favicon; Posts & Pages draws a thumbnail instead.
+                // No source has both, so whichever is present is the row's leading content.
+                leadingContent = faviconSlot(item.iconUrl) ?: if (showThumbnails) {
                     { StatsPostThumbnail(thumbnails[item.id], item.postType) }
                 } else {
                     null
