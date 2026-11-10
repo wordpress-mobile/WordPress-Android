@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.comments.unified.compose
 
 import android.text.style.URLSpan
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,7 +36,11 @@ import org.wordpress.android.util.EmoticonsUtils
  * HTML between them rendered as selectable text with tappable links.
  */
 @Composable
-fun CommentHtmlBody(html: String, modifier: Modifier = Modifier) {
+fun CommentHtmlBody(
+    html: String,
+    modifier: Modifier = Modifier,
+    onImageClick: ((String) -> Unit)? = null
+) {
     val linkColor = MaterialTheme.colorScheme.primary
     val segments = remember(html) { splitCommentHtml(html) }
     SelectionContainer(modifier = modifier) {
@@ -61,7 +66,15 @@ fun CommentHtmlBody(html: String, modifier: Modifier = Modifier) {
                         imageUrl = segment.url,
                         contentScale = ContentScale.Inside,
                         alignment = Alignment.TopStart,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .then(
+                                if (onImageClick != null) {
+                                    Modifier.clickable { onImageClick(segment.url) }
+                                } else {
+                                    Modifier
+                                }
+                            )
                     )
                 }
             }

@@ -14,6 +14,7 @@ import org.mockito.ArgumentMatchers.anyList
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
+import org.mockito.Mockito.lenient
 import org.mockito.kotlin.KArgumentCaptor
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
@@ -54,6 +55,7 @@ import org.wordpress.android.ui.engagement.utils.GetLikesTestConfig.TEST_CONFIG_
 import org.wordpress.android.ui.engagement.utils.getGetLikesState
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenUrl
@@ -78,7 +80,7 @@ import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.reader.models.ReaderSimplePost
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
-import org.wordpress.android.ui.reader.services.comment.wrapper.ReaderCommentServiceStarterWrapper
+import org.wordpress.android.ui.reader.repository.ReaderCommentRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState
@@ -113,7 +115,6 @@ import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
 import org.wordpress.android.util.config.ReaderReadingPreferencesFeatureConfig
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
-import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 
 private const val POST_PARAM_POSITION = 0
@@ -182,9 +183,6 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     private lateinit var likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig
 
     @Mock
-    private lateinit var contextProvider: ContextProvider
-
-    @Mock
     private lateinit var engagementUtils: EngagementUtils
 
     @Mock
@@ -200,7 +198,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     private lateinit var readerCommentTableWrapper: ReaderCommentTableWrapper
 
     @Mock
-    private lateinit var readerCommentServiceStarterWrapper: ReaderCommentServiceStarterWrapper
+    private lateinit var readerCommentRepository: ReaderCommentRepository
 
     @Mock
     private lateinit var readingPreferencesFeatureConfig: ReaderReadingPreferencesFeatureConfig
@@ -248,11 +246,10 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             likesEnhancementsFeatureConfig,
             engagementUtils,
             htmlMessageUtils,
-            contextProvider,
             networkUtilsWrapper,
             commentsSnippetFeatureConfig,
             readerCommentTableWrapper,
-            readerCommentServiceStarterWrapper,
+            readerCommentRepository,
             readingPreferencesFeatureConfig,
         )
         whenever(readerGetPostUseCase.get(any(), any(), any())).thenReturn(Pair(readerPost, false))
@@ -334,6 +331,8 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         whenever(getLikesHandler.likesStatusUpdate).thenReturn(getLikesState)
 
         whenever(commentsSnippetFeatureConfig.isEnabled()).thenReturn(true)
+        lenient().whenever(readerCommentRepository.fetchCommentsForSnippet(any(), any()))
+            .thenReturn(UpdateResult.UNCHANGED)
 
         likesCaptor = argumentCaptor()
 
@@ -1233,7 +1232,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onRefreshCommentsData does not start comment snippet service for external posts`() {
+    fun `onRefreshCommentsData does not fetch the comment snippet for external posts`() = test {
         val externalPost = createDummyReaderPost(1, isWpComPost = false)
         whenever(
             readerPostTableWrapper.getBlogPost(
@@ -1245,11 +1244,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
         viewModel.onRefreshCommentsData(1, 1)
 
-        verify(readerCommentServiceStarterWrapper, never()).startServiceForCommentSnippet(
-            anyOrNull(),
-            anyOrNull(),
-            anyOrNull()
-        )
+        verify(readerCommentRepository, never()).fetchCommentsForSnippet(any(), any())
     }
 
     @Test
