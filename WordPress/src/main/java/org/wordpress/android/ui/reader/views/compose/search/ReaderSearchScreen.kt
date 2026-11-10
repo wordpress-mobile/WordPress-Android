@@ -16,26 +16,22 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -52,10 +48,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -64,13 +58,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.text.htmlEncode
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.LoadingState
+import org.wordpress.android.ui.reader.views.compose.ReaderSiteRow
 import org.wordpress.android.ui.reader.viewmodels.ReaderSearchContent
-import org.wordpress.android.ui.reader.viewmodels.ReaderSearchSite
 import org.wordpress.android.ui.reader.viewmodels.ReaderSearchTab
 import org.wordpress.android.ui.reader.viewmodels.ReaderSearchUiState
 import org.wordpress.android.ui.rs.contentlist.ContentListSearchClearButton
@@ -78,10 +70,6 @@ import org.wordpress.android.ui.rs.contentlist.ContentListSearchField
 import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
 import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
 import org.wordpress.android.util.UrlUtils
-import org.wordpress.android.util.image.ImagePlaceholderManager
-import org.wordpress.android.util.image.ImageType
-
-private val blavatarPlaceholders = ImagePlaceholderManager()
 
 /**
  * The Reader search screen. [postList] is the post list fragment, which stays composed (and hidden by
@@ -312,8 +300,12 @@ private fun SitesList(uiState: ReaderSearchUiState, listState: LazyListState, ac
     )
     LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
         items(uiState.sites, key = { it.key }) { site ->
-            SiteRow(
-                site = site,
+            ReaderSiteRow(
+                title = site.title?.takeIf { it.isNotEmpty() } ?: stringResource(R.string.untitled_in_parentheses),
+                subtitle = remember(site.url) { UrlUtils.getHost(site.url) },
+                iconUrl = site.iconUrl,
+                isFollowing = site.isFollowing,
+                isFollowEnabled = site.isFollowEnabled,
                 onClick = { actions.onSiteClicked(site) },
                 onFollowClick = { actions.onSiteFollowClicked(site) }
             )
@@ -321,62 +313,6 @@ private fun SitesList(uiState: ReaderSearchUiState, listState: LazyListState, ac
         }
         if (uiState.isLoadingMoreSites) {
             contentListLoadingMoreItem()
-        }
-    }
-}
-
-@Composable
-private fun SiteRow(site: ReaderSearchSite, onClick: () -> Unit, onFollowClick: () -> Unit) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 12.dp)
-    ) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(site.iconUrl)
-                .apply {
-                    blavatarPlaceholders.getPlaceholderResource(ImageType.BLAVATAR)?.let { placeholder(it) }
-                    blavatarPlaceholders.getErrorResource(ImageType.BLAVATAR)?.let { error(it) }
-                }
-                .build(),
-            contentDescription = null,
-            modifier = Modifier
-                .size(40.dp)
-                .clip(RoundedCornerShape(4.dp))
-        )
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 16.dp)
-        ) {
-            Text(
-                text = site.title?.takeIf { it.isNotEmpty() } ?: stringResource(R.string.untitled_in_parentheses),
-                style = MaterialTheme.typography.titleMedium,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            val host = remember(site.url) { UrlUtils.getHost(site.url) }
-            if (host.isNotEmpty()) {
-                Text(
-                    text = host,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-        }
-        if (site.isFollowing) {
-            OutlinedButton(onClick = onFollowClick, enabled = site.isFollowEnabled) {
-                Text(stringResource(R.string.reader_btn_subscribed))
-            }
-        } else {
-            Button(onClick = onFollowClick, enabled = site.isFollowEnabled) {
-                Text(stringResource(R.string.reader_btn_subscribe))
-            }
         }
     }
 }

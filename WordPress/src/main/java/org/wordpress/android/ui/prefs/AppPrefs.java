@@ -88,9 +88,6 @@ public class AppPrefs {
         // last selected subfilter in the reader
         READER_SUBFILTER,
 
-        // title of the last active page in ReaderSubsActivity
-        READER_SUBS_PAGE_TITLE,
-
         // index of the last active page in main activity
         MAIN_PAGE_INDEX,
 
@@ -486,18 +483,6 @@ public class AppPrefs {
 
     public static void setReaderSubfilter(@NonNull String json) {
         setString(DeletablePrefKey.READER_SUBFILTER, json);
-    }
-
-    /**
-     * title of the last active page in ReaderSubsActivity - this is stored rather than
-     * the index of the page so we can re-order pages without affecting this value
-     */
-    public static String getReaderSubsPageTitle() {
-        return getString(DeletablePrefKey.READER_SUBS_PAGE_TITLE);
-    }
-
-    public static void setReaderSubsPageTitle(String pageTitle) {
-        setString(DeletablePrefKey.READER_SUBS_PAGE_TITLE, pageTitle);
     }
 
     // Store the version code of the app. Used to check it the app was upgraded.

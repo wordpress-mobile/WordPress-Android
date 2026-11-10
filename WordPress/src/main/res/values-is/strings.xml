@@ -23,7 +23,6 @@ Language: is
     <string name="start_over_email_subject">Byrja upp á nýtt með vefinn %s</string>
     <string name="site_picker_remove_site_error">Villa við að eyða vef, reyndu aftur síðar</string>
     <string name="photo_picker_title">Veldu mynd</string>
-    <string name="site_settings_image_quality_hint">Gæði mynda. Hærra gildi þýðir betri gæði mynda.</string>
     <string name="site_settings_optimize_images_summary">Virkjaðu til þess að minnka og þjappa myndum</string>
     <string name="media_upload_state_uploaded">Efni upphlaðið</string>
     <string name="media_upload_state_deleted">Eytt</string>
@@ -247,7 +246,6 @@ Language: is
     <string name="site_settings_discussion_hint">Skoða og breyta umræðustillingum fyrir vefinn þinn</string>
     <string name="site_settings_more_hint">Skoða allar umræðustillingar sem eru í boði</string>
     <string name="site_settings_related_posts_hint">Birta eða fela tengdar færslur í lesara</string>
-    <string name="site_settings_image_width_hint">Breyta stærð mynda í færslum yfir í þessa breidd</string>
     <string name="site_settings_format_hint">Skilgreina nýtt færslusnið</string>
     <string name="site_settings_category_hint">Skilgreinir nýjan færsluflokk</string>
     <string name="site_settings_password_hint">Breyttu lykilorðinu þínu</string>

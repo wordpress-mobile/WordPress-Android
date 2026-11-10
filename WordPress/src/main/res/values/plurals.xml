@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- New Stats: one day of the per-item screen's Recent Weeks grid, read out by screen readers -->
+    <plurals name="stats_post_detail_period_views">
+        <item quantity="one">%1$s: %2$s view</item>
+        <item quantity="other">%1$s: %2$s views</item>
+    </plurals>
+    <plurals name="stats_post_detail_period_average">
+        <item quantity="one">%1$s: %2$s view per day</item>
+        <item quantity="other">%1$s: %2$s views per day</item>
+    </plurals>
+
     <!-- AI Bot Support - Time formatting plurals -->
     <plurals name="ai_bot_time_minutes_ago">
         <item quantity="one">%1$d minute ago</item>

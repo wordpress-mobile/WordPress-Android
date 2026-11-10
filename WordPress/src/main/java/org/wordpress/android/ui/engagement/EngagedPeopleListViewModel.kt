@@ -21,6 +21,7 @@ import org.wordpress.android.ui.engagement.EngagedListServiceRequestEvent.Reques
 import org.wordpress.android.ui.engagement.EngagedListServiceRequestEvent.RequestComment
 import org.wordpress.android.ui.engagement.EngagementNavigationSource.LIKE_NOTIFICATION_LIST
 import org.wordpress.android.ui.engagement.EngagementNavigationSource.LIKE_READER_LIST
+import org.wordpress.android.ui.engagement.EngagementNavigationSource.LIKE_STATS_LIST
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
@@ -171,28 +172,7 @@ class EngagedPeopleListViewModel @Inject constructor(
     }
 
     private fun buildUiState(updateLikesState: GetLikesState?, listScenario: ListScenario?): EngagedPeopleListUiState {
-        val likedItem = listScenario?.headerData?.let {
-            listOf(
-                LikedItem(
-                    author = it.authorName,
-                    postOrCommentText = it.snippetText,
-                    authorAvatarUrl = it.authorAvatarUrl,
-                    likedItemId = listScenario.postOrCommentId,
-                    likedItemSiteId = listScenario.siteId,
-                    likedItemSiteUrl = listScenario.commentSiteUrl,
-                    likedItemPostId = listScenario.commentPostId,
-                    authorUserId = it.authorUserId,
-                    authorPreferredSiteId = it.authorPreferredSiteId,
-                    authorPreferredSiteUrl = it.authorPreferredSiteUrl,
-                    onGravatarClick = ::onSiteLinkHolderClicked,
-                    blogPreviewSource = when (listScenario.source) {
-                        LIKE_NOTIFICATION_LIST -> ReaderTracker.SOURCE_NOTIFICATION
-                        LIKE_READER_LIST -> ReaderTracker.SOURCE_READER_LIKE_LIST
-                    },
-                    onHeaderClicked = ::onHeaderClicked
-                )
-            )
-        } ?: listOf()
+        val likedItem = buildLikedItem(listScenario)
 
         val likers = when (updateLikesState) {
             is LikesData -> {
@@ -222,6 +202,13 @@ class EngagedPeopleListViewModel @Inject constructor(
                 emptyStateTitle = it.title
                 emptyStateAction = ::onRefreshData
             }
+        } else if (updateLikesState is LikesData && likedItem.isEmpty() && likers.isEmpty()) {
+            // A request that succeeded with nobody in it. Callers that head the list with the
+            // liked item always have that row to show; the ones that opt out of it -- Stats --
+            // would otherwise be left with a blank screen. There is nothing to retry here, so
+            // the empty state is shown without its button.
+            showEmptyState = true
+            emptyStateTitle = UiStringRes(R.string.get_likes_empty_state_no_likes)
         }
 
         return EngagedPeopleListUiState(
@@ -233,6 +220,38 @@ class EngagedPeopleListViewModel @Inject constructor(
             emptyStateButtonText = emptyStateAction?.let { UiStringRes(R.string.retry) }
         )
     }
+
+    /**
+     * The header naming the thing that was liked, for the callers that have the data for it. Stats
+     * opens this list knowing only the item's id and like count, so it asks for no header.
+     */
+    private fun buildLikedItem(listScenario: ListScenario?): List<EngageItem> =
+        listScenario?.headerData
+            ?.takeIf { listScenario.showLikedItemHeader }
+            ?.let { headerData ->
+                listOf(
+                    LikedItem(
+                        author = headerData.authorName,
+                        postOrCommentText = headerData.snippetText,
+                        authorAvatarUrl = headerData.authorAvatarUrl,
+                        likedItemId = listScenario.postOrCommentId,
+                        likedItemSiteId = listScenario.siteId,
+                        likedItemSiteUrl = listScenario.commentSiteUrl,
+                        likedItemPostId = listScenario.commentPostId,
+                        authorUserId = headerData.authorUserId,
+                        authorPreferredSiteId = headerData.authorPreferredSiteId,
+                        authorPreferredSiteUrl = headerData.authorPreferredSiteUrl,
+                        onGravatarClick = ::onSiteLinkHolderClicked,
+                        blogPreviewSource = when (listScenario.source) {
+                            LIKE_NOTIFICATION_LIST -> ReaderTracker.SOURCE_NOTIFICATION
+                            LIKE_READER_LIST -> ReaderTracker.SOURCE_READER_LIKE_LIST
+                            LIKE_STATS_LIST -> ReaderTracker.SOURCE_STATS_LIKE_LIST
+                        },
+                        onHeaderClicked = ::onHeaderClicked
+                    )
+                )
+            }
+            ?: listOf()
 
     private fun appendNextPageLoaderIfNeeded(
         hasMore: Boolean,

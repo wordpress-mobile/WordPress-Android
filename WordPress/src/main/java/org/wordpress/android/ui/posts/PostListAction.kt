@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.push.NativeNotificationsUtils
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.POST_FROM_POSTS_LIST
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
@@ -52,6 +53,7 @@ fun handlePostListAction(
     remotePreviewLogicHelper: RemotePreviewLogicHelper,
     previewStateHelper: PreviewStateHelper,
     blazeFeatureUtils: BlazeFeatureUtils,
+    activityNavigator: ActivityNavigator,
 ) {
     when (action) {
         is PostListAction.EditPost -> {
@@ -83,7 +85,13 @@ fun handlePostListAction(
             activity.startService(intent)
         }
         is PostListAction.ViewStats -> {
-            ActivityLauncher.viewStatsSinglePostDetails(activity, action.site, action.post)
+            activityNavigator.openPostStats(
+                activity,
+                action.site,
+                action.post.remotePostId,
+                action.post.title.orEmpty(),
+                action.post.link
+            )
         }
         is PostListAction.ViewPost -> {
             ActivityLauncher.browsePostOrPage(activity, action.site, action.post)

@@ -283,14 +283,11 @@ class NewStatsActivity : BaseAppCompatActivity() {
         activityNavigator.openInCustomTab(this, url)
     }
 
-    private fun selectSiteFromIntentIfNeeded() {
-        val localSiteId = intent?.getIntExtra(WordPress.LOCAL_SITE_ID, 0) ?: 0
-        if (localSiteId != 0 && localSiteId != selectedSiteRepository.getSelectedSiteLocalId()) {
-            siteStore.getSiteByLocalId(localSiteId)?.let { site ->
-                selectedSiteRepository.updateSite(site)
-            }
-        }
-    }
+    private fun selectSiteFromIntentIfNeeded() = selectNewStatsSiteIfNeeded(
+        intent?.getIntExtra(WordPress.LOCAL_SITE_ID, 0) ?: 0,
+        siteStore,
+        selectedSiteRepository
+    )
 
     private fun openPostDetailStats(item: MostViewedItem) {
         analyticsTracker.track(

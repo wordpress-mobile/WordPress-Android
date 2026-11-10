@@ -12,8 +12,11 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.AndroidUiDispatcher
 import androidx.core.os.BundleCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -21,7 +24,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
@@ -36,7 +38,6 @@ import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
-import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.ChooseSiteActivity
 import org.wordpress.android.ui.main.WPMainActivity.OnActivityBackPressedListener
@@ -44,7 +45,6 @@ import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
-import org.wordpress.android.ui.reader.ReaderEvents.TagAdded
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnBlogInfoFailedListener
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
@@ -69,6 +69,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostListArgs
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListUiEvent
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
+import org.wordpress.android.ui.reader.views.compose.ReaderScrollingFeed
 import org.wordpress.android.ui.reader.views.compose.postlist.ReaderPostListActions
 import org.wordpress.android.ui.reader.views.compose.postlist.ReaderPostListComposeView
 import org.wordpress.android.ui.reader.views.compose.postlist.ReaderPostListScreen
@@ -84,7 +85,8 @@ import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
 import javax.inject.Inject
 
 @Suppress("LargeClass")
-class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListener, OnScrollToTopListener {
+class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScrollToTopListener,
+    ReaderScrollingFeed {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -104,7 +106,10 @@ class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListene
 
     // created with each view, since it holds that view's layout. The position is kept here in between, so
     // the list keeps it when the view is recreated from the back stack.
-    private var listState: LazyListState? = null
+    // state, so the Reader's top bar can follow the list as it's recreated with the view
+    private var listState: LazyListState? by mutableStateOf(null)
+
+    override val feedListState get() = listState
     private var savedFirstVisibleIndex = 0
     private var savedFirstVisibleOffset = 0
 
@@ -134,7 +139,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListene
         savedInstanceState?.let {
             AppLog.d(AppLog.T.READER, "reader post list fragment > restoring instance state")
             wasPaused = it.getBoolean(ReaderConstants.KEY_WAS_PAUSED)
-        }
+        } ?: tagFragmentStartedWith?.let { ReaderTracker.trackTagLoaded(it) }
 
         postListViewModel = ViewModelProvider(this, viewModelFactory)[ReaderPostListViewModel::class.java]
 
@@ -314,7 +319,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListene
                     R.string.reader_toast_err_removing_tag
                 }
             )
-            is ReaderPostListUiEvent.SetSubfilterFromTag -> subFilterViewModel?.setSubfilterFromTag(event.tag)
             ReaderPostListUiEvent.SetDefaultSubfilter -> subFilterViewModel?.setDefaultSubfilter(false)
             ReaderPostListUiEvent.NoConnection -> NetworkUtils.checkConnection(requireContext())
             ReaderPostListUiEvent.DataLoaded -> onDataLoaded()
@@ -399,12 +403,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListene
             AppLog.d(AppLog.T.READER, "reader post list > resumed from paused state")
             wasPaused = false
 
-            postListViewModel.onResumeAfterPause(consumeAddedTagName(), getSiteIfBlogPreview())
-
-            if (isTopLevel) {
-                // Remove sticky event if not consumed
-                EventBus.getDefault().removeStickyEvent(TagAdded::class.java)
-            }
+            postListViewModel.onResumeAfterPause(getSiteIfBlogPreview())
         }
 
         // the user may have logged in or out, which changes whether the self-hosted CTA shows
@@ -416,19 +415,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListene
             isTopLevel, isSearching, isFilterableScreen,
             if (isFilterableScreen) subFilterViewModel!!.getCurrentSubfilterValue() else null
         )
-    }
-
-    /*
-     * returns the name of the tag the user just followed, if any, so the Following screen can switch to it
-     */
-    private fun consumeAddedTagName(): String? {
-        if (!isFollowingScreen || postListViewModel.listType != ReaderPostListType.TAG_FOLLOWED) {
-            return null
-        }
-        return EventBus.getDefault().getStickyEvent(TagAdded::class.java)?.let { addedTag ->
-            EventBus.getDefault().removeStickyEvent(addedTag)
-            addedTag.tagName
-        }
     }
 
     private fun getSiteIfBlogPreview(): SubfilterListItem.Site? {
@@ -570,8 +556,10 @@ class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListene
      * parent to be the main activity's CoordinatorLayout
      */
     private fun getSnackbarParent(): View? {
-        val coordinator =
-            requireActivity().findViewById<View>(R.id.coordinator_layout)
+        // coordinator_layout in standalone hosts; in the Reader tab, the main activity's coordinator, which sits
+        // above the bottom navigation
+        val coordinator: View? = requireActivity().findViewById(R.id.coordinator_layout)
+            ?: requireActivity().findViewById(R.id.coordinator)
         return coordinator ?: view
     }
 
@@ -611,8 +599,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListene
         }
         announceListStateForAccessibility()
     }
-
-    override fun getScrollableViewForUniqueIdProvision(): View? = view
 
     /*
      * called by the activity when user hits the back button - returns true if the back button
@@ -917,20 +903,27 @@ class ReaderPostListFragment : ViewPagerFragment(), OnActivityBackPressedListene
         ): ReaderPostListFragment {
             AppLog.d(AppLog.T.READER, "reader post list > newInstance (tag)")
 
-            val args = Bundle()
-            // Tag this fragment is started with
-            args.putSerializable(ReaderConstants.ARG_ORIGINAL_TAG, tag)
-            // Tag this fragment is started with but also used for savedState
-            args.putSerializable(ReaderConstants.ARG_TAG, tag)
-            args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, listType)
-            args.putBoolean(ReaderConstants.ARG_IS_TOP_LEVEL, isTopLevel)
-            args.putBoolean(ReaderConstants.ARG_IS_FILTERABLE, isFilterable)
-
             val fragment = ReaderPostListFragment()
-            fragment.arguments = args
-            ReaderTracker.trackTagLoaded(tag)
-
+            fragment.arguments = argumentsForTag(tag, listType, isTopLevel, isFilterable)
             return fragment
+        }
+
+        /*
+         * arguments for a tag's list, also used by the Reader and Discover tabs, which host it with AndroidFragment
+         */
+        fun argumentsForTag(
+            tag: ReaderTag,
+            listType: ReaderPostListType?,
+            isTopLevel: Boolean = false,
+            isFilterable: Boolean = false
+        ) = Bundle().apply {
+            // Tag this fragment is started with
+            putSerializable(ReaderConstants.ARG_ORIGINAL_TAG, tag)
+            // Tag this fragment is started with but also used for savedState
+            putSerializable(ReaderConstants.ARG_TAG, tag)
+            putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, listType)
+            putBoolean(ReaderConstants.ARG_IS_TOP_LEVEL, isTopLevel)
+            putBoolean(ReaderConstants.ARG_IS_FILTERABLE, isFilterable)
         }
 
         /*

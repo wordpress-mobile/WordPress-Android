@@ -45,13 +45,17 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
         recyclerView.adapter = ReaderRelatedPostsAdapter(uiHelpers, imageManager)
     }
 
+    /**
+     * Applies the state unconditionally, including an empty one. Returning early on an empty list
+     * would leave the previous post's cards, railcars and header label in place, so a post whose
+     * related posts come back empty would show the previous post's - and track its railcars. The
+     * caller keeps the view hidden when there is nothing to show.
+     */
     fun showPosts(state: RelatedPostsUiState): Unit = with(binding) {
-        if (state.cards?.size == 0) return
-
         railcarJsonStrings.clear()
         railcarJsonStrings.addAll(state.railcarJsonStrings)
 
-        state.cards?.let { (recyclerView.adapter as ReaderRelatedPostsAdapter).update(it) }
+        (recyclerView.adapter as ReaderRelatedPostsAdapter).update(state.cards.orEmpty())
         uiHelpers.setTextOrHide(textRelatedPostsLabel, state.headerLabel)
     }
 

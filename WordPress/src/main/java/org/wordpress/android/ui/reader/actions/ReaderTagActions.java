@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.wordpress.rest.RestRequest;
 
-import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
@@ -13,7 +12,6 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderConstants;
-import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsFetched;
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
@@ -51,14 +49,17 @@ public class ReaderTagActions {
     private static boolean deleteTagsLocallyOnly(ActionListener actionListener, ReaderTag tag) {
         ReaderTagTable.deleteTag(tag);
         ReaderActions.callActionListener(actionListener, true);
-        EventBus.getDefault().post(new FollowedTagsFetched(true, ReaderTagTable.getFollowedTags().size()));
 
         return true;
     }
 
     private static boolean deleteTagsLocallyAndRemotely(ActionListener actionListener, ReaderTag tag) {
-        final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getTagSlug());
-        final String path = "read/tags/" + tagNameForApi + "/mine/delete";
+        final String path = ReaderUtils.getTagApiPath(tag.getTagSlug(), "mine", "delete");
+        if (path == null) {
+            AppLog.w(T.READER, "delete tag failed, invalid tag slug");
+            ReaderActions.callActionListener(actionListener, false);
+            return false;
+        }
 
         com.wordpress.rest.RestRequest.Listener listener = jsonObject -> {
             AppLog.i(T.READER, "delete tag succeeded");
@@ -88,26 +89,13 @@ public class ReaderTagActions {
         return true;
     }
 
-    public static boolean addTag(@NonNull final ReaderTag tag,
-                                 final ReaderActions.ActionListener actionListener,
-                                 final boolean isLoggedIn) {
-        ReaderTagList tags = new ReaderTagList();
-        tags.add(tag);
-        return addTags(tags, actionListener, isLoggedIn);
-    }
-
-    public static boolean addTags(@NonNull final List<ReaderTag> tags,
-                                  final boolean isLoggedIn) {
-        return addTags(tags, null, isLoggedIn);
-    }
-
     public static boolean addTags(@NonNull final List<ReaderTag> tags,
                                   final ReaderActions.ActionListener actionListener,
                                   final boolean isLoggedIn) {
         ReaderTagList newTags = new ReaderTagList();
         for (ReaderTag tag : tags) {
-            final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getTagSlug());
-            String endpoint = "/read/tags/" + tagNameForApi + "/posts";
+            final String path = ReaderUtils.getTagApiPath(tag.getTagSlug(), "posts");
+            String endpoint = path != null ? "/" + path : null;
 
             ReaderTag newTag = new ReaderTag(
                     tag.getTagSlug(),
@@ -130,7 +118,6 @@ public class ReaderTagActions {
     private static boolean saveTagsLocallyOnly(ActionListener actionListener, ReaderTagList newTags) {
         ReaderTagTable.addOrUpdateTags(newTags);
         ReaderActions.callActionListener(actionListener, true);
-        EventBus.getDefault().post(new FollowedTagsFetched(true, ReaderTagTable.getFollowedTags().size()));
 
         return true;
     }
@@ -147,7 +134,6 @@ public class ReaderTagActions {
             if (actionListener != null) {
                 ReaderActions.callActionListener(actionListener, true);
             }
-            EventBus.getDefault().post(new FollowedTagsFetched(true, ReaderTagTable.getFollowedTags().size()));
         };
 
         RestRequest.ErrorListener errorListener = volleyError -> {
@@ -159,7 +145,6 @@ public class ReaderTagActions {
                 if (actionListener != null) {
                     ReaderActions.callActionListener(actionListener, true);
                 }
-                EventBus.getDefault().post(new FollowedTagsFetched(true, ReaderTagTable.getFollowedTags().size()));
                 return;
             }
 
@@ -171,7 +156,6 @@ public class ReaderTagActions {
             if (actionListener != null) {
                 ReaderActions.callActionListener(actionListener, false);
             }
-            EventBus.getDefault().post(new FollowedTagsFetched(false, ReaderTagTable.getFollowedTags().size()));
         };
 
         ReaderTagTable.addOrUpdateTags(newTags);

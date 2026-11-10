@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-09 05:01:49+0000
+Translation-Revision-Date: 2026-11-07 23:10:26+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: de
@@ -666,7 +666,6 @@ Language: de
     <string name="reader_empty_followed_blogs_button_subscriptions">Zu den Abonnements gehen</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Die Blogs, die du abonniert hast, haben in letzter Zeit nichts veröffentlicht</string>
     <string name="reader_no_followed_blogs_description_subs">Abonniere Blogs in Entdecken oder suche nach einem Blog, den du bereits magst.</string>
-    <string name="reader_no_recommended_blogs_title">Keine empfohlenen Blogs</string>
     <string name="reader_no_posts_with_this_tag">Keine Beiträge mit diesem Schlagwort</string>
     <string name="reader_toast_err_unable_to_block_blog">Dieser Blog kann nicht blockiert werden</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Beiträge aus diesem Blog werden nicht mehr angezeigt</string>
@@ -1306,7 +1305,7 @@ Language: de
     <string name="comment_moderation_error">Das Moderieren der Kommentare ist fehlgeschlagen</string>
     <string name="reader_comment_menu_trash">In den Papierkorb verschieben</string>
     <string name="reader_comment_menu_spam">Als Spam markieren</string>
-    <string name="reader_comment_menu_unapprove">Zurückweisen</string>
+    <string name="reader_comment_menu_unapprove">Freigabe aufheben</string>
     <string name="gutenberg_native_tiled_gallery_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Einstellungen der Kachel-Galerie</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Navigiert zur Layout-Auswahlansicht</string>
     <string name="gutenberg_native_gallery_style" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Galerie-Stil</string>
@@ -2008,7 +2007,6 @@ Language: de
     <string name="publish_date">Veröffentlichungsdatum</string>
     <string name="ccpa_privacy_notice_read">CCPA-Datenschutzhinweis lesen</string>
     <string name="ccpa_privacy_notice_caption">Nach dem California Consumer Privacy Act („CCPA“) sind wir verpflichtet, den Einwohnern Kaliforniens zusätzliche Informationen zu den Kategorien personenbezogener Daten mitzuteilen, die wir sammeln und weitergeben. Außerdem müssen wir Auskunft darüber erteilen, woher wir diese personenbezogenen Daten erhalten und wie und warum wir sie verwenden.</string>
-    <string name="ccpa_privacy_notice_header">Datenschutzhinweis für Benutzer in Kalifornien</string>
     <string name="status_and_visibility">Status und Sichtbarkeit</string>
     <string name="update_now">Jetzt aktualisieren</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2723,11 +2721,8 @@ Language: de
     <string name="activity_log">Aktivitätsprotokoll</string>
     <string name="privacy_policy_read">Datenschutzerklärung lesen</string>
     <string name="third_party_policy_learn_more_caption">Wir verwenden andere Werkzeuge zum Tracking, darunter auch welche von Drittanbietern. Hier erhältst du weitere Informationen und Tipps, wie du sie kontrollierst.</string>
-    <string name="third_party_policy_learn_more_header">Richtlinie für Drittanbieter</string>
     <string name="privacy_policy_learn_more_caption">Diese Informationen helfen uns dabei, unsere Produkte zu verbessern, Marketing besser auf dich zuzuschneiden, deine Erfahrung mit WordPress.com zu personalisieren und mehr. All das kannst du auch in unserer Datenschutzerklärung nachlesen.</string>
-    <string name="privacy_policy_learn_more_header">Datenschutzerklärung</string>
     <string name="cookie_policy_learn_more_caption">Teile Informationen über deine Nutzung von Diensten mit unserem Analysewerkzeug, während du in deinem WordPress.com-Konto angemeldet bist.</string>
-    <string name="cookie_policy_learn_more_header">Cookie-Richtlinie</string>
     <string name="preference_privacy_settings">Datenschutzeinstellungen</string>
     <string name="preference_collect_information">Informationen erfassen</string>
     <string name="post_submitted">Beitrag eingereicht</string>
@@ -3121,8 +3116,6 @@ Language: de
     <string name="media_all">Alle</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s wurde der Zugriff auf deine Mediendateien verweigert. Um das zu korrigieren, bearbeite deine Berechtigungen und aktiviere %2$s.</string>
     <string name="reader_view_comments">Kommentare anzeigen</string>
-    <string name="site_settings_video_quality_hint">Qualität der Videos. Höhere Werte bedeuten qualitativ hochwertigere Videos.</string>
-    <string name="site_settings_video_width_hint">Ändert die Größe von Videos in Beiträgen in diese Größe</string>
     <string name="site_settings_optimize_video_summary">Aktivieren, um die Größe von Videos zu ändern und sie zu komprimieren</string>
     <string name="site_settings_optimize_videos">Videos optimieren</string>
     <string name="draft_uploaded">Entwurf hochgeladen</string>
@@ -3206,7 +3199,6 @@ Language: de
     <string name="photo_picker_title">Foto auswählen</string>
     <string name="error_publish_no_network">Das Gerät ist offline. Der Beitrag wurde lokal gespeichert.</string>
     <string name="editor_post_saved_online">Der Beitrag wurde online gespeichert</string>
-    <string name="site_settings_image_quality_hint">Die Qualität der Bilder. Höhere Werte bedeuten Bilder in besserer Qualität.</string>
     <string name="site_settings_optimize_images_summary">Aktivieren, um die Größe von Bildern zu ändern und sie zu komprimieren</string>
     <string name="media_encoder_quality_maximum">Maximum</string>
     <string name="media_encoder_quality_high">Hoch</string>
@@ -3458,7 +3450,6 @@ Language: de
     <string name="site_settings_discussion_hint">Diskussionseinstellungen für deine Websites anzeigen und ändern</string>
     <string name="site_settings_more_hint">Alle verfügbaren Diskussionseinstellungen anzeigen</string>
     <string name="site_settings_related_posts_hint">Ähnliche Beiträge im Reader anzeigen oder ausblenden</string>
-    <string name="site_settings_image_width_hint">Ändert die Größe der Bilder in Beiträgen auf diese Breite</string>
     <string name="site_settings_format_hint">Legt ein neues Beitragsformat fest</string>
     <string name="site_settings_category_hint">Legt eine neue Beitragskategorie fest</string>
     <string name="site_settings_password_hint">Ändere dein Passwort</string>
@@ -3697,7 +3688,7 @@ Language: de
     <string name="dlg_confirm_trash_comments">In Papierkorb verschieben?</string>
     <string name="mnu_comment_trash">Papierkorb</string>
     <string name="mnu_comment_spam">Spam</string>
-    <string name="mnu_comment_unapprove">Zurückweisen</string>
+    <string name="mnu_comment_unapprove">Freigabe aufheben</string>
     <string name="mnu_comment_approve">Freigeben</string>
     <string name="edit_comment">Kommentar bearbeiten</string>
     <string name="comment_status_trash">Im Papierkorb</string>
