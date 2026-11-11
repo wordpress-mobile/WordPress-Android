@@ -8,9 +8,12 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.View
 import android.webkit.WebView
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
 import androidx.webkit.WebViewAssetLoader
 import androidx.webkit.WebViewAssetLoader.AssetsPathHandler
 import androidx.webkit.WebViewAssetLoader.DEFAULT_DOMAIN
@@ -63,8 +66,21 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         val toolbarLayoutParams = toolbar.layoutParams as AppBarLayout.LayoutParams
         toolbarLayoutParams.scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL
 
+        showAiDisclosure()
         setupWebView()
         setupJsInterfaceForWebView()
+    }
+
+    /**
+     * Shows the fixed AI disclosure above the chat (EU AI Act Art. 50). The banner lives in the
+     * AppBarLayout without scroll flags, so it stays visible for the whole conversation.
+     */
+    private fun showAiDisclosure() {
+        findViewById<TextView>(R.id.ai_disclosure_text).text = getString(
+            R.string.ai_support_disclosure,
+            getString(R.string.ai_support_disclosure_product_name)
+        )
+        findViewById<View>(R.id.ai_disclosure_banner).isVisible = true
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

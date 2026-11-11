@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **AI support chat says up front that you are chatting with AI**
+  The support chat now shows a fixed line above the conversation: "You're chatting with AI from WordPress.com Support." It sits outside the scrolling messages, so it stays visible however long the conversation gets, and it is there from the moment the chat opens, before the first reply. It appears in every AI chat, whether newly started or reopened from the list. Once a conversation has been handed to a Happiness Engineer and become a ticket, the ticket view does not show it.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Everyone
+  - **Where:** Me → Help & Support → Get help → any AI Assistant conversation; also the older Contact Support chat reached from the post editor
+  - **Notes:** Required by the EU AI Act (Art. 50), which asks for this label at the top of the chat rather than in a footer, everywhere in the world. The wording is written by the app, never by the bot, and is translated like any other string; "WordPress.com" in it is not translated. Both apps name WordPress.com, because that is who provides the support, so the Jetpack app says WordPress.com too. It is announced by screen readers along with the rest of the screen, and it wraps onto more lines rather than being cut off at larger text sizes.
+
 - **Referrers and Clicks in Stats show each source's icon**
   Rows in the redesigned Stats' Referrers and Clicks cards, and their full lists, now show the site icon the Stats API already reports for the referrer or link, matching the web version. A row the API has no icon for shows none, and its title stays where it was. Expanding a referrer group, such as Search Engines, shows an icon for each entry under it too.
   - **Apps:** Both
