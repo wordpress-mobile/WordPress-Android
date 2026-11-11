@@ -55,6 +55,7 @@ import org.wordpress.android.ui.reader.reblog.ReblogState.SingleSite
 import org.wordpress.android.ui.reader.reblog.ReblogState.Unknown
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.BlockedBlogResult
+import org.wordpress.android.ui.reader.repository.BlockedUserResult
 import org.wordpress.android.ui.reader.repository.ReaderBlogRepository
 import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.Failed
@@ -725,7 +726,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Posts are refreshed when site blocked in local db`() = test {
         // Arrange
         whenever(blockBlogUseCase.blockBlog(any(), any()))
-            .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
+            .thenReturn(flowOf(SiteBlockedInLocalDb(blockedBlogResult())))
         val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
@@ -743,7 +744,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Snackbar shown when site blocked in local db`() = test {
         // Arrange
         whenever(blockBlogUseCase.blockBlog(any(), any()))
-            .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
+            .thenReturn(flowOf(SiteBlockedInLocalDb(blockedBlogResult())))
         val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
@@ -815,7 +816,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Undo action is invoked when user clicks on undo action in snackbar`() = test {
         // Arrange
         whenever(blockBlogUseCase.blockBlog(any(), any()))
-            .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
+            .thenReturn(flowOf(SiteBlockedInLocalDb(blockedBlogResult())))
         val observedValues = startObserving(backgroundScope)
         actionHandler.onAction(
             mock(),
@@ -833,7 +834,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Post refreshed when user clicks on undo action in snackbar`() = test {
         // Arrange
         whenever(blockBlogUseCase.blockBlog(any(), any()))
-            .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
+            .thenReturn(flowOf(SiteBlockedInLocalDb(blockedBlogResult())))
         val observedValues = startObserving(backgroundScope)
         actionHandler.onAction(
             mock(),
@@ -851,14 +852,8 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Scroll to site emitted when user clicks on undo action in snackbar`() = test {
         // Arrange
         val expectedBlogId = 123L
-        val blockedBlogResult = BlockedBlogResult(
-            blogId = expectedBlogId,
-            feedId = 0L,
-            deletedRows = emptyMap(),
-            wasFollowing = false
-        )
         whenever(blockBlogUseCase.blockBlog(any(), any()))
-            .thenReturn(flowOf(SiteBlockedInLocalDb(blockedBlogResult)))
+            .thenReturn(flowOf(SiteBlockedInLocalDb(blockedBlogResult(expectedBlogId))))
         val observedValues = startObserving(backgroundScope)
         actionHandler.onAction(
             mock(),
@@ -879,7 +874,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Posts are refreshed when user blocked in local db`() = test {
         // Arrange
         whenever(blockUserUseCase.blockUser(any(), any()))
-            .thenReturn(mock())
+            .thenReturn(blockedUserResult())
         val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
@@ -897,7 +892,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Snackbar shown when user blocked in local db`() = test {
         // Arrange
         whenever(blockUserUseCase.blockUser(any(), any()))
-            .thenReturn(mock())
+            .thenReturn(blockedUserResult())
         val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
@@ -915,7 +910,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Undo action is invoked when user clicks on undo block user action in snackbar`() = test {
         // Arrange
         whenever(blockUserUseCase.blockUser(any(), any()))
-            .thenReturn(mock())
+            .thenReturn(blockedUserResult())
         val observedValues = startObserving(backgroundScope)
         actionHandler.onAction(
             mock(),
@@ -933,7 +928,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Post refreshed when user clicks on undo block user action in snackbar`() = test {
         // Arrange
         whenever(blockUserUseCase.blockUser(any(), any()))
-            .thenReturn(mock())
+            .thenReturn(blockedUserResult())
         val observedValues = startObserving(backgroundScope)
         actionHandler.onAction(
             mock(),
@@ -1368,4 +1363,13 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         val refreshPosts: List<Unit>,
         val scrollToSiteId: List<Long>
     )
+
+    private fun blockedBlogResult(blogId: Long = 0L) = BlockedBlogResult(
+        blogId = blogId,
+        feedId = 0L,
+        deletedRows = emptyMap(),
+        wasFollowing = false
+    )
+
+    private fun blockedUserResult() = BlockedUserResult(authorId = 0L, feedId = 0L, deletedRows = emptyMap())
 }

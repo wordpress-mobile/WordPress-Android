@@ -154,22 +154,25 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
      * null if the tag's slug isn't valid, otherwise whether it succeeded.
      */
     private suspend fun deleteTag(tag: ReaderTag, isLoggedIn: Boolean): Boolean? {
-        if (!isLoggedIn) {
-            ReaderTagTable.deleteTag(tag)
-            return true
-        }
         val path = ReaderUtils.getTagApiPath(tag.tagSlug, "mine", "delete")
-        if (path == null) {
-            AppLog.w(AppLog.T.READER, "delete tag failed, invalid tag slug")
-            return null
-        }
-
-        ReaderTagTable.deleteTag(tag)
-        val result = awaitRestRequest { listener, errorListener ->
-            WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener)
-        }
-        return isTagActionSuccessful(result, "delete tag", alreadyDoneError = "not_subscribed") {
-            ReaderTagTable.addOrUpdateTag(tag)
+        return when {
+            !isLoggedIn -> {
+                ReaderTagTable.deleteTag(tag)
+                true
+            }
+            path == null -> {
+                AppLog.w(AppLog.T.READER, "delete tag failed, invalid tag slug")
+                null
+            }
+            else -> {
+                ReaderTagTable.deleteTag(tag)
+                val result = awaitRestRequest { listener, errorListener ->
+                    WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener)
+                }
+                isTagActionSuccessful(result, "delete tag", alreadyDoneError = "not_subscribed") {
+                    ReaderTagTable.addOrUpdateTag(tag)
+                }
+            }
         }
     }
 

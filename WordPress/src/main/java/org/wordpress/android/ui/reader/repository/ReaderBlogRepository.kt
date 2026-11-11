@@ -102,18 +102,19 @@ class ReaderBlogRepository @Inject constructor(
         val blogInfo = withContext(ioDispatcher) {
             ReaderBlogTable.getFeedInfo(ReaderBlogTable.getFeedIdFromUrl(feedUrl))
         }
-        if (blogInfo != null) {
-            return followFeed(blogInfo.blogId, blogInfo.feedId, blogInfo.feedUrl, true, source)
+        return if (blogInfo != null) {
+            followFeed(blogInfo.blogId, blogInfo.feedId, blogInfo.feedUrl, true, source)
+        } else {
+            // this follows even if the lookup fails, since the lookup doesn't do feed discovery but the follow does
+            val fetchedInfo = fetchFeedInfo(0, feedUrl)
+            followFeed(
+                blogId = fetchedInfo?.blogId ?: 0,
+                feedId = fetchedInfo?.feedId ?: 0,
+                feedUrl = fetchedInfo?.takeIf { it.hasFeedUrl() }?.feedUrl ?: feedUrl,
+                follow = true,
+                source = source
+            )
         }
-        // this follows even if the lookup fails, since the lookup doesn't do feed discovery but the follow does
-        val fetchedInfo = fetchFeedInfo(0, feedUrl)
-        return followFeed(
-            blogId = fetchedInfo?.blogId ?: 0,
-            feedId = fetchedInfo?.feedId ?: 0,
-            feedUrl = fetchedInfo?.takeIf { it.hasFeedUrl() }?.feedUrl ?: feedUrl,
-            follow = true,
-            source = source
-        )
     }
 
     /**
@@ -274,13 +275,13 @@ class ReaderBlogRepository @Inject constructor(
         }
         val result = get(path)
         // an auth error may mean API access is disabled for the site, otherwise it's retried by domain
-        if (result is RestResult.Failure && result.statusCode != HttpURLConnection.HTTP_FORBIDDEN &&
-            hasBlogId && hasBlogUrl
-        ) {
+        val isRetryable = result is RestResult.Failure && result.statusCode != HttpURLConnection.HTTP_FORBIDDEN
+        return if (isRetryable && hasBlogId && hasBlogUrl) {
             AppLog.w(T.READER, "failed to get blog info by id, retrying with url")
-            return fetchBlogInfo(0, blogUrl)
+            fetchBlogInfo(0, blogUrl)
+        } else {
+            saveBlogInfo(result, "update blog info")
         }
-        return saveBlogInfo(result, "update blog info")
     }
 
     private suspend fun fetchFeedInfo(feedId: Long, feedUrl: String?): ReaderBlog? {
