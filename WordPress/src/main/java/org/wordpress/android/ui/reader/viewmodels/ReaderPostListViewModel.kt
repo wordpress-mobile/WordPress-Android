@@ -159,6 +159,7 @@ class ReaderPostListViewModel @Inject constructor(
     private var requestFailed = false
     private var autoUpdateSkipped = false
     private var isSiteAllSubfilter = false
+    private var siteSubfilter: SubfilterListItem.Site? = null
     private var hasFollowedBlogs = false
     private var restorePosition = 0
     private var pendingScrollToBlogId: Long? = null
@@ -173,7 +174,7 @@ class ReaderPostListViewModel @Inject constructor(
     private val postHeaderClicked: (Long, Long) -> Unit = ::onPostHeaderClicked
 
     private val refreshPostsObserver = Observer<Event<Unit>> { event ->
-        event.getContentIfNotHandled()?.let { reload() }
+        event.getContentIfNotHandled()?.let { onPostsChanged() }
     }
     private val followStatusObserver = Observer<FollowStatusChanged> { onFollowStatusChanged(it) }
 
@@ -368,8 +369,29 @@ class ReaderPostListViewModel @Inject constructor(
         }
     }
 
+    /*
+     * Called when a card action, such as blocking a site, changed the stored posts
+     */
+    private fun onPostsChanged() {
+        val site = siteSubfilter
+        if (!isFilterable || site == null) {
+            reload()
+            return
+        }
+        launch {
+            // blocking the site picked in the Subscriptions filter unfollows it, which would leave an empty
+            // list - show all subscriptions instead
+            if (repository.isFollowedSite(site.blog)) {
+                reload()
+            } else {
+                sendUiEvent(ReaderPostListUiEvent.SetDefaultSubfilter)
+            }
+        }
+    }
+
     fun onSubfilterChanged(subfilter: SubfilterListItem?) {
         isSiteAllSubfilter = subfilter is SubfilterListItem.SiteAll
+        siteSubfilter = subfilter as? SubfilterListItem.Site
         updateUiState()
     }
 
@@ -1208,11 +1230,6 @@ class ReaderPostListViewModel @Inject constructor(
         bookmarksList: Boolean,
         source: String
     ) {
-        // a site picked in the Subscriptions filter is the only one shown, so blocking it would leave an empty
-        // list - show all subscriptions instead
-        if (isFilterable && listType == ReaderPostListType.BLOG_PREVIEW) {
-            sendUiEvent(ReaderPostListUiEvent.SetDefaultSubfilter)
-        }
         launch {
             readerPostCardActionsHandler.onAction(
                 post,

@@ -1,10 +1,15 @@
 package org.wordpress.android.datasets;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.util.SqlUtils;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ReaderBlockedBlogTable {
     protected static final String BLOCKED_BLOGS_TABLE = "tbl_blocked_blogs";
@@ -56,14 +61,30 @@ public class ReaderBlockedBlogTable {
         ReaderDatabase.getWritableDb().delete(BLOCKED_BLOGS_TABLE, BLOG_ID + "=?", args);
     }
 
-    /*
-     * the server drops a blocked site from the followed sites list, and unblocking it on the web re-subscribes
-     * to it, so a followed site can't be blocked - this clears the local block left behind by such an unblock,
-     * which would otherwise keep dropping the site's posts until sign-out
-     */
-    public static void removeFollowedBlogs() {
-        ReaderDatabase.getWritableDb().execSQL("DELETE FROM " + BLOCKED_BLOGS_TABLE + " WHERE " + BLOG_ID
-                                               + " IN (SELECT blog_id FROM tbl_blog_info WHERE is_following=1)");
+    public static Set<Long> getBlockedBlogIds() {
+        Set<Long> blogIds = new HashSet<>();
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT " + BLOG_ID + " FROM " + BLOCKED_BLOGS_TABLE, null);
+        try {
+            while (c.moveToNext()) {
+                blogIds.add(c.getLong(0));
+            }
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
+        return blogIds;
+    }
+
+    public static void removeBlockedBlogs(Collection<Long> blogIds) {
+        SQLiteDatabase db = ReaderDatabase.getWritableDb();
+        db.beginTransaction();
+        try {
+            for (long blogId : blogIds) {
+                removeBlockedBlog(blogId);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
     public static void blacklistBlogLocally(long blogId) {

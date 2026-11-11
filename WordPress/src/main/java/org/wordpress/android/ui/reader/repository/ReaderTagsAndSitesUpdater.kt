@@ -135,9 +135,7 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
 
     private fun start(task: UpdateTask): Deferred<Boolean> = when (task) {
         UpdateTask.TAGS -> start(task, ::fetchTags, ::saveTags)
-        UpdateTask.FOLLOWED_BLOGS -> start(task, ::fetchFollowedBlogs) { (blogs, total) ->
-            saveFollowedBlogs(blogs, total)
-        }
+        UpdateTask.FOLLOWED_BLOGS -> start(task, ::fetchFollowedBlogs, ::saveFollowedBlogs)
     }
 
     /*
@@ -261,7 +259,8 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
     /*
      * requests every page of the sites the user follows and returns them with the total number of sites
      */
-    private suspend fun fetchFollowedBlogs(): Pair<ReaderBlogList, Int>? {
+    private suspend fun fetchFollowedBlogs(): FollowedBlogs? {
+        val blockedBeforeRequest = ReaderBlockedBlogTable.getBlockedBlogIds()
         val serverBlogs = ReaderBlogList()
         var page = 1
         while (true) {
@@ -279,12 +278,13 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
             if (json.optInt("number", 0) > MIN_SITES_FOR_NEXT_PAGE) {
                 page = json.optInt("page", 1) + 1
             } else {
-                return serverBlogs to json.optInt("total_subscriptions", 0)
+                return FollowedBlogs(serverBlogs, json.optInt("total_subscriptions", 0), blockedBeforeRequest)
             }
         }
     }
 
-    private suspend fun saveFollowedBlogs(serverBlogs: ReaderBlogList, totalSites: Int) {
+    private suspend fun saveFollowedBlogs(followedBlogs: FollowedBlogs) {
+        val (serverBlogs, totalSites, blockedBeforeRequest) = followedBlogs
         var didChange = false
         val localBlogs = ReaderBlogTable.getFollowedBlogs()
         if (!localBlogs.isSameList(serverBlogs)) {
@@ -298,7 +298,10 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
                 didChange = true
             }
         }
-        ReaderBlockedBlogTable.removeFollowedBlogs()
+        // the server leaves blocked sites out of this list, and unblocking one on the web re-subscribes to it, so a
+        // local block on a site in it is stale. Only blocks from before the request are cleared, since a site
+        // blocked while it ran can still be in the response.
+        ReaderBlockedBlogTable.removeBlockedBlogs(serverBlogs.map { it.blogId }.filter { it in blockedBeforeRequest })
         _events.emit(ReaderTagsAndSitesEvent.FollowedBlogsChanged(totalSites, didChange))
     }
 
@@ -382,3 +385,9 @@ sealed class ReaderTagsAndSitesEvent {
     data class FollowedTagsChanged(val totalTags: Int, val didChange: Boolean) : ReaderTagsAndSitesEvent()
     data class FollowedBlogsChanged(val totalSubscriptions: Int, val didChange: Boolean) : ReaderTagsAndSitesEvent()
 }
+
+private data class FollowedBlogs(
+    val blogs: ReaderBlogList,
+    val totalSites: Int,
+    val blockedBeforeRequest: Set<Long>
+)
