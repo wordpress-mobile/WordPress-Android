@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -162,18 +163,21 @@ class NotificationsListViewModel @Inject constructor(
         // for updating the UI in other tabs
         eventBusWrapper.postSticky(NotificationEvents.OnNotePostLikeChanged(note, liked))
         val post = readerPostTableWrapper.getBlogPost(note.siteId.toLong(), note.postId.toLong(), true)
-        val success = readerPostRepository.likePostRemote(
-            post = post,
-            blogId = note.siteId.toLong(),
-            postId = note.postId.toLong(),
-            like = liked,
-            wpComUserId = accountStore.account.userId
-        )
-        if (success) {
-            notificationsTableWrapper.saveNote(note)
-            if (post == null) {
-                // sync post from server
-                readerPostActionsWrapper.requestBlogPost(note.siteId.toLong(), note.postId.toLong(), null)
+        // saving the note is part of the like, so it isn't skipped if the screen goes away mid-request
+        withContext(NonCancellable) {
+            val success = readerPostRepository.likePostRemote(
+                post = post,
+                blogId = note.siteId.toLong(),
+                postId = note.postId.toLong(),
+                like = liked,
+                wpComUserId = accountStore.account.userId
+            )
+            if (success) {
+                notificationsTableWrapper.saveNote(note)
+                if (post == null) {
+                    // sync post from server
+                    readerPostActionsWrapper.requestBlogPost(note.siteId.toLong(), note.postId.toLong(), null)
+                }
             }
         }
     }

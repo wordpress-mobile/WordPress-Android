@@ -243,8 +243,10 @@ class ReaderPostRepository @Inject constructor(
         if (result is RestResult.Failure) {
             val error = result.errorString
             AppLog.w(AppLog.T.READER, "post $actionName failed" + if (error.isEmpty()) "" else " ($error)")
-            post?.let { ReaderPostTable.setLikesForPost(it, it.numLikes, it.isLikedByCurrentUser) }
-            ReaderLikeTable.setCurrentUserLikesPost(postId, blogId, !like, wpComUserId)
+            if (!result.isCancelled) {
+                post?.let { ReaderPostTable.setLikesForPost(it, it.numLikes, it.isLikedByCurrentUser) }
+                ReaderLikeTable.setCurrentUserLikesPost(postId, blogId, !like, wpComUserId)
+            }
         } else {
             AppLog.d(AppLog.T.READER, "post $actionName succeeded")
         }

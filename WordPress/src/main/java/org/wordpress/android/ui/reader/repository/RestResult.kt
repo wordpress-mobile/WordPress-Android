@@ -22,6 +22,12 @@ internal sealed class RestResult {
     }
 
     val response: JSONObject? get() = (this as? Success)?.json
+
+    /**
+     * True if Volley cancelled the request, as it does for every request at sign-out. Callers shouldn't revert
+     * local changes then, since the Reader's data is being cleared.
+     */
+    val isCancelled: Boolean get() = this is Failure && error == null
 }
 
 /**

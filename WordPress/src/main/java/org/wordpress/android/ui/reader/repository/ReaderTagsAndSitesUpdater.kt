@@ -178,7 +178,7 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
 
     /*
      * returns whether a tag action succeeded, treating [alreadyDoneError] (the server saying the tag was already
-     * followed or unfollowed) as a success, and calls [revert] if it failed
+     * followed or unfollowed) as a success, and calls [revert] if it failed (but not if it was cancelled)
      */
     private fun isTagActionSuccessful(
         result: RestResult,
@@ -196,7 +196,7 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
         }
         else -> {
             AppLog.w(AppLog.T.READER, "$action failed")
-            revert()
+            if (!result.isCancelled) revert()
             false
         }
     }

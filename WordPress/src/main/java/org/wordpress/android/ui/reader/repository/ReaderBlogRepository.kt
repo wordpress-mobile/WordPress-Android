@@ -72,14 +72,16 @@ class ReaderBlogRepository @Inject constructor(
                 // a 403 when unfollowing means the site no longer exists, so it's unfollowed by URL instead (the
                 // v1.2 endpoint returns a 404 in this case)
                 if (!follow && result.statusCode == HttpURLConnection.HTTP_FORBIDDEN) {
-                    return@withContext unfollowBlogByUrl(blogId)
+                    val unfollowed = unfollowBlogByUrl(blogId)
+                    if (unfollowed == false) setBlogFollowedLocal(blogId, true)
+                    return@withContext unfollowed == true
                 }
             }
             val succeeded = isFollowActionSuccessful(result.response, follow)
             if (result is RestResult.Success && !succeeded) {
                 AppLog.w(T.READER, "blog ${actionName(follow)} failed - ${result.json} - $path")
             }
-            if (!succeeded) setBlogFollowedLocal(blogId, !follow)
+            if (!succeeded && !result.isCancelled) setBlogFollowedLocal(blogId, !follow)
             succeeded
         }
     }
@@ -180,8 +182,8 @@ class ReaderBlogRepository @Inject constructor(
         withContext(ioDispatcher + NonCancellable) {
             AppLog.i(T.READER, "blocking blog ${blockResult.blogId}")
             val result = post("me/block/sites/${blockResult.blogId}/new")
-            if (result is RestResult.Failure) {
-                logVolleyError("block blog", result.error)
+            if (result is RestResult.Failure) logVolleyError("block blog", result.error)
+            if (result is RestResult.Failure && !result.isCancelled) {
                 undoBlockBlogLocal(blockResult)
                 if (blockResult.wasFollowing) ReaderBlogTable.setIsFollowedBlogId(blockResult.blogId, true)
             }
@@ -242,12 +244,17 @@ class ReaderBlogRepository @Inject constructor(
             } else if (!succeeded) {
                 AppLog.w(T.READER, "feed ${actionName(follow)} failed - ${result.response} - $path")
             }
-            if (!succeeded) setFeedFollowedLocal(feedId, !follow)
+            // the forward write was skipped without a feed ID, and reverting with 0 would unfollow every site
+            // that has no feed ID
+            if (!succeeded && feedId != 0L && !result.isCancelled) setFeedFollowedLocal(feedId, !follow)
             succeeded
         }
     }
 
-    private suspend fun unfollowBlogByUrl(blogId: Long): Boolean {
+    /*
+     * returns whether unfollowing by URL succeeded, or null if the request was cancelled
+     */
+    private suspend fun unfollowBlogByUrl(blogId: Long): Boolean? {
         val blogUrl = ReaderBlogTable.getBlogUrl(blogId)
         if (blogUrl.isNullOrEmpty()) {
             AppLog.w(T.READER, "URL not found for blogId $blogId")
@@ -255,7 +262,7 @@ class ReaderBlogRepository @Inject constructor(
         }
         val result = post("/read/following/mine/delete?url=" + UrlUtils.urlEncode(blogUrl))
         if (result is RestResult.Failure) logVolleyError("unfollow blog by url", result.error)
-        return result is RestResult.Success
+        return if (result.isCancelled) null else result is RestResult.Success
     }
 
     private suspend fun fetchBlogInfo(blogId: Long, blogUrl: String?): ReaderBlog? {
@@ -272,7 +279,8 @@ class ReaderBlogRepository @Inject constructor(
         }
         val result = get(path)
         // an auth error may mean API access is disabled for the site, otherwise it's retried by domain
-        val isRetryable = result is RestResult.Failure && result.statusCode != HttpURLConnection.HTTP_FORBIDDEN
+        val isRetryable = result is RestResult.Failure && !result.isCancelled &&
+            result.statusCode != HttpURLConnection.HTTP_FORBIDDEN
         return if (isRetryable && hasBlogId && hasBlogUrl) {
             AppLog.w(T.READER, "failed to get blog info by id, retrying with url")
             fetchBlogInfo(0, blogUrl)
