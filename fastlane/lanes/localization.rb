@@ -341,12 +341,7 @@ platform :android do
       )
 
       if download_path.nil?
-        error_message = <<~ERROR
-          Can't download strings file for #{lib[:name]}.
-          Strings for this library won't get translated.
-          Do you want to continue anyway?
-        ERROR
-        UI.user_error! 'Abort.' unless UI.confirm(error_message)
+        UI.user_error!("Can't download the strings file for #{lib[:name]}; its strings won't be merged for translation.")
       else
         UI.message("`strings.xml` file for #{lib[:name]} downloaded to #{download_path}.")
         lib_to_merge = [{
