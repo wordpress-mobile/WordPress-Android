@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.MediaFileNameUtils
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.WPVideoUtils
@@ -142,7 +143,7 @@ class GBKMediaProcessor @AssistedInject constructor(
         return ProcessedProxyFile.Processed(
             file = output,
             mimeType = MIME_MP4,
-            filename = "${filename.substringBeforeLast('.')}.mp4"
+            filename = MediaFileNameUtils.replaceExtension(filename, EXTENSION_MP4)
         )
     }
 
@@ -159,9 +160,15 @@ class GBKMediaProcessor @AssistedInject constructor(
             continuation.resume(null)
             return@suspendCancellableCoroutine
         }
-        val startTimeMs = System.currentTimeMillis()
         val listener = object : IProgressListener {
-            override fun onMediaStart() = Unit
+            // Set when encoding starts, matching VideoOptimizer's elapsed_time_ms.
+            @Volatile
+            private var startTimeMs = System.currentTimeMillis()
+
+            override fun onMediaStart() {
+                startTimeMs = System.currentTimeMillis()
+            }
+
             override fun onMediaProgress(progress: Float) = Unit
             override fun onMediaPause() = Unit
 
@@ -249,17 +256,19 @@ class GBKMediaProcessor @AssistedInject constructor(
         analyticsTrackerWrapper.track(AnalyticsTracker.Stat.MEDIA_VIDEO_CANT_OPTIMIZE, properties)
     }
 
-    /** Mirrors VideoOptimizer's events, including its `input_video_`/`output_video_` prefixes. */
+    /**
+     * Mirrors VideoOptimizer's events, including its `input_video_`/`output_video_` prefixes. Like
+     * VideoOptimizer, errors also describe the partial output.
+     */
     private fun trackTranscodeFinished(input: File, output: File, startTimeMs: Long, exception: Exception?) {
         val properties = mutableMapOf<String, Any?>()
         analyticsUtilsWrapper.getMediaProperties(true, null, input.absolutePath)
             .forEach { (key, value) -> properties["input_video_$key"] = value }
+        analyticsUtilsWrapper.getMediaProperties(true, null, output.absolutePath)
+            .forEach { (key, value) -> properties["output_video_$key"] = value }
+        properties["saved_megabytes"] = ((input.length() - output.length()) / BYTES_PER_MEGABYTE).toString()
 
-        if (exception == null) {
-            analyticsUtilsWrapper.getMediaProperties(true, null, output.absolutePath)
-                .forEach { (key, value) -> properties["output_video_$key"] = value }
-            properties["saved_megabytes"] = ((input.length() - output.length()) / BYTES_PER_MEGABYTE).toString()
-        } else {
+        if (exception != null) {
             properties["exception_name"] = exception.javaClass.canonicalName
             properties["exception_message"] = exception.message
         }
@@ -348,12 +357,12 @@ class GBKMediaProcessor @AssistedInject constructor(
             mediaUtilsWrapper.stripImageLocation(output.absolutePath)
         }
 
-        val basename = filename.substringBeforeLast('.')
-        return if (output.extension.lowercase() == EXTENSION_PNG) {
-            ProcessedProxyFile.Processed(output, MIME_PNG, "$basename.png")
-        } else {
-            ProcessedProxyFile.Processed(output, MIME_JPEG, "$basename.jpg")
-        }
+        val isPng = output.extension.lowercase() == EXTENSION_PNG
+        return ProcessedProxyFile.Processed(
+            file = output,
+            mimeType = if (isPng) MIME_PNG else MIME_JPEG,
+            filename = MediaFileNameUtils.replaceExtension(filename, if (isPng) EXTENSION_PNG else EXTENSION_JPG)
+        )
     }
 
     /**
@@ -394,6 +403,8 @@ class GBKMediaProcessor @AssistedInject constructor(
         private const val MIME_TEXT_PLAIN = "text/plain"
 
         private const val EXTENSION_PNG = "png"
+        private const val EXTENSION_JPG = "jpg"
+        private const val EXTENSION_MP4 = "mp4"
 
         private val PLACEHOLDER_MIME_TYPES = setOf(MIME_OCTET_STREAM, MIME_TEXT_PLAIN)
 
