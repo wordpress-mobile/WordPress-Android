@@ -9,7 +9,7 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 <!-- Add new entries directly below this line. -->
 
 - **New block editor uploads follow the Media settings**
-  Photos and videos added from the device in the new block editor are now resized, compressed, and stripped of location as set in App Settings, as they already were in the classic editors. Before, they uploaded unchanged. On free WordPress.com plans, an audio file or document the plan doesn't allow is refused up front with a notice in the app's language.
+  Photos and videos added from the device in the new block editor are now resized, compressed, and stripped of location as set in App Settings, as they already were in the classic editors. Before, they uploaded unchanged.
   - **Apps:** Both
   - **Type:** Fixed
   - **Availability:** Everyone
