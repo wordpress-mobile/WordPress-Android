@@ -65,6 +65,7 @@
     <string name="incorrect_credentials">Incorrect username or password.</string>
     <string name="gallery_error">The media item couldn\'t be retrieved</string>
     <string name="refresh">Refresh</string>
+    <string name="web_view_log_in_to_site">Log in to this site</string>
     <string name="blog_not_found">An error occurred when accessing this blog</string>
     <string name="post_not_found">An error occurred when loading the post. Refresh your posts and try again.</string>
     <string name="page_not_found">An error occurred when loading the page. Refresh your pages and try again.</string>
