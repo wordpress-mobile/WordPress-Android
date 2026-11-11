@@ -23,5 +23,5 @@ notify:
   - slack:
       channels:
         - "#build-and-ship"
-      message: "Failed to sync translations from GlotPress."
+      message: "Daily translations job failed (library strings, freeze, or GlotPress download). See the build log."
     if: build.state == "failed"
