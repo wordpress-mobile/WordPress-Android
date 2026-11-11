@@ -1605,6 +1605,11 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             SiteModel site = mSiteStore.getSiteByLocalId(selectedSite.getId());
             if (site != null) {
                 mSelectedSiteRepository.updateSite(site);
+            } else {
+                // The selected site was deleted by the fetch (e.g. it's no longer returned by /me/sites
+                // because it's inactive), so select another site instead of keeping the stale one
+                mSelectedSiteRepository.removeSite();
+                initSelectedSite();
             }
         }
     }
