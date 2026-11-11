@@ -81,18 +81,22 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun isProhibitedVideoDuration(context: Context, site: SiteModel, uri: Uri): Boolean =
         isProhibitedVideoDuration(context, site, uri, isVideoFile(uri))
 
+    @Suppress("TooGenericExceptionCaught")
     private fun isProhibitedVideoDuration(context: Context, site: SiteModel, uri: Uri, isVideo: Boolean): Boolean {
         if (isVideo && site.hasFreePlan && !site.isActiveModuleEnabled("videopress")) {
             val retriever = MediaMetadataRetriever()
 
-            try {
+            // The native extractor throws a plain RuntimeException for content it can't parse.
+            // An unknown duration leaves the decision to the server rather than failing the upload.
+            val videoDuration = try {
                 retriever.setDataSource(context, uri)
-            } catch (e: IllegalArgumentException) {
+                retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0
+            } catch (e: RuntimeException) {
                 AppLog.d(T.MEDIA, "Cannot retrieve video file $e")
+                0
+            } finally {
+                retriever.release()
             }
-
-            val videoDuration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0
-            retriever.release()
 
             val allowedVideoDurationForFreeSites = TimeUnit.MILLISECONDS.convert(DURATION_5_MIN, TimeUnit.MINUTES)
             return allowedVideoDurationForFreeSites < videoDuration
