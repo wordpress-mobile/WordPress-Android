@@ -1208,6 +1208,11 @@ class ReaderPostListViewModel @Inject constructor(
         bookmarksList: Boolean,
         source: String
     ) {
+        // a site picked in the Subscriptions filter is the only one shown, so blocking it would leave an empty
+        // list - show all subscriptions instead
+        if (isFilterable && listType == ReaderPostListType.BLOG_PREVIEW) {
+            sendUiEvent(ReaderPostListUiEvent.SetDefaultSubfilter)
+        }
         launch {
             readerPostCardActionsHandler.onAction(
                 post,

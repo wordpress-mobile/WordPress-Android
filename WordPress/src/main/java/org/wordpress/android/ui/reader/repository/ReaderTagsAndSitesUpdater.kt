@@ -16,6 +16,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.datasets.ReaderBlockedBlogTable
 import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.datasets.ReaderTagTable
@@ -297,6 +298,7 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
                 didChange = true
             }
         }
+        ReaderBlockedBlogTable.removeFollowedBlogs()
         _events.emit(ReaderTagsAndSitesEvent.FollowedBlogsChanged(totalSites, didChange))
     }
 

@@ -56,6 +56,16 @@ public class ReaderBlockedBlogTable {
         ReaderDatabase.getWritableDb().delete(BLOCKED_BLOGS_TABLE, BLOG_ID + "=?", args);
     }
 
+    /*
+     * the server drops a blocked site from the followed sites list, and unblocking it on the web re-subscribes
+     * to it, so a followed site can't be blocked - this clears the local block left behind by such an unblock,
+     * which would otherwise keep dropping the site's posts until sign-out
+     */
+    public static void removeFollowedBlogs() {
+        ReaderDatabase.getWritableDb().execSQL("DELETE FROM " + BLOCKED_BLOGS_TABLE + " WHERE " + BLOG_ID
+                                               + " IN (SELECT blog_id FROM tbl_blog_info WHERE is_following=1)");
+    }
+
     public static void blacklistBlogLocally(long blogId) {
         addBlockedBlog(blogId);
     }
