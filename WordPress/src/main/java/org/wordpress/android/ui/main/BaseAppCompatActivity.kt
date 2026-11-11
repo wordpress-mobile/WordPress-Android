@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import org.wordpress.android.R
 import org.wordpress.android.support.logs.ui.LogsActivity
 import org.wordpress.android.support.main.ui.SupportActivity
 import org.wordpress.android.support.unified.ui.UnifiedSupportActivity
@@ -50,12 +51,21 @@ import org.wordpress.android.ui.taxonomies.TermsDataViewActivity
  * but can be extended in the future to handle other situations
  */
 open class BaseAppCompatActivity : AppCompatActivity() {
+    // E Ink settings (tap highlights, window animations) are applied once, in onCreate
+    private var createdInEinkMode = false
+
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
+        createdInEinkMode = AppPrefs.isEinkModeEnabled()
+        if (createdInEinkMode) {
+            // Tap highlights show up as extra screen flashes on E Ink, so make them transparent.
+            // Applied before any layout is inflated so every View picks it up.
+            theme.applyStyle(R.style.ThemeOverlay_WordPress_EInk, true)
+        }
         super.onCreate(savedInstanceState)
 
         // Disable animations for e-ink devices
-        if (AppPrefs.isEinkModeEnabled()) {
+        if (createdInEinkMode) {
             window.setWindowAnimations(0)
             disableActivityTransition()
         }
@@ -65,6 +75,14 @@ open class BaseAppCompatActivity : AppCompatActivity() {
             !isExcludedActivity(this)
         ) {
             applyInsetOffsets()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // E Ink mode was toggled while this screen was in the back stack, so its settings are stale
+        if (AppPrefs.isEinkModeEnabled() != createdInEinkMode) {
+            recreate()
         }
     }
 

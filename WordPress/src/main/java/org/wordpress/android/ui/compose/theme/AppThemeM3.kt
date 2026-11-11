@@ -2,6 +2,8 @@ package org.wordpress.android.ui.compose.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
@@ -12,7 +14,9 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalInspectionMode
 import org.wordpress.android.BuildConfig
+import org.wordpress.android.ui.prefs.AppPrefs
 
 private val localColors = staticCompositionLocalOf { extraPaletteJPLight }
 
@@ -43,7 +47,7 @@ fun AppThemeM3WithoutBackground(
                 isDarkTheme = isDarkTheme,
                 isJetpackApp = isJetpackApp
             ),
-            content = content
+            content = { EinkRippleSuppression(content) }
         )
     }
 }
@@ -60,8 +64,24 @@ fun AppThemeM3Editor(
 ) {
     androidx.compose.material3.MaterialTheme(
         colorScheme = getColorScheme(isDarkTheme = isDarkTheme, isJetpackApp = isJetpackApp),
-        content = content
+        content = { EinkRippleSuppression(content) }
     )
+}
+
+/**
+ * On E Ink screens a tap ripple is drawn and then erased before the next screen appears, which shows up
+ * as extra screen flashes rather than feedback. Drop the ripple entirely while E Ink mode is on.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun EinkRippleSuppression(content: @Composable () -> Unit) {
+    // Previews have no app context to read preferences from
+    val isEinkMode = !LocalInspectionMode.current && AppPrefs.isEinkModeEnabled()
+    if (isEinkMode) {
+        CompositionLocalProvider(LocalRippleConfiguration provides null, content = content)
+    } else {
+        content()
+    }
 }
 
 
