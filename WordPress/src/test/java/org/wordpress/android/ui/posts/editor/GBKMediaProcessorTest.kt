@@ -48,6 +48,7 @@ class GBKMediaProcessorTest : BaseUnitTest() {
         appContext = mock {
             on { getString(R.string.error_media_file_type_not_allowed) } doReturn FILE_TYPE_ERROR
             on { getString(R.string.error_media_video_duration_exceeds_limit) } doReturn VIDEO_LIMIT_ERROR
+            on { getString(R.string.error_media_upload) } doReturn UPLOAD_ERROR
             on { getCacheDir() } doReturn cacheDir
         }
         mediaUtilsWrapper = mock()
@@ -165,6 +166,23 @@ class GBKMediaProcessorTest : BaseUnitTest() {
     }
 
     @Test
+    fun `failed strip copy rejects the upload with a localized message`() = test {
+        // Uploading the original instead would publish the location the user asked to remove, and
+        // the raw IOException message would show an English, path-bearing notice.
+        val missing = File(tempFolder.root, "vanished.jpg")
+        whenever(mediaUtilsWrapper.getOptimizedMedia(missing.absolutePath, false)).thenReturn(null)
+        whenever(appPrefsWrapper.isStripImageLocation).thenReturn(true)
+
+        val thrown = runCatching {
+            createProcessor(wpComSite()).processFile(missing, "image/jpeg", "vanished.jpg")
+        }.exceptionOrNull()
+
+        assertThat(thrown)
+            .isInstanceOf(GBKMediaUploadException::class.java)
+            .hasMessage(UPLOAD_ERROR)
+    }
+
+    @Test
     fun `failed strip copy does not leak the temp file`() = test {
         // GutenbergKit only deletes files handed back to it, so a temp file abandoned mid-copy
         // (a full disk being the likely cause) would sit in the cache dir indefinitely.
@@ -173,11 +191,8 @@ class GBKMediaProcessorTest : BaseUnitTest() {
         whenever(appPrefsWrapper.isStripImageLocation).thenReturn(true)
         val cacheFilesBefore = cacheDir.listFiles()?.size ?: 0
 
-        val thrown = runCatching {
-            createProcessor(wpComSite()).processFile(missing, "image/jpeg", "vanished.jpg")
-        }.exceptionOrNull()
+        runCatching { createProcessor(wpComSite()).processFile(missing, "image/jpeg", "vanished.jpg") }
 
-        assertThat(thrown).isNotNull()
         assertThat(cacheDir.listFiles()?.size ?: 0).isEqualTo(cacheFilesBefore)
     }
 
@@ -623,5 +638,6 @@ class GBKMediaProcessorTest : BaseUnitTest() {
     companion object {
         private const val FILE_TYPE_ERROR = "This file type is not allowed"
         private const val VIDEO_LIMIT_ERROR = "Uploading videos longer than 5 minutes requires a paid plan."
+        private const val UPLOAD_ERROR = "An error occurred while uploading media"
     }
 }

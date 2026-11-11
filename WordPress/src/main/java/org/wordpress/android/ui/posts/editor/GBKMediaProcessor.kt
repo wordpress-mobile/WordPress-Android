@@ -27,6 +27,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.gutenberg.MediaProcessor
 import org.wordpress.gutenberg.ProcessedProxyFile
 import java.io.File
+import java.io.IOException
 import javax.inject.Named
 import kotlin.coroutines.resume
 
@@ -292,18 +293,30 @@ class GBKMediaProcessor @AssistedInject constructor(
         }
 
         if (appPrefsWrapper.isStripImageLocation && mimeType in EXIF_MIME_TYPES) {
-            // Strip a copy: an in-place edit is lost when the original body is forwarded.
-            val copy = File.createTempFile("gbk-media", ".${file.extension}", appContext.cacheDir)
-            runCatching { file.copyTo(copy, overwrite = true) }.onFailure {
-                copy.delete()
-                throw it
-            }
+            val copy = copyForLocationStrip(file)
             mediaUtilsWrapper.stripImageLocation(copy.absolutePath)
             return ProcessedProxyFile.Processed(copy, mimeType, filename)
         }
 
         // Nothing to do, so skip a needless lossy re-encode.
         return ProcessedProxyFile.Original
+    }
+
+    /**
+     * Copies [file] for stripping, since an in-place edit is lost when the original body is forwarded.
+     * A failure rejects the upload, as uploading the original would publish the location the user
+     * asked to remove.
+     */
+    private fun copyForLocationStrip(file: File): File {
+        var copy: File? = null
+        try {
+            copy = File.createTempFile("gbk-media", ".${file.extension}", appContext.cacheDir)
+            return file.copyTo(copy, overwrite = true)
+        } catch (e: IOException) {
+            AppLog.e(AppLog.T.MEDIA, "GBKMediaProcessor > couldn't copy the image to strip its location", e)
+            copy?.delete()
+            throw GBKMediaUploadException(appContext.getString(R.string.error_media_upload))
+        }
     }
 
     /**
