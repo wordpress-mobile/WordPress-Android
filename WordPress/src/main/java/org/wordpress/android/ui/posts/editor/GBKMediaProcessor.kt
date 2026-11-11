@@ -82,7 +82,14 @@ class GBKMediaProcessor @AssistedInject constructor(
     /** Mirrors [processImage]'s exits: optimization, the self-hosted rotation, and the location strip. */
     private fun needsImageFile(resolvedMimeType: String): Boolean {
         val stripsLocation = appPrefsWrapper.isStripImageLocation && resolvedMimeType in EXIF_MIME_TYPES
-        return appPrefsWrapper.isImageOptimize || !site.isWPCom || stripsLocation
+        return optimizesImages() || !site.isWPCom || stripsLocation
+    }
+
+    /** Mirrors `WPMediaUtils.getOptimizedMedia`, which skips original size at 100% quality. */
+    private fun optimizesImages(): Boolean {
+        val keepsOriginal = appPrefsWrapper.imageOptimizeMaxSize <= IMAGE_MAX_SIZE_ORIGINAL &&
+                appPrefsWrapper.imageOptimizeQuality == IMAGE_QUALITY_MAX
+        return appPrefsWrapper.isImageOptimize && !keepsOriginal
     }
 
     override suspend fun processFile(
@@ -389,6 +396,9 @@ class GBKMediaProcessor @AssistedInject constructor(
         private val transcodeMutex = Mutex()
 
         private const val VIDEOPRESS_MODULE = "videopress"
+
+        private const val IMAGE_MAX_SIZE_ORIGINAL = 1
+        private const val IMAGE_QUALITY_MAX = 100
 
         private const val PROPERTY_OPTIMIZER_LIB = "optimizer_lib"
         private const val OPTIMIZER_LIB_M4M = "m4m"

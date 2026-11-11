@@ -493,6 +493,26 @@ class GBKMediaProcessorTest : BaseUnitTest() {
     }
 
     @Test
+    fun `handlesFile declines images when optimization keeps the original size and quality`() {
+        // getOptimizedMedia skips original size at 100% quality, so processImage returns Original
+        // on WP.com without reading the file.
+        whenever(appPrefsWrapper.isImageOptimize).thenReturn(true)
+        whenever(appPrefsWrapper.imageOptimizeMaxSize).thenReturn(1)
+        whenever(appPrefsWrapper.imageOptimizeQuality).thenReturn(100)
+
+        assertThat(createProcessor(wpComSite()).handlesFile("image/jpeg", "photo.jpg")).isFalse()
+    }
+
+    @Test
+    fun `handlesFile claims images when optimization keeps the original size but lowers quality`() {
+        whenever(appPrefsWrapper.isImageOptimize).thenReturn(true)
+        whenever(appPrefsWrapper.imageOptimizeMaxSize).thenReturn(1)
+        whenever(appPrefsWrapper.imageOptimizeQuality).thenReturn(85)
+
+        assertThat(createProcessor(wpComSite()).handlesFile("image/jpeg", "photo.jpg")).isTrue()
+    }
+
+    @Test
     fun `handlesFile claims images when the location strip applies`() {
         whenever(appPrefsWrapper.isStripImageLocation).thenReturn(true)
 
