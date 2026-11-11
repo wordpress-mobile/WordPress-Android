@@ -6,10 +6,17 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import org.wordpress.android.support.logs.ui.LogsActivity
+import org.wordpress.android.support.main.ui.SupportActivity
+import org.wordpress.android.support.unified.ui.UnifiedSupportActivity
+import org.wordpress.android.ui.WPLaunchActivity
 import org.wordpress.android.ui.accounts.DeviceInfoActivity
+import org.wordpress.android.ui.accounts.LoginActivity
+import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordLoginActivity
 import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordsListActivity
 import org.wordpress.android.ui.blaze.blazecampaigns.BlazeCampaignParentActivity
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListActivity
+import org.wordpress.android.ui.commentsrs.CommentsRsListActivity
 import org.wordpress.android.ui.debug.preferences.DebugSharedPreferenceFlagsActivity
 import org.wordpress.android.ui.domains.management.DomainManagementActivity
 import org.wordpress.android.ui.domains.management.newdomainsearch.NewDomainSearchActivity
@@ -17,16 +24,16 @@ import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomain
 import org.wordpress.android.ui.main.feedbackform.FeedbackFormActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.media.MediaSettingsActivity
-import org.wordpress.android.ui.commentsrs.CommentsRsListActivity
 import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
 import org.wordpress.android.ui.navmenus.NavMenusActivity
 import org.wordpress.android.ui.pagesrs.PagesRsListActivity
 import org.wordpress.android.ui.posts.GutenbergKitActivity
+import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
 import org.wordpress.android.ui.postsrs.PostRsListActivity
 import org.wordpress.android.ui.postsrs.PostRsSettingsActivity
 import org.wordpress.android.ui.postsrs.terms.TermSelectionActivity
-import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
+import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppSettingsActivity
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeaturesActivity
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity
@@ -36,9 +43,6 @@ import org.wordpress.android.ui.reader.ReaderUserListActivity
 import org.wordpress.android.ui.selfhostedusers.SelfHostedUsersActivity
 import org.wordpress.android.ui.sitemonitor.SiteMonitorParentActivity
 import org.wordpress.android.ui.subscribers.SubscribersActivity
-import org.wordpress.android.ui.accounts.LoginActivity
-import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordLoginActivity
-import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.taxonomies.TermsDataViewActivity
 
 /**
@@ -111,6 +115,10 @@ private fun isExcludedActivity(activity: BaseAppCompatActivity) =
  * approach as we add more Compose-based activities to the project.
  */
 private val excludedActivities = listOf(
+    LogsActivity::class.java.name,
+    SupportActivity::class.java.name,
+    UnifiedSupportActivity::class.java.name,
+    WPLaunchActivity::class.java.name,
     AppSettingsActivity::class.java.name,
     BlazeCampaignParentActivity::class.java.name,
     BloggingPromptsListActivity::class.java.name,
