@@ -51,7 +51,10 @@ class GBKMediaProcessorTest : BaseUnitTest() {
             on { getString(R.string.error_media_upload) } doReturn UPLOAD_ERROR
             on { getCacheDir() } doReturn cacheDir
         }
-        mediaUtilsWrapper = mock()
+        // Default to a strip that works: a failed one rejects the upload, which is opt-in per test.
+        mediaUtilsWrapper = mock {
+            on { stripImageLocation(any()) } doReturn true
+        }
         appPrefsWrapper = mock()
         // Default to a paid plan: the free-plan rejection is opt-in per test.
         siteUtilsWrapper = mock {
@@ -180,6 +183,42 @@ class GBKMediaProcessorTest : BaseUnitTest() {
         assertThat(thrown)
             .isInstanceOf(GBKMediaUploadException::class.java)
             .hasMessage(UPLOAD_ERROR)
+    }
+
+    @Test
+    fun `failed strip of the copy rejects the upload and deletes the copy`() = test {
+        // The copy would still carry GPS, e.g. after a full disk or bytes ExifInterface can't rewrite.
+        whenever(mediaUtilsWrapper.getOptimizedMedia(stagedFile.absolutePath, false)).thenReturn(null)
+        whenever(appPrefsWrapper.isStripImageLocation).thenReturn(true)
+        whenever(mediaUtilsWrapper.stripImageLocation(any())).thenReturn(false)
+
+        val thrown = runCatching {
+            createProcessor(wpComSite()).processFile(stagedFile, "image/jpeg", "photo.jpg")
+        }.exceptionOrNull()
+
+        assertThat(thrown)
+            .isInstanceOf(GBKMediaUploadException::class.java)
+            .hasMessage(UPLOAD_ERROR)
+        assertThat(cacheDir.walk().filter { it.isFile }.toList()).isEmpty()
+    }
+
+    @Test
+    fun `failed strip of the optimized output rejects the upload and deletes the output`() = test {
+        val optimized = tempFolder.newFile("optimized.jpg")
+        val optimizedUri = fileUri(optimized)
+        whenever(mediaUtilsWrapper.getOptimizedMedia(stagedFile.absolutePath, false))
+            .thenReturn(optimizedUri)
+        whenever(appPrefsWrapper.isStripImageLocation).thenReturn(true)
+        whenever(mediaUtilsWrapper.stripImageLocation(optimized.absolutePath)).thenReturn(false)
+
+        val thrown = runCatching {
+            createProcessor().processFile(stagedFile, "image/jpeg", "photo.jpg")
+        }.exceptionOrNull()
+
+        assertThat(thrown)
+            .isInstanceOf(GBKMediaUploadException::class.java)
+            .hasMessage(UPLOAD_ERROR)
+        assertThat(optimized).doesNotExist()
     }
 
     @Test

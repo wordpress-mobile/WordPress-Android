@@ -310,7 +310,7 @@ class GBKMediaProcessor @AssistedInject constructor(
 
         if (appPrefsWrapper.isStripImageLocation && mimeType in EXIF_MIME_TYPES) {
             val copy = copyForLocationStrip(file)
-            mediaUtilsWrapper.stripImageLocation(copy.absolutePath)
+            stripLocationOrReject(copy)
             return ProcessedProxyFile.Processed(copy, mimeType, filename)
         }
 
@@ -331,6 +331,17 @@ class GBKMediaProcessor @AssistedInject constructor(
         } catch (e: IOException) {
             AppLog.e(AppLog.T.MEDIA, "GBKMediaProcessor > couldn't copy the image to strip its location", e)
             copy?.delete()
+            throw GBKMediaUploadException(appContext.getString(R.string.error_media_upload))
+        }
+    }
+
+    /**
+     * Rejects the upload when [file] keeps its location, e.g. a full disk or bytes ExifInterface
+     * can't rewrite, since uploading it would publish what the user asked to remove.
+     */
+    private fun stripLocationOrReject(file: File) {
+        if (!mediaUtilsWrapper.stripImageLocation(file.absolutePath)) {
+            file.delete()
             throw GBKMediaUploadException(appContext.getString(R.string.error_media_upload))
         }
     }
@@ -361,7 +372,7 @@ class GBKMediaProcessor @AssistedInject constructor(
     private fun processedImage(output: File, filename: String): ProcessedProxyFile {
         if (appPrefsWrapper.isStripImageLocation) {
             // getOptimizedMedia copies the original EXIF, GPS included, onto its output.
-            mediaUtilsWrapper.stripImageLocation(output.absolutePath)
+            stripLocationOrReject(output)
         }
 
         val isPng = output.extension.lowercase() == EXTENSION_PNG
