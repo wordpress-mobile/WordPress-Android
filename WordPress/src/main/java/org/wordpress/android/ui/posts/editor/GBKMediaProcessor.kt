@@ -12,6 +12,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import org.m4m.IProgressListener
+import org.m4m.MediaComposer
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
@@ -148,9 +149,15 @@ class GBKMediaProcessor @AssistedInject constructor(
      * Transcodes per the user's video settings, resolving to null on any failure so the original
      * uploads instead, as [org.wordpress.android.ui.uploads.VideoOptimizer] does.
      */
-    @Suppress("TooGenericExceptionCaught")
+    @Suppress("TooGenericExceptionCaught", "ReturnCount")
     private suspend fun transcodeVideo(input: File): File? = suspendCancellableCoroutine { continuation ->
-        val output = File.createTempFile("wp-", ".mp4", appContext.cacheDir)
+        val output = try {
+            File.createTempFile("wp-", ".mp4", appContext.cacheDir)
+        } catch (e: Exception) {
+            AppLog.e(AppLog.T.MEDIA, "GBKMediaProcessor > couldn't create the transcode output", e)
+            continuation.resume(null)
+            return@suspendCancellableCoroutine
+        }
         val startTimeMs = System.currentTimeMillis()
         val listener = object : IProgressListener {
             override fun onMediaStart() = Unit
@@ -160,19 +167,23 @@ class GBKMediaProcessor @AssistedInject constructor(
             // Also fires before onMediaDone, so only onMediaDone and onError complete the coroutine.
             override fun onMediaStop() = Unit
 
+            // Skipped once cancelled: the output is gone and nobody awaits the result.
             override fun onMediaDone() {
+                if (!continuation.isActive) return
                 trackTranscodeFinished(input, output, startTimeMs, null)
-                if (continuation.isActive) continuation.resume(output)
+                continuation.resume(output)
             }
 
             override fun onError(exception: Exception) {
+                if (!continuation.isActive) return
                 AppLog.e(AppLog.T.MEDIA, "GBKMediaProcessor > video transcode failed", exception)
                 trackTranscodeFinished(input, output, startTimeMs, exception)
                 output.delete()
-                if (continuation.isActive) continuation.resume(null)
+                continuation.resume(null)
             }
         }
 
+        // m4m throws NPEs, among others, on some malformed inputs.
         var wasNpeDetected = false
         val composer = try {
             WPVideoUtils.getVideoOptimizationComposer(
@@ -183,10 +194,9 @@ class GBKMediaProcessor @AssistedInject constructor(
                 appPrefsWrapper.videoOptimizeWidth,
                 appPrefsWrapper.videoOptimizeQuality
             )
-        } catch (npe: NullPointerException) {
-            // m4m throws NPEs on some malformed inputs.
-            AppLog.w(AppLog.T.MEDIA, "GBKMediaProcessor > NPE getting composer: ${npe.message}")
-            wasNpeDetected = true
+        } catch (e: Exception) {
+            AppLog.w(AppLog.T.MEDIA, "GBKMediaProcessor > error getting composer: $e")
+            wasNpeDetected = e is NullPointerException
             null
         }
 
@@ -198,21 +208,35 @@ class GBKMediaProcessor @AssistedInject constructor(
         }
 
         continuation.invokeOnCancellation {
-            try {
-                composer.stop()
-            } catch (e: Exception) {
-                AppLog.w(AppLog.T.MEDIA, "GBKMediaProcessor > error stopping composer: ${e.message}")
-            }
+            composer.stopQuietly()
             output.delete()
         }
+
+        // Composer setup is slow and blocking, so the upload may already be cancelled. Starting
+        // anyway would orphan a transcode that holds the codecs after the mutex is released.
+        if (!continuation.isActive) return@suspendCancellableCoroutine
 
         // m4m throws when it can't set up the codec; upload the original rather than fail.
         try {
             composer.start()
-        } catch (e: IllegalStateException) {
+        } catch (e: Exception) {
             AppLog.e(AppLog.T.MEDIA, "GBKMediaProcessor > failed to start composer", e)
             output.delete()
             if (continuation.isActive) continuation.resume(null)
+            return@suspendCancellableCoroutine
+        }
+
+        // A cancel that landed during start() stopped the composer before it had a pipeline to stop.
+        if (!continuation.isActive) composer.stopQuietly()
+    }
+
+    /** Stopping twice is harmless: m4m only signals the running sources to stop. */
+    @Suppress("TooGenericExceptionCaught")
+    private fun MediaComposer.stopQuietly() {
+        try {
+            stop()
+        } catch (e: Exception) {
+            AppLog.w(AppLog.T.MEDIA, "GBKMediaProcessor > error stopping composer: ${e.message}")
         }
     }
 
