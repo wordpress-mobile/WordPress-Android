@@ -5033,4 +5033,22 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="comment_author_info_registered">Registered user</string>
     <string name="comment_author_info_guest">Guest</string>
     <string name="comment_detail_in_reply_to">In reply to %1$s:</string>
+    <string name="gbk_block_inserter_section_most_used" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Most used</string>
+    <string name="gbk_block_inserter_section_suggested" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Suggested</string>
+    <string name="gbk_block_inserter_failure" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Unable to display the block inserter.</string>
+    <string name="gbk_block_inserter_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Search blocks</string>
+    <string name="gbk_block_inserter_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Add block</string>
+    <string name="gbk_block_inserter_close" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Close</string>
+    <string name="gbk_block_inserter_tab_recent" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Recent</string>
+    <string name="gbk_block_inserter_clear_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Clear search</string>
+    <string name="gbk_block_inserter_no_results" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">No results</string>
+    <string name="gbk_block_inserter_no_results_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">No blocks match “%1$s”</string>
+    <string name="gbk_block_inserter_photos" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Photos</string>
+    <string name="gbk_block_inserter_camera" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Camera</string>
+    <string name="gbk_block_inserter_camera_unavailable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Camera not available on this device</string>
+    <string name="gbk_editor_load_failed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Failed to load editor</string>
+    <string name="gbk_editor_load_failed_unknown_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Unknown error</string>
+    <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">The editor stopped working</string>
+    <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Reload the editor to continue editing.</string>
+    <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Reload Editor</string>
 </resources>
