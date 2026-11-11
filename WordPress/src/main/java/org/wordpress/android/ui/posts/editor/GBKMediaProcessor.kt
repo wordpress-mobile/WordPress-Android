@@ -181,9 +181,12 @@ class GBKMediaProcessor @AssistedInject constructor(
                 appPrefsWrapper.videoOptimizeWidth,
                 appPrefsWrapper.videoOptimizeQuality
             )
+        } catch (e: NullPointerException) {
+            AppLog.w(AppLog.T.MEDIA, "GBKMediaProcessor > NPE getting composer: ${e.message}")
+            wasNpeDetected = true
+            null
         } catch (e: Exception) {
             AppLog.w(AppLog.T.MEDIA, "GBKMediaProcessor > error getting composer: $e")
-            wasNpeDetected = e is NullPointerException
             null
         }
 
