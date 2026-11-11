@@ -16,6 +16,9 @@ updates:
         exclude-patterns:
           - "org.jetbrains.kotlinx*"
     ignore:
+      # KSP 2.3.13 can silently generate nothing when tasks run in parallel: https://github.com/google/ksp/issues/3286
+      - dependency-name: "com.google.devtools.ksp"
+        versions: ["2.3.13"]
       # Bumping 2.13.3 to the newest version requires lots of changes, including changes to
       # Gutenberg. As such, and as agreed, any update is paused. For more details, see
       # https://github.com/wordpress-mobile/WordPress-Android/pull/17936#issuecomment-1553227875
