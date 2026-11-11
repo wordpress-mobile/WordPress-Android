@@ -139,6 +139,7 @@ class ReaderBlogRepository @Inject constructor(
             url,
             { if (continuation.isActive) continuation.resume(null) },
             { volleyError ->
+                AppLog.e(T.READER, volleyError)
                 logVolleyError("check url reachable", volleyError)
                 // an auth failure is checked by class, since a redirect to an unauthorized URL may return a 301
                 val statusCode = if (volleyError is AuthFailureError) {
@@ -208,12 +209,8 @@ class ReaderBlogRepository @Inject constructor(
     /**
      * Blocks a user locally, removing their posts, and returns what's needed to undo it
      */
-    fun blockUserLocal(authorId: Long, feedId: Long): BlockedUserResult {
-        val result = BlockedUserResult(
-            authorId = authorId,
-            feedId = feedId,
-            deletedRows = ReaderPostTable.getAuthorPostMap(authorId)
-        )
+    fun blockUserLocal(authorId: Long): BlockedUserResult {
+        val result = BlockedUserResult(authorId = authorId, deletedRows = ReaderPostTable.getAuthorPostMap(authorId))
         BlockedAuthorTable.blacklistAuthorLocally(authorId)
         ReaderPostTable.deletePostsForAuthor(authorId)
         return result
@@ -358,10 +355,9 @@ class ReaderBlogRepository @Inject constructor(
 
     private fun actionName(follow: Boolean) = if (follow) "follow" else "unfollow"
 
-    private fun logVolleyError(action: String, error: VolleyError?) {
+    // the error itself is logged by awaitRestRequest
+    private fun logVolleyError(action: String, error: VolleyError?) =
         AppLog.e(T.READER, "$action failed with error: ${VolleyUtils.statusCodeFromVolleyError(error)}")
-        AppLog.e(T.READER, error?.message ?: "No error message available")
-    }
 }
 
 /**
@@ -380,7 +376,6 @@ data class BlockedBlogResult(
  */
 data class BlockedUserResult(
     val authorId: Long,
-    val feedId: Long,
     // key: (tag slug, tag type)
     val deletedRows: Map<Pair<String, ReaderTagType>, ReaderPostList>
 )

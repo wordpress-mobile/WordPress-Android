@@ -51,7 +51,6 @@ import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderBlogRepository
 import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState
-import org.wordpress.android.ui.reader.repository.usecases.BlockUserUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -88,7 +87,6 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val bookmarkUseCase: ReaderPostBookmarkUseCase,
     private val followUseCase: ReaderSiteFollowUseCase,
     private val blockBlogUseCase: BlockBlogUseCase,
-    private val blockUserUseCase: BlockUserUseCase,
     private val likeUseCase: PostLikeUseCase,
     private val siteNotificationsUseCase: ReaderSiteNotificationsUseCase,
     private val readerBlogRepository: ReaderBlogRepository,
@@ -456,7 +454,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
         authorId: Long,
         feedId: Long,
     ) {
-        val blockedUserData = blockUserUseCase.blockUser(authorId, feedId)
+        readerTracker.trackBlog(AnalyticsTracker.Stat.READER_USER_BLOCKED, authorId, feedId)
+        val blockedUserData = readerBlogRepository.blockUserLocal(authorId)
         _refreshPosts.postValue(Event(Unit))
         _snackbarEvents.postValue(
             Event(
