@@ -8,7 +8,6 @@
     android:id="@+id/ai_disclosure_banner"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/wpColorSurfaceSecondary"
     android:orientation="vertical"
     android:visibility="gone"
     tools:visibility="visible">
@@ -17,6 +16,7 @@
         android:id="@+id/ai_disclosure_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/wpColorSurfaceSecondary"
         android:gravity="center_horizontal"
         android:paddingStart="@dimen/margin_extra_large"
         android:paddingTop="@dimen/margin_large"
