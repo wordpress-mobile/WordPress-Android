@@ -6,7 +6,6 @@ import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -26,13 +25,14 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ToastUtils
 import java.io.File
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class LogsActivity : AppCompatActivity() {
+class LogsActivity : BaseAppCompatActivity() {
     private val viewModel by viewModels<LogsViewModel>()
 
     private lateinit var composeView: ComposeView

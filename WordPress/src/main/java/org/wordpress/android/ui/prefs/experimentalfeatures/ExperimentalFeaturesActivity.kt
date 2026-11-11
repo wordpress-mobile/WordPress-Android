@@ -13,6 +13,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.components.FeedbackDialog
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.util.AppThemeUtils
 import org.wordpress.android.util.extensions.setContent
 
 @AndroidEntryPoint
@@ -53,6 +54,10 @@ class ExperimentalFeaturesActivity : BaseAppCompatActivity() {
                             showDialog.value = true
                         }
                         viewModel.onFeatureToggled(feature, enabled)
+                        if (feature == ExperimentalFeatures.Feature.EINK_MODE) {
+                            // Apply (or lift) the forced light theme now rather than on next launch
+                            AppThemeUtils.setAppTheme(this)
+                        }
                     },
                     onNavigateBack = onBackPressedDispatcher::onBackPressed
                 )

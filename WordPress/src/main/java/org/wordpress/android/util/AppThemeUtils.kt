@@ -6,6 +6,7 @@ import android.text.TextUtils
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 import org.wordpress.android.R
+import org.wordpress.android.ui.prefs.AppPrefs
 
 class AppThemeUtils {
     companion object {
@@ -13,6 +14,14 @@ class AppThemeUtils {
         @JvmStatic
         @JvmOverloads
         fun setAppTheme(context: Context, newTheme: String? = null) {
+            // E-ink mode always forces light theme
+            if (AppPrefs.isEinkModeEnabled()) {
+                AppCompatDelegate.setDefaultNightMode(
+                    AppCompatDelegate.MODE_NIGHT_NO
+                )
+                return
+            }
+
             val themeName = if (TextUtils.isEmpty(newTheme)) {
                 val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
                 sharedPreferences

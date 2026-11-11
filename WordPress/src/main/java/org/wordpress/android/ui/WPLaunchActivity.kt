@@ -3,15 +3,15 @@ package org.wordpress.android.ui
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.wordpress.android.R
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.util.MissingSplitsUtils.isMissingSplits
 import org.wordpress.android.util.ProfilingUtils
 
 @SuppressLint("CustomSplashScreen")
-class WPLaunchActivity : AppCompatActivity() {
+class WPLaunchActivity : BaseAppCompatActivity() {
     /*
      * this the main (default) activity, which does nothing more than launch the
      * previously active activity on startup - note that it's defined in the

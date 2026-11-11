@@ -313,6 +313,9 @@ public class AppPrefs {
         // These preferences persist across logout/login cycles.
         IS_TRACK_NETWORK_REQUESTS_ENABLED,
         TRACK_NETWORK_REQUESTS_RETENTION_PERIOD,
+
+        // Indicates if e-ink auto-detection has already run on this device
+        EINK_AUTO_DETECT_DONE,
     }
 
     static SharedPreferences prefs() {
@@ -2079,5 +2082,21 @@ public class AppPrefs {
 
     public static void setStatsNewStatsSuggestionLastDismissedAt(long timestamp) {
         setLong(DeletablePrefKey.STATS_NEW_STATS_SUGGESTION_LAST_DISMISSED_AT, timestamp);
+    }
+
+    public static boolean isEinkModeEnabled() {
+        return getExperimentalFeatureConfig("eink_mode");
+    }
+
+    public static void setEinkModeEnabled(boolean enabled) {
+        setExperimentalFeatureConfig(enabled, "eink_mode");
+    }
+
+    public static boolean isEinkAutoDetectDone() {
+        return getBoolean(UndeletablePrefKey.EINK_AUTO_DETECT_DONE, false);
+    }
+
+    public static void setEinkAutoDetectDone(boolean done) {
+        setBoolean(UndeletablePrefKey.EINK_AUTO_DETECT_DONE, done);
     }
 }

@@ -1576,4 +1576,11 @@
         <item name="android:gravity">center</item>
         <item name="android:orientation">vertical</item>
     </style>
+    <!-- Applied on top of the activity theme while E Ink mode is on: removes tap highlights,
+         which show up as extra screen flashes on E Ink displays. -->
+    <style name="ThemeOverlay.WordPress.EInk" parent="">
+        <item name="colorControlHighlight">@android:color/transparent</item>
+        <item name="android:colorControlHighlight">@android:color/transparent</item>
+    </style>
+
 </resources>

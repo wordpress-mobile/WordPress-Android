@@ -30,6 +30,7 @@ class SupportViewModel @Inject constructor(
         data object NavigateToLogin : NavigationEvent()
         data object NavigateToHelpCenter : NavigationEvent()
         data object NavigateToApplicationLogs : NavigationEvent()
+        data object NavigateToDeviceInfo : NavigationEvent()
         data object NavigateToUnifiedSupport : NavigationEvent()
         data object NavigateToNetworkRequests : NavigationEvent()
     }
@@ -131,6 +132,12 @@ class SupportViewModel @Inject constructor(
     fun onApplicationLogsClick() {
         viewModelScope.launch {
             _navigationEvents.emit(NavigationEvent.NavigateToApplicationLogs)
+        }
+    }
+
+    fun onDeviceInfoClick() {
+        viewModelScope.launch {
+            _navigationEvents.emit(NavigationEvent.NavigateToDeviceInfo)
         }
     }
 

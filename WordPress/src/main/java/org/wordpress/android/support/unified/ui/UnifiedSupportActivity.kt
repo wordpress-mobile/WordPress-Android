@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -36,6 +35,7 @@ import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.support.unified.util.AttachmentActionsListener
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.mediapicker.MediaType
@@ -45,7 +45,7 @@ import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class UnifiedSupportActivity : AppCompatActivity() {
+class UnifiedSupportActivity : BaseAppCompatActivity() {
     @Inject lateinit var fileDownloadManager: ReaderFileDownloadManager
     @Inject lateinit var appLogWrapper: AppLogWrapper
     @Inject lateinit var activityNavigator: ActivityNavigator

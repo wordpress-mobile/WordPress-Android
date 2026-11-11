@@ -41,6 +41,8 @@ import org.wordpress.android.ui.accounts.login.components.WordpressJetpackLogo
 import org.wordpress.android.ui.compose.TestTags
 import org.wordpress.android.ui.compose.components.ColumnWithFrostedGlassBackground
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.util.EinkDeviceDetector
 
 val LocalPosition = compositionLocalOf { 0f }
 
@@ -96,6 +98,9 @@ private fun PositionProvider(
     val position = viewModel.positionData.observeAsState(0f)
     CompositionLocalProvider(LocalPosition provides position.value) {
         LaunchedEffect(Unit) {
+            // A continuously scrolling feed smears on E Ink screens, so hold it still. The device
+            // check matters here: this screen shows before the user can opt in to E Ink mode.
+            if (AppPrefs.isEinkModeEnabled() || EinkDeviceDetector.isEinkDevice()) return@LaunchedEffect
             var lastFrameNanos: Long? = null
             while (isActive) {
                 val currentFrameNanos = withFrameNanos { it }

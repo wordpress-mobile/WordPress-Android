@@ -39,6 +39,11 @@ class ExperimentalFeatures @Inject constructor(
             "experimental_post_types",
             R.string.experimental_post_types,
             R.string.experimental_post_types_description
+        ),
+        EINK_MODE(
+            "eink_mode",
+            R.string.eink_mode_title,
+            R.string.eink_mode_summary
         )
     }
 }

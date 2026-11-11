@@ -151,6 +151,13 @@ class AppSettingsActivity : BaseAppCompatActivity(), LocalePickerCallback {
     // SDK 34. overridePendingTransition still works on Android 14 so using it should be safe for now.
     @Suppress("DEPRECATION")
     override fun recreate() {
+        // A night-mode change made elsewhere (e.g. the E Ink toggle in Experimental Features) recreates
+        // every activity in the back stack. Restarting with CLEAR_TOP from the background would close
+        // whatever is on top of this screen, so only use the fade restart while this screen is in front.
+        if (!lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+            super.recreate()
+            return
+        }
         startActivity(
             Intent(this, this::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
