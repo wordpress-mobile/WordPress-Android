@@ -373,12 +373,12 @@ class GBKMediaProcessor @AssistedInject constructor(
     }
 
     /**
-     * Normalizes the declared type (parameters, casing) and falls back to the file extension for
-     * placeholders, including the `text/plain` a multipart part without a `Content-Type` defaults to.
+     * Normalizes the declared type (parameters, casing) and falls back to the file extension when
+     * it's blank or `application/octet-stream`, which the browser sends for a file it can't type.
      */
     private fun resolveMimeType(mimeType: String, filename: String): String {
         val normalized = mimeType.substringBefore(';').trim().lowercase()
-        if (normalized.isNotBlank() && normalized !in PLACEHOLDER_MIME_TYPES) return normalized
+        if (normalized.isNotBlank() && normalized != MIME_OCTET_STREAM) return normalized
 
         val extension = filename.substringAfterLast('.', "").lowercase()
         // getSingleton() is null under the unit test stubs.
@@ -408,13 +408,10 @@ class GBKMediaProcessor @AssistedInject constructor(
         private const val MIME_JPEG = "image/jpeg"
         private const val MIME_MP4 = "video/mp4"
         private const val MIME_OCTET_STREAM = "application/octet-stream"
-        private const val MIME_TEXT_PLAIN = "text/plain"
 
         private const val EXTENSION_PNG = "png"
         private const val EXTENSION_JPG = "jpg"
         private const val EXTENSION_MP4 = "mp4"
-
-        private val PLACEHOLDER_MIME_TYPES = setOf(MIME_OCTET_STREAM, MIME_TEXT_PLAIN)
 
         /** Formats androidx ExifInterface can rewrite; HEIC/HEIF would fail and keep their GPS. */
         private val EXIF_MIME_TYPES = setOf(MIME_JPEG, MIME_PNG, "image/webp")
