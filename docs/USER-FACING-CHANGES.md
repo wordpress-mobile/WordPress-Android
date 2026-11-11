@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Reader: a site unblocked on the web shows its posts again after you subscribe**
+  If you blocked a site in the app's Reader and later unblocked it on the web, subscribing to it again in the app now shows its posts. Before, its stream stayed at "This blog is empty" until you logged out and back in.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → a previously blocked site → Subscribe
+  - **Notes:** The app only learns about the web unblock when you subscribe from the app. Opening the site's stream without subscribing still shows it as empty until you log out and back in.
+
 - **Referrers and Clicks in Stats show each source's icon**
   Rows in the redesigned Stats' Referrers and Clicks cards, and their full lists, now show the site icon the Stats API already reports for the referrer or link, matching the web version. A row the API has no icon for shows none, and its title stays where it was. Expanding a referrer group, such as Search Engines, shows an icon for each entry under it too.
   - **Apps:** Both

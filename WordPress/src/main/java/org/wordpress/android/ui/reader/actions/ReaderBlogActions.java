@@ -108,6 +108,9 @@ public class ReaderBlogActions {
                 boolean success = isFollowActionSuccessful(jsonObject, isAskingToFollow);
                 if (success) {
                     AppLog.d(T.READER, "blog " + actionName + " succeeded");
+                    if (isAskingToFollow) {
+                        clearLocalBlock(blogId);
+                    }
                 } else {
                     AppLog.w(T.READER, "blog " + actionName + " failed - " + jsonToString(jsonObject) + " - " + path);
                     localRevertFollowBlogId(blogId, isAskingToFollow);
@@ -297,6 +300,9 @@ public class ReaderBlogActions {
                 boolean success = isFollowActionSuccessful(jsonObject, isAskingToFollow);
                 if (success) {
                     AppLog.d(T.READER, "feed " + actionName + " succeeded");
+                    if (isAskingToFollow) {
+                        clearLocalBlock(blogId);
+                    }
                 } else {
                     AppLog.w(T.READER, "feed " + actionName + " failed - " + jsonToString(jsonObject) + " - " + path);
                     localRevertFollowFeedId(feedId, isAskingToFollow);
@@ -331,6 +337,15 @@ public class ReaderBlogActions {
         } else {
             return followBlogById(blogId, feedId, isAskingToFollow, actionListener, source, readerTracker);
         }
+    }
+
+    /*
+     * the local block list is never synced with the server, so a site unblocked on the web stays
+     * blocked here and its posts are dropped on insert - following it is an explicit opt-in, so
+     * clear the stale local block
+     */
+    private static void clearLocalBlock(long blogId) {
+        ReaderBlockedBlogTable.removeBlockedBlog(blogId);
     }
 
     /*
