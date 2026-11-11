@@ -1,7 +1,10 @@
 package org.wordpress.android.ui.posts.editor
 
 import android.content.Context
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -233,6 +236,27 @@ class GBKMediaProcessorTest : BaseUnitTest() {
 
         assertThat(cacheDir.walk().filter { it.isFile }.toList()).isEmpty()
         assertThat(File(cacheDir, "processed-media").listFiles().orEmpty()).isEmpty()
+    }
+
+    @Test
+    fun `processed file is deleted when the upload is cancelled during processing`() = test {
+        // The blocking image steps can't observe a cancel, so their output is written and then dropped
+        // with the result. GutenbergKit only deletes a processed file it receives.
+        val optimized = tempFolder.newFile("optimized.jpg")
+        val optimizedUri = fileUri(optimized)
+        lateinit var upload: Job
+        whenever(mediaUtilsWrapper.getOptimizedMedia(stagedFile.absolutePath, false)).thenAnswer {
+            upload.cancel()
+            optimizedUri
+        }
+        upload = launch(start = CoroutineStart.LAZY) {
+            createProcessor().processFile(stagedFile, "image/jpeg", "photo.jpg")
+        }
+
+        upload.join()
+
+        assertThat(upload.isCancelled).isTrue()
+        assertThat(optimized).doesNotExist()
     }
 
     @Test

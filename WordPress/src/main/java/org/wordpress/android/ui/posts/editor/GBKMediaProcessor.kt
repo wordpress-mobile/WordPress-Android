@@ -6,6 +6,7 @@ import android.webkit.MimeTypeMap
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.sync.Mutex
@@ -93,18 +94,28 @@ class GBKMediaProcessor @AssistedInject constructor(
         return appPrefsWrapper.isImageOptimize && !keepsOriginal
     }
 
-    override suspend fun processFile(
-        file: File,
-        mimeType: String,
-        filename: String
-    ): ProcessedProxyFile = withContext(ioDispatcher) {
+    override suspend fun processFile(file: File, mimeType: String, filename: String): ProcessedProxyFile {
+        var processed: ProcessedProxyFile.Processed? = null
+        try {
+            return withContext(ioDispatcher) {
+                process(file, mimeType, filename).also { processed = it as? ProcessedProxyFile.Processed }
+            }
+        } catch (e: CancellationException) {
+            // A cancel during the blocking image steps drops the result, and GutenbergKit only deletes
+            // a processed file it receives.
+            processed?.file?.deleteWithDir()
+            throw e
+        }
+    }
+
+    private suspend fun process(file: File, mimeType: String, filename: String): ProcessedProxyFile {
         val resolvedMimeType = resolveMimeType(mimeType, filename)
 
         if (isRejectedByFreePlan(resolvedMimeType)) {
             throw GBKMediaUploadException(appContext.getString(R.string.error_media_file_type_not_allowed))
         }
 
-        when {
+        return when {
             // Re-encoding would flatten the animation.
             resolvedMimeType == MIME_GIF -> ProcessedProxyFile.Original
             mediaUtilsWrapper.isVideoMimeType(resolvedMimeType) -> processVideo(file, resolvedMimeType, filename)
