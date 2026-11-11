@@ -69,16 +69,11 @@ class GBKMediaProcessor @AssistedInject constructor(
 
         return when {
             resolvedMimeType == MIME_GIF -> false
-            mediaUtilsWrapper.isVideoMimeType(resolvedMimeType) -> needsVideoFile()
+            // Only the opt-in transcode reads a video.
+            mediaUtilsWrapper.isVideoMimeType(resolvedMimeType) -> appPrefsWrapper.isVideoOptimize
             resolvedMimeType.startsWith(MIME_IMAGE_PREFIX) -> needsImageFile(resolvedMimeType)
             else -> false
         }
-    }
-
-    /** Mirrors [processVideo]'s exits: the free-plan duration check and the opt-in transcode. */
-    private fun needsVideoFile(): Boolean {
-        val durationCheckApplies = site.hasFreePlan && !site.isActiveModuleEnabled(VIDEOPRESS_MODULE)
-        return durationCheckApplies || appPrefsWrapper.isVideoOptimize
     }
 
     /** Mirrors [processImage]'s exits: optimization, the self-hosted rotation, and the location strip. */
@@ -118,7 +113,7 @@ class GBKMediaProcessor @AssistedInject constructor(
         return when {
             // Re-encoding would flatten the animation.
             resolvedMimeType == MIME_GIF -> ProcessedProxyFile.Original
-            mediaUtilsWrapper.isVideoMimeType(resolvedMimeType) -> processVideo(file, resolvedMimeType, filename)
+            mediaUtilsWrapper.isVideoMimeType(resolvedMimeType) -> processVideo(file, filename)
             resolvedMimeType.startsWith(MIME_IMAGE_PREFIX) -> processImage(file, resolvedMimeType, filename)
             else -> ProcessedProxyFile.Original
         }
@@ -141,13 +136,7 @@ class GBKMediaProcessor @AssistedInject constructor(
     }
 
     @Suppress("ReturnCount")
-    private suspend fun processVideo(file: File, mimeType: String, filename: String): ProcessedProxyFile {
-        if (mediaUtilsWrapper.isProhibitedVideoDuration(appContext, site, file, mimeType)) {
-            throw GBKMediaUploadException(
-                appContext.getString(R.string.error_media_video_duration_exceeds_limit)
-            )
-        }
-
+    private suspend fun processVideo(file: File, filename: String): ProcessedProxyFile {
         // Matches the legacy pipeline, where video optimization is opt-in.
         if (!appPrefsWrapper.isVideoOptimize) return ProcessedProxyFile.Original
 
@@ -430,8 +419,6 @@ class GBKMediaProcessor @AssistedInject constructor(
     companion object {
         /** Process-wide, so stacked editor instances can't run parallel codec-heavy transcodes. */
         private val transcodeMutex = Mutex()
-
-        private const val VIDEOPRESS_MODULE = "videopress"
 
         private const val IMAGE_MAX_SIZE_ORIGINAL = 1
         private const val IMAGE_QUALITY_MAX = 100

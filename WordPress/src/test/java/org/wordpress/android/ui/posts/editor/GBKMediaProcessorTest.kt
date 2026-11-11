@@ -13,7 +13,6 @@ import org.junit.rules.TemporaryFolder
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -50,7 +49,6 @@ class GBKMediaProcessorTest : BaseUnitTest() {
         cacheDir = tempFolder.newFolder("cache")
         appContext = mock {
             on { getString(R.string.error_media_file_type_not_allowed) } doReturn FILE_TYPE_ERROR
-            on { getString(R.string.error_media_video_duration_exceeds_limit) } doReturn VIDEO_LIMIT_ERROR
             on { getString(R.string.error_media_upload) } doReturn UPLOAD_ERROR
             on { getCacheDir() } doReturn cacheDir
         }
@@ -86,16 +84,6 @@ class GBKMediaProcessorTest : BaseUnitTest() {
     /** Puts the site on a free WP.com plan, where audio/document uploads are plan-restricted. */
     private fun onFreePlan() {
         whenever(siteUtilsWrapper.onFreePlan(any())).thenReturn(true)
-    }
-
-    /**
-     * A site subject to the free-plan video duration limit. Note this is [SiteModel.hasFreePlan]
-     * (the API's `plan.is_free`), which gates the duration check, and is distinct from
-     * [SiteUtilsWrapper.onFreePlan] (a plan-id match) used for the mime allowlist.
-     */
-    private fun freePlanSite() = SiteModel().apply {
-        setIsWPCom(true)
-        setHasFreePlan(true)
     }
 
     @Test
@@ -463,53 +451,14 @@ class GBKMediaProcessorTest : BaseUnitTest() {
     }
 
     @Test
-    fun `video exceeding duration limit throws with localized message`() = test {
-        whenever(mediaUtilsWrapper.isVideoMimeType("video/mp4")).thenReturn(true)
-        whenever(mediaUtilsWrapper.isProhibitedVideoDuration(any(), any(), any<File>(), any()))
-            .thenReturn(true)
-        val videoStaged = tempFolder.newFile("movie.mp4")
-
-        val thrown = runCatching {
-            createProcessor().processFile(videoStaged, "video/mp4", "movie.mp4")
-        }.exceptionOrNull()
-
-        assertThat(thrown)
-            .isInstanceOf(GBKMediaUploadException::class.java)
-            .hasMessage(VIDEO_LIMIT_ERROR)
-    }
-
-    @Test
     fun `video passes through when optimization disabled`() = test {
         whenever(mediaUtilsWrapper.isVideoMimeType("video/mp4")).thenReturn(true)
-        whenever(mediaUtilsWrapper.isProhibitedVideoDuration(any(), any(), any<File>(), any()))
-            .thenReturn(false)
         whenever(appPrefsWrapper.isVideoOptimize).thenReturn(false)
         val videoStaged = tempFolder.newFile("movie.mp4")
 
         val result = createProcessor().processFile(videoStaged, "video/mp4", "movie.mp4")
 
         assertThat(result).isEqualTo(ProcessedProxyFile.Original)
-    }
-
-    @Test
-    fun `duration check receives the resolved mime type, not the staged path`() = test {
-        // The staged file is named after the client-supplied filename, which need not carry an
-        // extension. Deriving "is this a video" from that path is an extension-only test, so the
-        // duration limit must be keyed off the resolved mime type instead.
-        whenever(mediaUtilsWrapper.isVideoMimeType("video/mp4")).thenReturn(true)
-        whenever(mediaUtilsWrapper.isProhibitedVideoDuration(any(), any(), any<File>(), any()))
-            .thenReturn(false)
-        whenever(appPrefsWrapper.isVideoOptimize).thenReturn(false)
-        val extensionlessVideo = tempFolder.newFile("upload")
-
-        createProcessor().processFile(extensionlessVideo, "video/mp4", "upload")
-
-        verify(mediaUtilsWrapper).isProhibitedVideoDuration(
-            any(),
-            any(),
-            eq(extensionlessVideo),
-            eq("video/mp4")
-        )
     }
 
     @Test
@@ -626,27 +575,19 @@ class GBKMediaProcessorTest : BaseUnitTest() {
     }
 
     @Test
-    fun `handlesFile claims videos on a free plan for the duration check`() {
-        whenever(mediaUtilsWrapper.isVideoMimeType("video/mp4")).thenReturn(true)
-
-        assertThat(createProcessor(freePlanSite()).handlesFile("video/mp4", "movie.mp4")).isTrue()
-    }
-
-    @Test
-    fun `handlesFile declines videos when nothing would touch the file`() {
-        // Paid plan with video optimization off — a common configuration, since optimization is
-        // opt-in. Claiming here copies the whole video to cache for a guaranteed passthrough.
+    fun `handlesFile declines videos when optimization is off`() {
+        // Optimization is opt-in, so this is common. Claiming here copies the whole video to cache
+        // for a guaranteed passthrough.
         whenever(mediaUtilsWrapper.isVideoMimeType("video/mp4")).thenReturn(true)
 
         assertThat(createProcessor(wpComSite()).handlesFile("video/mp4", "movie.mp4")).isFalse()
     }
 
     @Test
-    fun `handlesFile declines videos on a free plan with VideoPress enabled`() {
-        // VideoPress lifts the duration limit, so the check does not measure and nothing else
-        // reads the file with optimization off.
+    fun `handlesFile declines videos on a free plan when optimization is off`() {
+        // The processor no longer checks the free-plan duration limit, so the plan doesn't matter.
         whenever(mediaUtilsWrapper.isVideoMimeType("video/mp4")).thenReturn(true)
-        val site = freePlanSite().apply { activeModules = "videopress" }
+        val site = wpComSite().apply { setHasFreePlan(true) }
 
         assertThat(createProcessor(site).handlesFile("video/mp4", "movie.mp4")).isFalse()
     }
@@ -732,7 +673,6 @@ class GBKMediaProcessorTest : BaseUnitTest() {
 
     companion object {
         private const val FILE_TYPE_ERROR = "This file type is not allowed"
-        private const val VIDEO_LIMIT_ERROR = "Uploading videos longer than 5 minutes requires a paid plan."
         private const val UPLOAD_ERROR = "An error occurred while uploading media"
     }
 }
