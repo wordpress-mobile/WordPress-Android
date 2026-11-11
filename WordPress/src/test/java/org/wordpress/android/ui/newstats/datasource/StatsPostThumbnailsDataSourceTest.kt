@@ -12,6 +12,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.rs.WpRsRouting
 import org.wordpress.android.ui.rs.data.FeaturedImageUrls
 import org.wordpress.android.ui.rs.data.RsSiteRestClient
 import uniffi.wp_api.PostEndpointType
@@ -21,12 +22,16 @@ class StatsPostThumbnailsDataSourceTest : BaseUnitTest() {
     @Mock
     private lateinit var rsSiteRestClient: RsSiteRestClient
 
+    @Mock
+    private lateinit var wpRsRouting: WpRsRouting
+
     private val site = SiteModel()
     private lateinit var dataSource: StatsPostThumbnailsDataSource
 
     @Before
     fun setUp() {
-        dataSource = StatsPostThumbnailsDataSource(rsSiteRestClient, testDispatcher())
+        whenever(wpRsRouting.canUseWpRs(site)).thenReturn(true)
+        dataSource = StatsPostThumbnailsDataSource(rsSiteRestClient, wpRsRouting, testDispatcher())
     }
 
     @Test
@@ -138,6 +143,17 @@ class StatsPostThumbnailsDataSourceTest : BaseUnitTest() {
 
         assertThat(result).isEmpty()
         verify(rsSiteRestClient, never()).fetchFeaturedMediaIds(any(), any(), any())
+    }
+
+    @Test
+    fun `when the site can't be reached over wordpress-rs, then nothing is fetched`() = test {
+        whenever(wpRsRouting.canUseWpRs(site)).thenReturn(false)
+
+        val result = dataSource.fetchThumbnails(site, listOf(StatsThumbnailRequest(POST_ID, "post")))
+
+        assertThat(result).isEmpty()
+        verify(rsSiteRestClient, never()).fetchFeaturedMediaIds(any(), any(), any())
+        verify(rsSiteRestClient, never()).fetchFeaturedImageUrls(any(), any(), any(), any())
     }
 
     companion object {

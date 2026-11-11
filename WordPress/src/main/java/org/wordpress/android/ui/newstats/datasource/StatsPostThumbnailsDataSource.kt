@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.ui.rs.WpRsRouting
 import org.wordpress.android.ui.rs.data.RsSiteRestClient
 import uniffi.wp_api.PostEndpointType
 import javax.inject.Inject
@@ -22,10 +23,12 @@ import javax.inject.Named
  * own, so they never reach the network and simply keep their glyph.
  *
  * A failure anywhere costs thumbnails, not the screen: it comes back as a missing entry, and the
- * row falls back to the type glyph it was already showing.
+ * row falls back to the type glyph it was already showing. Sites the site REST API can't be
+ * reached on take that same fallback without a request -- see [fetchThumbnails].
  */
 class StatsPostThumbnailsDataSource @Inject constructor(
     private val rsSiteRestClient: RsSiteRestClient,
+    private val wpRsRouting: WpRsRouting,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) {
     /**
@@ -37,6 +40,19 @@ class StatsPostThumbnailsDataSource @Inject constructor(
      * through the Rust bindings. The other callers of these lookups wrap them the same way.
      */
     suspend fun fetchThumbnails(
+        site: SiteModel,
+        items: List<StatsThumbnailRequest>
+    ): Map<Long, String> {
+        // These lookups go to the site's own REST API, which wordpress-rs can only authenticate
+        // with an application password or over the WP.com REST proxy. Stats opens for sites with
+        // neither -- a Jetpack site whose record was built over XML-RPC -- and asking for a client
+        // for one of those throws rather than failing a request (CMM-2769). Skip them: the rows
+        // keep their type glyph, the same fallback a failed lookup gets.
+        if (!wpRsRouting.canUseWpRs(site)) return emptyMap()
+        return fetchThumbnailsFromSite(site, items)
+    }
+
+    private suspend fun fetchThumbnailsFromSite(
         site: SiteModel,
         items: List<StatsThumbnailRequest>
     ): Map<Long, String> = withContext(ioDispatcher) {

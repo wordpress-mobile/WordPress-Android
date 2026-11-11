@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Latest Post Summary in Stats loads on every site that has Stats**
+  The Latest Post Summary card in the redesigned Stats now reads the latest post from WordPress.com, the same place the rest of the screen already gets its data. On a Jetpack site the app has no way to reach directly — one added over XML-RPC with no application password stored — the card used to show "Failed to load stats" with a Retry that could never succeed, while every other card on the screen worked.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Insights → Latest Post Summary
+  - **Notes:** The card now costs one request instead of two, since the WordPress.com response carries the featured image URL alongside the post. Thumbnails in the Posts & Pages full list still come from the site's own REST API, so on those same sites their rows keep the post or page glyph — the same fallback they already took when an image couldn't be loaded.
+
 - **Referrers and Clicks in Stats show each source's icon**
   Rows in the redesigned Stats' Referrers and Clicks cards, and their full lists, now show the site icon the Stats API already reports for the referrer or link, matching the web version. A row the API has no icon for shows none, and its title stays where it was. Expanding a referrer group, such as Search Engines, shows an icon for each entry under it too.
   - **Apps:** Both
