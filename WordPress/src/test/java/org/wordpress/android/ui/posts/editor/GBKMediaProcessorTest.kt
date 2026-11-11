@@ -228,11 +228,23 @@ class GBKMediaProcessorTest : BaseUnitTest() {
         val missing = File(tempFolder.root, "vanished.jpg")
         whenever(mediaUtilsWrapper.getOptimizedMedia(missing.absolutePath, false)).thenReturn(null)
         whenever(appPrefsWrapper.isStripImageLocation).thenReturn(true)
-        val cacheFilesBefore = cacheDir.listFiles()?.size ?: 0
 
         runCatching { createProcessor(wpComSite()).processFile(missing, "image/jpeg", "vanished.jpg") }
 
-        assertThat(cacheDir.listFiles()?.size ?: 0).isEqualTo(cacheFilesBefore)
+        assertThat(cacheDir.walk().filter { it.isFile }.toList()).isEmpty()
+        assertThat(File(cacheDir, "processed-media").listFiles().orEmpty()).isEmpty()
+    }
+
+    @Test
+    fun `strip copy is written to the processed media cache`() = test {
+        // The app sweeps that directory at launch, so a copy orphaned by process death is reclaimed.
+        whenever(mediaUtilsWrapper.getOptimizedMedia(stagedFile.absolutePath, false)).thenReturn(null)
+        whenever(appPrefsWrapper.isStripImageLocation).thenReturn(true)
+
+        val result = createProcessor(wpComSite()).processFile(stagedFile, "image/jpeg", "photo.jpg")
+
+        result as ProcessedProxyFile.Processed
+        assertThat(result.file.parentFile?.parentFile).isEqualTo(File(cacheDir, "processed-media"))
     }
 
     @Test

@@ -22,6 +22,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.MediaFileNameUtils
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
+import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPVideoUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
@@ -143,7 +144,7 @@ class GBKMediaProcessor @AssistedInject constructor(
 
         // Matches VideoOptimizer: keep the transcode only when it's smaller.
         if (output.length() >= file.length()) {
-            output.delete()
+            output.deleteWithDir()
             return ProcessedProxyFile.Original
         }
 
@@ -160,10 +161,8 @@ class GBKMediaProcessor @AssistedInject constructor(
      */
     @Suppress("TooGenericExceptionCaught", "ReturnCount")
     private suspend fun transcodeVideo(input: File): File? = suspendCancellableCoroutine { continuation ->
-        val output = try {
-            File.createTempFile("wp-", ".mp4", appContext.cacheDir)
-        } catch (e: Exception) {
-            AppLog.e(AppLog.T.MEDIA, "GBKMediaProcessor > couldn't create the transcode output", e)
+        val output = createProcessedFile(MediaFileNameUtils.replaceExtension(input.name, EXTENSION_MP4))
+        if (output == null) {
             continuation.resume(null)
             return@suspendCancellableCoroutine
         }
@@ -193,7 +192,7 @@ class GBKMediaProcessor @AssistedInject constructor(
                 if (!continuation.isActive) return
                 AppLog.e(AppLog.T.MEDIA, "GBKMediaProcessor > video transcode failed", exception)
                 trackTranscodeFinished(input, output, startTimeMs, exception)
-                output.delete()
+                output.deleteWithDir()
                 continuation.resume(null)
             }
         }
@@ -217,14 +216,14 @@ class GBKMediaProcessor @AssistedInject constructor(
 
         if (composer == null) {
             trackCantOptimize(input, wasNpeDetected)
-            output.delete()
+            output.deleteWithDir()
             continuation.resume(null)
             return@suspendCancellableCoroutine
         }
 
         continuation.invokeOnCancellation {
             composer.stopQuietly()
-            output.delete()
+            output.deleteWithDir()
         }
 
         // Composer setup is slow and blocking, so the upload may already be cancelled. Starting
@@ -236,7 +235,7 @@ class GBKMediaProcessor @AssistedInject constructor(
             composer.start()
         } catch (e: Exception) {
             AppLog.e(AppLog.T.MEDIA, "GBKMediaProcessor > failed to start composer", e)
-            output.delete()
+            output.deleteWithDir()
             if (continuation.isActive) continuation.resume(null)
             return@suspendCancellableCoroutine
         }
@@ -324,15 +323,30 @@ class GBKMediaProcessor @AssistedInject constructor(
      * asked to remove.
      */
     private fun copyForLocationStrip(file: File): File {
-        var copy: File? = null
+        val copy = createProcessedFile(file.name)
+            ?: throw GBKMediaUploadException(appContext.getString(R.string.error_media_upload))
         try {
-            copy = File.createTempFile("gbk-media", ".${file.extension}", appContext.cacheDir)
             return file.copyTo(copy, overwrite = true)
         } catch (e: IOException) {
             AppLog.e(AppLog.T.MEDIA, "GBKMediaProcessor > couldn't copy the image to strip its location", e)
-            copy?.delete()
+            copy.deleteWithDir()
             throw GBKMediaUploadException(appContext.getString(R.string.error_media_upload))
         }
+    }
+
+    /**
+     * Places outputs in the processed media cache, whose leftovers the app sweeps at launch. A file
+     * orphaned by process death would otherwise stay in the cache root until the OS evicts it.
+     */
+    private fun createProcessedFile(fileName: String): File? =
+        WPMediaUtils.createProcessedMediaFile(appContext, fileName).also {
+            if (it == null) AppLog.w(AppLog.T.MEDIA, "GBKMediaProcessor > couldn't create a processed media file")
+        }
+
+    /** Also drops the file's directory, which [createProcessedFile] creates for it alone. */
+    private fun File.deleteWithDir() {
+        delete()
+        parentFile?.delete()
     }
 
     /**
@@ -341,7 +355,7 @@ class GBKMediaProcessor @AssistedInject constructor(
      */
     private fun stripLocationOrReject(file: File) {
         if (!mediaUtilsWrapper.stripImageLocation(file.absolutePath)) {
-            file.delete()
+            file.deleteWithDir()
             throw GBKMediaUploadException(appContext.getString(R.string.error_media_upload))
         }
     }
