@@ -272,7 +272,8 @@ class GBKMediaProcessor @AssistedInject constructor(
             return processedImage(optimized, filename)
         }
 
-        // WP.com rotates sideways images server-side; self-hosted sites don't (issue #5737).
+        // Self-hosted sites may not rotate on the server: core does it only for JPEGs (WP 5.3+) and
+        // only when PHP's `exif` extension is available. Matches the legacy editors (Gutenberg Mobile and Aztec).
         if (!site.isWPCom) {
             val rotated = mediaUtilsWrapper.fixOrientationIssue(file.absolutePath, false)
                 .toDistinctExistingFile(file)
