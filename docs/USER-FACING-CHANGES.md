@@ -8,6 +8,22 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **E Ink mode for eReaders**
+  A new E Ink mode turns off animations and screen transitions, removes the gray flash when you tap, and keeps the app in the light theme, so E Ink screens redraw less. On a device the app recognizes as an E Ink eReader, the app asks once whether to turn it on.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Everyone
+  - **Where:** Me → App Settings → Experimental Features → E Ink mode
+  - **Notes:** The prompt appears once, on the main screen, and only on recognized devices (matched by manufacturer and model, e.g. Onyx Boox, reMarkable, Kobo, Viwoods); declining it doesn't hide the setting. While E Ink mode is on, the app's theme setting is ignored and the app stays light. Turning it on or off applies right away to every open screen.
+
+- **Device Info screen in Help & Support**
+  A new Device Info screen lists the app version, the device's manufacturer, brand and model, the Android version, and whether the device was recognized as an E Ink eReader, with a button to copy everything for a bug report.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Everyone
+  - **Where:** Me → Help & Support → Diagnostics → Device Info
+  - **Notes:** The screen's labels are English only; they are not sent for translation.
+
 - **Referrers and Clicks in Stats show each source's icon**
   Rows in the redesigned Stats' Referrers and Clicks cards, and their full lists, now show the site icon the Stats API already reports for the referrer or link, matching the web version. A row the API has no icon for shows none, and its title stays where it was. Expanding a referrer group, such as Search Engines, shows an icon for each entry under it too.
   - **Apps:** Both

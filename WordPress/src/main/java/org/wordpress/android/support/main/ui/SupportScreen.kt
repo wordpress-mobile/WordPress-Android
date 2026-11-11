@@ -63,6 +63,7 @@ fun SupportScreen(
     onHelpCenterClick: () -> Unit,
     onUnifiedSupportClick: () -> Unit,
     onApplicationLogsClick: () -> Unit,
+    onDeviceInfoClick: () -> Unit,
     onNetworkTrackingToggle: (Boolean) -> Unit,
     onViewNetworkRequestsClick: () -> Unit,
     onRetentionPeriodSelected: (NetworkRequestsRetentionPeriod) -> Unit,
@@ -223,6 +224,16 @@ fun SupportScreen(
                 title = stringResource(R.string.support_screen_application_logs_title),
                 description = stringResource(R.string.support_screen_application_logs_description),
                 onClick = onApplicationLogsClick,
+            )
+
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+            )
+
+            SupportOptionItem(
+                title = stringResource(R.string.device_info_title),
+                description = stringResource(R.string.support_screen_device_info_description),
+                onClick = onDeviceInfoClick,
             )
 
             HorizontalDivider(
@@ -436,6 +447,7 @@ private fun SupportScreenPreview() {
             onHelpCenterClick = {},
             onUnifiedSupportClick = {},
             onApplicationLogsClick = {},
+            onDeviceInfoClick = {},
             onNetworkTrackingToggle = {},
             onViewNetworkRequestsClick = {},
             onRetentionPeriodSelected = {},
@@ -466,6 +478,7 @@ private fun SupportScreenPreviewDark() {
             onHelpCenterClick = {},
             onUnifiedSupportClick = {},
             onApplicationLogsClick = {},
+            onDeviceInfoClick = {},
             onNetworkTrackingToggle = {},
             onViewNetworkRequestsClick = {},
             onRetentionPeriodSelected = {},
@@ -496,6 +509,7 @@ private fun SupportScreenPreviewLoggedOut() {
             onHelpCenterClick = {},
             onUnifiedSupportClick = {},
             onApplicationLogsClick = {},
+            onDeviceInfoClick = {},
             onNetworkTrackingToggle = {},
             onViewNetworkRequestsClick = {},
             onRetentionPeriodSelected = {},

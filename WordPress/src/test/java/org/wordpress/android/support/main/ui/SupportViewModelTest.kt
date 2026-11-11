@@ -326,6 +326,22 @@ class SupportViewModelTest : BaseUnitTest() {
 
     // endregion
 
+    // region onDeviceInfoClick() tests
+
+    @Test
+    fun `onDeviceInfoClick emits NavigateToDeviceInfo event`() = test {
+        // When
+        viewModel.navigationEvents.test {
+            viewModel.onDeviceInfoClick()
+
+            // Then
+            val event = awaitItem()
+            assertThat(event).isEqualTo(SupportViewModel.NavigationEvent.NavigateToDeviceInfo)
+        }
+    }
+
+    // endregion
+
     // region StateFlow initial values tests
 
     @Test

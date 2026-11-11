@@ -26,6 +26,7 @@ import org.wordpress.android.support.logs.ui.LogsActivity
 import org.wordpress.android.support.unified.ui.UnifiedSupportActivity
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
+import org.wordpress.android.ui.accounts.DeviceInfoActivity
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import javax.inject.Inject
 
@@ -82,6 +83,7 @@ class SupportActivity : AppCompatActivity() {
                             onHelpCenterClick = { viewModel.onHelpCenterClick() },
                             onUnifiedSupportClick = { viewModel.onUnifiedSupportClick() },
                             onApplicationLogsClick = { viewModel.onApplicationLogsClick() },
+                            onDeviceInfoClick = { viewModel.onDeviceInfoClick() },
                             onNetworkTrackingToggle = { viewModel.onNetworkTrackingToggle(it) },
                             onViewNetworkRequestsClick = { viewModel.onViewNetworkRequestsClick() },
                             onRetentionPeriodSelected = { viewModel.onRetentionPeriodSelected(it) },
@@ -121,6 +123,7 @@ private fun getRetentionPeriodStringRes(period: NetworkRequestsRetentionPeriod):
                         is SupportViewModel.NavigationEvent.NavigateToLogin -> navigateToLogin()
                         is SupportViewModel.NavigationEvent.NavigateToHelpCenter -> navigateToHelpCenter()
                         is SupportViewModel.NavigationEvent.NavigateToApplicationLogs -> navigateToApplicationLogs()
+                        is SupportViewModel.NavigationEvent.NavigateToDeviceInfo -> navigateToDeviceInfo()
                         is SupportViewModel.NavigationEvent.NavigateToUnifiedSupport -> {
                             navigateToUnifiedSupport()
                         }
@@ -155,6 +158,10 @@ private fun getRetentionPeriodStringRes(period: NetworkRequestsRetentionPeriod):
 
     private fun navigateToApplicationLogs() {
         startActivity(LogsActivity.createIntent(this))
+    }
+
+    private fun navigateToDeviceInfo() {
+        startActivity(Intent(this, DeviceInfoActivity::class.java))
     }
 
     private fun navigateToNetworkRequests() {
