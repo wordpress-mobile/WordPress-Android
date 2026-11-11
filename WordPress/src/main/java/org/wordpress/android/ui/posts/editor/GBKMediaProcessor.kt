@@ -62,7 +62,7 @@ class GBKMediaProcessor @AssistedInject constructor(
         val resolvedMimeType = resolveMimeType(mimeType, filename)
 
         return when {
-            resolvedMimeType == MIME_GIF -> false
+            resolvedMimeType in UNPROCESSED_IMAGE_TYPES -> false
             // Only the opt-in transcode reads a video.
             mediaUtilsWrapper.isVideoMimeType(resolvedMimeType) -> appPrefsWrapper.isVideoOptimize
             resolvedMimeType.startsWith(MIME_IMAGE_PREFIX) -> needsImageFile(resolvedMimeType)
@@ -101,8 +101,7 @@ class GBKMediaProcessor @AssistedInject constructor(
         val resolvedMimeType = resolveMimeType(mimeType, filename)
 
         return when {
-            // Re-encoding would flatten the animation.
-            resolvedMimeType == MIME_GIF -> ProcessedProxyFile.Original
+            resolvedMimeType in UNPROCESSED_IMAGE_TYPES -> ProcessedProxyFile.Original
             mediaUtilsWrapper.isVideoMimeType(resolvedMimeType) -> processVideo(file, filename)
             resolvedMimeType.startsWith(MIME_IMAGE_PREFIX) -> processImage(file, resolvedMimeType, filename)
             else -> ProcessedProxyFile.Original
@@ -404,6 +403,7 @@ class GBKMediaProcessor @AssistedInject constructor(
 
         private const val MIME_IMAGE_PREFIX = "image/"
         private const val MIME_GIF = "image/gif"
+        private const val MIME_SVG = "image/svg+xml"
         private const val MIME_PNG = "image/png"
         private const val MIME_JPEG = "image/jpeg"
         private const val MIME_MP4 = "video/mp4"
@@ -412,6 +412,12 @@ class GBKMediaProcessor @AssistedInject constructor(
         private const val EXTENSION_PNG = "png"
         private const val EXTENSION_JPG = "jpg"
         private const val EXTENSION_MP4 = "mp4"
+
+        /**
+         * Uploaded as is: re-encoding would flatten a GIF's animation, and an SVG is vector, so
+         * there's nothing to resize and the image steps can't decode it.
+         */
+        private val UNPROCESSED_IMAGE_TYPES = setOf(MIME_GIF, MIME_SVG)
 
         /** Formats androidx ExifInterface can rewrite; HEIC/HEIF would fail and keep their GPS. */
         private val EXIF_MIME_TYPES = setOf(MIME_JPEG, MIME_PNG, "image/webp")

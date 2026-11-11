@@ -365,6 +365,19 @@ class GBKMediaProcessorTest : BaseUnitTest() {
     }
 
     @Test
+    fun `svg passes through untouched on self-hosted`() = test {
+        // Self-hosted runs every raster image through the image steps, which can't decode a vector
+        // image: optimizing it would only count a false success.
+        val svgStaged = tempFolder.newFile("logo.svg")
+
+        val result = createProcessor(selfHostedSite()).processFile(svgStaged, "image/svg+xml", "logo.svg")
+
+        assertThat(result).isEqualTo(ProcessedProxyFile.Original)
+        verify(mediaUtilsWrapper, never()).getOptimizedMedia(any(), any())
+        verify(mediaUtilsWrapper, never()).fixOrientationIssue(any(), any())
+    }
+
+    @Test
     fun `document passes through on a free plan for the server to judge`() = test {
         // The server's rejection reaches the editor in the user's locale, so the processor doesn't
         // second-guess the plan with the app's lagging MimeTypes table.
@@ -429,6 +442,11 @@ class GBKMediaProcessorTest : BaseUnitTest() {
     @Test
     fun `handlesFile declines gif so the copy is skipped`() {
         assertThat(createProcessor().handlesFile("image/gif", "anim.gif")).isFalse()
+    }
+
+    @Test
+    fun `handlesFile declines svg on self-hosted, which claims every raster image`() {
+        assertThat(createProcessor(selfHostedSite()).handlesFile("image/svg+xml", "logo.svg")).isFalse()
     }
 
     @Test
