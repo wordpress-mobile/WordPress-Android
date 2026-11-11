@@ -8,7 +8,10 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
+import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
+import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
+import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 
 @Suppress("MaxLineLength")
 @RunWith(MockitoJUnitRunner::class)
@@ -356,7 +359,66 @@ https://videopress.com/v/AbCDe?resizeToParent=true&amp;cover=true&amp;preloadCon
         assertThat(PostUtils.isMediaInGutenbergPostBody(postContent3, imgId)).isTrue()
     }
 
+    @Test
+    fun `isPreviewPubliclyViewable returns true for a published post`() {
+        val post = postWith(PUBLISHED)
+        assertThat(PostUtils.isPreviewPubliclyViewable(post, PREVIEW_URL)).isTrue()
+    }
+
+    @Test
+    fun `isPreviewPubliclyViewable returns false for a draft`() {
+        val post = postWith(DRAFT)
+        assertThat(PostUtils.isPreviewPubliclyViewable(post, PREVIEW_URL)).isFalse()
+    }
+
+    @Test
+    fun `isPreviewPubliclyViewable returns false for a pending post`() {
+        val post = postWith(PENDING)
+        assertThat(PostUtils.isPreviewPubliclyViewable(post, PREVIEW_URL)).isFalse()
+    }
+
+    @Test
+    fun `isPreviewPubliclyViewable returns false for a private post`() {
+        val post = postWith(PRIVATE)
+        assertThat(PostUtils.isPreviewPubliclyViewable(post, PREVIEW_URL)).isFalse()
+    }
+
+    @Test
+    fun `isPreviewPubliclyViewable returns false for a scheduled post`() {
+        val post = postWith(SCHEDULED)
+        assertThat(PostUtils.isPreviewPubliclyViewable(post, PREVIEW_URL)).isFalse()
+    }
+
+    @Test
+    fun `isPreviewPubliclyViewable returns false for a published post behind a password`() {
+        val post = postWith(PUBLISHED)
+        post.setPassword("secret")
+        assertThat(PostUtils.isPreviewPubliclyViewable(post, PREVIEW_URL)).isFalse()
+    }
+
+    @Test
+    fun `isPreviewPubliclyViewable returns false for the auto-save preview URL of a published post`() {
+        val post = postWith(PUBLISHED)
+        post.setAutoSavePreviewUrl(AUTO_SAVE_PREVIEW_URL)
+        assertThat(PostUtils.isPreviewPubliclyViewable(post, AUTO_SAVE_PREVIEW_URL)).isFalse()
+    }
+
+    @Test
+    fun `isPreviewPubliclyViewable returns false when there is no post`() {
+        assertThat(PostUtils.isPreviewPubliclyViewable(null, PREVIEW_URL)).isFalse()
+    }
+
     private companion object Fixtures {
+        private const val PREVIEW_URL = "https://example.com/a-post/?preview=true"
+        private const val AUTO_SAVE_PREVIEW_URL =
+            "https://example.com/?p=1&preview=true&preview_id=1&preview_nonce=abc123"
+
+        fun postWith(postStatus: PostStatus): PostModel {
+            val post = PostModel()
+            post.setStatus(postStatus.toString())
+            return post
+        }
+
         fun invokePreparePostForPublish(
             hasCapabilityPublishPosts: Boolean = true,
             isSelfHosted: Boolean = false,
