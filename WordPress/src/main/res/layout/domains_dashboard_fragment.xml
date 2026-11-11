@@ -20,6 +20,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="parent" />
 
+    <org.wordpress.android.ui.ActionableEmptyView
+        android:id="@+id/error_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:aevButton="@string/retry"
+        app:aevTitle="@string/domain_management_error_title"
+        tools:visibility="visible" />
+
     <ProgressBar
         android:id="@+id/progress"
         style="?android:attr/progressBarStyle"

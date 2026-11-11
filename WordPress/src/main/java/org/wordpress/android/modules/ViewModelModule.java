@@ -4,12 +4,11 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordLoginViewModel;
-import org.wordpress.android.ui.accounts.login.applicationpassword.LoginSiteApplicationPasswordViewModel;
-import org.wordpress.android.ui.accounts.LoginViewModel;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingViewModel;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentActivityViewModel;
+import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel;
 import org.wordpress.android.ui.debug.DebugSettingsViewModel;
@@ -49,8 +48,6 @@ import org.wordpress.android.ui.prefs.language.LocalePickerViewModel;
 import org.wordpress.android.ui.prefs.taxonomies.TaxonomiesNavMenuViewModel;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneViewModel;
 import org.wordpress.android.ui.publicize.PublicizeListViewModel;
-import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel;
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewModel;
@@ -80,7 +77,6 @@ import org.wordpress.android.ui.suggestion.SuggestionViewModel;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
-import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
@@ -294,10 +290,6 @@ abstract class ViewModelModule {
     @ViewModelKey(EditPostSettingsViewModel.class)
     abstract ViewModel editPostSettingsViewModel(EditPostSettingsViewModel viewModel);
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(ReaderCommentListViewModel.class)
-    abstract ViewModel readerCommentListViewModel(ReaderCommentListViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -308,11 +300,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ModalLayoutPickerViewModel.class)
     abstract ViewModel mlpViewModel(ModalLayoutPickerViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(PostSignupInterstitialViewModel.class)
-    abstract ViewModel postSignupInterstitialViewModel(PostSignupInterstitialViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -328,11 +315,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ReaderViewModel.class)
     abstract ViewModel readerParentPostListViewModel(ReaderViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(ReaderDiscoverViewModel.class)
-    abstract ViewModel readerDiscoverViewModel(ReaderDiscoverViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -444,18 +426,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(LoginViewModel.class)
-    abstract ViewModel loginViewModel(LoginViewModel viewModel);
-
-    @Binds
-    @IntoMap
     @ViewModelKey(ApplicationPasswordLoginViewModel.class)
     abstract ViewModel applicationPasswordLoginViewModel(ApplicationPasswordLoginViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(LoginSiteApplicationPasswordViewModel.class)
-    abstract ViewModel loginSiteApplicationPasswordViewModel(LoginSiteApplicationPasswordViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -492,6 +464,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(UnifiedCommentsEditViewModel.class)
     abstract ViewModel unifiedCommentsEditViewModel(UnifiedCommentsEditViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(UnifiedCommentDetailsViewModel.class)
+    abstract ViewModel unifiedCommentDetailsViewModel(UnifiedCommentDetailsViewModel viewModel);
 
     @Binds
     @IntoMap

@@ -9,7 +9,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.DebugSettingsActivityBinding
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.debug.previews.PreviewFragmentActivity.Companion.previewFragmentInActivity
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -42,9 +41,6 @@ class DebugSettingsActivity : BaseAppCompatActivity() {
             when (it) {
                 is DebugSettingsViewModel.NavigationAction.DebugCookies ->
                     ActivityLauncher.viewDebugCookies(this@DebugSettingsActivity)
-                is DebugSettingsViewModel.NavigationAction.PreviewFragment -> {
-                    previewFragmentInActivity(it.name)
-                }
                 is DebugSettingsViewModel.NavigationAction.DebugFlags ->
                     ActivityLauncher.viewDebugSharedPreferenceFlags(this@DebugSettingsActivity)
             }

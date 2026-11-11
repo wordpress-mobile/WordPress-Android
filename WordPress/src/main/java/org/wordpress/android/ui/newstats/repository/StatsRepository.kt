@@ -3,22 +3,39 @@ package org.wordpress.android.ui.newstats.repository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.datasource.CityViewsDataResult
+import org.wordpress.android.ui.newstats.datasource.ArchiveEntryDataItem
+import org.wordpress.android.ui.newstats.datasource.ArchiveSectionDataItem
+import org.wordpress.android.ui.newstats.datasource.ArchivesDataResult
 import org.wordpress.android.ui.newstats.datasource.ClicksDataResult
 import org.wordpress.android.ui.newstats.datasource.CountryViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.DevicesDataResult
 import org.wordpress.android.ui.newstats.datasource.FileDownloadsDataResult
+import org.wordpress.android.ui.newstats.datasource.PostViewsData
+import org.wordpress.android.ui.newstats.datasource.PostViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.ReferrersDataResult
 import org.wordpress.android.ui.newstats.datasource.RegionViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.SearchTermsDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
+import org.wordpress.android.ui.newstats.datasource.StatsInsightsData
+import org.wordpress.android.ui.newstats.datasource.StatsInsightsDataResult
+import org.wordpress.android.ui.newstats.datasource.StatsTagsData
+import org.wordpress.android.ui.newstats.datasource.StatsTagsDataResult
+import org.wordpress.android.ui.newstats.datasource.StatsSummaryDataResult
+import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
 import org.wordpress.android.ui.newstats.datasource.StatsDateRange
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
+import org.wordpress.android.ui.newstats.datasource.StatsVisitField
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsData
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsDataResult
 import org.wordpress.android.ui.newstats.datasource.TopAuthorsDataResult
 import org.wordpress.android.ui.newstats.datasource.TopPostsDataResult
 import org.wordpress.android.ui.newstats.datasource.VideoPlaysDataResult
+import org.wordpress.android.ui.newstats.datasource.StatsSubscribersDataResult
+import org.wordpress.android.ui.newstats.datasource.SubscribersByUserTypeDataResult
+import org.wordpress.android.ui.newstats.datasource.StatsEmailsSummaryDataResult
+import org.wordpress.android.ui.newstats.datasource.UtmDataResult
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDataSource
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -27,22 +44,47 @@ import org.wordpress.android.ui.newstats.StatsPeriod
 import androidx.annotation.StringRes
 import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.util.AppLog
+import java.time.Clock
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.time.temporal.TemporalAdjusters
+import java.time.temporal.WeekFields
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.coroutines.cancellation.CancellationException
+import kotlin.math.abs
 
 private const val HOURLY_QUANTITY = 24
+// Hourly queries end at an exact hour. "<day> 23:00:00" makes the 24-hour window cover that calendar
+// day's 00:00–23:00 buckets; a date-only value (00:00) shifts the window back an hour and drops the
+// day's 00:00 bucket.
+private const val HOURLY_END_TIME = "23:00:00"
 private const val DAILY_QUANTITY = 1
 private const val WEEKLY_QUANTITY = 7
 private const val DAYS_BEFORE_END_DATE = -6
 private const val DAYS_IN_7_DAYS = 7
 private const val DAYS_IN_30_DAYS = 30
-private const val DAYS_IN_6_MONTHS = 182
-private const val DAYS_IN_12_MONTHS = 365
-private const val MONTHS_IN_6_MONTHS = 6
 private const val MONTHS_IN_12_MONTHS = 12
+private const val MAX_DAYS_IN_MONTH = 31
+private const val MAX_DAYS_IN_2_YEARS = 731
+// The most a month/year step can lose to a short month (31 Jan + 1 month = 28 Feb). A forward step
+// landing within this of the present edge is that same window, not the neighbouring step.
+private const val MAX_SHORT_MONTH_DRIFT_DAYS = 3L
+// Backward paging stops once the window's start would reach this year, matching iOS's floor.
+private const val NAVIGATION_FLOOR_YEAR = 2000
+// The metrics the Views card needs from a stats/visits call: `views` drives the chart line and the
+// header total; the rest fill the bottom-row totals. For non-hourly periods a single [fetchStatsForPeriod]
+// call returns all of them, so the card needs no separate bottom-row request. Hourly (single-day)
+// responses only populate `views`, so those periods fetch the bottom row from a dedicated day-level call.
+private val CARD_STAT_FIELDS = listOf(
+    StatsVisitField.VIEWS,
+    StatsVisitField.VISITORS,
+    StatsVisitField.LIKES,
+    StatsVisitField.COMMENTS,
+    StatsVisitField.POSTS
+)
 private const val PERCENTAGE_MULTIPLIER = 100.0
 private const val PERCENTAGE_NO_CHANGE = 0.0
 
@@ -66,6 +108,27 @@ internal fun calculateItemChangePercent(
     }
 }
 private const val NUM_DAYS_TODAY = 1
+private const val SUBSCRIBERS_DEFAULT_MAX = 10
+
+// Number of referrers requested for the card. The detail screen requests all of them (max = 0,
+// which the server treats as "unlimited").
+private const val REFERRERS_CARD_MAX = 10
+private const val REFERRERS_DETAIL_MAX = 0
+
+// Number of archive entries requested for the card: 10, which is what Calypso's Traffic page asks
+// for, deliberately, so the card reports the same numbers as the web for the same period.
+//
+// The server applies the cap as a SQL LIMIT per day table, across all archive types at once, and
+// then caps the number of archive types to the same 10. A group's total is therefore the sum of
+// whatever survived that per-day cap, not the group's true total: the card can read lower than the
+// "show all" screen, which asks for everything (max = 0, "unlimited"). That divergence is the
+// price of web parity on the card and is accepted -- the alternative is a card that disagrees with
+// Calypso instead.
+private const val ARCHIVES_CARD_MAX = 10
+private const val ARCHIVES_DETAIL_MAX = 0
+
+/** The calendar unit a calendar-aligned period pages by. */
+private enum class CalendarUnit { WEEK, MONTH, YEAR }
 
 /**
  * Repository for fetching stats data using the wordpress-rs API.
@@ -74,23 +137,370 @@ private const val NUM_DAYS_TODAY = 1
 @Suppress("LargeClass")
 class StatsRepository @Inject constructor(
     private val statsDataSource: StatsDataSource,
+    private val statsResultCache: StatsResultCache,
     private val appLogWrapper: AppLogWrapper,
+    private val clock: Clock,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
     private val dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE
 
-    fun init(accessToken: String) {
-        statsDataSource.init(accessToken)
+    /**
+     * The current date, read through the injected [clock] so every window this class derives — and the
+     * navigation built on top of them — can be tested on fixed calendar days (a week's last day, the
+     * 30th, a leap day) instead of on whatever day the test happens to run.
+     */
+    private fun today(): LocalDate = LocalDate.now(clock)
+
+    /**
+     * Marks a result that must not be stored even though it is a [Success][StatsCacheKey]. A
+     * comparison endpoint still reports success when only its previous-period request failed, and
+     * every item then carries `previousViews = 0` and a +100% change; caching that would freeze the
+     * wrong comparison in place instead of recomputing it on the next visit. [cached] also prefers
+     * an existing entry over a result marked this way, so a partial comparison can't replace a
+     * complete one the card is already showing.
+     */
+    private class CacheGate {
+        var isComplete = true
+            private set
+
+        fun markIncomplete() {
+            isComplete = false
+        }
     }
+
+    /**
+     * Serves [key] from the in-memory cache when it holds it, otherwise runs [fetch] and caches the
+     * result if [isCacheable] accepts it and [fetch] did not mark its [CacheGate] incomplete —
+     * successes only, so an error or a thrown call always refetches. [forceRefresh] skips the
+     * lookup, for a pull-to-refresh or a background revalidation.
+     *
+     * A gate-rejected result is not just left uncached: when the cache still holds this key, that
+     * entry is returned in its place. Only complete results are ever stored, so the cached one is
+     * strictly better than a partial comparison, and the caller never has to paint +100% over
+     * numbers it already had. The entry stays stale, so the next load retries.
+     *
+     * Deliberately not wrapped in `withContext(ioDispatcher)`: a cache hit then returns without
+     * suspending at all, so a card that already has its data repaints within the same frame.
+     */
+    private suspend fun <T : Any> cached(
+        key: StatsCacheKey,
+        forceRefresh: Boolean,
+        isCacheable: (T) -> Boolean,
+        fetch: suspend (CacheGate) -> T
+    ): T {
+        if (!forceRefresh) {
+            statsResultCache.get<T>(key)?.let { return it }
+        }
+        // Read before the fetch: if the cache is emptied while this one is in flight — a
+        // pull-to-refresh, or a sign-out — the result belongs to a cache that no longer exists and
+        // put() drops it instead of writing it back.
+        val generation = statsResultCache.currentGeneration
+        val gate = CacheGate()
+        val result = fetch(gate)
+        return if (gate.isComplete) {
+            result.also { if (isCacheable(it)) statsResultCache.put(key, it, generation) }
+        } else {
+            statsResultCache.get<T>(key) ?: result
+        }
+    }
+
+    /**
+     * The cache key for one request. Stamped with [today] so a window resolved on an earlier day —
+     * or in another timezone — can never be served for this one.
+     */
+    private fun cacheKey(
+        bucket: StatsCacheBucket,
+        siteId: Long,
+        period: StatsPeriod? = null,
+        variant: String? = null
+    ) = StatsCacheKey(bucket, siteId, today(), period, variant)
+
+    /**
+     * Whether [bucket]'s result for [period] can be served from memory. Cards check this before
+     * loading, so a cache hit doesn't flash a loading placeholder.
+     */
+    fun isCached(
+        bucket: StatsCacheBucket,
+        siteId: Long,
+        period: StatsPeriod? = null,
+        variant: String? = null
+    ): Boolean = statsResultCache.isCached(cacheKey(bucket, siteId, period, variant))
+
+    /**
+     * Whether the cached result for [bucket]/[period] predates this visit to the stats screen, and so
+     * should be refreshed once in the background. False when nothing is cached, and false again once a
+     * refresh has stored a fresh result.
+     */
+    fun needsRevalidation(
+        bucket: StatsCacheBucket,
+        siteId: Long,
+        period: StatsPeriod? = null,
+        variant: String? = null
+    ): Boolean = statsResultCache.needsRevalidation(cacheKey(bucket, siteId, period, variant))
+
+    /**
+     * The cache queries for [fetchMostViewed], [fetchUtm] and [fetchHourlyViews], whose keys carry a
+     * variant. They live here, next to the fetchers that write those keys, because a card deriving
+     * the variant itself would silently stop matching if either side's encoding changed — the cache
+     * would then look permanently empty and never revalidate, with nothing failing.
+     */
+    fun isMostViewedCached(siteId: Long, period: StatsPeriod, dataSource: MostViewedDataSource) =
+        isCached(StatsCacheBucket.MOST_VIEWED, siteId, period, variant = dataSource.name)
+
+    fun mostViewedNeedsRevalidation(
+        siteId: Long,
+        period: StatsPeriod,
+        dataSource: MostViewedDataSource
+    ) = needsRevalidation(StatsCacheBucket.MOST_VIEWED, siteId, period, variant = dataSource.name)
+
+    fun isUtmCached(siteId: Long, period: StatsPeriod, keys: List<String>) =
+        isCached(StatsCacheBucket.UTM, siteId, period, variant = utmVariant(keys))
+
+    fun utmNeedsRevalidation(siteId: Long, period: StatsPeriod, keys: List<String>) =
+        needsRevalidation(StatsCacheBucket.UTM, siteId, period, variant = utmVariant(keys))
+
+    fun isHourlyViewsCached(siteId: Long, offsetDays: Int) =
+        isCached(StatsCacheBucket.HOURLY_VIEWS, siteId, variant = offsetDays.toString())
+
+    fun hourlyViewsNeedsRevalidation(siteId: Long, offsetDays: Int) =
+        needsRevalidation(StatsCacheBucket.HOURLY_VIEWS, siteId, variant = offsetDays.toString())
+
+    private fun utmVariant(keys: List<String>) = keys.joinToString(",")
+
+    /**
+     * The concrete range immediately before [period], stepped by the period's own length.
+     *
+     * The step is the window measured in its natural bucket unit ([unitAndQuantityFor]): Today steps
+     * one day, Last 7 Days seven days, Last 12 Months twelve months. Both endpoints shift by the same
+     * calendar amount so the span is preserved, and the result is always a concrete
+     * [StatsPeriod.Custom] — navigating away from a preset drops the preset (matching iOS), and a
+     * single-day result renders hourly exactly as Today does.
+     *
+     * The calendar-aligned periods ([StatsPeriod.ThisWeek]/[StatsPeriod.ThisMonth]/[StatsPeriod.ThisYear],
+     * and any full-calendar-unit Custom range they page onto) instead step to the *full* previous
+     * calendar week/month/year via [calendarShift]: from a partial "this week" (Mon..today) back steps
+     * to the whole previous week, not to a same-length mirror.
+     *
+     * [origin] is the period the user picked; it decides which of the two rhythms applies, so a rolling
+     * preset keeps its fixed span even when a paged window happens to line up with a whole calendar
+     * month (page back twice from Last 30 Days on the 29th and the intermediate window is exactly
+     * November, which would otherwise start stepping — and coming back — as calendar months).
+     */
+    fun previousPeriod(period: StatsPeriod, origin: StatsPeriod? = null): StatsPeriod =
+        stepPeriod(period, direction = -1, origin = origin)
+
+    /**
+     * The range immediately after [period], stepped by the period's own length. Clamped so the window
+     * never ends after today; callers gate the control with [canNavigateForward]. When the result
+     * lands exactly on a preset's own window it is returned as that preset (see [snapToPreset]), so
+     * paging forward onto the present edge restores the original label — Today → back → forward shows
+     * "Today", not today's date, and a full week → forward onto the present shows "This Week".
+     *
+     * [origin] is the period the user actually picked, carried by the caller across the intermediate
+     * ranges that paging produces. Several presets can share one window — on the last day of the week
+     * "Last 7 Days" and "This Week" are the same seven days — so without it the label the user chose
+     * can silently turn into another one, which paging then steps differently.
+     */
+    fun nextPeriod(period: StatsPeriod, origin: StatsPeriod? = null): StatsPeriod {
+        val shifted = stepPeriod(period, direction = 1, origin = origin)
+        // Windows generated by navigation always end on a step boundary from today, so forward lands
+        // exactly on the present edge. Clamp defensively in case a manually-picked range that isn't
+        // aligned to today overshoots. Calendar steps already clamp their end to today.
+        val today = today()
+        val result = if (shifted.endDate > today) {
+            val span = ChronoUnit.DAYS.between(shifted.startDate, shifted.endDate)
+            StatsPeriod.Custom(today.minusDays(span), today)
+        } else {
+            shifted
+        }
+        if (origin != null && isShortMonthDriftOf(result, origin, today)) return origin
+        return snapToPreset(result, source = period, origin = origin)
+    }
+
+    /**
+     * Whether [range] is [origin]'s own present-edge window, missed by a day or three because a
+     * month/year step clamped an endpoint to a shorter month on the way out and back.
+     *
+     * Paging back from Last 12 Months on 29 Feb, for instance, moves the end to 28 Feb (2027 has no
+     * 29th) and paging forward can no longer recover the leap day: the window returns one day short of
+     * the present, so it matches no preset and the forward arrow stays enabled at the present edge.
+     * Only month- and year-granular windows can drift this way ([MAX_SHORT_MONTH_DRIFT_DAYS] is the
+     * worst case, 31 Jan → 28 Feb), and their steps are a month or more apart, so a window this close
+     * to the origin's is always the same window rather than the neighbouring one.
+     */
+    private fun isShortMonthDriftOf(range: StatsPeriod.Custom, origin: StatsPeriod, today: LocalDate): Boolean {
+        val (unit, _) = unitAndQuantityFor(range.startDate, range.endDate)
+        // A custom origin has no canonical present-edge window to drift from, and a day-granular
+        // window steps by a fixed number of days, so neither can be left short by a month clamp.
+        if (origin is StatsPeriod.Custom || unit == StatsUnit.DAY) return false
+        val (originStart, originEnd) = currentPeriodWindow(origin)
+        return range.endDate <= today &&
+            daysApart(range.startDate, originStart) <= MAX_SHORT_MONTH_DRIFT_DAYS &&
+            daysApart(range.endDate, originEnd) <= MAX_SHORT_MONTH_DRIFT_DAYS
+    }
+
+    private fun daysApart(first: LocalDate, second: LocalDate): Long =
+        abs(ChronoUnit.DAYS.between(first, second))
+
+    /**
+     * Returns the preset whose canonical window exactly equals [range], or [range] itself when none
+     * matches. Lets forward navigation that lands back on the present edge restore the preset label
+     * instead of an equivalent Custom range. Only forward can match — every preset window ends today.
+     * Day-based presets match exactly; a month preset whose window drifted by a short-month clamp is
+     * recognised earlier, by [isShortMonthDriftOf], and otherwise stays Custom — a safe fallback
+     * (identical data, shown as dates rather than the preset name).
+     *
+     * Several presets can describe the same window: on the last day of the week "Last 7 Days" and
+     * "This Week" are the same seven days, and on a calendar-unit boundary day a "This week/month/
+     * year" window collapses to the single day Today covers. The [origin] preset — the one the user
+     * picked before paging away — wins those ties, so the label they chose is the one that comes back.
+     * Failing that we prefer the preset whose calendar unit matches the navigated [source], keeping
+     * "This Week" (and its whole-unit stepping) rather than switching to Today's daily stepping.
+     */
+    private fun snapToPreset(
+        range: StatsPeriod.Custom,
+        source: StatsPeriod,
+        origin: StatsPeriod? = null
+    ): StatsPeriod {
+        val window = range.startDate to range.endDate
+        val matches = StatsPeriod.presets().filter { currentPeriodWindow(it) == window }
+        val sourceUnit = calendarUnitOf(source)
+        return matches.firstOrNull { it == origin }
+            ?: matches.firstOrNull { calendarUnitOf(it) == sourceUnit }
+            ?: matches.firstOrNull()
+            ?: range
+    }
+
+    /** Whether paging backward stays above the year-[NAVIGATION_FLOOR_YEAR] floor. */
+    fun canNavigateBackward(period: StatsPeriod): Boolean {
+        val (start, _) = currentPeriodWindow(period)
+        return start.year > NAVIGATION_FLOOR_YEAR
+    }
+
+    /** Whether paging forward stays at or before today (the present edge). */
+    fun canNavigateForward(period: StatsPeriod): Boolean {
+        val (_, end) = currentPeriodWindow(period)
+        return end < today()
+    }
+
+    /**
+     * Shifts [period]'s concrete window by its own length in [direction] (-1 = back, +1 = forward),
+     * returning a concrete [StatsPeriod.Custom]. The shift amount is `quantity × direction` in the
+     * window's own bucket unit, so the span is preserved and month/year windows step by whole
+     * calendar months/years rather than by a fixed number of days.
+     */
+    private fun shiftPeriod(period: StatsPeriod, direction: Int): StatsPeriod.Custom {
+        val (start, end) = currentPeriodWindow(period)
+        val (unit, quantity) = unitAndQuantityFor(start, end)
+        val amount = quantity.toLong() * direction
+        val (newStart, newEnd) = when (unit) {
+            StatsUnit.YEAR -> start.plusYears(amount) to end.plusYears(amount)
+            StatsUnit.MONTH -> start.plusMonths(amount) to end.plusMonths(amount)
+            else -> start.plusDays(amount) to end.plusDays(amount)
+        }
+        return StatsPeriod.Custom(newStart, newEnd)
+    }
+
+    /**
+     * Steps [period] one position in [direction], using calendar-unit steps for the calendar-aligned
+     * periods ([calendarUnitOf]) and the span-preserving [shiftPeriod] for everything else.
+     *
+     * The rhythm comes from [origin] — the period the user picked — when the caller knows it, and from
+     * the window's own shape otherwise. Paging produces concrete ranges, and a range's shape alone
+     * can't tell a rolling period from a calendar one: thirty days ending on the 30th look exactly
+     * like a calendar month.
+     */
+    private fun stepPeriod(period: StatsPeriod, direction: Int, origin: StatsPeriod? = null): StatsPeriod.Custom {
+        val calendarUnit = calendarUnitOf(origin ?: period)
+        return if (calendarUnit != null) {
+            calendarShift(period, calendarUnit, direction)
+        } else {
+            shiftPeriod(period, direction)
+        }
+    }
+
+    /**
+     * The calendar unit a period pages by, or null for the rolling presets (Today, Last 7/30 days,
+     * Last 12 months) that page by a fixed span. The three calendar presets map to their unit
+     * directly; a Custom range maps only when it is exactly a full calendar week/month/year, so a
+     * period paged onto a whole previous week/month/year keeps stepping in whole calendar units while
+     * an arbitrary hand-picked range keeps its span-preserving step.
+     */
+    private fun calendarUnitOf(period: StatsPeriod): CalendarUnit? = when (period) {
+        is StatsPeriod.ThisWeek -> CalendarUnit.WEEK
+        is StatsPeriod.ThisMonth -> CalendarUnit.MONTH
+        is StatsPeriod.ThisYear -> CalendarUnit.YEAR
+        is StatsPeriod.Custom -> when {
+            isFullCalendarYear(period.startDate, period.endDate) -> CalendarUnit.YEAR
+            isFullCalendarMonth(period.startDate, period.endDate) -> CalendarUnit.MONTH
+            isFullCalendarWeek(period.startDate, period.endDate) -> CalendarUnit.WEEK
+            else -> null
+        }
+        else -> null
+    }
+
+    /**
+     * Steps [period]'s window to the adjacent *full* calendar week/month/year in [direction],
+     * returning a concrete [StatsPeriod.Custom]. Back always yields a whole calendar unit; forward
+     * yields a whole unit too, except that landing on the present unit clamps the end to today (so it
+     * matches the partial "this week/month/year" window and [snapToPreset] can restore the preset).
+     */
+    private fun calendarShift(period: StatsPeriod, unit: CalendarUnit, direction: Int): StatsPeriod.Custom {
+        val (start, _) = currentPeriodWindow(period)
+        val step = direction.toLong()
+        val (newStart, fullEnd) = when (unit) {
+            CalendarUnit.WEEK -> {
+                val weekStart = start.with(TemporalAdjusters.previousOrSame(firstDayOfWeek())).plusWeeks(step)
+                weekStart to weekStart.plusDays((DAYS_IN_7_DAYS - 1).toLong())
+            }
+            CalendarUnit.MONTH -> {
+                val monthStart = start.withDayOfMonth(1).plusMonths(step)
+                monthStart to monthStart.withDayOfMonth(monthStart.lengthOfMonth())
+            }
+            CalendarUnit.YEAR -> {
+                val yearStart = start.withDayOfYear(1).plusYears(step)
+                yearStart to yearStart.withDayOfYear(yearStart.lengthOfYear())
+            }
+        }
+        val today = today()
+        val end = if (fullEnd > today) today else fullEnd
+        return StatsPeriod.Custom(newStart, end)
+    }
+
+    private fun firstDayOfWeek() = WeekFields.of(Locale.getDefault()).firstDayOfWeek
+
+    private fun isFullCalendarWeek(start: LocalDate, end: LocalDate): Boolean =
+        start == start.with(TemporalAdjusters.previousOrSame(firstDayOfWeek())) &&
+            ChronoUnit.DAYS.between(start, end) == (DAYS_IN_7_DAYS - 1).toLong()
+
+    private fun isFullCalendarMonth(start: LocalDate, end: LocalDate): Boolean =
+        start.dayOfMonth == 1 && end == start.withDayOfMonth(start.lengthOfMonth())
+
+    private fun isFullCalendarYear(start: LocalDate, end: LocalDate): Boolean =
+        start == start.withDayOfYear(1) && end == start.withDayOfYear(start.lengthOfYear())
 
     /**
      * Fetches today's aggregated stats (views, visitors, likes, comments).
      *
      * @param siteId The WordPress.com site ID
+     * @param forceRefresh Refetches instead of serving the cached result
      * @return Today's aggregated stats or error
      */
-    suspend fun fetchTodayAggregates(siteId: Long): TodayAggregatesResult = withContext(ioDispatcher) {
-        val dateString = LocalDate.now().format(dateFormatter)
+    suspend fun fetchTodayAggregates(
+        siteId: Long,
+        forceRefresh: Boolean = false
+    ): TodayAggregatesResult = cached(
+        key = cacheKey(StatsCacheBucket.TODAY_AGGREGATES, siteId),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is TodayAggregatesResult.Success }
+    ) {
+        fetchTodayAggregatesFromNetwork(siteId)
+    }
+
+    private suspend fun fetchTodayAggregatesFromNetwork(
+        siteId: Long
+    ): TodayAggregatesResult = withContext(ioDispatcher) {
+        val dateString = today().format(dateFormatter)
 
         val result = statsDataSource.fetchStatsVisits(
             siteId = siteId,
@@ -129,25 +539,39 @@ class StatsRepository @Inject constructor(
     /**
      * Fetches hourly views data for the specified date.
      *
+     * The window ends at the target day itself ([formatApiEndDate] appends "23:00:00"), so its 24
+     * buckets cover that calendar day's 00:00–23:00. Passing the next day's date instead would end the
+     * window at 00:00, shifting it back an hour: the day's own 00:00 bucket would be dropped in favour
+     * of the following day's.
+     *
      * @param siteId The WordPress.com site ID
      * @param offsetDays Number of days to offset from today (0 = today, 1 = yesterday, etc.)
+     * @param forceRefresh Refetches instead of serving the cached result
      * @return List of hourly views data points, or empty list if fetch fails
      */
     suspend fun fetchHourlyViews(
         siteId: Long,
-        offsetDays: Int = 0
+        offsetDays: Int = 0,
+        forceRefresh: Boolean = false
+    ): HourlyViewsResult = cached(
+        key = cacheKey(StatsCacheBucket.HOURLY_VIEWS, siteId, variant = offsetDays.toString()),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is HourlyViewsResult.Success }
+    ) {
+        fetchHourlyViewsFromNetwork(siteId, offsetDays)
+    }
+
+    private suspend fun fetchHourlyViewsFromNetwork(
+        siteId: Long,
+        offsetDays: Int
     ): HourlyViewsResult = withContext(ioDispatcher) {
-        // The API's endDate is exclusive for hourly queries, so we need to add 1 day to get
-        // the target day's hours. Formula: 1 (for exclusive end) - offsetDays (0=today, 1=yesterday)
-        // Examples: offsetDays=0 → tomorrow's date → fetches today's hours
-        //           offsetDays=1 → today's date → fetches yesterday's hours
-        val dateString = LocalDate.now().plusDays((1 - offsetDays).toLong()).format(dateFormatter)
+        val day = today().minusDays(offsetDays.toLong())
 
         val result = statsDataSource.fetchStatsVisits(
             siteId = siteId,
             unit = StatsUnit.HOUR,
             quantity = HOURLY_QUANTITY,
-            endDate = dateString
+            endDate = formatApiEndDate(day, StatsUnit.HOUR)
         )
 
         when (result) {
@@ -241,9 +665,7 @@ class StatsRepository @Inject constructor(
 
             when (result) {
                 is StatsVisitsDataResult.Success -> {
-                    val dataPoints = result.data.visits.map { dataPoint ->
-                        ViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
-                    }
+                    val dataPoints = result.data.toMetricDataPoints()
                     DailyViewsResult.Success(dataPoints)
                 }
 
@@ -302,9 +724,7 @@ class StatsRepository @Inject constructor(
                 )
 
                 // Build daily data points
-                val dailyDataPoints = data.visits.map { dataPoint ->
-                    ViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
-                }
+                val dailyDataPoints = data.toMetricDataPoints()
 
                 WeeklyStatsWithDailyDataResult.Success(aggregates, dailyDataPoints)
             }
@@ -321,37 +741,61 @@ class StatsRepository @Inject constructor(
     }
 
     /**
-     * Fetches stats data for a specific period with comparison to the previous period.
+     * Fetches the chart data for a specific period with comparison to the previous period.
+     *
+     * Only the two chart windows (current + previous) are fetched here. The bottom-row totals load
+     * separately via [fetchBottomStats] so the chart can render as soon as its own calls return,
+     * independently of the bottom row (a slow or failed bottom call never blocks the chart).
      *
      * @param siteId The WordPress.com site ID
      * @param period The stats period to fetch
-     * @return Combined stats for current and previous periods or error
+     * @param forceRefresh Refetches instead of serving the cached result
+     * @return Chart stats for current and previous periods or error
      */
     suspend fun fetchStatsForPeriod(
+        siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): PeriodStatsResult = cached(
+        key = cacheKey(StatsCacheBucket.CHART, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is PeriodStatsResult.Success }
+    ) {
+        fetchStatsForPeriodFromNetwork(siteId, period)
+    }
+
+    private suspend fun fetchStatsForPeriodFromNetwork(
         siteId: Long,
         period: StatsPeriod
     ): PeriodStatsResult = withContext(ioDispatcher) {
         val periodRange = calculatePeriodDates(period)
 
-        val currentEndString = periodRange.currentEnd.format(dateFormatter)
-        val previousEndString = periodRange.previousEnd.format(dateFormatter)
+        val currentEndString = formatApiEndDate(periodRange.currentEnd, periodRange.unit)
+        val previousEndString = formatApiEndDate(periodRange.previousEnd, periodRange.unit)
 
-        // Fetch both periods in parallel for better performance
+        // Fetch the current and previous chart periods in parallel. Both request [CARD_STAT_FIELDS] so
+        // a single call powers the chart (views) and, for non-hourly periods, the bottom-row totals
+        // too — letting the card avoid a separate bottom-row request. Hourly responses only populate
+        // `views`; those (single-day) periods source the bottom row from a dedicated day-level call.
         val (currentResult, previousResult) = coroutineScope {
             val currentDeferred = async {
                 statsDataSource.fetchStatsVisits(
                     siteId = siteId,
                     unit = periodRange.unit,
-                    quantity = periodRange.quantity,
-                    endDate = currentEndString
+                    quantity = periodRange.currentQuantity,
+                    endDate = currentEndString,
+                    startDate = apiStartDateOrNull(periodRange.currentStart, periodRange.unit),
+                    statFields = CARD_STAT_FIELDS
                 )
             }
             val previousDeferred = async {
                 statsDataSource.fetchStatsVisits(
                     siteId = siteId,
                     unit = periodRange.unit,
-                    quantity = periodRange.quantity,
-                    endDate = previousEndString
+                    quantity = periodRange.previousQuantity,
+                    endDate = previousEndString,
+                    startDate = apiStartDateOrNull(periodRange.previousStart, periodRange.unit),
+                    statFields = CARD_STAT_FIELDS
                 )
             }
             currentDeferred.await() to previousDeferred.await()
@@ -363,6 +807,150 @@ class StatsRepository @Inject constructor(
             buildPeriodStatsSuccess(currentResult.data, previousResult.data, periodRange)
         } else {
             buildPeriodStatsError(currentResult, previousResult)
+        }
+    }
+
+    /**
+     * Formats the API `date` (window end) for [date] at [unit]. Hourly windows end at an exact hour
+     * ("<day> 23:00:00") so the 24 buckets cover that calendar day's 00:00–23:00; all coarser units use
+     * the plain date. See [HOURLY_END_TIME].
+     */
+    private fun formatApiEndDate(date: LocalDate, unit: StatsUnit): String {
+        val dateString = date.format(dateFormatter)
+        return if (unit == StatsUnit.HOUR) "$dateString $HOURLY_END_TIME" else dateString
+    }
+
+    /**
+     * The API `start_date` for a window starting at [start] at [unit], or null when the window must not
+     * send one.
+     *
+     * MONTH and YEAR windows send it; this is what the web app does
+     * (`unit=month&date=<end>&start_date=<start>&quantity=<n>`), and for the same two reasons.
+     *
+     * It anchors the buckets: without a start the API does not tie its year buckets to the requested
+     * window, so a range over two years comes back with the wrong buckets and every number on the card
+     * — chart, header total, % change and bottom row alike — is wrong.
+     *
+     * It also truncates the window's first bucket to the range actually asked for. A Custom range
+     * picked as 11 Feb – 7 Oct is nine month buckets either way, but without a start the February
+     * bucket arrives whole and the card silently reports from the 1st — ten days the user did not ask
+     * for, and ten days the list cards (which always send their own start) exclude. The same
+     * truncation is what keeps the current and previous totals comparable: each then covers exactly
+     * its own day span.
+     *
+     * The caveat is that truncating a bucket is exact for additive metrics (`views`) but not for
+     * per-bucket uniques (`visitors`), which can come back at their full-bucket value. The web app
+     * requests `views` and `visitors` together with a mid-bucket start and accepts the same, so this
+     * matches rather than diverges from it.
+     *
+     * DAY and HOUR windows send none: their buckets are never partial, so unit + quantity + endDate
+     * already pins the window exactly.
+     */
+    private fun apiStartDateOrNull(start: LocalDate, unit: StatsUnit): String? =
+        if (unit == StatsUnit.MONTH || unit == StatsUnit.YEAR) start.format(dateFormatter) else null
+
+    /**
+     * Fetches the bottom-row totals from a dedicated call, for the single-day periods only: Today and a
+     * Custom range whose start and end are the same day. Their chart is hourly and an hourly response
+     * only populates `views`, so the row can't be derived from [fetchStatsForPeriod].
+     *
+     * Every other period fills the row straight from the chart's own [fetchStatsForPeriod] response —
+     * it requests the same unit, quantity and windows — and never calls this. The routing lives in the
+     * view model's `fillsBottomFromChart`.
+     *
+     * Returns [BottomStatsResult.Error] (the row is hidden) only when a call errors or throws; a
+     * successful-but-empty response is summed to a legitimate all-zero row so a genuine zero-traffic
+     * period still shows totals.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param period The stats period to fetch
+     * @param forceRefresh Refetches instead of serving the cached result
+     * @return Bottom-row totals for current and previous periods, or error
+     */
+    suspend fun fetchBottomStats(
+        siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): BottomStatsResult = cached(
+        key = cacheKey(StatsCacheBucket.BOTTOM_STATS, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is BottomStatsResult.Success }
+    ) {
+        fetchBottomStatsFromNetwork(siteId, period)
+    }
+
+    private suspend fun fetchBottomStatsFromNetwork(
+        siteId: Long,
+        period: StatsPeriod
+    ): BottomStatsResult = withContext(ioDispatcher) {
+        val bottomRange = calculateBottomStatsRange(period)
+
+        val (currentResult, previousResult) = coroutineScope {
+            val currentDeferred = async {
+                fetchBottomStatsVisits(
+                    siteId = siteId,
+                    unit = bottomRange.unit,
+                    quantity = bottomRange.currentQuantity,
+                    startDate = bottomRange.currentStart,
+                    endDate = bottomRange.currentEnd
+                )
+            }
+            val previousDeferred = async {
+                fetchBottomStatsVisits(
+                    siteId = siteId,
+                    unit = bottomRange.unit,
+                    quantity = bottomRange.previousQuantity,
+                    startDate = bottomRange.previousStart,
+                    endDate = bottomRange.previousEnd
+                )
+            }
+            currentDeferred.await() to previousDeferred.await()
+        }
+
+        val current = bottomAggregatesOrNull(currentResult)
+        val previous = bottomAggregatesOrNull(previousResult)
+        if (current != null && previous != null) {
+            BottomStatsResult.Success(current, previous)
+        } else {
+            BottomStatsResult.Error
+        }
+    }
+
+    /**
+     * Fetches the dedicated bottom-row stats for the [startDate]..[endDate] window, restricting the
+     * response to the metrics shown in the bottom row.
+     *
+     * Takes the window explicitly rather than a [PeriodDateRange] so the current and previous calls
+     * cannot accidentally share one window's quantity — they can span different bucket counts.
+     *
+     * The request mirrors the chart's [fetchStatsForPeriod] exactly, [apiStartDateOrNull] included: a
+     * DAY or HOUR window is defined by unit + quantity + endDate alone, while a MONTH or YEAR window
+     * must send its start so the API anchors and truncates its buckets to the window asked for.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun fetchBottomStatsVisits(
+        siteId: Long,
+        unit: StatsUnit,
+        quantity: Int,
+        startDate: LocalDate,
+        endDate: LocalDate
+    ): StatsVisitsDataResult? {
+        return try {
+            statsDataSource.fetchStatsVisits(
+                siteId = siteId,
+                unit = unit,
+                quantity = quantity,
+                endDate = endDate.format(dateFormatter),
+                startDate = apiStartDateOrNull(startDate, unit),
+                statFields = CARD_STAT_FIELDS
+            )
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            // A bottom-stats failure must not cancel the sibling chart fetches or fail the whole
+            // card; swallow it here and let the bottom row be hidden instead.
+            appLogWrapper.e(AppLog.T.STATS, "Exception fetching bottom stats: ${e.message}")
+            null
         }
     }
 
@@ -384,19 +972,38 @@ class StatsRepository @Inject constructor(
             periodRange.previousStart.format(dateFormatter),
             previousDisplayDateString
         )
-        val currentPeriodData = currentData.visits.map { dataPoint ->
-            ViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
-        }
-        val previousPeriodData = previousData.visits.map { dataPoint ->
-            ViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
-        }
+        // An unfinished calendar period is charted over its whole span, so the current series is padded
+        // out to the end of the week/month/year; the previous window is the whole preceding period, so
+        // the buckets that haven't happened yet still have a comparison drawn over them.
+        val currentPeriodData = currentData.toMetricDataPoints() + upcomingPoints(periodRange)
+        val previousPeriodData = previousData.toMetricDataPoints()
 
         return PeriodStatsResult.Success(
             currentAggregates = currentAggregates,
             previousAggregates = previousAggregates,
             currentPeriodData = currentPeriodData,
-            previousPeriodData = previousPeriodData
+            previousPeriodData = previousPeriodData,
+            unit = periodRange.unit
         )
+    }
+
+    /**
+     * Builds the bottom-row totals from a dedicated call result, or null when the row should be
+     * hidden. Only a failed or thrown call (null result or error) hides the row; a successful
+     * response is summed as-is, so a successful-but-empty response yields a legitimate all-zero row.
+     */
+    private fun bottomAggregatesOrNull(
+        result: StatsVisitsDataResult?
+    ): BottomStatsAggregates? = if (result is StatsVisitsDataResult.Success) {
+        BottomStatsAggregates(
+            views = result.data.visits.sumOf { it.visits },
+            visitors = result.data.visitors.sumOf { it.visitors },
+            likes = result.data.likes.sumOf { it.likes },
+            comments = result.data.comments.sumOf { it.comments },
+            posts = result.data.posts.sumOf { it.posts }
+        )
+    } else {
+        null
     }
 
     private fun buildPeriodStatsError(
@@ -417,6 +1024,31 @@ class StatsRepository @Inject constructor(
         return PeriodStatsResult.Error(errorType.name)
     }
 
+    /**
+     * Combines the parallel per-bucket lists in [StatsVisitsData] into one [ViewsDataPoint] per
+     * bucket, so the chart can plot any of the five metrics from a single response. The metrics are
+     * matched by their `period` key (rather than by list position) to stay correct even if a metric
+     * omits a bucket; a metric with no entry for a bucket defaults to 0. The [visits] list drives the
+     * bucket set, mirroring how it drives the chart's views series today.
+     */
+    private fun StatsVisitsData.toMetricDataPoints(): List<ViewsDataPoint> {
+        val visitorsByPeriod = visitors.associate { it.period to it.visitors }
+        val likesByPeriod = likes.associate { it.period to it.likes }
+        val commentsByPeriod = comments.associate { it.period to it.comments }
+        val postsByPeriod = posts.associate { it.period to it.posts }
+        return visits.map { dataPoint ->
+            ViewsDataPoint(
+                period = dataPoint.period,
+                views = dataPoint.visits,
+                visitors = visitorsByPeriod[dataPoint.period] ?: 0L,
+                likes = likesByPeriod[dataPoint.period] ?: 0L,
+                comments = commentsByPeriod[dataPoint.period] ?: 0L,
+                posts = postsByPeriod[dataPoint.period] ?: 0L
+            )
+        }
+    }
+
+    /** Sums [data] into the totals shown in the header and the bottom row. */
     private fun buildPeriodAggregates(
         data: StatsVisitsData,
         startDate: String,
@@ -433,34 +1065,352 @@ class StatsRepository @Inject constructor(
         )
     }
 
+    /** The current series' trailing placeholders for [periodRange], or empty when it is complete. */
+    private fun upcomingPoints(periodRange: PeriodDateRange): List<ViewsDataPoint> =
+        periodRange.upcomingEnd?.let { upcomingDataPoints(periodRange.currentEnd, it, periodRange.unit) }.orEmpty()
+
+    /**
+     * The two windows a card region compares, and the API bucket [unit] both are fetched at.
+     *
+     * Each window carries its own quantity, and the two are *not* interchangeable — never send
+     * [currentQuantity] on the previous request. Two kinds of period make them differ:
+     *
+     * - An unfinished calendar period ([calculateCalendarPeriodDates]): the current window stops at
+     *   today while the previous one is the whole preceding week/month/year, so on a Wednesday
+     *   "This Week" asks for 4 buckets and 7. Reusing the current quantity would truncate the
+     *   comparison window and skew every % change on the card.
+     * - A Custom range coarsened to MONTH or YEAR: the previous window mirrors the current one's exact
+     *   *day* span (see [previousWindowMirror]), which always resolves to the same unit but not always
+     *   to the same number of calendar buckets. Reusing the current quantity would make the API return
+     *   an extra leading bucket and fold it into the previous total.
+     */
     private data class PeriodDateRange(
         val currentStart: LocalDate,
         val currentEnd: LocalDate,
         val previousStart: LocalDate,
         val previousEnd: LocalDate,
-        val quantity: Int,
+        val currentQuantity: Int,
+        val previousQuantity: Int,
         val unit: StatsUnit,
         // Display dates for the legend (may differ from API dates for hourly queries)
         val currentDisplayDate: LocalDate = currentEnd,
-        val previousDisplayDate: LocalDate = previousEnd
+        val previousDisplayDate: LocalDate = previousEnd,
+        /**
+         * The end of the whole calendar period when it runs past [currentEnd], or null when the window
+         * is already complete. The buckets between [currentEnd] and it have not happened yet; they are
+         * appended to the current series as empty placeholders so the chart spans the whole period.
+         */
+        val upcomingEnd: LocalDate? = null
     )
 
     private enum class DateUnit { DAY, MONTH }
 
     private data class PeriodConfig(val quantity: Int, val unit: StatsUnit, val dateUnit: DateUnit)
 
+    /**
+     * Computes the date range and API unit for a dedicated bottom-row fetch, coarsening the unit as the
+     * span grows (day up to a month, month up to two years, year beyond) so the API de-duplicates
+     * visitor uniques per bucket before the totals are summed. The previous window mirrors the current
+     * one's exact day span ([previousWindowMirror], exactly as [calculateTodayPeriodDates] and
+     * [calculateCustomPeriodDates] do), so the header's and the bottom row's Views % change compare
+     * against identical windows and never disagree. Each window's quantity is derived from its own span
+     * — the mirror can cover a different number of buckets.
+     *
+     * In practice only the single-day periods reach here (see [fetchBottomStats]), so the coarser units
+     * are currently unreachable from the card — every longer period fills its row from the chart. The
+     * span-based rule is kept so a caller that does need a standalone total for a longer window gets a
+     * correct one rather than a silently wrong bucket.
+     */
+    private fun calculateBottomStatsRange(period: StatsPeriod): PeriodDateRange {
+        val (currentStart, currentEnd) = currentPeriodWindow(period)
+        val (unit, currentQuantity) = unitAndQuantityFor(currentStart, currentEnd)
+        val (previousStart, previousEnd) = previousWindowMirror(currentStart, currentEnd)
+        val (_, previousQuantity) = unitAndQuantityFor(previousStart, previousEnd)
+        return PeriodDateRange(
+            currentStart = currentStart,
+            currentEnd = currentEnd,
+            previousStart = previousStart,
+            previousEnd = previousEnd,
+            currentQuantity = currentQuantity,
+            previousQuantity = previousQuantity,
+            unit = unit
+        )
+    }
+
+    /**
+     * Chooses the API [StatsUnit] and its quantity for the inclusive real-calendar [start]..[end]
+     * window, coarsening the bucket as the span grows: day up to a full month, month up to two years,
+     * year beyond that. Shared by the bottom-row range and the custom-period chart window so the
+     * thresholds and the quantity rule live in one place and the two always agree.
+     *
+     * Call it once per window — the quantity describes the window it was given, and a window and its
+     * [previousWindowMirror] can span different numbers of buckets.
+     *
+     * The quantity counts the calendar buckets the window *spans*, not the whole units elapsed
+     * between its endpoints: the API returns `quantity` buckets ending at the bucket holding the end
+     * date, so counting elapsed units drops the window's first bucket whenever the end's day-of-month
+     * falls before the start's (Jan 15..Mar 5 elapses 1 whole month but spans 3: Jan, Feb, Mar).
+     */
+    private fun unitAndQuantityFor(start: LocalDate, end: LocalDate): Pair<StatsUnit, Int> {
+        val unit = unitFor(start, end)
+        return unit to quantityFor(start, end, unit)
+    }
+
+    /** The bucket [StatsUnit] the inclusive [start]..[end] window is charted at. See [unitAndQuantityFor]. */
+    private fun unitFor(start: LocalDate, end: LocalDate): StatsUnit {
+        val daysBetween = ChronoUnit.DAYS.between(start, end).toInt() + 1
+        return when {
+            daysBetween <= MAX_DAYS_IN_MONTH -> StatsUnit.DAY
+            daysBetween > MAX_DAYS_IN_2_YEARS -> StatsUnit.YEAR
+            else -> StatsUnit.MONTH
+        }
+    }
+
+    /**
+     * How many [unit] buckets the inclusive [start]..[end] window spans. Split from [unitFor] so a
+     * window can be measured at a unit chosen elsewhere — the calendar-aligned periods pick their unit
+     * from the whole calendar week/month/year but request only the buckets up to today.
+     */
+    private fun quantityFor(start: LocalDate, end: LocalDate, unit: StatsUnit): Int = when (unit) {
+        StatsUnit.MONTH ->
+            (ChronoUnit.MONTHS.between(start.withDayOfMonth(1), end.withDayOfMonth(1)).toInt() + 1)
+                .coerceAtLeast(1)
+        StatsUnit.YEAR -> (end.year - start.year + 1).coerceAtLeast(1)
+        else -> (ChronoUnit.DAYS.between(start, end).toInt() + 1).coerceAtLeast(1)
+    }
+
+    /**
+     * The immediately-preceding window that mirrors [start]..[end]'s exact day span, ending the day
+     * before [start]. Used only where the chart itself compares against an exact day span (Today and
+     * Custom): for those paths the day boundaries line up with the chart, so the Views % change stays
+     * consistent. The fixed-span presets instead step both endpoints back by whole bucket units via
+     * [previousWindowForConfig] — the same day span, but aligned to the buckets the chart plots.
+     *
+     * The mirror preserves the day span, so [unitAndQuantityFor] always resolves it to the same unit as
+     * the window it mirrors — but not necessarily to the same bucket count, so its quantity must be
+     * derived from the mirror itself (2023-12-31..2026-01-01 spans 4 years; its mirror spans 3).
+     */
+    private fun previousWindowMirror(start: LocalDate, end: LocalDate): Pair<LocalDate, LocalDate> {
+        val daysBetween = ChronoUnit.DAYS.between(start, end).toInt() + 1
+        val previousEnd = start.minusDays(1)
+        val previousStart = previousEnd.minusDays((daysBetween - 1).toLong())
+        return previousStart to previousEnd
+    }
+
+    /**
+     * The window immediately before [currentStart]..[currentEnd], stepped back by the period's whole
+     * span — `quantity` [PeriodConfig.dateUnit] steps — at *both* endpoints. Shared with
+     * [calculateComparisonDateRanges] so the chart and the list cards derive it identically.
+     *
+     * Moving both endpoints by the same amount is what keeps the two totals comparable: the previous
+     * window then covers the same number of days as the current one, and its last bucket is cut at the
+     * same day of the month. Anchoring the end to [currentStart] instead — the day before it, or a
+     * whole unit before it — makes a month-granular previous window a full twelve months against a
+     * current window that only reaches today, so a site with flat traffic reads a steady loss (−8% on
+     * the 1st of a month, falling to 0% on its last day) on the Views card and on every list card.
+     *
+     * Day-unit windows are untouched by the choice: `currentEnd − quantity days` and
+     * `currentStart − 1 day` are the same date when the window spans `quantity` days.
+     */
+    private fun previousWindowForConfig(
+        currentStart: LocalDate,
+        currentEnd: LocalDate,
+        config: PeriodConfig
+    ): Pair<LocalDate, LocalDate> {
+        val previousStart = subtractFromDate(currentStart, config.quantity, config.dateUnit)
+        val previousEnd = subtractFromDate(currentEnd, config.quantity, config.dateUnit)
+        return previousStart to previousEnd
+    }
+
     @Suppress("ReturnCount")
     private fun calculatePeriodDates(period: StatsPeriod): PeriodDateRange {
         if (period is StatsPeriod.Today) return calculateTodayPeriodDates()
         if (period is StatsPeriod.Custom) return calculateCustomPeriodDates(period.startDate, period.endDate)
 
-        val config = getPeriodConfig(period)
-        val currentEnd = LocalDate.now()
-        val currentStart = subtractFromDate(currentEnd, config.quantity - 1, config.dateUnit)
-        val previousEnd = subtractFromDate(currentStart, 1, config.dateUnit)
-        val previousStart = subtractFromDate(previousEnd, config.quantity - 1, config.dateUnit)
+        // One read of today() for the whole computation. The calendar path derives both the elapsed end
+        // and the whole period's span from it, and reading the clock twice lets a load that straddles
+        // midnight pair a window from one day with an end from the next (an 8-bucket "This Week").
+        val currentWindow = currentPeriodWindow(period)
+        fullCalendarWindow(period, currentWindow)?.let {
+            return calculateCalendarPeriodDates(period, currentWindow.second, it)
+        }
 
-        return PeriodDateRange(currentStart, currentEnd, previousStart, previousEnd, config.quantity, config.unit)
+        val config = getPeriodConfig(period)
+        val (currentStart, currentEnd) = currentWindow
+        val (previousStart, previousEnd) = previousWindowForConfig(currentStart, currentEnd, config)
+
+        // [previousWindowForConfig] steps both endpoints exactly config.quantity units back, so both
+        // windows request the same number of buckets, and cover the same day span, by construction.
+        return PeriodDateRange(
+            currentStart = currentStart,
+            currentEnd = currentEnd,
+            previousStart = previousStart,
+            previousEnd = previousEnd,
+            currentQuantity = config.quantity,
+            previousQuantity = config.quantity,
+            unit = config.unit
+        )
+    }
+
+    /**
+     * The chart windows for an unfinished calendar period ([StatsPeriod.ThisWeek]/[StatsPeriod.ThisMonth]/
+     * [StatsPeriod.ThisYear]), whose whole calendar week/month/year is [fullWindow] and whose elapsed
+     * part ends at [currentEnd] (today). Both are passed in, from one read of the clock.
+     *
+     * The chart spans the *whole* period rather than stopping at today — matching iOS — so on a
+     * Wednesday "This Week" plots Monday through Sunday, with the days still to come carrying only the
+     * previous period's bars. Three things follow from that:
+     *
+     * - The bucket unit comes from the whole period, not from the part of it that has elapsed, so the
+     *   granularity doesn't change as the period fills up: "This Year" is twelve month buckets on 5
+     *   January just as it is in December, rather than five day buckets.
+     * - The current window is still only fetched up to today (the API has nothing for days that haven't
+     *   happened); [PeriodDateRange.upcomingEnd] carries the rest of the period so
+     *   [buildPeriodStatsSuccess] can append the empty buckets the chart draws.
+     * - The previous window is the *whole* preceding calendar week/month/year, untrimmed, so the part
+     *   of the period that hasn't happened yet still has a comparison drawn over it. The totals compare
+     *   whole period against whole period, which is what iOS does: on a Wednesday "This Week" reads
+     *   this week so far against all of last week. See [calculateComparisonDateRanges], which derives
+     *   the same window for every other card so one screen never mixes two baselines.
+     *
+     * The elapsed part is deliberately *not* carved out of the previous window. Doing so is only exact
+     * while a bucket is a day — at a coarser unit the last elapsed bucket is a month that has only
+     * partly happened — and the obvious repair, re-requesting the previous window ending at its
+     * equivalent day, does not work either: the API truncates a bucket's additive metrics at the
+     * requested end date but returns whole-bucket visitor uniques, so the comparison would be right for
+     * views and wrong for visitors. Matching iOS avoids the question entirely.
+     */
+    private fun calculateCalendarPeriodDates(
+        period: StatsPeriod,
+        currentEnd: LocalDate,
+        fullWindow: Pair<LocalDate, LocalDate>
+    ): PeriodDateRange {
+        val (currentStart, fullEnd) = fullWindow
+        val unit = unitFor(currentStart, fullEnd)
+
+        val (previousStart, previousEnd) = previousCalendarWindow(currentStart, calendarUnitOf(period))
+
+        return PeriodDateRange(
+            currentStart = currentStart,
+            currentEnd = currentEnd,
+            previousStart = previousStart,
+            previousEnd = previousEnd,
+            currentQuantity = quantityFor(currentStart, currentEnd, unit),
+            previousQuantity = quantityFor(previousStart, previousEnd, unit),
+            unit = unit,
+            upcomingEnd = fullEnd.takeIf { it > currentEnd }
+        )
+    }
+
+    /**
+     * The whole calendar week/month/year a calendar-aligned period belongs to — the future part of it
+     * included — or null for every other period. [currentWindow] (from [currentPeriodWindow]) stops at
+     * today; this is the window the chart spans. Takes the current window rather than re-deriving it so
+     * the whole computation rests on a single read of the clock.
+     */
+    private fun fullCalendarWindow(
+        period: StatsPeriod,
+        currentWindow: Pair<LocalDate, LocalDate>
+    ): Pair<LocalDate, LocalDate>? {
+        val (start, _) = currentWindow
+        return when (period) {
+            is StatsPeriod.ThisWeek -> start to start.plusDays((DAYS_IN_7_DAYS - 1).toLong())
+            is StatsPeriod.ThisMonth -> start to start.withDayOfMonth(start.lengthOfMonth())
+            is StatsPeriod.ThisYear -> start to start.withDayOfYear(start.lengthOfYear())
+            else -> null
+        }
+    }
+
+    /**
+     * The whole calendar [unit] immediately before the one starting at [start] — last week, last month,
+     * last year. This is the window a calendar-aligned period compares against, for the Views card
+     * ([calculateCalendarPeriodDates]) and every other card ([calculateComparisonDateRanges]) alike.
+     */
+    private fun previousCalendarWindow(start: LocalDate, unit: CalendarUnit?): Pair<LocalDate, LocalDate> {
+        val previousStart = when (unit) {
+            CalendarUnit.WEEK -> start.minusWeeks(1)
+            CalendarUnit.MONTH -> start.minusMonths(1)
+            CalendarUnit.YEAR -> start.minusYears(1)
+            null -> start.minusDays(1)
+        }
+        return previousStart to start.minusDays(1)
+    }
+
+    /** [start] moved forward by [buckets] whole [unit] buckets. */
+    private fun advanceBuckets(start: LocalDate, buckets: Int, unit: StatsUnit): LocalDate {
+        val amount = buckets.toLong()
+        return when (unit) {
+            StatsUnit.YEAR -> start.plusYears(amount)
+            StatsUnit.MONTH -> start.plusMonths(amount)
+            else -> start.plusDays(amount)
+        }
+    }
+
+    /**
+     * The empty buckets between [currentEnd] and [upcomingEnd] — the part of a calendar period that
+     * hasn't happened yet. Appended to the current series so the chart spans the whole period, with
+     * only the previous period's bars drawn over the days still to come.
+     *
+     * The placeholders are keyed by their own bucket start date in the API's own ISO format, so they
+     * label themselves exactly like the buckets the API returns.
+     */
+    private fun upcomingDataPoints(
+        currentEnd: LocalDate,
+        upcomingEnd: LocalDate,
+        unit: StatsUnit
+    ): List<ViewsDataPoint> {
+        val points = mutableListOf<ViewsDataPoint>()
+        var bucket = advanceBuckets(bucketStart(currentEnd, unit), 1, unit)
+        while (!bucket.isAfter(upcomingEnd)) {
+            points.add(ViewsDataPoint(period = bucket.format(dateFormatter), views = 0L, isUpcoming = true))
+            bucket = advanceBuckets(bucket, 1, unit)
+        }
+        return points
+    }
+
+    /** The first day of the [unit] bucket holding [date]. */
+    private fun bucketStart(date: LocalDate, unit: StatsUnit): LocalDate = when (unit) {
+        StatsUnit.YEAR -> date.withDayOfYear(1)
+        StatsUnit.MONTH -> date.withDayOfMonth(1)
+        else -> date
+    }
+
+    /**
+     * The inclusive real-calendar current window (start..end) for a period. Shared by both the chart
+     * window ([calculatePeriodDates]) and the bottom-row window ([calculateBottomStatsRange]) so the
+     * current window is never derived from two different code paths.
+     *
+     * Note: [calculatePeriodDates] handles the hourly cases (Today and single-day Custom) separately
+     * before reaching here, so those build their own window ending at "<day> 23:00:00".
+     */
+    /**
+     * The window a period covers, for callers that need to *show* the dates a preset resolves to
+     * (the Traffic selector's label) rather than fetch them. Delegates to the same
+     * [currentPeriodWindow] every request is built from, so a label can never name a different
+     * window from the one the cards below it loaded.
+     */
+    fun periodWindow(period: StatsPeriod): Pair<LocalDate, LocalDate> = currentPeriodWindow(period)
+
+    private fun currentPeriodWindow(period: StatsPeriod): Pair<LocalDate, LocalDate> {
+        val today = today()
+        return when (period) {
+            is StatsPeriod.Today -> today to today
+            is StatsPeriod.Last7Days -> today.minusDays((DAYS_IN_7_DAYS - 1).toLong()) to today
+            is StatsPeriod.Last30Days -> today.minusDays((DAYS_IN_30_DAYS - 1).toLong()) to today
+            // Twelve whole month buckets ending with the current month. That is what the API returns
+            // for the chart's `unit=month&quantity=12&date=<today>` request, and the window web and iOS
+            // ask for explicitly (`start_date` = the 1st of the month eleven months back). Starting it
+            // eleven months back *from today* instead would describe a window nobody fetches, and the
+            // list cards — which do send their own start — would cover a different range from the chart.
+            is StatsPeriod.Last12Months ->
+                today.minusMonths((MONTHS_IN_12_MONTHS - 1).toLong()).withDayOfMonth(1) to today
+            // Calendar-aligned windows run from the start of the current week/month/year up to today.
+            is StatsPeriod.ThisWeek ->
+                today.with(TemporalAdjusters.previousOrSame(firstDayOfWeek())) to today
+            is StatsPeriod.ThisMonth -> today.withDayOfMonth(1) to today
+            is StatsPeriod.ThisYear -> today.withDayOfYear(1) to today
+            is StatsPeriod.Custom -> period.startDate to period.endDate
+        }
     }
 
     private fun subtractFromDate(date: LocalDate, amount: Int, unit: DateUnit): LocalDate {
@@ -470,28 +1420,32 @@ class StatsRepository @Inject constructor(
         }
     }
 
+    /**
+     * The fixed-span presets' window shape. The calendar-aligned periods never reach here — they take
+     * their unit and windows from the whole calendar period, in [calculateCalendarPeriodDates].
+     */
     private fun getPeriodConfig(period: StatsPeriod): PeriodConfig = when (period) {
         is StatsPeriod.Last7Days -> PeriodConfig(DAYS_IN_7_DAYS, StatsUnit.DAY, DateUnit.DAY)
         is StatsPeriod.Last30Days -> PeriodConfig(DAYS_IN_30_DAYS, StatsUnit.DAY, DateUnit.DAY)
-        is StatsPeriod.Last6Months -> PeriodConfig(MONTHS_IN_6_MONTHS, StatsUnit.MONTH, DateUnit.MONTH)
         is StatsPeriod.Last12Months -> PeriodConfig(MONTHS_IN_12_MONTHS, StatsUnit.MONTH, DateUnit.MONTH)
         else -> PeriodConfig(DAYS_IN_7_DAYS, StatsUnit.DAY, DateUnit.DAY) // Fallback to 7 days
     }
 
     /**
-     * Calculates period dates for TODAY (hourly data).
-     * The API's endDate is exclusive for hourly queries, so we use tomorrow as end date for today's hours.
+     * Calculates period dates for TODAY (hourly data). The hourly window ends at the day itself
+     * ([formatApiEndDate] appends "23:00:00"), so the 24 buckets cover today's 00:00–23:00 and the
+     * previous window covers yesterday's — matching the day-level totals shown in the bottom row.
      */
     private fun calculateTodayPeriodDates(): PeriodDateRange {
-        val today = LocalDate.now()
-        val tomorrow = today.plusDays(1)
+        val today = today()
         val yesterday = today.minusDays(1)
         return PeriodDateRange(
             currentStart = today,
-            currentEnd = tomorrow,
+            currentEnd = today,
             previousStart = yesterday,
-            previousEnd = today,
-            quantity = HOURLY_QUANTITY,
+            previousEnd = yesterday,
+            currentQuantity = HOURLY_QUANTITY,
+            previousQuantity = HOURLY_QUANTITY,
             unit = StatsUnit.HOUR,
             currentDisplayDate = today,
             previousDisplayDate = yesterday
@@ -501,28 +1455,40 @@ class StatsRepository @Inject constructor(
     private fun calculateCustomPeriodDates(startDate: LocalDate, endDate: LocalDate): PeriodDateRange {
         val daysBetween = ChronoUnit.DAYS.between(startDate, endDate).toInt() + 1
 
-        val previousEnd = startDate.minusDays(1)
-        val previousStart = previousEnd.minusDays(daysBetween.toLong() - 1)
-
-        // Determine unit based on range
-        val unit = when {
-            daysBetween <= DAYS_IN_30_DAYS -> StatsUnit.DAY
-            else -> StatsUnit.MONTH
+        // Single day → hourly granularity (like Today). The hourly window ends at the day itself
+        // ([formatApiEndDate] appends "23:00:00"), so the 24 buckets cover that day's 00:00–23:00.
+        if (daysBetween == 1) {
+            val previousDate = startDate.minusDays(1)
+            return PeriodDateRange(
+                currentStart = startDate,
+                currentEnd = startDate,
+                previousStart = previousDate,
+                previousEnd = previousDate,
+                currentQuantity = HOURLY_QUANTITY,
+                previousQuantity = HOURLY_QUANTITY,
+                unit = StatsUnit.HOUR,
+                currentDisplayDate = startDate,
+                previousDisplayDate = previousDate
+            )
         }
 
-        val quantity = if (unit == StatsUnit.MONTH) {
-            val monthsBetween = ChronoUnit.MONTHS.between(startDate, endDate).toInt() + 1
-            monthsBetween.coerceAtLeast(1)
-        } else {
-            daysBetween
-        }
+        // Daily up to a full month (31 days), monthly up to two years, yearly beyond. Coarsening the
+        // chart to YEAR past two years (the same rule the bottom-row totals use) keeps the chart and
+        // the bottom row on one unit, so the header's Views and the bottom row's Views — and their
+        // visitor de-duplication — always agree for long Custom ranges. A coarsened window also sends
+        // its own start to the API, so it still covers the picked days and not whole buckets (see
+        // [apiStartDateOrNull]).
+        val (unit, currentQuantity) = unitAndQuantityFor(startDate, endDate)
+        val (previousStart, previousEnd) = previousWindowMirror(startDate, endDate)
+        val (_, previousQuantity) = unitAndQuantityFor(previousStart, previousEnd)
 
         return PeriodDateRange(
             currentStart = startDate,
             currentEnd = endDate,
             previousStart = previousStart,
             previousEnd = previousEnd,
-            quantity = quantity,
+            currentQuantity = currentQuantity,
+            previousQuantity = previousQuantity,
             unit = unit
         )
     }
@@ -534,7 +1500,7 @@ class StatsRepository @Inject constructor(
      * @return Pair of (startDate, endDate) LocalDates representing the 7-day period
      */
     private fun calculateWeekDateRange(weeksAgo: Int): Pair<LocalDate, LocalDate> {
-        val endDate = LocalDate.now().minusWeeks(weeksAgo.toLong())
+        val endDate = today().minusWeeks(weeksAgo.toLong())
         val startDate = endDate.plusDays(DAYS_BEFORE_END_DATE.toLong())
         return startDate to endDate
     }
@@ -546,30 +1512,76 @@ class StatsRepository @Inject constructor(
      * @param siteId The WordPress.com site ID
      * @param period The stats period to fetch
      * @param dataSource The data source type (posts and pages or referrers)
+     * @param forceRefresh Refetches instead of serving the cached result
      * @return Most viewed items with comparison data or error
      */
-    @Suppress("ReturnCount")
     suspend fun fetchMostViewed(
         siteId: Long,
         period: StatsPeriod,
-        dataSource: MostViewedDataSource
+        dataSource: MostViewedDataSource,
+        forceRefresh: Boolean = false
+    ): MostViewedResult = cached(
+        key = cacheKey(StatsCacheBucket.MOST_VIEWED, siteId, period, variant = dataSource.name),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is MostViewedResult.Success }
+    ) { gate ->
+        fetchMostViewedFromNetwork(siteId, period, dataSource, gate)
+    }
+
+    @Suppress("ReturnCount")
+    private suspend fun fetchMostViewedFromNetwork(
+        siteId: Long,
+        period: StatsPeriod,
+        dataSource: MostViewedDataSource,
+        gate: CacheGate
     ): MostViewedResult = withContext(ioDispatcher) {
         val (currentDateRange, previousDateRange) = calculateComparisonDateRanges(period)
 
         when (dataSource) {
             MostViewedDataSource.POSTS_AND_PAGES -> {
-                fetchTopPostsWithComparison(siteId, currentDateRange, previousDateRange)
+                fetchTopPostsWithComparison(siteId, currentDateRange, previousDateRange, gate)
             }
             MostViewedDataSource.REFERRERS -> {
-                fetchReferrersWithComparison(siteId, currentDateRange, previousDateRange)
+                fetchReferrersWithComparison(
+                    siteId, currentDateRange, previousDateRange, REFERRERS_CARD_MAX, gate
+                )
             }
         }
+    }
+
+    /**
+     * Fetches the full referrer list (max = 0 = unlimited) for the referrers detail screen. Kept
+     * separate from [fetchMostViewed] (which bounds the card to [REFERRERS_CARD_MAX]) so the detail
+     * screen can show more entries than the card without inflating the card request.
+     */
+    suspend fun fetchReferrersDetail(
+        siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): MostViewedResult = cached(
+        key = cacheKey(StatsCacheBucket.REFERRERS_DETAIL, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is MostViewedResult.Success }
+    ) { gate ->
+        fetchReferrersDetailFromNetwork(siteId, period, gate)
+    }
+
+    private suspend fun fetchReferrersDetailFromNetwork(
+        siteId: Long,
+        period: StatsPeriod,
+        gate: CacheGate
+    ): MostViewedResult = withContext(ioDispatcher) {
+        val (currentDateRange, previousDateRange) = calculateComparisonDateRanges(period)
+        fetchReferrersWithComparison(
+            siteId, currentDateRange, previousDateRange, REFERRERS_DETAIL_MAX, gate
+        )
     }
 
     private suspend fun fetchTopPostsWithComparison(
         siteId: Long,
         currentDateRange: StatsDateRange,
-        previousDateRange: StatsDateRange
+        previousDateRange: StatsDateRange,
+        gate: CacheGate
     ): MostViewedResult = coroutineScope {
         appLogWrapper.d(
             AppLog.T.STATS,
@@ -593,6 +1605,7 @@ class StatsRepository @Inject constructor(
             val previousItemsMap = if (previousResult is TopPostsDataResult.Success) {
                 previousResult.items.associateBy { it.id }
             } else {
+                gate.markIncomplete()
                 emptyMap()
             }
 
@@ -611,7 +1624,9 @@ class StatsRepository @Inject constructor(
                         title = item.title,
                         views = item.views,
                         previousViews = previousViews,
-                        isFirst = index == 0
+                        isFirst = index == 0,
+                        url = item.url,
+                        postType = item.postType
                     )
                 },
                 totalViews = totalViews,
@@ -628,13 +1643,20 @@ class StatsRepository @Inject constructor(
         }
     }
 
+    @Suppress("LongParameterList")
     private suspend fun fetchReferrersWithComparison(
         siteId: Long,
         currentDateRange: StatsDateRange,
-        previousDateRange: StatsDateRange
+        previousDateRange: StatsDateRange,
+        max: Int,
+        gate: CacheGate
     ): MostViewedResult = coroutineScope {
-        val currentDeferred = async { statsDataSource.fetchReferrers(siteId, currentDateRange) }
-        val previousDeferred = async { statsDataSource.fetchReferrers(siteId, previousDateRange) }
+        // The card requests REFERRERS_CARD_MAX items; the detail screen requests all of them by
+        // passing max = 0 (the server treats 0 as "unlimited", vs. an unset max that defaults to 10).
+        // Fetching all only when the detail screen opens keeps the card request small and avoids
+        // passing a large list across the process boundary.
+        val currentDeferred = async { statsDataSource.fetchReferrers(siteId, currentDateRange, max = max) }
+        val previousDeferred = async { statsDataSource.fetchReferrers(siteId, previousDateRange, max = max) }
 
         val currentResult = currentDeferred.await()
         val previousResult = previousDeferred.await()
@@ -643,6 +1665,7 @@ class StatsRepository @Inject constructor(
             val previousItemsMap = if (previousResult is ReferrersDataResult.Success) {
                 previousResult.items.associateBy { it.name }
             } else {
+                gate.markIncomplete()
                 emptyMap()
             }
 
@@ -661,7 +1684,17 @@ class StatsRepository @Inject constructor(
                         title = item.name,
                         views = item.views,
                         previousViews = previousViews,
-                        isFirst = index == 0
+                        isFirst = index == 0,
+                        children = item.children.map { child ->
+                            MostViewedChildData(
+                                name = child.name,
+                                url = child.url,
+                                views = child.views,
+                                iconUrl = child.iconUrl
+                            )
+                        },
+                        url = item.url,
+                        iconUrl = item.iconUrl
                     )
                 },
                 totalViews = totalViews,
@@ -683,7 +1716,7 @@ class StatsRepository @Inject constructor(
      * Used by multiple stats types (MostViewed, Countries, etc.)
      */
     private fun calculateCurrentDateRange(period: StatsPeriod): StatsDateRange {
-        val today = LocalDate.now()
+        val today = today()
         val todayString = today.format(dateFormatter)
         return when (period) {
             is StatsPeriod.Today ->
@@ -692,10 +1725,18 @@ class StatsRepository @Inject constructor(
                 StatsDateRange.Preset(num = DAYS_IN_7_DAYS, date = todayString)
             is StatsPeriod.Last30Days ->
                 StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = todayString)
-            is StatsPeriod.Last6Months ->
-                StatsDateRange.Preset(num = DAYS_IN_6_MONTHS, date = todayString)
-            is StatsPeriod.Last12Months ->
-                StatsDateRange.Preset(num = DAYS_IN_12_MONTHS, date = todayString)
+            // Last 12 Months sends its window rather than a day count: it is twelve whole month
+            // buckets, which no `num` describes. See [currentPeriodWindow].
+            is StatsPeriod.Last12Months,
+            is StatsPeriod.ThisWeek,
+            is StatsPeriod.ThisMonth,
+            is StatsPeriod.ThisYear -> {
+                val (start, end) = currentPeriodWindow(period)
+                StatsDateRange.Custom(
+                    startDate = start.format(dateFormatter),
+                    date = end.format(dateFormatter)
+                )
+            }
             is StatsPeriod.Custom ->
                 StatsDateRange.Custom(
                     startDate = period.startDate.format(dateFormatter),
@@ -705,7 +1746,7 @@ class StatsRepository @Inject constructor(
     }
 
     private fun calculateComparisonDateRanges(period: StatsPeriod): Pair<StatsDateRange, StatsDateRange> {
-        val today = LocalDate.now()
+        val today = today()
         val todayString = today.format(dateFormatter)
 
         return when (period) {
@@ -724,20 +1765,43 @@ class StatsRepository @Inject constructor(
                 StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = todayString) to
                     StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = previousEndString)
             }
-            is StatsPeriod.Last6Months -> {
-                val previousEndString = today.minusDays(DAYS_IN_6_MONTHS.toLong()).format(dateFormatter)
-                StatsDateRange.Preset(num = DAYS_IN_6_MONTHS, date = todayString) to
-                    StatsDateRange.Preset(num = DAYS_IN_6_MONTHS, date = previousEndString)
-            }
+            // Twelve whole month buckets, compared against the same window twelve months earlier — the
+            // windows the chart fetches, derived from the chart's own rules ([currentPeriodWindow] and
+            // [previousWindowForConfig]) so the two cannot drift apart. A rolling `num=365` would put
+            // this card on a window three weeks longer than the chart above it, and longer than the one
+            // web and iOS report.
             is StatsPeriod.Last12Months -> {
-                val previousEndString = today.minusDays(DAYS_IN_12_MONTHS.toLong()).format(dateFormatter)
-                StatsDateRange.Preset(num = DAYS_IN_12_MONTHS, date = todayString) to
-                    StatsDateRange.Preset(num = DAYS_IN_12_MONTHS, date = previousEndString)
+                val (start, end) = currentPeriodWindow(period)
+                val (previousStart, previousEnd) =
+                    previousWindowForConfig(start, end, getPeriodConfig(period))
+                StatsDateRange.Custom(
+                    startDate = start.format(dateFormatter),
+                    date = end.format(dateFormatter)
+                ) to StatsDateRange.Custom(
+                    startDate = previousStart.format(dateFormatter),
+                    date = previousEnd.format(dateFormatter)
+                )
+            }
+            is StatsPeriod.ThisWeek,
+            is StatsPeriod.ThisMonth,
+            is StatsPeriod.ThisYear -> {
+                // The whole preceding calendar week/month/year, the same window the Views card compares
+                // against (see [calculateCalendarPeriodDates]). A same-length mirror of the elapsed days
+                // would put this card on a different baseline from the chart above it — on a Wednesday,
+                // Most Viewed would compare against last Thursday-to-Saturday while the chart compared
+                // against the whole of last week.
+                val (start, end) = currentPeriodWindow(period)
+                val (previousStart, previousEnd) = previousCalendarWindow(start, calendarUnitOf(period))
+                StatsDateRange.Custom(
+                    startDate = start.format(dateFormatter),
+                    date = end.format(dateFormatter)
+                ) to StatsDateRange.Custom(
+                    startDate = previousStart.format(dateFormatter),
+                    date = previousEnd.format(dateFormatter)
+                )
             }
             is StatsPeriod.Custom -> {
-                val daysBetween = ChronoUnit.DAYS.between(period.startDate, period.endDate).toInt() + 1
-                val previousEnd = period.startDate.minusDays(1)
-                val previousStart = previousEnd.minusDays(daysBetween.toLong() - 1)
+                val (previousStart, previousEnd) = previousWindowMirror(period.startDate, period.endDate)
                 StatsDateRange.Custom(
                     startDate = period.startDate.format(dateFormatter),
                     date = period.endDate.format(dateFormatter)
@@ -754,11 +1818,25 @@ class StatsRepository @Inject constructor(
      *
      * @param siteId The WordPress.com site ID
      * @param period The stats period to fetch
+     * @param forceRefresh Refetches instead of serving the cached result
      * @return Country views data with comparison or error
      */
     suspend fun fetchCountryViews(
         siteId: Long,
-        period: StatsPeriod
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): CountryViewsResult = cached(
+        key = cacheKey(StatsCacheBucket.COUNTRIES, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is CountryViewsResult.Success }
+    ) { gate ->
+        fetchCountryViewsFromNetwork(siteId, period, gate)
+    }
+
+    private suspend fun fetchCountryViewsFromNetwork(
+        siteId: Long,
+        period: StatsPeriod,
+        gate: CacheGate
     ): CountryViewsResult = withContext(ioDispatcher) {
         val (currentDateRange, previousDateRange) = calculateComparisonDateRanges(period)
 
@@ -774,6 +1852,7 @@ class StatsRepository @Inject constructor(
                 val previousCountriesMap = if (previousResult is CountryViewsDataResult.Success) {
                     previousResult.data.countries.associateBy { it.countryCode }
                 } else {
+                    gate.markIncomplete()
                     emptyMap()
                 }
 
@@ -814,7 +1893,8 @@ class StatsRepository @Inject constructor(
                 )
                 CountryViewsResult.Error(
                     currentResult.errorType.messageResId,
-                    currentResult.errorType == StatsErrorType.AUTH_ERROR
+                    currentResult.errorType == StatsErrorType.AUTH_ERROR,
+                    currentResult.errorType == StatsErrorType.PLAN_GATED
                 )
             }
         }
@@ -825,11 +1905,25 @@ class StatsRepository @Inject constructor(
      *
      * @param siteId The WordPress.com site ID
      * @param period The stats period to fetch
+     * @param forceRefresh Refetches instead of serving the cached result
      * @return Region views data with comparison or error
      */
     suspend fun fetchRegionViews(
         siteId: Long,
-        period: StatsPeriod
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): RegionViewsResult = cached(
+        key = cacheKey(StatsCacheBucket.REGIONS, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is RegionViewsResult.Success }
+    ) { gate ->
+        fetchRegionViewsFromNetwork(siteId, period, gate)
+    }
+
+    private suspend fun fetchRegionViewsFromNetwork(
+        siteId: Long,
+        period: StatsPeriod,
+        gate: CacheGate
     ): RegionViewsResult = withContext(ioDispatcher) {
         val (currentDateRange, previousDateRange) =
             calculateComparisonDateRanges(period)
@@ -846,7 +1940,7 @@ class StatsRepository @Inject constructor(
 
         when (currentResult) {
             is RegionViewsDataResult.Success -> {
-                buildRegionViewsSuccess(currentResult, previousResult)
+                buildRegionViewsSuccess(currentResult, previousResult, gate)
             }
             is RegionViewsDataResult.Error -> {
                 appLogWrapper.e(
@@ -856,7 +1950,8 @@ class StatsRepository @Inject constructor(
                 )
                 RegionViewsResult.Error(
                     currentResult.errorType.messageResId,
-                    currentResult.errorType == StatsErrorType.AUTH_ERROR
+                    currentResult.errorType == StatsErrorType.AUTH_ERROR,
+                    currentResult.errorType == StatsErrorType.PLAN_GATED
                 )
             }
         }
@@ -864,12 +1959,14 @@ class StatsRepository @Inject constructor(
 
     private fun buildRegionViewsSuccess(
         currentResult: RegionViewsDataResult.Success,
-        previousResult: RegionViewsDataResult
+        previousResult: RegionViewsDataResult,
+        gate: CacheGate
     ): RegionViewsResult {
         val previousMap =
             if (previousResult is RegionViewsDataResult.Success) {
                 previousResult.data.regions.associateBy { it.location }
             } else {
+                gate.markIncomplete()
                 emptyMap()
             }
 
@@ -908,11 +2005,25 @@ class StatsRepository @Inject constructor(
      *
      * @param siteId The WordPress.com site ID
      * @param period The stats period to fetch
+     * @param forceRefresh Refetches instead of serving the cached result
      * @return City views data with comparison or error
      */
     suspend fun fetchCityViews(
         siteId: Long,
-        period: StatsPeriod
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): CityViewsResult = cached(
+        key = cacheKey(StatsCacheBucket.CITIES, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is CityViewsResult.Success }
+    ) { gate ->
+        fetchCityViewsFromNetwork(siteId, period, gate)
+    }
+
+    private suspend fun fetchCityViewsFromNetwork(
+        siteId: Long,
+        period: StatsPeriod,
+        gate: CacheGate
     ): CityViewsResult = withContext(ioDispatcher) {
         val (currentDateRange, previousDateRange) =
             calculateComparisonDateRanges(period)
@@ -929,7 +2040,7 @@ class StatsRepository @Inject constructor(
 
         when (currentResult) {
             is CityViewsDataResult.Success -> {
-                buildCityViewsSuccess(currentResult, previousResult)
+                buildCityViewsSuccess(currentResult, previousResult, gate)
             }
             is CityViewsDataResult.Error -> {
                 appLogWrapper.e(
@@ -939,7 +2050,8 @@ class StatsRepository @Inject constructor(
                 )
                 CityViewsResult.Error(
                     currentResult.errorType.messageResId,
-                    currentResult.errorType == StatsErrorType.AUTH_ERROR
+                    currentResult.errorType == StatsErrorType.AUTH_ERROR,
+                    currentResult.errorType == StatsErrorType.PLAN_GATED
                 )
             }
         }
@@ -947,12 +2059,14 @@ class StatsRepository @Inject constructor(
 
     private fun buildCityViewsSuccess(
         currentResult: CityViewsDataResult.Success,
-        previousResult: CityViewsDataResult
+        previousResult: CityViewsDataResult,
+        gate: CacheGate
     ): CityViewsResult {
         val previousMap =
             if (previousResult is CityViewsDataResult.Success) {
                 previousResult.data.cities.associateBy { it.location }
             } else {
+                gate.markIncomplete()
                 emptyMap()
             }
 
@@ -993,11 +2107,25 @@ class StatsRepository @Inject constructor(
      *
      * @param siteId The WordPress.com site ID
      * @param period The stats period to fetch
+     * @param forceRefresh Refetches instead of serving the cached result
      * @return Top authors data with comparison or error
      */
     suspend fun fetchTopAuthors(
         siteId: Long,
-        period: StatsPeriod
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): TopAuthorsResult = cached(
+        key = cacheKey(StatsCacheBucket.AUTHORS, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is TopAuthorsResult.Success }
+    ) { gate ->
+        fetchTopAuthorsFromNetwork(siteId, period, gate)
+    }
+
+    private suspend fun fetchTopAuthorsFromNetwork(
+        siteId: Long,
+        period: StatsPeriod,
+        gate: CacheGate
     ): TopAuthorsResult = withContext(ioDispatcher) {
         val (currentDateRange, previousDateRange) = calculateComparisonDateRanges(period)
 
@@ -1013,6 +2141,7 @@ class StatsRepository @Inject constructor(
                 val previousAuthorsMap = if (previousResult is TopAuthorsDataResult.Success) {
                     previousResult.data.authors.associateBy { it.name }
                 } else {
+                    gate.markIncomplete()
                     emptyMap()
                 }
 
@@ -1058,7 +2187,20 @@ class StatsRepository @Inject constructor(
 
     suspend fun fetchClicks(
         siteId: Long,
-        period: StatsPeriod
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): ClicksResult = cached(
+        key = cacheKey(StatsCacheBucket.CLICKS, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is ClicksResult.Success }
+    ) { gate ->
+        fetchClicksFromNetwork(siteId, period, gate)
+    }
+
+    private suspend fun fetchClicksFromNetwork(
+        siteId: Long,
+        period: StatsPeriod,
+        gate: CacheGate
     ): ClicksResult = fetchWithComparison(
         period = period,
         fetch = { dateRange ->
@@ -1074,22 +2216,132 @@ class StatsRepository @Inject constructor(
         keyOf = { it.name },
         metricOf = { it.clicks },
         mapItem = { item, prev ->
-            ClickItemData(item.name, item.clicks, prev)
+            ClickItemData(
+                name = item.name,
+                clicks = item.clicks,
+                previousClicks = prev,
+                url = item.url,
+                children = item.children.map { child ->
+                    MostViewedChildData(
+                        name = child.name,
+                        url = child.url,
+                        views = child.clicks
+                    )
+                },
+                iconUrl = item.iconUrl
+            )
         },
         buildSuccess = { items, total, change, pct ->
             ClicksResult.Success(
                 items, total, change, pct
             )
         },
-        buildError = { resId, isAuth ->
-            ClicksResult.Error(resId, isAuth)
+        buildError = { resId, isAuth, isNotAvailable ->
+            ClicksResult.Error(resId, isAuth, isNotAvailable)
         },
-        logLabel = "clicks"
+        logLabel = "clicks",
+        gate = gate
+    )
+
+    suspend fun fetchArchives(
+        siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): ArchivesResult = cached(
+        key = cacheKey(StatsCacheBucket.ARCHIVES, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is ArchivesResult.Success }
+    ) { gate ->
+        fetchArchivesFromNetwork(siteId, period, ARCHIVES_CARD_MAX, gate)
+    }
+
+    /**
+     * Fetches every archive entry (max = 0 = unlimited) for the archives detail screen. Kept
+     * separate from [fetchArchives] (which bounds the card to [ARCHIVES_CARD_MAX]) so the detail
+     * screen can show more entries than the card without inflating the card request, and cached
+     * under its own bucket so the two responses cannot overwrite each other.
+     */
+    suspend fun fetchArchivesDetail(
+        siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): ArchivesResult = cached(
+        key = cacheKey(StatsCacheBucket.ARCHIVES_DETAIL, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is ArchivesResult.Success }
+    ) { gate ->
+        fetchArchivesFromNetwork(siteId, period, ARCHIVES_DETAIL_MAX, gate)
+    }
+
+    private suspend fun fetchArchivesFromNetwork(
+        siteId: Long,
+        period: StatsPeriod,
+        max: Int,
+        gate: CacheGate
+    ): ArchivesResult = fetchWithComparison(
+        period = period,
+        fetch = { dateRange ->
+            when (val r = statsDataSource.fetchArchives(
+                siteId, dateRange, max
+            )) {
+                is ArchivesDataResult.Success ->
+                    DataSourceResult.Success(r.sections)
+                is ArchivesDataResult.Error ->
+                    DataSourceResult.Error(r.errorType)
+            }
+        },
+        keyOf = ArchiveSectionDataItem::key,
+        metricOf = ArchiveSectionDataItem::views,
+        mapItem = { section, prev ->
+            ArchiveSectionItemData(
+                key = section.key,
+                views = section.views,
+                previousViews = prev,
+                entries = section.entries.map { entry -> entry.toChildData() }
+            )
+        },
+        buildSuccess = { sections, total, change, pct ->
+            // Unlike every other top list, this one arrives as a map of groups rather than a
+            // ranked array, so the order has to be imposed here.
+            ArchivesResult.Success(
+                sections.sortedByDescending { it.views },
+                total, change, pct
+            )
+        },
+        buildError = { resId, isAuth, isNotAvailable ->
+            ArchivesResult.Error(resId, isAuth, isNotAvailable)
+        },
+        logLabel = "archives",
+        gate = gate
+    )
+
+    /**
+     * Maps an archive entry and, for the "Taxonomies" group, the terms nested under it. Only that
+     * group is more than one level deep; see [ArchiveEntryDataItem].
+     */
+    private fun ArchiveEntryDataItem.toChildData(): MostViewedChildData = MostViewedChildData(
+        name = value,
+        url = href,
+        views = views,
+        children = children.map { child -> child.toChildData() }
     )
 
     suspend fun fetchSearchTerms(
         siteId: Long,
-        period: StatsPeriod
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): SearchTermsResult = cached(
+        key = cacheKey(StatsCacheBucket.SEARCH_TERMS, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is SearchTermsResult.Success }
+    ) { gate ->
+        fetchSearchTermsFromNetwork(siteId, period, gate)
+    }
+
+    private suspend fun fetchSearchTermsFromNetwork(
+        siteId: Long,
+        period: StatsPeriod,
+        gate: CacheGate
     ): SearchTermsResult = fetchWithComparison(
         period = period,
         fetch = { dateRange ->
@@ -1112,15 +2364,29 @@ class StatsRepository @Inject constructor(
                 items, total, change, pct
             )
         },
-        buildError = { resId, isAuth ->
-            SearchTermsResult.Error(resId, isAuth)
+        buildError = { resId, isAuth, isNotAvailable ->
+            SearchTermsResult.Error(resId, isAuth, isNotAvailable)
         },
-        logLabel = "search terms"
+        logLabel = "search terms",
+        gate = gate
     )
 
     suspend fun fetchVideoPlays(
         siteId: Long,
-        period: StatsPeriod
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): VideoPlaysResult = cached(
+        key = cacheKey(StatsCacheBucket.VIDEO_PLAYS, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is VideoPlaysResult.Success }
+    ) { gate ->
+        fetchVideoPlaysFromNetwork(siteId, period, gate)
+    }
+
+    private suspend fun fetchVideoPlaysFromNetwork(
+        siteId: Long,
+        period: StatsPeriod,
+        gate: CacheGate
     ): VideoPlaysResult = fetchWithComparison(
         period = period,
         fetch = { dateRange ->
@@ -1143,15 +2409,29 @@ class StatsRepository @Inject constructor(
                 items, total, change, pct
             )
         },
-        buildError = { resId, isAuth ->
-            VideoPlaysResult.Error(resId, isAuth)
+        buildError = { resId, isAuth, isNotAvailable ->
+            VideoPlaysResult.Error(resId, isAuth, isNotAvailable)
         },
-        logLabel = "video plays"
+        logLabel = "video plays",
+        gate = gate
     )
 
     suspend fun fetchFileDownloads(
         siteId: Long,
-        period: StatsPeriod
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): FileDownloadsResult = cached(
+        key = cacheKey(StatsCacheBucket.FILE_DOWNLOADS, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is FileDownloadsResult.Success }
+    ) { gate ->
+        fetchFileDownloadsFromNetwork(siteId, period, gate)
+    }
+
+    private suspend fun fetchFileDownloadsFromNetwork(
+        siteId: Long,
+        period: StatsPeriod,
+        gate: CacheGate
     ): FileDownloadsResult = fetchWithComparison(
         period = period,
         fetch = { dateRange ->
@@ -1176,16 +2456,29 @@ class StatsRepository @Inject constructor(
                 items, total, change, pct
             )
         },
-        buildError = { resId, isAuth ->
-            FileDownloadsResult.Error(resId, isAuth)
+        buildError = { resId, isAuth, isNotAvailable ->
+            FileDownloadsResult.Error(resId, isAuth, isNotAvailable)
         },
-        logLabel = "file downloads"
+        logLabel = "file downloads",
+        gate = gate
     )
 
     /**
      * Fetches device screen size stats for a specific site and period.
      */
     suspend fun fetchDevicesScreensize(
+        siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): DevicesResult = cached(
+        key = cacheKey(StatsCacheBucket.DEVICES_SCREENSIZE, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is DevicesResult.Success }
+    ) {
+        fetchDevicesScreensizeFromNetwork(siteId, period)
+    }
+
+    private suspend fun fetchDevicesScreensizeFromNetwork(
         siteId: Long,
         period: StatsPeriod
     ): DevicesResult = withContext(ioDispatcher) {
@@ -1198,6 +2491,18 @@ class StatsRepository @Inject constructor(
      */
     suspend fun fetchDevicesBrowser(
         siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): DevicesResult = cached(
+        key = cacheKey(StatsCacheBucket.DEVICES_BROWSER, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is DevicesResult.Success }
+    ) {
+        fetchDevicesBrowserFromNetwork(siteId, period)
+    }
+
+    private suspend fun fetchDevicesBrowserFromNetwork(
+        siteId: Long,
         period: StatsPeriod
     ): DevicesResult = withContext(ioDispatcher) {
         val dateRange = calculateCurrentDateRange(period)
@@ -1208,6 +2513,18 @@ class StatsRepository @Inject constructor(
      * Fetches device platform stats for a specific site and period.
      */
     suspend fun fetchDevicesPlatform(
+        siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): DevicesResult = cached(
+        key = cacheKey(StatsCacheBucket.DEVICES_PLATFORM, siteId, period),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is DevicesResult.Success }
+    ) {
+        fetchDevicesPlatformFromNetwork(siteId, period)
+    }
+
+    private suspend fun fetchDevicesPlatformFromNetwork(
         siteId: Long,
         period: StatsPeriod
     ): DevicesResult = withContext(ioDispatcher) {
@@ -1237,11 +2554,108 @@ class StatsRepository @Inject constructor(
                 )
                 DevicesResult.Error(
                     result.errorType.messageResId,
-                    result.errorType == StatsErrorType.AUTH_ERROR
+                    result.errorType == StatsErrorType.AUTH_ERROR,
+                    result.errorType == StatsErrorType.PLAN_GATED
                 )
             }
         }
     }
+
+    /**
+     * Fetches UTM stats for a specific site and period.
+     */
+    suspend fun fetchUtm(
+        siteId: Long,
+        keys: List<String>,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): UtmResult = cached(
+        key = cacheKey(StatsCacheBucket.UTM, siteId, period, variant = utmVariant(keys)),
+        forceRefresh = forceRefresh,
+        isCacheable = { it is UtmResult.Success }
+    ) {
+        fetchUtmFromNetwork(siteId, keys, period)
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun fetchUtmFromNetwork(
+        siteId: Long,
+        keys: List<String>,
+        period: StatsPeriod
+    ): UtmResult = withContext(ioDispatcher) {
+        val curRange =
+            calculateCurrentDateRange(period)
+        val curResult = statsDataSource.fetchUtm(
+            siteId, keys,
+            curRange.dateString(),
+            curRange.daysCount()
+        )
+        when (curResult) {
+            is UtmDataResult.Success -> {
+                val curValues =
+                    curResult.data.topUtmValues
+                val total = curValues.values.sum()
+                UtmResult.Success(
+                    items = curValues.entries
+                        .sortedByDescending {
+                            it.value
+                        }
+                        .map { (name, views) ->
+                            val posts = curResult
+                                .data.topPosts[name]
+                                .orEmpty()
+                            UtmItemData(
+                                name = name,
+                                views = views,
+                                topPosts = posts.map {
+                                    UtmPostItemData(
+                                        it.title,
+                                        it.views
+                                    )
+                                }
+                            )
+                        },
+                    totalViews = total
+                )
+            }
+            is UtmDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching UTM: " +
+                        "${curResult.errorType}"
+                )
+                UtmResult.Error(
+                    curResult.errorType.messageResId,
+                    curResult.errorType ==
+                        StatsErrorType.AUTH_ERROR,
+                    curResult.errorType ==
+                        StatsErrorType.PLAN_GATED
+                )
+            }
+        }
+    }
+
+    private fun StatsDateRange.dateString(): String =
+        when (this) {
+            is StatsDateRange.Preset -> date
+            is StatsDateRange.Custom -> date
+        }
+
+    private fun StatsDateRange.daysCount(): Int =
+        when (this) {
+            is StatsDateRange.Preset -> num
+            is StatsDateRange.Custom -> {
+                val start = LocalDate.parse(
+                    startDate, dateFormatter
+                )
+                val end = LocalDate.parse(
+                    date, dateFormatter
+                )
+                ChronoUnit.DAYS.between(start, end)
+                    .toInt()
+                    .coerceAtLeast(1)
+            }
+        }
 
     private fun calculateChangePercent(
         totalViews: Long,
@@ -1271,8 +2685,9 @@ class StatsRepository @Inject constructor(
         metricOf: (Raw) -> Long,
         mapItem: (Raw, Long) -> Output,
         buildSuccess: (List<Output>, Long, Long, Double) -> R,
-        buildError: (Int, Boolean) -> R,
-        logLabel: String
+        buildError: (Int, Boolean, Boolean) -> R,
+        logLabel: String,
+        gate: CacheGate
     ): R = withContext(ioDispatcher) {
         val (curRange, prevRange) =
             calculateComparisonDateRanges(period)
@@ -1289,6 +2704,7 @@ class StatsRepository @Inject constructor(
                     if (prevResult is DataSourceResult.Success) {
                         prevResult.items.associateBy(keyOf)
                     } else {
+                        gate.markIncomplete()
                         emptyMap()
                     }
                 val total = curResult.items.sumOf(metricOf)
@@ -1315,10 +2731,347 @@ class StatsRepository @Inject constructor(
                 buildError(
                     curResult.errorType.messageResId,
                     curResult.errorType ==
-                        StatsErrorType.AUTH_ERROR
+                        StatsErrorType.AUTH_ERROR,
+                    curResult.errorType ==
+                        StatsErrorType.NOT_AVAILABLE
                 )
             }
         }
+    }
+
+    suspend fun fetchInsights(
+        siteId: Long
+    ): InsightsResult = withContext(ioDispatcher) {
+        val result = statsDataSource.fetchStatsInsights(
+            siteId = siteId
+        )
+        when (result) {
+            is StatsInsightsDataResult.Success ->
+                InsightsResult.Success(
+                    data = result.data
+                )
+            is StatsInsightsDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching insights: " +
+                        "${result.errorType}"
+                )
+                InsightsResult.Error(
+                    result.errorType.name
+                )
+            }
+        }
+    }
+
+    suspend fun fetchStatsSummary(
+        siteId: Long
+    ): StatsSummaryResult = withContext(ioDispatcher) {
+        val result =
+            statsDataSource.fetchStatsSummary(
+                siteId = siteId
+            )
+        when (result) {
+            is StatsSummaryDataResult.Success ->
+                StatsSummaryResult.Success(
+                    data = result.data
+                )
+            is StatsSummaryDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching stats " +
+                        "summary: " +
+                        "${result.errorType}"
+                )
+                StatsSummaryResult.Error(
+                    result.errorType.name
+                )
+            }
+        }
+    }
+
+    suspend fun fetchTags(
+        siteId: Long,
+        max: Int = DEFAULT_TAGS_MAX
+    ): TagsResult = withContext(ioDispatcher) {
+        val result = statsDataSource.fetchStatsTags(
+            siteId = siteId,
+            max = max
+        )
+        when (result) {
+            is StatsTagsDataResult.Success ->
+                TagsResult.Success(
+                    data = result.data
+                )
+            is StatsTagsDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching tags: " +
+                        "${result.errorType}"
+                )
+                TagsResult.Error(
+                    result.errorType.name
+                )
+            }
+        }
+    }
+
+    /**
+     * Fetches view stats for a single post, or for the site's home page when [postId] is 0.
+     */
+    suspend fun fetchPostViews(
+        siteId: Long,
+        postId: Long
+    ): PostViewsResult = withContext(ioDispatcher) {
+        val result = statsDataSource.fetchPostViews(
+            siteId = siteId,
+            postId = postId
+        )
+        when (result) {
+            is PostViewsDataResult.Success ->
+                PostViewsResult.Success(
+                    data = result.data
+                )
+            is PostViewsDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching post views: " +
+                        "${result.errorType}"
+                )
+                PostViewsResult.Error(
+                    result.errorType.name
+                )
+            }
+        }
+    }
+
+    /**
+     * Fetches all-time subscriber counts: current, 30d ago,
+     * 60d ago, 90d ago. Makes 4 parallel API calls.
+     */
+    @Suppress("MagicNumber")
+    suspend fun fetchSubscribersAllTime(
+        siteId: Long
+    ): SubscribersAllTimeResult = withContext(ioDispatcher) {
+        val results = fetchAllTimeResults(siteId)
+
+        val firstError = results.filterIsInstance<
+            StatsSubscribersDataResult.Error>().firstOrNull()
+        if (firstError != null) {
+            return@withContext SubscribersAllTimeResult.Error(
+                messageResId =
+                    firstError.errorType.messageResId,
+                isAuthError = firstError.errorType ==
+                    StatsErrorType.AUTH_ERROR
+            )
+        }
+
+        val current = results[0]
+        val d30 = results[1]
+        val d60 = results[2]
+        val d90 = results[3]
+        SubscribersAllTimeResult.Success(
+            currentCount = extractSubscriberCount(current),
+            count30DaysAgo = extractSubscriberCount(d30),
+            count60DaysAgo = extractSubscriberCount(d60),
+            count90DaysAgo = extractSubscriberCount(d90)
+        )
+    }
+
+    @Suppress("MagicNumber")
+    private suspend fun fetchAllTimeResults(
+        siteId: Long
+    ): List<StatsSubscribersDataResult> {
+        val today = today()
+        val dateFormat =
+            java.time.format.DateTimeFormatter
+                .ISO_LOCAL_DATE
+        val dates = listOf(0L, 30L, 60L, 90L).map {
+            today.minusDays(it).format(dateFormat)
+        }
+        return coroutineScope {
+            dates.map { date ->
+                async {
+                    statsDataSource.fetchStatsSubscribers(
+                        siteId,
+                        quantity = 1,
+                        date = date
+                    )
+                }
+            }.map { it.await() }
+        }
+    }
+
+    private fun extractSubscriberCount(
+        result: StatsSubscribersDataResult
+    ): Long {
+        val data = (result as?
+            StatsSubscribersDataResult.Success)?.data
+            ?: return 0L
+        return data.subscribersData
+            .firstOrNull()?.count ?: 0L
+    }
+
+    /**
+     * Fetches subscriber graph data for a given time unit.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    suspend fun fetchSubscribersGraph(
+        siteId: Long,
+        unit: String,
+        quantity: Int,
+        date: String
+    ): SubscribersGraphResult = withContext(ioDispatcher) {
+        try {
+            when (
+                val result = statsDataSource
+                    .fetchStatsSubscribers(
+                        siteId,
+                        quantity = quantity,
+                        unit = unit,
+                        date = date
+                    )
+            ) {
+                is StatsSubscribersDataResult.Success -> {
+                    SubscribersGraphResult.Success(
+                        dataPoints =
+                            result.data.subscribersData.map {
+                                SubscribersGraphDataPoint(
+                                    date = it.date,
+                                    count = it.count
+                                )
+                            }
+                    )
+                }
+                is StatsSubscribersDataResult.Error -> {
+                    SubscribersGraphResult.Error(
+                        messageResId =
+                            result.errorType.messageResId,
+                        isAuthError = result.errorType ==
+                            StatsErrorType.AUTH_ERROR
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            AppLog.e(
+                AppLog.T.STATS,
+                "Error fetching subscribers graph",
+                e
+            )
+            SubscribersGraphResult.Error(
+                messageResId = R.string.stats_error_api
+            )
+        }
+    }
+
+    /**
+     * Fetches a list of subscribers for the given site.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    suspend fun fetchSubscribersList(
+        siteId: Long,
+        perPage: Int = SUBSCRIBERS_DEFAULT_MAX,
+        page: Int = 1
+    ): SubscribersListResult = withContext(ioDispatcher) {
+        try {
+            when (
+                val result = statsDataSource
+                    .fetchSubscribersByUserType(
+                        siteId, perPage, page
+                    )
+            ) {
+                is SubscribersByUserTypeDataResult
+                    .Success -> {
+                    SubscribersListResult.Success(
+                        subscribers =
+                            result.items.map {
+                                SubscriberItemData(
+                                    displayName =
+                                        it.displayName,
+                                    subscribedSince =
+                                        it.subscribedSince
+                                )
+                            }
+                    )
+                }
+                is SubscribersByUserTypeDataResult
+                    .Error -> {
+                    SubscribersListResult.Error(
+                        messageResId =
+                            result.errorType.messageResId,
+                        isAuthError =
+                            result.errorType ==
+                                StatsErrorType.AUTH_ERROR
+                    )
+                }
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            AppLog.e(
+                AppLog.T.STATS,
+                "Error fetching subscribers list",
+                e
+            )
+            SubscribersListResult.Error(
+                messageResId = R.string.stats_error_api
+            )
+        }
+    }
+
+    /**
+     * Fetches email stats summary for the given site.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    suspend fun fetchEmailsSummary(
+        siteId: Long,
+        quantity: Int = SUBSCRIBERS_DEFAULT_MAX
+    ): EmailsStatsResult = withContext(ioDispatcher) {
+        try {
+            when (
+                val result = statsDataSource
+                    .fetchStatsEmailsSummary(
+                        siteId, quantity
+                    )
+            ) {
+                is StatsEmailsSummaryDataResult
+                    .Success -> {
+                    EmailsStatsResult.Success(
+                        items = result.items.map {
+                            EmailItemData(
+                                title = it.title,
+                                opens = it.opens,
+                                clicks = it.clicks
+                            )
+                        }
+                    )
+                }
+                is StatsEmailsSummaryDataResult
+                    .Error -> {
+                    EmailsStatsResult.Error(
+                        messageResId =
+                            result.errorType.messageResId,
+                        isAuthError =
+                            result.errorType ==
+                                StatsErrorType.AUTH_ERROR
+                    )
+                }
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            AppLog.e(
+                AppLog.T.STATS,
+                "Error fetching emails summary",
+                e
+            )
+            EmailsStatsResult.Error(
+                messageResId = R.string.stats_error_api
+            )
+        }
+    }
+
+    companion object {
+        private const val DEFAULT_TAGS_MAX = 10
     }
 }
 
@@ -1399,11 +3152,26 @@ sealed class DailyViewsResult {
 }
 
 /**
- * A data point from the stats API representing views for a time unit (hour, day, or month).
+ * A data point from the stats API representing one time bucket (hour, day, or month).
+ *
+ * Carries all five card metrics for that bucket. A non-hourly `stats/visits` response provides every
+ * metric per bucket, so the chart can plot any of them without a new network call. An hourly
+ * (single-day) response only populates [views]; the other four default to 0 and are never charted
+ * (the ViewModel disables non-views selection on single-day periods).
+ *
+ * [isUpcoming] marks a bucket of the selected period that hasn't happened yet: an unfinished calendar
+ * period ("This Week" on a Wednesday) is charted over its whole span, so the days still to come are
+ * carried as empty placeholders that hold their slot on the axis and show only the previous period's
+ * comparison.
  */
 data class ViewsDataPoint(
     val period: String,
-    val views: Long
+    val views: Long,
+    val visitors: Long = 0L,
+    val likes: Long = 0L,
+    val comments: Long = 0L,
+    val posts: Long = 0L,
+    val isUpcoming: Boolean = false
 )
 
 /**
@@ -1421,15 +3189,45 @@ sealed class WeeklyStatsWithDailyDataResult {
 /**
  * Result wrapper for period stats fetch operation.
  * Contains aggregated stats and data points for both current and previous periods.
+ *
+ * [unit] is the granularity the buckets in [currentPeriodData]/[previousPeriodData] were requested
+ * at. It is carried here because the bucket's [ViewsDataPoint.period] string alone cannot express it
+ * — the API returns a full ISO date for DAY, MONTH and YEAR buckets alike, so a YEAR bucket is
+ * indistinguishable from a day without this.
  */
 sealed class PeriodStatsResult {
     data class Success(
         val currentAggregates: PeriodAggregates,
         val previousAggregates: PeriodAggregates,
         val currentPeriodData: List<ViewsDataPoint>,
-        val previousPeriodData: List<ViewsDataPoint>
+        val previousPeriodData: List<ViewsDataPoint>,
+        val unit: StatsUnit
     ) : PeriodStatsResult()
     data class Error(val message: String) : PeriodStatsResult()
+}
+
+/**
+ * Bottom-row totals for a period. Unlike [PeriodAggregates] it carries no date fields, because the
+ * bottom row renders only the counts and the current-vs-previous change.
+ */
+data class BottomStatsAggregates(
+    val views: Long,
+    val visitors: Long,
+    val likes: Long,
+    val comments: Long,
+    val posts: Long
+)
+
+/**
+ * Result wrapper for the dedicated bottom-row totals fetch. [Error] means the row should be hidden
+ * (a call failed or threw); a successful-but-empty response is still a [Success] with zero counts.
+ */
+sealed class BottomStatsResult {
+    data class Success(
+        val current: BottomStatsAggregates,
+        val previous: BottomStatsAggregates
+    ) : BottomStatsResult()
+    data object Error : BottomStatsResult()
 }
 
 /**
@@ -1453,12 +3251,33 @@ data class MostViewedItemData(
     val title: String,
     val views: Long,
     val previousViews: Long,
-    val isFirst: Boolean
+    val isFirst: Boolean,
+    val children: List<MostViewedChildData> = emptyList(),
+    val url: String? = null,
+    /** The API item type -- "post", "page", "homepage" or "attachment". Posts and pages only. */
+    val postType: String? = null,
+    /** A favicon the API supplied for the item. Referrers and clicks only. */
+    val iconUrl: String? = null
 ) {
     val viewsChange: Long get() = views - previousViews
     val viewsChangePercent: Double
         get() = calculateItemChangePercent(views, previousViews)
 }
+
+/**
+ * A child item nested under a most viewed item (e.g. a referrer under a referrer group).
+ *
+ * [children] holds a further level of nesting, which only the archives card uses -- the terms of
+ * one custom taxonomy, under that taxonomy, under the "Taxonomies" group. Empty everywhere else.
+ */
+data class MostViewedChildData(
+    val name: String,
+    val url: String?,
+    val views: Long,
+    val children: List<MostViewedChildData> = emptyList(),
+    /** A favicon the API supplied for the child. Referrers only. */
+    val iconUrl: String? = null
+)
 
 /**
  * Result wrapper for country views fetch operation.
@@ -1473,7 +3292,8 @@ sealed class CountryViewsResult {
     ) : CountryViewsResult()
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isPlanGated: Boolean = false
     ) : CountryViewsResult()
 }
 
@@ -1505,7 +3325,8 @@ sealed class RegionViewsResult {
     ) : RegionViewsResult()
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isPlanGated: Boolean = false
     ) : RegionViewsResult()
 }
 
@@ -1537,7 +3358,8 @@ sealed class CityViewsResult {
     ) : CityViewsResult()
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isPlanGated: Boolean = false
     ) : CityViewsResult()
 }
 
@@ -1597,18 +3419,52 @@ sealed class ClicksResult {
     ) : ClicksResult()
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isNotAvailable: Boolean = false
     ) : ClicksResult()
 }
 
 data class ClickItemData(
     val name: String,
     val clicks: Long,
-    val previousClicks: Long
+    val previousClicks: Long,
+    val url: String? = null,
+    val children: List<MostViewedChildData> = emptyList(),
+    /** The linked site's favicon, as the API supplied it. */
+    val iconUrl: String? = null
 ) {
     val clicksChange: Long get() = clicks - previousClicks
     val clicksChangePercent: Double
         get() = calculateItemChangePercent(clicks, previousClicks)
+}
+
+sealed class ArchivesResult {
+    data class Success(
+        val sections: List<ArchiveSectionItemData>,
+        val totalViews: Long,
+        val totalViewsChange: Long,
+        val totalViewsChangePercent: Double
+    ) : ArchivesResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false,
+        val isNotAvailable: Boolean = false
+    ) : ArchivesResult()
+}
+
+/**
+ * One group of archive pages and the entries listed under it. [key] is the API's own name for the
+ * group, which the UI resolves into a label; see [ArchiveSectionDataItem].
+ */
+data class ArchiveSectionItemData(
+    val key: String,
+    val views: Long,
+    val previousViews: Long,
+    val entries: List<MostViewedChildData> = emptyList()
+) {
+    val viewsChange: Long get() = views - previousViews
+    val viewsChangePercent: Double
+        get() = calculateItemChangePercent(views, previousViews)
 }
 
 sealed class SearchTermsResult {
@@ -1620,7 +3476,8 @@ sealed class SearchTermsResult {
     ) : SearchTermsResult()
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isNotAvailable: Boolean = false
     ) : SearchTermsResult()
 }
 
@@ -1643,7 +3500,8 @@ sealed class VideoPlaysResult {
     ) : VideoPlaysResult()
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isNotAvailable: Boolean = false
     ) : VideoPlaysResult()
 }
 
@@ -1666,7 +3524,8 @@ sealed class FileDownloadsResult {
     ) : FileDownloadsResult()
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isNotAvailable: Boolean = false
     ) : FileDownloadsResult()
 }
 
@@ -1691,7 +3550,8 @@ sealed class DevicesResult {
     ) : DevicesResult()
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isPlanGated: Boolean = false
     ) : DevicesResult()
 }
 
@@ -1701,4 +3561,164 @@ sealed class DevicesResult {
 data class DeviceItemData(
     val name: String,
     val views: Double
+)
+
+/**
+ * Result of fetching insights data from the repository.
+ */
+sealed class InsightsResult {
+    data class Success(
+        val data: StatsInsightsData
+    ) : InsightsResult()
+    data class Error(
+        val message: String
+    ) : InsightsResult()
+}
+
+/**
+ * Result of fetching stats summary data from the repository.
+ */
+sealed class StatsSummaryResult {
+    data class Success(
+        val data: StatsSummaryData
+    ) : StatsSummaryResult()
+    data class Error(
+        val message: String
+    ) : StatsSummaryResult()
+}
+
+/**
+ * Result of fetching tags data from the repository.
+ */
+sealed class TagsResult {
+    data class Success(
+        val data: StatsTagsData
+    ) : TagsResult()
+    data class Error(
+        val message: String
+    ) : TagsResult()
+}
+
+/**
+ * Result of fetching a single post's view stats.
+ */
+sealed class PostViewsResult {
+    data class Success(
+        val data: PostViewsData
+    ) : PostViewsResult()
+    data class Error(
+        val message: String
+    ) : PostViewsResult()
+}
+
+/**
+ * Result wrapper for subscribers all-time stats fetch operation.
+ */
+sealed class SubscribersAllTimeResult {
+    data class Success(
+        val currentCount: Long,
+        val count30DaysAgo: Long,
+        val count60DaysAgo: Long,
+        val count90DaysAgo: Long
+    ) : SubscribersAllTimeResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : SubscribersAllTimeResult()
+}
+
+/**
+ * Result wrapper for subscribers list fetch operation.
+ */
+sealed class SubscribersListResult {
+    data class Success(
+        val subscribers: List<SubscriberItemData>
+    ) : SubscribersListResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : SubscribersListResult()
+}
+
+/**
+ * Data for a single subscriber item from the repository layer.
+ */
+data class SubscriberItemData(
+    val displayName: String,
+    val subscribedSince: String
+)
+
+/**
+ * Result wrapper for emails stats fetch operation.
+ */
+sealed class EmailsStatsResult {
+    data class Success(
+        val items: List<EmailItemData>
+    ) : EmailsStatsResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : EmailsStatsResult()
+}
+
+/**
+ * Data for a single email item from the repository layer.
+ */
+data class EmailItemData(
+    val title: String,
+    val opens: Long,
+    val clicks: Long
+)
+
+/**
+ * Result wrapper for subscribers graph fetch operation.
+ */
+sealed class SubscribersGraphResult {
+    data class Success(
+        val dataPoints: List<SubscribersGraphDataPoint>
+    ) : SubscribersGraphResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : SubscribersGraphResult()
+}
+
+/**
+ * A single data point for the subscribers graph.
+ */
+data class SubscribersGraphDataPoint(
+    val date: String,
+    val count: Long
+)
+
+/**
+ * Result wrapper for UTM stats fetch operation.
+ */
+sealed class UtmResult {
+    data class Success(
+        val items: List<UtmItemData>,
+        val totalViews: Long
+    ) : UtmResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false,
+        val isPlanGated: Boolean = false
+    ) : UtmResult()
+}
+
+/**
+ * Data for a single UTM item from the repository layer.
+ */
+data class UtmItemData(
+    val name: String,
+    val views: Long,
+    val topPosts: List<UtmPostItemData>
+)
+
+/**
+ * Data for a single post within a UTM item.
+ */
+data class UtmPostItemData(
+    val title: String,
+    val views: Long
 )

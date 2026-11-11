@@ -1,0 +1,19 @@
+package org.wordpress.android.ui.reader.repository
+
+import org.wordpress.android.WordPress
+import org.wordpress.android.networking.RestClientUtils
+import javax.inject.Inject
+
+class TagUpdateClientUtilsProvider @Inject constructor() {
+    fun getRestClientForTagUpdate(): RestClientUtils {
+        return WordPress.getRestClientUtilsV1_3()
+    }
+
+    fun getTagUpdateEndpointURL(): String {
+        return WordPress.getRestClientUtilsV1_3().restClient.endpointURL
+    }
+
+    fun getRestClientForInterestTags(): RestClientUtils {
+        return WordPress.getRestClientUtilsV2()
+    }
+}

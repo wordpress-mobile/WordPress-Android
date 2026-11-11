@@ -27,7 +27,6 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
@@ -39,7 +38,6 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReadi
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportUser
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_USER
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
@@ -704,9 +702,9 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     }
     /** SHARE ACTION end **/
 
-    /** VISIT SITE ACTION end **/
+    /** VISIT SITE ACTION begin **/
     @Test
-    fun `Visit Site button opens browser`() = test {
+    fun `View Site button shows blog preview`() = test {
         // Arrange
         val observedValues = startObserving(backgroundScope)
         // Act
@@ -718,7 +716,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         )
 
         // Assert
-        assertThat(observedValues.navigation[0]).isInstanceOf(OpenPost::class.java)
+        assertThat(observedValues.navigation[0]).isInstanceOf(ShowBlogPreview::class.java)
     }
     /** VISIT SITE ACTION end **/
 
@@ -1274,18 +1272,6 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
 
         // Assert
         assertThat(observedValues.navigation[0]).isInstanceOf(ShowPostDetail::class.java)
-    }
-
-    @Test
-    fun `Clicking on a video overlay opens video viewer`() = test {
-        // Arrange
-        val observedValues = startObserving(backgroundScope)
-
-        // Act
-        actionHandler.handleVideoOverlayClicked("mock")
-
-        // Assert
-        assertThat(observedValues.navigation[0]).isInstanceOf(ShowVideoViewer::class.java)
     }
 
     @Test

@@ -85,60 +85,101 @@ private fun getColorScheme(
     }
 }
 
-private val colorSchemeJPLight = lightColorScheme(
-    primary = AppColor.JetpackGreen50,
-    secondary = AppColor.JetpackGreen30,
+// Any role left unset here falls back to the M3 baseline palette, which is purple-tinted. The surface, outline
+// and inverse roles carry no brand hue, so they're shared by both flavors and derived from the Automattic Color
+// Studio grays; each scheme below then overrides only the roles that are actually brand-specific.
+private val baseLightScheme = lightColorScheme(
     background = AppColor.White,
+    onBackground = AppColor.Black,
     surface = AppColor.White,
-    error = AppColor.Red50,
+    onSurface = AppColor.Black,
+    surfaceBright = AppColor.White,
+    surfaceDim = AppColor.Gray5,
+    surfaceContainerLowest = AppColor.White,
+    surfaceContainerLow = AppColor.Gray0,
+    surfaceContainer = AppColor.Gray2,
+    surfaceContainerHigh = AppColor.Gray3,
+    surfaceContainerHighest = AppColor.Gray5,
+    surfaceVariant = AppColor.Gray5,
+    onSurfaceVariant = AppColor.Gray60,
+    outline = AppColor.Gray40,
+    outlineVariant = AppColor.Gray10,
+    inverseSurface = AppColor.Gray90,
+    inverseOnSurface = AppColor.Gray0,
+    // Matching surface cancels the tonal elevation blend, so elevated surfaces stay neutral and rely on their
+    // shadow instead of picking up a brand-colored wash.
+    surfaceTint = AppColor.White,
     onPrimary = AppColor.White,
     onSecondary = AppColor.White,
-    onBackground = AppColor.Black,
-    onSurface = AppColor.Black,
+    error = AppColor.Red50,
     onError = AppColor.White
 )
 
-private val colorSchemeJPDark = darkColorScheme(
-    primary = AppColor.JetpackGreen30,
-    secondary = AppColor.JetpackGreen50,
+private val baseDarkScheme = darkColorScheme(
     background = AppColor.DarkGray,
+    onBackground = AppColor.White,
     surface = AppColor.DarkGray,
-    error = AppColor.Red30,
+    onSurface = AppColor.White,
+    surfaceBright = AppColor.Gray70,
+    surfaceDim = AppColor.Gray100,
+    surfaceContainerLowest = AppColor.Gray100,
+    surfaceContainerLow = AppColor.Gray95,
+    surfaceContainer = AppColor.Gray90,
+    surfaceContainerHigh = AppColor.Gray85,
+    surfaceContainerHighest = AppColor.Gray80,
+    surfaceVariant = AppColor.Gray70,
+    onSurfaceVariant = AppColor.Gray10,
+    outline = AppColor.Gray30,
+    outlineVariant = AppColor.Gray70,
+    inverseSurface = AppColor.Gray5,
+    inverseOnSurface = AppColor.Gray90,
+    surfaceTint = AppColor.DarkGray,
     onPrimary = AppColor.Black,
     onSecondary = AppColor.White,
-    onBackground = AppColor.White,
-    onSurface = AppColor.White,
+    error = AppColor.Red30,
     onError = AppColor.Black
 )
 
-private val colorSchemeWPLight = lightColorScheme(
+// inversePrimary is the snackbar action label, painted on the light inverseSurface, so in dark mode it takes the
+// 70 tone rather than the scheme's own primary, which would only reach ~3.4:1 there.
+private val colorSchemeJPLight = baseLightScheme.copy(
+    primary = AppColor.JetpackGreen50,
+    secondary = AppColor.JetpackGreen30,
+    primaryContainer = AppColor.JetpackGreen5,
+    onPrimaryContainer = AppColor.JetpackGreen90,
+    secondaryContainer = AppColor.JetpackGreen5,
+    onSecondaryContainer = AppColor.JetpackGreen90,
+    inversePrimary = AppColor.JetpackGreen30
+)
+
+private val colorSchemeJPDark = baseDarkScheme.copy(
+    primary = AppColor.JetpackGreen30,
+    secondary = AppColor.JetpackGreen50,
+    primaryContainer = AppColor.JetpackGreen70,
+    onPrimaryContainer = AppColor.JetpackGreen5,
+    secondaryContainer = AppColor.JetpackGreen70,
+    onSecondaryContainer = AppColor.JetpackGreen5,
+    inversePrimary = AppColor.JetpackGreen70
+)
+
+private val colorSchemeWPLight = baseLightScheme.copy(
     primary = AppColor.Blue50,
     secondary = AppColor.Blue30,
     primaryContainer = AppColor.Blue5,
     onPrimaryContainer = AppColor.Blue80,
-    background = AppColor.White,
-    surface = AppColor.White,
-    error = AppColor.Red50,
-    onPrimary = AppColor.White,
-    onSecondary = AppColor.White,
-    onBackground = AppColor.Black,
-    onSurface = AppColor.Black,
-    onError = AppColor.White
+    secondaryContainer = AppColor.Blue5,
+    onSecondaryContainer = AppColor.Blue80,
+    inversePrimary = AppColor.Blue30
 )
 
-private val colorSchemeWPDark = darkColorScheme(
+private val colorSchemeWPDark = baseDarkScheme.copy(
     primary = AppColor.Blue30,
     secondary = AppColor.Blue50,
     primaryContainer = AppColor.Blue70,
     onPrimaryContainer = AppColor.Blue5,
-    background = AppColor.DarkGray,
-    surface = AppColor.DarkGray,
-    error = AppColor.Red30,
-    onPrimary = AppColor.Black,
-    onSecondary = AppColor.White,
-    onBackground = AppColor.White,
-    onSurface = AppColor.White,
-    onError = AppColor.Black
+    secondaryContainer = AppColor.Blue70,
+    onSecondaryContainer = AppColor.Blue5,
+    inversePrimary = AppColor.Blue70
 )
 
 // Provide extra semantic colors

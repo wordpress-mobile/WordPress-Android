@@ -5,11 +5,11 @@
 fastlane/
 
 # Key-related files
-.jks
-.keystore
+*.jks
+*.keystore
 
 # Backup files
-.bak
+*.bak
 
 # Generated files
 bin/
@@ -18,12 +18,12 @@ build/
 build.log
 
 # Built application files
-.apk
-.ap_
-.aab
+*.apk
+*.ap_
+*.aab
 
 # Dex VM files
-.dex
+*.dex
 
 # Configuration files
 .configure
@@ -31,7 +31,6 @@ build.log
 google-services.json
 google-upload-credentials.json
 firebase.secrets.json
-sentry.properties
 
 # Gradle files
 gradle.properties

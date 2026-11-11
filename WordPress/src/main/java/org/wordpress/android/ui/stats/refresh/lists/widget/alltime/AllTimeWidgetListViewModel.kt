@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget.alltime
 
 import androidx.annotation.LayoutRes
-import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.insights.AllTimeInsightsStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
+import org.wordpress.android.ui.stats.refresh.lists.widget.utils.runBlockingForWidget
 import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -36,7 +36,7 @@ class AllTimeWidgetListViewModel
         siteId?.apply {
             val site = siteStore.getSiteByLocalId(this)
             if (site != null) {
-                runBlocking {
+                runBlockingForWidget {
                     allTimeStore.fetchAllTimeInsights(site)
                 }
                 allTimeStore.getAllTimeInsights(site)?.let { visitsAndViewsModel ->

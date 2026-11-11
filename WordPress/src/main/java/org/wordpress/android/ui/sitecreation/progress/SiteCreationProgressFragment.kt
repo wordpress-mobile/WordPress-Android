@@ -93,6 +93,7 @@ class SiteCreationProgressFragment : Fragment(R.layout.site_creation_progress_sc
             }
         }
         viewModel.onFreeSiteCreated.observe(viewLifecycleOwner) {
+            @Suppress("DEPRECATION")
             view?.announceForAccessibility(getString(R.string.new_site_creation_preview_title))
         }
     }

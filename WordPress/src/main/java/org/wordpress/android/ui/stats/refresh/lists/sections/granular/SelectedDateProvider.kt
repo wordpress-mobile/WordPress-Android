@@ -12,6 +12,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_DATE_TAPPED_F
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_DATE_TAPPED_BACKWARD
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.trackWithGranularity
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.extensions.getParcelableCompat
@@ -26,7 +27,8 @@ private const val SELECTED_DATE_STATE_KEY = "selected_date_key"
 class SelectedDateProvider
 @Inject constructor(
     private val statsDateFormatter: StatsDateFormatter,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val statsSiteProvider: StatsSiteProvider
 ) {
     private val mutableDates = mutableMapOf(
         StatsGranularity.DAYS to SelectedDate(loading = true),
@@ -90,7 +92,11 @@ class SelectedDateProvider
     fun selectPreviousDate(statsGranularity: StatsGranularity) {
         val selectedDateState = getSelectedDateState(statsGranularity)
         if (selectedDateState.hasData()) {
-            analyticsTrackerWrapper.trackWithGranularity(STATS_DATE_TAPPED_BACKWARD, statsGranularity)
+            analyticsTrackerWrapper.trackWithGranularity(
+                STATS_DATE_TAPPED_BACKWARD,
+                statsSiteProvider.siteModel,
+                statsGranularity
+            )
             updateSelectedDate(
                 selectedDateState.copy(dateValue = selectedDateState.getPreviousDate()),
                 statsGranularity
@@ -101,7 +107,11 @@ class SelectedDateProvider
     fun selectNextDate(statsGranularity: StatsGranularity) {
         val selectedDateState = getSelectedDateState(statsGranularity)
         if (selectedDateState.hasData()) {
-            analyticsTrackerWrapper.trackWithGranularity(STATS_DATE_TAPPED_FORWARD, statsGranularity)
+            analyticsTrackerWrapper.trackWithGranularity(
+                STATS_DATE_TAPPED_FORWARD,
+                statsSiteProvider.siteModel,
+                statsGranularity
+            )
             updateSelectedDate(selectedDateState.copy(dateValue = selectedDateState.getNextDate()), statsGranularity)
         }
     }

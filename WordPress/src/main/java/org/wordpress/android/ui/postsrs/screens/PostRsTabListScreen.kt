@@ -1,101 +1,99 @@
 package org.wordpress.android.ui.postsrs.screens
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.snapshotFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostRsUiModel
-import org.wordpress.android.ui.postsrs.PostTabUiState
+import org.wordpress.android.ui.rs.RsTabUiState
+import org.wordpress.android.ui.rs.contentlist.ContentDateGroup
+import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
+import org.wordpress.android.ui.rs.contentlist.ContentListEmptyState
+import org.wordpress.android.ui.rs.contentlist.ContentListErrorRow
+import org.wordpress.android.ui.rs.contentlist.ContentListErrorState
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults
+import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.rs.contentlist.ContentDateGrouper
+import org.wordpress.android.ui.rs.contentlist.ContentListGroupHeader
+import org.wordpress.android.ui.rs.contentlist.ContentListHeroRow
+import org.wordpress.android.ui.rs.contentlist.ContentListPlaceholderRow
+import org.wordpress.android.ui.rs.contentlist.ContentListShimmer
+import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
+import org.wordpress.android.ui.rs.contentlist.ContentListRow
+import org.wordpress.android.ui.postsrs.toContentListRowUiState
+import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
+import org.wordpress.android.ui.rs.contentlist.ReportVisibleRows
+import org.wordpress.android.ui.rs.contentlist.RevealRow
+import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
+import org.wordpress.android.ui.rs.contentlist.toContentListRowActions
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostRsTabListScreen(
-    state: PostTabUiState,
+    state: RsTabUiState<PostRsUiModel>,
     emptyMessageResId: Int,
+    revealPostId: Long?,
+    onRevealHandled: () -> Unit,
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit,
     onPostClick: (Long) -> Unit,
     onPostMenuAction: (Long, PostRsMenuAction) -> Unit,
-    onCreatePost: () -> Unit,
+    onRowsVisible: (List<Long>) -> Unit,
     modifier: Modifier = Modifier,
     isSearchIdle: Boolean = false,
-    isSearching: Boolean = false
+    isSearching: Boolean = false,
+    showDateGroups: Boolean = true,
+    density: ContentListDensity = ContentListDensity.COMFORTABLE
 ) {
-    val pullToRefreshState = rememberPullToRefreshState()
-
-    PullToRefreshBox(
-        modifier = modifier.fillMaxSize(),
+    ContentListPullToRefreshBox(
         isRefreshing = state.isRefreshing,
-        state = pullToRefreshState,
         onRefresh = onRefresh,
-        indicator = {
-            PullToRefreshDefaults.Indicator(
-                state = pullToRefreshState,
-                isRefreshing = state.isRefreshing,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.align(Alignment.TopCenter)
-            )
-        }
+        modifier = modifier,
     ) {
         when {
             isSearchIdle -> Box(Modifier.fillMaxSize())
-            state.isLoading -> ShimmerList()
-            state.error != null && state.posts.isEmpty() -> {
-                ErrorContent(
+            state.isLoading -> ContentListShimmer()
+            state.error != null && state.items.isEmpty() -> FadeInOnAppear {
+                ContentListErrorState(
                     error = state.error,
                     onRetry = if (state.isAuthError) null else onRefresh
                 )
             }
-            state.posts.isEmpty() && !state.isRefreshing -> {
-                EmptyContent(
-                    emptyMessageResId = if (isSearching) {
-                        R.string
-                            .post_list_search_nothing_found
+            state.items.isEmpty() && !state.isRefreshing -> FadeInOnAppear {
+                ContentListEmptyState(
+                    messageResId = if (isSearching) {
+                        R.string.post_list_search_nothing_found
                     } else {
                         emptyMessageResId
-                    },
-                    onCreatePost = if (isSearching) {
-                        null
-                    } else {
-                        onCreatePost
                     }
                 )
             }
             else -> PostListContent(
-                posts = state.posts,
+                posts = state.items,
+                revealPostId = revealPostId,
+                onRevealHandled = onRevealHandled,
                 isLoadingMore = state.isLoadingMore,
                 canLoadMore = state.canLoadMore,
                 onLoadMore = onLoadMore,
                 onPostClick = onPostClick,
-                onPostMenuAction = onPostMenuAction
+                onPostMenuAction = onPostMenuAction,
+                onRowsVisible = onRowsVisible,
+                // Date buckets are computed against "now", so a list of future-dated posts would
+                // land under "This week" wholesale. The Scheduled tab opts out instead.
+                showDateGroups = showDateGroups && !isSearching,
+                density = density
             )
         }
     }
@@ -104,135 +102,206 @@ fun PostRsTabListScreen(
 @Composable
 private fun PostListContent(
     posts: List<PostRsUiModel>,
+    revealPostId: Long?,
+    onRevealHandled: () -> Unit,
     isLoadingMore: Boolean,
     canLoadMore: Boolean,
     onLoadMore: () -> Unit,
     onPostClick: (Long) -> Unit,
-    onPostMenuAction: (Long, PostRsMenuAction) -> Unit
+    onPostMenuAction: (Long, PostRsMenuAction) -> Unit,
+    onRowsVisible: (List<Long>) -> Unit,
+    showDateGroups: Boolean,
+    density: ContentListDensity
 ) {
     val listState = rememberLazyListState()
 
-    LaunchedEffect(canLoadMore) {
-        if (!canLoadMore) return@LaunchedEffect
-        snapshotFlow {
-            val lastVisible = listState.layoutInfo
-                .visibleItemsInfo.lastOrNull()?.index ?: 0
-            val total = listState.layoutInfo.totalItemsCount
-            lastVisible >= total - LOAD_MORE_THRESHOLD
-        }.distinctUntilChanged().collect { shouldLoad ->
-            if (shouldLoad) onLoadMore()
-        }
+    val entries = remember(posts, showDateGroups, density) {
+        buildEntries(posts, showDateGroups, density)
     }
+
+    // Indexes the rendered entries, since group headers are list items too.
+    RevealRow(revealPostId, listState, onRevealHandled) { id ->
+        entries.indexOfFirst { it.postId == id }
+    }
+
+    // Post entries key on their remote id; group headers key on a String and drop out.
+    ReportVisibleRows(listState, onRowsVisible = onRowsVisible) {
+        listState.layoutInfo.visibleItemsInfo.mapNotNull { it.key as? Long }
+    }
+
+    LoadMoreOnScrollToEnd(listState, posts.size, canLoadMore, onLoadMore)
 
     LazyColumn(
         state = listState,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = ContentListDefaults.FabClearancePadding
     ) {
         items(
-            items = posts,
-            key = { it.remotePostId }
-        ) { post ->
-            PostRsListItem(
-                post = post,
-                onClick = {
-                    onPostClick(post.remotePostId)
-                },
-                onMenuAction = { action ->
-                    onPostMenuAction(
-                        post.remotePostId, action
-                    )
-                },
-                modifier = Modifier.animateItem()
-            )
-        }
-
-        if (isLoadingMore) {
-            item(key = "loading_more") {
-                Box(
-                    modifier = Modifier
-                        .fillParentMaxWidth()
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        strokeWidth = 2.dp
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun ShimmerList() {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(SHIMMER_ITEM_COUNT) {
-            PlaceholderItem()
-        }
-    }
-}
-
-@Composable
-private fun ErrorContent(error: String, onRetry: (() -> Unit)?) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = stringResource(R.string.error_generic),
-            style = MaterialTheme.typography.titleMedium
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = error,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center
-        )
-        if (onRetry != null) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = onRetry) {
-                Text(text = stringResource(R.string.retry))
-            }
-        }
-    }
-}
-
-@Composable
-private fun EmptyContent(
-    emptyMessageResId: Int,
-    onCreatePost: (() -> Unit)?
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = stringResource(emptyMessageResId),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        if (onCreatePost != null) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = onCreatePost) {
-                Text(
-                    text = stringResource(
-                        R.string.posts_empty_list_button
-                    )
+            items = entries,
+            key = { it.key },
+            contentType = { it::class }
+        ) { entry ->
+            when (entry) {
+                is PostListEntry.Header -> ContentListGroupHeader(
+                    group = entry.group,
+                    modifier = Modifier.animateItem()
+                )
+                is PostListEntry.NonContent ->
+                    if (entry.post.displayState == ContentDisplayState.PLACEHOLDER) {
+                        ContentListPlaceholderRow(modifier = Modifier.animateItem())
+                    } else {
+                        ContentListErrorRow(R.string.post_rs_failed_to_load, Modifier.animateItem())
+                    }
+                is PostListEntry.Row -> RedesignedRow(
+                    entry = entry,
+                    onPostClick = onPostClick,
+                    onPostMenuAction = onPostMenuAction,
+                    density = density,
+                    modifier = Modifier.animateItem()
                 )
             }
         }
+
+        if (isLoadingMore) contentListLoadingMoreItem()
     }
 }
 
-private const val LOAD_MORE_THRESHOLD = 5
-private const val SHIMMER_ITEM_COUNT = 8
+/**
+ * Fades its content in the first time it appears.
+ *
+ * Driven by a [MutableTransitionState] rather than a plain `visible = true`: the states this wraps
+ * only enter the composition once the list has turned out to be empty or failed, so a plain flag
+ * would already sit at its target on first composition and the fade would be skipped entirely.
+ */
+@Composable
+private fun FadeInOnAppear(content: @Composable () -> Unit) {
+    val visibleState = remember { MutableTransitionState(false) }
+    visibleState.targetState = true
+
+    AnimatedVisibility(
+        visibleState = visibleState,
+        enter = fadeIn(animationSpec = tween(STATE_FADE_MS))
+    ) {
+        content()
+    }
+}
+
+/**
+ * One rendered item. Group headers occupy list positions of their own, so the list is built from
+ * entries rather than straight from the posts.
+ */
+private sealed interface PostListEntry {
+    val key: Any
+
+    /** Remote id of the post this entry shows, or null for a header. */
+    val postId: Long?
+
+    /**
+     * [ordinal] disambiguates the key. A sticky post floats to the top regardless of its date, so
+     * the same bucket can legitimately open twice in one list - and a repeated LazyColumn key
+     * throws rather than merely looking odd.
+     */
+    data class Header(val group: ContentDateGroup, val ordinal: Int) : PostListEntry {
+        override val key get() = "header_${ordinal}_${group.key}"
+        override val postId: Long? get() = null
+    }
+
+    data class Row(val post: PostRsUiModel, val isHero: Boolean) : PostListEntry {
+        override val key get() = post.remoteId
+        override val postId get() = post.remoteId
+    }
+
+    /**
+     * A row that is not a loaded post: still loading, or failed. Which of the two it is comes from
+     * the post's own [PostRsUiModel.displayState] at render time.
+     */
+    data class NonContent(val post: PostRsUiModel) : PostListEntry {
+        override val key get() = post.remoteId
+        override val postId get() = post.remoteId
+    }
+}
+
+private fun buildEntries(
+    posts: List<PostRsUiModel>,
+    showDateGroups: Boolean,
+    density: ContentListDensity
+): List<PostListEntry> {
+    val entries = mutableListOf<PostListEntry>()
+    var currentGroupKey: String? = null
+    var headerCount = 0
+
+    posts.forEach { post ->
+        if (post.displayState == ContentDisplayState.PLACEHOLDER ||
+            post.displayState == ContentDisplayState.ERROR
+        ) {
+            entries += PostListEntry.NonContent(post)
+            return@forEach
+        }
+
+        if (showDateGroups && post.dateGmtMillis > 0L) {
+            val group = ContentDateGrouper.groupOf(post.dateGmtMillis)
+            if (group.key != currentGroupKey) {
+                entries += PostListEntry.Header(group, headerCount++)
+                currentGroupKey = group.key
+            }
+        }
+
+        // Every post with a featured image gets the hero treatment, not just the newest. Keyed off
+        // the featured image *id*, which is present as soon as the post loads, rather than the
+        // resolved URL, which arrives a network call later - keying off the URL would pop rows from
+        // compact to hero as their images resolved.
+        // An image-led card with no image is just a compact card with the wrong padding, so a
+        // post whose media could not be resolved falls back to the compact shape.
+        val isHero = !density.isCondensed &&
+            showDateGroups &&
+            post.featuredImageId != 0L &&
+            !post.isFeaturedImageUnresolvable
+        entries += PostListEntry.Row(post, isHero)
+    }
+    return entries
+}
+
+@Composable
+private fun RedesignedRow(
+    entry: PostListEntry.Row,
+    onPostClick: (Long) -> Unit,
+    onPostMenuAction: (Long, PostRsMenuAction) -> Unit,
+    density: ContentListDensity,
+    modifier: Modifier = Modifier
+) {
+    val post = entry.post
+    val state = post.toContentListRowUiState()
+    val onClick = { onPostClick(post.remoteId) }
+    // Trashed posts get no Edit button: their row tap offers to restore the post rather than
+    // opening the editor.
+    val actions = post.actions.toContentListRowActions(
+        onEdit = if (post.isTrashed) null else onClick,
+        showQuickActions = !density.isCondensed
+    ) { action ->
+        onPostMenuAction(post.remoteId, action)
+    }
+
+    // The two shapes are different layouts, not one layout resized, so the swap is crossfaded
+    // rather than left to snap. Only the lead row ever takes this branch; the rest change size
+    // only, which the card animates itself.
+    AnimatedContent(
+        targetState = entry.isHero,
+        transitionSpec = { fadeIn() togetherWith fadeOut() },
+        modifier = modifier,
+        label = "content list row density"
+    ) { isHero ->
+        if (isHero) {
+            ContentListHeroRow(state = state, onClick = onClick, actions = actions)
+        } else {
+            ContentListRow(
+                state = state,
+                onClick = onClick,
+                density = density,
+                actions = actions
+            )
+        }
+    }
+}
+
+/** Long enough to read as a fade rather than a flicker, short enough not to feel sluggish. */
+private const val STATE_FADE_MS = 300

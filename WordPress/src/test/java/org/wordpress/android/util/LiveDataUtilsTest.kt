@@ -1,7 +1,11 @@
 package org.wordpress.android.util
 
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.test.advanceTimeBy
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
@@ -187,6 +191,57 @@ class LiveDataUtilsTest : BaseUnitTest() {
     }
 
     @Test
+    fun `merge merges 9 sources with function`() = test {
+        val sourceA = MutableLiveData<Int>()
+        val sourceB = MutableLiveData<String>()
+        val sourceC = MutableLiveData<Boolean>()
+        val sourceD = MutableLiveData<Double>()
+        val sourceE = MutableLiveData<Float>()
+        val sourceF = MutableLiveData<List<Unit>>()
+        val sourceG = MutableLiveData<Long>()
+        val sourceH = MutableLiveData<Char>()
+        val sourceI = MutableLiveData<Short>()
+
+        val mergedSources = merge(
+            sourceA, sourceB, sourceC, sourceD, sourceE,
+            sourceF, sourceG, sourceH, sourceI
+        ) { a, b, c, d, e, f, g, h, i ->
+            "$a:$b:$c:$d:$e:${f?.size}:$g:$h:$i"
+        }
+        mergedSources.observeForever { }
+
+        assertThat(mergedSources.value)
+            .isEqualTo("null:null:null:null:null:null:null:null:null")
+        sourceA.value = 1
+        assertThat(mergedSources.value)
+            .isEqualTo("1:null:null:null:null:null:null:null:null")
+        sourceB.value = "v"
+        assertThat(mergedSources.value)
+            .isEqualTo("1:v:null:null:null:null:null:null:null")
+        sourceC.value = true
+        assertThat(mergedSources.value)
+            .isEqualTo("1:v:true:null:null:null:null:null:null")
+        sourceD.value = 2.4
+        assertThat(mergedSources.value)
+            .isEqualTo("1:v:true:2.4:null:null:null:null:null")
+        sourceE.value = 3F
+        assertThat(mergedSources.value)
+            .isEqualTo("1:v:true:2.4:3.0:null:null:null:null")
+        sourceF.value = List(5) {}
+        assertThat(mergedSources.value)
+            .isEqualTo("1:v:true:2.4:3.0:5:null:null:null")
+        sourceG.value = 99L
+        assertThat(mergedSources.value)
+            .isEqualTo("1:v:true:2.4:3.0:5:99:null:null")
+        sourceH.value = 'X'
+        assertThat(mergedSources.value)
+            .isEqualTo("1:v:true:2.4:3.0:5:99:X:null")
+        sourceI.value = 7
+        assertThat(mergedSources.value)
+            .isEqualTo("1:v:true:2.4:3.0:5:99:X:7")
+    }
+
+    @Test
     fun `combineMap combines sources in a map`() {
         val sourceA = MutableLiveData<Int>()
         val sourceB = MutableLiveData<Int>()
@@ -311,5 +366,89 @@ class LiveDataUtilsTest : BaseUnitTest() {
         // Then
         assertThat(emitCount).isEqualTo(3)
         assertThat(emittedValues).isEqualTo(listOf("Alpha", "Alpha Bravo", "Alpha Bravo Charlie"))
+    }
+
+    @Test
+    fun `settle passes a value through at once when the source is quiet`() = test {
+        val source = MutableLiveData<String>()
+        val emitted = mutableListOf<String>()
+        source.settle(this, quietMs = QUIET_MS, maxHoldMs = MAX_HOLD_MS).observeForever { emitted.add(it) }
+
+        source.value = "Alpha"
+
+        assertThat(emitted).containsExactly("Alpha")
+    }
+
+    @Test
+    fun `settle holds a burst and emits only its newest value once the source goes quiet`() = test {
+        val source = MutableLiveData<String>()
+        val emitted = mutableListOf<String>()
+        source.settle(this, quietMs = QUIET_MS, maxHoldMs = MAX_HOLD_MS).observeForever { emitted.add(it) }
+
+        source.value = "Alpha"
+        advanceTimeBy(100)
+        source.value = "Bravo"
+        advanceTimeBy(100)
+        source.value = "Charlie"
+        assertThat(emitted).containsExactly("Alpha")
+
+        advanceTimeBy(QUIET_MS + 1)
+
+        assertThat(emitted).containsExactly("Alpha", "Charlie")
+    }
+
+    @Test
+    fun `settle flushes a burst that never goes quiet once the hold deadline passes`() = test {
+        val source = MutableLiveData<String>()
+        val emitted = mutableListOf<String>()
+        source.settle(this, quietMs = QUIET_MS, maxHoldMs = MAX_HOLD_MS).observeForever { emitted.add(it) }
+
+        source.value = "Alpha"
+        listOf("Bravo", "Charlie", "Delta", "Echo").forEach { value ->
+            advanceTimeBy(QUIET_MS - 100)
+            source.value = value
+        }
+        assertThat(emitted).containsExactly("Alpha")
+
+        advanceTimeBy(MAX_HOLD_MS)
+
+        assertThat(emitted).containsExactly("Alpha", "Echo")
+    }
+
+    @Test
+    fun `settle passes a value through at once after a burst has gone quiet`() = test {
+        val source = MutableLiveData<String>()
+        val emitted = mutableListOf<String>()
+        source.settle(this, quietMs = QUIET_MS, maxHoldMs = MAX_HOLD_MS).observeForever { emitted.add(it) }
+
+        source.value = "Alpha"
+        advanceTimeBy(100)
+        source.value = "Bravo"
+        advanceTimeBy(QUIET_MS + 1)
+
+        source.value = "Charlie"
+
+        assertThat(emitted).containsExactly("Alpha", "Bravo", "Charlie")
+    }
+
+    @Test
+    fun `settle drops a held value when its scope is cancelled`() = test {
+        val scope = CoroutineScope(coroutineContext + Job())
+        val source = MutableLiveData<String>()
+        val emitted = mutableListOf<String>()
+        source.settle(scope, quietMs = QUIET_MS, maxHoldMs = MAX_HOLD_MS).observeForever { emitted.add(it) }
+
+        source.value = "Alpha"
+        advanceTimeBy(100)
+        source.value = "Bravo"
+        scope.cancel()
+        advanceTimeBy(MAX_HOLD_MS + 1)
+
+        assertThat(emitted).containsExactly("Alpha")
+    }
+
+    companion object {
+        private const val QUIET_MS = 400L
+        private const val MAX_HOLD_MS = 1200L
     }
 }

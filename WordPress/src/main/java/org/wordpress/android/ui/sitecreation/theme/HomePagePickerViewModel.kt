@@ -57,7 +57,6 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         dispatcher.unregister(fetchHomePageLayoutsUseCase)
     }
 

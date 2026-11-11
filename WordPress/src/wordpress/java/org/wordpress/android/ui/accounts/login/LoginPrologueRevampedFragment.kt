@@ -2,15 +2,16 @@ package org.wordpress.android.ui.accounts.login
 
 import android.content.Context
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.os.Build
-import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,9 +29,9 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection.Rtl
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import org.wordpress.android.R
+import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.ui.accounts.login.compose.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.compose.components.SecondaryButton
 import org.wordpress.android.ui.accounts.login.compose.components.Tagline
@@ -38,7 +39,7 @@ import org.wordpress.android.ui.compose.TestTags
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 class LoginPrologueRevampedFragment : Fragment() {
-    private lateinit var loginPrologueListener: LoginPrologueListener
+    private lateinit var loginActivity: LoginActivity
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,9 +50,9 @@ class LoginPrologueRevampedFragment : Fragment() {
             AppThemeM3 {
                 LoginScreenRevamped(
                     onWpComLoginClicked = {
-                        loginPrologueListener.showWPcomLoginScreen(this.context)
+                        loginActivity.showWPcomLoginScreen(this.context)
                     },
-                    onSiteAddressLoginClicked = loginPrologueListener::loginViaSiteAddress,
+                    onSiteAddressLoginClicked = loginActivity::loginViaSiteAddress,
                 )
             }
         }
@@ -59,29 +60,9 @@ class LoginPrologueRevampedFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        check(context is LoginPrologueListener) { "$context must implement LoginPrologueListener" }
-        loginPrologueListener = context
+        check(context is LoginActivity) { "$context must be LoginActivity" }
+        loginActivity = context
     }
-
-    override fun onResume() {
-        super.onResume()
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-            setEdgeToEdgeContentDisplay(true)
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-            setEdgeToEdgeContentDisplay(false)
-        }
-    }
-
-    private fun setEdgeToEdgeContentDisplay(isEnabled: Boolean) {
-        val decorFitsSystemWindows = !isEnabled
-        WindowCompat.setDecorFitsSystemWindows(requireActivity().window, decorFitsSystemWindows)
-    }
-
 
     companion object {
         const val TAG = "login_prologue_revamped_fragment_tag"
@@ -101,6 +82,7 @@ fun LoginScreenRevamped(
     val offsetY = with(LocalDensity.current) { 75.dp.toPx() }
 
     Box(modifier = Modifier
+        .fillMaxSize()
         .background(color = colorResource(id = R.color.login_prologue_revamped_background))
         .drawBehind {
             scale(scaleX = scaleX, scaleY = 1f) {
@@ -117,7 +99,11 @@ fun LoginScreenRevamped(
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(vertical = 45.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .statusBarsPadding()
+                .navigationBarsPadding()
+                .padding(vertical = 45.dp)
         ) {
             Tagline(text = stringResource(R.string.login_prologue_revamped_tagline))
             PrimaryButton(

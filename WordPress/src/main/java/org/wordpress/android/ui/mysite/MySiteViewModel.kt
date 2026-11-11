@@ -28,9 +28,12 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.cards.DashboardCardsViewModelSlice
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.DashboardItemsViewModelSlice
+import org.wordpress.android.ui.newstats.NewStatsRouting
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.posts.BasicDialogViewModel
+import org.wordpress.android.ui.posts.GutenbergEditorPreloader
+import org.wordpress.android.ui.posts.GutenbergKitAnnouncementController
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -43,8 +46,8 @@ import javax.inject.Inject
 import javax.inject.Named
 import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPasswordViewModelSlice
 import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
-import org.wordpress.android.ui.posts.GutenbergKitWarmupHelper
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.mysite.cards.connectivity.SiteConnectivityBannerViewModelSlice
 
 @Suppress("LargeClass", "LongMethod", "LongParameterList")
 class MySiteViewModel @Inject constructor(
@@ -64,13 +67,18 @@ class MySiteViewModel @Inject constructor(
     private val dashboardCardsViewModelSlice: DashboardCardsViewModelSlice,
     private val dashboardItemsViewModelSlice: DashboardItemsViewModelSlice,
     private val applicationPasswordViewModelSlice: ApplicationPasswordViewModelSlice,
-    private val gutenbergKitWarmupHelper: GutenbergKitWarmupHelper,
     private val siteCapabilityChecker: SiteCapabilityChecker,
+    private val gutenbergEditorPreloader: GutenbergEditorPreloader,
+    private val siteConnectivityBannerViewModelSlice: SiteConnectivityBannerViewModelSlice,
+    private val gutenbergKitAnnouncementController: GutenbergKitAnnouncementController,
+    private val newStatsRouting: NewStatsRouting,
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _onOpenJetpackInstallFullPluginOnboarding = SingleLiveEvent<Event<Unit>>()
     private val _onShowJetpackIndividualPluginOverlay = SingleLiveEvent<Event<Unit>>()
+    private val _onShowGutenbergKitAnnouncement = SingleLiveEvent<Event<SiteModel>>()
+    val onShowGutenbergKitAnnouncement: LiveData<Event<SiteModel>> = _onShowGutenbergKitAnnouncement
 
     /* Capture and track the site selected event so we can circumvent refreshing sources on resume
        as they're already built on site select. */
@@ -119,23 +127,31 @@ class MySiteViewModel @Inject constructor(
         accountDataViewModelSlice.isRefreshing
     )
 
+    /* The local id of the site the cards and items were last built for. Switching sites updates the
+       header straight from the repository before onSitePicked has cleared and rebuilt the cards, so
+       until it runs the cards below the new header still belong to the previous site. */
+    private var cardsSiteLocalId: Int? = null
+
     val uiModel: LiveData<State> = merge(
         siteInfoHeaderCardViewModelSlice.uiModel,
         applicationPasswordViewModelSlice.uiModel,
         accountDataViewModelSlice.uiModel,
         dashboardCardsViewModelSlice.uiModel,
-        dashboardItemsViewModelSlice.uiModel
+        dashboardItemsViewModelSlice.uiModel,
+        siteConnectivityBannerViewModelSlice.uiModel,
     ) { siteInfoHeaderCard,
         applicationPAsswordModel,
         accountData,
         dashboardCards,
-        siteItems ->
+        siteItems,
+        connectivityBanner ->
         val nonNullSiteInfoHeaderCard =
             siteInfoHeaderCard ?: return@merge buildNoSiteState(accountData?.url, accountData?.name)
-        val headerList = listOfNotNull(nonNullSiteInfoHeaderCard, applicationPAsswordModel)
-        return@merge if (!dashboardCards.isNullOrEmpty<MySiteCardAndItem>())
+        val headerList = listOfNotNull(nonNullSiteInfoHeaderCard, applicationPAsswordModel, connectivityBanner)
+        val cardsAreForSelectedSite = selectedSiteRepository.getSelectedSite()?.id == cardsSiteLocalId
+        return@merge if (cardsAreForSelectedSite && !dashboardCards.isNullOrEmpty<MySiteCardAndItem>())
             SiteSelected(dashboardData = headerList + dashboardCards)
-        else if (!siteItems.isNullOrEmpty<MySiteCardAndItem>())
+        else if (cardsAreForSelectedSite && !siteItems.isNullOrEmpty<MySiteCardAndItem>())
             SiteSelected(dashboardData = headerList + siteItems)
         else
             SiteSelected(dashboardData = headerList)
@@ -148,6 +164,7 @@ class MySiteViewModel @Inject constructor(
         dashboardCardsViewModelSlice.initialize(viewModelScope)
         dashboardItemsViewModelSlice.initialize(viewModelScope)
         accountDataViewModelSlice.initialize(viewModelScope)
+        siteConnectivityBannerViewModelSlice.initialize(viewModelScope)
     }
 
     private fun shouldShowDashboard(site: SiteModel): Boolean {
@@ -165,9 +182,13 @@ class MySiteViewModel @Inject constructor(
         if (isPullToRefresh) analyticsTrackerWrapper.track(Stat.MY_SITE_PULL_TO_REFRESH)
         selectedSiteRepository.getSelectedSite()?.let { site ->
             if (isPullToRefresh) {
-                siteCapabilityChecker.clearCacheForSite(site.siteId)
+                siteCapabilityChecker.clearCacheForSite(site)
             }
-            buildDashboardOrSiteItems(site)
+            buildDashboardOrSiteItems(site, forceRefresh = isPullToRefresh)
+            siteConnectivityBannerViewModelSlice.fetchCapabilities(
+                site,
+                isUserInitiated = isPullToRefresh
+            )
         } ?: run {
             accountDataViewModelSlice.onRefresh()
         }
@@ -176,9 +197,14 @@ class MySiteViewModel @Inject constructor(
     fun onResume() {
         isSiteSelected = false
         checkAndShowJetpackFullPluginInstallOnboarding()
+        checkAndShowGutenbergKitAnnouncement()
         selectedSiteRepository.updateSiteSettingsIfNecessary()
         selectedSiteRepository.getSelectedSite()?.let {
             buildDashboardOrSiteItems(it)
+            siteConnectivityBannerViewModelSlice.fetchCapabilities(
+                it,
+                isUserInitiated = false
+            )
         } ?: run {
             accountDataViewModelSlice.onResume()
         }
@@ -188,6 +214,14 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
             if (getShowJetpackFullPluginInstallOnboardingUseCase.execute(selectedSite)) {
                 _onOpenJetpackInstallFullPluginOnboarding.postValue(Event(Unit))
+            }
+        }
+    }
+
+    private fun checkAndShowGutenbergKitAnnouncement() {
+        selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
+            if (gutenbergKitAnnouncementController.shouldShowAnnouncement(selectedSite)) {
+                _onShowGutenbergKitAnnouncement.postValue(Event(selectedSite))
             }
         }
     }
@@ -217,7 +251,11 @@ class MySiteViewModel @Inject constructor(
     fun handleSuccessfulLoginResult() {
         selectedSiteRepository.getSelectedSite()?.let { site ->
             _onNavigation.value = Event(
-                SiteNavigationAction.OpenStats(site)
+                if (newStatsRouting.isNewStatsEnabled()) {
+                    SiteNavigationAction.OpenNewStats
+                } else {
+                    SiteNavigationAction.OpenStats(site)
+                }
             )
         }
     }
@@ -248,8 +286,7 @@ class MySiteViewModel @Inject constructor(
         dashboardCardsViewModelSlice.onCleared()
         dashboardItemsViewModelSlice.onCleared()
         accountDataViewModelSlice.onCleared()
-        gutenbergKitWarmupHelper.clearWarmupState()
-        super.onCleared()
+        gutenbergEditorPreloader.clear()
     }
 
     fun onSitePicked() {
@@ -281,9 +318,13 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    private fun buildDashboardOrSiteItems(site: SiteModel) {
+    private fun buildDashboardOrSiteItems(
+        site: SiteModel,
+        forceRefresh: Boolean = false
+    ) {
         siteInfoHeaderCardViewModelSlice.buildCard(site)
         applicationPasswordViewModelSlice.buildCard(site)
+        cardsSiteLocalId = site.id
         if (shouldShowDashboard(site)) {
             dashboardCardsViewModelSlice.buildCards(site)
             dashboardItemsViewModelSlice.clearValue()
@@ -291,17 +332,22 @@ class MySiteViewModel @Inject constructor(
             dashboardItemsViewModelSlice.buildItems(site)
             dashboardCardsViewModelSlice.clearValue()
         }
-        // Trigger GutenbergView warmup for the selected site
-        gutenbergKitWarmupHelper.warmupIfNeeded(site, viewModelScope)
+        if (forceRefresh) {
+            gutenbergEditorPreloader.refreshPreloading(site, viewModelScope)
+        } else {
+            gutenbergEditorPreloader.preloadIfNeeded(site, viewModelScope)
+        }
     }
 
     private fun onSitePicked(site: SiteModel) {
         siteInfoHeaderCardViewModelSlice.buildCard(site)
         applicationPasswordViewModelSlice.buildCard(site)
+        siteConnectivityBannerViewModelSlice.clearBanner()
         dashboardItemsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.resetShownTracker()
         dashboardItemsViewModelSlice.resetShownTracker()
+        cardsSiteLocalId = site.id
         if (shouldShowDashboard(site)) {
             dashboardCardsViewModelSlice.buildCards(site)
         } else {

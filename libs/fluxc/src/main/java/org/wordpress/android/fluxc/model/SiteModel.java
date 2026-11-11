@@ -437,6 +437,11 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         mXmlRpcUrl = xmlRpcUrl;
     }
 
+    /**
+     * The site's own REST API root, or null when discovery hasn't found one. Never derive a value
+     * here: the generated WellSql mapper persists this getter on insert, so it would become permanent.
+     * Callers needing the WP.com proxy route through WpComUrlResolver instead.
+     */
     public String getWpApiRestUrl() {
         return mWpApiRestUrl;
     }
@@ -924,6 +929,10 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public boolean hasDiskSpaceQuotaInformation() {
         return mSpaceAllowed > 0;
+    }
+
+    public boolean isWPComSimpleSite() {
+        return isWPCom() && !isWPComAtomic();
     }
 
     public boolean isWPComAtomic() {

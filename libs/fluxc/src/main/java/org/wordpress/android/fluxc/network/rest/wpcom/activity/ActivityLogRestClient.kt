@@ -278,6 +278,9 @@ class ActivityLogRestClient @Inject constructor(
         payload.groups.forEachIndexed { index, value ->
             params["group[$index]"] = value
         }
+        payload.notGroups.forEachIndexed { index, value ->
+            params["not_group[$index]"] = value
+        }
         return params
     }
 
@@ -341,7 +344,9 @@ class ActivityLogRestClient @Inject constructor(
                                         it.type,
                                         it.wpcom_user_id,
                                         it.icon?.url,
-                                        it.role
+                                        it.role,
+                                        it.is_mcp_agent ?: false,
+                                        it.mcp_client
                                 )
                             }
                     )
@@ -455,13 +460,16 @@ class ActivityLogRestClient @Inject constructor(
             val activity_id: String?
         )
 
+        @Suppress("LongParameterList")
         class Actor(
             val type: String?,
             val name: String?,
             val external_user_id: Long?,
             val wpcom_user_id: Long?,
             val icon: Icon?,
-            val role: String?
+            val role: String?,
+            val is_mcp_agent: Boolean?,
+            val mcp_client: String?
         )
 
         class Icon(val type: String?, val url: String?, val width: Int?, val height: Int?)

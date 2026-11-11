@@ -17,7 +17,6 @@ import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.DOMAIN_REGISTRATION_PURPOSE_KEY
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
-import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -88,7 +87,9 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
         viewModel.suggestionsLiveData.observe(viewLifecycleOwner) { listState ->
             val isLoading = listState is ListState.Loading<*>
 
-            domainSuggestionsContainer.isInvisible = isLoading
+            // Nothing has been searched for in the `Init` state, so the list
+            // and its empty view have nothing to say either way.
+            domainSuggestionsContainer.isInvisible = isLoading || listState is ListState.Init<*>
             suggestionSearchIcon.isVisible = !isLoading
             suggestionProgressBar.isVisible = isLoading
 
@@ -97,10 +98,14 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
             }
 
             if (listState is ListState.Error<*>) {
-                val errorMessage = listState.errorMessage.orEmpty().ifEmpty {
-                    getString(R.string.domain_suggestions_fetch_error)
-                }
-                ToastUtils.showToast(context, errorMessage)
+                val detail = listState.errorMessageResId?.let { getString(it) }
+                    ?: listState.errorMessage?.ifEmpty { null }
+                actionableEmptyView.title.setText(R.string.domain_suggestions_fetch_error)
+                actionableEmptyView.subtitle.text = detail
+                actionableEmptyView.subtitle.isVisible = detail != null
+            } else {
+                actionableEmptyView.title.setText(R.string.domains_suggestions_empty_list)
+                actionableEmptyView.subtitle.isVisible = false
             }
         }
         viewModel.selectDomainButtonEnabledState.observe(viewLifecycleOwner) { selectDomainButton.isEnabled = it }

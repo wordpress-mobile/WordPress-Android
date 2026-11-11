@@ -158,7 +158,11 @@ class ClicksUseCase constructor(
     }
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
-        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_CLICKS_VIEW_MORE_TAPPED, statsGranularity)
+        analyticsTracker.trackGranular(
+            AnalyticsTracker.Stat.STATS_CLICKS_VIEW_MORE_TAPPED,
+            statsSiteProvider.siteModel,
+            statsGranularity
+        )
         navigateTo(
             ViewClicks(
                 statsGranularity,
@@ -168,7 +172,11 @@ class ClicksUseCase constructor(
     }
 
     private fun onItemClick(url: String) {
-        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_CLICKS_ITEM_TAPPED, statsGranularity)
+        analyticsTracker.trackGranular(
+            AnalyticsTracker.Stat.STATS_CLICKS_ITEM_TAPPED,
+            statsSiteProvider.siteModel,
+            statsGranularity
+        )
         navigateTo(ViewUrl(url))
     }
 

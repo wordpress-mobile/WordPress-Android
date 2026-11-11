@@ -9,6 +9,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
@@ -47,6 +48,45 @@ class ApplicationPasswordManagerTests {
             configuration = applicationPasswordsConfiguration,
             appLogWrapper = mock()
         )
+    }
+
+    @Test
+    fun `given a simple WPCom site, when we ask for a password, then return NotSupported`() = runTest {
+        val site = SiteModel().apply {
+            url = "http://simple.wordpress.com"
+            setIsWPCom(true)
+            setIsWPComAtomic(false)
+        }
+
+        val result = mApplicationPasswordsManager.getApplicationCredentials(site)
+
+        Assert.assertTrue(result is ApplicationPasswordCreationResult.NotSupported)
+    }
+
+    @Test
+    fun `given an Atomic site, when we ask for a password, then create it via the Jetpack client`() = runTest {
+        val site = SiteModel().apply {
+            url = "http://atomic.example.com"
+            username = "username"
+            setIsWPCom(true)
+            setIsWPComAtomic(true)
+            origin = SiteModel.ORIGIN_WPCOM_REST
+        }
+
+        whenever(applicationPasswordsStore.getCredentials(site)).thenReturn(null)
+        whenever(mJetpackApplicationPasswordsRestClient.fetchWPAdminUsername(site))
+            .thenReturn(UsernameFetchPayload(testCredentials.userName))
+        whenever(
+            mJetpackApplicationPasswordsRestClient.createApplicationPassword(site, applicationName)
+        ).thenReturn(
+            ApplicationPasswordCreationPayload(testCredentials.password, testCredentials.uuid!!)
+        )
+
+        val result = mApplicationPasswordsManager.getApplicationCredentials(site)
+
+        assertEquals(ApplicationPasswordCreationResult.Created(testCredentials), result)
+        verify(mJetpackApplicationPasswordsRestClient).createApplicationPassword(site, applicationName)
+        verify(applicationPasswordsStore).saveCredentials(site, testCredentials)
     }
 
     @Test
@@ -118,6 +158,47 @@ class ApplicationPasswordManagerTests {
             )
 
             assertEquals(ApplicationPasswordCreationResult.Created(testCredentials), result)
+        }
+
+    @Test
+    fun `given a non-jetpack site with no username, when we ask for a password, then return Failure`() =
+        runTest {
+            val site = SiteModel().apply {
+                origin = SiteModel.ORIGIN_XMLRPC
+                url = "http://test-site.com"
+                username = null
+            }
+            whenever(applicationPasswordsStore.getCredentials(site)).thenReturn(null)
+
+            val result = mApplicationPasswordsManager.getApplicationCredentials(site)
+
+            Assert.assertTrue(result is ApplicationPasswordCreationResult.Failure)
+            assertEquals(
+                GenericErrorType.NOT_AUTHENTICATED,
+                (result as ApplicationPasswordCreationResult.Failure).error.type
+            )
+            verifyNoInteractions(mWpApiApplicationPasswordsRestClient)
+        }
+
+    @Test
+    fun `given a non-jetpack site with no password, when we ask for a password, then return Failure`() =
+        runTest {
+            val site = SiteModel().apply {
+                origin = SiteModel.ORIGIN_XMLRPC
+                url = "http://test-site.com"
+                username = "username"
+                password = null
+            }
+            whenever(applicationPasswordsStore.getCredentials(site)).thenReturn(null)
+
+            val result = mApplicationPasswordsManager.getApplicationCredentials(site)
+
+            Assert.assertTrue(result is ApplicationPasswordCreationResult.Failure)
+            assertEquals(
+                GenericErrorType.NOT_AUTHENTICATED,
+                (result as ApplicationPasswordCreationResult.Failure).error.type
+            )
+            verifyNoInteractions(mWpApiApplicationPasswordsRestClient)
         }
 
     @Test

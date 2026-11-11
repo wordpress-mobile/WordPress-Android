@@ -34,7 +34,10 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
             posts.map { post ->
                 TagsFeedPostItem(
                     siteName = post.blogName.takeIf { it.isNotBlank() }
-                        ?: post.blogUrl.let { urlUtilsWrapper.removeScheme(it) },
+                        ?: post.blogUrl.takeIf { it.isNotBlank() }
+                            ?.let { urlUtilsWrapper.removeScheme(it) }
+                        ?: post.authorName.takeIf { it.isNotBlank() }
+                        ?: "",
                     postDateLine = dateTimeUtilsWrapper.javaDateToTimeSpan(
                         post.getDisplayDate(dateTimeUtilsWrapper)
                     ),
@@ -86,7 +89,6 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
     @Suppress("LongParameterList")
     fun mapInitialPostsUiState(
         tags: List<ReaderTag>,
-        announcementItem: ReaderTagsFeedViewModel.ReaderAnnouncementItem?,
         isRefreshing: Boolean,
         onTagChipClick: (ReaderTag) -> Unit,
         onMoreFromTagClick: (ReaderTag) -> Unit,
@@ -102,7 +104,6 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
                     onItemEnteredView = onItemEnteredView,
                 )
             },
-            announcementItem = announcementItem,
             isRefreshing = isRefreshing,
             onRefresh = onRefresh,
         )

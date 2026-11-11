@@ -169,7 +169,11 @@ class AuthorsUseCase constructor(
     }
 
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
-        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_AUTHORS_VIEW_MORE_TAPPED, statsGranularity)
+        analyticsTracker.trackGranular(
+            AnalyticsTracker.Stat.STATS_AUTHORS_VIEW_MORE_TAPPED,
+            statsSiteProvider.siteModel,
+            statsGranularity
+        )
         navigateTo(
             ViewAuthors(
                 statsGranularity,
@@ -179,7 +183,11 @@ class AuthorsUseCase constructor(
     }
 
     private fun onPostClicked(params: PostClickParams) {
-        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_AUTHORS_VIEW_POST_TAPPED, statsGranularity)
+        analyticsTracker.trackGranular(
+            AnalyticsTracker.Stat.STATS_AUTHORS_VIEW_POST_TAPPED,
+            statsSiteProvider.siteModel,
+            statsGranularity
+        )
         navigateTo(
             ViewPostDetailStats(
                 postId = params.postId.toLong(),

@@ -29,7 +29,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.utils.isLightTheme
 import org.wordpress.android.widgets.WPSwitchCompat
-import com.google.android.material.R as MaterialR
+import androidx.appcompat.R as AppCompatR
 
 /**
  * A switch that by default uses the same colors as the SwitchCompat from the App Compat libraries, so there are no
@@ -80,16 +80,16 @@ object WPSwitchDefaults {
         // thumb colors
         val thumbDisabledColor = colorResource(
             if (isLightTheme()) {
-                MaterialR.color.switch_thumb_disabled_material_light
+                AppCompatR.color.switch_thumb_disabled_material_light
             } else {
-                MaterialR.color.switch_thumb_disabled_material_dark
+                AppCompatR.color.switch_thumb_disabled_material_dark
             }
         )
         val thumbEnabledUncheckedColor = colorResource(
             if (isLightTheme()) {
-                MaterialR.color.switch_thumb_normal_material_light
+                AppCompatR.color.switch_thumb_normal_material_light
             } else {
-                MaterialR.color.switch_thumb_normal_material_dark
+                AppCompatR.color.switch_thumb_normal_material_dark
             }
         )
         val thumbEnabledCheckedColor = MaterialTheme.colorScheme.primary

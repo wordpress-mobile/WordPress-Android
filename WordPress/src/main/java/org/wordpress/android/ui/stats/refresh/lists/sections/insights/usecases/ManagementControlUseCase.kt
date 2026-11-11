@@ -10,6 +10,7 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManag
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.utils.ListItemInteraction.Companion
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -22,6 +23,7 @@ class ManagementControlUseCase
     @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val newsCardHandler: NewsCardHandler,
     private val resourceProvider: ResourceProvider,
+    private val statsSiteProvider: StatsSiteProvider,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : StatelessUseCase<Boolean>(
     ManagementType.CONTROL,
@@ -49,7 +51,11 @@ class ManagementControlUseCase
 
     private fun onClick() {
         newsCardHandler.dismiss()
-        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_ACCESSED, mapOf("source" to "insightsCard"))
+        analyticsTrackerWrapper.track(
+            Stat.STATS_INSIGHTS_MANAGEMENT_ACCESSED,
+            statsSiteProvider.siteModel,
+            mapOf("source" to "insightsCard")
+        )
         navigateTo(ViewInsightsManagement)
     }
 }

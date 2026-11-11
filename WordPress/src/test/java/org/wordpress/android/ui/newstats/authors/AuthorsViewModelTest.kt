@@ -20,7 +20,6 @@ import org.wordpress.android.ui.newstats.components.StatsViewChange
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.TopAuthorItemData
 import org.wordpress.android.ui.newstats.repository.TopAuthorsResult
-import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class AuthorsViewModelTest : BaseUnitTest() {
@@ -32,9 +31,6 @@ class AuthorsViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var statsRepository: StatsRepository
-
-    @Mock
-    private lateinit var resourceProvider: ResourceProvider
 
     private lateinit var viewModel: AuthorsViewModel
 
@@ -54,8 +50,7 @@ class AuthorsViewModelTest : BaseUnitTest() {
         viewModel = AuthorsViewModel(
             selectedSiteRepository,
             accountStore,
-            statsRepository,
-            resourceProvider
+            statsRepository
         )
         viewModel.onPeriodChanged(StatsPeriod.Last7Days)
     }
@@ -76,7 +71,7 @@ class AuthorsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when fetch fails, then error state is emitted`() = test {
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any()))
             .thenReturn(TopAuthorsResult.Error(R.string.stats_error_api))
 
         initViewModel()
@@ -90,7 +85,7 @@ class AuthorsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when auth error, then isAuthError is true in ui state`() = test {
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any()))
             .thenReturn(
                 TopAuthorsResult.Error(
                     R.string.stats_error_auth,
@@ -108,7 +103,7 @@ class AuthorsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when non-auth error, then isAuthError is false in ui state`() = test {
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any()))
             .thenReturn(
                 TopAuthorsResult.Error(R.string.stats_error_network)
             )
@@ -144,7 +139,7 @@ class AuthorsViewModelTest : BaseUnitTest() {
     // region Success states
     @Test
     fun `when data loads successfully, then loaded state is emitted`() = test {
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -156,7 +151,7 @@ class AuthorsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when data loads, then authors contain correct values`() = test {
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -173,7 +168,7 @@ class AuthorsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when data loads, then maxViewsForBar is set to first author views`() = test {
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -193,7 +188,7 @@ class AuthorsViewModelTest : BaseUnitTest() {
                 previousViews = (90 - index).toLong()
             )
         }
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any()))
             .thenReturn(
                 TopAuthorsResult.Success(
                     authors = manyAuthors,
@@ -213,7 +208,7 @@ class AuthorsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when data loads with 10 or fewer authors, then hasMoreItems is false`() = test {
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -231,7 +226,7 @@ class AuthorsViewModelTest : BaseUnitTest() {
             totalViewsChange = 0,
             totalViewsChangePercent = 0.0
         )
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any()))
             .thenReturn(emptyResult)
 
         initViewModel()
@@ -247,7 +242,7 @@ class AuthorsViewModelTest : BaseUnitTest() {
     // region Period changes
     @Test
     fun `when period changes, then data is reloaded`() = test {
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -256,13 +251,13 @@ class AuthorsViewModelTest : BaseUnitTest() {
         viewModel.onPeriodChanged(StatsPeriod.Last30Days)
         advanceUntilIdle()
 
-        verify(statsRepository, times(2)).fetchTopAuthors(any(), any())
-        verify(statsRepository).fetchTopAuthors(eq(TEST_SITE_ID), eq(StatsPeriod.Last30Days))
+        verify(statsRepository, times(2)).fetchTopAuthors(any(), any(), any())
+        verify(statsRepository).fetchTopAuthors(eq(TEST_SITE_ID), eq(StatsPeriod.Last30Days), any())
     }
 
     @Test
     fun `when same period is selected, then data is not reloaded`() = test {
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -272,14 +267,14 @@ class AuthorsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Should only be called once during init
-        verify(statsRepository, times(1)).fetchTopAuthors(any(), any())
+        verify(statsRepository, times(1)).fetchTopAuthors(any(), any(), any())
     }
     // endregion
 
     // region Refresh
     @Test
     fun `when refresh is called, then isRefreshing becomes true then false`() = test {
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -295,7 +290,7 @@ class AuthorsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when refresh is called, then data is fetched`() = test {
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -305,12 +300,12 @@ class AuthorsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Called twice: once during init, once during refresh
-        verify(statsRepository, times(2)).fetchTopAuthors(eq(TEST_SITE_ID), any())
+        verify(statsRepository, times(2)).fetchTopAuthors(eq(TEST_SITE_ID), any(), any())
     }
 
     @Test
     fun `when refresh is called with no site, then data is not fetched`() = test {
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -322,14 +317,14 @@ class AuthorsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Should only be called once during init
-        verify(statsRepository, times(1)).fetchTopAuthors(any(), any())
+        verify(statsRepository, times(1)).fetchTopAuthors(any(), any(), any())
     }
     // endregion
 
     // region Retry
     @Test
     fun `when onRetry is called, then data is reloaded`() = test {
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
@@ -339,58 +334,7 @@ class AuthorsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Called twice: once during init, once during retry
-        verify(statsRepository, times(2)).fetchTopAuthors(any(), any())
-    }
-    // endregion
-
-    // region getDetailData
-    @Test
-    fun `when getDetailData is called, then returns cached data`() = test {
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
-            .thenReturn(createSuccessResult())
-        whenever(resourceProvider.getString(R.string.stats_period_last_7_days))
-            .thenReturn("Last 7 days")
-
-        initViewModel()
-        advanceUntilIdle()
-
-        val detailData = viewModel.getDetailData()
-
-        assertThat(detailData.authors).hasSize(2)
-        assertThat(detailData.totalViews).isEqualTo(TEST_TOTAL_VIEWS)
-        assertThat(detailData.totalViewsChange).isEqualTo(TEST_TOTAL_VIEWS_CHANGE)
-        assertThat(detailData.totalViewsChangePercent).isEqualTo(TEST_TOTAL_VIEWS_CHANGE_PERCENT)
-        assertThat(detailData.dateRange).isEqualTo("Last 7 days")
-    }
-
-    @Test
-    fun `when getDetailData is called, then all authors are returned not just card items`() = test {
-        val manyAuthors = (1..15).map { index ->
-            TopAuthorItemData(
-                name = "Author $index",
-                avatarUrl = "https://example.com/avatar$index.jpg",
-                views = (100 - index).toLong(),
-                previousViews = (90 - index).toLong()
-            )
-        }
-        whenever(resourceProvider.getString(R.string.stats_period_last_7_days))
-            .thenReturn("Last 7 days")
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
-            .thenReturn(
-                TopAuthorsResult.Success(
-                    authors = manyAuthors,
-                    totalViews = 1000,
-                    totalViewsChange = 100,
-                    totalViewsChangePercent = 10.0
-                )
-            )
-
-        initViewModel()
-        advanceUntilIdle()
-
-        val detailData = viewModel.getDetailData()
-        // Card shows max 10, but detail data should have all 15
-        assertThat(detailData.authors).hasSize(15)
+        verify(statsRepository, times(2)).fetchTopAuthors(any(), any(), any())
     }
     // endregion
 
@@ -405,7 +349,7 @@ class AuthorsViewModelTest : BaseUnitTest() {
                 previousViews = 100
             )
         )
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any()))
             .thenReturn(
                 TopAuthorsResult.Success(
                     authors = authors,
@@ -435,7 +379,7 @@ class AuthorsViewModelTest : BaseUnitTest() {
                 previousViews = 100
             )
         )
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any()))
             .thenReturn(
                 TopAuthorsResult.Success(
                     authors = authors,
@@ -465,7 +409,7 @@ class AuthorsViewModelTest : BaseUnitTest() {
                 previousViews = 100
             )
         )
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any()))
             .thenReturn(
                 TopAuthorsResult.Success(
                     authors = authors,

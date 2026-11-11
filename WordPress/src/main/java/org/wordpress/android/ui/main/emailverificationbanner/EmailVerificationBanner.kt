@@ -68,6 +68,7 @@ fun EmailVerificationBanner(
         val announcementString = stringResource(stringRes)
         val view = LocalView.current
         LaunchedEffect(verificationState.value) {
+            @Suppress("DEPRECATION")
             view.announceForAccessibility(announcementString)
         }
     }

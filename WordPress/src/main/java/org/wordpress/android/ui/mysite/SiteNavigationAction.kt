@@ -52,16 +52,15 @@ sealed class SiteNavigationAction {
     data class EditDraftPost(val site: SiteModel, val postId: Int) : SiteNavigationAction()
     data class EditScheduledPost(val site: SiteModel, val postId: Int) : SiteNavigationAction()
     data class OpenStatsByDay(val site: SiteModel) : SiteNavigationAction()
+    object OpenNewStatsForToday : SiteNavigationAction()
     data class OpenExternalUrl(val url: String) : SiteNavigationAction()
     data class OpenUrlInWebView(val url: String) : SiteNavigationAction()
     data class OpenDeepLink(val url: String) : SiteNavigationAction()
     object OpenJetpackPoweredBottomSheet : SiteNavigationAction()
-    object OpenJetpackMigrationDeleteWP : SiteNavigationAction()
     data class OpenJetpackFeatureOverlay(val source: JetpackFeatureCollectionOverlaySource) : SiteNavigationAction()
     data class OpenPromoteWithBlazeOverlay(val source: BlazeFlowSource, val shouldShowBlazeOverlay: Boolean = false) :
         SiteNavigationAction()
 
-    object ShowJetpackRemovalStaticPostersView : SiteNavigationAction()
     data class OpenActivityLogDetail(val site: SiteModel, val activityId: String, val isRewindable: Boolean) :
         SiteNavigationAction()
 
@@ -82,6 +81,7 @@ sealed class SiteNavigationAction {
     object OpenApplicationPasswordsList : SiteNavigationAction()
 
     data class OpenMenus(val site: SiteModel) : SiteNavigationAction()
+    data object OpenXmlRpcDisabledBottomSheet : SiteNavigationAction()
     data class OpenApplicationPasswordAuthentication(val url: String) : SiteNavigationAction()
     // alternativeUrl used to open the web view authentication if necessary
     data class OpenApplicationPasswordAutoAuthentication(

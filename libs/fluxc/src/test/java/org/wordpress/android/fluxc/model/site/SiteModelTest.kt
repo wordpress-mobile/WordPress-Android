@@ -3,7 +3,9 @@ package org.wordpress.android.fluxc.model.site
 import org.junit.Test
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.site.SiteUtils
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class SiteModelTest {
@@ -155,6 +157,99 @@ class SiteModelTest {
         site.setShareButtonsSupport(false)
 
         assertFalse(site.supportsSharing())
+    }
+
+    /* isWPComSimpleSite */
+    @Test
+    fun `wpcom non-atomic site is a simple site`() {
+        val site = SiteUtils.generateWPComSite()
+        site.setIsWPComAtomic(false)
+
+        assertTrue(site.isWPComSimpleSite)
+    }
+
+    @Test
+    fun `wpcom atomic site is not a simple site`() {
+        val site = SiteUtils.generateWPComSite()
+        site.setIsWPComAtomic(true)
+
+        assertFalse(site.isWPComSimpleSite)
+    }
+
+    @Test
+    fun `self-hosted site is not a simple site`() {
+        val site = SiteUtils.generateSelfHostedNonJPSite()
+
+        assertFalse(site.isWPComSimpleSite)
+    }
+
+    @Test
+    fun `jetpack site is not a simple site`() {
+        val site = SiteUtils.generateJetpackSiteOverRestOnly()
+
+        assertFalse(site.isWPComSimpleSite)
+    }
+
+    /* getWpApiRestUrl — the stored value only, never a synthesized WP.com proxy root */
+    @Test
+    fun `atomic site returns stored wpApiRestUrl`() {
+        val site = SiteUtils.generateWPComSite()
+        site.setIsWPComAtomic(true)
+        site.wpApiRestUrl = "https://atomic.example.com/wp-json/"
+
+        assertEquals("https://atomic.example.com/wp-json/", site.wpApiRestUrl)
+    }
+
+    @Test
+    fun `self-hosted site with no wpApiRestUrl returns null`() {
+        val site = SiteUtils.generateSelfHostedNonJPSite()
+
+        assertNull(site.wpApiRestUrl)
+    }
+
+    @Test
+    fun `atomic site with no stored wpApiRestUrl returns null`() {
+        val site = SiteUtils.generateWPComSite()
+        site.setIsWPComAtomic(true)
+
+        assertNull(site.wpApiRestUrl)
+    }
+
+    /**
+     * The getter must not synthesize a proxy root here. The generated WellSql mapper reads it when
+     * inserting a row and the update path excludes the column, so a synthesized value would be
+     * persisted at insert and kept for the life of the site — surviving an Atomic transfer that
+     * makes it wrong.
+     */
+    @Test
+    fun `simple site with no stored wpApiRestUrl returns null`() {
+        val site = SiteUtils.generateWPComSite()
+        site.setIsWPComAtomic(false)
+
+        assertTrue(site.isWPComSimpleSite)
+        assertNull(site.wpApiRestUrl)
+    }
+
+    @Test
+    fun `simple site returns stored wpApiRestUrl unchanged`() {
+        val site = SiteUtils.generateWPComSite()
+        site.setIsWPComAtomic(false)
+        site.wpApiRestUrl = "https://simple.example.com/wp-json/"
+
+        assertEquals("https://simple.example.com/wp-json/", site.wpApiRestUrl)
+    }
+
+    @Test
+    fun `jetpack REST site returns stored url not proxy`() {
+        val site = SiteUtils.generateJetpackSiteOverRestOnly()
+        site.wpApiRestUrl = "https://jetpack.example.com/wp-json/"
+
+        assertTrue(site.isUsingWpComRestApi)
+        assertFalse(site.isWPComSimpleSite)
+        assertEquals(
+            "https://jetpack.example.com/wp-json/",
+            site.wpApiRestUrl
+        )
     }
 
     private fun SiteModel.setPublicizeSupport(enablePublicizeSupport: Boolean) {

@@ -3,8 +3,8 @@ package org.wordpress.android.ui.prefs
 import androidx.core.content.edit
 import com.google.gson.Gson
 import org.wordpress.android.fluxc.model.JetpackCapability
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.prefs.AppPrefs.PrefKey
 import org.wordpress.android.ui.prefs.AppPrefs.getBoolean
@@ -52,13 +52,17 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         get() = AppPrefs.getAuthorFilterSelection()
         set(value) = AppPrefs.setAuthorFilterSelection(value)
 
+    var isContentListCondensed: Boolean
+        get() = AppPrefs.isContentListCondensed()
+        set(value) = AppPrefs.setContentListCondensed(value)
+
+    var pagesListAuthorSelection: AuthorFilterSelection
+        get() = AppPrefs.getPagesAuthorFilterSelection()
+        set(value) = AppPrefs.setPagesAuthorFilterSelection(value)
+
     var systemNotificationsEnabled: Boolean
         get() = AppPrefs.getSystemNotificationsEnabled()
         set(value) = AppPrefs.setSystemNotificationsEnabled(value)
-
-    var shouldShowPostSignupInterstitial: Boolean
-        get() = AppPrefs.shouldShowPostSignupInterstitial()
-        set(shouldShow) = AppPrefs.setShouldShowPostSignupInterstitial(shouldShow)
 
     var readerTagsUpdatedTimestamp: Long
         get() = AppPrefs.getReaderTagsUpdatedTimestamp()
@@ -68,17 +72,24 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         get() = AppPrefs.getReaderAnalyticsCountTagsTimestamp()
         set(timestamp) = AppPrefs.setReaderAnalyticsCountTagsTimestamp(timestamp)
 
-    var readerCssUpdatedTimestamp: Long
-        get() = AppPrefs.getReaderCssUpdatedTimestamp()
-        set(timestamp) = AppPrefs.setReaderCssUpdatedTimestamp(timestamp)
-
     var readerCardsPageHandle: String?
         get() = AppPrefs.getReaderCardsPageHandle()
         set(pageHandle) = AppPrefs.setReaderCardsPageHandle(pageHandle)
 
+    fun getReaderDiscoverStreamPageHandle(tagSlug: String): String? =
+        AppPrefs.getReaderDiscoverStreamPageHandle(tagSlug)
+
+    fun setReaderDiscoverStreamPageHandle(tagSlug: String, pageHandle: String?) {
+        AppPrefs.setReaderDiscoverStreamPageHandle(tagSlug, pageHandle)
+    }
+
     var readerTopBarSelectedFeedItemId: String?
         get() = AppPrefs.getReaderTopBarSelectedFeedItemId()
         set(selectedFeedItemId) = AppPrefs.setReaderTopBarSelectedFeedItemId(selectedFeedItemId)
+
+    var readerDiscoverSelectedSubTabIndex: Int
+        get() = AppPrefs.getReaderDiscoverSelectedSubTabIndex()
+        set(index) = AppPrefs.setReaderDiscoverSelectedSubTabIndex(index)
 
     var shouldScheduleCreateSiteNotification: Boolean
         get() = AppPrefs.shouldScheduleCreateSiteNotification()
@@ -104,6 +115,53 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
 
     fun setStatsCardsConfigurationJson(siteId: Long, json: String?) =
         AppPrefs.setStatsCardsConfigurationJson(siteId, json)
+
+    fun getStatsInsightsCardsConfigurationJson(siteId: Long): String? =
+        AppPrefs.getStatsInsightsCardsConfigurationJson(siteId)
+
+    fun setStatsInsightsCardsConfigurationJson(
+        siteId: Long,
+        json: String?
+    ) = AppPrefs.setStatsInsightsCardsConfigurationJson(siteId, json)
+
+    fun getSubscribersCardsConfigurationJson(siteId: Long): String? =
+        AppPrefs.getSubscribersCardsConfigurationJson(siteId)
+
+    fun setSubscribersCardsConfigurationJson(siteId: Long, json: String?) =
+        AppPrefs.setSubscribersCardsConfigurationJson(siteId, json)
+
+    fun getStatsUtmCategory(siteId: Long): String? =
+        AppPrefs.getStatsUtmCategory(siteId)
+
+    fun setStatsUtmCategory(siteId: Long, category: String?) =
+        AppPrefs.setStatsUtmCategory(siteId, category)
+
+    fun hasSiteEditorCapabilities(site: SiteModel): Boolean =
+        AppPrefs.hasSiteEditorCapabilities(site)
+
+    fun getSiteSupportsEditorSettings(site: SiteModel): Boolean =
+        AppPrefs.getSiteSupportsEditorSettings(site)
+
+    fun setSiteSupportsEditorSettings(site: SiteModel, supports: Boolean) =
+        AppPrefs.setSiteSupportsEditorSettings(site, supports)
+
+    fun getSiteSupportsEditorAssets(site: SiteModel): Boolean =
+        AppPrefs.getSiteSupportsEditorAssets(site)
+
+    fun setSiteSupportsEditorAssets(site: SiteModel, supports: Boolean) =
+        AppPrefs.setSiteSupportsEditorAssets(site, supports)
+
+    fun getSiteThemeIsBlockTheme(site: SiteModel): Boolean =
+        AppPrefs.getSiteThemeIsBlockTheme(site)
+
+    fun setSiteThemeIsBlockTheme(site: SiteModel, isBlockTheme: Boolean) =
+        AppPrefs.setSiteThemeIsBlockTheme(site, isBlockTheme)
+
+    fun getXPostsNoResultCheckedTimestamp(site: SiteModel): Long =
+        AppPrefs.getXPostsNoResultCheckedTimestamp(site)
+
+    fun setXPostsNoResultCheckedTimestamp(site: SiteModel, timestamp: Long) =
+        AppPrefs.setXPostsNoResultCheckedTimestamp(site, timestamp)
 
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
@@ -245,8 +303,6 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
 
     fun setSelectedSite(siteLocalId: Int) = AppPrefs.setSelectedSite(siteLocalId)
 
-    fun getMySiteInitialScreen(isJetpackApp: Boolean): String = AppPrefs.getMySiteInitialScreen(isJetpackApp)
-
     fun setSkippedPromptDay(date: Date?, siteId: Int) = AppPrefs.setSkippedPromptDay(date, siteId)
 
     fun getSkippedPromptDay(siteId: Int): Date? = AppPrefs.getSkippedPromptDay(siteId)
@@ -256,36 +312,6 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun saveFirstBloggingPromptsOnboarding(isFirstTime: Boolean) {
         AppPrefs.saveFirstBloggingPromptsOnboarding(isFirstTime)
     }
-
-    fun getIsFirstTrySharedLoginJetpack(): Boolean = AppPrefs.getIsFirstTrySharedLoginJetpack()
-
-    fun saveIsFirstTrySharedLoginJetpack(isFirstTry: Boolean) = AppPrefs.saveIsFirstTrySharedLoginJetpack(isFirstTry)
-
-    fun getIsFirstTryUserFlagsJetpack(): Boolean = AppPrefs.getIsFirstTryUserFlagsJetpack()
-
-    fun saveIsFirstTryUserFlagsJetpack(isFirstTry: Boolean) = AppPrefs.saveIsFirstTryUserFlagsJetpack(isFirstTry)
-
-    fun getIsFirstTryBloggingRemindersSyncJetpack(): Boolean = AppPrefs.getIsFirstTryBloggingRemindersSyncJetpack()
-
-    fun saveIsFirstTryBloggingRemindersSyncJetpack(isFirstTry: Boolean) =
-        AppPrefs.saveIsFirstTryBloggingRemindersSyncJetpack(isFirstTry)
-
-    fun getIsFirstTryReaderSavedPostsJetpack(): Boolean = AppPrefs.getIsFirstTryReaderSavedPostsJetpack()
-
-    fun saveIsFirstTryReaderSavedPostsJetpack(isFirstTry: Boolean) =
-        AppPrefs.saveIsFirstTryReaderSavedPostsJetpack(isFirstTry)
-
-    fun setJetpackMigrationCompleted(isCompleted: Boolean) = AppPrefs.setIsJetpackMigrationCompleted(isCompleted)
-
-    fun isJetpackMigrationCompleted() = AppPrefs.getIsJetpackMigrationCompleted()
-
-    fun setJetpackMigrationInProgress(isInProgress: Boolean) = AppPrefs.setIsJetpackMigrationInProgress(isInProgress)
-
-    fun isJetpackMigrationInProgress() = AppPrefs.getIsJetpackMigrationInProgress()
-
-    fun setJetpackMigrationEligible(isEligible: Boolean) = AppPrefs.setIsJetpackMigrationEligible(isEligible)
-
-    fun isJetpackMigrationEligible() = AppPrefs.getIsJetpackMigrationEligible()
 
     fun getOpenWebLinksWithJetpackOverlayLastShownTimestamp(): Long =
         AppPrefs.getOpenWebLinksWithJetpackOverlayLastShownTimestamp()
@@ -298,35 +324,45 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack: Boolean) =
         AppPrefs.setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack)
 
-    fun getShouldHideJetpackFeatureCard(jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase): Boolean =
-        AppPrefs.getShouldHideJetpackFeatureCard(jetpackFeatureRemovalPhase)
+    var isImageOptimize: Boolean
+        get() = AppPrefs.isImageOptimize()
+        set(value) = AppPrefs.setImageOptimize(value)
 
-    fun setShouldHideJetpackFeatureCard(jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase, isHidden: Boolean) =
-        AppPrefs.setShouldHideJetpackFeatureCard(jetpackFeatureRemovalPhase, isHidden)
+    var imageOptimizeMaxSize: Int
+        get() = AppPrefs.getImageOptimizeMaxSize()
+        set(value) = AppPrefs.setImageOptimizeMaxSize(value)
 
-    fun getJetpackFeatureCardLastShownTimestamp(jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase): Long =
-        AppPrefs.getJetpackFeatureCardLastShownTimestamp(jetpackFeatureRemovalPhase)
+    var imageOptimizeQuality: Int
+        get() = AppPrefs.getImageOptimizeQuality()
+        set(value) = AppPrefs.setImageOptimizeQuality(value)
 
-    fun setJetpackFeatureCardLastShownTimestamp(
-        jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase,
-        lastShownTimestamp: Long
-    ) {
-        AppPrefs.setJetpackFeatureCardLastShownTimestamp(jetpackFeatureRemovalPhase, lastShownTimestamp)
-    }
+    var isStripImageLocation: Boolean
+        get() = AppPrefs.isStripImageLocation()
+        set(value) = AppPrefs.setStripImageLocation(value)
 
-    fun getSwitchToJetpackMenuCardLastShownTimestamp(): Long = AppPrefs.getSwitchToJetpackMenuCardLastShownTimestamp()
+    var isVideoOptimize: Boolean
+        get() = AppPrefs.isVideoOptimize()
+        set(value) = AppPrefs.setVideoOptimize(value)
 
-    fun setSwitchToJetpackMenuCardLastShownTimestamp(lastShownTimestamp: Long) {
-        AppPrefs.setSwitchToJetpackMenuCardLastShownTimestamp(lastShownTimestamp)
-    }
+    var videoOptimizeWidth: Int
+        get() = AppPrefs.getVideoOptimizeWidth()
+        set(value) = AppPrefs.setVideoOptimizeWidth(value)
 
-    fun getShouldHideSwitchToJetpackMenuCard(jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase): Boolean =
-        AppPrefs.getShouldHideSwitchToJetpackMenuCard(jetpackFeatureRemovalPhase)
+    var videoOptimizeQuality: Int
+        get() = AppPrefs.getVideoOptimizeQuality()
+        set(value) = AppPrefs.setVideoOptimizeQuality(value)
 
-    fun setShouldHideSwitchToJetpackMenuCard(
-        jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase,
-        isHidden: Boolean
-    ) = AppPrefs.setShouldHideSwitchToJetpackMenuCard(jetpackFeatureRemovalPhase, isHidden)
+    fun getShouldHideJetpackFeatureCard(): Boolean =
+        AppPrefs.getShouldHideJetpackFeatureCard()
+
+    fun setShouldHideJetpackFeatureCard(isHidden: Boolean) =
+        AppPrefs.setShouldHideJetpackFeatureCard(isHidden)
+
+    fun getJetpackFeatureCardLastShownTimestamp(): Long =
+        AppPrefs.getJetpackFeatureCardLastShownTimestamp()
+
+    fun setJetpackFeatureCardLastShownTimestamp(lastShownTimestamp: Long) =
+        AppPrefs.setJetpackFeatureCardLastShownTimestamp(lastShownTimestamp)
 
     fun getShouldHideJetpackInstallFullPluginCard(siteId: Int): Boolean =
         AppPrefs.getShouldHideJetpackInstallFullPluginCard(siteId)
@@ -450,10 +486,6 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
 
     fun setBookmarkPostsPseudoIdsUpdated() = AppPrefs.setBookmarkPostsPseudoIdsUpdated()
 
-    fun shouldShowReaderAnnouncementCard(): Boolean = AppPrefs.getShouldShowReaderAnnouncementCard()
-
-    fun setShouldShowReaderAnnouncementCard(shouldShow: Boolean) =
-        AppPrefs.setShouldShowReaderAnnouncementCard(shouldShow)
 
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
@@ -492,6 +524,10 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         get() = getBoolean(AppPrefs.DeletablePrefKey.HAS_SAVED_PRIVACY_SETTINGS, false)
         set(value) = AppPrefs.setBoolean(AppPrefs.DeletablePrefKey.HAS_SAVED_PRIVACY_SETTINGS, value)
 
+    var hasFetchedSites: Boolean
+        get() = getBoolean(AppPrefs.DeletablePrefKey.HAS_FETCHED_SITES, false)
+        set(value) = AppPrefs.setBoolean(AppPrefs.DeletablePrefKey.HAS_FETCHED_SITES, value)
+
     var pinnedSiteLocalIds: MutableSet<Int>
         get() = Gson().fromJson(AppPrefs.getPinnedSiteLocalIds(), Array<Int>::class.java).toMutableSet()
         set(value) = AppPrefs.setPinnedSiteLocalIds(Gson().toJson(value))
@@ -512,6 +548,45 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     var trackNetworkRequestsRetentionPeriod: Int
         get() = AppPrefs.getTrackNetworkRequestsRetentionPeriod()
         set(value) = AppPrefs.setTrackNetworkRequestsRetentionPeriod(value)
+
+    fun getNewStatsIntroShown(): Boolean = AppPrefs.getNewStatsIntroShown()
+
+    fun setNewStatsIntroShown(shown: Boolean) =
+        AppPrefs.setNewStatsIntroShown(shown)
+
+    fun getNewStatsUserOptedIn(): Boolean = AppPrefs.getNewStatsUserOptedIn()
+
+    fun setNewStatsUserOptedIn(optedIn: Boolean) =
+        AppPrefs.setNewStatsUserOptedIn(optedIn)
+
+    fun getNewStatsUserOptedOut(): Boolean = AppPrefs.getNewStatsUserOptedOut()
+
+    fun setNewStatsUserOptedOut(optedOut: Boolean) =
+        AppPrefs.setNewStatsUserOptedOut(optedOut)
+
+    fun getStatsNewStatsSuggestionShown(): Boolean =
+        AppPrefs.getStatsNewStatsSuggestionShown()
+
+    fun setStatsNewStatsSuggestionShown(shown: Boolean) =
+        AppPrefs.setStatsNewStatsSuggestionShown(shown)
+
+    fun getStatsNewStatsSuggestionLastDismissedAt(): Long =
+        AppPrefs.getStatsNewStatsSuggestionLastDismissedAt()
+
+    fun setStatsNewStatsSuggestionLastDismissedAt(timestamp: Long) =
+        AppPrefs.setStatsNewStatsSuggestionLastDismissedAt(timestamp)
+
+    fun getGutenbergKitSiteOverride(siteUrl: String?): Boolean? =
+        AppPrefs.getGutenbergKitSiteOverride(siteUrl)
+
+    fun setGutenbergKitSiteOverride(siteUrl: String?, enabled: Boolean) =
+        AppPrefs.setGutenbergKitSiteOverride(siteUrl, enabled)
+
+    fun getGutenbergKitAnnouncementDeferredUntil(siteUrl: String?): Long =
+        AppPrefs.getGutenbergKitAnnouncementDeferredUntil(siteUrl)
+
+    fun setGutenbergKitAnnouncementDeferredUntil(siteUrl: String?, timestampMillis: Long) =
+        AppPrefs.setGutenbergKitAnnouncementDeferredUntil(siteUrl, timestampMillis)
 
     var isEinkModeEnabled: Boolean
         get() = AppPrefs.isEinkModeEnabled()

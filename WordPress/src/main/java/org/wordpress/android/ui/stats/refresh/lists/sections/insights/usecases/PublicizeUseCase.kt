@@ -105,7 +105,7 @@ class PublicizeUseCase
     private fun buildTitle() = Title(R.string.stats_view_publicize, menuAction = this::onMenuClick)
 
     private fun onLinkClick() {
-        analyticsTracker.track(AnalyticsTracker.Stat.STATS_PUBLICIZE_VIEW_MORE_TAPPED)
+        analyticsTracker.track(AnalyticsTracker.Stat.STATS_PUBLICIZE_VIEW_MORE_TAPPED, statsSiteProvider.siteModel)
         return navigateTo(ViewPublicizeStats)
     }
 

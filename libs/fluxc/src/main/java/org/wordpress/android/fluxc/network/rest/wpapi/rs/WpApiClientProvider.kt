@@ -3,10 +3,8 @@ package org.wordpress.android.fluxc.network.rest.wpapi.rs
 import okhttp3.Cookie
 import okhttp3.CookieJar
 import okhttp3.HttpUrl
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.store.AccountStore
 import rs.wordpress.api.kotlin.WpApiClient
@@ -16,58 +14,115 @@ import uniffi.wp_api.CookiesNonceAuthenticationProvider
 import uniffi.wp_api.WpAppNotifier
 import uniffi.wp_api.WpAuthentication
 import uniffi.wp_api.WpAuthenticationProvider
+import uniffi.wp_api.ParsedUrl
 import uniffi.wp_api.WpComBaseUrl
 import uniffi.wp_api.WpComDotOrgApiUrlResolver as WpComUrlResolver // checkstyle ignore
 import uniffi.wp_api.WpDynamicAuthenticationProvider
+import uniffi.wp_api.WpOrgSiteApiUrlResolver
 import java.net.URL
 import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
 class WpApiClientProvider @Inject constructor(
     private val wpAppNotifierHandler: WpAppNotifierHandler,
     private val accountStore: AccountStore,
-    @Named(OkHttpClientQualifiers.INTERCEPTORS) private val interceptors: Set<@JvmSuppressWildcards Interceptor>,
+    @WpRsOkHttpClient private val okHttpClient: OkHttpClient,
     private val networkAvailabilityProvider: WpNetworkAvailabilityProvider,
 ) {
     private val wpComClients = mutableMapOf<Long, WpApiClient>()
+    private val selfHostedClients = mutableMapOf<Int, WpApiClient>()
 
-    /** Removes all cached WP.com API clients (e.g. on sign-out). */
+    /** Removes all cached API clients (e.g. on sign-out). */
     @Synchronized
-    fun clearWpComClients() {
+    fun clearAllClients() {
         wpComClients.clear()
+        selfHostedClients.clear()
     }
 
+    /**
+     * Removes the cached self-hosted client for a specific site so that the
+     * next call to [getWpApiClient] creates a fresh client with up-to-date
+     * credentials from the database.
+     */
+    @Synchronized
+    fun clearSelfHostedClient(siteId: Int) {
+        selfHostedClients.remove(siteId)
+    }
+
+    @Synchronized
     fun getWpApiClient(
         site: SiteModel,
         uploadListener: WpRequestExecutor.UploadListener? = null
-    ): WpApiClient {
-        if (site.isWPCom) return getWpComApiClient(site)
-        val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
-            username = site.apiRestUsernamePlain, password = site.apiRestPasswordPlain
-        )
-        val apiRootUrl = URL(site.buildUrl())
-        val client = WpApiClient(
-            wpOrgSiteApiRootUrl = apiRootUrl,
-            authProvider = authProvider,
-            requestExecutor = WpRequestExecutor(
-                interceptors = interceptors.toList(),
-                networkAvailabilityProvider = networkAvailabilityProvider,
-                uploadListener = uploadListener
-            ),
-            appNotifier = object : WpAppNotifier {
-                override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {
-                    wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
-                }
-            }
-        )
-        return client
+    ): WpApiClient = when {
+        site.isWPCom || site.isUsingWpComRestApi ->
+            getWpComApiClient(site)
+        // Skip caching when an upload listener is provided —
+        // upload flows need a dedicated client with progress
+        // callbacks.
+        uploadListener != null ->
+            createSelfHostedClient(site, uploadListener)
+        else -> selfHostedClients.getOrPut(site.id) {
+            createSelfHostedClient(site, uploadListener = null)
+        }
     }
 
+    /**
+     * Always returns a Basic-auth client against the direct host using the SiteModel's
+     * application-password credentials, regardless of WP.com routing. Use this when you need to
+     * talk to the site's own REST endpoints with the application password — `getWpApiClient`
+     * routes WPCom-flagged sites (including Atomic) through the bearer-token path and the WP.com
+     * REST proxy, which doesn't expose application-password-authenticated routes like
+     * `/wp/v2/users/{id}/application-passwords`.
+     */
+    @Synchronized
+    fun getApplicationPasswordClient(site: SiteModel): WpApiClient =
+        selfHostedClients.getOrPut(site.id) {
+            createSelfHostedClient(site, uploadListener = null)
+        }
+
+    private fun createSelfHostedClient(
+        site: SiteModel,
+        uploadListener: WpRequestExecutor.UploadListener?,
+    ): WpApiClient {
+        val authProvider =
+            WpAuthenticationProvider.staticWithUsernameAndPassword(
+                username = site.apiRestUsernamePlain,
+                password = site.apiRestPasswordPlain,
+            )
+
+        val urlResolver =
+            WpOrgSiteApiUrlResolver(ParsedUrl.parse(site.buildUrl()))
+
+        return WpApiClient(
+            apiUrlResolver = urlResolver,
+            authProvider = authProvider,
+            requestExecutor = requestExecutor(uploadListener),
+            appNotifier = object : WpAppNotifier {
+                override suspend fun requestedWithInvalidAuthentication(
+                    requestUrl: String
+                ) {
+                    wpAppNotifierHandler
+                        .notifyRequestedWithInvalidAuthentication(
+                            site
+                        )
+                }
+            },
+            errorLogger = wpRsErrorLogger(),
+        )
+    }
+
+    private fun requestExecutor(
+        uploadListener: WpRequestExecutor.UploadListener? = null
+    ) = WpRequestExecutor(
+        httpClient = WpHttpClient.CustomOkHttpClient(okHttpClient),
+        networkAvailabilityProvider = networkAvailabilityProvider,
+        uploadListener = uploadListener,
+    )
+
     fun getWpApiClientCookiesNonceAuthentication(site: SiteModel): WpApiClient {
-        // Create OkHttpClient with cookie jar for cookies/nonce authentication
-        val okHttpClient = OkHttpClient.Builder()
+        // newBuilder() carries over the pool, the interceptors and the timeouts.
+        val cookieAwareClient = okHttpClient.newBuilder()
             .cookieJar(object : CookieJar {
                 // We are storing the cookie in memory as this is a one-time call and there is no need to persist it
                 private val cookieStore = mutableMapOf<String, List<Cookie>>()
@@ -80,10 +135,9 @@ class WpApiClientProvider @Inject constructor(
                     return cookieStore[url.host] ?: emptyList()
                 }
             })
-            .apply { interceptors.forEach { addInterceptor(it) } }
             .build()
 
-        val httpClient = WpHttpClient.CustomOkHttpClient(okHttpClient)
+        val httpClient = WpHttpClient.CustomOkHttpClient(cookieAwareClient)
         val requestExecutor = WpRequestExecutor(httpClient, networkAvailabilityProvider)
 
         val cookiesNonceProvider = CookiesNonceAuthenticationProvider.withSiteUrl(
@@ -101,7 +155,8 @@ class WpApiClientProvider @Inject constructor(
                 override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {
                     wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
                 }
-            }
+            },
+            errorLogger = wpRsErrorLogger(),
         )
         return client
     }
@@ -116,15 +171,50 @@ class WpApiClientProvider @Inject constructor(
             WpApiClient(
                 apiUrlResolver = urlResolver,
                 authProvider = createWpComAuthProvider(accountStore),
-                requestExecutor = WpRequestExecutor(emptyList(), networkAvailabilityProvider),
+                requestExecutor = requestExecutor(),
+                // WpAppNotifierHandler listeners respond with application-password
+                // reauthentication, which can't fix a bearer-token 401; the screens surface
+                // WP.com auth errors themselves. So bearer clients don't report to the handler.
                 appNotifier = object : WpAppNotifier {
-                    override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {
-                        wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
-                    }
-                }
+                    override suspend fun requestedWithInvalidAuthentication(requestUrl: String) = Unit
+                },
+                errorLogger = wpRsErrorLogger(),
             )
         }
     }
+
+    fun getApiUrlResolver(
+        site: SiteModel
+    ): uniffi.wp_api.ApiUrlResolver = when {
+        site.isWPCom || site.isUsingWpComRestApi ->
+            WpComUrlResolver(
+                siteId = site.siteId.toString(),
+                baseUrl = WpComBaseUrl.Production
+            )
+        else -> WpOrgSiteApiUrlResolver(
+            ParsedUrl.parse(site.buildUrl())
+        )
+    }
+
+    /**
+     * Builds a [WpOrgSiteApiUrlResolver] for an already-parsed REST API root
+     * URL (e.g. one returned by `WpLoginClient.apiDiscovery`). Exposed so
+     * callers don't have to construct the uniffi resolver directly — useful
+     * for testability.
+     */
+    fun urlResolverFor(
+        apiRootUrl: ParsedUrl
+    ): uniffi.wp_api.ApiUrlResolver = WpOrgSiteApiUrlResolver(apiRootUrl)
+
+    /**
+     * Always returns a direct-host [WpOrgSiteApiUrlResolver] for the site, regardless of WP.com
+     * routing — the resolver counterpart to [getApplicationPasswordClient]. Use it to resolve
+     * routes fetched through that client against the host they actually came from.
+     */
+    fun getDirectHostApiUrlResolver(
+        site: SiteModel
+    ): uniffi.wp_api.ApiUrlResolver =
+        WpOrgSiteApiUrlResolver(ParsedUrl.parse(site.buildUrl()))
 
     fun getApiRootUrlFrom(site: SiteModel): String = site.buildUrl()
 

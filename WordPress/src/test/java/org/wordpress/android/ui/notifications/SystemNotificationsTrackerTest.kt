@@ -186,11 +186,55 @@ class SystemNotificationsTrackerTest {
         notificationType: NotificationType,
         typeValue: String
     ) {
-        systemNotificationsTracker.trackShownNotification(notificationType)
+        systemNotificationsTracker.trackShownNotification(notificationType, blogId = null)
 
         verify(analyticsTracker).track(
             NOTIFICATION_SHOWN,
             mapOf("notification_type" to typeValue)
+        )
+    }
+
+    @Test
+    fun `trackShownNotification attaches the notified site when the push payload carried one`() {
+        systemNotificationsTracker.trackShownNotification(COMMENT, blogId = 12345L)
+
+        verify(analyticsTracker).track(
+            NOTIFICATION_SHOWN,
+            mapOf("notification_type" to "comment", "blog_id" to 12345L)
+        )
+    }
+
+    @Test
+    fun `trackShownNotification omits blog_id for account-level notifications`() {
+        systemNotificationsTracker.trackShownNotification(CREATE_SITE, blogId = null)
+
+        verify(analyticsTracker).track(
+            NOTIFICATION_SHOWN,
+            mapOf("notification_type" to "create_site")
+        )
+    }
+
+    @Test
+    fun `track attaches the notified site alongside the system notifications state`() {
+        whenever(notificationManager.areNotificationsEnabled()).thenReturn(true)
+
+        systemNotificationsTracker.track(Stat.NOTIFICATION_RECEIVED_PROCESSING_START, blogId = 12345L)
+
+        verify(analyticsTracker).track(
+            Stat.NOTIFICATION_RECEIVED_PROCESSING_START,
+            mapOf("system_notifications_enabled" to true, "blog_id" to 12345L)
+        )
+    }
+
+    @Test
+    fun `track omits blog_id when the push payload carried none`() {
+        whenever(notificationManager.areNotificationsEnabled()).thenReturn(true)
+
+        systemNotificationsTracker.track(Stat.NOTIFICATION_RECEIVED_PROCESSING_END, blogId = null)
+
+        verify(analyticsTracker).track(
+            Stat.NOTIFICATION_RECEIVED_PROCESSING_END,
+            mapOf("system_notifications_enabled" to true)
         )
     }
 }

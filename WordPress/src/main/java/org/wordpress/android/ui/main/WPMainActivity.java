@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.widget.TextView;
@@ -41,12 +40,11 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
-import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
@@ -63,14 +61,16 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteEditorsChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.inappupdate.IInAppUpdateManager;
 import org.wordpress.android.inappupdate.InAppUpdateListener;
-import org.wordpress.android.login.LoginAnalyticsListener;
-import org.wordpress.android.networking.ConnectionChangeReceiver;
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordReauthNotifier;
+import org.wordpress.android.ui.accounts.login.LoginAnalyticsTracker;
+import org.wordpress.android.networking.NetworkConnectionMonitor;
 import org.wordpress.android.push.GCMMessageHandler;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationScheduler;
 import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.push.NotificationsProcessingService;
+import org.wordpress.android.support.SupportRouting;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.ActivityNavigator;
@@ -81,7 +81,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.ShortcutsNavigator;
 import org.wordpress.android.ui.accounts.LoginActivity;
-import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsReminderSchedulerListener;
@@ -91,7 +90,6 @@ import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.main.MainActionListItem.ActionType;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
@@ -114,22 +112,19 @@ import org.wordpress.android.ui.posts.EditorLauncher;
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
-import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.privacy.banner.PrivacyBannerFragment;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderFragment;
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
+import org.wordpress.android.ui.reader.repository.ReaderTagsAndSitesUpdater;
+import org.wordpress.android.ui.reader.repository.UpdateTask;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.stats.StatsTimeframe;
-import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
-import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils;
 import org.wordpress.android.ui.utils.UiString.UiStringRes;
 import org.wordpress.android.ui.voicetocontent.VoiceToContentDialogFragment;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
@@ -179,7 +174,6 @@ import kotlin.jvm.functions.Function3;
 
 import static androidx.lifecycle.Lifecycle.State.STARTED;
 import static org.wordpress.android.WordPress.SITE;
-import static org.wordpress.android.login.LoginAnalyticsListener.CreatedAccountSource.EMAIL;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 
@@ -193,14 +187,12 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         BloggingPromptsReminderSchedulerListener,
         BloggingPromptsOnboardingListener,
         UpdateSelectedSiteListener,
-        WpAppNotifierHandler.NotifierListener {
+        ApplicationPasswordReauthNotifier.Listener {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_CREATE_SITE = "ARG_CREATE_SITE";
     public static final String ARG_IS_MAGIC_LINK_LOGIN = "ARG_IS_MAGIC_LINK_LOGIN";
-    public static final String ARG_IS_MAGIC_LINK_SIGNUP = "ARG_IS_MAGIC_LINK_SIGNUP";
     public static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
-    public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
     public static final String ARG_SHOW_SITE_CREATION = "show_site_creation";
     public static final String ARG_SITE_CREATION_SOURCE = "ARG_SITE_CREATION_SOURCE";
     public static final String ARG_WP_COM_SIGN_UP = "sign_up";
@@ -220,10 +212,10 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     public static final String ARG_DISMISS_NOTIFICATION = "dismiss_notification";
     public static final String ARG_OPEN_BLOGGING_REMINDERS = "show_blogging_reminders_flow";
     public static final String ARG_SELECTED_SITE = "SELECTED_SITE_ID";
+    public static final String ARG_SELECT_PRIMARY_SITE = "SELECT_PRIMARY_SITE";
     public static final String ARG_STAT_TO_TRACK = "stat_to_track";
     public static final String ARG_EDITOR_ORIGIN = "editor_origin";
     public static final String ARG_IS_CHANGING_CONFIGURATION = "IS_CHANGING_CONFIGURATION";
-    public static final String ARG_BYPASS_MIGRATION = "bypass_migration";
     public static final String ARG_MEDIA = "show_media";
     public static final String ARG_ME = "show_me";
     public static final String ARG_OPEN_PAGE_MESSAGE = "open_page_message";
@@ -233,7 +225,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     private TextView mConnectionBar;
     private JetpackConnectionSource mJetpackConnectSource;
     private boolean mIsMagicLinkLogin;
-    private boolean mIsMagicLinkSignup;
 
     private WPMainActivityViewModel mViewModel;
     private ModalLayoutPickerViewModel mMLPViewModel;
@@ -248,7 +239,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Inject SiteStore mSiteStore;
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
-    @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
+    @Inject protected LoginAnalyticsTracker mLoginAnalyticsTracker;
     @Inject ShortcutsNavigator mShortcutsNavigator;
     @Inject ShortcutUtils mShortcutUtils;
     // Injected to ensure the store responds to dispatched actions
@@ -265,12 +256,10 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
     @Inject CreateSiteNotificationScheduler mCreateSiteNotificationScheduler;
     @Inject WeeklyRoundupScheduler mWeeklyRoundupScheduler;
-    @Inject JetpackAppMigrationFlowUtils mJetpackAppMigrationFlowUtils;
     @Inject DeepLinkOpenWebLinksWithJetpackHelper mDeepLinkOpenWebLinksWithJetpackHelper;
     @Inject OpenWebLinksWithJetpackFlowFeatureConfig mOpenWebLinksWithJetpackFlowFeatureConfig;
     @Inject QRCodeAuthFlowFeatureConfig mQrCodeAuthFlowFeatureConfig;
     @Inject JetpackFeatureRemovalOverlayUtil mJetpackFeatureRemovalOverlayUtil;
-    @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -280,11 +269,16 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
     @Inject ActivityNavigator mActivityNavigator;
 
+    @Inject SupportRouting mSupportRouting;
+
     @Inject SnackbarSequencer mSnackbarSequencer;
 
     @Inject PerAppLocaleManager mPerAppLocaleManager;
 
-    @Inject WpAppNotifierHandler mWpAppNotifierHandler;
+    @Inject ApplicationPasswordReauthNotifier mReauthNotifier;
+
+    @Inject NetworkConnectionMonitor mNetworkConnectionMonitor;
+    @Inject ReaderTagsAndSitesUpdater mReaderTagsAndSitesUpdater;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -325,20 +319,18 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         });
 
         mIsMagicLinkLogin = getIntent().getBooleanExtra(ARG_IS_MAGIC_LINK_LOGIN, false);
-        mIsMagicLinkSignup = getIntent().getBooleanExtra(ARG_IS_MAGIC_LINK_SIGNUP, false);
         mJetpackConnectSource = (JetpackConnectionSource) getIntent().getSerializableExtra(ARG_JETPACK_CONNECT_SOURCE);
         String authTokenToSet = null;
 
         mBottomNav = findViewById(R.id.bottom_navigation);
-        mBottomNav.init(getSupportFragmentManager(), this, mJetpackFeatureRemovalPhaseHelper);
+        mBottomNav.init(getSupportFragmentManager(), this);
 
         if (savedInstanceState == null) {
             if (!AppPrefs.isInstallationReferrerObtained()) {
                 InstallationReferrerServiceStarter.startService(this, null);
             }
 
-            if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)
-                && !AppPrefs.getIsJetpackMigrationInProgress()) {
+            if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
                 NotificationType notificationType =
                         (NotificationType) getIntent().getSerializableExtra(ARG_NOTIFICATION_TYPE);
                 if (notificationType != null) {
@@ -387,26 +379,11 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                                 (SiteModel) getIntent().getSerializableExtra(SITE), mAccountStore.hasAccessToken());
                     }
                 }
+            } else if (mIsMagicLinkLogin) {
+                authTokenToSet = getAuthToken();
             } else {
-                if (mIsMagicLinkLogin) {
-                    authTokenToSet = getAuthToken();
-                } else {
-                    boolean shouldBypassMigration = (getIntent() != null && getIntent()
-                            .getBooleanExtra(ARG_BYPASS_MIGRATION, false));
-                    if (!shouldBypassMigration && mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
-                        mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow();
-                    } else {
-                        if (shouldBypassMigration) {
-                            AppPrefs.setIsJetpackMigrationInProgress(false);
-                            AppPrefs.saveIsFirstTrySharedLoginJetpack(true);
-                            AppPrefs.saveIsFirstTryUserFlagsJetpack(true);
-                            AppPrefs.saveIsFirstTryReaderSavedPostsJetpack(true);
-                            AppPrefs.saveIsFirstTryBloggingRemindersSyncJetpack(true);
-                        }
-                        showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
-                    }
-                    finish();
-                }
+                showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
+                finish();
             }
             checkDismissNotification();
             checkTrackAnalyticsEvent();
@@ -424,16 +401,12 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         mDispatcher.register(this);
         EventBus.getDefault().register(this);
 
+        mNetworkConnectionMonitor.isConnected().observe(this, this::updateConnectionBar);
+
         if (authTokenToSet != null) {
             // Save Token to the AccountStore. This will trigger a onAuthenticationChanged.
             UpdateTokenPayload payload = new UpdateTokenPayload(authTokenToSet);
             mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
-        } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
-            ActivityLauncher.showSignupEpilogue(this,
-                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),
-                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS),
-                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
-                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME), false);
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SITE_CREATION, false) && savedInstanceState == null) {
             ActivityLauncher.newBlogForResult(this,
                     SiteCreationSource.fromString(getIntent().getStringExtra(ARG_SITE_CREATION_SOURCE)));
@@ -456,6 +429,12 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             onSetPromptReminderClick(getIntent().getIntExtra(ARG_OPEN_BLOGGING_REMINDERS, 0));
         }
 
+        // Check if we should select the primary site (e.g., after WP.com login)
+        if (getIntent().getBooleanExtra(ARG_SELECT_PRIMARY_SITE, false)) {
+            getIntent().removeExtra(ARG_SELECT_PRIMARY_SITE);
+            mSelectedSiteRepository.removeSite();
+            initSelectedSite();
+        }
         // Check if a specific site should be selected (e.g., after adding a self-hosted site)
         int selectedSiteId = getIntent().getIntExtra(ARG_SELECTED_SITE, SelectedSiteRepository.UNAVAILABLE);
         if (selectedSiteId != SelectedSiteRepository.UNAVAILABLE) {
@@ -528,9 +507,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         mAnalyticsTrackerWrapper.track(
                 Stat.JETPACK_FEATURE_INCORRECTLY_ACCESSED, trackingProperties);
         JetpackFeatureFullScreenOverlayFragment.newInstance(
-                null,
                 false,
-                true,
                 JetpackFeatureCollectionOverlaySource.DISABLED_ENTRY_POINT
         ).show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
     }
@@ -616,9 +593,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     private void displayJetpackFeatureCollectionOverlayIfNeeded() {
         if (mJetpackFeatureRemovalOverlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime()) {
             JetpackFeatureFullScreenOverlayFragment.newInstance(
-                    null,
                     false,
-                    true,
                     JetpackFeatureCollectionOverlaySource.APP_OPEN
             ).show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
         }
@@ -669,8 +644,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
         // Setup Observers
         mViewModel.getAskForPrivacyConsent().observe(this, action -> showPrivacyConsentDialog());
-        mViewModel.getShowPrivacySettings().observe(this, action -> showPrivacySettingsScreen(null));
-        mViewModel.getShowPrivacySettingsWithError().observe(this, this::showPrivacySettingsScreen);
+        mViewModel.getShowPrivacySettings().observe(this, action -> showPrivacySettingsScreen());
+        mViewModel.getShowPrivacySettingsWithError().observe(this, action -> showPrivacySettingsScreen());
         mViewModel.getFabUiState().observe(this, fabUiState -> {
             String message = getResources().getString(fabUiState.getCreateContentMessageId());
 
@@ -803,7 +778,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
     private void triggerCreatePageFlow(ActionType actionType) {
         if (mMLPViewModel.canShowModalLayoutPicker()
-            && mJetpackFeatureRemovalPhaseHelper.shouldShowTemplateSelectionInPages()) {
+            && mBuildConfigWrapper.isJetpackApp()) {
             mMLPViewModel.createPageFlowTriggered(getCreatePageDashboardSourceFromActionType(actionType));
         } else {
             if (actionType == ActionType.CREATE_NEW_PAGE_FROM_PAGES_CARD) {
@@ -852,7 +827,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                     break;
                 case ARG_NOTIFICATIONS:
                     setUpMainView();
-                    if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+                    if (!mBuildConfigWrapper.isJetpackApp()) {
                         Map<String, String> trackingProperties = new HashMap<>();
                         trackingProperties.put("calling_function", "deeplink_notifications");
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
@@ -862,7 +837,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                     break;
                 case ARG_READER:
                     setUpMainView();
-                    if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+                    if (!mBuildConfigWrapper.isJetpackApp()) {
                         Map<String, String> trackingProperties = new HashMap<>();
                         trackingProperties.put("calling_function", "deeplink_reader");
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
@@ -889,23 +864,14 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                     if (!mSelectedSiteRepository.hasSelectedSite()) {
                         initSelectedSite();
                     }
-                    if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+                    if (!mBuildConfigWrapper.isJetpackApp()) {
                         Map<String, String> trackingProperties = new HashMap<>();
                         trackingProperties.put("calling_function", "deeplink_stats");
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
                         break;
                     }
-                    if (mJetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-                        ActivityLauncher.showJetpackStaticPoster(this);
-                        break;
-                    }
-                    if (intent.hasExtra(ARG_STATS_TIMEFRAME)) {
-                        ActivityLauncher.viewBlogStatsForTimeframe(this, getSelectedSite(),
-                                (StatsTimeframe) intent.getSerializableExtra(ARG_STATS_TIMEFRAME),
-                                StatsLaunchedFrom.LINK);
-                    } else {
-                        ActivityLauncher.viewBlogStats(this, getSelectedSite(), StatsLaunchedFrom.LINK);
-                    }
+                    mActivityNavigator.openStats(this, getSelectedSite(),
+                            (StatsTimeframe) intent.getSerializableExtra(ARG_STATS_TIMEFRAME));
                     break;
                 case ARG_PAGES:
                     if (!mSelectedSiteRepository.hasSelectedSite()) {
@@ -946,7 +912,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         // init selected site, this is the same as in onResume
         initSelectedSite();
 
-        ActivityLauncher.viewZendeskTickets(this, getSelectedSite());
+        ActivityLauncher.viewZendeskTickets(this, getSelectedSite(), mSupportRouting);
     }
 
     /*
@@ -1105,7 +1071,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
         setUpMainView();
 
-        mWpAppNotifierHandler.addListener(this);
+        mReauthNotifier.addListener(this);
 
         // Load selected site
         initSelectedSite();
@@ -1177,6 +1143,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                   .show();
     }
 
+    @SuppressWarnings("deprecation")
     private void announceTitleForAccessibility(PageType pageType) {
         getWindow().getDecorView().announceForAccessibility(mBottomNav.getContentDescriptionForPageType(pageType));
     }
@@ -1239,7 +1206,14 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             return;
         }
 
-        ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source, promptId, entryPoint);
+        SiteModel selectedSite = getSelectedSite();
+        if (selectedSite == null) {
+            // Sites exist but none is selected - tell the user and route them to My Sites to pick one
+            ToastUtils.showToast(this, R.string.site_cannot_be_loaded, ToastUtils.Duration.LONG);
+            mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+            return;
+        }
+        ActivityLauncher.addNewPostForResult(this, selectedSite, false, source, promptId, entryPoint);
     }
 
     private void launchVoiceToContent() {
@@ -1255,19 +1229,19 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         switch (pageType) {
             case MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
-                mJetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(PageType.MY_SITE, getSelectedSite());
+                mAnalyticsTrackerWrapper.track(AnalyticsTracker.Stat.MY_SITE_ACCESSED, getSelectedSite());
                 break;
             case READER:
                 ActivityId.trackLastActivity(ActivityId.READER);
-                mJetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(PageType.READER);
+                mAnalyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_ACCESSED);
                 break;
             case NOTIFS:
                 ActivityId.trackLastActivity(ActivityId.NOTIFICATIONS);
-                mJetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(PageType.NOTIFS);
+                mAnalyticsTrackerWrapper.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
                 break;
             case ME:
                 ActivityId.trackLastActivity(ActivityId.ME);
-                mJetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(PageType.ME);
+                mAnalyticsTrackerWrapper.track(AnalyticsTracker.Stat.ME_ACCESSED);
                 break;
             default:
                 break;
@@ -1304,7 +1278,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Override
     @SuppressWarnings("deprecation")
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.e("WPMainActivity", "onActivityResult: " + requestCode + " " + resultCode);
         super.onActivityResult(requestCode, resultCode, data);
         if (!mSelectedSiteRepository.hasSelectedSite()) {
             initSelectedSite();
@@ -1395,7 +1368,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                 }
                 break;
             case RequestCodes.APP_SETTINGS:
-                if (resultCode == AppSettingsFragment.LANGUAGE_CHANGED) {
+                if (resultCode == AppSettingsActivity.LANGUAGE_CHANGED) {
                     appLanguageChanged();
                 }
                 break;
@@ -1442,7 +1415,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
     private void startWithNewAccount() {
         mGCMRegistrationScheduler.scheduleRegistration();
-        ReaderUpdateServiceStarter.startService(this, EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
+        mReaderTagsAndSitesUpdater.update(EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
     }
 
     private MySiteFragment getMySiteFragment() {
@@ -1487,25 +1460,12 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
         if (mAccountStore.hasAccessToken()) {
             if (mIsMagicLinkLogin) {
-                if (mIsMagicLinkSignup) {
-                    // Sets a flag that we need to track a magic link sign up.
-                    // We'll handle it in onAccountChanged so we know we have
-                    // updated account info.
-                    AppPrefs.setShouldTrackMagicLinkSignup(true);
-                    mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
-                    if (mJetpackConnectSource != null) {
-                        ActivityLauncher.continueJetpackConnect(this, mJetpackConnectSource, getSelectedSite());
-                    } else {
-                        ActivityLauncher.showSignupEpilogue(this, null, null, null, null, true);
-                    }
-                } else {
-                    mLoginAnalyticsListener.trackLoginMagicLinkSucceeded();
+                mLoginAnalyticsTracker.trackLoginMagicLinkSucceeded();
 
-                    if (mJetpackConnectSource != null) {
-                        ActivityLauncher.continueJetpackConnect(this, mJetpackConnectSource, getSelectedSite());
-                    } else {
-                        initSelectedSite();
-                    }
+                if (mJetpackConnectSource != null) {
+                    ActivityLauncher.continueJetpackConnect(this, mJetpackConnectSource, getSelectedSite());
+                } else {
+                    initSelectedSite();
                 }
             }
         }
@@ -1516,27 +1476,14 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     public void onAccountChanged(OnAccountChanged event) {
         // Sign-out is handled in `handleSiteRemoved`, no need to show the signup flow here
         if (mAccountStore.hasAccessToken()) {
-            if (mBottomNav != null) mBottomNav.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
-            if (AppPrefs.getShouldTrackMagicLinkSignup()) {
-                trackMagicLinkSignupIfNeeded();
+            if (mBottomNav != null) {
+                mBottomNav.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
+                if (event.causeOfChange == AccountAction.FETCH_ACCOUNT) {
+                    mBottomNav.refreshGravatar();
+                }
             }
         }
     }
-
-    /**
-     * Bumps stats related to a magic link sign up provided the account has been updated with
-     * the username and email address needed to refresh analytics meta data.
-     */
-    private void trackMagicLinkSignupIfNeeded() {
-        AccountModel account = mAccountStore.getAccount();
-        if (!TextUtils.isEmpty(account.getUserName()) && !TextUtils.isEmpty(account.getEmail())) {
-            mLoginAnalyticsListener.trackCreatedAccount(account.getUserName(), account.getEmail(), EMAIL);
-            mLoginAnalyticsListener.trackSignupMagicLinkSucceeded();
-            mLoginAnalyticsListener.trackAnalyticsSignIn(true);
-            AppPrefs.removeShouldTrackMagicLinkSignup();
-        }
-    }
-
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -1548,12 +1495,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(NotificationEvents.NotificationsUnseenStatus event) {
         if (mBottomNav != null) mBottomNav.showNoteBadge(event.hasUnseenNotes);
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(ConnectionChangeReceiver.ConnectionChangeEvent event) {
-        updateConnectionBar(event.isConnected());
     }
 
     private void checkConnection() {
@@ -1780,7 +1721,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     protected void onPause() {
         super.onPause();
 
-        mWpAppNotifierHandler.removeListener(this);
+        mReauthNotifier.removeListener(this);
     }
 
     private void enableDeepLinkingComponentsIfNeeded() {
@@ -1805,15 +1746,9 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         }
     }
 
-    private void showPrivacySettingsScreen(@Nullable Boolean requestedAnalyticsValue) {
+    private void showPrivacySettingsScreen() {
         Intent intent = new Intent(this, AppSettingsActivity.class);
         intent.putExtra(AppSettingsActivity.EXTRA_SHOW_PRIVACY_SETTINGS, true);
-        if (requestedAnalyticsValue != null) {
-            intent.putExtra(
-                    AppSettingsActivity.EXTRA_REQUESTED_ANALYTICS_VALUE_FROM_ERROR,
-                    requestedAnalyticsValue
-            );
-        }
 //        startActivityForResult(intent, RequestCodes.SETTINGS); // TODO: do we need to handle the result?
         startActivity(intent);
     }
@@ -1838,7 +1773,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         }
     }
 
-    @Override public void onRequestedWithInvalidAuthentication(@NonNull String siteUrl) {
+    @Override public void onReauthRequired(@NonNull String siteUrl) {
         showApplicationPasswordOffReauthenticateDialog(siteUrl);
     }
 

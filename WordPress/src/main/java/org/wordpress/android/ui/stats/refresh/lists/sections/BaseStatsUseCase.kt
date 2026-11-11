@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -44,6 +45,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     private var domainModel: DOMAIN_MODEL? = null
     private var uiState: UI_STATE = defaultUiState
     private var updateJob: Job? = null
+    private val fetchInProgress = AtomicBoolean(false)
 
     private val _liveData = MutableLiveData<UseCaseModel>()
     val liveData: LiveData<UseCaseModel> = _liveData
@@ -72,9 +74,22 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
             }
         }
         if (refresh || domainState != SUCCESS || emptyDb) {
+            // Guard against duplicate concurrent loads — e.g. the initial start() load racing the
+            // onResume refresh. A forced refresh (pull-to-refresh) still proceeds so it can bypass
+            // the STALE_PERIOD cache.
+            val startedFetch = fetchInProgress.compareAndSet(false, true)
+            if (!startedFetch && !forced) {
+                return
+            }
             updateUseCaseState(LOADING)
-            val state = fetchRemoteData(forced)
-            evaluateState(state)
+            try {
+                val state = fetchRemoteData(forced)
+                evaluateState(state)
+            } finally {
+                if (startedFetch) {
+                    fetchInProgress.set(false)
+                }
+            }
         }
     }
 

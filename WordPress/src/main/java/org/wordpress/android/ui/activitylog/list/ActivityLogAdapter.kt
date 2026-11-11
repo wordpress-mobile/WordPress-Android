@@ -62,7 +62,9 @@ class ActivityLogAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActivityLogViewHolder {
         return when (viewType) {
             ViewType.PROGRESS.id -> ProgressItemViewHolder(parent)
-            ViewType.EVENT.id -> EventItemViewHolder(parent, itemClickListener, secondaryActionClickListener)
+            ViewType.EVENT.id -> EventItemViewHolder(
+                parent, itemClickListener, secondaryActionClickListener, uiHelpers
+            )
             ViewType.HEADER.id -> HeaderItemViewHolder(parent)
             ViewType.FOOTER.id -> FooterItemViewHolder(parent)
             ViewType.LOADING.id -> LoadingItemViewHolder(parent)

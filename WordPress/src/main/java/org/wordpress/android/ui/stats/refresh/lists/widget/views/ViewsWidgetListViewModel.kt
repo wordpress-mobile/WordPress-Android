@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget.views
 
 import androidx.annotation.LayoutRes
-import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
@@ -16,6 +15,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OVERVIEW_ITEMS_TO_LOAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewMapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
+import org.wordpress.android.ui.stats.refresh.lists.widget.utils.runBlockingForWidget
 import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
@@ -50,7 +50,7 @@ class ViewsWidgetListViewModel
         siteId?.apply {
             val site = siteStore.getSiteByLocalId(this)
             if (site != null) {
-                runBlocking {
+                runBlockingForWidget {
                     visitsAndViewsStore.fetchVisits(site, DAYS, Top(OVERVIEW_ITEMS_TO_LOAD))
                 }
                 val visitsAndViewsModel = visitsAndViewsStore.getVisits(

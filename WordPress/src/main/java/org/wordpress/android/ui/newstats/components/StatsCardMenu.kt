@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.newstats.components
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.offset
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Delete
@@ -23,7 +24,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+
+private val IconButtonGlyphInset = 12.dp
 
 /**
  * Standard three-dots menu for stats cards.
@@ -53,7 +57,12 @@ fun StatsCardMenu(
     var expanded by remember { mutableStateOf(false) }
     var moveSubMenuExpanded by remember { mutableStateOf(false) }
 
-    Box(modifier = modifier) {
+    // The M3 IconButton centers its 24dp glyph in a 48dp touch target, leaving a 12dp inset on
+    // each side. Nudging the button toward the trailing edge by that inset lands the glyph on the
+    // card's content keyline, matching where the Stats top app bar overflow icon sits relative to
+    // the screen edge, instead of appearing over-padded (CMM-2185). offset() is layout-direction
+    // aware, so this stays correct in RTL.
+    Box(modifier = modifier.offset(x = IconButtonGlyphInset)) {
         IconButton(onClick = { expanded = true }) {
             Icon(
                 imageVector = Icons.Default.MoreVert,

@@ -8,9 +8,11 @@ import android.content.res.TypedArray;
 import android.preference.SwitchPreference;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -25,6 +27,7 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
     private ColorStateList mTint;
     private ColorStateList mThumbTint;
     private int mStartOffset = 0;
+    private boolean mAlignSwitchWithTitle = false;
 
     public WPSwitchPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -43,6 +46,8 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
                 mThumbTint = array.getColorStateList(index);
             } else if (index == R.styleable.SummaryEditTextPreference_startOffset) {
                 mStartOffset = array.getDimensionPixelSize(index, 0);
+            } else if (index == R.styleable.SummaryEditTextPreference_alignSwitchWithTitle) {
+                mAlignSwitchWithTitle = array.getBoolean(index, false);
             }
         }
 
@@ -83,6 +88,29 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
         // Add padding to start of switch.
         ViewCompat.setPaddingRelative(getSwitch((ViewGroup) view),
                 getContext().getResources().getDimensionPixelSize(R.dimen.margin_extra_large), 0, 0, 0);
+
+        alignSwitch(view);
+    }
+
+    /**
+     * Rows whose summary wraps to several lines look broken with the switch stranded in the
+     * vertical centre, so they can opt into having it sit alongside the title instead. Both
+     * branches are applied because preference rows are recycled.
+     */
+    private void alignSwitch(@NonNull View view) {
+        View widgetFrame = view.findViewById(android.R.id.widget_frame);
+        if (!(widgetFrame instanceof LinearLayout)) {
+            return;
+        }
+
+        LinearLayout frame = (LinearLayout) widgetFrame;
+        frame.setGravity(Gravity.END | (mAlignSwitchWithTitle ? Gravity.TOP : Gravity.CENTER_VERTICAL));
+
+        // matches the vertical padding the preference layout gives the title and summary
+        int topPadding = mAlignSwitchWithTitle
+                ? getContext().getResources().getDimensionPixelSize(R.dimen.margin_extra_large) : 0;
+        frame.setPaddingRelative(frame.getPaddingStart(), topPadding, frame.getPaddingEnd(),
+                frame.getPaddingBottom());
     }
 
     private Switch getSwitch(ViewGroup parentView) {

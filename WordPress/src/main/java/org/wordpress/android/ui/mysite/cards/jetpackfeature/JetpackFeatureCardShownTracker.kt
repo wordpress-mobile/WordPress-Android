@@ -1,15 +1,14 @@
 package org.wordpress.android.ui.mysite.cards.jetpackfeature
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.jetpackoverlay.JETPACK_REMOVAL_TRACKING_NAME
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.JETPACK_FEATURE_CARD
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
 class JetpackFeatureCardShownTracker @Inject constructor(
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
     private val cardsShownTracked = mutableListOf<MySiteCardAndItem.Type>()
 
@@ -23,7 +22,7 @@ class JetpackFeatureCardShownTracker @Inject constructor(
                 cardsShownTracked.add(itemType)
                 analyticsTrackerWrapper.track(
                     Stat.REMOVE_FEATURE_CARD_DISPLAYED,
-                    mapOf("phase" to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName)
+                    mapOf("phase" to JETPACK_REMOVAL_TRACKING_NAME)
                 )
             }
         }

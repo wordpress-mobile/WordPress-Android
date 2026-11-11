@@ -675,6 +675,10 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         if (!isAdded()) {
             return;
         }
+        // The editor loads and saves the comment over the network, so don't open it offline.
+        if (!NetworkUtils.checkConnection(getActivity())) {
+            return;
+        }
         if (mCommentSource != null) {
             AnalyticsUtils.trackCommentActionWithSiteDetails(
                     Stat.COMMENT_EDITOR_OPENED,
@@ -705,7 +709,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         switch (mCommentSource) {
             case SITE_COMMENTS:
                 if (mComment != null) {
-                    return new SiteCommentIdentifier(mComment.getId(), mComment.getRemoteCommentId());
+                    return new SiteCommentIdentifier(mComment.getRemoteCommentId());
                 } else {
                     return null;
                 }
@@ -834,7 +838,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             binding.textName.setOnClickListener(authorListener);
             binding.textName.setTextColor(ContextExtensionsKt.getColorFromAttribute(
                     binding.textName.getContext(),
-                    com.google.android.material.R.attr.colorPrimary)
+                    androidx.appcompat.R.attr.colorPrimary)
             );
         } else {
             binding.textName.setTextColor(ContextExtensionsKt.getColorFromAttribute(
@@ -886,7 +890,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                           + " <font color=" + HtmlUtils.colorResToHtmlColor(getActivity(),
                     ContextExtensionsKt.getColorResIdFromAttribute(
                             requireActivity(),
-                            com.google.android.material.R.attr.colorPrimary
+                            androidx.appcompat.R.attr.colorPrimary
                     ))
                           + ">"
                           + postTitle.trim()
@@ -1198,7 +1202,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                 statusTextResId = R.string.comment_status_spam;
                 statusColor = ContextExtensionsKt.getColorFromAttribute(
                         requireActivity(),
-                        com.google.android.material.R.attr.colorError
+                        androidx.appcompat.R.attr.colorError
                 );
                 break;
             case DELETED:
@@ -1211,7 +1215,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                 statusTextResId = R.string.comment_status_trash;
                 statusColor = ContextExtensionsKt.getColorFromAttribute(
                         requireActivity(),
-                        com.google.android.material.R.attr.colorError
+                        androidx.appcompat.R.attr.colorError
                 );
                 break;
         }
@@ -1480,10 +1484,11 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                     .OnNoteCommentLikeChanged(mNote, actionBinding.btnLike.isActivated()));
         }
 
-        actionBinding.btnLike.announceForAccessibility(
-                getText(actionBinding.btnLike.isActivated() ? R.string.comment_liked_talkback
-                        : R.string.comment_unliked_talkback)
-        );
+        @SuppressWarnings("deprecation")
+        CharSequence announcement = getText(actionBinding.btnLike.isActivated()
+                ? R.string.comment_liked_talkback
+                : R.string.comment_unliked_talkback);
+        actionBinding.btnLike.announceForAccessibility(announcement);
     }
 
     private void toggleLikeButton(
@@ -1667,6 +1672,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void announceCommentStatusChangeForAccessibility(CommentStatus newStatus) {
         int resId = -1;
         switch (newStatus) {

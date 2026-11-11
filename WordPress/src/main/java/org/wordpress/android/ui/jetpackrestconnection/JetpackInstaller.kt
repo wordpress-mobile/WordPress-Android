@@ -20,10 +20,15 @@ class JetpackInstaller @Inject constructor(
     private val jetpackConnectionHelper: JetpackConnectionHelper,
     private val appLogWrapper: AppLogWrapper,
 ) {
+    /**
+     * Installs/activates the Jetpack plugin on [site]. [onInvalidAuth] is invoked if the site rejects the
+     * application-password credentials (401) — handled locally by the caller rather than via the app-wide
+     * notifier, so it can't race a concurrent provisioning heal (see [JetpackConnectionHelper.initWpApiClient]).
+     */
     @Suppress("TooGenericExceptionCaught")
-    suspend fun installJetpack(site: SiteModel): Result<PluginStatus> {
+    suspend fun installJetpack(site: SiteModel, onInvalidAuth: () -> Unit): Result<PluginStatus> {
         return try {
-            val apiClient = jetpackConnectionHelper.initWpApiClient(site)
+            val apiClient = jetpackConnectionHelper.initWpApiClient(site, onInvalidAuth)
             val info = getPluginInfo(apiClient)
             when (info?.status) {
                 PluginStatus.ACTIVE, PluginStatus.NETWORK_ACTIVE -> {

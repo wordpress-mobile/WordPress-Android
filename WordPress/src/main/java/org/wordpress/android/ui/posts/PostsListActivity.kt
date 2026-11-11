@@ -32,6 +32,7 @@ import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
@@ -123,11 +124,19 @@ class PostsListActivity : BaseAppCompatActivity(),
     @Inject
     internal lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
+    @Inject
+    internal lateinit var activityNavigator: ActivityNavigator
+
     private lateinit var site: SiteModel
     private lateinit var binding: PostListActivityBinding
 
     override fun getSite() = site
     override fun getEditPostRepository() = editPostRepository
+    override fun syncFeaturedImageIdToEditor() {
+        // No editor is hosted here, so there is nothing to keep in sync.
+    }
+    // The quick-publish flow has no editor, so it can't fully support featured-image editing.
+    override fun supportsFeaturedImageEditing() = false
 
     private lateinit var viewModel: PostListMainViewModel
 
@@ -271,7 +280,8 @@ class PostsListActivity : BaseAppCompatActivity(),
                     action,
                     remotePreviewLogicHelper,
                     previewStateHelper,
-                    blazeFeatureUtils
+                    blazeFeatureUtils,
+                    activityNavigator
                 )
             }
         }
@@ -300,12 +310,12 @@ class PostsListActivity : BaseAppCompatActivity(),
             )
         }
         setupActions()
-        viewModel.openPrepublishingBottomSheet.observeEvent(this@PostsListActivity) {
+        viewModel.openPrepublishingBottomSheet.observeEvent(this@PostsListActivity) { isPage ->
             val fragment = supportFragmentManager.findFragmentByTag(PrepublishingBottomSheetFragment.TAG)
             if (fragment == null) {
                 val prepublishingFragment = newInstance(
                     site = site,
-                    isPage = editPostRepository.isPage
+                    isPage = isPage
                 )
                 prepublishingFragment.show(supportFragmentManager, PrepublishingBottomSheetFragment.TAG)
             }

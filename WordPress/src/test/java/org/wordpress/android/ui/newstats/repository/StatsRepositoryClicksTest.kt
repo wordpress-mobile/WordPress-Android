@@ -11,9 +11,11 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import java.time.Clock
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.datasource.ClickChildDataItem
 import org.wordpress.android.ui.newstats.datasource.ClickDataItem
 import org.wordpress.android.ui.newstats.datasource.ClicksDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
@@ -33,7 +35,9 @@ class StatsRepositoryClicksTest : BaseUnitTest() {
     fun setUp() {
         repository = StatsRepository(
             statsDataSource = statsDataSource,
+            statsResultCache = StatsResultCache(),
             appLogWrapper = appLogWrapper,
+            clock = Clock.systemDefaultZone(),
             ioDispatcher = testDispatcher()
         )
     }
@@ -65,6 +69,55 @@ class StatsRepositoryClicksTest : BaseUnitTest() {
         }
 
     @Test
+    fun `given a click with a url, when fetchClicks, then the url propagates`() =
+        test {
+            whenever(statsDataSource.fetchClicks(any(), any(), any()))
+                .thenReturn(
+                    ClicksDataResult.Success(createClickItems())
+                )
+
+            val result = repository.fetchClicks(
+                TEST_SITE_ID, StatsPeriod.Last7Days
+            )
+
+            val success = result as ClicksResult.Success
+            assertThat(success.items[0].url).isEqualTo(TEST_CLICK_URL_1)
+            assertThat(success.items[1].url).isEqualTo(TEST_CLICK_URL_2)
+        }
+
+    @Test
+    fun `given a click group with children, when fetchClicks, then children propagate`() =
+        test {
+            val grouped = listOf(
+                ClickDataItem(
+                    name = "Grouped source",
+                    url = null,
+                    clicks = 42,
+                    children = listOf(
+                        ClickChildDataItem(
+                            name = "Child link",
+                            url = TEST_CLICK_URL_1,
+                            clicks = 42
+                        )
+                    )
+                )
+            )
+            whenever(statsDataSource.fetchClicks(any(), any(), any()))
+                .thenReturn(ClicksDataResult.Success(grouped))
+
+            val result = repository.fetchClicks(
+                TEST_SITE_ID, StatsPeriod.Last7Days
+            )
+
+            val success = result as ClicksResult.Success
+            assertThat(success.items[0].url).isNull()
+            assertThat(success.items[0].children).hasSize(1)
+            assertThat(success.items[0].children[0].name).isEqualTo("Child link")
+            assertThat(success.items[0].children[0].url).isEqualTo(TEST_CLICK_URL_1)
+            assertThat(success.items[0].children[0].views).isEqualTo(42)
+        }
+
+    @Test
     fun `given successful response, when fetchClicks, then totalClicks is sum of item clicks`() =
         test {
             whenever(statsDataSource.fetchClicks(any(), any(), any()))
@@ -84,15 +137,34 @@ class StatsRepositoryClicksTest : BaseUnitTest() {
         }
 
     @Test
+    fun `given a click icon, when fetchClicks, then it propagates`() =
+        test {
+            val items = listOf(
+                ClickDataItem(name = "Link 1", url = null, clicks = 150, iconUrl = TEST_ICON_URL),
+                ClickDataItem(name = "Link 2", url = null, clicks = 100)
+            )
+            whenever(statsDataSource.fetchClicks(any(), any(), any()))
+                .thenReturn(ClicksDataResult.Success(items))
+                .thenReturn(ClicksDataResult.Success(emptyList()))
+
+            val result = repository.fetchClicks(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+            val success = result as ClicksResult.Success
+            assertThat(success.items[0].iconUrl).isEqualTo(TEST_ICON_URL)
+            // The API knows no icon for this one, and the row shows none rather than a placeholder.
+            assertThat(success.items[1].iconUrl).isNull()
+        }
+
+    @Test
     fun `given current and previous data, when fetchClicks, then change is calculated correctly`() =
         test {
             val currentItems = listOf(
-                ClickDataItem("Link 1", 150),
-                ClickDataItem("Link 2", 100)
+                ClickDataItem(name = "Link 1", url = null, clicks = 150),
+                ClickDataItem(name = "Link 2", url = null, clicks = 100)
             )
             val previousItems = listOf(
-                ClickDataItem("Link 1", 100),
-                ClickDataItem("Link 2", 100)
+                ClickDataItem(name = "Link 1", url = null, clicks = 100),
+                ClickDataItem(name = "Link 2", url = null, clicks = 100)
             )
 
             whenever(statsDataSource.fetchClicks(any(), any(), any()))
@@ -117,10 +189,10 @@ class StatsRepositoryClicksTest : BaseUnitTest() {
     fun `given item in both periods, when fetchClicks, then previousClicks is set correctly`() =
         test {
             val currentItems = listOf(
-                ClickDataItem("Link 1", 150)
+                ClickDataItem(name = "Link 1", url = null, clicks = 150)
             )
             val previousItems = listOf(
-                ClickDataItem("Link 1", 100)
+                ClickDataItem(name = "Link 1", url = null, clicks = 100)
             )
 
             whenever(statsDataSource.fetchClicks(any(), any(), any()))
@@ -146,7 +218,7 @@ class StatsRepositoryClicksTest : BaseUnitTest() {
     fun `given new item not in previous period, when fetchClicks, then previousClicks is zero`() =
         test {
             val currentItems = listOf(
-                ClickDataItem("New Link", 100)
+                ClickDataItem(name = "New Link", url = null, clicks = 100)
             )
             val previousItems = emptyList<ClickDataItem>()
 
@@ -175,7 +247,7 @@ class StatsRepositoryClicksTest : BaseUnitTest() {
     fun `given previous fetch fails, when fetchClicks, then previousClicks defaults to zero`() =
         test {
             val currentItems = listOf(
-                ClickDataItem("Link 1", 100)
+                ClickDataItem(name = "Link 1", url = null, clicks = 100)
             )
 
             whenever(statsDataSource.fetchClicks(any(), any(), any()))
@@ -370,10 +442,12 @@ class StatsRepositoryClicksTest : BaseUnitTest() {
     private fun createClickItems() = listOf(
         ClickDataItem(
             name = TEST_CLICK_NAME_1,
+            url = TEST_CLICK_URL_1,
             clicks = TEST_CLICK_CLICKS_1
         ),
         ClickDataItem(
             name = TEST_CLICK_NAME_2,
+            url = TEST_CLICK_URL_2,
             clicks = TEST_CLICK_CLICKS_2
         )
     )
@@ -383,7 +457,10 @@ class StatsRepositoryClicksTest : BaseUnitTest() {
 
         private const val TEST_CLICK_NAME_1 = "example.com"
         private const val TEST_CLICK_NAME_2 = "wordpress.org"
+        private const val TEST_CLICK_URL_1 = "https://example.com/"
+        private const val TEST_CLICK_URL_2 = "https://wordpress.org/"
         private const val TEST_CLICK_CLICKS_1 = 500L
         private const val TEST_CLICK_CLICKS_2 = 300L
+        private const val TEST_ICON_URL = "https://example.com/favicon.ico"
     }
 }

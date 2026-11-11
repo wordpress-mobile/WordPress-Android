@@ -25,7 +25,7 @@ public class NotificationsTable {
     private static final String NOTIFICATIONS_TABLE = "tbl_notifications";
 
     private static SQLiteDatabase getDb() {
-        return WordPress.wpDB.getDatabase();
+        return WordPress.getWpDB().getDatabase();
     }
 
     public static final int NOTES_TO_RETRIEVE = 200;

@@ -8,10 +8,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -24,10 +21,14 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 import rs.wordpress.api.kotlin.WpApiClient
+import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.ApplicationPasswordWithViewContext
+import uniffi.wp_api.RequestExecutionErrorReason
 import uniffi.wp_api.WpApiParamOrder
 import javax.inject.Inject
 import javax.inject.Named
@@ -38,23 +39,19 @@ class ApplicationPasswordsViewModel @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val appLogWrapper: AppLogWrapper,
     private val selectedSiteRepository: SelectedSiteRepository,
-    accountStore: AccountStore,
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     sharedPrefs: SharedPreferences,
     networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(IO_THREAD) ioDispatcher: CoroutineDispatcher,
-    trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor,
-    networkAvailabilityProvider: WpNetworkAvailabilityProvider,
+    wpComApiClient: WpComApiClient,
 ) : DataViewViewModel(
     mainDispatcher = mainDispatcher,
     appLogWrapper = appLogWrapper,
     sharedPrefs = sharedPrefs,
     networkUtilsWrapper = networkUtilsWrapper,
     selectedSiteRepository = selectedSiteRepository,
-    accountStore = accountStore,
     ioDispatcher = ioDispatcher,
-    trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor,
-    networkAvailabilityProvider = networkAvailabilityProvider
+    wpComApiClient = wpComApiClient
 ) {
     init {
         initialize()
@@ -111,9 +108,9 @@ class ApplicationPasswordsViewModel @Inject constructor(
             }
             SORT_BY_LAST_USED_ID -> { // Sort by last used
                 if (sortOrder == WpApiParamOrder.ASC) {
-                    filteredPasswords.sortedBy { it.lastUsed ?: "" }
+                    filteredPasswords.sortedBy { it.lastUsed }
                 } else {
-                    filteredPasswords.sortedByDescending { it.lastUsed ?: "" }
+                    filteredPasswords.sortedByDescending { it.lastUsed }
                 }
             }
             else -> filteredPasswords
@@ -151,7 +148,7 @@ class ApplicationPasswordsViewModel @Inject constructor(
                     valueType = DataViewFieldType.TEXT,
                 ),
                 DataViewItemField(
-                    value = formatDateString(applicationPassword.created),
+                    value = formatDate(applicationPassword.created),
                     valueType = DataViewFieldType.DATE,
                 ),
             ),
@@ -160,32 +157,30 @@ class ApplicationPasswordsViewModel @Inject constructor(
         )
     }
 
-    private fun formatLastUsed(lastUsed: String?): String = if (lastUsed.isNullOrEmpty()) {
+    private fun formatLastUsed(lastUsed: Date?): String = if (lastUsed == null) {
         context.resources.getString(R.string.application_password_never_used)
     } else {
-        formatDateString(lastUsed)
+        formatDate(lastUsed)
     }
 
     /**
-     * Formats a date string from "2025-08-07T11:02:34" format to "July 31, 2025" format.
-     * If the input doesn't match the expected format, returns the input as-is.
+     * Formats a date to "yyyy/MM/dd" for display, rendered in UTC. The API reports these
+     * timestamps without an offset, so formatting in UTC keeps the displayed day equal to the one
+     * the server reported instead of shifting it by the device's timezone offset.
      */
-    @Suppress("TooGenericExceptionCaught", "SwallowedException")
-    private fun formatDateString(dateString: String): String {
-        return try {
-            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-            val outputFormat = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
-
-            val parsedDate = inputFormat.parse(dateString)
-            parsedDate?.let { outputFormat.format(it) } ?: dateString
-        } catch (e: Exception) {
-            // If parsing fails, return the original string
-            dateString
-        }
-    }
+    private fun formatDate(date: Date): String =
+        SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+            .apply { timeZone = TimeZone.getTimeZone("UTC") }
+            .format(date)
 
     private suspend fun getApplicationPasswordsList(site: SiteModel): List<ApplicationPasswordWithViewContext> {
-        val wpApiClient = wpApiClientProvider.getWpApiClient(site)
+        // Always use the direct-host Basic-auth client. `getWpApiClient` routes WPCom-flagged
+        // sites (including Atomic) through the WP.com REST proxy, which doesn't expose the
+        // `application-passwords` routes — every call 404s with `rest_no_route`. Talking to the
+        // site directly with the stored application password sidesteps that limitation.
+        // Requires the SiteModel to have credentials already (e.g. via the My Site auto-mint
+        // flow); otherwise the call will 401.
+        val wpApiClient = wpApiClientProvider.getApplicationPasswordClient(site)
 
         val currentUserId = getCurrentUserId(wpApiClient)
         return if (currentUserId == null) {
@@ -204,8 +199,43 @@ class ApplicationPasswordsViewModel @Inject constructor(
                 userIdResponse.response.data.id
             }
 
+            is WpRequestResult.WpError -> {
+                val error = "Error getting current user Id: WpError - ${userIdResponse.errorMessage}"
+                appLogWrapper.e(AppLog.T.API, "$error (response: ${userIdResponse.response})")
+                onError(error)
+                null
+            }
+
+            is WpRequestResult.UnknownError -> {
+                val error = "Error getting current user Id: UnknownError - " +
+                    "statusCode=${userIdResponse.statusCode}, response=${userIdResponse.response}"
+                appLogWrapper.e(AppLog.T.API, error)
+                onError(error)
+                null
+            }
+
+            is WpRequestResult.ResponseParsingError<*> -> {
+                val error = "Error getting current user Id: ResponseParsingError - $userIdResponse"
+                appLogWrapper.e(AppLog.T.API, error)
+                onError(error)
+                null
+            }
+
+            is WpRequestResult.RequestExecutionFailed -> {
+                val isTimeout = userIdResponse.reason is RequestExecutionErrorReason.HttpTimeoutError
+                val error = if (isTimeout) {
+                    "Error getting current user Id: Request timed out"
+                } else {
+                    "Error getting current user Id: RequestExecutionFailed - " +
+                        "reason=${userIdResponse.reason}, statusCode=${userIdResponse.statusCode}"
+                }
+                appLogWrapper.e(AppLog.T.API, error)
+                onError(error)
+                null
+            }
+
             else -> {
-                val error = "Error getting current user Id"
+                val error = "Error getting current user Id: ${userIdResponse::class.simpleName} - $userIdResponse"
                 appLogWrapper.e(AppLog.T.API, error)
                 onError(error)
                 null
@@ -226,8 +256,53 @@ class ApplicationPasswordsViewModel @Inject constructor(
                 currentApplicationPasswordResponse.response.data
             }
 
+            is WpRequestResult.WpError -> {
+                val error = "Error getting Application Password list: WpError - " +
+                    currentApplicationPasswordResponse.errorMessage
+                appLogWrapper.e(
+                    AppLog.T.API,
+                    "$error (response: ${currentApplicationPasswordResponse.response})"
+                )
+                onError(error)
+                emptyList()
+            }
+
+            is WpRequestResult.UnknownError -> {
+                val error = "Error getting Application Password list: UnknownError - " +
+                    "statusCode=${currentApplicationPasswordResponse.statusCode}, " +
+                    "response=${currentApplicationPasswordResponse.response}"
+                appLogWrapper.e(AppLog.T.API, error)
+                onError(error)
+                emptyList()
+            }
+
+            is WpRequestResult.ResponseParsingError<*> -> {
+                val error = "Error getting Application Password list: ResponseParsingError - " +
+                    "$currentApplicationPasswordResponse"
+                appLogWrapper.e(AppLog.T.API, error)
+                onError(error)
+                emptyList()
+            }
+
+            is WpRequestResult.RequestExecutionFailed -> {
+                val isTimeout =
+                    currentApplicationPasswordResponse.reason is RequestExecutionErrorReason.HttpTimeoutError
+                val error = if (isTimeout) {
+                    "Error getting Application Password list: Request timed out"
+                } else {
+                    "Error getting Application Password list: RequestExecutionFailed - " +
+                        "reason=${currentApplicationPasswordResponse.reason}, " +
+                        "statusCode=${currentApplicationPasswordResponse.statusCode}"
+                }
+                appLogWrapper.e(AppLog.T.API, error)
+                onError(error)
+                emptyList()
+            }
+
             else -> {
-                val error = "Error getting Application Password list"
+                val error = "Error getting Application Password list: " +
+                    "${currentApplicationPasswordResponse::class.simpleName} - " +
+                    "$currentApplicationPasswordResponse"
                 appLogWrapper.e(AppLog.T.API, error)
                 onError(error)
                 emptyList()

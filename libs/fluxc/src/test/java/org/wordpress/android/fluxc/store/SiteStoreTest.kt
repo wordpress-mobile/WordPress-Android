@@ -1,35 +1,30 @@
 package org.wordpress.android.fluxc.store
 
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.inOrder
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.PostFormatModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SitesModel
-import org.wordpress.android.fluxc.model.asDomainModel
 import org.wordpress.android.fluxc.model.jetpacksocial.JetpackSocialMapper
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.PARSE_ERROR
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordsManager
 import org.wordpress.android.fluxc.network.rest.wpapi.site.SiteWPAPIRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
-import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainsResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.site.PlansResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload
@@ -37,21 +32,13 @@ import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
 import org.wordpress.android.fluxc.persistence.JetpackCPConnectedSitesDao
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
-import org.wordpress.android.fluxc.persistence.domains.DomainDao
 import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao
-import org.wordpress.android.fluxc.store.SiteStore.AllDomainsError
-import org.wordpress.android.fluxc.store.SiteStore.AllDomainsErrorType
 import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload
-import org.wordpress.android.fluxc.store.SiteStore.FetchedAllDomainsPayload
-import org.wordpress.android.fluxc.store.SiteStore.FetchedDomainsPayload
-import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType.SITE_NAME_INVALID
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload
 import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged
-import org.wordpress.android.fluxc.store.SiteStore.PlansError
-import org.wordpress.android.fluxc.store.SiteStore.PlansErrorType
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsError
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType.INVALID_SITE
 import org.wordpress.android.fluxc.store.SiteStore.SiteError
@@ -60,6 +47,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteFilter.WPCOM
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
+import javax.inject.Provider
 import kotlin.test.assertEquals
 
 @RunWith(MockitoJUnitRunner::class)
@@ -72,15 +60,8 @@ class SiteStoreTest {
     @Mock lateinit var privateAtomicCookie: PrivateAtomicCookie
     @Mock lateinit var siteSqlUtils: SiteSqlUtils
     @Mock lateinit var jetpackCPConnectedSitesDao: JetpackCPConnectedSitesDao
-    @Mock lateinit var domainsDao: DomainDao
     @Mock lateinit var jetpackSocialDao: JetpackSocialDao
     @Mock lateinit var jetpackSocialMapper: JetpackSocialMapper
-    @Mock lateinit var domainsSuccessResponse: Response.Success<DomainsResponse>
-    @Mock lateinit var allDomainsSuccessResponse: Response.Success<AllDomainsResponse>
-    @Mock lateinit var plansSuccessResponse: Response.Success<PlansResponse>
-    @Mock lateinit var domainsErrorResponse: Response.Error<DomainsResponse>
-    @Mock lateinit var allDomainsErrorResponse: Response.Error<AllDomainsResponse>
-    @Mock lateinit var plansErrorResponse: Response.Error<PlansResponse>
     private lateinit var siteStore: SiteStore
 
     @Before
@@ -94,7 +75,6 @@ class SiteStoreTest {
             privateAtomicCookie,
             siteSqlUtils,
             jetpackCPConnectedSitesDao,
-            domainsDao,
             jetpackSocialDao,
             jetpackSocialMapper,
             initCoroutineEngine()
@@ -150,7 +130,9 @@ class SiteStoreTest {
 
         assertThat(onSiteChanged.rowsAffected).isEqualTo(0)
         assertThat(onSiteChanged.error).isEqualTo(SiteError(GENERIC_ERROR, null))
-        verifyNoInteractions(siteSqlUtils)
+        // fetchSite reads the stored row to decide which client refreshes it, but an errored
+        // fetch must write nothing.
+        verify(siteSqlUtils, never()).insertOrUpdateSite(any())
     }
 
     private suspend fun assertSiteFetched(
@@ -175,16 +157,16 @@ class SiteStoreTest {
         val siteB = SiteModel()
         sitesModel.sites = listOf(siteA, siteB)
         whenever(siteRestClient.fetchSites(payload.filters, false)).thenReturn(sitesModel)
-        whenever(siteSqlUtils.insertOrUpdateSite(siteA)).thenReturn(1)
-        whenever(siteSqlUtils.insertOrUpdateSite(siteB)).thenReturn(1)
+        whenever(siteSqlUtils.insertOrUpdateSiteReturningId(siteA)).thenReturn(1)
+        whenever(siteSqlUtils.insertOrUpdateSiteReturningId(siteB)).thenReturn(1)
 
         val onSiteChanged = siteStore.fetchSites(payload)
 
         assertThat(onSiteChanged.rowsAffected).isEqualTo(2)
         assertThat(onSiteChanged.error).isNull()
         val inOrder = inOrder(siteSqlUtils)
-        inOrder.verify(siteSqlUtils).insertOrUpdateSite(siteA)
-        inOrder.verify(siteSqlUtils).insertOrUpdateSite(siteB)
+        inOrder.verify(siteSqlUtils).insertOrUpdateSiteReturningId(siteA)
+        inOrder.verify(siteSqlUtils).insertOrUpdateSiteReturningId(siteB)
         inOrder.verify(siteSqlUtils).removeWPComRestSitesAbsentFromList(postSqlUtils, sitesModel.sites)
     }
 
@@ -217,8 +199,8 @@ class SiteStoreTest {
         sitesModel.sites = listOf(siteA, siteB)
         sitesModel.jetpackCPSites = listOf(siteC)
         whenever(siteRestClient.fetchSites(payload.filters, false)).thenReturn(sitesModel)
-        whenever(siteSqlUtils.insertOrUpdateSite(siteA)).thenReturn(1)
-        whenever(siteSqlUtils.insertOrUpdateSite(siteB)).thenReturn(1)
+        whenever(siteSqlUtils.insertOrUpdateSiteReturningId(siteA)).thenReturn(1)
+        whenever(siteSqlUtils.insertOrUpdateSiteReturningId(siteB)).thenReturn(1)
 
         siteStore.fetchSites(payload)
 
@@ -247,8 +229,8 @@ class SiteStoreTest {
         }
         sitesModel.sites = listOf(siteA, siteB)
         whenever(siteRestClient.fetchSites(payload.filters, false)).thenReturn(sitesModel)
-        whenever(siteSqlUtils.insertOrUpdateSite(siteA)).thenReturn(1)
-        whenever(siteSqlUtils.insertOrUpdateSite(siteB)).thenReturn(1)
+        whenever(siteSqlUtils.insertOrUpdateSiteReturningId(siteA)).thenReturn(1)
+        whenever(siteSqlUtils.insertOrUpdateSiteReturningId(siteB)).thenReturn(1)
 
         siteStore.fetchSites(payload)
 
@@ -406,121 +388,6 @@ class SiteStoreTest {
     }
 
     @Test
-    fun `fetchSiteDomains from WPCom endpoint`() = test {
-        val site = SiteModel()
-        site.setIsWPCom(true)
-
-        whenever(siteRestClient.fetchSiteDomains(site)).thenReturn(domainsSuccessResponse)
-        whenever(domainsSuccessResponse.data).thenReturn(DomainsResponse(listOf()))
-
-        val onSiteDomainsFetched = siteStore.fetchSiteDomains(site)
-
-        assertThat(onSiteDomainsFetched.domains).isNotNull
-        assertThat(onSiteDomainsFetched.error).isNull()
-    }
-
-    @Test
-    fun `fetchSiteDomains error from WPCom endpoint returns error`() = test {
-        val site = SiteModel()
-        site.setIsWPCom(true)
-
-        whenever(siteRestClient.fetchSiteDomains(site)).thenReturn(domainsErrorResponse)
-        whenever(domainsErrorResponse.error).thenReturn(WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
-
-        val onSiteDomainsFetched = siteStore.fetchSiteDomains(site)
-
-        verifyNoInteractions(domainsDao)
-        assertThat(onSiteDomainsFetched.error).isEqualTo(SiteError(GENERIC_ERROR, null))
-        assertThat(onSiteDomainsFetched).isEqualTo(FetchedDomainsPayload(site, onSiteDomainsFetched.domains))
-    }
-
-    @Test
-    fun `getSiteDomains is backed by DomainsDao`() = test {
-        val siteLocalId = 1234
-        val domainEntity = DomainDao.DomainEntity(
-            siteLocalId = siteLocalId,
-            domain = "example.wordpress.com",
-            primaryDomain = true,
-            wpcomDomain = true
-        )
-
-        whenever(domainsDao.getDomains(siteLocalId)).thenReturn(flowOf(listOf(domainEntity)))
-
-        assertEquals(
-            domainsDao.getDomains(siteLocalId).first().map(DomainDao.DomainEntity::toDomainModel),
-            siteStore.getSiteDomains(siteLocalId).first()
-        )
-    }
-
-    @Test
-    fun `fetchSiteDomains updates stored domains`() = test {
-        val siteLocalId = 1234
-        val site = SiteModel()
-        site.id = siteLocalId
-        val domains = listOf(Domain(domain = "example.wordpress.com", primaryDomain = true, wpcomDomain = true))
-
-        whenever(siteRestClient.fetchSiteDomains(site)).thenReturn(Response.Success(DomainsResponse(domains)))
-
-        siteStore.fetchSiteDomains(site)
-
-        verify(domainsDao).insert(siteLocalId, domains.map(Domain::asDomainModel))
-    }
-
-    @Test
-    fun `fetchSitePlans from WPCom endpoint`() = test {
-        val site = SiteModel()
-        site.setIsWPCom(true)
-
-        whenever(siteRestClient.fetchSitePlans(site)).thenReturn(plansSuccessResponse)
-        whenever(plansSuccessResponse.data).thenReturn(PlansResponse(listOf()))
-
-        val onSitePlansFetched = siteStore.fetchSitePlans(site)
-
-        assertThat(onSitePlansFetched.plans).isNotNull
-        assertThat(onSitePlansFetched.error).isNull()
-        assertThat(onSitePlansFetched).isEqualTo(FetchedPlansPayload(site, onSitePlansFetched.plans))
-    }
-
-    @Test
-    fun `fetchSitePlans error from WPCom endpoint returns error`() = test {
-        val site = SiteModel()
-        site.setIsWPCom(true)
-
-        whenever(siteRestClient.fetchSitePlans(site)).thenReturn(plansErrorResponse)
-        whenever(plansErrorResponse.error).thenReturn(WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
-
-        val onSitePlansFetched = siteStore.fetchSitePlans(site)
-
-        assertThat(onSitePlansFetched.error.type).isEqualTo(PlansError(PlansErrorType.GENERIC_ERROR, null).type)
-    }
-
-    @Test
-    fun `fetchAllDomains from WPCom endpoint`() = test {
-        whenever(siteRestClient.fetchAllDomains()).thenReturn(allDomainsSuccessResponse)
-        whenever(allDomainsSuccessResponse.data).thenReturn(AllDomainsResponse(listOf()))
-
-        val onAllDomainsFetched = siteStore.fetchAllDomains()
-
-        assertThat(onAllDomainsFetched.domains).isNotNull
-        assertThat(onAllDomainsFetched.error).isNull()
-        assertThat(onAllDomainsFetched).isEqualTo(FetchedAllDomainsPayload(onAllDomainsFetched.domains))
-    }
-
-    @Test
-    fun `fetchAllDomains error from WPCom endpoint returns error`() = test {
-        val site = SiteModel()
-        site.setIsWPCom(true)
-
-        whenever(siteRestClient.fetchAllDomains()).thenReturn(allDomainsErrorResponse)
-        whenever(allDomainsErrorResponse.error).thenReturn(WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
-
-        val onAllDomainsFetched = siteStore.fetchAllDomains()
-
-        val expectedErrorType = AllDomainsError(AllDomainsErrorType.GENERIC_ERROR, null).type
-        assertThat(onAllDomainsFetched.error.type).isEqualTo(expectedErrorType)
-    }
-
-    @Test
     fun `hasSiteAccessedViaWPAPI returns true when WPAPI sites exist`() {
         val wpapiSite = SiteModel().apply {
             origin = SiteModel.ORIGIN_WPAPI
@@ -536,6 +403,199 @@ class SiteStoreTest {
 
         assertThat(siteStore.hasSiteAccessedViaWPAPI()).isFalse()
     }
+
+    @Test
+    fun `fetchSiteWPAPIFromApplicationPassword sets AP credentials and wpApiRestUrl`() =
+        test {
+            // Given
+            val payload =
+                SiteStore.RefreshSitesXMLRPCApplicationPasswordCredentialsPayload(
+                    username = "appUser",
+                    password = "appPass",
+                    url = "https://example.com",
+                    apiRootUrl = "https://example.com/wp-json/",
+                )
+            val fetchedSite = SiteModel().apply {
+                name = "Test Site"
+                origin = SiteModel.ORIGIN_WPAPI
+                url = "https://example.com"
+                apiRestUsernamePlain = "appUser"
+                apiRestPasswordPlain = "appPass"
+            }
+            whenever(siteWPAPIClient.fetchWPAPISite(any<SiteStore.FetchWPAPISitePayload>(), anyOrNull()))
+                .thenReturn(fetchedSite)
+            whenever(siteSqlUtils.insertOrUpdateSite(fetchedSite))
+                .thenReturn(1)
+
+            // When
+            val result =
+                siteStore.fetchSiteWPAPIFromApplicationPassword(payload)
+
+            // Then
+            assertThat(result.isError).isFalse()
+            assertThat(fetchedSite.username).isNullOrEmpty()
+            assertThat(fetchedSite.password).isNullOrEmpty()
+            assertThat(fetchedSite.apiRestUsernamePlain)
+                .isEqualTo("appUser")
+            assertThat(fetchedSite.apiRestPasswordPlain)
+                .isEqualTo("appPass")
+            assertThat(fetchedSite.wpApiRestUrl)
+                .isEqualTo("https://example.com/wp-json/")
+            // updateSite's full-row write skips WP_API_REST_URL, so the discovered URL must be persisted
+            // via the URL-keyed targeted writer (the fetched site has no local id to key on).
+            verify(siteSqlUtils).updateWpApiRestUrlForWPAPISite(
+                "https://example.com",
+                "https://example.com/wp-json/"
+            )
+            verify(siteSqlUtils).updateApplicationPasswordCredentialsForWPAPISite(
+                "https://example.com",
+                "appUser",
+                "appPass"
+            )
+        }
+
+    @Test
+    fun `fetchSitesXmlRpc AP fallback stores the site via WPAPI without persisting an xmlrpc endpoint`() =
+        test {
+            org.mockito.Mockito.mockStatic(
+                org.wordpress.android.util.AppLog::class.java
+            ).use {
+                // Given: the XML-RPC fetch against the conventional (unverified) xmlrpc.php endpoint fails.
+                // Since payload.url is only a guess, the fallback must NOT persist it — the My Site card's
+                // rediscovery verifies and persists a real endpoint later, and it only runs while xmlRpcUrl
+                // is empty. This holds for any error, transient (429) or definitive.
+                val payload =
+                    SiteStore.RefreshSitesXMLRPCApplicationPasswordCredentialsPayload(
+                        username = "appUser",
+                        password = "appPass",
+                        url = "https://example.com/xmlrpc.php",
+                        apiRootUrl = "https://example.com/wp-json/",
+                    )
+                val erroredSites = SitesModel().apply { error = BaseNetworkError(PARSE_ERROR) }
+                whenever(
+                    siteXMLRPCClient.fetchSitesFromApplicationPassword(
+                        payload.url,
+                        payload.apiRootUrl,
+                        payload.username,
+                        payload.password
+                    )
+                ).thenReturn(erroredSites)
+                val fetchedSite = SiteModel().apply {
+                    name = "Test Site"
+                    origin = SiteModel.ORIGIN_WPAPI
+                    url = "https://example.com"
+                }
+                whenever(siteWPAPIClient.fetchWPAPISite(any<SiteStore.FetchWPAPISitePayload>(), anyOrNull()))
+                    .thenReturn(fetchedSite)
+                whenever(siteSqlUtils.insertOrUpdateSite(fetchedSite)).thenReturn(1)
+
+                // When
+                val result = siteStore.fetchSitesXmlRpcFromApplicationPassword(payload)
+
+                // Then: the site is stored via WPAPI, but no xmlrpc endpoint is recorded (rediscovery heals it).
+                assertThat(result.isError).isFalse()
+                verify(siteSqlUtils, never()).updateXmlRpcUrlForWPAPISite(any(), any())
+            }
+        }
+
+    @Test
+    fun `updateApplicationPassword persists credentials and wpApiRestUrl via targeted writers`() {
+        val existing = SiteModel().apply {
+            id = 3
+            url = "https://selfhosted.test"
+        }
+        whenever(siteSqlUtils.getSitesWithLocalId(3)).thenReturn(listOf(existing))
+        val incoming = SiteModel().apply {
+            id = 3
+            apiRestUsernamePlain = "user"
+            apiRestPasswordPlain = "pass"
+            wpApiRestUrl = "https://selfhosted.test/wp-json/"
+        }
+
+        siteStore.onAction(SiteActionBuilder.newUpdateApplicationPasswordAction(incoming))
+
+        verify(siteSqlUtils).updateApplicationPasswordCredentials(3, "user", "pass")
+        verify(siteSqlUtils).updateWpApiRestUrl(3, "https://selfhosted.test/wp-json/")
+    }
+
+    @Test
+    fun `removeApplicationPassword clears credentials and wpApiRestUrl via targeted writers`() {
+        val existing = SiteModel().apply {
+            id = 4
+            url = "https://selfhosted.test"
+            wpApiRestUrl = "https://selfhosted.test/wp-json/"
+        }
+        whenever(siteSqlUtils.getSitesWithLocalId(4)).thenReturn(listOf(existing))
+        siteStore.onAction(
+            SiteActionBuilder.newRemoveApplicationPasswordAction(SiteModel().apply { id = 4 })
+        )
+
+        verify(siteSqlUtils).clearApplicationPasswordCredentials(4)
+        verify(siteSqlUtils).clearWpApiRestUrl(4)
+    }
+
+    @Test
+    fun `clearApplicationPasswordColumns clears credentials but preserves wpApiRestUrl`() {
+        val existing = SiteModel().apply {
+            id = 8
+            url = "https://selfhosted.test"
+        }
+        whenever(siteSqlUtils.getSitesWithLocalId(8)).thenReturn(listOf(existing))
+        siteStore.applicationPasswordsManagerProvider = Provider { mock<ApplicationPasswordsManager>() }
+
+        siteStore.deleteStoredApplicationPasswordCredentials(SiteModel().apply { id = 8 })
+
+        verify(siteSqlUtils).clearApplicationPasswordCredentials(8)
+        verify(siteSqlUtils, never()).clearWpApiRestUrl(8)
+    }
+
+    @Test
+    fun `persistXmlRpcUrl writes the column via the targeted writer`() = test {
+        siteStore.persistXmlRpcUrl(9, "https://selfhosted.test/xmlrpc.php")
+
+        verify(siteSqlUtils).updateXmlRpcUrl(9, "https://selfhosted.test/xmlrpc.php")
+    }
+
+    @Test
+    fun `createOrUpdateSites persists app-password credentials on the stamped row`() {
+        val appPwSite = SiteModel().apply {
+            selfHostedSiteId = 77L
+            url = "https://selfhosted.test"
+            xmlRpcUrl = "https://selfhosted.test/xmlrpc.php"
+            origin = SiteModel.ORIGIN_XMLRPC
+            apiRestUsernamePlain = "user"
+            apiRestPasswordPlain = "pass"
+            wpApiRestUrl = "https://selfhosted.test/wp-json/"
+        }
+        whenever(siteSqlUtils.insertOrUpdateSiteReturningId(any())).thenReturn(9)
+
+        siteStore.onAction(SiteActionBuilder.newUpdateSitesAction(SitesModel(listOf(appPwSite))))
+
+        verify(siteSqlUtils).updateApplicationPasswordCredentials(9, "user", "pass")
+        verify(siteSqlUtils).updateWpApiRestUrl(9, "https://selfhosted.test/wp-json/")
+    }
+
+    @Test
+    fun `fetchPostFormats returns empty list for WPAPI site without crashing`() =
+        test {
+            org.mockito.Mockito.mockStatic(
+                org.wordpress.android.util.AppLog::class.java
+            ).use {
+                // Given
+                val site = SiteModel().apply {
+                    origin = SiteModel.ORIGIN_WPAPI
+                    // xmlRpcUrl is intentionally null
+                }
+
+                // When
+                val result = siteStore.fetchPostFormats(site)
+
+                // Then - no crash, empty post formats
+                assertThat(result.isError).isFalse()
+                verifyNoInteractions(siteXMLRPCClient)
+                verifyNoInteractions(siteRestClient)
+            }
+        }
 
     @Test
     fun `sitesAccessedViaWPAPICount returns correct count`() {

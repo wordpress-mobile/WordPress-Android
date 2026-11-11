@@ -177,12 +177,12 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
                     com.google.android.material.R.attr.colorOnPrimarySurface
             );
             themeViewHolder.mDetailsView.setBackgroundColor(
-                    ContextExtensionsKt.getColorFromAttribute(mContext, com.google.android.material.R.attr.colorPrimary)
+                    ContextExtensionsKt.getColorFromAttribute(mContext, androidx.appcompat.R.attr.colorPrimary)
             );
             themeViewHolder.mNameView.setTextColor(color);
             themeViewHolder.mActiveView.setVisibility(View.VISIBLE);
             themeViewHolder.mCardView.setCardBackgroundColor(
-                    ContextExtensionsKt.getColorFromAttribute(mContext, com.google.android.material.R.attr.colorPrimary)
+                    ContextExtensionsKt.getColorFromAttribute(mContext, androidx.appcompat.R.attr.colorPrimary)
             );
             ImageViewCompat.setImageTintList(themeViewHolder.mImageButton, color);
         } else {

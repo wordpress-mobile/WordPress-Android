@@ -9,7 +9,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_HEADER_IT
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DYNAMIC_DASHBOARD_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.INFO_ITEM
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.JETPACK_BADGE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.JETPACK_FEATURE_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.LIST_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_LINK_RIBBON
@@ -47,10 +46,8 @@ sealed class MySiteCardAndItem(open val type: Type) {
         PAGES_CARD_ERROR,
         PAGES_CARD,
         ACTIVITY_CARD,
-        JETPACK_BADGE,
         SINGLE_ACTION_CARD,
         JETPACK_FEATURE_CARD,
-        JETPACK_SWITCH_CARD,
         JETPACK_INSTALL_FULL_PLUGIN_CARD,
         NO_CARDS_MESSAGE,
         PERSONALIZE_CARD,
@@ -84,8 +81,7 @@ sealed class MySiteCardAndItem(open val type: Type) {
                 val label: UiString.UiStringRes,
                 @DrawableRes val icon: Int,
                 val disableTint: Boolean = false,
-                val onClick: ListItemInteraction,
-                val showBetaBadge: Boolean = false
+                val onClick: ListItemInteraction
             )
         }
 
@@ -98,15 +94,7 @@ sealed class MySiteCardAndItem(open val type: Type) {
             val onHideMenuItemClick: ListItemInteraction,
             val onLearnMoreClick: ListItemInteraction,
             val onMoreMenuClick: ListItemInteraction,
-            val learnMoreUrl: String?,
         ) : Card(JETPACK_FEATURE_CARD)
-
-        data class JetpackSwitchMenu(
-            val onClick: ListItemInteraction,
-            val onRemindMeLaterItemClick: ListItemInteraction,
-            val onHideMenuItemClick: ListItemInteraction,
-            val onMoreMenuClick: ListItemInteraction
-        ) : Card(Type.JETPACK_SWITCH_CARD)
 
         data class JetpackInstallFullPluginCard(
             val siteName: String,
@@ -383,10 +371,18 @@ sealed class MySiteCardAndItem(open val type: Type) {
     ) : MySiteCardAndItem(type) {
         data class InfoItem(val title: UiString) : Item(INFO_ITEM)
 
+        /**
+         * [centerText] presents the card as a plain notice: the image is hidden and the text is
+         * centred across the whole card rather than sitting in the column beside the icon. Use it
+         * when the card only explains something and has nothing to tap.
+         */
         data class SingleActionCard(
             @StringRes val textResource: Int,
             @DrawableRes val imageResource: Int,
-            val onActionClick: () -> Unit
+            val onActionClick: () -> Unit,
+            val centerImageVertically: Boolean = false,
+            val showLearnMore: Boolean = true,
+            val centerText: Boolean = false
         ) : Item(SINGLE_ACTION_CARD)
 
         data class CategoryHeaderItem(val title: UiString) : Item(CATEGORY_HEADER_ITEM)
@@ -400,13 +396,7 @@ sealed class MySiteCardAndItem(open val type: Type) {
             val secondaryText: UiString? = null,
             val onClick: ListItemInteraction,
             val disablePrimaryIconTint: Boolean = false,
-            val listItemAction: ListItemAction,
-            val showBetaBadge: Boolean = false
+            val listItemAction: ListItemAction
         ) : Item(LIST_ITEM)
     }
-
-    data class JetpackBadge(
-        val text: UiString,
-        val onClick: ListItemInteraction? = null,
-    ) : MySiteCardAndItem(JETPACK_BADGE)
 }

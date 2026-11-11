@@ -22,20 +22,15 @@
         <!-- GCM -->
         <ignore path="**/generated/ksp/**/org/wordpress/android/push/Hilt_GCMMessageService.java" />
     </issue>
+    <!-- The NonNullableMutableLiveDataDetector shipped with AGP 9.3.0 crashes (NPE) when analyzing the
+         anonymous MutableLiveData subclass in LoginPrologueRevampedViewModel. Disable until the lint bug is fixed. -->
+    <issue id="NullSafeMutableLiveData" severity="ignore" />
     <issue id="AndroidGradlePluginVersion" severity="ignore" /> <!-- The AGP update is done manually -->
     <issue id="GradleDependency" severity="ignore" /> <!-- Dependabot will take care of this -->
-    <issue id="MissingNullAnnotationOnField">
-        <ignore path="**/generated/**" />
-    </issue>
-    <issue id="MissingNullAnnotationOnConstructorParameter">
-        <ignore path="**/generated/**" />
-    </issue>
-    <issue id="MissingNullAnnotationOnMethodParameter">
-        <ignore path="**/generated/**" />
-    </issue>
-    <issue id="MissingNullAnnotationOnMethodReturnType">
-        <ignore path="**/generated/**" />
-    </issue>
+    <issue id="MissingNullAnnotationOnField" severity="ignore" />
+    <issue id="MissingNullAnnotationOnConstructorParameter" severity="ignore" />
+    <issue id="MissingNullAnnotationOnMethodParameter" severity="ignore" />
+    <issue id="MissingNullAnnotationOnMethodReturnType" severity="ignore" />
     <issue id="Aligned16KB" severity="ignore" /> <!-- Will be addressed by removing Gutenberg Mobile -->
     <issue id="VectorRaster" severity="warning" /> <!--    fluxc-->
     <!-- SECURITY -->
@@ -55,6 +50,12 @@
         <!-- EDITOR -->
         <ignore path="**/libs/editor/src/main/res/drawable/**" /> <!-- 9 errors -->
         <ignore path="**/libs/editor/src/main/res/drawable-hdpi/**" />  <!-- 6 errors -->
+        <!-- Resources used by editor library (not visible with checkDependencies=false) -->
+        <ignore path="**/res/color/aztec_format_button_selector_color.xml" />
+        <ignore path="**/res/color/primary_on_surface_disabled_selector.xml" />
+        <ignore path="**/res/values-night/colors_aztec.xml" />
+        <ignore regexp="R\.style\.FormatBarButton" />
+        <ignore regexp="R\.style\.DividerSourceView" />
         <!-- GOOGLE SERVICES -->
         <ignore path="**/generated/res/google-services/**/values/values.xml" />
         <ignore path="**/xml/global_tracker.xml" />

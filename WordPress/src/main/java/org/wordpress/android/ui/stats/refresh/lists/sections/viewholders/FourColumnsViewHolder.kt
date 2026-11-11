@@ -40,6 +40,7 @@ class FourColumnsViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             else -> {
                 columnLayouts.forEachIndexed { index, layout ->
                     layout.setOnClickListener {
+                        @Suppress("DEPRECATION")
                         it.announceForAccessibility(it.resources.getString(R.string.stats_graph_updated))
                         item.onColumnSelected?.invoke(index)
                     }

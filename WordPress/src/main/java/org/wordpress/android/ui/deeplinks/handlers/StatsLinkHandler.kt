@@ -2,7 +2,6 @@ package org.wordpress.android.ui.deeplinks.handlers
 
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
-import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenJetpackStaticPosterView
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStats
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStatsForSite
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStatsForSiteAndTimeframe
@@ -11,15 +10,13 @@ import org.wordpress.android.ui.deeplinks.DeepLinkUriUtils
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.APPLINK_SCHEME
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.HOST_WORDPRESS_COM
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.SITE_DOMAIN
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 
 class StatsLinkHandler
 @Inject constructor(
-    private val deepLinkUriUtils: DeepLinkUriUtils,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    private val deepLinkUriUtils: DeepLinkUriUtils
 ) : DeepLinkHandler {
     /**
      * Builds navigate action from URL like:
@@ -35,7 +32,6 @@ class StatsLinkHandler
         val timeframeIndex = if (site == null) (length - 1) else (length - 2)
         val statsTimeframe = pathSegments.getOrNull(timeframeIndex)?.toStatsTimeframe()
         return when {
-            jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage() -> OpenJetpackStaticPosterView
             site != null && statsTimeframe != null -> {
                 OpenStatsForSiteAndTimeframe(site, statsTimeframe)
             }

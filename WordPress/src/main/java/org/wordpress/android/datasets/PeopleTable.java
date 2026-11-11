@@ -23,11 +23,11 @@ public class PeopleTable {
     private static final String VIEWERS_TABLE = "people_viewers";
 
     private static SQLiteDatabase getReadableDb() {
-        return WordPress.wpDB.getDatabase();
+        return WordPress.getWpDB().getDatabase();
     }
 
     private static SQLiteDatabase getWritableDb() {
-        return WordPress.wpDB.getDatabase();
+        return WordPress.getWpDB().getDatabase();
     }
 
     public static void createTables(SQLiteDatabase db) {

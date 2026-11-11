@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.xmlrpc.site
 
 import com.android.volley.RequestQueue
+import kotlinx.coroutines.delay
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
@@ -27,6 +28,8 @@ import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType.GENERIC_
 import org.wordpress.android.fluxc.utils.SiteUtils
 import org.wordpress.android.fluxc.utils.extensions.getPasswordProcessed
 import org.wordpress.android.fluxc.utils.extensions.getUserNameProcessed
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.MapUtils
 import java.util.ArrayList
 import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
@@ -66,7 +69,7 @@ class SiteXMLRPCClient @Inject constructor(
         username: String,
         password: String
     ): SitesModel {
-        val sites = fetchSites(xmlrpcUrl, username, password)
+        val sites = fetchSites(xmlrpcUrl, username, password, retryOnRateLimit = true)
         // If fetched from Application Password, we need to be sure we are not storing the regular credentials
         sites.sites.forEach { site ->
             site.username = ""
@@ -77,31 +80,43 @@ class SiteXMLRPCClient @Inject constructor(
         }
         return sites
     }
-    suspend fun fetchSites(xmlrpcUrl: String, username: String, password: String): SitesModel {
+    suspend fun fetchSites(
+        xmlrpcUrl: String,
+        username: String,
+        password: String,
+        retryOnRateLimit: Boolean = false
+    ): SitesModel {
         val params = listOf(username, password)
-        val response = xmlrpcRequestBuilder.syncGetRequest(
-                this,
-                xmlrpcUrl,
-                GET_USERS_SITES,
-                params,
-                Array<Any>::class.java
-        )
-        return when (response) {
-            is Success -> {
+        var attempt = 0
+        while (true) {
+            val response = xmlrpcRequestBuilder.syncGetRequest(
+                    this,
+                    xmlrpcUrl,
+                    GET_USERS_SITES,
+                    params,
+                    Array<Any>::class.java
+            )
+            if (response is Success) {
                 val sites = sitesResponseToSitesModel(response.data, username, password)
-                if (sites != null) {
-                    sites
-                } else {
-                    val result = SitesModel()
-                    result.error = BaseNetworkError(INVALID_RESPONSE)
-                    result
-                }
+                return sites ?: SitesModel().apply { error = BaseNetworkError(INVALID_RESPONSE) }
             }
-            is Error -> {
-                val sites = SitesModel()
-                sites.error = response.error
-                sites
+            val networkError = (response as Error).error
+            val statusCode = networkError.volleyError?.networkResponse?.statusCode ?: -1
+            // Retry a transient 429 (rate-limited) with exponential backoff before giving up. These edge
+            // throttles send no Retry-After, so we use our own fixed-base backoff; a short pause is usually
+            // enough to clear the tight per-endpoint window. Only opted into by the app-password fetch, which
+            // is the flow that triggers the tight per-endpoint throttle by hitting xmlrpc.php back-to-back.
+            if (!retryOnRateLimit || statusCode != RATE_LIMITED_STATUS_CODE || attempt >= MAX_RATE_LIMIT_RETRIES) {
+                return SitesModel().apply { error = networkError }
             }
+            val delayMs = RATE_LIMIT_RETRY_BASE_DELAY_MS shl attempt
+            attempt++
+            AppLog.w(
+                T.API,
+                "A_P: wp.getUsersBlogs rate-limited (429) by $xmlrpcUrl, backing off" +
+                    " ${delayMs}ms then retry (attempt $attempt/$MAX_RATE_LIMIT_RETRIES)"
+            )
+            delay(delayMs)
         }
     }
 
@@ -307,5 +322,12 @@ class SiteXMLRPCClient @Inject constructor(
 
     private fun responseToPostFormats(response: Map<*, *>): List<PostFormatModel>? {
         return SiteUtils.getValidPostFormatsOrNull(response)
+    }
+
+    companion object {
+        private const val RATE_LIMITED_STATUS_CODE = 429
+        // Backoff for transient 429s on xmlrpc.php: base delay shifted left per attempt (1s, 2s, 4s).
+        private const val MAX_RATE_LIMIT_RETRIES = 3
+        private const val RATE_LIMIT_RETRY_BASE_DELAY_MS = 1000L
     }
 }

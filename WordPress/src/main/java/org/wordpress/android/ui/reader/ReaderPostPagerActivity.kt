@@ -9,16 +9,23 @@ import android.os.Bundle
 import android.util.AttributeSet
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.activity.addCallback
 import androidx.core.os.BundleCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -46,7 +53,6 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayVi
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.ForwardToJetpack
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -55,8 +61,6 @@ import org.wordpress.android.ui.posts.EditorLauncher
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderEvents.DoSignIn
 import org.wordpress.android.ui.reader.ReaderEvents.PostSlugsRequestCompleted
-import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsEnded
-import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsStarted
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment.Companion.newInstance
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.actions.ReaderActions
@@ -64,7 +68,10 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.OnRequestListener
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
+import org.wordpress.android.ui.reader.repository.ReaderPostListEvent
+import org.wordpress.android.ui.reader.repository.ReaderPostListTarget
+import org.wordpress.android.ui.reader.repository.ReaderPostUpdater
+import org.wordpress.android.ui.reader.repository.UpdateAction
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
 import org.wordpress.android.ui.reader.usecases.ReaderGetReadingPreferencesSyncUseCase
@@ -72,10 +79,9 @@ import org.wordpress.android.ui.reader.utils.ReaderPostSeenStatusWrapper
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
-import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils
-import org.wordpress.android.ui.utils.PreMigrationDeepLinkData
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
@@ -148,6 +154,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     private var backFromLogin = false
 
     private val trackedPositions = HashSet<Int>()
+    private var pagerGeneration = 0L
 
     @Inject
     lateinit var siteStore: SiteStore
@@ -191,18 +198,19 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var deepLinkOpenWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
 
-    @Inject
-    lateinit var jetpackAppMigrationFlowUtils: JetpackAppMigrationFlowUtils
     private var jetpackFullScreenViewModel: JetpackFeatureFullScreenOverlayViewModel? = null
 
     @Inject
     lateinit var mAccountStore: AccountStore
 
     @Inject
-    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    lateinit var buildConfigWrapper: BuildConfigWrapper
 
     @Inject
     lateinit var getReadingPreferencesSyncUseCase: ReaderGetReadingPreferencesSyncUseCase
+
+    @Inject
+    lateinit var readerPostUpdater: ReaderPostUpdater
 
     @Suppress("LongMethod")
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -213,23 +221,24 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
         setContentView(R.layout.reader_activity_post_pager)
 
-        // Start migration flow passing deep link data if requirements are met
-        if (jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
-            val deepLinkData = PreMigrationDeepLinkData(
-                intent.action,
-                intent.data
-            )
-            jetpackAppMigrationFlowUtils.startJetpackMigrationFlow(deepLinkData)
-            finish()
-            return
-        }
-
         viewPager = findViewById(R.id.viewpager)
         // lint complains about OFFSCREEN_PAGE_LIMIT, even through it's a valid constant (?)
         @SuppressLint("WrongConstant")
         viewPager.offscreenPageLimit = OFFSCREEN_PAGE_LIMIT
 
         progressBar = findViewById(R.id.progress_loading)
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                readerPostUpdater.events.collect { event ->
+                    when (event) {
+                        is ReaderPostListEvent.UpdateStarted -> onUpdatePostsStarted()
+                        is ReaderPostListEvent.UpdateEnded -> onUpdatePostsEnded(event)
+                        else -> Unit
+                    }
+                }
+            }
+        }
 
         if (savedInstanceState != null) {
             isFeed = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_FEED)
@@ -272,6 +281,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                     trackedPositions.addAll(positions as HashSet<Int>)
                 }
             }
+            pagerGeneration =
+                savedInstanceState.getLong(KEY_PAGER_GENERATION)
         } else {
             isFeed = intent.getBooleanExtra(ReaderConstants.ARG_IS_FEED, false)
             blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0)
@@ -340,6 +351,30 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         observeOverlayEvents()
     }
 
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        // super.onRestoreInstanceState just restored the view-hierarchy state, which
+        // populates ViewPager2.mPendingAdapterState with the saved FragmentStateAdapter
+        // bundle. We always rebuild the adapter in loadPosts(), so applying that bundle
+        // to a fresh PostPagerAdapter just throws "Fragment no longer exists for key
+        // f#…" against the rebuilt FragmentManager. Assigning a non-StatefulAdapter
+        // here makes ViewPager2.restorePendingState() drop the pending bundle.
+        if (::viewPager.isInitialized && viewPager.adapter == null) {
+            AppLog.d(AppLog.T.READER, "reader pager > dropping pending FSA state via placeholder adapter")
+            viewPager.adapter = noOpAdapter()
+        }
+    }
+
+    private fun noOpAdapter(): RecyclerView.Adapter<RecyclerView.ViewHolder> =
+        object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+                error("placeholder adapter — should never inflate")
+
+            override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) = Unit
+
+            override fun getItemCount() = 0
+        }
+
     @Suppress("DEPRECATION")
     override fun onCreateView(
         parent: View?, name: String, context: Context,
@@ -387,22 +422,13 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             host = uri.host
         }
 
-        if (uri == null || jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
-            || jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()
-        ) {
+        if (uri == null || !buildConfigWrapper.isJetpackApp) {
             readerTracker.trackDeepLink(AnalyticsTracker.Stat.DEEP_LINKED, action!!, host!!, uri)
             // invalid uri so, just show the entry screen
-            if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-                val intent = Intent(this, WPMainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER)
-                startActivity(intent)
-            } else {
-                val intent = Intent(this, WPLaunchActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER)
-                startActivity(intent)
-            }
+            val intent = Intent(this, WPLaunchActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER)
+            startActivity(intent)
             finish()
             return
         }
@@ -606,9 +632,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
         deepLinkOpenWebLinksWithJetpackHelper.onOverlayShown()
         newInstance(
-            null,
             isDeepLinkOverlay = true,
-            isFeatureCollectionOverlay = false,
             featureCollectionOverlaySource = JetpackFeatureCollectionOverlaySource.UNSPECIFIED
         )
             .show(supportFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
@@ -746,7 +770,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun hasPagerAdapter() = viewPager.adapter != null
+    private fun hasPagerAdapter() = viewPager.adapter is PostPagerAdapter
 
     private val pagerAdapter: PostPagerAdapter?
         get() = viewPager.adapter as? PostPagerAdapter
@@ -781,6 +805,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             outState.putSerializable(ReaderConstants.KEY_TRACKED_POSITIONS, trackedPositions)
         }
 
+        outState.putLong(KEY_PAGER_GENERATION, pagerGeneration)
+
         super.onSaveInstanceState(outState)
     }
 
@@ -814,22 +840,24 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
      * perform analytics tracking and bump the page view for the post
      */
     private fun trackPost(blogId: Long, postId: Long) {
-        // bump the page view
-        ReaderPostActions.bumpPageViewForPost(siteStore, blogId, postId)
+        // ReaderPostTable.getBlogPost runs a rawQuery; do it off the main thread
+        // (Volley/post-handler callbacks otherwise park on the SQLite connection pool).
+        lifecycleScope.launch(Dispatchers.IO) {
+            ReaderPostActions.bumpPageViewForPost(siteStore, blogId, postId)
 
-        if (seenUnseenWithCounterFeatureConfig.isEnabled()) {
-            val currentPost = ReaderPostTable.getBlogPost(blogId, postId, true)
-            if (currentPost != null) {
-                postSeenStatusWrapper.markPostAsSeenSilently(currentPost)
+            if (seenUnseenWithCounterFeatureConfig.isEnabled()) {
+                val currentPost = ReaderPostTable.getBlogPost(blogId, postId, true)
+                if (currentPost != null) {
+                    postSeenStatusWrapper.markPostAsSeenSilently(currentPost)
+                }
             }
-        }
 
-        // analytics tracking
-        readerTracker.trackPost(
-            AnalyticsTracker.Stat.READER_ARTICLE_OPENED,
-            readerPostTableWrapper.getBlogPost(blogId, postId, true),
-            getReadingPreferencesSyncUseCase.invoke()
-        )
+            readerTracker.trackPost(
+                AnalyticsTracker.Stat.READER_ARTICLE_OPENED,
+                readerPostTableWrapper.getBlogPost(blogId, postId, true),
+                getReadingPreferencesSyncUseCase.invoke()
+            )
+        }
     }
 
     /*
@@ -866,7 +894,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 val newPosition = idList.indexOf(blogId, postId)
 
                 runOnUiThread {
-                    if (isFinishing) {
+                    if (isFinishing || isDestroyed) {
                         return@runOnUiThread
                     }
                     AppLog.d(
@@ -874,7 +902,25 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                         "reader pager > creating adapter"
                     )
                     val adapter = PostPagerAdapter(idList)
-                    viewPager.adapter = adapter
+                    // Assigning the adapter triggers FragmentStateAdapter to restore any
+                    // pending saved-state fragments. On a process-death restore those keys
+                    // may point to fragments that no longer exist, which throws
+                    // IllegalStateException("Fragment no longer exists for key …"). The
+                    // pagerGeneration bump on restore should prevent this, but keep a
+                    // narrow catch as a safety net: bail out of the activity so the user
+                    // returns to the previous screen instead of crashing.
+                    // (Sentry: JETPACK-ANDROID-1G8W)
+                    try {
+                        viewPager.adapter = adapter
+                    } catch (e: IllegalStateException) {
+                        AppLog.e(
+                            AppLog.T.READER,
+                            "reader pager > failed to attach adapter after saved-state restore",
+                            e
+                        )
+                        finish()
+                        return@runOnUiThread
+                    }
 
                     // set the current position without smooth scrolling - otherwise the previous post in
                     // the list may briefly appear
@@ -910,17 +956,13 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         AppLog.d(AppLog.T.READER, "reader pager > requesting older posts")
         when (postListType) {
             ReaderPostListType.TAG_PREVIEW,
-            ReaderPostListType.TAG_FOLLOWED ->
-                ReaderPostServiceStarter.startServiceForTag(
-                    this,
-                    currentTag,
-                    ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
-                )
+            ReaderPostListType.TAG_FOLLOWED -> currentTag?.let {
+                readerPostUpdater.updatePosts(ReaderPostListTarget.Tag(it), UpdateAction.REQUEST_OLDER)
+            }
 
-            ReaderPostListType.BLOG_PREVIEW -> ReaderPostServiceStarter.startServiceForBlog(
-                this,
-                blogId,
-                ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
+            ReaderPostListType.BLOG_PREVIEW -> readerPostUpdater.updatePosts(
+                ReaderPostListTarget.Blog(blogId),
+                UpdateAction.REQUEST_OLDER
             )
 
             ReaderPostListType.SEARCH_RESULTS -> {}
@@ -931,9 +973,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMainThread(event: UpdatePostsStarted?) {
+    private fun onUpdatePostsStarted() {
         if (isFinishing) {
             return
         }
@@ -942,8 +982,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         progressBar!!.visibility = View.VISIBLE
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMainThread(event: UpdatePostsEnded) {
+    private fun onUpdatePostsEnded(event: ReaderPostListEvent.UpdateEnded) {
         if (isFinishing) {
             return
         }
@@ -1056,12 +1095,39 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     }
 
     /**
+     * Tells the ViewPager2 adapter to destroy and recreate all fragments.
+     * Used after reading preferences change so fragments are re-inflated with the new theme.
+     */
+    fun recreatePages() {
+        pagerAdapter?.recreateFragments()
+    }
+
+    /**
      * ViewPager2 adapter containing post detail fragments
      */
     private inner class PostPagerAdapter(
         private val idList: ReaderBlogIdPostIdList,
     ) : FragmentStateAdapter(this@ReaderPostPagerActivity) {
         var allPostsLoaded: Boolean = false
+
+        /**
+         * Increments the generation counter so [getItemId] returns new IDs,
+         * causing [FragmentStateAdapter] to destroy old fragments and create fresh ones.
+         */
+        @SuppressLint("NotifyDataSetChanged")
+        fun recreateFragments() {
+            pagerGeneration++
+            notifyDataSetChanged()
+        }
+
+        override fun getItemId(position: Int): Long =
+            position.toLong() + pagerGeneration * GENERATION_OFFSET
+
+        override fun containsItem(itemId: Long): Boolean {
+            val pos = (itemId % GENERATION_OFFSET).toInt()
+            return itemId / GENERATION_OFFSET == pagerGeneration &&
+                isValidPosition(pos)
+        }
 
         fun canRequestMostPosts(): Boolean {
             return !allPostsLoaded &&
@@ -1104,16 +1170,17 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
 
         /**
-         * In ViewPager2 the FragmentManager by default have assigned tags to fragments like this:
-         *  Fragment in 1st position has a tag of "f0"
-         *  Fragment in 2nd position has a tag of "f1"
-         *  etc.
+         * FragmentStateAdapter tags fragments as "f${getItemId(position)}".
          */
         fun getFragmentAtPosition(position: Int) =
-                supportFragmentManager.findFragmentByTag("f$position") as? ReaderPostDetailFragment
+            supportFragmentManager.findFragmentByTag(
+                "f${getItemId(position)}"
+            ) as? ReaderPostDetailFragment
     }
 
     companion object {
         private const val OFFSCREEN_PAGE_LIMIT = 2
+        private const val GENERATION_OFFSET = 100_000L
+        private const val KEY_PAGER_GENERATION = "pager_generation"
     }
 }

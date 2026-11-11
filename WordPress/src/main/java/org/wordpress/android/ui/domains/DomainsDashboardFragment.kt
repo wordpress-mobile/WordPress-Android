@@ -61,6 +61,7 @@ class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment), 
 
     private fun DomainsDashboardFragmentBinding.setupViews() {
         contentRecyclerView.adapter = DomainsDashboardAdapter(uiHelpers)
+        errorView.button.setOnClickListener { viewModel.onRetryClick() }
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -86,11 +87,13 @@ class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment), 
     }
 
     private fun DomainsDashboardFragmentBinding.setupObservers() {
-        viewModel.progressBar.observe(viewLifecycleOwner) {
-            progress.isVisible = it
-        }
-        viewModel.uiModel.observe(viewLifecycleOwner) { uiState ->
-            (contentRecyclerView.adapter as? DomainsDashboardAdapter)?.submitList(uiState ?: listOf())
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
+            progress.isVisible = uiState is DomainsDashboardUiState.Loading
+            errorView.isVisible = uiState is DomainsDashboardUiState.Error
+            contentRecyclerView.isVisible = uiState is DomainsDashboardUiState.Content
+            (uiState as? DomainsDashboardUiState.Content)?.let {
+                (contentRecyclerView.adapter as? DomainsDashboardAdapter)?.submitList(it.items)
+            }
         }
         viewModel.onNavigation.observeEvent(viewLifecycleOwner, ::handleNavigationAction)
     }

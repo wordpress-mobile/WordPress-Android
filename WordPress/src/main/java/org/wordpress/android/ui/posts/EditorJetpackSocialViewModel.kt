@@ -188,6 +188,7 @@ class EditorJetpackSocialViewModel @Inject constructor(
     }
 
     private fun shouldShowJetpackSocial() = ::editPostRepository.isInitialized
+            && editPostRepository.hasPost()
             && !editPostRepository.isPage
             && siteModel.supportsPublicize()
             && currentPost?.status != PostStatus.PRIVATE.toString()
@@ -358,7 +359,6 @@ class EditorJetpackSocialViewModel @Inject constructor(
 
     override fun onCleared() {
         dispatcher.unregister(this)
-        super.onCleared()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

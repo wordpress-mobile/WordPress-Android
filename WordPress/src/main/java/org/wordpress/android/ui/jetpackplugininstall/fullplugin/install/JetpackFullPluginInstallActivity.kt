@@ -3,6 +3,7 @@ package org.wordpress.android.ui.jetpackplugininstall.fullplugin.install
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -10,11 +11,11 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.wordpress.android.support.SupportRouting
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.jetpackplugininstall.install.compose.JetpackPluginInstallScreen
 import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.util.extensions.setContent
 import javax.inject.Inject
@@ -22,7 +23,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class JetpackFullPluginInstallActivity : BaseAppCompatActivity() {
     @Inject
-    lateinit var experimentalFeatures: ExperimentalFeatures
+    lateinit var supportRouting: SupportRouting
 
     private val viewModel: JetpackFullPluginInstallViewModel by viewModels()
 
@@ -45,13 +46,18 @@ class JetpackFullPluginInstallActivity : BaseAppCompatActivity() {
             }
         }
         observeActionEvents()
-    }
-
-    @Suppress("OVERRIDE_DEPRECATION","MissingSuperCall")
-    override fun onBackPressed() {
-        if (!viewModel.uiState.value.showCloseButton) return
-
-        viewModel.onBackPressed()
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (viewModel.uiState.value.showCloseButton) {
+                        viewModel.onBackPressed()
+                    }
+                    // When showCloseButton is false, consume the
+                    // back event (do nothing)
+                }
+            }
+        )
     }
 
     private fun observeActionEvents() {
@@ -66,7 +72,7 @@ class JetpackFullPluginInstallActivity : BaseAppCompatActivity() {
                     actionEvent.origin,
                     actionEvent.selectedSite,
                     null,
-                    experimentalFeatures
+                    supportRouting
                 )
             }
 

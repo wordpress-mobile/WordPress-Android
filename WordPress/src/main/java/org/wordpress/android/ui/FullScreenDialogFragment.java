@@ -306,7 +306,7 @@ public class FullScreenDialogFragment extends DialogFragment {
                 R.drawable.ic_close_white_24dp,
                 ContextExtensionsKt.getColorResIdFromAttribute(
                         context,
-                        com.google.android.material.R.attr.colorControlNormal
+                        androidx.appcompat.R.attr.colorControlNormal
                 )
         ));
         mToolbar.setNavigationContentDescription(R.string.close_dialog_button_desc);

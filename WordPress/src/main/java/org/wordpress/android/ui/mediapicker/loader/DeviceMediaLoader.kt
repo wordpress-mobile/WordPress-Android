@@ -153,7 +153,7 @@ class DeviceMediaLoader
 
     data class DeviceMediaList(val items: List<DeviceMediaItem>, val next: Long? = null)
 
-    data class DeviceMediaItem(val uri: UriWrapper, val title: String, val dateModified: Long)
+    data class DeviceMediaItem(val uri: UriWrapper, val title: String?, val dateModified: Long)
 
     companion object {
         private const val ID_COL = Media._ID

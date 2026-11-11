@@ -28,10 +28,11 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainStatus
-import org.wordpress.android.fluxc.network.rest.wpcom.site.StatusType
 import org.wordpress.android.ui.domains.management.composable.PendingGhostStrip
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import uniffi.wp_api.DomainListItemStatus
+import uniffi.wp_api.DomainListItemStatusId
+import uniffi.wp_api.DomainListItemStatusType
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -58,7 +59,9 @@ fun StatusRow(
                     text = uiState.statusText,
                     color = uiState.textColor,
                     style = if (uiState.isBold) {
-                        LocalTextStyle.current.copy(fontWeight = FontWeight.Bold)
+                        LocalTextStyle.current.copy(
+                            fontWeight = FontWeight.Bold
+                        )
                     } else {
                         LocalTextStyle.current
                     },
@@ -66,7 +69,10 @@ fun StatusRow(
                 Spacer(modifier = Modifier.weight(1f))
                 uiState.expiry?.let { localDate ->
                     Text(
-                        text = stringResource(R.string.domain_management_expires, localDate.mediumFormat),
+                        text = stringResource(
+                            R.string.domain_management_expires,
+                            localDate.mediumFormat
+                        ),
                         textAlign = TextAlign.End,
                         color = MaterialTheme.colorScheme.outline,
                     )
@@ -89,30 +95,57 @@ fun BulletPoint(
 )
 
 private val LocalDate.mediumFormat
-    get() = format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+    get() = format(
+        DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+    )
 
+private val previewStatusTypes = listOf(
+    DomainListItemStatusType.Success to "Success",
+    DomainListItemStatusType.Warning to "Warning",
+    DomainListItemStatusType.Error to "Error",
+    DomainListItemStatusType.Alert to "Alert",
+    DomainListItemStatusType.Neutral to "Neutral",
+    DomainListItemStatusType.Premium to "Premium",
+)
 
-class PreviewStatusProvider: PreviewParameterProvider<Pair<DomainStatus, LocalDate?>?> {
+class PreviewStatusProvider :
+    PreviewParameterProvider<Pair<DomainListItemStatus, LocalDate?>?> {
     override val values
-        get() = StatusType.values().asSequence()
-            .map {
+        get() = previewStatusTypes.asSequence()
+            .map { (statusType, label) ->
                 Pair(
-                    DomainStatus(it.titleName, it),
-                    LocalDate.of(2024,8,15),
+                    previewStatus(label = label, statusType = statusType),
+                    LocalDate.of(2024, 8, 15),
                 )
             } +
-                sequenceOf(Pair(DomainStatus(), null)) +
+                // A blank label falls back to the generic error string.
+                sequenceOf(Pair(previewStatus(label = ""), null)) +
                 sequenceOf(null)
 }
 
+private fun previewStatus(
+    label: String,
+    statusType: DomainListItemStatusType = DomainListItemStatusType.Success,
+) = DomainListItemStatus(
+    id = DomainListItemStatusId.Active,
+    label = label,
+    statusType = statusType,
+    cta = null,
+)
+
 @Preview(showBackground = true, widthDp = 296)
-@Preview(showBackground = true, widthDp = 296, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(
+    showBackground = true,
+    widthDp = 296,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 fun DomainStatusRowPreview(
-    @PreviewParameter(PreviewStatusProvider::class) status: Pair<DomainStatus, LocalDate?>?,
+    @PreviewParameter(PreviewStatusProvider::class)
+    status: Pair<DomainListItemStatus, LocalDate?>?,
 ) {
     AppThemeM3 {
-        Column (Modifier.padding(8.dp)) {
+        Column(Modifier.padding(8.dp)) {
             StatusRow(
                 uiState = status?.let { (domainStatus, expiry) ->
                     StatusRowUiState.Loaded(
@@ -130,6 +163,3 @@ fun DomainStatusRowPreview(
         }
     }
 }
-
-val StatusType.titleName
-    get() = name.lowercase().replaceFirstChar(Char::titlecase)

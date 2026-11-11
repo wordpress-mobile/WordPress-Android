@@ -238,52 +238,7 @@ class PageListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `sorts 100 or more pages by date DESC`() {
-        val pages = MutableLiveData<List<PageModel>>()
-        whenever(pagesViewModel.pages).thenReturn(pages)
-
-        viewModel.start(PUBLISHED, pagesViewModel)
-
-        val result = mutableListOf<Triple<List<PageItem>, Boolean, Boolean>>()
-
-        viewModel.pages.observeForever { result.add(it) }
-
-        val earlyPages = (0..30).map { buildPageModel(it, Date(HOUR_IN_MILLISECONDS * it)) }
-        val latePages = (31..60).map { buildPageModel(it, Date(100 * HOUR_IN_MILLISECONDS * it)) }
-        val middlePages = (61..96).map { buildPageModel(it, Date(10 * HOUR_IN_MILLISECONDS * it)) }
-        val earlyChild = buildPageModel(97, Date(40 * HOUR_IN_MILLISECONDS), earlyPages[0])
-        val middleChild = buildPageModel(98, Date(1000 * HOUR_IN_MILLISECONDS), middlePages[0])
-        val lateChild = buildPageModel(99, Date(7000 * HOUR_IN_MILLISECONDS), latePages[0])
-        val children = listOf(middleChild, earlyChild, lateChild)
-
-        val pageModels = mutableListOf<PageModel>()
-        pageModels.addAll(middlePages)
-        pageModels.addAll(latePages)
-        pageModels.addAll(children)
-        pageModels.addAll(earlyPages)
-        pages.value = pageModels
-
-        assertThat(result).hasSize(1)
-        val pageItems = result[0].first
-        assertThat(pageItems).hasSize(102)
-        assertPublishedPage(pageItems[0], lateChild)
-        for (index in 1..latePages.size) {
-            assertPublishedPage(pageItems[index], latePages[latePages.size - index])
-        }
-        assertPublishedPage(pageItems[31], middleChild)
-        for (index in 1..middlePages.size) {
-            assertPublishedPage(pageItems[31 + index], middlePages[middlePages.size - index])
-        }
-        assertPublishedPage(pageItems[68], earlyChild)
-        for (index in 1..earlyPages.size) {
-            assertPublishedPage(pageItems[68 + index], earlyPages[earlyPages.size - index])
-        }
-        assertDivider(pageItems[100])
-        assertDivider(pageItems[101])
-    }
-
-    @Test
-    fun `sorts up to 99 pages topologically`() {
+    fun `sorts pages topologically`() {
         val pages = MutableLiveData<List<PageModel>>()
         whenever(pagesViewModel.pages).thenReturn(pages)
 

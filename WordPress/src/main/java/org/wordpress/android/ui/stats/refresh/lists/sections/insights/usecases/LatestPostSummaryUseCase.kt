@@ -210,12 +210,12 @@ class LatestPostSummaryUseCase
     }
 
     private fun onAddNewPostClick() {
-        analyticsTracker.track(STATS_LATEST_POST_SUMMARY_ADD_NEW_POST_TAPPED)
+        analyticsTracker.track(STATS_LATEST_POST_SUMMARY_ADD_NEW_POST_TAPPED, statsSiteProvider.siteModel)
         navigateTo(AddNewPost)
     }
 
     private fun onViewMore(params: ViewMoreParams) {
-        analyticsTracker.track(STATS_LATEST_POST_SUMMARY_VIEW_POST_DETAILS_TAPPED)
+        analyticsTracker.track(STATS_LATEST_POST_SUMMARY_VIEW_POST_DETAILS_TAPPED, statsSiteProvider.siteModel)
         navigateTo(
             ViewPostDetailStats(
                 params.postId,
@@ -226,12 +226,12 @@ class LatestPostSummaryUseCase
     }
 
     private fun onSharePost(params: SharePostParams) {
-        analyticsTracker.track(STATS_LATEST_POST_SUMMARY_SHARE_POST_TAPPED)
+        analyticsTracker.track(STATS_LATEST_POST_SUMMARY_SHARE_POST_TAPPED, statsSiteProvider.siteModel)
         navigateTo(SharePost(params.postUrl, params.postTitle))
     }
 
     private fun onLinkClicked(params: LinkClickParams) {
-        analyticsTracker.track(STATS_LATEST_POST_SUMMARY_POST_ITEM_TAPPED)
+        analyticsTracker.track(STATS_LATEST_POST_SUMMARY_POST_ITEM_TAPPED, statsSiteProvider.siteModel)
         navigateTo(ViewPost(params.postId, params.postUrl))
     }
 

@@ -45,6 +45,9 @@ public class SelfHostedEndpointFinder {
         WORDPRESS_COM_SITE,
         XMLRPC_BLOCKED,
         XMLRPC_FORBIDDEN,
+        // Transient: the server rate-limited us (HTTP 429). Kept distinct from the "missing/blocked" errors so
+        // callers don't misread a temporary throttle as XML-RPC being disabled.
+        RATE_LIMITED,
         GENERIC_ERROR
     }
 
@@ -54,7 +57,7 @@ public class SelfHostedEndpointFinder {
         @NonNull public final DiscoveryError discoveryError;
         @Nullable public final String failedUrl;
 
-        DiscoveryException(@NonNull DiscoveryError failureType, @Nullable String failedUrl) {
+        public DiscoveryException(@NonNull DiscoveryError failureType, @Nullable String failedUrl) {
             this.discoveryError = failureType;
             this.failedUrl = failedUrl;
         }
@@ -183,7 +186,8 @@ public class SelfHostedEndpointFinder {
                 if (e.discoveryError == DiscoveryError.ERRONEOUS_SSL_CERTIFICATE
                     || e.discoveryError == DiscoveryError.HTTP_AUTH_REQUIRED
                     || e.discoveryError == DiscoveryError.MISSING_XMLRPC_METHOD
-                    || e.discoveryError == DiscoveryError.XMLRPC_BLOCKED) {
+                    || e.discoveryError == DiscoveryError.XMLRPC_BLOCKED
+                    || e.discoveryError == DiscoveryError.RATE_LIMITED) {
                     throw e;
                 }
                 // Otherwise. swallow the error since we are just verifying various URLs
@@ -353,6 +357,10 @@ public class SelfHostedEndpointFinder {
                 throw new DiscoveryException(DiscoveryError.XMLRPC_BLOCKED, url);
             } else if (e.discoveryError.equals(DiscoveryError.MISSING_XMLRPC_METHOD)) {
                 throw new DiscoveryException(DiscoveryError.MISSING_XMLRPC_METHOD, url);
+            } else if (e.discoveryError.equals(DiscoveryError.RATE_LIMITED)) {
+                // Surface the transient throttle instead of swallowing it and returning false (which callers
+                // would treat as "endpoint found but methods missing").
+                throw new DiscoveryException(DiscoveryError.RATE_LIMITED, url);
             }
         } catch (IllegalArgumentException e) {
             // The XML-RPC client returns this error in case of redirect to an invalid URL.

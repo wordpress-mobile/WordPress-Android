@@ -2,12 +2,16 @@ package org.wordpress.android.ui.reader
 
 import androidx.test.core.app.ApplicationProvider
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatCode
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
+import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
+import java.util.EnumSet
 
 @RunWith(RobolectricTestRunner::class)
 @Config(application = android.app.Application::class)
@@ -91,5 +95,56 @@ class ReaderActivityLauncherTest {
         val intent = ReaderActivityLauncher.createReaderSearchIntent(context)
 
         assertThat(intent.component?.className).isEqualTo(ReaderSearchActivity::class.java.name)
+    }
+
+    @Test
+    fun `openUrl with null url does not throw`() {
+        assertThatCode {
+            ReaderActivityLauncher.openUrl(context, null)
+        }.doesNotThrowAnyException()
+    }
+
+    @Test
+    fun `openUrl with empty url does not throw`() {
+        assertThatCode {
+            ReaderActivityLauncher.openUrl(context, "")
+        }.doesNotThrowAnyException()
+    }
+
+    @Test
+    fun `openUrl with null url and external type does not throw`() {
+        assertThatCode {
+            ReaderActivityLauncher.openUrl(context, null, OpenUrlType.EXTERNAL)
+        }.doesNotThrowAnyException()
+    }
+
+    @Test
+    fun `showReaderPhotoViewer with null imageUrl does not throw`() {
+        assertThatCode {
+            ReaderActivityLauncher.showReaderPhotoViewer(
+                context,
+                null,
+                null,
+                null,
+                EnumSet.noneOf(PhotoViewerOption::class.java),
+                0,
+                0
+            )
+        }.doesNotThrowAnyException()
+    }
+
+    @Test
+    fun `showReaderPhotoViewer with empty imageUrl does not throw`() {
+        assertThatCode {
+            ReaderActivityLauncher.showReaderPhotoViewer(
+                context,
+                "",
+                null,
+                null,
+                EnumSet.noneOf(PhotoViewerOption::class.java),
+                0,
+                0
+            )
+        }.doesNotThrowAnyException()
     }
 }

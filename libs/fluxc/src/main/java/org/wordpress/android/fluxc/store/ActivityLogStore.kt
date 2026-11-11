@@ -360,7 +360,8 @@ class ActivityLogStore
         val loadMore: Boolean = false,
         val after: Date? = null,
         val before: Date? = null,
-        val groups: List<String> = listOf()
+        val groups: List<String> = listOf(),
+        val notGroups: List<String> = listOf()
     ) : Payload<BaseRequest.BaseNetworkError>()
 
     class FetchRewindStatePayload(val site: SiteModel) : Payload<BaseRequest.BaseNetworkError>()

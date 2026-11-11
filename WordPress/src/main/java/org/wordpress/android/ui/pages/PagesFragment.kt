@@ -42,7 +42,6 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.blaze.BlazeFlowSource
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment.Companion.MODAL_LAYOUT_PICKER_TAG
 import org.wordpress.android.ui.posts.EditorConstants
@@ -57,6 +56,7 @@ import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.WPSwipeToRefreshHelper
@@ -80,7 +80,7 @@ import org.wordpress.android.viewmodel.wpwebview.WPWebViewSource
 import org.wordpress.android.widgets.WPSnackbar
 import java.lang.ref.WeakReference
 import javax.inject.Inject
-import com.google.android.material.R as MaterialR
+import androidx.appcompat.R as AppCompatR
 
 class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializedListener {
     @Inject
@@ -122,7 +122,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
     lateinit var uploadUtilsWrapper: UploadUtilsWrapper
 
     @Inject
-    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    lateinit var buildConfigWrapper: BuildConfigWrapper
 
     @Suppress("DEPRECATION")
     private var progressDialog: ProgressDialog? = null
@@ -301,7 +301,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         })
 
         // fix the search view margins to match the action bar
-        val searchEditFrame = actionMenuItem.actionView?.findViewById<LinearLayout>(MaterialR.id.search_edit_frame)
+        val searchEditFrame = actionMenuItem.actionView?.findViewById<LinearLayout>(AppCompatR.id.search_edit_frame)
         (searchEditFrame?.layoutParams as LinearLayout.LayoutParams)
             .apply { this.leftMargin = DisplayUtils.dpToPx(activity, -8) }
 
@@ -375,7 +375,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
 
         viewModel.createNewPage.observe(viewLifecycleOwner) {
             if (mlpViewModel.canShowModalLayoutPicker()
-                && jetpackFeatureRemovalPhaseHelper.shouldShowTemplateSelectionInPages()
+                && buildConfigWrapper.isJetpackApp
             ) {
                 mlpViewModel.createPageFlowTriggered()
             } else {

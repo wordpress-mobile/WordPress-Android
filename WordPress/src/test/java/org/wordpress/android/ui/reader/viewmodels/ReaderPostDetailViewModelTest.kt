@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.viewmodels
 
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -13,12 +14,14 @@ import org.mockito.ArgumentMatchers.anyList
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
+import org.mockito.Mockito.lenient
 import org.mockito.kotlin.KArgumentCaptor
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -52,6 +55,7 @@ import org.wordpress.android.ui.engagement.utils.GetLikesTestConfig.TEST_CONFIG_
 import org.wordpress.android.ui.engagement.utils.getGetLikesState
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenUrl
@@ -76,7 +80,7 @@ import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.reader.models.ReaderSimplePost
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
-import org.wordpress.android.ui.reader.services.comment.wrapper.ReaderCommentServiceStarterWrapper
+import org.wordpress.android.ui.reader.repository.ReaderCommentRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState
@@ -96,11 +100,10 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiSt
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState.RelatedPostsUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState.RelatedPostsUiState.ReaderRelatedPostUiState
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
-import org.wordpress.android.ui.reader.views.uistates.InteractionSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderAction
-import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
+import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -112,7 +115,6 @@ import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
 import org.wordpress.android.util.config.ReaderReadingPreferencesFeatureConfig
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
-import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 
 private const val POST_PARAM_POSITION = 0
@@ -181,9 +183,6 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     private lateinit var likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig
 
     @Mock
-    private lateinit var contextProvider: ContextProvider
-
-    @Mock
     private lateinit var engagementUtils: EngagementUtils
 
     @Mock
@@ -199,7 +198,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     private lateinit var readerCommentTableWrapper: ReaderCommentTableWrapper
 
     @Mock
-    private lateinit var readerCommentServiceStarterWrapper: ReaderCommentServiceStarterWrapper
+    private lateinit var readerCommentRepository: ReaderCommentRepository
 
     @Mock
     private lateinit var readingPreferencesFeatureConfig: ReaderReadingPreferencesFeatureConfig
@@ -247,11 +246,10 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             likesEnhancementsFeatureConfig,
             engagementUtils,
             htmlMessageUtils,
-            contextProvider,
             networkUtilsWrapper,
             commentsSnippetFeatureConfig,
             readerCommentTableWrapper,
-            readerCommentServiceStarterWrapper,
+            readerCommentRepository,
             readingPreferencesFeatureConfig,
         )
         whenever(readerGetPostUseCase.get(any(), any(), any())).thenReturn(Pair(readerPost, false))
@@ -333,6 +331,8 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         whenever(getLikesHandler.likesStatusUpdate).thenReturn(getLikesState)
 
         whenever(commentsSnippetFeatureConfig.isEnabled()).thenReturn(true)
+        lenient().whenever(readerCommentRepository.fetchCommentsForSnippet(any(), any()))
+            .thenReturn(UpdateResult.UNCHANGED)
 
         likesCaptor = argumentCaptor()
 
@@ -455,7 +455,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given request already running, when post is fetched, then no error is shown`() =
+    fun `given request already running, when post is fetched, then loading is kept and no error is shown`() =
         testWithoutLocalPost {
             whenever(readerFetchPostUseCase.fetchPost(readerPost.blogId, readerPost.postId, viewModel.isFeed))
                 .thenReturn(FetchReaderPostState.Success)
@@ -465,7 +465,9 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
             viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
-            assertThat(observers.uiStates.filterIsInstance<ErrorUiState>().last().message).isNull()
+            // A sibling fetch is still in flight, so we stay on loading rather than showing
+            // a (message-less) error that would blank the screen mid-load.
+            assertThat(observers.uiStates.last()).isEqualTo(LoadingUiState)
         }
 
     @Test
@@ -480,6 +482,122 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
         assertThat(observers.uiStates.last())
             .isEqualTo(ErrorUiState(UiStringRes(R.string.reader_err_get_post_not_found)))
+    }
+
+    /* SHOW POST - LOAD ALWAYS TERMINATES (CMM-2254) */
+    @Test
+    fun `given cached post has no body, when show post is triggered, then loading state is shown`() = test {
+        val bodylessPost = createDummyReaderPost(readerPost.postId).apply { text = null }
+        whenever(readerGetPostUseCase.get(anyLong(), anyLong(), anyBoolean())).thenReturn(Pair(bodylessPost, false))
+        val observers = init(showPost = false)
+
+        viewModel.onShowPost(blogId = bodylessPost.blogId, postId = bodylessPost.postId)
+
+        assertThat(observers.uiStates.first()).isEqualTo(LoadingUiState)
+    }
+
+    @Test
+    fun `given cached post has no body and fetch fails, when show post is triggered, then error is shown`() = test {
+        val bodylessPost = createDummyReaderPost(readerPost.postId).apply { text = null }
+        whenever(readerGetPostUseCase.get(anyLong(), anyLong(), anyBoolean())).thenReturn(Pair(bodylessPost, false))
+        whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+            .thenReturn(Failed.RequestFailed)
+        val observers = init(showPost = false)
+
+        viewModel.onShowPost(blogId = bodylessPost.blogId, postId = bodylessPost.postId)
+
+        assertThat(observers.uiStates.last())
+            .isEqualTo(ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic)))
+    }
+
+    @Test
+    fun `given fetch succeeds but post is still missing, when show post is triggered, then error is shown`() =
+        testWithoutLocalPost {
+            whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                .thenReturn(FetchReaderPostState.Success)
+            val observers = init(showPost = false)
+
+            viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+            assertThat(observers.uiStates.last())
+                .isEqualTo(ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic)))
+        }
+
+    @Test
+    fun `given fetch succeeds but body is empty, when show post is triggered, then post is rendered`() = test {
+        // A post can't be published without a title, and usually has a featured image too, so an
+        // empty body still has a header, image and actions worth showing - not an error.
+        val bodylessPost = createDummyReaderPost(readerPost.postId).apply { text = null }
+        whenever(readerGetPostUseCase.get(anyLong(), anyLong(), anyBoolean())).thenReturn(Pair(bodylessPost, false))
+        whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+            .thenReturn(FetchReaderPostState.Success)
+        val observers = init(showPost = false)
+
+        viewModel.onShowPost(blogId = bodylessPost.blogId, postId = bodylessPost.postId)
+
+        assertThat(observers.uiStates.last()).isInstanceOf(ReaderPostDetailsUiState::class.java)
+        assertThat(observers.uiStates.none { it is ErrorUiState }).isTrue
+    }
+
+    @Test
+    fun `given excerpt-only post, when show post is triggered, then excerpt is rendered not an error`() = test {
+        // A Jetpack site with "Show excerpt" on: ReaderPostRenderer renders the excerpt in place
+        // of the body for these, so an empty body is normal and the post is still renderable.
+        val excerptOnlyPost = createDummyReaderPost(readerPost.postId).apply {
+            text = null
+            isJetpack = true
+            useExcerpt = true
+            setExcerpt("<p>Dummy post excerpt</p>")
+        }
+        whenever(readerGetPostUseCase.get(anyLong(), anyLong(), anyBoolean()))
+            .thenReturn(Pair(excerptOnlyPost, false))
+        whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+            .thenReturn(FetchReaderPostState.Success)
+        val observers = init(showPost = false)
+
+        viewModel.onShowPost(blogId = excerptOnlyPost.blogId, postId = excerptOnlyPost.postId)
+
+        assertThat(observers.uiStates.none { it is ErrorUiState }).isTrue
+    }
+
+    @Test
+    fun `given rendered post and empty refetch, when show post is triggered, then content is kept`() = test {
+        val bodylessPost = createDummyReaderPost(readerPost.postId).apply { text = null }
+        whenever(readerGetPostUseCase.get(anyLong(), anyLong(), anyBoolean()))
+            .thenReturn(Pair(readerPost, false))
+            .thenReturn(Pair(bodylessPost, false))
+        whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+            .thenReturn(FetchReaderPostState.Success)
+        val observers = init(showPost = false)
+
+        viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+        assertThat(observers.uiStates.last()).isInstanceOf(ReaderPostDetailsUiState::class.java)
+        assertThat(observers.uiStates.none { it is ErrorUiState }).isTrue
+    }
+
+    @Test
+    fun `given the screen moved to another post, when a stale fetch fails, then no error is shown`() = test {
+        // This screen is reused when navigating to a related post or back through the post
+        // history, so a fetch can resolve long after its post left the screen - it waits up to
+        // the fetch timeout. Its outcome must not be applied to the post now being shown.
+        val stalePost = createDummyReaderPost(99).apply { text = null }
+        val staleFetch = CompletableDeferred<FetchReaderPostState>()
+        whenever(readerGetPostUseCase.get(anyLong(), anyLong(), anyBoolean()))
+            .thenReturn(Pair(stalePost, false))
+            .thenReturn(Pair(readerPost, false))
+        whenever(readerFetchPostUseCase.fetchPost(eq(stalePost.blogId), eq(stalePost.postId), anyBoolean()))
+            .doSuspendableAnswer { staleFetch.await() }
+        whenever(readerFetchPostUseCase.fetchPost(eq(readerPost.blogId), eq(readerPost.postId), anyBoolean()))
+            .thenReturn(FetchReaderPostState.Success)
+        val observers = init(showPost = false)
+
+        viewModel.onShowPost(blogId = stalePost.blogId, postId = stalePost.postId)
+        viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+        staleFetch.complete(FetchReaderPostState.Failed.RequestFailed)
+
+        assertThat(observers.uiStates.none { it is ErrorUiState }).isTrue
+        assertThat(observers.uiStates.last()).isInstanceOf(ReaderPostDetailsUiState::class.java)
     }
 
     @Test
@@ -723,32 +841,6 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         verify(readerPostCardActionsHandler).onAction(
             eq(readerPost),
             eq(FOLLOW),
-            eq(false),
-            anyString()
-        )
-    }
-
-    @Test
-    fun `when header likes count is clicked, then like action is invoked`() = test {
-        val observers = init()
-        // trigger mapping and header action callback capture
-        (observers.uiStates.last() as ReaderPostDetailsUiState)
-
-        capturedOnHeaderAction.invoke(ReaderPostDetailsHeaderAction.LikesClicked)
-
-        assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowEngagedPeopleList::class.java)
-    }
-
-    @Test
-    fun `when header comments count is clicked, then comments action is invoked`() = test {
-        // trigger mapping and header action callback capture
-        (init().uiStates.last() as ReaderPostDetailsUiState)
-
-        capturedOnHeaderAction.invoke(ReaderPostDetailsHeaderAction.CommentsClicked)
-
-        verify(readerPostCardActionsHandler).onAction(
-            eq(readerPost),
-            eq(COMMENTS),
             eq(false),
             anyString()
         )
@@ -1026,7 +1118,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             isLikedByCurrentUser = true
         }
         viewModel.post = post
-        init()
+        init(showPost = false)
 
         viewModel.onRefreshLikersData(post, true)
 
@@ -1059,7 +1151,6 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
         assertThat(likeObserver).isNotEmpty
         with(likeObserver.first()) {
-            assertThat(showLoading).isFalse
             assertThat(engageItemsList).isEqualTo(
                 likers + TrailingLabelTextItem(
                     UiStringText(
@@ -1088,7 +1179,6 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
         assertThat(likeObserver).isNotEmpty
         with(likeObserver.first()) {
-            assertThat(showLoading).isFalse
             assertThat(engageItemsList).isEqualTo(likers)
             assertThat(showEmptyState).isTrue
             assertThat(emptyStateTitle is UiStringRes).isTrue
@@ -1142,7 +1232,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onRefreshCommentsData does not start comment snippet service for external posts`() {
+    fun `onRefreshCommentsData does not fetch the comment snippet for external posts`() = test {
         val externalPost = createDummyReaderPost(1, isWpComPost = false)
         whenever(
             readerPostTableWrapper.getBlogPost(
@@ -1154,11 +1244,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
         viewModel.onRefreshCommentsData(1, 1)
 
-        verify(readerCommentServiceStarterWrapper, never()).startServiceForCommentSnippet(
-            anyOrNull(),
-            anyOrNull(),
-            anyOrNull()
-        )
+        verify(readerCommentRepository, never()).fetchCommentsForSnippet(any(), any())
     }
 
     @Test
@@ -1270,7 +1356,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             this.blogId = id * 100
             this.feedId = id * 1000
             this.title = "DummyPost"
-            this.featuredVideo = id.toString()
+            this.text = "<p>Dummy post content</p>"
             this.featuredImage = "/featured_image/$id/url"
             this.isExternal = !isWpComPost
             this.numReplies = 1
@@ -1292,13 +1378,11 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         return ReaderPostDetailsUiState(
             postId = post.postId,
             blogId = post.blogId,
-            featuredImageUiState = mock(),
             headerUiState = ReaderPostDetailsHeaderUiState(
-                UiStringText(post.title),
-                post.authorName,
-                listOf(TagUiState("", "", false, mock())),
-                true,
-                ReaderBlogSectionUiState(
+                title = UiStringText(post.title),
+                authorName = post.authorName,
+                tagItems = listOf(TagUiState("", "", false, mock())),
+                blogSectionUiState = ReaderBlogSectionUiState(
                     postId = post.postId,
                     blogId = post.blogId,
                     dateLine = "",
@@ -1310,18 +1394,11 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                     blavatarType = BLAVATAR_CIRCULAR,
                     blogSectionClickData = ReaderBlogSectionClickData(mock(), 0)
                 ),
-                FollowButtonUiState(
+                followButtonUiState = FollowButtonUiState(
                     onFollowButtonClicked = mock(),
                     isFollowed = false,
                     isVisible = true
                 ),
-                "",
-                InteractionSectionUiState(
-                    likeCount = 42,
-                    commentCount = 13,
-                    onLikesClicked = mock(),
-                    onCommentsClicked = mock(),
-                )
             ),
             excerptFooterUiState = mock(),
             moreMenuItems = mock(),

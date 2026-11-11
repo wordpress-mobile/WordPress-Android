@@ -3,12 +3,12 @@ package org.wordpress.android.ui.mysite.cards.dashboard.todaysstats
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
+import org.wordpress.android.ui.newstats.NewStatsRouting
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -16,9 +16,9 @@ import javax.inject.Inject
 class TodaysStatsViewModelSlice @Inject constructor(
     private val cardsTracker: CardsTracker,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val todaysStatsCardBuilder: TodaysStatsCardBuilder
+    private val todaysStatsCardBuilder: TodaysStatsCardBuilder,
+    private val newStatsRouting: NewStatsRouting
 ) {
     private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.TodaysStatsCard?>()
     val uiModel = _uiModel as LiveData<MySiteCardAndItem.Card.TodaysStatsCard?>
@@ -53,15 +53,11 @@ class TodaysStatsViewModelSlice @Inject constructor(
             CardsTracker.Type.STATS.label,
             CardsTracker.StatsSubtype.TODAYS_STATS_NUDGE.label
         )
-        if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-            _onNavigation.value = Event(SiteNavigationAction.ShowJetpackRemovalStaticPostersView)
-        } else {
-            _onNavigation.value = Event(
-                SiteNavigationAction.OpenExternalUrl(
-                    TodaysStatsCardBuilder.URL_GET_MORE_VIEWS_AND_TRAFFIC
-                )
+        _onNavigation.value = Event(
+            SiteNavigationAction.OpenExternalUrl(
+                TodaysStatsCardBuilder.URL_GET_MORE_VIEWS_AND_TRAFFIC
             )
-        }
+        )
     }
 
     private fun onMoreMenuClick() {
@@ -86,12 +82,12 @@ class TodaysStatsViewModelSlice @Inject constructor(
     }
 
     private fun navigateToTodaysStats() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-            _onNavigation.value = Event(SiteNavigationAction.ShowJetpackRemovalStaticPostersView)
-        } else {
-            _onNavigation.value = Event(SiteNavigationAction.OpenStatsByDay(selectedSite))
+        val navigationAction = when {
+            newStatsRouting.isNewStatsEnabled() -> SiteNavigationAction.OpenNewStatsForToday
+
+            else -> SiteNavigationAction.OpenStatsByDay(requireNotNull(selectedSiteRepository.getSelectedSite()))
         }
+        _onNavigation.value = Event(navigationAction)
     }
 
     fun clearValue() {

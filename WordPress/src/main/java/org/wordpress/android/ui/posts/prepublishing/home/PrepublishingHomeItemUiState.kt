@@ -4,6 +4,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel
+import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageData
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -80,6 +81,19 @@ sealed class PrepublishingHomeItemUiState(
             @DrawableRes val iconRes: Int,
             val isEnabled: Boolean = true
         )
+    }
+
+    sealed class FeaturedImageUiState(
+        isVisible: Boolean = true
+    ) : PrepublishingHomeItemUiState(isVisible) {
+        data class Visible(
+            val featuredImageData: FeaturedImageData,
+            val onSetOrReplaceClicked: () -> Unit,
+            val onRemoveClicked: () -> Unit,
+            val onRetryClicked: () -> Unit,
+        ) : FeaturedImageUiState()
+
+        object Hidden : FeaturedImageUiState(isVisible = false)
     }
 
     sealed interface ActionType {

@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.login.LoginMode;
+import org.wordpress.android.ui.accounts.LoginFlow;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginActivity;
@@ -38,7 +38,7 @@ public class AuthenticationDialogUtils {
             } else {
                 // only WPCOM sites are available so, need to ask the user to log in again
                 Intent intent = new Intent(activity, LoginActivity.class);
-                LoginMode.WPCOM_REAUTHENTICATE.putInto(intent);
+                LoginFlow.WPCOM_REAUTHENTICATE.putInto(intent);
                 activity.startActivityForResult(intent, RequestCodes.REAUTHENTICATE);
             }
 

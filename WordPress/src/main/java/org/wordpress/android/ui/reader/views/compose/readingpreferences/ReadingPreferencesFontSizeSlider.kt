@@ -149,7 +149,7 @@ private fun FontSizePreviewLabels(
                     modifier = Modifier
                         .wrapContentWidth()
                         .clickable(
-                            interactionSource = MutableInteractionSource(),
+                            interactionSource = remember { MutableInteractionSource() },
                             indication = null,
                         ) { onFontSizeSelected(fontSize) }
                 )

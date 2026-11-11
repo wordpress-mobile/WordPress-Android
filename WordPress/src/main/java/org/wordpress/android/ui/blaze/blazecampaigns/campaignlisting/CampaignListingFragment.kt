@@ -57,7 +57,7 @@ import org.wordpress.android.ui.blaze.blazecampaigns.CampaignViewModel
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.mysite.cards.blaze.CampaignStatus
 import org.wordpress.android.ui.compose.utils.uiStringText
-import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingState
+import org.wordpress.android.ui.compose.components.LoadingState
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.viewmodel.observeEvent

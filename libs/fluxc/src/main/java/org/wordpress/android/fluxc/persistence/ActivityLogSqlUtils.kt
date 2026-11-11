@@ -196,7 +196,9 @@ class ActivityLogSqlUtils @Inject constructor(private val formattableContentMapp
                 actorType = this.actor?.type,
                 wpcomUserID = this.actor?.wpcomUserID,
                 avatarURL = this.actor?.avatarURL,
-                role = this.actor?.role
+                role = this.actor?.role,
+                mcpAgent = this.actor?.isMCPAgent,
+                mcpClient = this.actor?.mcpClient
         )
     }
 
@@ -267,7 +269,9 @@ class ActivityLogSqlUtils @Inject constructor(private val formattableContentMapp
         @Column var actorType: String? = null,
         @Column var wpcomUserID: Long? = null,
         @Column var avatarURL: String? = null,
-        @Column var role: String? = null
+        @Column var role: String? = null,
+        @Column var mcpAgent: Boolean? = null,
+        @Column var mcpClient: String? = null
     ) : Identifiable {
         constructor() : this(-1, 0, 0, "", "", "", published = 0)
 
@@ -286,7 +290,10 @@ class ActivityLogSqlUtils @Inject constructor(private val formattableContentMapp
                 avatarURL != null ||
                 role != null
             ) {
-                ActivityLogModel.ActivityActor(displayName, actorType, wpcomUserID, avatarURL, role)
+                ActivityLogModel.ActivityActor(
+                    displayName, actorType, wpcomUserID, avatarURL, role,
+                    mcpAgent ?: false, mcpClient
+                )
             } else {
                 null
             }

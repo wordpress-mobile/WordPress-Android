@@ -5,19 +5,19 @@ import android.content.Context
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.push.NotificationType.BLOGGING_PROMPTS_ONBOARDING
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.notifications.DismissNotificationReceiver
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.workers.notification.local.LocalNotificationHandler
 import javax.inject.Inject
 
 class BloggingPromptsOnboardingNotificationHandler @Inject constructor(
     private val accountStore: AccountStore,
     private val notificationsTracker: SystemNotificationsTracker,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    private val buildConfigWrapper: BuildConfigWrapper
 ) : LocalNotificationHandler {
     override fun shouldShowNotification(): Boolean {
-        return accountStore.hasAccessToken() && jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()
+        return accountStore.hasAccessToken() && buildConfigWrapper.isJetpackApp
     }
 
     override fun buildFirstActionPendingIntent(context: Context, notificationId: Int): PendingIntent {
@@ -42,6 +42,6 @@ class BloggingPromptsOnboardingNotificationHandler @Inject constructor(
     }
 
     override fun onNotificationShown() {
-        notificationsTracker.trackShownNotification(BLOGGING_PROMPTS_ONBOARDING)
+        notificationsTracker.trackShownNotification(BLOGGING_PROMPTS_ONBOARDING, blogId = null)
     }
 }

@@ -48,6 +48,26 @@ class ActivityLauncherWrapperTest {
     }
 
     @Test
+    fun `openPlayStoreLink, when activity is finishing, should not call finishAffinity`() {
+        val activity = mockAppPreinstalled(true)
+        whenever(activity.isFinishing).thenReturn(true)
+
+        classToTest.openPlayStoreLink(activity, "packageName")
+
+        verify(activity, never()).finishAffinity()
+    }
+
+    @Test
+    fun `openPlayStoreLink, when activity is destroyed, should not call finishAffinity`() {
+        val activity = mockAppPreinstalled(true)
+        whenever(activity.isDestroyed).thenReturn(true)
+
+        classToTest.openPlayStoreLink(activity, "packageName")
+
+        verify(activity, never()).finishAffinity()
+    }
+
+    @Test
     fun `when a campaign is passed the store url includes a referrer`() {
         val expectedStoreUrl = "https://play.google.com/store/apps/details?id=com.jetpack.android" +
                 "&referrer=utm_source%3Dorg.wordpress.android%26utm_campaign%3Dtest_campaign"

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="WordPress.ZenDesk" parent="WordPress.NoActionBar.NoEdgeToEdge">
+<resources>
+    <style name="WordPress.ZenDesk" parent="WordPress.NoActionBar">
         <item name="toolbarStyle">@style/WordPress.ZenDesk.Toolbar</item>
+        <!-- statusBarColor is ignored with edge-to-edge on API 35+ but still applies on older APIs -->
         <item name="android:statusBarColor">@color/primary_dark</item>
         <item name="titleTextColor">?attr/colorOnSurface</item>
         <item name="toolbarNavigationButtonStyle">

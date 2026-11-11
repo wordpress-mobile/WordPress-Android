@@ -120,7 +120,7 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given no todays stats, when card is built, then return null`() {
+    fun `given no today's stats, when card is built, then return null`() {
         val statCard = buildTodaysStatsCard(null)
 
         assertThat(statCard).isNull()
@@ -129,21 +129,21 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
     /* TODAY'S STATS CARD - CONTENT */
 
     @Test
-    fun `given todays stats, when card is built, then return stat card`() {
+    fun `given today's stats, when card is built, then return stat card`() {
         val statCard = buildTodaysStatsCard(todaysStatsCardModel)
 
         assertThat(statCard).isNotNull
     }
 
     @Test
-    fun `given todays stats, when card is built, then stat count exists`() {
+    fun `given today's stats, when card is built, then stat count exists`() {
         val statCard = buildTodaysStatsCard(todaysStatsCardModel)
 
         assertThat(statCard).isEqualTo(todaysStatsCard)
     }
 
     @Test
-    fun `given empty todays stats, when card is built, then get more views message exists`() {
+    fun `given empty today's stats, when card is built, then get more views message exists`() {
         val zeroCount = 0
         whenever(statsUtils.toFormattedString(zeroCount)).thenReturn("$zeroCount")
 
@@ -160,7 +160,7 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given non empty todays stats, when card is built, then get more views message not exists`() {
+    fun `given non empty today's stats, when card is built, then get more views message not exists`() {
         val todaysStatsCard = buildTodaysStatsCard(todaysStatsCardModel)
 
         assertThat((todaysStatsCard as TodaysStatsCardWithData).message).isNull()

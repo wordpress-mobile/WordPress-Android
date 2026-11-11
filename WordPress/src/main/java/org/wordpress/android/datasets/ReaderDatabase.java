@@ -29,7 +29,7 @@ import java.util.Locale;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 155;
+    private static final int DB_VERSION = 157;
     private static final int DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT = 136; // do not change this value
 
     /*
@@ -118,6 +118,8 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      * 153 - added author_email to tbl_comments
      * 154 - added tbl_blocked_authors table
      * 155 - added tbl_blocked_blogs table
+     * 156 - dropped tbl_discover_cards (Reader Discover legacy code removed)
+     * 157 - dropped tbl_thumbnails (Reader video cards removed)
      */
 
     /*
@@ -187,6 +189,17 @@ public class ReaderDatabase extends SQLiteOpenHelper {
     }
 
     @Override
+    public void onConfigure(SQLiteDatabase db) {
+        super.onConfigure(db);
+        // Enable Write-Ahead Logging so reads and a single writer can run concurrently. Without WAL,
+        // Android caps the connection pool at a single connection for the whole reader DB, which
+        // serializes every read/write across all threads. That serialization causes ANRs when a
+        // main-thread read (e.g. reloading Reader tags in onStart) blocks behind a background write
+        // such as purge()/reset()/addOrUpdatePosts(). See ReaderTagTable.getTagFromEndpoint ANR.
+        db.enableWriteAheadLogging();
+    }
+
+    @Override
     public void onCreate(SQLiteDatabase db) {
         createAllTables(db);
     }
@@ -211,7 +224,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
                 db.execSQL("ALTER TABLE tbl_posts ADD is_private_atomic BOOLEAN;");
                 currentVersion++;
             case 138:
-                ReaderDiscoverCardsTable.INSTANCE.createTable(db);
+                // no-op (tbl_discover_cards was created here; dropped at v156)
                 currentVersion++;
             case 139:
                 db.execSQL("DROP TABLE IF EXISTS tbl_tags_recommended;");
@@ -273,6 +286,12 @@ public class ReaderDatabase extends SQLiteOpenHelper {
             case 154:
                 ReaderBlockedBlogTable.createTables(db);
                 currentVersion++;
+            case 155:
+                db.execSQL("DROP TABLE IF EXISTS tbl_discover_cards;");
+                currentVersion++;
+            case 156:
+                db.execSQL("DROP TABLE IF EXISTS tbl_thumbnails;");
+                currentVersion++;
         }
         if (currentVersion != newVersion) {
             throw new RuntimeException(
@@ -296,10 +315,8 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         BlockedAuthorTable.createTables(db);
         ReaderTagTable.createTables(db);
         ReaderUserTable.createTables(db);
-        ReaderThumbnailTable.createTables(db);
         ReaderBlogTable.createTables(db);
         ReaderSearchTable.createTables(db);
-        ReaderDiscoverCardsTable.INSTANCE.createTable(db);
         ReaderBlockedBlogTable.createTables(db);
     }
 
@@ -310,10 +327,8 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         BlockedAuthorTable.dropTables(db);
         ReaderTagTable.dropTables(db);
         ReaderUserTable.dropTables(db);
-        ReaderThumbnailTable.dropTables(db);
         ReaderBlogTable.dropTables(db);
         ReaderSearchTable.dropTables(db);
-        ReaderDiscoverCardsTable.INSTANCE.dropTables(db);
         ReaderBlockedBlogTable.dropTables(db);
     }
 
@@ -354,12 +369,6 @@ public class ReaderDatabase extends SQLiteOpenHelper {
                 int numLikesDeleted = ReaderLikeTable.purge(db);
                 if (numLikesDeleted > 0) {
                     AppLog.i(T.READER, String.format(Locale.ENGLISH, "%d likes purged", numLikesDeleted));
-                }
-
-                // purge unattached thumbnails
-                int numThumbsPurged = ReaderThumbnailTable.purge(db);
-                if (numThumbsPurged > 0) {
-                    AppLog.i(T.READER, String.format(Locale.ENGLISH, "%d thumbnails purged", numThumbsPurged));
                 }
             }
             db.setTransactionSuccessful();

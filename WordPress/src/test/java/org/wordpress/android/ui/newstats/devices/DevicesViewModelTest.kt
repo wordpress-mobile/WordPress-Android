@@ -7,6 +7,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -16,6 +17,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.repository.DeviceItemData
 import org.wordpress.android.ui.newstats.repository.DevicesResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
@@ -31,6 +33,9 @@ class DevicesViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var statsRepository: StatsRepository
+
+    @Mock
+    private lateinit var newStatsTracker: NewStatsTracker
 
     private lateinit var viewModel: DevicesViewModel
 
@@ -52,7 +57,8 @@ class DevicesViewModelTest : BaseUnitTest() {
         viewModel = DevicesViewModel(
             selectedSiteRepository,
             accountStore,
-            statsRepository
+            statsRepository,
+            newStatsTracker
         )
         viewModel.onPeriodChanged(StatsPeriod.Last7Days)
     }
@@ -96,7 +102,7 @@ class DevicesViewModelTest : BaseUnitTest() {
     @Test
     fun `when fetch fails, then error state is emitted`() = test {
         whenever(
-            statsRepository.fetchDevicesScreensize(any(), any())
+            statsRepository.fetchDevicesScreensize(any(), any(), any())
         ).thenReturn(
             DevicesResult.Error(R.string.stats_error_api)
         )
@@ -116,7 +122,7 @@ class DevicesViewModelTest : BaseUnitTest() {
     @Test
     fun `when auth error, then isAuthError is true`() = test {
         whenever(
-            statsRepository.fetchDevicesScreensize(any(), any())
+            statsRepository.fetchDevicesScreensize(any(), any(), any())
         ).thenReturn(
             DevicesResult.Error(
                 R.string.stats_error_auth,
@@ -137,13 +143,37 @@ class DevicesViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when plan gated, then isPlanGated is true`() = test {
+        whenever(
+            statsRepository.fetchDevicesScreensize(any(), any(), any())
+        ).thenReturn(
+            DevicesResult.Error(
+                R.string.stats_error_not_available,
+                isPlanGated = true
+            )
+        )
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertThat(state).isInstanceOf(
+            DevicesCardUiState.Error::class.java
+        )
+        assertThat(
+            (state as DevicesCardUiState.Error).isPlanGated
+        ).isTrue()
+        assertThat(state.isAuthError).isFalse()
+    }
+
+    @Test
     fun `when browser fetch fails, then error state is emitted`() =
         test {
             whenever(
-                statsRepository.fetchDevicesScreensize(any(), any())
+                statsRepository.fetchDevicesScreensize(any(), any(), any())
             ).thenReturn(createScreensizeSuccess())
             whenever(
-                statsRepository.fetchDevicesBrowser(any(), any())
+                statsRepository.fetchDevicesBrowser(any(), any(), any())
             ).thenReturn(
                 DevicesResult.Error(R.string.stats_error_api)
             )
@@ -164,10 +194,10 @@ class DevicesViewModelTest : BaseUnitTest() {
     fun `when platform fetch fails, then error state is emitted`() =
         test {
             whenever(
-                statsRepository.fetchDevicesScreensize(any(), any())
+                statsRepository.fetchDevicesScreensize(any(), any(), any())
             ).thenReturn(createScreensizeSuccess())
             whenever(
-                statsRepository.fetchDevicesPlatform(any(), any())
+                statsRepository.fetchDevicesPlatform(any(), any(), any())
             ).thenReturn(
                 DevicesResult.Error(R.string.stats_error_api)
             )
@@ -188,7 +218,7 @@ class DevicesViewModelTest : BaseUnitTest() {
     fun `when repository throws exception, then unknown error state is emitted`() =
         test {
             whenever(
-                statsRepository.fetchDevicesScreensize(any(), any())
+                statsRepository.fetchDevicesScreensize(any(), any(), any())
             ).thenThrow(RuntimeException("Network error"))
 
             initViewModel()
@@ -210,7 +240,7 @@ class DevicesViewModelTest : BaseUnitTest() {
     fun `when data loads successfully, then loaded state is emitted`() =
         test {
             whenever(
-                statsRepository.fetchDevicesScreensize(any(), any())
+                statsRepository.fetchDevicesScreensize(any(), any(), any())
             ).thenReturn(createScreensizeSuccess())
 
             initViewModel()
@@ -225,7 +255,7 @@ class DevicesViewModelTest : BaseUnitTest() {
     @Test
     fun `when data loads, then items have correct values`() = test {
         whenever(
-            statsRepository.fetchDevicesScreensize(any(), any())
+            statsRepository.fetchDevicesScreensize(any(), any(), any())
         ).thenReturn(createScreensizeSuccess())
 
         initViewModel()
@@ -248,7 +278,7 @@ class DevicesViewModelTest : BaseUnitTest() {
     fun `when data loads, then maxValueForBar is set to first item views`() =
         test {
             whenever(
-                statsRepository.fetchDevicesScreensize(any(), any())
+                statsRepository.fetchDevicesScreensize(any(), any(), any())
             ).thenReturn(createScreensizeSuccess())
 
             initViewModel()
@@ -265,7 +295,7 @@ class DevicesViewModelTest : BaseUnitTest() {
         test {
             whenever(
                 statsRepository.fetchDevicesScreensize(
-                    any(), any()
+                    any(), any(), any()
                 )
             ).thenReturn(
                 DevicesResult.Success(
@@ -293,7 +323,7 @@ class DevicesViewModelTest : BaseUnitTest() {
         test {
             whenever(
                 statsRepository.fetchDevicesScreensize(
-                    any(), any()
+                    any(), any(), any()
                 )
             ).thenReturn(
                 DevicesResult.Success(
@@ -316,7 +346,7 @@ class DevicesViewModelTest : BaseUnitTest() {
     fun `when data loads with empty items, then loaded state with empty list is emitted`() =
         test {
             whenever(
-                statsRepository.fetchDevicesScreensize(any(), any())
+                statsRepository.fetchDevicesScreensize(any(), any(), any())
             ).thenReturn(
                 DevicesResult.Success(items = emptyList())
             )
@@ -335,7 +365,7 @@ class DevicesViewModelTest : BaseUnitTest() {
     @Test
     fun `when period changes, then data is reloaded`() = test {
         whenever(
-            statsRepository.fetchDevicesScreensize(any(), any())
+            statsRepository.fetchDevicesScreensize(any(), any(), any())
         ).thenReturn(createScreensizeSuccess())
 
         initViewModel()
@@ -345,9 +375,10 @@ class DevicesViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         verify(statsRepository, times(2))
-            .fetchDevicesScreensize(any(), any())
+            .fetchDevicesScreensize(any(), any(), any())
         verify(statsRepository).fetchDevicesScreensize(
-            eq(TEST_SITE_ID), eq(StatsPeriod.Last30Days)
+            eq(TEST_SITE_ID), eq(StatsPeriod.Last30Days),
+            any()
         )
     }
 
@@ -355,7 +386,7 @@ class DevicesViewModelTest : BaseUnitTest() {
     fun `when same period is selected, then data is not reloaded`() =
         test {
             whenever(
-                statsRepository.fetchDevicesScreensize(any(), any())
+                statsRepository.fetchDevicesScreensize(any(), any(), any())
             ).thenReturn(createScreensizeSuccess())
 
             initViewModel()
@@ -365,7 +396,7 @@ class DevicesViewModelTest : BaseUnitTest() {
             advanceUntilIdle()
 
             verify(statsRepository, times(1))
-                .fetchDevicesScreensize(any(), any())
+                .fetchDevicesScreensize(any(), any(), any())
         }
     // endregion
 
@@ -374,10 +405,10 @@ class DevicesViewModelTest : BaseUnitTest() {
     fun `when switching to browser, then browser data is fetched`() =
         test {
             whenever(
-                statsRepository.fetchDevicesScreensize(any(), any())
+                statsRepository.fetchDevicesScreensize(any(), any(), any())
             ).thenReturn(createScreensizeSuccess())
             whenever(
-                statsRepository.fetchDevicesBrowser(any(), any())
+                statsRepository.fetchDevicesBrowser(any(), any(), any())
             ).thenReturn(createBrowserSuccess())
 
             initViewModel()
@@ -387,7 +418,7 @@ class DevicesViewModelTest : BaseUnitTest() {
             advanceUntilIdle()
 
             verify(statsRepository).fetchDevicesBrowser(
-                eq(TEST_SITE_ID), any()
+                eq(TEST_SITE_ID), any(), any()
             )
         }
 
@@ -395,7 +426,7 @@ class DevicesViewModelTest : BaseUnitTest() {
     fun `when switching to same type, then data is not re-fetched`() =
         test {
             whenever(
-                statsRepository.fetchDevicesScreensize(any(), any())
+                statsRepository.fetchDevicesScreensize(any(), any(), any())
             ).thenReturn(createScreensizeSuccess())
 
             initViewModel()
@@ -405,17 +436,17 @@ class DevicesViewModelTest : BaseUnitTest() {
             advanceUntilIdle()
 
             verify(statsRepository, times(1))
-                .fetchDevicesScreensize(any(), any())
+                .fetchDevicesScreensize(any(), any(), any())
         }
 
     @Test
     fun `when switching to platform, then platform data is fetched`() =
         test {
             whenever(
-                statsRepository.fetchDevicesScreensize(any(), any())
+                statsRepository.fetchDevicesScreensize(any(), any(), any())
             ).thenReturn(createScreensizeSuccess())
             whenever(
-                statsRepository.fetchDevicesPlatform(any(), any())
+                statsRepository.fetchDevicesPlatform(any(), any(), any())
             ).thenReturn(createPlatformSuccess())
 
             initViewModel()
@@ -425,7 +456,7 @@ class DevicesViewModelTest : BaseUnitTest() {
             advanceUntilIdle()
 
             verify(statsRepository).fetchDevicesPlatform(
-                eq(TEST_SITE_ID), any()
+                eq(TEST_SITE_ID), any(), any()
             )
         }
     // endregion
@@ -435,7 +466,7 @@ class DevicesViewModelTest : BaseUnitTest() {
     fun `when refresh is called, then isRefreshing becomes true then false`() =
         test {
             whenever(
-                statsRepository.fetchDevicesScreensize(any(), any())
+                statsRepository.fetchDevicesScreensize(any(), any(), any())
             ).thenReturn(createScreensizeSuccess())
 
             initViewModel()
@@ -452,7 +483,7 @@ class DevicesViewModelTest : BaseUnitTest() {
     @Test
     fun `when refresh is called, then data is fetched`() = test {
         whenever(
-            statsRepository.fetchDevicesScreensize(any(), any())
+            statsRepository.fetchDevicesScreensize(any(), any(), any())
         ).thenReturn(createScreensizeSuccess())
 
         initViewModel()
@@ -462,14 +493,14 @@ class DevicesViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         verify(statsRepository, times(2))
-            .fetchDevicesScreensize(eq(TEST_SITE_ID), any())
+            .fetchDevicesScreensize(eq(TEST_SITE_ID), any(), any())
     }
 
     @Test
     fun `when refresh with no site, then data is not fetched`() =
         test {
             whenever(
-                statsRepository.fetchDevicesScreensize(any(), any())
+                statsRepository.fetchDevicesScreensize(any(), any(), any())
             ).thenReturn(createScreensizeSuccess())
 
             initViewModel()
@@ -482,13 +513,13 @@ class DevicesViewModelTest : BaseUnitTest() {
             advanceUntilIdle()
 
             verify(statsRepository, times(1))
-                .fetchDevicesScreensize(any(), any())
+                .fetchDevicesScreensize(any(), any(), any())
         }
 
     @Test
     fun `when onRetry is called, then data is reloaded`() = test {
         whenever(
-            statsRepository.fetchDevicesScreensize(any(), any())
+            statsRepository.fetchDevicesScreensize(any(), any(), any())
         ).thenReturn(createScreensizeSuccess())
 
         initViewModel()
@@ -498,7 +529,7 @@ class DevicesViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         verify(statsRepository, times(2))
-            .fetchDevicesScreensize(any(), any())
+            .fetchDevicesScreensize(any(), any(), any())
     }
     // endregion
 
@@ -559,6 +590,31 @@ class DevicesViewModelTest : BaseUnitTest() {
     )
     // endregion
 
+
+    // region Tracking
+    @Test
+    fun `when the breakdown changes, then the breakdown moved from and to are reported`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onDeviceTypeChanged(DeviceType.BROWSER)
+
+        verify(newStatsTracker).trackDeviceBreakdownChanged(
+            from = DeviceType.SCREENSIZE,
+            to = DeviceType.BROWSER
+        )
+    }
+
+    @Test
+    fun `when the breakdown already shown is re-selected, then nothing is reported`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onDeviceTypeChanged(DeviceType.SCREENSIZE)
+
+        verify(newStatsTracker, never()).trackDeviceBreakdownChanged(any(), any())
+    }
+    // endregion
     companion object {
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN = "test_access_token"

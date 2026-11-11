@@ -10,4 +10,5 @@ class DateFormatWrapper @Inject constructor(
     private val appContext: Context
 ) {
     fun getLongDateFormat(): java.text.DateFormat = DateFormat.getLongDateFormat(appContext)
+    fun is24HourFormat(): Boolean = DateFormat.is24HourFormat(appContext)
 }

@@ -93,7 +93,6 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
     override fun onCleared() {
         dispatcher.unregister(this)
-        super.onCleared()
     }
 
     override fun fetchLayouts(preferCache: Boolean) {
@@ -144,6 +143,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * at this point the only requirement is to have the block editor enabled
      * @return true if the Modal Layout Picker can be shown
      */
+    @Suppress("DEPRECATION")
     fun canShowModalLayoutPicker() = SiteUtils.isBlockEditorDefaultForNewPost(site)
 
     /**

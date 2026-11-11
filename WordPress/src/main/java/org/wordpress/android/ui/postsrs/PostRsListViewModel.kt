@@ -8,6 +8,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,20 +19,45 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus as FluxCPostStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.posts.AuthorFilterSelection
-import org.wordpress.android.ui.postsrs.data.PostRsRestClient
-import org.wordpress.android.ui.postsrs.data.WpServiceProvider
+import org.wordpress.android.ui.rs.RsAuthorNames
+import org.wordpress.android.ui.rs.RsCollectionScope
+import org.wordpress.android.ui.rs.RsCommentCountFetcher
+import org.wordpress.android.ui.rs.RsErrorUtils
+import org.wordpress.android.ui.rs.RsFeaturedImages
+import org.wordpress.android.ui.rs.RsFluxCBridge
+import org.wordpress.android.ui.rs.RsPostChangeListener
+import org.wordpress.android.ui.rs.RsReveal
+import org.wordpress.android.ui.rs.RsSnackbarMessage
+import org.wordpress.android.ui.rs.RsTabLoading
+import org.wordpress.android.ui.rs.RsTabRefreshJobs
+import org.wordpress.android.ui.rs.RsTabUiState
+import org.wordpress.android.ui.rs.RsUploadedPost
+import org.wordpress.android.ui.rs.RsViewCounts
+import org.wordpress.android.ui.rs.RsVisibleRows
+import org.wordpress.android.ui.rs.checkNetwork
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.MIN_SEARCH_QUERY_LENGTH
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.SEARCH_DEBOUNCE_MS
+import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.rs.contentlist.toContentItemUiModel
+import org.wordpress.android.ui.rs.data.FeaturedImageUrls
+import org.wordpress.android.ui.rs.data.RsSiteRestClient
+import org.wordpress.android.ui.rs.data.WpServiceProvider
+import org.wordpress.android.ui.rs.sendWithRetry
+import org.wordpress.android.ui.rs.toRsPostStatus
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import rs.wordpress.cache.kotlin.ObservableMetadataCollection
 import rs.wordpress.cache.kotlin.getObservablePostMetadataCollectionWithEditContext
@@ -39,10 +65,7 @@ import rs.wordpress.cache.kotlin.hasMorePages
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostStatus
 import uniffi.wp_api.PostUpdateParams
-import uniffi.wp_api.RequestExecutionErrorReason
-import uniffi.wp_api.WpApiException
 import uniffi.wp_api.WpApiParamPostsOrderBy
-import uniffi.wp_api.WpErrorCode
 import uniffi.wp_mobile.FetchException
 import uniffi.wp_mobile.PostListFilter
 import uniffi.wp_mobile_cache.ListState
@@ -53,16 +76,25 @@ import javax.inject.Inject
 class PostRsListViewModel @Inject constructor(
     selectedSiteRepository: SelectedSiteRepository,
     private val serviceProvider: WpServiceProvider,
-    private val restClient: PostRsRestClient,
+    private val restClient: RsSiteRestClient,
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,
+    private val fluxCBridge: RsFluxCBridge,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val accountStore: AccountStore,
     private val appPrefsWrapper: AppPrefsWrapper,
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val changeListener: RsPostChangeListener,
+    private val statsDataSource: StatsDataSource,
+    private val commentCountFetcher: RsCommentCountFetcher,
 ) : ViewModel() {
-    private val _tabStates = MutableStateFlow<Map<PostRsListTab, PostTabUiState>>(emptyMap())
-    val tabStates: StateFlow<Map<PostRsListTab, PostTabUiState>> = _tabStates.asStateFlow()
+    private val _tabStates = MutableStateFlow<Map<PostRsListTab, RsTabUiState<PostRsUiModel>>>(emptyMap())
+    val tabStates: StateFlow<Map<PostRsListTab, RsTabUiState<PostRsUiModel>>> = _tabStates.asStateFlow()
+
+    private val _isOpeningPost = MutableStateFlow(false)
+    val isOpeningPost: StateFlow<Boolean> = _isOpeningPost.asStateFlow()
+    private var openingJob: Job? = null
 
     private val _isSearchActive = MutableStateFlow(false)
     val isSearchActive: StateFlow<Boolean> = _isSearchActive.asStateFlow()
@@ -72,19 +104,59 @@ class PostRsListViewModel @Inject constructor(
     private var activeSearchTab = PostRsListTab.PUBLISHED
 
     private val collections = mutableMapOf<PostRsListTab, ObservableMetadataCollection>()
+    private val collectionScope = RsCollectionScope(viewModelScope)
     private val initializingTabs = mutableSetOf<PostRsListTab>()
     private val userRefreshingTabs = mutableSetOf<PostRsListTab>()
-    private val resolveImageJobs = mutableMapOf<PostRsListTab, Job>()
-    private val resolveAuthorJobs = mutableMapOf<PostRsListTab, Job>()
+    private val refreshJobs = RsTabRefreshJobs<PostRsListTab>()
+
+    private var isScreenVisible = false
+    private var hasDeferredChange = false
+    private var pendingReveal: RsReveal<PostRsListTab>? = null
+
+    /** Tabs whose collection has completed at least one fetch, so an empty list means empty. */
+    private val fetchedTabs = mutableSetOf<PostRsListTab>()
+    private val visiblePostIds = RsVisibleRows<PostRsListTab>()
+    private val viewCounts = RsViewCounts(
+        scope = collectionScope,
+        statsDataSource = statsDataSource,
+        visibleRows = visiblePostIds,
+        logTag = AppLog.T.POSTS,
+        onCountsChanged = ::applyMetrics,
+    )
+    private val featuredImages = RsFeaturedImages(
+        scope = viewModelScope,
+        restClient = restClient,
+        onImagesResolved = ::applyFeaturedImages,
+    )
+    private val authorNames = RsAuthorNames(
+        scope = viewModelScope,
+        restClient = restClient,
+        postType = POST_TYPE,
+        onNamesResolved = ::applyAuthorNames,
+        // A "Me" list is all the user's own, so naming the author on every row adds nothing.
+        isEnabled = { _authorFilter.value != AuthorFilterSelection.ME },
+    )
+
+    /**
+     * Comment counts by remote post id; null means "fetched, nothing to show". Kept apart from
+     * [viewCounts] because these come from the site's own REST API and work on every site.
+     */
+    private val commentCountCache = mutableMapOf<Long, Long?>()
+    private val inFlightCommentCounts = mutableSetOf<Long>()
+
+    private var lastTrackedTab: PostRsListTab? = null
 
     private val _events = Channel<PostRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
-    private val _snackbarMessages = Channel<SnackbarMessage>(Channel.BUFFERED)
+    private val _snackbarMessages = Channel<RsSnackbarMessage>(Channel.BUFFERED)
     val snackbarMessages = _snackbarMessages.receiveAsFlow()
 
-    private val _pendingConfirmation = MutableStateFlow<PendingConfirmation?>(null)
-    val pendingConfirmation: StateFlow<PendingConfirmation?> = _pendingConfirmation.asStateFlow()
+    private val _revealRequests = Channel<RsReveal<PostRsListTab>>(Channel.BUFFERED)
+    val revealRequests = _revealRequests.receiveAsFlow()
+
+    private val _pendingConfirmation = MutableStateFlow<PostRsConfirmation?>(null)
+    val pendingConfirmation: StateFlow<PostRsConfirmation?> = _pendingConfirmation.asStateFlow()
 
     private val _site: SiteModel? = selectedSiteRepository.getSelectedSite()
     private val site: SiteModel
@@ -99,6 +171,24 @@ class PostRsListViewModel @Inject constructor(
             _site.hasCapabilityEditOthersPosts &&
             _site.isSingleUserSite == false
     }
+
+    /**
+     * View counts come from the WP.com stats endpoint, so they need a WP.com site ID and the
+     * capability to read stats. Self-hosted sites reached over application passwords have neither
+     * and show no view counts - their comment counts still work, since those come from the site's
+     * own REST API.
+     */
+    private val canFetchViewCounts: Boolean by lazy {
+        _site != null &&
+            _site.siteId > 0 &&
+            SiteUtils.isAccessedViaWPComRest(_site) &&
+            _site.hasCapabilityViewStats
+    }
+
+    private val _density = MutableStateFlow(
+        ContentListDensity.of(appPrefsWrapper.isContentListCondensed)
+    )
+    val density: StateFlow<ContentListDensity> = _density.asStateFlow()
 
     private val _authorFilter = MutableStateFlow(
         if (isAuthorFilterSupported) {
@@ -122,33 +212,154 @@ class PostRsListViewModel @Inject constructor(
                     .collect {
                         clearCollections()
                         _tabStates.value = PostRsListTab.entries.associateWith {
-                            PostTabUiState(isLoading = true)
+                            RsTabUiState(isLoading = true)
                         }
                         initTab(activeSearchTab)
                     }
             }
+            // Subscribe before starting the listener - its flow has no replay, so a change
+            // reported in between would be dropped.
+            viewModelScope.launch {
+                changeListener.changes.collect { onRemoteChangeDetected() }
+            }
+            viewModelScope.launch {
+                changeListener.uploads.collect { onPostUploaded(it) }
+            }
+            changeListener.start(site, isPages = false)
         }
     }
 
+    /** Called when the screen becomes visible, and again whenever it returns from the background. */
+    @MainThread
+    fun onScreenVisible() {
+        isScreenVisible = true
+        if (hasDeferredChange) onRemoteChangeDetected()
+        emitPendingReveal()
+    }
+
+    @MainThread
+    fun onScreenHidden() {
+        isScreenVisible = false
+    }
+
     /**
-     * Looks up a post in the local FluxC database and emits
-     * an [PostRsListEvent.EditPost] to open the editor.
+     * Refreshes the list after FluxC reported a change the rs collections can't see - a post saved
+     * in the editor, for instance - or remembers to.
+     *
+     * Most of these arrive while the editor covers the list, and refreshing a screen nobody is
+     * looking at spends a request per open tab on a result that may be superseded before it is
+     * seen. A refresh while offline could only fail, and [refreshAllTabs] would then mark every
+     * tab with an error the user never asked for. Either way the change is remembered, however
+     * many arrive, and the list catches up with a single refresh in [onScreenVisible].
+     */
+    private fun onRemoteChangeDetected() {
+        hasDeferredChange = true
+        if (!isScreenVisible || !networkUtilsWrapper.isNetworkAvailable()) return
+        hasDeferredChange = false
+        refreshAllTabs()
+    }
+
+    /**
+     * Remembers to point the user at a post the editor just saved: it lands on whichever tab its
+     * status belongs to, not necessarily the one being looked at. Held until [onScreenVisible],
+     * because the upload usually finishes while the editor still covers the list.
+     */
+    private fun onPostUploaded(upload: RsUploadedPost) {
+        val status = upload.status.toRsPostStatus() ?: return
+        pendingReveal = RsReveal(tabForStatus(status), upload.remotePostId)
+        emitPendingReveal()
+    }
+
+    private fun emitPendingReveal() {
+        if (!isScreenVisible) return
+        val reveal = pendingReveal ?: return
+        pendingReveal = null
+        _revealRequests.trySend(reveal)
+    }
+
+    /**
+     * Bridges the post into FluxC's database and emits an
+     * [PostRsListEvent.EditPost] to open the editor.
      * If the post is trashed, shows a confirmation dialog first.
      */
     @MainThread
     fun openPost(remotePostId: Long, tab: PostRsListTab) {
-        if (tab == PostRsListTab.TRASHED) {
+        if (_isOpeningPost.value) return
+        // Search lists every status inside whichever tab it was opened from, so the post's own
+        // status decides; the tab only stands in when the post isn't loaded.
+        val post = _tabStates.value[tab]?.items?.firstOrNull { it.remoteId == remotePostId }
+        val isTrashed = post?.isTrashed ?: (tab == PostRsListTab.TRASHED)
+        if (isTrashed) {
+            analyticsTracker.track(
+                Stat.POST_LIST_ITEM_SELECTED,
+                site,
+                mapOf(
+                    TRACKS_ACTION to "move_to_draft",
+                    TRACKS_POST_ID to remotePostId
+                )
+            )
             _pendingConfirmation.value =
-                PendingConfirmation.MoveToDraft(remotePostId)
+                PostRsConfirmation.MoveToDraft(remotePostId)
             return
         }
-        val post = getFluxCPost(remotePostId) ?: return
-        _events.trySend(PostRsListEvent.EditPost(site, post))
+        analyticsTracker.track(
+            Stat.POST_LIST_ITEM_SELECTED,
+            site,
+            mapOf(
+                TRACKS_ACTION to "edit",
+                TRACKS_POST_ID to remotePostId
+            )
+        )
+        bridgeAndOpen(remotePostId)
+    }
+
+    /**
+     * Refreshes all currently initialized tabs. Called when
+     * returning from the settings screen after saving changes.
+     */
+    @MainThread
+    fun refreshAllTabs() {
+        restClient.clearCaches()
+        val tabs = collections.keys.toList()
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            // Every tab would report the same connection failure, so record the failure on each
+            // and send one message for the whole fan-out. It has to be sent here rather than by
+            // a nominated tab: a tab only offers a snackbar when it has content to keep, so
+            // picking one that turned out to be empty would swallow the message entirely.
+            val anyTabKeepsItsPosts = tabs.any { getTabUiState(it).items.isNotEmpty() }
+            tabs.forEach { onRefreshFailed(it, e = null, showSnackbar = false) }
+            if (anyTabKeepsItsPosts) {
+                _snackbarMessages.sendWithRetry(friendlyErrorMessage(null), resourceProvider = resourceProvider) {
+                    refreshAllTabs()
+                }
+            }
+            return
+        }
+        tabs.forEach { tab ->
+            refreshTab(tab)
+        }
+    }
+
+    /** Tracks a tab change event when the user swipes or taps a tab. */
+    @MainThread
+    fun onTabChanged(tab: PostRsListTab) {
+        if (tab == lastTrackedTab) return
+        lastTrackedTab = tab
+        analyticsTracker.track(
+            Stat.POST_LIST_TAB_CHANGED,
+            site,
+            mapOf(TRACKS_SELECTED_TAB to tab.name.lowercase())
+        )
     }
 
     /** Emits a [PostRsListEvent.CreatePost] for the selected site. */
     @MainThread
     fun createNewPost() {
+        analyticsTracker.track(
+            Stat.POST_LIST_CREATE_POST_TAPPED,
+            site,
+            mapOf(TRACKS_ACTION to TRACKS_CREATE_NEW_POST)
+        )
         _events.trySend(PostRsListEvent.CreatePost(site))
     }
 
@@ -158,6 +369,7 @@ class PostRsListViewModel @Inject constructor(
      */
     @MainThread
     fun onSearchOpen() {
+        analyticsTracker.track(Stat.POST_LIST_SEARCH_ACCESSED, site)
         _isSearchActive.value = true
         clearCollections()
     }
@@ -192,6 +404,11 @@ class PostRsListViewModel @Inject constructor(
     @MainThread
     fun onAuthorFilterChanged(selection: AuthorFilterSelection, activeTab: PostRsListTab) {
         if (selection == _authorFilter.value) return
+        analyticsTracker.track(
+            Stat.POST_LIST_AUTHOR_FILTER_CHANGED,
+            site,
+            mapOf(TRACKS_SELECTED_AUTHOR_FILTER to selection.toString())
+        )
         appPrefsWrapper.postListAuthorSelection = selection
         _authorFilter.value = selection
         clearCollections()
@@ -202,6 +419,14 @@ class PostRsListViewModel @Inject constructor(
     @MainThread
     @Suppress("LongMethod", "ReturnCount")
     fun onPostMenuAction(remotePostId: Long, action: PostRsMenuAction) {
+        analyticsTracker.track(
+            Stat.POST_LIST_BUTTON_PRESSED,
+            site,
+            mapOf(
+                TRACKS_ACTION to action.toAnalyticsAction(),
+                TRACKS_POST_ID to remotePostId
+            )
+        )
         val post = findPost(remotePostId)
 
         when (action) {
@@ -225,10 +450,7 @@ class PostRsListViewModel @Inject constructor(
                 }
                 _events.trySend(PostRsListEvent.SharePost(url, post.title))
             }
-            PostRsMenuAction.BLAZE -> {
-                val post = getFluxCPost(remotePostId) ?: return
-                _events.trySend(PostRsListEvent.PromoteWithBlaze(site, post))
-            }
+            PostRsMenuAction.BLAZE -> bridgeAndOpen(remotePostId, blaze = true)
             PostRsMenuAction.STATS -> _events.trySend(
                 PostRsListEvent.ViewStats(
                     site = site, postId = remotePostId,
@@ -238,9 +460,9 @@ class PostRsListViewModel @Inject constructor(
             PostRsMenuAction.COMMENTS ->
                 _events.trySend(PostRsListEvent.ViewComments(site.siteId, remotePostId))
             PostRsMenuAction.TRASH ->
-                _pendingConfirmation.value = PendingConfirmation.Trash(remotePostId)
+                _pendingConfirmation.value = PostRsConfirmation.Trash(remotePostId)
             PostRsMenuAction.DELETE_PERMANENTLY ->
-                _pendingConfirmation.value = PendingConfirmation.Delete(remotePostId)
+                _pendingConfirmation.value = PostRsConfirmation.Delete(remotePostId)
             PostRsMenuAction.PUBLISH -> publishPost(remotePostId)
             PostRsMenuAction.MOVE_TO_DRAFT -> moveToDraft(remotePostId)
             PostRsMenuAction.DUPLICATE -> duplicatePost(remotePostId)
@@ -250,9 +472,9 @@ class PostRsListViewModel @Inject constructor(
     @MainThread
     fun onConfirmPendingAction() {
         when (val confirmation = _pendingConfirmation.value) {
-            is PendingConfirmation.Trash -> trashPost(confirmation.postId)
-            is PendingConfirmation.Delete -> deletePost(confirmation.postId)
-            is PendingConfirmation.MoveToDraft ->
+            is PostRsConfirmation.Trash -> trashPost(confirmation.postId)
+            is PostRsConfirmation.Delete -> deletePost(confirmation.postId)
+            is PostRsConfirmation.MoveToDraft ->
                 moveToDraftAndEdit(confirmation.postId)
             null -> Unit
         }
@@ -314,7 +536,7 @@ class PostRsListViewModel @Inject constructor(
                         postStatusUpdate(PostStatus.Draft)
                     )
                 }
-                val post = getFluxCPost(postId)
+                val post = bridgePostOrNull(postId)
                 if (post != null) {
                     _events.trySend(PostRsListEvent.EditPost(site, post))
                 } else {
@@ -325,9 +547,9 @@ class PostRsListViewModel @Inject constructor(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                AppLog.e(AppLog.T.POSTS, "Move to draft and edit failed", e)
+                AppLog.e(AppLog.T.POSTS, "Move to draft failed", e)
                 _snackbarMessages.trySend(
-                    SnackbarMessage(
+                    RsSnackbarMessage(
                         friendlyErrorMessage(e, R.string.post_rs_error_update_status)
                     )
                 )
@@ -339,82 +561,74 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun bridgePostOrNull(remotePostId: Long) = try {
+        val lastModified = findPost(remotePostId)?.lastModified
+        withContext(Dispatchers.IO) {
+            fluxCBridge.fetchAndBridgePost(remotePostId, site, lastModified)
+        }
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        AppLog.e(AppLog.T.POSTS, "Bridge post failed", e)
+        _snackbarMessages.trySend(
+            RsSnackbarMessage(friendlyErrorMessage(e, R.string.post_not_found))
+        )
+        null
+    }
+
     /**
      * Duplicates a post by creating a new draft with the same content.
-     * The FluxC dependency is temporary and will be removed once the
-     * editor supports loading posts via wordpress-rs.
+     * Bridges the source post into FluxC first so we can read its
+     * content, then creates a new local draft from it.
      */
+    @Suppress("TooGenericExceptionCaught")
     private fun duplicatePost(remotePostId: Long) {
-        val postToCopy = getFluxCPost(remotePostId) ?: return
-        val newPost = postStore.instantiatePostModel(
-            site,
-            false,
-            postToCopy.title,
-            postToCopy.content,
-            FluxCPostStatus.DRAFT.toString(),
-            postToCopy.categoryIdList,
-            postToCopy.postFormat,
-            true
-        )
-        _events.trySend(PostRsListEvent.EditPost(site, newPost))
-    }
-
-    /**
-     * Extracts the underlying [WpApiException] from a [FetchException.Api]
-     * wrapper so that callers can inspect API-level error details (status
-     * codes, error reasons) without knowing about the wrapper type.
-     */
-    private fun unwrapException(e: Exception?): Exception? =
-        (e as? FetchException.Api)?.v1 ?: e
-
-    /**
-     * Returns true when the exception represents an authentication failure
-     * (rejected credentials, missing app-password, etc.).
-     */
-    private fun isAuthError(e: Exception?): Boolean {
-        val apiException = unwrapException(e)
-        val reason = (apiException as? WpApiException.RequestExecutionFailed)?.reason
-        val errorCode = (apiException as? WpApiException.WpException)?.errorCode
-        return reason is RequestExecutionErrorReason.HttpAuthenticationRejectedError ||
-            reason is RequestExecutionErrorReason.HttpAuthenticationRequiredError ||
-            errorCode is WpErrorCode.Unauthorized ||
-            errorCode is WpErrorCode.ApplicationPasswordNotFound ||
-            errorCode is WpErrorCode.NoAuthenticatedAppPassword
-    }
-
-    private fun checkNetwork(): Boolean {
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            _snackbarMessages.trySend(
-                SnackbarMessage(resourceProvider.getString(R.string.no_network_message))
-            )
-            return false
+        if (!checkNetwork()) return
+        _isOpeningPost.value = true
+        openingJob = viewModelScope.launch {
+            try {
+                val lastModified = findPost(remotePostId)?.lastModified
+                val postToCopy = withContext(Dispatchers.IO) {
+                    fluxCBridge.fetchAndBridgePost(
+                        remotePostId, site, lastModified
+                    )
+                }
+                val newPost = postStore.instantiatePostModel(
+                    site,
+                    false,
+                    postToCopy.title,
+                    postToCopy.content,
+                    FluxCPostStatus.DRAFT.toString(),
+                    postToCopy.categoryIdList,
+                    postToCopy.postFormat,
+                    true
+                )
+                _events.trySend(PostRsListEvent.EditPost(site, newPost))
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.POSTS, "Duplicate post failed", e)
+                _snackbarMessages.trySend(
+                    RsSnackbarMessage(
+                        friendlyErrorMessage(e, R.string.post_not_found)
+                    )
+                )
+            } finally {
+                _isOpeningPost.value = false
+            }
         }
-        return true
     }
 
-    /**
-     * Returns a user-friendly error subtitle based on the exception type.
-     * Detects offline, authentication, and generic errors. When a default
-     * resource ID is provided and the exception is a WpApiException with a
-     * message, that message is used; otherwise falls back to the default.
-     */
-    private fun friendlyErrorMessage(e: Exception? = null, defaultResId: Int? = null): String {
-        val apiException = unwrapException(e)
-        val reason = (apiException as? WpApiException.RequestExecutionFailed)?.reason
+    private fun checkNetwork(): Boolean =
+        _snackbarMessages.checkNetwork(networkUtilsWrapper, resourceProvider)
 
-        val resId = when {
-            reason is RequestExecutionErrorReason.DeviceIsOfflineError ||
-                !networkUtilsWrapper.isNetworkAvailable() ->
-                R.string.error_generic_network
-
-            isAuthError(e) -> R.string.post_rs_error_auth
-
-            defaultResId != null -> defaultResId
-
-            else -> R.string.request_failed_message
-        }
-        return resourceProvider.getString(resId)
-    }
+    private fun friendlyErrorMessage(
+        e: Exception? = null,
+        defaultResId: Int? = null,
+    ): String = RsErrorUtils.friendlyErrorMessage(
+        e, defaultResId, resourceProvider, networkUtilsWrapper
+    )
 
     /** Creates a PostUpdateParams for changing post status. */
     private fun postStatusUpdate(status: PostStatus) = PostUpdateParams(status = status, meta = null)
@@ -436,14 +650,14 @@ class PostRsListViewModel @Inject constructor(
             try {
                 withContext(Dispatchers.IO) { operation() }
                 _snackbarMessages.trySend(
-                    SnackbarMessage(resourceProvider.getString(successMessageResId))
+                    RsSnackbarMessage(resourceProvider.getString(successMessageResId))
                 )
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "$logTag failed", e)
                 _snackbarMessages.trySend(
-                    SnackbarMessage(friendlyErrorMessage(e, errorMessageResId))
+                    RsSnackbarMessage(friendlyErrorMessage(e, errorMessageResId))
                 )
             }
         }
@@ -452,26 +666,61 @@ class PostRsListViewModel @Inject constructor(
     /** Searches all tab states for a [PostRsUiModel] matching [remotePostId]. */
     private fun findPost(remotePostId: Long): PostRsUiModel? {
         for (state in _tabStates.value.values) {
-            for (post in state.posts) {
-                if (post.remotePostId == remotePostId) return post
+            for (post in state.items) {
+                if (post.remoteId == remotePostId) return post
             }
         }
         return null
     }
 
     /**
-     * Looks up a post in the local FluxC database and shows a toast if not found.
-     * This FluxC dependency is temporary and will be removed once the editor
-     * supports loading posts via wordpress-rs.
+     * Fetches the post via the bridge (fast path from FluxC cache
+     * or slow path via wordpress-rs), then opens the editor or
+     * Blaze promotion screen.
      */
-    private fun getFluxCPost(remotePostId: Long): PostModel? {
-        val post = postStore.getPostByRemotePostId(remotePostId, site)
-        if (post == null) {
-            _snackbarMessages.trySend(
-                SnackbarMessage(resourceProvider.getString(R.string.post_not_found))
-            )
+    @Suppress("TooGenericExceptionCaught")
+    private fun bridgeAndOpen(
+        remotePostId: Long,
+        blaze: Boolean = false
+    ) {
+        if (!checkNetwork()) return
+        _isOpeningPost.value = true
+        openingJob = viewModelScope.launch {
+            try {
+                val lastModified = findPost(remotePostId)?.lastModified
+                val post = withContext(Dispatchers.IO) {
+                    fluxCBridge.fetchAndBridgePost(
+                        remotePostId, site, lastModified
+                    )
+                }
+                if (blaze) {
+                    _events.trySend(
+                        PostRsListEvent.PromoteWithBlaze(site, post)
+                    )
+                } else {
+                    _events.trySend(
+                        PostRsListEvent.EditPost(site, post)
+                    )
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.POSTS, "Bridge post failed", e)
+                _snackbarMessages.trySend(
+                    RsSnackbarMessage(
+                        friendlyErrorMessage(e, R.string.post_not_found)
+                    )
+                )
+            } finally {
+                _isOpeningPost.value = false
+            }
         }
-        return post
+    }
+
+    /** Abandons the post being opened, for when the fetch behind the spinner is slow. */
+    @MainThread
+    fun cancelOpeningPost() {
+        openingJob?.cancel()
     }
 
     private fun getMenuActions(
@@ -535,14 +784,20 @@ class PostRsListViewModel @Inject constructor(
     }
 
     private fun clearCollections() {
+        // Cancel in-flight work first so nothing touches the collections closed below.
+        collectionScope.reset()
         collections.values.forEach { it.close() }
         collections.clear()
         initializingTabs.clear()
         userRefreshingTabs.clear()
-        resolveImageJobs.values.forEach { it.cancel() }
-        resolveImageJobs.clear()
-        resolveAuthorJobs.values.forEach { it.cancel() }
-        resolveAuthorJobs.clear()
+        refreshJobs.clear()
+        fetchedTabs.clear()
+        authorNames.clear()
+        visiblePostIds.clear()
+        viewCounts.clear()
+        commentCountCache.clear()
+        featuredImages.clear()
+        inFlightCommentCounts.clear()
         _tabStates.value = emptyMap()
     }
 
@@ -552,11 +807,13 @@ class PostRsListViewModel @Inject constructor(
      */
     @MainThread
     fun initTab(tab: PostRsListTab) {
-        if (collections.containsKey(tab) || initializingTabs.contains(tab)) return
+        if (collections.containsKey(tab) || initializingTabs.contains(tab) || isOutsideSearch(tab)) return
 
         initializingTabs.add(tab)
+        // Reset to a loading state so a retry after a failed init clears the prior error UI.
+        updateTabUiState(tab) { RsTabUiState(isLoading = true) }
 
-        viewModelScope.launch {
+        collectionScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
                 val collection = createCollection(site, tab)
@@ -565,18 +822,24 @@ class PostRsListViewModel @Inject constructor(
                 registerObservers(tab, collection)
                 loadItemsForTab(tab)
                 refreshTab(tab)
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Failed to init RS post list tab", e)
                 initializingTabs.remove(tab)
                 updateTabUiState(tab) {
-                    PostTabUiState(
+                    RsTabUiState(
                         error = friendlyErrorMessage(e),
-                        isAuthError = isAuthError(e)
+                        isAuthError = RsErrorUtils.isAuthError(e)
                     )
                 }
             }
         }
     }
+
+    /** While searching, only the searched tab gets a collection, and only once the query is long enough. */
+    private fun isOutsideSearch(tab: PostRsListTab): Boolean = _isSearchActive.value &&
+        (tab != activeSearchTab || _searchQuery.value.length < MIN_SEARCH_QUERY_LENGTH)
 
     /**
      * Builds an observable post collection for the given [tab] on IO.
@@ -586,34 +849,45 @@ class PostRsListViewModel @Inject constructor(
     private suspend fun createCollection(
         site: SiteModel,
         tab: PostRsListTab
-    ): ObservableMetadataCollection = withContext(Dispatchers.IO) {
-        val service = serviceProvider.getService(site)
-        val query = _searchQuery.value
-        val authorIds = if (_authorFilter.value == AuthorFilterSelection.ME) {
-            accountStore.account?.userId?.let { listOf(it) } ?: emptyList()
-        } else {
-            emptyList()
+    ): ObservableMetadataCollection {
+        var created: ObservableMetadataCollection? = null
+        try {
+            return withContext(Dispatchers.IO) {
+                val service = serviceProvider.getService(site)
+                val query = _searchQuery.value
+                val authorIds = if (_authorFilter.value == AuthorFilterSelection.ME) {
+                    accountStore.account?.userId?.let { listOf(it) } ?: emptyList()
+                } else {
+                    emptyList()
+                }
+                val filter = PostListFilter(
+                    status = if (query.isNotBlank()) ALL_STATUSES else tab.statuses,
+                    order = tab.order,
+                    // Search mixes statuses and shows no date groups, so it stays on date.
+                    orderby = if (query.isNotBlank()) WpApiParamPostsOrderBy.DATE else tab.orderBy,
+                    search = query.ifBlank { null },
+                    author = authorIds
+                )
+                service.posts().getObservablePostMetadataCollectionWithEditContext(
+                    endpointType = PostEndpointType.Posts,
+                    filter = filter,
+                    perPage = PAGE_SIZE.toUInt()
+                ).also { created = it }
+            }
+        } catch (e: CancellationException) {
+            // The collection exists on the rs side even though nothing here holds it, so it has to
+            // be closed on a context that cancellation cannot interrupt.
+            withContext(NonCancellable + Dispatchers.IO) { created?.close() }
+            throw e
         }
-        val filter = PostListFilter(
-            status = if (query.isNotBlank()) ALL_STATUSES else tab.statuses,
-            order = tab.order,
-            orderby = WpApiParamPostsOrderBy.DATE,
-            search = query.ifBlank { null },
-            author = authorIds
-        )
-        service.posts().getObservablePostMetadataCollectionWithEditContext(
-            endpointType = PostEndpointType.Posts,
-            filter = filter,
-            perPage = PAGE_SIZE.toUInt()
-        )
     }
 
     private fun registerObservers(tab: PostRsListTab, collection: ObservableMetadataCollection) {
         collection.addDataObserver {
-            viewModelScope.launch { loadItemsForTab(tab) }
+            collectionScope.launch { loadItemsForTab(tab) }
         }
         collection.addListInfoObserver {
-            viewModelScope.launch { updateListInfoForTab(tab) }
+            collectionScope.launch { updateListInfoForTab(tab) }
         }
     }
 
@@ -623,47 +897,113 @@ class PostRsListViewModel @Inject constructor(
      */
     @MainThread
     fun refreshTab(tab: PostRsListTab, isUserRefresh: Boolean = false) {
-        val collection = collections[tab] ?: return
+        val collection = collections[tab] ?: run {
+            // No collection yet (init failed or hasn't run), so Retry re-attempts the init.
+            initTab(tab)
+            return
+        }
 
         if (isUserRefresh) {
             restClient.clearCaches()
             userRefreshingTabs.add(tab)
             updateTabUiState(tab) { copy(isRefreshing = true, error = null) }
         } else {
-            updateTabUiState(tab) { copy(error = null) }
+            updateTabUiState(tab) {
+                copy(
+                    isLoading = RsTabLoading.onRefreshStarted(
+                        hasItems = items.isNotEmpty(),
+                        hasFetched = tab in fetchedTabs
+                    ),
+                    error = null
+                )
+            }
         }
 
-        viewModelScope.launch {
+        when {
+            // A refresh with no connection can only fail, so report it without the round trip.
+            !networkUtilsWrapper.isNetworkAvailable() ->
+                onRefreshFailed(tab, e = null, showSnackbar = isUserRefresh)
+
+            // The tab is already refreshing. Its progress state is set above either way, and
+            // the request is replayed by [startRefresh] once the running one finishes.
+            refreshJobs.deferIfRunning(tab, isUserRefresh) -> Unit
+
+            else -> startRefresh(tab, collection, isUserRefresh)
+        }
+    }
+
+    /** Runs the one refresh a tab is allowed at a time, then replays any request it deferred. */
+    private fun startRefresh(
+        tab: PostRsListTab,
+        collection: ObservableMetadataCollection,
+        isUserRefresh: Boolean
+    ) {
+        val job = collectionScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) { collection.refresh() }
-            } catch (e: Exception) {
-                AppLog.e(AppLog.T.POSTS, "Failed to refresh tab $tab", e)
+                fetchedTabs.add(tab)
+                // Drop only the "nothing to show" entries so a transient failure is retried,
+                // while numbers already fetched stay put.
+                viewCounts.invalidateUnresolved()
+                commentCountCache.entries.removeAll { it.value == null }
+                featuredImages.invalidateUnresolved()
+                authorNames.invalidateUnresolved()
                 userRefreshingTabs.remove(tab)
-                val message = friendlyErrorMessage(e)
-                if (getTabUiState(tab).posts.isNotEmpty()) {
-                    updateTabUiState(tab) {
-                        copy(isLoading = false, isRefreshing = false, error = null)
-                    }
-                    val authError = isAuthError(e)
-                    _snackbarMessages.trySend(
-                        SnackbarMessage(
-                            message = message,
-                            actionLabel = if (authError) null
-                                else resourceProvider.getString(R.string.retry),
-                            onAction = if (authError) null
-                                else ({ refreshTab(tab) })
-                        )
-                    )
-                } else {
-                    updateTabUiState(tab) {
-                        copy(
-                            isLoading = false, isRefreshing = false,
-                            error = message,
-                            isAuthError = isAuthError(e)
-                        )
-                    }
+                // Read the fetched items and end both progress states here rather than relying
+                // on the collection observers, which aren't guaranteed to fire for a refresh.
+                loadItemsForTab(tab)
+                updateTabUiState(tab) { copy(isLoading = false, isRefreshing = false) }
+                // Clearing the cache above puts those rows back into the pending state, and the
+                // list only asks for metrics when its visible rows change - which a refresh in
+                // place does not do. Without this the skeletons would spin with nothing to
+                // resolve them.
+                retryMetricsForVisibleRows(tab)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                onRefreshFailed(tab, e, showSnackbar = isUserRefresh)
+            }
+            refreshJobs.onFinished(tab)?.let { replayAsUser -> refreshTab(tab, replayAsUser) }
+        }
+        refreshJobs.onStarted(tab, job)
+    }
+
+    /**
+     * A tab that already has posts on screen keeps them and offers a retry snackbar; an empty one
+     * shows the full-screen error state.
+     *
+     * [e] is null when no request was made because the device is offline. The message is the same
+     * either way - [friendlyErrorMessage] reports the network error whenever the device is offline,
+     * regardless of what failed.
+     *
+     * [showSnackbar] is false when the user didn't ask for this refresh - [initTab] refreshes each
+     * tab as the pager settles on it, and interrupting someone browsing cached posts with an error
+     * they didn't provoke is noise. The full-screen error still covers a tab with nothing to show.
+     * It's also false when another tab is already reporting the same failure.
+     */
+    private fun onRefreshFailed(tab: PostRsListTab, e: Exception?, showSnackbar: Boolean = true) {
+        e?.let { AppLog.e(AppLog.T.POSTS, "Failed to refresh tab $tab", it) }
+        userRefreshingTabs.remove(tab)
+        val message = friendlyErrorMessage(e)
+        val authError = RsErrorUtils.isAuthError(e)
+        if (getTabUiState(tab).items.isNotEmpty()) {
+            updateTabUiState(tab) {
+                copy(isLoading = false, isRefreshing = false, error = null)
+            }
+            if (showSnackbar) {
+                // The user asked, so a second failure has to be reported.
+                _snackbarMessages.sendWithRetry(message, authError, resourceProvider) {
+                    refreshTab(tab, isUserRefresh = true)
                 }
+            }
+        } else {
+            updateTabUiState(tab) {
+                copy(
+                    isLoading = false, isRefreshing = false,
+                    error = message,
+                    isAuthError = authError
+                )
             }
         }
     }
@@ -677,18 +1017,29 @@ class PostRsListViewModel @Inject constructor(
 
         updateTabUiState(tab) { copy(isLoadingMore = true) }
 
-        viewModelScope.launch {
+        collectionScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) { collection.loadNextPage() }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: FetchException) {
+                if (RsErrorUtils.isPastLastPage(e)) {
+                    // The server never said how many pages there are; the refusal is the answer.
+                    updateTabUiState(tab) { copy(isLoadingMore = false, canLoadMore = false) }
+                } else {
+                    onLoadMoreFailed(tab, e)
+                }
             } catch (e: Exception) {
-                AppLog.e(AppLog.T.POSTS, "Failed to load more for tab $tab", e)
-                updateTabUiState(tab) { copy(isLoadingMore = false) }
-                _snackbarMessages.trySend(
-                    SnackbarMessage(friendlyErrorMessage(e))
-                )
+                onLoadMoreFailed(tab, e)
             }
         }
+    }
+
+    private fun onLoadMoreFailed(tab: PostRsListTab, e: Exception) {
+        AppLog.e(AppLog.T.POSTS, "Failed to load more for tab $tab", e)
+        updateTabUiState(tab) { copy(isLoadingMore = false) }
+        _snackbarMessages.trySend(RsSnackbarMessage(friendlyErrorMessage(e)))
     }
 
     /** Reads cached items from the collection and maps them to [PostRsUiModel] instances. */
@@ -697,102 +1048,217 @@ class PostRsListViewModel @Inject constructor(
 
         @Suppress("TooGenericExceptionCaught")
         try {
-            val isSearch = _searchQuery.value.isNotBlank()
+            // Snapshotted rather than read live: this function suspends for IO between the
+            // three reads below, and the query can change under it.
+            val isSearch = isSearching
+            val nowLabel = resourceProvider.getString(R.string.rs_date_now)
+            val modifiedDateFormat = tab.modifiedDateLabelResId
+                .takeIf { !isSearch && it != 0 }
+                ?.let(resourceProvider::getString)
             val items = withContext(Dispatchers.IO) {
                 collection.loadItems().map { item ->
-                    item.state.toUiModel(item.id, showStatus = isSearch)
+                    item.state.toContentItemUiModel<PostRsMenuAction>(
+                        item.id,
+                        nowLabel,
+                        showStatus = isSearch,
+                        modifiedDateFormat = modifiedDateFormat
+                    )
                 }
             }
-            val existingPosts = getTabUiState(tab).posts
+            val existingPosts = getTabUiState(tab).items
             val uiModels = items.map { model ->
                 val effectiveTab = if (isSearch) tabForStatus(model.status) else tab
                 val existing = existingPosts
-                    .firstOrNull { it.remotePostId == model.remotePostId }
-                model.copy(
+                    .firstOrNull { it.remoteId == model.remoteId }
+                featuredImages.carryOver(model, existing).copy(
                     actions = getMenuActions(effectiveTab, model.hasPassword, model.commentsOpen),
-                    featuredImageUrl = existing?.featuredImageUrl,
-                    authorDisplayName = existing?.authorDisplayName
+                    authorDisplayName = if (
+                        model.authorId != 0L &&
+                        model.authorId == existing?.authorId
+                    ) {
+                        existing.authorDisplayName
+                    } else {
+                        null
+                    },
+                    // Read straight from the metrics cache: rebuilding from the collection would
+                    // otherwise blank out numbers already fetched on every change it reports.
+                    viewCount = viewCounts.countFor(model.remoteId),
+                    commentCount = commentCountCache[model.remoteId],
+                    // Search mixes statuses into one list, and metrics are only fetched for
+                    // published posts, so skeletons there would never resolve.
+                    areMetricsPending = expectsMetrics(tab) &&
+                        !isSearch &&
+                        isAnyMetricOutstanding(model.remoteId)
+
                 )
             }
-            updateTabUiState(tab) { copy(posts = uiModels, isLoading = false, error = null) }
-            resolveFeaturedImages(tab, uiModels)
-            resolveAuthorNames(tab, uiModels)
+            updateTabUiState(tab) {
+                copy(
+                    items = uiModels,
+                    isLoading = RsTabLoading.onItemsLoaded(
+                        wasLoading = isLoading,
+                        hasItems = uiModels.isNotEmpty()
+                    ),
+                    error = null
+                )
+            }
+            featuredImages.resolve(tab, site, uiModels)
+            authorNames.resolve(tab, site, uiModels)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             AppLog.e(AppLog.T.POSTS, "Failed to load items for tab $tab", e)
         }
     }
 
-    /**
-     * Fetches featured image URLs for posts that have a non-zero
-     * [PostRsUiModel.featuredImageId] but no resolved URL yet.
-     * All URLs are fetched in a single batched network call.
-     */
-    private fun resolveFeaturedImages(
-        tab: PostRsListTab,
-        posts: List<PostRsUiModel>
-    ) {
-        val unresolvedIds = posts
-            .filter { it.featuredImageId != 0L && it.featuredImageUrl == null }
-            .map { it.featuredImageId }
-        if (unresolvedIds.isEmpty()) return
+    private fun applyFeaturedImages(tab: PostRsListTab, images: Map<Long, FeaturedImageUrls>) {
+        updateTabUiState(tab) {
+            copy(items = items.map { featuredImages.withImage(it, images) })
+        }
+    }
 
-        resolveImageJobs[tab]?.cancel()
-        resolveImageJobs[tab] = viewModelScope.launch {
-            val urls = withContext(Dispatchers.IO) {
-                restClient.fetchMediaUrls(site, unresolvedIds)
-            }
-            if (urls.isEmpty()) return@launch
-            updateTabUiState(tab) {
-                copy(
-                    posts = this.posts.map { post ->
-                        val url = urls[post.featuredImageId]
-                        if (url != null) {
-                            post.copy(featuredImageUrl = url)
-                        } else {
-                            post
-                        }
+    private fun applyAuthorNames(tab: PostRsListTab, names: Map<Long, String>) {
+        updateTabUiState(tab) {
+            copy(items = items.map { post -> names[post.authorId]?.let { post.copy(authorDisplayName = it) } ?: post })
+        }
+    }
+
+    /**
+     * Flips the list between its two densities, persisting the choice for the pages list too.
+     *
+     * Condensed does not fetch metrics, so returning to comfortable has to ask for them: the rows on
+     * screen have not changed, and the visible-row stream is what normally triggers a fetch.
+     */
+    @MainThread
+    fun onDensityToggled(tab: PostRsListTab) {
+        val next = ContentListDensity.of(!_density.value.isCondensed)
+        _density.value = next
+        appPrefsWrapper.isContentListCondensed = next.isCondensed
+        collectionScope.launch {
+            // Re-map the rows so their pending flags match the new density before anything fetches.
+            loadItemsForTab(tab)
+            if (!next.isCondensed) retryMetricsForVisibleRows(tab)
+        }
+    }
+
+    /**
+     * Whether rows on [tab] should expect metrics at all, and so whether to show a skeleton.
+     *
+     * Published posts only, and only at comfortable density - a condensed row shows no metrics, so
+     * it does not fetch them either. Within that, comment counts work on every site while view
+     * counts are an extra that only WordPress.com-connected sites add on top.
+     */
+    private fun expectsMetrics(tab: PostRsListTab) =
+        tab == PostRsListTab.PUBLISHED && !_density.value.isCondensed
+
+    /**
+     * Search results mix statuses into one list and metrics are only fetched for published posts,
+     * so anything shown while searching would wait on a fetch that never comes.
+     */
+    private val isSearching: Boolean get() = _searchQuery.value.isNotBlank()
+
+    /** Whether either metric is still expected for [postId] but has not arrived. */
+    private fun isAnyMetricOutstanding(postId: Long) =
+        !commentCountCache.containsKey(postId) ||
+            (canFetchViewCounts && viewCounts.isOutstanding(postId))
+
+    /**
+     * Fetches metrics for the rows currently on screen.
+     *
+     * Driven by scroll position rather than by the page load because neither source is free: view
+     * counts are one request per post, and comment counts are one per visible batch.
+     *
+     * Published posts only - a draft has neither a view history nor comments. Skipped entirely
+     * while searching, since results there mix statuses and a draft has nothing to report.
+     */
+    @MainThread
+    fun onRowsVisible(tab: PostRsListTab, postIds: List<Long>) {
+        // Recorded before the guard, not after: a list opened condensed does not fetch, but it
+        // still has to know what is on screen so that switching to comfortable can ask for it.
+        // Otherwise retryMetricsForVisibleRows finds an empty set and the rows shimmer for good.
+        visiblePostIds.record(tab, postIds)
+        if (!expectsMetrics(tab) || isSearching) return
+        fetchCommentCounts(tab, postIds)
+        fetchViewCounts(tab, postIds)
+    }
+
+    @MainThread
+    private fun fetchViewCounts(tab: PostRsListTab, postIds: List<Long>) {
+        // The counts come from WordPress.com, so there is nothing to ask for without a bearer token.
+        val hasAccessToken = !accountStore.accessToken.isNullOrEmpty()
+        if (!canFetchViewCounts || !hasAccessToken) return
+        viewCounts.fetch(tab, site.siteId, postIds)
+    }
+
+    /**
+     * Fetches comment counts for the visible rows in a single batched request.
+     *
+     * Unlike view counts this needs no WordPress.com account or stats capability: it reads the
+     * site's own REST API through whichever transport the site already uses.
+     */
+    @MainThread
+    private fun fetchCommentCounts(tab: PostRsListTab, postIds: List<Long>) {
+        val wanted = postIds.filter {
+            !commentCountCache.containsKey(it) && it !in inFlightCommentCounts
+        }
+        if (wanted.isEmpty()) return
+
+        inFlightCommentCounts.addAll(wanted)
+        collectionScope.launch {
+            @Suppress("TooGenericExceptionCaught")
+            try {
+                val counts = try {
+                    withContext(Dispatchers.IO) {
+                        commentCountFetcher.fetchCommentCounts(site, wanted)
                     }
-                )
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    AppLog.e(AppLog.T.POSTS, "Failed to fetch comment counts", e)
+                    emptyMap()
+                }
+                // Every id is written, so anything the fetch could not answer for is recorded as
+                // "nothing to show" and its row stops waiting; a refresh clears those and retries.
+                wanted.forEach { commentCountCache[it] = counts[it] }
+                applyMetrics(tab, wanted)
+            } finally {
+                inFlightCommentCounts.removeAll(wanted.toSet())
             }
         }
     }
 
     /**
-     * Fetches display names for posts that have a non-zero
-     * [PostRsUiModel.authorId] but no resolved name yet.
-     * Skipped when filtering by "Me" since the user already
-     * knows their own name.
+     * Re-requests metrics for the rows already on screen, for when something other than scrolling
+     * put them back into the pending state.
      */
-    private fun resolveAuthorNames(
-        tab: PostRsListTab,
-        posts: List<PostRsUiModel>
-    ) {
-        if (!isAuthorFilterSupported || _authorFilter.value == AuthorFilterSelection.ME) return
+    @MainThread
+    private fun retryMetricsForVisibleRows(tab: PostRsListTab) {
+        val visible = visiblePostIds.visible(tab)
+        if (visible.isEmpty()) return
+        onRowsVisible(tab, visible.toList())
+    }
 
-        val unresolvedIds = posts
-            .filter { it.authorId != 0L && it.authorDisplayName == null }
-            .map { it.authorId }
-            .distinct()
-        if (unresolvedIds.isEmpty()) return
-
-        resolveAuthorJobs[tab]?.cancel()
-        resolveAuthorJobs[tab] = viewModelScope.launch {
-            val names = withContext(Dispatchers.IO) {
-                restClient.fetchUserDisplayNames(site, unresolvedIds)
-            }
-            if (names.isEmpty()) return@launch
-            updateTabUiState(tab) {
-                copy(
-                    posts = this.posts.map { post ->
-                        val name = names[post.authorId]
-                        if (name != null) {
-                            post.copy(authorDisplayName = name)
-                        } else {
-                            post
-                        }
+    /** Pushes whatever the caches now hold for [postIds] onto the tab's rows. */
+    @MainThread
+    private fun applyMetrics(tab: PostRsListTab, postIds: List<Long>) {
+        val touched = postIds.toSet()
+        updateTabUiState(tab) {
+            copy(
+                items = items.map { post ->
+                    if (post.remoteId in touched) {
+                        post.copy(
+                            viewCount = viewCounts.countFor(post.remoteId),
+                            commentCount = commentCountCache[post.remoteId],
+                            // Mirrors the guard in loadItemsForTab: without it a late-landing
+                            // fetch could raise a skeleton over a search result.
+                            areMetricsPending = !isSearching &&
+                                isAnyMetricOutstanding(post.remoteId)
+                        )
+                    } else {
+                        post
                     }
-                )
-            }
+                }
+            )
         }
     }
 
@@ -803,7 +1269,16 @@ class PostRsListViewModel @Inject constructor(
     private suspend fun updateListInfoForTab(tab: PostRsListTab) {
         val collection = collections[tab] ?: return
 
-        val listInfo = withContext(Dispatchers.IO) { collection.listInfo() }
+        // A late observer can hit a collection mid-teardown, and this scope has no handler.
+        @Suppress("TooGenericExceptionCaught")
+        val listInfo = try {
+            withContext(Dispatchers.IO) { collection.listInfo() }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            AppLog.e(AppLog.T.POSTS, "Failed to read list info for tab $tab", e)
+            return
+        }
         val morePages = listInfo?.hasMorePages ?: false
         val fetchingFirstPage = listInfo?.state == ListState.FETCHING_FIRST_PAGE
         val isUserRefresh = userRefreshingTabs.contains(tab)
@@ -811,11 +1286,11 @@ class PostRsListViewModel @Inject constructor(
         if (!fetchingFirstPage) userRefreshingTabs.remove(tab)
 
         val isError = listInfo?.state == ListState.ERROR
-        val hasPosts = getTabUiState(tab).posts.isNotEmpty()
+        val hasPosts = getTabUiState(tab).items.isNotEmpty()
         val errorMessage = if (isError) friendlyErrorMessage() else null
 
         if (isError && hasPosts) {
-            val authError = getTabUiState(tab).isAuthError
+            // Just sync state; the refresh or load-more that failed reports it.
             updateTabUiState(tab) {
                 copy(
                     isLoading = false,
@@ -825,19 +1300,15 @@ class PostRsListViewModel @Inject constructor(
                     error = null
                 )
             }
-            _snackbarMessages.trySend(
-                SnackbarMessage(
-                    message = errorMessage.orEmpty(),
-                    actionLabel = if (authError) null
-                        else resourceProvider.getString(R.string.retry),
-                    onAction = if (authError) null
-                        else ({ refreshTab(tab) })
-                )
-            )
         } else {
             updateTabUiState(tab) {
                 copy(
-                    isLoading = isLoading && fetchingFirstPage,
+                    isLoading = RsTabLoading.onListInfoChanged(
+                        wasLoading = isLoading,
+                        isFetchingFirstPage = fetchingFirstPage,
+                        hasItems = items.isNotEmpty(),
+                        hasFetched = tab in fetchedTabs
+                    ),
                     isRefreshing = isUserRefresh && fetchingFirstPage,
                     isLoadingMore = listInfo?.state
                         == ListState.FETCHING_NEXT_PAGE,
@@ -849,24 +1320,48 @@ class PostRsListViewModel @Inject constructor(
     }
 
     /** Returns the current UI state for [tab], or a default loading state. */
-    private fun getTabUiState(tab: PostRsListTab): PostTabUiState {
-        return _tabStates.value[tab] ?: PostTabUiState(isLoading = true)
+    private fun getTabUiState(tab: PostRsListTab): RsTabUiState<PostRsUiModel> {
+        return _tabStates.value[tab] ?: RsTabUiState(isLoading = true)
     }
 
     /** Updates the UI state for [tab] by applying [update] to the current state. */
-    private fun updateTabUiState(tab: PostRsListTab, update: PostTabUiState.() -> PostTabUiState) {
+    private fun updateTabUiState(
+        tab: PostRsListTab,
+        update: RsTabUiState<PostRsUiModel>.() -> RsTabUiState<PostRsUiModel>
+    ) {
         _tabStates.value += (tab to getTabUiState(tab).update())
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        collections.values.forEach { it.close() }
+    public override fun onCleared() {
+        changeListener.stop()
+        clearCollections()
     }
 
     companion object {
         private const val PAGE_SIZE = 20
-        private const val SEARCH_DEBOUNCE_MS = 250L
-        internal const val MIN_SEARCH_QUERY_LENGTH = 3
+        private const val POST_TYPE = "post"
+
         private val ALL_STATUSES = PostRsListTab.entries.flatMap { it.statuses }.distinct()
+
+        private const val TRACKS_SELECTED_TAB = "selected_tab"
+        private const val TRACKS_SELECTED_AUTHOR_FILTER = "author_filter_selection"
+        private const val TRACKS_ACTION = "action"
+        private const val TRACKS_POST_ID = "post_id"
+        private const val TRACKS_CREATE_NEW_POST = "create_new_post"
     }
+}
+
+private fun PostRsMenuAction.toAnalyticsAction(): String = when (this) {
+    PostRsMenuAction.SETTINGS -> "settings"
+    PostRsMenuAction.VIEW -> "view"
+    PostRsMenuAction.READ -> "read"
+    PostRsMenuAction.PUBLISH -> "publish"
+    PostRsMenuAction.MOVE_TO_DRAFT -> "move_to_draft"
+    PostRsMenuAction.DUPLICATE -> "copy"
+    PostRsMenuAction.SHARE -> "share"
+    PostRsMenuAction.BLAZE -> "promote_with_blaze"
+    PostRsMenuAction.STATS -> "stats"
+    PostRsMenuAction.COMMENTS -> "comments"
+    PostRsMenuAction.TRASH -> "trash"
+    PostRsMenuAction.DELETE_PERMANENTLY -> "delete"
 }

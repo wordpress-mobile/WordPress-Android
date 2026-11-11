@@ -5,12 +5,12 @@ import org.junit.Test
 
 class ReaderTagTest {
     @Test
-    fun `GIVEN tag with freshly pressed endpoint WHEN isFreshlyPressed THEN returns true`() {
+    fun `GIVEN tag with freshly pressed slug WHEN isFreshlyPressed THEN returns true`() {
         val tag = ReaderTag(
             ReaderTag.TAG_SLUG_FRESHLY_PRESSED,
             ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
             ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
-            ReaderTag.FRESHLY_PRESSED_PATH,
+            "read/streams/freshly-pressed",
             ReaderTagType.DEFAULT
         )
 
@@ -18,7 +18,7 @@ class ReaderTagTest {
     }
 
     @Test
-    fun `GIVEN tag with different endpoint WHEN isFreshlyPressed THEN returns false`() {
+    fun `GIVEN tag with different slug WHEN isFreshlyPressed THEN returns false`() {
         val tag = ReaderTag(
             "other",
             "Other",
@@ -31,12 +31,12 @@ class ReaderTagTest {
     }
 
     @Test
-    fun `GIVEN tag with freshly pressed endpoint but wrong type WHEN isFreshlyPressed THEN returns false`() {
+    fun `GIVEN tag with freshly pressed slug but wrong type WHEN isFreshlyPressed THEN returns false`() {
         val tag = ReaderTag(
             ReaderTag.TAG_SLUG_FRESHLY_PRESSED,
             ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
             ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
-            ReaderTag.FRESHLY_PRESSED_PATH,
+            "read/streams/freshly-pressed",
             ReaderTagType.FOLLOWED
         )
 
@@ -75,7 +75,7 @@ class ReaderTagTest {
             ReaderTag.TAG_SLUG_FRESHLY_PRESSED,
             ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
             ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
-            ReaderTag.FRESHLY_PRESSED_PATH,
+            "read/streams/freshly-pressed",
             ReaderTagType.DEFAULT
         )
 

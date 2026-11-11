@@ -16,9 +16,11 @@ import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
@@ -459,6 +461,75 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
             assertEquals(it.activityID, ACTIVITY_ID)
             assertEquals(it.content, updatedContent)
         }
+    }
+
+    @Test
+    fun `given mcp agent with client, when view model starts, then metadata is shown`() {
+        val mcpLabel = "via Claude"
+        val mcpActivity = activityLogModel.copy(
+            actor = activityLogModel.actor?.copy(
+                isMCPAgent = true,
+                mcpClient = "Claude"
+            )
+        )
+        whenever(activityLogStore.getActivityLogForSite(site))
+            .thenReturn(listOf(mcpActivity))
+        whenever(
+            resourceProvider.getString(
+                eq(R.string.activity_log_mcp_agent_label), any()
+            )
+        ).thenReturn(mcpLabel)
+
+        startViewModel()
+
+        assertNotNull(lastEmittedItem)
+        assertEquals(mcpLabel, lastEmittedItem?.actorMetadata)
+    }
+
+    @Test
+    fun `given mcp agent with empty client, when view model starts, then metadata is null`() {
+        val mcpActivity = activityLogModel.copy(
+            actor = activityLogModel.actor?.copy(
+                isMCPAgent = true,
+                mcpClient = ""
+            )
+        )
+        whenever(activityLogStore.getActivityLogForSite(site))
+            .thenReturn(listOf(mcpActivity))
+
+        startViewModel()
+
+        assertNotNull(lastEmittedItem)
+        assertNull(lastEmittedItem?.actorMetadata)
+    }
+
+    @Test
+    fun `given non-mcp agent with client, when view model starts, then metadata is null`() {
+        val mcpActivity = activityLogModel.copy(
+            actor = activityLogModel.actor?.copy(
+                isMCPAgent = false,
+                mcpClient = "Claude"
+            )
+        )
+        whenever(activityLogStore.getActivityLogForSite(site))
+            .thenReturn(listOf(mcpActivity))
+
+        startViewModel()
+
+        assertNotNull(lastEmittedItem)
+        assertNull(lastEmittedItem?.actorMetadata)
+    }
+
+    @Test
+    fun `given no actor, when view model starts, then metadata is null`() {
+        val noActorActivity = activityLogModel.copy(actor = null)
+        whenever(activityLogStore.getActivityLogForSite(site))
+            .thenReturn(listOf(noActorActivity))
+
+        startViewModel()
+
+        assertNotNull(lastEmittedItem)
+        assertNull(lastEmittedItem?.actorMetadata)
     }
 
     private fun startViewModel(

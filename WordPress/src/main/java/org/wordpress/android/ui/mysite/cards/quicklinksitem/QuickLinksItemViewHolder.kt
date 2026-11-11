@@ -36,8 +36,6 @@ class QuickLinksItemViewHolder(
             ImageViewCompat.setImageTintList(quickLinkIcon, null)
         }
         quickLinkLabel.setText(item.label.stringRes)
-        quickLinkBetaBadge.visibility =
-            if (item.showBetaBadge) View.VISIBLE else View.GONE
         quickLinkItemRoot.setOnClickListener { item.onClick.click() }
     }
 }

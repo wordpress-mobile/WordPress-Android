@@ -19,6 +19,7 @@ import org.wordpress.android.R
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
+import androidx.appcompat.R as AppCompatR
 import com.google.android.material.R as MaterialR
 
 /**
@@ -42,7 +43,7 @@ class PrefMainSwitchToolbarView @JvmOverloads constructor(
         HIGHLIGHTED(
             0,
             MaterialR.attr.colorOnPrimary,
-            MaterialR.attr.colorPrimary
+            AppCompatR.attr.colorPrimary
         ),
         NORMAL(
             1,
@@ -79,7 +80,7 @@ class PrefMainSwitchToolbarView @JvmOverloads constructor(
          * @param buttonView The main switch whose state has changed.
          * @param isChecked The new checked state of main switch.
          */
-        fun onMainSwitchCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean)
+        fun onMainSwitchCheckedChanged(buttonView: CompoundButton, isChecked: Boolean)
     }
 
     init {
@@ -296,7 +297,7 @@ class PrefMainSwitchToolbarView @JvmOverloads constructor(
     /*
      * User toggled the main switch
      */
-    override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+    override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
         setToolbarTitle(isChecked)
         mainSwitchToolbarListener?.onMainSwitchCheckedChanged(buttonView, isChecked)
     }

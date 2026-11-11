@@ -19,7 +19,6 @@ import org.wordpress.android.ui.mysite.cards.dashboard.bloganuary.BloganuaryNudg
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardViewModelSlice
-import org.wordpress.android.ui.mysite.cards.migration.JpMigrationSuccessCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewModelSlice
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.plans.PlansCardViewModelSlice
@@ -33,7 +32,6 @@ import javax.inject.Named
 @SuppressWarnings("LongParameterList")
 class DashboardCardsViewModelSlice @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val jpMigrationSuccessCardViewModelSlice: JpMigrationSuccessCardViewModelSlice,
     private val jetpackInstallFullPluginCardViewModelSlice: JetpackInstallFullPluginCardViewModelSlice,
     private val domainRegistrationCardViewModelSlice: DomainRegistrationCardViewModelSlice,
     private val blazeCardViewModelSlice: BlazeCardViewModelSlice,
@@ -70,7 +68,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
         personalizeCardViewModelSlice.onNavigation,
         quickLinksItemViewModelSlice.navigation,
         plansCardViewModelSlice.onNavigation,
-        jpMigrationSuccessCardViewModelSlice.onNavigation,
         domainRegistrationCardViewModelSlice.onNavigation,
     )
 
@@ -92,7 +89,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
         cardViewModelSlice.uiModel,
         bloggingPromptCardViewModelSlice.uiModel,
         bloganuaryNudgeCardViewModelSlice.uiModel,
-        jpMigrationSuccessCardViewModelSlice.uiModel,
         plansCardViewModelSlice.uiModel,
         personalizeCardViewModelSlice.uiModel,
         jetpackInstallFullPluginCardViewModelSlice.uiModel,
@@ -102,7 +98,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
         cardsState,
         bloggingPromptCard,
         bloganuaryNudgeCard,
-        migrationSuccessCard,
         plansCard,
         personalizeCard,
         jpFullInstallFullPlugin,
@@ -113,7 +108,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
             cardsState,
             bloggingPromptCard,
             bloganuaryNudgeCard,
-            migrationSuccessCard,
             plansCard,
             personalizeCard,
             jpFullInstallFullPlugin,
@@ -128,14 +122,12 @@ class DashboardCardsViewModelSlice @Inject constructor(
         cardsState: CardsState?,
         bloggingPromptCard: MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData?,
         bloganuaryNudgeCard: MySiteCardAndItem.Card.BloganuaryNudgeCardModel?,
-        migrationSuccessCard: MySiteCardAndItem.Item.SingleActionCard?,
         plansCard: MySiteCardAndItem.Card.DashboardPlansCard?,
         personalizeCard: MySiteCardAndItem.Card.PersonalizeCardModel?,
         jpFullInstallFullPlugin: MySiteCardAndItem.Card.JetpackInstallFullPluginCard?,
         domainRegistrationCard: MySiteCardAndItem.Card.DomainRegistrationCard?,
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
-        migrationSuccessCard?.let { cards.add(it) }
         jpFullInstallFullPlugin?.let { cards.add(it) }
         domainRegistrationCard?.let { cards.add(it) }
         quicklinks?.let { cards.add(it) }
@@ -185,7 +177,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
     fun buildCards(site: SiteModel) {
         job?.cancel()
         job = scope.launch(bgDispatcher) {
-            jpMigrationSuccessCardViewModelSlice.buildCard()
             jetpackInstallFullPluginCardViewModelSlice.buildCard(site)
             blazeCardViewModelSlice.buildCard(site)
             bloggingPromptCardViewModelSlice.fetchBloggingPrompt(site)
@@ -200,7 +191,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
 
 
     fun clearValue() {
-        jpMigrationSuccessCardViewModelSlice.clearValue()
         jetpackInstallFullPluginCardViewModelSlice.clearValue()
         blazeCardViewModelSlice.clearValue()
         bloggingPromptCardViewModelSlice.clearValue()

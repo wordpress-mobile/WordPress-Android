@@ -51,11 +51,11 @@ public class PublicizeTable {
     }
 
     private static SQLiteDatabase getReadableDb() {
-        return WordPress.wpDB.getDatabase();
+        return WordPress.getWpDB().getDatabase();
     }
 
     private static SQLiteDatabase getWritableDb() {
-        return WordPress.wpDB.getDatabase();
+        return WordPress.getWpDB().getDatabase();
     }
 
     public static void resetServicesTable(SQLiteDatabase db) {

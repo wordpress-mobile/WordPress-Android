@@ -10,6 +10,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard.TodaysStatsCardWithData
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.BlazeSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.StatsSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
@@ -17,7 +18,8 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
 class CardsShownTracker @Inject constructor(
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val selectedSiteRepository: SelectedSiteRepository
 ) {
     private val cardsShownTracked = mutableListOf<Pair<String, String>>()
 
@@ -121,6 +123,7 @@ class CardsShownTracker @Inject constructor(
             cardsShownTracked.add(pair)
             analyticsTrackerWrapper.track(
                 Stat.MY_SITE_DASHBOARD_CARD_SHOWN,
+                selectedSiteRepository.getSelectedSite(),
                 mapOf(
                     CardsTracker.TYPE to pair.first,
                     CardsTracker.SUBTYPE to pair.second

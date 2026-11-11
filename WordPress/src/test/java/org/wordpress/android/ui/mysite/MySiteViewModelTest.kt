@@ -32,16 +32,22 @@ import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndivid
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.GetShowJetpackFullPluginInstallOnboardingUseCase
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.AccountData
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
+import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
 import org.wordpress.android.ui.mysite.cards.DashboardCardsViewModelSlice
 import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPasswordViewModelSlice
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.DashboardItemsViewModelSlice
+import org.wordpress.android.ui.newstats.NewStatsRouting
 import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
+import org.wordpress.android.ui.mysite.cards.connectivity.SiteConnectivityBannerViewModelSlice
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.posts.GutenbergKitWarmupHelper
+import org.wordpress.android.ui.posts.GutenbergEditorPreloader
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
@@ -98,10 +104,20 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var applicationPasswordViewModelSlice: ApplicationPasswordViewModelSlice
 
     @Mock
-    lateinit var gutenbergKitWarmupHelper: GutenbergKitWarmupHelper
+    lateinit var siteCapabilityChecker: SiteCapabilityChecker
 
     @Mock
-    lateinit var siteCapabilityChecker: SiteCapabilityChecker
+    lateinit var gutenbergEditorPreloader: GutenbergEditorPreloader
+
+    @Mock
+    lateinit var siteConnectivityBannerViewModelSlice: SiteConnectivityBannerViewModelSlice
+
+    @Mock
+    lateinit var gutenbergKitAnnouncementController:
+            org.wordpress.android.ui.posts.GutenbergKitAnnouncementController
+
+    @Mock
+    lateinit var newStatsRouting: NewStatsRouting
 
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<MySiteViewModel.State>
@@ -119,6 +135,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val selectedSite = MediatorLiveData<SelectedSite>()
 
     private val currentAvatar = MutableLiveData(AccountData("",""))
+    private val siteInfoHeaderCard = MutableLiveData<SiteInfoHeaderCard?>()
+    private val dashboardCards = MutableLiveData<List<MySiteCardAndItem>>()
 
     @Suppress("LongMethod")
     @Before
@@ -133,11 +151,12 @@ class MySiteViewModelTest : BaseUnitTest() {
         onSiteSelected.value = null
         selectedSite.value = null
 
-        whenever(siteInfoHeaderCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
+        whenever(siteInfoHeaderCardViewModelSlice.uiModel).thenReturn(siteInfoHeaderCard)
         whenever(accountDataViewModelSlice.uiModel).thenReturn(MutableLiveData())
-        whenever(dashboardCardsViewModelSlice.uiModel).thenReturn(MutableLiveData())
+        whenever(dashboardCardsViewModelSlice.uiModel).thenReturn(dashboardCards)
         whenever(dashboardItemsViewModelSlice.uiModel).thenReturn(MutableLiveData())
         whenever(applicationPasswordViewModelSlice.uiModel).thenReturn(MutableLiveData())
+        whenever(siteConnectivityBannerViewModelSlice.uiModel).thenReturn(MutableLiveData())
 
         viewModel = MySiteViewModel(
             testDispatcher(),
@@ -156,8 +175,11 @@ class MySiteViewModelTest : BaseUnitTest() {
             dashboardCardsViewModelSlice,
             dashboardItemsViewModelSlice,
             applicationPasswordViewModelSlice,
-            gutenbergKitWarmupHelper,
             siteCapabilityChecker,
+            gutenbergEditorPreloader,
+            siteConnectivityBannerViewModelSlice,
+            gutenbergKitAnnouncementController,
+            newStatsRouting,
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -224,6 +246,32 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(dashboardCardsViewModelSlice, atLeastOnce()).clearValue()
         verify(dashboardItemsViewModelSlice, atLeastOnce()).clearValue()
+    }
+
+    @Test
+    fun `given cards built for the previous site, when the site changes, then only the header is shown`() = test {
+        initSelectedSite(isJetpackApp = true)
+        viewModel.onSitePicked()
+        val previousHeader = headerCard(siteTest)
+        val previousCards = listOf(QuickLinksItem(quickLinkItems = emptyList()))
+        siteInfoHeaderCard.value = previousHeader
+        dashboardCards.value = previousCards
+        assertThat((uiModels.last() as SiteSelected).dashboardData).isEqualTo(listOf(previousHeader) + previousCards)
+
+        // the repository already points at the new site when its header is built, before onSitePicked
+        // has had a chance to clear and rebuild the cards
+        val nextSite = SiteModel().apply { id = TEST_SITE_ID + 1 }
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(nextSite)
+        val nextHeader = headerCard(nextSite)
+        siteInfoHeaderCard.value = nextHeader
+
+        assertThat((uiModels.last() as SiteSelected).dashboardData).containsExactly(nextHeader)
+
+        viewModel.onSitePicked()
+        val nextCards = listOf(QuickLinksItem(quickLinkItems = emptyList()))
+        dashboardCards.value = nextCards
+
+        assertThat((uiModels.last() as SiteSelected).dashboardData).isEqualTo(listOf(nextHeader) + nextCards)
     }
 
     @Test
@@ -355,8 +403,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(dashboardCardsViewModelSlice).clearValue()
     }
 
-
-
     /* LAND ON THE EDITOR A/B EXPERIMENT */
     @Test
     fun `when performFirstStepAfterSiteCreation called, then home page editor is shown`() = test {
@@ -399,6 +445,49 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(accountDataViewModelSlice).onCleared()
         verify(dashboardCardsViewModelSlice).onCleared()
         verify(dashboardItemsViewModelSlice).onCleared()
+        verify(gutenbergEditorPreloader).clear()
+    }
+
+    @Test
+    fun `when dashboard is built, then editor preload is triggered`() {
+        initSelectedSite()
+
+        viewModel.refresh()
+
+        verify(gutenbergEditorPreloader).preloadIfNeeded(
+            org.mockito.kotlin.eq(siteTest),
+            org.mockito.kotlin.any()
+        )
+    }
+
+    /* GUTENBERGKIT ANNOUNCEMENT */
+
+    @Test
+    fun `onResume posts gutenberg kit announcement event when controller says show`() = test {
+        initSelectedSite()
+        whenever(gutenbergKitAnnouncementController.shouldShowAnnouncement(siteTest)).thenReturn(true)
+        val observed = mutableListOf<SiteModel>()
+        viewModel.onShowGutenbergKitAnnouncement.observeForever { event ->
+            event?.getContentIfNotHandled()?.let { observed.add(it) }
+        }
+
+        viewModel.onResume()
+
+        assertThat(observed).containsExactly(siteTest)
+    }
+
+    @Test
+    fun `onResume does not post gutenberg kit announcement event when controller says skip`() = test {
+        initSelectedSite()
+        whenever(gutenbergKitAnnouncementController.shouldShowAnnouncement(siteTest)).thenReturn(false)
+        val observed = mutableListOf<SiteModel>()
+        viewModel.onShowGutenbergKitAnnouncement.observeForever { event ->
+            event?.getContentIfNotHandled()?.let { observed.add(it) }
+        }
+
+        viewModel.onResume()
+
+        assertThat(observed).isEmpty()
     }
 
     @Suppress("LongParameterList")
@@ -418,6 +507,15 @@ class MySiteViewModelTest : BaseUnitTest() {
         onSiteChange.value = siteTest
         selectedSite.value = SelectedSite(siteTest)
     }
+
+    private fun headerCard(site: SiteModel) = SiteInfoHeaderCard(
+        title = "Site ${site.id}",
+        url = TEST_URL,
+        iconState = SiteInfoHeaderCard.IconState.Visible(),
+        onIconClick = ListItemInteraction.create { },
+        onUrlClick = ListItemInteraction.create { },
+        onSwitchSiteClick = ListItemInteraction.create { }
+    )
 
     fun ViewModel.invokeOnCleared() {
         val viewModelStore = ViewModelStore()

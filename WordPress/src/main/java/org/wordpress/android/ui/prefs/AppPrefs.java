@@ -16,12 +16,12 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.JetpackCapability;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalTrackingKt;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -42,6 +42,9 @@ public class AppPrefs {
 
     private static final int THEME_IMAGE_SIZE_WIDTH_DEFAULT = 400;
 
+    // Legacy experimental-features pref key for New Stats, kept only for one-time opt-in migration.
+    private static final String LEGACY_NEW_STATS_EXPERIMENTAL_KEY = "new_stats";
+
     // store twice as many recent sites as we show
     private static final int MAX_RECENTLY_PICKED_SITES_TO_SHOW = 8;
     private static final int MAX_RECENTLY_PICKED_SITES_TO_SAVE = MAX_RECENTLY_PICKED_SITES_TO_SHOW * 2;
@@ -61,6 +64,14 @@ public class AppPrefs {
         // name of last shown activity
         LAST_ACTIVITY_STR,
 
+        NEW_STATS_INTRO_SHOWN,
+
+        NEW_STATS_USER_OPTED_IN,
+
+        STATS_NEW_STATS_SUGGESTION_SHOWN,
+
+        STATS_NEW_STATS_SUGGESTION_LAST_DISMISSED_AT,
+
         READER_TAGS_UPDATE_TIMESTAMP,
         // last selected tag in the reader
         READER_TAG_NAME,
@@ -76,9 +87,6 @@ public class AppPrefs {
 
         // last selected subfilter in the reader
         READER_SUBFILTER,
-
-        // title of the last active page in ReaderSubsActivity
-        READER_SUBS_PAGE_TITLE,
 
         // index of the last active page in main activity
         MAIN_PAGE_INDEX,
@@ -109,9 +117,6 @@ public class AppPrefs {
         // Used to flag whether the app should strip geolocation from images
         STRIP_IMAGE_LOCATION,
 
-        // Used to flag the account created stat needs to be bumped after account information is synced.
-        SHOULD_TRACK_MAGIC_LINK_SIGNUP,
-
         // Support email address and name that's independent of any account or site
         SUPPORT_EMAIL,
         SUPPORT_NAME,
@@ -123,8 +128,12 @@ public class AppPrefs {
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2,
         GUTENBERG_OPT_IN_DIALOG_SHOWN,
         GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN,
+        GUTENBERG_KIT_OPT_IN_SITES,
+        GUTENBERG_KIT_OPT_OUT_SITES,
+        GUTENBERG_KIT_ANNOUNCEMENT_DEFERRED_UNTIL,
 
         POST_LIST_AUTHOR_FILTER,
+        PAGES_LIST_AUTHOR_FILTER,
         POST_LIST_VIEW_LAYOUT_TYPE,
 
         // Widget settings
@@ -136,8 +145,6 @@ public class AppPrefs {
         // Keep the local_blog_id + local_post_id values that have HW Acc. turned off
         AZTEC_EDITOR_DISABLE_HW_ACC_KEYS,
 
-        // timestamp of the last update of the reader css styles
-        READER_CSS_UPDATED_TIMESTAMP,
         // Identifier of the next page for the discover /cards endpoint
         READER_CARDS_ENDPOINT_PAGE_HANDLE,
         // used to tell the server to return a different set of data so the content on discover tab doesn't look static
@@ -147,6 +154,8 @@ public class AppPrefs {
         READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER,
         // Selected Reader feed ID for persisting user preferred feed
         READER_TOP_BAR_SELECTED_FEED_ITEM_ID,
+        // Index of the last-selected sub-tab inside the Reader Discover tabbed UI
+        READER_DISCOVER_SELECTED_SUB_TAB_INDEX,
         MANUAL_FEATURE_CONFIG,
         EXPERIMENTAL_FEATURE_CONFIG,
         SITE_JETPACK_CAPABILITIES,
@@ -164,8 +173,6 @@ public class AppPrefs {
         OPEN_WEB_LINKS_WITH_JETPACK,
         SHOULD_HIDE_JETPACK_FEATURE_CARD,
         JETPACK_FEATURE_CARD_LAST_SHOWN_TIMESTAMP,
-        SWITCH_TO_JETPACK_MENU_CARD_SHOWN_TIMESTAMP,
-        SHOULD_HIDE_SWITCH_TO_JETPACK_MENU_CARD,
         SHOULD_HIDE_JETPACK_INSTALL_FULL_PLUGIN_CARD,
         SHOULD_SHOW_JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING,
         SHOULD_HIDE_PROMOTE_WITH_BLAZE_CARD,
@@ -176,6 +183,7 @@ public class AppPrefs {
         WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_LAST_SHOWN_TIMESTAMP,
         NOTIFICATIONS_PERMISSION_WARNING_DISMISSED,
         HAS_SAVED_PRIVACY_SETTINGS,
+        HAS_FETCHED_SITES,
         SHOULD_HIDE_BLAZE_OVERLAY,
 
         // Should show Jetpack Social no connections UI
@@ -194,8 +202,23 @@ public class AppPrefs {
         SHOULD_HIDE_DYNAMIC_CARD,
         PINNED_SITE_IDS,
         READER_READING_PREFERENCES_JSON,
-        SHOULD_SHOW_READER_ANNOUNCEMENT_CARD,
         STATS_CARDS_CONFIGURATION_JSON,
+        STATS_INSIGHTS_CARDS_CONFIGURATION_JSON,
+        SUBSCRIBERS_CARDS_CONFIGURATION_JSON,
+        STATS_UTM_CATEGORY,
+        SITE_SUPPORTS_EDITOR_SETTINGS,
+        SITE_SUPPORTS_EDITOR_ASSETS,
+        SITE_THEME_IS_BLOCK_THEME,
+        // Timestamp (millis) of the last time we confirmed a site has no xposts, used to throttle
+        // re-checks so a site that later enables xposts (o2) is eventually picked up.
+        XPOSTS_NO_RESULT_CHECKED_TIMESTAMP,
+
+        // Login flow preserved across OAuth Custom Tabs redirect
+        PENDING_LOGIN_FLOW,
+        // Whether a share flow is pending (for self-hosted login)
+        IS_SHARE_FLOW_PENDING,
+        // Whether the posts/pages lists are shown in their condensed density
+        CONTENT_LIST_CONDENSED,
     }
 
     /**
@@ -217,11 +240,19 @@ public class AppPrefs {
 
         BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN,
 
+        // Set when the user explicitly turns New Stats off. Undeletable so the choice survives
+        // sign-out - it is the only thing that can override the android_new_stats rollout flag,
+        // so erasing it would silently push the user back into New Stats.
+        NEW_STATS_USER_OPTED_OUT,
+
         // When we need to show the snackbar indicating how notifications can be navigated through
         SWIPE_TO_NAVIGATE_NOTIFICATIONS,
 
         // Same as above but for the reader
         SWIPE_TO_NAVIGATE_READER,
+
+        // Same as above but for the comment detail
+        SWIPE_TO_NAVIGATE_COMMENTS,
 
         // smart toast counters
         SMART_TOAST_COMMENTS_LONG_PRESS_USAGE_COUNTER,
@@ -255,9 +286,6 @@ public class AppPrefs {
         // indicates whether the system notifications are enabled for the app
         SYSTEM_NOTIFICATIONS_ENABLED,
 
-        // Used to indicate whether or not the the post-signup interstitial must be shown
-        SHOULD_SHOW_POST_SIGNUP_INTERSTITIAL,
-
         // used to indicate that we do not need to show the main FAB tooltip
         IS_MAIN_FAB_TOOLTIP_DISABLED,
 
@@ -277,32 +305,8 @@ public class AppPrefs {
         // Tracks which block types are considered "new" via impression counts
         GUTENBERG_BLOCK_TYPE_IMPRESSIONS,
 
-        // Used to identify the App Settings for initial screen that is updated when the variant is assigned
-        wp_pref_initial_screen,
-
         // Indicates if this is the first time the user sees the blogging prompts onboarding dialog
         IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING,
-
-        // Indicates if this is the first time we try to login to Jetpack automatically
-        IS_FIRST_TRY_LOGIN_JETPACK,
-
-        // Indicates if this is the first time we try to get the user flags in Jetpack automatically
-        IS_FIRST_TRY_USER_FLAGS_JETPACK,
-
-        // Indicates if this is the first time we try sync the blogging reminders in Jetpack automatically
-        IS_FIRST_TRY_BLOGGING_REMINDERS_SYNC_JETPACK,
-
-        // Indicates if this is the first time we try to get the reader saved posts in Jetpack automatically
-        IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK,
-
-        // Indicates if the user has completed the Jetpack migration flow
-        IS_JETPACK_MIGRATION_COMPLETED,
-
-        // Indicates if the the Jetpack migration flow is in progress (useful for resetting after interruptions)
-        IS_JETPACK_MIGRATION_IS_IN_PROGRESS,
-
-        // Indicates if the user is eligible for the Jetpack migration flow
-        IS_JETPACK_MIGRATION_ELIGIBLE,
 
         // Track Network Requests (Chucker) preferences - stored as device-level preferences
         // (not user-specific) to allow troubleshooting network issues during login flows.
@@ -484,18 +488,6 @@ public class AppPrefs {
         setString(DeletablePrefKey.READER_SUBFILTER, json);
     }
 
-    /**
-     * title of the last active page in ReaderSubsActivity - this is stored rather than
-     * the index of the page so we can re-order pages without affecting this value
-     */
-    public static String getReaderSubsPageTitle() {
-        return getString(DeletablePrefKey.READER_SUBS_PAGE_TITLE);
-    }
-
-    public static void setReaderSubsPageTitle(String pageTitle) {
-        setString(DeletablePrefKey.READER_SUBS_PAGE_TITLE, pageTitle);
-    }
-
     // Store the version code of the app. Used to check it the app was upgraded.
     public static int getLastAppVersionCode() {
         return getInt(UndeletablePrefKey.LAST_APP_VERSION_INDEX);
@@ -575,6 +567,18 @@ public class AppPrefs {
         return true;
     }
 
+    /**
+     * Whether the redesigned posts and pages lists are shown condensed. Shared by both lists: a user
+     * who wants a dense list of posts wants a dense list of pages.
+     */
+    public static boolean isContentListCondensed() {
+        return getBoolean(DeletablePrefKey.CONTENT_LIST_CONDENSED, false);
+    }
+
+    public static void setContentListCondensed(boolean isCondensed) {
+        setBoolean(DeletablePrefKey.CONTENT_LIST_CONDENSED, isCondensed);
+    }
+
     public static boolean isAztecEditorToolbarExpanded() {
         return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_TOOLBAR_EXPANDED, false);
     }
@@ -643,6 +647,14 @@ public class AppPrefs {
 
     public static void setReaderSwipeToNavigateShown(boolean alreadyShown) {
         setBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_READER, alreadyShown);
+    }
+
+    public static boolean isCommentsSwipeToNavigateShown() {
+        return getBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_COMMENTS, false);
+    }
+
+    public static void setCommentsSwipeToNavigateShown(boolean alreadyShown) {
+        setBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_COMMENTS, alreadyShown);
     }
 
     public static boolean isImageOptimize() {
@@ -821,6 +833,118 @@ public class AppPrefs {
         return urls != null && urls.contains(siteURL);
     }
 
+    /**
+     * Returns the explicit per-site override for GutenbergKit, or {@code null} if the user has
+     * not set one. When {@code null}, downstream resolution in {@code GutenbergKitFeatureChecker}
+     * falls back to the experimental and remote feature flags.
+     */
+    @Nullable
+    public static Boolean getGutenbergKitSiteOverride(String siteURL) {
+        if (TextUtils.isEmpty(siteURL)) {
+            return null;
+        }
+        if (siteSetContains(DeletablePrefKey.GUTENBERG_KIT_OPT_OUT_SITES, siteURL)) {
+            return Boolean.FALSE;
+        }
+        if (siteSetContains(DeletablePrefKey.GUTENBERG_KIT_OPT_IN_SITES, siteURL)) {
+            return Boolean.TRUE;
+        }
+        return null;
+    }
+
+    /**
+     * Sets an explicit per-site override for GutenbergKit, replacing any prior override for the
+     * site. The site is added to the opt-in or opt-out set (per {@code enabled}) and removed from
+     * the other so the two sets stay mutually exclusive.
+     */
+    public static void setGutenbergKitSiteOverride(String siteURL, boolean enabled) {
+        if (TextUtils.isEmpty(siteURL)) {
+            return;
+        }
+        DeletablePrefKey added = enabled
+                ? DeletablePrefKey.GUTENBERG_KIT_OPT_IN_SITES
+                : DeletablePrefKey.GUTENBERG_KIT_OPT_OUT_SITES;
+        DeletablePrefKey removed = enabled
+                ? DeletablePrefKey.GUTENBERG_KIT_OPT_OUT_SITES
+                : DeletablePrefKey.GUTENBERG_KIT_OPT_IN_SITES;
+        addToSiteSet(added, siteURL);
+        removeFromSiteSet(removed, siteURL);
+    }
+
+    /**
+     * Returns {@code true} if {@code siteURL} is currently a member of the StringSet at {@code key}.
+     * A missing entry or a value of the wrong type is treated as absence.
+     */
+    private static boolean siteSetContains(DeletablePrefKey key, String siteURL) {
+        try {
+            Set<String> urls = prefs().getStringSet(key.name(), null);
+            return urls != null && urls.contains(siteURL);
+        } catch (ClassCastException exp) {
+            return false;
+        }
+    }
+
+    /**
+     * Adds {@code siteURL} to the StringSet at {@code key}, creating the set if it does not exist.
+     * No-ops if the stored value is of the wrong type.
+     */
+    private static void addToSiteSet(DeletablePrefKey key, String siteURL) {
+        Set<String> urls;
+        try {
+            urls = prefs().getStringSet(key.name(), null);
+        } catch (ClassCastException exp) {
+            return;
+        }
+        Set<String> newUrls = new HashSet<>();
+        if (urls != null) newUrls.addAll(urls);
+        newUrls.add(siteURL);
+        prefs().edit().putStringSet(key.name(), newUrls).apply();
+    }
+
+    /**
+     * Removes {@code siteURL} from the StringSet at {@code key}. No-ops if the site is not present
+     * or the stored value is of the wrong type.
+     */
+    private static void removeFromSiteSet(DeletablePrefKey key, String siteURL) {
+        Set<String> urls;
+        try {
+            urls = prefs().getStringSet(key.name(), null);
+        } catch (ClassCastException exp) {
+            return;
+        }
+        if (urls == null || !urls.contains(siteURL)) return;
+        Set<String> newUrls = new HashSet<>(urls);
+        newUrls.remove(siteURL);
+        prefs().edit().putStringSet(key.name(), newUrls).apply();
+    }
+
+    /**
+     * Returns the wall-clock timestamp (millis) before which the GutenbergKit announcement should
+     * not be re-shown for {@code siteURL}. Returns {@code 0L} if no deferral is set (i.e., free
+     * to show now, subject to the other gates).
+     */
+    public static long getGutenbergKitAnnouncementDeferredUntil(String siteURL) {
+        if (TextUtils.isEmpty(siteURL)) {
+            return 0L;
+        }
+        return prefs().getLong(gutenbergKitDeferralKey(siteURL), 0L);
+    }
+
+    /**
+     * Defers the GutenbergKit announcement for {@code siteURL} until the given wall-clock
+     * timestamp (millis).
+     */
+    public static void setGutenbergKitAnnouncementDeferredUntil(String siteURL, long timestampMillis) {
+        if (TextUtils.isEmpty(siteURL)) {
+            return;
+        }
+        prefs().edit().putLong(gutenbergKitDeferralKey(siteURL), timestampMillis).apply();
+    }
+
+    private static String gutenbergKitDeferralKey(String siteURL) {
+        return DeletablePrefKey.GUTENBERG_KIT_ANNOUNCEMENT_DEFERRED_UNTIL.name() + "_" + siteURL;
+    }
+
     public static void setGutenbergInfoPopupDisplayed(String siteURL, boolean isDisplayed) {
         if (isGutenbergInfoPopupDisplayed(siteURL)) {
             return;
@@ -990,18 +1114,6 @@ public class AppPrefs {
         setLong(UndeletablePrefKey.LAST_WP_COM_THEMES_SYNC, time);
     }
 
-    public static void setShouldTrackMagicLinkSignup(Boolean shouldTrack) {
-        setBoolean(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP, shouldTrack);
-    }
-
-    public static boolean getShouldTrackMagicLinkSignup() {
-        return getBoolean(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP, false);
-    }
-
-    public static void removeShouldTrackMagicLinkSignup() {
-        remove(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP);
-    }
-
     public static void setMainFabTooltipDisabled(Boolean disable) {
         setBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, disable);
     }
@@ -1042,6 +1154,15 @@ public class AppPrefs {
 
     public static void setAuthorFilterSelection(@NonNull AuthorFilterSelection selection) {
         setLong(DeletablePrefKey.POST_LIST_AUTHOR_FILTER, selection.getId());
+    }
+
+    @NonNull public static AuthorFilterSelection getPagesAuthorFilterSelection() {
+        long id = getLong(DeletablePrefKey.PAGES_LIST_AUTHOR_FILTER, AuthorFilterSelection.getDefaultValue().getId());
+        return AuthorFilterSelection.fromId(id);
+    }
+
+    public static void setPagesAuthorFilterSelection(@NonNull AuthorFilterSelection selection) {
+        setLong(DeletablePrefKey.PAGES_LIST_AUTHOR_FILTER, selection.getId());
     }
 
     public static void setStatsWidgetSelectedSiteId(long siteId, int appWidgetId) {
@@ -1116,14 +1237,6 @@ public class AppPrefs {
         return getBoolean(UndeletablePrefKey.SYSTEM_NOTIFICATIONS_ENABLED, true);
     }
 
-    public static void setShouldShowPostSignupInterstitial(boolean shouldShow) {
-        setBoolean(UndeletablePrefKey.SHOULD_SHOW_POST_SIGNUP_INTERSTITIAL, shouldShow);
-    }
-
-    public static boolean shouldShowPostSignupInterstitial() {
-        return getBoolean(UndeletablePrefKey.SHOULD_SHOW_POST_SIGNUP_INTERSTITIAL, true);
-    }
-
     private static List<String> getPostWithHWAccelerationOff() {
         String idsAsString = getString(DeletablePrefKey.AZTEC_EDITOR_DISABLE_HW_ACC_KEYS, "");
         return Arrays.asList(idsAsString.split(","));
@@ -1169,14 +1282,6 @@ public class AppPrefs {
         setLong(DeletablePrefKey.READER_ANALYTICS_COUNT_SITES_TIMESTAMP, timestamp);
     }
 
-    public static long getReaderCssUpdatedTimestamp() {
-        return getLong(DeletablePrefKey.READER_CSS_UPDATED_TIMESTAMP, 0);
-    }
-
-    public static void setReaderCssUpdatedTimestamp(long timestamp) {
-        setLong(DeletablePrefKey.READER_CSS_UPDATED_TIMESTAMP, timestamp);
-    }
-
     public static String getReaderCardsPageHandle() {
         return getString(DeletablePrefKey.READER_CARDS_ENDPOINT_PAGE_HANDLE, null);
     }
@@ -1191,6 +1296,26 @@ public class AppPrefs {
 
     public static void incrementReaderCardsRefreshCounter() {
         setInt(DeletablePrefKey.READER_CARDS_ENDPOINT_REFRESH_COUNTER, getReaderCardsRefreshCounter() + 1);
+    }
+
+    @Nullable
+    public static String getReaderDiscoverStreamPageHandle(@NonNull String tagSlug) {
+        return prefs().getString(getReaderDiscoverStreamPageHandleKey(tagSlug), null);
+    }
+
+    public static void setReaderDiscoverStreamPageHandle(@NonNull String tagSlug, @Nullable String pageHandle) {
+        SharedPreferences.Editor editor = prefs().edit();
+        if (pageHandle == null) {
+            editor.remove(getReaderDiscoverStreamPageHandleKey(tagSlug));
+        } else {
+            editor.putString(getReaderDiscoverStreamPageHandleKey(tagSlug), pageHandle);
+        }
+        editor.apply();
+    }
+
+    @NonNull
+    private static String getReaderDiscoverStreamPageHandleKey(@NonNull String tagSlug) {
+        return "READER_DISCOVER_STREAM_PAGE_HANDLE_" + tagSlug;
     }
 
     public static boolean getReaderRecommendedTagsDeletedForLoggedOutUser() {
@@ -1212,6 +1337,14 @@ public class AppPrefs {
         } else {
             setString(DeletablePrefKey.READER_TOP_BAR_SELECTED_FEED_ITEM_ID, selectedFeedItemId);
         }
+    }
+
+    public static int getReaderDiscoverSelectedSubTabIndex() {
+        return getInt(DeletablePrefKey.READER_DISCOVER_SELECTED_SUB_TAB_INDEX, 0);
+    }
+
+    public static void setReaderDiscoverSelectedSubTabIndex(int index) {
+        setInt(DeletablePrefKey.READER_DISCOVER_SELECTED_SUB_TAB_INDEX, index);
     }
 
     public static void setShouldShowStorageWarning(boolean shouldShow) {
@@ -1386,75 +1519,12 @@ public class AppPrefs {
         return DeletablePrefKey.SKIPPED_BLOGGING_PROMPT_DAY.name() + siteId;
     }
 
-    public static String getMySiteInitialScreen(boolean isJetpackApp) {
-        return getString(
-                UndeletablePrefKey.wp_pref_initial_screen,
-                isJetpackApp ? MySiteTabType.DASHBOARD.getLabel() : MySiteTabType.SITE_MENU.getLabel()
-        );
-    }
-
     public static Boolean getIsFirstBloggingPromptsOnboarding() {
         return getBoolean(UndeletablePrefKey.IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING, true);
     }
 
     public static void saveFirstBloggingPromptsOnboarding(final boolean isFirstTime) {
         setBoolean(UndeletablePrefKey.IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING, isFirstTime);
-    }
-
-    public static Boolean getIsFirstTrySharedLoginJetpack() {
-        return getBoolean(UndeletablePrefKey.IS_FIRST_TRY_LOGIN_JETPACK, true);
-    }
-
-    public static void saveIsFirstTrySharedLoginJetpack(final boolean isFirstTry) {
-        setBoolean(UndeletablePrefKey.IS_FIRST_TRY_LOGIN_JETPACK, isFirstTry);
-    }
-
-    public static Boolean getIsFirstTryUserFlagsJetpack() {
-        return getBoolean(UndeletablePrefKey.IS_FIRST_TRY_USER_FLAGS_JETPACK, true);
-    }
-
-    public static void saveIsFirstTryUserFlagsJetpack(final boolean isFirstTry) {
-        setBoolean(UndeletablePrefKey.IS_FIRST_TRY_USER_FLAGS_JETPACK, isFirstTry);
-    }
-
-    public static Boolean getIsFirstTryBloggingRemindersSyncJetpack() {
-        return getBoolean(UndeletablePrefKey.IS_FIRST_TRY_BLOGGING_REMINDERS_SYNC_JETPACK, true);
-    }
-
-    public static void saveIsFirstTryBloggingRemindersSyncJetpack(final boolean isFirstTry) {
-        setBoolean(UndeletablePrefKey.IS_FIRST_TRY_BLOGGING_REMINDERS_SYNC_JETPACK, isFirstTry);
-    }
-
-    public static Boolean getIsFirstTryReaderSavedPostsJetpack() {
-        return getBoolean(UndeletablePrefKey.IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK, true);
-    }
-
-    public static void saveIsFirstTryReaderSavedPostsJetpack(final boolean isFirstTry) {
-        setBoolean(UndeletablePrefKey.IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK, isFirstTry);
-    }
-
-    public static boolean getIsJetpackMigrationCompleted() {
-        return getBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_COMPLETED, false);
-    }
-
-    public static void setIsJetpackMigrationCompleted(final boolean isCompleted) {
-        setBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_COMPLETED, isCompleted);
-    }
-
-    public static boolean getIsJetpackMigrationInProgress() {
-        return getBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_IS_IN_PROGRESS, false);
-    }
-
-    public static void setIsJetpackMigrationInProgress(final boolean isInProgress) {
-        setBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_IS_IN_PROGRESS, isInProgress);
-    }
-
-    public static boolean getIsJetpackMigrationEligible() {
-        return getBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_ELIGIBLE, true);
-    }
-
-    public static void setIsJetpackMigrationEligible(final boolean isEligible) {
-        setBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_ELIGIBLE, isEligible);
     }
 
     public static Long getOpenWebLinksWithJetpackOverlayLastShownTimestamp() {
@@ -1473,51 +1543,31 @@ public class AppPrefs {
         setBoolean(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK, isOpenWebLinksWithJetpack);
     }
 
-    public static Boolean getShouldHideJetpackFeatureCard(JetpackFeatureRemovalPhase phase) {
-        return prefs().getBoolean(getHideJetpackFeatureCardWithPhaseKey(phase), false);
+    public static Boolean getShouldHideJetpackFeatureCard() {
+        return prefs().getBoolean(getHideJetpackFeatureCardWithPhaseKey(), false);
     }
 
-    public static void setShouldHideJetpackFeatureCard(JetpackFeatureRemovalPhase phase, final boolean isHidden) {
-        prefs().edit().putBoolean(getHideJetpackFeatureCardWithPhaseKey(phase), isHidden).apply();
+    public static void setShouldHideJetpackFeatureCard(final boolean isHidden) {
+        prefs().edit().putBoolean(getHideJetpackFeatureCardWithPhaseKey(), isHidden).apply();
     }
 
-    public static Long getJetpackFeatureCardLastShownTimestamp(JetpackFeatureRemovalPhase jetpackFeatureRemovalPhase) {
-        return prefs().getLong(getJetpackFeatureCardLastShownTimeStampWithPhaseKey(jetpackFeatureRemovalPhase), 0L);
+    public static Long getJetpackFeatureCardLastShownTimestamp() {
+        return prefs().getLong(getJetpackFeatureCardLastShownTimeStampWithPhaseKey(), 0L);
     }
 
-    public static void setJetpackFeatureCardLastShownTimestamp(JetpackFeatureRemovalPhase jetpackFeatureRemovalPhase,
-                                                               final Long lastShownTimestamp) {
-        prefs().edit().putLong(getJetpackFeatureCardLastShownTimeStampWithPhaseKey(jetpackFeatureRemovalPhase),
-                lastShownTimestamp).apply();
+    public static void setJetpackFeatureCardLastShownTimestamp(final Long lastShownTimestamp) {
+        prefs().edit().putLong(getJetpackFeatureCardLastShownTimeStampWithPhaseKey(), lastShownTimestamp).apply();
     }
 
-    @NonNull private static String getHideJetpackFeatureCardWithPhaseKey(JetpackFeatureRemovalPhase phase) {
-        return DeletablePrefKey.SHOULD_HIDE_JETPACK_FEATURE_CARD.name() + phase.getTrackingName();
+    @NonNull private static String getHideJetpackFeatureCardWithPhaseKey() {
+        return DeletablePrefKey.SHOULD_HIDE_JETPACK_FEATURE_CARD.name()
+               + JetpackFeatureRemovalTrackingKt.JETPACK_REMOVAL_TRACKING_NAME;
     }
 
     @NonNull
-    private static String getJetpackFeatureCardLastShownTimeStampWithPhaseKey(JetpackFeatureRemovalPhase phase) {
-        return DeletablePrefKey.JETPACK_FEATURE_CARD_LAST_SHOWN_TIMESTAMP.name() + phase.getTrackingName();
-    }
-
-    public static Long getSwitchToJetpackMenuCardLastShownTimestamp() {
-        return getLong(DeletablePrefKey.SWITCH_TO_JETPACK_MENU_CARD_SHOWN_TIMESTAMP, 0L);
-    }
-
-    public static void setSwitchToJetpackMenuCardLastShownTimestamp(final Long lastShownTimestamp) {
-        setLong(DeletablePrefKey.SWITCH_TO_JETPACK_MENU_CARD_SHOWN_TIMESTAMP, lastShownTimestamp);
-    }
-
-    public static Boolean getShouldHideSwitchToJetpackMenuCard(JetpackFeatureRemovalPhase phase) {
-        return prefs().getBoolean(getHideSwitchToJetpackMenuCardWithPhaseKey(phase), false);
-    }
-
-    public static void setShouldHideSwitchToJetpackMenuCard(JetpackFeatureRemovalPhase phase, final boolean isHidden) {
-        prefs().edit().putBoolean(getHideSwitchToJetpackMenuCardWithPhaseKey(phase), isHidden).apply();
-    }
-
-    @NonNull private static String getHideSwitchToJetpackMenuCardWithPhaseKey(JetpackFeatureRemovalPhase phase) {
-        return DeletablePrefKey.SHOULD_HIDE_SWITCH_TO_JETPACK_MENU_CARD.name() + phase.getTrackingName();
+    private static String getJetpackFeatureCardLastShownTimeStampWithPhaseKey() {
+        return DeletablePrefKey.JETPACK_FEATURE_CARD_LAST_SHOWN_TIMESTAMP.name()
+               + JetpackFeatureRemovalTrackingKt.JETPACK_REMOVAL_TRACKING_NAME;
     }
 
     public static Boolean getShouldHideJetpackInstallFullPluginCard(int siteId) {
@@ -1754,14 +1804,6 @@ public class AppPrefs {
         setString(DeletablePrefKey.PINNED_SITE_IDS, ids);
     }
 
-    public static boolean getShouldShowReaderAnnouncementCard() {
-        return prefs().getBoolean(DeletablePrefKey.SHOULD_SHOW_READER_ANNOUNCEMENT_CARD.name(), true);
-    }
-
-    public static void setShouldShowReaderAnnouncementCard(final boolean shouldShow) {
-        prefs().edit().putBoolean(DeletablePrefKey.SHOULD_SHOW_READER_ANNOUNCEMENT_CARD.name(), shouldShow).apply();
-    }
-
     @Nullable
     public static String getReaderReadingPreferencesJson() {
         return getString(DeletablePrefKey.READER_READING_PREFERENCES_JSON, null);
@@ -1795,6 +1837,147 @@ public class AppPrefs {
         return DeletablePrefKey.STATS_CARDS_CONFIGURATION_JSON.name() + siteId;
     }
 
+    @Nullable
+    public static String getStatsInsightsCardsConfigurationJson(long siteId) {
+        return prefs().getString(getStatsInsightsCardsConfigurationKey(siteId), null);
+    }
+
+    public static void setStatsInsightsCardsConfigurationJson(long siteId, @Nullable String json) {
+        SharedPreferences.Editor editor = prefs().edit();
+        if (json == null) {
+            editor.remove(getStatsInsightsCardsConfigurationKey(siteId));
+        } else {
+            editor.putString(getStatsInsightsCardsConfigurationKey(siteId), json);
+        }
+        editor.apply();
+    }
+
+    @NonNull
+    private static String getStatsInsightsCardsConfigurationKey(long siteId) {
+        return DeletablePrefKey.STATS_INSIGHTS_CARDS_CONFIGURATION_JSON.name() + siteId;
+    }
+
+    @Nullable
+    public static String getSubscribersCardsConfigurationJson(long siteId) {
+        return prefs().getString(getSubscribersCardsConfigurationKey(siteId), null);
+    }
+
+    public static void setSubscribersCardsConfigurationJson(
+            long siteId,
+            @Nullable String json
+    ) {
+        SharedPreferences.Editor editor = prefs().edit();
+        if (json == null) {
+            editor.remove(getSubscribersCardsConfigurationKey(siteId));
+        } else {
+            editor.putString(
+                    getSubscribersCardsConfigurationKey(siteId),
+                    json
+            );
+        }
+        editor.apply();
+    }
+
+    @NonNull
+    private static String getSubscribersCardsConfigurationKey(long siteId) {
+        return DeletablePrefKey.SUBSCRIBERS_CARDS_CONFIGURATION_JSON.name() + siteId;
+    }
+
+    @Nullable
+    public static String getStatsUtmCategory(long siteId) {
+        return prefs().getString(getStatsUtmCategoryKey(siteId), null);
+    }
+
+    public static void setStatsUtmCategory(long siteId, @Nullable String category) {
+        SharedPreferences.Editor editor = prefs().edit();
+        if (category == null) {
+            editor.remove(getStatsUtmCategoryKey(siteId));
+        } else {
+            editor.putString(getStatsUtmCategoryKey(siteId), category);
+        }
+        editor.apply();
+    }
+
+    @NonNull
+    private static String getStatsUtmCategoryKey(long siteId) {
+        return DeletablePrefKey.STATS_UTM_CATEGORY.name() + siteId;
+    }
+
+    public static boolean hasSiteEditorCapabilities(
+            @NonNull SiteModel site
+    ) {
+        return prefs().contains(
+                DeletablePrefKey.SITE_SUPPORTS_EDITOR_SETTINGS.name()
+                        + site.getId()
+        );
+    }
+
+    public static boolean getSiteSupportsEditorSettings(
+            @NonNull SiteModel site
+    ) {
+        return prefs().getBoolean(
+                DeletablePrefKey.SITE_SUPPORTS_EDITOR_SETTINGS.name()
+                        + site.getId(), false
+        );
+    }
+
+    public static void setSiteSupportsEditorSettings(
+            @NonNull SiteModel site, boolean supports
+    ) {
+        prefs().edit().putBoolean(
+                DeletablePrefKey.SITE_SUPPORTS_EDITOR_SETTINGS.name()
+                        + site.getId(), supports
+        ).apply();
+    }
+
+    public static boolean getSiteSupportsEditorAssets(
+            @NonNull SiteModel site
+    ) {
+        return prefs().getBoolean(
+                DeletablePrefKey.SITE_SUPPORTS_EDITOR_ASSETS.name()
+                        + site.getId(), false
+        );
+    }
+
+    public static void setSiteSupportsEditorAssets(
+            @NonNull SiteModel site, boolean supports
+    ) {
+        prefs().edit().putBoolean(
+                DeletablePrefKey.SITE_SUPPORTS_EDITOR_ASSETS.name()
+                        + site.getId(), supports
+        ).apply();
+    }
+
+    public static boolean getSiteThemeIsBlockTheme(
+            @NonNull SiteModel site
+    ) {
+        return prefs().getBoolean(
+                DeletablePrefKey.SITE_THEME_IS_BLOCK_THEME.name()
+                        + site.getId(), false
+        );
+    }
+
+    public static void setSiteThemeIsBlockTheme(
+            @NonNull SiteModel site, boolean isBlockTheme
+    ) {
+        prefs().edit().putBoolean(
+                DeletablePrefKey.SITE_THEME_IS_BLOCK_THEME.name()
+                        + site.getId(), isBlockTheme
+        ).apply();
+    }
+
+    private static String xPostsNoResultCheckedTimestampKey(@NonNull SiteModel site) {
+        return DeletablePrefKey.XPOSTS_NO_RESULT_CHECKED_TIMESTAMP.name() + site.getId();
+    }
+
+    public static long getXPostsNoResultCheckedTimestamp(@NonNull SiteModel site) {
+        return prefs().getLong(xPostsNoResultCheckedTimestampKey(site), 0);
+    }
+
+    public static void setXPostsNoResultCheckedTimestamp(@NonNull SiteModel site, long timestamp) {
+        prefs().edit().putLong(xPostsNoResultCheckedTimestampKey(site), timestamp).apply();
+    }
+
     /**
      * Returns whether network request tracking (Chucker) is enabled.
      * This is a device-level preference that persists across logout/login cycles
@@ -1819,6 +2002,86 @@ public class AppPrefs {
 
     public static void setTrackNetworkRequestsRetentionPeriod(int period) {
         setInt(UndeletablePrefKey.TRACK_NETWORK_REQUESTS_RETENTION_PERIOD, period);
+    }
+
+    @Nullable
+    public static String getPendingLoginFlow() {
+        String value = getString(DeletablePrefKey.PENDING_LOGIN_FLOW);
+        return value.isEmpty() ? null : value;
+    }
+
+    public static void setPendingLoginFlow(@Nullable String flowName) {
+        setString(DeletablePrefKey.PENDING_LOGIN_FLOW, flowName);
+    }
+
+    public static boolean consumeShareFlowPending() {
+        boolean result = getBoolean(
+                DeletablePrefKey.IS_SHARE_FLOW_PENDING, false
+        );
+        setBoolean(DeletablePrefKey.IS_SHARE_FLOW_PENDING, false);
+        return result;
+    }
+
+    public static void setShareFlowPending(boolean pending) {
+        setBoolean(DeletablePrefKey.IS_SHARE_FLOW_PENDING, pending);
+    }
+
+    public static boolean getNewStatsIntroShown() {
+        return getBoolean(DeletablePrefKey.NEW_STATS_INTRO_SHOWN, false);
+    }
+
+    public static void setNewStatsIntroShown(boolean shown) {
+        setBoolean(DeletablePrefKey.NEW_STATS_INTRO_SHOWN, shown);
+    }
+
+    public static boolean getNewStatsUserOptedIn() {
+        migrateLegacyNewStatsOptIn();
+        return getBoolean(DeletablePrefKey.NEW_STATS_USER_OPTED_IN, false);
+    }
+
+    public static void setNewStatsUserOptedIn(boolean optedIn) {
+        setBoolean(DeletablePrefKey.NEW_STATS_USER_OPTED_IN, optedIn);
+    }
+
+    public static boolean getNewStatsUserOptedOut() {
+        return getBoolean(UndeletablePrefKey.NEW_STATS_USER_OPTED_OUT, false);
+    }
+
+    public static void setNewStatsUserOptedOut(boolean optedOut) {
+        setBoolean(UndeletablePrefKey.NEW_STATS_USER_OPTED_OUT, optedOut);
+    }
+
+    /**
+     * One-time migration for users who enabled New Stats via the old experimental-features toggle,
+     * before it was replaced by the remote flag + local opt-in preference. Without this, those users
+     * would be silently reverted to old Stats. Runs once: after the new key is written the legacy
+     * value is dropped, so this is a no-op on every subsequent read.
+     */
+    private static void migrateLegacyNewStatsOptIn() {
+        if (keyExists(DeletablePrefKey.NEW_STATS_USER_OPTED_IN)) {
+            return;
+        }
+        String legacyKey = getExperimentalFeatureConfigKey(LEGACY_NEW_STATS_EXPERIMENTAL_KEY);
+        if (prefs().contains(legacyKey)) {
+            setNewStatsUserOptedIn(prefs().getBoolean(legacyKey, false));
+            prefs().edit().remove(legacyKey).apply();
+        }
+    }
+
+    public static boolean getStatsNewStatsSuggestionShown() {
+        return getBoolean(DeletablePrefKey.STATS_NEW_STATS_SUGGESTION_SHOWN, false);
+    }
+
+    public static void setStatsNewStatsSuggestionShown(boolean shown) {
+        setBoolean(DeletablePrefKey.STATS_NEW_STATS_SUGGESTION_SHOWN, shown);
+    }
+
+    public static long getStatsNewStatsSuggestionLastDismissedAt() {
+        return getLong(DeletablePrefKey.STATS_NEW_STATS_SUGGESTION_LAST_DISMISSED_AT, 0L);
+    }
+
+    public static void setStatsNewStatsSuggestionLastDismissedAt(long timestamp) {
+        setLong(DeletablePrefKey.STATS_NEW_STATS_SUGGESTION_LAST_DISMISSED_AT, timestamp);
     }
 
     public static boolean isEinkModeEnabled() {

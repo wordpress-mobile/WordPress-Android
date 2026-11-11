@@ -25,7 +25,7 @@ import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
-import com.google.android.material.R as MaterialR
+import android.R as AndroidR
 
 @Singleton
 class ItemPopupMenuHandler
@@ -50,7 +50,7 @@ class ItemPopupMenuHandler
             val showDownAction = indexOfBlock < insights.size - 1
 
             withContext(mainDispatcher) {
-                val popup = ListPopupWindow(view.context, null, MaterialR.attr.listPopupWindowStyle)
+                val popup = ListPopupWindow(view.context, null, AndroidR.attr.listPopupWindowStyle)
                 val adapter = InsightsMenuAdapter(view.context, showUpAction, showDownAction)
                 popup.setAdapter(adapter)
                 popup.width = view.context.resources.getDimensionPixelSize(R.dimen.stats_insights_menu_item_width)
@@ -61,6 +61,7 @@ class ItemPopupMenuHandler
                         UP -> {
                             analyticsTrackerWrapper.trackWithType(
                                 Stat.STATS_INSIGHTS_TYPE_MOVED_UP,
+                                statsSiteProvider.siteModel,
                                 statsType
                             )
                             coroutineScope.launch {
@@ -72,6 +73,7 @@ class ItemPopupMenuHandler
                             coroutineScope.launch {
                                 analyticsTrackerWrapper.trackWithType(
                                     Stat.STATS_INSIGHTS_TYPE_MOVED_DOWN,
+                                    statsSiteProvider.siteModel,
                                     statsType
                                 )
                                 statsStore.moveTypeDown(statsSiteProvider.siteModel, type)
@@ -82,6 +84,7 @@ class ItemPopupMenuHandler
                             coroutineScope.launch {
                                 analyticsTrackerWrapper.trackWithType(
                                     Stat.STATS_INSIGHTS_TYPE_REMOVED,
+                                    statsSiteProvider.siteModel,
                                     statsType
                                 )
                                 statsStore.removeType(statsSiteProvider.siteModel, type)

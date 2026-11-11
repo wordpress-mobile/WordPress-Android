@@ -17,7 +17,6 @@ import org.junit.Rule;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.InitializationRule;
 import org.wordpress.android.R;
-import org.wordpress.android.e2e.flows.LoginFlow;
 import org.wordpress.android.e2e.pages.MePage;
 import org.wordpress.android.e2e.pages.MySitesPage;
 import org.wordpress.android.rules.RetryTestRule;
@@ -35,8 +34,6 @@ import static com.google.android.apps.common.testing.accessibility.framework.Acc
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.is;
 import static org.wordpress.android.support.E2ECredentials.SELF_HOSTED_USER_SITE_ADDRESS;
-import static org.wordpress.android.support.E2ECredentials.WP_COM_USER_EMAIL;
-import static org.wordpress.android.support.E2ECredentials.WP_COM_USER_PASSWORD;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 
 public class BaseTest {
@@ -96,11 +93,11 @@ public class BaseTest {
     }
 
     protected void wpLogin() {
-        logoutIfNecessary();
-        new LoginFlow().chooseContinueWithWpCom(mComposeTestRule)
-                       .enterEmailAddress(WP_COM_USER_EMAIL)
-                       .enterPassword(WP_COM_USER_PASSWORD)
-                       .confirmLogin();
+        // WP.com login now uses web-based OAuth flow which cannot be automated via Espresso.
+        // Tests requiring WP.com login need a different approach (e.g., pre-authenticated state).
+        throw new UnsupportedOperationException(
+                "WP.com login is now web-based and cannot be automated via Espresso"
+        );
     }
 
     private void wpLogout() {

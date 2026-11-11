@@ -1,7 +1,12 @@
 package org.wordpress.android.ui.selfhostedusers
 
+import uniffi.wp_api.UserCapabilitiesMap
 import uniffi.wp_api.UserRole
 import uniffi.wp_api.UserWithEditContext
+import java.util.Date
+
+// 2023-01-01T00:00:00Z, used as the placeholder registration date for the sample users.
+private const val SAMPLE_REGISTERED_DATE_MILLIS = 1672531200000L
 
 /**
  * This is a temporary object to supply a list of users for the self-hosted user list.
@@ -15,16 +20,16 @@ object SampleUsers {
         id = 1,
         username = "@sampleUser",
         avatarUrls = emptyMap(),
-        capabilities = emptyMap(),
+        capabilities = UserCapabilitiesMap(emptyMap()),
         email = "email@example.com",
-        extraCapabilities = emptyMap(),
+        extraCapabilities = UserCapabilitiesMap(emptyMap()),
         firstName = "Sample",
         lastName = "User",
         link = "example.com",
         locale = "en-US",
         name = "Sample User",
         nickname = "User nickname",
-        registeredDate = "2023-01-01",
+        registeredDate = Date(SAMPLE_REGISTERED_DATE_MILLIS),
         roles = listOf(UserRole.Administrator),
         slug = "sample-user",
         url = "example.com",
@@ -35,17 +40,17 @@ object SampleUsers {
         id = 2,
         username = "@sampleUserWithALongUserName",
         avatarUrls = emptyMap(),
-        capabilities = emptyMap(),
+        capabilities = UserCapabilitiesMap(emptyMap()),
         description = "User description",
         email = "email@example.com",
-        extraCapabilities = emptyMap(),
+        extraCapabilities = UserCapabilitiesMap(emptyMap()),
         firstName = "Sample",
         lastName = "User",
         link = "example.com",
         locale = "en-US",
         name = "Sample User",
         nickname = "User nickname",
-        registeredDate = "2023-01-01",
+        registeredDate = Date(SAMPLE_REGISTERED_DATE_MILLIS),
         roles = listOf(UserRole.Contributor),
         slug = "sample-user",
         url = "example.com",
@@ -55,17 +60,17 @@ object SampleUsers {
         id = 3,
         username = "@sampleUser",
         avatarUrls = emptyMap(),
-        capabilities = emptyMap(),
+        capabilities = UserCapabilitiesMap(emptyMap()),
         description = "User description",
         email = "email@example.com",
-        extraCapabilities = emptyMap(),
+        extraCapabilities = UserCapabilitiesMap(emptyMap()),
         firstName = "Sample",
         lastName = "User",
         link = "example.com",
         locale = "en-US",
         name = "Sample User",
         nickname = "User nickname",
-        registeredDate = "2023-01-01",
+        registeredDate = Date(SAMPLE_REGISTERED_DATE_MILLIS),
         roles = listOf(UserRole.Contributor, UserRole.Editor, UserRole.Subscriber),
         slug = "sample-user",
         url = "example.com",

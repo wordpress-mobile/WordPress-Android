@@ -2,27 +2,26 @@ package org.wordpress.android.ui.domains.management.util
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainStatus
+import org.wordpress.android.ui.domains.management.testDomainItem
 
 class DomainLocalSearchEngineTest {
-    private val fakeDomainFoo = AllDomainsDomain(
+    private val fakeDomainFoo = testDomainItem(
         domain = "foo.com",
         siteSlug = "Foo Warehouse",
         blogName = "Awesome blog",
-        domainStatus = DomainStatus(status = "Active")
+        statusLabel = "Active",
     )
-    private val fakeDomainBar = AllDomainsDomain(
+    private val fakeDomainBar = testDomainItem(
         domain = "bar.com",
         siteSlug = "Chocolate Bar",
         blogName = "Sweet blog",
-        domainStatus = DomainStatus(status = "Activating")
+        statusLabel = "Activating",
     )
-    private val fakeDomainBah = AllDomainsDomain(
+    private val fakeDomainBah = testDomainItem(
         domain = "bah.com",
         siteSlug = "Black sheep",
         blogName = "Unique blog",
-        domainStatus = DomainStatus(status = "Expired")
+        statusLabel = "Expired",
     )
     private val allDomains = listOf(fakeDomainFoo, fakeDomainBar, fakeDomainBah)
 

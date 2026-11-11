@@ -4,12 +4,16 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
+import com.automattic.android.tracks.crashlogging.CrashLogging
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.models.ReaderPost
@@ -24,7 +28,10 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsActivit
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.WPUrlUtils
+import org.wordpress.android.util.crashlogging.sendReportWithTag
 import java.util.EnumSet
 
 object ReaderActivityLauncher {
@@ -398,14 +405,6 @@ object ReaderActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.NO_REBLOG_SITE)
     }
 
-    /*
-     * show followed tags & blogs
-     */
-    fun showReaderSubs(context: Context) {
-        val intent = Intent(context, ReaderSubsActivity::class.java)
-        context.startActivity(intent)
-    }
-
     fun createIntentShowReaderSubs(context: Context, selectPosition: Int): Intent {
         val intent = Intent(context, ReaderSubsActivity::class.java)
         intent.putExtra(ReaderConstants.ARG_SUBS_TAB_POSITION, selectPosition)
@@ -414,39 +413,32 @@ object ReaderActivityLauncher {
 
     @JvmStatic
     fun showReaderInterests(activity: Activity) {
-        val intent = Intent(activity, ReaderInterestsActivity::class.java)
-        intent.putExtra(
+        activity.startActivityForResult(createReaderInterestsIntent(activity), RequestCodes.READER_INTERESTS)
+    }
+
+    fun createReaderInterestsIntent(context: Context): Intent =
+        Intent(context, ReaderInterestsActivity::class.java).putExtra(
             ReaderInterestsFragment.READER_INTEREST_ENTRY_POINT,
             ReaderInterestsFragment.EntryPoint.SETTINGS
         )
-        activity.startActivityForResult(intent, RequestCodes.READER_INTERESTS)
-    }
-
-    /*
-     * play an external video
-     */
-    @JvmStatic
-    fun showReaderVideoViewer(context: Context, videoUrl: String) {
-        if (TextUtils.isEmpty(videoUrl)) {
-            return
-        }
-        val intent = Intent(context, ReaderVideoViewerActivity::class.java)
-        intent.putExtra(ReaderConstants.ARG_VIDEO_URL, videoUrl)
-        context.startActivity(intent)
-    }
 
     @JvmStatic
+    @JvmOverloads
     @Suppress("LongParameterList")
     fun showReaderPhotoViewer(
         context: Context,
-        imageUrl: String,
-        content: String,
+        imageUrl: String?,
+        content: String?,
         sourceView: View?,
         imageOptions: EnumSet<PhotoViewerOption>,
         startX: Int,
-        startY: Int
+        startY: Int,
+        galleryImageUrls: ArrayList<String>? = null
     ) {
-        if (TextUtils.isEmpty(imageUrl)) {
+        if (imageUrl.isNullOrEmpty()) {
+            val message = "showReaderPhotoViewer called with null or empty imageUrl"
+            AppLog.w(T.READER, message)
+            reportNullOrEmptyUrlToSentry(context, message)
             return
         }
 
@@ -457,8 +449,14 @@ object ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_IMAGE_URL, imageUrl)
         intent.putExtra(ReaderConstants.ARG_IS_PRIVATE, isPrivate)
         intent.putExtra(ReaderConstants.ARG_IS_GALLERY, isGallery)
-        if (!TextUtils.isEmpty(content)) {
+        if (!content.isNullOrEmpty()) {
             intent.putExtra(ReaderConstants.ARG_CONTENT, content)
+        }
+        if (!galleryImageUrls.isNullOrEmpty()) {
+            intent.putStringArrayListExtra(
+                ReaderConstants.ARG_GALLERY_IMAGE_URLS,
+                galleryImageUrls
+            )
         }
 
         if (context is Activity && sourceView != null) {
@@ -504,10 +502,13 @@ object ReaderActivityLauncher {
     @JvmOverloads
     fun openUrl(
         context: Context,
-        url: String,
+        url: String?,
         openUrlType: OpenUrlType = OpenUrlType.INTERNAL
     ) {
-        if (TextUtils.isEmpty(url)) {
+        if (url.isNullOrEmpty()) {
+            val message = "openUrl called with null or empty url, openUrlType=$openUrlType"
+            AppLog.w(T.READER, message)
+            reportNullOrEmptyUrlToSentry(context, message)
             return
         }
 
@@ -516,6 +517,21 @@ object ReaderActivityLauncher {
         } else {
             ActivityLauncher.openUrlExternal(context, url)
         }
+    }
+
+    private fun reportNullOrEmptyUrlToSentry(context: Context, message: String) {
+        runCatching {
+            EntryPointAccessors.fromApplication(
+                context.applicationContext,
+                ReaderActivityLauncherEntryPoint::class.java
+            ).crashLogging().sendReportWithTag(IllegalArgumentException(message), T.READER)
+        }
+    }
+
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface ReaderActivityLauncherEntryPoint {
+        fun crashLogging(): CrashLogging
     }
 
     /*

@@ -126,7 +126,11 @@ class VideoPlaysUseCase constructor(
     }
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
-        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_VIDEO_PLAYS_VIEW_MORE_TAPPED, statsGranularity)
+        analyticsTracker.trackGranular(
+            AnalyticsTracker.Stat.STATS_VIDEO_PLAYS_VIEW_MORE_TAPPED,
+            statsSiteProvider.siteModel,
+            statsGranularity
+        )
         navigateTo(
             ViewVideoPlays(
                 statsGranularity,
@@ -136,7 +140,11 @@ class VideoPlaysUseCase constructor(
     }
 
     private fun onItemClick(url: String) {
-        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_VIDEO_PLAYS_VIDEO_TAPPED, statsGranularity)
+        analyticsTracker.trackGranular(
+            AnalyticsTracker.Stat.STATS_VIDEO_PLAYS_VIDEO_TAPPED,
+            statsSiteProvider.siteModel,
+            statsGranularity
+        )
         navigateTo(ViewUrl(url))
     }
 

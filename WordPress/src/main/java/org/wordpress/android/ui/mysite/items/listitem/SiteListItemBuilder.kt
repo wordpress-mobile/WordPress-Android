@@ -4,7 +4,6 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteViewModel
@@ -23,7 +22,6 @@ import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SITE_SETTIN
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SUBSCRIBERS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.THEMES
 import org.wordpress.android.ui.plugins.PluginUtilsWrapper
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -42,10 +40,8 @@ class SiteListItemBuilder @Inject constructor(
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val themeBrowserUtils: ThemeBrowserUtils,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val siteMonitoringFeatureConfig: SiteMonitoringFeatureConfig,
     private val selfHostedUsersFeatureConfig: SelfHostedUsersFeatureConfig,
-    private val experimentalFeatures: ExperimentalFeatures,
     private val siteCapabilityChecker: SiteCapabilityChecker
 ) {
     fun buildActivityLogItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
@@ -197,14 +193,15 @@ class SiteListItemBuilder @Inject constructor(
         } else null
     }
 
-    @Suppress("ComplexCondition")
-    fun buildMeItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
-        return if ((!buildConfigWrapper.isJetpackApp &&
-                    jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures() &&
-                    site.hasCapabilityManageOptions) ||
-            (!buildConfigWrapper.isJetpackApp &&
-                    site.isSelfHostedAdmin)
-        ) {
+    /**
+     * The Me item replaces the bottom navigation's Me tab when that nav is hidden, so it's gated on
+     * exactly the same condition WPMainActivity uses to hide it. Me is account-level, so site
+     * capabilities deliberately play no part here.
+     *
+     * The Jetpack app keeps its Me tab, so the item never builds there.
+     */
+    fun buildMeItemIfAvailable(onClick: (ListItemAction) -> Unit): ListItem? {
+        return if (!buildConfigWrapper.isJetpackApp) {
             ListItem(
                 R.drawable.ic_user_primary_white_24,
                 UiStringRes(R.string.me),
@@ -269,10 +266,7 @@ class SiteListItemBuilder @Inject constructor(
     }
 
     fun buildApplicationPasswordsItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
-        return if (
-            experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE) &&
-            site.isUsingSelfHostedRestApi
-            ) {
+        return if (site.isUsingSelfHostedRestApi) {
             ListItem(
                 R.drawable.ic_outline_key_vertical_24,
                 UiStringRes(R.string.application_password_info_title),
@@ -297,8 +291,7 @@ class SiteListItemBuilder @Inject constructor(
                 R.drawable.ic_gridicons_menus,
                 UiStringRes(R.string.menus),
                 onClick = ListItemInteraction.create(ListItemAction.MENUS, onClick),
-                listItemAction = ListItemAction.MENUS,
-                showBetaBadge = true
+                listItemAction = ListItemAction.MENUS
             )
         } else {
             null

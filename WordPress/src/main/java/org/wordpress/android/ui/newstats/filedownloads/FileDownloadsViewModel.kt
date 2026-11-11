@@ -3,7 +3,6 @@ package org.wordpress.android.ui.newstats.filedownloads
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.mostviewed.BaseStatsCardViewModel
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedChange
@@ -11,6 +10,7 @@ import org.wordpress.android.ui.newstats.mostviewed.MostViewedDetailItem
 import org.wordpress.android.ui.newstats.mostviewed.StatsCardFetchResult
 import org.wordpress.android.ui.newstats.repository.FileDownloadItemData
 import org.wordpress.android.ui.newstats.repository.FileDownloadsResult
+import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -25,16 +25,17 @@ class FileDownloadsViewModel @Inject constructor(
     selectedSiteRepository, accountStore,
     statsRepository, resourceProvider
 ) {
-    override val cardType = StatsCardType.FILE_DOWNLOADS
     override val logTag = "file downloads"
+    override val cacheBucket = StatsCacheBucket.FILE_DOWNLOADS
 
     override suspend fun fetchStats(
         siteId: Long,
-        period: StatsPeriod
+        period: StatsPeriod,
+        forceRefresh: Boolean
     ): StatsCardFetchResult {
         return when (
             val result = statsRepository.fetchFileDownloads(
-                siteId, period
+                siteId, period, forceRefresh
             )
         ) {
             is FileDownloadsResult.Success -> {
@@ -52,7 +53,8 @@ class FileDownloadsViewModel @Inject constructor(
             is FileDownloadsResult.Error -> {
                 StatsCardFetchResult.Error(
                     messageResId = result.messageResId,
-                    isAuthError = result.isAuthError
+                    isAuthError = result.isAuthError,
+                    isNotAvailable = result.isNotAvailable
                 )
             }
         }

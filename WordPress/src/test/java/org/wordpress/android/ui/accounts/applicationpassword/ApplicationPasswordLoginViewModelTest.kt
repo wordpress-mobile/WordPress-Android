@@ -1,26 +1,35 @@
 package org.wordpress.android.ui.accounts.applicationpassword
 
 import app.cash.turbine.test
+import com.automattic.android.tracks.crashlogging.CrashLogging
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argThat
+import org.mockito.kotlin.doThrow
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
-import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
-import org.wordpress.android.fluxc.store.SiteStore
-import org.mockito.kotlin.any
-import org.mockito.kotlin.eq
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCApplicationPasswordCredentialsPayload
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.StoreCredentialsResult
+import org.wordpress.android.util.UrlUtils
+import java.io.IOException
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
 @Suppress("MaxLineLength")
@@ -32,21 +41,23 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
     lateinit var applicationPasswordLoginHelper: ApplicationPasswordLoginHelper
 
     @Mock
-    lateinit var selfHostedEndpointFinder: SelfHostedEndpointFinder
-
-    @Mock
     lateinit var siteStore: SiteStore
-
-    @Mock
-    lateinit var appPrefsWrapper: AppPrefsWrapper
 
     @Mock
     lateinit var appLogWrapper: AppLogWrapper
 
+    @Mock
+    lateinit var crashLogging: CrashLogging
+
     private lateinit var viewModel: ApplicationPasswordLoginViewModel
 
     private val rawData = "url=callback?site_url=https://example.com&user_login=user&password=pass"
-    private val urlLogin = ApplicationPasswordLoginHelper.UriLogin("https://example.com", "user", "pass", "https://example.com/json")
+    private val urlLogin = ApplicationPasswordLoginHelper.UriLogin(
+        "https://example.com",
+        "user",
+        "pass",
+        "https://example.com/json"
+    )
     private val testSite = SiteModel().apply {
         apiRestUsernamePlain = urlLogin.user
         apiRestPasswordPlain = urlLogin.password
@@ -60,12 +71,19 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             testDispatcher(),
             dispatcher,
             applicationPasswordLoginHelper,
-            selfHostedEndpointFinder,
             siteStore,
-            appPrefsWrapper,
-            appLogWrapper
+            appLogWrapper,
+            crashLogging
         )
         whenever(applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData)).thenReturn(urlLogin)
+        // Mirror the helper's exact-match behavior so existing tests that stub
+        // siteStore.sites still find their fixture site by URL. Tests that need
+        // tolerant or no-match behavior can override this stub.
+        whenever(applicationPasswordLoginHelper.findSiteByUrl(any(), any())).thenAnswer { invocation ->
+            val normalizedUrl = invocation.getArgument<String?>(0)
+            val sites = invocation.getArgument<List<SiteModel>>(1)
+            sites.firstOrNull { UrlUtils.normalizeUrl(it.url) == normalizedUrl }
+        }
     }
 
     @Test
@@ -74,10 +92,10 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
         val emptyRawData = ""
         val expectedResult = ApplicationPasswordLoginViewModel.NavigationActionData(
             showSiteSelector = false,
-            showPostSignupInterstitial = false,
             siteUrl = "",
             oldSitesIDs = null,
-            isError = true
+            isError = true,
+            errorMessage = "empty_raw_data"
         )
 
         // When
@@ -88,28 +106,70 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             val finishedEvent = awaitItem()
             assertEquals(expectedResult, finishedEvent)
             verify(applicationPasswordLoginHelper, times(0))
-                .storeApplicationPasswordCredentialsFrom(eq(urlLogin))
-            verify(selfHostedEndpointFinder, times(0)).verifyOrDiscoverXMLRPCEndpoint(any())
+                .storeApplicationPasswordCredentialsFrom(eq(urlLogin), any())
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun `given intent rawData, when setup site and not able to store credentials and data is empty, then fetch them and emit error`() =
+    fun `given user rejected authorization, when setup site, then emit user_rejected without crash report`() =
+        runTest {
+            // Given
+            val rejectionRawData = "wordpress://app-pass-authorize?success=false"
+            whenever(applicationPasswordLoginHelper.isUserRejectedAuthorization(rejectionRawData))
+                .thenReturn(true)
+            val expectedResult = ApplicationPasswordLoginViewModel.NavigationActionData(
+                showSiteSelector = false,
+                siteUrl = null,
+                oldSitesIDs = null,
+                isError = true,
+                errorMessage = "user_rejected"
+            )
+
+            // When
+            viewModel.onFinishedEvent.test {
+                viewModel.setupSite(rejectionRawData)
+
+                // Then
+                val finishedEvent = awaitItem()
+                assertEquals(expectedResult, finishedEvent)
+                verify(applicationPasswordLoginHelper)
+                    .trackStoringFailed(eq(""), eq("user_rejected"), any())
+                verify(applicationPasswordLoginHelper, times(0))
+                    .getSiteUrlLoginFromRawData(any())
+                verify(applicationPasswordLoginHelper, times(0))
+                    .storeApplicationPasswordCredentialsFrom(any(), any())
+                verify(crashLogging, times(0))
+                    .sendReport(any(), any(), any())
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `given malformed rawData, when setup site and bad data, then emit bad_data error`() =
         runTest {
             // Given
             val malformedRawData = "malformed ray data"
-            val expectedResult = ApplicationPasswordLoginViewModel.NavigationActionData(
-                showSiteSelector = false,
-                showPostSignupInterstitial = false,
-                siteUrl = "",
-                oldSitesIDs = null,
-                isError = true
-            )
-            whenever(applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(malformedRawData))
-                .thenReturn(
-                    ApplicationPasswordLoginHelper.UriLogin("", "", "", "")
+            val emptyUriLogin =
+                ApplicationPasswordLoginHelper.UriLogin("", "", "", "")
+            val expectedResult =
+                ApplicationPasswordLoginViewModel.NavigationActionData(
+                    showSiteSelector = false,
+                    siteUrl = "",
+                    oldSitesIDs = null,
+                    isError = true,
+                    errorMessage = "bad_data"
                 )
+            whenever(
+                applicationPasswordLoginHelper
+                    .getSiteUrlLoginFromRawData(malformedRawData)
+            ).thenReturn(emptyUriLogin)
+            whenever(
+                applicationPasswordLoginHelper
+                    .storeApplicationPasswordCredentialsFrom(
+                        eq(emptyUriLogin), any()
+                    )
+            ).thenReturn(StoreCredentialsResult.BadData)
 
             // When
             viewModel.onFinishedEvent.test {
@@ -118,7 +178,6 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 // Then
                 val finishedEvent = awaitItem()
                 assertEquals(expectedResult, finishedEvent)
-                verify(selfHostedEndpointFinder, times(0)).verifyOrDiscoverXMLRPCEndpoint(any())
                 cancelAndIgnoreRemainingEvents()
             }
         }
@@ -129,13 +188,14 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             // Given
             val expectedResult = ApplicationPasswordLoginViewModel.NavigationActionData(
                 showSiteSelector = false,
-                showPostSignupInterstitial = false,
                 siteUrl = urlLogin.siteUrl,
                 oldSitesIDs = null,
-                isError = true
+                isError = true,
+                errorMessage = null
             )
-            whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin))).thenReturn(false)
-            whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(any())).thenThrow(RuntimeException())
+            whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin), any()))
+                .thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
+            doThrow(RuntimeException()).whenever(dispatcher).dispatch(any())
 
             // When
             viewModel.onFinishedEvent.test {
@@ -144,7 +204,6 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 // Then
                 val finishedEvent = awaitItem()
                 assertEquals(expectedResult, finishedEvent)
-                verify(selfHostedEndpointFinder, times(1)).verifyOrDiscoverXMLRPCEndpoint(eq(urlLogin.siteUrl!!))
                 cancelAndIgnoreRemainingEvents()
             }
         }
@@ -153,32 +212,25 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
     fun `given intent rawData, when setup site and not able to store credentials nor store fetch, then emit error`() =
         runTest {
             // Given
-            val xmlRpcEndpoint = "https://example.com/xmlrpc.php"
-            val expectedResult = ApplicationPasswordLoginViewModel.NavigationActionData(
-                showSiteSelector = false,
-                showPostSignupInterstitial = false,
-                siteUrl = urlLogin.siteUrl,
-                oldSitesIDs = null,
-                isError = true
-            )
-            whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin))).thenReturn(false)
-            whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!))
-                .thenReturn(xmlRpcEndpoint)
+            whenever(
+                applicationPasswordLoginHelper
+                    .storeApplicationPasswordCredentialsFrom(eq(urlLogin), any())
+            ).thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
 
             // When
             viewModel.onFinishedEvent.test {
                 viewModel.setupSite(rawData)
                 // Mock onSiteChanged event
                 viewModel.onSiteChanged(
-                    SiteStore.OnSiteChanged(
-                        rowsAffected = 1,
-                    )
+                    SiteStore.OnSiteChanged(rowsAffected = 1)
                 )
 
                 // Then
                 val finishedEvent = awaitItem()
-                assertEquals(expectedResult, finishedEvent)
-                verify(selfHostedEndpointFinder, times(1)).verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl)
+                assertTrue(finishedEvent.isError)
+                assertEquals(
+                    "site_not_found", finishedEvent.errorMessage
+                )
                 verify(siteStore, times(1)).sites
                 cancelAndIgnoreRemainingEvents()
             }
@@ -188,10 +240,8 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
     fun `given intent rawData, when setup site and not able to store credentials but store fetch, then emit ok with site selector`() =
         runTest {
             // Given
-            val xmlRpcEndpoint = "https://example.com/xmlrpc.php"
             val expectedResult = ApplicationPasswordLoginViewModel.NavigationActionData(
                 showSiteSelector = true,
-                showPostSignupInterstitial = false,
                 siteUrl = urlLogin.siteUrl,
                 oldSitesIDs = null,
                 isError = false,
@@ -199,9 +249,8 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             )
             whenever(siteStore.hasSite()).thenReturn(true)
             whenever(siteStore.sites).thenReturn(listOf(testSite))
-            whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin))).thenReturn(false)
-            whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!))
-                .thenReturn(xmlRpcEndpoint)
+            whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin), any()))
+                .thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
 
             // When
             viewModel.onFinishedEvent.test {
@@ -217,19 +266,16 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 // Then
                 val finishedEvent = awaitItem()
                 assertEquals(expectedResult, finishedEvent)
-                verify(selfHostedEndpointFinder, times(1)).verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl)
                 cancelAndIgnoreRemainingEvents()
             }
         }
 
     @Test
-    fun `given intent rawData, when setup site and not able to store credentials but store fetch, then emit ok with no site selector nor interstitial`() =
+    fun `given intent rawData, when setup site and not able to store credentials but store fetch and no sites, then emit ok without site selector`() =
         runTest {
             // Given
-            val xmlRpcEndpoint = "https://example.com/xmlrpc.php"
             val expectedResult = ApplicationPasswordLoginViewModel.NavigationActionData(
                 showSiteSelector = false,
-                showPostSignupInterstitial = false,
                 siteUrl = urlLogin.siteUrl,
                 oldSitesIDs = null,
                 isError = false,
@@ -237,9 +283,8 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             )
             whenever(siteStore.hasSite()).thenReturn(false)
             whenever(siteStore.sites).thenReturn(listOf(testSite))
-            whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin))).thenReturn(false)
-            whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!))
-                .thenReturn(xmlRpcEndpoint)
+            whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin), any()))
+                .thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
 
             // When
             viewModel.onFinishedEvent.test {
@@ -255,19 +300,16 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 // Then
                 val finishedEvent = awaitItem()
                 assertEquals(expectedResult, finishedEvent)
-                verify(selfHostedEndpointFinder, times(1)).verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl)
                 cancelAndIgnoreRemainingEvents()
             }
         }
 
     @Test
-    fun `given intent rawData, when setup site and not able to store credentials but store fetch, then emit ok with no interstitial by sites`() =
+    fun `given intent rawData, when setup site and not able to store credentials but store fetch with sites, then emit ok with site selector`() =
         runTest {
             // Given
-            val xmlRpcEndpoint = "https://example.com/xmlrpc.php"
             val expectedResult = ApplicationPasswordLoginViewModel.NavigationActionData(
                 showSiteSelector = true,
-                showPostSignupInterstitial = false,
                 siteUrl = urlLogin.siteUrl,
                 oldSitesIDs = null,
                 isError = false,
@@ -275,9 +317,10 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             )
             whenever(siteStore.hasSite()).thenReturn(true)
             whenever(siteStore.sites).thenReturn(listOf(testSite))
-            whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin))).thenReturn(false)
-            whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!))
-                .thenReturn(xmlRpcEndpoint)
+            whenever(
+                applicationPasswordLoginHelper
+                    .storeApplicationPasswordCredentialsFrom(eq(urlLogin), any())
+            ).thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
 
             // When
             viewModel.onFinishedEvent.test {
@@ -293,34 +336,67 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 // Then
                 val finishedEvent = awaitItem()
                 assertEquals(expectedResult, finishedEvent)
-                verify(selfHostedEndpointFinder, times(1)).verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl)
                 cancelAndIgnoreRemainingEvents()
             }
         }
 
     @Test
-    fun `given intent rawData, when setup site and not able to store credentials but store fetch, then emit ok with no interstitial by preferences`() =
+    fun `given onSiteChanged with error, then emit error with SiteStore details`() =
         runTest {
             // Given
-            val xmlRpcEndpoint = "https://example.com/xmlrpc.php"
-            val expectedResult = ApplicationPasswordLoginViewModel.NavigationActionData(
-                showSiteSelector = false,
-                showPostSignupInterstitial = false,
-                siteUrl = urlLogin.siteUrl,
-                oldSitesIDs = null,
-                isError = false,
-                newSiteLocalId = testSite.id
+            setupFetchSitesFlow()
+            val siteError = SiteStore.SiteError(
+                SiteStore.SiteErrorType.GENERIC_ERROR, "encryption failed"
             )
-            whenever(siteStore.sites).thenReturn(listOf(testSite))
-            whenever(appPrefsWrapper.shouldShowPostSignupInterstitial).thenReturn(false)
-            whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin))).thenReturn(false)
-            whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!))
-                .thenReturn(xmlRpcEndpoint)
+            val errorEvent = SiteStore.OnSiteChanged(0, siteError)
 
             // When
             viewModel.onFinishedEvent.test {
                 viewModel.setupSite(rawData)
-                // Mock onSiteChanged event
+                viewModel.onSiteChanged(errorEvent)
+
+                // Then
+                val result = awaitItem()
+                assertTrue(result.isError)
+                assertEquals("site_store_error", result.errorMessage)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `given onSiteChanged with no rows affected, then emit error`() =
+        runTest {
+            // Given
+            setupFetchSitesFlow()
+
+            // When
+            viewModel.onFinishedEvent.test {
+                viewModel.setupSite(rawData)
+                viewModel.onSiteChanged(
+                    SiteStore.OnSiteChanged(rowsAffected = 0)
+                )
+
+                // Then
+                val result = awaitItem()
+                assertTrue(result.isError)
+                assertEquals("no_rows_affected", result.errorMessage)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `given onSiteChanged with bad credentials, then emit error`() =
+        runTest {
+            // Given
+            setupFetchSitesFlow()
+            whenever(siteStore.sites).thenReturn(listOf(testSite))
+            whenever(
+                applicationPasswordLoginHelper.siteHasBadCredentials(any())
+            ).thenReturn(true)
+
+            // When
+            viewModel.onFinishedEvent.test {
+                viewModel.setupSite(rawData)
                 viewModel.onSiteChanged(
                     SiteStore.OnSiteChanged(
                         rowsAffected = 1,
@@ -329,10 +405,308 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 )
 
                 // Then
-                val finishedEvent = awaitItem()
-                assertEquals(expectedResult, finishedEvent)
-                verify(selfHostedEndpointFinder, times(1)).verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl)
+                val result = awaitItem()
+                assertTrue(result.isError)
+                assertEquals("empty_credentials", result.errorMessage)
                 cancelAndIgnoreRemainingEvents()
             }
         }
+
+    @Test
+    fun `given onSiteChanged with DB exception, then emit error`() =
+        runTest {
+            // Given
+            setupFetchSitesFlow()
+            whenever(siteStore.sites)
+                .thenThrow(RuntimeException("DB corrupted"))
+
+            // When
+            viewModel.onFinishedEvent.test {
+                viewModel.setupSite(rawData)
+                viewModel.onSiteChanged(
+                    SiteStore.OnSiteChanged(rowsAffected = 1)
+                )
+
+                // Then
+                val result = awaitItem()
+                assertTrue(result.isError)
+                assertEquals("db_read_exception", result.errorMessage)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `given error emitted, then crash report is sent`() = runTest {
+        // Given & When
+        viewModel.onFinishedEvent.test {
+            viewModel.setupSite("")
+
+            // Then
+            awaitItem()
+            verify(crashLogging).sendReport(
+                exception = any(),
+                tags = eq(mapOf("tag" to "MAIN")),
+                message = eq(null)
+            )
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `given existing site, when store credentials succeeds, then emit success without site selector`() =
+        runTest {
+            // Given
+            val expectedResult =
+                ApplicationPasswordLoginViewModel.NavigationActionData(
+                    showSiteSelector = false,
+                    siteUrl = urlLogin.siteUrl,
+                    oldSitesIDs = null,
+                    isError = false,
+                )
+            whenever(
+                applicationPasswordLoginHelper
+                    .storeApplicationPasswordCredentialsFrom(
+                        eq(urlLogin), any()
+                    )
+            ).thenReturn(StoreCredentialsResult.Success)
+
+            // When
+            viewModel.onFinishedEvent.test {
+                viewModel.setupSite(rawData)
+
+                // Then
+                val finishedEvent = awaitItem()
+                assertEquals(expectedResult, finishedEvent)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `given existing site, when store credentials succeeds, then onSiteChanged is ignored`() =
+        runTest {
+            // Given
+            whenever(
+                applicationPasswordLoginHelper
+                    .storeApplicationPasswordCredentialsFrom(
+                        eq(urlLogin), any()
+                    )
+            ).thenReturn(StoreCredentialsResult.Success)
+
+            // When
+            viewModel.onFinishedEvent.test {
+                viewModel.setupSite(rawData)
+                val successEvent = awaitItem()
+                assertFalse(successEvent.isError)
+
+                // Simulate onSiteChanged from updateApplicationPassword
+                viewModel.onSiteChanged(
+                    SiteStore.OnSiteChanged(
+                        rowsAffected = 1,
+                        updatedSites = listOf(testSite)
+                    )
+                )
+
+                // No second event should be emitted
+                expectNoEvents()
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `given onSiteChanged with error, then no Sentry report is sent`() = runTest {
+        // Given
+        setupFetchSitesFlow()
+        val siteError = SiteStore.SiteError(
+            SiteStore.SiteErrorType.GENERIC_ERROR, "boom"
+        )
+
+        // When
+        viewModel.onFinishedEvent.test {
+            viewModel.setupSite(rawData)
+            viewModel.onSiteChanged(SiteStore.OnSiteChanged(0, siteError))
+
+            // Then — error surfaces in UI but is not noised into Sentry
+            val result = awaitItem()
+            assertTrue(result.isError)
+            assertEquals("site_store_error", result.errorMessage)
+            verify(crashLogging, never()).sendReport(any(), any(), any())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `given site_not_found validation, then no Sentry report is sent`() = runTest {
+        // Given — site list is empty so validateSiteChanged hits site_not_found
+        setupFetchSitesFlow()
+        whenever(siteStore.sites).thenReturn(emptyList())
+
+        // When
+        viewModel.onFinishedEvent.test {
+            viewModel.setupSite(rawData)
+            viewModel.onSiteChanged(SiteStore.OnSiteChanged(rowsAffected = 1))
+
+            // Then
+            val result = awaitItem()
+            assertTrue(result.isError)
+            assertEquals("site_not_found", result.errorMessage)
+            verify(crashLogging, never()).sendReport(any(), any(), any())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `given fetchSites with IOException cause, then no Sentry report is sent`() = runTest {
+        // Given — a network failure during the fetch dispatch surfaces as an unchecked exception with an
+        // IOException cause; this exercises the cause-chain traversal in isRecoverableNetworkError.
+        whenever(
+            applicationPasswordLoginHelper
+                .storeApplicationPasswordCredentialsFrom(eq(urlLogin), any())
+        ).thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
+        doThrow(RuntimeException("wrapped", IOException("offline")))
+            .whenever(dispatcher).dispatch(any())
+
+        // When
+        viewModel.onFinishedEvent.test {
+            viewModel.setupSite(rawData)
+
+            // Then
+            val result = awaitItem()
+            assertTrue(result.isError)
+            verify(crashLogging, never()).sendReport(any(), any(), any())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `given onSiteChanged success and site matched via tolerant URL match, then emit success`() = runTest {
+        // Given — stored URL has www. prefix while callback URL does not. Without
+        // the tolerant fallback the lookup would fail with site_not_found.
+        val storedSite = SiteModel().apply {
+            apiRestUsernamePlain = urlLogin.user
+            apiRestPasswordPlain = urlLogin.password
+            url = "https://www.example.com"
+        }
+        whenever(siteStore.hasSite()).thenReturn(true)
+        whenever(siteStore.sites).thenReturn(listOf(storedSite))
+        whenever(applicationPasswordLoginHelper.findSiteByUrl(any(), any()))
+            .thenReturn(storedSite)
+        whenever(
+            applicationPasswordLoginHelper
+                .storeApplicationPasswordCredentialsFrom(eq(urlLogin), any())
+        ).thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
+
+        // When
+        viewModel.onFinishedEvent.test {
+            viewModel.setupSite(rawData)
+            viewModel.onSiteChanged(
+                SiteStore.OnSiteChanged(
+                    rowsAffected = 1,
+                    updatedSites = listOf(storedSite)
+                )
+            )
+
+            // Then
+            val result = awaitItem()
+            assertFalse(result.isError)
+            // A first-time site completes here, not in the helper, so this is the only place the
+            // login event can record the success that matches the failures the helper records.
+            verify(applicationPasswordLoginHelper).trackCreated("login", success = true)
+            verify(applicationPasswordLoginHelper).trackLogin(urlLogin.siteUrl, "login", success = true)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `given SiteNotFound, when fetchSites, then dispatch XML-RPC fetch with conventional xmlrpc endpoint`() =
+        runTest {
+            // Given — no client-side discovery: the login flow goes straight to the XML-RPC fetch (getUsersBlogs)
+            // against the conventional {siteUrl}/xmlrpc.php endpoint. The SiteStore handles any WPAPI fallback.
+            whenever(
+                applicationPasswordLoginHelper
+                    .storeApplicationPasswordCredentialsFrom(
+                        eq(urlLogin), any()
+                    )
+            ).thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
+
+            // When
+            viewModel.onFinishedEvent.test {
+                viewModel.setupSite(rawData)
+
+                // Then - no error emitted, XML-RPC action dispatched with the conventional endpoint
+                expectNoEvents()
+                verify(dispatcher, times(1)).dispatch(
+                    argThat {
+                        type == SiteAction.FETCH_SITES_XML_RPC_FROM_APPLICATION_PASSWORD &&
+                            (payload as RefreshSitesXMLRPCApplicationPasswordCredentialsPayload)
+                                .url == "https://example.com/xmlrpc.php"
+                    }
+                )
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `given SiteNotFound with recovered apiRootUrl, then fetchSites uses recovered login and dispatches`() =
+        runTest {
+            // Given — the parsed login is missing apiRootUrl (cache miss), but the helper
+            // recovers it and returns it via SiteNotFound. The ViewModel must fetch with the
+            // recovered login, not the original empty one, otherwise it aborts with empty_fetch_params.
+            val parsedLogin = urlLogin.copy(apiRootUrl = "")
+            val recoveredLogin = urlLogin.copy(apiRootUrl = "https://example.com/json")
+            whenever(applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData))
+                .thenReturn(parsedLogin)
+            whenever(
+                applicationPasswordLoginHelper
+                    .storeApplicationPasswordCredentialsFrom(eq(parsedLogin), any())
+            ).thenReturn(StoreCredentialsResult.SiteNotFound(recoveredLogin))
+
+            // When
+            viewModel.onFinishedEvent.test {
+                viewModel.setupSite(rawData)
+
+                // Then — no error emitted, fetch is dispatched with the recovered params
+                expectNoEvents()
+                verify(dispatcher, times(1)).dispatch(
+                    argThat {
+                        type == SiteAction.FETCH_SITES_XML_RPC_FROM_APPLICATION_PASSWORD
+                    }
+                )
+                verify(crashLogging, never()).sendReport(any(), any(), any())
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `given SiteNotFound with empty fetch params, then emit error without Sentry report`() =
+        runTest {
+            // Given — helper returns a login with an empty siteUrl, so fetchSites can't proceed.
+            // (An empty apiRootUrl would be rejected as BadData before ever reaching SiteNotFound;
+            // siteUrl is only guarded against null in the helper, so an empty string slips through.)
+            val incompleteLogin = urlLogin.copy(siteUrl = "")
+            whenever(applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData))
+                .thenReturn(incompleteLogin)
+            whenever(
+                applicationPasswordLoginHelper
+                    .storeApplicationPasswordCredentialsFrom(eq(incompleteLogin), any())
+            ).thenReturn(StoreCredentialsResult.SiteNotFound(incompleteLogin))
+
+            // When
+            viewModel.onFinishedEvent.test {
+                viewModel.setupSite(rawData)
+
+                // Then — user-recoverable data condition surfaces in UI but is not noised into Sentry
+                val result = awaitItem()
+                assertTrue(result.isError)
+                assertEquals("empty_fetch_params", result.errorMessage)
+                verify(crashLogging, never()).sendReport(any(), any(), any())
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    private suspend fun setupFetchSitesFlow() {
+        whenever(
+            applicationPasswordLoginHelper
+                .storeApplicationPasswordCredentialsFrom(eq(urlLogin), any())
+        ).thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
+    }
 }

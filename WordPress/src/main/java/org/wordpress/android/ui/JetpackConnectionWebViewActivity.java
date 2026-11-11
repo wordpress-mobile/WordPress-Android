@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.login.LoginMode;
+import org.wordpress.android.ui.accounts.LoginFlow;
 import org.wordpress.android.ui.JetpackConnectionWebViewClient.JetpackConnectionWebViewClientListener;
 import org.wordpress.android.ui.accounts.LoginActivity;
 
@@ -146,7 +146,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
     @Override
     public void onRequiresJetpackLogin() {
         Intent loginIntent = new Intent(this, LoginActivity.class);
-        LoginMode.JETPACK_STATS.putInto(loginIntent);
+        LoginFlow.JETPACK_STATS.putInto(loginIntent);
         loginIntent.putExtra(LoginActivity.ARG_JETPACK_CONNECT_SOURCE, mSource);
         startActivityForResult(loginIntent, JETPACK_LOGIN);
     }

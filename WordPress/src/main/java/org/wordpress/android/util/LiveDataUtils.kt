@@ -8,6 +8,8 @@ import androidx.lifecycle.map
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.viewmodel.SingleMediatorLiveEvent
 
@@ -351,6 +353,102 @@ fun <S, T, U, V, W, X, Y> merge(
     }
 }
 
+@Suppress(
+    "DestructuringDeclarationWithTooManyEntries",
+    "LongParameterList",
+    "CyclomaticComplexMethod",
+    "LongMethod"
+)
+fun <A, B, C, D, E, F, G, H, I, Z> merge(
+    sourceA: LiveData<A>,
+    sourceB: LiveData<B>,
+    sourceC: LiveData<C>,
+    sourceD: LiveData<D>,
+    sourceE: LiveData<E>,
+    sourceF: LiveData<F>,
+    sourceG: LiveData<G>,
+    sourceH: LiveData<H>,
+    sourceI: LiveData<I>,
+    distinct: Boolean = false,
+    merger: (A?, B?, C?, D?, E?, F?, G?, H?, I?) -> Z?
+): LiveData<Z> {
+    data class NineItemContainer(
+        val first: A? = null,
+        val second: B? = null,
+        val third: C? = null,
+        val fourth: D? = null,
+        val fifth: E? = null,
+        val sixth: F? = null,
+        val seventh: G? = null,
+        val eighth: H? = null,
+        val ninth: I? = null
+    )
+
+    val mediator = MediatorLiveData<NineItemContainer>()
+    mediator.value = NineItemContainer()
+    mediator.addSource(sourceA) {
+        val container = mediator.value
+        if (container?.first != it || !distinct) {
+            mediator.value = container?.copy(first = it)
+        }
+    }
+    mediator.addSource(sourceB) {
+        val container = mediator.value
+        if (container?.second != it || !distinct) {
+            mediator.value = container?.copy(second = it)
+        }
+    }
+    mediator.addSource(sourceC) {
+        val container = mediator.value
+        if (container?.third != it || !distinct) {
+            mediator.value = container?.copy(third = it)
+        }
+    }
+    mediator.addSource(sourceD) {
+        val container = mediator.value
+        if (container?.fourth != it || !distinct) {
+            mediator.value = container?.copy(fourth = it)
+        }
+    }
+    mediator.addSource(sourceE) {
+        val container = mediator.value
+        if (container?.fifth != it || !distinct) {
+            mediator.value = container?.copy(fifth = it)
+        }
+    }
+    mediator.addSource(sourceF) {
+        val container = mediator.value
+        if (container?.sixth != it || !distinct) {
+            mediator.value = container?.copy(sixth = it)
+        }
+    }
+    mediator.addSource(sourceG) {
+        val container = mediator.value
+        if (container?.seventh != it || !distinct) {
+            mediator.value = container?.copy(seventh = it)
+        }
+    }
+    mediator.addSource(sourceH) {
+        val container = mediator.value
+        if (container?.eighth != it || !distinct) {
+            mediator.value = container?.copy(eighth = it)
+        }
+    }
+    mediator.addSource(sourceI) {
+        val container = mediator.value
+        if (container?.ninth != it || !distinct) {
+            mediator.value = container?.copy(ninth = it)
+        }
+    }
+    return mediator.mapSafe {
+        (first, second, third, fourth, fifth, sixth, seventh, eighth, ninth) ->
+        merger(
+            first, second, third, fourth, fifth,
+            sixth, seventh, eighth, ninth
+        )
+    }
+}
+
 /**
  * Merges ten LiveData sources using a given function. The function returns an object of a new type.
  * @param sourceA first source
@@ -551,6 +649,49 @@ fun <T> LiveData<T>.fold(action: (previous: T, current: T) -> T): MediatorLiveDa
         }
     }
     return mediatorLiveData
+}
+
+/**
+ * Passes a value straight through when the source has been quiet for [quietMs]. Otherwise the source
+ * is mid-burst, so the newest value is held until the burst has been quiet for [quietMs] or
+ * [maxHoldMs] has passed since the hold began, whichever comes first. Observers see the first value
+ * of a burst and then its last, rather than every step in between, and a value arriving on its own
+ * is never delayed. The held value is always the source's newest, so the observer always ends on it.
+ *
+ * [scope] bounds the timers' lifetime; they always run on the main thread, whatever the scope's own
+ * dispatcher, since that is the only thread the returned LiveData may be set from. Cancelling the
+ * scope drops whatever is held.
+ */
+fun <T> LiveData<T>.settle(scope: CoroutineScope, quietMs: Long, maxHoldMs: Long): LiveData<T> {
+    val mediator = MediatorLiveData<T>()
+    var quietJob: Job? = null
+    // non-null exactly while a value is being held
+    var deadlineJob: Job? = null
+
+    fun flush() {
+        val deadline = deadlineJob ?: return
+        deadline.cancel()
+        deadlineJob = null
+        mediator.value = this.value
+    }
+
+    mediator.addSource(this) { value ->
+        val wasQuiet = quietJob?.isActive != true
+        quietJob?.cancel()
+        quietJob = scope.launch(Dispatchers.Main.immediate) {
+            delay(quietMs)
+            flush()
+        }
+        if (wasQuiet) {
+            mediator.value = value
+        } else if (deadlineJob == null) {
+            deadlineJob = scope.launch(Dispatchers.Main.immediate) {
+                delay(maxHoldMs)
+                flush()
+            }
+        }
+    }
+    return mediator
 }
 
 /**

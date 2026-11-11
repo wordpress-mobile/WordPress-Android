@@ -29,8 +29,6 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
-import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.STATS
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.StatsTimeframe
@@ -82,7 +80,6 @@ class StatsViewModel
     private val statsModuleActivateUseCase: StatsModuleActivateUseCase,
     private val notificationsTracker: SystemNotificationsTracker,
     private val jetpackBrandingUtils: JetpackBrandingUtils,
-    private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
     private val statsTrafficSubscribersTabsFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private val _isRefreshing = MutableLiveData<Boolean>()
@@ -112,9 +109,6 @@ class StatsViewModel
 
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
-
-    private val _showJetpackOverlay = MutableLiveData<Event<Boolean>>()
-    val showJetpackOverlay: LiveData<Event<Boolean>> = _showJetpackOverlay
 
     fun start(intent: Intent, restart: Boolean = false) {
         val localSiteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
@@ -189,6 +183,12 @@ class StatsViewModel
         if (restart) {
             selectedDateProvider.clear()
         }
+
+        // Resolve the site being viewed before anything below reads it. Stats can be opened for a site other than
+        // the selected one (widget, notification, deep link), and StatsSiteProvider is a singleton still holding the
+        // previously selected site until start() runs, so tracking before this point attributes events to that site.
+        val siteChanged = statsSiteProvider.start(localSiteId)
+
         // Check if VM is not already initialized
         if (!isInitialized || restart) {
             isInitialized = true
@@ -230,7 +230,6 @@ class StatsViewModel
 
         _statsModuleUiModel.value = Event(buildShowStatsEnabledViewUiModel())
 
-        val siteChanged = statsSiteProvider.start(localSiteId)
         if (!isStatsModuleEnabled()) {
             _statsModuleUiModel.value = Event(buildShowStatsDisabledViewUiModel())
         } else {
@@ -249,9 +248,6 @@ class StatsViewModel
         }
 
         if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
-
-        if (jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(STATS))
-            showJetpackOverlay()
     }
 
     private fun updateSelectedSectionByTrafficSubscribersTabFeatureConfig() {
@@ -267,10 +263,6 @@ class StatsViewModel
                 statsSectionManager.setSelectedSection(StatsSection.TRAFFIC)
             }
         }
-    }
-
-    private fun showJetpackOverlay() {
-        _showJetpackOverlay.value = Event(true)
     }
 
     private fun showJetpackPoweredBottomSheet() {
@@ -345,30 +337,41 @@ class StatsViewModel
         when (statsSection) {
             StatsSection.TRAFFIC -> analyticsTracker.trackWithGranularity(
                 STATS_PERIOD_ACCESSED,
+                statsSiteProvider.siteModel,
                 selectedTrafficGranularityManager.getSelectedTrafficGranularity()
             )
 
-            StatsSection.INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
+            StatsSection.INSIGHTS -> analyticsTracker.track(
+                STATS_INSIGHTS_ACCESSED,
+                statsSiteProvider.siteModel
+            )
 
-            StatsSection.SUBSCRIBERS -> analyticsTracker.track(STATS_SUBSCRIBERS_ACCESSED)
+            StatsSection.SUBSCRIBERS -> analyticsTracker.track(
+                STATS_SUBSCRIBERS_ACCESSED,
+                statsSiteProvider.siteModel
+            )
 
             StatsSection.DAYS -> analyticsTracker.trackWithGranularity(
                 STATS_PERIOD_DAYS_ACCESSED,
+                statsSiteProvider.siteModel,
                 StatsGranularity.DAYS
             )
 
             StatsSection.WEEKS -> analyticsTracker.trackWithGranularity(
                 STATS_PERIOD_WEEKS_ACCESSED,
+                statsSiteProvider.siteModel,
                 StatsGranularity.WEEKS
             )
 
             StatsSection.MONTHS -> analyticsTracker.trackWithGranularity(
                 STATS_PERIOD_MONTHS_ACCESSED,
+                statsSiteProvider.siteModel,
                 StatsGranularity.MONTHS
             )
 
             StatsSection.YEARS -> analyticsTracker.trackWithGranularity(
                 STATS_PERIOD_YEARS_ACCESSED,
+                statsSiteProvider.siteModel,
                 StatsGranularity.YEARS
             )
 
@@ -383,7 +386,6 @@ class StatsViewModel
 
     @SuppressLint("NullSafeMutableLiveData")
     override fun onCleared() {
-        super.onCleared()
         _showSnackbarMessage.value = null
     }
 

@@ -2,8 +2,6 @@ package org.wordpress.android.fluxc.store
 
 import android.text.TextUtils
 import androidx.annotation.VisibleForTesting
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.ASYNC
 import org.wordpress.android.fluxc.Dispatcher
@@ -11,27 +9,21 @@ import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.action.SiteAction.CHECKED_AUTOMATED_TRANSFER_ELIGIBILITY
 import org.wordpress.android.fluxc.action.SiteAction.CHECKED_AUTOMATED_TRANSFER_STATUS
-import org.wordpress.android.fluxc.action.SiteAction.CHECKED_DOMAIN_AVAILABILITY
 import org.wordpress.android.fluxc.action.SiteAction.CHECKED_IS_WPCOM_URL
 import org.wordpress.android.fluxc.action.SiteAction.CHECK_AUTOMATED_TRANSFER_ELIGIBILITY
 import org.wordpress.android.fluxc.action.SiteAction.CHECK_AUTOMATED_TRANSFER_STATUS
-import org.wordpress.android.fluxc.action.SiteAction.CHECK_DOMAIN_AVAILABILITY
 import org.wordpress.android.fluxc.action.SiteAction.COMPLETED_QUICK_START
 import org.wordpress.android.fluxc.action.SiteAction.COMPLETE_QUICK_START
 import org.wordpress.android.fluxc.action.SiteAction.CREATE_NEW_SITE
 import org.wordpress.android.fluxc.action.SiteAction.DELETED_SITE
 import org.wordpress.android.fluxc.action.SiteAction.DELETE_SITE
 import org.wordpress.android.fluxc.action.SiteAction.DESIGNATED_MOBILE_EDITOR_FOR_ALL_SITES
-import org.wordpress.android.fluxc.action.SiteAction.DESIGNATED_PRIMARY_DOMAIN
 import org.wordpress.android.fluxc.action.SiteAction.DESIGNATE_MOBILE_EDITOR
 import org.wordpress.android.fluxc.action.SiteAction.DESIGNATE_MOBILE_EDITOR_FOR_ALL_SITES
-import org.wordpress.android.fluxc.action.SiteAction.DESIGNATE_PRIMARY_DOMAIN
 import org.wordpress.android.fluxc.action.SiteAction.EXPORTED_SITE
 import org.wordpress.android.fluxc.action.SiteAction.EXPORT_SITE
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_BLOCK_LAYOUTS
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_CONNECT_SITE_INFO
-import org.wordpress.android.fluxc.action.SiteAction.FETCHED_DOMAIN_SUPPORTED_COUNTRIES
-import org.wordpress.android.fluxc.action.SiteAction.FETCHED_DOMAIN_SUPPORTED_STATES
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_JETPACK_CAPABILITIES
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_PLANS
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_PRIVATE_ATOMIC_COOKIE
@@ -41,8 +33,6 @@ import org.wordpress.android.fluxc.action.SiteAction.FETCHED_USER_ROLES
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_WPCOM_SITE_BY_URL
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_BLOCK_LAYOUTS
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_CONNECT_SITE_INFO
-import org.wordpress.android.fluxc.action.SiteAction.FETCH_DOMAIN_SUPPORTED_COUNTRIES
-import org.wordpress.android.fluxc.action.SiteAction.FETCH_DOMAIN_SUPPORTED_STATES
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_JETPACK_CAPABILITIES
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_PLANS
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_POST_FORMATS
@@ -54,6 +44,7 @@ import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITES_XML_RPC
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITES_XML_RPC_FROM_APPLICATION_PASSWORD
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITE_EDITORS
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITE_WP_API
+import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITE_WP_API_FROM_APPLICATION_PASSWORD
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_USER_ROLES
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_WPCOM_SITE_BY_URL
 import org.wordpress.android.fluxc.action.SiteAction.HIDE_SITES
@@ -64,36 +55,31 @@ import org.wordpress.android.fluxc.action.SiteAction.REMOVE_ALL_SITES
 import org.wordpress.android.fluxc.action.SiteAction.REMOVE_SITE
 import org.wordpress.android.fluxc.action.SiteAction.REMOVE_WPCOM_AND_JETPACK_SITES
 import org.wordpress.android.fluxc.action.SiteAction.SHOW_SITES
-import org.wordpress.android.fluxc.action.SiteAction.SUGGESTED_DOMAINS
-import org.wordpress.android.fluxc.action.SiteAction.SUGGEST_DOMAINS
 import org.wordpress.android.fluxc.action.SiteAction.UPDATE_SITE
 import org.wordpress.android.fluxc.action.SiteAction.UPDATE_SITES
 import org.wordpress.android.fluxc.action.SiteAction.UPDATE_APPLICATION_PASSWORD
 import org.wordpress.android.fluxc.action.SiteAction.REMOVE_APPLICATION_PASSWORD
 import org.wordpress.android.fluxc.annotations.action.Action
-import org.wordpress.android.fluxc.model.DomainModel
 import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.model.PlanModel
 import org.wordpress.android.fluxc.model.PostFormatModel
 import org.wordpress.android.fluxc.model.RoleModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SitesModel
-import org.wordpress.android.fluxc.model.asDomainModel
 import org.wordpress.android.fluxc.model.jetpacksocial.JetpackSocial
 import org.wordpress.android.fluxc.model.jetpacksocial.JetpackSocialMapper
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
-import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordCreationResult
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordCredentials
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordDeletionResult
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordsConfiguration
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordsManager
 import org.wordpress.android.fluxc.network.rest.wpapi.site.SiteWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
-import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
-import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainPriceResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayout
 import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCategory
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
@@ -104,8 +90,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.Export
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.FetchWPComSiteResponsePayload
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPComResponsePayload
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedCountryResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedStateResponse
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
 import org.wordpress.android.fluxc.persistence.JetpackCPConnectedSiteModel
 import org.wordpress.android.fluxc.persistence.JetpackCPConnectedSitesDao
@@ -113,21 +97,17 @@ import org.wordpress.android.fluxc.persistence.JetpackCPConnectedSitesDao.Jetpac
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException
-import org.wordpress.android.fluxc.persistence.domains.DomainDao
 import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao
 import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType.NON_PRIVATE_AT_SITE
 import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType.SITE_MISSING_FROM_STORE
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteErrorType.INVALID_SITE
-import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityErrorType.INVALID_DOMAIN_NAME
-import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType.INVALID_COUNTRY_CODE
 import org.wordpress.android.fluxc.store.SiteStore.ExportSiteErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.SiteStore.LaunchSiteErrorType.ALREADY_LAUNCHED
 import org.wordpress.android.fluxc.store.SiteStore.PlansErrorType.NOT_AVAILABLE
 import org.wordpress.android.fluxc.store.SiteStore.SelfHostedErrorType.NOT_SET
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.DUPLICATE_SITE
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.UNAUTHORIZED
-import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.UNKNOWN_SITE
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.fluxc.utils.SiteErrorUtils
 import org.wordpress.android.util.AppLog
@@ -154,12 +134,12 @@ open class SiteStore @Inject constructor(
     private val privateAtomicCookie: PrivateAtomicCookie,
     private val siteSqlUtils: SiteSqlUtils,
     private val jetpackCPConnectedSitesDao: JetpackCPConnectedSitesDao,
-    private val domainDao: DomainDao,
     private val jetpackSocialDao: JetpackSocialDao,
     private val jetpackSocialMapper: JetpackSocialMapper,
     private val coroutineEngine: CoroutineEngine
 ) : Store(dispatcher) {
     @Inject internal lateinit var applicationPasswordsManagerProvider: Provider<ApplicationPasswordsManager>
+    @Inject internal lateinit var applicationPasswordsConfigurationProvider: Provider<ApplicationPasswordsConfiguration>
 
     // Payloads
     data class CompleteQuickStartPayload(
@@ -184,6 +164,7 @@ open class SiteStore @Inject constructor(
         val url: String,
         val username: String? = null,
         val password: String? = null,
+        val isApplicationPassword: Boolean = false,
     ) : Payload<BaseNetworkError>()
 
     data class FetchSitesPayload @JvmOverloads constructor(
@@ -339,79 +320,6 @@ open class SiteStore @Inject constructor(
         @JvmField val error: JetpackCapabilitiesError? = null
     ) : OnChanged<JetpackCapabilitiesError>()
 
-    data class SuggestDomainsPayload(
-        @JvmField val query: String,
-        @JvmField val quantity: Int,
-        @JvmField val vendor: String? = null,
-        @JvmField val onlyWordpressCom: Boolean? = null,
-        @JvmField val includeWordpressCom: Boolean? = null,
-        @JvmField val includeDotBlogSubdomain: Boolean? = null,
-        @JvmField val tlds: String? = null,
-        @JvmField val segmentId: Long? = null
-    ) : Payload<BaseNetworkError>() {
-        @Deprecated(
-            "Replace with primary constructor " +
-                "which accepts 'vendor = \"dot\"' instead of 'includeVendorDot = true' " +
-                "or 'vendor = null' instead of 'includeVendorDot = false'.",
-            replaceWith = ReplaceWith(
-                expression = "SiteStore.SuggestDomainsPayload(" +
-                    "query = query, " +
-                    "onlyWordpressCom = onlyWordpressCom, " +
-                    "includeWordpressCom = includeWordpressCom, " +
-                    "includeDotBlogSubdomain = includeDotBlogSubdomain, " +
-                    "quantity = quantity, " +
-                    "vendor = null)"
-            )
-        )
-        constructor(
-            query: String,
-            onlyWordpressCom: Boolean,
-            includeWordpressCom: Boolean,
-            includeDotBlogSubdomain: Boolean,
-            quantity: Int,
-            includeVendorDot: Boolean
-        ) : this(
-            query = query,
-            quantity = quantity,
-            vendor = if (includeVendorDot) "dot" else null,
-            onlyWordpressCom = onlyWordpressCom,
-            includeWordpressCom = includeWordpressCom,
-            includeDotBlogSubdomain = includeDotBlogSubdomain
-        )
-
-        constructor(
-            query: String,
-            onlyWordpressCom: Boolean,
-            includeWordpressCom: Boolean,
-            includeDotBlogSubdomain: Boolean,
-            quantity: Int,
-            vendor: String? = null,
-        ) : this(
-            query,
-            quantity,
-            vendor,
-            onlyWordpressCom,
-            includeWordpressCom,
-            includeDotBlogSubdomain
-        )
-
-        constructor(query: String, quantity: Int, tlds: String?) : this(
-            query,
-            quantity,
-            vendor = null, // Avoids error: "There's a cycle in the delegation calls chain"
-            tlds = tlds
-        )
-    }
-
-    data class SuggestDomainsResponsePayload(
-        @JvmField val query: String,
-        @JvmField val suggestions: List<DomainSuggestionResponse> = listOf()
-    ) : Payload<SuggestDomainError>() {
-        constructor(query: String, error: SuggestDomainError?) : this(query) {
-            this.error = error
-        }
-    }
-
     data class ConnectSiteInfoPayload
     @JvmOverloads constructor(
         @JvmField val url: String,
@@ -435,11 +343,6 @@ open class SiteStore @Inject constructor(
             )
         }
     }
-
-    data class DesignatePrimaryDomainPayload(
-        @JvmField val site: SiteModel,
-        @JvmField val domain: String
-    ) : Payload<DesignatePrimaryDomainError>()
 
     data class InitiateAutomatedTransferPayload(
         @JvmField val site: SiteModel,
@@ -474,37 +377,6 @@ open class SiteStore @Inject constructor(
             this.error = error
         }
     }
-
-    data class DomainAvailabilityResponsePayload(
-        @JvmField val status: DomainAvailabilityStatus? = null,
-        @JvmField val mappable: DomainMappabilityStatus? = null,
-        @JvmField val supportsPrivacy: Boolean = false
-    ) : Payload<DomainAvailabilityError>() {
-        constructor(error: DomainAvailabilityError) : this() {
-            this.error = error
-        }
-    }
-
-    data class DomainSupportedStatesResponsePayload(
-        @JvmField val supportedStates: List<SupportedStateResponse>? = null
-    ) : Payload<DomainSupportedStatesError>() {
-        constructor(error: DomainSupportedStatesError) : this() {
-            this.error = error
-        }
-    }
-
-    data class DomainSupportedCountriesResponsePayload(
-        @JvmField val supportedCountries: List<SupportedCountryResponse>? = null
-    ) : Payload<DomainSupportedCountriesError>() {
-        constructor(error: DomainSupportedCountriesError) : this() {
-            this.error = error
-        }
-    }
-
-    data class AllDomainsError @JvmOverloads constructor(
-        @JvmField val type: AllDomainsErrorType,
-        @JvmField val message: String? = null,
-    ) : OnChangedError
 
     data class SiteError @JvmOverloads constructor(
         @JvmField val type: SiteErrorType,
@@ -545,30 +417,7 @@ open class SiteStore @Inject constructor(
         constructor(type: String, message: String) : this(AutomatedTransferErrorType.fromString(type), message)
     }
 
-    data class DomainAvailabilityError
-    @JvmOverloads
-    constructor(
-        @JvmField val type: DomainAvailabilityErrorType,
-        @JvmField val message: String? = null
-    ) : OnChangedError
-
-    data class DomainSupportedStatesError
-    @JvmOverloads
-    constructor(
-        @JvmField val type: DomainSupportedStatesErrorType,
-        @JvmField val message: String? = null
-    ) : OnChangedError
-
-    data class DomainSupportedCountriesError(
-        @JvmField val type: DomainSupportedCountriesErrorType,
-        @JvmField val message: String?
-    ) : OnChangedError
-
     data class QuickStartError(@JvmField val type: QuickStartErrorType, @JvmField val message: String?) : OnChangedError
-    data class DesignatePrimaryDomainError(
-        @JvmField val type: DesignatePrimaryDomainErrorType,
-        @JvmField val message: String?
-    ) : OnChangedError
 
     // OnChanged Events
     data class OnProfileFetched(@JvmField val site: SiteModel) : OnChanged<SiteError>()
@@ -685,114 +534,18 @@ open class SiteStore @Inject constructor(
         @JvmField val site: SiteModel? = null
     ) : OnChanged<SiteError>()
 
-    data class SuggestDomainError(@JvmField val type: SuggestDomainErrorType, @JvmField val message: String) :
-            OnChangedError {
-        constructor(apiErrorType: String, message: String) : this(
-                SuggestDomainErrorType.fromString(apiErrorType),
-                message
-        )
-    }
-
-    data class OnSuggestedDomains(
-        val query: String,
-        @JvmField val suggestions: List<DomainSuggestionResponse>
-    ) : OnChanged<SuggestDomainError>()
-
-    data class OnDomainAvailabilityChecked(
-        @JvmField val status: DomainAvailabilityStatus?,
-        @JvmField val mappable: DomainMappabilityStatus?,
-        @JvmField val supportsPrivacy: Boolean
-    ) : OnChanged<DomainAvailabilityError>() {
-        constructor(
-            status: DomainAvailabilityStatus?,
-            mappable: DomainMappabilityStatus?,
-            supportsPrivacy: Boolean,
-            error: DomainAvailabilityError?
-        ) : this(status, mappable, supportsPrivacy) {
-            this.error = error
-        }
-    }
-
-    enum class DomainAvailabilityStatus {
-        BLACKLISTED_DOMAIN,
-        INVALID_TLD,
-        INVALID_DOMAIN,
-        TLD_NOT_SUPPORTED,
-        TRANSFERRABLE_DOMAIN,
-        AVAILABLE,
-        UNKNOWN_STATUS;
-
-        companion object {
-            @JvmStatic fun fromString(string: String): DomainAvailabilityStatus {
-                if (!TextUtils.isEmpty(string)) {
-                    for (v in values()) {
-                        if (string.equals(v.name, ignoreCase = true)) {
-                            return v
-                        }
-                    }
-                }
-                return UNKNOWN_STATUS
-            }
-        }
-    }
-
-    enum class DomainMappabilityStatus {
-        BLACKLISTED_DOMAIN, INVALID_TLD, INVALID_DOMAIN, MAPPABLE_DOMAIN, UNKNOWN_STATUS;
-
-        companion object {
-            @JvmStatic fun fromString(string: String): DomainMappabilityStatus {
-                if (!TextUtils.isEmpty(string)) {
-                    for (v in values()) {
-                        if (string.equals(v.name, ignoreCase = true)) {
-                            return v
-                        }
-                    }
-                }
-                return UNKNOWN_STATUS
-            }
-        }
-    }
-
-    data class OnDomainSupportedStatesFetched(
-        @JvmField val supportedStates: List<SupportedStateResponse>?
-    ) : OnChanged<DomainSupportedStatesError>() {
-        constructor(
-            supportedStates: List<SupportedStateResponse>?,
-            error: DomainSupportedStatesError?
-        ) : this(supportedStates) {
-            this.error = error
-        }
-    }
-
-    class OnDomainSupportedCountriesFetched(
-        @JvmField val supportedCountries: List<SupportedCountryResponse>?,
-        error: DomainSupportedCountriesError?
-    ) : OnChanged<DomainSupportedCountriesError>() {
-        init {
-            this.error = error
-        }
-    }
-
-    data class FetchedAllDomainsPayload(
-        @JvmField val domains: List<AllDomainsDomain>? = null
-    ) : Payload<AllDomainsError>() {
-        constructor(error: AllDomainsError) : this() {
-            this.error = error
-        }
-    }
-
-    data class FetchedDomainsPayload(
-        @JvmField val site: SiteModel,
-        @JvmField val domains: List<Domain>? = null
-    ) : Payload<SiteError>() {
-        constructor(site: SiteModel, error: SiteError) : this(site) {
-            this.error = error
-        }
-    }
-
     data class OnApplicationPasswordDeleted(val site: SiteModel) : OnChanged<OnApplicationPasswordDeleteError>() {
         constructor(site: SiteModel, error: BaseNetworkError): this(site) {
             this.error = OnApplicationPasswordDeleteError(error)
+        }
+    }
+
+    data class OnApplicationPasswordCreated(
+        val site: SiteModel,
+        val credentials: ApplicationPasswordCredentials? = null,
+    ) : OnChanged<OnApplicationPasswordCreateError>() {
+        constructor(site: SiteModel, error: BaseNetworkError, notSupported: Boolean): this(site) {
+            this.error = OnApplicationPasswordCreateError(error, notSupported)
         }
     }
 
@@ -814,6 +567,23 @@ open class SiteStore @Inject constructor(
     }
 
     class OnApplicationPasswordDeleteError(error: BaseNetworkError) : OnChangedError {
+        var errorCode: String? = null
+        var message: String
+
+        init {
+            if (error is WPAPINetworkError) {
+                errorCode = error.errorCode
+            } else if (error is WPComGsonNetworkError) {
+                errorCode = error.apiError
+            }
+            message = error.message
+        }
+    }
+
+    class OnApplicationPasswordCreateError(
+        error: BaseNetworkError,
+        val notSupported: Boolean,
+    ) : OnChangedError {
         var errorCode: String? = null
         var message: String
 
@@ -890,16 +660,6 @@ open class SiteStore @Inject constructor(
         @JvmField val success: Boolean
     ) : OnChanged<QuickStartError>()
 
-    class DesignatedPrimaryDomainPayload(
-        @JvmField val site: SiteModel,
-        @JvmField val success: Boolean
-    ) : OnChanged<DesignatePrimaryDomainError>()
-
-    class OnPrimaryDomainDesignated(
-        @JvmField val site: SiteModel,
-        @JvmField val success: Boolean
-    ) : OnChanged<DesignatePrimaryDomainError>()
-
     data class UpdateSitesResult(
         @JvmField val rowsAffected: Int = 0,
         @JvmField val updatedSites: List<SiteModel> = emptyList(),
@@ -908,27 +668,6 @@ open class SiteStore @Inject constructor(
 
     enum class SiteErrorType {
         INVALID_SITE, UNKNOWN_SITE, DUPLICATE_SITE, INVALID_RESPONSE, UNAUTHORIZED, NOT_AUTHENTICATED, GENERIC_ERROR
-    }
-
-    enum class AllDomainsErrorType {
-        UNAUTHORIZED, GENERIC_ERROR
-    }
-
-    enum class SuggestDomainErrorType {
-        EMPTY_RESULTS, EMPTY_QUERY, INVALID_MINIMUM_QUANTITY, INVALID_MAXIMUM_QUANTITY, INVALID_QUERY, GENERIC_ERROR;
-
-        companion object {
-            fun fromString(string: String): SuggestDomainErrorType {
-                if (!TextUtils.isEmpty(string)) {
-                    for (v in values()) {
-                        if (string.equals(v.name, ignoreCase = true)) {
-                            return v
-                        }
-                    }
-                }
-                return GENERIC_ERROR
-            }
-        }
     }
 
     enum class PostFormatsErrorType {
@@ -1053,36 +792,7 @@ open class SiteStore @Inject constructor(
         }
     }
 
-    enum class DomainAvailabilityErrorType {
-        INVALID_DOMAIN_NAME, GENERIC_ERROR
-    }
-
-    enum class DomainSupportedStatesErrorType {
-        INVALID_COUNTRY_CODE, INVALID_QUERY, GENERIC_ERROR;
-
-        companion object {
-            @JvmStatic fun fromString(type: String): DomainSupportedStatesErrorType {
-                if (!TextUtils.isEmpty(type)) {
-                    for (v in values()) {
-                        if (type.equals(v.name, ignoreCase = true)) {
-                            return v
-                        }
-                    }
-                }
-                return GENERIC_ERROR
-            }
-        }
-    }
-
-    enum class DomainSupportedCountriesErrorType {
-        GENERIC_ERROR
-    }
-
     enum class QuickStartErrorType {
-        GENERIC_ERROR
-    }
-
-    enum class DesignatePrimaryDomainErrorType {
         GENERIC_ERROR
     }
 
@@ -1360,6 +1070,19 @@ open class SiteStore @Inject constructor(
             FETCH_SITE_WP_API -> coroutineEngine.launch(T.MAIN, this, "Fetch WPAPI Site") {
                 emitChange(fetchWPAPISite(action.payload as FetchWPAPISitePayload))
             }
+            FETCH_SITE_WP_API_FROM_APPLICATION_PASSWORD ->
+                coroutineEngine.launch(
+                    T.MAIN,
+                    this,
+                    "Fetch WPAPI Site from Application Password"
+                ) {
+                    emitChange(
+                        fetchSiteWPAPIFromApplicationPassword(
+                            action.payload
+                                as RefreshSitesXMLRPCApplicationPasswordCredentialsPayload
+                        )
+                    )
+                }
             UPDATE_SITE -> {
                 emitChange(updateSite(action.payload as SiteModel))
             }
@@ -1408,22 +1131,8 @@ open class SiteStore @Inject constructor(
             FETCHED_WPCOM_SITE_BY_URL -> handleFetchedWPComSiteByUrl(action.payload as FetchWPComSiteResponsePayload)
             IS_WPCOM_URL -> checkUrlIsWPCom(action.payload as String)
             CHECKED_IS_WPCOM_URL -> handleCheckedIsWPComUrl(action.payload as IsWPComResponsePayload)
-            SUGGEST_DOMAINS -> suggestDomains(action.payload as SuggestDomainsPayload)
-            SUGGESTED_DOMAINS -> handleSuggestedDomains(action.payload as SuggestDomainsResponsePayload)
             FETCH_PLANS -> fetchPlans(action.payload as SiteModel)
             FETCHED_PLANS -> handleFetchedPlans(action.payload as FetchedPlansPayload)
-            CHECK_DOMAIN_AVAILABILITY -> checkDomainAvailability(action.payload as String)
-            CHECKED_DOMAIN_AVAILABILITY -> handleCheckedDomainAvailability(
-                    action.payload as DomainAvailabilityResponsePayload
-            )
-            FETCH_DOMAIN_SUPPORTED_STATES -> fetchSupportedStates(action.payload as String)
-            FETCHED_DOMAIN_SUPPORTED_STATES -> handleFetchedSupportedStates(
-                    action.payload as DomainSupportedStatesResponsePayload
-            )
-            FETCH_DOMAIN_SUPPORTED_COUNTRIES -> siteRestClient.fetchSupportedCountries()
-            FETCHED_DOMAIN_SUPPORTED_COUNTRIES -> handleFetchedSupportedCountries(
-                    action.payload as DomainSupportedCountriesResponsePayload
-            )
             CHECK_AUTOMATED_TRANSFER_ELIGIBILITY -> checkAutomatedTransferEligibility(action.payload as SiteModel)
             INITIATE_AUTOMATED_TRANSFER -> initiateAutomatedTransfer(action.payload as InitiateAutomatedTransferPayload)
             CHECK_AUTOMATED_TRANSFER_STATUS -> checkAutomatedTransferStatus(action.payload as SiteModel)
@@ -1438,8 +1147,6 @@ open class SiteStore @Inject constructor(
             )
             COMPLETE_QUICK_START -> completeQuickStart(action.payload as CompleteQuickStartPayload)
             COMPLETED_QUICK_START -> handleQuickStartCompleted(action.payload as QuickStartCompletedResponsePayload)
-            DESIGNATE_PRIMARY_DOMAIN -> designatePrimaryDomain(action.payload as DesignatePrimaryDomainPayload)
-            DESIGNATED_PRIMARY_DOMAIN -> handleDesignatedPrimaryDomain(action.payload as DesignatedPrimaryDomainPayload)
             FETCH_PRIVATE_ATOMIC_COOKIE -> fetchPrivateAtomicCookie(action.payload as FetchPrivateAtomicCookiePayload)
             FETCHED_PRIVATE_ATOMIC_COOKIE -> handleFetchedPrivateAtomicCookie(
                     action.payload as FetchedPrivateAtomicCookiePayload
@@ -1452,15 +1159,33 @@ open class SiteStore @Inject constructor(
     }
 
     private fun fetchProfileXmlRpc(site: SiteModel) {
+        if (site.xmlRpcUrl.isNullOrEmpty()) {
+            AppLog.w(
+                T.API,
+                "fetchProfileXmlRpc: skipping, xmlRpcUrl is null"
+            )
+            val event = OnProfileFetched(site)
+            event.error = SiteError(
+                SiteErrorType.GENERIC_ERROR,
+                "XML-RPC is unavailable for this site"
+            )
+            emitChange(event)
+            return
+        }
         siteXMLRPCClient.fetchProfile(site)
     }
 
     suspend fun fetchSite(site: SiteModel): OnSiteChanged {
         return coroutineEngine.withDefaultContext(T.API, this, "Fetch site") {
-            val updatedSite = when (site.origin) {
-                SiteModel.ORIGIN_WPCOM_REST -> siteRestClient.fetchSite(site)
-                SiteModel.ORIGIN_WPAPI -> siteWPAPIRestClient.fetchWPAPISite(site)
-                else -> siteXMLRPCClient.fetchSite(site)
+            // Refresh from the stored row rather than the caller's copy. An in-memory SiteModel can
+            // predate later writes -- carrying stale identity or connection state back would undo
+            // them -- and its origin can predate an upgrade of the row (e.g. WPAPI -> WPCOM_REST by
+            // /me/sites), which would re-fetch through the wrong client and downgrade the row again.
+            val storedSite = getSiteByLocalId(site.id) ?: site
+            val updatedSite = when (storedSite.origin) {
+                SiteModel.ORIGIN_WPCOM_REST -> siteRestClient.fetchSite(storedSite)
+                SiteModel.ORIGIN_WPAPI -> siteWPAPIRestClient.fetchWPAPISite(storedSite)
+                else -> siteXMLRPCClient.fetchSite(storedSite)
             }
 
             updateSite(updatedSite)
@@ -1480,24 +1205,126 @@ open class SiteStore @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     suspend fun fetchSitesXmlRpcFromApplicationPassword(
         payload: RefreshSitesXMLRPCApplicationPasswordCredentialsPayload
     ): OnSiteChanged {
         return coroutineEngine.withDefaultContext(T.API, this, "Fetch sites") {
-            updateSites(
-                siteXMLRPCClient.fetchSitesFromApplicationPassword(
-                    payload.url,
-                    payload.apiRootUrl,
-                    payload.username,
-                    payload.password
+            try {
+                val sites =
+                    siteXMLRPCClient.fetchSitesFromApplicationPassword(
+                        payload.url,
+                        payload.apiRootUrl,
+                        payload.username,
+                        payload.password
+                    )
+                if (sites.isError) {
+                    // payload.url is now an unverified guess at the conventional xmlrpc.php endpoint (no
+                    // client-side discovery runs before this fetch), so don't persist it here. Fall back to
+                    // WPAPI and leave xmlRpcUrl empty: the My Site card's rediscovery only runs while it's
+                    // empty, and it verifies and persists a real endpoint (staying hidden on a transient 429,
+                    // warning only on a definitive "XML-RPC disabled"). Persisting the guess would gate that
+                    // self-heal off and could pin a wrong endpoint permanently.
+                    AppLog.w(
+                        T.API,
+                        "XML-RPC fetch failed (${sites.error?.message}), falling back to WPAPI"
+                    )
+                    // Use apiRootUrl as the base URL for WPAPI discovery since payload.url is the xmlrpc.php
+                    // endpoint.
+                    fetchSiteWPAPIFromApplicationPassword(
+                        payload.copy(
+                            url = payload.apiRootUrl
+                        )
+                    )
+                } else {
+                    updateSites(sites)
+                }
+            } catch (e: Exception) {
+                val errorMsg =
+                    e.message ?: e.javaClass.simpleName
+                AppLog.e(
+                    T.API,
+                    "Failed to fetch/store sites: $errorMsg",
+                    e
                 )
-            )
+                OnSiteChanged(
+                    SiteError(
+                        SiteErrorType.GENERIC_ERROR,
+                        errorMsg
+                    )
+                )
+            }
         }
+    }
+
+    /**
+     * The stored row a WPAPI fetch is refreshing, when there is one. Passed to the fetch as its
+     * `previousSite` so the fields the fetch can't determine -- and the local id, which keeps
+     * [SiteSqlUtils.insertOrUpdateSiteReturningId] matching the row once it stores a real blog id --
+     * carry forward instead of resetting. The lookup tries both schemes because the stored URL
+     * carries the scheme discovery resolved, not necessarily the one the caller supplied.
+     */
+    private fun storedWPAPISite(url: String?): SiteModel? {
+        if (url.isNullOrEmpty()) return null
+        val bareUrl = url.substringAfter("://")
+        return siteSqlUtils.getWPAPISiteByUrl("https://$bareUrl")
+            ?: siteSqlUtils.getWPAPISiteByUrl("http://$bareUrl")
     }
 
     suspend fun fetchWPAPISite(payload: FetchWPAPISitePayload): OnSiteChanged {
         return coroutineEngine.withDefaultContext(T.MAIN, this, "Fetch WPAPI Site") {
-            updateSite(siteWPAPIRestClient.fetchWPAPISite(payload))
+            updateSite(siteWPAPIRestClient.fetchWPAPISite(payload, storedWPAPISite(payload.url)))
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    internal suspend fun fetchSiteWPAPIFromApplicationPassword(
+        payload: RefreshSitesXMLRPCApplicationPasswordCredentialsPayload,
+    ): OnSiteChanged {
+        return coroutineEngine.withDefaultContext(
+            T.API,
+            this,
+            "Fetch WPAPI Site from Application Password"
+        ) {
+            try {
+                val siteModel = siteWPAPIRestClient.fetchWPAPISite(
+                    FetchWPAPISitePayload(
+                        url = payload.url,
+                        username = payload.username,
+                        password = payload.password,
+                        isApplicationPassword = true,
+                    ),
+                    previousSite = storedWPAPISite(payload.url)
+                )
+                if (!siteModel.isError) {
+                    siteModel.wpApiRestUrl = payload.apiRootUrl
+                }
+                val result = updateSite(siteModel)
+                // updateSite's full-row write skips WP_API_REST_URL and the credential columns, and this fresh
+                // site has no local id (it's matched by URL), so persist them via the URL-keyed writers.
+                if (!siteModel.isError) {
+                    persistAppPasswordColumns(
+                        siteModel,
+                        { username, password ->
+                            siteSqlUtils.updateApplicationPasswordCredentialsForWPAPISite(
+                                siteModel.url, username, password
+                            )
+                        },
+                        { siteSqlUtils.updateWpApiRestUrlForWPAPISite(siteModel.url, it) }
+                    )
+                }
+                result
+            } catch (e: Exception) {
+                val errorMsg = e.message ?: e.javaClass.simpleName
+                AppLog.e(
+                    T.API,
+                    "Failed to fetch/store site via WPAPI: $errorMsg",
+                    e
+                )
+                OnSiteChanged(
+                    SiteError(SiteErrorType.GENERIC_ERROR, errorMsg)
+                )
+            }
         }
     }
 
@@ -1524,22 +1351,15 @@ open class SiteStore @Inject constructor(
             OnSiteChanged(SiteErrorUtils.genericToSiteError(siteModel.error))
         } else {
             try {
-                // The REST API doesn't return info about the editor(s) nor the Application Password.
-                // Make sure to copy current values available on the DB.
-                // Otherwise the apps will receive an update site without editor prefs set.
-                // The apps will dispatch the action to update editor(s) when necessary.
+                // The REST API doesn't return editor prefs, so copy the current values from the DB to avoid
+                // emitting an updated site without them. (Credentials and wpApiRestUrl are protected by the
+                // mapper exclusion in SiteSqlUtils, so they don't need copying here.)
                 val freshSiteFromDB = getSiteByLocalId(siteModel.id)
                 if (freshSiteFromDB != null) {
                     siteModel.mobileEditor = freshSiteFromDB.mobileEditor
                     siteModel.webEditor = freshSiteFromDB.webEditor
-                    if (!freshSiteFromDB.apiRestUsernameEncrypted.isNullOrEmpty()) {
-                        siteModel.apiRestUsernameEncrypted = freshSiteFromDB.apiRestUsernameEncrypted
-                        siteModel.apiRestPasswordEncrypted = freshSiteFromDB.apiRestPasswordEncrypted
-                        siteModel.apiRestUsernameIV = freshSiteFromDB.apiRestUsernameIV
-                        siteModel.apiRestPasswordIV = freshSiteFromDB.apiRestPasswordIV
-                        siteModel.wpApiRestUrl = freshSiteFromDB.wpApiRestUrl
-                    }
                 }
+                yieldBlogIdIfOwnedElsewhere(siteModel)
                 OnSiteChanged(siteSqlUtils.insertOrUpdateSite(siteModel))
             } catch (e: DuplicateSiteException) {
                 OnSiteChanged(SiteError(DUPLICATE_SITE))
@@ -1547,28 +1367,88 @@ open class SiteStore @Inject constructor(
         }
     }
 
-    @Suppress("SwallowedException")
+    /**
+     * An application-password site can discover the WordPress.com blog id of a site that another row --
+     * typically a /me/sites copy of the same site -- already owns. Persisting it would either trip the
+     * UNIQUE (SITE_ID, URL) constraint (discarding the whole update) or, when the URLs differ, make
+     * [SiteSqlUtils.insertOrUpdateSiteReturningId]'s bare-SITE_ID match target the other row and
+     * overwrite it. Leave the blog id with the row that already owns it.
+     */
+    private fun yieldBlogIdIfOwnedElsewhere(siteModel: SiteModel) {
+        if (siteModel.origin != SiteModel.ORIGIN_WPAPI || siteModel.siteId == 0L) return
+        if (siteSqlUtils.getSitesWithRemoteId(siteModel.siteId).any { it.id != siteModel.id }) {
+            siteModel.siteId = 0
+        }
+    }
+
+    /**
+     * Targeted persist for [SiteModel.xmlRpcUrl] — for callers (e.g. XML-RPC rediscovery) that heal/discover
+     * only that one column and don't want to full-row write an in-memory model. The generic update path also
+     * persists xmlRpcUrl (and preserves it on absence), so this is a convenience for the single-column heal,
+     * not the sole writer.
+     */
+    suspend fun persistXmlRpcUrl(localId: Int, xmlRpcUrl: String): OnSiteChanged =
+        coroutineEngine.withDefaultContext(T.API, this, "persistXmlRpcUrl") {
+            OnSiteChanged(siteSqlUtils.updateXmlRpcUrl(localId, xmlRpcUrl))
+        }
+
+    /**
+     * Persists the application-password columns that the generic full-row write excludes — the encrypted
+     * credentials and, when present, [SiteModel.wpApiRestUrl] — via the supplied targeted writers, returning the
+     * number of rows written. The three post-write handlers (UPDATE_APPLICATION_PASSWORD, the WPAPI app-password
+     * fetch, and app-password XML-RPC login in createOrUpdateSites) differ only in targeting the row by local id
+     * or by URL, so each passes its matching writer pair.
+     *
+     * The credential check gates the whole write — a model carrying no credentials has nothing to persist here,
+     * and a /me/sites sync is exactly that. The column is separately protected by the isNotEmpty() check below:
+     * that, not the credential gate, is what stops a model with credentials but no discovered root from blanking
+     * a value discovery already found.
+     */
+    private fun persistAppPasswordColumns(
+        site: SiteModel,
+        persistCredentials: (username: String, password: String) -> Int,
+        persistWpApiRestUrl: (wpApiRestUrl: String) -> Int
+    ): Int {
+        val username = site.apiRestUsernamePlain
+        val password = site.apiRestPasswordPlain
+        if (username.isNullOrEmpty() || password.isNullOrEmpty()) return 0
+        var rowsAffected = persistCredentials(username, password)
+        site.wpApiRestUrl?.takeIf { it.isNotEmpty() }?.let {
+            rowsAffected += persistWpApiRestUrl(it)
+        }
+        return rowsAffected
+    }
+
+    @Suppress("SwallowedException", "TooGenericExceptionCaught")
     private fun updateApplicationPassword(siteModel: SiteModel): OnSiteChanged {
         return try {
             val siteFromDB = getSiteByLocalId(siteModel.id)
-            // If the site doesn't exists we rely on create a new one
-            val siteToStore = if (siteFromDB == null) {
-                siteModel
+            if (siteFromDB == null) {
+                // New site: the full insert persists everything, incl. credentials via encrypt-on-insert.
+                OnSiteChanged(siteSqlUtils.insertOrUpdateSite(siteModel))
             } else {
-                siteFromDB.apply {
-                    apiRestUsernamePlain = siteModel.apiRestUsernamePlain
-                    apiRestPasswordPlain = siteModel.apiRestPasswordPlain
-                    apiRestUsernameEncrypted = siteModel.apiRestUsernameEncrypted
-                    apiRestPasswordEncrypted = siteModel.apiRestPasswordEncrypted
-                    apiRestUsernameIV = siteModel.apiRestUsernameIV
-                    apiRestPasswordIV = siteModel.apiRestPasswordIV
-                    wpApiRestUrl = siteModel.wpApiRestUrl
-                }
-                siteFromDB
+                // Existing site: credentials + WP_API_REST_URL are excluded from the full-row write, so
+                // persist them on the existing row via their targeted writers (nothing else changed).
+                OnSiteChanged(
+                    persistAppPasswordColumns(
+                        siteModel,
+                        { username, password ->
+                            siteSqlUtils.updateApplicationPasswordCredentials(siteFromDB.id, username, password)
+                        },
+                        { siteSqlUtils.updateWpApiRestUrl(siteFromDB.id, it) }
+                    )
+                )
             }
-            OnSiteChanged(siteSqlUtils.insertOrUpdateSite(siteToStore))
         } catch (e: DuplicateSiteException) {
             OnSiteChanged(SiteError(DUPLICATE_SITE))
+        } catch (e: Exception) {
+            val errorMsg = e.message ?: e.javaClass.simpleName
+            AppLog.e(
+                T.DB,
+                "Failed to update application password: $errorMsg",
+                e
+            )
+            OnSiteChanged(SiteError(SiteErrorType.GENERIC_ERROR, errorMsg))
         }
     }
 
@@ -1580,16 +1460,11 @@ open class SiteStore @Inject constructor(
             if (siteFromDB == null) {
                 OnSiteChanged(SiteError(SiteErrorType.INVALID_SITE))
             } else {
-                siteFromDB.apply {
-                    apiRestUsernamePlain = ""
-                    apiRestPasswordPlain = ""
-                    apiRestUsernameEncrypted = ""
-                    apiRestPasswordEncrypted = ""
-                    apiRestUsernameIV = ""
-                    apiRestPasswordIV = ""
-                    wpApiRestUrl = ""
-                }
-                OnSiteChanged(siteSqlUtils.insertOrUpdateSite(siteFromDB))
+                // Credentials + WP_API_REST_URL are excluded from the full-row write, so clear them on the
+                // existing row via their targeted writers now that the application password is gone.
+                val rowsAffected = siteSqlUtils.clearApplicationPasswordCredentials(siteFromDB.id) +
+                        siteSqlUtils.clearWpApiRestUrl(siteFromDB.id)
+                OnSiteChanged(rowsAffected)
             }
         } catch (e: DuplicateSiteException) {
             OnSiteChanged(SiteError(DUPLICATE_SITE))
@@ -1639,26 +1514,30 @@ open class SiteStore @Inject constructor(
         val updatedSites = mutableListOf<SiteModel>()
         for (site in sites.sites) {
             try {
-                // The REST API doesn't return info about the editor(s) nor the Application Password.
-                // Make sure to copy current values available on the DB.
-                // Otherwise the apps will receive an update site without editor prefs set.
-                // The apps will dispatch the action to update editor(s) when necessary.
+                // The REST API doesn't return editor prefs, so copy the current values from the DB to avoid
+                // emitting an updated site without them. (Credentials and wpApiRestUrl are protected by the
+                // mapper exclusion in SiteSqlUtils, so they don't need copying here.)
                 val siteFromDB = getSiteBySiteId(site.siteId)
                 if (siteFromDB != null) {
                     site.mobileEditor = siteFromDB.mobileEditor
                     site.webEditor = siteFromDB.webEditor
-                    if (!siteFromDB.apiRestUsernameEncrypted.isNullOrEmpty()) {
-                        site.apiRestUsernameEncrypted = siteFromDB.apiRestUsernameEncrypted
-                        site.apiRestPasswordEncrypted = siteFromDB.apiRestPasswordEncrypted
-                        site.apiRestUsernameIV = siteFromDB.apiRestUsernameIV
-                        site.apiRestPasswordIV = siteFromDB.apiRestPasswordIV
-                        site.wpApiRestUrl = siteFromDB.wpApiRestUrl
-                    }
                 }
-                val isUpdated = (siteSqlUtils.insertOrUpdateSite(site) == 1)
-                if (isUpdated) {
+                val localId = siteSqlUtils.insertOrUpdateSiteReturningId(site)
+                if (localId != 0) {
                     rowsAffected++
                     updatedSites.add(site)
+                }
+                // Credentials + wpApiRestUrl are excluded from the full-row write, so when this site carries
+                // app-password creds (XML-RPC app-password login), persist them on the row that was just
+                // written (localId) via the targeted writers.
+                if (localId != 0) {
+                    persistAppPasswordColumns(
+                        site,
+                        { username, password ->
+                            siteSqlUtils.updateApplicationPasswordCredentials(localId, username, password)
+                        },
+                        { siteSqlUtils.updateWpApiRestUrl(localId, it) }
+                    )
                 }
             } catch (caughtException: DuplicateSiteException) {
                 duplicateSiteFound = true
@@ -1781,10 +1660,16 @@ open class SiteStore @Inject constructor(
     }
 
     suspend fun fetchPostFormats(site: SiteModel): OnPostFormatsChanged {
-        val payload = if (site.isUsingWpComRestApi) {
-            siteRestClient.fetchPostFormats(site)
-        } else {
-            siteXMLRPCClient.fetchPostFormats(site)
+        val payload = when {
+            site.isUsingWpComRestApi -> siteRestClient.fetchPostFormats(site)
+            site.origin == SiteModel.ORIGIN_WPAPI -> {
+                AppLog.w(
+                    T.API,
+                    "fetchPostFormats: skipping for WPAPI site"
+                )
+                FetchedPostFormatsPayload(site, emptyList())
+            }
+            else -> siteXMLRPCClient.fetchPostFormats(site)
         }
         val event = OnPostFormatsChanged(payload.site)
         if (payload.isError) {
@@ -1977,27 +1862,6 @@ open class SiteStore @Inject constructor(
         emitChange(OnURLChecked(payload.url ?: "", payload.isWPCom, error))
     }
 
-    private fun suggestDomains(payload: SuggestDomainsPayload) {
-        siteRestClient.suggestDomains(
-            payload.query,
-            payload.quantity,
-            payload.vendor,
-            payload.onlyWordpressCom,
-            payload.includeWordpressCom,
-            payload.includeDotBlogSubdomain,
-            payload.segmentId,
-            payload.tlds
-        )
-    }
-
-    private fun handleSuggestedDomains(payload: SuggestDomainsResponsePayload) {
-        val event = OnSuggestedDomains(payload.query, payload.suggestions)
-        if (payload.isError) {
-            event.error = payload.error
-        }
-        emitChange(event)
-    }
-
     private fun fetchPrivateAtomicCookie(payload: FetchPrivateAtomicCookiePayload) {
         val site = getSiteBySiteId(payload.siteId)
         if (site == null) {
@@ -2056,43 +1920,6 @@ open class SiteStore @Inject constructor(
 
     private fun handleFetchedPlans(payload: FetchedPlansPayload) {
         emitChange(OnPlansFetched(payload.site, payload.plans, payload.error))
-    }
-
-    private fun checkDomainAvailability(domainName: String) {
-        if (TextUtils.isEmpty(domainName)) {
-            val error = DomainAvailabilityError(INVALID_DOMAIN_NAME)
-            handleCheckedDomainAvailability(DomainAvailabilityResponsePayload(error))
-        } else {
-            siteRestClient.checkDomainAvailability(domainName)
-        }
-    }
-
-    private fun handleCheckedDomainAvailability(payload: DomainAvailabilityResponsePayload) {
-        emitChange(
-                OnDomainAvailabilityChecked(
-                        payload.status,
-                        payload.mappable,
-                        payload.supportsPrivacy,
-                        payload.error
-                )
-        )
-    }
-
-    private fun fetchSupportedStates(countryCode: String) {
-        if (TextUtils.isEmpty(countryCode)) {
-            val error = DomainSupportedStatesError(INVALID_COUNTRY_CODE)
-            handleFetchedSupportedStates(DomainSupportedStatesResponsePayload(error))
-        } else {
-            siteRestClient.fetchSupportedStates(countryCode)
-        }
-    }
-
-    private fun handleFetchedSupportedStates(payload: DomainSupportedStatesResponsePayload) {
-        emitChange(OnDomainSupportedStatesFetched(payload.supportedStates, payload.error))
-    }
-
-    private fun handleFetchedSupportedCountries(payload: DomainSupportedCountriesResponsePayload) {
-        emitChange(OnDomainSupportedCountriesFetched(payload.supportedCountries, payload.error))
     }
 
     private fun handleFetchedBlockLayouts(payload: FetchedBlockLayoutsResponsePayload) {
@@ -2173,69 +2000,6 @@ open class SiteStore @Inject constructor(
         emitChange(event)
     }
 
-    private fun designatePrimaryDomain(payload: DesignatePrimaryDomainPayload) {
-        siteRestClient.designatePrimaryDomain(payload.site, payload.domain)
-    }
-
-    private fun handleDesignatedPrimaryDomain(payload: DesignatedPrimaryDomainPayload) {
-        val event = OnPrimaryDomainDesignated(payload.site, payload.success)
-        event.error = payload.error
-        emitChange(event)
-    }
-
-    suspend fun fetchAllDomains(
-        noWpCom: Boolean = true,
-        resolveStatus: Boolean = true
-    ): FetchedAllDomainsPayload =
-        coroutineEngine.withDefaultContext(T.API, this, "Fetch all domains") {
-            return@withDefaultContext when (val response =
-                siteRestClient.fetchAllDomains(noWpCom, resolveStatus)) {
-                is Success -> {
-                    val domains = response.data.domains
-                    FetchedAllDomainsPayload(domains)
-                }
-                is Error -> {
-                    val errorType = when (response.error.apiError) {
-                        "authorization_required" -> AllDomainsErrorType.UNAUTHORIZED
-                        else -> AllDomainsErrorType.GENERIC_ERROR
-                    }
-                    val domainsError = AllDomainsError(errorType, response.error.message)
-                    FetchedAllDomainsPayload(domainsError)
-                }
-            }
-        }
-    suspend fun fetchSiteDomains(siteModel: SiteModel): FetchedDomainsPayload =
-            coroutineEngine.withDefaultContext(T.API, this, "Fetch site domains") {
-                return@withDefaultContext when (val response =
-                        siteRestClient.fetchSiteDomains(siteModel)) {
-                            is Success -> {
-                                val domains = response.data.domains
-                                insertDomainModels(siteModel, domains)
-                                FetchedDomainsPayload(siteModel, domains)
-                            }
-                            is Error -> {
-                                val siteErrorType = when (response.error.apiError) {
-                                    "unauthorized" -> UNAUTHORIZED
-                                    "unknown_blog" -> UNKNOWN_SITE
-                                    else -> SiteErrorType.GENERIC_ERROR
-                                }
-                                val domainsError = SiteError(siteErrorType, response.error.message)
-                                FetchedDomainsPayload(siteModel, domainsError)
-                            }
-                }
-            }
-
-    private suspend fun insertDomainModels(siteModel: SiteModel, domains: List<Domain>) {
-        val domainModels = domains.map { it.asDomainModel() }
-        domainDao.insert(siteModel.id, domainModels)
-    }
-
-    fun getSiteDomains(siteLocalId: Int): Flow<List<DomainModel>> {
-        return domainDao.getDomains(siteLocalId).map { result ->
-            result.map { it.toDomainModel() }
-        }
-    }
-
     suspend fun fetchJetpackSocial(siteModel: SiteModel): FetchedJetpackSocialResult =
         coroutineEngine.withDefaultContext(T.API, this, "Fetch Jetpack Social") {
             when (val response = siteRestClient.fetchJetpackSocial(siteModel.siteId)) {
@@ -2260,42 +2024,90 @@ open class SiteStore @Inject constructor(
             }
         }
 
-    suspend fun fetchSitePlans(siteModel: SiteModel): FetchedPlansPayload {
-        return if (siteModel.isUsingWpComRestApi) {
-            coroutineEngine.withDefaultContext(T.API, this, "Fetch site plans") {
-                return@withDefaultContext when (val response =
-                    siteRestClient.fetchSitePlans(siteModel)) {
-                    is Success -> {
-                        FetchedPlansPayload(siteModel, response.data.plansList)
-                    }
-                    is Error -> {
-                        val siteErrorType = when (response.error.apiError) {
-                            "unauthorized" -> PlansErrorType.UNAUTHORIZED
-                            "unknown_blog" -> PlansErrorType.UNKNOWN_BLOG
-                            else -> PlansErrorType.GENERIC_ERROR
-                        }
-                        val plansError = PlansError(siteErrorType, response.error.message)
-                        FetchedPlansPayload(siteModel, plansError)
-                    }
-                }
+    suspend fun createApplicationPassword(site: SiteModel): OnApplicationPasswordCreated =
+        coroutineEngine.withDefaultContext(T.API, this, "Create Application Password") {
+            if (!applicationPasswordsConfigurationProvider.get().isEnabled) {
+                return@withDefaultContext OnApplicationPasswordCreated(
+                    site,
+                    BaseNetworkError(
+                        GenericErrorType.UNKNOWN,
+                        "Application Passwords feature is not configured for this app"
+                    ),
+                    notSupported = true,
+                )
             }
-        } else {
-            FetchedPlansPayload(siteModel, PlansError(NOT_AVAILABLE))
+            when (val result = applicationPasswordsManagerProvider.get().getApplicationCredentials(site)) {
+                is ApplicationPasswordCreationResult.Created -> {
+                    persistApplicationPasswordCredentials(site, result.credentials)
+                    OnApplicationPasswordCreated(site, result.credentials)
+                }
+                is ApplicationPasswordCreationResult.Existing -> {
+                    if (site.apiRestUsernamePlain.isNullOrEmpty() || site.apiRestPasswordPlain.isNullOrEmpty()) {
+                        persistApplicationPasswordCredentials(site, result.credentials)
+                    }
+                    OnApplicationPasswordCreated(site, result.credentials)
+                }
+                is ApplicationPasswordCreationResult.NotSupported ->
+                    OnApplicationPasswordCreated(site, result.originalError, notSupported = true)
+                is ApplicationPasswordCreationResult.Failure ->
+                    OnApplicationPasswordCreated(site, result.error, notSupported = false)
+            }
+        }
+
+    /**
+     * Clears stored application-password credentials so the next call to
+     * [createApplicationPassword] mints a fresh one. Use this when a validation call against the
+     * stored credentials has failed (e.g. 401, password revoked server-side).
+     *
+     * Both storage locations are cleared:
+     * - The encrypted SharedPreferences cache (`ApplicationPasswordsStore`), so
+     *   [ApplicationPasswordsManager] doesn't short-circuit the next mint by returning
+     *   `Existing` with the revoked password.
+     * - The SiteModel's credential columns (`apiRest*`), so subsequent reads — validation
+     *   loops, XML-RPC rediscovery, etc. — don't see the stale credentials.
+     *
+     * `wpApiRestUrl` is intentionally preserved. Unlike [removeApplicationPassword] (full sign-out),
+     * the discovered REST URL is reusable across credential rotations; clearing it would force a
+     * re-discovery on every refresh after a revoke.
+     */
+    fun deleteStoredApplicationPasswordCredentials(site: SiteModel) {
+        applicationPasswordsManagerProvider.get().deleteLocalApplicationPassword(site)
+        emitChange(clearApplicationPasswordColumns(site))
+    }
+
+    @Suppress("SwallowedException")
+    private fun clearApplicationPasswordColumns(siteModel: SiteModel): OnSiteChanged {
+        return try {
+            val siteFromDB = getSiteByLocalId(siteModel.id)
+                ?: return OnSiteChanged(SiteError(SiteErrorType.INVALID_SITE))
+            // Credentials are excluded from the full-row write, so clear them on the existing row via the
+            // targeted writer. wpApiRestUrl is intentionally preserved here — credential rotation reuses it.
+            OnSiteChanged(siteSqlUtils.clearApplicationPasswordCredentials(siteFromDB.id))
+        } catch (e: DuplicateSiteException) {
+            OnSiteChanged(SiteError(DUPLICATE_SITE))
         }
     }
 
-    suspend fun fetchDomainPrice(domainName: String): WPAPIResponse<DomainPriceResponse> {
-        return coroutineEngine.withDefaultContext(T.API, this, "Fetch domain price") {
-            when (val response =
-                siteRestClient.fetchDomainPrice(domainName)) {
-                is Success -> {
-                    WPAPIResponse.Success(response.data)
-                }
-                is Error -> {
-                    WPAPIResponse.Error(WPAPINetworkError(response.error))
-                }
-            }
+    private fun persistApplicationPasswordCredentials(
+        site: SiteModel,
+        credentials: ApplicationPasswordCredentials,
+    ) {
+        // Despite the "Plain" suffix, these fields are transient in-memory only — they have no
+        // `@Column` annotation. `SiteSqlUtils.insertOrUpdateSite` runs them through
+        // `encryptAPIRestCredentials` (AES/GCM/NoPadding, key in AndroidKeyStore) and persists
+        // ciphertext + IV into the *Encrypted columns. We clear the encrypted columns here so
+        // re-mints re-encrypt from the fresh plain values — `encryptAPIRestCredentials`
+        // short-circuits if the encrypted columns are already populated and would otherwise leave
+        // the stale ciphertext in place.
+        site.apply {
+            apiRestUsernamePlain = credentials.userName
+            apiRestPasswordPlain = credentials.password
+            apiRestUsernameEncrypted = ""
+            apiRestPasswordEncrypted = ""
+            apiRestUsernameIV = ""
+            apiRestPasswordIV = ""
         }
+        emitChange(updateApplicationPassword(site))
     }
 
     suspend fun launchSite(site: SiteModel): OnSiteLaunched {

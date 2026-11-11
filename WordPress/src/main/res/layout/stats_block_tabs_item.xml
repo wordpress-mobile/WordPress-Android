@@ -11,12 +11,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top"
         android:background="?attr/colorSurface"
-        app:tabGravity="fill"
-        app:tabIndicatorColor="?attr/colorPrimary"
         app:tabMode="scrollable"
         app:tabPaddingEnd="@dimen/margin_extra_large"
-        app:tabPaddingStart="@dimen/margin_extra_large"
-        app:tabTextColor="?attr/colorPrimary" />
+        app:tabPaddingStart="@dimen/margin_extra_large" />
 
     <View
         android:layout_width="match_parent"

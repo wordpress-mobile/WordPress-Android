@@ -24,7 +24,8 @@ sealed class LocationsCardUiState {
 
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isPlanGated: Boolean = false
     ) : LocationsCardUiState()
 }
 

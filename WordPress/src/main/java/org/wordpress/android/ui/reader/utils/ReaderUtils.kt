@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.reader.utils
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
+import okhttp3.HttpUrl
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderCommentTable
@@ -9,17 +11,17 @@ import org.wordpress.android.datasets.ReaderTagTable
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
-import org.wordpress.android.ui.FilteredRecyclerView
 import org.wordpress.android.ui.reader.ReaderConstants
-import org.wordpress.android.ui.reader.services.update.TagUpdateClientUtilsProvider
+import org.wordpress.android.ui.reader.repository.TagUpdateClientUtilsProvider
 import org.wordpress.android.util.FormatUtils
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.UrlUtils
-import java.net.URI
 import androidx.core.net.toUri
 
 object ReaderUtils {
+    private val VALID_TAG_SLUG_REGEX = "(?:[A-Za-z0-9_-]|[^\\x00-\\x7F\\p{Z}\\p{Cc}]|%[89a-fA-F][0-9a-fA-F])+".toRegex()
+
     @JvmStatic
     fun getResizedImageUrl(
         imageUrl: String,
@@ -150,8 +152,7 @@ object ReaderUtils {
     @JvmStatic
     fun sanitizeWithDashes(title: String): String {
         val trimmedTitle = title.trim()
-        return if (isValidUrlEncodedString(trimmedTitle)
-        ) {
+        return if (isValidTagSlug(trimmedTitle)) {
             trimmedTitle
         } else {
             trimmedTitle
@@ -165,14 +166,35 @@ object ReaderUtils {
         }
     }
 
-    @Suppress("SwallowedException")
-    private fun isValidUrlEncodedString(title: String): Boolean {
-        try {
-            URI.create(title)
-            return true
-        } catch (e: IllegalArgumentException) {
-            return false
-        }
+    /*
+     * returns true if the passed slug only contains ASCII letters, digits, dashes and underscores, non-ASCII
+     * characters other than spaces and control characters, and percent-encoded non-ASCII bytes, so slugs
+     * that are already URL encoded are kept as-is
+     */
+    @JvmStatic
+    fun isValidTagSlug(slug: String): Boolean = VALID_TAG_SLUG_REGEX.matches(slug)
+
+    /*
+     * returns the API path for the passed tag followed by the passed path segments, ex: read/tags/dogs/posts,
+     * or null if the tag slug can't be used as a single path segment
+     */
+    @JvmStatic
+    fun getTagApiPath(tagSlug: String, vararg segments: String): String? =
+        buildApiPath(listOf("read", "tags", sanitizeWithDashes(tagSlug)) + segments)
+
+    /*
+     * HttpUrl.Builder encodes "/", "?" and "#" in each segment, but it resolves "." and ".." segments (even
+     * percent-encoded ones) instead of encoding them, so those are detected by the path ending up with fewer
+     * segments than were added. Only the path of the built URL is used, so the host is a placeholder
+     */
+    @VisibleForTesting
+    internal fun buildApiPath(segments: List<String>): String? {
+        val url = HttpUrl.Builder()
+            .scheme("https")
+            .host("localhost")
+            .apply { segments.forEach { addEncodedPathSegment(it) } }
+            .build()
+        return url.encodedPath.removePrefix("/").takeIf { url.pathSize == segments.size }
     }
 
     /*
@@ -480,66 +502,6 @@ object ReaderUtils {
         prependDefaults(defaultTags, orderedTagList, defaultTagInfos)
 
         return orderedTagList
-    }
-
-    @Suppress("ReturnCount")
-    fun isTagManagedInFollowingTab(
-        tag: ReaderTag,
-        isTopLevelReader: Boolean,
-        recyclerView: FilteredRecyclerView
-    ): Boolean {
-        if (isTopLevelReader) {
-            if (tag.isDefaultInMemoryTag) {
-                return true
-            }
-
-            val isSpecialTag = tag.isDiscover || tag.isPostsILike || tag.isBookmarked
-            val tabsInitializingNow = recyclerView.currentFilter == null
-            val tagIsFollowedSitesOrAFollowedTag =
-                tag.isFollowedSites || tag.tagType == ReaderTagType.FOLLOWED
-
-            return if (isSpecialTag) {
-                false
-            } else if (tabsInitializingNow) {
-                tagIsFollowedSitesOrAFollowedTag
-            } else if (recyclerView.currentFilter is ReaderTag) {
-                if (recyclerView.isValidFilter(tag)) {
-                    tag.isFollowedSites
-                } else {
-                    // If we reach here it means we are setting a followed tag or site in the Following tab
-                    true
-                }
-            } else {
-                false
-            }
-        } else {
-            return tag.isFollowedSites
-        }
-    }
-
-    @Suppress("ReturnCount")
-    fun getValidTagForSharedPrefs(
-        tag: ReaderTag,
-        isTopLevelReader: Boolean,
-        recyclerView: FilteredRecyclerView,
-        defaultTag: ReaderTag
-    ): ReaderTag {
-        if (!isTopLevelReader) {
-            return tag
-        }
-
-        val isValidFilter = recyclerView.isValidFilter(tag)
-        val isSpecialTag = tag.isDiscover || tag.isPostsILike || tag.isBookmarked
-        if (!isSpecialTag && !isValidFilter && isTagManagedInFollowingTab(
-                tag = tag,
-                isTopLevelReader = isTopLevelReader,
-                recyclerView = recyclerView
-            )
-        ) {
-            return defaultTag
-        }
-
-        return tag
     }
 
     @JvmStatic

@@ -2,7 +2,8 @@ package org.wordpress.android.ui.mysite.cards.applicationpassword
 
 import junit.framework.TestCase.assertNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.flow.MutableStateFlow
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -11,112 +12,179 @@ import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
-import org.mockito.kotlin.times
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.repositories.SiteAuthState
+import org.wordpress.android.repositories.SiteProvisioningSource
+import org.wordpress.android.repositories.SiteReadiness
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.accounts.login.DiscoverySource
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
-import kotlin.test.assertNotNull
 
 private const val TEST_URL = "https://www.test.com"
-private const val TEST_SITE_NAME = "My Site"
 private const val TEST_SITE_ID = 1
-private const val TEST_SITE_ICON = "http://site.com/icon.jpg"
-private const val TEST_URL_AUTH = "https://www.test.com/auth"
-private const val TEST_URL_AUTH_SUFFIX = "?app_name=android-jetpack-client&success_url=callback://callback"
+private const val TEST_AUTH_URL = "https://www.test.com/auth"
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
-    @Mock
-    lateinit var applicationPasswordLoginHelper: ApplicationPasswordLoginHelper
-
-    @Mock
-    lateinit var siteStore: SiteStore
-
-    @Mock
-    lateinit var experimentalFeatures: ExperimentalFeatures
-
-    @Mock
-    lateinit var appLogWrapper: AppLogWrapper
+    @Mock lateinit var applicationPasswordLoginHelper: ApplicationPasswordLoginHelper
+    @Mock lateinit var siteStore: SiteStore
+    @Mock lateinit var appLogWrapper: AppLogWrapper
+    @Mock lateinit var siteProvisioningSource: SiteProvisioningSource
 
     private lateinit var siteTest: SiteModel
-
-    private var applicationPasswordCard: MySiteCardAndItem.Card? = null
-
-    private lateinit var applicationPasswordViewModelSlice: ApplicationPasswordViewModelSlice
+    private var card: MySiteCardAndItem? = null
+    private lateinit var slice: ApplicationPasswordViewModelSlice
 
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-
-        applicationPasswordViewModelSlice = ApplicationPasswordViewModelSlice(
+        slice = ApplicationPasswordViewModelSlice(
             applicationPasswordLoginHelper,
             siteStore,
-            experimentalFeatures,
-            appLogWrapper
-        ).apply {
-            initialize(testScope())
-            whenever(experimentalFeatures.isEnabled(any())).thenReturn(true)
-        }
+            appLogWrapper,
+            siteProvisioningSource,
+        ).apply { initialize(testScope()) }
         siteTest = SiteModel().apply {
             id = TEST_SITE_ID
             url = TEST_URL
-            name = TEST_SITE_NAME
-            iconUrl = TEST_SITE_ICON
-            siteId = TEST_SITE_ID.toLong()
         }
+        card = null
+        slice.uiModel.observeForever { card = it }
+    }
 
-        applicationPasswordCard = null
-        applicationPasswordViewModelSlice.uiModel.observeForever { card ->
-            applicationPasswordCard = card
-        }
+    private fun stubReadiness(readiness: SiteReadiness): MutableStateFlow<SiteReadiness> {
+        val flow = MutableStateFlow(readiness)
+        whenever(siteProvisioningSource.stateFor(siteTest)).thenReturn(flow)
+        return flow
+    }
+
+    private suspend fun stubDiscovery(result: ApplicationPasswordLoginHelper.DiscoveryResult) {
+        whenever(
+            applicationPasswordLoginHelper.getAuthorizationUrlComplete(eq(TEST_URL), eq(DiscoverySource.MY_SITE_CARD))
+        ).thenReturn(result)
+    }
+
+    private suspend fun stubAuthorized() {
+        stubDiscovery(ApplicationPasswordLoginHelper.DiscoveryResult.Authorized(TEST_AUTH_URL))
     }
 
     @Test
-    fun `given proper site, when api discovery is success, then add the application password card`() = runTest {
-        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(eq(TEST_URL)))
-            .thenReturn("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX")
+    fun `given unprovisionable without prior creds, then show the create card`() = test {
+        stubReadiness(SiteReadiness.NeedsAuth(SiteAuthState.Unprovisionable(hadCredentials = false)))
+        stubAuthorized()
 
-        applicationPasswordViewModelSlice.buildCard(siteTest)
+        slice.buildCard(siteTest)
 
-        assertNotNull(applicationPasswordCard)
-        verify(applicationPasswordLoginHelper).getAuthorizationUrlComplete(eq(TEST_URL))
+        assertThat(card).isInstanceOf(MySiteCardAndItem.Card.QuickLinksItem::class.java)
     }
 
     @Test
-    fun `given login scenario, when api discovery is empty, then show no card`() = runTest {
-        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(eq(TEST_URL)))
-            .thenReturn("")
+    fun `given unprovisionable with prior creds, then show the reauthentication card`() = test {
+        stubReadiness(SiteReadiness.NeedsAuth(SiteAuthState.Unprovisionable(hadCredentials = true)))
+        stubAuthorized()
 
-        applicationPasswordViewModelSlice.buildCard(siteTest)
+        slice.buildCard(siteTest)
 
-        assertNull(applicationPasswordCard)
-        verify(applicationPasswordLoginHelper).getAuthorizationUrlComplete(eq(TEST_URL))
+        val banner = card as MySiteCardAndItem.Item.SingleActionCard
+        assertThat(banner.textResource).isEqualTo(R.string.application_password_reauthentication_banner)
     }
 
     @Test
-    fun `given site already authenticated, when calling api discovery, then show no card`() = runTest {
-        whenever(siteStore.sites)
-        .thenReturn(
-            listOf(
-                SiteModel().apply {
-                    id = siteTest.id
-                    apiRestUsernamePlain = "user"
-                    apiRestPasswordPlain = "password"
-                }
+    fun `given unprovisionable but discovery fails, then no card`() = test {
+        stubReadiness(SiteReadiness.NeedsAuth(SiteAuthState.Unprovisionable(hadCredentials = false)))
+        stubDiscovery(ApplicationPasswordLoginHelper.DiscoveryResult.Failed("bad discovery"))
+
+        slice.buildCard(siteTest)
+
+        assertNull(card)
+    }
+
+    @Test
+    fun `given provisioning, then no card`() = test {
+        stubReadiness(SiteReadiness.NeedsAuth(SiteAuthState.Provisioning))
+
+        slice.buildCard(siteTest)
+
+        assertNull(card)
+    }
+
+    @Test
+    fun `given ready on a WPCom-REST site, then no card`() = test {
+        stubReadiness(SiteReadiness.Ready)
+        whenever(siteStore.getSiteByLocalId(TEST_SITE_ID)).thenReturn(
+            SiteModel().apply { id = TEST_SITE_ID; url = TEST_URL; setIsWPCom(true) }
+        )
+
+        slice.buildCard(siteTest)
+
+        assertNull(card)
+        verify(applicationPasswordLoginHelper, never()).getAuthorizationUrlComplete(any(), any())
+    }
+
+    @Test
+    fun `given ready on a self-hosted site with XML-RPC definitively off, then show the disabled card`() = test {
+        stubReadiness(SiteReadiness.Ready)
+        // Not WP.com-REST and still no XML-RPC endpoint after the pipeline's recovery attempt.
+        whenever(siteStore.getSiteByLocalId(TEST_SITE_ID)).thenReturn(
+            SiteModel().apply { id = TEST_SITE_ID; url = TEST_URL }
+        )
+        whenever(siteProvisioningSource.isXmlRpcUnavailable(TEST_SITE_ID)).thenReturn(true)
+
+        slice.buildCard(siteTest)
+
+        val xmlRpcCard = card as MySiteCardAndItem.Item.SingleActionCard
+        assertThat(xmlRpcCard.textResource).isEqualTo(R.string.xmlrpc_disabled_card_text)
+    }
+
+    @Test
+    fun `given XML-RPC recovery was inconclusive, then keep the card hidden`() = test {
+        // A missing xmlRpcUrl is not evidence XML-RPC is off — recovery also fails transiently (e.g. a
+        // 429), and warning then would be a false positive on a throttled site.
+        stubReadiness(SiteReadiness.Ready)
+        whenever(siteStore.getSiteByLocalId(TEST_SITE_ID)).thenReturn(
+            SiteModel().apply { id = TEST_SITE_ID; url = TEST_URL }
+        )
+        whenever(siteProvisioningSource.isXmlRpcUnavailable(TEST_SITE_ID)).thenReturn(false)
+
+        slice.buildCard(siteTest)
+
+        assertNull(card)
+    }
+
+    @Test
+    fun `given a private site with revoked credentials, then the private-site card explains it`() = test {
+        // Discovery can't produce an authorization URL through the Privacy gate, so the re-auth card
+        // can't be built. Hiding it leaves the user with broken credentials and no explanation at all.
+        stubReadiness(SiteReadiness.NeedsAuth(SiteAuthState.Unprovisionable(hadCredentials = true)))
+        stubDiscovery(
+            ApplicationPasswordLoginHelper.DiscoveryResult.Failed(
+                userFacingMessage = "Found a site but failed to read its API configuration.",
+                reason = ApplicationPasswordLoginHelper.DiscoveryResult.FailureReason.PrivateSite,
             )
         )
 
-        applicationPasswordViewModelSlice.buildCard(siteTest)
+        slice.buildCard(siteTest)
 
-        assertNull(applicationPasswordCard)
-        verify(siteStore).sites
-        verify(applicationPasswordLoginHelper, times(0)).getAuthorizationUrlComplete(any())
+        val privateCard = card as MySiteCardAndItem.Item.SingleActionCard
+        assertThat(privateCard.textResource).isEqualTo(R.string.application_password_private_site_card)
+    }
+
+    @Test
+    fun `given discovery fails for any other reason, then the card stays hidden`() = test {
+        // Only a private site is named; everything else still hides pending #22884.
+        stubReadiness(SiteReadiness.NeedsAuth(SiteAuthState.Unprovisionable(hadCredentials = true)))
+        stubDiscovery(ApplicationPasswordLoginHelper.DiscoveryResult.Failed("connection reset"))
+
+        slice.buildCard(siteTest)
+
+        assertNull(card)
     }
 }

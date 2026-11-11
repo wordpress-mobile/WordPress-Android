@@ -1,0 +1,115 @@
+package org.wordpress.android.ui.rs
+
+import org.wordpress.android.R
+import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.ResourceProvider
+import uniffi.wp_api.RequestExecutionErrorReason
+import uniffi.wp_api.WpApiException
+import uniffi.wp_api.WpErrorCode
+import uniffi.wp_mobile.FetchException
+
+/**
+ * Shared error-handling helpers for the rs screens.
+ */
+internal object RsErrorUtils {
+    /**
+     * Extracts the underlying [WpApiException] from a
+     * [FetchException.Api] wrapper so callers can inspect
+     * API-level error details without knowing the wrapper.
+     */
+    fun unwrapException(e: Exception?): Exception? =
+        (e as? FetchException.Api)?.v1 ?: e
+
+    /**
+     * Returns true when the exception represents an
+     * authentication failure (rejected credentials,
+     * missing app-password, etc.).
+     */
+    fun isAuthError(e: Exception?): Boolean =
+        isAuthError(failureReason(e), errorCode(e))
+
+    /**
+     * The same check for callers holding a
+     * [uniffi.wp_api.WpRequestResult] rather than a thrown
+     * exception: the rs client reports these failures as
+     * result variants, so there is nothing to unwrap. A
+     * rejected credential arrives as a [reason] when the
+     * request never completed and as an [errorCode] when the
+     * server answered with a WP error envelope, so both have
+     * to be checked.
+     */
+    fun isAuthError(
+        reason: RequestExecutionErrorReason?,
+        errorCode: WpErrorCode?
+    ): Boolean =
+        reason is RequestExecutionErrorReason
+            .HttpAuthenticationRejectedError ||
+            reason is RequestExecutionErrorReason
+                .HttpAuthenticationRequiredError ||
+            errorCode is WpErrorCode.Unauthorized ||
+            errorCode is WpErrorCode
+                .ApplicationPasswordNotFound ||
+            errorCode is WpErrorCode
+                .NoAuthenticatedAppPassword
+
+    /**
+     * Returns true when the server refused a page number past
+     * the end of a list. A caller paging without a known total
+     * reads this as "no more pages", not as a failure.
+     */
+    fun isPastLastPage(e: Exception?): Boolean =
+        errorCode(e) is WpErrorCode.PostInvalidPageNumber
+
+    private fun failureReason(e: Exception?): RequestExecutionErrorReason? =
+        (e as? RsBridgeException)?.reason
+            ?: (unwrapException(e) as? WpApiException.RequestExecutionFailed)?.reason
+
+    private fun errorCode(e: Exception?): WpErrorCode? =
+        (e as? RsBridgeException)?.errorCode
+            ?: (unwrapException(e) as? WpApiException.WpException)?.errorCode
+
+    /**
+     * Whether the request never reached the server - rs's `isDeviceOffline || isSiteUnreachable`,
+     * matched here because those call into the native library, which unit tests can't load.
+     *
+     * rs reports a failed DNS lookup on a device that says it is online as
+     * [RequestExecutionErrorReason.NonExistentSiteError], but these screens only talk to a site the
+     * app has already reached, so that is the network too. A timeout is left out, as rs leaves it
+     * out: the request got through and the site was too slow to answer, which the user's
+     * connection has nothing to do with.
+     */
+    private fun isConnectionFailure(reason: RequestExecutionErrorReason?): Boolean =
+        reason is RequestExecutionErrorReason.DeviceIsOfflineError ||
+            reason is RequestExecutionErrorReason.NonExistentSiteError ||
+            reason is RequestExecutionErrorReason.ConnectionError
+
+    /**
+     * Returns a user-friendly error string based on the
+     * exception type. Detects offline, auth, and generic
+     * errors.
+     */
+    fun friendlyErrorMessage(
+        e: Exception? = null,
+        defaultResId: Int? = null,
+        resourceProvider: ResourceProvider,
+        networkUtilsWrapper: NetworkUtilsWrapper,
+        reason: RequestExecutionErrorReason? = null,
+        errorCode: WpErrorCode? = null,
+    ): String {
+        val failureReason = reason ?: failureReason(e)
+
+        val resId = when {
+            isConnectionFailure(failureReason) ||
+                !networkUtilsWrapper.isNetworkAvailable() ->
+                R.string.error_generic_network
+
+            isAuthError(failureReason, errorCode ?: errorCode(e)) ->
+                R.string.post_rs_error_auth
+
+            defaultResId != null -> defaultResId
+
+            else -> R.string.request_failed_message
+        }
+        return resourceProvider.getString(resId)
+    }
+}

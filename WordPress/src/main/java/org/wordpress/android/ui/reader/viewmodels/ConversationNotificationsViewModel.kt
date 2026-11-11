@@ -231,7 +231,6 @@ class ConversationNotificationsViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         followStatusGetJob?.cancel()
         followStatusSetJob?.cancel()
     }

@@ -14,20 +14,15 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import rs.wordpress.api.kotlin.WpComApiClient
 import uniffi.wp_api.WpApiParamOrder
-import uniffi.wp_api.WpAuthentication
-import uniffi.wp_api.WpAuthenticationProvider
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -43,10 +38,8 @@ open class DataViewViewModel @Inject constructor(
     private val sharedPrefs: SharedPreferences,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val accountStore: AccountStore,
     @Named(IO_THREAD) protected val ioDispatcher: CoroutineDispatcher,
-    private val trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor,
-    private val networkAvailabilityProvider: WpNetworkAvailabilityProvider,
+    protected val wpComApiClient: WpComApiClient,
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableStateFlow(DataViewUiState())
     val uiState: StateFlow<DataViewUiState> = _uiState.asStateFlow()
@@ -54,6 +47,13 @@ open class DataViewViewModel @Inject constructor(
     private val debouncedQuery = MutableStateFlow("")
 
     open val emptyView = DataViewEmptyView()
+
+    /**
+     * When false, the list is fetched in full by a single [performNetworkRequest] call and
+     * incremental (scroll) pagination is disabled. Subclasses that need the complete data set
+     * up front - e.g. to build a hierarchy - override this.
+     */
+    protected open val supportsLoadMore: Boolean = true
 
     private fun updateState(update: (DataViewUiState) -> DataViewUiState) {
         _uiState.update { update(it) }
@@ -67,7 +67,7 @@ open class DataViewViewModel @Inject constructor(
                     if (currentState.searchQuery.isNotEmpty()) LoadingState.EMPTY_SEARCH
                     else LoadingState.EMPTY
                 } else LoadingState.LOADED,
-                canLoadMore = items.size == PAGE_SIZE
+                canLoadMore = supportsLoadMore && items.size == PAGE_SIZE
             )
         }
     }
@@ -80,19 +80,6 @@ open class DataViewViewModel @Inject constructor(
                 errorMessage = null
             )
         }
-    }
-
-    // TODO this is strictly for wp.com sites, we'll need different auth for self-hosted
-    protected val wpComApiClient: WpComApiClient by lazy {
-        WpComApiClient(
-            authProvider = WpAuthenticationProvider.staticWithAuth(
-                requireNotNull(accountStore.accessToken) { "Access token is required but was null" }.let { token ->
-                    WpAuthentication.Bearer(token = token)
-                }
-            ),
-            interceptors = listOf(trackNetworkRequestsInterceptor),
-            networkAvailabilityProvider = networkAvailabilityProvider
-        )
     }
 
     init {

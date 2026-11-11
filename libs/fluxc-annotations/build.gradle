@@ -1,11 +1,9 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     id "java"
     alias(libs.plugins.dependency.analysis)
 }
 
 java {
-    sourceCompatibility = JvmTarget.fromTarget(libs.versions.java.get()).target
-    targetCompatibility = JvmTarget.fromTarget(libs.versions.java.get()).target
+    sourceCompatibility = JavaVersion.toVersion(libs.versions.java.get())
+    targetCompatibility = JavaVersion.toVersion(libs.versions.java.get())
 }

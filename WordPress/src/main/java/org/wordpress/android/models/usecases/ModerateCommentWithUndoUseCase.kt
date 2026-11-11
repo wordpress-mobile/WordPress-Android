@@ -56,7 +56,6 @@ class ModerateCommentWithUndoUseCase @Inject constructor(
                                     DoNotCare
                                 )
                             )
-                            Idle
                         }
 
                         val localModerationResult = commentsStore.moderateCommentLocally(

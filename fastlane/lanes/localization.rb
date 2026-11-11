@@ -86,23 +86,6 @@ platform :android do
   # PlayStore Metadata
   ########################################################################
 
-  # Updates the `PlayStoreStrings.po` files for both apps, commits, pushes, and creates a backmerge PR.
-  #
-  # @param [String] app The app to update. If nil, updates both WordPress and Jetpack.
-  # @param [String] version The current `x.y` version of the app. Defaults to current release version.
-  #
-  lane :update_appstore_strings do |app: nil, version: current_release_version|
-    apps = app.nil? ? %i[wordpress jetpack] : Array(app.to_s.downcase.to_sym)
-
-    apps.each do |current_app|
-      generate_playstore_strings(app: current_app, version: version)
-    end
-
-    push_to_git_remote(tags: false)
-
-    create_backmerge_pr(source_branch: git_branch, target_branch: "release/#{version}")
-  end
-
   # Generates the `PlayStoreStrings.po` file for a given app from the metadata text sources.
   # The updated `.po` file is then picked up by GlotPress for translations.
   #
@@ -124,8 +107,6 @@ platform :android do
 
     # <key in po file> => <path to txt file> or <{ path:, comment: } hash>
     files = {
-      release_note: File.join(metadata_folder, 'release_notes.txt'),
-      release_note_short: File.join(metadata_folder, 'release_notes_short.txt'),
       play_store_app_title: {
         path: File.join(metadata_folder, 'title.txt'),
         comment: 'translators: Title to be displayed in the Play Store. Limit to 30 characters including spaces and commas!'
@@ -145,6 +126,15 @@ platform :android do
       files[key] = {
         path: File.join(metadata_folder, screenshot_file),
         comment: screenshot_comment
+      }
+    end
+
+    # The beta-promotion picker's "what's new" options. Stable keys (no version suffix) so each is
+    # translated once.
+    STATIC_RELEASE_NOTE_OPTIONS.each do |option|
+      files[:"release_note_static_#{option[:key]}"] = {
+        path: File.join(metadata_folder, 'release_notes_static', "#{option[:key]}.txt"),
+        comment: 'translators: Generic "what\'s new" text shown in the Play Store. Limit to 500 characters including spaces.'
       }
     end
 
@@ -182,20 +172,15 @@ platform :android do
     )
   end
 
-  # Downloads the translated metadata (release notes, app store strings, title, etc.)
+  # Downloads the translated metadata (app store strings, title, etc.)
   # from GlotPress, and updates the local `.txt` files with them.
   #
   # @param [Symbol|String] app The app to download metadata for. If nil, downloads for both WordPress and Jetpack
-  # @param [String] version The `versionName` of the app, used to extract release notes from GlotPress.
-  #                         Defaults to current `versionName`. Only required if skip_release_notes is false
-  # @param [Boolean] skip_release_notes Whether to skip downloading release notes. Default false
   # @param [Boolean] skip_commit If true, will skip the `git add`, `git commit` and `git push` operations. Default to false.
   #
   # @return [void]
   #
-  lane :download_metadata_strings do |app: nil, version: current_release_version, skip_release_notes: false, skip_commit: false|
-    version = nil if skip_release_notes
-
+  lane :download_metadata_strings do |app: nil, skip_commit: false|
     # If no `app:` is specified, call this for both WordPress and Jetpack
     apps = if app.nil?
              %i[wordpress jetpack]
@@ -215,28 +200,6 @@ platform :android do
         play_store_desc: { desc: 'full_description.txt', max_size: 4000 }
       }
 
-      unless skip_release_notes
-        version_suffix = version.split('.').join
-
-        source_notes_file = File.join(metadata_source_dir, 'release_notes.txt')
-        if !File.exist?(source_notes_file) || File.read(source_notes_file).strip.empty?
-          # Clear release notes if the source file is empty
-          all_app_locales = locales + [%w[en en-US]]
-          all_app_locales.each_value do |google_play_locale|
-            changelog_dir = File.join(metadata_download_path, google_play_locale, 'changelogs')
-            FileUtils.mkdir_p(changelog_dir)
-            File.write(File.join(changelog_dir, 'default.txt'), '')
-          end
-        else
-          # Make sure to also download the release notes translations as the source file (release_notes.txt) is not empty
-          files["release_note_#{version_suffix}"] = {
-            desc: 'changelogs/default.txt',
-            max_size: 500,
-            alternate_key: "release_note_short_#{version_suffix}"
-          }
-        end
-      end
-
       # Add key mappings for `screenshots_*` files too
       Dir.glob('screenshot_*.txt', base: metadata_source_dir).each do |f|
         key = "play_store_#{File.basename(f, '.txt')}"
@@ -253,17 +216,61 @@ platform :android do
 
       # Copy the source `.txt` files (used as source of truth when we generated the `.po`) to the `fastlane/*metadata/android/en-US` dir,
       # as `en-US` is the source language, and isn't exported from GlotPress during `gp_downloadmetadata`
-      files.each do |key, h|
-        source_file = key.to_s.start_with?('release_note_') ? 'release_notes.txt' : h[:desc]
-        FileUtils.cp(File.join(metadata_source_dir, source_file), File.join(metadata_download_path, 'en-US', h[:desc]))
+      files.each_value do |h|
+        FileUtils.cp(File.join(metadata_source_dir, h[:desc]), File.join(metadata_download_path, 'en-US', h[:desc]))
       end
 
       next if skip_commit
 
       git_add(path: metadata_download_path)
       message = "Update #{app_values[:display_name]} metadata translations"
-      message += " for #{version}" unless version.nil?
       git_commit(path: metadata_download_path, message: message, allow_nothing_to_commit: true)
+    end
+  end
+
+  # Downloads the translated "what's new" options from GlotPress into the per-locale
+  # `release_notes_static/<option>.txt` files. Not part of the release path; run it whenever an
+  # option's copy changes.
+  #
+  # @param [Symbol|String] app The app to download for. If nil, does both WordPress and Jetpack.
+  # @param [Boolean] skip_commit If true, skips the `git add`/`git commit`. Default false.
+  #
+  lane :download_static_release_notes do |app: nil, skip_commit: false|
+    apps = app.nil? ? %i[wordpress jetpack] : Array(app.to_s.downcase.to_sym)
+
+    apps.each do |current_app|
+      app_values = APP_SPECIFIC_VALUES[current_app]
+      source_dir = File.join(PROJECT_ROOT_FOLDER, 'WordPress', app_values[:metadata_dir], 'release_notes_static')
+      download_path = File.join(FASTLANE_FOLDER, app_values[:metadata_dir], 'android')
+      locales = { wordpress: WP_RELEASE_NOTES_LOCALES, jetpack: JP_RELEASE_NOTES_LOCALES }[current_app]
+
+      target_files = STATIC_RELEASE_NOTE_OPTIONS.to_h do |option|
+        [
+          "release_note_static_#{option[:key]}",
+          { desc: File.join('release_notes_static', "#{option[:key]}.txt"), max_size: 500 }
+        ]
+      end
+
+      UI.header("Downloading static release notes for #{app_values[:display_name]}")
+      gp_downloadmetadata(
+        project_url: app_values[:glotpress_metadata_project],
+        target_files: target_files,
+        locales: locales,
+        download_path: download_path
+      )
+
+      # en-US is the source language and isn't exported from GlotPress; copy each source verbatim.
+      en_us_dir = File.join(download_path, 'en-US', 'release_notes_static')
+      FileUtils.mkdir_p(en_us_dir)
+      STATIC_RELEASE_NOTE_OPTIONS.each do |option|
+        FileUtils.cp(File.join(source_dir, "#{option[:key]}.txt"), File.join(en_us_dir, "#{option[:key]}.txt"))
+      end
+
+      next if skip_commit
+
+      git_add(path: download_path)
+      message = "Update #{app_values[:display_name]} static release notes translations"
+      git_commit(path: download_path, message: message, allow_nothing_to_commit: true)
     end
   end
 
@@ -278,11 +285,8 @@ platform :android do
   JETPACK_MAIN_STRINGS_PATH = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'src', 'jetpack', 'res', 'values', 'strings.xml').freeze
   JETPACK_FROZEN_STRINGS_DIR_PATH = File.join(FASTLANE_FOLDER, 'jetpack_resources', 'values').freeze
   LOCAL_LIBRARIES_STRINGS_PATHS = [
-    # NOTE: for those we don't set `add_ignore_attr` to true because we currently use `checkDependencies true` in `WordPress/build.gradle`
-    # Which will correctly detect strings from the app's `strings.xml` being used by one of the module.
-    { library: 'Image Editor', strings_path: './libs/image-editor/src/main/res/values/strings.xml', source_id: 'module:image-editor' },
-    { library: 'Editor', strings_path: './libs/editor/src/main/res/values/strings.xml', source_id: 'module:editor' },
-    { library: 'Login Library', strings_path: './libs/login/src/main/res/values/strings.xml', source_id: 'module:login' }
+    { library: 'Image Editor', strings_path: './libs/image-editor/src/main/res/values/strings.xml', source_id: 'module:image-editor', add_ignore_attr: true },
+    { library: 'Editor', strings_path: './libs/editor/src/main/res/values/strings.xml', source_id: 'module:editor', add_ignore_attr: true }
   ].freeze
   REMOTE_LIBRARIES_STRINGS_PATHS = [
     {
@@ -291,6 +295,13 @@ platform :android do
       repository: 'wordpress-mobile/gutenberg-mobile',
       strings_file_path: 'bundle/android/strings.xml',
       source_id: 'gutenberg'
+    },
+    {
+      name: 'GutenbergKit',
+      import_key: 'gutenberg-kit',
+      repository: 'wordpress-mobile/GutenbergKit',
+      strings_file_path: 'android/Gutenberg/src/main/res/values/strings.xml',
+      source_id: 'gutenberg-kit'
     },
     {
       name: 'About Library',
@@ -376,6 +387,83 @@ platform :android do
       glotpress_url: APP_SPECIFIC_VALUES[:jetpack][:glotpress_appstrings_project],
       locales: JP_APP_LOCALES
     )
+  end
+
+  TRANSLATIONS_SYNC_BRANCH = 'translations/daily-update'
+
+  #####################################################################################
+  # update_translations
+  # -----------------------------------------------------------------------------------
+  # Downloads the latest WordPress & Jetpack translations from GlotPress and opens (or
+  # refreshes) a single rolling Pull Request, so `trunk` stays continuously localized.
+  # Intended to run on a daily schedule.
+  #
+  # Each run resets `translations/daily-update` to `trunk` and re-downloads, so the PR
+  # always shows the complete current translation delta against `trunk` (no accumulation).
+  # If GlotPress has nothing new, no commit is made and the lane exits without a PR.
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane update_translations
+  #####################################################################################
+  lane :update_translations do
+    # `checkout_and_pull` swallows git errors and only signals failure through its return value, so
+    # abort explicitly rather than silently building the sync branch from a stale/wrong `trunk`.
+    UI.user_error!("Could not check out and pull #{DEFAULT_BRANCH}; aborting translation sync.") unless Fastlane::Helper::GitHelper.checkout_and_pull(DEFAULT_BRANCH)
+
+    # Reset the rolling branch to the tip of `trunk` so each run produces a clean delta against it.
+    Fastlane::Helper::GitHelper.delete_local_branch_if_exists!(TRANSLATIONS_SYNC_BRANCH)
+    Fastlane::Helper::GitHelper.create_branch(TRANSLATIONS_SYNC_BRANCH, from: DEFAULT_BRANCH)
+
+    download_translations
+
+    # `download_translations` commits when GlotPress has updates; if nothing changed, HEAD still
+    # points at `trunk` and there is nothing to open a PR for.
+    if Fastlane::Helper::GitHelper.point_to_same_commit?(DEFAULT_BRANCH, 'HEAD')
+      UI.important('No new translations from GlotPress today; nothing to sync.')
+      next
+    end
+
+    # Prune translations whose key is no longer in the source strings (GlotPress can still serve them),
+    # which would otherwise fail Lint's `ExtraTranslation` check. Done as a separate commit on top of the
+    # download so the PR shows exactly what was pruned vs. what was downloaded.
+    main_res = File.join('WordPress', 'src', 'main', 'res')
+    jetpack_res = File.join('WordPress', 'src', 'jetpack', 'res')
+    android_prune_orphaned_translations(res_dir: main_res)
+    android_prune_orphaned_translations(
+      res_dir: jetpack_res,
+      additional_source_strings_paths: [File.join(main_res, 'values', 'strings.xml')]
+    )
+    Fastlane::Helper::GitHelper.commit(message: 'Prune orphaned translations', files: :all)
+
+    # The prune can remove exactly what the download added, when the only translations GlotPress has
+    # for us are for keys that no longer exist in the source strings. That leaves two commits whose
+    # combined diff against `trunk` is empty, so there is nothing to push or review. Compare trees
+    # rather than commit SHAs: HEAD is two commits ahead of `trunk` here even when the content matches.
+    trunk_tree, head_tree = [DEFAULT_BRANCH, 'HEAD'].map { |ref| sh('git', 'rev-parse', "#{ref}^{tree}").strip }
+    if trunk_tree == head_tree
+      UI.important('Every translation downloaded today was pruned as orphaned; nothing to sync.')
+      next
+    end
+
+    push_to_git_remote(remote_branch: TRANSLATIONS_SYNC_BRANCH, tags: false, force: true, set_upstream: true)
+
+    # `find_or_create_pull_request` resolves the GitHub token the standard way (GITHUB_TOKEN) and only
+    # opens a PR when none is already open; the force-push above already refreshed any existing one.
+    pr_url = find_or_create_pull_request(
+      repository: GITHUB_REPO,
+      title: 'Update translations',
+      body: <<~BODY,
+        Automated daily translation sync from GlotPress. Opened by the `download-translations` scheduled pipeline.
+
+        ⚠️ This branch is reset to `trunk` and force-pushed daily — do not push commits here;
+        they will be overwritten. Fix translations in GlotPress instead.
+      BODY
+      head: TRANSLATIONS_SYNC_BRANCH,
+      base: DEFAULT_BRANCH,
+      labels: ['Localization'],
+      team_reviewers: [MOBILE_REVIEWER_TEAM]
+    )
+    UI.success("Translations PR: #{pr_url}")
   end
 
   # Updates the `.po` file at the given `po_path` using the content of the `sources` files,

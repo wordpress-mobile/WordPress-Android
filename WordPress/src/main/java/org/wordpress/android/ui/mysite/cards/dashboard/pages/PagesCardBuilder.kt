@@ -60,7 +60,6 @@ class PagesCardBuilder @Inject constructor(
         pages: List<PagesCardModel.PageCardModel>,
         onPageItemClick: (params: PagesItemClickParams) -> Unit
     ): List<PageContentItem> {
-        PagesCardContentType
         return pages.map { page ->
             PageContentItem(
                 title = getPageTitle(page.title),

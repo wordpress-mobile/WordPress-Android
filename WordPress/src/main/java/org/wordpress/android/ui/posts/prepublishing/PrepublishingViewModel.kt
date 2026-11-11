@@ -17,6 +17,7 @@ import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.ADD_CATE
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.CATEGORIES
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.PUBLISH
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.TAGS
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
 import org.wordpress.android.util.AppLog
@@ -56,15 +57,27 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
     }
 
     override fun onCleared() {
-        super.onCleared()
         dispatcher.unregister(this)
     }
 
     fun start(
         site: SiteModel,
-        currentScreenFromSavedState: PrepublishingScreen?
+        currentScreenFromSavedState: PrepublishingScreen?,
+        hasPost: Boolean
     ) {
         this.site = site
+
+        // The sheet is a DialogFragment, so the FragmentManager restores it after a config change or
+        // process death even when the host hasn't loaded a post. Every restore passes through here,
+        // whatever screen was saved in KEY_SCREEN_STATE, so this dismisses the sheet in all of them.
+        // Note it does not stop the saved child fragment from being restored and started first: the
+        // dismissal is async. The non-HOME screens tolerate an empty repository at start time, and
+        // HOME has its own early return. A new screen that reads the post at start needs one too.
+        if (!hasPost) {
+            AppLog.e(T.POSTS, "Prepublishing sheet started without a post; dismissing.")
+            _dismissBottomSheet.postValue(Event(Unit))
+            return
+        }
 
         // Set screen: use saved state if available (config change), otherwise reset to HOME (dismissal + reopen)
         val targetScreen = currentScreenFromSavedState ?: HOME
@@ -96,10 +109,10 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
     }
 
     // Send this back out to the current screen and so it can determine if it needs to save
-    // any data before accepting a backPress - in our case, the only view that needs this today
-    // is the Categories selection & AddCategory
+    // any data before accepting a backPress - the screens that need this are the Categories
+    // selection, AddCategory and Tags (which must commit typed-but-uncommitted text first).
     fun onDeviceBackPressed() {
-        if (currentScreen == CATEGORIES || currentScreen == ADD_CATEGORY) {
+        if (currentScreen == CATEGORIES || currentScreen == ADD_CATEGORY || currentScreen == TAGS) {
             _triggerOnDeviceBackPressed.value = Event(currentScreen as PrepublishingScreen)
         } else {
             onBackClicked()

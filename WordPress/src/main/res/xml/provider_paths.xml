@@ -6,4 +6,7 @@
     <cache-path
         name="shared_logs"
         path="shared_logs/"/>
+    <cache-path
+        name="gbk_camera"
+        path="camera/"/>
 </paths>

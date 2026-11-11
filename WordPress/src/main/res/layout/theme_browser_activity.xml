@@ -25,8 +25,4 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <include
-        android:id="@+id/jetpack_banner"
-        layout="@layout/jetpack_banner" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

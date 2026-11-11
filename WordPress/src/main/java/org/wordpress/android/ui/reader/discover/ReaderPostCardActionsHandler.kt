@@ -23,8 +23,6 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
@@ -34,7 +32,6 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReade
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReadingPreferences
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportUser
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_USER
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
@@ -124,7 +121,6 @@ class ReaderPostCardActionsHandler @Inject constructor(
     val followStatusUpdated: LiveData<FollowStatusChanged> = _followStatusUpdated
 
     // Used only in legacy ReaderPostListFragment and ReaderPostDetailFragment.
-    // The discover tab observes reactive ReaderDiscoverDataProvider.
     private val _refreshPosts = MediatorLiveData<Event<Unit>>()
     val refreshPosts: LiveData<Event<Unit>> = _refreshPosts
 
@@ -197,7 +193,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
         source: String
     ) {
         when (type) {
-            FOLLOW -> handleFollowClicked(post, source)
+            FOLLOW -> handleFollowSiteClicked(post.blogId, post.feedId, post.blogName, source)
             SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId, post.feedId)
             SHARE -> handleShareClicked(post, source)
             VISIT_SITE -> handleVisitSiteClicked(post)
@@ -234,12 +230,6 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 )
             }
             _navigationEvents.postValue(Event(ShowPostDetail(post)))
-        }
-    }
-
-    suspend fun handleVideoOverlayClicked(videoUrl: String) {
-        withContext(bgDispatcher) {
-            _navigationEvents.postValue(Event(ShowVideoViewer(videoUrl)))
         }
     }
 
@@ -306,37 +296,17 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    suspend fun handleFollowRecommendedSiteClicked(
-        recommendedBlogUiState: ReaderRecommendedBlogUiState,
+    suspend fun handleFollowSiteClicked(
+        blogId: Long,
+        feedId: Long,
+        blogName: String,
         source: String
     ) {
         if (!accountStore.hasAccessToken()) {
             showSignInPrompt()
             return
         }
-        val param = ReaderSiteFollowUseCase.Param(
-            blogId = recommendedBlogUiState.blogId,
-            blogName = recommendedBlogUiState.name,
-            feedId = recommendedBlogUiState.feedId
-        )
-        followSite(param, source)
-    }
-
-    private suspend fun handleFollowClicked(
-        post: ReaderPost,
-        source: String
-    ) {
-        if (!accountStore.hasAccessToken()) {
-            showSignInPrompt()
-            return
-        }
-        followSite(
-            ReaderSiteFollowUseCase.Param(
-                post.blogId,
-                post.feedId,
-                post.blogName
-            ), source
-        )
+        followSite(ReaderSiteFollowUseCase.Param(blogId, feedId, blogName), source)
     }
 
     private fun showSignInPrompt() {
@@ -418,7 +388,9 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     private fun handleVisitSiteClicked(post: ReaderPost) {
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
-        _navigationEvents.postValue(Event(OpenPost(post)))
+        _navigationEvents.postValue(
+            Event(ShowBlogPreview(post.blogId, post.feedId, post.isFollowedByCurrentUser))
+        )
     }
 
     private fun handleReadingPreferencesClicked() {

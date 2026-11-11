@@ -24,6 +24,20 @@ object AppColor {
     val DarkGray90 = Color(0xE6121212)
 
     @Stable
+    val Gray0 = Color(0xFFF6F7F7)
+
+    // Grays tagged "interpolated" below sit evenly between adjacent Color Studio stops. They exist only to fill
+    // the 5-step M3 surfaceContainer ramp, which the published ramp is too coarse to cover on its own.
+    @Stable
+    val Gray2 = Color(0xFFEDEEEF) // interpolated
+
+    @Stable
+    val Gray3 = Color(0xFFE5E5E6) // interpolated
+
+    @Stable
+    val Gray5 = Color(0xFFDCDCDE)
+
+    @Stable
     val Gray10 = Color(0xFFC3C4C7)
 
     @Stable
@@ -34,6 +48,27 @@ object AppColor {
 
     @Stable
     val Gray50 = Color(0xFF646970)
+
+    @Stable
+    val Gray60 = Color(0xFF50575E)
+
+    @Stable
+    val Gray70 = Color(0xFF3C434A)
+
+    @Stable
+    val Gray80 = Color(0xFF2C3338)
+
+    @Stable
+    val Gray85 = Color(0xFF252B30) // interpolated
+
+    @Stable
+    val Gray90 = Color(0xFF1D2327)
+
+    @Stable
+    val Gray95 = Color(0xFF171C1F) // interpolated
+
+    @Stable
+    val Gray100 = Color(0xFF101517)
 
     // Blues (Automattic Color Studio)
     @Stable
@@ -64,10 +99,19 @@ object AppColor {
 
     // Jetpack Greens (Automattic Color Studio)
     @Stable
+    val JetpackGreen5 = Color(0xFFD0E6B8)
+
+    @Stable
     val JetpackGreen30 = Color(0xFF2FB41F)
 
     @Stable
     val JetpackGreen50 = Color(0xFF008710)
+
+    @Stable
+    val JetpackGreen70 = Color(0xFF005B18)
+
+    @Stable
+    val JetpackGreen90 = Color(0xFF003010)
 
     // Yellows
     @Stable

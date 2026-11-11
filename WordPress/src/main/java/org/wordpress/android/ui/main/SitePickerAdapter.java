@@ -585,9 +585,9 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return mSiteStore.getSites();
         }
         if (mShowSelfHostedSites) {
-            List<SiteModel> out = mSiteStore.getSitesAccessedViaWPComRest();
-            out.addAll(mSiteStore.getSitesAccessedViaXMLRPC());
-            return out;
+            // every non-deleted site regardless of origin, so self-hosted sites connected with an
+            // application password (SiteModel.ORIGIN_WPAPI) are included
+            return mSiteStore.getSites();
         } else {
             return mSiteStore.getSitesAccessedViaWPComRest();
         }

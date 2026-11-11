@@ -353,10 +353,11 @@ class InsightsMapper @Inject constructor(val statsUtils: StatsUtils) {
                 return@let it
             }
         }.map { post -> PostModel(post.id ?: 0, post.href ?: "", post.title ?: "", post.opens ?: 0, post.clicks ?: 0) }
-            .sortedByDescending {
+            .let { posts ->
+                // POST_DATE keeps the server ordering (post_date desc); only OPENS needs a client-side sort.
                 when (sortField) {
-                    SortField.POST_ID -> it.id
-                    SortField.OPENS -> it.opens.toLong()
+                    SortField.POST_DATE -> posts
+                    SortField.OPENS -> posts.sortedByDescending { it.opens.toLong() }
                 }
             }
     )

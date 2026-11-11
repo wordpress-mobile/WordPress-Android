@@ -17,6 +17,8 @@ class QuickLinkRibbonViewHolder(
 ) {
     init {
         with(binding.quickLinksItemList) {
+            // the outer list already settles its cards; animating a card refining in place reads as flicker
+            itemAnimator = null
             if (adapter == null) {
                 layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
                 adapter = QuickLinksItemAdapter()

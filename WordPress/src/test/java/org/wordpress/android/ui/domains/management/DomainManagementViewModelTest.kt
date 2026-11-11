@@ -15,11 +15,6 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_DOMAINS_LIST_SHOWN
-import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
-import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.SiteStore.AllDomainsError
-import org.wordpress.android.fluxc.store.SiteStore.AllDomainsErrorType
-import org.wordpress.android.fluxc.store.SiteStore.FetchedAllDomainsPayload
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.ActionEvent
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState
 import org.wordpress.android.ui.domains.management.util.DomainLocalSearchEngine
@@ -36,9 +31,6 @@ class DomainManagementViewModelTest : BaseUnitTest() {
     lateinit var useCase: FetchAllDomainsUseCase
 
     @Mock
-    lateinit var siteStore: SiteStore
-
-    @Mock
     lateinit var domainLocalSearchEngine: DomainLocalSearchEngine
 
     private lateinit var viewModel: DomainManagementViewModel
@@ -49,17 +41,21 @@ class DomainManagementViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `WHEN ViewModel initialized THEN track DOMAIN_MANAGEMENT_DOMAINS_LIST_SHOWN event`() = test {
-        initializeViewModel()
-        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_DOMAINS_LIST_SHOWN)
-    }
+    fun `WHEN ViewModel initialized THEN track DOMAIN_MANAGEMENT_DOMAINS_LIST_SHOWN event`() =
+        test {
+            initializeViewModel()
+            verify(analyticsTracker).track(DOMAIN_MANAGEMENT_DOMAINS_LIST_SHOWN)
+        }
 
     @Test
-    fun `WHEN a domain is tapped THEN send DomainTapped action event`() = testWithActionEvents { events ->
-        viewModel.onDomainTapped(testDomain, testDomainDetailUrl)
-        advanceUntilIdle()
-        assertThat(events.last()).isEqualTo(ActionEvent.DomainTapped(testDomain, testDomainDetailUrl))
-    }
+    fun `WHEN a domain is tapped THEN send DomainTapped action event`() =
+        testWithActionEvents { events ->
+            viewModel.onDomainTapped(testDomain, testDomainDetailUrl)
+            advanceUntilIdle()
+            assertThat(events.last()).isEqualTo(
+                ActionEvent.DomainTapped(testDomain, testDomainDetailUrl)
+            )
+        }
 
     @Test
     fun `WHEN a navigation back button is tapped THEN send NavigateBackTapped action event`() =
@@ -70,36 +66,50 @@ class DomainManagementViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `GIVEN empty domains result WHEN initialized THEN send empty UI state`() = testWithState { state ->
-        assertThat(state.last()).isEqualTo(UiState.Empty)
-    }
+    fun `GIVEN empty domains result WHEN initialized THEN send empty UI state`() =
+        testWithState { state ->
+            assertThat(state.last()).isEqualTo(UiState.Empty)
+        }
 
     @Test
     fun `GIVEN error domains result WHEN initialized THEN send error UI state`() =
-        testWithState(initialAllDomainsFetchResult = AllDomains.Error) { state ->
+        testWithState(
+            initialAllDomainsFetchResult = AllDomains.Error
+        ) { state ->
             assertThat(state.last()).isEqualTo(UiState.Error)
         }
 
     @Test
     fun `GIVEN successful domains result WHEN initialized THEN send populated list loaded complete UI state`() {
-        val domains = listOf(AllDomainsDomain(), AllDomainsDomain())
-        testWithState(initialAllDomainsFetchResult = AllDomains.Success(domains)) { state ->
-            assertThat(state.last()).isEqualTo(UiState.PopulatedList.Loaded.Complete(domains))
+        val domains = listOf(testDomainItem(), testDomainItem())
+        testWithState(
+            initialAllDomainsFetchResult = AllDomains.Success(domains)
+        ) { state ->
+            assertThat(state.last()).isEqualTo(
+                UiState.PopulatedList.Loaded.Complete(domains)
+            )
         }
     }
 
     @Suppress("MaxLineLength")
     @Test
     fun `GIVEN successful domains result and query is not blank WHEN search query changed THEN return populated loaded filtered UI state`() {
-        val domains = listOf(AllDomainsDomain(), AllDomainsDomain())
-        val filteredDomains = listOf(AllDomainsDomain())
-        whenever(domainLocalSearchEngine.filter(domains, query = "query")).thenReturn(filteredDomains)
+        val domains = listOf(testDomainItem(), testDomainItem())
+        val filteredDomains = listOf(testDomainItem())
+        whenever(
+            domainLocalSearchEngine.filter(domains, query = "query")
+        ).thenReturn(filteredDomains)
 
-        testWithState(initialAllDomainsFetchResult = AllDomains.Success(domains)) { state ->
+        testWithState(
+            initialAllDomainsFetchResult = AllDomains.Success(domains)
+        ) { state ->
             viewModel.onSearchQueryChanged("query")
             advanceUntilIdle()
             assertThat(state.last()).isEqualTo(
-                UiState.PopulatedList.Loaded.Filtered(allDomains = domains, filtered = filteredDomains)
+                UiState.PopulatedList.Loaded.Filtered(
+                    allDomains = domains,
+                    filtered = filteredDomains
+                )
             )
         }
     }
@@ -107,31 +117,36 @@ class DomainManagementViewModelTest : BaseUnitTest() {
     @Suppress("MaxLineLength")
     @Test
     fun `GIVEN successful domains result and blank query WHEN search query changed THEN return populated loaded complete UI state`() {
-        val domains = listOf(AllDomainsDomain(), AllDomainsDomain())
+        val domains = listOf(testDomainItem(), testDomainItem())
 
-        testWithState(initialAllDomainsFetchResult = AllDomains.Success(domains)) { state ->
+        testWithState(
+            initialAllDomainsFetchResult = AllDomains.Success(domains)
+        ) { state ->
             viewModel.onSearchQueryChanged(" ")
             advanceUntilIdle()
-            assertThat(state.last()).isEqualTo(UiState.PopulatedList.Loaded.Complete(allDomains = domains))
+            assertThat(state.last()).isEqualTo(
+                UiState.PopulatedList.Loaded.Complete(allDomains = domains)
+            )
             verifyNoInteractions(domainLocalSearchEngine)
         }
     }
 
     @Test
     fun `onRefresh fetches all the domains again`() = test {
-        // Given
-        val useCase = FetchAllDomainsUseCase(siteStore)
-        whenever(siteStore.fetchAllDomains()).thenReturn(
-            FetchedAllDomainsPayload(AllDomainsError(AllDomainsErrorType.GENERIC_ERROR)),
-            FetchedAllDomainsPayload(emptyList()),
+        whenever(useCase.execute()).thenReturn(
+            AllDomains.Error,
+            AllDomains.Empty,
         )
-        viewModel = DomainManagementViewModel(testDispatcher(), analyticsTracker, useCase, domainLocalSearchEngine)
+        viewModel = DomainManagementViewModel(
+            testDispatcher(),
+            analyticsTracker,
+            useCase,
+            domainLocalSearchEngine
+        )
 
-        // When
         viewModel.onRefresh()
 
-        // Then
-        verify(siteStore, times(2)).fetchAllDomains()
+        verify(useCase, times(2)).execute()
     }
 
     private fun testWithActionEvents(
@@ -140,7 +155,9 @@ class DomainManagementViewModelTest : BaseUnitTest() {
     ) = test {
         initializeViewModel(initialAllDomainsFetchResult)
         val actionEvents = mutableListOf<ActionEvent>()
-        val job = launch { viewModel.actionEvents.toList(actionEvents) }
+        val job = launch {
+            viewModel.actionEvents.toList(actionEvents)
+        }
 
         block(actionEvents)
 
@@ -160,9 +177,16 @@ class DomainManagementViewModelTest : BaseUnitTest() {
         job.cancel()
     }
 
-    private suspend fun initializeViewModel(initialAllDomainsFetchResult: AllDomains = AllDomains.Empty) {
+    private suspend fun initializeViewModel(
+        initialAllDomainsFetchResult: AllDomains = AllDomains.Empty
+    ) {
         whenever(useCase.execute()).thenReturn(initialAllDomainsFetchResult)
-        viewModel = DomainManagementViewModel(testDispatcher(), analyticsTracker, useCase, domainLocalSearchEngine)
+        viewModel = DomainManagementViewModel(
+            testDispatcher(),
+            analyticsTracker,
+            useCase,
+            domainLocalSearchEngine
+        )
     }
 
     companion object {

@@ -1,30 +1,59 @@
 package org.wordpress.android.ui.domains.usecases
 
-import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.util.AppLog
+import rs.wordpress.api.kotlin.WpComApiClient
+import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.AllDomainItem
+import uniffi.wp_api.AllDomainsParams
+import uniffi.wp_api.DomainSubtypeId
 import javax.inject.Inject
 
-class FetchAllDomainsUseCase  @Inject constructor(
-    private val siteStore: SiteStore,
+class FetchAllDomainsUseCase @Inject constructor(
+    private val wpComApiClient: WpComApiClient,
 ) {
+    /**
+     * Fetches every domain across the account's sites, excluding the free
+     * WordPress.com site addresses.
+     *
+     * The v1.1 endpoint took a `no_wpcom` query parameter for this. The v1.2
+     * endpoint used here declares only `garden`, and the API framework
+     * intersects the query string with the declared parameters before the
+     * callback runs, so `no_wpcom` would be discarded. The exclusion therefore
+     * happens client-side.
+     *
+     * `DefaultAddress` is the exact equivalent rather than an approximation:
+     * the server assigns that subtype to precisely the domains `no_wpcom`
+     * removed — the free `*.wordpress.com` address, along with the staging
+     * (`*.wpcomstaging.com`) and garden subdomains it also surfaces as a site
+     * address.
+     */
     suspend fun execute(): AllDomains {
-        val result = siteStore.fetchAllDomains()
-        return when {
-            result.isError -> {
-                AppLog.e(AppLog.T.API, "An error occurred while fetching all domains: ${result.error.message}")
+        val result = wpComApiClient
+            .request { it.domains().allDomains(AllDomainsParams()).data }
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val domains = result.response.domains
+                    .filterNot { it.subtype.id is DomainSubtypeId.DefaultAddress }
+                if (domains.isEmpty()) {
+                    AllDomains.Empty
+                } else {
+                    AllDomains.Success(domains)
+                }
+            }
+            else -> {
+                AppLog.e(
+                    AppLog.T.API,
+                    "An error occurred while fetching all domains"
+                )
                 AllDomains.Error
             }
-
-            result.domains.isNullOrEmpty() -> AllDomains.Empty
-            else -> AllDomains.Success(requireNotNull(result.domains))
         }
     }
 }
 
 sealed interface AllDomains {
     data class Success(
-        val domains: List<AllDomainsDomain>,
+        val domains: List<AllDomainItem>,
     ) : AllDomains
 
     data object Empty : AllDomains

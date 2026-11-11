@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.reader.actions;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Pair;
 
@@ -32,8 +34,15 @@ import org.wordpress.android.util.VolleyUtils;
 
 import java.net.HttpURLConnection;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ReaderBlogActions {
+    // Serial worker for Reader DB writes triggered from Volley response callbacks. Using a single
+    // shared executor avoids spawning a thread per response and lets SQLite writes queue naturally.
+    private static final ExecutorService DB_EXECUTOR = Executors.newSingleThreadExecutor();
+    private static final Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());
+
     public static class BlockedBlogResult {
         public long blogId;
         public long feedId;
@@ -456,12 +465,14 @@ public class ReaderBlogActions {
             return;
         }
 
-        ReaderBlog blogInfo = ReaderBlog.fromJson(jsonObject);
-        ReaderBlogTable.addOrUpdateBlog(blogInfo);
-
-        if (infoListener != null) {
-            infoListener.onResult(blogInfo);
-        }
+        final ReaderBlog blogInfo = ReaderBlog.fromJson(jsonObject);
+        // Move the INSERT OR REPLACE off the main thread; callers expect onResult on main.
+        DB_EXECUTOR.execute(() -> {
+            ReaderBlogTable.addOrUpdateBlog(blogInfo);
+            if (infoListener != null) {
+                MAIN_HANDLER.post(() -> infoListener.onResult(blogInfo));
+            }
+        });
     }
 
     /*

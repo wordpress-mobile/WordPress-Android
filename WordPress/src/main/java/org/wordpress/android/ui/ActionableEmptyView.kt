@@ -162,6 +162,7 @@ class ActionableEmptyView : LinearLayout {
             subtitle.isVisible
         } ?: ""
 
+        @Suppress("DEPRECATION")
         announceForAccessibility("${title.text}.$subTitle")
     }
 

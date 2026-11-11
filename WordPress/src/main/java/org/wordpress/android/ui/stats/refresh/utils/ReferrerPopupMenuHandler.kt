@@ -21,14 +21,15 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
-import com.google.android.material.R as MaterialR
+import android.R as AndroidR
 
 @Singleton
 class ReferrerPopupMenuHandler
 @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val statsSiteProvider: StatsSiteProvider
 ) {
     private val coroutineScope = CoroutineScope(bgDispatcher)
 
@@ -41,7 +42,7 @@ class ReferrerPopupMenuHandler
     ) {
         coroutineScope.launch {
             withContext(mainDispatcher) {
-                val popup = ListPopupWindow(view.context, null, MaterialR.attr.listPopupWindowStyle)
+                val popup = ListPopupWindow(view.context, null, AndroidR.attr.listPopupWindowStyle)
                 val adapter = ReferrerMenuAdapter(view.context, spam)
                 popup.setAdapter(adapter)
                 popup.width = view.context.resources.getDimensionPixelSize(R.dimen.stats_insights_menu_item_width)
@@ -56,6 +57,7 @@ class ReferrerPopupMenuHandler
                             coroutineScope.launch {
                                 analyticsTrackerWrapper.trackGranular(
                                     Stat.STATS_REFERRERS_ITEM_MARKED_AS_SPAM,
+                                    statsSiteProvider.siteModel,
                                     statsGranularity
                                 )
                                 referrersUseCase.markReferrerAsSpam(url)
@@ -66,6 +68,7 @@ class ReferrerPopupMenuHandler
                             coroutineScope.launch {
                                 analyticsTrackerWrapper.trackGranular(
                                     Stat.STATS_REFERRERS_ITEM_MARKED_AS_NOT_SPAM,
+                                    statsSiteProvider.siteModel,
                                     statsGranularity
                                 )
                                 referrersUseCase.unmarkReferrerAsSpam(url)

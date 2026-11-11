@@ -70,6 +70,7 @@ public class SiteSettingsModel {
     private static final String JETPACK_SEARCH_SUPPORTED_COLUMN_NAME = "jetpackSearchSupported";
     private static final String JETPACK_SEARCH_ENABLED_COLUMN_NAME = "jetpackSearchEnabled";
     private static final String USE_THEME_STYLES_COLUMN_NAME = "useThemeStyles";
+    private static final String USE_THIRD_PARTY_BLOCKS_COLUMN_NAME = "useThirdPartyBlocks";
 
     public static final String SETTINGS_TABLE_NAME = "site_settings";
 
@@ -107,6 +108,9 @@ public class SiteSettingsModel {
                                                + " add " + SITE_ICON_COLUMN_NAME + " INTEGER;";
     public static final String ADD_USE_THEME_STYLES = "alter table " + SETTINGS_TABLE_NAME
                                                       + " add " + USE_THEME_STYLES_COLUMN_NAME + " BOOLEAN DEFAULT 1;";
+    public static final String ADD_USE_THIRD_PARTY_BLOCKS = "alter table " + SETTINGS_TABLE_NAME
+                                                      + " add " + USE_THIRD_PARTY_BLOCKS_COLUMN_NAME
+                                                      + " BOOLEAN DEFAULT 0;";
 
     public static final String CREATE_SETTINGS_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS "
@@ -198,6 +202,7 @@ public class SiteSettingsModel {
     public boolean jetpackSearchSupported;
     public boolean jetpackSearchEnabled;
     public boolean useThemeStyles = true;
+    public boolean useThirdPartyBlocks;
     public String quotaDiskSpace;
 
     @Override
@@ -243,6 +248,7 @@ public class SiteSettingsModel {
                && jetpackSearchEnabled == otherModel.jetpackSearchEnabled
                && jetpackSearchSupported == otherModel.jetpackSearchSupported
                && useThemeStyles == otherModel.useThemeStyles
+               && useThirdPartyBlocks == otherModel.useThirdPartyBlocks
                && maxLinks == otherModel.maxLinks
                && equals(defaultPostFormat, otherModel.defaultPostFormat)
                && holdForModeration != null
@@ -309,6 +315,7 @@ public class SiteSettingsModel {
         jetpackSearchSupported = other.jetpackSearchSupported;
         jetpackSearchEnabled = other.jetpackSearchEnabled;
         useThemeStyles = other.useThemeStyles;
+        useThirdPartyBlocks = other.useThirdPartyBlocks;
         if (other.holdForModeration != null) {
             holdForModeration = new ArrayList<>(other.holdForModeration);
         }
@@ -374,6 +381,7 @@ public class SiteSettingsModel {
         jetpackSearchSupported = getBooleanFromCursor(cursor, JETPACK_SEARCH_SUPPORTED_COLUMN_NAME);
         jetpackSearchEnabled = getBooleanFromCursor(cursor, JETPACK_SEARCH_ENABLED_COLUMN_NAME);
         useThemeStyles = getBooleanFromCursor(cursor, USE_THEME_STYLES_COLUMN_NAME);
+        useThirdPartyBlocks = getBooleanFromCursor(cursor, USE_THIRD_PARTY_BLOCKS_COLUMN_NAME);
 
         String moderationKeys = getStringFromCursor(cursor, MODERATION_KEYS_COLUMN_NAME);
         String denylistKeys = getStringFromCursor(cursor, DENYLIST_KEYS_COLUMN_NAME);
@@ -467,6 +475,7 @@ public class SiteSettingsModel {
         values.put(JETPACK_SEARCH_SUPPORTED_COLUMN_NAME, jetpackSearchSupported);
         values.put(JETPACK_SEARCH_ENABLED_COLUMN_NAME, jetpackSearchEnabled);
         values.put(USE_THEME_STYLES_COLUMN_NAME, useThemeStyles);
+        values.put(USE_THIRD_PARTY_BLOCKS_COLUMN_NAME, useThirdPartyBlocks);
 
         StringBuilder moderationKeys = new StringBuilder();
         if (holdForModeration != null) {

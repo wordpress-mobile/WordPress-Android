@@ -36,7 +36,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/single_action_card_image"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="@string/jp_migration_success_card_message" />
+            tools:text="Single action card message" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/learn_more"

@@ -40,6 +40,7 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
+import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsFragment;
 import org.wordpress.android.ui.engagement.EngagedPeopleListFragment;
 import org.wordpress.android.ui.engagement.ListScenarioUtils;
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
@@ -55,6 +56,7 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
+import org.wordpress.android.ui.rs.WpRsRouting;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
 import org.wordpress.android.util.AppLog;
@@ -100,6 +102,7 @@ public class NotificationsDetailActivity extends BaseAppCompatActivity implement
     @Inject ReaderTracker mReaderTracker;
     @Inject LikesEnhancementsFeatureConfig mLikesEnhancementsFeatureConfig;
     @Inject ListScenarioUtils mListScenarioUtils;
+    @Inject WpRsRouting mWpRsRouting;
 
     @Nullable private String mNoteId;
     private boolean mIsTappedOnNotification;
@@ -402,11 +405,23 @@ public class NotificationsDetailActivity extends BaseAppCompatActivity implement
             // show comment detail for comment notifications
             boolean isInstantReply = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA,
                     false);
-            fragment = CommentDetailFragment.newInstance(note.getId(),
-                    getIntent().getStringExtra(NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA));
-
-            if (isInstantReply) {
-                ((CommentDetailFragment) fragment).enableShouldFocusReplyField();
+            String prefilledReply = getIntent().getStringExtra(NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA);
+            SiteModel site = mSiteStore.getSiteBySiteId(note.getSiteId());
+            // The rs detail needs a real site from the SiteStore; the legacy fragment can fall
+            // back to a dummy WP.com site built from the note, so it stays the catch-all.
+            if (site != null && note.getCommentId() != 0 && mWpRsRouting.canUseWpRs(site)) {
+                fragment = UnifiedCommentDetailsFragment.newInstance(
+                        site,
+                        note.getCommentId(),
+                        note.getId(),
+                        prefilledReply,
+                        isInstantReply
+                );
+            } else {
+                fragment = CommentDetailFragment.newInstance(note.getId(), prefilledReply);
+                if (isInstantReply) {
+                    ((CommentDetailFragment) fragment).enableShouldFocusReplyField();
+                }
             }
         } else if (note.isAutomattcherType()) {
             // show reader post detail for automattchers about posts - note that comment

@@ -43,7 +43,6 @@ sealed class ReaderNavigationEvents {
         val buttonLabel: Int = R.string.dialog_button_ok
     }
 
-    data class ShowVideoViewer(val videoUrl: String) : ReaderNavigationEvents()
     data class ShowBlogPreview(
         val siteId: Long,
         val feedId: Long,
@@ -66,6 +65,13 @@ sealed class ReaderNavigationEvents {
         val siteId: Long,
         val postId: Long,
         val headerData: HeaderData
+    ) : ReaderNavigationEvents()
+
+    data class ShowAuthorProfile(
+        val authorName: String,
+        val authorAvatar: String,
+        val blogName: String,
+        val blogUrl: String,
     ) : ReaderNavigationEvents()
 
     data object ShowReadingPreferences : ReaderNavigationEvents()

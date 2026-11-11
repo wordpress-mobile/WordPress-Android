@@ -3,7 +3,9 @@ package org.wordpress.android.ui.posts.editor
 import android.content.res.Configuration
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView.Orientation
 import org.wordpress.android.R
 import org.wordpress.android.editor.MediaToolbarAction
@@ -89,9 +91,10 @@ class EditorPhotoPicker(
             val mediaPickerSetup = buildEditorMediaPickerSetup(site)
 
             MediaPickerFragment.newInstance(
-                this,
-                mediaPickerSetup,
-                site
+                listener = this,
+                mediaPickerSetup = mediaPickerSetup,
+                site = site,
+                isEmbedded = true
             ).let {
                 mediaPickerFragment = it
                 activity.supportFragmentManager
@@ -112,7 +115,6 @@ class EditorPhotoPicker(
             if (site.isUsingWpComRestApi) {
                 availableDataSources.add(DataSource.STOCK_LIBRARY)
             }
-            availableDataSources.add(DataSource.GIF_LIBRARY)
         }
 
         return MediaPickerSetup(
@@ -197,8 +199,13 @@ class EditorPhotoPicker(
         val siteModel = siteModelProvider()
         when (action) {
             MediaToolbarAction.GALLERY -> {
-                // Show the embedded photo picker for selecting media from device
-                showPhotoPicker(siteModel)
+                // Once the picker is showing, this button offers the other media sources in a
+                // popup anchored below it - otherwise it opens the picker
+                if (isPhotoPickerShowing()) {
+                    showMediaSourcePopup(action, siteModel)
+                } else {
+                    showPhotoPicker(siteModel)
+                }
             }
             MediaToolbarAction.CAMERA -> {
                 // Launch the camera to capture a photo (after checking permissions)
@@ -220,6 +227,45 @@ class EditorPhotoPicker(
         }
     }
 
+    /**
+     * Shows the media sources that aren't part of the picker's device media grid in a popup
+     * anchored to the media toolbar button that was tapped.
+     */
+    private fun showMediaSourcePopup(action: MediaToolbarAction, site: SiteModel) {
+        val anchor = activity.findViewById<View>(action.buttonId) ?: return
+        if (!WPMediaUtils.currentUserCanUploadMedia(site)) {
+            showNoUploadPermissionSnackbar()
+            return
+        }
+        allowMultipleSelection = true
+        PopupMenu(activity, anchor).apply {
+            addItem(R.string.photo_picker_choose_photo) {
+                WPMediaUtils.launchPictureLibrary(activity, true)
+            }
+            addItem(R.string.photo_picker_choose_video) {
+                WPMediaUtils.launchVideoLibrary(activity, true)
+            }
+            if (site.isUsingWpComRestApi) {
+                addItem(R.string.photo_picker_stock_media) {
+                    mediaPickerLauncher.showStockMediaPickerForResult(
+                        activity,
+                        site,
+                        RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT,
+                        true
+                    )
+                }
+            }
+        }.show()
+    }
+
+    private fun PopupMenu.addItem(@StringRes title: Int, action: () -> Unit) {
+        menu.add(title).setOnMenuItemClickListener {
+            hidePhotoPicker()
+            action()
+            true
+        }
+    }
+
     fun onOrientationChanged(@Orientation newOrientation: Int) {
         // resize the photo picker if the user rotated the device
         if (newOrientation != photoPickerOrientation) {
@@ -234,7 +280,6 @@ class EditorPhotoPicker(
         val uriList = identifiers.mapNotNull { identifier ->
             when (identifier) {
                 is Identifier.LocalUri -> identifier.value.uri
-                is Identifier.GifMediaIdentifier -> identifier.largeImageUri.uri
                 else -> null
             }
         }
@@ -267,7 +312,7 @@ class EditorPhotoPicker(
                 }
             }
             is MediaPickerAction.SwitchMediaPicker -> {
-                // Handle switching to different data sources (WP Media, Stock, GIF)
+                // Handle switching to different data sources (WP Media, Stock)
                 val setup = action.mediaPickerSetup
                 when (setup.primaryDataSource) {
                     DataSource.WP_LIBRARY -> {
@@ -290,15 +335,12 @@ class EditorPhotoPicker(
                             setup.canMultiselect
                         )
                     }
-                    DataSource.GIF_LIBRARY -> {
-                        mediaPickerLauncher.showGifPickerForResult(
-                            activity,
-                            siteModel,
-                            setup.canMultiselect
-                        )
-                    }
                     else -> { /* Device is handled by OpenSystemPicker */ }
                 }
+            }
+            is MediaPickerAction.ShowSystemPickerTypeMenu -> {
+                // Only reachable when a flow allows both visual media and other files; the editor's
+                // embedded picker relies upon other flows, so this never fires here.
             }
         }
     }

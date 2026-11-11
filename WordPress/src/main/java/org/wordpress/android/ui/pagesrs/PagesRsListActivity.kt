@@ -1,0 +1,203 @@
+package org.wordpress.android.ui.pagesrs
+
+import android.content.ClipData
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+import android.os.Bundle
+import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.ActivityNavigator
+import org.wordpress.android.ui.PagePostCreationSourcesDetail.PAGE_FROM_PAGES_LIST
+import org.wordpress.android.ui.WPWebViewActivity
+import org.wordpress.android.ui.blaze.BlazeFlowSource
+import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment
+import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment.Companion.MODAL_LAYOUT_PICKER_TAG
+import org.wordpress.android.ui.pagesrs.screens.PagesRsListScreen
+import org.wordpress.android.ui.rs.RsConfirmationDialogState
+import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.extensions.clipboardManager
+import org.wordpress.android.util.extensions.setContent
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
+import org.wordpress.android.viewmodel.observeEvent
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewSource
+import javax.inject.Inject
+
+@AndroidEntryPoint
+class PagesRsListActivity : BaseAppCompatActivity() {
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var buildConfigWrapper: BuildConfigWrapper
+    @Inject lateinit var activityNavigator: ActivityNavigator
+
+    private val viewModel: PagesRsListViewModel by viewModels()
+    private lateinit var mlpViewModel: ModalLayoutPickerViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        mlpViewModel = ViewModelProvider(this, viewModelFactory)[ModalLayoutPickerViewModel::class.java]
+        observeEvents()
+        observeMlp()
+
+        setContent {
+            val tabStates by viewModel.tabStates.collectAsState()
+            val isSearchActive by viewModel.isSearchActive.collectAsState()
+            val isOpeningPage by viewModel.isOpeningPage.collectAsState()
+            val searchQuery by viewModel.searchQuery.collectAsState()
+            val authorFilter by viewModel.authorFilter.collectAsState()
+            val pendingConfirmation by viewModel.pendingConfirmation.collectAsState()
+            val parentPicker by viewModel.parentPicker.collectAsState()
+            val density by viewModel.density.collectAsState()
+            AppThemeM3 {
+                PagesRsListScreen(
+                    tabStates = tabStates,
+                    isSearchActive = isSearchActive,
+                    isOpeningPage = isOpeningPage,
+                    searchQuery = searchQuery,
+                    authorFilter = authorFilter,
+                    isAuthorFilterSupported = viewModel.isAuthorFilterSupported,
+                    avatarUrl = viewModel.avatarUrl,
+                    confirmationDialog = RsConfirmationDialogState(
+                        pending = pendingConfirmation,
+                        onConfirm = viewModel::onConfirmPendingAction,
+                        onDismiss = viewModel::onDismissPendingAction
+                    ),
+                    parentPicker = parentPicker,
+                    snackbarMessages = viewModel.snackbarMessages,
+                    revealRequests = viewModel.revealRequests,
+                    onSearchOpen = viewModel::onSearchOpen,
+                    onSearchQueryChanged = viewModel::onSearchQueryChanged,
+                    onSearchClose = viewModel::onSearchClose,
+                    onAuthorFilterChanged = viewModel::onAuthorFilterChanged,
+                    onInitTab = viewModel::initTab,
+                    onTabChanged = viewModel::onTabChanged,
+                    onRefreshTab = { tab -> viewModel.refreshTab(tab, isUserRefresh = true) },
+                    onLoadMore = viewModel::loadMorePages,
+                    onNavigateBack = { onBackPressedDispatcher.onBackPressed() },
+                    onPageClick = viewModel::openPage,
+                    onPageMenuAction = viewModel::onPageMenuAction,
+                    onParentSelected = viewModel::onParentSelected,
+                    onParentSearchChanged = viewModel::onParentSearchChanged,
+                    onLoadMoreParents = viewModel::onLoadMoreParents,
+                    onParentPickerDismissed = viewModel::onParentPickerDismissed,
+                    onAddNewPage = viewModel::onAddNewPage,
+                    onRowsVisible = viewModel::onRowsVisible,
+                    onDensityToggled = viewModel::onDensityToggled,
+                    onCancelOpeningPage = viewModel::cancelOpeningPage,
+                    density = density
+                )
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.onScreenVisible()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.onScreenHidden()
+    }
+
+    private fun observeEvents() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.events.collect { event -> handleEvent(event) }
+            }
+        }
+    }
+
+    private fun handleEvent(event: PageRsListEvent) {
+        when (event) {
+            is PageRsListEvent.EditPage ->
+                ActivityLauncher.editPostOrPageForResult(this, event.site, event.page)
+            is PageRsListEvent.CreateNewPage -> startCreatePageFlow()
+            is PageRsListEvent.ViewPage -> activityNavigator.openInCustomTab(this, event.url)
+            is PageRsListEvent.SharePage ->
+                ActivityLauncher.openShareIntent(this, event.url, event.title)
+            is PageRsListEvent.CopyPageUrl -> copyUrlToClipboard(event.url)
+            is PageRsListEvent.ViewStats ->
+                activityNavigator.openPageStats(
+                    this, event.site, event.pageId, event.title, event.url
+                )
+            is PageRsListEvent.OpenSiteEditor -> openSiteEditor(event.url, event.useWpComCredentials)
+            is PageRsListEvent.PromoteWithBlaze ->
+                ActivityLauncher.openPromoteWithBlaze(this, event.page, BlazeFlowSource.PAGES_LIST)
+            is PageRsListEvent.ShowToast -> ToastUtils.showToast(this, event.messageResId)
+            is PageRsListEvent.Finish -> finish()
+        }
+    }
+
+    private fun openSiteEditor(url: String, useWpComCredentials: Boolean) {
+        if (useWpComCredentials) {
+            WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(
+                this,
+                url,
+                WPWebViewSource.PAGE_LIST_EDIT_HOMEPAGE
+            )
+        } else {
+            WPWebViewActivity.openURL(this, url, WPWebViewSource.PAGE_LIST_EDIT_HOMEPAGE)
+        }
+    }
+
+    private fun copyUrlToClipboard(url: String) {
+        clipboardManager?.setPrimaryClip(ClipData.newPlainText(CLIPBOARD_URL_LABEL, url))
+        // Android 13+ shows its own confirmation UI when the clipboard changes.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            ToastUtils.showToast(this, R.string.media_edit_copy_url_toast)
+        }
+    }
+
+    private fun startCreatePageFlow() {
+        if (mlpViewModel.canShowModalLayoutPicker() &&
+            buildConfigWrapper.isJetpackApp
+        ) {
+            mlpViewModel.createPageFlowTriggered()
+        } else {
+            val site = viewModel.site ?: return
+            launchNewPageEditor(site, title = "", template = null)
+        }
+    }
+
+    private fun launchNewPageEditor(site: SiteModel, title: String, template: String?) {
+        ActivityLauncher.addNewPageForResult(
+            this, site, title, "", template, PAGE_FROM_PAGES_LIST
+        )
+    }
+
+    private fun observeMlp() {
+        mlpViewModel.onCreateNewPageRequested.observe(this) { request ->
+            val site = viewModel.site ?: return@observe
+            launchNewPageEditor(site, request.title, request.template)
+        }
+        mlpViewModel.isModalLayoutPickerShowing.observeEvent(this) { isShowing ->
+            val fm = supportFragmentManager
+            val existing = fm.findFragmentByTag(MODAL_LAYOUT_PICKER_TAG) as ModalLayoutPickerFragment?
+            if (isShowing && existing == null) {
+                ModalLayoutPickerFragment().show(fm, MODAL_LAYOUT_PICKER_TAG)
+            } else if (!isShowing && existing != null) {
+                existing.dismiss()
+            }
+        }
+    }
+
+    companion object {
+        private const val CLIPBOARD_URL_LABEL = "Page URL"
+
+        fun createIntent(context: Context) = Intent(context, PagesRsListActivity::class.java)
+    }
+}

@@ -281,7 +281,8 @@ public class ReaderPostActions {
     public static void requestBlogPost(final String blogSlug,
                                        final String postSlug,
                                        final ReaderActions.OnRequestListener<String> requestListener) {
-        String path = "sites/" + blogSlug + "/posts/slug:" + postSlug + "/?meta=site,likes";
+        // The blog slug can come from an app link host, so encode it as a single path segment
+        String path = "sites/" + UrlUtils.urlEncode(blogSlug) + "/posts/slug:" + postSlug + "/?meta=site,likes";
         requestPost(WordPress.getRestClientUtilsV1_1(), path, requestListener);
     }
 
@@ -292,6 +293,19 @@ public class ReaderPostActions {
             public void onResponse(JSONObject jsonObject) {
                 new Thread(() -> {
                     ReaderPost post = ReaderPost.fromJson(jsonObject);
+
+                    // Preserve the existing date_published if the post
+                    // already exists in the DB. This prevents editorial
+                    // dates (e.g. Freshly Pressed "displayed_on") from
+                    // being overwritten when the detail endpoint response
+                    // lacks the editorial section.
+                    ReaderPost existingPost =
+                            ReaderPostTable.getBlogPost(
+                                    post.blogId, post.postId, true);
+                    if (existingPost != null) {
+                        post.setDatePublished(
+                                existingPost.getDatePublished());
+                    }
 
                     ReaderPostTable.addPost(post);
                     handlePostLikes(post, jsonObject);

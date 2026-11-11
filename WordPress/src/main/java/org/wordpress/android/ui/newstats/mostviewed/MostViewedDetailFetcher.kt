@@ -1,0 +1,182 @@
+package org.wordpress.android.ui.newstats.mostviewed
+
+import org.wordpress.android.R
+import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.archives.toDetailItem
+import org.wordpress.android.ui.newstats.repository.ArchivesResult
+import org.wordpress.android.ui.newstats.repository.ClickItemData
+import org.wordpress.android.ui.newstats.repository.ClicksResult
+import org.wordpress.android.ui.newstats.repository.FileDownloadItemData
+import org.wordpress.android.ui.newstats.repository.FileDownloadsResult
+import org.wordpress.android.ui.newstats.repository.MostViewedResult
+import org.wordpress.android.ui.newstats.repository.SearchTermItemData
+import org.wordpress.android.ui.newstats.repository.SearchTermsResult
+import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
+import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.ui.newstats.repository.VideoPlayItemData
+import org.wordpress.android.ui.newstats.repository.VideoPlaysResult
+import org.wordpress.android.viewmodel.ResourceProvider
+import javax.inject.Inject
+
+/**
+ * Which data source a self-fetching Most Viewed detail screen should load. These are the sources
+ * whose detail screen shows the full (unbounded, max = 0) list, so they re-fetch it themselves
+ * rather than receiving it through the launching Intent (which risked TransactionTooLargeException).
+ */
+enum class MostViewedDetailSource {
+    REFERRERS,
+    CLICKS,
+    SEARCH_TERMS,
+    VIDEO_PLAYS,
+    FILE_DOWNLOADS,
+    ARCHIVES
+}
+
+/**
+ * Fetches the full detail list for a [MostViewedDetailSource] and maps it to the common
+ * [StatsCardFetchResult] shape used by [MostViewedDetailViewModel].
+ *
+ * The per-item mapping mirrors the corresponding card ViewModels (e.g. `ClicksViewModel`); the card
+ * shows the first N items while the detail screen shows them all.
+ */
+class MostViewedDetailFetcher @Inject constructor(
+    private val statsRepository: StatsRepository,
+    private val resourceProvider: ResourceProvider
+) {
+    suspend fun fetch(
+        source: MostViewedDetailSource,
+        siteId: Long,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
+    ): StatsCardFetchResult {
+        return when (source) {
+            MostViewedDetailSource.REFERRERS ->
+                statsRepository.fetchReferrersDetail(siteId, period, forceRefresh).toFetchResult()
+            MostViewedDetailSource.CLICKS ->
+                statsRepository.fetchClicks(siteId, period, forceRefresh).toFetchResult()
+            MostViewedDetailSource.SEARCH_TERMS ->
+                statsRepository.fetchSearchTerms(siteId, period, forceRefresh).toFetchResult()
+            MostViewedDetailSource.VIDEO_PLAYS ->
+                statsRepository.fetchVideoPlays(siteId, period, forceRefresh).toFetchResult()
+            MostViewedDetailSource.FILE_DOWNLOADS ->
+                statsRepository.fetchFileDownloads(siteId, period, forceRefresh).toFetchResult()
+            MostViewedDetailSource.ARCHIVES ->
+                statsRepository.fetchArchivesDetail(siteId, period, forceRefresh).toFetchResult()
+        }
+    }
+
+    /**
+     * Whether [source]'s entry for [period] came from an earlier visit to the stats screen and so
+     * should be refreshed in the background. [MostViewedDetailSource.REFERRERS] and
+     * [MostViewedDetailSource.ARCHIVES] are the sources whose cache bucket no card shares, so
+     * without their own revalidation their lists could be served from a previous visit for the
+     * rest of the day.
+     */
+    fun needsRevalidation(source: MostViewedDetailSource, siteId: Long, period: StatsPeriod) =
+        statsRepository.needsRevalidation(bucketOf(source), siteId, period)
+
+    private fun bucketOf(source: MostViewedDetailSource) = when (source) {
+        MostViewedDetailSource.REFERRERS -> StatsCacheBucket.REFERRERS_DETAIL
+        MostViewedDetailSource.CLICKS -> StatsCacheBucket.CLICKS
+        MostViewedDetailSource.SEARCH_TERMS -> StatsCacheBucket.SEARCH_TERMS
+        MostViewedDetailSource.VIDEO_PLAYS -> StatsCacheBucket.VIDEO_PLAYS
+        MostViewedDetailSource.FILE_DOWNLOADS -> StatsCacheBucket.FILE_DOWNLOADS
+        MostViewedDetailSource.ARCHIVES -> StatsCacheBucket.ARCHIVES_DETAIL
+    }
+
+    private fun MostViewedResult.toFetchResult() = when (this) {
+        is MostViewedResult.Success -> StatsCardFetchResult.Success(
+            items = items.map { it.toDetailItem() },
+            totalValue = totalViews,
+            totalValueChange = totalViewsChange,
+            totalValueChangePercent = totalViewsChangePercent
+        )
+        is MostViewedResult.Error -> StatsCardFetchResult.Error(R.string.stats_error_api)
+    }
+
+    private fun ClicksResult.toFetchResult() = when (this) {
+        is ClicksResult.Success -> StatsCardFetchResult.Success(
+            items = items.mapIndexed { i, item -> item.toDetailItem(i.toLong()) },
+            totalValue = totalClicks,
+            totalValueChange = totalClicksChange,
+            totalValueChangePercent = totalClicksChangePercent
+        )
+        is ClicksResult.Error -> StatsCardFetchResult.Error(messageResId, isAuthError)
+    }
+
+    private fun SearchTermsResult.toFetchResult() = when (this) {
+        is SearchTermsResult.Success -> StatsCardFetchResult.Success(
+            items = items.mapIndexed { i, item -> item.toDetailItem(i.toLong()) },
+            totalValue = totalViews,
+            totalValueChange = totalViewsChange,
+            totalValueChangePercent = totalViewsChangePercent
+        )
+        is SearchTermsResult.Error -> StatsCardFetchResult.Error(messageResId, isAuthError)
+    }
+
+    private fun VideoPlaysResult.toFetchResult() = when (this) {
+        is VideoPlaysResult.Success -> StatsCardFetchResult.Success(
+            items = items.mapIndexed { i, item -> item.toDetailItem(i.toLong()) },
+            totalValue = totalViews,
+            totalValueChange = totalViewsChange,
+            totalValueChangePercent = totalViewsChangePercent
+        )
+        is VideoPlaysResult.Error -> StatsCardFetchResult.Error(messageResId, isAuthError)
+    }
+
+    private fun FileDownloadsResult.toFetchResult() = when (this) {
+        is FileDownloadsResult.Success -> StatsCardFetchResult.Success(
+            items = items.mapIndexed { i, item -> item.toDetailItem(i.toLong()) },
+            totalValue = totalDownloads,
+            totalValueChange = totalDownloadsChange,
+            totalValueChangePercent = totalDownloadsChangePercent
+        )
+        is FileDownloadsResult.Error -> StatsCardFetchResult.Error(messageResId, isAuthError)
+    }
+
+    private fun ArchivesResult.toFetchResult() = when (this) {
+        is ArchivesResult.Success -> StatsCardFetchResult.Success(
+            // No per-group cap here, unlike the card: the screen is a lazy list and exists to show
+            // everything the group was fetched with.
+            items = sections.mapIndexed { i, section -> section.toDetailItem(i.toLong(), resourceProvider) },
+            totalValue = totalViews,
+            totalValueChange = totalViewsChange,
+            totalValueChangePercent = totalViewsChangePercent
+        )
+        is ArchivesResult.Error -> StatsCardFetchResult.Error(messageResId, isAuthError)
+    }
+
+    private fun SearchTermItemData.toDetailItem(id: Long) = MostViewedDetailItem(
+        id = id,
+        title = name,
+        views = views,
+        change = MostViewedChange.fromChange(viewsChange, viewsChangePercent)
+    )
+
+    private fun VideoPlayItemData.toDetailItem(id: Long) = MostViewedDetailItem(
+        id = id,
+        title = title,
+        views = views,
+        change = MostViewedChange.fromChange(viewsChange, viewsChangePercent)
+    )
+
+    private fun FileDownloadItemData.toDetailItem(id: Long) = MostViewedDetailItem(
+        id = id,
+        title = name,
+        views = downloads,
+        change = MostViewedChange.fromChange(downloadsChange, downloadsChangePercent)
+    )
+}
+
+/** Maps a clicks item onto the shared detail shape. Shared by the clicks card and this fetcher. */
+internal fun ClickItemData.toDetailItem(id: Long) = MostViewedDetailItem(
+    id = id,
+    title = name,
+    views = clicks,
+    change = MostViewedChange.fromChange(clicksChange, clicksChangePercent),
+    children = children.map { child ->
+        MostViewedChildItem(name = child.name, url = child.url, views = child.views)
+    },
+    url = url,
+    iconUrl = iconUrl
+)

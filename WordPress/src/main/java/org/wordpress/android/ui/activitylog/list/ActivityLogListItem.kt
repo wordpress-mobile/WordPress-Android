@@ -31,7 +31,8 @@ sealed class ActivityLogListItem(val type: ViewType) {
         val date: Date,
         override val isButtonVisible: Boolean,
         val buttonIcon: Icon,
-        val isRestoreHidden: Boolean
+        val isRestoreHidden: Boolean,
+        val actorMetadata: String? = null
     ) : ActivityLogListItem(EVENT), IActionableItem {
         val formattedDate: String = date.toFormattedDateString()
         val icon = Icon.fromValue(gridIcon)

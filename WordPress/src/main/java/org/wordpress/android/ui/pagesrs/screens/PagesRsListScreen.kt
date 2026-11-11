@@ -1,0 +1,318 @@
+package org.wordpress.android.ui.pagesrs.screens
+
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.stringResource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.launch
+import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.FilterChipTabRow
+import org.wordpress.android.ui.compose.utils.rsDebugTitle
+import org.wordpress.android.ui.pagesrs.PageRsListConfirmation
+import org.wordpress.android.ui.pagesrs.PageRsListItem
+import org.wordpress.android.ui.pagesrs.PageRsListTab
+import org.wordpress.android.ui.pagesrs.PageRsMenuAction
+import org.wordpress.android.ui.pagesrs.PageRsParentPickerState
+import org.wordpress.android.ui.posts.AuthorFilterSelection
+import org.wordpress.android.ui.rs.RsConfirmationDialogState
+import org.wordpress.android.ui.rs.RsReveal
+import org.wordpress.android.ui.rs.RsSnackbarMessage
+import org.wordpress.android.ui.rs.RsTabUiState
+import org.wordpress.android.ui.rs.contentlist.ContentListAuthorFilterButton
+import org.wordpress.android.ui.rs.contentlist.ContentListConfirmationDialog
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.MIN_SEARCH_QUERY_LENGTH
+import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.rs.contentlist.ContentListDensityToggle
+import org.wordpress.android.ui.rs.contentlist.ContentListSearchClearButton
+import org.wordpress.android.ui.rs.contentlist.ContentListSearchField
+import org.wordpress.android.ui.rs.contentlist.ReportSettledTab
+import org.wordpress.android.ui.rs.contentlist.ShowRsSnackbars
+
+@Suppress("CyclomaticComplexMethod")
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun PagesRsListScreen(
+    tabStates: Map<PageRsListTab, RsTabUiState<PageRsListItem>>,
+    isSearchActive: Boolean,
+    isOpeningPage: Boolean,
+    searchQuery: String,
+    authorFilter: AuthorFilterSelection,
+    isAuthorFilterSupported: Boolean,
+    avatarUrl: String?,
+    confirmationDialog: RsConfirmationDialogState<PageRsListConfirmation>,
+    parentPicker: PageRsParentPickerState?,
+    snackbarMessages: Flow<RsSnackbarMessage> = emptyFlow(),
+    revealRequests: Flow<RsReveal<PageRsListTab>> = emptyFlow(),
+    onSearchOpen: () -> Unit,
+    onSearchQueryChanged: (String, PageRsListTab) -> Unit,
+    onSearchClose: (PageRsListTab) -> Unit,
+    onAuthorFilterChanged: (AuthorFilterSelection, PageRsListTab) -> Unit,
+    onInitTab: (PageRsListTab) -> Unit,
+    onTabChanged: (PageRsListTab) -> Unit,
+    onRefreshTab: (PageRsListTab) -> Unit,
+    onLoadMore: (PageRsListTab) -> Unit,
+    onNavigateBack: () -> Unit,
+    onPageClick: (Long, PageRsListTab) -> Unit,
+    onPageMenuAction: (Long, PageRsMenuAction) -> Unit,
+    onParentSelected: (Long) -> Unit,
+    onParentSearchChanged: (String) -> Unit,
+    onLoadMoreParents: () -> Unit,
+    onParentPickerDismissed: () -> Unit,
+    onAddNewPage: () -> Unit,
+    onRowsVisible: (PageRsListTab, List<Long>) -> Unit,
+    onDensityToggled: (PageRsListTab) -> Unit,
+    onCancelOpeningPage: () -> Unit,
+    density: ContentListDensity = ContentListDensity.COMFORTABLE
+) {
+    val tabs = PageRsListTab.entries
+    val pagerState = rememberPagerState(pageCount = { tabs.size })
+    val coroutineScope = rememberCoroutineScope()
+    val focusRequester = remember { FocusRequester() }
+    val activeTab = tabs[pagerState.settledPage]
+    val snackbarHostState = remember { SnackbarHostState() }
+    // A page the user just saved, to be scrolled to once the tab showing it has it. Held here
+    // rather than acted on in the collector below so that the tab switch, which the user can win,
+    // can be cancelled without taking the collector down with it.
+    var pendingReveal by remember { mutableStateOf<RsReveal<PageRsListTab>?>(null) }
+
+    LaunchedEffect(revealRequests) {
+        revealRequests.collect { pendingReveal = it }
+    }
+
+    // The page's status decides the tab, which may not be the one on screen. Switching to it also
+    // initializes a tab that was never opened, so its first fetch brings the page in.
+    LaunchedEffect(pendingReveal) {
+        val reveal = pendingReveal ?: return@LaunchedEffect
+        if (isSearchActive) {
+            pendingReveal = null
+            return@LaunchedEffect
+        }
+        val page = tabs.indexOf(reveal.tab)
+        if (pagerState.settledPage != page) pagerState.animateScrollToPage(page)
+    }
+
+    BackHandler(enabled = isSearchActive) { onSearchClose(activeTab) }
+
+    LaunchedEffect(isSearchActive) {
+        if (isSearchActive) focusRequester.requestFocus()
+    }
+
+    ShowRsSnackbars(snackbarMessages, snackbarHostState)
+
+    Scaffold(
+        containerColor = ContentListDefaults.containerColor(),
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        floatingActionButton = {
+            AddPageFab(visible = !isSearchActive, onClick = onAddNewPage)
+        },
+        topBar = {
+            TopAppBar(
+                title = {
+                    if (isSearchActive) {
+                        ContentListSearchField(
+                            query = searchQuery,
+                            onQueryChange = { query -> onSearchQueryChanged(query, activeTab) },
+                            placeholderResId = R.string.pages_search_suggestion,
+                            modifier = Modifier.focusRequester(focusRequester)
+                        )
+                    } else {
+                        Text(text = rsDebugTitle(R.string.my_site_btn_site_pages))
+                    }
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        if (isSearchActive) onSearchClose(activeTab) else onNavigateBack()
+                    }) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
+                    }
+                },
+                actions = {
+                    if (isSearchActive) {
+                        ContentListSearchClearButton(searchQuery) {
+                            onSearchQueryChanged("", activeTab)
+                        }
+                    } else {
+                        // Ahead of the author filter, not between it and search: these actions are
+                        // end-aligned, so inserting anywhere later would shift both pre-existing
+                        // icons left of where they have always been.
+                        ContentListDensityToggle(
+                            density = density,
+                            onToggle = { onDensityToggled(activeTab) }
+                        )
+                        if (isAuthorFilterSupported) {
+                            ContentListAuthorFilterButton(
+                                authorFilter = authorFilter,
+                                avatarUrl = avatarUrl,
+                                onSelectionChanged = { selection ->
+                                    onAuthorFilterChanged(selection, activeTab)
+                                }
+                            )
+                        }
+                        IconButton(onClick = onSearchOpen) {
+                            Icon(
+                                Icons.Default.Search,
+                                contentDescription = stringResource(R.string.pages_search_suggestion)
+                            )
+                        }
+                    }
+                }
+            )
+        }
+    ) { contentPadding ->
+        Column(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
+            if (!isSearchActive) {
+                FilterChipTabRow(
+                    labels = tabs.map { stringResource(it.labelResId) },
+                    selectedIndex = pagerState.settledPage,
+                    onSelect = { index ->
+                        coroutineScope.launch { pagerState.animateScrollToPage(index) }
+                    }
+                )
+            }
+
+            ReportSettledTab(
+                pagerState = pagerState,
+                onTabSettled = { page -> onInitTab(tabs[page]) },
+                onTabChanged = { page -> onTabChanged(tabs[page]) },
+            )
+
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.weight(1f),
+                userScrollEnabled = !isSearchActive
+            ) { page ->
+                val tab = tabs[page]
+                val tabState = tabStates[tab] ?: RsTabUiState(isLoading = true)
+
+                PageRsTabListScreen(
+                    state = tabState,
+                    emptyMessageResId = tab.emptyMessageResId,
+                    revealPageId = pendingReveal?.takeIf { it.tab == tab }?.remoteId,
+                    onRevealHandled = { pendingReveal = null },
+                    isSearchIdle = isSearchActive && searchQuery.length < MIN_SEARCH_QUERY_LENGTH,
+                    isSearching = isSearchActive && searchQuery.length >= MIN_SEARCH_QUERY_LENGTH,
+                    onRefresh = { onRefreshTab(tab) },
+                    onLoadMore = { onLoadMore(tab) },
+                    onPageClick = { pageId -> onPageClick(pageId, tab) },
+                    onPageMenuAction = onPageMenuAction,
+                    onRowsVisible = { ids -> onRowsVisible(tab, ids) },
+                    density = density
+                )
+            }
+        }
+    }
+
+    PageConfirmationDialogHost(confirmationDialog)
+
+    if (parentPicker != null) {
+        PageRsParentPickerSheet(
+            state = parentPicker,
+            onParentSelected = onParentSelected,
+            onParentSearchChanged = onParentSearchChanged,
+            onLoadMoreParents = onLoadMoreParents,
+            onDismiss = onParentPickerDismissed
+        )
+    }
+
+    // Back abandons the page being opened rather than leaving the list behind the spinner.
+    BackHandler(enabled = isOpeningPage, onBack = onCancelOpeningPage)
+    if (isOpeningPage) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) { },
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    }
+}
+
+@Composable
+private fun PageConfirmationDialogHost(confirmationDialog: RsConfirmationDialogState<PageRsListConfirmation>) {
+    when (val pending = confirmationDialog.pending) {
+        is PageRsListConfirmation.Trash -> ContentListConfirmationDialog(
+            titleResId = R.string.trash,
+            message = stringResource(R.string.page_rs_confirm_trash_message),
+            onConfirm = confirmationDialog.onConfirm,
+            onDismiss = confirmationDialog.onDismiss
+        )
+        is PageRsListConfirmation.Delete -> ContentListConfirmationDialog(
+            titleResId = R.string.delete_page,
+            message = stringResource(R.string.page_delete_dialog_message, pending.pageTitle),
+            confirmTextResId = R.string.delete,
+            isDestructive = true,
+            onConfirm = confirmationDialog.onConfirm,
+            onDismiss = confirmationDialog.onDismiss
+        )
+        is PageRsListConfirmation.MoveToDraft -> ContentListConfirmationDialog(
+            titleResId = R.string.page_rs_move_trashed_page_to_draft_dialog_title,
+            message = stringResource(R.string.page_rs_move_trashed_page_to_draft_dialog_message),
+            confirmTextResId = R.string.pages_move_to_draft,
+            onConfirm = confirmationDialog.onConfirm,
+            onDismiss = confirmationDialog.onDismiss
+        )
+        null -> {}
+    }
+}
+
+@Composable
+private fun AddPageFab(visible: Boolean, onClick: () -> Unit) {
+    AnimatedVisibility(
+        visible = visible,
+        enter = scaleIn() + fadeIn(),
+        exit = scaleOut() + fadeOut()
+    ) {
+        ExtendedFloatingActionButton(
+            onClick = onClick,
+            icon = { Icon(Icons.Default.Add, contentDescription = null) },
+            text = { Text(stringResource(R.string.create_page_fab_tooltip)) }
+        )
+    }
+}

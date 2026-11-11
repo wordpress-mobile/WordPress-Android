@@ -96,7 +96,12 @@ sealed class MySiteCardAndItemBuilderParams {
         val scanAvailable: Boolean = false,
         val enableFocusPoints: Boolean = false,
         val onClick: (ListItemAction) -> Unit,
-        val isBlazeEligible: Boolean = false
+        val isBlazeEligible: Boolean = false,
+        /**
+         * The Menus item is the one item gated on a user capability probe, a network round trip that
+         * can take seconds on a cold start. Callers that will drop the item anyway can skip the probe.
+         */
+        val includeMenusItem: Boolean = true
     ) : MySiteCardAndItemBuilderParams()
 
     data class BloggingPromptCardBuilderParams(

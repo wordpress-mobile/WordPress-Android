@@ -49,7 +49,7 @@ class SiteUtilsTest {
     }
 
     @Test
-    fun `checkMinimalJetpackVersion doesnt fail when Jetpack version is false`() {
+    fun `checkMinimalJetpackVersion doesn't fail when Jetpack version is false`() {
         val site = SiteModel()
         site.jetpackVersion = "false"
 

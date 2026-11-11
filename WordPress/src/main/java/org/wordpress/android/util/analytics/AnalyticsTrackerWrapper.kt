@@ -44,7 +44,11 @@ class AnalyticsTrackerWrapper
 
     @JvmOverloads
     fun track(stat: Stat, site: SiteModel?, properties: Map<String, Any?>? = null) {
-        AnalyticsUtils.trackWithSiteDetails(this, stat, site, properties)
+        // Copy to a mutable map because the Java trackWithSiteDetails method
+        // mutates the map to add site properties.
+        AnalyticsUtils.trackWithSiteDetails(
+            this, stat, site, properties?.toMutableMap()
+        )
     }
 
     fun track(stat: Stat, site: SiteModel?, feature: FeatureConfig) {

@@ -116,9 +116,17 @@ public class DiscoveryXMLRPCClient extends BaseXMLRPCClient {
                 // In the event of an SSL handshake error we should stop attempting discovery
                 throw new DiscoveryException(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE, url);
             } else if (e.getCause() instanceof ServerError) {
+                // Note: Volley's ClientError (used for 4xx) extends ServerError, so 4xx responses land here too.
                 NetworkResponse networkResponse = ((ServerError) e.getCause()).networkResponse;
                 if (networkResponse == null) {
                     return null;
+                }
+
+                if (networkResponse.statusCode == 429) {
+                    // A 429 (rate-limited) is transient. Falling through to the null return below would be read
+                    // as "no XML-RPC methods found" and misclassified as MISSING_XMLRPC_METHOD/NO_SITE_ERROR,
+                    // so surface a distinct transient error instead.
+                    throw new DiscoveryException(DiscoveryError.RATE_LIMITED, url);
                 }
 
                 if (networkResponse.statusCode == 405 && !new String(networkResponse.data).contains(

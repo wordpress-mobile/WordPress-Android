@@ -84,6 +84,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.network.UserAgent
+import org.wordpress.gutenberg.model.EditorConfiguration
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
@@ -120,7 +121,6 @@ import org.wordpress.android.ui.Shortcut
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION
 import org.wordpress.android.ui.history.HistoryListItem.Revision
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
@@ -193,7 +193,6 @@ import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.NetworkUtils
-import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.ReblogUtils
 import org.wordpress.android.util.ShortcutUtils
 import org.wordpress.android.util.SiteUtils
@@ -208,7 +207,6 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource
 import org.wordpress.android.util.config.ContactSupportFeatureConfig
-import org.wordpress.android.util.config.GutenbergKitPluginsFeature
 import org.wordpress.android.util.config.PostConflictResolutionFeatureConfig
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.util.helpers.MediaFile
@@ -335,8 +333,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
 
     @Inject lateinit var editorMedia: EditorMedia
 
-    @Inject lateinit var perAppLocaleManager: PerAppLocaleManager
-
     @Inject internal lateinit var editPostRepository: EditPostRepository
 
     @Inject lateinit var postUtilsWrapper: PostUtilsWrapper
@@ -375,13 +371,10 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
 
     @Inject lateinit var bloggingPromptsStore: BloggingPromptsStore
 
-    @Inject lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     @Inject lateinit var contactSupportFeatureConfig: ContactSupportFeatureConfig
 
     @Inject lateinit var postConflictResolutionFeatureConfig: PostConflictResolutionFeatureConfig
-
-    @Inject lateinit var gutenbergKitPluginsFeature: GutenbergKitPluginsFeature
 
     @Inject lateinit var activityNavigator: ActivityNavigator
 
@@ -391,6 +384,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     @Inject lateinit var editorBloggingPromptsViewModel: EditorBloggingPromptsViewModel
     @Inject lateinit var editorJetpackSocialViewModel: EditorJetpackSocialViewModel
     @Inject lateinit var gutenbergKitNetworkLogger: GutenbergKitNetworkLogger
+    @Inject lateinit var gutenbergKitSettingsBuilder: GutenbergKitSettingsBuilder
     private lateinit var editPostNavigationViewModel: EditPostNavigationViewModel
     private lateinit var editPostSettingsViewModel: EditPostSettingsViewModel
     private lateinit var prepublishingViewModel: PrepublishingViewModel
@@ -485,12 +479,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         (application as WordPress).component().inject(this)
         initializeViewModels()
 
-        // Track if this editor launch came via EditorLauncher (only on initial creation)
-        if (savedInstanceState == null
-            && intent.getBooleanExtra(EditorLauncher.EXTRA_LAUNCHED_VIA_EDITOR_LAUNCHER, false)) {
-            analyticsTrackerWrapper.track(Stat.EDITOR_LAUNCHED_VIA_EDITOR_LAUNCHER)
-        }
-
         setContentView(R.layout.new_edit_post_activity)
 
         // Handle edge-to-edge with IME insets for keyboard management
@@ -514,6 +502,13 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT)
             finish()
             return
+        }
+
+        // Track if this editor launch came via EditorLauncher (only on initial creation). Tracked after the site
+        // is resolved so the event carries the site it was launched for.
+        if (savedInstanceState == null
+            && intent.getBooleanExtra(EditorLauncher.EXTRA_LAUNCHED_VIA_EDITOR_LAUNCHER, false)) {
+            analyticsTrackerWrapper.track(Stat.EDITOR_LAUNCHED_VIA_EDITOR_LAUNCHER, siteModel)
         }
 
         if (shouldRequireApplicationPassword()) {
@@ -1223,9 +1218,11 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         prepublishingViewModel.triggerOnSubmitButtonClickedListener.observe(this) { event ->
             event.getContentIfNotHandled()?.let { publishPost ->
                 AppLog.d(AppLog.T.POSTS, "GutenbergKitActivity: Handling prepublishing submit event")
-                uploadPost(publishPost)
-                if (publishPost) {
-                    incrementInteractions(Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE)
+                confirmSaveIfSavingLocked {
+                    uploadPost(publishPost)
+                    if (publishPost) {
+                        incrementInteractions(Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE)
+                    }
                 }
             }
         }
@@ -1262,7 +1259,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     override fun onPause() {
         super.onPause()
         EventBus.getDefault().unregister(this)
-        AnalyticsTracker.track(Stat.EDITOR_CLOSED)
+        analyticsTrackerWrapper.track(Stat.EDITOR_CLOSED, siteModel)
     }
 
     override fun onStop() {
@@ -1465,6 +1462,12 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         // for GutenbergKitActivity but are hidden rather than removed to avoid duplicating
         // menu resources until a more comprehensive menu cleanup is undertaken.
 
+        // A crashed editor can't switch modes until it reloads. The primary action waits for the reload
+        // too, so the user sees the content it would send; closing still saves the last content read.
+        val isEditorUnavailable = editorFragment?.isEditorUnavailable() == true
+        menu.findItem(R.id.menu_html_mode)?.isEnabled = !isEditorUnavailable
+        if (isEditorUnavailable) menu.findItem(R.id.menu_primary_action)?.isEnabled = false
+
         // Hide "Switch to Gutenberg" - not needed since we're already using GutenbergKit
         menu.findItem(R.id.menu_switch_to_gutenberg)?.isVisible = false
 
@@ -1516,6 +1519,13 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 // Let the navigation ViewModel handle the back navigation
                 editPostNavigationViewModel.handleBackNavigation()
             }
+            // Leaving ends the editor's uploads, so confirm before the media is lost.
+            editorFragment?.isSavingLocked() == true -> showSavingLockedDialog(
+                R.string.editor_saving_locked_leave_message,
+                R.string.editor_saving_locked_leave
+            ) {
+                savePostAndOptionallyFinish(doFinish = true, forceSave = false)
+            }
             else -> {
                 savePostAndOptionallyFinish(doFinish = true, forceSave = false)
             }
@@ -1523,19 +1533,40 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         return true
     }
 
+    /**
+     * Runs [save] after confirmation while the editor locks saving. The lock is advisory: it can
+     * come from a media upload or from a block that never releases it, and the editor can't say which.
+     */
+    private fun confirmSaveIfSavingLocked(save: () -> Unit) {
+        if (editorFragment?.isSavingLocked() == true) {
+            showSavingLockedDialog(
+                R.string.editor_saving_locked_save_message,
+                R.string.editor_saving_locked_continue,
+                save
+            )
+        } else {
+            save()
+        }
+    }
+
+    private fun showSavingLockedDialog(
+        @StringRes messageRes: Int,
+        @StringRes proceedRes: Int,
+        onProceed: () -> Unit
+    ) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.editor_saving_locked_title)
+            .setMessage(messageRes)
+            .setPositiveButton(R.string.editor_saving_locked_keep_editing, null)
+            .setNegativeButton(proceedRes) { _, _ -> onProceed() }
+            .show()
+    }
+
     private val editPostActivityStrategyFunctions: RemotePreviewHelperFunctions
         get() {
             return object : RemotePreviewHelperFunctions {
                 override fun notifyUploadInProgress(post: PostImmutableModel): Boolean {
-                    return if (UploadService.hasInProgressMediaUploadsForPost(post)) {
-                        ToastUtils.showToast(
-                            this@GutenbergKitActivity,
-                            getString(R.string.editor_toast_uploading_please_wait), ToastUtils.Duration.SHORT
-                        )
-                        true
-                    } else {
-                        false
-                    }
+                    return notifyMediaUploadInProgress(post)
                 }
 
                 override fun notifyEmptyDraft() {
@@ -1563,6 +1594,17 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
             }
         }
 
+    private fun notifyMediaUploadInProgress(post: PostImmutableModel?): Boolean {
+        if (!UploadService.hasInProgressMediaUploadsForPost(post)) {
+            return false
+        }
+        ToastUtils.showToast(
+            this@GutenbergKitActivity,
+            getString(R.string.editor_toast_uploading_please_wait), ToastUtils.Duration.SHORT
+        )
+        return true
+    }
+
     // Menu actions
     @Suppress("LongMethod", "CyclomaticComplexMethod", "ReturnCount")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -1580,9 +1622,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 ActivityUtils.hideKeyboard(this)
                 editPostNavigationViewModel.navigateTo(EditPostDestination.History)
             } else if (itemId == R.id.menu_preview_post) {
-                if (!showPreview()) {
-                    return false
-                }
+                confirmSaveIfSavingLocked { showPreview() }
             } else if (itemId == R.id.menu_post_settings) {
                 editPostSettingsFragment?.refreshViews()
                 ActivityUtils.hideKeyboard(this)
@@ -1648,11 +1688,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
 
     @Suppress("UseCheckOrError", "ReturnCount")
     private fun performSecondaryAction(): Boolean {
-        if (UploadService.hasInProgressMediaUploadsForPost(editPostRepository.getPost())) {
-            ToastUtils.showToast(
-                this@GutenbergKitActivity,
-                getString(R.string.editor_toast_uploading_please_wait), ToastUtils.Duration.SHORT
-            )
+        if (notifyMediaUploadInProgress(editPostRepository.getPost())) {
             return false
         }
         if (isDiscardable) {
@@ -1662,12 +1698,12 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         when (secondaryAction) {
             SecondaryEditorAction.SAVE_AS_DRAFT -> {
                 // Force the new Draft status
-                saveAsDraft()
+                confirmSaveIfSavingLocked { saveAsDraft() }
                 return true
             }
 
             SecondaryEditorAction.SAVE -> {
-                uploadPost(false)
+                confirmSaveIfSavingLocked { uploadPost(false) }
                 return true
             }
 
@@ -1759,6 +1795,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         )
     }
 
+    // Actions that open the prepublishing sheet confirm a save lock on submit instead.
     private fun performPrimaryAction() {
         when (primaryAction) {
             PrimaryEditorAction.PUBLISH_NOW -> {
@@ -1775,7 +1812,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 return
             }
 
-            PrimaryEditorAction.SAVE -> uploadPost(false)
+            PrimaryEditorAction.SAVE -> confirmSaveIfSavingLocked { uploadPost(false) }
         }
     }
 
@@ -1879,15 +1916,24 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         updateAndSavePostAsync(listener, isFinishing)
     }
 
+    @Suppress("ReturnCount")
     private fun updateFromEditor(oldContent: String, isFinishing: Boolean = false): UpdateFromEditor {
         editorFragment?.let {
+            // Don't read title/content from a stalled editor — doing so would
+            // overwrite the in-memory PostModel with empty strings, and the
+            // postChanged observer would then persist that empty state to
+            // SQLite. See issue #22878.
+            if (!it.isEditorReady()) {
+                AppLog.w(AppLog.T.EDITOR, "Skipping content update: Gutenberg editor not ready")
+                return UpdateFromEditor.Failed(java.lang.Exception("Gutenberg editor not ready"))
+            }
             return try {
                 // To reduce redundant bridge events emitted to the Gutenberg editor, we get title and content at once
                 val titleAndContent = it.getTitleAndContent(oldContent, isFinishing)
                 val title = titleAndContent.first as String
                 val content = titleAndContent.second as String
                 PostFields(title, content)
-            } catch (e: EditorFragmentAbstract.EditorFragmentNotAddedException) {
+            } catch (e: GutenbergKitEditorFragmentBase.EditorFragmentNotAddedException) {
                 AppLog.e(AppLog.T.EDITOR, "Impossible to save the post, we weren't able to update it.")
                 UpdateFromEditor.Failed(e)
             }
@@ -2208,40 +2254,28 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 onXpostsSettingsCapability(isXpostsCapable)
             }
 
-            val siteConfig = GutenbergKitSettingsBuilder.SiteConfig.fromSiteModel(siteModel)
+            val post = editPostRepository.getPost()
+            val configuration = buildEditorConfiguration(siteModel, post)
 
-            val postConfig = GutenbergKitSettingsBuilder.PostConfig.fromPostModel(
-                editPostRepository.getPost()
+            return GutenbergKitEditorFragment.newInstance(
+                configuration,
+                siteModel
             )
+        }
 
-            val featureConfig = GutenbergKitSettingsBuilder.FeatureConfig(
-                isPluginsFeatureEnabled = gutenbergKitPluginsFeature.isEnabled(),
-                isThemeStylesFeatureEnabled = siteSettings?.useThemeStyles ?: true,
-                isNetworkLoggingEnabled = AppPrefs.isTrackNetworkRequestsEnabled()
-            )
-
-            val appConfig = GutenbergKitSettingsBuilder.AppConfig(
+        private fun buildEditorConfiguration(
+            site: SiteModel,
+            post: PostImmutableModel?
+        ): EditorConfiguration {
+            return gutenbergKitSettingsBuilder.buildPostConfiguration(
+                site = site,
                 accessToken = accountStore.accessToken,
-                locale = perAppLocaleManager.getCurrentLocaleLanguageCode(),
-                cookies = editPostAuthViewModel.getCookiesForPrivateSites(site, privateAtomicCookie),
-                accountUserId = accountStore.account.userId,
-                accountUserName = accountStore.account.userName,
-                userAgent = userAgent,
-                isJetpackSsoEnabled = isJetpackSsoEnabled
-            )
-
-            val config = GutenbergKitSettingsBuilder.GutenbergKitConfig(
-                siteConfig = siteConfig,
-                postConfig = postConfig,
-                appConfig = appConfig,
-                featureConfig = featureConfig
-            )
-
-            return GutenbergKitEditorFragment.newInstanceWithBuilder(
-                getContext(),
-                isNewPost,
-                jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures(),
-                config
+                cookies = editPostAuthViewModel.getCookiesForPrivateSites(
+                    site, privateAtomicCookie
+                ),
+                isNetworkLoggingEnabled = AppPrefs.isTrackNetworkRequestsEnabled(),
+                post = post,
+                source = GutenbergKitSettingsBuilder.ConfigSource.EDITOR,
             )
         }
 
@@ -2479,8 +2513,19 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 mediaId, postRepository
             ) { _: PostImmutableModel? ->
              }
-        } else if (editPostSettingsFragment != null) {
-            editPostSettingsFragment?.updateFeaturedImage(mediaId, imagePicked)
+        } else {
+            // The post settings screen may not be showing (e.g. the image was set from the
+            // pre-publish sheet), so fall back to writing the id ourselves.
+            if (editPostSettingsFragment != null) {
+                editPostSettingsFragment?.updateFeaturedImage(mediaId, imagePicked)
+            } else {
+                updateFeaturedImageUseCase.updateFeaturedImage(mediaId, editPostRepository) { }
+            }
+            // Record the id on the fragment (kept across config changes). GutenbergKit's
+            // GutenbergView exposes no app->webview featured-image setter, so the already-loaded
+            // editor can only pick this up on its next load; the PostModel write above is the
+            // source of truth for saving.
+            editorFragment?.setFeaturedImageId(mediaId)
         }
     }
 
@@ -2544,8 +2589,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 // No-op because it was Aztec only
             }
             RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT -> handleStockMediaPickerMultiSelect(data)
-            RequestCodes.GIF_PICKER_SINGLE_SELECT,
-            RequestCodes.GIF_PICKER_MULTI_SELECT -> handleGifPicker(data)
             RequestCodes.HISTORY_DETAIL -> handleHistoryDetail()
             RequestCodes.IMAGE_EDITOR_EDIT_IMAGE -> handleImageEditor(data)
             RequestCodes.SELECTED_USER_MENTION -> handleUserMention(data)
@@ -2587,13 +2630,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                     it
                 )
             }
-        }
-    }
-
-    private fun handleGifPicker(data: Intent?) {
-        val localIds = data?.getIntArrayExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS)
-        if (localIds != null && localIds.isNotEmpty()) {
-            editorMedia.addGifMediaToPostAsync(localIds)
         }
     }
 
@@ -2762,7 +2798,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                     getString(R.string.error_media_insufficient_fs_permissions)
 
                 MediaErrorType.NOT_FOUND -> errorMessage = getString(R.string.error_media_not_found)
-                MediaErrorType.AUTHORIZATION_REQUIRED -> errorMessage = getString(R.string.error_media_unauthorized)
+                MediaErrorType.AUTHORIZATION_REQUIRED, MediaErrorType.NOT_AUTHENTICATED ->
+                    errorMessage = getString(R.string.error_media_unauthorized)
                 MediaErrorType.PARSE_ERROR -> errorMessage = getString(R.string.error_media_parse_error)
                 MediaErrorType.MALFORMED_MEDIA_ARG, MediaErrorType.NULL_MEDIA_ARG, MediaErrorType.GENERIC_ERROR ->
                     errorMessage = getString(R.string.error_refresh_media)
@@ -2955,6 +2992,10 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         Handler(Looper.getMainLooper()).post { invalidateOptionsMenu() }
     }
 
+    override fun getPersistedTitle(): String = editPostRepository.title
+
+    override fun getPersistedContent(): String = editPostRepository.content
+
     // FluxC events
     @Suppress("unused", "CyclomaticComplexMethod")
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -3133,13 +3174,21 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     fun onEditorSettingsChanged(event: OnEditorSettingsChanged) {
-        val editorSettingsString = event.editorSettings?.toJsonString() ?: "undefined"
-        editorFragment?.startWithEditorSettings(editorSettingsString)
+        // In GutenbergKit v0.15.0, the editor configuration is provided at
+        // construction time. Editor settings are no longer applied after the
+        // fact. This handler is retained for the EventBus subscription.
     }
 
     // EditorDataProvider methods
     override fun getEditPostRepository() = editPostRepository
     override fun getSite() = siteModel
+    override fun syncFeaturedImageIdToEditor() {
+        // GutenbergKit's GutenbergView has no app->webview featured-image setter, so this only
+        // records the id on the fragment; the loaded editor reflects it on its next load. The
+        // PostModel write done by the caller is what actually persists the change.
+        editorFragment?.setFeaturedImageId(editPostRepository.featuredImageId)
+    }
+    override fun supportsFeaturedImageEditing() = true
 
     override fun onMenuOpened(featureId: Int, menu: Menu): Boolean {
         // This is a workaround for bag discovered on Chromebooks, where Enter key will not work in the toolbar menu

@@ -3,7 +3,6 @@ package org.wordpress.android.ui.newstats.searchterms
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.mostviewed.BaseStatsCardViewModel
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedChange
@@ -11,6 +10,7 @@ import org.wordpress.android.ui.newstats.mostviewed.MostViewedDetailItem
 import org.wordpress.android.ui.newstats.mostviewed.StatsCardFetchResult
 import org.wordpress.android.ui.newstats.repository.SearchTermItemData
 import org.wordpress.android.ui.newstats.repository.SearchTermsResult
+import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -25,16 +25,17 @@ class SearchTermsViewModel @Inject constructor(
     selectedSiteRepository, accountStore,
     statsRepository, resourceProvider
 ) {
-    override val cardType = StatsCardType.SEARCH_TERMS
     override val logTag = "search terms"
+    override val cacheBucket = StatsCacheBucket.SEARCH_TERMS
 
     override suspend fun fetchStats(
         siteId: Long,
-        period: StatsPeriod
+        period: StatsPeriod,
+        forceRefresh: Boolean
     ): StatsCardFetchResult {
         return when (
             val result = statsRepository.fetchSearchTerms(
-                siteId, period
+                siteId, period, forceRefresh
             )
         ) {
             is SearchTermsResult.Success -> {
@@ -51,7 +52,8 @@ class SearchTermsViewModel @Inject constructor(
             is SearchTermsResult.Error -> {
                 StatsCardFetchResult.Error(
                     messageResId = result.messageResId,
-                    isAuthError = result.isAuthError
+                    isAuthError = result.isAuthError,
+                    isNotAvailable = result.isNotAvailable
                 )
             }
         }

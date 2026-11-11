@@ -11,8 +11,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
@@ -40,9 +38,6 @@ import org.wordpress.android.ui.engagement.GetLikesUseCase.LikeGroupFingerPrint
 import org.wordpress.android.ui.engagement.HeaderData
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderConstants.READER_COMMENTS_TO_REQUEST_FOR_POST_SNIPPET
-import org.wordpress.android.ui.reader.ReaderEvents.UpdateCommentsEnded
-import org.wordpress.android.ui.reader.ReaderEvents.UpdateCommentsScenario.COMMENT_SNIPPET
-import org.wordpress.android.ui.reader.ReaderEvents.UpdateCommentsStarted
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.CHANGED
@@ -65,7 +60,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
-import org.wordpress.android.ui.reader.services.comment.wrapper.ReaderCommentServiceStarterWrapper
+import org.wordpress.android.ui.reader.repository.ReaderCommentRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState
@@ -79,7 +74,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiSt
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderAction
-import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
+import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
@@ -94,7 +89,6 @@ import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
 import org.wordpress.android.util.config.ReaderReadingPreferencesFeatureConfig
 import org.wordpress.android.util.mapSafe
-import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -124,14 +118,14 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig,
     private val engagementUtils: EngagementUtils,
     private val htmlMessageUtils: HtmlMessageUtils,
-    private val contextProvider: ContextProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig,
     private val readerCommentTableWrapper: ReaderCommentTableWrapper,
-    private val readerCommentServiceStarterWrapper: ReaderCommentServiceStarterWrapper,
+    private val readerCommentRepository: ReaderCommentRepository,
     private val readingPreferencesFeatureConfig: ReaderReadingPreferencesFeatureConfig,
 ) : ScopedViewModel(mainDispatcher) {
     private var getLikesJob: Job? = null
+    private var commentSnippetJob: Job? = null
 
     private val _uiState = MediatorLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
@@ -158,10 +152,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
 
-    private val _reloadFragment = MutableLiveData<Event<Unit>>()
-    val reloadFragment: LiveData<Event<Unit>> = _reloadFragment
-
-    private val _postBlocked = MutableLiveData<Boolean>(false)
+    private val _postBlocked = MutableLiveData(false)
     val postBlocked: LiveData<Boolean> = _postBlocked
 
     /**
@@ -175,6 +166,13 @@ class ReaderPostDetailViewModel @Inject constructor(
     var post: ReaderPost? = null
     val hasPost: Boolean
         get() = post != null
+
+    /**
+     * The load started by the most recent [onShowPost]. The same screen is reused when navigating
+     * to a related post or back through the post history, so a load can outlive the post it was
+     * started for - it is cancelled rather than left to resolve against a post no longer shown.
+     */
+    private var showPostJob: Job? = null
 
     private data class RenderedLikesData(val blogId: Long, val postId: Long, val numLikes: Int, val iLike: Boolean) {
         fun isMatchingPostLikeStatus(post: ReaderPost): Boolean {
@@ -197,7 +195,6 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     data class TrainOfFacesUiState(
         val showLikeFacesTrainContainer: Boolean,
-        val showLoading: Boolean,
         val engageItemsList: List<TrainOfAvatarsItem>,
         val showEmptyState: Boolean,
         val emptyStateTitle: UiString? = null,
@@ -228,9 +225,6 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     init {
         eventBusWrapper.register(readerFetchRelatedPostsUseCase)
-        if (commentsSnippetFeatureConfig.isEnabled()) {
-            eventBusWrapper.register(this)
-        }
     }
 
     fun start(isRelatedPost: Boolean, isFeed: Boolean, interceptedUri: String?) {
@@ -327,11 +321,7 @@ class ReaderPostDetailViewModel @Inject constructor(
 
                 if (!isRepliesDataChanged) return
 
-                readerCommentServiceStarterWrapper.startServiceForCommentSnippet(
-                    contextProvider.getContext(),
-                    blogId,
-                    postId
-                )
+                fetchCommentSnippet(blogId, postId)
             }
         }
     }
@@ -388,16 +378,21 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     fun onShowPost(blogId: Long, postId: Long) {
-        launch { getOrFetchReaderPost(blogId = blogId, postId = postId) }
+        // Stop the previous load before starting this one. It reads from the database and then
+        // waits on the network, either of which can resolve after the user has moved on, and
+        // would otherwise render - or report an error - over the post now on screen.
+        showPostJob?.cancel()
+        showPostJob = launch { getOrFetchReaderPost(blogId = blogId, postId = postId) }
     }
 
-    @Suppress("CyclomaticComplexMethod")
     private suspend fun getOrFetchReaderPost(blogId: Long, postId: Long) {
         getReaderPostFromDb(blogId = blogId, postId = postId)
 
-        // Show cached content immediately if available, otherwise show loading
-        val hasCachedPost = post != null
-        if (hasCachedPost) {
+        // Only render the cached copy immediately if there is actually something to render. A
+        // header-only post (whose body hasn't been fetched yet) would otherwise leave the
+        // user staring at a blank article, so keep the loading state until the fetch lands.
+        val hasRenderableContent = post.hasRenderableContent()
+        if (hasRenderableContent) {
             updatePostDetailsUi()
         } else {
             _uiState.value = LoadingUiState
@@ -405,45 +400,70 @@ class ReaderPostDetailViewModel @Inject constructor(
 
         // Always fetch fresh content from the server
         val oldPostText = post?.text
-        when (readerFetchPostUseCase.fetchPost(blogId = blogId, postId = postId, isFeed = isFeed)) {
-            FetchReaderPostState.Success -> {
-                getReaderPostFromDb(blogId, postId)
-                // Update UI if content changed or we didn't have cached content
-                if (!hasCachedPost || post?.text != oldPostText) {
-                    updatePostDetailsUi()
-                }
-            }
+        val fetchState = readerFetchPostUseCase.fetchPost(blogId = blogId, postId = postId, isFeed = isFeed)
 
+        if (fetchState is FetchReaderPostState.Success) {
+            renderFetchedPost(blogId, postId, hadRenderableContent = hasRenderableContent, oldPostText = oldPostText)
+        } else if (!hasRenderableContent) {
+            // A non-success outcome only changes the UI when there's nothing on screen yet; a
+            // rendered post is kept rather than torn down by a failed background refresh.
+            showFetchOutcomeWithoutContent(fetchState)
+        }
+    }
+
+    private suspend fun renderFetchedPost(
+        blogId: Long,
+        postId: Long,
+        hadRenderableContent: Boolean,
+        oldPostText: String?
+    ) {
+        getReaderPostFromDb(blogId, postId)
+        if (post == null) {
+            // The fetch reported success but left us with no post at all. Surface an error
+            // rather than an endless spinner - but only when there is nothing on screen to keep.
+            if (!hadRenderableContent) {
+                _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic))
+            }
+        } else if (post.hasRenderableContent()) {
+            // Render when the body changed, or we didn't already have renderable content
+            if (!hadRenderableContent || post?.text != oldPostText) {
+                updatePostDetailsUi()
+            }
+        } else if (!hadRenderableContent) {
+            // The post exists but its body is empty. A post can't be published without at least
+            // a title, and usually has a featured image too, so render that rather than an
+            // error - the header, image and actions are all built from fields other than the
+            // body. Skipped when something is already on screen, which a refetch that blanked
+            // the body must not tear down.
+            updatePostDetailsUi()
+        }
+    }
+
+    /**
+     * Whether the post has something [org.wordpress.android.ui.reader.ReaderPostRenderer] can
+     * actually put on screen. It renders the excerpt in place of the body for Jetpack posts that
+     * ask for it, so an empty body is normal - and renderable - for those; testing `hasText()`
+     * alone would report a perfectly displayable post as empty.
+     */
+    private fun ReaderPost?.hasRenderableContent() = this != null && (hasText() || shouldShowExcerpt())
+
+    private fun showFetchOutcomeWithoutContent(fetchState: FetchReaderPostState) {
+        when (fetchState) {
             FetchReaderPostState.AlreadyRunning -> {
-                if (!hasCachedPost) {
-                    AppLog.i(T.READER, "reader post detail > fetch post already running")
-                    _uiState.value = ErrorUiState(null)
-                }
+                // A sibling fetch for this post is already in flight (e.g. a re-entry after a
+                // config change); stay on loading and let it resolve the UI.
+                AppLog.i(T.READER, "reader post detail > fetch post already running")
+                _uiState.value = LoadingUiState
             }
-
-            FetchReaderPostState.Failed.NoNetwork -> {
-                if (!hasCachedPost) {
-                    _uiState.value = ErrorUiState(UiStringRes(R.string.no_network_message))
-                }
-            }
-
-            FetchReaderPostState.Failed.RequestFailed -> {
-                if (!hasCachedPost) {
-                    _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic))
-                }
-            }
-
-            FetchReaderPostState.Failed.NotAuthorised -> {
-                if (!hasCachedPost) {
-                    trackAndUpdateNotAuthorisedErrorState()
-                }
-            }
-
-            FetchReaderPostState.Failed.PostNotFound -> {
-                if (!hasCachedPost) {
-                    _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_not_found))
-                }
-            }
+            FetchReaderPostState.Failed.NoNetwork ->
+                _uiState.value = ErrorUiState(UiStringRes(R.string.no_network_message))
+            FetchReaderPostState.Failed.RequestFailed ->
+                _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic))
+            FetchReaderPostState.Failed.NotAuthorised ->
+                trackAndUpdateNotAuthorisedErrorState()
+            FetchReaderPostState.Failed.PostNotFound ->
+                _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_not_found))
+            FetchReaderPostState.Success -> Unit // handled by renderFetchedPost
         }
     }
 
@@ -511,19 +531,6 @@ class ReaderPostDetailViewModel @Inject constructor(
         )
     }
 
-    private fun onCommentsClicked() {
-        post?.let {
-            launch {
-                readerPostCardActionsHandler.onAction(
-                    post = it,
-                    type = COMMENTS,
-                    isBookmarkList = false,
-                    source = ReaderTracker.SOURCE_POST_DETAIL,
-                )
-            }
-        }
-    }
-
     fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
         onActionClicked(postId, blogId, type, ReaderTracker.SOURCE_POST_DETAIL)
     }
@@ -567,13 +574,19 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
+    fun handleHeaderAction(action: ReaderPostDetailsHeaderAction) {
+        post?.let { onHeaderAction(it, action) }
+    }
+
     private fun onHeaderAction(post: ReaderPost, action: ReaderPostDetailsHeaderAction) {
         when (action) {
             is ReaderPostDetailsHeaderAction.BlogSectionClicked -> onBlogSectionClicked(post.postId, post.blogId)
             is ReaderPostDetailsHeaderAction.FollowClicked -> onButtonClicked(post.postId, post.blogId, FOLLOW)
-            is ReaderPostDetailsHeaderAction.LikesClicked -> onLikesClicked()
-            is ReaderPostDetailsHeaderAction.CommentsClicked -> onCommentsClicked()
             is ReaderPostDetailsHeaderAction.TagItemClicked -> onTagItemClicked(action.tagSlug)
+            is ReaderPostDetailsHeaderAction.FeaturedImageClicked ->
+                onFeaturedImageClicked(action.blogId, action.featuredImageUrl)
+            is ReaderPostDetailsHeaderAction.AuthorClicked ->
+                onAuthorClicked(post)
         }
     }
 
@@ -587,6 +600,21 @@ class ReaderPostDetailViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    private fun onAuthorClicked(post: ReaderPost) {
+        val authorName = post.authorName?.takeIf { it.isNotBlank() }
+            ?: return
+        val blogUrl = post.blogUrl.orEmpty()
+            .ifBlank { post.url.orEmpty() }
+        _navigationEvents.value = Event(
+            ReaderNavigationEvents.ShowAuthorProfile(
+                authorName = authorName,
+                authorAvatar = post.postAvatar.orEmpty(),
+                blogName = post.blogName.orEmpty(),
+                blogUrl = blogUrl,
+            )
+        )
     }
 
     fun onVisitPostExcerptFooterClicked(postLink: String) {
@@ -641,23 +669,39 @@ class ReaderPostDetailViewModel @Inject constructor(
             onButtonClicked = this@ReaderPostDetailViewModel::onButtonClicked,
             onHeaderAction = { action -> onHeaderAction(post, action) },
         )
-        return preserveFollowActionRunningState(newUiState)
+        return preserveTransientState(newUiState)
     }
 
-    private fun preserveFollowActionRunningState(
+    private fun preserveTransientState(
         newUiState: ReaderPostDetailsUiState
     ): ReaderPostDetailsUiState {
-        val currentUiState = _uiState.value as? ReaderPostDetailsUiState ?: return newUiState
-        val currentFollowButtonState = currentUiState.headerUiState.followButtonUiState
+        val currentUiState = _uiState.value as? ReaderPostDetailsUiState
+            ?: return newUiState
 
-        return if (currentFollowButtonState.isFollowActionRunning) {
-            val updatedFollowButtonUiState = newUiState.headerUiState.followButtonUiState.copy(
-                isFollowActionRunning = true
+        var headerUiState = newUiState.headerUiState
+
+        // Keep the follow-action-running flag across re-renders
+        if (currentUiState.headerUiState.followButtonUiState.isFollowActionRunning) {
+            headerUiState = headerUiState.copy(
+                followButtonUiState = headerUiState.followButtonUiState.copy(
+                    isFollowActionRunning = true
+                )
             )
-            val updatedHeaderUiState = newUiState.headerUiState.copy(
-                followButtonUiState = updatedFollowButtonUiState
+        }
+
+        // Once the featured image is shown, keep it visible across
+        // re-renders so it doesn't flicker when fresh post text causes
+        // the deduplication heuristic to change its mind.
+        if (currentUiState.headerUiState.featuredImageUiState != null &&
+            headerUiState.featuredImageUiState == null
+        ) {
+            headerUiState = headerUiState.copy(
+                featuredImageUiState = currentUiState.headerUiState.featuredImageUiState
             )
-            newUiState.copy(headerUiState = updatedHeaderUiState)
+        }
+
+        return if (headerUiState !== newUiState.headerUiState) {
+            newUiState.copy(headerUiState = headerUiState)
         } else {
             newUiState
         }
@@ -678,7 +722,10 @@ class ReaderPostDetailViewModel @Inject constructor(
         post?.let {
             readerTracker.trackPost(Stat.READER_ARTICLE_RENDERED, it)
             _navigationEvents.postValue(Event(ShowPostInWebView(it)))
-            _uiState.value = convertPostToUiState(it)
+            viewModelScope.launch {
+                _uiState.value = convertPostToUiState(it)
+            }
+            onRefreshLikersData(it)
             if (commentsSnippetFeatureConfig.isEnabled()) {
                 onRefreshCommentsData(it.blogId, it.postId)
             }
@@ -717,6 +764,11 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun updateRelatedPostsUiState(sourcePost: ReaderPost, state: FetchRelatedPostsState.Success) {
+        // The displayed post can have been replaced while the request was in flight - a tapped
+        // related post, or back out of one. These cards belong to the post that asked for them,
+        // and their clicks are tracked against it, so they must not land on a different post.
+        if (sourcePost.blogId != post?.blogId || sourcePost.postId != post?.postId) return
+
         (_uiState.value as? ReaderPostDetailsUiState)?.let {
             _uiState.value = it.copy(
                 localRelatedPosts = convertRelatedPostsToUiState(
@@ -767,11 +819,10 @@ class ReaderPostDetailViewModel @Inject constructor(
     private fun buildLikersUiState(updateLikesState: GetLikesState?): TrainOfFacesUiState {
         val (likers, numLikes) = getLikersEssentials(updateLikesState)
 
-        val showLoading = updateLikesState is Loading
         var showEmptyState = false
         var emptyStateTitle: UiString? = null
 
-        if (updateLikesState is Failure && !showLoading) {
+        if (updateLikesState is Failure) {
             updateLikesState.emptyStateData.let {
                 showEmptyState = it.showEmptyState
                 emptyStateTitle = it.title
@@ -779,7 +830,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
 
         val showLikeFacesTrainContainer = post?.let {
-            it.isWP && ((numLikes > 0 && (likers.isNotEmpty() || showEmptyState)) || showLoading)
+            it.isWP && numLikes > 0 && (likers.isNotEmpty() || showEmptyState)
         } ?: false
 
         val engageItemsList = if (showLikeFacesTrainContainer) {
@@ -794,7 +845,6 @@ class ReaderPostDetailViewModel @Inject constructor(
 
         return TrainOfFacesUiState(
             showLikeFacesTrainContainer = showLikeFacesTrainContainer,
-            showLoading = showLoading,
             engageItemsList = engageItemsList,
             showEmptyState = showEmptyState,
             emptyStateTitle = emptyStateTitle,
@@ -925,7 +975,6 @@ class ReaderPostDetailViewModel @Inject constructor(
         data class ReaderPostDetailsUiState(
             val postId: Long,
             val blogId: Long,
-            val featuredImageUiState: ReaderPostFeaturedImageUiState? = null,
             val headerUiState: ReaderPostDetailsHeaderUiState,
             val excerptFooterUiState: ExcerptFooterUiState?,
             val moreMenuItems: List<ReaderPostCardAction>? = null,
@@ -933,8 +982,6 @@ class ReaderPostDetailViewModel @Inject constructor(
             val localRelatedPosts: RelatedPostsUiState? = null,
             val globalRelatedPosts: RelatedPostsUiState? = null
         ) : UiState() {
-            data class ReaderPostFeaturedImageUiState(val blogId: Long, val url: String? = null, val height: Int)
-
             data class ExcerptFooterUiState(val visitPostExcerptFooterLinkText: UiString? = null, val postLink: String?)
 
             data class RelatedPostsUiState(
@@ -958,24 +1005,12 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    @Suppress("unused")
-    @Subscribe(threadMode = MAIN)
-    fun onEventMainThread(event: UpdateCommentsStarted?) {
-        if (!commentsSnippetFeatureConfig.isEnabled() || event == null || event.scenario != COMMENT_SNIPPET) return
-        if (post?.blogId != event.blogId || post?.postId != event.postId) return
-
-        _commentSnippetState.value = CommentSnippetState.Loading
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = MAIN)
-    fun onEventMainThread(event: UpdateCommentsEnded?) {
-        if (!commentsSnippetFeatureConfig.isEnabled() || event == null || event.scenario != COMMENT_SNIPPET) return
-        if (event.result == null || post?.blogId != event.blogId || post?.postId != event.postId) return
-
-        launch(mainDispatcher) {
-            // Check the cache
-            val comments: ReaderCommentList? = post?.let {
+    private fun fetchCommentSnippet(blogId: Long, postId: Long) {
+        commentSnippetJob?.cancel()
+        commentSnippetJob = launch(mainDispatcher) {
+            _commentSnippetState.value = CommentSnippetState.Loading
+            val result = readerCommentRepository.fetchCommentsForSnippet(blogId, postId)
+            val comments = post?.let {
                 withContext(bgDispatcher) {
                     readerCommentTableWrapper.getCommentsForPostSnippet(
                         it,
@@ -983,18 +1018,24 @@ class ReaderPostDetailViewModel @Inject constructor(
                     ) ?: ReaderCommentList()
                 }
             }
-
-            _commentSnippetState.value = getUpdatedSnippetState(comments, event.result)
+            _commentSnippetState.value = getUpdatedSnippetState(comments, result)
         }
     }
 
     fun onUserNavigateFromComments() {
-        // reload post from DB and update UI state
-        val currentUiState: ReaderPostDetailsUiState? = (_uiState.value as? ReaderPostDetailsUiState)
-        currentUiState?.let {
-            findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
-                this.post = post
-                onUpdatePost(post)
+        // reload post from DB (including text column for featured image
+        // deduplication) and update UI state
+        (_uiState.value as? ReaderPostDetailsUiState)?.let { state ->
+            launch(mainDispatcher) {
+                val reloadedPost = withContext(bgDispatcher) {
+                    readerPostTableWrapper.getBlogPost(
+                        state.blogId, state.postId, false
+                    )
+                }
+                reloadedPost?.let { post ->
+                    this@ReaderPostDetailViewModel.post = post
+                    onUpdatePost(post)
+                }
             }
         }
 
@@ -1056,19 +1097,11 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    fun onReadingPreferencesThemeChanged() {
-        _reloadFragment.value = Event(Unit)
-    }
-
     override fun onCleared() {
-        super.onCleared()
         getLikesJob?.cancel()
         getLikesHandler.clear()
         readerPostCardActionsHandler.onCleared()
         eventBusWrapper.unregister(readerFetchRelatedPostsUseCase)
-        if (commentsSnippetFeatureConfig.isEnabled()) {
-            eventBusWrapper.unregister(this)
-        }
     }
 
     fun onArticleTextCopied() {

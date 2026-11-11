@@ -77,7 +77,7 @@
                         android:contentDescription="@string/description_user"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:src="@drawable/ic_user_circle_no_padding_grey_24dp" />
+                        tools:src="@drawable/ic_user_placeholder_primary_24" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/text_comment_author"

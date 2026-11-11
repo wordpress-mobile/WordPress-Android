@@ -4,7 +4,6 @@ import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
 import android.os.Parcelable.Creator
-import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.GIF_MEDIA_IDENTIFIER
 import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.LOCAL_ID
 import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.LOCAL_URI
 import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.REMOTE_ID
@@ -24,8 +23,7 @@ data class MediaItem(
         LOCAL_URI,
         REMOTE_ID,
         LOCAL_ID,
-        STOCK_MEDIA_IDENTIFIER,
-        GIF_MEDIA_IDENTIFIER
+        STOCK_MEDIA_IDENTIFIER
     }
 
     sealed class Identifier(val type: IdentifierType) : Parcelable {
@@ -40,11 +38,6 @@ data class MediaItem(
             val name: String?,
             val title: String?
         ) : Identifier(STOCK_MEDIA_IDENTIFIER)
-
-        data class GifMediaIdentifier(
-            val largeImageUri: UriWrapper,
-            val title: String?
-        ) : Identifier(GIF_MEDIA_IDENTIFIER)
 
         override fun writeToParcel(parcel: Parcel, flags: Int) {
             parcel.writeString(this.type.name)
@@ -62,10 +55,6 @@ data class MediaItem(
                 is StockMediaIdentifier -> {
                     parcel.writeString(this.url)
                     parcel.writeString(this.name)
-                    parcel.writeString(this.title)
-                }
-                is GifMediaIdentifier -> {
-                    parcel.writeParcelable(this.largeImageUri.uri, flags)
                     parcel.writeString(this.title)
                 }
             }
@@ -95,12 +84,6 @@ data class MediaItem(
                         }
                         STOCK_MEDIA_IDENTIFIER -> {
                             StockMediaIdentifier(parcel.readString(), parcel.readString(), parcel.readString())
-                        }
-                        GIF_MEDIA_IDENTIFIER -> {
-                            GifMediaIdentifier(
-                                UriWrapper(requireNotNull(parcel.readParcelableCompat(Uri::class.java.classLoader))),
-                                parcel.readString()
-                            )
                         }
                     }
                 }

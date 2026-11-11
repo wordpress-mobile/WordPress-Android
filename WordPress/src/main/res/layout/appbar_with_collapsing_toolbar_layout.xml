@@ -17,19 +17,6 @@
         app:scrimVisibleHeightTrigger="@dimen/scrim_visible_height_trigger"
         app:titleEnabled="false">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:foreground="@drawable/bg_rectangle_black_translucent_40"
-            android:fitsSystemWindows="true"
-            app:layout_collapseMode="parallax">
-            <ImageView
-                android:id="@+id/featured_image"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:contentDescription="@null"/>
-        </FrameLayout>
-
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_main"
             android:layout_width="match_parent"

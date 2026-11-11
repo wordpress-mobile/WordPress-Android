@@ -428,7 +428,10 @@ public class PostUtils {
     public static String replaceMediaFileWithUrlInGutenbergPost(@NonNull String postContent,
                                                                 @NonNull String localMediaId, MediaFile mediaFile,
                                                                 @NonNull String siteUrl) {
-        if (mediaFile != null && contentContainsGutenbergBlocks(postContent)) {
+        // BlockProcessor reads MediaFile.mediaId as a non-null Kotlin String and would NPE;
+        // with no remote ID there is nothing to substitute, so leave the content untouched.
+        if (mediaFile != null && mediaFile.getMediaId() != null
+                && contentContainsGutenbergBlocks(postContent)) {
             MediaUploadCompletionProcessor processor = new MediaUploadCompletionProcessor(localMediaId, mediaFile,
                     siteUrl);
             postContent = processor.processContent(postContent);

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/handle"
+            layout="@layout/bottom_sheet_handle_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_small" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_notice_red_24dp" />
+
+        <TextView
+            style="@style/WordPress.BottomSheetDialogTheme.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/margin_extra_large"
+            android:paddingHorizontal="@dimen/margin_extra_extra_medium_large"
+            android:text="@string/xmlrpc_disabled_bottom_sheet_title" />
+
+        <TextView
+            style="@style/WordPress.BottomSheetDialogTheme.Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_extra_large"
+            android:paddingHorizontal="@dimen/margin_extra_large"
+            android:text="@string/xmlrpc_disabled_bottom_sheet_body" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/learn_more_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/margin_extra_large"
+            android:background="?android:selectableItemBackground"
+            android:padding="@dimen/margin_medium"
+            android:text="@string/learn_more"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="@dimen/text_sz_large" />
+
+    </LinearLayout>
+
+</ScrollView>

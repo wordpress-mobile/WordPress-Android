@@ -378,7 +378,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
      */
     private void trackUploadMediaEvents(AnalyticsTracker.Stat stat, MediaModel media, Map<String, Object> properties) {
         if (media == null) {
-            AppLog.e(T.MEDIA, "MediaUploadHandler > Cannot track media upload handler events if the original media"
+            AppLog.e(T.MEDIA, "MediaUploadHandler > Cannot track media upload handler events if the original media "
                               + "is null");
             return;
         }

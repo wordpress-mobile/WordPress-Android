@@ -30,7 +30,6 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
 
     private lateinit var viewModel: TestConversationsSupportViewModel
 
-    private val testAccessToken = "test_access_token"
     private val testUserName = "Test User"
     private val testUserEmail = "test@example.com"
     private val testAvatarUrl = "https://example.com/avatar.jpg"
@@ -45,7 +44,6 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
         }
         whenever(accountStore.account).thenReturn(accountModel)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(accountStore.accessToken).thenReturn(testAccessToken)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
         viewModel = TestConversationsSupportViewModel(
@@ -139,6 +137,18 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
     @Test
     fun `init sets GENERAL error when loading conversations fails`() = test {
         viewModel.setShouldThrowOnGetConversations(true)
+
+        viewModel.init()
+        advanceUntilIdle()
+
+        assertThat(viewModel.errorMessage.value).isEqualTo(ConversationsSupportViewModel.ErrorType.GENERAL)
+        assertThat(viewModel.conversationsState.value).isInstanceOf(ConversationsState.Error.javaClass)
+        verify(appLogWrapper).e(any(), any<String>())
+    }
+
+    @Test
+    fun `init sets GENERAL error and Error state when getConversations returns null`() = test {
+        viewModel.setConversationsToReturn(null)
 
         viewModel.init()
         advanceUntilIdle()
@@ -365,50 +375,6 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onCreateNewConversationClick emits NavigateToNewConversation event`() = test {
-        var emittedEvent: ConversationsSupportViewModel.NavigationEvent? = null
-        val job = launch {
-            viewModel.navigationEvents.collect { event ->
-                emittedEvent = event
-            }
-        }
-
-        viewModel.onCreateNewConversationClick()
-        advanceUntilIdle()
-
-        assertThat(emittedEvent).isEqualTo(ConversationsSupportViewModel.NavigationEvent.NavigateToNewConversation)
-        job.cancel()
-    }
-
-    @Test
-    fun `onCreateNewConversationClick sets OFFLINE error when network is not available`() = test {
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
-
-        viewModel.onCreateNewConversationClick()
-        advanceUntilIdle()
-
-        assertThat(viewModel.errorMessage.value).isEqualTo(ConversationsSupportViewModel.ErrorType.OFFLINE)
-    }
-
-    @Test
-    fun `onCreateNewConversationClick does not navigate when network is not available`() = test {
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
-
-        var emittedEvent: ConversationsSupportViewModel.NavigationEvent? = null
-        val job = launch {
-            viewModel.navigationEvents.collect { event ->
-                emittedEvent = event
-            }
-        }
-
-        viewModel.onCreateNewConversationClick()
-        advanceUntilIdle()
-
-        assertThat(emittedEvent).isNull()
-        job.cancel()
-    }
-
-    @Test
     fun `setNewConversation sets selected conversation and emits navigation event`() = test {
         val conversation = createTestConversation(1)
         var emittedEvent: ConversationsSupportViewModel.NavigationEvent? = null
@@ -450,7 +416,7 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
         private var shouldThrowOnInit = false
         private var shouldThrowOnGetConversations = false
         private var shouldThrowOnGetConversation = false
-        private var conversationsToReturn: List<TestConversation> = emptyList()
+        private var conversationsToReturn: List<TestConversation>? = emptyList()
         private var conversationToReturn: TestConversation? = null
 
         fun setShouldThrowOnInit(shouldThrow: Boolean) {
@@ -465,7 +431,7 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
             shouldThrowOnGetConversation = shouldThrow
         }
 
-        fun setConversationsToReturn(conversations: List<TestConversation>) {
+        fun setConversationsToReturn(conversations: List<TestConversation>?) {
             conversationsToReturn = conversations
         }
 
@@ -474,7 +440,7 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
         }
 
         @Suppress("TooGenericExceptionThrown")
-        override fun initRepository(accessToken: String) {
+        override fun initRepository() {
             if (shouldThrowOnInit) {
                 throw RuntimeException("Init failed")
             }
@@ -482,7 +448,7 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
         }
 
         @Suppress("TooGenericExceptionThrown")
-        override suspend fun getConversations(): List<TestConversation> {
+        override suspend fun getConversations(): List<TestConversation>? {
             if (shouldThrowOnGetConversations) {
                 throw RuntimeException("Get conversations failed")
             }

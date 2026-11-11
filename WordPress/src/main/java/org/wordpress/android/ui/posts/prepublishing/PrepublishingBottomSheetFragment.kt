@@ -191,7 +191,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             KEY_SCREEN_STATE
         )
         val site = requireNotNull(arguments?.getSerializableCompat<SiteModel>(SITE))
-        viewModel.start(site, prepublishingScreenState)
+        viewModel.start(site, prepublishingScreenState, getEditorHook().editPostRepository.hasPost())
     }
 
     private fun navigateToScreen(navigationTarget: PrepublishingNavigationTarget) {

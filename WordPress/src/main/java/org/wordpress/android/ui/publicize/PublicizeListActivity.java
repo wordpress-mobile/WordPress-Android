@@ -33,7 +33,6 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
-import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -55,7 +54,6 @@ public class PublicizeListActivity extends BaseAppCompatActivity
         PublicizeListFragment.PublicizeButtonPrefsListener, ScrollableViewInitializedListener {
     private static final String WPCOM_CONNECTIONS_URL = "https://wordpress.com/marketing/connections/";
     @Inject SiteStore mSiteStore;
-    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
     private SiteModel mSite;
     private ProgressDialog mProgressDialog;
     private AppBarLayout mAppBarLayout;

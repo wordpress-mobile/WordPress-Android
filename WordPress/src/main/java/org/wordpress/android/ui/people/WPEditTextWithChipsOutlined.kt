@@ -34,6 +34,7 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.WpEditTextWithChipsOutlinedBinding
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.extensions.getColorResIdFromAttribute
+import androidx.appcompat.R as AppCompatR
 import com.google.android.material.R as MaterialR
 
 /**
@@ -106,7 +107,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
 
     enum class ItemValidationState(@AttrRes val colorAttr: Int) {
         NEUTRAL(MaterialR.attr.colorOnSurface),
-        VALIDATED(MaterialR.attr.colorPrimary),
+        VALIDATED(AppCompatR.attr.colorPrimary),
         VALIDATED_WITH_ERRORS(R.attr.wpColorError);
 
         @ColorInt
@@ -253,7 +254,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
             })
         outlineColorFocused = ContextCompat.getColor(context,
             TypedValue().let {
-                getContext().theme.resolveAttribute(MaterialR.attr.colorPrimary, it, true)
+                getContext().theme.resolveAttribute(AppCompatR.attr.colorPrimary, it, true)
                 it.resourceId
             })
         colorSurface = ContextCompat.getColor(context,

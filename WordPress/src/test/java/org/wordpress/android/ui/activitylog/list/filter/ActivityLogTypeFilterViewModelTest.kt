@@ -15,12 +15,15 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_ACTIVITY_TYPES
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityTypesError
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityTypesErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityTypesPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityTypesFetched
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.activitylog.GetActivityLogHiddenGroupsUseCase
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState.ActivityType
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState
@@ -40,10 +43,18 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var activityLogStore: ActivityLogStore
 
+    @Mock
+    private lateinit var siteStore: SiteStore
+
+    @Mock
+    private lateinit var getActivityLogHiddenGroupsUseCase: GetActivityLogHiddenGroupsUseCase
+
     @Before
     fun setUp() {
         viewModel = ActivityLogTypeFilterViewModel(
             activityLogStore,
+            siteStore,
+            getActivityLogHiddenGroupsUseCase,
             testDispatcher(),
             testDispatcher()
         )
@@ -205,6 +216,20 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         assertThat((uiStates.last() as Content).items.filterIsInstance(ActivityType::class.java)
             .filter { it.checked }.map { it.id }
         ).containsExactlyElementsOf(initialSelection)
+    }
+
+    @Test
+    fun `hidden groups are not shown in the list, when site hides activity log groups`() = test {
+        init(activityTypeCount = 3)
+        val site = SiteModel()
+        whenever(siteStore.getSiteBySiteId(REMOTE_SITE_ID)).thenReturn(site)
+        whenever(getActivityLogHiddenGroupsUseCase.getHiddenGroups(site)).thenReturn(listOf("1"))
+
+        startVM()
+
+        assertThat(
+            (viewModel.uiState.value as Content).items.filterIsInstance(ActivityType::class.java).map { it.id }
+        ).containsExactly("2", "3")
     }
 
     @Test

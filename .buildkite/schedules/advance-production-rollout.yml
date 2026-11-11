@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
+---
+
+# Advances the live production staged rollout one step per run — reads the current rollout percentage
+# back from Play and bumps WordPress & Jetpack to the next step, finalizing to 100% past the top. Only
+# ever advances an `inProgress` rollout, so it never resumes one a developer paused (a paused rollout
+# is `halted`). Runs Tuesday–Friday on a schedule, so a Monday promotion reaches 100% within the
+# working week and no step lands on a weekend; also triggerable manually via the `PIPELINE` env var.
+
+agents:
+  queue: "android"
+
+steps:
+  - label: ":chart_with_upwards_trend: Advance production rollout"
+    command: ".buildkite/commands/advance-production-rollout.sh"
+    plugins: [$CI_TOOLKIT]
+
+# Slack backstop for any failed build — its unique value is failures that abort before the lane runs
+# (gems/secrets) and can't self-report; on a lane failure it may also accompany the lane's own
+# message.
+notify:
+  - slack: "#wpmobile-team"
+    if: build.state == "failed"

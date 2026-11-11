@@ -8,8 +8,6 @@ import org.json.JSONObject;
 import org.wordpress.android.ui.Organization;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
-import org.wordpress.android.ui.reader.utils.ReaderIframeScanner;
-import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DateTimeUtilsWrapper;
 import org.wordpress.android.util.HtmlUtils;
@@ -50,7 +48,6 @@ public class ReaderPost {
     private String mUrl;
     private String mShortUrl;
     private String mFeaturedImage;
-    private String mFeaturedVideo;
     private String mAuthorBlogUrl;
 
     public int numReplies; // includes comments, trackbacks & pingbacks
@@ -138,6 +135,9 @@ public class ReaderPost {
             post.blogId = jsonEditorial.optLong("blog_id");
             post.mBlogName = JSONUtils.getStringDecoded(jsonEditorial, "blog_name");
             post.mFeaturedImage = getEditorialImage(JSONUtils.getString(jsonEditorial, "image"));
+            if (post.mFeaturedImage == null) {
+                post.mFeaturedImage = JSONUtils.getString(json, "featured_image");
+            }
             post.setPrimaryTag(JSONUtils.getString(jsonEditorial, "highlight_topic_title"));
             // freshly-pressed posts show the date they were chosen rather than the day published
             post.mDatePublished = JSONUtils.getString(jsonEditorial, "displayed_on");
@@ -202,21 +202,6 @@ public class ReaderPost {
                     post.mFeaturedImage = JSONUtils.getString(jsonMedia, "uri");
                 }
             }
-        }
-
-        // if the post doesn't have a featured image but it contains an IMG tag, check whether
-        // we can find a suitable image from the content
-        if (!post.hasFeaturedImage() && post.hasImages()) {
-            post.mFeaturedImage = new ReaderImageScanner(post.mText, post.isPrivate)
-                    .getLargestImage(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
-        }
-
-        // if there's no featured image or featured video and the post contains an iframe, scan
-        // the content for a suitable featured video
-        if (!post.hasFeaturedImage()
-            && !post.hasFeaturedVideo()
-            && post.getText().contains("<iframe")) {
-            post.setFeaturedVideo(new ReaderIframeScanner(post.getText()).getFirstUsableVideo());
         }
 
         // "railcar" data - currently used in search streams, used by TrainTracks
@@ -447,14 +432,6 @@ public class ReaderPost {
         this.mFeaturedImage = StringUtils.notNullStr(featuredImage);
     }
 
-    public String getFeaturedVideo() {
-        return StringUtils.notNullStr(mFeaturedVideo);
-    }
-
-    public void setFeaturedVideo(String featuredVideo) {
-        this.mFeaturedVideo = StringUtils.notNullStr(featuredVideo);
-    }
-
     public String getBlogName() {
         return StringUtils.notNullStr(mBlogName);
     }
@@ -619,10 +596,6 @@ public class ReaderPost {
         return !TextUtils.isEmpty(mFeaturedImage);
     }
 
-    public boolean hasFeaturedVideo() {
-        return !TextUtils.isEmpty(mFeaturedVideo);
-    }
-
     public boolean hasBlogName() {
         return !TextUtils.isEmpty(mBlogName);
     }
@@ -676,6 +649,14 @@ public class ReaderPost {
      * retrieved to determine which ones are new/changed/unchanged
      */
     public boolean isSamePost(ReaderPost post) {
+        return isSamePost(post, true);
+    }
+
+    /*
+     * pass compareText=false when either side was loaded without the text column, since an
+     * absent text would otherwise be compared against the incoming post's body and always differ
+     */
+    public boolean isSamePost(ReaderPost post, boolean compareText) {
         return post != null
                && post.blogId == this.blogId
                && post.postId == this.postId
@@ -689,7 +670,7 @@ public class ReaderPost {
                && post.useExcerpt == this.useExcerpt
                && post.getTitle().equals(this.getTitle())
                && post.getExcerpt().equals(this.getExcerpt())
-               && post.getText().equals(this.getText());
+               && (!compareText || post.getText().equals(this.getText()));
     }
 
     public boolean hasIds(ReaderBlogIdPostId ids) {
@@ -760,17 +741,5 @@ public class ReaderPost {
             mDateDisplay = dateTimeUtilsWrapper.dateFromIso8601(this.mDatePublished);
         }
         return mDateDisplay;
-    }
-
-    /*
-     * used when a unique numeric id is required by an adapter (when hasStableIds() = true)
-     */
-    private transient long mStableId;
-
-    public long getStableId() {
-        if (mStableId == 0) {
-            mStableId = (mPseudoId != null ? mPseudoId.hashCode() : 0);
-        }
-        return mStableId;
     }
 }

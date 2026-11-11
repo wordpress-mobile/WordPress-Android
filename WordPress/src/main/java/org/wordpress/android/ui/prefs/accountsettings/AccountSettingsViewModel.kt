@@ -365,7 +365,6 @@ class AccountSettingsViewModel @Inject constructor(
 
     override fun onCleared() {
         pushAccountSettingsUseCase.onCleared()
-        super.onCleared()
     }
 
     companion object {

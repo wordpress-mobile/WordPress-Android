@@ -1,0 +1,330 @@
+package org.wordpress.android.ui.comments.unified.compose
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.launch
+import org.wordpress.android.R
+import org.wordpress.android.ui.dataview.compose.RemoteImage
+import org.wordpress.android.ui.suggestion.Suggestion
+
+@Composable
+private fun ReplyTextField(
+    replyText: TextFieldValue,
+    onReplyTextChange: (TextFieldValue) -> Unit,
+    hint: String,
+    enabled: Boolean,
+    modifier: Modifier = Modifier
+) {
+    TextField(
+        value = replyText,
+        onValueChange = onReplyTextChange,
+        enabled = enabled,
+        placeholder = { Text(hint) },
+        textStyle = MaterialTheme.typography.bodyLarge,
+        minLines = 2,
+        // No IME send action: the legacy field was textMultiLine, so the enter key inserts a
+        // newline and sending stays on the dedicated send button.
+        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent
+        ),
+        modifier = modifier
+    )
+}
+
+/**
+ * User suggestions for the `@`-mention being typed at the cursor, shown directly above the reply
+ * field. Replaces the popup the legacy SuggestionAutoCompleteText offered; matching and filtering
+ * follow the legacy SuggestionAdapter/SuggestionTokenizer behaviour.
+ */
+@Composable
+private fun MentionSuggestionPanel(
+    replyText: TextFieldValue,
+    suggestions: List<Suggestion>,
+    onReplyTextChange: (TextFieldValue) -> Unit
+) {
+    val token = findMentionToken(replyText) ?: return
+    val filtered = filterMentionSuggestions(suggestions, token.query)
+    if (filtered.isEmpty()) return
+
+    HorizontalDivider()
+    LazyColumn(modifier = Modifier.heightIn(max = 200.dp)) {
+        items(filtered, key = { it.value }) { suggestion ->
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        onReplyTextChange(applyMentionSuggestion(replyText, token, suggestion))
+                    }
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                RemoteImage(
+                    imageUrl = suggestion.avatarUrl,
+                    fallbackImageRes = R.drawable.ic_user_placeholder_primary_24,
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clip(CircleShape)
+                )
+                Column(modifier = Modifier.padding(start = 12.dp)) {
+                    Text(
+                        text = "@${suggestion.value}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = suggestion.displayValue,
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = MEDIUM_EMPHASIS_ALPHA)
+                    )
+                }
+            }
+        }
+    }
+}
+
+internal data class MentionToken(val start: Int, val query: String)
+
+/**
+ * Finds the `@`-mention token the cursor is currently inside: an `@` at the start of the text or
+ * preceded by whitespace, with no whitespace between it and the cursor. Returns null when the
+ * cursor isn't in a mention (or a selection is active).
+ */
+internal fun findMentionToken(value: TextFieldValue): MentionToken? {
+    val cursor = value.selection.end
+    val text = value.text
+    if (!value.selection.collapsed || cursor > text.length) return null
+    // The candidate token is whatever sits between the last whitespace and the cursor
+    val beforeCursor = text.substring(0, cursor)
+    val tokenStart = beforeCursor.indexOfLast { it.isWhitespace() } + 1
+    val candidate = beforeCursor.substring(tokenStart)
+    return if (candidate.startsWith('@')) {
+        MentionToken(start = tokenStart, query = candidate.substring(1))
+    } else {
+        null
+    }
+}
+
+/** Same matching as the legacy SuggestionAdapter: user login or display name prefix, per word. */
+internal fun filterMentionSuggestions(suggestions: List<Suggestion>, query: String): List<Suggestion> {
+    if (query.isEmpty()) return suggestions
+    val lowerQuery = query.lowercase()
+    return suggestions.filter { suggestion ->
+        suggestion.value.lowercase().startsWith(lowerQuery) ||
+            suggestion.displayValue.lowercase().startsWith(lowerQuery) ||
+            suggestion.displayValue.lowercase().contains(" $lowerQuery")
+    }
+}
+
+/** Replaces the mention being typed with the picked suggestion and moves the cursor after it. */
+internal fun applyMentionSuggestion(
+    value: TextFieldValue,
+    token: MentionToken,
+    suggestion: Suggestion
+): TextFieldValue {
+    val replacement = "@${suggestion.value} "
+    val newText = value.text.replaceRange(token.start, value.selection.end, replacement)
+    return value.copy(text = newText, selection = TextRange(token.start + replacement.length))
+}
+
+/**
+ * The comment detail's reply editor, presented as a modal bottom sheet from the Reply action
+ * under the comment, so the comment being answered stays visible behind it.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+@Suppress("LongParameterList")
+fun CommentReplySheet(
+    replyText: TextFieldValue,
+    onReplyTextChange: (TextFieldValue) -> Unit,
+    suggestions: List<Suggestion>,
+    hint: String,
+    isReplyInProgress: Boolean,
+    isSendEnabled: Boolean,
+    onSendClick: () -> Unit,
+    onDeleteDraft: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val focusRequester = remember { FocusRequester() }
+    val scope = rememberCoroutineScope()
+    var isReplyFieldFocused by remember { mutableStateOf(false) }
+    var showDraftPrompt by remember { mutableStateOf(false) }
+    val canSend = isSendEnabled && replyText.text.isNotBlank() && !isReplyInProgress
+
+    ModalBottomSheet(
+        // Closing with something typed asks what to do with it, like iOS's composer. An empty
+        // sheet just closes. Every dismiss path - scrim, swipe, back - arrives here.
+        onDismissRequest = {
+            if (replyText.text.isNotBlank()) showDraftPrompt = true else onDismiss()
+        },
+        sheetState = sheetState,
+        // The sheet hosts a text field, so it has to ride above the keyboard rather than sit
+        // behind it; the inset is applied to the content below instead.
+        contentWindowInsets = { WindowInsets(0) }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .imePadding()
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = SHEET_H_PADDING, end = SHEET_ACTION_PADDING)
+            ) {
+                Text(
+                    text = stringResource(R.string.reply),
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.weight(1f)
+                )
+                if (isReplyInProgress) {
+                    CircularProgressIndicator(
+                        strokeWidth = SHEET_PROGRESS_STROKE,
+                        modifier = Modifier.size(SHEET_PROGRESS_SIZE)
+                    )
+                } else {
+                    TextButton(onClick = onSendClick, enabled = canSend) {
+                        Text(stringResource(R.string.send))
+                    }
+                }
+            }
+            ReplyTextField(
+                replyText = replyText,
+                onReplyTextChange = onReplyTextChange,
+                hint = hint,
+                enabled = !isReplyInProgress,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = SHEET_FIELD_MIN_HEIGHT)
+                    .focusRequester(focusRequester)
+                    .onFocusChanged { isReplyFieldFocused = it.isFocused }
+            )
+            if (isReplyFieldFocused) {
+                MentionSuggestionPanel(replyText, suggestions, onReplyTextChange)
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+
+    if (showDraftPrompt) {
+        ReplyDraftPrompt(
+            onKeepEditing = {
+                showDraftPrompt = false
+                // A swipe-down already animated the sheet to hidden, so bring it back rather
+                // than leaving a composed-but-invisible sheet behind.
+                scope.launch { sheetState.show() }
+            },
+            onDeleteDraft = {
+                showDraftPrompt = false
+                onDeleteDraft()
+                onDismiss()
+            },
+            onSaveDraft = {
+                showDraftPrompt = false
+                // The draft is already persisted by the host on pause, so saving is just leaving.
+                onDismiss()
+            }
+        )
+    }
+}
+
+/**
+ * What to do with an unsent reply when the sheet is closed, mirroring iOS's close-confirmation
+ * action sheet. The buttons stack because the labels are too long to sit on one row, which also
+ * keeps the destructive option from landing next to the safe one.
+ */
+@Composable
+private fun ReplyDraftPrompt(
+    onKeepEditing: () -> Unit,
+    onDeleteDraft: () -> Unit,
+    onSaveDraft: () -> Unit
+) {
+    AlertDialog(
+        // Dismissing the prompt itself is the safe choice, not a decision about the draft.
+        onDismissRequest = onKeepEditing,
+        // iOS shows these as a bare action sheet, which needs no prompt text. An Android dialog
+        // with nothing above the buttons renders as an empty box, so it says what it is asking
+        // about instead.
+        text = { Text(stringResource(R.string.comment_reply_unsent)) },
+        confirmButton = {
+            Column(
+                horizontalAlignment = Alignment.End,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TextButton(onClick = onSaveDraft) {
+                    Text(stringResource(R.string.comment_reply_save_draft))
+                }
+                TextButton(onClick = onDeleteDraft) {
+                    Text(
+                        text = stringResource(R.string.comment_reply_delete_draft),
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+                TextButton(onClick = onKeepEditing) {
+                    Text(stringResource(R.string.comment_reply_keep_editing))
+                }
+            }
+        }
+    )
+}
+
+private val SHEET_H_PADDING = 16.dp
+private val SHEET_ACTION_PADDING = 8.dp
+private val SHEET_FIELD_MIN_HEIGHT = 120.dp
+private val SHEET_PROGRESS_SIZE = 20.dp
+private val SHEET_PROGRESS_STROKE = 2.dp
+
+/** Matches material_emphasis_medium. */
+private const val MEDIUM_EMPHASIS_ALPHA = 0.6f

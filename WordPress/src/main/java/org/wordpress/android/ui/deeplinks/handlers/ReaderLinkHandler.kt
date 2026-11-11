@@ -18,6 +18,7 @@ import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Com
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.HOST_WORDPRESS_COM
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.SITE_DOMAIN
 import org.wordpress.android.ui.reader.ReaderConstants
+import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.utils.IntentUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
@@ -161,7 +162,7 @@ class ReaderLinkHandler
             }
             isWordPressComTagUrl(uri) -> {
                 val tagSlug = extractTagSlug(uri)
-                if (!tagSlug.isNullOrBlank()) {
+                if (tagSlug != null && ReaderUtils.isValidTagSlug(tagSlug)) {
                     OpenTagInReader(tagSlug)
                 } else {
                     _toast.value = Event(R.string.error_generic)

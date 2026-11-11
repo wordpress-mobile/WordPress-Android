@@ -21,9 +21,6 @@ public class RequestCodes {
     public static final int STOCK_MEDIA_PICKER_SINGLE_SELECT = 1202;
     public static final int STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK = 1203;
     public static final int SITE_ICON_PICKER = 1205;
-    public static final int SHOW_SIGNUP_EPILOGUE_AND_RETURN = 1301;
-    public static final int SMART_LOCK_SAVE = 1400;
-    public static final int SMART_LOCK_READ = 1500;
     public static final int NOTIFICATION_SETTINGS = 1600;
     public static final int ACTIVITY_LOG_DETAIL = 1700;
     public static final int BACKUP_DOWNLOAD = 1710;
@@ -52,9 +49,6 @@ public class RequestCodes {
 
     // QuickStart
     public static final int QUICK_START_REMINDER_RECEIVER = 4000;
-
-    public static final int GIF_PICKER_SINGLE_SELECT = 3200;
-    public static final int GIF_PICKER_MULTI_SELECT = 3201;
 
     // Domain Registration
     public static final int DOMAIN_REGISTRATION = 5000;

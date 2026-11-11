@@ -43,30 +43,44 @@ constructor(
         data: RESPONSE_TYPE,
         requestedItems: Int? = null,
         replaceExistingData: Boolean = true,
-        postId: Long? = null
+        postId: Long? = null,
+        cacheKey: String? = null
     ) {
-        statsSqlUtils.insert(site, blockType, INSIGHTS, data, replaceExistingData, postId = postId)
+        statsSqlUtils.insert(site, blockType, INSIGHTS, data, replaceExistingData, date = cacheKey, postId = postId)
         if (replaceExistingData) {
             statsRequestSqlUtils.insert(
                     site,
                     blockType,
                     INSIGHTS,
                     requestedItems,
+                    date = cacheKey,
                     postId = postId
             )
         }
     }
 
-    fun select(site: SiteModel, postId: Long? = null): RESPONSE_TYPE? {
-        return statsSqlUtils.select(site, blockType, INSIGHTS, classOfResponse, postId = postId)
+    fun select(site: SiteModel, postId: Long? = null, cacheKey: String? = null): RESPONSE_TYPE? {
+        return statsSqlUtils.select(site, blockType, INSIGHTS, classOfResponse, date = cacheKey, postId = postId)
     }
 
     fun selectAll(site: SiteModel): List<RESPONSE_TYPE> {
         return statsSqlUtils.selectAll(site, blockType, INSIGHTS, classOfResponse)
     }
 
-    fun hasFreshRequest(site: SiteModel, requestedItems: Int? = null, postId: Long? = null): Boolean {
-        return statsRequestSqlUtils.hasFreshRequest(site, blockType, INSIGHTS, requestedItems, postId = postId)
+    fun hasFreshRequest(
+        site: SiteModel,
+        requestedItems: Int? = null,
+        postId: Long? = null,
+        cacheKey: String? = null
+    ): Boolean {
+        return statsRequestSqlUtils.hasFreshRequest(
+                site,
+                blockType,
+                INSIGHTS,
+                requestedItems,
+                date = cacheKey,
+                postId = postId
+        )
     }
 
     class AllTimeSqlUtils

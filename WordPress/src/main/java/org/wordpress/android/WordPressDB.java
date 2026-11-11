@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class WordPressDB {
-    private static final int DATABASE_VERSION = 70;
+    private static final int DATABASE_VERSION = 71;
 
 
     // Warning renaming DATABASE_NAME could break previous App backups (see: xml/backup_scheme.xml)
@@ -187,6 +187,9 @@ public class WordPressDB {
             case 69:
                 // add editor theme styles site setting
                 mDb.execSQL(SiteSettingsModel.ADD_USE_THEME_STYLES);
+            case 70:
+                // add third-party blocks site setting
+                mDb.execSQL(SiteSettingsModel.ADD_USE_THIRD_PARTY_BLOCKS);
         }
         mDb.setVersion(DATABASE_VERSION);
     }

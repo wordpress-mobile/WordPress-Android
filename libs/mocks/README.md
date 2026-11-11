@@ -8,7 +8,7 @@ The JSON files used by WireMock to handle requests and are located in `src/main/
 you're first going to want to set up [Charles Proxy](https://www.charlesproxy.com/) (or similar) to work with your Android emulator.
  If you've never done this I found
 [this article](https://medium.com/@daptronic/the-android-emulator-and-charles-proxy-a-love-story-595c23484e02) to be a
-good place to start. Once you've done that you'll want to walk through the specfic flow you're testing and store the JSON contents
+good place to start. Once you've done that you'll want to walk through the specific flow you're testing and store the JSON contents
 of the necessary responses in the `jsonBody` field of the `response` field in the mock file.
 
 Here's an example of what this might look like,

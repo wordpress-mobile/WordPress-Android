@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections
 
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
@@ -8,6 +10,8 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
@@ -95,6 +99,40 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         assertThat(block.liveData.value?.state).isEqualTo(UseCaseState.LOADING)
     }
 
+    @Test
+    fun `concurrent non-forced fetches only trigger one remote load`() = test {
+        whenever(localDataProvider.get()).thenReturn(null)
+        val gate = CompletableDeferred<Unit>()
+        val gatedBlock = TestUseCase(localDataProvider, remoteDataProvider, loadingData, gate)
+
+        launch { gatedBlock.fetch(false, false) } // acquires the in-flight guard, suspends at the gate
+        advanceUntilIdle()
+        launch { gatedBlock.fetch(true, false) } // a load is already in flight -> should be skipped
+        advanceUntilIdle()
+        gate.complete(Unit)
+        advanceUntilIdle()
+
+        verify(remoteDataProvider, times(1)).get()
+        gatedBlock.clear()
+    }
+
+    @Test
+    fun `a forced fetch is not skipped while a load is in flight`() = test {
+        whenever(localDataProvider.get()).thenReturn(null)
+        val gate = CompletableDeferred<Unit>()
+        val gatedBlock = TestUseCase(localDataProvider, remoteDataProvider, loadingData, gate)
+
+        launch { gatedBlock.fetch(false, false) } // non-forced load in flight
+        advanceUntilIdle()
+        launch { gatedBlock.fetch(true, true) } // forced (pull-to-refresh) must still hit remote
+        advanceUntilIdle()
+        gate.complete(Unit)
+        advanceUntilIdle()
+
+        verify(remoteDataProvider, times(2)).get()
+        gatedBlock.clear()
+    }
+
     @After
     fun tearDown() {
         block.clear()
@@ -109,7 +147,8 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
     class TestUseCase(
         private val localDataProvider: Provider<String?>,
         private val remoteDataProvider: Provider<String?>,
-        private val loadingItems: List<BlockListItem>
+        private val loadingItems: List<BlockListItem>,
+        private val remoteGate: CompletableDeferred<Unit>? = null
     ) : BaseStatsUseCase<String, Int>(
         ALL_TIME_STATS,
         UnconfinedTestDispatcher(),
@@ -130,6 +169,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         }
 
         override suspend fun fetchRemoteData(forced: Boolean): State<String> {
+            remoteGate?.await()
             val domainModel = remoteDataProvider.get()
             return if (domainModel != null) {
                 State.Data(domainModel)

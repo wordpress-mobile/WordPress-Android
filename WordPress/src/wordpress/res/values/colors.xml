@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Login Prologue Revamped
+         tools:keep is needed because Android Lint can't trace resource usage
+         across product flavors — these colors are used by Compose code in
+         this flavor (wordpress) but Lint only sees the main source set. -->
+    <color name="login_prologue_revamped_background"
+        tools:keep="@color/login_prologue_revamped_background">@color/gray_0</color>
+    <color name="login_prologue_revamped_icon"
+        tools:keep="@color/login_prologue_revamped_icon">@color/gray_80</color>
+</resources>

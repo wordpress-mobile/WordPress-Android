@@ -56,7 +56,6 @@ class MySiteListItemViewHolder(
         uiHelpers.setImageOrHide(mySiteItemSecondaryIcon, cardAndItem.secondaryIcon)
         uiHelpers.setTextOrHide(mySiteItemPrimaryText, cardAndItem.primaryText)
         uiHelpers.setTextOrHide(mySiteItemSecondaryText, cardAndItem.secondaryText)
-        mySiteItemBetaBadge.visibility = if (cardAndItem.showBetaBadge) View.VISIBLE else View.GONE
         itemView.setOnClickListener { cardAndItem.onClick.click() }
     }
 

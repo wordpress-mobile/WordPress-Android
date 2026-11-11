@@ -65,7 +65,7 @@ import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewMod
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.TagChip
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.TagFeedItem
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.UiState
-import org.wordpress.android.ui.reader.views.compose.ReaderAnnouncementCard
+
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterChip
 import org.wordpress.android.ui.utils.UiString
 
@@ -108,15 +108,6 @@ private fun Loaded(uiState: UiState.Loaded) {
                 .fillMaxSize()
                 .nestedScroll(rememberNestedScrollInteropConnection()),
         ) {
-            uiState.announcementItem?.let { announcementItem ->
-                item(key = "reader-announcement-card") {
-                    ReaderAnnouncementCard(
-                        items = announcementItem.items,
-                        onAnnouncementCardDoneClick = announcementItem.onDoneClicked,
-                    )
-                }
-            }
-
             items(
                 items = uiState.data,
                 key = { it.tagChip.tag.tagSlug }

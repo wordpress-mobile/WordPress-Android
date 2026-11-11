@@ -1,28 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <permission
-        android:name="${applicationId}.permission.DISABLE_NOTIFICATIONS"
-        android:description="@string/notification_disable_broadcast_permission_desc"
-        android:label="@string/notification_disable_broadcast_permission_label" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application>
-        <provider
-            android:name=".localcontentmigration.LocalMigrationContentProvider"
-            android:authorities="${applicationId}.LocalMigrationContentProvider"
-            android:exported="true"
-            tools:ignore="ExportedContentProvider" />
-
-        <receiver
-            android:name=".ui.mysite.jetpackbadge.JetpackAppInstallReceiver"
-            android:exported="true"
-            android:permission="${applicationId}.permission.DISABLE_NOTIFICATIONS">
-            <intent-filter>
-                <action android:name="org.wordpress.android.broadcast.DISABLE_NOTIFICATIONS"/>
-            </intent-filter>
-        </receiver>
-
         <receiver
             android:name=".ui.deeplinks.JetpackAppUninstallReceiver"
             android:exported="true">

@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2016-12-01 04:20:36+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.3
+Generator: GlotPress/4.1.0
 Language: th
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
@@ -35,7 +35,6 @@ Language: th
     <string name="site_settings_discussion_hint">ดูและเปลี่ยนการตั้งค่าการสนทนาเว็บของคุณ</string>
     <string name="site_settings_more_hint">ดูการตั้งค่าการสนทนาทั้งหมดที่มีอยู่</string>
     <string name="site_settings_related_posts_hint">แสดงหรือซ่อนเรื่องในตัวอ่าน</string>
-    <string name="site_settings_image_width_hint">เปลี่ยนขนาดรูปภาพในเรื่องมาที่ขนาดความกว้างนี้</string>
     <string name="site_settings_format_hint">ตั้งค่ารูปแบบเรื่องใหม่</string>
     <string name="site_settings_category_hint">ตั้งค่าหมวดหมู่เรื่องใหม่</string>
     <string name="site_settings_password_hint">เปลี่ยนรหัสผ่านของคุณ</string>
@@ -136,6 +135,7 @@ Language: th
     <string name="push_auth_expired">การร้องขอหมดอายุแล้ว  ลงทะเบียนเข้าสู่ WordPress.com เพื่อลองอีกครั้ง</string>
     <string name="stats_insights_best_ever">การดูที่ดีที่สุด</string>
     <string name="ignore">ไม่สนใจ</string>
+    <string name="stats_insights_most_popular_day">วันยอดนิยมที่สุด</string>
     <string name="stats_insights_today">สถิติวันนี้</string>
     <string name="stats_insights_all_time">เรื่อง การดูและผู้เยี่ยมชมของเวลาทั้งหมด</string>
     <string name="stats_insights">แบบละเอียด</string>
@@ -148,9 +148,6 @@ Language: th
     <string name="reader_label_new_posts_subtitle">แตะเพื่อแสดงมัน</string>
     <string name="select_all">เลือกทั้งหมด</string>
     <string name="language">ภาษา</string>
-    <string name="verification_code" a8c-src-lib="module:login">โค้ดยืนยัน</string>
-    <string name="invalid_verification_code" a8c-src-lib="module:login">โค้ดยืนยันไม่ถูกต้อง</string>
-    <string name="auth_required" a8c-src-lib="module:login">เข้าสู่ระบบอีกครั้งเพื่อทำต่อ</string>
     <string name="reader_empty_posts_request_failed">ไม่สามารถดึงเรื่องได้</string>
     <string name="error_notification_open">ไม่สามารถเปิดคำเตือนได้</string>
     <string name="stats_search_terms_unknown_search_terms">เงื่อนไขการค้นหาที่ไม่รู้จัก</string>
@@ -199,7 +196,6 @@ Language: th
     <string name="more">กว่า</string>
     <string name="browse_our_faq_button">เรียกดูคำถามที่พบบ่อยของเรา</string>
     <string name="reader_empty_comments">ยังไม่มีความเห็น</string>
-    <string name="reader_label_view_original">ดูบทความเริ่มต้น</string>
     <string name="reader_label_like">ชื่นชอบ</string>
     <string name="signing_out">กำลังออกจากระบบ…</string>
     <string name="reader_toast_err_generic">ไม่สามารถทำการกระทำนี้ได้</string>
@@ -228,10 +224,8 @@ Language: th
     <string name="error_refresh_pages">ไม่สามารถโหลดใหม่หน้าในตอนนี้</string>
     <string name="error_refresh_comments">ไม่สามารถโหลดใหม่ความเห็นในตอนนี้</string>
     <string name="invalid_email_message">ที่อยู่อีเมลของคุณไม่ถูกต้อง</string>
-    <string name="email_invalid" a8c-src-lib="module:login">ใส่ที่อยู่อีเมลที่ใช้งานได้</string>
     <string name="new_media">ไฟล์สื่อใหม่</string>
     <string name="wordpress_blog">บล็อกเวิร์ดเพรส</string>
-    <string name="fatal_db_error">มีความผิดพลาดเกิดขึ้นระหว่างการสร้างฐานข้อมูลแอพ  โปรดลองติดตั้งแอพใหม่อีกครั้ง</string>
     <string name="new_post">เรื่องใหม่</string>
     <string name="view_in_browser">ดูในเบราว์เซอร์</string>
     <string name="add_new_category">เพิ่มหมวดหมู่ใหม่</string>
@@ -261,11 +255,9 @@ Language: th
     <string name="file_error_create">ไม่สามารถสร้างไฟล์ชั่วคราวสำหรับการอัปโหลดไฟล์สื่อ โปรดตรวจสอบว่าอุปกรณ์ของคุณมีพื้นที่ว่างเพียงพอสำหรับการอัปโหลด</string>
     <string name="local_changes">การเปลี่ยนแปลงบนอุปกรณ์</string>
     <string name="media_gallery_type_thumbnail_grid">ตารางรูปขนาดย่อ</string>
-    <string name="horizontal_alignment" a8c-src-lib="module:editor">การเรียงในแนวนอน</string>
-    <string name="http_authorization_required" a8c-src-lib="module:login">ต้องการการอนุญาติ</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">การเรียงในแนวนอน</string>
     <string name="reader_title_applog">log แอพพลิเคชั่น</string>
     <string name="remove_account">ลบเว็บ</string>
-    <string name="notifications_empty_all">ยังไม่มีคำเตือน</string>
     <string name="share_link">แบ่งปันลิงก์</string>
     <string name="reader_empty_posts_in_tag_updating">กำลังดึงข้อมูลเรื่อง…</string>
     <string name="comment_spammed">ความเห็นนี้ถูกบันทึกเป็นสแปม</string>
@@ -315,8 +307,6 @@ Language: th
     <string name="more_notifications">และ %d เพิ่มเติม</string>
     <string name="sign_in">เข้าสู่ระบบ</string>
     <string name="loading">กำลังโหลดข้อมูล…</string>
-    <string name="httpuser" a8c-src-lib="module:login">ชื่อผู้ใช้ HTTP</string>
-    <string name="httppassword" a8c-src-lib="module:login">รหัสผ่าน HTTP</string>
     <string name="error_media_upload">มีความผิดพลาดเกิดขึ้นขณะทำการอัปโหลดไฟล์สื่อ</string>
     <string name="incorrect_credentials">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</string>
     <string name="password">รหัสผ่าน</string>
@@ -324,16 +314,16 @@ Language: th
     <string name="log_in" a8c-src-lib="module:login">เข้าสู่ระบบ</string>
     <string name="reader">ผู้อ่าน</string>
     <string name="pages">หน้า</string>
-    <string name="caption" a8c-src-lib="module:editor">ป้ายชื่อ (ทางเลือก)</string>
-    <string name="width" a8c-src-lib="module:editor">ความกว้าง</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">ป้ายชื่อ (ทางเลือก)</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">ความกว้าง</string>
     <string name="posts">เรื่อง</string>
     <string name="anonymous">นิรนาม</string>
-    <string name="featured" a8c-src-lib="module:editor">ใช้เป็นรูปเด่น</string>
-    <string name="featured_in_post" a8c-src-lib="module:editor">รวมรูปภาพในเนื้อหาเรื่อง</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">ใช้เป็นรูปเด่น</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">รวมรูปภาพในเนื้อหาเรื่อง</string>
     <string name="no_network_title">ไม่มีเครือข่ายใช้งานได้</string>
     <string name="ok">ตกลง</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">กำลังอัปโหลด…</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">กำลังอัปโหลด…</string>
     <string name="image_alignment">จัดหน้า</string>
     <string name="refresh">รีเฟรช</string>
     <string name="untitled">ไม่มีหัวข้อ</string>

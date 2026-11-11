@@ -16,7 +16,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.accounts.login.DiscoverySource
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -28,9 +28,6 @@ class ApplicationPasswordDialogViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var appLogWrapper: AppLogWrapper
-
-    @Mock
-    lateinit var experimentalFeatures: ExperimentalFeatures
 
     private lateinit var viewModel: ApplicationPasswordDialogViewModel
 
@@ -44,15 +41,17 @@ class ApplicationPasswordDialogViewModelTest : BaseUnitTest() {
         viewModel = ApplicationPasswordDialogViewModel(
             applicationPasswordLoginHelper,
             appLogWrapper,
-            experimentalFeatures
         )
     }
 
     @Test
     fun `onDialogConfirmed with valid URL processes successfully and emits NavigateToLogin`() = runTest {
         // Given
-        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(eq(testAuthUrl)))
-            .thenReturn(testCompleteAuthUrl)
+        whenever(
+            applicationPasswordLoginHelper
+                .getAuthorizationUrlComplete(eq(testAuthUrl), eq(DiscoverySource.REAUTH_DIALOG))
+        )
+            .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.Authorized(testCompleteAuthUrl))
 
         // When & Then
         viewModel.navigationEvent.test {
@@ -78,7 +77,8 @@ class ApplicationPasswordDialogViewModelTest : BaseUnitTest() {
                 navigationEvent
             )
 
-            verify(applicationPasswordLoginHelper, times(1)).getAuthorizationUrlComplete(eq(testAuthUrl))
+            verify(applicationPasswordLoginHelper, times(1))
+                .getAuthorizationUrlComplete(eq(testAuthUrl), eq(DiscoverySource.REAUTH_DIALOG))
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -97,7 +97,7 @@ class ApplicationPasswordDialogViewModelTest : BaseUnitTest() {
             )
 
             // Should NOT call the helper since we return early
-            verify(applicationPasswordLoginHelper, times(0)).getAuthorizationUrlComplete(any())
+            verify(applicationPasswordLoginHelper, times(0)).getAuthorizationUrlComplete(any(), any())
             // Should log a warning about empty URL
             verify(appLogWrapper, times(1)).w(any(), any())
             cancelAndIgnoreRemainingEvents()
@@ -107,8 +107,11 @@ class ApplicationPasswordDialogViewModelTest : BaseUnitTest() {
     @Test
     fun `onDialogConfirmed with helper returning empty URL emits ShowError`() = runTest {
         // Given
-        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(eq(testAuthUrl)))
-            .thenReturn("")
+        whenever(
+            applicationPasswordLoginHelper
+                .getAuthorizationUrlComplete(eq(testAuthUrl), eq(DiscoverySource.REAUTH_DIALOG))
+        )
+            .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.Failed("test failure"))
 
         // When & Then
         viewModel.navigationEvent.test {
@@ -134,7 +137,8 @@ class ApplicationPasswordDialogViewModelTest : BaseUnitTest() {
                 navigationEvent
             )
 
-            verify(applicationPasswordLoginHelper, times(1)).getAuthorizationUrlComplete(eq(testAuthUrl))
+            verify(applicationPasswordLoginHelper, times(1))
+                .getAuthorizationUrlComplete(eq(testAuthUrl), eq(DiscoverySource.REAUTH_DIALOG))
             verify(appLogWrapper, times(1)).e(any(), any())
             cancelAndIgnoreRemainingEvents()
         }
@@ -144,7 +148,10 @@ class ApplicationPasswordDialogViewModelTest : BaseUnitTest() {
     fun `onDialogConfirmed with helper throwing exception emits ShowError`() = runTest {
         // Given
         val testException = RuntimeException("API discovery failed")
-        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(eq(testAuthUrl)))
+        whenever(
+            applicationPasswordLoginHelper
+                .getAuthorizationUrlComplete(eq(testAuthUrl), eq(DiscoverySource.REAUTH_DIALOG))
+        )
             .doThrow(testException)
 
         // When & Then
@@ -171,7 +178,8 @@ class ApplicationPasswordDialogViewModelTest : BaseUnitTest() {
                 navigationEvent
             )
 
-            verify(applicationPasswordLoginHelper, times(1)).getAuthorizationUrlComplete(eq(testAuthUrl))
+            verify(applicationPasswordLoginHelper, times(1))
+                .getAuthorizationUrlComplete(eq(testAuthUrl), eq(DiscoverySource.REAUTH_DIALOG))
             verify(appLogWrapper, times(1)).e(any(), any())
             cancelAndIgnoreRemainingEvents()
         }

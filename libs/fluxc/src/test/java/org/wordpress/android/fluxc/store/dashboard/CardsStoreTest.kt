@@ -183,7 +183,9 @@ private val ACTIVITY_RESPONSE_ACTOR = ActivitiesResponse.Actor(
     ACTIVITY_ACTOR_EXTERNAL_USER_ID,
     ACTIVITY_ACTOR_WPCOM_USER_ID,
     ACTIVITY_RESPONSE_ICON,
-    ACTIVITY_ACTOR_ROLE
+    ACTIVITY_ACTOR_ROLE,
+    null,
+    null
 )
 private val ACTIVITY_RESPONSE_GENERATOR = ActivitiesResponse.Generator(10.3f, 123)
 private val ACTIVITY_RESPONSE_PAGE = ActivitiesResponse.ActivityResponse(
@@ -678,7 +680,7 @@ class CardsStoreTest {
     /* TODAYS STATS CARD WITH ERROR */
 
     @Test
-    fun `given todays stats card with error, when fetch cards triggered, then card with error inserted into db`() =
+    fun `given today's stats card with error, when fetch cards triggered, then card with error inserted into db`() =
             test {
                 whenever(restClient.fetchCards(defaultFetchCardsPayload)).thenReturn(
                     CardsPayload(

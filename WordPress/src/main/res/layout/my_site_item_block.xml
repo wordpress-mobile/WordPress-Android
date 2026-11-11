@@ -55,30 +55,9 @@
         android:paddingStart="0dp"
         android:textAlignment="viewEnd"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/my_site_item_beta_badge"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/guideline2"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/posts" />
-
-    <TextView
-        android:id="@+id/my_site_item_beta_badge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_beta_pill"
-        android:paddingStart="@dimen/margin_small"
-        android:paddingEnd="@dimen/margin_small"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
-        android:layout_marginEnd="@dimen/margin_medium"
-        android:text="@string/beta_label"
-        android:textAllCaps="true"
-        android:textColor="@color/white"
-        android:textSize="11sp"
-        android:textStyle="bold"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,15 +6,14 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.items.ACTIVITY_ITEM
 import org.wordpress.android.ui.mysite.items.ADMIN_ITEM
 import org.wordpress.android.ui.mysite.items.BACKUP_ITEM
+import org.wordpress.android.ui.mysite.items.ME_ITEM
 import org.wordpress.android.ui.mysite.items.PAGES_ITEM
 import org.wordpress.android.ui.mysite.items.PEOPLE_ITEM
 import org.wordpress.android.ui.mysite.items.PLUGINS_ITEM
@@ -24,7 +23,6 @@ import org.wordpress.android.ui.mysite.items.SITE_ITEM_ACTION
 import org.wordpress.android.ui.mysite.items.SITE_MONITORING_ITEM
 import org.wordpress.android.ui.mysite.items.SITE_SETTINGS_ITEM
 import org.wordpress.android.ui.plugins.PluginUtilsWrapper
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
@@ -52,13 +50,7 @@ class SiteListItemBuilderTest {
     lateinit var siteModel: SiteModel
 
     @Mock
-    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
-
-    @Mock
     lateinit var siteMonitoringFeatureConfig: SiteMonitoringFeatureConfig
-
-    @Mock
-    lateinit var experimentalFeatures: ExperimentalFeatures
 
     @Mock
     lateinit var selfHostedUsersFeatureConfig: SelfHostedUsersFeatureConfig
@@ -76,10 +68,8 @@ class SiteListItemBuilderTest {
             siteUtilsWrapper,
             buildConfigWrapper,
             themeBrowserUtils,
-            jetpackFeatureRemovalPhaseHelper,
             siteMonitoringFeatureConfig,
             selfHostedUsersFeatureConfig,
-            experimentalFeatures,
             siteCapabilityChecker
         )
     }
@@ -343,6 +333,26 @@ class SiteListItemBuilderTest {
         assertThat(item).isNull()
     }
 
+    // Me stands in for the bottom navigation in the WordPress app, so it is built for every site
+    // regardless of capabilities.
+    @Test
+    fun `me item built in the WordPress app, regardless of site capabilities`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+
+        val item = siteListItemBuilder.buildMeItemIfAvailable(SITE_ITEM_ACTION)
+
+        assertThat(item).isEqualTo(ME_ITEM)
+    }
+
+    @Test
+    fun `me item not built in the Jetpack app`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+
+        val item = siteListItemBuilder.buildMeItemIfAvailable(SITE_ITEM_ACTION)
+
+        assertThat(item).isNull()
+    }
+
     /* SITE MONITORING */
     @Test
     fun `give jetpack app, when FF is true and site is atomic and admin, then site monitoring item is built`() {
@@ -413,8 +423,7 @@ class SiteListItemBuilderTest {
     }
 
     @Test
-    fun `application password when feature is enabled`() {
-        whenever(experimentalFeatures.isEnabled(any())).thenReturn(true)
+    fun `application password item built when site uses self-hosted rest api`() {
         whenever(siteModel.isUsingSelfHostedRestApi).thenReturn(true)
 
         val item = siteListItemBuilder.buildApplicationPasswordsItemIfAvailable(siteModel, SITE_ITEM_ACTION)
@@ -423,17 +432,7 @@ class SiteListItemBuilderTest {
     }
 
     @Test
-    fun `application password null when feature is not enabled`() {
-        whenever(experimentalFeatures.isEnabled(any())).thenReturn(false)
-
-        val item = siteListItemBuilder.buildApplicationPasswordsItemIfAvailable(siteModel, SITE_ITEM_ACTION)
-
-        assertThat(item).isNull()
-    }
-
-    @Test
-    fun `application password null when not set`() {
-        whenever(experimentalFeatures.isEnabled(any())).thenReturn(true)
+    fun `application password null when not using self-hosted rest api`() {
         whenever(siteModel.isUsingSelfHostedRestApi).thenReturn(false)
 
         val item = siteListItemBuilder.buildApplicationPasswordsItemIfAvailable(siteModel, SITE_ITEM_ACTION)

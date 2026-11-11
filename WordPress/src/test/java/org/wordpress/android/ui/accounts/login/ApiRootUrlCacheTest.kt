@@ -10,6 +10,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.util.UriUtilsWrapper
 import org.wordpress.android.util.UriWrapper
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 class ApiRootUrlCacheTest {
@@ -93,6 +94,11 @@ class ApiRootUrlCacheTest {
     }
 
     @Test
+    fun `get returns null for null key`() {
+        assertNull(apiRootUrlCache.get(null))
+    }
+
+    @Test
     fun `cache handles special characters in values`() {
         val key = "test-site.com"
         val value = "https://test-site.com/wp-json/?auth=token&user=test@email.com"
@@ -121,6 +127,16 @@ class ApiRootUrlCacheTest {
         assertEquals(value, apiRootUrlCache.get(keyUpperCase))
         assertEquals(value, apiRootUrlCache.get("TEST-SITE.COM"))
         assertEquals(value, apiRootUrlCache.get("test-site.com"))
+    }
+
+    @Test
+    fun `put and get are consistent for malformed URL`() {
+        whenever(uriUtilsWrapper.parse(any())).thenThrow(IllegalArgumentException("malformed"))
+
+        val malformedUrl = "http://bad site.com/path"
+        apiRootUrlCache.put(malformedUrl, "https://bad site.com/wp-json/")
+
+        assertNotNull(apiRootUrlCache.get(malformedUrl))
     }
 
     @Test

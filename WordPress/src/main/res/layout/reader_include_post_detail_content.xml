@@ -15,11 +15,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!--
+            saveEnabled is off because the WebView's saved state (its serialized back/forward
+            list) can reach megabytes and overflow the saved-state Binder transaction, crashing
+            with TransactionTooLargeException. The post is always re-rendered from local data
+            by ReaderPostRenderer, so this state is never used on restore.
+        -->
         <org.wordpress.android.ui.reader.views.ReaderWebView
             android:id="@+id/reader_webview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_extra_large"
+            android:saveEnabled="false"
             android:scrollbars="none" />
 
         <ProgressBar

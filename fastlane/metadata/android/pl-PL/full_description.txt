@@ -1,40 +1,40 @@
-WordPress dla Androida zapewnia moc publikowania w sieci właściwie prawie z własnej kieszeni. Kreator witryn internetowych i wiele więcej!
-
+Aplikacja WordPress na Androida przenosi możliwości publikowania w sieci prosto do Twojej kieszeni. Narzędzie do tworzenia witryn internetowych i nie tylko!
+ 
 TWÓRZ
-- Daj swoim wielkim pomysłom miejsce w sieci. WordPress dla Androida to kreator witryn i blogów.
-- Wybierz odpowiedni wygląd i styl z szerokiej gamy motywów WordPress, a następnie dostosuj go za pomocą zdjęć, kolorów i krojów pisma, aby był wyjątkowy.
-- Wbudowane wskazówki szybkiego startu poprowadzą przez podstawy konfiguracji, aby nowa witryna odniosła sukces.
-
+- Zrealizuj swoje wielkie pomysły w sieci. WordPress na Androida to narzędzie do tworzenia witryn internetowych i blogów.
+- Wybierz odpowiedni wygląd spośród szerokiej gamy motywów WordPressa, a następnie dostosuj go za pomocą zdjęć, kolorów i czcionek, aby witryna odzwierciedlała Twoją osobowość.
+- Wbudowane wskazówki „Szybki start” przeprowadzą przez podstawy konfiguracji, aby nowa witryna odniosła sukces.
+ 
 PUBLIKUJ
-- Twórz aktualizacje, historie, fotoreportaże, ogłoszenia - cokolwiek! -- za pomocą edytora.
-- Ożyw swoje wpisy i strony za pomocą zdjęć i filmów z aparatu i albumów lub znajdź idealny obraz dzięki dostępnej w aplikacji kolekcji bezpłatnych profesjonalnych fotografii.
-- Zapisuj pomysły jako wersje robocze i wracaj do nich, gdy wróci twoja muza, lub planuj nowe posty na przyszłość, aby twoja witryna była zawsze świeża i wciągająca.
-- Dodaj tagi i kategorie, aby pomóc nowym czytelnikom odkryć wpisy i obserwuj, jak rośnie czytelnictwo.
-
+- Twórz aktualizacje, historie, fotoreportaże, ogłoszenia – cokolwiek zechcesz! – za pomocą edytora.
+- Ożyw swoje posty i strony zdjęciami i filmami z aparatu i albumów lub znajdź idealny obrazek w dostępnej w aplikacji kolekcji profesjonalnych zdjęć do bezpłatnego użytku.
+- Zapisuj pomysły jako wersje robocze i wracaj do nich, gdy znów poczujesz natchnienie, albo zaplanuj nowe wpisy na przyszłość, żeby witryna była zawsze świeża i wciągająca.
+- Dodawaj tagi i kategorie, żeby nowi czytelnicy mogli łatwiej odkrywać wpisy, i obserwuj, jak rośnie Twoja publiczność.
+ 
 STATYSTYKI
-- Sprawdzaj statystyki swojej witryny w czasie rzeczywistym, aby śledzić jej aktywność.
-- Śledź, które posty i strony uzyskują największy ruch w czasie, przeglądając dzienne, tygodniowe, miesięczne i roczne statystyki.
-
+- Sprawdzaj statystyki swojej strony w czasie rzeczywistym, żeby śledzić aktywność w witrynie.
+- Śledź, które wpisy i strony cieszą się największym ruchem w czasie, przeglądając statystyki dzienne, tygodniowe, miesięczne i roczne.
+ 
 POWIADOMIENIA
-- Otrzymuj powiadomienia o komentarzach, polubieniach i nowych obserwujących, aby widzieć, jak ludzie reagują na tworzone treści.
-- Odpowiadaj na komentarze, gdy tylko się pojawią, aby podtrzymać konwersację i docenić swoich czytelników.
-
-CZYTNIK
-- Przeglądaj tysiące tematów według tagów, odkrywaj nowych autorów i organizacje oraz śledź tych, którzy wzbudzają zainteresowanie.
-- Zachowaj wpisy, które fascynują, dzięki funkcji Zapisz na później.
-
-UDOSTĘPNIAJ
-- Skonfiguruj automatyczne udostępnianie, aby poinformować swoich obserwujących w mediach społecznościowych o opublikowaniu nowego posta.
-- Dodaj przyciski udostępniania społecznościowego do swoich postów, aby odwiedzający mogli dzielić się nimi ze swoją siecią i pozwól swoim fanom stać się Twoimi ambasadorami.
-
+- Otrzymuj powiadomienia o komentarzach, polubieniach i nowych obserwujących, aby na bieżąco widzieć reakcje ludzi na Twoją witrynę.
+- Odpowiadaj na nowe komentarze, gdy tylko się pojawią, aby podtrzymać rozmowę i okazać wdzięczność swoim czytelnikom.
+ 
+CZYTANIE
+- Przeglądaj tysiące tematów według tagów, odkrywaj nowych autorów i organizacje oraz obserwuj tych, którzy wzbudzają Twoje zainteresowanie.
+- Zapisuj wpisy, które Cię fascynują, dzięki funkcji „Zapisz na później”.
+ 
+UDOSTĘPNIJ
+- Skonfiguruj automatyczne udostępnianie, aby powiadamiać swoich obserwujących w mediach społecznościowych o nowych postach.
+- Dodaj przyciski udostępniania w mediach społecznościowych do swoich postów, aby odwiedzający mogli je udostępniać w swoich sieciach, a Twoi fani stali się Twoimi ambasadorami.
+ 
 Dlaczego WordPress?
-
-Istnieje wiele usług blogowania, kreatorów stron internetowych i sieci społecznościowych. Dlaczego warto stworzyć swoją witrynę za pomocą WordPress?
-
-WordPress zasila ponad jedną trzecią sieci. Korzystają z niego blogi hobbystyczne, firmy różnej wielkości, sklepy internetowe, a nawet największe serwisy informacyjne w Internecie. Istnieje duże prawdopodobieństwo, że wiele z twoich ulubionych witryn działa na WordPressie.
-
-Dzięki WordPress jesteś właścicielem swoich treści. Inne sieci społecznościowe traktują Cię jak towar i zakładają własność publikowanych przez Ciebie treści. Ale z WordPressem wszystko, co publikujesz, jest twoje i możesz zabrać to ze sobą, gdziekolwiek chcesz.
-
-Niezależnie od tego, czy potrzebujesz narzędzia do tworzenia witryn internetowych, czy prostego narzędzia do tworzenia blogów, WordPress może Ci pomóc. Zapewnia piękne projekty, zaawansowane funkcje i swobodę tworzenia wszystkiego, co chcesz.
-
-Oświadczenie o ochronie prywatności użytkowników z Kalifornii: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa.
+ 
+Istnieje wiele serwisów blogowych, kreatorów stron internetowych i sieci społecznościowych. Dlaczego warto stworzyć swoją stronę w WordPressie?
+ 
+WordPress obsługuje ponad jedną trzecią stron internetowych. Korzystają z niego blogi hobbystyczne, firmy każdej wielkości, sklepy internetowe, a nawet największe serwisy informacyjne w sieci. Jest duże prawdopodobieństwo, że wiele z Twoich ulubionych witryn używa WordPressa.
+ 
+Dzięki WordPressowi jesteś właścicielem swoich treści. Inne serwisy społecznościowe traktują cię jak towar i przejmują prawa do publikowanych przez ciebie treści. Ale w WordPressie wszystko, co opublikujesz, należy do ciebie i możesz to zabrać ze sobą, gdzie tylko chcesz.
+ 
+Niezależnie od tego, czy potrzebujesz narzędzia do tworzenia witryn internetowych, czy prostego kreatora blogów, WordPress może Ci pomóc. Oferuje piękne szablony, zaawansowane funkcje i swobodę tworzenia wszystkiego, co tylko chcesz.
+ 
+Informacja o ochronie prywatności dla użytkowników z Kalifornii: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa.

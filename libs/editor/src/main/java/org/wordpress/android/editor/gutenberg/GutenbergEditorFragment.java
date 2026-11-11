@@ -130,7 +130,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String MEDIA_SOURCE_FILE = "MEDIA_SOURCE_FILE";
     private static final String MEDIA_SOURCE_AUDIO_FILE = "MEDIA_SOURCE_AUDIO_FILE";
     private static final String MEDIA_SOURCE_STOCK_MEDIA = "MEDIA_SOURCE_STOCK_MEDIA";
-    private static final String GIF_MEDIA = "GIF_MEDIA";
 
     private static final String USER_EVENT_KEY_TEMPLATE = "template";
 
@@ -350,9 +349,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         switch (mediaSource) {
                             case MEDIA_SOURCE_STOCK_MEDIA:
                                 mEditorFragmentListener.onAddStockMediaClicked(allowMultipleSelection);
-                                break;
-                            case GIF_MEDIA:
-                                mEditorFragmentListener.onAddGifClicked(allowMultipleSelection);
                                 break;
                             case MEDIA_SOURCE_FILE:
                                 mEditorFragmentListener.onAddFileClicked(allowMultipleSelection);
@@ -628,8 +624,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
-    private GutenbergWebViewAuthorizationData getGutenbergWebViewAuthorizationData() {
-        SavedInstanceDatabase db = SavedInstanceDatabase.Companion.getDatabase(getContext());
+    @Nullable
+    private GutenbergWebViewAuthorizationData getGutenbergWebViewAuthorizationData(@Nullable Context context) {
+        // Callers pass a context they captured themselves: this can run on the React Native bridge
+        // thread, where the fragment may detach at any point and Fragment.getContext() can become
+        // null mid-call (JETPACK-ANDROID-1F1W)
+        if (context == null) {
+            return null;
+        }
+        SavedInstanceDatabase db = SavedInstanceDatabase.Companion.getDatabase(context);
         if (db != null) {
             return db.getParcel(ARG_GUTENBERG_WEB_VIEW_AUTH_DATA, GutenbergWebViewAuthorizationData.CREATOR);
         }
@@ -637,25 +640,40 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void openGutenbergWebViewActivity(String content, String blockId, String blockName, String blockTitle) {
-        GutenbergWebViewAuthorizationData gutenbergWebViewAuthData = getGutenbergWebViewAuthorizationData();
+        // This is invoked from a React Native bridge callback that can fire while the fragment is
+        // detaching. Hop to the main thread so the isAdded() check cannot race with detachment,
+        // which also happens on the main thread (JETPACK-ANDROID-1F1W)
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if (!isAdded()) {
+                AppLog.e(T.EDITOR, "Failed to open Gutenberg web view because the fragment is not attached");
+                return;
+            }
 
-        // There is a chance that isJetpackSsoEnabled has changed on the server
-        // so we need to make sure that we have fresh value of it.
-        gutenbergWebViewAuthData.setJetpackSsoEnabled(mIsJetpackSsoEnabled);
+            GutenbergWebViewAuthorizationData gutenbergWebViewAuthData =
+                    getGutenbergWebViewAuthorizationData(getContext());
+            if (gutenbergWebViewAuthData == null) {
+                AppLog.e(T.EDITOR, "Failed to open Gutenberg web view because the auth data is missing");
+                return;
+            }
 
-        Intent intent = new Intent(getActivity(), WPGutenbergWebViewActivity.class);
-        intent.putExtra(WPGutenbergWebViewActivity.ARG_BLOCK_ID, blockId);
-        intent.putExtra(WPGutenbergWebViewActivity.ARG_BLOCK_TITLE, blockTitle);
-        intent.putExtra(WPGutenbergWebViewActivity.ARG_BLOCK_CONTENT, content);
-        intent.putExtra(WPGutenbergWebViewActivity.ARG_GUTENBERG_WEB_VIEW_AUTH_DATA, gutenbergWebViewAuthData);
+            // There is a chance that isJetpackSsoEnabled has changed on the server
+            // so we need to make sure that we have fresh value of it.
+            gutenbergWebViewAuthData.setJetpackSsoEnabled(mIsJetpackSsoEnabled);
 
-        startActivityForResult(intent, UNSUPPORTED_BLOCK_REQUEST_CODE);
+            Intent intent = new Intent(getActivity(), WPGutenbergWebViewActivity.class);
+            intent.putExtra(WPGutenbergWebViewActivity.ARG_BLOCK_ID, blockId);
+            intent.putExtra(WPGutenbergWebViewActivity.ARG_BLOCK_TITLE, blockTitle);
+            intent.putExtra(WPGutenbergWebViewActivity.ARG_BLOCK_CONTENT, content);
+            intent.putExtra(WPGutenbergWebViewActivity.ARG_GUTENBERG_WEB_VIEW_AUTH_DATA, gutenbergWebViewAuthData);
 
-        HashMap<String, String> properties = new HashMap<>();
-        properties.put("block", blockName);
-        mEditorFragmentListener.onTrackableEvent(
-                TrackableEvent.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_SHOWN,
-                properties);
+            startActivityForResult(intent, UNSUPPORTED_BLOCK_REQUEST_CODE);
+
+            HashMap<String, String> properties = new HashMap<>();
+            properties.put("block", blockName);
+            mEditorFragmentListener.onTrackableEvent(
+                    TrackableEvent.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_SHOWN,
+                    properties);
+        });
     }
 
     private void trackWebViewClosed(String action) {
@@ -667,12 +685,19 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void openGutenbergEmbedWebViewActivity(String html, String title) {
-        Activity activity = getActivity();
+        // Same bridge-thread detachment hazard as openGutenbergWebViewActivity (JETPACK-ANDROID-1F1W)
+        new Handler(Looper.getMainLooper()).post(() -> {
+            Activity activity = getActivity();
+            if (activity == null) {
+                AppLog.e(T.EDITOR, "Failed to open Gutenberg embed web view because the fragment is not attached");
+                return;
+            }
 
-        Intent intent = new Intent(activity, GutenbergEmbedWebViewActivity.class);
-        intent.putExtra(GutenbergEmbedWebViewActivity.ARG_CONTENT, html);
-        intent.putExtra(GutenbergEmbedWebViewActivity.ARG_TITLE, title);
-        activity.startActivityForResult(intent, EMBED_FULLSCREEN_PREVIEW_CODE);
+            Intent intent = new Intent(activity, GutenbergEmbedWebViewActivity.class);
+            intent.putExtra(GutenbergEmbedWebViewActivity.ARG_CONTENT, html);
+            intent.putExtra(GutenbergEmbedWebViewActivity.ARG_TITLE, title);
+            activity.startActivityForResult(intent, EMBED_FULLSCREEN_PREVIEW_CODE);
+        });
     }
 
     @Override
@@ -703,33 +728,35 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private ArrayList<MediaOption> initOtherMediaImageOptions() {
         ArrayList<MediaOption> otherMediaOptions = new ArrayList<>();
 
+        // This runs on the React Native bridge thread and must return synchronously, so capture the
+        // activity and context once and use only the captured references below — Fragment.getString()
+        // and friends can start throwing mid-call if the fragment detaches (JETPACK-ANDROID-1F1W)
         Bundle arguments = getArguments();
         FragmentActivity activity = getActivity();
         final Context context = getContext();
         if (activity == null || context == null || arguments == null) {
             AppLog.e(T.EDITOR,
-                    "Failed to initialize other media options because the activity or getArguments() is null");
+                    "Failed to initialize other media options because the activity, context or arguments are null");
             return otherMediaOptions;
         }
 
         boolean jetpackFeaturesEnabled = arguments.getBoolean(ARG_JETPACK_FEATURES_ENABLED);
-        GutenbergWebViewAuthorizationData gutenbergWebViewAuthorizationData = getGutenbergWebViewAuthorizationData();
+        GutenbergWebViewAuthorizationData gutenbergWebViewAuthorizationData =
+                getGutenbergWebViewAuthorizationData(context);
+        if (gutenbergWebViewAuthorizationData == null) {
+            AppLog.e(T.EDITOR, "Failed to initialize other media options because the auth data is missing");
+            return otherMediaOptions;
+        }
 
         boolean supportStockPhotos = gutenbergWebViewAuthorizationData.isSiteUsingWPComRestAPI()
                                      && jetpackFeaturesEnabled;
-        boolean supportsTenor = jetpackFeaturesEnabled;
 
         String packageName = activity.getApplication().getPackageName();
         if (supportStockPhotos) {
             int stockMediaResourceId =
                     context.getResources().getIdentifier("photo_picker_stock_media", "string", packageName);
 
-            otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_STOCK_MEDIA, getString(stockMediaResourceId)));
-        }
-        if (supportsTenor) {
-            int gifMediaResourceId =
-                    context.getResources().getIdentifier("photo_picker_gif", "string", packageName);
-            otherMediaOptions.add(new MediaOption(GIF_MEDIA, getString(gifMediaResourceId)));
+            otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_STOCK_MEDIA, context.getString(stockMediaResourceId)));
         }
 
         return otherMediaOptions;
@@ -746,19 +773,21 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private ArrayList<MediaOption> initOtherMediaFileOptions(String mediaOptionId) {
         ArrayList<MediaOption> otherMediaOptions = new ArrayList<>();
 
+        // Capture and use only local references, as in initOtherMediaImageOptions (JETPACK-ANDROID-1F1W)
         FragmentActivity activity = getActivity();
-        if (activity == null) {
+        final Context context = getContext();
+        if (activity == null || context == null) {
             AppLog.e(T.EDITOR,
-                    "Failed to initialize other media options because the activity is null");
+                    "Failed to initialize other media options because the activity or context is null");
             return otherMediaOptions;
         }
 
         String packageName = activity.getApplication().getPackageName();
 
         int chooseFileResourceId =
-                getResources().getIdentifier("photo_picker_choose_file", "string", packageName);
+                context.getResources().getIdentifier("photo_picker_choose_file", "string", packageName);
 
-        otherMediaOptions.add(new MediaOption(mediaOptionId, getString(chooseFileResourceId)));
+        otherMediaOptions.add(new MediaOption(mediaOptionId, context.getString(chooseFileResourceId)));
 
         return otherMediaOptions;
     }
@@ -788,7 +817,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     public void resetUploadingMediaToFailed(Set<Integer> failedMediaIds) {
-        // get all media failed for this post, and represent it on tje UI
+        // get all media failed for this post, and represent it on the UI
         if (failedMediaIds != null && !failedMediaIds.isEmpty()) {
             for (Integer mediaId : failedMediaIds) {
                 // and keep track of failed ids around

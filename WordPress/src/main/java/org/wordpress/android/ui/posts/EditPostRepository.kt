@@ -73,7 +73,7 @@ class EditPostRepository
     val password: String
         get() = post!!.password
     val status: PostStatus
-        get() = fromPost(getPost())
+        get() = fromPost(post!!)
     val isPage: Boolean
         get() = post!!.isPage
     val isLocalDraft: Boolean

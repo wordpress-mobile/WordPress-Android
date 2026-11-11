@@ -26,21 +26,28 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.StatsCardType
 
 /**
- * Bottom sheet for adding stats cards.
- * Shows a list of available (hidden) cards that can be added.
+ * Generic bottom sheet for adding stats cards.
+ * Shows a list of available (hidden) cards that
+ * can be added.
  *
  * @param sheetState The state of the bottom sheet
- * @param availableCards List of card types that can be added (currently hidden)
- * @param onDismiss Callback invoked when the sheet is dismissed
- * @param onCardSelected Callback invoked when a card is selected to be added
+ * @param availableCards List of card types that can
+ *        be added (currently hidden)
+ * @param getDisplayNameResId Resolves each card to
+ *        its display name string resource
+ * @param onDismiss Callback invoked when the sheet
+ *        is dismissed
+ * @param onCardSelected Callback invoked when a card
+ *        is selected to be added
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddStatsCardBottomSheet(
+fun <T> AddCardBottomSheet(
     sheetState: SheetState,
-    availableCards: List<StatsCardType>,
+    availableCards: List<T>,
+    getDisplayNameResId: (T) -> Int,
     onDismiss: () -> Unit,
-    onCardSelected: (StatsCardType) -> Unit
+    onCardSelected: (T) -> Unit
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -53,23 +60,34 @@ fun AddStatsCardBottomSheet(
                 .padding(bottom = 32.dp)
         ) {
             Text(
-                text = stringResource(R.string.stats_add_card_title),
-                style = MaterialTheme.typography.titleLarge,
+                text = stringResource(
+                    R.string.stats_add_card_title
+                ),
+                style = MaterialTheme
+                    .typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
             )
 
             if (availableCards.isEmpty()) {
                 Text(
-                    text = stringResource(R.string.stats_all_cards_visible),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(vertical = 24.dp)
+                    text = stringResource(
+                        R.string.stats_all_cards_visible
+                    ),
+                    style = MaterialTheme
+                        .typography.bodyMedium,
+                    color = MaterialTheme
+                        .colorScheme.onSurfaceVariant,
+                    modifier = Modifier
+                        .padding(vertical = 24.dp)
                 )
             } else {
                 availableCards.forEach { cardType ->
                     AddCardItem(
-                        label = stringResource(cardType.displayNameResId),
+                        label = stringResource(
+                            getDisplayNameResId(cardType)
+                        ),
                         onClick = {
                             onCardSelected(cardType)
                             onDismiss()
@@ -81,6 +99,26 @@ fun AddStatsCardBottomSheet(
     }
 }
 
+/**
+ * Convenience overload for [StatsCardType].
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AddStatsCardBottomSheet(
+    sheetState: SheetState,
+    availableCards: List<StatsCardType>,
+    onDismiss: () -> Unit,
+    onCardSelected: (StatsCardType) -> Unit
+) {
+    AddCardBottomSheet(
+        sheetState = sheetState,
+        availableCards = availableCards,
+        getDisplayNameResId = { it.displayNameResId },
+        onDismiss = onDismiss,
+        onCardSelected = onCardSelected
+    )
+}
+
 @Composable
 private fun AddCardItem(
     label: String,
@@ -89,7 +127,10 @@ private fun AddCardItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
+            .clickable(
+                onClickLabel = label,
+                onClick = onClick
+            )
             .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

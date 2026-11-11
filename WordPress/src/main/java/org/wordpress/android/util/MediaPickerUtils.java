@@ -8,6 +8,7 @@ import androidx.annotation.StringRes;
 import org.wordpress.android.R;
 
 public class MediaPickerUtils {
+    @SuppressWarnings("deprecation")
     public static void announceSelectedMediaForAccessibility(@NonNull ImageView imageThumbnail,
                                                              boolean isVideo,
                                                              boolean itemSelected) {

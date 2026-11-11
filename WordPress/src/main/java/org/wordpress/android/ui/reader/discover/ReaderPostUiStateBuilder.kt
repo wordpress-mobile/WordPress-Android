@@ -5,27 +5,13 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderCardType.GALLERY
-import org.wordpress.android.models.ReaderCardType.VIDEO
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestChipStyleColor
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleGreen
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleOrange
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStylePurple
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleYellow
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.InteractionSectionData
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
@@ -35,7 +21,6 @@ import org.wordpress.android.ui.reader.utils.ReaderImageScannerProvider
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
-import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
@@ -48,9 +33,6 @@ import org.wordpress.android.util.image.BlavatarShape.CIRCULAR
 import javax.inject.Inject
 import javax.inject.Named
 import android.R as AndroidR
-
-private const val READER_INTEREST_LIST_SIZE_LIMIT = 5
-private const val READER_RECOMMENDED_BLOGS_LIST_SIZE_LIMIT = 3
 
 @Reusable
 class ReaderPostUiStateBuilder @Inject constructor(
@@ -74,7 +56,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onItemRendered: (ReaderCardUiState) -> Unit,
         onMoreButtonClicked: (ReaderPostUiState) -> Unit,
         onMoreDismissed: (ReaderPostUiState) -> Unit,
-        onVideoOverlayClicked: (Long, Long) -> Unit,
         onPostHeaderViewClicked: (Long, Long) -> Unit,
         moreMenuItems: List<SecondaryAction>? = null,
     ): ReaderPostUiState {
@@ -90,7 +71,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 onItemRendered,
                 onMoreButtonClicked,
                 onMoreDismissed,
-                onVideoOverlayClicked,
                 onPostHeaderViewClicked,
                 moreMenuItems,
             )
@@ -109,7 +89,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onItemRendered: (ReaderCardUiState) -> Unit,
         onMoreButtonClicked: (ReaderPostUiState) -> Unit,
         onMoreDismissed: (ReaderPostUiState) -> Unit,
-        onVideoOverlayClicked: (Long, Long) -> Unit,
         onPostHeaderViewClicked: (Long, Long) -> Unit,
         moreMenuItems: List<ReaderPostCardAction>? = null,
     ): ReaderPostUiState {
@@ -124,10 +103,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
             title = buildTitle(post),
             excerpt = buildExcerpt(post),
             featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
-            featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius_new),
-            fullVideoUrl = buildFullVideoUrl(post),
             thumbnailStripSection = buildThumbnailStripUrls(post),
-            videoOverlayVisibility = buildVideoOverlayVisibility(post),
             featuredImageVisibility = buildFeaturedImageVisibility(post),
             moreMenuVisibility = accountStore.hasAccessToken(),
             likeAction = buildLikeSection(post, onButtonClicked, isReaderImprovementsEnabled = true),
@@ -138,7 +114,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
             onItemRendered = onItemRendered,
             onMoreButtonClicked = onMoreButtonClicked,
             onMoreDismissed = onMoreDismissed,
-            onVideoOverlayClicked = onVideoOverlayClicked,
         )
     }
 
@@ -159,49 +134,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
             reblogAction = buildReblogSection(post, onButtonClicked),
             commentsAction = buildCommentsSection(post, onButtonClicked)
         )
-    }
-
-    suspend fun mapTagListToReaderInterestUiState(
-        interests: ReaderTagList,
-        onClicked: ((String) -> Unit)
-    ): ReaderInterestsCardUiState {
-        return withContext(bgDispatcher) {
-            val listSize = if (interests.size < READER_INTEREST_LIST_SIZE_LIMIT) {
-                interests.size
-            } else {
-                READER_INTEREST_LIST_SIZE_LIMIT
-            }
-
-            return@withContext ReaderInterestsCardUiState(interests.take(listSize).map { interest ->
-                ReaderInterestUiState(
-                    interest = interest.tagTitle,
-                    slug = interest.tagSlug,
-                    onClicked = onClicked,
-                    chipStyle = buildChipStyle(interest, interests)
-                )
-            })
-        }
-    }
-
-    suspend fun mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
-        recommendedBlogs: List<ReaderBlog>,
-        onItemClicked: (Long, Long, Boolean) -> Unit,
-        onFollowClicked: (ReaderRecommendedBlogUiState) -> Unit
-    ): ReaderRecommendedBlogsCardUiState = withContext(bgDispatcher) {
-        recommendedBlogs.take(READER_RECOMMENDED_BLOGS_LIST_SIZE_LIMIT)
-            .map {
-                ReaderRecommendedBlogUiState(
-                    name = it.name,
-                    url = urlUtilsWrapper.removeScheme(it.url),
-                    blogId = it.blogId,
-                    feedId = it.feedId,
-                    description = it.description.ifEmpty { null },
-                    iconUrl = it.imageUrl,
-                    isFollowed = it.isFollowing,
-                    onFollowClicked = onFollowClicked,
-                    onItemClicked = onItemClicked
-                )
-            }.let { ReaderRecommendedBlogsCardUiState(it) }
     }
 
     private fun buildBlogSection(
@@ -272,20 +204,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
         ?.blogUrl
         ?.let { urlUtilsWrapper.removeScheme(it) }
 
-    private fun buildFullVideoUrl(post: ReaderPost) =
-        post.takeIf { post.cardType == VIDEO }
-            ?.let { post.featuredVideo }
-
-    // TODO malinjir show overlay when buildFullVideoUrl != null
-    private fun buildVideoOverlayVisibility(post: ReaderPost) = post.cardType == VIDEO
-
-    private fun buildFeaturedImageVisibility(post: ReaderPost): Boolean {
-        return when (post.cardType) {
-            GALLERY -> false
-            VIDEO -> post.hasFeaturedVideo() || post.hasFeaturedImage()
-            else -> post.hasFeaturedImage()
-        }
-    }
+    private fun buildFeaturedImageVisibility(post: ReaderPost) =
+        post.cardType != GALLERY && post.hasFeaturedImage()
 
     private fun buildThumbnailStripUrls(post: ReaderPost) =
         post.takeIf { it.cardType == GALLERY }
@@ -305,9 +225,10 @@ class ReaderPostUiStateBuilder @Inject constructor(
 
     private fun buildBlogName(post: ReaderPost, isP2Post: Boolean = false): UiString {
         val blogName = post.takeIf { it.hasBlogName() }?.blogName?.let { UiStringText(it) }
-            ?:post.takeIf { it.hasBlogUrl() }
-            ?.blogUrl
-            ?.let { UiStringText(urlUtilsWrapper.removeScheme(it)) }
+            ?: post.takeIf { it.hasBlogUrl() }
+                ?.blogUrl
+                ?.let { UiStringText(urlUtilsWrapper.removeScheme(it)) }
+            ?: post.authorName.takeIf { it.isNotEmpty() }?.let { UiStringText(it) }
             ?: UiStringRes(R.string.untitled_in_parentheses)
 
         if (!isP2Post) {
@@ -423,19 +344,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 contentDescription = contentDescription,
                 type = ReaderPostCardActionType.COMMENTS
             )
-        }
-    }
-
-    private fun buildChipStyle(readerTag: ReaderTag, readerTagList: ReaderTagList): ChipStyle {
-        val colorCount = ReaderInterestChipStyleColor.values().size
-        val index = readerTagList.indexOf(readerTag)
-
-        return when (index % colorCount) {
-            ReaderInterestChipStyleColor.GREEN.id -> ChipStyleGreen
-            ReaderInterestChipStyleColor.PURPLE.id -> ChipStylePurple
-            ReaderInterestChipStyleColor.YELLOW.id -> ChipStyleYellow
-            ReaderInterestChipStyleColor.ORANGE.id -> ChipStyleOrange
-            else -> ChipStyleGreen
         }
     }
 }

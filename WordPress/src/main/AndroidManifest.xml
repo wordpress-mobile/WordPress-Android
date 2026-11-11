@@ -127,6 +127,36 @@
             android:theme="@style/WordPress.NoActionBar"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.newstats.utm.UtmDetailActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.newstats.yearinreview.YearInReviewDetailActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.newstats.tagsandcategories.TagsAndCategoriesDetailActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.newstats.poststats.PostStatsDetailActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.newstats.subscribers.subscriberslist.SubscribersListDetailActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.newstats.subscribers.emails.EmailsDetailActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false" />
+
         <!-- Account activities -->
         <activity
             android:name=".ui.main.MeActivity"
@@ -134,7 +164,8 @@
             android:label="@string/me_section_screen_title" />
         <activity
             android:name=".ui.accounts.LoginActivity"
-            android:theme="@style/LoginTheme.TransparentSystemBars"
+            android:launchMode="singleTop"
+            android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">
 
@@ -150,7 +181,7 @@
 
         <activity
             android:name=".ui.accounts.applicationpassword.ApplicationPasswordLoginActivity"
-            android:theme="@style/LoginTheme.TransparentSystemBars"
+            android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">
 
@@ -193,17 +224,6 @@
         </activity>
 
         <activity
-            android:name=".ui.accounts.SignupEpilogueActivity"
-            android:label="@string/signup_epilogue_screen_title"
-            android:theme="@style/LoginTheme" />
-
-        <activity
-            android:name=".ui.accounts.PostSignupInterstitialActivity"
-            android:label="@string/post_signup_interstitial_title"
-            android:theme="@style/LoginTheme"
-            />
-
-        <activity
             android:name=".ui.sitecreation.SiteCreationActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
@@ -241,7 +261,7 @@
 
         <activity
             android:name=".support.SupportWebViewActivity"
-            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge" />
+            android:theme="@style/WordPress.NoActionBar" />
 
         <!-- empty title -->
 
@@ -304,12 +324,17 @@
             android:launchMode="singleTop"
             android:label="@string/comments"/>
         <activity
+            android:name=".ui.commentsrs.CommentsRsListActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:launchMode="singleTop"
+            android:label="@string/comments"/>
+        <activity
             android:name=".ui.comments.unified.UnifiedCommentsEditActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/edit_comment"/>
         <activity
             android:name=".ui.comments.CommentsDetailActivity"
-            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge"
+            android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="adjustResize"
             android:label="@string/comments"/>
         <activity
@@ -322,7 +347,7 @@
         <activity
             android:name=".ui.posts.EditPostActivity"
             android:configChanges="locale|orientation|screenSize"
-            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge"
+            android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:exported="false">
             <meta-data
@@ -353,9 +378,17 @@
             android:theme="@style/WordPress.NoActionBar"
             android:label="" />
         <activity
+            android:name=".ui.postsrs.terms.TermSelectionActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:label="" />
+        <activity
             android:name=".ui.pages.PagesActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:launchMode="singleTop"
+            android:label="@string/my_site_btn_site_pages" />
+        <activity
+            android:name=".ui.pagesrs.PagesRsListActivity"
+            android:theme="@style/WordPress.NoActionBar"
             android:label="@string/my_site_btn_site_pages" />
         <activity
             android:name=".ui.pages.PageParentActivity"
@@ -461,11 +494,6 @@
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/subscribers"/>
 
-        <activity android:name="org.wordpress.android.support.aibot.ui.AIBotSupportActivity"
-            android:theme="@style/WordPress.NoActionBar"
-            android:label="@string/ai_bot_conversations_title"
-            android:windowSoftInputMode="adjustResize"/>
-
         <activity android:name="org.wordpress.android.support.main.ui.SupportActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/support_screen_title"/>
@@ -474,9 +502,9 @@
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/support_screen_application_logs_title"/>
 
-        <activity android:name="org.wordpress.android.support.he.ui.HESupportActivity"
+        <activity android:name="org.wordpress.android.support.unified.ui.UnifiedSupportActivity"
             android:theme="@style/WordPress.NoActionBar"
-            android:label="@string/support_screen_title"
+            android:label="@string/unified_support_conversations_title"
             android:windowSoftInputMode="adjustResize"/>
 
         <!-- Deep Linking Activity -->
@@ -507,8 +535,6 @@
             android:name=".URISchemeDeepLinkingIntentReceiverActivity"
             android:label="@string/deep_linking_urilinks_alias_label"
             android:targetActivity="org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity"
-            android:theme="@style/WordPress.NoActionBar"
-            android:excludeFromRecents="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -532,8 +558,6 @@
             android:name=".WebLinksDeepLinkingIntentReceiverActivity"
             android:label="@string/deep_linking_weblinks_alias_label"
             android:targetActivity="org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity"
-            android:theme="@style/WordPress.NoActionBar"
-            android:excludeFromRecents="true"
             android:exported="true">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
@@ -860,7 +884,7 @@
         <activity
             android:name=".ui.reader.ReaderCommentListActivity"
             android:label="@string/reader_title_comments"
-            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge"
+            android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.reader.NoSiteToReblogActivity"
@@ -874,13 +898,10 @@
             android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.reader.ReaderSubsActivity"
-            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge"
-            android:windowSoftInputMode="stateHidden" />
+            android:theme="@style/WordPress.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".ui.reader.ReaderPhotoViewerActivity"
-            android:theme="@style/ReaderMediaViewerTheme" />
-        <activity
-            android:name=".ui.reader.ReaderVideoViewerActivity"
             android:theme="@style/ReaderMediaViewerTheme" />
         <activity
             android:name=".ui.reader.discover.interests.ReaderInterestsActivity"
@@ -950,15 +971,10 @@
             android:name=".ui.debug.cookies.DebugCookiesActivity"
             android:theme="@style/WordPress.NoActionBar" />
 
-        <activity
-            android:name=".ui.main.jetpack.migration.JetpackMigrationActivity"
-            android:label="@string/jp_migration_welcome_title"
-            android:theme="@style/WordPress.NoActionBar" />
-
         <!-- Notifications activities -->
         <activity
             android:name=".ui.notifications.NotificationsDetailActivity"
-            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge" />
+            android:theme="@style/WordPress.NoActionBar" />
 
         <!--People Management-->
         <activity
@@ -1115,51 +1131,6 @@
             />
 
         <service
-            android:name=".ui.reader.services.update.ReaderUpdateService"
-            android:exported="false"
-            android:label="Reader Update Service" />
-        <service
-            android:name=".ui.reader.services.update.ReaderUpdateJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false"
-            android:label="Reader Update JobService" />
-
-        <service
-            android:name=".ui.reader.services.discover.ReaderDiscoverService"
-            android:exported="false"
-            android:label="Reader Discover Service" />
-        <service
-            android:name=".ui.reader.services.discover.ReaderDiscoverJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false"
-            android:label="Reader Discover JobService" />
-
-        <service
-            android:name=".ui.reader.services.post.ReaderPostService"
-            android:exported="false"
-            android:label="Reader Post Service" />
-        <service
-            android:name=".ui.reader.services.post.ReaderPostJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false"
-            android:label="Reader Post JobService" />
-
-        <service
-            android:name=".ui.reader.services.search.ReaderSearchService"
-            android:exported="false"
-            android:label="Reader Search Service" />
-        <service
-            android:name=".ui.reader.services.search.ReaderSearchJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false"
-            android:label="Reader Search Job Service" />
-
-        <service
-            android:name=".ui.reader.services.comment.ReaderCommentService"
-            android:exported="false"
-            android:label="Reader Comment Service" />
-
-        <service
             android:name=".ui.suggestion.service.SuggestionService"
             android:exported="false"
             android:label="Suggestion Service" />
@@ -1189,12 +1160,6 @@
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"
             android:label="Installation Referrer Service" />
-
-        <service
-            android:name=".login.LoginWpcomService"
-            android:exported="false"
-            android:label="Login to WPCOM Service"
-            android:foregroundServiceType="shortService" />
 
         <service
             android:name=".ui.sitecreation.services.SiteCreationService"
@@ -1351,15 +1316,21 @@
         <!-- Smart Lock for Passwords -->
         <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />
 
-        <!-- Provider for exposing file URIs on Android 7+ -->
+        <!-- Provider for exposing file URIs on Android 7+. The `gutenberg.fileprovider`
+             authority is owned by the GutenbergKit library (camera capture temp files);
+             we host both authorities on the same FileProvider element so the manifest
+             merger doesn't see two declarations of `androidx.core.content.FileProvider`
+             as a duplicate. `gbk_file_paths` is folded into `provider_paths.xml`. -->
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
+            android:authorities="${applicationId}.provider;${applicationId}.gutenberg.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths"
+                tools:replace="android:resource"/>
         </provider>
 
         <!-- Remove only the default initializer to provide a custom configuration.
@@ -1380,7 +1351,24 @@
                 android:name="androidx.work.WorkManagerInitializer"
                 android:value="androidx.startup"
                 tools:node="remove" />
+            <!-- The Gravatar Quick Editor initializer builds an encrypted DataStore (AndroidKeyStore + Tink
+                 self-test) on the main thread before Application.onCreate, which shows up as background ANRs.
+                 It is initialized on demand from MeFragment instead. -->
+            <meta-data
+                android:name="com.gravatar.quickeditor.initializer.QuickEditorContainerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
         </provider>
+
+        <!-- The Gravatar Quick Editor library exports two activities the app never launches (it shows the editor
+             as a sheet inside the host activity). They would crash without the initializer removed above, so
+             drop them rather than leave an exported entry point around. -->
+        <activity
+            android:name="com.gravatar.quickeditor.ui.GravatarQuickEditorActivity"
+            tools:node="remove" />
+        <activity
+            android:name="com.gravatar.quickeditor.ui.oauth.GravatarOAuthActivity"
+            tools:node="remove" />
 
         <activity android:name=".ui.blaze.blazepromote.BlazePromoteParentActivity"
             android:exported="false"
@@ -1391,11 +1379,6 @@
             android:exported="false"
             android:label="@string/blaze_campaigns_page_title"
             android:theme="@style/WordPress.NoActionBar" />
-
-        <activity android:name=".ui.jetpackoverlay.JetpackStaticPosterActivity"
-            android:exported="false"
-            android:label="@string/stats"
-            android:theme="@style/WordPress.NoActionBar"/>
 
         <activity android:name=".ui.mysite.personalization.PersonalizationActivity"
             android:exported="false"

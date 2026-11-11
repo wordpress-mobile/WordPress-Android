@@ -84,7 +84,13 @@ class ViewsWidgetUpdater
     override fun componentName(context: Context) = ComponentName(context, StatsViewsWidget::class.java)
 
     override fun delete(appWidgetId: Int) {
-        analyticsTrackerWrapper.trackWithWidgetType(AnalyticsTracker.Stat.STATS_WIDGET_REMOVED, WEEK_VIEWS)
+        // Tracked before the prefs below are cleared: removeAppWidgetSiteId drops the only record
+        // of which site this widget belonged to.
+        analyticsTrackerWrapper.trackWithWidgetType(
+            AnalyticsTracker.Stat.STATS_WIDGET_REMOVED,
+            WEEK_VIEWS,
+            siteStore.getSiteBySiteId(appPrefsWrapper.getAppWidgetSiteId(appWidgetId))
+        )
         appPrefsWrapper.removeAppWidgetColorModeId(appWidgetId)
         appPrefsWrapper.removeAppWidgetSiteId(appWidgetId)
     }

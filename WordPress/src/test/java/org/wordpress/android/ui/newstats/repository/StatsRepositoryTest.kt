@@ -5,11 +5,11 @@ import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.datasource.CommentsDataPoint
 import org.wordpress.android.ui.newstats.datasource.LikesDataPoint
 import org.wordpress.android.ui.newstats.datasource.PostsDataPoint
-import org.wordpress.android.ui.newstats.datasource.ReferrerDataItem
-import org.wordpress.android.ui.newstats.datasource.ReferrersDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
+import org.wordpress.android.ui.newstats.datasource.StatsDateRange
 import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
+import org.wordpress.android.ui.newstats.datasource.StatsVisitField
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsData
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsDataResult
 import org.wordpress.android.ui.newstats.datasource.TopPostDataItem
@@ -18,20 +18,29 @@ import org.wordpress.android.ui.newstats.datasource.VisitorsDataPoint
 import org.wordpress.android.ui.newstats.datasource.VisitsDataPoint
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDataSource
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.isNotNull
+import org.mockito.kotlin.isNull
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import java.time.Clock
 import java.time.LocalDate
+import java.time.ZoneId
+import java.util.Locale
 
 @ExperimentalCoroutinesApi
+@Suppress("LargeClass")
 class StatsRepositoryTest : BaseUnitTest() {
     @Mock
     private lateinit var statsDataSource: StatsDataSource
@@ -41,28 +50,41 @@ class StatsRepositoryTest : BaseUnitTest() {
 
     private lateinit var repository: StatsRepository
 
+    private lateinit var previousLocale: Locale
+
     @Before
     fun setUp() {
+        // The navigation tests below pin "today" to days that are a week's last day, the 30th or a leap
+        // day; which weekday starts the week is a locale question, so pin that too.
+        previousLocale = Locale.getDefault()
+        Locale.setDefault(Locale.US)
         repository = StatsRepository(
             statsDataSource = statsDataSource,
+            statsResultCache = StatsResultCache(),
             appLogWrapper = appLogWrapper,
+            clock = Clock.systemDefaultZone(),
             ioDispatcher = testDispatcher()
         )
     }
 
-    // region init
-    @Test
-    fun `when init is called, then data source is initialized with access token`() {
-        repository.init(TEST_ACCESS_TOKEN)
-
-        verify(statsDataSource).init(eq(TEST_ACCESS_TOKEN))
+    @After
+    fun tearDown() {
+        Locale.setDefault(previousLocale)
     }
-    // endregion
+
+    /** A repository whose "today" is [today], so navigation can be asserted on exact calendar days. */
+    private fun repositoryAt(today: LocalDate) = StatsRepository(
+        statsDataSource = statsDataSource,
+        statsResultCache = StatsResultCache(),
+        appLogWrapper = appLogWrapper,
+        clock = Clock.fixed(today.atStartOfDay(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault()),
+        ioDispatcher = testDispatcher()
+    )
 
     // region fetchTodayAggregates
     @Test
     fun `given successful response, when fetchTodayAggregates is called, then success result is returned`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createStatsVisitsData()))
 
         val result = repository.fetchTodayAggregates(TEST_SITE_ID)
@@ -78,7 +100,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given successful response, when fetchTodayAggregates is called, then data source is called with DAY unit`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createStatsVisitsData()))
 
             repository.fetchTodayAggregates(TEST_SITE_ID)
@@ -87,13 +109,15 @@ class StatsRepositoryTest : BaseUnitTest() {
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.DAY),
                 quantity = eq(1),
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = anyOrNull()
             )
         }
 
     @Test
     fun `given empty data, when fetchTodayAggregates is called, then zeros are returned`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createEmptyStatsVisitsData()))
 
         val result = repository.fetchTodayAggregates(TEST_SITE_ID)
@@ -108,7 +132,7 @@ class StatsRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `given error response, when fetchTodayAggregates is called, then error result is returned`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
 
         val result = repository.fetchTodayAggregates(TEST_SITE_ID)
@@ -121,7 +145,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     // region fetchHourlyViews
     @Test
     fun `given successful response, when fetchHourlyViews is called, then success result is returned`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createHourlyStatsVisitsData()))
 
         val result = repository.fetchHourlyViews(TEST_SITE_ID)
@@ -138,7 +162,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given successful response, when fetchHourlyViews is called, then data source is called with HOUR unit`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createHourlyStatsVisitsData()))
 
             repository.fetchHourlyViews(TEST_SITE_ID)
@@ -147,13 +171,15 @@ class StatsRepositoryTest : BaseUnitTest() {
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.HOUR),
                 quantity = eq(24),
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = anyOrNull()
             )
         }
 
     @Test
     fun `given error response, when fetchHourlyViews is called, then error result is returned`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
 
         val result = repository.fetchHourlyViews(TEST_SITE_ID)
@@ -164,7 +190,7 @@ class StatsRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `given offset days, when fetchHourlyViews is called, then data source is called`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createHourlyStatsVisitsData()))
 
         repository.fetchHourlyViews(TEST_SITE_ID, offsetDays = 1)
@@ -173,7 +199,39 @@ class StatsRepositoryTest : BaseUnitTest() {
             siteId = eq(TEST_SITE_ID),
             unit = eq(StatsUnit.HOUR),
             quantity = eq(24),
-            endDate = any()
+            endDate = any(),
+            startDate = anyOrNull(),
+            statFields = anyOrNull()
+        )
+    }
+
+    @Test
+    fun `given offsetDays, when fetchHourlyViews, then the window ends at 23-00-00 of that calendar day`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createHourlyStatsVisitsData()))
+
+        repository.fetchHourlyViews(TEST_SITE_ID, offsetDays = 0)
+        repository.fetchHourlyViews(TEST_SITE_ID, offsetDays = 1)
+
+        // The 24 hourly buckets must cover 00:00–23:00 of the requested day. Passing the *next* day's
+        // date ended the window at 00:00, shifting it back an hour: the day's own 00:00 bucket was
+        // dropped in favour of the following day's.
+        val today = LocalDate.now()
+        verify(statsDataSource).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = eq(StatsUnit.HOUR),
+            quantity = eq(24),
+            endDate = eq("$today 23:00:00"),
+            startDate = anyOrNull(),
+            statFields = anyOrNull()
+        )
+        verify(statsDataSource).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = eq(StatsUnit.HOUR),
+            quantity = eq(24),
+            endDate = eq("${today.minusDays(1)} 23:00:00"),
+            startDate = anyOrNull(),
+            statFields = anyOrNull()
         )
     }
     // endregion
@@ -181,7 +239,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     // region fetchWeeklyStats
     @Test
     fun `given successful response, when fetchWeeklyStats is called, then success result is returned`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
         val result = repository.fetchWeeklyStats(TEST_SITE_ID)
@@ -198,7 +256,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given successful response, when fetchWeeklyStats is called, then data source is called with DAY unit`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
             repository.fetchWeeklyStats(TEST_SITE_ID)
@@ -207,13 +265,15 @@ class StatsRepositoryTest : BaseUnitTest() {
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.DAY),
                 quantity = eq(7),
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = anyOrNull()
             )
         }
 
     @Test
     fun `given error response, when fetchWeeklyStats is called, then error result is returned`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
 
         val result = repository.fetchWeeklyStats(TEST_SITE_ID)
@@ -224,7 +284,7 @@ class StatsRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `given weeks ago parameter, when fetchWeeklyStats is called, then data source is called`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
         repository.fetchWeeklyStats(TEST_SITE_ID, weeksAgo = 1)
@@ -233,7 +293,9 @@ class StatsRepositoryTest : BaseUnitTest() {
             siteId = eq(TEST_SITE_ID),
             unit = eq(StatsUnit.DAY),
             quantity = eq(7),
-            endDate = any()
+            endDate = any(),
+            startDate = anyOrNull(),
+            statFields = anyOrNull()
         )
     }
     // endregion
@@ -241,7 +303,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     // region fetchDailyViewsForWeek
     @Test
     fun `given successful response, when fetchDailyViewsForWeek is called, then success result is returned`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
         val result = repository.fetchDailyViewsForWeek(TEST_SITE_ID)
@@ -258,7 +320,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given successful response, when fetchDailyViewsForWeek is called, then data source is called with DAY unit`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
             repository.fetchDailyViewsForWeek(TEST_SITE_ID)
@@ -267,13 +329,15 @@ class StatsRepositoryTest : BaseUnitTest() {
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.DAY),
                 quantity = eq(7),
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = anyOrNull()
             )
         }
 
     @Test
     fun `given error response, when fetchDailyViewsForWeek is called, then error result is returned`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
 
         val result = repository.fetchDailyViewsForWeek(TEST_SITE_ID)
@@ -287,7 +351,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given successful response, when fetchWeeklyStatsWithDailyData is called, then success result is returned`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
             val result = repository.fetchWeeklyStatsWithDailyData(TEST_SITE_ID)
@@ -311,7 +375,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given successful response, when fetchWeeklyStatsWithDailyData is called, data source is called correctly`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
             repository.fetchWeeklyStatsWithDailyData(TEST_SITE_ID)
@@ -320,13 +384,15 @@ class StatsRepositoryTest : BaseUnitTest() {
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.DAY),
                 quantity = eq(7),
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = anyOrNull()
             )
         }
 
     @Test
     fun `given error response, when fetchWeeklyStatsWithDailyData is called, then error result is returned`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
 
         val result = repository.fetchWeeklyStatsWithDailyData(TEST_SITE_ID)
@@ -338,7 +404,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given weeks ago parameter, when fetchWeeklyStatsWithDailyData is called, then data source is called`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
             repository.fetchWeeklyStatsWithDailyData(TEST_SITE_ID, weeksAgo = 2)
@@ -347,7 +413,9 @@ class StatsRepositoryTest : BaseUnitTest() {
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.DAY),
                 quantity = eq(7),
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = anyOrNull()
             )
         }
     // endregion
@@ -356,7 +424,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given successful response, when fetchStatsForPeriod with Last7Days, then success result is returned`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
             val result = repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
@@ -370,77 +438,105 @@ class StatsRepositoryTest : BaseUnitTest() {
         }
 
     @Test
+    fun `given successful response, when fetchStatsForPeriod, then each bucket carries all five metrics`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            val result = repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+            val success = result as PeriodStatsResult.Success
+            val firstBucket = success.currentPeriodData[0]
+            assertThat(firstBucket.views).isEqualTo(TEST_VIEWS_1)
+            assertThat(firstBucket.visitors).isEqualTo(TEST_VISITORS_1)
+            assertThat(firstBucket.likes).isEqualTo(TEST_LIKES_1)
+            assertThat(firstBucket.comments).isEqualTo(TEST_COMMENTS_1)
+            assertThat(firstBucket.posts).isEqualTo(TEST_POSTS_1)
+        }
+
+    @Test
+    fun `given a metric with no per-bucket data, when fetchStatsForPeriod, then that metric defaults to zero`() =
+        test {
+            // The hourly fixture leaves likes, comments and posts empty (an hourly response populates
+            // views and visitors only), so those buckets should default to zero rather than crash.
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createHourlyStatsVisitsData()))
+
+            val result = repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Today)
+
+            val success = result as PeriodStatsResult.Success
+            val firstBucket = success.currentPeriodData[0]
+            assertThat(firstBucket.views).isEqualTo(TEST_VIEWS_1)
+            assertThat(firstBucket.likes).isEqualTo(0L)
+            assertThat(firstBucket.comments).isEqualTo(0L)
+            assertThat(firstBucket.posts).isEqualTo(0L)
+        }
+
+    @Test
     fun `given successful response, when fetchStatsForPeriod with Last7Days, then data source called with DAY unit`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
             repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
 
-            // Called twice: once for current period, once for previous period
+            // The chart is fetched twice (current + previous), each requesting the card's stat fields
+            // so the same response can also fill the bottom row.
             verify(statsDataSource, times(2)).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.DAY),
                 quantity = eq(7),
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )
         }
 
     @Test
     fun `given successful response, when fetchStatsForPeriod with Last30Days, then data source called with DAY unit`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
             repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last30Days)
 
-            // Called twice: once for current period, once for previous period
+            // The chart is fetched twice (current + previous), each requesting the card's stat fields
+            // so the same response can also fill the bottom row.
             verify(statsDataSource, times(2)).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.DAY),
                 quantity = eq(30),
-                endDate = any()
-            )
-        }
-
-    @Test
-    fun `given successful response, when fetchStatsForPeriod with Last6Months, then data source called with MONTH`() =
-        test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
-                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
-
-            repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last6Months)
-
-            // Called twice: once for current period, once for previous period
-            verify(statsDataSource, times(2)).fetchStatsVisits(
-                siteId = eq(TEST_SITE_ID),
-                unit = eq(StatsUnit.MONTH),
-                quantity = eq(6),
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )
         }
 
     @Test
     fun `given successful response, when fetchStatsForPeriod with Last12Months, then data source called with MONTH`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
             repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last12Months)
 
-            // Called twice: once for current period, once for previous period
+            // The chart is fetched twice (current + previous), each requesting the card's stat fields
+            // so the same response can also fill the bottom row. A MONTH window sends its own start,
+            // which here is the 1st of a month either way — the twelve buckets are whole.
             verify(statsDataSource, times(2)).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.MONTH),
                 quantity = eq(12),
-                endDate = any()
+                endDate = any(),
+                startDate = isNotNull(),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )
         }
 
     @Test
     fun `given successful response, when fetchStatsForPeriod with Today, then data source called with HOUR unit`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createHourlyStatsVisitsData()))
 
             repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Today)
@@ -450,13 +546,45 @@ class StatsRepositoryTest : BaseUnitTest() {
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.HOUR),
                 quantity = eq(24),
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = anyOrNull()
             )
         }
 
     @Test
+    fun `given Today, when fetchStatsForPeriod, then hourly window ends at 23-00-00 of the calendar day`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createHourlyStatsVisitsData()))
+
+        repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Today)
+
+        val today = LocalDate.now()
+        val yesterday = today.minusDays(1)
+        // The hourly window must end at "<day> 23:00:00" so its 24 buckets cover 00:00–23:00 of that
+        // calendar day. Using the next day at 00:00 shifted the window an hour, dropping the day's
+        // 00:00 bucket and making the chart total under-count vs the day-level bottom row.
+        verify(statsDataSource).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = eq(StatsUnit.HOUR),
+            quantity = eq(24),
+            endDate = eq("$today 23:00:00"),
+            startDate = anyOrNull(),
+            statFields = anyOrNull()
+        )
+        verify(statsDataSource).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = eq(StatsUnit.HOUR),
+            quantity = eq(24),
+            endDate = eq("$yesterday 23:00:00"),
+            startDate = anyOrNull(),
+            statFields = anyOrNull()
+        )
+    }
+
+    @Test
     fun `given error response, when fetchStatsForPeriod is called, then error result is returned`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
 
         val result = repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
@@ -468,7 +596,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given custom period, when fetchStatsForPeriod is called, then data source called with correct quantity`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
             val customPeriod = StatsPeriod.Custom(
@@ -477,19 +605,22 @@ class StatsRepositoryTest : BaseUnitTest() {
             )
             repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
 
-            // 10 days custom period should use DAY unit with quantity 10
+            // 10 days custom period should use DAY unit with quantity 10 for the two chart calls,
+            // each requesting the card's stat fields.
             verify(statsDataSource, times(2)).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.DAY),
                 quantity = eq(10),
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )
         }
 
     @Test
     fun `given long custom period, when fetchStatsForPeriod is called, then data source called with MONTH unit`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
             val customPeriod = StatsPeriod.Custom(
@@ -498,29 +629,439 @@ class StatsRepositoryTest : BaseUnitTest() {
             )
             repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
 
-            // Long custom period (>30 days) should use MONTH unit
+            // Long custom period (>30 days) should use MONTH unit for the two chart calls, each
+            // requesting the card's stat fields.
             verify(statsDataSource, times(2)).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.MONTH),
                 quantity = argThat { this > 0 },
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+        }
+
+    @Test
+    fun `given custom period ending early in the month, when fetchStatsForPeriod, then every month is fetched`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            val customPeriod = StatsPeriod.Custom(
+                startDate = LocalDate.of(2024, 1, 15),
+                endDate = LocalDate.of(2024, 3, 5)
+            )
+            repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
+
+            // The quantity counts the calendar months the range spans (Jan, Feb, Mar), not the whole
+            // months elapsed between its endpoints (1). The API returns `quantity` buckets ending at
+            // March, so a quantity of 2 would silently drop January from the chart and the header total.
+            verify(statsDataSource, times(2)).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.MONTH),
+                quantity = eq(3),
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+        }
+
+    @Test
+    fun `given custom period ending early in the year, when fetchStatsForPeriod, then every year is fetched`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            val customPeriod = StatsPeriod.Custom(
+                startDate = LocalDate.of(2023, 12, 31),
+                endDate = LocalDate.of(2026, 1, 1)
+            )
+            repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
+
+            // Spans four calendar years (2023–2026) though only two whole years elapse between the
+            // endpoints; a quantity of 3 would drop 2023 entirely.
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.YEAR),
+                quantity = eq(4),
+                endDate = eq("2026-01-01"),
+                startDate = eq("2023-12-31"),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+            // The previous window mirrors the current one's day span, landing on 2021-12-28..2023-12-30
+            // — three calendar years, not four. Reusing the current window's quantity here would make
+            // the API return 2020–2023 and fold an extra year into the previous total, inflating it and
+            // skewing the % change.
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.YEAR),
+                quantity = eq(3),
+                endDate = eq("2023-12-30"),
+                startDate = eq("2021-12-28"),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+        }
+
+    @Test
+    fun `given Custom range over two years, when fetchStatsForPeriod, then YEAR calls send start_date`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            val customPeriod = StatsPeriod.Custom(
+                startDate = LocalDate.of(2024, 1, 1),
+                endDate = LocalDate.of(2026, 6, 29)
+            )
+            repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
+
+            // Byte-identical to the web app's request for the same range:
+            // unit=year&date=2026-06-29&start_date=2024-01-01&quantity=3. Without start_date the API
+            // does not anchor its year buckets to the window, and every number on the card is wrong.
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.YEAR),
+                quantity = eq(3),
+                endDate = eq("2026-06-29"),
+                startDate = eq("2024-01-01"),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+            // The previous window mirrors the current 911-day span and sends its own real start, so its
+            // total covers exactly that span too — keeping the % change a like-for-like comparison.
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.YEAR),
+                quantity = eq(3),
+                endDate = eq("2023-12-31"),
+                startDate = eq("2021-07-04"),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+        }
+
+    @Test
+    fun `given MONTH Custom whose mirror spans fewer months, when fetchStatsForPeriod, then quantities differ`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            val customPeriod = StatsPeriod.Custom(
+                startDate = LocalDate.of(2024, 5, 31),
+                endDate = LocalDate.of(2024, 7, 2)
+            )
+            repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
+
+            // The current window spans May, Jun, Jul (3), and sends its own start so the May bucket
+            // is truncated to the 31st rather than arriving whole.
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.MONTH),
+                quantity = eq(3),
+                endDate = eq("2024-07-02"),
+                startDate = eq("2024-05-31"),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+            // Its mirror 2024-04-28..2024-05-30 spans only Apr and May (2). Sending the current
+            // window's 3 would return Mar–May, folding March into the previous total.
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.MONTH),
+                quantity = eq(2),
+                endDate = eq("2024-05-30"),
+                startDate = eq("2024-04-28"),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+        }
+
+    @Test
+    fun `given a Custom range starting mid-month, when fetchStatsForPeriod, then the picked days are charted`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            val customPeriod = StatsPeriod.Custom(
+                startDate = LocalDate.of(2026, 2, 11),
+                endDate = LocalDate.of(2026, 10, 7)
+            )
+            repositoryAt(MID_WEEK).fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
+
+            // Both requests match what the web app sends for this range, start_date included. Without
+            // it the February bucket arrives whole and the card reports from the 1st — ten days the
+            // user did not pick, and ten days the list cards below it exclude.
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.MONTH),
+                quantity = eq(9),
+                endDate = eq("2026-10-07"),
+                startDate = eq("2026-02-11"),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.MONTH),
+                quantity = eq(9),
+                endDate = eq("2026-02-10"),
+                startDate = eq("2025-06-17"),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+        }
+
+    @Test
+    fun `given DAY Custom, when fetchStatsForPeriod, then no start_date is sent and both windows match`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            val customPeriod = StatsPeriod.Custom(
+                startDate = LocalDate.of(2024, 1, 1),
+                endDate = LocalDate.of(2024, 1, 10)
+            )
+            repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
+
+            // A DAY window's buckets are never partial, so it needs no start_date, and the mirror
+            // preserves the day span, so both windows request the same 10 buckets.
+            verify(statsDataSource, times(2)).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.DAY),
+                quantity = eq(10),
+                endDate = any(),
+                startDate = isNull(),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+        }
+
+    @Test
+    fun `given custom period over two years, when fetchStatsForPeriod, then chart uses YEAR unit`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            val customPeriod = StatsPeriod.Custom(
+                startDate = LocalDate.of(2022, 1, 1),
+                endDate = LocalDate.of(2025, 1, 1)
+            )
+            repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
+
+            // Beyond two years the chart coarsens to YEAR — the same unit the bottom-row totals use —
+            // so the header's Views and the bottom row's Views (and their visitor de-dup) always agree.
+            // Both YEAR windows must carry a start_date; without one the API misanchors the buckets.
+            verify(statsDataSource, times(2)).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.YEAR),
+                quantity = argThat { this > 0 },
+                endDate = any(),
+                startDate = isNotNull(),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )
         }
 
     @Test
     fun `given parallel fetch, when fetchStatsForPeriod is called, then both periods are fetched`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
         repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
 
-        // Verify data source is called twice (current and previous period)
+        // Verify the chart periods are fetched (current and previous), each requesting the card's
+        // stat fields.
         verify(statsDataSource, times(2)).fetchStatsVisits(
             siteId = eq(TEST_SITE_ID),
             unit = any(),
             quantity = any(),
-            endDate = any()
+            endDate = any(),
+            startDate = anyOrNull(),
+            statFields = eq(EXPECTED_CARD_STAT_FIELDS)
         )
+    }
+
+    @Test
+    fun `given Last7Days, when fetchStatsForPeriod, then it makes exactly the two chart calls`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+        repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        // fetchStatsForPeriod issues exactly the current + previous chart calls, each requesting the
+        // card's stat fields so the same response can also fill the bottom row (non-hourly periods).
+        verify(statsDataSource, times(2)).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = any(),
+            quantity = any(),
+            endDate = any(),
+            startDate = anyOrNull(),
+            statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+        )
+        verifyNoMoreInteractions(statsDataSource)
+    }
+    // endregion
+
+    // region fetchBottomStats
+    @Test
+    fun `given single-day Custom, when fetchBottomStats, then a dedicated day-level call is made`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createStatsVisitsData()))
+
+        val day = LocalDate.of(2024, 3, 10)
+        repository.fetchBottomStats(TEST_SITE_ID, StatsPeriod.Custom(startDate = day, endDate = day))
+
+        // A single-day Custom range renders an hourly chart, so its bottom row comes from a dedicated
+        // day-level call (current day + previous day) restricted to the card's stat fields.
+        verify(statsDataSource, times(2)).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = eq(StatsUnit.DAY),
+            quantity = eq(1),
+            endDate = any(),
+            startDate = isNull(),
+            statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+        )
+    }
+
+    @Test
+    fun `given Today, when fetchBottomStats, then dedicated bottom call uses DAY unit and stat fields`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createStatsVisitsData()))
+
+        repository.fetchBottomStats(TEST_SITE_ID, StatsPeriod.Today)
+
+        // Today's chart is hourly, so the bottom row uses a dedicated daily call (current + previous)
+        // restricted to the bottom stat fields.
+        verify(statsDataSource, times(2)).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = eq(StatsUnit.DAY),
+            quantity = eq(1),
+            endDate = any(),
+            startDate = anyOrNull(),
+            statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+        )
+    }
+
+    @Test
+    fun `given custom range over two years, when fetchBottomStats, then bottom call uses YEAR unit`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+        val customPeriod = StatsPeriod.Custom(
+            startDate = LocalDate.of(2022, 1, 1),
+            endDate = LocalDate.of(2025, 1, 1)
+        )
+        repository.fetchBottomStats(TEST_SITE_ID, customPeriod)
+
+        // Beyond two years the chart's monthly buckets would over-count unique visitors (a visitor
+        // active across several months counts once per month), so the bottom row uses a dedicated YEAR
+        // call to de-duplicate per year. A YEAR window carries its own start_date, matching the chart.
+        verify(statsDataSource, times(2)).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = eq(StatsUnit.YEAR),
+            quantity = any(),
+            endDate = any(),
+            startDate = isNotNull(),
+            statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+        )
+    }
+
+    @Test
+    fun `given Custom ending early in the month, when fetchBottomStats, then every month is fetched`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            val customPeriod = StatsPeriod.Custom(
+                startDate = LocalDate.of(2024, 1, 15),
+                endDate = LocalDate.of(2024, 3, 5)
+            )
+            repository.fetchBottomStats(TEST_SITE_ID, customPeriod)
+
+            // Same calendar-span rule as the chart, so the bottom row's totals cover January too and
+            // keep agreeing with the header.
+            verify(statsDataSource, times(2)).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.MONTH),
+                quantity = eq(3),
+                endDate = any(),
+                startDate = isNotNull(),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+        }
+
+    @Test
+    fun `given multi-month Custom, when fetchBottomStats, then each window sends its own startDate`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            val customPeriod = StatsPeriod.Custom(
+                startDate = LocalDate.of(2024, 1, 1),
+                endDate = LocalDate.of(2024, 6, 30)
+            )
+            repository.fetchBottomStats(TEST_SITE_ID, customPeriod)
+
+            // The row mirrors the chart, startDate included, so both cover the picked days rather than
+            // whole month buckets. The mirror starts mid-July, which is exactly the case that needs it.
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.MONTH),
+                quantity = eq(6),
+                endDate = eq("2024-06-30"),
+                startDate = eq("2024-01-01"),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.MONTH),
+                quantity = eq(6),
+                endDate = eq("2023-12-31"),
+                startDate = eq("2023-07-03"),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+        }
+
+    @Test
+    fun `given successful response, when fetchBottomStats, then totals are summed`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+        val result = repository.fetchBottomStats(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isInstanceOf(BottomStatsResult.Success::class.java)
+        val success = result as BottomStatsResult.Success
+        assertThat(success.current.views).isEqualTo(TEST_VIEWS_1 + TEST_VIEWS_2)
+        assertThat(success.previous.views).isEqualTo(TEST_VIEWS_1 + TEST_VIEWS_2)
+    }
+
+    @Test
+    fun `given empty but successful response, when fetchBottomStats, then a zero-valued row is returned`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createEmptyStatsVisitsData()))
+
+        val result = repository.fetchBottomStats(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        // A genuine zero-traffic period shows zeros rather than hiding the row.
+        assertThat(result).isInstanceOf(BottomStatsResult.Success::class.java)
+        val success = result as BottomStatsResult.Success
+        assertThat(success.current.views).isEqualTo(0L)
+        assertThat(success.previous.views).isEqualTo(0L)
+    }
+
+    @Test
+    fun `given error response, when fetchBottomStats, then error is returned so the row is hidden`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
+
+        val result = repository.fetchBottomStats(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isEqualTo(BottomStatsResult.Error)
+    }
+
+    @Test
+    fun `given only the previous call errors, when fetchBottomStats, then error is returned`() = test {
+        whenever(
+            statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), eq(EXPECTED_CARD_STAT_FIELDS))
+        )
+            .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+            .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
+
+        val result = repository.fetchBottomStats(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        // The current and previous windows must both succeed; if either errors the row is hidden.
+        assertThat(result).isEqualTo(BottomStatsResult.Error)
     }
     // endregion
 
@@ -547,26 +1088,6 @@ class StatsRepositoryTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given successful response, when fetchMostViewed with REFERRERS, then success result is returned`() = test {
-        whenever(statsDataSource.fetchReferrers(any(), any(), any()))
-            .thenReturn(ReferrersDataResult.Success(createReferrersData()))
-
-        val result = repository.fetchMostViewed(
-            TEST_SITE_ID,
-            StatsPeriod.Last7Days,
-            MostViewedDataSource.REFERRERS
-        )
-
-        assertThat(result).isInstanceOf(MostViewedResult.Success::class.java)
-        val success = result as MostViewedResult.Success
-        assertThat(success.items).hasSize(2)
-        assertThat(success.items[0].title).isEqualTo(TEST_REFERRER_NAME_1)
-        assertThat(success.items[0].views).isEqualTo(TEST_REFERRER_VIEWS_1)
-        assertThat(success.items[1].title).isEqualTo(TEST_REFERRER_NAME_2)
-        assertThat(success.items[1].views).isEqualTo(TEST_REFERRER_VIEWS_2)
-    }
-
-    @Test
     fun `given successful response, when fetchMostViewed, then totalViews is calculated correctly`() = test {
         whenever(statsDataSource.fetchTopPostsAndPages(any(), any(), any()))
             .thenReturn(TopPostsDataResult.Success(createTopPostsData()))
@@ -580,6 +1101,28 @@ class StatsRepositoryTest : BaseUnitTest() {
         assertThat(result).isInstanceOf(MostViewedResult.Success::class.java)
         val success = result as MostViewedResult.Success
         assertThat(success.totalViews).isEqualTo(TEST_POST_VIEWS_1 + TEST_POST_VIEWS_2)
+    }
+
+    @Test
+    fun `given items with a type, when fetchMostViewed, then the type reaches the result`() = test {
+        val currentData = listOf(
+            TopPostDataItem(id = 1, title = "Post 1", views = 150, postType = "post"),
+            TopPostDataItem(id = 2, title = "Page 1", views = 100, postType = "page"),
+            TopPostDataItem(id = 3, title = "Home", views = 50, postType = null)
+        )
+
+        whenever(statsDataSource.fetchTopPostsAndPages(any(), any(), any()))
+            .thenReturn(TopPostsDataResult.Success(currentData))
+            .thenReturn(TopPostsDataResult.Success(emptyList()))
+
+        val result = repository.fetchMostViewed(
+            TEST_SITE_ID,
+            StatsPeriod.Last7Days,
+            MostViewedDataSource.POSTS_AND_PAGES
+        )
+
+        val success = result as MostViewedResult.Success
+        assertThat(success.items.map { it.postType }).containsExactly("post", "page", null)
     }
 
     @Test
@@ -620,21 +1163,6 @@ class StatsRepositoryTest : BaseUnitTest() {
             TEST_SITE_ID,
             StatsPeriod.Last7Days,
             MostViewedDataSource.POSTS_AND_PAGES
-        )
-
-        assertThat(result).isInstanceOf(MostViewedResult.Error::class.java)
-        assertThat((result as MostViewedResult.Error).message).isEqualTo(TEST_ERROR_TYPE.name)
-    }
-
-    @Test
-    fun `given error response, when fetchMostViewed with REFERRERS, then error result is returned`() = test {
-        whenever(statsDataSource.fetchReferrers(any(), any(), any()))
-            .thenReturn(ReferrersDataResult.Error(TEST_ERROR_TYPE))
-
-        val result = repository.fetchMostViewed(
-            TEST_SITE_ID,
-            StatsPeriod.Last7Days,
-            MostViewedDataSource.REFERRERS
         )
 
         assertThat(result).isInstanceOf(MostViewedResult.Error::class.java)
@@ -749,17 +1277,646 @@ class StatsRepositoryTest : BaseUnitTest() {
         TopPostDataItem(id = 1, title = TEST_POST_TITLE_1, views = TEST_POST_VIEWS_1),
         TopPostDataItem(id = 2, title = TEST_POST_TITLE_2, views = TEST_POST_VIEWS_2)
     )
+    // endregion
 
-    private fun createReferrersData() = listOf(
-        ReferrerDataItem(name = TEST_REFERRER_NAME_1, views = TEST_REFERRER_VIEWS_1),
-        ReferrerDataItem(name = TEST_REFERRER_NAME_2, views = TEST_REFERRER_VIEWS_2)
-    )
+    // region unfinished calendar periods
+    @Test
+    fun `given ThisWeek mid-week, when fetchStatsForPeriod, then the whole previous week is fetched`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+        repositoryAt(WEDNESDAY).fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.ThisWeek)
+
+        // The current window still stops at today -- the API has nothing for days that haven't
+        // happened -- but the comparison covers the whole previous week, so the chart can show a bar
+        // for the rest of this one.
+        verify(statsDataSource).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = eq(StatsUnit.DAY),
+            quantity = eq(4),
+            endDate = eq("2026-03-11"),
+            startDate = isNull(),
+            statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+        )
+        verify(statsDataSource).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = eq(StatsUnit.DAY),
+            quantity = eq(DAYS_IN_WEEK),
+            endDate = eq("2026-03-07"),
+            startDate = isNull(),
+            statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+        )
+    }
+
+    @Test
+    fun `given ThisWeek mid-week, when fetchStatsForPeriod, then the series spans the whole week`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+        val result = repositoryAt(WEDNESDAY).fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.ThisWeek)
+
+        // Thursday, Friday and Saturday haven't happened yet: they come back as placeholders that
+        // hold their slot on the axis (keyed by their own date) rather than being left off the chart.
+        val success = result as PeriodStatsResult.Success
+        val upcoming = success.currentPeriodData.filter { it.isUpcoming }
+        assertThat(upcoming.map { it.period }).containsExactly("2026-03-12", "2026-03-13", "2026-03-14")
+        assertThat(upcoming.map { it.views }).containsOnly(0L)
+        assertThat(success.currentPeriodData.filterNot { it.isUpcoming }).hasSize(2)
+    }
+
+    @Test
+    fun `given ThisWeek mid-week, when fetchStatsForPeriod, then totals compare the whole previous week`() = test {
+        // The previous call (the whole week) returns seven buckets; the current one (four days so far)
+        // returns four.
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), eq(DAYS_IN_WEEK), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createDailyVisitsData(LocalDate.of(2026, 3, 1), DAYS_IN_WEEK)))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), eq(4), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createDailyVisitsData(LocalDate.of(2026, 3, 8), 4)))
+
+        val result = repositoryAt(WEDNESDAY).fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.ThisWeek)
+
+        // Whole period against whole period, the way iOS compares: this week so far against all of last
+        // week. Carving the elapsed stretch out of the previous window instead is only exact while a
+        // bucket is a day, and the API can't express it for the coarser units (it truncates a bucket's
+        // additive metrics at the requested end date but returns whole-bucket visitor uniques).
+        val success = result as PeriodStatsResult.Success
+        assertThat(success.previousAggregates.views).isEqualTo(DAYS_IN_WEEK * DAILY_VIEWS)
+        assertThat(success.previousAggregates.startDate).isEqualTo("2026-03-01")
+        assertThat(success.previousAggregates.endDate).isEqualTo("2026-03-07")
+        assertThat(success.previousPeriodData).hasSize(DAYS_IN_WEEK)
+    }
+
+    @Test
+    fun `given ThisMonth mid-month, when fetchStatsForPeriod, then the whole previous month is fetched`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+        val result = repositoryAt(WEDNESDAY).fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.ThisMonth)
+
+        verify(statsDataSource).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = eq(StatsUnit.DAY),
+            quantity = eq(11),
+            endDate = eq("2026-03-11"),
+            startDate = isNull(),
+            statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+        )
+        verify(statsDataSource).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = eq(StatsUnit.DAY),
+            quantity = eq(28),
+            endDate = eq("2026-02-28"),
+            startDate = isNull(),
+            statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+        )
+        val success = result as PeriodStatsResult.Success
+        assertThat(success.currentPeriodData.count { it.isUpcoming }).isEqualTo(20)
+        assertThat(success.currentPeriodData.last().period).isEqualTo("2026-03-31")
+    }
+
+    @Test
+    fun `given ThisYear in January, when fetchStatsForPeriod, then the year is charted in months`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+        val result = repositoryAt(EARLY_JANUARY).fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.ThisYear)
+
+        // The granularity comes from the whole year rather than from the few days of it that have
+        // elapsed, so "This Year" is twelve month buckets on 5 January just as it is in December --
+        // it no longer starts the year as a handful of day buckets and silently switches in February.
+        verify(statsDataSource).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = eq(StatsUnit.MONTH),
+            quantity = eq(1),
+            endDate = eq("2026-01-05"),
+            startDate = eq("2026-01-01"),
+            statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+        )
+        verify(statsDataSource).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = eq(StatsUnit.MONTH),
+            quantity = eq(MONTHS_IN_YEAR),
+            endDate = eq("2025-12-31"),
+            startDate = eq("2025-01-01"),
+            statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+        )
+        val success = result as PeriodStatsResult.Success
+        assertThat(success.currentPeriodData.filter { it.isUpcoming }.map { it.period })
+            .startsWith("2026-02-01")
+            .endsWith("2026-12-01")
+            .hasSize(MONTHS_IN_YEAR - 1)
+    }
+
+    @Test
+    fun `given a finished period, when fetchStatsForPeriod, then no upcoming buckets are added`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+        val result = repositoryAt(WEDNESDAY).fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        val success = result as PeriodStatsResult.Success
+        assertThat(success.currentPeriodData).noneMatch { it.isUpcoming }
+    }
+
+    @Test
+    fun `given ThisYear mid-year, when fetchStatsForPeriod, then totals compare the whole previous year`() = test {
+        // The previous window is the whole of 2025 -- twelve whole month buckets -- and the totals use
+        // all of them, including the months of 2026 that haven't happened yet.
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), eq(MONTHS_IN_YEAR), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(monthlyVisits(LocalDate.of(2025, 1, 1), MONTHS_IN_YEAR, WHOLE_MONTH_VIEWS))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), eq(9), eq("2026-09-23"), anyOrNull(), anyOrNull()))
+            .thenReturn(monthlyVisits(LocalDate.of(2026, 1, 1), 9, PART_MONTH_VIEWS))
+
+        val result = repositoryAt(LATE_SEPTEMBER).fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.ThisYear)
+
+        // Whole year against whole year, as iOS does. The elapsed stretch is deliberately not carved
+        // out of the previous window: a month bucket can't be split, and re-requesting the year ending
+        // on the equivalent day of 2025 doesn't work either -- the API truncates a bucket's additive
+        // metrics at the requested end date but returns whole-bucket visitor uniques, so views would be
+        // right and visitors wrong.
+        val success = result as PeriodStatsResult.Success
+        assertThat(success.previousAggregates.views).isEqualTo(MONTHS_IN_YEAR * WHOLE_MONTH_VIEWS)
+        assertThat(success.previousAggregates.startDate).isEqualTo("2025-01-01")
+        assertThat(success.previousAggregates.endDate).isEqualTo("2025-12-31")
+        // The chart still spans the whole of both years, so the months still to come keep a comparison.
+        assertThat(success.currentPeriodData).hasSize(MONTHS_IN_YEAR)
+        assertThat(success.previousPeriodData).hasSize(MONTHS_IN_YEAR)
+    }
+
+    @Test
+    fun `given a calendar period, when fetchStatsForPeriod, then only the two chart windows are fetched`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+        repositoryAt(LATE_SEPTEMBER).fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.ThisYear)
+
+        // Comparing whole period against whole period needs no window beyond the two the chart already
+        // draws, so even the month-bucket periods stay at two requests.
+        verify(statsDataSource, times(2)).fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull())
+    }
+
+    /** [count] consecutive month buckets from [start]'s month, each worth [views] of every metric. */
+    private fun monthlyVisits(start: LocalDate, count: Int, views: Long): StatsVisitsDataResult.Success {
+        val periods = (0 until count).map { start.plusMonths(it.toLong()).withDayOfMonth(1).toString() }
+        return StatsVisitsDataResult.Success(
+            StatsVisitsData(
+                visits = periods.map { VisitsDataPoint(it, views) },
+                visitors = periods.map { VisitorsDataPoint(it, views) },
+                likes = periods.map { LikesDataPoint(it, views) },
+                comments = periods.map { CommentsDataPoint(it, views) },
+                posts = periods.map { PostsDataPoint(it, views) }
+            )
+        )
+    }
+
+    @Test
+    fun `given ThisWeek, when another card fetches, then it compares the same window as the chart`() = test {
+        whenever(statsDataSource.fetchTopPostsAndPages(any(), any(), any()))
+            .thenReturn(TopPostsDataResult.Success(createTopPostsData()))
+
+        repositoryAt(WEDNESDAY).fetchMostViewed(
+            TEST_SITE_ID,
+            StatsPeriod.ThisWeek,
+            MostViewedDataSource.POSTS_AND_PAGES
+        )
+
+        // Every card on the screen compares a calendar period against the whole preceding calendar
+        // one, exactly as the Views chart does. A same-length mirror of the elapsed days would put this
+        // card on last Thursday-to-Saturday while the chart above it used the whole of last week.
+        verify(statsDataSource).fetchTopPostsAndPages(
+            eq(TEST_SITE_ID),
+            eq(StatsDateRange.Custom(startDate = "2026-03-08", date = "2026-03-11")),
+            any()
+        )
+        verify(statsDataSource).fetchTopPostsAndPages(
+            eq(TEST_SITE_ID),
+            eq(StatsDateRange.Custom(startDate = "2026-03-01", date = "2026-03-07")),
+            any()
+        )
+    }
+
+    @Test
+    fun `given Last12Months, when another card fetches, then it uses the chart's twelve month buckets`() = test {
+        whenever(statsDataSource.fetchTopPostsAndPages(any(), any(), any()))
+            .thenReturn(TopPostsDataResult.Success(createTopPostsData()))
+
+        repositoryAt(MID_WEEK).fetchMostViewed(
+            TEST_SITE_ID,
+            StatsPeriod.Last12Months,
+            MostViewedDataSource.POSTS_AND_PAGES
+        )
+
+        // The twelve whole month buckets Oct 2025..Sep 2026 — what the chart's unit=month&quantity=12
+        // request actually returns, and the window web and iOS send as start_date. A rolling 365 days
+        // would reach back to 17 Sep 2025 and report three weeks the chart above it excludes.
+        verify(statsDataSource).fetchTopPostsAndPages(
+            eq(TEST_SITE_ID),
+            eq(StatsDateRange.Custom(startDate = "2025-10-01", date = "2026-09-16")),
+            any()
+        )
+        verify(statsDataSource).fetchTopPostsAndPages(
+            eq(TEST_SITE_ID),
+            eq(StatsDateRange.Custom(startDate = "2024-10-01", date = "2025-09-16")),
+            any()
+        )
+    }
+
+    @Test
+    fun `given Last12Months, when fetchStatsForPeriod, then the previous window is the twelve months before`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            repositoryAt(MID_WEEK).fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last12Months)
+
+            // Both endpoints step back twelve months, so the previous window covers the same 351 days
+            // as the current one and its last bucket is cut on the 16th too. Ending it on 30 September
+            // instead would compare 351 days of traffic against a full 365.
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.MONTH),
+                quantity = eq(12),
+                endDate = eq("2026-09-16"),
+                startDate = eq("2025-10-01"),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.MONTH),
+                quantity = eq(12),
+                endDate = eq("2025-09-16"),
+                startDate = eq("2024-10-01"),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+        }
+
+    @Test
+    fun `given Last7Days, when fetchStatsForPeriod, then the previous window is still the seven days before`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            repositoryAt(MID_WEEK).fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+            // Pins that the day presets are untouched by the month-bucket alignment: a day before and a
+            // whole unit before are the same date when the unit is a day.
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.DAY),
+                quantity = eq(DAYS_IN_WEEK),
+                endDate = eq("2026-09-16"),
+                startDate = isNull(),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.DAY),
+                quantity = eq(DAYS_IN_WEEK),
+                endDate = eq("2026-09-09"),
+                startDate = isNull(),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+        }
+
+    /** [count] consecutive day buckets from [start], each worth [DAILY_VIEWS] views. */
+    private fun createDailyVisitsData(start: LocalDate, count: Int): StatsVisitsData {
+        val periods = (0 until count).map { start.plusDays(it.toLong()).toString() }
+        return StatsVisitsData(
+            visits = periods.map { VisitsDataPoint(it, DAILY_VIEWS) },
+            visitors = periods.map { VisitorsDataPoint(it, DAILY_VIEWS) },
+            likes = periods.map { LikesDataPoint(it, DAILY_VIEWS) },
+            comments = periods.map { CommentsDataPoint(it, DAILY_VIEWS) },
+            posts = periods.map { PostsDataPoint(it, DAILY_VIEWS) }
+        )
+    }
+    // endregion
+
+    // region navigation
+    @Test
+    fun `previousPeriod of Today is the single day before, rendered hourly-capable`() {
+        val result = repositoryAt(MID_WEEK).previousPeriod(StatsPeriod.Today)
+
+        assertThat(result).isEqualTo(StatsPeriod.Custom(LocalDate.of(2026, 9, 15), LocalDate.of(2026, 9, 15)))
+    }
+
+    @Test
+    fun `previousPeriod of Last7Days steps back seven days preserving the span`() {
+        val result = repositoryAt(MID_WEEK).previousPeriod(StatsPeriod.Last7Days)
+
+        assertThat(result).isEqualTo(StatsPeriod.Custom(LocalDate.of(2026, 9, 3), LocalDate.of(2026, 9, 9)))
+    }
+
+    @Test
+    fun `previousPeriod of Last30Days steps back thirty days preserving the span`() {
+        val result = repositoryAt(MID_WEEK).previousPeriod(StatsPeriod.Last30Days)
+
+        assertThat(result).isEqualTo(StatsPeriod.Custom(LocalDate.of(2026, 7, 19), LocalDate.of(2026, 8, 17)))
+    }
+
+    @Test
+    fun `previousPeriod of Last12Months steps back twelve calendar months`() {
+        // The window is the twelve whole month buckets Oct 2025..Sep 2026, so it starts on the 1st and
+        // the step back lands on the 1st too.
+        val result = repositoryAt(MID_WEEK).previousPeriod(StatsPeriod.Last12Months)
+
+        assertThat(result).isEqualTo(StatsPeriod.Custom(LocalDate.of(2024, 10, 1), LocalDate.of(2025, 9, 16)))
+    }
+
+    @Test
+    fun `previousPeriod of ThisWeek is the whole previous calendar week`() {
+        // Back from a partial "this week" (week start..today) lands on the full previous week, not a
+        // same-length mirror ending on the day before the week started.
+        val result = repositoryAt(MID_WEEK).previousPeriod(StatsPeriod.ThisWeek)
+
+        assertThat(result).isEqualTo(StatsPeriod.Custom(LocalDate.of(2026, 9, 6), LocalDate.of(2026, 9, 12)))
+    }
+
+    @Test
+    fun `previousPeriod of ThisMonth is the whole previous calendar month`() {
+        val result = repositoryAt(MID_WEEK).previousPeriod(StatsPeriod.ThisMonth)
+
+        assertThat(result).isEqualTo(StatsPeriod.Custom(LocalDate.of(2026, 8, 1), LocalDate.of(2026, 8, 31)))
+    }
+
+    @Test
+    fun `previousPeriod of ThisYear is the whole previous calendar year`() {
+        val result = repositoryAt(MID_WEEK).previousPeriod(StatsPeriod.ThisYear)
+
+        assertThat(result).isEqualTo(StatsPeriod.Custom(LocalDate.of(2025, 1, 1), LocalDate.of(2025, 12, 31)))
+    }
+
+    @Test
+    fun `previousPeriod paged twice from ThisMonth keeps stepping whole calendar months`() {
+        val repository = repositoryAt(MID_WEEK)
+
+        val once = repository.previousPeriod(StatsPeriod.ThisMonth)
+        val twice = repository.previousPeriod(once)
+
+        // Continued paging on a full-calendar-month window stays aligned to whole months rather than
+        // drifting by a fixed day count.
+        assertThat(twice).isEqualTo(StatsPeriod.Custom(LocalDate.of(2026, 7, 1), LocalDate.of(2026, 7, 31)))
+    }
+
+    @Test
+    fun `nextPeriod from the previous full month returns to the current month to date`() {
+        val repository = repositoryAt(MID_WEEK)
+        val previous = repository.previousPeriod(StatsPeriod.ThisMonth)
+
+        val result = repository.nextPeriod(previous, origin = StatsPeriod.ThisMonth)
+
+        assertThat(result).isEqualTo(StatsPeriod.ThisMonth)
+    }
+
+    @Test
+    fun `nextPeriod onto the present edge snaps back to the Today preset`() {
+        val repository = repositoryAt(MID_WEEK)
+        val yesterday = StatsPeriod.Custom(LocalDate.of(2026, 9, 15), LocalDate.of(2026, 9, 15))
+
+        val result = repository.nextPeriod(yesterday, origin = StatsPeriod.Today)
+
+        // Landing on today's single-day window restores the preset label rather than a Custom range,
+        // so Today → back → forward shows "Today" again.
+        assertThat(result).isEqualTo(StatsPeriod.Today)
+    }
+
+    @Test
+    fun `given a mid-week day, when Last7Days is paged back and forward, then Last7Days comes back`() {
+        val repository = repositoryAt(MID_WEEK)
+
+        val back = repository.previousPeriod(StatsPeriod.Last7Days)
+        val result = repository.nextPeriod(back, origin = StatsPeriod.Last7Days)
+
+        assertThat(result).isEqualTo(StatsPeriod.Last7Days)
+    }
+
+    @Test
+    fun `given the last day of the week, when Last7Days is paged back and forward, then Last7Days comes back`() {
+        // The back step lands on 6-12 Sep, which is itself a whole calendar week, so the forward step
+        // is a calendar step and its window is both Last 7 Days and This Week. Without the origin the
+        // label silently became This Week, and was persisted for the next session (CMM-2415).
+        val repository = repositoryAt(WEEK_LAST_DAY)
+
+        val back = repository.previousPeriod(StatsPeriod.Last7Days)
+        val result = repository.nextPeriod(back, origin = StatsPeriod.Last7Days)
+
+        assertThat(result).isEqualTo(StatsPeriod.Last7Days)
+    }
+
+    @Test
+    fun `given the last day of the week, when ThisWeek is paged back and forward, then ThisWeek comes back`() {
+        // Same window, other label: the preset the user picked is the one that must come back.
+        val repository = repositoryAt(WEEK_LAST_DAY)
+
+        val back = repository.previousPeriod(StatsPeriod.ThisWeek)
+        val result = repository.nextPeriod(back, origin = StatsPeriod.ThisWeek)
+
+        assertThat(result).isEqualTo(StatsPeriod.ThisWeek)
+    }
+
+    @Test
+    fun `given the first day of the week, when ThisWeek is paged back and forward, then ThisWeek comes back`() {
+        // On the week's first day the "this week" window collapses to a single day, so Today matches it
+        // too; the picked preset keeps its whole-week stepping instead of switching to daily stepping.
+        val repository = repositoryAt(WEEK_FIRST_DAY)
+
+        val back = repository.previousPeriod(StatsPeriod.ThisWeek)
+        val result = repository.nextPeriod(back, origin = StatsPeriod.ThisWeek)
+
+        assertThat(result).isEqualTo(StatsPeriod.ThisWeek)
+    }
+
+    @Test
+    fun `given the 30th, when Last30Days is paged back and forward, then Last30Days comes back`() {
+        // The back step lands on the whole of the preceding 30-day month (1-30 Sep), which turns the
+        // forward step into a calendar-month step onto a window This Month also describes.
+        val repository = repositoryAt(THIRTIETH_AFTER_30_DAY_MONTH)
+
+        val back = repository.previousPeriod(StatsPeriod.Last30Days)
+        assertThat(back).isEqualTo(StatsPeriod.Custom(LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 30)))
+
+        val result = repository.nextPeriod(back, origin = StatsPeriod.Last30Days)
+
+        assertThat(result).isEqualTo(StatsPeriod.Last30Days)
+    }
+
+    @Test
+    fun `given the 30th, when Last30Days is paged back twice and forward twice, then Last30Days comes back`() {
+        val repository = repositoryAt(THIRTIETH_AFTER_30_DAY_MONTH)
+
+        var period = StatsPeriod.Last30Days as StatsPeriod
+        repeat(2) { period = repository.previousPeriod(period, origin = StatsPeriod.Last30Days) }
+        repeat(2) { period = repository.nextPeriod(period, origin = StatsPeriod.Last30Days) }
+
+        assertThat(period).isEqualTo(StatsPeriod.Last30Days)
+    }
+
+    @Test
+    fun `given the 29th, when Last30Days is paged back twice, then it keeps stepping thirty days`() {
+        // Two steps back from the 29th land on the whole of the preceding 30-day month. Judged on shape
+        // alone that window is a calendar month, and paging it would step — and come back — as whole
+        // months, turning the user's thirty days into a 29-day month-to-date window called This Month.
+        val repository = repositoryAt(TWENTY_NINTH_AFTER_30_DAY_MONTH)
+
+        var period = StatsPeriod.Last30Days as StatsPeriod
+        repeat(2) { period = repository.previousPeriod(period, origin = StatsPeriod.Last30Days) }
+        assertThat(period).isEqualTo(StatsPeriod.Custom(LocalDate.of(2025, 11, 1), LocalDate.of(2025, 11, 30)))
+
+        repeat(2) { period = repository.nextPeriod(period, origin = StatsPeriod.Last30Days) }
+
+        assertThat(period).isEqualTo(StatsPeriod.Last30Days)
+    }
+
+    @Test
+    fun `given the 30th, when ThisMonth is paged back and forward, then ThisMonth comes back`() {
+        val repository = repositoryAt(THIRTIETH_AFTER_30_DAY_MONTH)
+
+        val back = repository.previousPeriod(StatsPeriod.ThisMonth)
+        val result = repository.nextPeriod(back, origin = StatsPeriod.ThisMonth)
+
+        assertThat(result).isEqualTo(StatsPeriod.ThisMonth)
+    }
+
+    @Test
+    fun `given a leap day, when Last12Months is paged back and forward, then it returns to the present edge`() {
+        // Stepping back from 29 Feb clamps the window's end to 28 Feb (the year before has no 29th) and
+        // stepping forward cannot recover the day, so the window used to come back one day short of the
+        // present — unlabelled, with the forward arrow still enabled.
+        val repository = repositoryAt(LEAP_DAY)
+
+        val back = repository.previousPeriod(StatsPeriod.Last12Months)
+        val result = repository.nextPeriod(back, origin = StatsPeriod.Last12Months)
+
+        assertThat(result).isEqualTo(StatsPeriod.Last12Months)
+        assertThat(repository.canNavigateForward(result)).isFalse()
+    }
+
+    @Test
+    fun `given a month-end after a leap month, when Last12Months is paged back and forward, then it comes back`() {
+        // Mirror case: here the clamp drifts the window's start (29 Feb 2024 → 28 Feb) instead of its end.
+        val repository = repositoryAt(MONTH_END_AFTER_LEAP_MONTH)
+
+        val back = repository.previousPeriod(StatsPeriod.Last12Months)
+        val result = repository.nextPeriod(back, origin = StatsPeriod.Last12Months)
+
+        assertThat(result).isEqualTo(StatsPeriod.Last12Months)
+    }
+
+    @Test
+    fun `given new year's day, when ThisYear is paged back and forward, then ThisYear comes back`() {
+        // On 1 January the year-to-date window is a single day, matching Today and This Month too.
+        val repository = repositoryAt(NEW_YEARS_DAY)
+
+        val back = repository.previousPeriod(StatsPeriod.ThisYear)
+        val result = repository.nextPeriod(back, origin = StatsPeriod.ThisYear)
+
+        assertThat(result).isEqualTo(StatsPeriod.ThisYear)
+    }
+
+    @Test
+    fun `given a drilled-in single day as origin, when paging forward onto the present, then Today wins`() {
+        // Drilling into a chart bar makes a concrete day the origin: it matches no preset, so the tie
+        // falls back to the navigated window's own unit and the single-day landing is labelled Today.
+        val repository = repositoryAt(WEEK_FIRST_DAY)
+        val drilledDay = StatsPeriod.Custom(LocalDate.of(2026, 9, 19), LocalDate.of(2026, 9, 19))
+
+        val result = repository.nextPeriod(drilledDay, origin = drilledDay)
+
+        assertThat(result).isEqualTo(StatsPeriod.Today)
+    }
+
+    @Test
+    fun `given no origin, when Last7Days is paged back and forward, then the window is unchanged`() {
+        // Callers without an origin (none today) still get the right seven days; only the label is
+        // decided by the fallback tie-break.
+        val repository = repositoryAt(WEEK_LAST_DAY)
+
+        val back = repository.previousPeriod(StatsPeriod.Last7Days)
+        val result = repository.nextPeriod(back)
+
+        assertThat(repository.canNavigateForward(result)).isFalse()
+        assertThat(repository.previousPeriod(result)).isEqualTo(back)
+    }
+
+    @Test
+    fun `nextPeriod clamps so the window never ends after today`() {
+        // A ten-day range ending today: forward would overshoot into the future and must be clamped
+        // back to end on today.
+        val repository = repositoryAt(MID_WEEK)
+        val endingToday = StatsPeriod.Custom(LocalDate.of(2026, 9, 7), MID_WEEK)
+
+        val result = repository.nextPeriod(endingToday)
+
+        assertThat(result).isEqualTo(StatsPeriod.Custom(LocalDate.of(2026, 9, 7), MID_WEEK))
+    }
+
+    @Test
+    fun `canNavigateForward is false at the present edge and true in the past`() {
+        val repository = repositoryAt(MID_WEEK)
+
+        assertThat(repository.canNavigateForward(StatsPeriod.Today)).isFalse()
+        assertThat(repository.canNavigateForward(StatsPeriod.Last7Days)).isFalse()
+        assertThat(
+            repository.canNavigateForward(
+                StatsPeriod.Custom(LocalDate.of(2026, 9, 15), LocalDate.of(2026, 9, 15))
+            )
+        ).isTrue()
+    }
+
+    @Test
+    fun `canNavigateBackward stops at the year 2000 floor`() {
+        val repository = repositoryAt(MID_WEEK)
+
+        assertThat(repository.canNavigateBackward(StatsPeriod.Today)).isTrue()
+        assertThat(
+            repository.canNavigateBackward(
+                StatsPeriod.Custom(LocalDate.of(2001, 1, 1), LocalDate.of(2001, 1, 7))
+            )
+        ).isTrue()
+        assertThat(
+            repository.canNavigateBackward(
+                StatsPeriod.Custom(LocalDate.of(2000, 6, 1), LocalDate.of(2000, 6, 7))
+            )
+        ).isFalse()
+    }
     // endregion
 
     companion object {
+        // Navigation anchors. With a US week (Sunday first) 19 Sep 2026 is a Saturday, so it is the
+        // week's last day and 20 Sep is the next week's first day. September has 30 days, which makes
+        // 30 Oct the day "the last 30 days" is also "this month". 2028 is a leap year, and Jan 2025
+        // reaches back into leap-day February 2024.
+        private val MID_WEEK: LocalDate = LocalDate.of(2026, 9, 16)
+        private val WEEK_LAST_DAY: LocalDate = LocalDate.of(2026, 9, 19)
+        private val WEEK_FIRST_DAY: LocalDate = LocalDate.of(2026, 9, 20)
+        private val THIRTIETH_AFTER_30_DAY_MONTH: LocalDate = LocalDate.of(2026, 10, 30)
+        private val TWENTY_NINTH_AFTER_30_DAY_MONTH: LocalDate = LocalDate.of(2026, 1, 29)
+        private val LEAP_DAY: LocalDate = LocalDate.of(2028, 2, 29)
+        private val MONTH_END_AFTER_LEAP_MONTH: LocalDate = LocalDate.of(2025, 1, 31)
+        private val NEW_YEARS_DAY: LocalDate = LocalDate.of(2026, 1, 1)
+
+        // Unfinished-calendar-period anchors. With a US week (Sunday first) Wednesday 11 Mar 2026 sits
+        // four days into its week (8-14 Mar) and eleven into a 31-day month; 5 Jan 2026 is early enough
+        // in the year that the elapsed part of it would otherwise be charted in days.
+        private val WEDNESDAY: LocalDate = LocalDate.of(2026, 3, 11)
+        private val EARLY_JANUARY: LocalDate = LocalDate.of(2026, 1, 5)
+        // Nine months into 2026, with September only part-elapsed -- the case where comparing whole
+        // month buckets against the previous year would overstate the previous total.
+        private val LATE_SEPTEMBER: LocalDate = LocalDate.of(2026, 9, 23)
+        private const val DAYS_IN_WEEK = 7
+        private const val MONTHS_IN_YEAR = 12
+        private const val DAILY_VIEWS = 10L
+        private const val WHOLE_MONTH_VIEWS = 300L
+        private const val PART_MONTH_VIEWS = 230L
+
         private const val TEST_SITE_ID = 123L
-        private const val TEST_ACCESS_TOKEN = "test_access_token"
         private val TEST_ERROR_TYPE = StatsErrorType.NETWORK_ERROR
+        private val EXPECTED_CARD_STAT_FIELDS = listOf(
+            StatsVisitField.VIEWS,
+            StatsVisitField.VISITORS,
+            StatsVisitField.LIKES,
+            StatsVisitField.COMMENTS,
+            StatsVisitField.POSTS
+        )
 
         private const val TEST_PERIOD_1 = "2024-01-15"
         private const val TEST_PERIOD_2 = "2024-01-16"
@@ -785,10 +1942,5 @@ class StatsRepositoryTest : BaseUnitTest() {
         private const val TEST_POST_TITLE_2 = "Test Post 2"
         private const val TEST_POST_VIEWS_1 = 500L
         private const val TEST_POST_VIEWS_2 = 300L
-
-        private const val TEST_REFERRER_NAME_1 = "google.com"
-        private const val TEST_REFERRER_NAME_2 = "twitter.com"
-        private const val TEST_REFERRER_VIEWS_1 = 200L
-        private const val TEST_REFERRER_VIEWS_2 = 150L
     }
 }

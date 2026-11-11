@@ -151,5 +151,17 @@ public abstract class GutenbergKitEditorFragmentBase extends Fragment {
         void onOpenMediaLibraryRequested(org.wordpress.gutenberg.GutenbergView.OpenMediaLibraryConfig config);
         void onModalDialogOpened(String dialogType);
         void onModalDialogClosed(String dialogType);
+
+        /**
+         * Returns the persisted post title for content recovery after WebView refresh.
+         * @return The most recently persisted title from autosave.
+         */
+        String getPersistedTitle();
+
+        /**
+         * Returns the persisted post content for content recovery after WebView refresh.
+         * @return The most recently persisted content from autosave.
+         */
+        String getPersistedContent();
     }
 }

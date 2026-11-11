@@ -20,20 +20,10 @@ class ExperimentalFeatures @Inject constructor(
         val labelResId: Int,
         val descriptionResId: Int
     ) {
-        DISABLE_EXPERIMENTAL_BLOCK_EDITOR(
-            "disable_experimental_block_editor",
-            R.string.disable_experimental_block_editor,
-            R.string.disable_experimental_block_editor_description
-        ),
         EXPERIMENTAL_BLOCK_EDITOR(
             "experimental_block_editor",
             R.string.experimental_block_editor,
             R.string.experimental_block_editor_description
-        ),
-        EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE(
-            "experimental_application_password_feature",
-            R.string.experimental_application_password_feature,
-            R.string.experimental_application_password_feature_description
         ),
         MODERN_SUPPORT(
             "modern_support",
@@ -50,20 +40,10 @@ class ExperimentalFeatures @Inject constructor(
             R.string.experimental_post_types,
             R.string.experimental_post_types_description
         ),
-        NEW_STATS(
-            "new_stats",
-            R.string.experimental_new_stats,
-            R.string.experimental_new_stats_description
-        ),
-        RS_POST_LIST(
-            "rs_post_list",
-            R.string.experimental_rs_post_list,
-            R.string.experimental_rs_post_list_description
-        ),
         EINK_MODE(
             "eink_mode",
             R.string.eink_mode_title,
             R.string.eink_mode_summary
-        );
+        )
     }
 }

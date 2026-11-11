@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.accounts.login
 
+import android.content.Context
+import com.automattic.android.tracks.crashlogging.CrashLogging
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -8,25 +11,36 @@ import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.StoreCredentialsResult
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.UriLogin
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.AutoDiscoveryAttemptSuccess
 import uniffi.wp_api.DiscoveredAuthenticationMechanism
+import uniffi.wp_api.OAuth2Endpoints
+import uniffi.wp_api.AutoDiscoveryAttemptFailure
+import uniffi.wp_api.FetchAndParseApiRootFailure
+import uniffi.wp_api.FindApiRootFailure
 import uniffi.wp_api.ParseUrlException
+import uniffi.wp_api.WpErrorCode
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
+import kotlin.test.assertFailsWith
+import kotlin.test.assertIs
 
 private const val TEST_URL = "http://test.com"
 private const val TEST_USER = "testuser"
@@ -39,6 +53,9 @@ private const val TEST_URL_AUTH_SUFFIX = "?app_name=android-jetpack-client&succe
 @ExperimentalCoroutinesApi
 class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     val testUriLogin = UriLogin(TEST_URL, TEST_USER, TEST_PASSWORD, TEST_API_ROOT_URL)
+     @Mock
+     lateinit var context: Context
+
      @Mock
      lateinit var dispatcherWrapper: ApplicationPasswordLoginHelper.DispatcherWrapper
 
@@ -63,6 +80,15 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     @Mock
     lateinit var apiRootUrlCache: ApiRootUrlCache
 
+    @Mock
+    lateinit var crashLogging: CrashLogging
+
+    @Mock
+    lateinit var wpApiClientProvider: WpApiClientProvider
+
+    @Mock
+    lateinit var analyticsTracker: AnalyticsTrackerWrapper
+
     private lateinit var applicationPasswordLoginHelper: ApplicationPasswordLoginHelper
 
     @Before
@@ -73,57 +99,128 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             dispatcherWrapper,
             siteStore,
             uriLoginWrapper,
-            buildConfigWrapper,
             wpLoginClient,
             appLogWrapper,
             apiRootUrlCache,
-            discoverSuccessWrapper
+            discoverSuccessWrapper,
+            crashLogging,
+            wpApiClientProvider,
+            analyticsTracker,
         )
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with empty data returns false`() = runTest {
+    fun `storeApplicationPasswordCredentialsFrom with empty data returns BadData`() = runTest {
         val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
             UriLogin("", "", "", "")
         )
-        assertFalse(result)
+        assertIs<StoreCredentialsResult.BadData>(result)
+        verify(wpApiClientProvider, times(0)).clearSelfHostedClient(any())
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with same data returns false`() = runTest {
+    fun `storeApplicationPasswordCredentialsFrom with same data returns BadData`() = runTest {
+        whenever(siteStore.sites).thenReturn(listOf(
+            SiteModel().apply { url = TEST_URL }
+        ))
         applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
         val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
-        assertFalse(result)
+        assertIs<StoreCredentialsResult.BadData>(result)
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with null user name returns false`() = runTest {
-        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
-        assertFalse(result)
+    fun `storeApplicationPasswordCredentialsFrom with null user name returns BadData`() = runTest {
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
+            UriLogin(TEST_URL, null, TEST_PASSWORD, TEST_API_ROOT_URL)
+        )
+        assertIs<StoreCredentialsResult.BadData>(result)
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with missing user name returns false`() = runTest {
-        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
-        assertFalse(result)
+    fun `storeApplicationPasswordCredentialsFrom with missing user name returns BadData`() = runTest {
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
+            UriLogin(TEST_URL, "", TEST_PASSWORD, TEST_API_ROOT_URL)
+        )
+        assertIs<StoreCredentialsResult.BadData>(result)
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with null password returns false`() = runTest {
-        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
-        assertFalse(result)
+    fun `storeApplicationPasswordCredentialsFrom with null password returns BadData`() = runTest {
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
+            UriLogin(TEST_URL, TEST_USER, null, TEST_API_ROOT_URL)
+        )
+        assertIs<StoreCredentialsResult.BadData>(result)
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with missing password returns false`() = runTest {
-        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
-        assertFalse(result)
+    fun `storeApplicationPasswordCredentialsFrom with missing password returns BadData`() = runTest {
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
+            UriLogin(TEST_URL, TEST_USER, "", TEST_API_ROOT_URL)
+        )
+        assertIs<StoreCredentialsResult.BadData>(result)
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with empty api root url returns false`() = runTest {
+    fun `storeApplicationPasswordCredentialsFrom when apiRootUrl null and fallback discovery fails returns BadData`() =
+        runTest {
+            whenever(wpLoginClient.apiDiscovery(any())).thenReturn(
+                ApiDiscoveryResult.Failure(AutoDiscoveryAttemptFailure.ParseSiteUrl(ParseUrlException.Generic("")))
+            )
+
+            val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
+                UriLogin(TEST_URL, TEST_USER, TEST_PASSWORD, null)
+            )
+
+            assertIs<StoreCredentialsResult.BadData>(result)
+        }
+
+    @Test
+    fun `storeApplicationPasswordCredentialsFrom recovers missing apiRootUrl via fallback discovery`() = runTest {
+        val autoDiscoveryAttemptSuccess = AutoDiscoveryAttemptSuccess(
+            mock(), mock(), mock(), DiscoveredAuthenticationMechanism.ApplicationPasswords(mock())
+        )
+        val apiDiscoveryResult = ApiDiscoveryResult.Success(autoDiscoveryAttemptSuccess)
+        whenever(wpLoginClient.apiDiscovery(any())).thenReturn(apiDiscoveryResult)
+        whenever(discoverSuccessWrapper.getApiRootUrl(eq(apiDiscoveryResult))).thenReturn(TEST_API_ROOT_URL)
+        val siteModel = SiteModel().apply { url = TEST_URL }
+        whenever(siteStore.sites).thenReturn(listOf(siteModel))
+
+        val loginWithoutApiRoot = UriLogin(TEST_URL, TEST_USER, TEST_PASSWORD, null)
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(loginWithoutApiRoot)
+
+        assertIs<StoreCredentialsResult.Success>(result)
+        verify(wpLoginClient, times(1)).apiDiscovery(any())
+        verify(dispatcherWrapper).updateApplicationPassword(eq(siteModel))
+    }
+
+    @Test
+    fun `storeApplicationPasswordCredentialsFrom returns SiteNotFound carrying the recovered apiRootUrl`() = runTest {
+        // Given — apiRootUrl is missing and recovered via discovery, but the site is not found
+        // locally. The recovered value must be carried on SiteNotFound so the caller can fetch.
+        val autoDiscoveryAttemptSuccess = AutoDiscoveryAttemptSuccess(
+            mock(), mock(), mock(), DiscoveredAuthenticationMechanism.ApplicationPasswords(mock())
+        )
+        val apiDiscoveryResult = ApiDiscoveryResult.Success(autoDiscoveryAttemptSuccess)
+        whenever(wpLoginClient.apiDiscovery(any())).thenReturn(apiDiscoveryResult)
+        whenever(discoverSuccessWrapper.getApiRootUrl(eq(apiDiscoveryResult))).thenReturn(TEST_API_ROOT_URL)
+        whenever(siteStore.sites).thenReturn(listOf())
+
+        val loginWithoutApiRoot = UriLogin(TEST_URL, TEST_USER, TEST_PASSWORD, null)
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(loginWithoutApiRoot)
+
+        assertIs<StoreCredentialsResult.SiteNotFound>(result)
+        assertEquals(TEST_API_ROOT_URL, result.urlLogin.apiRootUrl)
+    }
+
+    @Test
+    fun `storeApplicationPasswordCredentialsFrom does not run discovery when apiRootUrl is present`() = runTest {
+        val siteModel = SiteModel().apply { url = TEST_URL }
+        whenever(siteStore.sites).thenReturn(listOf(siteModel))
+
         val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
-        assertFalse(result)
+
+        assertIs<StoreCredentialsResult.Success>(result)
+        verify(wpLoginClient, times(0)).apiDiscovery(any())
     }
 
     @Test
@@ -137,323 +234,408 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
 
         val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
 
-        assertTrue(result)
+        assertIs<StoreCredentialsResult.Success>(result)
         verify(siteStore).sites
         verify(dispatcherWrapper).updateApplicationPassword(eq(siteModel))
+        verify(wpApiClientProvider).clearSelfHostedClient(eq(siteModel.id))
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with valid data but not matching site does not store credentials`() =
+    fun `storeApplicationPasswordCredentialsFrom with valid data but not matching site returns SiteNotFound`() =
         runTest {
             whenever(siteStore.sites).thenReturn(listOf())
 
             val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
 
-            assertFalse(result)
+            assertIs<StoreCredentialsResult.SiteNotFound>(result)
             verify(siteStore).sites
             verify(dispatcherWrapper, times(0)).updateApplicationPassword(any())
-            verify(dispatcherWrapper, times(0)).removeApplicationPassword(any())
+            verify(wpApiClientProvider, times(0)).clearSelfHostedClient(any())
+        }
+
+    @Test
+    fun `storeApplicationPasswordCredentialsFrom with empty url does not match site with empty url`() =
+        runTest {
+            val siteWithEmptyUrl = SiteModel().apply {
+                url = ""
+            }
+            whenever(siteStore.sites).thenReturn(listOf(siteWithEmptyUrl))
+            val emptyUrlLogin = UriLogin(
+                "", TEST_USER, TEST_PASSWORD, TEST_API_ROOT_URL
+            )
+
+            val result = applicationPasswordLoginHelper
+                .storeApplicationPasswordCredentialsFrom(emptyUrlLogin)
+
+            assertIs<StoreCredentialsResult.SiteNotFound>(result)
+            verify(dispatcherWrapper, times(0)).updateApplicationPassword(any())
+        }
+
+    @Test
+    fun `storeApplicationPasswordCredentialsFrom matches site with different scheme`() =
+        runTest {
+            val siteModel = SiteModel().apply {
+                url = "http://test.com"
+            }
+            whenever(siteStore.sites).thenReturn(listOf(siteModel))
+            val httpsLogin = UriLogin(
+                "https://test.com", TEST_USER, TEST_PASSWORD, TEST_API_ROOT_URL
+            )
+
+            val result = applicationPasswordLoginHelper
+                .storeApplicationPasswordCredentialsFrom(httpsLogin)
+
+            assertIs<StoreCredentialsResult.Success>(result)
+            verify(dispatcherWrapper).updateApplicationPassword(eq(siteModel))
+        }
+
+    @Test
+    fun `storeApplicationPasswordCredentialsFrom matches site with www mismatch`() =
+        runTest {
+            val siteModel = SiteModel().apply {
+                url = "https://www.test.com"
+            }
+            whenever(siteStore.sites).thenReturn(listOf(siteModel))
+            val noWwwLogin = UriLogin(
+                "https://test.com", TEST_USER, TEST_PASSWORD, TEST_API_ROOT_URL
+            )
+
+            val result = applicationPasswordLoginHelper
+                .storeApplicationPasswordCredentialsFrom(noWwwLogin)
+
+            assertIs<StoreCredentialsResult.Success>(result)
+            verify(dispatcherWrapper).updateApplicationPassword(eq(siteModel))
+        }
+
+    @Test
+    fun `storeApplicationPasswordCredentialsFrom matches site with scheme and www mismatch`() =
+        runTest {
+            val siteModel = SiteModel().apply {
+                url = "http://www.test.com"
+            }
+            whenever(siteStore.sites).thenReturn(listOf(siteModel))
+            val httpsNoWwwLogin = UriLogin(
+                "https://test.com", TEST_USER, TEST_PASSWORD, TEST_API_ROOT_URL
+            )
+
+            val result = applicationPasswordLoginHelper
+                .storeApplicationPasswordCredentialsFrom(httpsNoWwwLogin)
+
+            assertIs<StoreCredentialsResult.Success>(result)
+            verify(dispatcherWrapper).updateApplicationPassword(eq(siteModel))
+        }
+
+    @Test
+    fun `storeApplicationPasswordCredentialsFrom prefers exact match over fallback`() =
+        runTest {
+            val exactSite = SiteModel().apply {
+                url = TEST_URL
+                id = 1
+            }
+            val fallbackSite = SiteModel().apply {
+                url = "https://test.com"
+                id = 2
+            }
+            whenever(siteStore.sites)
+                .thenReturn(listOf(fallbackSite, exactSite))
+
+            val result = applicationPasswordLoginHelper
+                .storeApplicationPasswordCredentialsFrom(testUriLogin)
+
+            assertIs<StoreCredentialsResult.Success>(result)
+            verify(dispatcherWrapper).updateApplicationPassword(eq(exactSite))
         }
 
     @Test
     fun `appendParamsToRestAuthorizationUrl with null authorizationUrl returns empty string`() {
-        val result = ApplicationPasswordLoginHelper.UriLoginWrapper(apiRootUrlCache, buildConfigWrapper)
+        val result = ApplicationPasswordLoginHelper.UriLoginWrapper(context, apiRootUrlCache, buildConfigWrapper)
             .appendParamsToRestAuthorizationUrl(null)
         assertEquals("", result)
     }
 
     @Test
     fun `appendParamsToRestAuthorizationUrl with empty authorizationUrl returns empty string`() {
-        val result = ApplicationPasswordLoginHelper.UriLoginWrapper(apiRootUrlCache, buildConfigWrapper)
+        val result = ApplicationPasswordLoginHelper.UriLoginWrapper(context, apiRootUrlCache, buildConfigWrapper)
             .appendParamsToRestAuthorizationUrl("")
         assertEquals("", result)
     }
 
     @Test
-    fun `given proper site, when api discovery is success, then return discovery url`() = runTest {
-        val autoDiscoveryAttemptSuccess = AutoDiscoveryAttemptSuccess(
-            mock(), mock(), mock(), DiscoveredAuthenticationMechanism.ApplicationPasswords(mock())
+    fun `given a WP_com site, when api discovery returns OAuth2, then return WpComSite`() = runTest {
+        val oAuth2 = DiscoveredAuthenticationMechanism.OAuth2(
+            OAuth2Endpoints(authorizationUrl = TEST_URL, tokenUrl = TEST_URL)
         )
-        whenever(uriLoginWrapper.appendParamsToRestAuthorizationUrl(any()))
-            .thenReturn("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX")
-        val apiDiscoveryResult = ApiDiscoveryResult.Success(
-            autoDiscoveryAttemptSuccess
-        )
-        whenever(discoverSuccessWrapper.getApplicationPasswordsAuthenticationUrl(eq(apiDiscoveryResult)))
-            .thenReturn(TEST_URL_AUTH)
-        whenever(discoverSuccessWrapper.getApiRootUrl(eq(apiDiscoveryResult)))
-            .thenReturn(TEST_API_ROOT_URL)
-        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(apiDiscoveryResult)
-
-        val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL)
-
-        assertEquals("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX", result)
-        verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
-    }
-
-    @Test
-    fun `given login scenario, when api discovery fails, then return emtpy`() = runTest {
-        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).doThrow(RuntimeException("API discovery failed"))
-
-        val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL)
-
-        assertEquals("", result)
-        verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
-    }
-
-    @Test
-    fun `given login scenario, when api discovery is empty, then return empty`() = runTest {
-        val autoDiscoveryAttemptSuccess = AutoDiscoveryAttemptSuccess(
-            mock(), mock(), mock(), DiscoveredAuthenticationMechanism.ApplicationPasswords(mock())
-        )
+        val autoDiscoveryAttemptSuccess = AutoDiscoveryAttemptSuccess(mock(), mock(), mock(), oAuth2)
         val apiDiscoveryResult = ApiDiscoveryResult.Success(autoDiscoveryAttemptSuccess)
         whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(apiDiscoveryResult)
-        val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL)
+        whenever(discoverSuccessWrapper.isWpComSite(eq(apiDiscoveryResult))).thenReturn(true)
 
-        assertEquals("", result)
-        verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
-    }
+        val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.LOGIN)
 
-
-    @Test
-    fun `given login scenario, when api discovery is failed, then return empty`() = runTest {
-        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL)))
-            .thenReturn(
-                ApiDiscoveryResult.FailureParseSiteUrl(
-                    ParseUrlException.Generic("")
-                )
-            )
-
-        val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL)
-
-        assertEquals("", result)
+        assertEquals(ApplicationPasswordLoginHelper.DiscoveryResult.WpComSite, result)
         verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
     }
 
     @Test
-    fun `removeAllApplicationPasswordCredentials with no sites completes without errors`() = runTest {
-        whenever(siteStore.sites).thenReturn(emptyList())
-
-        applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
-
-        verify(siteStore).sites
-        verify(dispatcherWrapper, times(0)).updateApplicationPassword(any())
-        verify(dispatcherWrapper, times(0)).removeApplicationPassword(any())
-    }
-
-    @Test
-    fun `removeAllApplicationPasswordCredentials clears all password fields for site with regular credentials`() =
+    fun `given login scenario, when api discovery is failed, then return Failed with wordpress-rs message`() =
         runTest {
-            val site = SiteModel().apply {
-                id = 1
-                url = TEST_URL
-                username = "regular_user"
-                password = "regular_password"
-                apiRestUsernamePlain = TEST_USER
-                apiRestPasswordPlain = TEST_PASSWORD
-                apiRestUsernameEncrypted = "encrypted_user"
-                apiRestPasswordEncrypted = "encrypted_password"
-                apiRestUsernameIV = "user_iv"
-                apiRestPasswordIV = "password_iv"
-            }
-            whenever(siteStore.sites).thenReturn(listOf(site))
+            val failure = AutoDiscoveryAttemptFailure.ParseSiteUrl(ParseUrlException.Generic(""))
+            whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(ApiDiscoveryResult.Failure(failure))
+            whenever(discoverSuccessWrapper.localizedDescription(failure)).thenReturn("Translated sentence")
 
-            applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
+            val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.LOGIN)
 
-            verify(siteStore).sites
-            verify(dispatcherWrapper).removeApplicationPassword(eq(site))
-
-            // Verify all password fields are cleared
-            assertEquals("", site.apiRestUsernamePlain)
-            assertEquals("", site.apiRestPasswordPlain)
-            assertEquals("", site.apiRestUsernameEncrypted)
-            assertEquals("", site.apiRestPasswordEncrypted)
-            assertEquals("", site.apiRestUsernameIV)
-            assertEquals("", site.apiRestPasswordIV)
+            assertEquals(ApplicationPasswordLoginHelper.DiscoveryResult.Failed("Translated sentence"), result)
+            verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
         }
 
     @Test
-    fun `removeAllApplicationPasswordCredentials only resets sites with regular credentials`() = runTest {
-        val siteWithRegularCredentials = SiteModel().apply {
-            id = 1
-            url = "http://site1.com"
-            username = "regular_user1"
-            password = "regular_password1"
-            apiRestUsernamePlain = "user1"
-            apiRestPasswordPlain = "password1"
-            apiRestUsernameEncrypted = "encrypted_user1"
-            apiRestPasswordEncrypted = "encrypted_password1"
-            apiRestUsernameIV = "user_iv1"
-            apiRestPasswordIV = "password_iv1"
+    fun `given rs discovery fails, then the one classification feeds the event, the login row and the UI`() =
+        runTest {
+            val failure = AutoDiscoveryAttemptFailure.FetchAndParseApiRoot(
+                mock(),
+                mock(),
+                FetchAndParseApiRootFailure.WpError(WpErrorCode.CustomException("private_site"), "", 403u),
+            )
+            whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(ApiDiscoveryResult.Failure(failure))
+            whenever(discoverSuccessWrapper.localizedDescription(failure)).thenReturn("Translated sentence")
+
+            val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.LOGIN)
+
+            assertEquals(
+                mapOf(
+                    "reason" to "wp_error",
+                    "error_code" to "private_site",
+                    "status_code" to "403",
+                    "url" to "txxt.com",
+                    "source" to "login",
+                ),
+                trackedProps(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
+            )
+            assertEquals(
+                mapOf(
+                    "url" to "txxt.com",
+                    "success" to "0",
+                    "source" to "login",
+                    "error" to "discovery_wp_error",
+                ),
+                trackedProps(Stat.APPLICATION_PASSWORD_LOGIN)
+            )
+            assertEquals(
+                ApplicationPasswordLoginHelper.DiscoveryResult.Failed(
+                    "Translated sentence",
+                    ApplicationPasswordLoginHelper.DiscoveryResult.FailureReason.PrivateSite,
+                ),
+                result
+            )
         }
-        val siteWithoutRegularCredentials = SiteModel().apply {
-            id = 2
-            url = "http://site2.com"
-            username = ""
-            password = ""
-            apiRestUsernamePlain = "user2"
-            apiRestPasswordPlain = "password2"
-            apiRestUsernameEncrypted = "encrypted_user2"
-            apiRestPasswordEncrypted = "encrypted_password2"
-            apiRestUsernameIV = "user_iv2"
-            apiRestPasswordIV = "password_iv2"
+
+    @Test
+    fun `given login discovery fails, then both events carry the reason and the login event fails`() = runTest {
+        stubDiscovery(authUrl = null)
+
+        val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.LOGIN)
+
+        assertEquals(
+            mapOf("reason" to "no_auth_url_advertised", "url" to "txxt.com", "source" to "login"),
+            trackedProps(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
+        )
+        assertEquals(
+            mapOf(
+                "url" to "txxt.com",
+                "success" to "0",
+                "source" to "login",
+                "error" to "discovery_no_auth_url_advertised",
+            ),
+            trackedProps(Stat.APPLICATION_PASSWORD_LOGIN)
+        )
+        assertEquals(
+            ApplicationPasswordLoginHelper.DiscoveryResult.Failed(
+                "No application-passwords authentication URL advertised",
+                ApplicationPasswordLoginHelper.DiscoveryResult.FailureReason.NotSupported,
+            ),
+            result
+        )
+    }
+
+    @Test
+    fun `given card discovery fails, then no login event fires`() = runTest {
+        stubDiscovery(authUrl = null)
+
+        applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.MY_SITE_CARD)
+
+        verify(analyticsTracker).track(eq(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED), any<Map<String, *>>())
+        verify(analyticsTracker, never()).track(eq(Stat.APPLICATION_PASSWORD_LOGIN), any<Map<String, *>>())
+    }
+
+    @Test
+    fun `given discovery throws, then autodiscovery_failed carries the exception class`() = runTest {
+        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).doThrow(IllegalStateException("boom"))
+
+        val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.REAUTH_DIALOG)
+
+        assertIs<ApplicationPasswordLoginHelper.DiscoveryResult.Failed>(result)
+        assertEquals(
+            mapOf(
+                "reason" to "exception",
+                "error_code" to "illegal_state_exception",
+                "url" to "txxt.com",
+                "source" to "reauth",
+            ),
+            trackedProps(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
+        )
+    }
+
+    @Test
+    fun `given discovery is cancelled, then it propagates and nothing is tracked`() = runTest {
+        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).doThrow(CancellationException("left the screen"))
+
+        assertFailsWith<CancellationException> {
+            applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.LOGIN)
         }
-        val siteWithNoAppPassword = SiteModel().apply {
-            id = 3
-            url = "http://site3.com"
-            username = "regular_user3"
-            password = "regular_password3"
-            // This site has no Application Password credentials set
-        }
-        whenever(siteStore.sites).thenReturn(
-            listOf(siteWithRegularCredentials, siteWithoutRegularCredentials, siteWithNoAppPassword)
+
+        verify(analyticsTracker, never()).track(any(), any<Map<String, *>>())
+    }
+
+    @Test
+    fun `given discovery succeeds, then autodiscovery_successful carries url source and is_wpcom`() = runTest {
+        stubDiscovery(authUrl = TEST_URL_AUTH)
+
+        val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL, DiscoverySource.MY_SITE_CARD)
+
+        assertEquals(
+            mapOf("url" to "txxt.com", "source" to "my_site_card", "is_wpcom" to false),
+            trackedProps(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
+        )
+        assertEquals(
+            ApplicationPasswordLoginHelper.DiscoveryResult.Authorized("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX"),
+            result
+        )
+    }
+
+    @Test
+    fun `given the callback stores or fails to store, then the login event records the outcome`() = runTest {
+        whenever(siteStore.sites).thenReturn(listOf(SiteModel().apply { url = TEST_URL }))
+
+        applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin, "login")
+        applicationPasswordLoginHelper.trackStoringFailed(TEST_URL, "user_rejected", "login")
+
+        val captor = argumentCaptor<Map<String, *>>()
+        verify(analyticsTracker, times(2)).track(eq(Stat.APPLICATION_PASSWORD_LOGIN), captor.capture())
+        assertEquals(
+            listOf(
+                mapOf("url" to "txxt.com", "success" to "1", "source" to "login"),
+                mapOf("url" to "txxt.com", "success" to "0", "source" to "login", "error" to "user_rejected"),
+            ),
+            captor.allValues
+        )
+    }
+
+    @Test
+    fun `given the callback's recovery discovery fails, then its reason is tracked but not as a login`() = runTest {
+        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(
+            ApiDiscoveryResult.Failure(
+                AutoDiscoveryAttemptFailure.FindApiRoot(mock(), FindApiRootFailure.RestApiDisabled)
+            )
         )
 
-        applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
+        val result = applicationPasswordLoginHelper
+            .storeApplicationPasswordCredentialsFrom(testUriLogin.copy(apiRootUrl = null), "login")
 
-        verify(siteStore).sites
-        // Only the site with regular credentials AND app password should be reset
-        verify(dispatcherWrapper).removeApplicationPassword(eq(siteWithRegularCredentials))
-        // Site without regular credentials should NOT be reset
-        verify(dispatcherWrapper, times(0)).removeApplicationPassword(eq(siteWithoutRegularCredentials))
-        // Site with no app password encrypted should NOT be reset
-        verify(dispatcherWrapper, times(0)).removeApplicationPassword(eq(siteWithNoAppPassword))
-
-        // Verify password fields are cleared only for site with regular credentials
-        assertEquals("", siteWithRegularCredentials.apiRestUsernamePlain)
-        assertEquals("", siteWithRegularCredentials.apiRestUsernameEncrypted)
-
-        // Verify password fields are preserved for site without regular credentials
-        assertEquals("user2", siteWithoutRegularCredentials.apiRestUsernamePlain)
-        assertEquals("encrypted_user2", siteWithoutRegularCredentials.apiRestUsernameEncrypted)
-    }
-
-    @Test
-    fun `removeAllApplicationPasswordCredentials preserves other site fields`() = runTest {
-        val site = SiteModel().apply {
-            id = 1
-            url = TEST_URL
-            name = "Test Site"
-            description = "Test Description"
-            siteId = 12345L
-            username = "regular_user"
-            password = "regular_password"
-            apiRestUsernamePlain = TEST_USER
-            apiRestPasswordPlain = TEST_PASSWORD
-            apiRestUsernameEncrypted = "encrypted_user"
-        }
-        whenever(siteStore.sites).thenReturn(listOf(site))
-
-        applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
-
-        verify(dispatcherWrapper).removeApplicationPassword(eq(site))
-
-        // Verify non-password fields are preserved
-        assertEquals(1, site.id)
-        assertEquals(TEST_URL, site.url)
-        assertEquals("Test Site", site.name)
-        assertEquals("Test Description", site.description)
-        assertEquals(12345L, site.siteId)
-
-        // Verify Application Password fields are cleared
-        assertEquals("", site.apiRestUsernamePlain)
-        assertEquals("", site.apiRestPasswordPlain)
-
-        // Verify regular credentials are preserved
-        assertEquals("regular_user", site.username)
-        assertEquals("regular_password", site.password)
-    }
-
-    @Test
-    fun `removeAllApplicationPasswordCredentials does not reset site with only username`() = runTest {
-        val site = SiteModel().apply {
-            id = 1
-            url = TEST_URL
-            username = "regular_user"
-            password = "" // No password
-            apiRestUsernameEncrypted = "encrypted_user"
-        }
-        whenever(siteStore.sites).thenReturn(listOf(site))
-
-        applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
-
-        verify(dispatcherWrapper, times(0)).removeApplicationPassword(any())
-        assertEquals("encrypted_user", site.apiRestUsernameEncrypted)
-    }
-
-    @Test
-    fun `removeAllApplicationPasswordCredentials does not reset site with only password`() = runTest {
-        val site = SiteModel().apply {
-            id = 1
-            url = TEST_URL
-            username = "" // No username
-            password = "regular_password"
-            apiRestUsernameEncrypted = "encrypted_user"
-        }
-        whenever(siteStore.sites).thenReturn(listOf(site))
-
-        applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
-
-        verify(dispatcherWrapper, times(0)).removeApplicationPassword(any())
-        assertEquals("encrypted_user", site.apiRestUsernameEncrypted)
-    }
-
-    @Test
-    fun `getResettableApplicationPasswordSitesCount returns count of sites with regular credentials`() {
-        val siteWithRegularCredentials = SiteModel().apply {
-            id = 1
-            username = "user"
-            password = "password"
-            apiRestUsernameEncrypted = "encrypted"
-        }
-        val siteWithoutRegularCredentials = SiteModel().apply {
-            id = 2
-            username = ""
-            password = ""
-            apiRestUsernameEncrypted = "encrypted"
-        }
-        val siteWithNoAppPassword = SiteModel().apply {
-            id = 3
-            username = "user"
-            password = "password"
-            apiRestUsernameEncrypted = ""
-        }
-        whenever(siteStore.sites).thenReturn(
-            listOf(siteWithRegularCredentials, siteWithoutRegularCredentials, siteWithNoAppPassword)
+        assertIs<StoreCredentialsResult.BadData>(result)
+        assertEquals(
+            mapOf("reason" to "rest_api_disabled", "url" to "txxt.com", "source" to "api_root_recovery"),
+            trackedProps(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
         )
-
-        val count = applicationPasswordLoginHelper.getResettableApplicationPasswordSitesCount()
-
-        assertEquals(1, count)
+        assertEquals(
+            mapOf("url" to "txxt.com", "success" to "0", "source" to "login", "error" to "bad_data"),
+            trackedProps(Stat.APPLICATION_PASSWORD_LOGIN)
+        )
     }
 
     @Test
-    fun `getResettableApplicationPasswordSitesCount returns zero when no sites have regular credentials`() {
-        val site = SiteModel().apply {
-            id = 1
-            username = ""
-            password = ""
-            apiRestUsernameEncrypted = "encrypted"
-        }
-        whenever(siteStore.sites).thenReturn(listOf(site))
-
-        val count = applicationPasswordLoginHelper.getResettableApplicationPasswordSitesCount()
-
-        assertEquals(0, count)
+    fun `maskUrl yields one value per site`() {
+        // The login screen passes the address as typed; the callback carries a normalised site_url.
+        // Scheme, case, www, path, trailing slash or dot and IDN form must not split one site in two.
+        assertMasked(
+            "mysite.com" to "mxxxxe.com",
+            "MySite.com" to "mxxxxe.com",
+            "WWW.MySite.com/" to "mxxxxe.com",
+            "http://mysite.com" to "mxxxxe.com",
+            "mysite.com." to "mxxxxe.com",
+            " https://mysite.com " to "mxxxxe.com",
+            "mysite.com/wp-admin" to "mxxxxe.com",
+            "mysite.com/wp-login.php?redirect_to=https://mysite.com/wp-admin" to "mxxxxe.com",
+            "https://test.com:8080" to "txxt.com:8080",
+            "münchen.de" to "xxxxxxxxxxxxxa.de",
+            "https://xn--mnchen-3ya.de" to "xxxxxxxxxxxxxa.de",
+            "my_site.com" to "mxxxxxe.com",
+        )
     }
 
     @Test
-    fun `getResettableApplicationPasswordSitesCount returns zero when no sites have app password`() {
-        val site = SiteModel().apply {
-            id = 1
-            username = "user"
-            password = "password"
-            apiRestUsernameEncrypted = ""
+    fun `maskUrl masks the domain and keeps the TLD`() {
+        assertMasked(
+            "https://example.com" to "exxxxxe.com",
+            "https://abc.com" to "axc.com",
+            "https://a.com" to "x.com",
+            "https://ab.com" to "xx.com",
+        )
+    }
+
+    @Test
+    fun `maskUrl ships nothing but the masked host`() {
+        assertMasked(
+            "nick@example.com" to "exxxxxe.com",
+            "https://user:pass@example.com" to "exxxxxe.com",
+            "test.com:x@test.com" to "txxt.com",
+            "example.com/~nick/blog?next=x#y" to "exxxxxe.com",
+        )
+    }
+
+    @Test
+    fun `maskUrl drops a host that is not a domain name`() {
+        assertMasked(
+            "" to "",
+            "https://localhost" to "",
+            "192.168.1.5:8080" to "",
+            "http://[fd00::1]/" to "",
+            "http://[::ffff:192.168.1.5]" to "",
+            "example.com:abc" to "",
+            "mysite.com.." to "",
+            "not a url" to "",
+        )
+    }
+
+    private fun assertMasked(vararg cases: Pair<String, String>) {
+        cases.forEach { (input, expected) ->
+            assertEquals(expected, applicationPasswordLoginHelper.maskUrl(input), input)
         }
-        whenever(siteStore.sites).thenReturn(listOf(site))
+    }
 
-        val count = applicationPasswordLoginHelper.getResettableApplicationPasswordSitesCount()
+    private fun trackedProps(stat: Stat): Map<String, *> {
+        val captor = argumentCaptor<Map<String, *>>()
+        verify(analyticsTracker).track(eq(stat), captor.capture())
+        return captor.firstValue
+    }
 
-        assertEquals(0, count)
+    /**
+     * A successful rs discovery whose site advertises [authUrl], or no application-passwords URL at
+     * all when null.
+     */
+    private suspend fun stubDiscovery(authUrl: String?) {
+        val apiDiscoveryResult = ApiDiscoveryResult.Success(
+            AutoDiscoveryAttemptSuccess(
+                mock(), mock(), mock(), DiscoveredAuthenticationMechanism.ApplicationPasswords(mock())
+            )
+        )
+        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(apiDiscoveryResult)
+        whenever(discoverSuccessWrapper.getApplicationPasswordsAuthenticationUrl(eq(apiDiscoveryResult)))
+            .thenReturn(authUrl)
+        if (authUrl != null) {
+            whenever(discoverSuccessWrapper.getApiRootUrl(eq(apiDiscoveryResult))).thenReturn(TEST_API_ROOT_URL)
+            whenever(uriLoginWrapper.appendParamsToRestAuthorizationUrl(any()))
+                .thenReturn("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX")
+        }
     }
 }

@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import org.wordpress.android.datasets.wrappers.ReaderTagTableWrapper
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
@@ -13,14 +14,14 @@ import org.wordpress.android.models.ReaderTagType.DEFAULT
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.NetworkUnavailable
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.RemoteRequestFailure
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Success
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
 import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUseCase
-import org.wordpress.android.ui.reader.repository.usecases.tags.FetchFollowedTagsUseCase
-import org.wordpress.android.ui.reader.repository.usecases.tags.FetchInterestTagsUseCase
-import org.wordpress.android.ui.reader.repository.usecases.tags.FollowInterestTagsUseCase
 import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.util.NetworkUtilsWrapper
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
@@ -33,9 +34,9 @@ class ReaderTagRepository @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
-    private val fetchInterestTagUseCase: FetchInterestTagsUseCase,
-    private val followInterestTagsUseCase: FollowInterestTagsUseCase,
-    private val fetchFollowedTagUseCase: FetchFollowedTagsUseCase,
+    private val tagsAndSitesUpdater: ReaderTagsAndSitesUpdater,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val accountStore: AccountStore,
     private val getFollowedTagsUseCase: GetFollowedTagsUseCase,
     private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
     private val readerTagTableWrapper: ReaderTagTableWrapper
@@ -44,10 +45,10 @@ class ReaderTagRepository @Inject constructor(
     private val recommendedInterests: LiveData<ReaderTagList> = mutableRecommendedInterests
     private val followingReaderTag = readerUtilsWrapper.getTagFromTagName(ReaderConstants.KEY_FOLLOWING, DEFAULT)
 
-    suspend fun getInterests(): ReaderRepositoryCommunication {
-        return withContext(ioDispatcher) {
-            fetchInterestTagUseCase.fetch()
-        }
+    suspend fun getInterests(): ReaderRepositoryCommunication = if (!networkUtilsWrapper.isNetworkAvailable()) {
+        NetworkUnavailable
+    } else {
+        tagsAndSitesUpdater.fetchInterestTags()?.let { SuccessWithData(it) } ?: RemoteRequestFailure
     }
 
     suspend fun getUserTags(): ReaderRepositoryCommunication {
@@ -59,7 +60,11 @@ class ReaderTagRepository @Inject constructor(
                 val refresh = shouldAutoUpdateTagUseCase.get(followingReaderTag)
                 var result: ReaderRepositoryCommunication = Success
                 if (refresh) {
-                    result = fetchFollowedTagUseCase.fetch()
+                    result = when {
+                        !networkUtilsWrapper.isNetworkAvailable() -> NetworkUnavailable
+                        tagsAndSitesUpdater.updateTags() -> Success
+                        else -> RemoteRequestFailure
+                    }
                 }
                 if (result is Success) {
                     SuccessWithData(getFollowedTagsUseCase.get())
@@ -70,10 +75,11 @@ class ReaderTagRepository @Inject constructor(
         }
     }
 
-    suspend fun saveInterests(tags: List<ReaderTag>): ReaderRepositoryCommunication {
-        return withContext(ioDispatcher) {
-            followInterestTagsUseCase.followInterestTags(tags)
-        }
+    suspend fun saveInterests(tags: List<ReaderTag>): ReaderRepositoryCommunication = when {
+        // logged out users follow tags locally, so they don't need a connection
+        accountStore.hasAccessToken() && !networkUtilsWrapper.isNetworkAvailable() -> NetworkUnavailable
+        tagsAndSitesUpdater.followTags(tags) -> Success
+        else -> RemoteRequestFailure
     }
 
     suspend fun clearTagLastUpdated(tag: ReaderTag) {

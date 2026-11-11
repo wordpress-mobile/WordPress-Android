@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+      Tablet (NavigationRailView) override of NavbarItemRoot. The rail is laid out
+      vertically with match_parent height, so the item must wrap its content;
+      otherwise the first item fills the whole rail and pushes the others off-screen.
+      layout_gravity centers each wrapped item within the rail's width.
+    -->
+    <style name="NavbarItemRoot">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+</resources>

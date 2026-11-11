@@ -40,7 +40,6 @@
     <ID>EmptyFunctionBlock:PostsListActivity.kt$PostsListActivity.&lt;no name provided>${}</ID>
     <ID>EmptyFunctionBlock:PrepublishingAddCategoryFragment.kt$PrepublishingAddCategoryFragment.&lt;no name provided>${ }</ID>
     <ID>EmptyFunctionBlock:QuickStartFocusPoint.kt$QuickStartFocusPoint.&lt;no name provided>${}</ID>
-    <ID>EmptyFunctionBlock:ReaderDiscoverDataProvider.kt$ReaderDiscoverDataProvider${ }</ID>
     <ID>EmptyFunctionBlock:SearchInputWithHeader.kt$SearchInputWithHeader.&lt;no name provided>${}</ID>
     <ID>EmptyFunctionBlock:SettingsUsernameChangerFragment.kt$SettingsUsernameChangerFragment.&lt;no name provided>${ }</ID>
     <ID>EmptyFunctionBlock:SiteCreationService.kt$SiteCreationService${ }</ID>
@@ -59,6 +58,7 @@
     <ID>EmptySecondaryConstructor:WPEditTextWithChipsOutlined.kt$WPEditTextWithChipsOutlined.SavedState${}</ID>
     <ID>FunctionParameterNaming:WizardManager.kt$WizardManager$T: WizardStep</ID>
     <ID>LargeClass:PagesViewModel.kt$PagesViewModel : ScopedViewModel</ID>
+    <ID>LargeClass:ViewsStatsViewModel.kt$ViewsStatsViewModel : ViewModel</ID>
     <ID>LongMethod:AuthorsUseCase.kt$AuthorsUseCase$override fun buildUiModel(domainModel: AuthorsModel, uiState: SelectedAuthor): List&lt;BlockListItem></ID>
     <ID>LongMethod:BarChartViewHolder.kt$BarChartViewHolder$private fun BarChart.draw( item: BarChartItem, labelStart: TextView, labelEnd: TextView ): BarCount</ID>
     <ID>LongMethod:ClicksUseCase.kt$ClicksUseCase$override fun buildUiModel(domainModel: ClicksModel, uiState: SelectedClicksGroup): List&lt;BlockListItem></ID>
@@ -169,7 +169,6 @@
     <ID>ReturnCount:MediaPickerAdapterDiffCallback.kt$MediaPickerAdapterDiffCallback$override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any?</ID>
     <ID>ReturnCount:PageListViewModel.kt$PageListViewModel$private fun getFeaturedImageUrl(featuredImageId: Long): String?</ID>
     <ID>ReturnCount:PageParentFragment.kt$PageParentFragment$override fun onOptionsItemSelected(item: MenuItem): Boolean</ID>
-    <ID>ReturnCount:ParseDiscoverCardsJsonUseCase.kt$ParseDiscoverCardsJsonUseCase$fun parseInterestCard(interestCardJson: JSONObject?): ReaderTagList</ID>
     <ID>ReturnCount:PhotoPickerAdapterDiffCallback.kt$PhotoPickerAdapterDiffCallback$override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any?</ID>
     <ID>ReturnCount:PostListAdapter.kt$&lt;no name provided>$override fun areContentsTheSame(oldItem: PostListItemType, newItem: PostListItemType): Boolean</ID>
     <ID>ReturnCount:PostListAdapter.kt$&lt;no name provided>$override fun areItemsTheSame(oldItem: PostListItemType, newItem: PostListItemType): Boolean</ID>
@@ -186,7 +185,6 @@
     <ID>ThrowsCount:PageListDialogHelper.kt$PageListDialogHelper$fun onPositiveClickedForBasicDialog( instanceTag: String, deletePage: (RemoteId) -> Unit, editPage: (RemoteId, LoadAutoSaveRevision) -> Unit, editPageFirst: (RemoteId) -> Unit )</ID>
     <ID>TooGenericExceptionCaught:BaseStatsUseCase.kt$BaseStatsUseCase$e: Exception</ID>
     <ID>TooGenericExceptionCaught:ColorUnderlineSpan.kt$ColorUnderlineSpan$e: Exception</ID>
-    <ID>TooGenericExceptionCaught:GifMediaInsertUseCase.kt$GifMediaInsertUseCase$e: Exception</ID>
     <ID>TooGenericExceptionCaught:MediaPickerActivity.kt$MediaPickerActivity$e: RuntimeException</ID>
     <ID>TooGenericExceptionCaught:UploadStarter.kt$UploadStarter$e: Exception</ID>
     <ID>TooGenericExceptionThrown:ActionableEmptyView.kt$ActionableEmptyView$throw RuntimeException("$context: ActionableEmptyView must have a title (aevTitle)")</ID>
@@ -195,7 +193,6 @@
     <ID>TooGenericExceptionThrown:BaseListUseCase.kt$BaseListUseCase$throw RuntimeException("Duplicate stats type in a use case")</ID>
     <ID>TooGenericExceptionThrown:BasicFragmentDialog.kt$BasicFragmentDialog$throw RuntimeException("Hosting activity must implement BasicDialogNegativeClickInterface")</ID>
     <ID>TooGenericExceptionThrown:BasicFragmentDialog.kt$BasicFragmentDialog$throw RuntimeException("Hosting activity must implement BasicDialogPositiveClickInterface")</ID>
-    <ID>TooGenericExceptionThrown:GifMediaInsertUseCase.kt$GifMediaInsertUseCase$throw Exception("Failed to download the image.")</ID>
     <ID>TooGenericExceptionThrown:PageListAdapter.kt$PageListAdapter$throw Throwable("Unexpected view type")</ID>
     <ID>TooGenericExceptionThrown:PageParentAdapter.kt$PageParentAdapter$throw Throwable("Unexpected view type")</ID>
     <ID>TooGenericExceptionThrown:PageParentSearchAdapter.kt$PageParentSearchAdapter$throw Throwable("Unexpected view type")</ID>
@@ -216,10 +213,6 @@
     <ID>TopLevelPropertyNaming:PrepublishingHomeAdapter.kt$private const val headerViewType: Int = 1</ID>
     <ID>TopLevelPropertyNaming:PrepublishingHomeAdapter.kt$private const val homeItemViewType: Int = 2</ID>
     <ID>TopLevelPropertyNaming:PrepublishingHomeAdapter.kt$private const val submitButtonViewType: Int = 3</ID>
-    <ID>TopLevelPropertyNaming:ReaderDiscoverAdapter.kt$private const val interestViewType: Int = 3</ID>
-    <ID>TopLevelPropertyNaming:ReaderDiscoverAdapter.kt$private const val postViewType: Int = 2</ID>
-    <ID>TopLevelPropertyNaming:ReaderDiscoverAdapter.kt$private const val recommendedBlogsViewType: Int = 4</ID>
-    <ID>TopLevelPropertyNaming:ReaderDiscoverAdapter.kt$private const val welcomeBannerViewType: Int = 1</ID>
     <ID>TopLevelPropertyNaming:SiteCreationDomainsAdapter.kt$private const val suggestionErrorViewType: Int = 2</ID>
     <ID>TopLevelPropertyNaming:SiteCreationDomainsAdapter.kt$private const val suggestionItemViewType: Int = 1</ID>
     <ID>TopLevelPropertyNaming:SupportedBlocks.kt$private const val defaultAssetFilename = "supported-blocks.json"</ID>

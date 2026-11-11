@@ -4,65 +4,61 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
+import uniffi.wp_api.DomainSubtypeId
 
 @ExperimentalCoroutinesApi
 class GetDomainDetailsUrlTest : BaseUnitTest() {
     @Test
     fun `WHEN a transfer domain is passed THEN a transfer detail url is generated`() {
-        val domain = AllDomainsDomain(
+        val domain = testDomainItem(
             domain = "transfer.domain",
             siteSlug = "transfer.slug",
-            type = "transfer"
+            subtypeId = DomainSubtypeId.DomainTransfer,
         )
-        val expectedDetailUrl = "https://wordpress.com/domains/manage/all/transfer.domain/transfer/in/transfer.slug"
-        val actualDetailUrl = domain.getDomainDetailsUrl()
-        assertThat(actualDetailUrl).isEqualTo(expectedDetailUrl)
+        val expected =
+            "https://wordpress.com/domains/manage/all/transfer.domain/transfer/in/transfer.slug"
+        assertThat(domain.getDomainDetailsUrl()).isEqualTo(expected)
     }
 
     @Test
     fun `WHEN a redirect domain is passed THEN a redirect detail url is generated`() {
-        val domain = AllDomainsDomain(
+        val domain = testDomainItem(
             domain = "redirect.domain",
             siteSlug = "redirect.domain.slug",
-            type = "redirect"
+            subtypeId = DomainSubtypeId.SiteRedirect,
         )
-        val expectedDetailUrl = "https://wordpress.com/domains/manage/all/redirect.domain/redirect/redirect.domain.slug"
-        val actualDetailUrl = domain.getDomainDetailsUrl()
-        assertThat(actualDetailUrl).isEqualTo(expectedDetailUrl)
+        val expected =
+            "https://wordpress.com/domains/manage/all/redirect.domain/redirect/redirect.domain.slug"
+        assertThat(domain.getDomainDetailsUrl()).isEqualTo(expected)
     }
 
     @Test
     fun `WHEN a mapping domain is passed THEN the default detail url is generated`() {
-        val domain = AllDomainsDomain(
+        val domain = testDomainItem(
             domain = "some.domain",
             siteSlug = "domain.slug",
-            type = "mapping"
+            subtypeId = DomainSubtypeId.DomainConnection,
         )
-        val expectedDetailUrl = "https://wordpress.com/domains/manage/all/some.domain/edit/domain.slug"
-        val actualDetailUrl = domain.getDomainDetailsUrl()
-        assertThat(actualDetailUrl).isEqualTo(expectedDetailUrl)
+        val expected =
+            "https://wordpress.com/domains/manage/all/some.domain/edit/domain.slug"
+        assertThat(domain.getDomainDetailsUrl()).isEqualTo(expected)
     }
 
     @Test
-    fun `WHEN the domain is null THEN the default detail url is null`() {
-        val domain = AllDomainsDomain(
-            domain = null,
+    fun `WHEN the domain is empty THEN the detail url is null`() {
+        val domain = testDomainItem(
+            domain = "",
             siteSlug = "domain.slug",
-            type = "mapping"
         )
-        val actualDetailUrl = domain.getDomainDetailsUrl()
-        assertThat(actualDetailUrl).isNull()
+        assertThat(domain.getDomainDetailsUrl()).isNull()
     }
 
     @Test
-    fun `WHEN the slug is null THEN the default detail url is null`() {
-        val domain = AllDomainsDomain(
+    fun `WHEN the slug is empty THEN the detail url is null`() {
+        val domain = testDomainItem(
             domain = "some.domain",
-            siteSlug = null,
-            type = "mapping"
+            siteSlug = "",
         )
-        val actualDetailUrl = domain.getDomainDetailsUrl()
-        assertThat(actualDetailUrl).isNull()
+        assertThat(domain.getDomainDetailsUrl()).isNull()
     }
 }

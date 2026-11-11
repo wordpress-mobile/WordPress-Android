@@ -63,7 +63,6 @@
 
 /mobile/feature-announcements/
 /mobile/feature-flags/
-/mobile/migration
 /mobile/remote-config
 
 /me/gutenberg/

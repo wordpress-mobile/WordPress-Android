@@ -12,4 +12,6 @@ class NotificationsTableWrapper @Inject constructor() {
     fun saveNotes(notes: List<Note>, clearBeforeSaving: Boolean) {
         NotificationsTable.saveNotes(notes, clearBeforeSaving)
     }
+
+    fun getNoteById(noteId: String): Note? = NotificationsTable.getNoteById(noteId)
 }

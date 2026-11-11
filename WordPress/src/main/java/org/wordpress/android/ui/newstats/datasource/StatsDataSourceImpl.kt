@@ -1,11 +1,15 @@
 package org.wordpress.android.ui.newstats.datasource
 
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
-import org.wordpress.android.util.LocaleManagerWrapper
+import androidx.annotation.VisibleForTesting
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.StatsArchivesEntry
+import uniffi.wp_api.StatsArchivesParams
+import uniffi.wp_api.StatsArchivesPeriod
+import uniffi.wp_api.StatsArchivesSummaryData
 import uniffi.wp_api.StatsCityViewsParams
 import uniffi.wp_api.StatsCityViewsPeriod
+import uniffi.wp_api.StatsClicksChild
 import uniffi.wp_api.StatsClicksParams
 import uniffi.wp_api.StatsClicksPeriod
 import uniffi.wp_api.StatsCountryViewsParams
@@ -14,10 +18,17 @@ import uniffi.wp_api.StatsFileDownloadsParams
 import uniffi.wp_api.StatsFileDownloadsPeriod
 import uniffi.wp_api.StatsReferrersParams
 import uniffi.wp_api.StatsReferrersPeriod
+import uniffi.wp_api.StatsReferrersResults
 import uniffi.wp_api.StatsRegionViewsParams
 import uniffi.wp_api.StatsRegionViewsPeriod
 import uniffi.wp_api.StatsDevicesParams
 import uniffi.wp_api.StatsDevicesPeriod
+import uniffi.wp_api.WpDateString
+import uniffi.wp_api.StatsPostChange
+import uniffi.wp_api.StatsPostResponse
+import uniffi.wp_api.StatsPostTarget
+import uniffi.wp_api.StatsPostWeek
+import uniffi.wp_api.StatsTagsParams
 import uniffi.wp_api.StatsSearchTermsParams
 import uniffi.wp_api.StatsSearchTermsPeriod
 import uniffi.wp_api.StatsTopAuthorsParams
@@ -26,12 +37,25 @@ import uniffi.wp_api.StatsTopPostsParams
 import uniffi.wp_api.StatsTopPostsPeriod
 import uniffi.wp_api.StatsVideoPlaysParams
 import uniffi.wp_api.StatsVideoPlaysPeriod
+import uniffi.wp_api.StatsVisitsField
 import uniffi.wp_api.StatsVisitsParams
 import uniffi.wp_api.StatsVisitsUnit
-import uniffi.wp_api.WpComLanguage
+import uniffi.wp_api.StatsSubscribersParams
+import uniffi.wp_api.StatsSubscribersUnit
+import uniffi.wp_api.StatsSubscribersStatField
+import uniffi.wp_api.SubscribersByUserTypeParams
+import uniffi.wp_api.WpComSubscriberType
+import uniffi.wp_api.SubscribersByUserTypeSortField
+import uniffi.wp_api.StatsEmailsSummaryParams
+import uniffi.wp_api.StatsEmailsSummaryPeriod
+import uniffi.wp_api.StatsEmailsSummarySortField
+import uniffi.wp_api.StatsUtmKey
+import uniffi.wp_api.StatsUtmParams
+import uniffi.wp_api.WpApiParamOrder
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import rs.wordpress.api.kotlin.fromLocale
+import java.net.URLDecoder
 import javax.inject.Inject
 
 /**
@@ -40,48 +64,26 @@ import javax.inject.Inject
  */
 @Suppress("LargeClass")
 class StatsDataSourceImpl @Inject constructor(
-    private val wpComApiClientProvider: WpComApiClientProvider,
-    private val localeManagerWrapper: LocaleManagerWrapper
+    private val wpComApiClient: WpComApiClient,
+    private val siteStore: SiteStore
 ) : StatsDataSource {
-    /**
-     * Access token for API authentication.
-     * Marked as @Volatile to ensure visibility across threads since this data source is accessed
-     * from multiple coroutine contexts.
-     */
-    @Volatile
-    private var accessToken: String? = null
-
-    @Volatile
-    private var wpComApiClient: WpComApiClient? = null
-
-    private fun getOrCreateClient(): WpComApiClient {
-        val token = accessToken
-        check(token != null) { "DataSource not initialized" }
-        return wpComApiClient
-            ?: wpComApiClientProvider.getWpComApiClient(token)
-                .also { wpComApiClient = it }
-    }
-
-    override fun init(accessToken: String) {
-        if (this.accessToken != accessToken) {
-            this.accessToken = accessToken
-            wpComApiClient = null
-        }
-    }
-
     override suspend fun fetchStatsVisits(
         siteId: Long,
         unit: StatsUnit,
         quantity: Int,
-        endDate: String
+        endDate: String,
+        startDate: String?,
+        statFields: List<StatsVisitField>?
     ): StatsVisitsDataResult {
         val params = StatsVisitsParams(
             unit = unit.toApiUnit(),
             quantity = quantity.toUInt(),
-            endDate = endDate,
+            endDate = WpDateString(endDate),
+            startDate = startDate?.let { WpDateString(it) },
+            statFields = statFields?.map { it.toApiField() } ?: emptyList(),
         )
 
-        val result = getOrCreateClient().request { requestBuilder ->
+        val result = wpComApiClient.request { requestBuilder ->
             requestBuilder.statsVisits().getStatsVisits(
                 wpComSiteId = siteId.toULong(),
                 params = params
@@ -104,19 +106,19 @@ class StatsDataSourceImpl @Inject constructor(
     private fun mapToStatsVisitsData(response: uniffi.wp_api.StatsVisitsResponse): StatsVisitsData {
         return StatsVisitsData(
             visits = response.visitsData().map { dataPoint ->
-                VisitsDataPoint(period = dataPoint.period, visits = dataPoint.visits.toLong())
+                VisitsDataPoint(period = dataPoint.period.value, visits = dataPoint.visits.toLong())
             },
             visitors = response.visitorsData().map { dataPoint ->
-                VisitorsDataPoint(period = dataPoint.period, visitors = dataPoint.visitors.toLong())
+                VisitorsDataPoint(period = dataPoint.period.value, visitors = dataPoint.visitors.toLong())
             },
             likes = response.likesData().map { dataPoint ->
-                LikesDataPoint(period = dataPoint.period, likes = dataPoint.likes.toLong())
+                LikesDataPoint(period = dataPoint.period.value, likes = dataPoint.likes.toLong())
             },
             comments = response.commentsData().map { dataPoint ->
-                CommentsDataPoint(period = dataPoint.period, comments = dataPoint.comments.toLong())
+                CommentsDataPoint(period = dataPoint.period.value, comments = dataPoint.comments.toLong())
             },
             posts = response.postsData().map { dataPoint ->
-                PostsDataPoint(period = dataPoint.period, posts = dataPoint.posts.toLong())
+                PostsDataPoint(period = dataPoint.period.value, posts = dataPoint.posts.toLong())
             }
         )
     }
@@ -126,25 +128,30 @@ class StatsDataSourceImpl @Inject constructor(
         StatsUnit.DAY -> StatsVisitsUnit.DAY
         StatsUnit.WEEK -> StatsVisitsUnit.WEEK
         StatsUnit.MONTH -> StatsVisitsUnit.MONTH
+        StatsUnit.YEAR -> StatsVisitsUnit.YEAR
     }
 
-    private val wpComLanguage: WpComLanguage?
-        get() = WpComLanguage.fromLocale(localeManagerWrapper.getLocale())
+    private fun StatsVisitField.toApiField(): StatsVisitsField = when (this) {
+        StatsVisitField.VIEWS -> StatsVisitsField.VIEWS
+        StatsVisitField.VISITORS -> StatsVisitsField.VISITORS
+        StatsVisitField.LIKES -> StatsVisitsField.LIKES
+        StatsVisitField.REBLOGS -> StatsVisitsField.REBLOGS
+        StatsVisitField.COMMENTS -> StatsVisitsField.COMMENTS
+        StatsVisitField.POSTS -> StatsVisitsField.POSTS
+    }
 
     private fun buildTopPostsParams(dateRange: StatsDateRange, max: Int) = when (dateRange) {
         is StatsDateRange.Preset -> StatsTopPostsParams(
             period = StatsTopPostsPeriod.DAY,
-            date = dateRange.date,
+            date = WpDateString(dateRange.date),
             num = dateRange.num.toUInt(),
             max = max.coerceAtLeast(1).toUInt(),
-            locale = wpComLanguage
         )
         is StatsDateRange.Custom -> StatsTopPostsParams(
             period = StatsTopPostsPeriod.DAY,
-            date = dateRange.date,
-            startDate = dateRange.startDate,
+            date = WpDateString(dateRange.date),
+            startDate = WpDateString(dateRange.startDate),
             max = max.coerceAtLeast(1).toUInt(),
-            locale = wpComLanguage
         )
     }
 
@@ -155,7 +162,7 @@ class StatsDataSourceImpl @Inject constructor(
     ): TopPostsDataResult {
         val params = buildTopPostsParams(dateRange, max)
         AppLog.d(T.STATS, "fetchTopPostsAndPages - siteId=$siteId, dateRange=$dateRange, max=$max")
-        val result = getOrCreateClient().request { requestBuilder ->
+        val result = wpComApiClient.request { requestBuilder ->
             requestBuilder.statsTopPosts().getStatsTopPosts(
                 wpComSiteId = siteId.toULong(),
                 params = params
@@ -173,7 +180,9 @@ class StatsDataSourceImpl @Inject constructor(
                         TopPostDataItem(
                             id = post.id.toLong(),
                             title = post.title.orEmpty(),
-                            views = post.views?.toLong() ?: 0L
+                            views = post.views?.toLong() ?: 0L,
+                            url = post.href,
+                            postType = post.postType
                         )
                     }
                 )
@@ -189,24 +198,25 @@ class StatsDataSourceImpl @Inject constructor(
         dateRange: StatsDateRange,
         max: Int
     ): ReferrersDataResult {
+        // Referrers-specific max semantics: the server treats max=0 as "all" but an unset max as
+        // "default 10", so 0 is sent explicitly (unlike other endpoints that map 0 -> null).
+        val maxParam = max.coerceAtLeast(0).toUInt()
         val params = when (dateRange) {
             is StatsDateRange.Preset -> StatsReferrersParams(
                 period = StatsReferrersPeriod.DAY,
-                date = dateRange.date,
+                date = WpDateString(dateRange.date),
                 num = dateRange.num.toUInt(),
-                max = max.coerceAtLeast(1).toUInt(),
-                locale = wpComLanguage
+                max = maxParam,
             )
             is StatsDateRange.Custom -> StatsReferrersParams(
                 period = StatsReferrersPeriod.DAY,
-                date = dateRange.date,
-                startDate = dateRange.startDate,
-                max = max.coerceAtLeast(1).toUInt(),
-                locale = wpComLanguage
+                date = WpDateString(dateRange.date),
+                startDate = WpDateString(dateRange.startDate),
+                max = maxParam,
             )
         }
 
-        val result = getOrCreateClient().request { requestBuilder ->
+        val result = wpComApiClient.request { requestBuilder ->
             requestBuilder.statsReferrers().getStatsReferrers(
                 wpComSiteId = siteId.toULong(),
                 params = params
@@ -223,7 +233,10 @@ class StatsDataSourceImpl @Inject constructor(
                     groups.map { group ->
                         ReferrerDataItem(
                             name = group.name.orEmpty(),
-                            views = group.total?.toLong() ?: 0L
+                            url = group.url,
+                            views = group.total?.toLong() ?: 0L,
+                            children = group.results.toChildren(),
+                            iconUrl = group.icon
                         )
                     }
                 )
@@ -234,21 +247,32 @@ class StatsDataSourceImpl @Inject constructor(
         }
     }
 
+    private fun StatsReferrersResults?.toChildren(): List<ReferrerChildDataItem> =
+        when (this) {
+            is StatsReferrersResults.Referrers -> v1.map { child ->
+                ReferrerChildDataItem(
+                    name = child.name.orEmpty(),
+                    url = child.url,
+                    views = child.views?.toLong() ?: 0L,
+                    iconUrl = child.icon
+                )
+            }
+            else -> emptyList()
+        }
+
     private fun buildCountryViewsParams(dateRange: StatsDateRange, max: Int) = when (dateRange) {
         is StatsDateRange.Preset -> StatsCountryViewsParams(
             period = StatsCountryViewsPeriod.DAY,
-            date = dateRange.date,
+            date = WpDateString(dateRange.date),
             num = dateRange.num.toUInt(),
             max = max.coerceAtLeast(1).toUInt(),
-            locale = wpComLanguage,
             summarize = true
         )
         is StatsDateRange.Custom -> StatsCountryViewsParams(
             period = StatsCountryViewsPeriod.DAY,
-            date = dateRange.date,
-            startDate = dateRange.startDate,
+            date = WpDateString(dateRange.date),
+            startDate = WpDateString(dateRange.startDate),
             max = max.coerceAtLeast(1).toUInt(),
-            locale = wpComLanguage,
             summarize = true
         )
     }
@@ -259,7 +283,7 @@ class StatsDataSourceImpl @Inject constructor(
         max: Int
     ): CountryViewsDataResult {
         val params = buildCountryViewsParams(dateRange, max)
-        val result = getOrCreateClient().request { requestBuilder ->
+        val result = wpComApiClient.request { requestBuilder ->
             requestBuilder.statsCountryViews().getStatsCountryViews(
                 wpComSiteId = siteId.toULong(),
                 params = params
@@ -293,7 +317,9 @@ class StatsDataSourceImpl @Inject constructor(
                     )
                 )
             }
-            else -> logErrorAndReturn("fetchCountryViews", result) {
+            else -> logErrorAndReturn(
+                "fetchCountryViews", result, planGatedSiteId = siteId
+            ) {
                 CountryViewsDataResult.Error(it)
             }
         }
@@ -305,18 +331,16 @@ class StatsDataSourceImpl @Inject constructor(
     ) = when (dateRange) {
         is StatsDateRange.Preset -> StatsRegionViewsParams(
             period = StatsRegionViewsPeriod.DAY,
-            date = dateRange.date,
+            date = WpDateString(dateRange.date),
             num = dateRange.num.toUInt(),
             max = max.coerceAtLeast(1).toUInt(),
-            locale = wpComLanguage,
             summarize = true
         )
         is StatsDateRange.Custom -> StatsRegionViewsParams(
             period = StatsRegionViewsPeriod.DAY,
-            date = dateRange.date,
-            startDate = dateRange.startDate,
+            date = WpDateString(dateRange.date),
+            startDate = WpDateString(dateRange.startDate),
             max = max.coerceAtLeast(1).toUInt(),
-            locale = wpComLanguage,
             summarize = true
         )
     }
@@ -327,7 +351,7 @@ class StatsDataSourceImpl @Inject constructor(
         max: Int
     ): RegionViewsDataResult {
         val params = buildRegionViewsParams(dateRange, max)
-        val result = getOrCreateClient().request { requestBuilder ->
+        val result = wpComApiClient.request { requestBuilder ->
             requestBuilder.statsRegionViews().getStatsRegionViews(
                 wpComSiteId = siteId.toULong(),
                 params = params
@@ -367,7 +391,9 @@ class StatsDataSourceImpl @Inject constructor(
                     )
                 )
             }
-            else -> logErrorAndReturn("fetchRegionViews", result) {
+            else -> logErrorAndReturn(
+                "fetchRegionViews", result, planGatedSiteId = siteId
+            ) {
                 RegionViewsDataResult.Error(it)
             }
         }
@@ -379,18 +405,16 @@ class StatsDataSourceImpl @Inject constructor(
     ) = when (dateRange) {
         is StatsDateRange.Preset -> StatsCityViewsParams(
             period = StatsCityViewsPeriod.DAY,
-            date = dateRange.date,
+            date = WpDateString(dateRange.date),
             num = dateRange.num.toUInt(),
             max = max.coerceAtLeast(1).toUInt(),
-            locale = wpComLanguage,
             summarize = true
         )
         is StatsDateRange.Custom -> StatsCityViewsParams(
             period = StatsCityViewsPeriod.DAY,
-            date = dateRange.date,
-            startDate = dateRange.startDate,
+            date = WpDateString(dateRange.date),
+            startDate = WpDateString(dateRange.startDate),
             max = max.coerceAtLeast(1).toUInt(),
-            locale = wpComLanguage,
             summarize = true
         )
     }
@@ -401,7 +425,7 @@ class StatsDataSourceImpl @Inject constructor(
         max: Int
     ): CityViewsDataResult {
         val params = buildCityViewsParams(dateRange, max)
-        val result = getOrCreateClient().request { requestBuilder ->
+        val result = wpComApiClient.request { requestBuilder ->
             requestBuilder.statsCityViews().getStatsCityViews(
                 wpComSiteId = siteId.toULong(),
                 params = params
@@ -445,7 +469,9 @@ class StatsDataSourceImpl @Inject constructor(
                     )
                 )
             }
-            else -> logErrorAndReturn("fetchCityViews", result) {
+            else -> logErrorAndReturn(
+                "fetchCityViews", result, planGatedSiteId = siteId
+            ) {
                 CityViewsDataResult.Error(it)
             }
         }
@@ -454,18 +480,16 @@ class StatsDataSourceImpl @Inject constructor(
     private fun buildTopAuthorsParams(dateRange: StatsDateRange, max: Int) = when (dateRange) {
         is StatsDateRange.Preset -> StatsTopAuthorsParams(
             period = StatsTopAuthorsPeriod.DAY,
-            date = dateRange.date,
+            date = WpDateString(dateRange.date),
             num = dateRange.num.toUInt(),
             max = if (max > 0) max.toUInt() else null,
-            locale = wpComLanguage,
             summarize = true
         )
         is StatsDateRange.Custom -> StatsTopAuthorsParams(
             period = StatsTopAuthorsPeriod.DAY,
-            date = dateRange.date,
-            startDate = dateRange.startDate,
+            date = WpDateString(dateRange.date),
+            startDate = WpDateString(dateRange.startDate),
             max = if (max > 0) max.toUInt() else null,
-            locale = wpComLanguage,
             summarize = true
         )
     }
@@ -478,7 +502,7 @@ class StatsDataSourceImpl @Inject constructor(
         val params = buildTopAuthorsParams(dateRange, max)
         AppLog.d(T.STATS, "fetchTopAuthors - siteId=$siteId, dateRange=$dateRange, max=$max")
 
-        val result = getOrCreateClient().request { requestBuilder ->
+        val result = wpComApiClient.request { requestBuilder ->
             requestBuilder.statsTopAuthors().getStatsTopAuthors(
                 wpComSiteId = siteId.toULong(),
                 params = params
@@ -523,15 +547,15 @@ class StatsDataSourceImpl @Inject constructor(
     ) = when (dateRange) {
         is StatsDateRange.Preset -> StatsClicksParams(
             period = StatsClicksPeriod.DAY,
-            date = dateRange.date,
+            date = WpDateString(dateRange.date),
             num = dateRange.num.toUInt(),
             max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
         is StatsDateRange.Custom -> StatsClicksParams(
             period = StatsClicksPeriod.DAY,
-            date = dateRange.date,
-            startDate = dateRange.startDate,
+            date = WpDateString(dateRange.date),
+            startDate = WpDateString(dateRange.startDate),
             max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
@@ -543,15 +567,15 @@ class StatsDataSourceImpl @Inject constructor(
     ) = when (dateRange) {
         is StatsDateRange.Preset -> StatsDevicesParams(
             period = StatsDevicesPeriod.DAY,
-            date = dateRange.date,
+            date = WpDateString(dateRange.date),
             num = dateRange.num.toUInt(),
             max = max.coerceAtLeast(1).toUInt(),
             summarize = true
         )
         is StatsDateRange.Custom -> StatsDevicesParams(
             period = StatsDevicesPeriod.DAY,
-            date = dateRange.date,
-            startDate = dateRange.startDate,
+            date = WpDateString(dateRange.date),
+            startDate = WpDateString(dateRange.startDate),
             max = max.coerceAtLeast(1).toUInt(),
             summarize = true
         )
@@ -563,7 +587,7 @@ class StatsDataSourceImpl @Inject constructor(
         max: Int
     ): ClicksDataResult {
         val params = buildClicksParams(dateRange, max)
-        val result = getOrCreateClient().request { api ->
+        val result = wpComApiClient.request { api ->
             api.statsClicks().getStatsClicks(
                 wpComSiteId = siteId.toULong(),
                 params = params
@@ -583,8 +607,11 @@ class StatsDataSourceImpl @Inject constructor(
                     clicks.map { entry ->
                         ClickDataItem(
                             name = entry.name.orEmpty(),
+                            url = entry.url,
                             clicks = entry.views?.toLong()
-                                ?: 0L
+                                ?: 0L,
+                            children = entry.children.toClickChildren(),
+                            iconUrl = entry.icon
                         )
                     }
                 )
@@ -597,13 +624,187 @@ class StatsDataSourceImpl @Inject constructor(
         }
     }
 
+    private fun List<StatsClicksChild>?.toClickChildren(): List<ClickChildDataItem> =
+        orEmpty().map { child ->
+            ClickChildDataItem(
+                name = child.name.orEmpty(),
+                url = child.url,
+                clicks = child.views?.toLong() ?: 0L
+            )
+        }
+
+    @VisibleForTesting
+    internal fun buildArchivesParams(
+        dateRange: StatsDateRange,
+        max: Int
+    ): StatsArchivesParams {
+        // Archives shares the referrers `max` semantics: the server treats max=0 as "all", but an
+        // unset max as "default 10", so 0 is sent explicitly rather than mapped to null. The cap is
+        // applied as a SQL LIMIT per day table, across all archive types at once, so a year of days
+        // still yields thousands of entries -- enough to look unlimited without being so.
+        //
+        // `skipArchives` is left at its default of true, which is what the web sends whenever it
+        // shows this list. The server reads it as its own `migrate_archive_homepage` and drops the
+        // `home` group outright, so that group never reaches the app and needs no label. Were it
+        // ever set to false, labelling it would not be enough: the home group's entries carry the
+        // page id as their value, so the web labels them with the href instead, and collapses the
+        // group to a plain row when it holds only one.
+        val maxParam = max.coerceAtLeast(0).toUInt()
+        return when (dateRange) {
+            is StatsDateRange.Preset -> StatsArchivesParams(
+                period = StatsArchivesPeriod.DAY,
+                date = WpDateString(dateRange.date),
+                num = dateRange.num.toUInt(),
+                max = maxParam,
+                summarize = true
+            )
+            is StatsDateRange.Custom -> StatsArchivesParams(
+                period = StatsArchivesPeriod.DAY,
+                date = WpDateString(dateRange.date),
+                startDate = WpDateString(dateRange.startDate),
+                max = maxParam,
+                summarize = true
+            )
+        }
+    }
+
+    override suspend fun fetchArchives(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int
+    ): ArchivesDataResult {
+        val params = buildArchivesParams(dateRange, max)
+        val result = wpComApiClient.request { api ->
+            api.statsArchives().getStatsArchives(
+                wpComSiteId = siteId.toULong(),
+                params = params
+            )
+        }
+        logResultType("fetchArchives", result)
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val sections = result.response.data.summary
+                    .toArchiveSections()
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchArchives " +
+                        "success - ${sections.size} sections"
+                )
+                ArchivesDataResult.Success(sections)
+            }
+            else -> logErrorAndReturn(
+                "fetchArchives", result
+            ) {
+                ArchivesDataResult.Error(it)
+            }
+        }
+    }
+
+    /**
+     * Flattens the archive summary into one list of groups: one per built-in group, plus a single
+     * [ARCHIVE_SECTION_KEY_TAXONOMIES] group gathering every custom taxonomy the site has. Listing
+     * each taxonomy as its own group would bury the built-in ones on a site with many of them, so
+     * they share a group -- which, as on the web, keeps a level: the group's entries are the
+     * taxonomies themselves, each with its own terms nested under it. A term is then unambiguous,
+     * and each taxonomy is ranked and capped on its own rather than competing with the others.
+     */
+    @VisibleForTesting
+    internal fun StatsArchivesSummaryData?.toArchiveSections(): List<ArchiveSectionDataItem> {
+        if (this == null) return emptyList()
+        val builtIn = groups.entries.mapNotNull { (key, entries) ->
+            entries.toArchiveSection(key)
+        }
+        return builtIn + listOfNotNull(tax.toTaxonomiesSection())
+    }
+
+    /**
+     * A group's entries, sorted by views and capped -- see [toArchiveEntries] for both.
+     */
+    private fun List<StatsArchivesEntry>.toArchiveSection(key: String): ArchiveSectionDataItem? {
+        val entries = toArchiveEntries()
+        if (entries.isEmpty()) return null
+        return ArchiveSectionDataItem(
+            key = key,
+            views = entries.sumOf { it.views },
+            entries = entries.rankedAndCapped()
+        )
+    }
+
+    /**
+     * The one group holding the site's custom taxonomies: an entry per taxonomy, named by the
+     * API's own key for it (as the web labels them), carrying that taxonomy's terms as children and
+     * their views as its own total. A taxonomy whose terms are all unnamed is left out entirely,
+     * and so is the whole group if the site has no custom taxonomies.
+     */
+    private fun Map<String, List<StatsArchivesEntry>>.toTaxonomiesSection(): ArchiveSectionDataItem? {
+        val taxonomies = mapNotNull { (taxonomy, entries) ->
+            val terms = entries.toArchiveEntries()
+            if (terms.isEmpty()) return@mapNotNull null
+            ArchiveEntryDataItem(
+                value = taxonomy,
+                href = null,
+                views = terms.sumOf { it.views },
+                children = terms.rankedAndCapped()
+            )
+        }
+        if (taxonomies.isEmpty()) return null
+        return ArchiveSectionDataItem(
+            key = ARCHIVE_SECTION_KEY_TAXONOMIES,
+            views = taxonomies.sumOf { it.views },
+            entries = taxonomies.rankedAndCapped()
+        )
+    }
+
+    /**
+     * The entries of one group or one taxonomy, in the order the API sent them.
+     *
+     * Entries with no term are dropped, from the group's total as well as from its list: they have
+     * no label to show, and the web drops them the same way, so a group's total matches what
+     * Calypso reports for it. A term is percent-decoded, again as the web does, so a search for
+     * "ekonomi & pengar" doesn't read "ekonomi %26 pengar"; the `href` is left as it came, being a
+     * URL to open rather than a label.
+     */
+    private fun List<StatsArchivesEntry>.toArchiveEntries(): List<ArchiveEntryDataItem> =
+        mapNotNull { entry ->
+            val value = entry.value?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
+            ArchiveEntryDataItem(
+                value = value.percentDecoded(),
+                href = entry.href,
+                views = entry.views?.toLong() ?: 0L
+            )
+        }
+
+    /**
+     * Ranked by views and capped: the detail screen asks for an unbounded summary -- a busy site
+     * returns thousands of search terms -- and the card and its "show all" screen are the only
+     * readers, so keeping the whole list would only grow the result held in the stats cache. The
+     * total it belongs to is summed before this, so it still counts every entry.
+     */
+    private fun List<ArchiveEntryDataItem>.rankedAndCapped() =
+        sortedByDescending { it.views }.take(MAX_ARCHIVE_ENTRIES_PER_SECTION)
+
+    /**
+     * Percent-decodes an archive term the way the web's `decodeURIComponent` does, leaving a
+     * malformed sequence ("100%") as it came rather than throwing. Unlike [URLDecoder] on its own,
+     * a literal "+" stays a plus sign instead of becoming a space, so a search for "a+b" survives.
+     *
+     * Named charset rather than a [java.nio.charset.Charset]: that overload of [URLDecoder.decode]
+     * is API 33, which this app does not have the minimum for.
+     */
+    private fun String.percentDecoded(): String = try {
+        URLDecoder.decode(replace("+", PLUS_ENCODED), Charsets.UTF_8.name())
+    } catch (e: IllegalArgumentException) {
+        AppLog.d(T.STATS, "StatsDataSourceImpl: undecodable archive term - ${e.message}")
+        this
+    }
+
     override suspend fun fetchDevicesScreensize(
         siteId: Long,
         dateRange: StatsDateRange,
         max: Int
     ): DevicesDataResult {
         val params = buildDevicesParams(dateRange, max)
-        val result = getOrCreateClient().request { requestBuilder ->
+        val result = wpComApiClient.request { requestBuilder ->
             requestBuilder.statsDevicesScreensize()
                 .getStatsDevicesScreensize(
                     wpComSiteId = siteId.toULong(),
@@ -624,12 +825,12 @@ class StatsDataSourceImpl @Inject constructor(
                 )
             }
             is WpRequestResult.WpError -> logErrorAndReturn(
-                "fetchDevicesScreensize", result
+                "fetchDevicesScreensize", result, planGatedSiteId = siteId
             ) {
                 DevicesDataResult.Error(it)
             }
             else -> logErrorAndReturn(
-                "fetchDevicesScreensize", result
+                "fetchDevicesScreensize", result, planGatedSiteId = siteId
             ) {
                 DevicesDataResult.Error(it)
             }
@@ -642,15 +843,15 @@ class StatsDataSourceImpl @Inject constructor(
     ) = when (dateRange) {
         is StatsDateRange.Preset -> StatsSearchTermsParams(
             period = StatsSearchTermsPeriod.DAY,
-            date = dateRange.date,
+            date = WpDateString(dateRange.date),
             num = dateRange.num.toUInt(),
             max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
         is StatsDateRange.Custom -> StatsSearchTermsParams(
             period = StatsSearchTermsPeriod.DAY,
-            date = dateRange.date,
-            startDate = dateRange.startDate,
+            date = WpDateString(dateRange.date),
+            startDate = WpDateString(dateRange.startDate),
             max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
@@ -662,7 +863,7 @@ class StatsDataSourceImpl @Inject constructor(
         max: Int
     ): SearchTermsDataResult {
         val params = buildSearchTermsParams(dateRange, max)
-        val result = getOrCreateClient().request { api ->
+        val result = wpComApiClient.request { api ->
             api.statsSearchTerms().getStatsSearchTerms(
                 wpComSiteId = siteId.toULong(),
                 params = params
@@ -702,7 +903,7 @@ class StatsDataSourceImpl @Inject constructor(
         max: Int
     ): DevicesDataResult {
         val params = buildDevicesParams(dateRange, max)
-        val result = getOrCreateClient().request { requestBuilder ->
+        val result = wpComApiClient.request { requestBuilder ->
             requestBuilder.statsDevicesBrowser()
                 .getStatsDevicesBrowser(
                     wpComSiteId = siteId.toULong(),
@@ -723,12 +924,12 @@ class StatsDataSourceImpl @Inject constructor(
                 )
             }
             is WpRequestResult.WpError -> logErrorAndReturn(
-                "fetchDevicesBrowser", result
+                "fetchDevicesBrowser", result, planGatedSiteId = siteId
             ) {
                 DevicesDataResult.Error(it)
             }
             else -> logErrorAndReturn(
-                "fetchDevicesBrowser", result
+                "fetchDevicesBrowser", result, planGatedSiteId = siteId
             ) {
                 DevicesDataResult.Error(it)
             }
@@ -741,15 +942,15 @@ class StatsDataSourceImpl @Inject constructor(
     ) = when (dateRange) {
         is StatsDateRange.Preset -> StatsVideoPlaysParams(
             period = StatsVideoPlaysPeriod.DAY,
-            date = dateRange.date,
+            date = WpDateString(dateRange.date),
             num = dateRange.num.toUInt(),
             max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
         is StatsDateRange.Custom -> StatsVideoPlaysParams(
             period = StatsVideoPlaysPeriod.DAY,
-            date = dateRange.date,
-            startDate = dateRange.startDate,
+            date = WpDateString(dateRange.date),
+            startDate = WpDateString(dateRange.startDate),
             max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
@@ -761,7 +962,7 @@ class StatsDataSourceImpl @Inject constructor(
         max: Int
     ): VideoPlaysDataResult {
         val params = buildVideoPlaysParams(dateRange, max)
-        val result = getOrCreateClient().request { api ->
+        val result = wpComApiClient.request { api ->
             api.statsVideoPlays().getStatsVideoPlays(
                 wpComSiteId = siteId.toULong(),
                 params = params
@@ -801,7 +1002,7 @@ class StatsDataSourceImpl @Inject constructor(
         max: Int
     ): DevicesDataResult {
         val params = buildDevicesParams(dateRange, max)
-        val result = getOrCreateClient().request { requestBuilder ->
+        val result = wpComApiClient.request { requestBuilder ->
             requestBuilder.statsDevicesPlatform()
                 .getStatsDevicesPlatform(
                     wpComSiteId = siteId.toULong(),
@@ -822,12 +1023,12 @@ class StatsDataSourceImpl @Inject constructor(
                 )
             }
             is WpRequestResult.WpError -> logErrorAndReturn(
-                "fetchDevicesPlatform", result
+                "fetchDevicesPlatform", result, planGatedSiteId = siteId
             ) {
                 DevicesDataResult.Error(it)
             }
             else -> logErrorAndReturn(
-                "fetchDevicesPlatform", result
+                "fetchDevicesPlatform", result, planGatedSiteId = siteId
             ) {
                 DevicesDataResult.Error(it)
             }
@@ -840,15 +1041,15 @@ class StatsDataSourceImpl @Inject constructor(
     ) = when (dateRange) {
         is StatsDateRange.Preset -> StatsFileDownloadsParams(
             period = StatsFileDownloadsPeriod.DAY,
-            date = dateRange.date,
+            date = WpDateString(dateRange.date),
             num = dateRange.num.toUInt(),
             max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
         is StatsDateRange.Custom -> StatsFileDownloadsParams(
             period = StatsFileDownloadsPeriod.DAY,
-            date = dateRange.date,
-            startDate = dateRange.startDate,
+            date = WpDateString(dateRange.date),
+            startDate = WpDateString(dateRange.startDate),
             max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
@@ -860,7 +1061,7 @@ class StatsDataSourceImpl @Inject constructor(
         max: Int
     ): FileDownloadsDataResult {
         val params = buildFileDownloadsParams(dateRange, max)
-        val result = getOrCreateClient().request { api ->
+        val result = wpComApiClient.request { api ->
             api.statsFileDownloads().getStatsFileDownloads(
                 wpComSiteId = siteId.toULong(),
                 params = params
@@ -923,29 +1124,52 @@ class StatsDataSourceImpl @Inject constructor(
         else -> "Unknown"
     }
 
+    /**
+     * @param planGatedSiteId the site the request was made for, and only for a stat a paid plan can
+     * gate (region and city views, devices, UTM). Every other endpoint leaves it null and keeps
+     * reporting [StatsErrorType.AUTH_ERROR], so a refusal can never reach a card that has no upsell
+     * to offer for it.
+     */
     private fun <R> logErrorAndReturn(
         methodName: String,
         result: WpRequestResult<*>,
+        planGatedSiteId: Long? = null,
         errorFactory: (StatsErrorType) -> R
     ): R {
-        val (logMessage, errorType) = classifyError(methodName, result)
+        val (logMessage, errorType) = classifyError(
+            methodName = methodName,
+            result = result,
+            userCanViewStats = canViewStats(planGatedSiteId)
+        )
         AppLog.e(T.STATS, logMessage)
         return errorFactory(errorType)
     }
 
+    /**
+     * Whether the site says this user may read its stats, which is what separates a plan gate from
+     * a permission problem — see [isStatsGatedByPlan]. A null [siteId] means the endpoint is one no
+     * plan gates, so its refusals stay permission errors whatever the user may do.
+     */
+    private fun canViewStats(siteId: Long?): Boolean =
+        siteId != null && siteStore.getSiteBySiteId(siteId)?.hasCapabilityViewStats == true
+
+    @Suppress("LongMethod")
     private fun classifyError(
         methodName: String,
-        result: WpRequestResult<*>
+        result: WpRequestResult<*>,
+        userCanViewStats: Boolean
     ): Pair<String, StatsErrorType> = when (result) {
         is WpRequestResult.WpError -> {
             val statusCode = result.statusCode.toInt()
-            val errorType = if (
+            val errorType = when {
+                isStatsUnavailableForSite(result.response) ->
+                    StatsErrorType.NOT_AVAILABLE
+                isStatsGatedByPlan(result.response, userCanViewStats) ->
+                    StatsErrorType.PLAN_GATED
                 statusCode == HTTP_FORBIDDEN ||
-                statusCode == HTTP_UNAUTHORIZED
-            ) {
-                StatsErrorType.AUTH_ERROR
-            } else {
-                StatsErrorType.API_ERROR
+                    statusCode == HTTP_UNAUTHORIZED ->
+                    StatsErrorType.AUTH_ERROR
+                else -> StatsErrorType.API_ERROR
             }
             "StatsDataSourceImpl: $methodName WpError " +
                 "(status=$statusCode) - ${result.errorMessage}" to
@@ -976,6 +1200,18 @@ class StatsDataSourceImpl @Inject constructor(
                 "InvalidHttpStatusCode - " +
                 "${result.statusCode}" to StatsErrorType.API_ERROR
         }
+        is WpRequestResult.UnknownError<*> -> {
+            val errorType = when {
+                isStatsUnavailableForSite(result.response) ->
+                    StatsErrorType.NOT_AVAILABLE
+                isStatsGatedByPlan(result.response, userCanViewStats) ->
+                    StatsErrorType.PLAN_GATED
+                else -> StatsErrorType.UNKNOWN
+            }
+            "StatsDataSourceImpl: $methodName UnknownError " +
+                "(status=${result.statusCode}) - " +
+                "${result.response}" to errorType
+        }
         else -> {
             "StatsDataSourceImpl: $methodName " +
                 "unexpected result - $result" to
@@ -983,7 +1219,557 @@ class StatsDataSourceImpl @Inject constructor(
         }
     }
 
+    @Suppress("LongMethod")
+    override suspend fun fetchStatsInsights(
+        siteId: Long
+    ): StatsInsightsDataResult {
+        val result = wpComApiClient
+            .request { requestBuilder ->
+                requestBuilder.statsInsights()
+                    .getStatsInsights(
+                        wpComSiteId = siteId.toULong()
+                    )
+            }
+
+        logResultType("fetchStatsInsights", result)
+
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val data = result.response.data
+                val years = data.years
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: " +
+                        "fetchStatsInsights success " +
+                        "- ${years.size} years"
+                )
+                StatsInsightsDataResult.Success(
+                    StatsInsightsData(
+                        highestHour =
+                            data.highestHour.toInt(),
+                        highestHourPercent =
+                            data.highestHourPercent,
+                        highestDayOfWeek =
+                            data.highestDayOfWeek
+                                .toInt(),
+                        highestDayPercent =
+                            data.highestDayPercent,
+                        years = years.map { yearData ->
+                            YearInsightsData(
+                                year = yearData.year,
+                                totalPosts =
+                                    yearData.totalPosts
+                                        .toLong(),
+                                totalWords =
+                                    yearData.totalWords
+                                        .toLong(),
+                                avgWords =
+                                    yearData.avgWords,
+                                totalLikes =
+                                    yearData.totalLikes
+                                        .toLong(),
+                                avgLikes =
+                                    yearData.avgLikes,
+                                totalComments =
+                                    yearData.totalComments
+                                        .toLong(),
+                                avgComments =
+                                    yearData.avgComments
+                            )
+                        }
+                    )
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchStatsInsights",
+                result
+            ) {
+                StatsInsightsDataResult.Error(it)
+            }
+        }
+    }
+
+    override suspend fun fetchStatsSummary(
+        siteId: Long
+    ): StatsSummaryDataResult {
+        val result = wpComApiClient
+            .request { requestBuilder ->
+                requestBuilder.statsSummary()
+                    .getStatsSummary(
+                        wpComSiteId = siteId.toULong()
+                    )
+            }
+
+        logResultType("fetchStatsSummary", result)
+
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val stats = result.response.data.stats
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: " +
+                        "fetchStatsSummary success"
+                )
+                StatsSummaryDataResult.Success(
+                    StatsSummaryData(
+                        views = stats.views.toLong(),
+                        visitors =
+                            stats.visitors.toLong(),
+                        posts = stats.posts.toLong(),
+                        comments =
+                            stats.comments.toLong(),
+                        viewsBestDay =
+                            stats.viewsBestDay.value,
+                        viewsBestDayTotal =
+                            stats.viewsBestDayTotal
+                                .toLong()
+                    )
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchStatsSummary",
+                result
+            ) {
+                StatsSummaryDataResult.Error(it)
+            }
+        }
+    }
+
+    private fun mapToStatsTagsData(
+        tagGroups: List<uniffi.wp_api.StatsTagGroup>
+    ): StatsTagsData {
+        return StatsTagsData(
+            tagGroups = tagGroups.map { group ->
+                TagGroupData(
+                    tags = group.tags.map { tag ->
+                        TagData(
+                            tagType = tag.tagType,
+                            name = tag.name,
+                            link = tag.link
+                        )
+                    },
+                    views = group.views.toLong()
+                )
+            }
+        )
+    }
+
+    override suspend fun fetchStatsTags(
+        siteId: Long,
+        max: Int
+    ): StatsTagsDataResult {
+        val params = StatsTagsParams(
+            max = if (max > 0) max.toUInt() else null,
+        )
+        val result = wpComApiClient
+            .request { requestBuilder ->
+                requestBuilder.statsTags()
+                    .getStatsTags(
+                        wpComSiteId = siteId.toULong(),
+                        params = params
+                    )
+            }
+
+        logResultType("fetchStatsTags", result)
+
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val tagGroups =
+                    result.response.data.tags
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: " +
+                        "fetchStatsTags success " +
+                        "- ${tagGroups.size} " +
+                        "tag groups"
+                )
+                StatsTagsDataResult.Success(
+                    mapToStatsTagsData(tagGroups)
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchStatsTags",
+                result
+            ) {
+                StatsTagsDataResult.Error(it)
+            }
+        }
+    }
+
+    override suspend fun fetchPostViews(
+        siteId: Long,
+        postId: Long
+    ): PostViewsDataResult {
+        // The endpoint takes no query params -- num, date and period are silently ignored.
+        // The API addresses the home page as post 0, which the target models explicitly.
+        val target = if (postId == HOME_PAGE_POST_ID) {
+            StatsPostTarget.HomePage
+        } else {
+            StatsPostTarget.Post(postId)
+        }
+        val result = wpComApiClient
+            .request { requestBuilder ->
+                requestBuilder.statsPost()
+                    .getStatsPost(
+                        wpComSiteId = siteId.toULong(),
+                        statsPostTarget = target
+                    )
+            }
+
+        logResultType("fetchPostViews", result)
+
+        return when (result) {
+            is WpRequestResult.Success -> {
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: " +
+                        "fetchPostViews success"
+                )
+                PostViewsDataResult.Success(
+                    mapToPostViewsData(
+                        result.response.data,
+                        postId
+                    )
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchPostViews",
+                result
+            ) {
+                PostViewsDataResult.Error(it)
+            }
+        }
+    }
+
+    private fun mapToPostViewsData(
+        response: StatsPostResponse,
+        postId: Long
+    ): PostViewsData = PostViewsData(
+        // The home page has no post row to read an id from, so the requested id is authoritative.
+        postId = response.post?.id ?: postId,
+        totalViews = response.views.toLong(),
+        dailyViews = response.dailyViews
+            .map {
+                PostViewsDailyView(
+                    day = it.period.value,
+                    views = it.views.toLong()
+                )
+            },
+        // The API sends weeks oldest first; the UI lists
+        // the most recent week at the top.
+        weeks = response.weeks
+            .map { it.toPostViewsWeek() }
+            .reversed(),
+        years = response.years
+            .map { (year, value) ->
+                PostViewsYear(
+                    year = year,
+                    total = value.total.toLong(),
+                    months = value.months.toMonthlyFigures()
+                )
+            }
+            .sortedByDescending { it.year },
+        averages = response.averages
+            .map { (year, value) ->
+                PostViewsYearAverage(
+                    year = year,
+                    overall = value.overall.toLong(),
+                    months = value.months.toMonthlyFigures()
+                )
+            }
+            .sortedByDescending { it.year },
+        // Null for the home page, which has view stats but no post metadata, likes or comments.
+        post = response.post?.let { post ->
+            PostViewsPost(
+                title = post.title,
+                date = post.date.value,
+                likeCount = response.likeCount
+                    ?.toLong() ?: 0L,
+                commentCount = response.discussion
+                    ?.commentCount?.toLong() ?: 0L,
+                url = post.permalink,
+                type = post.postType,
+                status = post.status
+            )
+        }
+    )
+
+    /** The API keys months "1" to "12" and leaves out the ones with nothing to report. */
+    private fun Map<String, ULong>.toMonthlyFigures(): Map<Int, Long> =
+        mapNotNull { (month, figure) ->
+            month.toIntOrNull()?.let { it to figure.toLong() }
+        }.toMap()
+
+    private fun StatsPostWeek.toPostViewsWeek() =
+        PostViewsWeek(
+            startDay = days.firstOrNull()?.day?.value.orEmpty(),
+            endDay = days.lastOrNull()?.day?.value.orEmpty(),
+            days = days.map {
+                PostViewsDailyView(
+                    day = it.day.value,
+                    views = it.count.toLong()
+                )
+            },
+            total = total.toLong(),
+            change = when (val change = change) {
+                is StatsPostChange.Percentage ->
+                    PostViewsChange.Percentage(change.value)
+                is StatsPostChange.Infinite ->
+                    PostViewsChange.Infinite
+                null -> PostViewsChange.None
+            }
+        )
+
+    override suspend fun fetchStatsSubscribers(
+        siteId: Long,
+        quantity: Int,
+        unit: String?,
+        date: String?
+    ): StatsSubscribersDataResult {
+        val subscribersUnit = when (unit) {
+            "week" -> StatsSubscribersUnit.WEEK
+            "month" -> StatsSubscribersUnit.MONTH
+            "year" -> StatsSubscribersUnit.YEAR
+            else -> StatsSubscribersUnit.DAY
+        }
+        val params = StatsSubscribersParams(
+            unit = subscribersUnit,
+            quantity = quantity.toUInt(),
+            date = date?.let { WpDateString(it) },
+            statFields = listOf(
+                StatsSubscribersStatField.SUBSCRIBERS
+            )
+        )
+        val result = wpComApiClient.request { requestBuilder ->
+            requestBuilder.statsSubscribers()
+                .getStatsSubscribers(
+                    wpComSiteId = siteId.toULong(),
+                    params = params
+                )
+        }
+        logResultType("fetchStatsSubscribers", result)
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val dataPoints =
+                    result.response.data.subscribersData()
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: " +
+                        "fetchStatsSubscribers success " +
+                        "- ${dataPoints.size} data points"
+                )
+                StatsSubscribersDataResult.Success(
+                    StatsSubscribersData(
+                        subscribersData = dataPoints.map {
+                            SubscribersDataPoint(
+                                date = it.period.value,
+                                count = it.subscribers
+                                    .toLong()
+                            )
+                        }
+                    )
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchStatsSubscribers", result
+            ) {
+                StatsSubscribersDataResult.Error(it)
+            }
+        }
+    }
+
+    override suspend fun fetchSubscribersByUserType(
+        siteId: Long,
+        perPage: Int,
+        page: Int
+    ): SubscribersByUserTypeDataResult {
+        val params = SubscribersByUserTypeParams(
+            userType = WpComSubscriberType.WP_COM,
+            perPage = perPage.toULong(),
+            page = page.toULong(),
+            sort = SubscribersByUserTypeSortField
+                .DATE_SUBSCRIBED
+        )
+        val result = wpComApiClient.request { requestBuilder ->
+            requestBuilder.subscribers()
+                .listSubscribersByUserType(
+                    wpComSiteId = siteId.toULong(),
+                    params = params
+                )
+        }
+        logResultType(
+            "fetchSubscribersByUserType", result
+        )
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val subscribers = result.response.data.subscribers
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: " +
+                        "fetchSubscribersByUserType " +
+                        "success - " +
+                        "${subscribers.size} subscribers"
+                )
+                SubscribersByUserTypeDataResult.Success(
+                    subscribers.map { subscriber ->
+                        SubscriberItem(
+                            displayName =
+                                subscriber.displayName,
+                            subscribedSince =
+                                subscriber.dateSubscribed?.let { dateSubscribed ->
+                                    java.time.ZonedDateTime
+                                        .ofInstant(
+                                            dateSubscribed.toInstant(),
+                                            java.time.ZoneId
+                                                .systemDefault()
+                                        ).format(
+                                            java.time.format
+                                                .DateTimeFormatter
+                                                .ISO_LOCAL_DATE_TIME
+                                        )
+                                }.orEmpty()
+                        )
+                    }
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchSubscribersByUserType", result
+            ) {
+                SubscribersByUserTypeDataResult.Error(it)
+            }
+        }
+    }
+
+    override suspend fun fetchStatsEmailsSummary(
+        siteId: Long,
+        quantity: Int
+    ): StatsEmailsSummaryDataResult {
+        val params = StatsEmailsSummaryParams(
+            period = StatsEmailsSummaryPeriod.ALL_TIME,
+            quantity = quantity.toUInt(),
+            sortField = StatsEmailsSummarySortField.POST_DATE,
+            sortOrder = WpApiParamOrder.DESC
+        )
+        val result = wpComApiClient.request { requestBuilder ->
+            requestBuilder.statsEmailsSummary()
+                .getStatsEmailsSummary(
+                    wpComSiteId = siteId.toULong(),
+                    params = params
+                )
+        }
+        logResultType("fetchStatsEmailsSummary", result)
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val emails = result.response.data.posts
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: " +
+                        "fetchStatsEmailsSummary success" +
+                        " - ${emails.size} emails"
+                )
+                StatsEmailsSummaryDataResult.Success(
+                    emails.map { email ->
+                        EmailSummaryItem(
+                            title = email.title.orEmpty(),
+                            opens = email.opens
+                                ?.toLong() ?: 0L,
+                            clicks = email.clicks
+                                ?.toLong() ?: 0L
+                        )
+                    }
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchStatsEmailsSummary", result
+            ) {
+                StatsEmailsSummaryDataResult.Error(it)
+            }
+        }
+    }
+
+    override suspend fun fetchUtm(
+        siteId: Long,
+        keys: List<String>,
+        date: String,
+        days: Int,
+        max: Int,
+        queryTopPosts: Boolean
+    ): UtmDataResult {
+        val utmKeys = keys.mapNotNull(::toStatsUtmKey)
+        val params = StatsUtmParams(
+            max = max.toUInt(),
+            date = WpDateString(date),
+            days = days.toUInt(),
+            startDate = null,
+            queryTopPosts = queryTopPosts
+        )
+        AppLog.d(
+            T.STATS,
+            "fetchUtm - siteId=$siteId, " +
+                "keys=$keys, date=$date, days=$days"
+        )
+        val result = wpComApiClient
+            .request { requestBuilder ->
+                requestBuilder.statsUtm()
+                    .getStatsUtm(
+                        wpComSiteId = siteId.toULong(),
+                        statsUtmKeys = utmKeys,
+                        params = params
+                    )
+            }
+        logResultType("fetchUtm", result)
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val response = result.response.data
+                val topValues = response.topUtmValues
+                    .mapValues { it.value.toLong() }
+                val topPosts = response.topPosts
+                    .mapValues { entry ->
+                        entry.value.map { post ->
+                            UtmPostData(
+                                title = post.title,
+                                views = post.views.toLong()
+                            )
+                        }
+                    }
+                AppLog.d(
+                    T.STATS,
+                    "fetchUtm success - " +
+                        "${topValues.size} values"
+                )
+                UtmDataResult.Success(
+                    UtmData(
+                        topUtmValues = topValues,
+                        topPosts = topPosts
+                    )
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchUtm", result, planGatedSiteId = siteId
+            ) {
+                UtmDataResult.Error(it)
+            }
+        }
+    }
+
+    private fun toStatsUtmKey(key: String): StatsUtmKey? =
+        when (key) {
+            "utm_source" -> StatsUtmKey.UTM_SOURCE
+            "utm_medium" -> StatsUtmKey.UTM_MEDIUM
+            "utm_campaign" -> StatsUtmKey.UTM_CAMPAIGN
+            else -> null
+        }
+
     companion object {
+        // The API addresses the site's home page as post 0.
+        private const val HOME_PAGE_POST_ID = 0L
+        // How many entries of one archive group are kept: ten times what the card lists under a
+        // group, and the ceiling for its "show all" screen. The detail screen asks for max = 0, so
+        // a busy site really does return thousands of search terms for the year ranges.
+        private const val MAX_ARCHIVE_ENTRIES_PER_SECTION = 100
+        // What a literal "+" in an archive term is rewritten to before decoding, so the decoder
+        // reads it as a plus sign rather than as the form-encoded space it would otherwise be.
+        private const val PLUS_ENCODED = "%2B"
         private const val HTTP_UNAUTHORIZED = 401
         private const val HTTP_FORBIDDEN = 403
     }

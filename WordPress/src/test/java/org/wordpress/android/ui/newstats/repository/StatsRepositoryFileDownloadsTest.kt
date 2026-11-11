@@ -11,6 +11,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import java.time.Clock
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.newstats.StatsPeriod
@@ -33,7 +34,9 @@ class StatsRepositoryFileDownloadsTest : BaseUnitTest() {
     fun setUp() {
         repository = StatsRepository(
             statsDataSource = statsDataSource,
+            statsResultCache = StatsResultCache(),
             appLogWrapper = appLogWrapper,
+            clock = Clock.systemDefaultZone(),
             ioDispatcher = testDispatcher()
         )
     }
@@ -366,6 +369,32 @@ class StatsRepositoryFileDownloadsTest : BaseUnitTest() {
             val error = result as FileDownloadsResult.Error
             assertThat(error.messageResId)
                 .isEqualTo(R.string.stats_error_api)
+            assertThat(error.isAuthError).isFalse()
+        }
+
+    @Test
+    fun `given not available error, when fetchFileDownloads, then correct message is returned`() =
+        test {
+            whenever(
+                statsDataSource.fetchFileDownloads(
+                    any(), any(), any()
+                )
+            ).thenReturn(
+                FileDownloadsDataResult.Error(
+                    StatsErrorType.NOT_AVAILABLE
+                )
+            )
+
+            val result = repository.fetchFileDownloads(
+                TEST_SITE_ID, StatsPeriod.Last7Days
+            )
+
+            assertThat(result).isInstanceOf(
+                FileDownloadsResult.Error::class.java
+            )
+            val error = result as FileDownloadsResult.Error
+            assertThat(error.messageResId)
+                .isEqualTo(R.string.stats_error_not_available)
             assertThat(error.isAuthError).isFalse()
         }
 

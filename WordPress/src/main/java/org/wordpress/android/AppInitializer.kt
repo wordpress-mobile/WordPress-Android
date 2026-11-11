@@ -11,34 +11,29 @@ import android.app.NotificationManager
 import android.app.SyncNotedAppOp
 import android.content.ComponentCallbacks2
 import android.content.Context
-import android.content.ContextWrapper
-import android.content.IntentFilter
 import android.content.res.Configuration
-import android.database.SQLException
-import android.database.sqlite.SQLiteException
-import android.net.ConnectivityManager
 import android.net.http.HttpResponseCache
 import android.os.Build
 import android.os.Build.VERSION_CODES
-import android.os.Bundle
 import android.os.SystemClock
 import android.text.TextUtils
-import android.util.Log
 import android.webkit.WebView
 import androidx.annotation.RequiresApi
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.preference.PreferenceManager
-import androidx.work.WorkManager
 import com.android.volley.RequestQueue
 import com.automattic.android.tracks.crashlogging.CrashLogging
-import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.iid.FirebaseInstanceId
+import com.gravatar.Gravatar
 import com.wordpress.rest.RestClient
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -68,24 +63,26 @@ import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.fluxc.tools.FluxCImageLoader
 import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError
 import org.wordpress.android.modules.APPLICATION_SCOPE
-import org.wordpress.android.networking.ConnectionChangeReceiver
+import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.networking.NetworkConnectionMonitor
 import org.wordpress.android.networking.OAuthAuthenticator
 import org.wordpress.android.networking.RestClientUtils
 import org.wordpress.android.push.GCMRegistrationScheduler
+import org.wordpress.android.repositories.SiteProvisioningSource
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.debug.cookies.DebugCookieManager
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalWidgetHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.repository.StatsResultCache
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.posts.editor.ImageEditorFileUtils
 import org.wordpress.android.ui.posts.editor.ImageEditorInitializer
 import org.wordpress.android.ui.posts.editor.ImageEditorTracker
-import org.wordpress.android.ui.postsrs.data.WpServiceProvider
+import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
@@ -93,7 +90,6 @@ import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppThemeUtils
 import org.wordpress.android.util.BitmapLruCache
 import org.wordpress.android.util.BuildConfigWrapper
@@ -107,13 +103,13 @@ import org.wordpress.android.util.ProfilingUtils
 import org.wordpress.android.util.RateLimitedTask
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.VolleyUtils
+import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.config.AppConfig
 import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfig
 import org.wordpress.android.util.enqueuePeriodicUploadWorkRequestForAllSites
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.AppReviewManager
-import org.wordpress.android.workers.WordPressWorkersFactory
 import java.io.File
 import java.io.IOException
 import java.net.CookieManager
@@ -150,10 +146,16 @@ class AppInitializer @Inject constructor(
     lateinit var uploadStarter: UploadStarter
 
     @Inject
+    lateinit var networkConnectionMonitor: NetworkConnectionMonitor
+
+    @Inject
     lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
 
     @Inject
     lateinit var statsStore: StatsStore
+
+    @Inject
+    lateinit var statsResultCache: StatsResultCache
 
     @Inject
     lateinit var systemNotificationsTracker: SystemNotificationsTracker
@@ -186,9 +188,6 @@ class AppInitializer @Inject constructor(
     lateinit var imageEditorFileUtils: ImageEditorFileUtils
 
     @Inject
-    lateinit var wordPressWorkerFactory: WordPressWorkersFactory
-
-    @Inject
     lateinit var gcmRegistrationScheduler: GCMRegistrationScheduler
 
     @Inject
@@ -202,6 +201,10 @@ class AppInitializer @Inject constructor(
     @Inject
     @Named(APPLICATION_SCOPE)
     lateinit var appScope: CoroutineScope
+
+    @Inject
+    @Named(IO_THREAD)
+    lateinit var ioDispatcher: CoroutineDispatcher
 
     @Inject
     lateinit var selectedSiteRepository: SelectedSiteRepository
@@ -230,6 +233,11 @@ class AppInitializer @Inject constructor(
     @Inject
     lateinit var wpApiClientProvider: WpApiClientProvider
 
+    // Lazy because building it loads the wordpress-rs native library (via WpLoginClient), which caused startup
+    // ANRs when done on the main thread. It's built off main in warmUpSiteProvisioningSource() instead.
+    @Inject
+    lateinit var siteProvisioningSource: dagger.Lazy<SiteProvisioningSource>
+
     @Inject
     lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
 
@@ -237,15 +245,17 @@ class AppInitializer @Inject constructor(
     lateinit var jetpackFeatureRemovalWidgetHelper: JetpackFeatureRemovalWidgetHelper
 
     @Inject
-    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
-
-    @Inject
     lateinit var perAppLocaleManager: PerAppLocaleManager
 
     private lateinit var applicationLifecycleMonitor: ApplicationLifecycleMonitor
 
-    @Suppress("DEPRECATION")
-    private lateinit var credentialsClient: GoogleApiClient
+    /**
+     * The coroutine enqueuing the periodic upload work. Exposed so UI tests can wait for it before swapping in
+     * a test WorkManager.
+     */
+    @VisibleForTesting
+    var periodicUploadEnqueueJob: Job? = null
+        private set
 
     private var startDate: Long
 
@@ -311,7 +321,8 @@ class AppInitializer @Inject constructor(
         AppLog.i(T.UTILS, "AppInitializer.init")
 
         WordPress.versionName = PackageUtils.getVersionName(application)
-        initWpDb()
+        warmUpWpDb()
+        warmUpSiteProvisioningSource()
         context?.let { enableHttpResponseCache(it) }
 
         AppReviewManager.init(application)
@@ -328,13 +339,10 @@ class AppInitializer @Inject constructor(
 
         RestClientUtils.setUserAgent(userAgent.apiUserAgent)
 
+        initGravatarAppIdentifier()
+
         if (!initialized) {
-            zendeskHelper.setupZendesk(
-                application,
-                BuildConfig.ZENDESK_DOMAIN,
-                BuildConfig.ZENDESK_APP_ID,
-                BuildConfig.ZENDESK_OAUTH_CLIENT_ID
-            )
+            initZendeskAsync()
         }
 
         val memoryAndConfigChangeMonitor = MemoryAndConfigChangeMonitor()
@@ -346,6 +354,11 @@ class AppInitializer @Inject constructor(
 
         // Make the UploadStarter observe the app process so it can auto-start uploads
         uploadStarter.activateAutoUploading(ProcessLifecycleOwner.get() as ProcessLifecycleOwner)
+
+        // Monitor default-network connectivity for the whole process lifetime. Uses a NetworkCallback on a
+        // background thread instead of the deprecated CONNECTIVITY_ACTION broadcast, so it can't cause a
+        // background ANR. start() is idempotent, so it's safe if init() runs more than once.
+        networkConnectionMonitor.start(application)
 
         initAnalytics(SystemClock.elapsedRealtime() - startDate)
 
@@ -362,19 +375,17 @@ class AppInitializer @Inject constructor(
         // remove expired lists
         dispatcher.dispatch(ListActionBuilder.newRemoveExpiredListsAction(RemoveExpiredListsPayload()))
 
-        // setup the Credentials Client so we can clean it up on wpcom logout
-        setupCredentialsClient()
-
         if (!initialized) {
-            initWorkManager()
+            enqueuePeriodicUploadWorkAsync()
         }
-
-        // Enqueue our periodic upload work request. The UploadWorkRequest will be called even if the app is closed.
-        // It will upload local draft or published posts with local changes to the server.
-        enqueuePeriodicUploadWorkRequestForAllSites()
 
         systemNotificationsTracker.checkSystemNotificationsState()
         ImageEditorInitializer.init(imageManager, imageEditorTracker, imageEditorFileUtils, appScope)
+
+        // drop the optimized copies left behind by uploads of previous sessions
+        launchIo(T.MEDIA, "Failed to delete the old processed media") {
+            WPMediaUtils.deleteOldProcessedMedia(application, PROCESSED_MEDIA_MAX_AGE_MS, pendingUploadPaths())
+        }
 
         initDebugCookieManager()
 
@@ -389,6 +400,47 @@ class AppInitializer @Inject constructor(
         if (buildConfig.isDebugSettingsEnabled()) {
             debugCookieManager = DebugCookieManager(application, cookieManager, buildConfig)
             debugCookieManager.sync()
+        }
+    }
+
+    // Names the app to the Gravatar SDK, which otherwise sends a bare `GravatarAndroid/<version>`
+    // that no edge rule can key on (CMM-1100). The same name the rest of our traffic already
+    // carries, so Gravatar sees us under one identity. Must run before the first SDK request.
+    //
+    // Guarded because the SDK validates both arguments and throws, and this runs on the startup
+    // path. No automated build can produce a bad value: `versionName` is read from
+    // version.properties, and the prototype override fastlane passes is sanitised ASCII. A
+    // hand-supplied `-PprototypeBuildVersionName` still can be, and a crash on every launch is
+    // not worth an attribution header.
+    //
+    // The version is optional to the SDK, so a rejected version alone still leaves the app named:
+    // that keeps `wp-android` in the User-Agent and the `X-Source` header the edge rule keys on.
+    // Only a rejected name drops us to the SDK's unnamed default.
+    private fun initGravatarAppIdentifier() {
+        try {
+            Gravatar.appIdentifier(WordPress.USER_AGENT_APPNAME, buildConfig.getAppVersionName())
+        } catch (versionError: IllegalArgumentException) {
+            AppLog.e(T.MAIN, "Gravatar: app version rejected, naming the app without it", versionError)
+            try {
+                Gravatar.appIdentifier(WordPress.USER_AGENT_APPNAME)
+            } catch (nameError: IllegalArgumentException) {
+                AppLog.e(T.MAIN, "Gravatar: app name rejected, falling back to the SDK default", nameError)
+            }
+        }
+    }
+
+    // Zendesk SDK init does enough work to trip the ANR threshold on slow devices
+    // when called from Application.onCreate(). The Help screen is the only entry
+    // point that needs Zendesk and is gated by user navigation, so deferring init
+    // to a background coroutine is safe in practice.
+    private fun initZendeskAsync() {
+        launchIo(T.SUPPORT, "Failed to initialize Zendesk SDK") {
+            zendeskHelper.setupZendesk(
+                application,
+                BuildConfig.ZENDESK_DOMAIN,
+                BuildConfig.ZENDESK_APP_ID,
+                BuildConfig.ZENDESK_OAUTH_CLIENT_ID
+            )
         }
     }
 
@@ -421,13 +473,55 @@ class AppInitializer @Inject constructor(
         appOpsManager.setOnOpNotedCallback(context?.mainExecutor, appOpsCallback)
     }
 
-    private fun initWorkManager() {
-        val configBuilder = androidx.work.Configuration.Builder().setWorkerFactory(wordPressWorkerFactory)
-        if (BuildConfig.DEBUG) {
-            configBuilder.setMinimumLoggingLevel(Log.DEBUG)
+    /**
+     * Runs [block] on the IO dispatcher, logging (rather than propagating) any failure. [appScope] has a plain
+     * [Job], so an uncaught exception would crash the process and cancel every other coroutine in the scope.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    private fun launchIo(tag: T, failureMessage: String, block: suspend () -> Unit): Job =
+        appScope.launch(ioDispatcher) {
+            try {
+                block()
+            } catch (e: Exception) {
+                AppLog.e(tag, failureMessage, e)
+            }
         }
-        configBuilder.setJobSchedulerJobIdRange(WORK_MANAGER_ID_RANGE_MIN, WORK_MANAGER_ID_RANGE_MAX)
-        WorkManager.initialize(application, configBuilder.build())
+
+    /**
+     * Local paths of the media that hasn't been uploaded yet, which the processed media purge has to keep: an
+     * upload can stay pending for as long as the device stays offline or the site keeps rejecting it.
+     */
+    private fun pendingUploadPaths(): List<String> = siteStore.sites
+        .flatMap { mediaStore.getLocalSiteMedia(it) }
+        .mapNotNull { it.filePath }
+        .filter { it.isNotEmpty() }
+
+    /**
+     * Enqueues our periodic upload work request, which uploads local drafts or published posts with local
+     * changes even when the app is closed. Runs off the main thread because the first WorkManager access
+     * initializes it on demand (see [WordPress.workManagerConfiguration]), which opens its Room database.
+     */
+    private fun enqueuePeriodicUploadWorkAsync() {
+        periodicUploadEnqueueJob = launchIo(T.MAIN, "Failed to enqueue periodic upload work") {
+            enqueuePeriodicUploadWorkRequestForAllSites()
+        }
+    }
+
+    /**
+     * Opens the legacy app database off the main thread so that the first main-thread reader usually finds it
+     * ready. [WordPress.wpDB] is lazy and synchronized, so readers that get there first simply open it themselves.
+     */
+    private fun warmUpWpDb() {
+        launchIo(T.DB, "Failed to open the app database") { WordPress.wpDB }
+    }
+
+    /**
+     * Builds [SiteProvisioningSource] off the main thread. Constructing it registers the app-wide listener that heals
+     * wordpress-rs 401s, and loads the wordpress-rs native library so that My Site, which also depends on it, usually
+     * finds the library already loaded instead of loading it on the main thread.
+     */
+    private fun warmUpSiteProvisioningSource() {
+        launchIo(T.MAIN, "Failed to build the site provisioning source") { siteProvisioningSource.get() }
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -443,30 +537,13 @@ class AppInitializer @Inject constructor(
 
     private fun sanitizeMediaUploadStateForSite() {
         val selectedSiteLocalId: Int = selectedSiteRepository.getSelectedSiteLocalId(true)
-        val site = siteStore.getSiteByLocalId(selectedSiteLocalId)
-        site?.let {
-            Thread {
-                UploadService.sanitizeMediaUploadStateForSite(mediaStore, dispatcher, site)
-            }.start()
+        launchIo(T.MEDIA, "Failed to sanitize the media upload state") {
+            // The site lookup is a database read (plus credential decryption), so keep it off the main thread
+            val site = siteStore.getSiteByLocalId(selectedSiteLocalId) ?: return@launchIo
+            UploadService.sanitizeMediaUploadStateForSite(mediaStore, dispatcher, site)
         }
     }
 
-    @Suppress("DEPRECATION")
-    private fun setupCredentialsClient() {
-        credentialsClient = GoogleApiClient.Builder(application)
-            .addConnectionCallbacks(object : GoogleApiClient.ConnectionCallbacks {
-                override fun onConnected(bundle: Bundle?) {
-                    // Do nothing
-                }
-
-                override fun onConnectionSuspended(i: Int) {
-                    // Do nothing
-                }
-            })
-            .addApi(Auth.CREDENTIALS_API)
-            .build()
-        credentialsClient.connect()
-    }
 
     private fun createNotificationChannelsOnSdk26(
         normal: Boolean = true,
@@ -582,28 +659,6 @@ class AppInitializer @Inject constructor(
         }
     }
 
-    private fun initWpDb() {
-        if (!createAndVerifyWpDb()) {
-            AppLog.e(T.DB, "Invalid database, sign out user and delete database")
-            // Force DB deletion
-            WordPressDB.deleteDatabase(application)
-            WordPress.wpDB = WordPressDB(application)
-        }
-    }
-
-    private fun createAndVerifyWpDb(): Boolean {
-        return try {
-            WordPress.wpDB = WordPressDB(application)
-            true
-        } catch (e: SQLiteException) {
-            AppLog.e(T.DB, e)
-            false
-        } catch (e: SQLException) {
-            AppLog.e(T.DB, e)
-            false
-        }
-    }
-
     /**
      * Sign out from wpcom account.
      * Note: This method must not be called on UI Thread.
@@ -613,10 +668,6 @@ class AppInitializer @Inject constructor(
         AnalyticsTracker.track(Stat.ACCOUNT_LOGOUT)
 
         removeWpComUserRelatedData(application.applicationContext)
-
-        if (credentialsClient.isConnected) {
-            Auth.CredentialsApi.disableAutoSignIn(credentialsClient)
-        }
 
         // Once fully logged out refresh the metadata so the user information doesn't persist for logged out events
         AnalyticsUtils.refreshMetadata(accountStore, siteStore)
@@ -710,6 +761,10 @@ class AppInitializer @Inject constructor(
 
         // Reset Stats Data
         statsStore.deleteAllData()
+        // The new-stats in-memory cache is a process-lifetime singleton keyed by remote site id,
+        // so without this the next account to sign in could be served this one's numbers for a
+        // site they both belong to.
+        statsResultCache.clear()
         statsWidgetUpdaters.update(context)
 
         // Reset Notifications Data
@@ -726,7 +781,10 @@ class AppInitializer @Inject constructor(
 
         // Clear cached wordpress-rs services and API clients
         wpServiceProvider.clearAll()
-        wpApiClientProvider.clearWpComClients()
+        wpApiClientProvider.clearAllClients()
+
+        // Drop per-site provisioning + capability state for the signed-out user
+        siteProvisioningSource.get().clear()
     }
 
     /*
@@ -802,7 +860,6 @@ class AppInitializer @Inject constructor(
     inner class ApplicationLifecycleMonitor {
         private var lastPingDate: Date? = null
         private var applicationOpenedDate: Date? = null
-        private var connectionReceiverRegistered = false
         var firstActivityResumed = true
 
         private val isPushNotificationPingNeeded: Boolean
@@ -855,18 +912,6 @@ class AppInitializer @Inject constructor(
 
             AnalyticsTracker.track(Stat.APPLICATION_CLOSED, properties)
             AnalyticsTracker.endSession(false)
-            // Methods onAppComesFromBackground and onAppGoesToBackground are only workarounds to track when the app
-            // goes to or comes from background. The workarounds are not 100% reliable, so avoid unregistering the
-            // receiver twice.
-            if (connectionReceiverRegistered) {
-                connectionReceiverRegistered = false
-                try {
-                    application.unregisterReceiver(ConnectionChangeReceiver.getInstance())
-                    AppLog.d(MAIN, "ConnectionChangeReceiver successfully unregistered")
-                } catch (e: IllegalArgumentException) {
-                    AppLog.e(MAIN, "ConnectionChangeReceiver was already unregistered")
-                }
-            }
 
             // Disable the widgets if needed
             disableWidgetReceiversIfNeeded()
@@ -886,25 +931,6 @@ class AppInitializer @Inject constructor(
             }
             WordPress.appIsInTheBackground = false
 
-            // https://developer.android.com/reference/android/net/ConnectivityManager.html
-            // Apps targeting Android 7.0 (API level 24) and higher do not receive this broadcast if the broadcast
-            // receiver is declared in their manifest. Apps will still receive broadcasts if BroadcastReceiver is
-            // registered with Context.registerReceiver() and that context is still valid.
-            if (!connectionReceiverRegistered) {
-                connectionReceiverRegistered = true
-                if (Build.VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                    application.registerReceiver(
-                        ConnectionChangeReceiver.getInstance(),
-                        IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION),
-                        ContextWrapper.RECEIVER_EXPORTED
-                    )
-                } else {
-                    application.registerReceiver(
-                        ConnectionChangeReceiver.getInstance(),
-                        IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-                    )
-                }
-            }
             AnalyticsUtils.refreshMetadata(accountStore, siteStore)
             applicationOpenedDate = Date()
             // This stat is part of a funnel that provides critical information. Before making ANY modification to this
@@ -973,7 +999,7 @@ class AppInitializer @Inject constructor(
     }
 
     private fun updateNotificationSettings() {
-        if (!jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()) {
+        if (!buildConfig.isJetpackApp) {
             NotificationsUtils.cancelAllNotifications(application)
             // Only create the transient notification channel to handle upload notifications
             createNotificationChannelsOnSdk26(
@@ -996,11 +1022,8 @@ class AppInitializer @Inject constructor(
         private const val KILOBYTES_IN_BYTES = 1024
         private const val MEMORY_CACHE_RATIO = 0.25 // Use 1/4th of the available memory for memory cache.
         private const val DEFAULT_TIMEOUT = 2 * 60 // 2 minutes
-
-        // Use service ids near the int max to avoid collisions with existing JobService ids
-        // The minimum range size is 1000, but we can easily give 10000.
-        private const val WORK_MANAGER_ID_RANGE_MAX = Int.MAX_VALUE
-        private const val WORK_MANAGER_ID_RANGE_MIN = WORK_MANAGER_ID_RANGE_MAX - 10000
+        // matches the retention of the image editor's cache; long enough not to race an upload being retried
+        private const val PROCESSED_MEDIA_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000L // 1 week
 
         @SuppressLint("StaticFieldLeak")
         var context: Context? = null

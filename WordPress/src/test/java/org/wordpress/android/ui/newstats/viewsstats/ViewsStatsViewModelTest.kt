@@ -1,36 +1,43 @@
 package org.wordpress.android.ui.newstats.viewsstats
 
 import androidx.lifecycle.SavedStateHandle
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argThat
+import org.mockito.kotlin.doSuspendableAnswer
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.junit.runner.RunWith
-import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.StatsCardsConfiguration
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
+import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.repository.ViewsDataPoint
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
+import org.wordpress.android.ui.newstats.repository.BottomStatsAggregates
+import org.wordpress.android.ui.newstats.repository.BottomStatsResult
 import org.wordpress.android.ui.newstats.repository.PeriodAggregates
 import org.wordpress.android.ui.newstats.repository.PeriodStatsResult
+import org.wordpress.android.ui.newstats.util.StatsDateUnitTest
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.LocalDate
 
 @ExperimentalCoroutinesApi
 @Suppress("LargeClass")
-@RunWith(MockitoJUnitRunner.Silent::class)
-class ViewsStatsViewModelTest : BaseUnitTest() {
+class ViewsStatsViewModelTest : StatsDateUnitTest() {
     @Mock
     private lateinit var selectedSiteRepository: SelectedSiteRepository
 
@@ -45,6 +52,9 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var cardsConfigurationRepository: StatsCardsConfigurationRepository
+
+    @Mock
+    private lateinit var newStatsTracker: NewStatsTracker
 
     private lateinit var viewModel: ViewsStatsViewModel
 
@@ -74,18 +84,26 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             .thenReturn("Comments")
         whenever(resourceProvider.getString(R.string.posts))
             .thenReturn("Posts")
+        // The selector's date line resolves a preset's window through the repository. These tests
+        // assert the chart, not that line, so one fixed window stands in for every period.
+        whenever(statsRepository.periodWindow(any()))
+            .thenReturn(LocalDate.of(2024, 1, 14) to LocalDate.of(2024, 1, 20))
     }
 
-    private suspend fun initViewModel() {
+    private suspend fun initViewModel(periodType: String? = null) {
         whenever(cardsConfigurationRepository.getConfiguration(any()))
             .thenReturn(StatsCardsConfiguration())
+        // Default period is Last7Days (a fixed period that fills the bottom row from the chart). Pass
+        // "today" to exercise the dedicated-bottom-call path (also used by Custom periods).
+        val savedState = periodType?.let { SavedStateHandle(mapOf("period_type" to it)) } ?: SavedStateHandle()
         viewModel = ViewsStatsViewModel(
             selectedSiteRepository,
             accountStore,
             statsRepository,
             resourceProvider,
-            SavedStateHandle(),
-            cardsConfigurationRepository
+            savedState,
+            cardsConfigurationRepository,
+            newStatsTracker
         )
         viewModel.loadDataIfNeeded()
     }
@@ -109,56 +127,255 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             previousViews = TEST_PREVIOUS_PERIOD_VIEWS
         )
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(ViewsStatsCardUiState.Loaded::class.java)
-        with(state as ViewsStatsCardUiState.Loaded) {
-            assertThat(currentPeriodViews).isEqualTo(TEST_CURRENT_PERIOD_VIEWS)
-            assertThat(previousPeriodViews).isEqualTo(TEST_PREVIOUS_PERIOD_VIEWS)
+        assertThat(state).isInstanceOf(ViewsStatsCardUiState.Content::class.java)
+        with(state.chartLoaded()) {
+            assertThat(currentPeriodTotal).isEqualTo(TEST_CURRENT_PERIOD_VIEWS)
+            assertThat(previousPeriodTotal).isEqualTo(TEST_PREVIOUS_PERIOD_VIEWS)
         }
     }
 
     @Test
-    fun `when period stats fetch fails, then error state is emitted`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+    fun `when period stats fetch fails, then chart region shows an error but the card stays`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(PeriodStatsResult.Error("Network error"))
 
         initViewModel()
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(ViewsStatsCardUiState.Error::class.java)
-        assertThat((state as ViewsStatsCardUiState.Error).message).isEqualTo(FAILED_TO_LOAD_ERROR)
+        assertThat(state).isInstanceOf(ViewsStatsCardUiState.Content::class.java)
+        assertThat((state as ViewsStatsCardUiState.Content).chart).isEqualTo(ChartUiState.Error)
     }
 
     @Test
-    fun `when period data is empty, then chart data is empty but state is loaded`() = test {
+    fun `when period data is empty, then chart data is empty but chart is loaded`() = test {
         val result = createPeriodStatsResult(currentPeriodData = emptyList(), previousPeriodData = emptyList())
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(ViewsStatsCardUiState.Loaded::class.java)
-        with(state as ViewsStatsCardUiState.Loaded) {
+        assertThat(state).isInstanceOf(ViewsStatsCardUiState.Content::class.java)
+        with(state.chartLoaded()) {
             assertThat(chartData.currentPeriod).isEmpty()
             assertThat(chartData.previousPeriod).isEmpty()
         }
     }
 
     @Test
+    fun `given YEAR unit, when chart loads, then labels show the year rather than the month`() = test {
+        val result = createPeriodStatsResult(
+            unit = StatsUnit.YEAR,
+            currentPeriodData = listOf(
+                ViewsDataPoint(period = "2024-01-01", views = 1000L),
+                ViewsDataPoint(period = "2025-01-01", views = 1500L),
+                ViewsDataPoint(period = "2026-01-01", views = 2000L)
+            ),
+            previousPeriodData = emptyList()
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val labels = viewModel.uiState.value.chartLoaded().chartData.currentPeriod.map { it.label }
+        assertThat(labels).containsExactly("2024", "2025", "2026")
+    }
+
+    @Test
+    fun `given YEAR unit, when chart loads, then the legend shows a year span`() = test {
+        val result = createPeriodStatsResult(unit = StatsUnit.YEAR)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        // Aggregates are stubbed as 2024-01-14..2024-01-20, a span inside a single year.
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange).isEqualTo("2024")
+    }
+
+    @Test
+    fun `given DAY unit, when chart loads, then the legend date range includes the year`() = test {
+        // Default aggregates span 2024-01-14..2024-01-20 (a Last7Days range within one month).
+        val result = createPeriodStatsResult(unit = StatsUnit.DAY)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange).isEqualTo("Jan 14 - Jan 20, 2024")
+    }
+
+    @Test
+    fun `given a cross-year DAY range, when chart loads, then both ends show the year`() = test {
+        val result = createPeriodStatsResult(
+            unit = StatsUnit.DAY,
+            currentStartDate = "2024-12-29",
+            currentEndDate = "2025-01-04"
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange)
+            .isEqualTo("Dec 29, 2024 - Jan 4, 2025")
+    }
+
+    @Test
+    fun `given a MONTH range, when chart loads, then the legend date range includes the year`() = test {
+        val result = createPeriodStatsResult(
+            unit = StatsUnit.MONTH,
+            currentStartDate = "2024-01-01",
+            currentEndDate = "2024-06-01"
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.Last12Months)
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange).isEqualTo("Jan - Jun 2024")
+    }
+
+    @Test
+    fun `given ThisYear, when chart loads, then the legend shows a month range`() = test {
+        // ThisYear takes its granularity from the whole calendar year, so it is always charted in month
+        // buckets and its legend is always a month span -- it no longer starts January in day buckets.
+        // Default aggregates span 2024-01-14..2024-01-20.
+        val result = createPeriodStatsResult(unit = StatsUnit.MONTH)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.ThisYear)
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange).isEqualTo("Jan 2024")
+    }
+
+    @Test
+    fun `given ThisYear with MONTH unit, when chart loads, then the legend shows a month range`() = test {
+        val result = createPeriodStatsResult(
+            unit = StatsUnit.MONTH,
+            currentStartDate = "2024-01-01",
+            currentEndDate = "2024-06-01"
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.ThisYear)
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange).isEqualTo("Jan - Jun 2024")
+    }
+
+    @Test
+    fun `a preset's label names the dates it resolves to`() = test {
+        whenever(statsRepository.periodWindow(StatsPeriod.Last7Days))
+            .thenReturn(LocalDate.of(2026, 10, 21) to LocalDate.of(2026, 10, 27))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.effectivePeriodDates.value).isEqualTo("Oct 21 - Oct 27, 2026")
+    }
+
+    @Test
+    fun `a month-bucketed preset's label names its dates by month`() = test {
+        whenever(statsRepository.periodWindow(StatsPeriod.Last12Months))
+            .thenReturn(LocalDate.of(2025, 11, 1) to LocalDate.of(2026, 10, 27))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.Last12Months)
+        advanceUntilIdle()
+
+        assertThat(viewModel.effectivePeriodDates.value).isEqualTo("Nov 2025 - Oct 2026")
+    }
+
+    @Test
+    fun `a custom range gets no second line of dates, since its label is already made of them`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onCustomRangeSelected(LocalDate.of(2026, 10, 1), LocalDate.of(2026, 10, 7))
+        advanceUntilIdle()
+
+        assertThat(viewModel.effectivePeriodDates.value).isNull()
+    }
+
+    @Test
+    fun `given DAY unit, when chart loads, then labels are not coarsened to the year`() = test {
+        val result = createPeriodStatsResult(unit = StatsUnit.DAY)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        // Locale-independent contract lock: the YEAR pattern must not leak into the DAY path. A
+        // bare four-digit label would mean it had.
+        val labels = viewModel.uiState.value.chartLoaded().chartData.currentPeriod.map { it.label }
+        assertThat(labels).isNotEmpty
+        assertThat(labels).noneMatch { it.matches(Regex("""\d{4}""")) }
+    }
+
+    @Test
+    fun `given MONTH unit, when chart loads, then labels are not coarsened to the year`() = test {
+        val result = createPeriodStatsResult(unit = StatsUnit.MONTH)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val labels = viewModel.uiState.value.chartLoaded().chartData.currentPeriod.map { it.label }
+        assertThat(labels).isNotEmpty
+        assertThat(labels).noneMatch { it.matches(Regex("""\d{4}""")) }
+    }
+
+    @Test
+    fun `given HOUR unit, when chart loads, then labels show the hour`() = test {
+        val result = createPeriodStatsResult(
+            unit = StatsUnit.HOUR,
+            currentPeriodData = listOf(
+                ViewsDataPoint(period = "2024-01-14 14:00:00", views = 10L),
+                ViewsDataPoint(period = "2024-01-14 15:00:00", views = 20L)
+            ),
+            previousPeriodData = emptyList()
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val labels = viewModel.uiState.value.chartLoaded().chartData.currentPeriod.map { it.label }
+        assertThat(labels).containsExactly("14:00", "15:00")
+    }
+
+    @Test
     fun `when loadData is called, then repository is called`() = test {
         val result = createPeriodStatsResult()
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
@@ -168,14 +385,14 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Called twice: once during init, once during loadData
-        verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any())
+        verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any(), any())
     }
 
     @Test
     fun `when onRetry is called, then loadData is called`() = test {
         val result = createPeriodStatsResult()
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
@@ -185,56 +402,56 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Called twice: once during init, once during onRetry
-        verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any())
+        verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any(), any())
     }
 
     @Test
     fun `when data loads, then views difference is calculated correctly`() = test {
         val result = createPeriodStatsResult(currentViews = 7000L, previousViews = 8000L)
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
-        assertThat(state.viewsDifference).isEqualTo(-1000L)
+        val state = viewModel.uiState.value.chartLoaded()
+        assertThat(state.difference).isEqualTo(-1000L)
     }
 
     @Test
     fun `when data loads, then percentage change is calculated correctly`() = test {
         val result = createPeriodStatsResult(currentViews = 9000L, previousViews = 10000L)
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
-        assertThat(state.viewsPercentageChange).isEqualTo(-10.0)
+        val state = viewModel.uiState.value.chartLoaded()
+        assertThat(state.percentageChange).isEqualTo(-10.0)
     }
 
     @Test
     fun `when previous period has zero views, then percentage change is 100 percent`() = test {
         val result = createPeriodStatsResult(currentViews = 1000L, previousViews = 0L)
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
-        assertThat(state.viewsPercentageChange).isEqualTo(100.0)
+        val state = viewModel.uiState.value.chartLoaded()
+        assertThat(state.percentageChange).isEqualTo(100.0)
     }
 
     @Test
     fun `when refresh is called, then isRefreshing becomes true then false`() = test {
         val result = createPeriodStatsResult()
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
@@ -261,66 +478,171 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when bottom stats are built, then they contain all stat types`() = test {
-        val result = createPeriodStatsResult()
-
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
-            .thenReturn(result)
+    fun `when a fixed period loads, then the bottom row is built from the chart response`() = test {
+        // Fixed periods (default: Last7Days) fill the bottom row from the chart's own call — no
+        // dedicated bottom fetch.
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
 
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
-        assertThat(state.bottomStats).hasSize(5)
-        assertThat(state.bottomStats.map { it.label }).containsExactly(
-            "Views", "Visitors", "Likes", "Comments", "Posts"
+        val stats = viewModel.uiState.value.bottomStatsOrNull()
+        assertThat(stats).hasSize(5)
+        assertThat(stats!!.map { it.metric }).containsExactly(
+            StatsMetric.VIEWS, StatsMetric.VISITORS, StatsMetric.LIKES, StatsMetric.COMMENTS, StatsMetric.POSTS
         )
+        verify(statsRepository, times(0)).fetchBottomStats(any(), any(), any())
+    }
+
+    @Test
+    fun `when a multi-day Custom loads, then the bottom row is built from the chart response`() = test {
+        // A multi-day Custom chart shares the bottom row's unit, quantity and windows, so its response
+        // already carries the row's totals — no dedicated call, 2 network calls instead of 4.
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(
+            StatsPeriod.Custom(startDate = LocalDate.of(2024, 1, 1), endDate = LocalDate.of(2024, 3, 5))
+        )
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        val stats = viewModel.uiState.value.bottomStatsOrNull()
+        assertThat(stats).hasSize(5)
+        assertThat(stats!!.map { it.metric }).containsExactly(
+            StatsMetric.VIEWS, StatsMetric.VISITORS, StatsMetric.LIKES, StatsMetric.COMMENTS, StatsMetric.POSTS
+        )
+        verify(statsRepository, times(0)).fetchBottomStats(any(), any(), any())
+    }
+
+    @Test
+    fun `when a single-day Custom loads, then the bottom row comes from the dedicated call`() = test {
+        // Its chart is hourly and an hourly response only populates `views`, so the row can't come
+        // from the chart.
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val day = LocalDate.of(2024, 1, 14)
+        viewModel.onPeriodChanged(StatsPeriod.Custom(startDate = day, endDate = day))
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        verify(statsRepository, times(1)).fetchBottomStats(any(), any(), any())
+    }
+
+    @Test
+    fun `when a fixed-period chart fetch fails, then both the chart and the bottom row are hidden`() = test {
+        // Fixed periods source the bottom row from the chart, so a chart failure hides both.
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(PeriodStatsResult.Error("Network error"))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(state.chart).isEqualTo(ChartUiState.Error)
+        assertThat(state.bottomStats).isEqualTo(BottomStatsUiState.Hidden)
+    }
+
+    @Test
+    fun `when a single-day bottom fetch fails, then the row is hidden but the chart still loads`() = test {
+        // Single-day periods (Today) load the hourly chart and the bottom row independently.
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
+            .thenReturn(BottomStatsResult.Error)
+
+        initViewModel(periodType = "today")
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(state.bottomStats).isEqualTo(BottomStatsUiState.Hidden)
+        assertThat((state.chart as ChartUiState.Loaded).currentPeriodTotal).isEqualTo(TEST_CURRENT_PERIOD_VIEWS)
+    }
+
+    @Test
+    fun `when a single-day chart fetch fails, then the bottom row still loads from its dedicated call`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(PeriodStatsResult.Error("Network error"))
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        initViewModel(periodType = "today")
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(state.chart).isEqualTo(ChartUiState.Error)
+        assertThat(state.bottomStats).isInstanceOf(BottomStatsUiState.Loaded::class.java)
+    }
+
+    @Test
+    fun `when a single-day bottom fetch fails transiently, then the next visibility retries and recovers`() = test {
+        // The dedicated bottom call is used for single-day periods; a transient failure must not leave
+        // the period marked loaded, so the next visibility retries it.
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        // First attempt fails (row hidden); the retry on next visibility succeeds.
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
+            .thenReturn(BottomStatsResult.Error)
+            .thenReturn(createBottomStatsResult())
+
+        initViewModel(periodType = "today")
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.bottomState()).isEqualTo(BottomStatsUiState.Hidden)
+
+        // The card becoming visible again must retry, since the period was not fully loaded.
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.bottomState()).isInstanceOf(BottomStatsUiState.Loaded::class.java)
+        verify(statsRepository, times(2)).fetchBottomStats(any(), any(), any())
     }
 
     @Test
     fun `when stat increases, then positive change is calculated`() = test {
-        val result = createPeriodStatsResult(currentViews = 1000L, previousViews = 800L)
-
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
-            .thenReturn(result)
+        // For fixed periods the bottom row comes from the chart aggregates, so drive the change via them.
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult(currentViews = 1000L, previousViews = 800L))
 
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
-        val viewsStat = state.bottomStats.first { it.label == "Views" }
+        val viewsStat = viewModel.uiState.value.bottomStatsOrNull()!!.first { it.metric == StatsMetric.VIEWS }
         assertThat(viewsStat.change).isInstanceOf(StatChange.Positive::class.java)
         assertThat((viewsStat.change as StatChange.Positive).percentage).isEqualTo(25.0)
     }
 
     @Test
     fun `when stat decreases, then negative change is calculated`() = test {
-        val result = createPeriodStatsResult(currentViews = 800L, previousViews = 1000L)
-
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
-            .thenReturn(result)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult(currentViews = 800L, previousViews = 1000L))
 
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
-        val viewsStat = state.bottomStats.first { it.label == "Views" }
+        val viewsStat = viewModel.uiState.value.bottomStatsOrNull()!!.first { it.metric == StatsMetric.VIEWS }
         assertThat(viewsStat.change).isInstanceOf(StatChange.Negative::class.java)
         assertThat((viewsStat.change as StatChange.Negative).percentage).isEqualTo(20.0)
     }
 
     @Test
     fun `when stat is unchanged, then no change is calculated`() = test {
-        val result = createPeriodStatsResult(currentViews = 1000L, previousViews = 1000L)
-
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
-            .thenReturn(result)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult(currentViews = 1000L, previousViews = 1000L))
 
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
-        val viewsStat = state.bottomStats.first { it.label == "Views" }
+        val viewsStat = viewModel.uiState.value.bottomStatsOrNull()!!.first { it.metric == StatsMetric.VIEWS }
         assertThat(viewsStat.change).isInstanceOf(StatChange.NoChange::class.java)
     }
 
@@ -328,35 +650,78 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     fun `when period average is calculated, then it is based on data points count`() = test {
         val result = createPeriodStatsResult(currentViews = 7000L)
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
+        val state = viewModel.uiState.value.chartLoaded()
         // 7000 views / 2 data points = 3500 average
         assertThat(state.periodAverage).isEqualTo(3500L)
     }
 
     @Test
-    fun `when exception is thrown during fetch, then error state is emitted`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+    fun `given a period that hasn't finished, then the average only counts the buckets that elapsed`() = test {
+        val result = createPeriodStatsResult(
+            currentViews = 7000L,
+            currentPeriodData = createDefaultDataPoints() + listOf(
+                ViewsDataPoint(period = "2024-01-16", views = 0L, isUpcoming = true),
+                ViewsDataPoint(period = "2024-01-17", views = 0L, isUpcoming = true)
+            )
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value.chartLoaded()
+        // Still 7000 views / 2 elapsed buckets: averaging over the days still to come would drag the
+        // line down as the period fills up.
+        assertThat(state.periodAverage).isEqualTo(3500L)
+        assertThat(state.chartData.currentPeriod.map { it.isUpcoming })
+            .containsExactly(false, false, true, true)
+    }
+
+    @Test
+    fun `when a bucket that hasn't happened yet is tapped, then nothing is selected`() = test {
+        val result = createPeriodStatsResult(
+            currentPeriodData = createDefaultDataPoints() +
+                ViewsDataPoint(period = "2024-01-16", views = 0L, isUpcoming = true)
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(2)
+        advanceUntilIdle()
+
+        // That slot only holds the previous period's comparison bar: there is nothing to put in the
+        // header and nothing to drill into.
+        assertThat(viewModel.uiState.value.selectedBar()).isNull()
+        assertThat(viewModel.effectivePeriod.value).isEqualTo(viewModel.selectedPeriod.value)
+    }
+
+    @Test
+    fun `when exception is thrown during chart fetch, then chart region shows an error`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenThrow(RuntimeException("Test exception"))
 
         initViewModel()
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(ViewsStatsCardUiState.Error::class.java)
-        assertThat((state as ViewsStatsCardUiState.Error).message).isEqualTo("Test exception")
+        assertThat(state).isInstanceOf(ViewsStatsCardUiState.Content::class.java)
+        assertThat((state as ViewsStatsCardUiState.Content).chart).isEqualTo(ChartUiState.Error)
     }
 
     @Test
     fun `when onPeriodChanged is called with same period, then data is not reloaded`() = test {
         val result = createPeriodStatsResult()
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
@@ -367,14 +732,14 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Should only be called once during init
-        verify(statsRepository, times(1)).fetchStatsForPeriod(any(), any())
+        verify(statsRepository, times(1)).fetchStatsForPeriod(any(), any(), any())
     }
 
     @Test
     fun `when onPeriodChanged is called with different period, then data is reloaded`() = test {
         val result = createPeriodStatsResult()
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
@@ -385,14 +750,14 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Called twice: once during init, once after period change
-        verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any())
+        verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any(), any())
     }
 
     @Test
     fun `when onPeriodChanged is called with custom period, then data is loaded`() = test {
         val result = createPeriodStatsResult()
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
@@ -407,7 +772,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Called twice: once during init, once after custom period change
-        verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any())
+        verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any(), any())
     }
 
     @Test
@@ -422,7 +787,9 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     fun `when loadDataIfNeeded is called multiple times, then data is only loaded once`() = test {
         val result = createPeriodStatsResult()
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        // Fixed period: the chart call succeeds and fills the bottom row, so the period is fully loaded
+        // and subsequent loadDataIfNeeded calls short-circuit.
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
@@ -435,24 +802,1604 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Should only be called once despite three calls to loadDataIfNeeded
-        verify(statsRepository, times(1)).fetchStatsForPeriod(any(), any())
+        verify(statsRepository, times(1)).fetchStatsForPeriod(any(), any(), any())
     }
 
     @Test
     fun `when onChartTypeChanged is called, then chart type is updated`() = test {
         val result = createPeriodStatsResult()
 
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.LINE)
+
+        val state = viewModel.uiState.value.chartLoaded()
+        assertThat(state.chartType).isEqualTo(ChartType.LINE)
+    }
+
+    // region Chart type persistence
+
+    @Test
+    fun `when chart type is saved, then it persists in SavedStateHandle`() = test {
+        val result = createPeriodStatsResult()
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
             .thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
 
         viewModel.onChartTypeChanged(ChartType.BAR)
+        advanceUntilIdle()
 
-        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
+        verify(cardsConfigurationRepository).saveConfiguration(
+            any(), any()
+        )
+    }
+
+    @Test
+    fun `when no chart type is stored, then it defaults to bar`() = test {
+        whenever(cardsConfigurationRepository.getConfiguration(any()))
+            .thenReturn(StatsCardsConfiguration())
+        val result = createPeriodStatsResult()
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(result)
+
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository, accountStore, statsRepository,
+            resourceProvider, SavedStateHandle(),
+            cardsConfigurationRepository,
+            newStatsTracker
+        )
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value.chartLoaded()
         assertThat(state.chartType).isEqualTo(ChartType.BAR)
     }
+
+    @Test
+    fun `when SavedStateHandle has line chart type, then it is restored`() = test {
+        val savedState = SavedStateHandle(
+            mapOf("chart_type" to "line")
+        )
+        whenever(cardsConfigurationRepository.getConfiguration(any()))
+            .thenReturn(StatsCardsConfiguration())
+        val result = createPeriodStatsResult()
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(result)
+
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository, accountStore, statsRepository,
+            resourceProvider, savedState, cardsConfigurationRepository,
+            newStatsTracker
+        )
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value.chartLoaded()
+        assertThat(state.chartType).isEqualTo(ChartType.LINE)
+    }
+
+    @Test
+    fun `when preferences has line chart type, then it is restored`() = test {
+        whenever(cardsConfigurationRepository.getConfiguration(any()))
+            .thenReturn(
+                StatsCardsConfiguration(selectedChartType = "line")
+            )
+        val result = createPeriodStatsResult()
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(result)
+
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository, accountStore, statsRepository,
+            resourceProvider, SavedStateHandle(),
+            cardsConfigurationRepository,
+            newStatsTracker
+        )
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value.chartLoaded()
+        assertThat(state.chartType).isEqualTo(ChartType.LINE)
+    }
+
+    // endregion
+
+    // region Bar tap soft selection
+
+    private fun ViewsStatsCardUiState.selectedBar(): SelectedBar? =
+        (this as ViewsStatsCardUiState.Content).selectedBar
+
+    @Test
+    fun `when a daily bar is tapped, then it soft-selects without changing the committed period`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+        val committedBefore = viewModel.selectedPeriod.value
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        // The committed period (and therefore the Views chart) is untouched...
+        assertThat(viewModel.selectedPeriod.value).isEqualTo(committedBefore)
+        // ...but the bar is selected and the effective period follows it.
+        val selected = viewModel.uiState.value.selectedBar()
+        assertThat(selected).isNotNull
+        assertThat(selected!!.index).isEqualTo(0)
+        assertThat(selected.canDrillDown).isTrue
+        val effective = viewModel.effectivePeriod.value
+        assertThat(effective).isInstanceOf(StatsPeriod.Custom::class.java)
+        with(effective as StatsPeriod.Custom) {
+            assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 14))
+            assertThat(endDate).isEqualTo(LocalDate.of(2024, 1, 14))
+        }
+    }
+
+    @Test
+    fun `when the arrow is tapped on a daily selection, then the whole screen drills into that day`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        viewModel.onDrillIntoSelectedBar()
+        advanceUntilIdle()
+
+        val period = viewModel.selectedPeriod.value
+        assertThat(period).isInstanceOf(StatsPeriod.Custom::class.java)
+        with(period as StatsPeriod.Custom) {
+            assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 14))
+            assertThat(endDate).isEqualTo(LocalDate.of(2024, 1, 14))
+        }
+        // Committing clears the soft selection.
+        assertThat(viewModel.uiState.value.selectedBar()).isNull()
+    }
+
+    @Test
+    fun `when a monthly bar is tapped, then it soft-selects the full month`() = test {
+        val monthlyData = listOf(
+            ViewsDataPoint(period = "2024-01-01", views = 5000L),
+            ViewsDataPoint(period = "2024-02-01", views = 6000L)
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(
+                createPeriodStatsResult(
+                    currentPeriodData = monthlyData,
+                    previousPeriodData = monthlyData,
+                    unit = StatsUnit.MONTH
+                )
+            )
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.Last12Months)
+        viewModel.loadData()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        // Committed period stays Last12Months; only the effective period drills to the month.
+        assertThat(viewModel.selectedPeriod.value).isEqualTo(StatsPeriod.Last12Months)
+        val effective = viewModel.effectivePeriod.value
+        assertThat(effective).isInstanceOf(StatsPeriod.Custom::class.java)
+        with(effective as StatsPeriod.Custom) {
+            assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
+            assertThat(endDate).isEqualTo(LocalDate.of(2024, 1, 31))
+        }
+        assertThat(viewModel.uiState.value.selectedBar()?.canDrillDown).isTrue
+    }
+
+    @Test
+    fun `when a ThisYear bar is tapped and the chart is day-granular, then it drills to a single day`() = test {
+        // Early in January the ThisYear window is short enough to be charted in day buckets, so a bar
+        // must drill to that single day, not to the whole month (as month-granular ThisYear does).
+        val dailyData = listOf(
+            ViewsDataPoint(period = "2024-01-14", views = 1000L),
+            ViewsDataPoint(period = "2024-01-15", views = 1500L)
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(
+                createPeriodStatsResult(
+                    currentPeriodData = dailyData,
+                    previousPeriodData = dailyData,
+                    unit = StatsUnit.DAY
+                )
+            )
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.ThisYear)
+        viewModel.loadData()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        assertThat(viewModel.selectedPeriod.value).isEqualTo(StatsPeriod.ThisYear)
+        val effective = viewModel.effectivePeriod.value
+        assertThat(effective).isInstanceOf(StatsPeriod.Custom::class.java)
+        with(effective as StatsPeriod.Custom) {
+            assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 14))
+            assertThat(endDate).isEqualTo(LocalDate.of(2024, 1, 14))
+        }
+        assertThat(viewModel.uiState.value.selectedBar()?.canDrillDown).isTrue
+    }
+
+    @Test
+    fun `when a ThisYear bar is tapped and the chart is month-granular, then it drills to a full month`() = test {
+        val monthlyData = listOf(
+            ViewsDataPoint(period = "2024-01-01", views = 5000L),
+            ViewsDataPoint(period = "2024-02-01", views = 6000L)
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(
+                createPeriodStatsResult(
+                    currentPeriodData = monthlyData,
+                    previousPeriodData = monthlyData,
+                    unit = StatsUnit.MONTH
+                )
+            )
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.ThisYear)
+        viewModel.loadData()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        val effective = viewModel.effectivePeriod.value
+        assertThat(effective).isInstanceOf(StatsPeriod.Custom::class.java)
+        with(effective as StatsPeriod.Custom) {
+            assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
+            assertThat(endDate).isEqualTo(LocalDate.of(2024, 1, 31))
+        }
+    }
+
+    @Test
+    fun `when an hourly bar is tapped, then only the header and selection change`() = test {
+        val hourlyData = listOf(
+            ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
+            ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult(currentPeriodData = hourlyData, previousPeriodData = hourlyData))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.Today)
+        viewModel.loadData()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        // Hourly buckets have no sub-period: the committed AND effective periods stay put, and the bar
+        // is selected but not drillable (no arrow).
+        assertThat(viewModel.selectedPeriod.value).isEqualTo(StatsPeriod.Today)
+        assertThat(viewModel.effectivePeriod.value).isEqualTo(StatsPeriod.Today)
+        val selected = viewModel.uiState.value.selectedBar()
+        assertThat(selected).isNotNull
+        assertThat(selected!!.canDrillDown).isFalse
+        // The header still overlays the tapped bar's value.
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodTotal).isEqualTo(100L)
+    }
+
+    @Test
+    fun `when the arrow is tapped on an hourly selection, then nothing drills`() = test {
+        val hourlyData = listOf(
+            ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
+            ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult(currentPeriodData = hourlyData, previousPeriodData = hourlyData))
+
+        initViewModel()
+        advanceUntilIdle()
+        viewModel.onPeriodChanged(StatsPeriod.Today)
+        viewModel.loadData()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        viewModel.onDrillIntoSelectedBar()
+        advanceUntilIdle()
+
+        assertThat(viewModel.selectedPeriod.value).isEqualTo(StatsPeriod.Today)
+    }
+
+    @Test
+    fun `when the selected bar is tapped again, then the selection clears and the header is restored`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.selectedBar()).isNull()
+        assertThat(viewModel.effectivePeriod.value).isEqualTo(viewModel.selectedPeriod.value)
+        // Header is back to the whole-period total.
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodTotal)
+            .isEqualTo(TEST_CURRENT_PERIOD_VIEWS)
+    }
+
+    @Test
+    fun `when a different bar is tapped, then the selection moves to it`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+        viewModel.onBarTapped(1)
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.selectedBar()?.index).isEqualTo(1)
+        // Default data point 1 is 2024-01-15 with 1500 views.
+        val effective = viewModel.effectivePeriod.value as StatsPeriod.Custom
+        assertThat(effective.startDate).isEqualTo(LocalDate.of(2024, 1, 15))
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodTotal).isEqualTo(1500L)
+    }
+
+    @Test
+    fun `when a bar is soft-selected, then the header overlays that bar's totals`() = test {
+        val current = listOf(
+            ViewsDataPoint(period = "2024-01-14", views = 1000L),
+            ViewsDataPoint(period = "2024-01-15", views = 1500L)
+        )
+        val previous = listOf(
+            ViewsDataPoint(period = "2024-01-07", views = 400L),
+            ViewsDataPoint(period = "2024-01-08", views = 600L)
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult(currentPeriodData = current, previousPeriodData = previous))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        val header = viewModel.uiState.value.chartLoaded()
+        assertThat(header.currentPeriodTotal).isEqualTo(1000L)
+        assertThat(header.previousPeriodTotal).isEqualTo(400L)
+        assertThat(header.difference).isEqualTo(600L)
+        // The chart series itself is untouched so the bars don't move.
+        assertThat(header.chartData.currentPeriod).hasSize(2)
+    }
+
+    @Test
+    fun `when a bar is soft-selected, then the bottom row reflects that bar`() = test {
+        val data = listOf(
+            ViewsDataPoint(period = "2024-01-14", views = 1000L, visitors = 300L),
+            ViewsDataPoint(period = "2024-01-15", views = 1500L, visitors = 450L)
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult(currentPeriodData = data, previousPeriodData = data))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(1)
+        advanceUntilIdle()
+
+        val items = viewModel.uiState.value.bottomStatsOrNull()
+        assertThat(items).isNotNull
+        assertThat(items!!.first { it.metric == StatsMetric.VIEWS }.value).isEqualTo(1500L)
+        assertThat(items.first { it.metric == StatsMetric.VISITORS }.value).isEqualTo(450L)
+    }
+
+    @Test
+    fun `when the selection is cleared, then the bottom row is restored to the whole period`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        val items = viewModel.uiState.value.bottomStatsOrNull()
+        assertThat(items).isNotNull
+        // Back to the whole-period aggregate total, not the single bucket's value.
+        assertThat(items!!.first { it.metric == StatsMetric.VIEWS }.value)
+            .isEqualTo(TEST_CURRENT_PERIOD_VIEWS)
+    }
+
+    @Test
+    fun `when the metric changes while a bar is selected, then the overlay reflects the new metric`() = test {
+        val data = listOf(
+            ViewsDataPoint(period = "2024-01-14", views = 1000L, visitors = 300L),
+            ViewsDataPoint(period = "2024-01-15", views = 1500L, visitors = 450L)
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult(currentPeriodData = data, previousPeriodData = data))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+        viewModel.onMetricSelected(StatsMetric.VISITORS)
+        advanceUntilIdle()
+
+        // Selection is preserved and the header now shows the visitors value at that bar.
+        assertThat(viewModel.uiState.value.selectedBar()?.index).isEqualTo(0)
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodTotal).isEqualTo(300L)
+    }
+
+    @Test
+    fun `when the committed period changes, then any soft selection is cleared`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.selectedBar()).isNotNull
+
+        viewModel.onPeriodChanged(StatsPeriod.Last30Days)
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.selectedBar()).isNull()
+        assertThat(viewModel.effectivePeriod.value).isEqualTo(viewModel.selectedPeriod.value)
+    }
+
+    @Test
+    fun `when a late bottom load lands after a bar is selected, then it does not clobber the overlay`() = test {
+        val hourly = listOf(
+            ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
+            ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult(currentPeriodData = hourly, previousPeriodData = hourly))
+        // Single-day periods fetch the bottom row from a dedicated call; gate it so the chart resolves
+        // first, leaving a window where the card is chart=Loaded, bottom=Loading, not dimmed.
+        val bottomGate = CompletableDeferred<Unit>()
+        whenever(statsRepository.fetchBottomStats(any(), any(), any())).doSuspendableAnswer {
+            bottomGate.await()
+            createBottomStatsResult()
+        }
+
+        initViewModel(periodType = "today")
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.chartLoaded()).isNotNull
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.bottomStatsOrNull()!!.first { it.metric == StatsMetric.VIEWS }.value)
+            .isEqualTo(100L)
+
+        // The whole-period bottom load lands late; it must not overwrite the selected bar's overlay.
+        bottomGate.complete(Unit)
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.bottomStatsOrNull()!!.first { it.metric == StatsMetric.VIEWS }.value)
+            .isEqualTo(100L)
+    }
+
+    @Test
+    fun `given an hourly bar, when it is selected, then metrics with no hourly series show the day totals`() = test {
+        val hourly = listOf(
+            ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
+            ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(
+            createPeriodStatsResult(
+                currentPeriodData = hourly,
+                previousPeriodData = hourly,
+                unit = StatsUnit.HOUR
+            )
+        )
+        whenever(statsRepository.fetchBottomStats(any(), any(), any())).thenReturn(createBottomStatsResult())
+
+        initViewModel(periodType = "today")
+        advanceUntilIdle()
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        val stats = viewModel.uiState.value.bottomStatsOrNull()!!
+        // Views comes from the selected hour...
+        assertThat(stats.first { it.metric == StatsMetric.VIEWS }.value).isEqualTo(100L)
+        // ...while the metrics an hourly response carries no series for show the whole day's totals,
+        // matching iOS, rather than a zero that reads as "no visitors this hour".
+        assertThat(stats.first { it.metric == StatsMetric.VISITORS }.value).isEqualTo(TEST_CURRENT_PERIOD_VISITORS)
+        assertThat(stats.first { it.metric == StatsMetric.LIKES }.value).isEqualTo(TEST_CURRENT_PERIOD_LIKES)
+        assertThat(stats.first { it.metric == StatsMetric.COMMENTS }.value).isEqualTo(TEST_CURRENT_PERIOD_COMMENTS)
+        assertThat(stats.first { it.metric == StatsMetric.POSTS }.value).isEqualTo(TEST_CURRENT_PERIOD_POSTS)
+    }
+
+    @Test
+    fun `given an hourly selection, when the day totals land late, then they fill the missing metrics`() = test {
+        val hourly = listOf(
+            ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
+            ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(
+            createPeriodStatsResult(
+                currentPeriodData = hourly,
+                previousPeriodData = hourly,
+                unit = StatsUnit.HOUR
+            )
+        )
+        // The day-level row is fetched separately and can land after the user has tapped a bar.
+        val bottomGate = CompletableDeferred<Unit>()
+        whenever(statsRepository.fetchBottomStats(any(), any(), any())).doSuspendableAnswer {
+            bottomGate.await()
+            createBottomStatsResult()
+        }
+
+        initViewModel(periodType = "today")
+        advanceUntilIdle()
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        bottomGate.complete(Unit)
+        advanceUntilIdle()
+
+        val stats = viewModel.uiState.value.bottomStatsOrNull()!!
+        assertThat(stats.first { it.metric == StatsMetric.VISITORS }.value).isEqualTo(TEST_CURRENT_PERIOD_VISITORS)
+        // The selected hour's own views survive the late load.
+        assertThat(stats.first { it.metric == StatsMetric.VIEWS }.value).isEqualTo(100L)
+        assertThat(viewModel.uiState.value.selectedBar()).isNotNull
+    }
+
+    @Test
+    fun `given a fresh single-day period, when a bar is tapped before its day totals land, then the row waits`() =
+        test {
+            // Last 7 Days fills its bottom row from the chart, so the card is holding that row when the
+            // user switches away from it.
+            whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+                .thenReturn(createPeriodStatsResult(currentVisitors = STALE_VISITORS))
+            initViewModel()
+            advanceUntilIdle()
+            assertThat(viewModel.uiState.value.bottomStatsOrNull()!!.first { it.metric == StatsMetric.VISITORS }.value)
+                .isEqualTo(STALE_VISITORS)
+
+            // Switching to Today: its chart is hourly and its row comes from a separate call, gated here
+            // so the tap lands in the window where the chart is up but the day totals are not.
+            val hourly = listOf(
+                ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
+                ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
+            )
+            whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(
+                createPeriodStatsResult(
+                    currentPeriodData = hourly,
+                    previousPeriodData = hourly,
+                    unit = StatsUnit.HOUR
+                )
+            )
+            val bottomGate = CompletableDeferred<Unit>()
+            whenever(statsRepository.fetchBottomStats(any(), any(), any())).doSuspendableAnswer {
+                bottomGate.await()
+                createBottomStatsResult()
+            }
+            viewModel.onPeriodChanged(StatsPeriod.Today)
+            viewModel.loadDataIfNeeded()
+            advanceUntilIdle()
+
+            viewModel.onChartTypeChanged(ChartType.BAR)
+            viewModel.onBarTapped(0)
+            advanceUntilIdle()
+
+            // The hour has no series of its own for Visitors and friends, and Last 7 Days' totals are
+            // not today's, so the row keeps its placeholder instead of borrowing them.
+            assertThat(viewModel.uiState.value.bottomStatsOrNull()).isNull()
+            assertThat(viewModel.uiState.value.selectedBar()).isNotNull
+
+            bottomGate.complete(Unit)
+            advanceUntilIdle()
+
+            val stats = viewModel.uiState.value.bottomStatsOrNull()!!
+            assertThat(stats.first { it.metric == StatsMetric.VIEWS }.value).isEqualTo(100L)
+            assertThat(stats.first { it.metric == StatsMetric.VISITORS }.value).isEqualTo(TEST_CURRENT_PERIOD_VISITORS)
+        }
+
+    @Test
+    fun `given a single-day row still in flight, when the selection is cleared, then no other period's row shows`() =
+        test {
+            // Same window as the test above: Last 7 Days' row is what the card is holding when the user
+            // switches to Today, whose own row hasn't landed yet.
+            whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+                .thenReturn(createPeriodStatsResult(currentVisitors = STALE_VISITORS))
+            initViewModel()
+            advanceUntilIdle()
+
+            val hourly = listOf(
+                ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
+                ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
+            )
+            whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(
+                createPeriodStatsResult(
+                    currentPeriodData = hourly,
+                    previousPeriodData = hourly,
+                    unit = StatsUnit.HOUR
+                )
+            )
+            val bottomGate = CompletableDeferred<Unit>()
+            whenever(statsRepository.fetchBottomStats(any(), any(), any())).doSuspendableAnswer {
+                bottomGate.await()
+                createBottomStatsResult()
+            }
+            viewModel.onPeriodChanged(StatsPeriod.Today)
+            viewModel.loadDataIfNeeded()
+            advanceUntilIdle()
+
+            viewModel.onChartTypeChanged(ChartType.BAR)
+            viewModel.onBarTapped(0)
+            advanceUntilIdle()
+
+            // Tapping the same bar again drops the selection, which restores the committed period's row
+            // -- but Today's row is still in flight, so there is nothing of Today's to restore.
+            viewModel.onBarTapped(0)
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.selectedBar()).isNull()
+            // The placeholder, not Last 7 Days' totals dressed up as today's.
+            assertThat(viewModel.uiState.value.bottomState()).isEqualTo(BottomStatsUiState.Loading)
+
+            bottomGate.complete(Unit)
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.bottomStatsOrNull()!!.first { it.metric == StatsMetric.VISITORS }.value)
+                .isEqualTo(TEST_CURRENT_PERIOD_VISITORS)
+        }
+
+    @Test
+    fun `given a refresh that lands after a period change, then its row is dropped rather than re-stamped`() = test {
+        // refresh() loads outside the job loadData() cancels, so its response can arrive after the user
+        // has already moved to another period.
+        val staleResult = createPeriodStatsResult(currentVisitors = STALE_VISITORS)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(staleResult)
+        initViewModel()
+        advanceUntilIdle()
+
+        // Gate the refresh's own fetch so it is still in flight when the period changes.
+        val refreshGate = CompletableDeferred<Unit>()
+        whenever(statsRepository.fetchStatsForPeriod(any(), eq(StatsPeriod.Last7Days), any())).doSuspendableAnswer {
+            refreshGate.await()
+            staleResult
+        }
+        val hourly = listOf(
+            ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
+            ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), eq(StatsPeriod.Today), any())).thenReturn(
+            createPeriodStatsResult(
+                currentPeriodData = hourly,
+                previousPeriodData = hourly,
+                unit = StatsUnit.HOUR
+            )
+        )
+        val bottomGate = CompletableDeferred<Unit>()
+        whenever(statsRepository.fetchBottomStats(any(), any(), any())).doSuspendableAnswer {
+            bottomGate.await()
+            createBottomStatsResult()
+        }
+
+        viewModel.refresh()
+        advanceUntilIdle()
+        viewModel.onPeriodChanged(StatsPeriod.Today)
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        // Last 7 Days' data arrives while Today is on screen: it must not repaint the card, and above all
+        // must not be filed as Today's row.
+        refreshGate.complete(Unit)
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        // The hour still has no series of its own for Visitors and friends, and the only row available to
+        // borrow from belongs to Last 7 Days, so the placeholder stays.
+        assertThat(viewModel.uiState.value.bottomStatsOrNull()).isNull()
+        assertThat(viewModel.uiState.value.selectedBar()).isNotNull
+
+        bottomGate.complete(Unit)
+        advanceUntilIdle()
+
+        val stats = viewModel.uiState.value.bottomStatsOrNull()!!
+        assertThat(stats.first { it.metric == StatsMetric.VIEWS }.value).isEqualTo(100L)
+        assertThat(stats.first { it.metric == StatsMetric.VISITORS }.value).isEqualTo(TEST_CURRENT_PERIOD_VISITORS)
+    }
+
+    @Test
+    fun `given an hourly selection, when the day totals fail, then the row is hidden rather than left loading`() =
+        test {
+            val hourly = listOf(
+                ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
+                ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
+            )
+            whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(
+                createPeriodStatsResult(
+                    currentPeriodData = hourly,
+                    previousPeriodData = hourly,
+                    unit = StatsUnit.HOUR
+                )
+            )
+            // Gate the day-level row so the bar can be tapped while it is still in flight, then fail it.
+            val bottomGate = CompletableDeferred<Unit>()
+            whenever(statsRepository.fetchBottomStats(any(), any(), any())).doSuspendableAnswer {
+                bottomGate.await()
+                BottomStatsResult.Error
+            }
+
+            initViewModel(periodType = "today")
+            advanceUntilIdle()
+            viewModel.onChartTypeChanged(ChartType.BAR)
+            viewModel.onBarTapped(0)
+            advanceUntilIdle()
+
+            bottomGate.complete(Unit)
+            advanceUntilIdle()
+
+            // The metrics an hourly bar has no series for can only come from that row, and it is never
+            // coming. Drop the row as the unselected card does instead of shimmering forever.
+            val content = viewModel.uiState.value as ViewsStatsCardUiState.Content
+            assertThat(content.bottomStats).isEqualTo(BottomStatsUiState.Hidden)
+            assertThat(content.selectedBar).isNotNull
+        }
+
+    @Test
+    fun `when loadData reloads while a bar is selected, then the selection and effective period reset`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+        val committed = viewModel.selectedPeriod.value
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.selectedBar()).isNotNull
+        assertThat(viewModel.effectivePeriod.value).isNotEqualTo(committed)
+
+        // loadVisibleCards()/Retry call loadData() directly; it must not leave effectivePeriod stuck.
+        viewModel.loadData()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.selectedBar()).isNull()
+        assertThat(viewModel.effectivePeriod.value).isEqualTo(committed)
+    }
+
+    @Test
+    fun `when a refresh chart reload lands after a bar is tapped, then the overlaid header survives`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+        viewModel.onChartTypeChanged(ChartType.BAR)
+
+        // Gate the refresh's chart fetch so we can tap a bar while it is in flight.
+        val gate = CompletableDeferred<Unit>()
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).doSuspendableAnswer {
+            gate.await()
+            createPeriodStatsResult(currentViews = 9999L)
+        }
+        viewModel.refresh()
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+        val overlaidTotal = viewModel.uiState.value.chartLoaded().currentPeriodTotal
+
+        gate.complete(Unit)
+        advanceUntilIdle()
+
+        // The landing refresh must not clobber the bar overlay with the fresh whole-period total.
+        assertThat(viewModel.uiState.value.selectedBar()).isNotNull
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodTotal).isEqualTo(overlaidTotal)
+    }
+
+    @Test
+    fun `when refreshing while a bar is selected, then the selection is cleared`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.selectedBar()).isNotNull
+
+        viewModel.refresh()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.selectedBar()).isNull()
+        assertThat(viewModel.effectivePeriod.value).isEqualTo(viewModel.selectedPeriod.value)
+        // The header is the whole-period total again, not the tapped bar's value.
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodTotal)
+            .isEqualTo(TEST_CURRENT_PERIOD_VIEWS)
+    }
+
+    @Test
+    fun `when the committed range is re-selected while a bar is selected, then the selection clears`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+        val committed = viewModel.selectedPeriod.value
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.selectedBar()).isNotNull
+        assertThat(viewModel.effectivePeriod.value).isNotEqualTo(committed)
+
+        // Tapping the already-committed range (its label showed the bar's date) restores the full view.
+        viewModel.onPeriodChanged(committed)
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.selectedBar()).isNull()
+        assertThat(viewModel.selectedPeriod.value).isEqualTo(committed)
+        assertThat(viewModel.effectivePeriod.value).isEqualTo(committed)
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodTotal)
+            .isEqualTo(TEST_CURRENT_PERIOD_VIEWS)
+    }
+
+    @Test
+    fun `when the chart type changes while a bar is selected, then the selection is cleared`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.LINE)
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.selectedBar()).isNull()
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodTotal)
+            .isEqualTo(TEST_CURRENT_PERIOD_VIEWS)
+    }
+
+    @Test
+    fun `when a bar is tapped, then no new fetch is triggered`() = test {
+        var fetchCount = 0
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenAnswer {
+                fetchCount++
+                createPeriodStatsResult()
+            }
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+        assertThat(fetchCount).isEqualTo(1)
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        // A soft selection never hits the network; only the arrow (drill-down) does.
+        assertThat(fetchCount).isEqualTo(1)
+
+        viewModel.onDrillIntoSelectedBar()
+        advanceUntilIdle()
+        assertThat(fetchCount).isEqualTo(2)
+    }
+
+    @Test
+    fun `when a bar is tapped while a period is loading, then the tap is ignored`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        val bottomGate = CompletableDeferred<Unit>()
+        whenever(statsRepository.fetchBottomStats(any(), any(), any())).doSuspendableAnswer {
+            bottomGate.await()
+            createBottomStatsResult()
+        }
+
+        initViewModel()
+        bottomGate.complete(Unit)
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        // Commit to enter the dimmed loading state (bottom gate left pending on the next load).
+        val pendingGate = CompletableDeferred<Unit>()
+        whenever(statsRepository.fetchBottomStats(any(), any(), any())).doSuspendableAnswer {
+            pendingGate.await()
+            createBottomStatsResult()
+        }
+        viewModel.onDrillIntoSelectedBar()
+        advanceUntilIdle()
+
+        val dimmed = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(dimmed.isLoadingNewPeriod).isTrue
+
+        // A tap while dimmed is a no-op: no selection appears.
+        viewModel.onBarTapped(1)
+        advanceUntilIdle()
+        assertThat((viewModel.uiState.value as ViewsStatsCardUiState.Content).selectedBar).isNull()
+        pendingGate.complete(Unit)
+    }
+
+    @Test
+    fun `when a bar is tapped with an invalid index, then nothing is selected`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(999)
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.selectedBar()).isNull()
+        assertThat(viewModel.effectivePeriod.value).isEqualTo(viewModel.selectedPeriod.value)
+    }
+
+    @Test
+    fun `when the arrow is tapped and the chart finishes first, then the card stays dimmed until bottom done`() =
+        test {
+            whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+                .thenReturn(createPeriodStatsResult())
+            // Gate the (slower, dedicated) bottom-stats call so the chart always resolves first.
+            var bottomGate = CompletableDeferred<Unit>()
+            whenever(statsRepository.fetchBottomStats(any(), any(), any())).doSuspendableAnswer {
+                bottomGate.await()
+                createBottomStatsResult()
+            }
+
+            initViewModel()
+            bottomGate.complete(Unit)
+            advanceUntilIdle()
+
+            // Fresh gate for the drill-down load; leave it pending so only the chart completes.
+            bottomGate = CompletableDeferred()
+            viewModel.onChartTypeChanged(ChartType.BAR)
+            viewModel.onBarTapped(0)
+            viewModel.onDrillIntoSelectedBar()
+            advanceUntilIdle()
+
+            // Chart has resolved for the new period, but the card must remain dimmed because the
+            // bottom row still holds the previous period's totals.
+            val dimmedState = viewModel.uiState.value as ViewsStatsCardUiState.Content
+            assertThat(dimmedState.chart).isInstanceOf(ChartUiState.Loaded::class.java)
+            assertThat(dimmedState.isLoadingNewPeriod).isTrue
+
+            // Once the bottom row resolves for the new period, the card un-dims.
+            bottomGate.complete(Unit)
+            advanceUntilIdle()
+
+            val finalState = viewModel.uiState.value as ViewsStatsCardUiState.Content
+            assertThat(finalState.isLoadingNewPeriod).isFalse
+        }
+
+    // endregion
+
+    // region ChartType storage key
+
+    @Test
+    fun `ChartType fromStorageKey returns correct types`() {
+        assertThat(ChartType.fromStorageKey("line"))
+            .isEqualTo(ChartType.LINE)
+        assertThat(ChartType.fromStorageKey("bar"))
+            .isEqualTo(ChartType.BAR)
+        assertThat(ChartType.fromStorageKey("unknown")).isNull()
+        assertThat(ChartType.fromStorageKey(null)).isNull()
+    }
+
+    // endregion
+
+    // region navigation
+    @Test
+    fun `onNavigatePrevious pages the whole screen to the previous range`() = test {
+        val previous = StatsPeriod.Custom(LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 7))
+        whenever(statsRepository.canNavigateBackward(any())).thenReturn(true)
+        whenever(statsRepository.previousPeriod(any(), anyOrNull())).thenReturn(previous)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(createPeriodStatsResult())
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onNavigatePrevious()
+        advanceUntilIdle()
+
+        assertThat(viewModel.selectedPeriod.value).isEqualTo(previous)
+    }
+
+    @Test
+    fun `onNavigateNext pages the whole screen to the next range`() = test {
+        val next = StatsPeriod.Custom(LocalDate.of(2026, 2, 1), LocalDate.of(2026, 2, 7))
+        whenever(statsRepository.canNavigateForward(any())).thenReturn(true)
+        whenever(statsRepository.nextPeriod(any(), anyOrNull())).thenReturn(next)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(createPeriodStatsResult())
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onNavigateNext()
+        advanceUntilIdle()
+
+        assertThat(viewModel.selectedPeriod.value).isEqualTo(next)
+    }
+
+    @Test
+    fun `onNavigatePrevious is a no-op at the backward floor`() = test {
+        whenever(statsRepository.canNavigateBackward(any())).thenReturn(false)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(createPeriodStatsResult())
+        initViewModel()
+        advanceUntilIdle()
+        val before = viewModel.selectedPeriod.value
+
+        viewModel.onNavigatePrevious()
+        advanceUntilIdle()
+
+        assertThat(viewModel.selectedPeriod.value).isEqualTo(before)
+        verify(statsRepository, never()).previousPeriod(any(), anyOrNull())
+    }
+
+    @Test
+    fun `navigation enablement flows reflect the repository`() = test {
+        whenever(statsRepository.canNavigateBackward(any())).thenReturn(true)
+        whenever(statsRepository.canNavigateForward(any())).thenReturn(false)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(createPeriodStatsResult())
+        initViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.canNavigateBackward.value).isTrue()
+        assertThat(viewModel.canNavigateForward.value).isFalse()
+    }
+
+    @Test
+    fun `given a picked preset, when paging back then forward, then the pick is passed as the origin`() = test {
+        // Paging back replaces the preset with a concrete range, so forward navigation has to be told
+        // which preset the user actually picked or it can land on a different label (CMM-2415).
+        val previous = StatsPeriod.Custom(LocalDate.of(2026, 9, 6), LocalDate.of(2026, 9, 12))
+        whenever(statsRepository.canNavigateBackward(any())).thenReturn(true)
+        whenever(statsRepository.canNavigateForward(any())).thenReturn(true)
+        whenever(statsRepository.previousPeriod(any(), anyOrNull())).thenReturn(previous)
+        whenever(statsRepository.nextPeriod(any(), anyOrNull())).thenReturn(StatsPeriod.ThisWeek)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(createPeriodStatsResult())
+        initViewModel()
+        advanceUntilIdle()
+        viewModel.onPeriodChanged(StatsPeriod.ThisWeek)
+        advanceUntilIdle()
+
+        viewModel.onNavigatePrevious()
+        advanceUntilIdle()
+        viewModel.onNavigateNext()
+        advanceUntilIdle()
+
+        verify(statsRepository).nextPeriod(previous, StatsPeriod.ThisWeek)
+    }
+
+    @Test
+    fun `given a picked preset, when paging saves the range, then the pick is persisted as the origin`() = test {
+        val previous = StatsPeriod.Custom(LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 30))
+        whenever(statsRepository.canNavigateBackward(any())).thenReturn(true)
+        whenever(statsRepository.previousPeriod(any(), anyOrNull())).thenReturn(previous)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(createPeriodStatsResult())
+        initViewModel()
+        advanceUntilIdle()
+        viewModel.onPeriodChanged(StatsPeriod.Last30Days)
+        advanceUntilIdle()
+
+        viewModel.onNavigatePrevious()
+        advanceUntilIdle()
+
+        // The range stored is the one on screen — a whole calendar month here — but the origin stays
+        // the preset the user picked, so a restart mid-paging doesn't have to guess between the two.
+        verify(cardsConfigurationRepository).saveConfiguration(
+            any(),
+            argThat {
+                selectedPeriodType == "custom" &&
+                    customPeriodStartDate == previous.startDate.toEpochDay() &&
+                    originPeriodType == "last_30_days"
+            }
+        )
+    }
+
+    @Test
+    fun `given a persisted origin, when restoring, then paging resolves against the picked preset`() = test {
+        // Paging back from Last 30 Days can land on a whole calendar month; without the stored origin
+        // the restored session would step forward by calendar months and return a shorter window
+        // than the thirty days the user picked (CMM-2415).
+        val paged = StatsPeriod.Custom(LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 30))
+        whenever(cardsConfigurationRepository.getConfiguration(any())).thenReturn(
+            StatsCardsConfiguration(
+                selectedPeriodType = "custom",
+                customPeriodStartDate = paged.startDate.toEpochDay(),
+                customPeriodEndDate = paged.endDate.toEpochDay(),
+                originPeriodType = "last_30_days"
+            )
+        )
+        whenever(statsRepository.canNavigateForward(any())).thenReturn(true)
+        whenever(statsRepository.nextPeriod(any(), anyOrNull())).thenReturn(StatsPeriod.Last30Days)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(createPeriodStatsResult())
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository, accountStore, statsRepository,
+            resourceProvider, SavedStateHandle(), cardsConfigurationRepository,
+            newStatsTracker
+        )
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        viewModel.onNavigateNext()
+        advanceUntilIdle()
+
+        verify(statsRepository).nextPeriod(paged, StatsPeriod.Last30Days)
+    }
+
+    @Test
+    fun `given a configuration stored before origins, when restoring, then the period is its own origin`() = test {
+        val paged = StatsPeriod.Custom(LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 30))
+        whenever(cardsConfigurationRepository.getConfiguration(any())).thenReturn(
+            StatsCardsConfiguration(
+                selectedPeriodType = "custom",
+                customPeriodStartDate = paged.startDate.toEpochDay(),
+                customPeriodEndDate = paged.endDate.toEpochDay()
+            )
+        )
+        whenever(statsRepository.canNavigateForward(any())).thenReturn(true)
+        whenever(statsRepository.nextPeriod(any(), anyOrNull())).thenReturn(StatsPeriod.Last30Days)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(createPeriodStatsResult())
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository, accountStore, statsRepository,
+            resourceProvider, SavedStateHandle(), cardsConfigurationRepository,
+            newStatsTracker
+        )
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        viewModel.onNavigateNext()
+        advanceUntilIdle()
+
+        verify(statsRepository).nextPeriod(paged, paged)
+    }
+
+    @Test
+    fun `given SavedStateHandle holds an origin, when restoring, then paging resolves against it`() = test {
+        val paged = StatsPeriod.Custom(LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 30))
+        val savedState = SavedStateHandle(
+            mapOf(
+                "period_type" to "custom",
+                "custom_start_date" to paged.startDate.toEpochDay(),
+                "custom_end_date" to paged.endDate.toEpochDay(),
+                "origin_period_type" to "last_30_days"
+            )
+        )
+        whenever(cardsConfigurationRepository.getConfiguration(any())).thenReturn(StatsCardsConfiguration())
+        whenever(statsRepository.canNavigateForward(any())).thenReturn(true)
+        whenever(statsRepository.nextPeriod(any(), anyOrNull())).thenReturn(StatsPeriod.Last30Days)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(createPeriodStatsResult())
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository, accountStore, statsRepository,
+            resourceProvider, savedState, cardsConfigurationRepository,
+            newStatsTracker
+        )
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        viewModel.onNavigateNext()
+        advanceUntilIdle()
+
+        verify(statsRepository).nextPeriod(paged, StatsPeriod.Last30Days)
+    }
+
+    @Test
+    fun `given an entry point seeding only a period, when restoring, then that period is the origin`() = test {
+        // The period keys double as Intent extras; an entry point that opens New Stats on a preset
+        // never sets the origin keys, so the seeded period stands in for an explicit pick.
+        whenever(statsRepository.canNavigateForward(any())).thenReturn(true)
+        whenever(statsRepository.nextPeriod(any(), anyOrNull())).thenReturn(StatsPeriod.Last30Days)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(createPeriodStatsResult())
+        initViewModel(periodType = "last_30_days")
+        advanceUntilIdle()
+
+        viewModel.onNavigateNext()
+        advanceUntilIdle()
+
+        verify(statsRepository).nextPeriod(StatsPeriod.Last30Days, StatsPeriod.Last30Days)
+    }
+    // endregion
+
+    // region Metric selection
+
+    @Test
+    fun `given a multi-day period, when data loads, then views is charted`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val content = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(content.selectedMetric).isEqualTo(StatsMetric.VIEWS)
+        assertThat(content.chart).isInstanceOf(ChartUiState.Loaded::class.java)
+    }
+
+    @Test
+    fun `when a metric is selected, then the chart re-plots that metric without a new fetch`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(
+                createPeriodStatsResult(
+                    currentVisitors = 700L,
+                    currentPeriodData = listOf(
+                        ViewsDataPoint(period = "2024-01-14", views = 1000L, visitors = 300L),
+                        ViewsDataPoint(period = "2024-01-15", views = 1500L, visitors = 400L)
+                    ),
+                    previousPeriodData = emptyList()
+                )
+            )
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onMetricSelected(StatsMetric.VISITORS)
+        advanceUntilIdle()
+
+        val content = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(content.selectedMetric).isEqualTo(StatsMetric.VISITORS)
+        // The chart series now carries the per-bucket visitors values.
+        assertThat(content.chartLoaded().chartData.currentPeriod.map { it.value })
+            .containsExactly(300L, 400L)
+        // The header total follows the selection.
+        assertThat(content.chartLoaded().currentPeriodTotal).isEqualTo(700L)
+        // No additional network call was made — the data was already in memory.
+        verify(statsRepository, times(1)).fetchStatsForPeriod(any(), any(), any())
+    }
+
+    @Test
+    fun `when a metric is selected, then the choice is persisted to the site configuration`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onMetricSelected(StatsMetric.LIKES)
+        advanceUntilIdle()
+
+        verify(cardsConfigurationRepository).saveConfiguration(
+            eq(TEST_SITE_ID),
+            argThat { selectedMetric == "likes" }
+        )
+    }
+
+    @Test
+    fun `given a persisted metric, when the view model initializes, then that metric is selected`() = test {
+        whenever(cardsConfigurationRepository.getConfiguration(any()))
+            .thenReturn(StatsCardsConfiguration(selectedMetric = "visitors"))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(
+                createPeriodStatsResult(
+                    currentPeriodData = listOf(
+                        ViewsDataPoint(period = "2024-01-14", views = 1000L, visitors = 300L)
+                    ),
+                    previousPeriodData = emptyList()
+                )
+            )
+
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository,
+            accountStore,
+            statsRepository,
+            resourceProvider,
+            SavedStateHandle(),
+            cardsConfigurationRepository,
+            newStatsTracker
+        )
+        // Let the async preference restore complete before the first load.
+        advanceUntilIdle()
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        val content = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(content.selectedMetric).isEqualTo(StatsMetric.VISITORS)
+    }
+
+    @Test
+    fun `given a single-day period with a persisted non-views metric, then views is charted instead`() = test {
+        whenever(cardsConfigurationRepository.getConfiguration(any()))
+            .thenReturn(StatsCardsConfiguration(selectedMetric = "visitors"))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository,
+            accountStore,
+            statsRepository,
+            resourceProvider,
+            SavedStateHandle(mapOf("period_type" to "today")),
+            cardsConfigurationRepository,
+            newStatsTracker
+        )
+        advanceUntilIdle()
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        // The hourly response has no visitors series, so the card falls back to charting views and says
+        // so through the metric selection, instead of leaving a dead end with no chart (CMM-2472).
+        val content = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(content.selectedMetric).isEqualTo(StatsMetric.VIEWS)
+        assertThat(content.chart).isInstanceOf(ChartUiState.Loaded::class.java)
+        // The stored preference is untouched by the fallback.
+        verify(cardsConfigurationRepository, never()).saveConfiguration(any(), any())
+    }
+
+    @Test
+    fun `given a single-day period with views selected, then views is charted normally`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        initViewModel(periodType = "today")
+        advanceUntilIdle()
+
+        val content = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(content.selectedMetric).isEqualTo(StatsMetric.VIEWS)
+        assertThat(content.chart).isInstanceOf(ChartUiState.Loaded::class.java)
+    }
+
+    @Test
+    fun `when a non-views metric is selected on a single-day period, then the chart is unavailable`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        initViewModel(periodType = "today")
+        advanceUntilIdle()
+
+        viewModel.onMetricSelected(StatsMetric.VISITORS)
+        advanceUntilIdle()
+
+        // An explicit pick is honored (and persisted) even though there is no hourly visitors series:
+        // the empty state answers the tap, rather than it looking like nothing happened.
+        val content = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(content.selectedMetric).isEqualTo(StatsMetric.VISITORS)
+        assertThat(content.chart).isEqualTo(ChartUiState.Unavailable)
+        verify(cardsConfigurationRepository)
+            .saveConfiguration(any(), argThat { selectedMetric == "visitors" })
+    }
+
+    @Test
+    fun `given the views fallback, when the fallen-back metric is tapped, then the chart is unavailable`() = test {
+        whenever(cardsConfigurationRepository.getConfiguration(any()))
+            .thenReturn(StatsCardsConfiguration(selectedMetric = "visitors"))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository,
+            accountStore,
+            statsRepository,
+            resourceProvider,
+            SavedStateHandle(mapOf("period_type" to "today")),
+            cardsConfigurationRepository,
+            newStatsTracker
+        )
+        advanceUntilIdle()
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+        // Views is standing in for the stored visitors preference.
+        assertThat(viewModel.uiState.value.selectedMetric()).isEqualTo(StatsMetric.VIEWS)
+
+        // Tapping the metric the fallback is standing in for still has to answer, even though it is
+        // already the stored preference and so isn't a change to it.
+        viewModel.onMetricSelected(StatsMetric.VISITORS)
+        advanceUntilIdle()
+
+        val content = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(content.selectedMetric).isEqualTo(StatsMetric.VISITORS)
+        assertThat(content.chart).isEqualTo(ChartUiState.Unavailable)
+    }
+
+    @Test
+    fun `given the views fallback, when views is tapped, then the stored preference is untouched`() = test {
+        whenever(cardsConfigurationRepository.getConfiguration(any()))
+            .thenReturn(StatsCardsConfiguration(selectedMetric = "visitors"))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository,
+            accountStore,
+            statsRepository,
+            resourceProvider,
+            SavedStateHandle(mapOf("period_type" to "today")),
+            cardsConfigurationRepository,
+            newStatsTracker
+        )
+        advanceUntilIdle()
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+        // Views is standing in for the stored visitors preference, so the Views tab is the highlighted
+        // one even though nothing was picked.
+        assertThat(viewModel.uiState.value.selectedMetric()).isEqualTo(StatsMetric.VIEWS)
+
+        // Tapping that highlighted tab can't change anything on screen, so it must not quietly rewrite
+        // the preference either — otherwise the visitors choice is lost with no feedback at all.
+        viewModel.onMetricSelected(StatsMetric.VIEWS)
+        advanceUntilIdle()
+
+        verify(cardsConfigurationRepository, never()).saveConfiguration(any(), any())
+        // Proof the preference survived: the next multi-day period charts visitors again.
+        viewModel.onPeriodChanged(StatsPeriod.Last7Days)
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.selectedMetric()).isEqualTo(StatsMetric.VISITORS)
+    }
+
+    @Test
+    fun `given an unavailable chart, when show views is tapped, then views is charted`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        initViewModel(periodType = "today")
+        advanceUntilIdle()
+        viewModel.onMetricSelected(StatsMetric.VISITORS)
+        advanceUntilIdle()
+
+        viewModel.onMetricSelected(StatsMetric.VIEWS)
+        advanceUntilIdle()
+
+        val content = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(content.selectedMetric).isEqualTo(StatsMetric.VIEWS)
+        assertThat(content.chart).isInstanceOf(ChartUiState.Loaded::class.java)
+    }
+
+    @Test
+    fun `given a non-views metric, when moving to a single-day period, then the chart falls back to views`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+        viewModel.onMetricSelected(StatsMetric.VISITORS)
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.selectedMetric()).isEqualTo(StatsMetric.VISITORS)
+
+        viewModel.onPeriodChanged(StatsPeriod.Today)
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        // Arriving with a preference the period can't chart plots views instead of the empty state.
+        assertThat(viewModel.uiState.value.selectedMetric()).isEqualTo(StatsMetric.VIEWS)
+        val content = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(content.chart).isInstanceOf(ChartUiState.Loaded::class.java)
+    }
+
+    @Test
+    fun `given a single-day fallback, when moving back to a multi-day period, then the pick is charted again`() = test {
+        whenever(cardsConfigurationRepository.getConfiguration(any()))
+            .thenReturn(StatsCardsConfiguration(selectedMetric = "visitors"))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository,
+            accountStore,
+            statsRepository,
+            resourceProvider,
+            SavedStateHandle(mapOf("period_type" to "today")),
+            cardsConfigurationRepository,
+            newStatsTracker
+        )
+        advanceUntilIdle()
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.selectedMetric()).isEqualTo(StatsMetric.VIEWS)
+
+        viewModel.onPeriodChanged(StatsPeriod.Last7Days)
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.selectedMetric()).isEqualTo(StatsMetric.VISITORS)
+    }
+
+    @Test
+    fun `given an unavailable chart, when leaving and returning to the period, then views is charted`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        initViewModel(periodType = "today")
+        advanceUntilIdle()
+        viewModel.onMetricSelected(StatsMetric.VISITORS)
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.chartOrNull()).isEqualTo(ChartUiState.Unavailable)
+
+        viewModel.onPeriodChanged(StatsPeriod.Last7Days)
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+        viewModel.onPeriodChanged(StatsPeriod.Today)
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        // The pick belonged to the period it was made on, so coming back lands on the fallback again
+        // rather than resurrecting the empty state.
+        assertThat(viewModel.uiState.value.selectedMetric()).isEqualTo(StatsMetric.VIEWS)
+        assertThat(viewModel.uiState.value.chartOrNull()).isInstanceOf(ChartUiState.Loaded::class.java)
+    }
+
+    @Test
+    fun `when bottom stats build, then each item carries its metric`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val stats = viewModel.uiState.value.bottomStatsOrNull()!!
+        assertThat(stats.map { it.metric }).containsExactly(
+            StatsMetric.VIEWS,
+            StatsMetric.VISITORS,
+            StatsMetric.LIKES,
+            StatsMetric.COMMENTS,
+            StatsMetric.POSTS
+        )
+    }
+
+    // endregion
 
     private fun createPeriodStatsResult(
         currentViews: Long = TEST_CURRENT_PERIOD_VIEWS,
@@ -466,7 +2413,10 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         previousComments: Long = TEST_PREVIOUS_PERIOD_COMMENTS,
         previousPosts: Long = TEST_PREVIOUS_PERIOD_POSTS,
         currentPeriodData: List<ViewsDataPoint> = createDefaultDataPoints(),
-        previousPeriodData: List<ViewsDataPoint> = createDefaultDataPoints()
+        previousPeriodData: List<ViewsDataPoint> = createDefaultDataPoints(),
+        unit: StatsUnit = StatsUnit.DAY,
+        currentStartDate: String = "2024-01-14",
+        currentEndDate: String = "2024-01-20"
     ): PeriodStatsResult.Success {
         val currentAggregates = PeriodAggregates(
             views = currentViews,
@@ -474,8 +2424,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             likes = currentLikes,
             comments = currentComments,
             posts = currentPosts,
-            startDate = "2024-01-14",
-            endDate = "2024-01-20"
+            startDate = currentStartDate,
+            endDate = currentEndDate
         )
         val previousAggregates = PeriodAggregates(
             views = previousViews,
@@ -490,9 +2440,53 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             currentAggregates = currentAggregates,
             previousAggregates = previousAggregates,
             currentPeriodData = currentPeriodData,
-            previousPeriodData = previousPeriodData
+            previousPeriodData = previousPeriodData,
+            unit = unit
         )
     }
+
+    private fun createBottomStatsResult(
+        currentViews: Long = TEST_CURRENT_PERIOD_VIEWS,
+        currentVisitors: Long = TEST_CURRENT_PERIOD_VISITORS,
+        currentLikes: Long = TEST_CURRENT_PERIOD_LIKES,
+        currentComments: Long = TEST_CURRENT_PERIOD_COMMENTS,
+        currentPosts: Long = TEST_CURRENT_PERIOD_POSTS,
+        previousViews: Long = TEST_PREVIOUS_PERIOD_VIEWS,
+        previousVisitors: Long = TEST_PREVIOUS_PERIOD_VISITORS,
+        previousLikes: Long = TEST_PREVIOUS_PERIOD_LIKES,
+        previousComments: Long = TEST_PREVIOUS_PERIOD_COMMENTS,
+        previousPosts: Long = TEST_PREVIOUS_PERIOD_POSTS
+    ): BottomStatsResult.Success = BottomStatsResult.Success(
+        current = BottomStatsAggregates(
+            views = currentViews,
+            visitors = currentVisitors,
+            likes = currentLikes,
+            comments = currentComments,
+            posts = currentPosts
+        ),
+        previous = BottomStatsAggregates(
+            views = previousViews,
+            visitors = previousVisitors,
+            likes = previousLikes,
+            comments = previousComments,
+            posts = previousPosts
+        )
+    )
+
+    private fun ViewsStatsCardUiState.chartLoaded(): ChartUiState.Loaded =
+        (this as ViewsStatsCardUiState.Content).chart as ChartUiState.Loaded
+
+    private fun ViewsStatsCardUiState.chartOrNull(): ChartUiState? =
+        (this as? ViewsStatsCardUiState.Content)?.chart
+
+    private fun ViewsStatsCardUiState.selectedMetric(): StatsMetric =
+        (this as ViewsStatsCardUiState.Content).selectedMetric
+
+    private fun ViewsStatsCardUiState.bottomState(): BottomStatsUiState =
+        (this as ViewsStatsCardUiState.Content).bottomStats
+
+    private fun ViewsStatsCardUiState.bottomStatsOrNull(): List<StatItem>? =
+        (bottomState() as? BottomStatsUiState.Loaded)?.stats
 
     private fun createDefaultDataPoints() = listOf(
         ViewsDataPoint(
@@ -510,6 +2504,9 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         private const val TEST_ACCESS_TOKEN = "test_access_token"
         private const val TEST_CURRENT_PERIOD_VIEWS = 7000L
         private const val TEST_CURRENT_PERIOD_VISITORS = 700L
+
+        // Deliberately unlike every other total, so a row carried over from the period before shows up.
+        private const val STALE_VISITORS = 4242L
         private const val TEST_CURRENT_PERIOD_LIKES = 50L
         private const val TEST_CURRENT_PERIOD_COMMENTS = 25L
         private const val TEST_CURRENT_PERIOD_POSTS = 5L

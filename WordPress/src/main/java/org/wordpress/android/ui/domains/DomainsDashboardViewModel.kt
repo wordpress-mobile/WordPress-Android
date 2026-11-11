@@ -10,12 +10,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_G
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_GET_PLAN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_VIEWED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
-import org.wordpress.android.fluxc.model.PlanModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
-import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
-import org.wordpress.android.fluxc.network.rest.wpcom.site.StatusType
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
@@ -30,42 +25,43 @@ import org.wordpress.android.ui.domains.management.getDomainDetailsUrl
 import org.wordpress.android.ui.domains.usecases.AllDomains
 import org.wordpress.android.ui.domains.usecases.FetchAllDomainsUseCase
 import org.wordpress.android.ui.domains.usecases.FetchPlansUseCase
-import org.wordpress.android.util.isDomainCreditAvailable
+import org.wordpress.android.ui.domains.usecases.FetchSiteDomainsUseCase
+import org.wordpress.android.ui.domains.usecases.SiteDomainsResult
+import org.wordpress.android.ui.domains.usecases.SitePlansResult
+import org.wordpress.android.ui.domains.usecases.hasDomainCredit
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T.DOMAIN_REGISTRATION
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
+import uniffi.wp_api.AllDomainItem
+import uniffi.wp_api.DomainListItemStatusType
+import uniffi.wp_api.SiteDomain
 import javax.inject.Inject
 import javax.inject.Named
 
 class DomainsDashboardViewModel @Inject constructor(
-    private val siteStore: SiteStore,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val htmlMessageUtils: HtmlMessageUtils,
     private val fetchPlansUseCase: FetchPlansUseCase,
+    private val fetchSiteDomainsUseCase: FetchSiteDomainsUseCase,
     private val fetchAllDomainsUseCase: FetchAllDomainsUseCase,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     lateinit var site: SiteModel
     private var isStarted: Boolean = false
 
-    private val _showProgressSpinner = MutableLiveData<Boolean>()
-    val progressBar: LiveData<Boolean> = _showProgressSpinner
-
     private val _onNavigation = MutableLiveData<Event<DomainsDashboardNavigationAction>>()
     val onNavigation: LiveData<Event<DomainsDashboardNavigationAction>> = _onNavigation
 
-    private val _uiModel = MutableLiveData<List<DomainsDashboardItem>>()
-    val uiModel: LiveData<List<DomainsDashboardItem>> = _uiModel
+    private val _uiState = MutableLiveData<DomainsDashboardUiState>()
+    val uiState: LiveData<DomainsDashboardUiState> = _uiState
 
     fun start(site: SiteModel) {
         if (isStarted) {
@@ -77,46 +73,60 @@ class DomainsDashboardViewModel @Inject constructor(
         isStarted = true
     }
 
-    override fun onCleared() {
-        fetchPlansUseCase.clear()
-        super.onCleared()
+    fun onRetryClick() {
+        refresh(site)
     }
 
+    /**
+     * The site's domains and its plans each settle something the screen states
+     * as fact: which domains the site has, and whether the call to action
+     * claims a free domain or sells one. Neither question has an answer that
+     * stands in for a failed request — an empty list reads as "this site has
+     * no custom domains" and an absent credit routes a user holding one into a
+     * paid checkout — so a failure of either leaves the screen reporting the
+     * error rather than drawing a dashboard.
+     */
     private fun refresh(site: SiteModel) = launch {
-        _showProgressSpinner.postValue(true)
+        _uiState.postValue(DomainsDashboardUiState.Loading)
 
         val deferredPlansResult = async { fetchPlansUseCase.execute(site) }
-        val deferredDomainsResult = async { siteStore.fetchSiteDomains(site) }
+        val deferredDomainsResult = async { fetchSiteDomainsUseCase.execute(site) }
         val deferredAllDomainsResult = async { fetchAllDomainsUseCase.execute() }
 
         val plansResult = deferredPlansResult.await()
         val domainsResult = deferredDomainsResult.await()
         val allDomainsResult = deferredAllDomainsResult.await()
 
-        if (plansResult.isError) {
-            AppLog.e(DOMAIN_REGISTRATION, "An error occurred while fetching plans: ${plansResult.error.message}")
-        }
-
-        if (domainsResult.isError) {
-            AppLog.e(DOMAIN_REGISTRATION, "An error occurred while fetching domains: ${domainsResult.error.message}")
+        if (domainsResult !is SiteDomainsResult.Success || plansResult !is SitePlansResult.Success) {
+            _uiState.postValue(DomainsDashboardUiState.Error)
+            return@launch
         }
 
         val allDomains = if (allDomainsResult is AllDomains.Success) allDomainsResult.domains else emptyList()
 
-        buildDashboardItems(site, plansResult.plans.orEmpty(), domainsResult.domains.orEmpty(), allDomains)
+        _uiState.postValue(
+            DomainsDashboardUiState.Content(
+                buildDashboardItems(
+                    site,
+                    plansResult.hasDomainCredit(),
+                    domainsResult.domains,
+                    allDomains
+                )
+            )
+        )
     }
 
     private fun buildDashboardItems(
         site: SiteModel,
-        plans: List<PlanModel>,
-        domains: List<Domain>,
-        allDomains: List<AllDomainsDomain>
-    ) {
+        hasDomainCredit: Boolean,
+        domains: List<SiteDomain>,
+        allDomains: List<AllDomainItem>
+    ): List<DomainsDashboardItem> {
         val listItems = mutableListOf<DomainsDashboardItem>()
 
         listItems += SiteDomainsHeader(UiStringRes(R.string.domains_free_domain))
 
-        val freeDomain = domains.firstOrNull { it.wpcomDomain }
+        val freeDomain = domains.firstOrNull { it.wpcomDomain == true }
         val freeDomainUrl = freeDomain?.domain ?: getCleanUrl(site.unmappedUrl)
         val freeDomainIsPrimary = freeDomain?.primaryDomain ?: false
 
@@ -124,13 +134,12 @@ class DomainsDashboardViewModel @Inject constructor(
             UiStringText(freeDomainUrl),
             freeDomainIsPrimary,
             UiStringRes(R.string.active),
-            getStatusColor(StatusType.SUCCESS),
+            getStatusColor(DomainListItemStatusType.Success),
             UiStringRes(R.string.domains_site_domain_never_expires)
         )
 
-        val customDomains = domains.filter { !it.wpcomDomain }
+        val customDomains = domains.filter { it.wpcomDomain != true }
         val hasCustomDomains = customDomains.isNotEmpty()
-        val hasDomainCredit = isDomainCreditAvailable(plans)
         val hasPaidPlan = !SiteUtils.onFreePlan(site)
 
         if (hasCustomDomains) {
@@ -139,15 +148,19 @@ class DomainsDashboardViewModel @Inject constructor(
 
         listItems += buildCtaItems(hasCustomDomains, hasDomainCredit, hasPaidPlan)
 
-        _showProgressSpinner.postValue(false)
-        _uiModel.postValue(listItems)
+        return listItems
     }
 
-    private fun getStatusColor(statusType: StatusType?) = when (statusType) {
-        StatusType.SUCCESS -> R.color.jetpack_green_50
-        StatusType.NEUTRAL -> R.color.gray_50
-        StatusType.WARNING -> R.color.orange_50
-        else -> R.color.red_50
+    private fun getStatusColor(
+        statusType: DomainListItemStatusType
+    ) = when (statusType) {
+        is DomainListItemStatusType.Success,
+        is DomainListItemStatusType.Premium -> R.color.jetpack_green_50
+        is DomainListItemStatusType.Neutral -> R.color.gray_50
+        is DomainListItemStatusType.Warning -> R.color.orange_50
+        is DomainListItemStatusType.Alert,
+        is DomainListItemStatusType.Error,
+        is DomainListItemStatusType.Other -> R.color.red_50
     }
 
     private fun buildCtaItems(
@@ -186,10 +199,18 @@ class DomainsDashboardViewModel @Inject constructor(
         return listItems
     }
 
+    /**
+     * The account-wide domain list carries two things a row shows: the status
+     * it reports, and the details screen it opens. A domain missing from that
+     * list — because the request failed, or because it answered without that
+     * domain — leaves both unknown, so the row states neither. Its address,
+     * primary marker and expiry come from the site's own domains and stand on
+     * their own.
+     */
     private fun buildCustomDomainItems(
         site: SiteModel,
-        customDomains: List<Domain>,
-        allDomains: List<AllDomainsDomain>
+        customDomains: List<SiteDomain>,
+        allDomains: List<AllDomainItem>
     ): List<DomainsDashboardItem> {
         val listItems = mutableListOf<DomainsDashboardItem>()
         listItems += SiteDomainsHeader(
@@ -199,43 +220,46 @@ class DomainsDashboardViewModel @Inject constructor(
             )
         )
         listItems += customDomains.map {
-            val allDomainsDomain = allDomains.find { allDomainsItem -> it.domain == allDomainsItem.domain }
+            val allDomainItem = allDomains.find { item ->
+                it.domain == item.domain
+            }
 
             SiteDomains(
-                UiStringText(it.domain.orEmpty()),
-                it.primaryDomain,
-                allDomainsDomain?.domainStatus?.status?.let { status ->
-                    UiStringText(status)
-                } ?: UiStringRes(R.string.error),
-                getStatusColor(allDomainsDomain?.domainStatus?.statusType),
-                if (!it.hasRegistration) {
+                UiStringText(it.domain),
+                it.primaryDomain == true,
+                allDomainItem?.let { item -> UiStringText(item.domainStatus.label) },
+                allDomainItem?.let { item -> getStatusColor(item.domainStatus.statusType) },
+                if (it.hasRegistration != true) {
                     null
-                } else if (it.expirySoon) {
+                } else if (it.expirySoon == true) {
                     UiStringText(
                         htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                             R.string.domains_site_domain_expires_soon,
-                            it.expiry.orEmpty()
+                            it.expiry?.value.orEmpty()
                         )
                     )
                 } else {
                     UiStringResWithParams(
                         R.string.domains_site_domain_expires,
-                        listOf(UiStringText(it.expiry.orEmpty()))
+                        listOf(UiStringText(it.expiry?.value.orEmpty()))
                     )
                 },
-                allDomainsDomain?.let { ListItemInteraction.create(allDomainsDomain, this::onDomainClick) }
+                allDomainItem?.let {
+                    ListItemInteraction.create(allDomainItem, this::onDomainClick)
+                }
             )
         }
         return listItems
     }
 
-    private fun getCleanUrl(url: String?) = StringUtils.removeTrailingSlash(UrlUtils.removeScheme(url))
+    private fun getCleanUrl(url: String?) =
+        StringUtils.removeTrailingSlash(UrlUtils.removeScheme(url))
 
-    private fun onDomainClick(allDomainsDomain: AllDomainsDomain) {
+    private fun onDomainClick(allDomainItem: AllDomainItem) {
         _onNavigation.value = Event(
             OpenDomainManagement(
-                allDomainsDomain.domain ?: return,
-                allDomainsDomain.getDomainDetailsUrl() ?: return
+                allDomainItem.domain,
+                allDomainItem.getDomainDetailsUrl() ?: return
             )
         )
     }
@@ -263,4 +287,12 @@ class DomainsDashboardViewModel @Inject constructor(
     fun onSuccessfulDomainRegistration() {
         refresh(site)
     }
+}
+
+sealed interface DomainsDashboardUiState {
+    data object Loading : DomainsDashboardUiState
+
+    data class Content(val items: List<DomainsDashboardItem>) : DomainsDashboardUiState
+
+    data object Error : DomainsDashboardUiState
 }
