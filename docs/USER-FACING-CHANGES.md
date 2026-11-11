@@ -8,13 +8,21 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Stats' Posts & Pages full list shows thumbnails only on sites with an application password**
+  Thumbnails on the redesigned Stats' Posts & Pages full list come from the site's own REST API, which the app now asks for only when it has an application password for the site, or when the WordPress.com rollout flag below is on. Everywhere else — including WordPress.com and Atomic sites, and Jetpack sites connected over the WordPress.com API — each row shows the post or page glyph instead of the featured image. The list, view counts and ordering are unaffected.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → Posts & Pages → Show All
+  - **Notes:** A row with no thumbnail is showing the same fallback it takes when an image fails to load, so it is not a sign of a broken image. Sites reached only over XML-RPC never had a way to serve these images; the rest are waiting on the `android_wp_rs_wpcom` rollout, and switching that flag on restores thumbnails for them.
+
 - **Latest Post Summary in Stats loads on every site that has Stats**
   The Latest Post Summary card in the redesigned Stats now reads the latest post from WordPress.com, the same place the rest of the screen already gets its data. On a Jetpack site the app has no way to reach directly — one added over XML-RPC with no application password stored — the card used to show "Failed to load stats" with a Retry that could never succeed, while every other card on the screen worked.
   - **Apps:** Both
   - **Type:** Fixed
   - **Availability:** Flag: android_new_stats
   - **Where:** My Site → Stats → Insights → Latest Post Summary
-  - **Notes:** The card now costs one request instead of two, since the WordPress.com response carries the featured image URL alongside the post. Thumbnails in the Posts & Pages full list still come from the site's own REST API, so on those same sites their rows keep the post or page glyph — the same fallback they already took when an image couldn't be loaded.
+  - **Notes:** The card now costs one request instead of two, since the WordPress.com response carries the featured image URL alongside the post.
 
 - **Referrers and Clicks in Stats show each source's icon**
   Rows in the redesigned Stats' Referrers and Clicks cards, and their full lists, now show the site icon the Stats API already reports for the referrer or link, matching the web version. A row the API has no icon for shows none, and its title stays where it was. Expanding a referrer group, such as Search Engines, shows an icon for each entry under it too.

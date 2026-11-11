@@ -1,10 +1,14 @@
 package org.wordpress.android.ui.newstats.datasource
 
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Looks up the site's most recently published post.
@@ -22,19 +26,25 @@ import javax.inject.Inject
  * One request carries both the post id and its featured image URL.
  */
 class LatestPostDataSource @Inject constructor(
-    private val latestPostInsightsRestClient: LatestPostInsightsRestClient
+    private val latestPostInsightsRestClient: LatestPostInsightsRestClient,
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) {
+    /**
+     * Runs on [ioDispatcher]: issuing the request reaches the response cache on the calling
+     * thread, and a forced fetch reads and rewrites the cached entry there. The other callers
+     * of this client wrap it the same way.
+     */
     suspend fun fetchLatestPublishedPost(
         site: SiteModel
-    ): LatestPostLookupResult {
+    ): LatestPostLookupResult = withContext(ioDispatcher) {
         // Forced: the card loads once per screen entry and on pull-to-refresh, and
-        // LatestPostViewModel tracks that itself, so there is nothing for the HTTP cache
-        // underneath to add.
+        // LatestPostViewModel tracks that itself, so the response cache underneath would only
+        // serve a post this screen has already decided to replace.
         val payload = latestPostInsightsRestClient
             .fetchLatestPostForInsights(site, forced = true)
 
         val post = payload.response?.posts?.firstOrNull()
-        return when {
+        when {
             payload.isError -> {
                 val message = payload.error?.message
                     ?: "Failed to fetch the latest post"
@@ -45,6 +55,19 @@ class LatestPostDataSource @Inject constructor(
                         "failed - $message"
                 )
                 LatestPostLookupResult.Error(message)
+            }
+            // A success carrying no body at all is a failed fetch, not an empty site: saying
+            // "nothing published yet" here would offer a create-post prompt instead of a retry.
+            payload.response == null -> {
+                AppLog.e(
+                    T.STATS,
+                    "LatestPostDataSource: " +
+                        "fetchLatestPublishedPost " +
+                        "returned an empty response"
+                )
+                LatestPostLookupResult.Error(
+                    "Failed to fetch the latest post"
+                )
             }
             post == null -> LatestPostLookupResult.NoPosts
             else -> LatestPostLookupResult.Success(

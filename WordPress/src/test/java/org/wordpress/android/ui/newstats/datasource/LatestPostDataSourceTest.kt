@@ -27,7 +27,7 @@ class LatestPostDataSourceTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        dataSource = LatestPostDataSource(restClient)
+        dataSource = LatestPostDataSource(restClient, testDispatcher())
     }
 
     @Test
@@ -74,6 +74,18 @@ class LatestPostDataSourceTest : BaseUnitTest() {
         val result = dataSource.fetchLatestPublishedPost(site)
 
         assertThat(result).isEqualTo(LatestPostLookupResult.NoPosts)
+    }
+
+    @Test
+    fun `when a success carries no response, then it is an error rather than NoPosts`() = test {
+        whenever(restClient.fetchLatestPostForInsights(any(), any()))
+            .thenReturn(FetchStatsPayload<PostsResponse>(null))
+
+        val result = dataSource.fetchLatestPublishedPost(site)
+
+        assertThat(result).isEqualTo(
+            LatestPostLookupResult.Error("Failed to fetch the latest post")
+        )
     }
 
     @Test
