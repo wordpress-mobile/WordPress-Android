@@ -22,7 +22,6 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.MediaFileNameUtils
 import org.wordpress.android.util.MediaUtilsWrapper
-import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPVideoUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -51,7 +50,6 @@ class GBKMediaProcessor @AssistedInject constructor(
     private val appContext: Context,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val siteUtilsWrapper: SiteUtilsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
@@ -60,12 +58,8 @@ class GBKMediaProcessor @AssistedInject constructor(
      * Metadata-only gate GutenbergKit checks before copying the upload to a temp file. Declining
      * forwards the original body, so this claims only files [processFile] would actually read.
      */
-    @Suppress("ReturnCount")
     override fun handlesFile(mimeType: String, filename: String): Boolean {
         val resolvedMimeType = resolveMimeType(mimeType, filename)
-
-        // Claimed so processFile can throw the localized rejection instead of the server's error.
-        if (isRejectedByFreePlan(resolvedMimeType)) return true
 
         return when {
             resolvedMimeType == MIME_GIF -> false
@@ -106,10 +100,6 @@ class GBKMediaProcessor @AssistedInject constructor(
     private suspend fun process(file: File, mimeType: String, filename: String): ProcessedProxyFile {
         val resolvedMimeType = resolveMimeType(mimeType, filename)
 
-        if (isRejectedByFreePlan(resolvedMimeType)) {
-            throw GBKMediaUploadException(appContext.getString(R.string.error_media_file_type_not_allowed))
-        }
-
         return when {
             // Re-encoding would flatten the animation.
             resolvedMimeType == MIME_GIF -> ProcessedProxyFile.Original
@@ -117,22 +107,6 @@ class GBKMediaProcessor @AssistedInject constructor(
             resolvedMimeType.startsWith(MIME_IMAGE_PREFIX) -> processImage(file, resolvedMimeType, filename)
             else -> ProcessedProxyFile.Original
         }
-    }
-
-    /**
-     * Rejects audio and documents on free WordPress.com plans, a plan entitlement the app knows
-     * reliably, so the user gets a message in the app's language. Images and videos are left to
-     * the server, since the app's `MimeTypes` table lags what WordPress accepts (e.g. AVIF).
-     */
-    private fun isRejectedByFreePlan(resolvedMimeType: String): Boolean {
-        if (!site.isWPCom || !siteUtilsWrapper.onFreePlan(site)) return false
-
-        // octet-stream means the type couldn't be resolved, not that it's disallowed.
-        val isPlanRestrictedType = resolvedMimeType != MIME_OCTET_STREAM &&
-                (mediaUtilsWrapper.isAudioMimeType(resolvedMimeType) ||
-                        mediaUtilsWrapper.isApplicationMimeType(resolvedMimeType))
-
-        return isPlanRestrictedType && !mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(site, resolvedMimeType)
     }
 
     @Suppress("ReturnCount")
