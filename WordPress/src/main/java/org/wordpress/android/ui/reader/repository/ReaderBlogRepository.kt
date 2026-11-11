@@ -89,33 +89,38 @@ class ReaderBlogRepository @Inject constructor(
     /**
      * Follows or unfollows a feed by its ID and returns whether it succeeded
      */
-    suspend fun followFeed(feedId: Long, follow: Boolean, source: String): Boolean {
-        val blogInfo = withContext(ioDispatcher) { ReaderBlogTable.getFeedInfo(feedId) }
-            ?: fetchFeedInfo(feedId, null)
-            ?: return false
-        return followFeed(blogInfo.blogId, blogInfo.feedId, blogInfo.feedUrl, follow, source)
-    }
+    suspend fun followFeed(feedId: Long, follow: Boolean, source: String): Boolean =
+        // the lookup is part of the follow, so it isn't dropped if the caller is cancelled while it runs
+        withContext(NonCancellable) {
+            val blogInfo = withContext(ioDispatcher) { ReaderBlogTable.getFeedInfo(feedId) }
+                ?: fetchFeedInfo(feedId, null)
+            blogInfo?.let { followFeed(it.blogId, it.feedId, it.feedUrl, follow, source) } ?: false
+        }
 
     /**
      * Follows the passed feed URL and returns whether it succeeded
      */
     suspend fun followFeedUrl(feedUrl: String, source: String): Boolean {
         if (feedUrl.isEmpty()) return false
-        val blogInfo = withContext(ioDispatcher) {
-            ReaderBlogTable.getFeedInfo(ReaderBlogTable.getFeedIdFromUrl(feedUrl))
-        }
-        return if (blogInfo != null) {
-            followFeed(blogInfo.blogId, blogInfo.feedId, blogInfo.feedUrl, true, source)
-        } else {
-            // this follows even if the lookup fails, since the lookup doesn't do feed discovery but the follow does
-            val fetchedInfo = fetchFeedInfo(0, feedUrl)
-            followFeed(
-                blogId = fetchedInfo?.blogId ?: 0,
-                feedId = fetchedInfo?.feedId ?: 0,
-                feedUrl = fetchedInfo?.takeIf { it.hasFeedUrl() }?.feedUrl ?: feedUrl,
-                follow = true,
-                source = source
-            )
+        // the lookup is part of the follow, so it isn't dropped if the caller is cancelled while it runs
+        return withContext(NonCancellable) {
+            val blogInfo = withContext(ioDispatcher) {
+                ReaderBlogTable.getFeedInfo(ReaderBlogTable.getFeedIdFromUrl(feedUrl))
+            }
+            if (blogInfo != null) {
+                followFeed(blogInfo.blogId, blogInfo.feedId, blogInfo.feedUrl, true, source)
+            } else {
+                // this follows even if the lookup fails, since the lookup doesn't do feed discovery but the
+                // follow does
+                val fetchedInfo = fetchFeedInfo(0, feedUrl)
+                followFeed(
+                    blogId = fetchedInfo?.blogId ?: 0,
+                    feedId = fetchedInfo?.feedId ?: 0,
+                    feedUrl = fetchedInfo?.takeIf { it.hasFeedUrl() }?.feedUrl ?: feedUrl,
+                    follow = true,
+                    source = source
+                )
+            }
         }
     }
 
