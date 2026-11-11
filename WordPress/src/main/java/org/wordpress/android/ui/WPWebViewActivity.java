@@ -898,12 +898,17 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
      * it won't show with 404 (or 403), which is what a stale session cookie produces, for example after a
      * password change, and what a site that doesn't serve a published post to visitors answers too. Once the
      * error page has loaded, checkSiteSessionOnErrorPage() decides whether to show the login page.
+     *
+     * A gate that answers 200 with a teaser can't be told apart from the post itself, so it doesn't reach
+     * here. The menu's "Log in to this site" is the way out of that one.
      */
     private void onMainFrameHttpError(int statusCode) {
         if (!mSkippedSiteLogin || mFellBackToSiteLogin) {
             return;
         }
-        if (statusCode == HttpURLConnection.HTTP_NOT_FOUND || statusCode == HttpURLConnection.HTTP_FORBIDDEN) {
+        if (statusCode == HttpURLConnection.HTTP_NOT_FOUND || statusCode == HttpURLConnection.HTTP_FORBIDDEN
+            || statusCode == HttpURLConnection.HTTP_UNAUTHORIZED
+            || statusCode == HttpURLConnection.HTTP_UNAVAILABLE) {
             mCheckingSiteSession = true;
         }
     }
@@ -1027,6 +1032,10 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.webview, menu);
+        // The site's login page is only reachable on a preview that has one, and only the user can tell that
+        // a page the site served with 200 is a gate rather than the post. See onMainFrameHttpError().
+        menu.findItem(R.id.menu_site_login)
+            .setVisible(!TextUtils.isEmpty(getIntent().getStringExtra(SITE_LOGIN_URL)));
         return true;
     }
 
@@ -1044,6 +1053,11 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         } else if (itemID == R.id.menu_refresh) {
             mViewModel.track(Stat.WEBVIEW_RELOAD_TAPPED);
             mWebView.reload();
+            return true;
+        } else if (itemID == R.id.menu_site_login) {
+            // The user has taken over, so leave the automatic fallback alone from here on.
+            mFellBackToSiteLogin = true;
+            loadSiteLoginPage();
             return true;
         }
 
