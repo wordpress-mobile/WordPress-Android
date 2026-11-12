@@ -319,6 +319,7 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
             )
             ReaderPostListUiEvent.SetDefaultSubfilter -> subFilterViewModel?.setDefaultSubfilter(false)
             ReaderPostListUiEvent.ReloadSubfilters -> subFilterViewModel?.loadSubFilters()
+            is ReaderPostListUiEvent.SetSubfilter -> subFilterViewModel?.setSubfilter(event.subfilter)
             ReaderPostListUiEvent.NoConnection -> NetworkUtils.checkConnection(requireContext())
             ReaderPostListUiEvent.DataLoaded -> onDataLoaded()
             ReaderPostListUiEvent.BlogInfoFailed -> (activity as? OnBlogInfoFailedListener)?.onBlogInfoFailed()

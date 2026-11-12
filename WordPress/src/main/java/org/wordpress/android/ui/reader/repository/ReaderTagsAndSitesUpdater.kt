@@ -370,8 +370,9 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
         // the server leaves blocked sites out of this list, and unblocking one on the web re-subscribes to it, so a
         // local block on a site in it is stale. Only blocks from before the request are cleared, since a site
         // blocked while it ran can still be in the response.
-        ReaderBlockedBlogTable.removeBlockedBlogs(serverBlogs.map { it.blogId }.filter { it in blockedBeforeRequest })
-        _events.emit(ReaderTagsAndSitesEvent.FollowedBlogsChanged(totalSites, didChange))
+        val unblockedIds = serverBlogs.map { it.blogId }.filter { it in blockedBeforeRequest }
+        ReaderBlockedBlogTable.removeBlockedBlogs(unblockedIds)
+        _events.emit(ReaderTagsAndSitesEvent.FollowedBlogsChanged(totalSites, didChange, unblockedIds.isNotEmpty()))
     }
 
     /*
@@ -445,7 +446,11 @@ enum class UpdateTask {
 
 sealed class ReaderTagsAndSitesEvent {
     data class FollowedTagsChanged(val totalTags: Int, val didChange: Boolean) : ReaderTagsAndSitesEvent()
-    data class FollowedBlogsChanged(val totalSubscriptions: Int, val didChange: Boolean) : ReaderTagsAndSitesEvent()
+    data class FollowedBlogsChanged(
+        val totalSubscriptions: Int,
+        val didChange: Boolean,
+        val didClearBlocks: Boolean = false
+    ) : ReaderTagsAndSitesEvent()
 }
 
 private data class FollowedBlogs(
