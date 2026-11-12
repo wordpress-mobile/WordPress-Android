@@ -146,10 +146,16 @@ class RsLocalDraftsSectionTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
-    fun `delete removes the draft`() = test {
-        section().delete(LOCAL_ID)
+    fun `delete removes the draft and drops its row without waiting for a reload`() = test {
+        stubLoad(listOf(draft()))
+        val section = section()
+        section.reload()
+        runCurrent()
+
+        section.delete(LOCAL_ID)
 
         verify(source).delete(site, LOCAL_ID)
+        assertThat(section.drafts.value).isEmpty()
     }
 
     /** On the background scope: the section's change collector never completes, and runTest would wait on it. */

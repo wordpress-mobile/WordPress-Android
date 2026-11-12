@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -88,7 +89,14 @@ internal class RsLocalDraftsSection(
         reload()
     }
 
-    fun delete(localId: Int) = source.delete(site, localId)
+    /**
+     * Drops the row at once, alongside the "deleted" snackbar. FluxC removes the post on its own thread, so a
+     * reload here could still find it; the reload its removal triggers confirms the list instead.
+     */
+    fun delete(localId: Int) {
+        source.delete(site, localId)
+        _drafts.update { drafts -> drafts.filterNot { it.localId == localId } }
+    }
 
     /**
      * True while the draft is being sent to the server or queued to be; see [RsLocalDrafts.isUploadingOrQueued].
