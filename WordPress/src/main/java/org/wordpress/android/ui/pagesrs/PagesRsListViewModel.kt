@@ -140,6 +140,9 @@ internal class PagesRsListViewModel @Inject constructor(
     // editor before this screen stops. Cleared when it comes back.
     private var isOpeningLocalDraft = false
 
+    /** A server page being fetched to open, or a local one handed to the editor. */
+    private val isOpeningAnyPage: Boolean get() = _isOpeningPage.value || isOpeningLocalDraft
+
     private var hasDeferredChange = false
     private var pendingReveal: RsReveal<PageRsListTab>? = null
 
@@ -870,7 +873,7 @@ internal class PagesRsListViewModel @Inject constructor(
     @MainThread
     fun openLocalDraft(localId: Int) {
         val site = this.site
-        if (site == null || _isOpeningPage.value || isOpeningLocalDraft || isLocalDraftUploading(localId)) return
+        if (site == null || isOpeningAnyPage || isLocalDraftUploading(localId)) return
         analyticsTracker.track(
             Stat.PAGES_LIST_ITEM_SELECTED,
             site,
