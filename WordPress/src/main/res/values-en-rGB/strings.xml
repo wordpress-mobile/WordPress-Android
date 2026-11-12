@@ -1,11 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-18 19:14:02+0000
+Translation-Revision-Date: 2026-11-11 22:27:50+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: en_GB
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Reload Editor</string>
+    <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Reload the editor to continue editing.</string>
+    <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">The editor stopped working</string>
+    <string name="gbk_editor_load_failed_unknown_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Unknown error</string>
+    <string name="gbk_editor_load_failed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Failed to load editor</string>
+    <string name="gbk_block_inserter_camera_unavailable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Camera not available on this device</string>
+    <string name="gbk_block_inserter_camera" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Camera</string>
+    <string name="gbk_block_inserter_photos" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Photos</string>
+    <string name="gbk_block_inserter_no_results_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">No blocks match “%1$s”</string>
+    <string name="gbk_block_inserter_no_results" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">No results</string>
+    <string name="gbk_block_inserter_clear_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Clear search</string>
+    <string name="gbk_block_inserter_tab_recent" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Recent</string>
+    <string name="gbk_block_inserter_close" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Close</string>
+    <string name="gbk_block_inserter_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Add block</string>
+    <string name="gbk_block_inserter_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Search blocks</string>
+    <string name="gbk_block_inserter_failure" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Unable to display the block inserter.</string>
+    <string name="gbk_block_inserter_section_suggested" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Suggested</string>
+    <string name="gbk_block_inserter_section_most_used" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Most used</string>
+    <string name="comment_detail_in_reply_to">In reply to %1$s:</string>
+    <string name="comment_author_info_guest">Guest</string>
+    <string name="comment_author_info_registered">Registered user</string>
+    <string name="comment_author_info_bio">Bio</string>
+    <string name="comment_author_info_posted_from">Posted from</string>
+    <string name="comment_author_info_send_email">Send email</string>
+    <string name="comment_author_info_email">Email</string>
+    <string name="comment_author_info_website">Website</string>
+    <string name="comment_author_info_posted_at">Posted at</string>
+    <string name="comment_author_info_show">Show author details</string>
+    <string name="comment_detail_on_post">on %1$s</string>
+    <string name="comment_reply_continue">Continue reply</string>
+    <string name="comment_reply_save_draft">Save Draft</string>
+    <string name="comment_reply_delete_draft">Delete Draft</string>
+    <string name="comment_reply_keep_editing">Keep Editing</string>
+    <string name="comment_reply_unsent">You have an unsent reply.</string>
+    <string name="comment_trash_has_replies">This comment has replies. They won’t be moved to the bin with it.</string>
+    <string name="content_list_density_show_comfortable">Show expanded list</string>
+    <string name="content_list_density_show_condensed">Show condensed list</string>
+    <string name="content_list_comment_count_plural">%1$s comments</string>
+    <string name="content_list_comment_count_singular">%1$s comment</string>
+    <string name="content_list_view_count_plural">%1$s views</string>
+    <string name="content_list_view_count_singular">%1$s view</string>
+    <string name="content_list_fab_write">Write</string>
+    <string name="content_list_group_earlier_in">Earlier in %1$s</string>
+    <string name="content_list_group_this_week">This week</string>
+    <string name="content_list_group_yesterday">Yesterday</string>
+    <string name="content_list_group_today">Today</string>
+    <string name="unified_support_related_label">Related:</string>
+    <string name="unified_support_attachment_link_content_description">Open link: %1$s</string>
+    <string name="unified_support_status_ai_assistant">AI Assistant</string>
+    <string name="he_support_status_ongoing">Ongoing</string>
+    <string name="he_support_reply_sent_confirmation">Your reply has been sent. Check your email for updates.</string>
+    <string name="he_support_add_more_info_button">Add more info</string>
+    <string name="application_password_private_site_card">This site is private, so we can\'t reconnect to it.</string>
+    <string name="application_password_private_site_error">This site is private, so we can\'t read its settings to sign you in.</string>
+    <string name="prepublishing_tags_remove_tag_desc">Remove tag %1$s</string>
+    <string name="prepublishing_tags_add_hint">Add a tag</string>
+    <string name="photo_picker_choose_other_files">Other files</string>
+    <string name="photo_picker_choose_photo_or_video">Photos and videos</string>
+    <string name="editor_saving_locked_leave">Leave</string>
+    <string name="editor_saving_locked_continue">Continue</string>
+    <string name="editor_saving_locked_keep_editing">Keep editing</string>
+    <string name="editor_saving_locked_leave_message">If you leave now, anything still in progress, like a media upload, stops and may be missing or broken in your post.</string>
+    <string name="editor_saving_locked_save_message">Something in the editor, like a media upload, is still in progress. If you continue, it may be missing or broken in your post.</string>
+    <string name="editor_saving_locked_title">Your post isn\'t ready yet</string>
+    <string name="domain_registration_purchase_unconfirmed">Your domain credit was used, but we could not confirm the result. Check your domains before trying again, and contact support if %s is missing.</string>
+    <string name="domain_registration_purchase_incomplete">Your domain credit was used, but %s could not be registered. Please contact support.</string>
+    <string name="support_screen_login_description">Log into WordPress.com to access support chat.</string>
+    <string name="site_picker_add_site_menu_expanded">Add site menu expanded</string>
+    <string name="site_picker_add_site_menu_collapsed">Add site menu collapsed</string>
+    <string name="site_picker_add_a_site_expand">Show ways to add a site</string>
+    <string name="site_picker_add_a_site_collapse">Close the add site menu</string>
+    <string name="get_likes_empty_state_no_likes">No likes yet</string>
+    <string name="stats_archives_section_taxonomies">Taxonomies</string>
+    <string name="stats_archives_section_other">Other</string>
+    <string name="stats_archives_section_aggregated">Aggregated</string>
+    <string name="stats_archives_section_error">Error</string>
+    <string name="stats_archives_section_dates">Dates</string>
+    <string name="stats_archives_section_authors">Authors</string>
+    <string name="stats_archives_section_tags">Tags</string>
+    <string name="stats_archives_section_categories">Categories</string>
+    <string name="stats_archives_section_search">Search terms</string>
+    <string name="stats_archives_title_label">Archive pages</string>
+    <string name="stats_archives_title">Archives</string>
+    <string name="stats_view_selected_period_content_description">View stats for the selected period</string>
+    <string name="stats_period_next_content_description">Next period</string>
+    <string name="stats_period_previous_content_description">Previous period</string>
+    <string name="stats_period_this_year">This Year</string>
+    <string name="stats_period_this_month">This Month</string>
+    <string name="stats_feature_gate_plans_unavailable">Unable to open the plans page for this site</string>
+    <string name="stats_feature_gate_explore_plans">Explore Plans</string>
+    <string name="stats_feature_gate_message">Upgrade your plan to get access to advanced analytics</string>
+    <string name="stats_error_not_available">These stats aren\'t available for this site</string>
+    <string name="stats_next_day">Next day</string>
+    <string name="stats_previous_day">Previous day</string>
+    <string name="stats_post_detail_average">Average</string>
+    <string name="stats_post_detail_total">Total</string>
+    <string name="stats_post_detail_activity_more">More</string>
+    <string name="stats_post_detail_activity_less">Less</string>
+    <string name="stats_post_detail_more_likers">+%1$s</string>
+    <string name="stats_post_detail_published">Published %1$s</string>
+    <string name="stats_post_detail_title">Post Stats</string>
+    <string name="stats_open_link">Open link</string>
+    <string name="stats_traffic_date_range_content_description">%1$s to %2$s</string>
+    <string name="stats_show_views">Show Views</string>
+    <string name="stats_hourly_data_not_available">Hourly data not available</string>
+    <string name="rs_date_trashed">Binned: %s</string>
+    <string name="rs_date_modified">Modified: %s</string>
+    <string name="rs_date_now">Now</string>
+    <string name="stats_new_stats_feedback_dialog_message">Are you willing to share feedback on the new Stats experience?</string>
+    <string name="deleting_tag_failed">Deleting tag failed</string>
+    <string name="comments_rs_moderation_failed_multiple">%1$d of %2$d comments couldn\'t be updated</string>
+    <string name="comments_rs_moderation_failed_single">The comment couldn\'t be updated</string>
+    <string name="comments_rs_search_nothing_found">No comments matching your search</string>
+    <string name="comments_rs_search_prompt">Search comments</string>
+    <string name="web_view_log_in_to_site">Log in to this site</string>
     <string name="support_screen_unified_support_description">Get answers from our support team, anytime</string>
     <string name="support_screen_unified_support_title">Get help</string>
     <string name="unified_support_attachment_match_score">%1$d%% match</string>
@@ -93,6 +208,7 @@ Language: en_GB
     <string name="gutenberg_kit_announcement_learn_more">Learn more</string>
     <string name="gutenberg_kit_announcement_maybe_later">Maybe later</string>
     <string name="gutenberg_kit_announcement_activate">Activate</string>
+    <string name="gutenberg_kit_announcement_body_deadline_v2">By the end of 2026, it will become the default editor for everyone. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">The next-generation block editor is ready, and it brings more new features.</string>
     <string name="gutenberg_kit_announcement_title">A better block editor is coming</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Switch to the block editor first to try the new editor.</string>
@@ -1198,6 +1314,7 @@ Language: en_GB
     <string name="photo_picker_media_thumbnail_content_description">Media Thumbnail</string>
     <string name="stats_insights_popular_title">🔥 Most Popular Time</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_period_this_week">This Week</string>
     <string name="scan_vault_press_active_on_site_button_text">Visit Dashboard</string>
     <string name="scan_vault_press_active_on_site_subtitle">Your site already is protected by VaultPress. You can find a link to your VaultPress dashboard below.</string>
     <string name="scan_vault_press_active_on_site_title">Your site has VaultPress</string>
