@@ -179,8 +179,8 @@ class RsLocalDrafts @Inject constructor(
             .orEmpty()
 
     /**
-     * Unescaped but not stripped, as the server rows show titles: a title can't hold markup, and stripping
-     * would eat text that only looks like a tag, such as "x < 5 and y > 3".
+     * Unescaped, since the editor stores "<" as "&lt;", but not stripped: a title can't hold markup, and
+     * stripping would eat text that only looks like a tag, such as "x < 5 and y > 3".
      */
     private fun String.toDisplayTitle(): String =
         StringEscapeUtils.unescapeHtml4(this).replace(WHITESPACE, " ").trim()
