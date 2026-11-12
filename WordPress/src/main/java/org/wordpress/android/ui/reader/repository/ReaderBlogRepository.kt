@@ -188,7 +188,6 @@ class ReaderBlogRepository @Inject constructor(
             if (result is RestResult.Failure) logVolleyError("block blog", result.error)
             if (result is RestResult.Failure && !result.isCancelled) {
                 undoBlockBlogLocal(blockResult)
-                if (blockResult.wasFollowing) ReaderBlogTable.setIsFollowedBlogId(blockResult.blogId, true)
             }
             result is RestResult.Success
         }
@@ -328,6 +327,9 @@ class ReaderBlogRepository @Inject constructor(
 
     private fun undoBlockBlogLocal(blockResult: BlockedBlogResult) {
         ReaderBlockedBlogTable.whitelistBlogLocally(blockResult.blogId)
+        // restore the follow before the server is asked, so the Subscriptions filter and its count are right
+        // when the list refreshes - an undo re-follows on the server once the unblock succeeds
+        if (blockResult.wasFollowing) setBlogFollowedLocal(blockResult.blogId, true)
         restorePosts(blockResult.deletedRows)
     }
 
