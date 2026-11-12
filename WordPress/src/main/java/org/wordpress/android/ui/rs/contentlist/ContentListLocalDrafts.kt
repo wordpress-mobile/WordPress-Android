@@ -1,23 +1,11 @@
 package org.wordpress.android.ui.rs.contentlist
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import org.wordpress.android.R
 import org.wordpress.android.ui.rs.RsLocalDraftUiModel
-
-/** The overflow menu of a local draft row, shared by the posts and pages lists. */
-enum class RsLocalDraftMenuAction(
-    @StringRes override val labelResId: Int,
-    @DrawableRes override val iconResId: Int,
-    override val isDestructive: Boolean = false
-) : RsMenuAction {
-    RETRY(R.string.retry, R.drawable.ic_refresh_white_24dp),
-    DELETE(R.string.delete, R.drawable.gb_ic_trash, isDestructive = true)
-}
 
 val RsLocalDraftUiModel.menuActions: List<RsLocalDraftMenuAction>
     get() = buildList {

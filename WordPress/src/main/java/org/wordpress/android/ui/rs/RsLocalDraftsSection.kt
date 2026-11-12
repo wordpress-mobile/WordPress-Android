@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -25,7 +24,6 @@ import org.wordpress.android.viewmodel.ResourceProvider
 internal class RsLocalDraftsSection(
     private val scope: CoroutineScope,
     private val source: RsLocalDrafts,
-    private val uploadStarter: UploadStarter,
     private val resourceProvider: ResourceProvider,
     private val site: SiteModel,
     private val isPage: Boolean,
@@ -44,12 +42,12 @@ internal class RsLocalDraftsSection(
     fun start(localChanges: Flow<Unit>) {
         scope.launch { localChanges.collect { reload() } }
         reload()
-        uploadStarter.queueUploadFromSite(site)
+        source.queueDueUploads(site)
     }
 
     /** A pull to refresh is also how the legacy lists retried uploads that were still due. */
     fun onUserRefresh() {
-        uploadStarter.queueUploadFromSite(site)
+        source.queueDueUploads(site)
         reload()
     }
 

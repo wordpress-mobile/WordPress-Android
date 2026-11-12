@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtilsWrapper
 import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.uploads.UploadServiceFacade
+import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
@@ -55,6 +56,7 @@ class RsLocalDrafts @Inject constructor(
     private val postLabels: CreatePostListItemLabelsUseCase,
     private val pageLabels: CreatePageListItemLabelsUseCase,
     private val uploadServiceFacade: UploadServiceFacade,
+    private val uploadStarter: UploadStarter,
     private val pendingDraftsNotifications: PendingDraftsNotificationsUtilsWrapper,
 ) {
     /**
@@ -74,6 +76,11 @@ class RsLocalDrafts @Inject constructor(
         drafts.filter { it.matches(query) }
             .sortedByDescending { it.dateLocallyChangedMillis() }
             .map { it.toUiModel(site, isPage, nowLabel, dateFormat) }
+    }
+
+    /** Starts the uploads of [site] still due, as the legacy lists do on opening and on refresh. */
+    fun queueDueUploads(site: SiteModel) {
+        uploadStarter.queueUploadFromSite(site)
     }
 
     /** Starts the upload again; the change listener reports its progress. */

@@ -46,7 +46,6 @@ import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
-import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.SiteEditorMVPFeatureConfig
@@ -59,7 +58,6 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     @Mock lateinit var serviceProvider: WpServiceProvider
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var localDraftsSource: RsLocalDrafts
-    @Mock lateinit var uploadStarter: UploadStarter
     @Mock lateinit var restClient: RsSiteRestClient
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var postStore: PostStore
@@ -117,7 +115,6 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
         changeListener = changeListener,
         statsDataSource = statsDataSource,
         localDraftsSource = localDraftsSource,
-        uploadStarter = uploadStarter,
     ).also { activeViewModel = it }
 
     @Test
@@ -875,7 +872,7 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
 
         assertThat(viewModel.localDrafts.value).containsExactly(draft)
         verifyBlocking(localDraftsSource) { load(eq(site), eq(true), eq(""), anyOrNull(), anyOrNull()) }
-        verify(uploadStarter).queueUploadFromSite(site)
+        verify(localDraftsSource).queueDueUploads(site)
     }
 
     @Test

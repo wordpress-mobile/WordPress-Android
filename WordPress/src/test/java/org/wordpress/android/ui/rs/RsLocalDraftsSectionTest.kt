@@ -21,13 +21,11 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class RsLocalDraftsSectionTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var source: RsLocalDrafts
-    @Mock lateinit var uploadStarter: UploadStarter
     @Mock lateinit var resourceProvider: ResourceProvider
 
     private val site = SiteModel().apply { id = SITE_ID }
@@ -49,7 +47,7 @@ class RsLocalDraftsSectionTest : BaseUnitTest(StandardTestDispatcher()) {
         runCurrent()
 
         assertThat(section.drafts.value).containsExactly(draft())
-        verify(uploadStarter).queueUploadFromSite(site)
+        verify(source).queueDueUploads(site)
     }
 
     @Test
@@ -91,7 +89,7 @@ class RsLocalDraftsSectionTest : BaseUnitTest(StandardTestDispatcher()) {
         section.onUserRefresh()
         runCurrent()
 
-        verify(uploadStarter).queueUploadFromSite(site)
+        verify(source).queueDueUploads(site)
         verifyBlocking(source) { load(any(), any(), any(), any(), anyOrNull()) }
     }
 
@@ -137,7 +135,7 @@ class RsLocalDraftsSectionTest : BaseUnitTest(StandardTestDispatcher()) {
 
     /** On the background scope: the section's change collector never completes, and runTest would wait on it. */
     private fun TestScope.section(isPage: Boolean = false) =
-        RsLocalDraftsSection(backgroundScope, source, uploadStarter, resourceProvider, site, isPage) { query }
+        RsLocalDraftsSection(backgroundScope, source, resourceProvider, site, isPage) { query }
 
     private fun stubLoad(drafts: List<RsLocalDraftUiModel>) {
         source.stub { on { load(any(), any(), any(), any(), anyOrNull()) } doReturn drafts }

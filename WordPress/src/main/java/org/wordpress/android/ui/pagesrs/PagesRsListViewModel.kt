@@ -69,7 +69,6 @@ import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.ui.rs.sendWithRetry
 import org.wordpress.android.ui.rs.toRsPostStatus
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -111,7 +110,6 @@ internal class PagesRsListViewModel @Inject constructor(
     private val changeListener: RsPostChangeListener,
     private val statsDataSource: StatsDataSource,
     private val localDraftsSource: RsLocalDrafts,
-    private val uploadStarter: UploadStarter,
 ) : ViewModel() {
     private val _tabStates = MutableStateFlow<Map<PageRsListTab, RsTabUiState<PageRsListItem>>>(emptyMap())
     val tabStates: StateFlow<Map<PageRsListTab, RsTabUiState<PageRsListItem>>> = _tabStates.asStateFlow()
@@ -201,7 +199,7 @@ internal class PagesRsListViewModel @Inject constructor(
      * Outside search every one shows; in search, only those matching the query.
      */
     private val localDraftsSection = site?.let {
-        RsLocalDraftsSection(viewModelScope, localDraftsSource, uploadStarter, resourceProvider, it, isPage = true) {
+        RsLocalDraftsSection(viewModelScope, localDraftsSource, resourceProvider, it, isPage = true) {
             if (_isSearchActive.value) _searchQuery.value else ""
         }
     }
@@ -863,8 +861,8 @@ internal class PagesRsListViewModel @Inject constructor(
     /** Opens a page that exists only on this device; see [RsLocalDraftsSection.open]. */
     @MainThread
     fun openLocalDraft(localId: Int) {
-        val site = this.site ?: return
-        if (_isOpeningPage.value) return
+        val site = this.site
+        if (site == null || _isOpeningPage.value) return
         analyticsTracker.track(
             Stat.PAGES_LIST_ITEM_SELECTED,
             site,

@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtilsWrapper
 import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.uploads.UploadServiceFacade
+import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.pages.CreatePageListItemLabelsUseCase
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase
@@ -43,6 +44,7 @@ class RsLocalDraftsTest : BaseUnitTest() {
     @Mock lateinit var uploadUiStateUseCase: PostModelUploadUiStateUseCase
     @Mock lateinit var pageLabels: CreatePageListItemLabelsUseCase
     @Mock lateinit var uploadServiceFacade: UploadServiceFacade
+    @Mock lateinit var uploadStarter: UploadStarter
     @Mock lateinit var pendingDraftsNotifications: PendingDraftsNotificationsUtilsWrapper
 
     private lateinit var site: SiteModel
@@ -61,6 +63,7 @@ class RsLocalDraftsTest : BaseUnitTest() {
             postLabels = CreatePostListItemLabelsUseCase(),
             pageLabels = pageLabels,
             uploadServiceFacade = uploadServiceFacade,
+            uploadStarter = uploadStarter,
             pendingDraftsNotifications = pendingDraftsNotifications
         )
         whenever(uploadUiStateUseCase.createUploadUiState(any(), any(), any()))
@@ -173,6 +176,13 @@ class RsLocalDraftsTest : BaseUnitTest() {
     // endregion
 
     // region actions
+
+    @Test
+    fun `due uploads are queued for the site`() {
+        localDrafts.queueDueUploads(site)
+
+        verify(uploadStarter).queueUploadFromSite(site)
+    }
 
     @Test
     fun `retry uploads the draft again`() {

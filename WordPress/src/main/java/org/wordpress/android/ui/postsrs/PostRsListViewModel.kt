@@ -58,7 +58,6 @@ import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.ui.rs.sendWithRetry
 import org.wordpress.android.ui.rs.toRsPostStatus
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -94,7 +93,6 @@ class PostRsListViewModel @Inject constructor(
     private val statsDataSource: StatsDataSource,
     private val commentCountFetcher: RsCommentCountFetcher,
     private val localDraftsSource: RsLocalDrafts,
-    private val uploadStarter: UploadStarter,
 ) : ViewModel() {
     private val _tabStates = MutableStateFlow<Map<PostRsListTab, RsTabUiState<PostRsUiModel>>>(emptyMap())
     val tabStates: StateFlow<Map<PostRsListTab, RsTabUiState<PostRsUiModel>>> = _tabStates.asStateFlow()
@@ -175,7 +173,7 @@ class PostRsListViewModel @Inject constructor(
      * Outside search every one shows; in search, only those matching the query.
      */
     private val localDraftsSection = _site?.let {
-        RsLocalDraftsSection(viewModelScope, localDraftsSource, uploadStarter, resourceProvider, it, isPage = false) {
+        RsLocalDraftsSection(viewModelScope, localDraftsSource, resourceProvider, it, isPage = false) {
             if (_isSearchActive.value) _searchQuery.value else ""
         }
     }

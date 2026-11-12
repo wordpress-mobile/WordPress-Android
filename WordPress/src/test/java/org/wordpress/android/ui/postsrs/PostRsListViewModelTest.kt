@@ -47,7 +47,6 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.rs.RsCommentCountFetcher
 import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
-import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -70,7 +69,6 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var commentCountFetcher: RsCommentCountFetcher
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var localDraftsSource: RsLocalDrafts
-    @Mock lateinit var uploadStarter: UploadStarter
 
     private lateinit var site: SiteModel
     private lateinit var changeListener: RsPostChangeListener
@@ -119,7 +117,6 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         statsDataSource = statsDataSource,
         commentCountFetcher = commentCountFetcher,
         localDraftsSource = localDraftsSource,
-        uploadStarter = uploadStarter,
     ).also { activeViewModel = it }
 
     @Test
@@ -770,7 +767,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         viewModel.refreshTab(PostRsListTab.DRAFTS, isUserRefresh = true)
         awaitTabInitFailure(viewModel, PostRsListTab.DRAFTS)
 
-        verify(uploadStarter, times(2)).queueUploadFromSite(site)
+        verify(localDraftsSource, times(2)).queueDueUploads(site)
         verifyBlocking(localDraftsSource, times(2)) { load(any(), any(), any(), any(), anyOrNull()) }
     }
 

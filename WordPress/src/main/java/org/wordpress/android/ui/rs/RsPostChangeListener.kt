@@ -115,13 +115,15 @@ class RsPostChangeListener @Inject constructor(
         if (post.localSiteId != localSiteId || post.isPage != isPages) return
         // Success or failure, the post's upload state changed - and a failed one may be a local draft.
         notifyLocalChanged()
-        if (event.isError) return
-        notifyChanged()
-        // A post that never got an id is nothing a list can point at.
-        if (post.remotePostId != 0L) {
-            // fromPost reads the date as well as the status, so a post published with a future
-            // date is reported as SCHEDULED - which is the tab the list will show it on.
-            _uploads.tryEmit(RsUploadedPost(post.remotePostId, PostStatus.fromPost(post)))
+        // Only a successful upload changed the server copy.
+        if (!event.isError) {
+            notifyChanged()
+            // A post that never got an id is nothing a list can point at.
+            if (post.remotePostId != 0L) {
+                // fromPost reads the date as well as the status, so a post published with a future
+                // date is reported as SCHEDULED - which is the tab the list will show it on.
+                _uploads.tryEmit(RsUploadedPost(post.remotePostId, PostStatus.fromPost(post)))
+            }
         }
     }
 
