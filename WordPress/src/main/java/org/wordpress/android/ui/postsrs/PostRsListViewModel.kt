@@ -743,7 +743,7 @@ class PostRsListViewModel @Inject constructor(
     /** Opens a draft that exists only on this device; see [RsLocalDraftsSection.open]. */
     @MainThread
     fun openLocalDraft(localId: Int) {
-        if (_isOpeningPost.value) return
+        if (_isOpeningPost.value || isLocalDraftUploading(localId)) return
         analyticsTracker.track(
             Stat.POST_LIST_ITEM_SELECTED,
             site,
@@ -765,14 +765,24 @@ class PostRsListViewModel @Inject constructor(
                 if (!checkNetwork()) return
                 localDraftsSection?.retry(localId)
             }
-            RsLocalDraftMenuAction.DELETE ->
+            RsLocalDraftMenuAction.DELETE -> if (!isLocalDraftUploading(localId)) {
                 _pendingConfirmation.value = PostRsConfirmation.DeleteLocal(localId)
+            }
         }
     }
 
     private fun deleteLocalDraft(localId: Int) {
+        // Checked again, since the upload may have started while the confirmation was showing.
+        if (isLocalDraftUploading(localId)) return
         localDraftsSection?.delete(localId)
         _snackbarMessages.trySend(RsSnackbarMessage(resourceProvider.getString(R.string.post_rs_deleted)))
+    }
+
+    /** True, after telling the user, when the draft is mid-upload and can't be edited or deleted yet. */
+    private fun isLocalDraftUploading(localId: Int): Boolean {
+        if (localDraftsSection?.isUploading(localId) != true) return false
+        _snackbarMessages.trySend(RsSnackbarMessage(resourceProvider.getString(R.string.editor_uploading_draft)))
+        return true
     }
 
     /** Abandons the post being opened, for when the fetch behind the spinner is slow. */

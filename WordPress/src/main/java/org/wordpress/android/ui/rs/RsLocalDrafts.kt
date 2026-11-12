@@ -107,6 +107,13 @@ class RsLocalDrafts @Inject constructor(
         return post
     }
 
+    /**
+     * Whether the draft is being sent to the server right now. Cancelling only stops a queued upload, so
+     * editing or deleting it then would race the push - as the legacy lists' overlay prevents.
+     */
+    fun isUploading(site: SiteModel, localId: Int): Boolean =
+        find(site, localId)?.let { uploadServiceFacade.isPostUploading(it) } == true
+
     private fun find(site: SiteModel, localId: Int): PostModel? =
         postStore.getPostByLocalPostId(localId)?.takeIf { it.isLocalDraft && it.localSiteId == site.id }
 

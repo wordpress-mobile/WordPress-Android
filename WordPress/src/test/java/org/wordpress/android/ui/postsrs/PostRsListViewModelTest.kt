@@ -846,6 +846,35 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
+    fun `a draft mid-upload is neither opened nor deleted`() = test {
+        whenever(localDraftsSource.isUploading(site, LOCAL_DRAFT_ID)).thenReturn(true)
+        whenever(resourceProvider.getString(R.string.editor_uploading_draft)).thenReturn("Uploading")
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        viewModel.snackbarMessages.test {
+            viewModel.openLocalDraft(LOCAL_DRAFT_ID)
+            assertThat(awaitItem().message).isEqualTo("Uploading")
+
+            viewModel.onLocalDraftMenuAction(LOCAL_DRAFT_ID, RsLocalDraftMenuAction.DELETE)
+            assertThat(awaitItem().message).isEqualTo("Uploading")
+        }
+        verify(localDraftsSource, never()).open(any(), any())
+        assertThat(viewModel.pendingConfirmation.value).isNull()
+    }
+
+    @Test
+    fun `a delete confirmed after the upload started is refused`() = test {
+        val viewModel = createViewModel()
+        viewModel.onLocalDraftMenuAction(LOCAL_DRAFT_ID, RsLocalDraftMenuAction.DELETE)
+        whenever(localDraftsSource.isUploading(site, LOCAL_DRAFT_ID)).thenReturn(true)
+
+        viewModel.onConfirmPendingAction()
+
+        verify(localDraftsSource, never()).delete(any(), any())
+    }
+
+    @Test
     fun `dismissing the delete confirmation keeps the draft`() = test {
         val viewModel = createViewModel()
 

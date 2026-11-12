@@ -902,6 +902,20 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     }
 
     @Test
+    fun `a local page mid-upload is neither opened nor deleted`() = test {
+        whenever(localDraftsSource.isUploading(site, LOCAL_PAGE_ID)).thenReturn(true)
+        whenever(resourceProvider.getString(R.string.editor_uploading_page)).thenReturn("Uploading")
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        viewModel.openLocalDraft(LOCAL_PAGE_ID)
+        viewModel.onLocalDraftMenuAction(LOCAL_PAGE_ID, RsLocalDraftMenuAction.DELETE)
+
+        verify(localDraftsSource, never()).open(any(), any())
+        assertThat(viewModel.pendingConfirmation.value).isNull()
+    }
+
+    @Test
     fun `retrying a local page restarts its upload`() = test {
         val viewModel = createViewModel()
 

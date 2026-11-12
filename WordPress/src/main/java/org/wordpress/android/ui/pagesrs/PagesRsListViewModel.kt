@@ -862,7 +862,7 @@ internal class PagesRsListViewModel @Inject constructor(
     @MainThread
     fun openLocalDraft(localId: Int) {
         val site = this.site
-        if (site == null || _isOpeningPage.value) return
+        if (site == null || _isOpeningPage.value || isLocalDraftUploading(localId)) return
         analyticsTracker.track(
             Stat.PAGES_LIST_ITEM_SELECTED,
             site,
@@ -885,14 +885,24 @@ internal class PagesRsListViewModel @Inject constructor(
                 if (!checkNetwork()) return
                 localDraftsSection?.retry(localId)
             }
-            RsLocalDraftMenuAction.DELETE ->
+            RsLocalDraftMenuAction.DELETE -> if (!isLocalDraftUploading(localId)) {
                 _pendingConfirmation.value = PageRsListConfirmation.DeleteLocal(localId)
+            }
         }
     }
 
     private fun deleteLocalDraft(localId: Int) {
+        // Checked again, since the upload may have started while the confirmation was showing.
+        if (isLocalDraftUploading(localId)) return
         localDraftsSection?.delete(localId)
         _snackbarMessages.trySend(RsSnackbarMessage(resourceProvider.getString(R.string.page_permanently_deleted)))
+    }
+
+    /** True, after telling the user, when the page is mid-upload and can't be edited or deleted yet. */
+    private fun isLocalDraftUploading(localId: Int): Boolean {
+        if (localDraftsSection?.isUploading(localId) != true) return false
+        _snackbarMessages.trySend(RsSnackbarMessage(resourceProvider.getString(R.string.editor_uploading_page)))
+        return true
     }
 
     /** Abandons the page being opened, for when the fetch behind the spinner is slow. */

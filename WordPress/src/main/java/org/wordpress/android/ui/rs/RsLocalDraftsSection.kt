@@ -85,4 +85,10 @@ internal class RsLocalDraftsSection(
     }
 
     fun delete(localId: Int) = source.delete(site, localId)
+
+    /**
+     * True while the draft is being sent to the server; see [RsLocalDrafts.isUploading]. Reloads in that
+     * case, since an upload starting isn't reported and the row may not show it yet.
+     */
+    fun isUploading(localId: Int): Boolean = source.isUploading(site, localId).also { if (it) reload() }
 }

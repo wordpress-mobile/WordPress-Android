@@ -229,6 +229,20 @@ class RsLocalDraftsTest : BaseUnitTest() {
     }
 
     @Test
+    fun `a draft being pushed to the server is uploading`() {
+        val post = localDraft()
+        whenever(postStore.getPostByLocalPostId(LOCAL_ID)).thenReturn(post)
+        whenever(uploadServiceFacade.isPostUploading(post)).thenReturn(true)
+
+        assertThat(localDrafts.isUploading(site, LOCAL_ID)).isTrue
+    }
+
+    @Test
+    fun `a draft that is gone is not uploading`() {
+        assertThat(localDrafts.isUploading(site, LOCAL_ID)).isFalse
+    }
+
+    @Test
     fun `opening a draft that is gone returns null`() {
         assertThat(localDrafts.open(site, LOCAL_ID)).isNull()
     }
