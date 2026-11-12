@@ -61,6 +61,7 @@ class PagesRsListActivity : BaseAppCompatActivity() {
             val pendingConfirmation by viewModel.pendingConfirmation.collectAsState()
             val parentPicker by viewModel.parentPicker.collectAsState()
             val density by viewModel.density.collectAsState()
+            val localDrafts by viewModel.localDrafts.collectAsState()
             AppThemeM3 {
                 PagesRsListScreen(
                     tabStates = tabStates,
@@ -97,7 +98,10 @@ class PagesRsListActivity : BaseAppCompatActivity() {
                     onRowsVisible = viewModel::onRowsVisible,
                     onDensityToggled = viewModel::onDensityToggled,
                     onCancelOpeningPage = viewModel::cancelOpeningPage,
-                    density = density
+                    density = density,
+                    localDrafts = localDrafts,
+                    onLocalDraftClick = viewModel::openLocalDraft,
+                    onLocalDraftAction = viewModel::onLocalDraftMenuAction
                 )
             }
         }

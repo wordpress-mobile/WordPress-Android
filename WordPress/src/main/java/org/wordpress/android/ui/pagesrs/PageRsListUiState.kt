@@ -18,6 +18,7 @@ internal sealed interface PageRsListConfirmation {
     data class Trash(val pageId: Long) : PageRsListConfirmation
     data class Delete(val pageId: Long, val pageTitle: String) : PageRsListConfirmation
     data class MoveToDraft(val pageId: Long) : PageRsListConfirmation
+    data class DeleteLocal(val localId: Int) : PageRsListConfirmation
 }
 
 /**

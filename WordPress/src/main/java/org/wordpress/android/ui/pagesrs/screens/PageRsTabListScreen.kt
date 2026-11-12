@@ -8,22 +8,28 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import org.wordpress.android.R
 import org.wordpress.android.ui.pagesrs.PageRsListItem
 import org.wordpress.android.ui.pagesrs.PageRsMenuAction
 import org.wordpress.android.ui.pagesrs.SITE_EDITOR_PAGE_ID
 import org.wordpress.android.ui.pagesrs.hasRealPages
+import org.wordpress.android.ui.rs.RsLocalDraftUiModel
 import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.contentlist.ContentListDefaults
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListEmptyState
+import org.wordpress.android.ui.rs.contentlist.ContentListErrorRow
 import org.wordpress.android.ui.rs.contentlist.ContentListErrorState
+import org.wordpress.android.ui.rs.contentlist.ContentListPlaceholderRow
 import org.wordpress.android.ui.rs.contentlist.ContentListShimmer
 import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
 import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
 import org.wordpress.android.ui.rs.contentlist.ReportVisibleRows
 import org.wordpress.android.ui.rs.contentlist.RevealRow
+import org.wordpress.android.ui.rs.contentlist.RsLocalDraftMenuAction
 import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
+import org.wordpress.android.ui.rs.contentlist.localDraftItems
 
 @Composable
 internal fun PageRsTabListScreen(
@@ -39,7 +45,10 @@ internal fun PageRsTabListScreen(
     modifier: Modifier = Modifier,
     isSearchIdle: Boolean = false,
     isSearching: Boolean = false,
-    density: ContentListDensity = ContentListDensity.COMFORTABLE
+    density: ContentListDensity = ContentListDensity.COMFORTABLE,
+    localDrafts: List<RsLocalDraftUiModel> = emptyList(),
+    onLocalDraftClick: (Int) -> Unit = {},
+    onLocalDraftAction: (Int, RsLocalDraftMenuAction) -> Unit = { _, _ -> }
 ) {
     ContentListPullToRefreshBox(
         isRefreshing = state.isRefreshing,
@@ -48,6 +57,29 @@ internal fun PageRsTabListScreen(
     ) {
         when {
             isSearchIdle -> Box(Modifier.fillMaxSize())
+            // Pages only on this device show whatever the server fetch is doing - offline above all.
+            localDrafts.isNotEmpty() -> PageListContent(
+                pages = state.items,
+                revealPageId = revealPageId,
+                onRevealHandled = onRevealHandled,
+                isLoadingMore = state.isLoadingMore,
+                canLoadMore = state.canLoadMore,
+                onLoadMore = onLoadMore,
+                onPageClick = onPageClick,
+                onPageMenuAction = onPageMenuAction,
+                onRowsVisible = onRowsVisible,
+                density = density,
+                isSearching = isSearching,
+                localDrafts = localDrafts,
+                serverState = when {
+                    state.isLoading -> ServerRowsState.LOADING
+                    state.error != null && !state.items.hasRealPages -> ServerRowsState.FAILED
+                    else -> ServerRowsState.LOADED
+                },
+                serverError = state.error,
+                onLocalDraftClick = onLocalDraftClick,
+                onLocalDraftAction = onLocalDraftAction
+            )
             state.isLoading -> ContentListShimmer()
             state.error != null && !state.items.hasRealPages -> {
                 ContentListErrorState(
@@ -93,21 +125,35 @@ private fun PageListContent(
     onPageMenuAction: (Long, PageRsMenuAction) -> Unit,
     onRowsVisible: (List<Long>) -> Unit,
     density: ContentListDensity,
-    isSearching: Boolean
+    isSearching: Boolean,
+    localDrafts: List<RsLocalDraftUiModel> = emptyList(),
+    serverState: ServerRowsState = ServerRowsState.LOADED,
+    serverError: String? = null,
+    onLocalDraftClick: (Int) -> Unit = {},
+    onLocalDraftAction: (Int, RsLocalDraftMenuAction) -> Unit = { _, _ -> }
 ) {
     val listState = rememberLazyListState()
+    // Local pages come first, under a header of their own, ahead of every server row.
+    val localItemCount = if (localDrafts.isEmpty()) 0 else localDrafts.size + 1
+    // The placeholder or error standing in for the server rows sits between the two.
+    val serverStateItemCount = when (serverState) {
+        ServerRowsState.LOADING -> SERVER_PLACEHOLDER_COUNT
+        ServerRowsState.FAILED -> 1
+        ServerRowsState.LOADED -> 0
+    }
+    val pagesOffset = localItemCount + serverStateItemCount
 
     // Scrolls to a page the user just saved, once the refresh carrying it lands. The published and
     // draft tabs sort by title, so it can be anywhere in the list.
     RevealRow(revealPageId, listState, onRevealHandled) { id ->
-        pages.indexOfFirst { it.remotePageId == id }
+        pages.indexOfFirst { it.remotePageId == id }.let { if (it < 0) it else it + pagesOffset }
     }
 
     // Rows are keyed by a String, so the ids come from the entries the visible indexes land on.
     // The Site Editor row has no page behind it and so no view count to ask for.
     ReportVisibleRows(listState, onRowsVisible = onRowsVisible) {
         listState.layoutInfo.visibleItemsInfo.mapNotNull { info ->
-            pages.getOrNull(info.index)
+            pages.getOrNull(info.index - pagesOffset)
                 ?.remotePageId
                 ?.takeIf { it != SITE_EDITOR_PAGE_ID }
         }
@@ -121,6 +167,21 @@ private fun PageListContent(
         // The add-page FAB is hidden while searching, so there's nothing to clear.
         contentPadding = if (isSearching) PaddingValues() else ContentListDefaults.FabClearancePadding
     ) {
+        localDraftItems(
+            drafts = localDrafts,
+            density = density,
+            onClick = onLocalDraftClick,
+            onAction = onLocalDraftAction
+        )
+        when (serverState) {
+            ServerRowsState.LOADING -> items(SERVER_PLACEHOLDER_COUNT, key = { "server_placeholder_$it" }) {
+                ContentListPlaceholderRow()
+            }
+            ServerRowsState.FAILED -> item(key = "server_error") {
+                ContentListErrorRow(serverError ?: stringResource(R.string.error_generic))
+            }
+            ServerRowsState.LOADED -> Unit
+        }
         items(
             items = pages,
             key = { it.stableKey }
@@ -137,3 +198,9 @@ private fun PageListContent(
         if (isLoadingMore) contentListLoadingMoreItem()
     }
 }
+
+/** What the server's part of a list shows when local pages already fill the top of it. */
+private enum class ServerRowsState { LOADING, FAILED, LOADED }
+
+/** Enough to read as "more coming" under the local pages without pushing them off screen. */
+private const val SERVER_PLACEHOLDER_COUNT = 3

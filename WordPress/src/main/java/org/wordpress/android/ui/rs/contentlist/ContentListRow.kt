@@ -46,6 +46,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ShimmerBox
+import org.wordpress.android.ui.compose.utils.uiStringText
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -136,9 +137,18 @@ fun ContentListGroupHeader(
     group: ContentDateGroup,
     modifier: Modifier = Modifier
 ) {
+    ContentListSectionHeader(text = group.label(), modifier = modifier)
+}
+
+/** A list section header in the date buckets' style, e.g. "NOT UPLOADED". */
+@Composable
+fun ContentListSectionHeader(
+    text: String,
+    modifier: Modifier = Modifier
+) {
     val locale = ConfigurationCompat.getLocales(LocalConfiguration.current)[0] ?: Locale.ROOT
     Text(
-        text = group.label().uppercase(locale),
+        text = text.uppercase(locale),
         style = MaterialTheme.typography.labelSmall,
         fontWeight = FontWeight.Bold,
         letterSpacing = GROUP_HEADER_TRACKING,
@@ -315,6 +325,30 @@ private fun RowBody(
             showSyncFailed = true
         )
     }
+    RowStatus(state)
+}
+
+/**
+ * A local draft's "Local draft" or upload error. On a line of its own because an upload error is a
+ * sentence, which the metadata line would cut short.
+ */
+@Composable
+private fun RowStatus(state: ContentListRowUiState) {
+    if (state.statusLabels.isEmpty()) return
+    Spacer(modifier = Modifier.height(TITLE_META_GAP))
+    Text(
+        text = state.statusLabels.map { uiStringText(it) }
+            .joinToString(stringResource(R.string.multiple_status_label_delimiter)),
+        style = MaterialTheme.typography.bodySmall,
+        fontSize = META_SIZE,
+        color = if (state.isStatusError) {
+            MaterialTheme.colorScheme.error
+        } else {
+            MaterialTheme.colorScheme.onSurfaceVariant
+        },
+        maxLines = STATUS_MAX_LINES,
+        overflow = TextOverflow.Ellipsis
+    )
 }
 
 @Composable
@@ -645,6 +679,7 @@ private val SYNC_BAR_HEIGHT = 2.dp
 private const val SYNC_BAR_ALPHA = 0.5f
 private const val TITLE_MAX_LINES = 2
 private const val EXCERPT_MAX_LINES = 2
+private const val STATUS_MAX_LINES = 2
 private val TITLE_SIZE = 19.sp
 private val TITLE_LINE_HEIGHT = 24.sp
 private val HERO_TITLE_SIZE = 21.sp

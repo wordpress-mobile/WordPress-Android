@@ -12,8 +12,10 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
+import org.mockito.kotlin.stub
 import org.mockito.kotlin.timeout
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.verify
@@ -35,12 +37,16 @@ import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.rs.RsFluxCBridge
+import org.wordpress.android.ui.rs.RsLocalDraftUiModel
+import org.wordpress.android.ui.rs.RsLocalDrafts
 import org.wordpress.android.ui.rs.RsReveal
+import org.wordpress.android.ui.rs.contentlist.RsLocalDraftMenuAction
 import org.wordpress.android.ui.rs.data.RsSiteRestClient
 import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.SiteEditorMVPFeatureConfig
@@ -52,6 +58,8 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var serviceProvider: WpServiceProvider
     @Mock lateinit var dispatcher: Dispatcher
+    @Mock lateinit var localDraftsSource: RsLocalDrafts
+    @Mock lateinit var uploadStarter: UploadStarter
     @Mock lateinit var restClient: RsSiteRestClient
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var postStore: PostStore
@@ -79,6 +87,9 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
         changeListener = RsPostChangeListener(dispatcher, postStore)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        localDraftsSource.stub {
+            on { load(any(), any(), any(), anyOrNull(), anyOrNull()) } doReturn emptyList()
+        }
     }
 
     @After
@@ -105,6 +116,8 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
         siteEditorMVPFeatureConfig = siteEditorMVPFeatureConfig,
         changeListener = changeListener,
         statsDataSource = statsDataSource,
+        localDraftsSource = localDraftsSource,
+        uploadStarter = uploadStarter,
     ).also { activeViewModel = it }
 
     @Test
@@ -840,7 +853,71 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     }
 
     // endregion
+
+    // region Local pages
+
+    @Test
+    fun `local pages are loaded and due uploads queued when the list opens`() = test {
+        val draft = RsLocalDraftUiModel(
+            localId = LOCAL_PAGE_ID,
+            title = "Unsent",
+            excerpt = "",
+            dateLabel = "now",
+            statusLabels = emptyList(),
+            isUploadFailed = true
+        )
+        localDraftsSource.stub {
+            on { load(any(), any(), any(), anyOrNull(), anyOrNull()) } doReturn listOf(draft)
+        }
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.localDrafts.value).containsExactly(draft)
+        verifyBlocking(localDraftsSource) { load(eq(site), eq(true), eq(""), anyOrNull(), anyOrNull()) }
+        verify(uploadStarter).queueUploadFromSite(site)
+    }
+
+    @Test
+    fun `a local page opens in the editor without checking the network`() = test {
+        val page = PostModel().apply { setIsPage(true) }
+        whenever(localDraftsSource.open(site, LOCAL_PAGE_ID)).thenReturn(page)
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        viewModel.events.test {
+            viewModel.openLocalDraft(LOCAL_PAGE_ID)
+
+            assertThat(awaitItem()).isEqualTo(PageRsListEvent.EditPage(site, page))
+        }
+    }
+
+    @Test
+    fun `deleting a local page asks for confirmation first`() = test {
+        whenever(resourceProvider.getString(R.string.page_permanently_deleted)).thenReturn("Deleted")
+        val viewModel = createViewModel()
+
+        viewModel.onLocalDraftMenuAction(LOCAL_PAGE_ID, RsLocalDraftMenuAction.DELETE)
+        verify(localDraftsSource, never()).delete(any(), any())
+
+        viewModel.onConfirmPendingAction()
+
+        verify(localDraftsSource).delete(site, LOCAL_PAGE_ID)
+    }
+
+    @Test
+    fun `retrying a local page restarts its upload`() = test {
+        val viewModel = createViewModel()
+
+        viewModel.onLocalDraftMenuAction(LOCAL_PAGE_ID, RsLocalDraftMenuAction.RETRY)
+
+        verify(localDraftsSource).retry(site, LOCAL_PAGE_ID)
+    }
+
+    // endregion
 }
+
+private const val LOCAL_PAGE_ID = 7
 
 private const val UPLOADED_PAGE_ID = 4242L
 private const val PUBLISHED_ROW_ID = 1L

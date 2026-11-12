@@ -45,6 +45,9 @@ import org.wordpress.android.ui.rs.RsCollectionScope
 import org.wordpress.android.ui.rs.RsErrorUtils
 import org.wordpress.android.ui.rs.RsFeaturedImages
 import org.wordpress.android.ui.rs.RsFluxCBridge
+import org.wordpress.android.ui.rs.RsLocalDraftUiModel
+import org.wordpress.android.ui.rs.RsLocalDrafts
+import org.wordpress.android.ui.rs.RsLocalDraftsSection
 import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.ui.rs.RsReveal
 import org.wordpress.android.ui.rs.RsSnackbarMessage
@@ -58,6 +61,7 @@ import org.wordpress.android.ui.rs.checkNetwork
 import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.SEARCH_DEBOUNCE_MS
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.rs.contentlist.RsLocalDraftMenuAction
 import org.wordpress.android.ui.rs.contentlist.toContentItemUiModel
 import org.wordpress.android.ui.rs.data.FeaturedImageUrls
 import org.wordpress.android.ui.rs.data.RsSiteRestClient
@@ -65,6 +69,7 @@ import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.ui.rs.sendWithRetry
 import org.wordpress.android.ui.rs.toRsPostStatus
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -105,6 +110,8 @@ internal class PagesRsListViewModel @Inject constructor(
     private val siteEditorMVPFeatureConfig: SiteEditorMVPFeatureConfig,
     private val changeListener: RsPostChangeListener,
     private val statsDataSource: StatsDataSource,
+    private val localDraftsSource: RsLocalDrafts,
+    private val uploadStarter: UploadStarter,
 ) : ViewModel() {
     private val _tabStates = MutableStateFlow<Map<PageRsListTab, RsTabUiState<PageRsListItem>>>(emptyMap())
     val tabStates: StateFlow<Map<PageRsListTab, RsTabUiState<PageRsListItem>>> = _tabStates.asStateFlow()
@@ -188,6 +195,18 @@ internal class PagesRsListViewModel @Inject constructor(
 
     val site: SiteModel? = selectedSiteRepository.getSelectedSite()
 
+    /**
+     * Pages that exist only on this device - never uploaded, or their upload failed. The server's
+     * collections can't contain them, so they're read from FluxC and shown ahead of the Drafts tab.
+     * Outside search every one shows; in search, only those matching the query.
+     */
+    private val localDraftsSection = site?.let {
+        RsLocalDraftsSection(viewModelScope, localDraftsSource, uploadStarter, resourceProvider, it, isPage = true) {
+            if (_isSearchActive.value) _searchQuery.value else ""
+        }
+    }
+    val localDrafts: StateFlow<List<RsLocalDraftUiModel>> = localDraftsSection?.drafts ?: MutableStateFlow(emptyList())
+
     val avatarUrl: String? = accountStore.account?.avatarUrl
 
     val isAuthorFilterSupported: Boolean = site != null &&
@@ -243,6 +262,7 @@ internal class PagesRsListViewModel @Inject constructor(
                     .collect {
                         clearCollections()
                         initTab(activeSearchTab)
+                        localDraftsSection?.reload()
                     }
             }
             @OptIn(FlowPreview::class)
@@ -260,6 +280,7 @@ internal class PagesRsListViewModel @Inject constructor(
             viewModelScope.launch {
                 changeListener.uploads.collect { onPageUploaded(it) }
             }
+            localDraftsSection?.start(changeListener.localChanges)
             changeListener.start(site, isPages = true)
         }
     }
@@ -269,6 +290,8 @@ internal class PagesRsListViewModel @Inject constructor(
     fun onScreenVisible() {
         isScreenVisible = true
         if (hasDeferredChange) onRemoteChangeDetected()
+        // Upload state lives partly in UploadService, which reports some changes without an event.
+        localDraftsSection?.reload()
         emitPendingReveal()
     }
 
@@ -372,6 +395,7 @@ internal class PagesRsListViewModel @Inject constructor(
         _searchQuery.value = ""
         clearCollections()
         initTab(activeTab)
+        localDraftsSection?.reload()
     }
 
     /**
@@ -529,6 +553,8 @@ internal class PagesRsListViewModel @Inject constructor(
 
     @MainThread
     fun refreshTab(tab: PageRsListTab, isUserRefresh: Boolean = false) {
+        // Before the collection check, so it also works on a tab that never loaded, e.g. opened offline.
+        if (isUserRefresh) localDraftsSection?.onUserRefresh()
         val collection = collections[tab] ?: run {
             // The collection wasn't created (init failed or hasn't run). Re-attempt init so
             // a Retry tap from the error UI can recover instead of silently doing nothing.
@@ -834,6 +860,43 @@ internal class PagesRsListViewModel @Inject constructor(
         }
     }
 
+    /** Opens a page that exists only on this device; see [RsLocalDraftsSection.open]. */
+    @MainThread
+    fun openLocalDraft(localId: Int) {
+        val site = this.site ?: return
+        if (_isOpeningPage.value) return
+        analyticsTracker.track(
+            Stat.PAGES_LIST_ITEM_SELECTED,
+            site,
+            mapOf(TRACKS_ACTION to TRACKS_ACTION_EDIT, TRACKS_IS_LOCAL_DRAFT to true)
+        )
+        val page = localDraftsSection?.open(localId) ?: return
+        _events.trySend(PageRsListEvent.EditPage(site, page))
+    }
+
+    @MainThread
+    fun onLocalDraftMenuAction(localId: Int, action: RsLocalDraftMenuAction) {
+        val site = this.site ?: return
+        analyticsTracker.track(
+            Stat.PAGES_OPTIONS_PRESSED,
+            site,
+            mapOf(TRACKS_ACTION to action.toAnalyticsAction(), TRACKS_IS_LOCAL_DRAFT to true)
+        )
+        when (action) {
+            RsLocalDraftMenuAction.RETRY -> {
+                if (!checkNetwork()) return
+                localDraftsSection?.retry(localId)
+            }
+            RsLocalDraftMenuAction.DELETE ->
+                _pendingConfirmation.value = PageRsListConfirmation.DeleteLocal(localId)
+        }
+    }
+
+    private fun deleteLocalDraft(localId: Int) {
+        localDraftsSection?.delete(localId)
+        _snackbarMessages.trySend(RsSnackbarMessage(resourceProvider.getString(R.string.page_permanently_deleted)))
+    }
+
     /** Abandons the page being opened, for when the fetch behind the spinner is slow. */
     @MainThread
     fun cancelOpeningPage() {
@@ -897,6 +960,7 @@ internal class PagesRsListViewModel @Inject constructor(
             is PageRsListConfirmation.Trash -> trashPage(confirmation.pageId)
             is PageRsListConfirmation.Delete -> deletePage(confirmation.pageId)
             is PageRsListConfirmation.MoveToDraft -> moveToDraftAndEdit(confirmation.pageId)
+            is PageRsListConfirmation.DeleteLocal -> deleteLocalDraft(confirmation.localId)
             null -> Unit
         }
         _pendingConfirmation.value = null
@@ -1816,7 +1880,13 @@ internal class PagesRsListViewModel @Inject constructor(
         private const val TRACKS_PAGE_ID = "page_id"
         private const val TRACKS_OPTION_NAME = "option_name"
         private const val TRACKS_NEW_PARENT_ID = "new_parent_id"
+        private const val TRACKS_IS_LOCAL_DRAFT = "is_local_draft"
     }
+}
+
+private fun RsLocalDraftMenuAction.toAnalyticsAction(): String = when (this) {
+    RsLocalDraftMenuAction.RETRY -> "retry"
+    RsLocalDraftMenuAction.DELETE -> "delete_permanently"
 }
 
 /** Tracks values matching the legacy pages list (PagesViewModel.trackMenuSelectionEvent). */

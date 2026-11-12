@@ -34,6 +34,9 @@ import org.wordpress.android.ui.rs.RsCommentCountFetcher
 import org.wordpress.android.ui.rs.RsErrorUtils
 import org.wordpress.android.ui.rs.RsFeaturedImages
 import org.wordpress.android.ui.rs.RsFluxCBridge
+import org.wordpress.android.ui.rs.RsLocalDraftUiModel
+import org.wordpress.android.ui.rs.RsLocalDrafts
+import org.wordpress.android.ui.rs.RsLocalDraftsSection
 import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.ui.rs.RsReveal
 import org.wordpress.android.ui.rs.RsSnackbarMessage
@@ -47,6 +50,7 @@ import org.wordpress.android.ui.rs.checkNetwork
 import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.SEARCH_DEBOUNCE_MS
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.rs.contentlist.RsLocalDraftMenuAction
 import org.wordpress.android.ui.rs.contentlist.toContentItemUiModel
 import org.wordpress.android.ui.rs.data.FeaturedImageUrls
 import org.wordpress.android.ui.rs.data.RsSiteRestClient
@@ -54,6 +58,7 @@ import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.ui.rs.sendWithRetry
 import org.wordpress.android.ui.rs.toRsPostStatus
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -88,6 +93,8 @@ class PostRsListViewModel @Inject constructor(
     private val changeListener: RsPostChangeListener,
     private val statsDataSource: StatsDataSource,
     private val commentCountFetcher: RsCommentCountFetcher,
+    private val localDraftsSource: RsLocalDrafts,
+    private val uploadStarter: UploadStarter,
 ) : ViewModel() {
     private val _tabStates = MutableStateFlow<Map<PostRsListTab, RsTabUiState<PostRsUiModel>>>(emptyMap())
     val tabStates: StateFlow<Map<PostRsListTab, RsTabUiState<PostRsUiModel>>> = _tabStates.asStateFlow()
@@ -161,6 +168,18 @@ class PostRsListViewModel @Inject constructor(
     private val _site: SiteModel? = selectedSiteRepository.getSelectedSite()
     private val site: SiteModel
         get() = requireNotNull(_site) { "No selected site — Activity should have finished" }
+
+    /**
+     * Posts that exist only on this device - never uploaded, or their upload failed. The server's
+     * collections can't contain them, so they're read from FluxC and shown ahead of the Drafts tab.
+     * Outside search every one shows; in search, only those matching the query.
+     */
+    private val localDraftsSection = _site?.let {
+        RsLocalDraftsSection(viewModelScope, localDraftsSource, uploadStarter, resourceProvider, it, isPage = false) {
+            if (_isSearchActive.value) _searchQuery.value else ""
+        }
+    }
+    val localDrafts: StateFlow<List<RsLocalDraftUiModel>> = localDraftsSection?.drafts ?: MutableStateFlow(emptyList())
     private val postService by lazy { serviceProvider.getService(site).posts() }
 
     val avatarUrl: String? = accountStore.account?.avatarUrl
@@ -215,6 +234,7 @@ class PostRsListViewModel @Inject constructor(
                             RsTabUiState(isLoading = true)
                         }
                         initTab(activeSearchTab)
+                        localDraftsSection?.reload()
                     }
             }
             // Subscribe before starting the listener - its flow has no replay, so a change
@@ -225,6 +245,7 @@ class PostRsListViewModel @Inject constructor(
             viewModelScope.launch {
                 changeListener.uploads.collect { onPostUploaded(it) }
             }
+            localDraftsSection?.start(changeListener.localChanges)
             changeListener.start(site, isPages = false)
         }
     }
@@ -234,6 +255,8 @@ class PostRsListViewModel @Inject constructor(
     fun onScreenVisible() {
         isScreenVisible = true
         if (hasDeferredChange) onRemoteChangeDetected()
+        // Upload state lives partly in UploadService, which reports some changes without an event.
+        localDraftsSection?.reload()
         emitPendingReveal()
     }
 
@@ -395,6 +418,7 @@ class PostRsListViewModel @Inject constructor(
         _searchQuery.value = ""
         clearCollections()
         initTab(activeTab)
+        localDraftsSection?.reload()
     }
 
     /**
@@ -476,6 +500,7 @@ class PostRsListViewModel @Inject constructor(
             is PostRsConfirmation.Delete -> deletePost(confirmation.postId)
             is PostRsConfirmation.MoveToDraft ->
                 moveToDraftAndEdit(confirmation.postId)
+            is PostRsConfirmation.DeleteLocal -> deleteLocalDraft(confirmation.localId)
             null -> Unit
         }
         _pendingConfirmation.value = null
@@ -717,6 +742,41 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
+    /** Opens a draft that exists only on this device; see [RsLocalDraftsSection.open]. */
+    @MainThread
+    fun openLocalDraft(localId: Int) {
+        if (_isOpeningPost.value) return
+        analyticsTracker.track(
+            Stat.POST_LIST_ITEM_SELECTED,
+            site,
+            mapOf(TRACKS_ACTION to "edit", TRACKS_IS_LOCAL_DRAFT to true)
+        )
+        val post = localDraftsSection?.open(localId) ?: return
+        _events.trySend(PostRsListEvent.EditPost(site, post))
+    }
+
+    @MainThread
+    fun onLocalDraftMenuAction(localId: Int, action: RsLocalDraftMenuAction) {
+        analyticsTracker.track(
+            Stat.POST_LIST_BUTTON_PRESSED,
+            site,
+            mapOf(TRACKS_ACTION to action.toAnalyticsAction(), TRACKS_IS_LOCAL_DRAFT to true)
+        )
+        when (action) {
+            RsLocalDraftMenuAction.RETRY -> {
+                if (!checkNetwork()) return
+                localDraftsSection?.retry(localId)
+            }
+            RsLocalDraftMenuAction.DELETE ->
+                _pendingConfirmation.value = PostRsConfirmation.DeleteLocal(localId)
+        }
+    }
+
+    private fun deleteLocalDraft(localId: Int) {
+        localDraftsSection?.delete(localId)
+        _snackbarMessages.trySend(RsSnackbarMessage(resourceProvider.getString(R.string.post_rs_deleted)))
+    }
+
     /** Abandons the post being opened, for when the fetch behind the spinner is slow. */
     @MainThread
     fun cancelOpeningPost() {
@@ -897,6 +957,8 @@ class PostRsListViewModel @Inject constructor(
      */
     @MainThread
     fun refreshTab(tab: PostRsListTab, isUserRefresh: Boolean = false) {
+        // Before the collection check, so it also works on a tab that never loaded, e.g. opened offline.
+        if (isUserRefresh) localDraftsSection?.onUserRefresh()
         val collection = collections[tab] ?: run {
             // No collection yet (init failed or hasn't run), so Retry re-attempts the init.
             initTab(tab)
@@ -1348,7 +1410,13 @@ class PostRsListViewModel @Inject constructor(
         private const val TRACKS_ACTION = "action"
         private const val TRACKS_POST_ID = "post_id"
         private const val TRACKS_CREATE_NEW_POST = "create_new_post"
+        private const val TRACKS_IS_LOCAL_DRAFT = "is_local_draft"
     }
+}
+
+private fun RsLocalDraftMenuAction.toAnalyticsAction(): String = when (this) {
+    RsLocalDraftMenuAction.RETRY -> "retry"
+    RsLocalDraftMenuAction.DELETE -> "delete"
 }
 
 private fun PostRsMenuAction.toAnalyticsAction(): String = when (this) {

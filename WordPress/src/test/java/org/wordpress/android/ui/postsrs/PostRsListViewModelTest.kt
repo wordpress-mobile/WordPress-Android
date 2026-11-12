@@ -5,14 +5,19 @@ import app.cash.turbine.test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
+import org.mockito.kotlin.stub
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.timeout
 import org.mockito.kotlin.verifyBlocking
@@ -32,13 +37,17 @@ import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.rs.RsFluxCBridge
+import org.wordpress.android.ui.rs.RsLocalDraftUiModel
+import org.wordpress.android.ui.rs.RsLocalDrafts
 import org.wordpress.android.ui.rs.RsReveal
+import org.wordpress.android.ui.rs.contentlist.RsLocalDraftMenuAction
 import org.wordpress.android.ui.rs.data.RsSiteRestClient
 import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.rs.RsCommentCountFetcher
 import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
+import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -60,6 +69,8 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var statsDataSource: StatsDataSource
     @Mock lateinit var commentCountFetcher: RsCommentCountFetcher
     @Mock lateinit var dispatcher: Dispatcher
+    @Mock lateinit var localDraftsSource: RsLocalDrafts
+    @Mock lateinit var uploadStarter: UploadStarter
 
     private lateinit var site: SiteModel
     private lateinit var changeListener: RsPostChangeListener
@@ -77,6 +88,13 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             .thenReturn(AuthorFilterSelection.EVERYONE)
         whenever(resourceProvider.getString(any())).thenReturn("error")
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        stubLocalDrafts(emptyList())
+    }
+
+    private fun stubLocalDrafts(drafts: List<RsLocalDraftUiModel>) {
+        localDraftsSource.stub {
+            on { load(any(), any(), any(), any(), anyOrNull()) } doReturn drafts
+        }
     }
 
     @After
@@ -100,6 +118,8 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         changeListener = changeListener,
         statsDataSource = statsDataSource,
         commentCountFetcher = commentCountFetcher,
+        localDraftsSource = localDraftsSource,
+        uploadStarter = uploadStarter,
     ).also { activeViewModel = it }
 
     @Test
@@ -728,9 +748,147 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     // endregion
+
+    // region Local drafts
+
+    @Test
+    fun `local drafts are loaded when the list opens`() = test {
+        stubLocalDrafts(listOf(localDraft()))
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.localDrafts.value).containsExactly(localDraft())
+        verifyBlocking(localDraftsSource) { load(eq(site), eq(false), eq(""), any(), anyOrNull()) }
+    }
+
+    @Test
+    fun `pulling to refresh queues uploads and reloads local drafts`() = test {
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        viewModel.refreshTab(PostRsListTab.DRAFTS, isUserRefresh = true)
+        awaitTabInitFailure(viewModel, PostRsListTab.DRAFTS)
+
+        verify(uploadStarter, times(2)).queueUploadFromSite(site)
+        verifyBlocking(localDraftsSource, times(2)) { load(any(), any(), any(), any(), anyOrNull()) }
+    }
+
+    @Test
+    fun `a search filters local drafts by its query`() = test {
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        viewModel.onSearchOpen()
+        viewModel.onSearchQueryChanged("recipe", PostRsListTab.DRAFTS)
+        awaitTabInitFailure(viewModel, PostRsListTab.DRAFTS)
+
+        verifyBlocking(localDraftsSource) { load(eq(site), eq(false), eq("recipe"), any(), anyOrNull()) }
+    }
+
+    @Test
+    fun `closing search lists every local draft again`() = test {
+        val viewModel = createViewModel()
+        viewModel.onSearchOpen()
+        viewModel.onSearchQueryChanged("recipe", PostRsListTab.DRAFTS)
+        awaitTabInitFailure(viewModel, PostRsListTab.DRAFTS)
+
+        viewModel.onSearchClose(PostRsListTab.DRAFTS)
+        awaitTabInitFailure(viewModel, PostRsListTab.DRAFTS)
+
+        verifyBlocking(localDraftsSource, times(2)) { load(eq(site), eq(false), eq(""), any(), anyOrNull()) }
+    }
+
+    @Test
+    fun `a local draft opens in the editor without checking the network`() = test {
+        val post = postUpload()
+        whenever(localDraftsSource.open(site, LOCAL_DRAFT_ID)).thenReturn(post)
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        viewModel.events.test {
+            viewModel.openLocalDraft(LOCAL_DRAFT_ID)
+
+            assertThat(awaitItem()).isEqualTo(PostRsListEvent.EditPost(site, post))
+        }
+        // The editor reads the draft from FluxC, so being offline can't stand in the way.
+        verify(networkUtilsWrapper, never()).isNetworkAvailable()
+    }
+
+    @Test
+    fun `retry restarts the upload`() = test {
+        val viewModel = createViewModel()
+
+        viewModel.onLocalDraftMenuAction(LOCAL_DRAFT_ID, RsLocalDraftMenuAction.RETRY)
+
+        verify(localDraftsSource).retry(site, LOCAL_DRAFT_ID)
+    }
+
+    @Test
+    fun `retry offline does not start an upload`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        val viewModel = createViewModel()
+
+        viewModel.onLocalDraftMenuAction(LOCAL_DRAFT_ID, RsLocalDraftMenuAction.RETRY)
+
+        verify(localDraftsSource, never()).retry(any(), any())
+    }
+
+    @Test
+    fun `delete asks for confirmation before deleting`() = test {
+        val viewModel = createViewModel()
+
+        viewModel.onLocalDraftMenuAction(LOCAL_DRAFT_ID, RsLocalDraftMenuAction.DELETE)
+
+        assertThat(viewModel.pendingConfirmation.value).isEqualTo(PostRsConfirmation.DeleteLocal(LOCAL_DRAFT_ID))
+        verify(localDraftsSource, never()).delete(any(), any())
+
+        viewModel.onConfirmPendingAction()
+
+        verify(localDraftsSource).delete(site, LOCAL_DRAFT_ID)
+        assertThat(viewModel.pendingConfirmation.value).isNull()
+    }
+
+    @Test
+    fun `dismissing the delete confirmation keeps the draft`() = test {
+        val viewModel = createViewModel()
+
+        viewModel.onLocalDraftMenuAction(LOCAL_DRAFT_ID, RsLocalDraftMenuAction.DELETE)
+        viewModel.onDismissPendingAction()
+
+        verify(localDraftsSource, never()).delete(any(), any())
+    }
+
+    /**
+     * Initializing a tab builds its collection on Dispatchers.IO, a real thread advanceUntilIdle can't
+     * wait for. With [serviceProvider] a bare mock that init fails, so waiting for the tab's error
+     * keeps it from resuming onto Main after the test has torn the test dispatcher down.
+     */
+    private fun TestScope.awaitTabInitFailure(viewModel: PostRsListViewModel, tab: PostRsListTab) {
+        val deadline = System.currentTimeMillis() + FETCH_TIMEOUT_MS
+        advanceUntilIdle()
+        while (viewModel.tabStates.value[tab]?.error == null && System.currentTimeMillis() < deadline) {
+            Thread.sleep(POLL_INTERVAL_MS)
+            advanceUntilIdle()
+        }
+        assertThat(viewModel.tabStates.value[tab]?.error).isNotNull
+    }
+
+    private fun localDraft() = RsLocalDraftUiModel(
+        localId = LOCAL_DRAFT_ID,
+        title = "Unsent",
+        excerpt = "",
+        dateLabel = "now",
+        statusLabels = emptyList(),
+        isUploadFailed = true
+    )
+
+    // endregion
 }
 
+private const val LOCAL_DRAFT_ID = 7
 private const val UPLOADED_POST_ID = 4242L
 private const val PUBLISHED_ROW_ID = 1L
 private const val DRAFT_ROW_ID = 99L
 private const val FETCH_TIMEOUT_MS = 2_000L
+private const val POLL_INTERVAL_MS = 10L

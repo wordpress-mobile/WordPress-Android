@@ -15,9 +15,11 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import org.wordpress.android.R
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostRsUiModel
+import org.wordpress.android.ui.rs.RsLocalDraftUiModel
 import org.wordpress.android.ui.rs.RsTabUiState
 import org.wordpress.android.ui.rs.contentlist.ContentDateGroup
 import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
@@ -37,7 +39,9 @@ import org.wordpress.android.ui.postsrs.toContentListRowUiState
 import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
 import org.wordpress.android.ui.rs.contentlist.ReportVisibleRows
 import org.wordpress.android.ui.rs.contentlist.RevealRow
+import org.wordpress.android.ui.rs.contentlist.RsLocalDraftMenuAction
 import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
+import org.wordpress.android.ui.rs.contentlist.localDraftItems
 import org.wordpress.android.ui.rs.contentlist.toContentListRowActions
 
 @Composable
@@ -55,7 +59,10 @@ fun PostRsTabListScreen(
     isSearchIdle: Boolean = false,
     isSearching: Boolean = false,
     showDateGroups: Boolean = true,
-    density: ContentListDensity = ContentListDensity.COMFORTABLE
+    density: ContentListDensity = ContentListDensity.COMFORTABLE,
+    localDrafts: List<RsLocalDraftUiModel> = emptyList(),
+    onLocalDraftClick: (Int) -> Unit = {},
+    onLocalDraftAction: (Int, RsLocalDraftMenuAction) -> Unit = { _, _ -> }
 ) {
     ContentListPullToRefreshBox(
         isRefreshing = state.isRefreshing,
@@ -64,6 +71,29 @@ fun PostRsTabListScreen(
     ) {
         when {
             isSearchIdle -> Box(Modifier.fillMaxSize())
+            // Drafts only on this device show whatever the server fetch is doing - offline above all.
+            localDrafts.isNotEmpty() -> PostListContent(
+                posts = state.items,
+                localDrafts = localDrafts,
+                serverState = when {
+                    state.isLoading -> ServerRowsState.LOADING
+                    state.error != null && state.items.isEmpty() -> ServerRowsState.FAILED
+                    else -> ServerRowsState.LOADED
+                },
+                serverError = state.error,
+                revealPostId = revealPostId,
+                onRevealHandled = onRevealHandled,
+                isLoadingMore = state.isLoadingMore,
+                canLoadMore = state.canLoadMore,
+                onLoadMore = onLoadMore,
+                onPostClick = onPostClick,
+                onPostMenuAction = onPostMenuAction,
+                onLocalDraftClick = onLocalDraftClick,
+                onLocalDraftAction = onLocalDraftAction,
+                onRowsVisible = onRowsVisible,
+                showDateGroups = showDateGroups && !isSearching,
+                density = density
+            )
             state.isLoading -> ContentListShimmer()
             state.error != null && state.items.isEmpty() -> FadeInOnAppear {
                 ContentListErrorState(
@@ -111,7 +141,12 @@ private fun PostListContent(
     onPostMenuAction: (Long, PostRsMenuAction) -> Unit,
     onRowsVisible: (List<Long>) -> Unit,
     showDateGroups: Boolean,
-    density: ContentListDensity
+    density: ContentListDensity,
+    localDrafts: List<RsLocalDraftUiModel> = emptyList(),
+    serverState: ServerRowsState = ServerRowsState.LOADED,
+    serverError: String? = null,
+    onLocalDraftClick: (Int) -> Unit = {},
+    onLocalDraftAction: (Int, RsLocalDraftMenuAction) -> Unit = { _, _ -> }
 ) {
     val listState = rememberLazyListState()
 
@@ -119,9 +154,18 @@ private fun PostListContent(
         buildEntries(posts, showDateGroups, density)
     }
 
-    // Indexes the rendered entries, since group headers are list items too.
+    // Indexes the rendered entries, since group headers are list items too. Local drafts come first,
+    // under a header of their own, and the placeholder or error standing in for the server rows
+    // sits between the two.
+    val localItemCount = if (localDrafts.isEmpty()) 0 else localDrafts.size + 1
+    val serverStateItemCount = when (serverState) {
+        ServerRowsState.LOADING -> SERVER_PLACEHOLDER_COUNT
+        ServerRowsState.FAILED -> 1
+        ServerRowsState.LOADED -> 0
+    }
+    val entriesOffset = localItemCount + serverStateItemCount
     RevealRow(revealPostId, listState, onRevealHandled) { id ->
-        entries.indexOfFirst { it.postId == id }
+        entries.indexOfFirst { it.postId == id }.let { if (it < 0) it else it + entriesOffset }
     }
 
     // Post entries key on their remote id; group headers key on a String and drop out.
@@ -136,6 +180,21 @@ private fun PostListContent(
         modifier = Modifier.fillMaxSize(),
         contentPadding = ContentListDefaults.FabClearancePadding
     ) {
+        localDraftItems(
+            drafts = localDrafts,
+            density = density,
+            onClick = onLocalDraftClick,
+            onAction = onLocalDraftAction
+        )
+        when (serverState) {
+            ServerRowsState.LOADING -> items(SERVER_PLACEHOLDER_COUNT, key = { "server_placeholder_$it" }) {
+                ContentListPlaceholderRow()
+            }
+            ServerRowsState.FAILED -> item(key = "server_error") {
+                ContentListErrorRow(serverError ?: stringResource(R.string.post_rs_failed_to_load))
+            }
+            ServerRowsState.LOADED -> Unit
+        }
         items(
             items = entries,
             key = { it.key },
@@ -302,6 +361,12 @@ private fun RedesignedRow(
         }
     }
 }
+
+/** What the server's part of a list shows when local drafts already fill the top of it. */
+private enum class ServerRowsState { LOADING, FAILED, LOADED }
+
+/** Enough to read as "more coming" under the local drafts without pushing them off screen. */
+private const val SERVER_PLACEHOLDER_COUNT = 3
 
 /** Long enough to read as a fade rather than a flicker, short enough not to feel sluggish. */
 private const val STATE_FADE_MS = 300

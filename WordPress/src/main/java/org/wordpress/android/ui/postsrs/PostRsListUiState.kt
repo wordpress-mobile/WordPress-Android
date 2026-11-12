@@ -16,6 +16,7 @@ sealed interface PostRsConfirmation {
     data class Trash(val postId: Long) : PostRsConfirmation
     data class Delete(val postId: Long) : PostRsConfirmation
     data class MoveToDraft(val postId: Long) : PostRsConfirmation
+    data class DeleteLocal(val localId: Int) : PostRsConfirmation
 }
 
 enum class PostRsMenuAction(

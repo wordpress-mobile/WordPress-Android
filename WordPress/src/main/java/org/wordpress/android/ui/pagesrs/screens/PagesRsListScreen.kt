@@ -54,6 +54,7 @@ import org.wordpress.android.ui.pagesrs.PageRsMenuAction
 import org.wordpress.android.ui.pagesrs.PageRsParentPickerState
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.rs.RsConfirmationDialogState
+import org.wordpress.android.ui.rs.RsLocalDraftUiModel
 import org.wordpress.android.ui.rs.RsReveal
 import org.wordpress.android.ui.rs.RsSnackbarMessage
 import org.wordpress.android.ui.rs.RsTabUiState
@@ -66,6 +67,7 @@ import org.wordpress.android.ui.rs.contentlist.ContentListDensityToggle
 import org.wordpress.android.ui.rs.contentlist.ContentListSearchClearButton
 import org.wordpress.android.ui.rs.contentlist.ContentListSearchField
 import org.wordpress.android.ui.rs.contentlist.ReportSettledTab
+import org.wordpress.android.ui.rs.contentlist.RsLocalDraftMenuAction
 import org.wordpress.android.ui.rs.contentlist.ShowRsSnackbars
 
 @Suppress("CyclomaticComplexMethod")
@@ -102,7 +104,10 @@ internal fun PagesRsListScreen(
     onRowsVisible: (PageRsListTab, List<Long>) -> Unit,
     onDensityToggled: (PageRsListTab) -> Unit,
     onCancelOpeningPage: () -> Unit,
-    density: ContentListDensity = ContentListDensity.COMFORTABLE
+    density: ContentListDensity = ContentListDensity.COMFORTABLE,
+    localDrafts: List<RsLocalDraftUiModel> = emptyList(),
+    onLocalDraftClick: (Int) -> Unit = {},
+    onLocalDraftAction: (Int, RsLocalDraftMenuAction) -> Unit = { _, _ -> }
 ) {
     val tabs = PageRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
@@ -226,6 +231,13 @@ internal fun PagesRsListScreen(
             ) { page ->
                 val tab = tabs[page]
                 val tabState = tabStates[tab] ?: RsTabUiState(isLoading = true)
+                val isSearching = isSearchActive && searchQuery.length >= MIN_SEARCH_QUERY_LENGTH
+                // Local pages belong on Drafts; a search shows its matches in whichever tab it runs in.
+                val showsLocalDrafts = if (isSearchActive) {
+                    isSearching && tab == activeTab
+                } else {
+                    tab == PageRsListTab.DRAFTS
+                }
 
                 PageRsTabListScreen(
                     state = tabState,
@@ -233,13 +245,16 @@ internal fun PagesRsListScreen(
                     revealPageId = pendingReveal?.takeIf { it.tab == tab }?.remoteId,
                     onRevealHandled = { pendingReveal = null },
                     isSearchIdle = isSearchActive && searchQuery.length < MIN_SEARCH_QUERY_LENGTH,
-                    isSearching = isSearchActive && searchQuery.length >= MIN_SEARCH_QUERY_LENGTH,
+                    isSearching = isSearching,
                     onRefresh = { onRefreshTab(tab) },
                     onLoadMore = { onLoadMore(tab) },
                     onPageClick = { pageId -> onPageClick(pageId, tab) },
                     onPageMenuAction = onPageMenuAction,
                     onRowsVisible = { ids -> onRowsVisible(tab, ids) },
-                    density = density
+                    density = density,
+                    localDrafts = if (showsLocalDrafts) localDrafts else emptyList(),
+                    onLocalDraftClick = onLocalDraftClick,
+                    onLocalDraftAction = onLocalDraftAction
                 )
             }
         }
@@ -295,6 +310,14 @@ private fun PageConfirmationDialogHost(confirmationDialog: RsConfirmationDialogS
             titleResId = R.string.page_rs_move_trashed_page_to_draft_dialog_title,
             message = stringResource(R.string.page_rs_move_trashed_page_to_draft_dialog_message),
             confirmTextResId = R.string.pages_move_to_draft,
+            onConfirm = confirmationDialog.onConfirm,
+            onDismiss = confirmationDialog.onDismiss
+        )
+        is PageRsListConfirmation.DeleteLocal -> ContentListConfirmationDialog(
+            titleResId = R.string.delete_page,
+            message = stringResource(R.string.rs_local_draft_confirm_delete_message),
+            confirmTextResId = R.string.delete,
+            isDestructive = true,
             onConfirm = confirmationDialog.onConfirm,
             onDismiss = confirmationDialog.onDismiss
         )

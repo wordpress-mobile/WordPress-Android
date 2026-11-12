@@ -2,6 +2,7 @@ package org.wordpress.android.ui.rs.contentlist
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import org.wordpress.android.ui.utils.UiString
 
 /**
  * One row of the redesigned posts/pages list.
@@ -25,7 +26,11 @@ data class ContentListRowUiState(
     val areMetricsPending: Boolean = false,
     val badges: List<Int> = emptyList(),
     val isSyncing: Boolean = false,
-    val hasSyncFailed: Boolean = false
+    val hasSyncFailed: Boolean = false,
+    /** Shown after the date, e.g. a local draft's "Local draft" or upload error. */
+    val statusLabels: List<UiString> = emptyList(),
+    /** Draws [statusLabels] in the error colour. */
+    val isStatusError: Boolean = false
 )
 
 /**
