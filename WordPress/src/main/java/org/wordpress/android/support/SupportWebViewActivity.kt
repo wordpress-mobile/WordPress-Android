@@ -31,6 +31,7 @@ import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.setWindowStatusBarColor
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenUiState
 import org.wordpress.android.widgets.WPSnackbar
 import java.util.UUID
 import javax.inject.Inject
@@ -74,13 +75,19 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
     /**
      * Shows the fixed AI disclosure above the chat (EU AI Act Art. 50). The banner lives in the
      * AppBarLayout without scroll flags, so it stays visible for the whole conversation.
+     *
+     * It stays up while the chat is loading, so the disclosure is never late, but is hidden once
+     * the error view takes over: there is no AI conversation on screen to disclose then.
      */
     private fun showAiDisclosure() {
         findViewById<TextView>(R.id.ai_disclosure_text).text = getString(
             R.string.ai_support_disclosure,
             getString(R.string.ai_support_disclosure_product_name)
         )
-        findViewById<View>(R.id.ai_disclosure_banner).isVisible = true
+        val banner = findViewById<View>(R.id.ai_disclosure_banner)
+        webPreviewViewModel.uiState.observe(this) { uiState ->
+            banner.isVisible = uiState !is WebPreviewFullscreenUiState.WebPreviewFullscreenErrorUiState
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
