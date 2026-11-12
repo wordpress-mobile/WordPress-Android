@@ -16,6 +16,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** Reader → Subscriptions, and the unblocked site's stream
   - **Notes:** Unblocking a site on the web subscribes you to it again, and that is how the app finds out. A site you blocked without being subscribed to it comes back only after you subscribe to it, or log out and back in.
 
+- **Inactive sites no longer appear in the site list**
+  Sites that WordPress.com reports as inactive, such as a self-hosted Jetpack site whose domain has expired, are no longer listed. Previously they stayed in the list, and removing one with the X button only lasted until the next refresh.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** My Site → site switcher
+  - **Notes:** Inactive sites already on the device are removed on the next site refresh. A site that still has unsynced local posts is kept until those are dealt with. This matches what the iOS app and the WordPress.com web dashboard already show.
+
 - **Referrers and Clicks in Stats show each source's icon**
   Rows in the redesigned Stats' Referrers and Clicks cards, and their full lists, now show the site icon the Stats API already reports for the referrer or link, matching the web version. A row the API has no icon for shows none, and its title stays where it was. Expanding a referrer group, such as Search Engines, shows an icon for each entry under it too.
   - **Apps:** Both
