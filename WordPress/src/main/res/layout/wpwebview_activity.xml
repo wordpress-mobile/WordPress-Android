@@ -31,6 +31,11 @@
                 app:subtitleTextColor="?attr/wpColorOnSurfaceMedium"
                 app:theme="@style/WordPress.ActionBar" />
 
+            <!-- AI disclosure for the AI support chat; hidden unless the hosting screen shows it.
+                 Inside the AppBarLayout but without scroll flags, so it stays put while the page
+                 scrolls. -->
+            <include layout="@layout/ai_disclosure_banner" />
+
         </com.google.android.material.appbar.AppBarLayout>
 
         <RelativeLayout
