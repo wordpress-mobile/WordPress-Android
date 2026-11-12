@@ -899,8 +899,8 @@ Language: ro
     <string name="privacy_banner_analytics_description">Ne permit să optimizăm performanța prin colectarea de informații despre modul în care utilizatorii interacționează cu aplicațiile noastre pentru mobil.</string>
     <string name="privacy_banner_analytics">Analytics</string>
     <string name="privacy_banner_title">Administrează confidențialitatea</string>
-    <string name="tabbar_accessibility_label_me">Pe mine. Administrează informațiile din profilul tău.</string>
     <string name="privacy_banner_description">Confidențialitatea este foarte importantă pentru noi și a fost mereu în centrul atenției noastre. Folosim, stocăm și procesăm datele tale cu caracter personal în mai multe moduri ca să ne optimizăm aplicația (și experiența utilizatorilor). Avem nevoie neapărat de unele dintre datelor tale ca să facem lucrurile să funcționeze, iar alte date le poți personaliza în Setări.</string>
+    <string name="tabbar_accessibility_label_me">Pe mine. Administrează informațiile din profilul tău.</string>
     <string name="social_item_message_title">Mesaj</string>
     <string name="gutenberg_native_block_ungrouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bloc negrupat</string>
     <string name="gutenberg_native_block_grouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bloc grupat</string>

@@ -16,6 +16,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** Me → Help & Support → Get help → any AI Assistant conversation; also the older Contact Support chat reached from the post editor
   - **Notes:** Required by the EU AI Act (Art. 50), which asks for this label at the top of the chat rather than in a footer, everywhere in the world. The wording is written by the app, never by the bot, and is translated like any other string; "WordPress.com" in it is not translated. Both apps name WordPress.com, because that is who provides the support, so the Jetpack app says WordPress.com too. It is announced by screen readers along with the rest of the screen, and it wraps onto more lines rather than being cut off at larger text sizes.
 
+- **Inactive sites no longer appear in the site list**
+  Sites that WordPress.com reports as inactive, such as a self-hosted Jetpack site whose domain has expired, are no longer listed. Previously they stayed in the list, and removing one with the X button only lasted until the next refresh.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** My Site → site switcher
+  - **Notes:** Inactive sites already on the device are removed on the next site refresh. A site that still has unsynced local posts is kept until those are dealt with. This matches what the iOS app and the WordPress.com web dashboard already show.
+
 - **Referrers and Clicks in Stats show each source's icon**
   Rows in the redesigned Stats' Referrers and Clicks cards, and their full lists, now show the site icon the Stats API already reports for the referrer or link, matching the web version. A row the API has no icon for shows none, and its title stays where it was. Expanding a referrer group, such as Search Engines, shows an icon for each entry under it too.
   - **Apps:** Both
