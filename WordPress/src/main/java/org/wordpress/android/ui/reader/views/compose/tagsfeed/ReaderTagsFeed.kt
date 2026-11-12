@@ -513,8 +513,13 @@ data class TagsFeedPostItem(
     val onPostCardClick: (TagsFeedPostItem) -> Unit,
     val onPostLikeClick: (TagsFeedPostItem) -> Unit,
     val onPostMoreMenuClick: (TagsFeedPostItem) -> Unit,
-    // set by the view model when the more menu is opened
-    val moreMenuItems: List<ReaderPostCardAction>? = null,
+    // set by the view model while this card's more menu is open
+    val moreMenu: TagsFeedMoreMenu? = null,
+)
+
+data class TagsFeedMoreMenu(
+    val items: List<ReaderPostCardAction>,
+    val onDismiss: () -> Unit,
 )
 
 @Preview

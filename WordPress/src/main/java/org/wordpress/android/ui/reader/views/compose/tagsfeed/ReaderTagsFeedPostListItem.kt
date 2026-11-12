@@ -30,10 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -73,11 +70,6 @@ private const val CONTENT_TOTAL_LINES = 3
 fun ReaderTagsFeedPostListItem(
     item: TagsFeedPostItem,
 ) = with(item) {
-    var isMoreMenuExpanded by remember(blogId, postId) { mutableStateOf(false) }
-    val openMoreMenu = {
-        isMoreMenuExpanded = true
-        onPostMoreMenuClick(item)
-    }
     val baseColor = if (isSystemInDarkTheme()) AppColor.White else AppColor.Black
     val primaryElementColor = baseColor.copy(
         alpha = 0.87F
@@ -92,7 +84,7 @@ fun ReaderTagsFeedPostListItem(
         modifier = Modifier
             .width(ReaderTagsFeedComposeUtils.PostItemWidth)
             .height(ReaderTagsFeedComposeUtils.PostItemHeight)
-            .itemSemanticsModifier(item, openMoreMenu),
+            .itemSemanticsModifier(item),
         verticalArrangement = Arrangement.spacedBy(Margin.Small.value),
     ) {
         Row(
@@ -245,18 +237,13 @@ fun ReaderTagsFeedPostListItem(
                 )
             }
             Spacer(Modifier.weight(1f))
-            MoreMenu(
-                item = item,
-                isExpanded = isMoreMenuExpanded,
-                onOpen = openMoreMenu,
-                onDismiss = { isMoreMenuExpanded = false }
-            )
+            MoreMenu(item)
         }
     }
 }
 
 @Composable
-private fun MoreMenu(item: TagsFeedPostItem, isExpanded: Boolean, onOpen: () -> Unit, onDismiss: () -> Unit) {
+private fun MoreMenu(item: TagsFeedPostItem) {
     Box {
         Icon(
             painter = painterResource(R.drawable.ic_more_ellipsis_horizontal_squares),
@@ -268,15 +255,15 @@ private fun MoreMenu(item: TagsFeedPostItem, isExpanded: Boolean, onOpen: () -> 
                     interactionSource = null,
                     indication = ripple(bounded = false),
                     role = Role.Button,
-                    onClick = onOpen,
+                    onClick = { item.onPostMoreMenuClick(item) },
                 ),
         )
-        // the items arrive once the post has been read, just after the tap
-        val items = item.moreMenuItems
-        DropdownMenu(expanded = isExpanded && items != null, onDismissRequest = onDismiss) {
-            items?.forEach { action ->
+        // set once the post has been read, just after the tap
+        val moreMenu = item.moreMenu
+        DropdownMenu(expanded = moreMenu != null, onDismissRequest = { moreMenu?.onDismiss() }) {
+            moreMenu?.items?.forEach { action ->
                 ReaderPostMoreMenuItem(action) {
-                    onDismiss()
+                    moreMenu.onDismiss()
                     it.onClicked(item.postId, item.blogId, it.type)
                 }
             }
@@ -284,7 +271,7 @@ private fun MoreMenu(item: TagsFeedPostItem, isExpanded: Boolean, onOpen: () -> 
     }
 }
 
-private fun Modifier.itemSemanticsModifier(item: TagsFeedPostItem, openMoreMenu: () -> Unit): Modifier = composed {
+private fun Modifier.itemSemanticsModifier(item: TagsFeedPostItem): Modifier = composed {
     val openPostActionLabel = stringResource(R.string.reader_tags_feed_action_label_open_post)
     val openBlogActionLabel = stringResource(R.string.reader_tags_feed_action_label_open_blog)
 
@@ -313,7 +300,7 @@ private fun Modifier.itemSemanticsModifier(item: TagsFeedPostItem, openMoreMenu:
                 true
             },
             CustomAccessibilityAction(openMenuActionLabel) {
-                openMoreMenu()
+                item.onPostMoreMenuClick(item)
                 true
             },
         )

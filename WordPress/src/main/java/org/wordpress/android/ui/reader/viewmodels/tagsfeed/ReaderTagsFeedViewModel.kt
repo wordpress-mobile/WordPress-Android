@@ -18,7 +18,6 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
-import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
@@ -27,6 +26,7 @@ import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 
+import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedMoreMenu
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
@@ -66,7 +66,6 @@ class ReaderTagsFeedViewModel @Inject constructor(
     // from this ViewModel.
     private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
-
 
     private var hasInitialized = false
 
@@ -470,8 +469,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     private fun onPostMoreMenuClick(postItem: TagsFeedPostItem) {
         readerTracker.track(AnalyticsTracker.Stat.POST_CARD_MORE_TAPPED)
-        // cleared first, so the menu doesn't open with the items from the last time it was shown
-        setMoreMenuItems(postItem, null)
+        // the row is found now, since the same post can be shown under more than one tag
+        val tagSlug = findTagFeedItemShowing(postItem)?.tagChip?.tag?.tagSlug ?: return
         launch {
             findPost(postItem.postId, postItem.blogId)?.let { post ->
                 val items = readerPostMoreButtonUiStateBuilder.buildMoreMenuItems(
@@ -479,24 +478,40 @@ class ReaderTagsFeedViewModel @Inject constructor(
                     includeBookmark = true,
                     onButtonClicked = ::onMoreMenuButtonClicked,
                 )
-                setMoreMenuItems(postItem, items)
+                val moreMenu = TagsFeedMoreMenu(items, onDismiss = ::closeMoreMenu)
+                updatePostItems { tagFeedItem, item ->
+                    val isCard = tagFeedItem.tagChip.tag.tagSlug == tagSlug &&
+                            item.postId == postItem.postId && item.blogId == postItem.blogId
+                    // only one menu is open at a time
+                    item.withMoreMenu(if (isCard) moreMenu else null)
+                }
             }
         }
     }
 
+    private fun closeMoreMenu() = updatePostItems { _, item -> item.withMoreMenu(null) }
+
+    // unchanged cards keep their instance, which findTagFeedItemShowing relies on
+    private fun TagsFeedPostItem.withMoreMenu(moreMenu: TagsFeedMoreMenu?) =
+        if (this.moreMenu == moreMenu) this else copy(moreMenu = moreMenu)
+
     /*
-     * sets the menu items on every card showing the post, since a post can appear under more than one tag; the
-     * card that was tapped is the only one with its menu open
+     * the row showing this card: by identity, since a post under two tags gives two equal cards, falling back to
+     * the first row with the post if the card has been replaced since
      */
-    private fun setMoreMenuItems(postItem: TagsFeedPostItem, items: List<ReaderPostCardAction>?) {
+    private fun findTagFeedItemShowing(postItem: TagsFeedPostItem): TagFeedItem? {
+        val rows = (_uiStateFlow.value as? UiState.Loaded)?.data ?: return null
+        fun TagFeedItem.cards() = (postList as? PostList.Loaded)?.items.orEmpty()
+        fun TagFeedItem.hasPost() = cards().any { it.postId == postItem.postId && it.blogId == postItem.blogId }
+        return rows.firstOrNull { row -> row.cards().any { it === postItem } } ?: rows.firstOrNull { it.hasPost() }
+    }
+
+    private fun updatePostItems(transform: (TagFeedItem, TagsFeedPostItem) -> TagsFeedPostItem) {
         _uiStateFlow.update { uiState ->
             if (uiState !is UiState.Loaded) return@update uiState
             uiState.copy(data = uiState.data.map { tagFeedItem ->
                 val postList = tagFeedItem.postList as? PostList.Loaded ?: return@map tagFeedItem
-                tagFeedItem.copy(postList = postList.copy(items = postList.items.map { item ->
-                    val isPost = item.postId == postItem.postId && item.blogId == postItem.blogId
-                    if (isPost) item.copy(moreMenuItems = items) else item
-                }))
+                tagFeedItem.copy(postList = postList.copy(items = postList.items.map { transform(tagFeedItem, it) }))
             })
         }
     }

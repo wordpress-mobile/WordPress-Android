@@ -109,6 +109,8 @@ class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener
         // everything shown here comes from the intent, so there's no state to save; AndroidFragment restores the list
         val listArguments = listArguments()
         val title = screenTitle()
+        // also the window's title, which TalkBack announces and Recents shows
+        setTitle(title)
         setupBackPressCallback()
         setContent {
             AppThemeM3 {
