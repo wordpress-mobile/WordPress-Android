@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Reader search reports a subscribe that couldn't start**
+  On the Sites tab of Reader search, tapping Subscribe on a site that can't be subscribed to from there now shows the "Unable to subscribe to this blog" message, the same one shown when the request fails. Previously the button just flipped back without saying anything.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Reader → Search → Sites → Subscribe
+  - **Notes:** Rare: it happens when the app has the site's feed on record but no feed address for it. Unsubscribing from the same place shows the matching "Unable to unsubscribe from blog" message.
+
 - **Inactive sites no longer appear in the site list**
   Sites that WordPress.com reports as inactive, such as a self-hosted Jetpack site whose domain has expired, are no longer listed. Previously they stayed in the list, and removing one with the X button only lasted until the next refresh.
   - **Apps:** Both

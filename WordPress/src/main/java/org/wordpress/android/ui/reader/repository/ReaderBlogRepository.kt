@@ -91,8 +91,8 @@ class ReaderBlogRepository @Inject constructor(
      */
     suspend fun followFeed(feedId: Long, follow: Boolean, source: String): Boolean =
         // the lookup is part of the follow, so it isn't dropped if the caller is cancelled while it runs
-        withContext(NonCancellable) {
-            val blogInfo = withContext(ioDispatcher) { ReaderBlogTable.getFeedInfo(feedId) }
+        withContext(ioDispatcher + NonCancellable) {
+            val blogInfo = ReaderBlogTable.getFeedInfo(feedId)
                 ?: fetchFeedInfo(feedId, null)
             blogInfo?.let { followFeed(it.blogId, it.feedId, it.feedUrl, follow, source) } ?: false
         }
@@ -103,10 +103,8 @@ class ReaderBlogRepository @Inject constructor(
     suspend fun followFeedUrl(feedUrl: String, source: String): Boolean {
         if (feedUrl.isEmpty()) return false
         // the lookup is part of the follow, so it isn't dropped if the caller is cancelled while it runs
-        return withContext(NonCancellable) {
-            val blogInfo = withContext(ioDispatcher) {
-                ReaderBlogTable.getFeedInfo(ReaderBlogTable.getFeedIdFromUrl(feedUrl))
-            }
+        return withContext(ioDispatcher + NonCancellable) {
+            val blogInfo = ReaderBlogTable.getFeedInfo(ReaderBlogTable.getFeedIdFromUrl(feedUrl))
             if (blogInfo != null) {
                 followFeed(blogInfo.blogId, blogInfo.feedId, blogInfo.feedUrl, true, source)
             } else {
@@ -200,15 +198,19 @@ class ReaderBlogRepository @Inject constructor(
      * Only the local undo is waited for.
      */
     suspend fun undoBlockBlog(blockResult: BlockedBlogResult, source: String) {
-        withContext(ioDispatcher) { undoBlockBlogLocal(blockResult) }
-        applicationScope.launch(ioDispatcher) {
-            AppLog.i(T.READER, "unblocking blog ${blockResult.blogId}")
-            val result = post("me/block/sites/${blockResult.blogId}/delete")
-            when {
-                result is RestResult.Failure -> logVolleyError("unblock blog", result.error)
-                result.response?.optBoolean("success") != true ->
-                    AppLog.w(T.READER, "failed to unblock blog ${blockResult.blogId}")
-                blockResult.wasFollowing -> followBlog(blockResult.blogId, blockResult.feedId, true, source)
+        // the server call is launched inside the non-cancellable block, so a caller cancelled during the local
+        // undo can't leave the site unblocked locally but still blocked on the server
+        withContext(ioDispatcher + NonCancellable) {
+            undoBlockBlogLocal(blockResult)
+            applicationScope.launch(ioDispatcher) {
+                AppLog.i(T.READER, "unblocking blog ${blockResult.blogId}")
+                val result = post("me/block/sites/${blockResult.blogId}/delete")
+                when {
+                    result is RestResult.Failure -> logVolleyError("unblock blog", result.error)
+                    result.response?.optBoolean("success") != true ->
+                        AppLog.w(T.READER, "failed to unblock blog ${blockResult.blogId}")
+                    blockResult.wasFollowing -> followBlog(blockResult.blogId, blockResult.feedId, true, source)
+                }
             }
         }
     }

@@ -226,7 +226,7 @@ class ReaderPostRepository @Inject constructor(
 
     /**
      * Likes or unlikes the post on the server and returns whether it succeeded. If it fails, the local like
-     * is reverted to the passed post's state. This finishes even if the caller is cancelled.
+     * is reverted to the passed post's state, if there is one. This finishes even if the caller is cancelled.
      */
     suspend fun likePostRemote(
         post: ReaderPost?,
@@ -243,9 +243,13 @@ class ReaderPostRepository @Inject constructor(
         if (result is RestResult.Failure) {
             val error = result.errorString
             AppLog.w(AppLog.T.READER, "post $actionName failed" + if (error.isEmpty()) "" else " ($error)")
+            // restore the post's state from before the action. Without the post there's nothing to restore,
+            // and writing the like table anyway would add a like for a caller that never applied one locally
             if (!result.isCancelled) {
-                post?.let { ReaderPostTable.setLikesForPost(it, it.numLikes, it.isLikedByCurrentUser) }
-                ReaderLikeTable.setCurrentUserLikesPost(postId, blogId, !like, wpComUserId)
+                post?.let {
+                    ReaderPostTable.setLikesForPost(it, it.numLikes, it.isLikedByCurrentUser)
+                    ReaderLikeTable.setCurrentUserLikesPost(it, it.isLikedByCurrentUser, wpComUserId)
+                }
             }
         } else {
             AppLog.d(AppLog.T.READER, "post $actionName succeeded")
