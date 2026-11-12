@@ -863,7 +863,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
 
     @Test
     fun `a draft mid-upload is neither opened nor deleted`() = test {
-        whenever(localDraftsSource.isUploading(site, LOCAL_DRAFT_ID)).thenReturn(true)
+        whenever(localDraftsSource.isUploadingOrQueued(site, LOCAL_DRAFT_ID)).thenReturn(true)
         whenever(resourceProvider.getString(R.string.editor_uploading_draft)).thenReturn("Uploading")
         val viewModel = createViewModel()
         advanceUntilIdle()
@@ -883,7 +883,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     fun `a delete confirmed after the upload started is refused`() = test {
         val viewModel = createViewModel()
         viewModel.onLocalDraftMenuAction(LOCAL_DRAFT_ID, RsLocalDraftMenuAction.DELETE)
-        whenever(localDraftsSource.isUploading(site, LOCAL_DRAFT_ID)).thenReturn(true)
+        whenever(localDraftsSource.isUploadingOrQueued(site, LOCAL_DRAFT_ID)).thenReturn(true)
 
         viewModel.onConfirmPendingAction()
 

@@ -98,9 +98,9 @@ class RsLocalDrafts @Inject constructor(
     }
 
     /**
-     * The draft to hand the editor, or null when it was uploaded or deleted since the list loaded. A
-     * queued upload is cancelled first, as the legacy list does, so it can't race the edit; media
-     * already uploading carries on.
+     * The draft to hand the editor, or null when it was uploaded or deleted since the list loaded. One
+     * waiting on its media has that upload cancelled first, as the legacy list does, so it can't race the
+     * edit; media already uploading carries on. One queued or uploading is refused before this is called.
      */
     fun open(site: SiteModel, localId: Int): PostModel? {
         val post = find(site, localId) ?: return null
@@ -109,11 +109,14 @@ class RsLocalDrafts @Inject constructor(
     }
 
     /**
-     * Whether the draft is being sent to the server right now. Cancelling only stops a queued upload, so
-     * editing or deleting it then would race the push - as the legacy lists' overlay prevents.
+     * Whether the draft is being sent to the server, or is queued to be. PostUploadHandler pushes its
+     * queued copy even after a cancel or delete, so editing or deleting it then would race the push, and a
+     * deleted draft would come back.
      */
-    fun isUploading(site: SiteModel, localId: Int): Boolean =
-        find(site, localId)?.let { uploadServiceFacade.isPostUploading(it) } == true
+    fun isUploadingOrQueued(site: SiteModel, localId: Int): Boolean {
+        val post = find(site, localId) ?: return false
+        return uploadServiceFacade.isPostUploading(post) || uploadServiceFacade.isPostQueued(post)
+    }
 
     private fun find(site: SiteModel, localId: Int): PostModel? =
         postStore.getPostByLocalPostId(localId)?.takeIf { it.isLocalDraft && it.localSiteId == site.id }

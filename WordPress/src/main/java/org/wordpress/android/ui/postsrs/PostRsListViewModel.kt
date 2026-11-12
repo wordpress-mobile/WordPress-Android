@@ -782,7 +782,7 @@ class PostRsListViewModel @Inject constructor(
 
     /** True, after telling the user, when the draft is mid-upload and can't be edited or deleted yet. */
     private fun isLocalDraftUploading(localId: Int): Boolean {
-        if (localDraftsSection?.isUploading(localId) != true) return false
+        if (localDraftsSection?.isUploadingOrQueued(localId) != true) return false
         _snackbarMessages.trySend(RsSnackbarMessage(resourceProvider.getString(R.string.editor_uploading_draft)))
         return true
     }

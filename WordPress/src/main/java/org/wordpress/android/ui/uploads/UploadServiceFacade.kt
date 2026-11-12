@@ -28,6 +28,9 @@ class UploadServiceFacade @Inject constructor(private val appContext: Context) {
     fun isPostUploading(post: PostImmutableModel) =
         UploadService.isPostUploading(post)
 
+    fun isPostQueued(post: PostImmutableModel) =
+        UploadService.isPostQueued(post)
+
     fun cancelQueuedPostUpload(post: PostModel) =
         UploadService.cancelQueuedPostUpload(post)
 

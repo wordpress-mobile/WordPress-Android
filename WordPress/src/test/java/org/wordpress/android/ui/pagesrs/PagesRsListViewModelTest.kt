@@ -903,7 +903,7 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
 
     @Test
     fun `a local page mid-upload is neither opened nor deleted`() = test {
-        whenever(localDraftsSource.isUploading(site, LOCAL_PAGE_ID)).thenReturn(true)
+        whenever(localDraftsSource.isUploadingOrQueued(site, LOCAL_PAGE_ID)).thenReturn(true)
         whenever(resourceProvider.getString(R.string.editor_uploading_page)).thenReturn("Uploading")
         val viewModel = createViewModel()
         advanceUntilIdle()

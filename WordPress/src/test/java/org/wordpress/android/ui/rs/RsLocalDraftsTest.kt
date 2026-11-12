@@ -248,12 +248,21 @@ class RsLocalDraftsTest : BaseUnitTest() {
         whenever(postStore.getPostByLocalPostId(LOCAL_ID)).thenReturn(post)
         whenever(uploadServiceFacade.isPostUploading(post)).thenReturn(true)
 
-        assertThat(localDrafts.isUploading(site, LOCAL_ID)).isTrue
+        assertThat(localDrafts.isUploadingOrQueued(site, LOCAL_ID)).isTrue
+    }
+
+    @Test
+    fun `a draft queued behind another upload counts too, since its queued copy is pushed even after a delete`() {
+        val post = localDraft()
+        whenever(postStore.getPostByLocalPostId(LOCAL_ID)).thenReturn(post)
+        whenever(uploadServiceFacade.isPostQueued(post)).thenReturn(true)
+
+        assertThat(localDrafts.isUploadingOrQueued(site, LOCAL_ID)).isTrue
     }
 
     @Test
     fun `a draft that is gone is not uploading`() {
-        assertThat(localDrafts.isUploading(site, LOCAL_ID)).isFalse
+        assertThat(localDrafts.isUploadingOrQueued(site, LOCAL_ID)).isFalse
     }
 
     @Test
