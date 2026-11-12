@@ -377,7 +377,7 @@ class ReaderViewModel @Inject constructor(
         maxRetries: Int = 10,
         block: suspend CoroutineScope.(topBarUiState: TopBarUiState) -> Unit
     ) {
-        launch(bgDispatcher) {
+        launch(mainDispatcher) {
             if (initialDelay > 0L) delay(initialDelay)
 
             var remainingTries = maxRetries
@@ -386,12 +386,9 @@ class ReaderViewModel @Inject constructor(
                 remainingTries--
             }
 
-            // read the state on the main thread, where the block sets it, so an update made while this one was
-            // waiting (such as a new filter count while the selected filter is cleared) isn't overwritten.
+            // read and set on main so an update made while this one waited isn't overwritten.
             // Only run the block if the topBarUiState is not null, otherwise do nothing
-            withContext(mainDispatcher) {
-                _topBarUiState.value?.let { topBarUiState -> block(topBarUiState) }
-            }
+            _topBarUiState.value?.let { topBarUiState -> block(topBarUiState) }
         }
     }
 

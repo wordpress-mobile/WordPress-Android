@@ -328,13 +328,7 @@ class ReaderPostListViewModel @Inject constructor(
                 }
             }
 
-            siteSubfilter != null -> launch {
-                if (repository.isFollowedSite(siteSubfilter.blog)) {
-                    reload()
-                } else if (isFilterable) {
-                    sendUiEvent(ReaderPostListUiEvent.SetDefaultSubfilter)
-                }
-            }
+            siteSubfilter != null -> reloadOrResetSiteSubfilter(siteSubfilter)
 
             else -> reload()
         }
@@ -377,18 +371,18 @@ class ReaderPostListViewModel @Inject constructor(
     private fun onPostsChanged() {
         reloadSubfilters()
         val site = siteSubfilter
-        if (!isFilterable || site == null) {
+        if (site != null) reloadOrResetSiteSubfilter(site) else reload()
+    }
+
+    /*
+     * Reloads the site picked in the Subscriptions filter, or shows all subscriptions if it's no longer followed
+     * (such as after it was blocked), since its list would otherwise be empty
+     */
+    private fun reloadOrResetSiteSubfilter(site: SubfilterListItem.Site) = launch {
+        if (repository.isFollowedSite(site.blog)) {
             reload()
-            return
-        }
-        launch {
-            // blocking the site picked in the Subscriptions filter unfollows it, which would leave an empty
-            // list - show all subscriptions instead
-            if (repository.isFollowedSite(site.blog)) {
-                reload()
-            } else {
-                sendUiEvent(ReaderPostListUiEvent.SetDefaultSubfilter)
-            }
+        } else if (isFilterable) {
+            sendUiEvent(ReaderPostListUiEvent.SetDefaultSubfilter)
         }
     }
 

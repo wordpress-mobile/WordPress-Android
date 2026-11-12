@@ -75,6 +75,9 @@ public class ReaderBlockedBlogTable {
     }
 
     public static void removeBlockedBlogs(Collection<Long> blogIds) {
+        if (blogIds.isEmpty()) {
+            return;
+        }
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         db.beginTransaction();
         try {
