@@ -1,10 +1,13 @@
 package org.wordpress.android.ui.rs
 
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runCurrent
+import kotlinx.coroutines.withContext
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -12,6 +15,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.stub
@@ -71,6 +75,32 @@ class RsLocalDraftsSectionTest : BaseUnitTest(StandardTestDispatcher()) {
         runCurrent()
 
         verifyBlocking(source) { load(eq(site), eq(false), eq("banana"), any(), any()) }
+    }
+
+    @Test
+    fun `a reload waits for the load it cancels, since that load can't stop mid-query`() = test {
+        val firstLoadGate = CompletableDeferred<Unit>()
+        var loads = 0
+        source.stub {
+            on { load(any(), any(), any(), any(), anyOrNull()) } doSuspendableAnswer {
+                loads++
+                if (loads == 1) withContext(NonCancellable) { firstLoadGate.await() }
+                listOf(draft())
+            }
+        }
+        val section = section()
+
+        section.reload()
+        runCurrent()
+        section.reload()
+        runCurrent()
+        assertThat(loads).isEqualTo(1)
+
+        firstLoadGate.complete(Unit)
+        runCurrent()
+
+        assertThat(loads).isEqualTo(2)
+        assertThat(section.drafts.value).containsExactly(draft())
     }
 
     @Test

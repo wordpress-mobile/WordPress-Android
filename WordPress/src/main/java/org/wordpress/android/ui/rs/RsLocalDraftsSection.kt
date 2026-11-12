@@ -45,10 +45,14 @@ internal class RsLocalDraftsSection(
     }
 
     fun reload() {
-        loadJob?.cancel()
+        val previous = loadJob
+        previous?.cancel()
         // Read now rather than in the coroutine, so a load reflects the query it was asked for.
         val currentQuery = query()
         loadJob = scope.launch {
+            // Cancelling doesn't stop a load mid-query, and loads share the upload status tracker's
+            // unsynchronized cache, so the next one waits for it to finish.
+            previous?.join()
             @Suppress("TooGenericExceptionCaught")
             try {
                 _drafts.value = source.load(
