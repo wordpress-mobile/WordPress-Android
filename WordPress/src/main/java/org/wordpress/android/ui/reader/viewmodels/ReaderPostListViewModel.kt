@@ -665,11 +665,7 @@ class ReaderPostListViewModel @Inject constructor(
                 onFollowedTagsFetched()
             }
 
-            is ReaderPostListEvent.FollowedBlogsFetched -> if (isFollowedSitesList) {
-                if (event.didChange) reload()
-                // posts from a site whose block was just cleared were dropped when they were saved, so ask again
-                if (event.didClearBlocks) currentTarget()?.let { requestPosts(it, UpdateAction.REQUEST_NEWER) }
-            }
+            is ReaderPostListEvent.FollowedBlogsFetched -> if (isFollowedSitesList) onFollowedBlogsFetched(event)
         }
     }
 
@@ -684,6 +680,12 @@ class ReaderPostListViewModel @Inject constructor(
             requestFailed = true
             setIsUpdating(false, action)
         }
+    }
+
+    private fun onFollowedBlogsFetched(event: ReaderPostListEvent.FollowedBlogsFetched) {
+        if (event.didChange) reload()
+        // posts from a site whose block was just cleared were dropped when they were saved, so ask again
+        if (event.didClearBlocks) currentTarget()?.let { requestPosts(it, UpdateAction.REQUEST_NEWER) }
     }
 
     private fun onFollowedTagsFetched() = launch {
