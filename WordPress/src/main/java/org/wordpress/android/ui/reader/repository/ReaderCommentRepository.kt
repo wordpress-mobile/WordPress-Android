@@ -250,7 +250,7 @@ class ReaderCommentRepository @Inject constructor(
         return if (comments.isNotEmpty()) UpdateResult.HAS_NEW else UpdateResult.UNCHANGED
     }
 
-    // RestClientUtils.post doesn't return its request, so a POST isn't cancelled with the caller
+    // a POST isn't cancelled with the caller, since the server may already have acted on it
     private suspend fun post(path: String, params: Map<String, String>?): JSONObject? =
         request { listener, errorListener ->
             WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener)

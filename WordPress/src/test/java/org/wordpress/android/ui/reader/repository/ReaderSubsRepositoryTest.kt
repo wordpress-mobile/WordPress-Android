@@ -9,12 +9,11 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.ui.reader.tracker.ReaderTracker
 
 @ExperimentalCoroutinesApi
 class ReaderSubsRepositoryTest : BaseUnitTest() {
     @Mock lateinit var tagsAndSitesUpdater: ReaderTagsAndSitesUpdater
-    @Mock lateinit var readerTracker: ReaderTracker
+    @Mock lateinit var blogRepository: ReaderBlogRepository
 
     private val updaterEvents = MutableSharedFlow<ReaderTagsAndSitesEvent>()
 
@@ -23,7 +22,7 @@ class ReaderSubsRepositoryTest : BaseUnitTest() {
     @Before
     fun setUp() {
         whenever(tagsAndSitesUpdater.events).thenReturn(updaterEvents)
-        repository = ReaderSubsRepository(tagsAndSitesUpdater, readerTracker, testDispatcher())
+        repository = ReaderSubsRepository(tagsAndSitesUpdater, blogRepository, testDispatcher())
     }
 
     @Test
