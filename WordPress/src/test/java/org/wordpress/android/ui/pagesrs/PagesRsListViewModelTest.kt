@@ -556,6 +556,19 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     }
 
     @Test
+    fun `a local page's menu tracks PAGES_OPTIONS_PRESSED under option_name, as server rows do`() {
+        val viewModel = createViewModel()
+
+        viewModel.onLocalDraftMenuAction(LOCAL_PAGE_ID, RsLocalDraftMenuAction.RETRY)
+
+        verify(analyticsTracker).track(
+            eq(Stat.PAGES_OPTIONS_PRESSED),
+            eq(site),
+            eq(mapOf("option_name" to "retry", "is_local_draft" to true))
+        )
+    }
+
+    @Test
     fun `onDismissPendingAction clears pending confirmation`() {
         val viewModel = createViewModel()
         viewModel.onPageMenuAction(42L, PageRsMenuAction.TRASH)

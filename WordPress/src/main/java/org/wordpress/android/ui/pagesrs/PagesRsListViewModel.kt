@@ -880,7 +880,7 @@ internal class PagesRsListViewModel @Inject constructor(
         analyticsTracker.track(
             Stat.PAGES_OPTIONS_PRESSED,
             site,
-            mapOf(TRACKS_ACTION to action.toAnalyticsAction(), TRACKS_IS_LOCAL_DRAFT to true)
+            mapOf(TRACKS_OPTION_NAME to action.toAnalyticsAction(), TRACKS_IS_LOCAL_DRAFT to true)
         )
         when (action) {
             RsLocalDraftMenuAction.RETRY -> {
