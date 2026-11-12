@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Drafts that never uploaded appear in the redesigned Posts and Pages lists**
+  Posts and pages saved on the device but never uploaded, because saving failed or the device was offline, now appear under "Not uploaded" at the top of the Drafts tab, with their upload status or error. Previously these lists didn't show them at all, so once the upload-failure notification was dismissed there was no way back to the draft. Tap one to keep editing, even offline; its menu offers Retry after a failed upload, and Delete.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** My Site → Posts → Drafts, and My Site → Pages → Drafts
+  - **Notes:** Only on sites that use the redesigned lists: sites added with an Application Password, and WordPress.com sites where the redesign is enabled. Searching also matches these drafts by title and content. Opening the list or pulling to refresh retries uploads that are still due, as the old lists did; drafts last changed more than two days ago aren't retried automatically, so they show their error until you tap Retry. Delete removes the only copy and can't be undone.
+
 - **Reader search reports a subscribe that couldn't start**
   On the Sites tab of Reader search, tapping Subscribe on a site that can't be subscribed to from there now shows the "Unable to subscribe to this blog" message, the same one shown when the request fails. Previously the button just flipped back without saying anything.
   - **Apps:** Both
