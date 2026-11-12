@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -34,6 +36,7 @@ internal class RsLocalDraftsSection(
     val drafts: StateFlow<List<RsLocalDraftUiModel>> = _drafts.asStateFlow()
 
     private var loadJob: Job? = null
+    private val loadLock = Mutex()
 
     /**
      * Lists the drafts and keeps them current with [localChanges]. Uploads still due are left to
@@ -45,27 +48,28 @@ internal class RsLocalDraftsSection(
     }
 
     fun reload() {
-        val previous = loadJob
-        previous?.cancel()
+        loadJob?.cancel()
         // Read now rather than in the coroutine, so a load reflects the query it was asked for.
         val currentQuery = query()
         loadJob = scope.launch {
             // Cancelling doesn't stop a load mid-query, and loads share the upload status tracker's
-            // unsynchronized cache, so the next one waits for it to finish.
-            previous?.join()
-            @Suppress("TooGenericExceptionCaught")
-            try {
-                _drafts.value = source.load(
-                    site = site,
-                    isPage = isPage,
-                    query = currentQuery,
-                    nowLabel = resourceProvider.getString(R.string.rs_date_now),
-                    dateFormat = resourceProvider.getString(R.string.rs_date_modified)
-                )
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                AppLog.e(AppLog.T.POSTS, "Failed to load local drafts", e)
+            // unsynchronized cache. The lock is held until a cancelled load has really finished, which
+            // joining the previous job doesn't ensure once that job was itself cancelled while waiting.
+            loadLock.withLock {
+                @Suppress("TooGenericExceptionCaught")
+                try {
+                    _drafts.value = source.load(
+                        site = site,
+                        isPage = isPage,
+                        query = currentQuery,
+                        nowLabel = resourceProvider.getString(R.string.rs_date_now),
+                        dateFormat = resourceProvider.getString(R.string.rs_date_modified)
+                    )
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    AppLog.e(AppLog.T.POSTS, "Failed to load local drafts", e)
+                }
             }
         }
     }

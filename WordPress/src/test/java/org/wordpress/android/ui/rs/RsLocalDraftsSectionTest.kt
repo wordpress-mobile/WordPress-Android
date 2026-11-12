@@ -78,7 +78,7 @@ class RsLocalDraftsSectionTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
-    fun `a reload waits for the load it cancels, since that load can't stop mid-query`() = test {
+    fun `reloads wait for the load they cancel, since that load can't stop mid-query`() = test {
         val firstLoadGate = CompletableDeferred<Unit>()
         var loads = 0
         source.stub {
@@ -90,10 +90,11 @@ class RsLocalDraftsSectionTest : BaseUnitTest(StandardTestDispatcher()) {
         }
         val section = section()
 
-        section.reload()
-        runCurrent()
-        section.reload()
-        runCurrent()
+        // Three in a row, as quick search keystrokes make: the second is cancelled while it waits.
+        repeat(3) {
+            section.reload()
+            runCurrent()
+        }
         assertThat(loads).isEqualTo(1)
 
         firstLoadGate.complete(Unit)
