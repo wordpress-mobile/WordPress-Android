@@ -19,7 +19,6 @@ import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DateTimeUtils
-import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.viewmodel.pages.CreatePageListItemLabelsUseCase
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
@@ -156,7 +155,7 @@ class RsLocalDrafts @Inject constructor(
         }
         return RsLocalDraftUiModel(
             localId = id,
-            title = title.toPlainText(),
+            title = title.toDisplayTitle(),
             excerpt = listExcerpt(),
             dateLabel = date,
             // The row's badge already says it's local, so the plain "Local draft" label would repeat it.
@@ -177,8 +176,12 @@ class RsLocalDrafts @Inject constructor(
             ?.replace(WHITESPACE, " ")?.trim()
             .orEmpty()
 
-    private fun String.toPlainText(): String =
-        HtmlUtils.fastStripHtml(StringEscapeUtils.unescapeHtml4(this)).replace(WHITESPACE, " ").trim()
+    /**
+     * Unescaped but not stripped, as the server rows show titles: a title can't hold markup, and stripping
+     * would eat text that only looks like a tag, such as "x < 5 and y > 3".
+     */
+    private fun String.toDisplayTitle(): String =
+        StringEscapeUtils.unescapeHtml4(this).replace(WHITESPACE, " ").trim()
 
     private companion object {
         const val SOURCE_RETRY = "rs list retry"

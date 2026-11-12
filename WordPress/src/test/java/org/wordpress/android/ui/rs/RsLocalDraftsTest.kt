@@ -134,6 +134,15 @@ class RsLocalDraftsTest : BaseUnitTest() {
     }
 
     @Test
+    fun `a title keeps text that only looks like a tag, as the server rows do`() = test {
+        whenever(postStore.getLocalDraftPosts(site)).thenReturn(
+            listOf(localDraft(title = "When x &lt; 5 and y &gt; 3, use <code>"))
+        )
+
+        assertThat(load().single().title).isEqualTo("When x < 5 and y > 3, use <code>")
+    }
+
+    @Test
     fun `the excerpt drops gallery blocks and keeps escaped text, as the legacy list does`() = test {
         whenever(postStore.getLocalDraftPosts(site)).thenReturn(
             listOf(
