@@ -24,11 +24,14 @@ import javax.inject.Inject
  * The editor and [org.wordpress.android.ui.uploads.UploadService] write through FluxC, so without
  * this bridge a post edited in the editor stays stale in the list until the user pulls to refresh.
  *
- * Delete this class - and the `changeListener` parameter of the two view models that use it - once
- * wordpress-rs can observe those changes itself.
+ * It also reports [localChanges]: saves, removals and upload progress of posts that exist only on
+ * this device, which the lists show from FluxC because the server has never seen them.
  *
- * Callers [start] the listener with the site whose posts (or pages) they show, collect [changes],
- * and [stop] it when they're done.
+ * Delete the server half of this class once wordpress-rs can observe those changes itself; the local
+ * half stays for as long as FluxC holds drafts the server hasn't seen.
+ *
+ * Callers [start] the listener with the site whose posts (or pages) they show, collect [changes]
+ * and [localChanges], and [stop] it when they're done.
  */
 class RsPostChangeListener @Inject constructor(
     private val dispatcher: Dispatcher,
@@ -66,6 +69,23 @@ class RsPostChangeListener @Inject constructor(
      */
     val uploads: Flow<RsUploadedPost> = _uploads
 
+    private val _localChanges = MutableSharedFlow<Unit>(
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+
+    /**
+     * Emits once whenever a post (or page, per [start]) of the observed site changed on this device,
+     * or its upload failed or finished - anything that can change what a local draft row shows.
+     * Debounced like [changes], because the editor saves locally on every pause in typing.
+     *
+     * An upload starting isn't reported: UploadService announces that on the default EventBus rather
+     * than through FluxC, and a row that still reads "Local draft" for the few seconds it takes is
+     * cheaper than a second bus subscription.
+     */
+    @OptIn(FlowPreview::class)
+    val localChanges: Flow<Unit> = _localChanges.debounce(CHANGE_DEBOUNCE_MS)
+
     /**
      * Starts listening for changes to [site]'s posts, or its pages when [isPages] is true.
      *
@@ -92,7 +112,10 @@ class RsPostChangeListener @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
         val post = event.post ?: return
-        if (event.isError || post.localSiteId != localSiteId || post.isPage != isPages) return
+        if (post.localSiteId != localSiteId || post.isPage != isPages) return
+        // Success or failure, the post's upload state changed - and a failed one may be a local draft.
+        notifyLocalChanged()
+        if (event.isError) return
         notifyChanged()
         // A post that never got an id is nothing a list can point at.
         if (post.remotePostId != 0L) {
@@ -103,8 +126,9 @@ class RsPostChangeListener @Inject constructor(
     }
 
     /**
-     * Fired for every write FluxC makes to its post table. Only the causes that mean the server
-     * copy changed are of interest - the rs list renders the server copy and nothing else.
+     * Fired for every write FluxC makes to its post table. Writes that change the server copy are
+     * reported as [changes]; writes to the device's copy, which the local draft rows render, as
+     * [localChanges].
      *
      * Delivered on a background thread because deciding whether the post belongs to this list
      * reads it back out of the database, and this fires on every write FluxC makes. Keep the work
@@ -116,12 +140,20 @@ class RsPostChangeListener @Inject constructor(
         if (event.isError) return
         when (val cause = event.causeOfChange) {
             // A local-only save fires on every debounced keystroke in the editor and leaves the
-            // server copy alone, so only the remote writes are worth a refresh.
-            is CauseOfOnPostChanged.UpdatePost ->
-                if (!cause.isLocalUpdate) notifyIfOurs(cause.localPostId)
+            // server copy alone, so it only refreshes the local rows.
+            is CauseOfOnPostChanged.UpdatePost -> if (isOurs(cause.localPostId)) {
+                notifyLocalChanged()
+                if (!cause.isLocalUpdate) notifyChanged()
+            }
 
-            is CauseOfOnPostChanged.DeletePost -> notifyIfOurs(cause.localPostId)
-            is CauseOfOnPostChanged.RestorePost -> notifyIfOurs(cause.localPostId)
+            is CauseOfOnPostChanged.DeletePost -> if (isOurs(cause.localPostId)) {
+                notifyLocalChanged()
+                notifyChanged()
+            }
+            is CauseOfOnPostChanged.RestorePost -> if (isOurs(cause.localPostId)) notifyChanged()
+
+            // Removal only touches the device - deleting a local draft, or tidying up after a delete.
+            is CauseOfOnPostChanged.RemovePost -> if (isOurs(cause.localPostId)) notifyLocalChanged()
 
             // A remote autosave stores a revision; the published post the list shows is unchanged.
             // Everything else is either local-only or traffic from the legacy lists.
@@ -134,14 +166,17 @@ class RsPostChangeListener @Inject constructor(
      * belongs to the observed list. A deleted post is already gone from the table - notify anyway,
      * because a refresh that wasn't needed costs less than a delete the list never notices.
      */
-    private fun notifyIfOurs(localPostId: Int) {
+    private fun isOurs(localPostId: Int): Boolean {
         val post = postStore.getPostByLocalPostId(localPostId)
-        if (post != null && (post.localSiteId != localSiteId || post.isPage != isPages)) return
-        notifyChanged()
+        return post == null || (post.localSiteId == localSiteId && post.isPage == isPages)
     }
 
     private fun notifyChanged() {
         if (localSiteId != null) _changes.tryEmit(Unit)
+    }
+
+    private fun notifyLocalChanged() {
+        if (localSiteId != null) _localChanges.tryEmit(Unit)
     }
 
     companion object {

@@ -254,6 +254,60 @@ class RsPostChangeListenerTest : BaseUnitTest(StandardTestDispatcher()) {
         assertThat(uploads).isEmpty()
     }
 
+    // region localChanges
+
+    @Test
+    fun `a local save of a post of the observed site is reported as a local change`() = assertEmitsLocal(1) {
+        whenever(postStore.getPostByLocalPostId(LOCAL_POST_ID)).thenReturn(post())
+
+        listener.onPostChanged(changed(updatePost(isLocalUpdate = true)))
+    }
+
+    @Test
+    fun `a local save of another site's post is not a local change`() = assertEmitsLocal(0) {
+        whenever(postStore.getPostByLocalPostId(LOCAL_POST_ID)).thenReturn(post(localSiteId = OTHER_SITE_ID))
+
+        listener.onPostChanged(changed(updatePost(isLocalUpdate = true)))
+    }
+
+    @Test
+    fun `a local save of a page is not a local change for a post listener`() = assertEmitsLocal(0) {
+        whenever(postStore.getPostByLocalPostId(LOCAL_POST_ID)).thenReturn(post(isPage = true))
+
+        listener.onPostChanged(changed(updatePost(isLocalUpdate = true)))
+    }
+
+    @Test
+    fun `a removed post is reported as a local change`() = assertEmitsLocal(1) {
+        listener.onPostChanged(changed(CauseOfOnPostChanged.RemovePost(LOCAL_POST_ID, 0L)))
+    }
+
+    @Test
+    fun `a failed upload is reported as a local change`() = assertEmitsLocal(1) {
+        listener.onPostUploaded(OnPostUploaded(post(), false).apply { error = genericError() })
+    }
+
+    @Test
+    fun `a successful upload is reported as a local change`() = assertEmitsLocal(1) {
+        listener.onPostUploaded(OnPostUploaded(post(), false))
+    }
+
+    @Test
+    fun `a failed upload from another site is not a local change`() = assertEmitsLocal(0) {
+        listener.onPostUploaded(
+            OnPostUploaded(post(localSiteId = OTHER_SITE_ID), false).apply { error = genericError() }
+        )
+    }
+
+    @Test
+    fun `a local change after stop is not emitted`() = assertEmitsLocal(0) {
+        listener.stop()
+
+        listener.onPostUploaded(OnPostUploaded(post(), false))
+    }
+
+    // endregion
+
     /**
      * Asserts that running [events] against a started listener makes `changes` fire [expected]
      * times.
@@ -267,6 +321,22 @@ class RsPostChangeListenerTest : BaseUnitTest(StandardTestDispatcher()) {
         test {
             listener.start(site, isPages)
             val job = launch { listener.changes.collect { emissions++ } }
+            advanceUntilIdle()
+
+            events()
+            advanceUntilIdle()
+
+            job.cancel()
+        }
+        assertThat(emissions).isEqualTo(expected)
+    }
+
+    /** Like [assertEmits], for `localChanges`. */
+    private fun assertEmitsLocal(expected: Int, isPages: Boolean = false, events: () -> Unit) {
+        var emissions = 0
+        test {
+            listener.start(site, isPages)
+            val job = launch { listener.localChanges.collect { emissions++ } }
             advanceUntilIdle()
 
             events()
