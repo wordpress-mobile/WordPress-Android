@@ -9,12 +9,14 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
+import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -56,7 +58,11 @@ class ReaderInterestsFragment : Fragment() {
                         ReaderInterestsScreen(
                             uiState = state,
                             snackbarHostState = snackbarHostState,
-                            showBackButton = entryPoint == EntryPoint.DISCOVER,
+                            title = if (entryPoint == EntryPoint.SETTINGS) {
+                                stringResource(R.string.reader_title_tags)
+                            } else {
+                                null
+                            },
                             onBackClick = viewModel::onBackButtonClick,
                             onInterestToggled = viewModel::onInterestAtIndexToggled,
                             onDoneClick = viewModel::onDoneButtonClick,

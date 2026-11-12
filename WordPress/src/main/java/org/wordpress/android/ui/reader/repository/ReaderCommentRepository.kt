@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.reader.repository
 
 import androidx.core.database.sqlite.transaction
-import com.android.volley.Request
-import com.wordpress.rest.RestRequest
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -155,7 +153,7 @@ class ReaderCommentRepository @Inject constructor(
             } else {
                 "sites/${post.blogId}/comments/${pending.parentId}/replies/new"
             }
-            val json = post(path, mapOf("content" to pending.text))
+            val json = post(path, mapOf("content" to pending.text)).response
             ReaderCommentTable.deleteComment(post, pending.commentId)
             json?.let {
                 ReaderComment.fromJson(it, post.blogId).also { comment ->
@@ -190,8 +188,10 @@ class ReaderCommentRepository @Inject constructor(
         withContext(NonCancellable + ioDispatcher) {
             val path = "sites/${comment.blogId}/comments/${comment.commentId}/likes/" +
                 if (isLiked) "new" else "mine/delete"
-            val succeeded = post(path, null)?.let { JSONUtils.getBool(it, "success") } == true
-            if (!succeeded) {
+            val result = post(path, null)
+            val succeeded = result.response?.let { JSONUtils.getBool(it, "success") } == true
+            // a cancel means sign-out, which clears the Reader's data, so there's nothing to restore
+            if (!succeeded && !result.isCancelled) {
                 AppLog.w(T.READER, "comment ${if (isLiked) "like" else "unlike"} failed")
                 ReaderCommentTable.setLikesForComment(comment, comment.numLikes, comment.isLikedByCurrentUser)
                 ReaderLikeTable.setCurrentUserLikesComment(comment, comment.isLikedByCurrentUser, wpComUserId)
@@ -205,7 +205,7 @@ class ReaderCommentRepository @Inject constructor(
             "date" to comment.published,
             "status" to newStatus.toString()
         )
-        val json = post("sites/${comment.blogId}/comments/${comment.commentId}", params) ?: return false
+        val json = post("sites/${comment.blogId}/comments/${comment.commentId}", params).response ?: return false
         withContext(NonCancellable + ioDispatcher) {
             val moderated = ReaderComment.fromJson(json, comment.blogId)
             ReaderCommentTable.addOrUpdateComment(moderated)
@@ -219,9 +219,9 @@ class ReaderCommentRepository @Inject constructor(
     private suspend fun fetchPage(blogId: Long, postId: Long, page: Int, count: Int): UpdateResult {
         val path = "sites/$blogId/posts/$postId/replies/?number=$count&meta=likes&force=wpcom" +
             "&hierarchical=true&order=ASC&page=$page"
-        val json = request { listener, errorListener ->
+        val json = awaitRestRequest(cancelWithCaller = true) { listener, errorListener ->
             WordPress.getRestClientUtilsV1_1().getWithLocale(path, null, null, listener, errorListener)
-        } ?: return UpdateResult.FAILED
+        }.response ?: return UpdateResult.FAILED
         return withContext(NonCancellable + ioDispatcher) { saveComments(json, blogId, postId, page) }
     }
 
@@ -251,28 +251,10 @@ class ReaderCommentRepository @Inject constructor(
     }
 
     // a POST isn't cancelled with the caller, since the server may already have acted on it
-    private suspend fun post(path: String, params: Map<String, String>?): JSONObject? =
-        request { listener, errorListener ->
+    private suspend fun post(path: String, params: Map<String, String>?): RestResult =
+        awaitRestRequest { listener, errorListener ->
             WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener)
-            null
         }
-
-    /**
-     * Runs a request and returns its response, or null if it fails. [start] returns the request when it
-     * can, so it's cancelled along with the caller.
-     */
-    private suspend fun request(
-        start: (RestRequest.Listener, RestRequest.ErrorListener) -> Request<*>?
-    ): JSONObject? = suspendCancellableCoroutine { continuation ->
-        val request = start(
-            { json -> if (continuation.isActive) continuation.resume(json) },
-            { volleyError ->
-                AppLog.e(T.READER, volleyError)
-                if (continuation.isActive) continuation.resume(null)
-            }
-        )
-        continuation.invokeOnCancellation { request?.cancel() }
-    }
 }
 
 data class ReaderComments(val comments: List<ReaderComment>, val hasMore: Boolean)

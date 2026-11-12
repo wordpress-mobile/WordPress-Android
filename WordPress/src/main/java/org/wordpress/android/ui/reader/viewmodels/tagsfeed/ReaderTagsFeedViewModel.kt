@@ -17,30 +17,23 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.reader.ReaderTypes
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
-import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
-import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
-
-private const val PHOTON_WIDTH_QUALITY_RATION = 0.5 // load images in 1/2 screen width to save users' data
-private const val FEATURED_IMAGE_HEIGHT_WIDTH_RATION = 0.56 // 9:16
 
 @HiltViewModel
 class ReaderTagsFeedViewModel @Inject constructor(
@@ -51,8 +44,6 @@ class ReaderTagsFeedViewModel @Inject constructor(
     private val postLikeUseCase: PostLikeUseCase,
     private val readerPostTableWrapper: ReaderPostTableWrapper,
     private val readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder,
-    private val readerPostUiStateBuilder: ReaderPostUiStateBuilder,
-    private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val readerTracker: ReaderTracker,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
 
@@ -76,8 +67,6 @@ class ReaderTagsFeedViewModel @Inject constructor(
     private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
-    private val _openMoreMenuEvents = SingleLiveEvent<MoreMenuUiState>()
-    val openMoreMenuEvents: LiveData<MoreMenuUiState> = _openMoreMenuEvents
 
     private var hasInitialized = false
 
@@ -480,6 +469,9 @@ class ReaderTagsFeedViewModel @Inject constructor(
     }
 
     private fun onPostMoreMenuClick(postItem: TagsFeedPostItem) {
+        readerTracker.track(AnalyticsTracker.Stat.POST_CARD_MORE_TAPPED)
+        // cleared first, so the menu doesn't open with the items from the last time it was shown
+        setMoreMenuItems(postItem, null)
         launch {
             findPost(postItem.postId, postItem.blogId)?.let { post ->
                 val items = readerPostMoreButtonUiStateBuilder.buildMoreMenuItems(
@@ -487,28 +479,25 @@ class ReaderTagsFeedViewModel @Inject constructor(
                     includeBookmark = true,
                     onButtonClicked = ::onMoreMenuButtonClicked,
                 )
-                val photonWidth =
-                    (displayUtilsWrapper.getDisplayPixelWidth() * PHOTON_WIDTH_QUALITY_RATION).toInt()
-                val photonHeight = (photonWidth * FEATURED_IMAGE_HEIGHT_WIDTH_RATION).toInt()
-                _openMoreMenuEvents.postValue(
-                    MoreMenuUiState(
-                        readerCardUiState = readerPostUiStateBuilder.mapPostToUiState(
-                            source = ReaderTracker.SOURCE_TAGS_FEED,
-                            post = post,
-                            photonWidth = photonWidth,
-                            photonHeight = photonHeight,
-                            postListType = ReaderTypes.ReaderPostListType.TAGS_FEED,
-                            onButtonClicked = { _, _, _ -> },
-                            onItemClicked = { _, _ -> },
-                            onItemRendered = {},
-                            onMoreButtonClicked = {},
-                            onMoreDismissed = {},
-                            onPostHeaderViewClicked = { _, _ -> },
-                        ),
-                        readerPostCardActions = items,
-                    )
-                )
+                setMoreMenuItems(postItem, items)
             }
+        }
+    }
+
+    /*
+     * sets the menu items on every card showing the post, since a post can appear under more than one tag; the
+     * card that was tapped is the only one with its menu open
+     */
+    private fun setMoreMenuItems(postItem: TagsFeedPostItem, items: List<ReaderPostCardAction>?) {
+        _uiStateFlow.update { uiState ->
+            if (uiState !is UiState.Loaded) return@update uiState
+            uiState.copy(data = uiState.data.map { tagFeedItem ->
+                val postList = tagFeedItem.postList as? PostList.Loaded ?: return@map tagFeedItem
+                tagFeedItem.copy(postList = postList.copy(items = postList.items.map { item ->
+                    val isPost = item.postId == postItem.postId && item.blogId == postItem.blogId
+                    if (isPost) item.copy(moreMenuItems = items) else item
+                }))
+            })
         }
     }
 
@@ -597,11 +586,6 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
         data object NoContent : ErrorType
     }
-
-    data class MoreMenuUiState(
-        val readerCardUiState: ReaderCardUiState.ReaderPostUiState,
-        val readerPostCardActions: List<ReaderPostCardAction>,
-    )
 
     companion object {
         private const val NO_CONNECTION_DELAY = 500L

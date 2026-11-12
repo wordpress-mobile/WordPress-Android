@@ -374,7 +374,7 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
      */
     private suspend fun request(
         start: (RestRequest.Listener, RestRequest.ErrorListener) -> Request<*>
-    ): JSONObject? = awaitRestRequest(start).response
+    ): JSONObject? = awaitRestRequest(start = start).response
 
     private fun parseTags(json: JSONObject, name: String, tagType: ReaderTagType): ReaderTagList {
         val topics = ReaderTagList()

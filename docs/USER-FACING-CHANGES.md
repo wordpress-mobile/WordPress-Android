@@ -8,6 +8,13 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Reblogging from a site's or tag's post list confirms the result**
+  After you reblog a post from a site's or a tag's post list and leave the editor, the post list now shows the editor's result snackbar (for example, that the post was published or saved as a draft), and another when the upload finishes. Previously neither appeared there, though the reblog itself worked.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → tap a site name or a tag → a post's Reblog button → editor → back
+
 - **Reader search reports a subscribe that couldn't start**
   On the Sites tab of Reader search, tapping Subscribe on a site that can't be subscribed to from there now shows the "Unable to subscribe to this blog" message, the same one shown when the request fails. Previously the button just flipped back without saying anything.
   - **Apps:** Both
