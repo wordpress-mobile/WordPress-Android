@@ -552,7 +552,7 @@ internal class PagesRsListViewModel @Inject constructor(
     @MainThread
     fun refreshTab(tab: PageRsListTab, isUserRefresh: Boolean = false) {
         // Before the collection check, so it also works on a tab that never loaded, e.g. opened offline.
-        if (isUserRefresh) localDraftsSection?.onUserRefresh()
+        if (isUserRefresh) localDraftsSection?.reload()
         val collection = collections[tab] ?: run {
             // The collection wasn't created (init failed or hasn't run). Re-attempt init so
             // a Retry tap from the error UI can recover instead of silently doing nothing.

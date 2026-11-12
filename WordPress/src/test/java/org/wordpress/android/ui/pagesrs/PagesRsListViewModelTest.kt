@@ -854,7 +854,7 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     // region Local pages
 
     @Test
-    fun `local pages are loaded and due uploads queued when the list opens`() = test {
+    fun `local pages are loaded when the list opens`() = test {
         val draft = RsLocalDraftUiModel(
             localId = LOCAL_PAGE_ID,
             title = "Unsent",
@@ -872,7 +872,6 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
 
         assertThat(viewModel.localDrafts.value).containsExactly(draft)
         verifyBlocking(localDraftsSource) { load(eq(site), eq(true), eq(""), anyOrNull(), anyOrNull()) }
-        verify(localDraftsSource).queueDueUploads(site)
     }
 
     @Test

@@ -36,18 +36,11 @@ internal class RsLocalDraftsSection(
     private var loadJob: Job? = null
 
     /**
-     * Lists the drafts and keeps them current with [localChanges]. Also starts the uploads still due, as
-     * the legacy lists do on opening, rather than waiting for the app to next return to the foreground.
+     * Lists the drafts and keeps them current with [localChanges]. Uploads still due are left to
+     * [org.wordpress.android.ui.uploads.UploadStarter], which queues them on foreground and reconnect.
      */
     fun start(localChanges: Flow<Unit>) {
         scope.launch { localChanges.collect { reload() } }
-        reload()
-        source.queueDueUploads(site)
-    }
-
-    /** A pull to refresh is also how the legacy lists retried uploads that were still due. */
-    fun onUserRefresh() {
-        source.queueDueUploads(site)
         reload()
     }
 

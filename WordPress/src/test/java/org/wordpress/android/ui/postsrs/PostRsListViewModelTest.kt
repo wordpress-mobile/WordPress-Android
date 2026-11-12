@@ -760,14 +760,13 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
-    fun `pulling to refresh queues uploads and reloads local drafts`() = test {
+    fun `pulling to refresh reloads local drafts`() = test {
         val viewModel = createViewModel()
         advanceUntilIdle()
 
         viewModel.refreshTab(PostRsListTab.DRAFTS, isUserRefresh = true)
         awaitTabInitFailure(viewModel, PostRsListTab.DRAFTS)
 
-        verify(localDraftsSource, times(2)).queueDueUploads(site)
         verifyBlocking(localDraftsSource, times(2)) { load(any(), any(), any(), any(), anyOrNull()) }
     }
 

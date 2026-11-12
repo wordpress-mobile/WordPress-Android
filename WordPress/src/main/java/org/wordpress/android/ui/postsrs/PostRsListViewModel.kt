@@ -956,7 +956,7 @@ class PostRsListViewModel @Inject constructor(
     @MainThread
     fun refreshTab(tab: PostRsListTab, isUserRefresh: Boolean = false) {
         // Before the collection check, so it also works on a tab that never loaded, e.g. opened offline.
-        if (isUserRefresh) localDraftsSection?.onUserRefresh()
+        if (isUserRefresh) localDraftsSection?.reload()
         val collection = collections[tab] ?: run {
             // No collection yet (init failed or hasn't run), so Retry re-attempts the init.
             initTab(tab)

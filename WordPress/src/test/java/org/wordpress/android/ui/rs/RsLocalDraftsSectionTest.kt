@@ -39,7 +39,7 @@ class RsLocalDraftsSectionTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
-    fun `starting lists the drafts and queues the uploads that are due`() = test {
+    fun `starting lists the drafts`() = test {
         stubLoad(listOf(draft()))
         val section = section()
 
@@ -47,7 +47,6 @@ class RsLocalDraftsSectionTest : BaseUnitTest(StandardTestDispatcher()) {
         runCurrent()
 
         assertThat(section.drafts.value).containsExactly(draft())
-        verify(source).queueDueUploads(site)
     }
 
     @Test
@@ -80,17 +79,6 @@ class RsLocalDraftsSectionTest : BaseUnitTest(StandardTestDispatcher()) {
         runCurrent()
 
         verifyBlocking(source) { load(eq(site), eq(true), any(), any(), any()) }
-    }
-
-    @Test
-    fun `a user refresh queues uploads and reloads`() = test {
-        val section = section()
-
-        section.onUserRefresh()
-        runCurrent()
-
-        verify(source).queueDueUploads(site)
-        verifyBlocking(source) { load(any(), any(), any(), any(), anyOrNull()) }
     }
 
     @Test
