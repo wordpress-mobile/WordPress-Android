@@ -24,6 +24,7 @@ import org.wordpress.android.ui.rs.contentlist.ContentListErrorState
 import org.wordpress.android.ui.rs.contentlist.ContentListPlaceholderRow
 import org.wordpress.android.ui.rs.contentlist.ContentListShimmer
 import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
+import org.wordpress.android.ui.rs.contentlist.KeepNewLocalDraftsInView
 import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
 import org.wordpress.android.ui.rs.contentlist.ReportVisibleRows
 import org.wordpress.android.ui.rs.contentlist.RevealRow
@@ -123,6 +124,7 @@ private fun PageListContent(
     onLocalDraftAction: (Int, RsLocalDraftMenuAction) -> Unit = { _, _ -> }
 ) {
     val listState = rememberLazyListState()
+    KeepNewLocalDraftsInView(listState, localDrafts)
     // Local pages come first, ahead of every server row.
     val localItemCount = localDrafts.size
     // The placeholder or error standing in for the server rows sits between the two.

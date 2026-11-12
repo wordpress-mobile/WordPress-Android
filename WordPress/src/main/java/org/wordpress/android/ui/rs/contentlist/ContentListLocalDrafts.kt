@@ -1,7 +1,12 @@
 package org.wordpress.android.ui.rs.contentlist
 
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import org.wordpress.android.R
 import org.wordpress.android.ui.rs.RsLocalDraftUiModel
@@ -53,6 +58,23 @@ fun LazyListScope.localDraftItems(
             ) { action -> onAction(draft.localId, action) },
             modifier = Modifier.animateItem()
         )
+    }
+}
+
+/**
+ * Scrolls to the top when a local draft is added. It lands above the first row, and LazyColumn holds on to
+ * whichever row was first in view, so a draft just saved in the editor would arrive out of sight. Drafts
+ * are only added by the user saving one or widening a search, so the jump is always theirs. Removals don't
+ * count, so a draft uploading while the user is scrolled down leaves them where they are.
+ */
+@Composable
+fun KeepNewLocalDraftsInView(listState: LazyListState, drafts: List<RsLocalDraftUiModel>) {
+    val ids = remember(drafts) { drafts.map { it.localId } }
+    val previousIds = remember { mutableStateOf<List<Int>?>(null) }
+    LaunchedEffect(ids) {
+        val previous = previousIds.value
+        previousIds.value = ids
+        if (previous != null && ids.any { it !in previous }) listState.scrollToItem(0)
     }
 }
 

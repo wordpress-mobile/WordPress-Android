@@ -36,6 +36,7 @@ import org.wordpress.android.ui.rs.contentlist.ContentListShimmer
 import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
 import org.wordpress.android.ui.rs.contentlist.ContentListRow
 import org.wordpress.android.ui.postsrs.toContentListRowUiState
+import org.wordpress.android.ui.rs.contentlist.KeepNewLocalDraftsInView
 import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
 import org.wordpress.android.ui.rs.contentlist.ReportVisibleRows
 import org.wordpress.android.ui.rs.contentlist.RevealRow
@@ -139,6 +140,7 @@ private fun PostListContent(
     onLocalDraftAction: (Int, RsLocalDraftMenuAction) -> Unit = { _, _ -> }
 ) {
     val listState = rememberLazyListState()
+    KeepNewLocalDraftsInView(listState, localDrafts)
 
     val entries = remember(posts, showDateGroups, density) {
         buildEntries(posts, showDateGroups, density)
