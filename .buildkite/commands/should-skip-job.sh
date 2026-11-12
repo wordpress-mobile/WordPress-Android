@@ -1,6 +1,7 @@
 #!/bin/bash -eu
 
-# Usage: should-skip-job.sh --job-type [validation|lint|build]
+# Usage: should-skip-job.sh --job-type [validation|lint|build|library-lint]
+# --job-type library-lint: Skip standalone library lint for app-source-only PR changes.
 # --job-type validation: For jobs like unit/instrumented tests, manifest validation…
 #     Skip when changes are limited to documentation, tooling, non-code files, and localization files
 # --job-type lint: For jobs doing linting, especially ones that might include linting of localization files
@@ -34,7 +35,7 @@ LINT="lint"
 
 # Check if arguments are valid
 if [ -z "${1:-}" ] || [ "$1" != "--job-type" ] || [ -z "${2:-}" ]; then
-  echo "Error: Must specify --job-type [$VALIDATION|$BUILD|$LINT]"
+  echo "Error: Must specify --job-type [$VALIDATION|$BUILD|$LINT|library-lint]"
   buildkite-agent step cancel
   exit 15
 fi
@@ -51,6 +52,29 @@ show_skip_message() {
 
 job_type="$2"
 case "$job_type" in
+  library-lint)
+    # Extend the existing lint exclusions with app-only paths.
+    # Library sources and module build files still matter.
+    if [[ "${BUILDKITE_SOURCE:-}" != webhook || ! "${BUILDKITE_PULL_REQUEST:-}" =~ ^[0-9]+$ ]]; then
+      exit 1
+    fi
+
+    # Include both sides of renames, including moves from a library into the app.
+    config_index=${GIT_CONFIG_COUNT:-0}
+    export GIT_CONFIG_COUNT=$((config_index + 1))
+    export "GIT_CONFIG_KEY_${config_index}=diff.renames" "GIT_CONFIG_VALUE_${config_index}=false"
+
+    PATTERNS=(
+      "${COMMON_PATTERNS[@]}"
+      'WordPress/src/*' 'WordPress/metadata/*' 'WordPress/jetpack_metadata/*'
+      'docs/*'
+    )
+    if pr_changed_files --all-match "${PATTERNS[@]}"; then
+      show_skip_message "$job_type"
+      exit 0
+    fi
+    exit 1
+    ;;
   $VALIDATION)
     # We should skip if changes are limited to documentation, tooling, non-code files, and localization files
     PATTERNS=("${COMMON_PATTERNS[@]}" "**/strings.xml")
@@ -71,7 +95,7 @@ case "$job_type" in
     exit 1
     ;;
   *)
-    echo "Error: Job type must be either '$VALIDATION', '$BUILD', or '$LINT'"
+    echo "Error: Job type must be '$VALIDATION', '$BUILD', '$LINT', or 'library-lint'"
     buildkite-agent step cancel
     exit 15
     ;;
