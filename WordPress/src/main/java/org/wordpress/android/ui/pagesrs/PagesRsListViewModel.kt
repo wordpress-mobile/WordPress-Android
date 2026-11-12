@@ -135,6 +135,11 @@ internal class PagesRsListViewModel @Inject constructor(
     private val fillingTabs = mutableSetOf<PageRsListTab>()
 
     private var isScreenVisible = false
+
+    // A local draft opens without a fetch, so nothing else stops a second tap from stacking another
+    // editor before this screen stops. Cleared when it comes back.
+    private var isOpeningLocalDraft = false
+
     private var hasDeferredChange = false
     private var pendingReveal: RsReveal<PageRsListTab>? = null
 
@@ -286,6 +291,7 @@ internal class PagesRsListViewModel @Inject constructor(
     @MainThread
     fun onScreenVisible() {
         isScreenVisible = true
+        isOpeningLocalDraft = false
         if (hasDeferredChange) onRemoteChangeDetected()
         // Upload state lives partly in UploadService, which reports some changes without an event.
         localDraftsSection?.reload()
@@ -864,13 +870,14 @@ internal class PagesRsListViewModel @Inject constructor(
     @MainThread
     fun openLocalDraft(localId: Int) {
         val site = this.site
-        if (site == null || _isOpeningPage.value || isLocalDraftUploading(localId)) return
+        if (site == null || _isOpeningPage.value || isOpeningLocalDraft || isLocalDraftUploading(localId)) return
         analyticsTracker.track(
             Stat.PAGES_LIST_ITEM_SELECTED,
             site,
             mapOf(TRACKS_ACTION to TRACKS_ACTION_EDIT, TRACKS_IS_LOCAL_DRAFT to true)
         )
         val page = localDraftsSection?.open(localId) ?: return
+        isOpeningLocalDraft = true
         _events.trySend(PageRsListEvent.EditPage(site, page))
     }
 

@@ -828,6 +828,25 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
+    fun `a second tap on a local draft opens nothing until the list is back`() = test {
+        val post = postUpload()
+        whenever(localDraftsSource.open(site, LOCAL_DRAFT_ID)).thenReturn(post)
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        viewModel.events.test {
+            viewModel.openLocalDraft(LOCAL_DRAFT_ID)
+            viewModel.openLocalDraft(LOCAL_DRAFT_ID)
+            assertThat(awaitItem()).isEqualTo(PostRsListEvent.EditPost(site, post))
+            expectNoEvents()
+
+            viewModel.onScreenVisible()
+            viewModel.openLocalDraft(LOCAL_DRAFT_ID)
+            assertThat(awaitItem()).isEqualTo(PostRsListEvent.EditPost(site, post))
+        }
+    }
+
+    @Test
     fun `retry restarts the upload`() = test {
         val viewModel = createViewModel()
 

@@ -115,6 +115,11 @@ class PostRsListViewModel @Inject constructor(
     private val refreshJobs = RsTabRefreshJobs<PostRsListTab>()
 
     private var isScreenVisible = false
+
+    // A local draft opens without a fetch, so nothing else stops a second tap from stacking another
+    // editor before this screen stops. Cleared when it comes back.
+    private var isOpeningLocalDraft = false
+
     private var hasDeferredChange = false
     private var pendingReveal: RsReveal<PostRsListTab>? = null
 
@@ -251,6 +256,7 @@ class PostRsListViewModel @Inject constructor(
     @MainThread
     fun onScreenVisible() {
         isScreenVisible = true
+        isOpeningLocalDraft = false
         if (hasDeferredChange) onRemoteChangeDetected()
         // Upload state lives partly in UploadService, which reports some changes without an event.
         localDraftsSection?.reload()
@@ -745,13 +751,14 @@ class PostRsListViewModel @Inject constructor(
     /** Opens a draft that exists only on this device; see [RsLocalDraftsSection.open]. */
     @MainThread
     fun openLocalDraft(localId: Int) {
-        if (_isOpeningPost.value || isLocalDraftUploading(localId)) return
+        if (_isOpeningPost.value || isOpeningLocalDraft || isLocalDraftUploading(localId)) return
         analyticsTracker.track(
             Stat.POST_LIST_ITEM_SELECTED,
             site,
             mapOf(TRACKS_ACTION to "edit", TRACKS_IS_LOCAL_DRAFT to true)
         )
         val post = localDraftsSection?.open(localId) ?: return
+        isOpeningLocalDraft = true
         _events.trySend(PostRsListEvent.EditPost(site, post))
     }
 
