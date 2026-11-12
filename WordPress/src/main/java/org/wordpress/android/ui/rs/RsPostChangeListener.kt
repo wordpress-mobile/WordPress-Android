@@ -142,10 +142,15 @@ class RsPostChangeListener @Inject constructor(
         if (event.isError) return
         when (val cause = event.causeOfChange) {
             // A local-only save fires on every debounced keystroke in the editor and leaves the
-            // server copy alone, so it only refreshes the local rows.
-            is CauseOfOnPostChanged.UpdatePost -> if (isOurs(cause.localPostId)) {
-                notifyLocalChanged()
-                if (!cause.isLocalUpdate) notifyChanged()
+            // server copy alone, so it only refreshes the local rows - and only a post the server has
+            // never seen has one. Checked before the lookup to keep it off the shared queue.
+            is CauseOfOnPostChanged.UpdatePost -> when {
+                cause.isLocalUpdate ->
+                    if (cause.remotePostId == 0L && isOurs(cause.localPostId)) notifyLocalChanged()
+                isOurs(cause.localPostId) -> {
+                    notifyLocalChanged()
+                    notifyChanged()
+                }
             }
 
             is CauseOfOnPostChanged.DeletePost -> if (isOurs(cause.localPostId)) {

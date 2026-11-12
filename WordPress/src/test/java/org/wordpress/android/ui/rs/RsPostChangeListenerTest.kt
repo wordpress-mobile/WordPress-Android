@@ -260,21 +260,29 @@ class RsPostChangeListenerTest : BaseUnitTest(StandardTestDispatcher()) {
     fun `a local save of a post of the observed site is reported as a local change`() = assertEmitsLocal(1) {
         whenever(postStore.getPostByLocalPostId(LOCAL_POST_ID)).thenReturn(post())
 
-        listener.onPostChanged(changed(updatePost(isLocalUpdate = true)))
+        listener.onPostChanged(changed(updatePost(isLocalUpdate = true, remotePostId = 0L)))
     }
+
+    @Test
+    fun `a local save of a post the server has is not a local change, and is not looked up`() =
+        assertEmitsLocal(0) {
+            listener.onPostChanged(changed(updatePost(isLocalUpdate = true)))
+
+            verify(postStore, never()).getPostByLocalPostId(LOCAL_POST_ID)
+        }
 
     @Test
     fun `a local save of another site's post is not a local change`() = assertEmitsLocal(0) {
         whenever(postStore.getPostByLocalPostId(LOCAL_POST_ID)).thenReturn(post(localSiteId = OTHER_SITE_ID))
 
-        listener.onPostChanged(changed(updatePost(isLocalUpdate = true)))
+        listener.onPostChanged(changed(updatePost(isLocalUpdate = true, remotePostId = 0L)))
     }
 
     @Test
     fun `a local save of a page is not a local change for a post listener`() = assertEmitsLocal(0) {
         whenever(postStore.getPostByLocalPostId(LOCAL_POST_ID)).thenReturn(post(isPage = true))
 
-        listener.onPostChanged(changed(updatePost(isLocalUpdate = true)))
+        listener.onPostChanged(changed(updatePost(isLocalUpdate = true, remotePostId = 0L)))
     }
 
     @Test
@@ -378,8 +386,8 @@ class RsPostChangeListenerTest : BaseUnitTest(StandardTestDispatcher()) {
         setLocalSiteId(localSiteId)
     }
 
-    private fun updatePost(isLocalUpdate: Boolean) =
-        CauseOfOnPostChanged.UpdatePost(LOCAL_POST_ID, REMOTE_POST_ID, isLocalUpdate)
+    private fun updatePost(isLocalUpdate: Boolean, remotePostId: Long = REMOTE_POST_ID) =
+        CauseOfOnPostChanged.UpdatePost(LOCAL_POST_ID, remotePostId, isLocalUpdate)
 
     private fun changed(cause: CauseOfOnPostChanged) = OnPostChanged(cause, 1)
 
