@@ -12,15 +12,12 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
-import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
-import org.wordpress.android.ui.reader.actions.ReaderBlogActionsWrapper
-import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.repository.ReaderBlogRepository
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Failed.RequestFailed
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
@@ -28,7 +25,6 @@ import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSi
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 
-private const val FOLLOW_BLOG_ACTION_LISTENER_PARAM_POSITION = 3
 private const val SOURCE = "source"
 
 @ExperimentalCoroutinesApi
@@ -43,13 +39,10 @@ class ReaderSiteFollowUseCaseTest : BaseUnitTest() {
     lateinit var readerUtilsWrapper: ReaderUtilsWrapper
 
     @Mock
-    lateinit var readerBlogActionsWrapper: ReaderBlogActionsWrapper
+    lateinit var readerBlogRepository: ReaderBlogRepository
 
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-
-    @Mock
-    lateinit var readerTracker: ReaderTracker
 
     private val useCaseParam = ReaderSiteFollowUseCase.Param(11L, 13L, "FakeBlogName")
 
@@ -57,10 +50,9 @@ class ReaderSiteFollowUseCaseTest : BaseUnitTest() {
     fun setup() {
         useCase = ReaderSiteFollowUseCase(
             networkUtilsWrapper,
-            readerBlogActionsWrapper,
+            readerBlogRepository,
             readerBlogTableWrapper,
-            readerUtilsWrapper,
-            readerTracker
+            readerUtilsWrapper
         )
 
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
@@ -228,13 +220,11 @@ class ReaderSiteFollowUseCaseTest : BaseUnitTest() {
             useCase.toggleFollow(useCaseParam, SOURCE).toList(mutableListOf())
 
             // Assert
-            verify(readerBlogActionsWrapper).followBlog(
+            verify(readerBlogRepository).followSite(
                 anyLong(),
                 anyLong(),
                 eq(true),
-                anyOrNull(),
-                eq(SOURCE),
-                eq(readerTracker)
+                eq(SOURCE)
             )
         }
 
@@ -245,13 +235,11 @@ class ReaderSiteFollowUseCaseTest : BaseUnitTest() {
             useCase.toggleFollow(useCaseParam, SOURCE).toList(mutableListOf())
 
             // Assert
-            verify(readerBlogActionsWrapper).followBlog(
+            verify(readerBlogRepository).followSite(
                 anyLong(),
                 anyLong(),
                 eq(false),
-                anyOrNull(),
-                eq(SOURCE),
-                eq(readerTracker)
+                eq(SOURCE)
             )
         }
 
@@ -262,32 +250,19 @@ class ReaderSiteFollowUseCaseTest : BaseUnitTest() {
             useCase.toggleFollow(useCaseParam, SOURCE).toList(mutableListOf())
 
             // Assert
-            verify(readerBlogActionsWrapper).followBlog(
+            verify(readerBlogRepository).followSite(
                 eq(useCaseParam.blogId),
                 eq(useCaseParam.feedId),
                 anyBoolean(),
-                anyOrNull(),
-                eq(SOURCE),
-                eq(readerTracker)
+                eq(SOURCE)
             )
         }
 
     private fun <T> testWithFollowedSitePost(block: suspend CoroutineScope.() -> T) {
         test {
             whenever(readerBlogTableWrapper.isSiteFollowed(useCaseParam.blogId, useCaseParam.feedId)).thenReturn(true)
-            whenever(
-                readerBlogActionsWrapper.followBlog(
-                    anyLong(),
-                    anyLong(),
-                    anyBoolean(),
-                    anyOrNull(),
-                    anyString(),
-                    eq(readerTracker)
-                )
-            ).then {
-                (it.arguments[FOLLOW_BLOG_ACTION_LISTENER_PARAM_POSITION] as ActionListener).onActionResult(true)
-                true
-            }
+            whenever(readerBlogRepository.followSite(anyLong(), anyLong(), anyBoolean(), anyString()))
+                .thenReturn(true)
 
             block()
         }
@@ -296,19 +271,8 @@ class ReaderSiteFollowUseCaseTest : BaseUnitTest() {
     private fun <T> testWithUnFollowedSitePost(block: suspend CoroutineScope.() -> T) {
         test {
             whenever(readerBlogTableWrapper.isSiteFollowed(useCaseParam.blogId, useCaseParam.feedId)).thenReturn(false)
-            whenever(
-                readerBlogActionsWrapper.followBlog(
-                    anyLong(),
-                    anyLong(),
-                    anyBoolean(),
-                    anyOrNull(),
-                    anyString(),
-                    eq(readerTracker)
-                )
-            ).then {
-                (it.arguments[FOLLOW_BLOG_ACTION_LISTENER_PARAM_POSITION] as ActionListener).onActionResult(true)
-                true
-            }
+            whenever(readerBlogRepository.followSite(anyLong(), anyLong(), anyBoolean(), anyString()))
+                .thenReturn(true)
 
             block()
         }
@@ -317,19 +281,8 @@ class ReaderSiteFollowUseCaseTest : BaseUnitTest() {
     private fun <T> testWithFailedResponseForFollowedSitePost(block: suspend CoroutineScope.() -> T) {
         test {
             whenever(readerBlogTableWrapper.isSiteFollowed(useCaseParam.blogId, useCaseParam.feedId)).thenReturn(true)
-            whenever(
-                readerBlogActionsWrapper.followBlog(
-                    anyLong(),
-                    anyLong(),
-                    anyBoolean(),
-                    anyOrNull(),
-                    anyString(),
-                    eq(readerTracker)
-                )
-            ).then {
-                (it.arguments[FOLLOW_BLOG_ACTION_LISTENER_PARAM_POSITION] as ActionListener).onActionResult(false)
-                true
-            }
+            whenever(readerBlogRepository.followSite(anyLong(), anyLong(), anyBoolean(), anyString()))
+                .thenReturn(false)
 
             block()
         }
@@ -338,19 +291,8 @@ class ReaderSiteFollowUseCaseTest : BaseUnitTest() {
     private fun <T> testWithFailedResponseForUnFollowedSitePost(block: suspend CoroutineScope.() -> T) {
         test {
             whenever(readerBlogTableWrapper.isSiteFollowed(useCaseParam.blogId, useCaseParam.feedId)).thenReturn(false)
-            whenever(
-                readerBlogActionsWrapper.followBlog(
-                    anyLong(),
-                    anyLong(),
-                    anyBoolean(),
-                    anyOrNull(),
-                    anyString(),
-                    eq(readerTracker)
-                )
-            ).then {
-                (it.arguments[FOLLOW_BLOG_ACTION_LISTENER_PARAM_POSITION] as ActionListener).onActionResult(false)
-                true
-            }
+            whenever(readerBlogRepository.followSite(anyLong(), anyLong(), anyBoolean(), anyString()))
+                .thenReturn(false)
 
             block()
         }

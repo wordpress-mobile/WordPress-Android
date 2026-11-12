@@ -31,6 +31,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtilsWrapper
@@ -54,6 +55,9 @@ class NotificationsListViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
+
+    @Mock
+    private lateinit var readerPostRepository: ReaderPostRepository
 
     @Mock
     private lateinit var notificationsActionsWrapper: NotificationsActionsWrapper
@@ -106,6 +110,7 @@ class NotificationsListViewModelTest : BaseUnitTest() {
             commentStore,
             readerPostTableWrapper,
             readerPostActionsWrapper,
+            readerPostRepository,
             notificationsTableWrapper,
             notificationsActionsWrapper,
             eventBusWrapper,
@@ -310,17 +315,15 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         whenever(accountStore.account).thenReturn(account)
         whenever(account.userId).thenReturn(userId)
         whenever(readerPostTableWrapper.getBlogPost(siteId, postId, true)).thenReturn(post)
-        whenever(readerPostActionsWrapper.performLikeActionRemote(any(), any(), any(), any(), any(), any())).then {
-            (it.arguments[5] as ReaderActions.ActionListener).onActionResult(true)
-        }
+        whenever(readerPostRepository.likePostRemote(any(), any(), any(), any(), any())).thenReturn(true)
 
         // When
         viewModel.likePost(note, true)
 
         // Then
         verify(note, times(1)).setLikedPost(true)
-        verify(readerPostActionsWrapper, times(1))
-            .performLikeActionRemote(eq(post), eq(postId), eq(siteId), eq(true), eq(userId), any())
+        verify(readerPostRepository, times(1))
+            .likePostRemote(eq(post), eq(siteId), eq(postId), eq(true), eq(userId))
         verify(eventBusWrapper, times(1)).postSticky(any<NotificationEvents.OnNotePostLikeChanged>())
         verify(notificationsTableWrapper, times(1)).saveNote(note)
     }
@@ -339,17 +342,15 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         whenever(accountStore.account).thenReturn(account)
         whenever(account.userId).thenReturn(userId)
         whenever(readerPostTableWrapper.getBlogPost(siteId, postId, true)).thenReturn(post)
-        whenever(readerPostActionsWrapper.performLikeActionRemote(any(), any(), any(), any(), any(), any())).then {
-            (it.arguments[5] as ReaderActions.ActionListener).onActionResult(true)
-        }
+        whenever(readerPostRepository.likePostRemote(any(), any(), any(), any(), any())).thenReturn(true)
 
         // When
         viewModel.likePost(note, false)
 
         // Then
         verify(note, times(1)).setLikedPost(false)
-        verify(readerPostActionsWrapper, times(1))
-            .performLikeActionRemote(eq(post), eq(postId), eq(siteId), eq(false), eq(userId), any())
+        verify(readerPostRepository, times(1))
+            .likePostRemote(eq(post), eq(siteId), eq(postId), eq(false), eq(userId))
         verify(eventBusWrapper, times(1)).postSticky(any<NotificationEvents.OnNotePostLikeChanged>())
         verify(notificationsTableWrapper, times(1)).saveNote(note)
     }
@@ -368,17 +369,15 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         whenever(accountStore.account).thenReturn(account)
         whenever(account.userId).thenReturn(userId)
         whenever(readerPostTableWrapper.getBlogPost(siteId, postId, true)).thenReturn(post)
-        whenever(readerPostActionsWrapper.performLikeActionRemote(any(), any(), any(), any(), any(), any())).then {
-            (it.arguments[5] as ReaderActions.ActionListener).onActionResult(false)
-        }
+        whenever(readerPostRepository.likePostRemote(any(), any(), any(), any(), any())).thenReturn(false)
 
         // When
         viewModel.likePost(note, true)
 
         // Then
         verify(note, times(1)).setLikedPost(true)
-        verify(readerPostActionsWrapper, times(1))
-            .performLikeActionRemote(eq(post), eq(postId), eq(siteId), eq(true), eq(userId), any())
+        verify(readerPostRepository, times(1))
+            .likePostRemote(eq(post), eq(siteId), eq(postId), eq(true), eq(userId))
         verify(eventBusWrapper, times(1)).postSticky(any<NotificationEvents.OnNotePostLikeChanged>())
         verify(notificationsTableWrapper, times(0)).saveNote(note)
     }

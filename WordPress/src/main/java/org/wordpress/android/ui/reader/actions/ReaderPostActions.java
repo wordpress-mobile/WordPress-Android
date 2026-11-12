@@ -1,10 +1,8 @@
 package org.wordpress.android.ui.reader.actions;
 
 import android.os.Handler;
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -16,35 +14,27 @@ import com.wordpress.rest.RestRequest;
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.ReaderPostList;
-import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.reader.ReaderEvents;
-import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
 import org.wordpress.android.ui.reader.models.ReaderSimplePost;
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.VolleyUtils;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -57,82 +47,6 @@ public class ReaderPostActions {
 
     private ReaderPostActions() {
         throw new AssertionError();
-    }
-
-    /**
-     * like/unlike the passed post
-     */
-    public static boolean performLikeActionLocal(final ReaderPost post,
-                                                 final boolean isAskingToLike,
-                                                 final long wpComUserId) {
-        // do nothing if post's like state is same as passed
-        boolean isCurrentlyLiked = ReaderPostTable.isPostLikedByCurrentUser(post);
-        if (isCurrentlyLiked == isAskingToLike) {
-            AppLog.w(T.READER, "post like unchanged");
-            return false;
-        }
-
-        // update like status and like count in local db
-        int numCurrentLikes = ReaderPostTable.getNumLikesForPost(post.blogId, post.postId);
-        int newNumLikes = (isAskingToLike ? numCurrentLikes + 1 : numCurrentLikes - 1);
-        if (newNumLikes < 0) {
-            newNumLikes = 0;
-        }
-        ReaderPostTable.setLikesForPost(post, newNumLikes, isAskingToLike);
-        ReaderLikeTable.setCurrentUserLikesPost(post, isAskingToLike, wpComUserId);
-        return true;
-    }
-
-    public static void performLikeActionRemote(@Nullable final ReaderPost post,
-                                               final boolean isAskingToLike,
-                                               final long wpComUserId,
-                                               @Nullable final ActionListener actionListener) {
-        if (post != null) {
-            performLikeActionRemote(post, post.blogId, post.postId, isAskingToLike, wpComUserId, actionListener);
-        }
-    }
-
-    public static void performLikeActionRemote(
-            @Nullable final ReaderPost post,
-            final long blogId,
-            final long postId,
-            final boolean isAskingToLike,
-            final long wpComUserId,
-            @Nullable final ActionListener actionListener
-    ) {
-        final String actionName = isAskingToLike ? "like" : "unlike";
-        String path = "sites/" + blogId + "/posts/" + postId + "/likes/";
-        if (isAskingToLike) {
-            path += "new";
-        } else {
-            path += "mine/delete";
-        }
-
-        com.wordpress.rest.RestRequest.Listener listener = jsonObject -> {
-            AppLog.d(T.READER, String.format("post %s succeeded", actionName));
-            if (actionListener != null) {
-                ReaderActions.callActionListener(actionListener, true);
-            }
-        };
-
-        RestRequest.ErrorListener errorListener = volleyError -> {
-            String error = VolleyUtils.errStringFromVolleyError(volleyError);
-            if (TextUtils.isEmpty(error)) {
-                AppLog.w(T.READER, String.format("post %s failed", actionName));
-            } else {
-                AppLog.w(T.READER, String.format("post %s failed (%s)", actionName, error));
-            }
-            AppLog.e(T.READER, volleyError);
-            if (post != null) {
-                ReaderPostTable.setLikesForPost(post, post.numLikes, post.isLikedByCurrentUser);
-            }
-            ReaderLikeTable.setCurrentUserLikesPost(postId, blogId, isAskingToLike, wpComUserId);
-            if (actionListener != null) {
-                ReaderActions.callActionListener(actionListener, false);
-            }
-        };
-
-        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
 
     /*
@@ -465,37 +379,5 @@ public class ReaderPostActions {
                 }
             }
         }.start();
-    }
-
-    public static void addToBookmarked(@NonNull final ReaderPost post) {
-        if (!post.isBookmarked) {
-            ReaderPostList readerPosts = new ReaderPostList();
-            readerPosts.add(post);
-            ReaderTagList bookmarkTags = ReaderTagTable.getBookmarkTags();
-
-            for (ReaderTag tag : bookmarkTags) {
-                post.setDateTagged(DateTimeUtils.iso8601UTCFromDate(new Date()));
-                ReaderPostTable.addOrUpdatePosts(tag, readerPosts);
-            }
-            ReaderPostTable.setBookmarkFlag(post.blogId, post.postId, true);
-        } else {
-            String msg = "addToBookmarked called on an already bookmarked post.";
-            AppLog.w(T.READER, msg);
-            if (BuildConfig.DEBUG) {
-                throw new RuntimeException(msg);
-            }
-        }
-    }
-
-    public static void removeFromBookmarked(@NonNull final ReaderPost post) {
-        if (post.isBookmarked) {
-            ReaderPostTable.setBookmarkFlag(post.blogId, post.postId, false);
-        } else {
-            String msg = "removeFromBookmarked called on a post which wasn't bookmarked.";
-            AppLog.w(T.READER, msg);
-            if (BuildConfig.DEBUG) {
-                throw new RuntimeException(msg);
-            }
-        }
     }
 }

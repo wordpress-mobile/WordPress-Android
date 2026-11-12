@@ -562,13 +562,13 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                         ReaderPostActions.requestBlogPost(
                             blogIdentifier, postIdentifier,
                             object : OnRequestListener<String?> {
-                                override fun onSuccess(blogUrl: String?) {
+                                override fun onSuccess(result: String?) {
                                     postSlugsResolutionUnderway = false
 
                                     // the scheme is removed to match the query pattern in ReaderPostTable
                                     // .getBlogPost
                                     val primaryBlogIdentifier = urlUtilsWrapper.removeScheme(
-                                        blogUrl!!
+                                        result!!
                                     )
 
                                     // getBlogPost utilizes the primaryBlogIdentifier instead of blogIdentifier

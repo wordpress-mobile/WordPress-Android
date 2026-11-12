@@ -15,7 +15,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -34,7 +34,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     @Mock
-    lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
+    lateinit var readerPostRepository: ReaderPostRepository
 
     @Mock
     lateinit var readerPostTableWrapper: ReaderPostTableWrapper
@@ -44,7 +44,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
         useCase = ReaderPostBookmarkUseCase(
             readerTracker,
             networkUtilsWrapper,
-            readerPostActionsWrapper,
+            readerPostRepository,
             readerPostTableWrapper
         )
     }
@@ -61,7 +61,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
         ).toList(mutableListOf())
 
         // Assert
-        verify(readerPostActionsWrapper).addToBookmarked(dummyPost)
+        verify(readerPostRepository).setBookmarked(dummyPost, true)
     }
 
     @Test
@@ -76,7 +76,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
         ).toList(mutableListOf())
 
         // Assert
-        verify(readerPostActionsWrapper).removeFromBookmarked(dummyPost)
+        verify(readerPostRepository).setBookmarked(dummyPost, false)
     }
 
     @Test

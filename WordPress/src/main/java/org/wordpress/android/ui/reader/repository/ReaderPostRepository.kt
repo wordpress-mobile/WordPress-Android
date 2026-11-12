@@ -5,6 +5,7 @@ import com.wordpress.rest.RestRequest
 import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -12,6 +13,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.wordpress.android.WordPress
 import org.wordpress.android.WordPress.Companion.getRestClientUtilsV1_2
+import org.wordpress.android.datasets.ReaderLikeTable
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.datasets.ReaderTagTable
 import org.wordpress.android.models.ReaderPost
@@ -34,6 +36,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.UrlUtils
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.resume
@@ -203,6 +206,67 @@ class ReaderPostRepository @Inject constructor(
             ReaderPostTable.addOrUpdatePosts(ReaderUtils.getTagForSearchQuery(query), serverPosts)
         }
         return true
+    }
+
+    /**
+     * Likes or unlikes the post locally and returns whether that changed anything
+     */
+    suspend fun likePostLocal(post: ReaderPost, like: Boolean, wpComUserId: Long): Boolean =
+        withContext(ioDispatcher) {
+            if (ReaderPostTable.isPostLikedByCurrentUser(post) == like) {
+                AppLog.w(AppLog.T.READER, "post like unchanged")
+                return@withContext false
+            }
+            val numLikes = ReaderPostTable.getNumLikesForPost(post.blogId, post.postId)
+            val newNumLikes = (if (like) numLikes + 1 else numLikes - 1).coerceAtLeast(0)
+            ReaderPostTable.setLikesForPost(post, newNumLikes, like)
+            ReaderLikeTable.setCurrentUserLikesPost(post, like, wpComUserId)
+            true
+        }
+
+    /**
+     * Likes or unlikes the post on the server and returns whether it succeeded. If it fails, the local like
+     * is reverted to the passed post's state, if there is one. This finishes even if the caller is cancelled.
+     */
+    suspend fun likePostRemote(
+        post: ReaderPost?,
+        blogId: Long,
+        postId: Long,
+        like: Boolean,
+        wpComUserId: Long
+    ): Boolean = withContext(ioDispatcher + NonCancellable) {
+        val actionName = if (like) "like" else "unlike"
+        val path = "sites/$blogId/posts/$postId/likes/" + if (like) "new" else "mine/delete"
+        val result = awaitRestRequest { listener, errorListener ->
+            WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener)
+        }
+        if (result is RestResult.Failure) {
+            val error = result.errorString
+            AppLog.w(AppLog.T.READER, "post $actionName failed" + if (error.isEmpty()) "" else " ($error)")
+            // restore the post's state from before the action. Without the post there's nothing to restore,
+            // and writing the like table anyway would add a like for a caller that never applied one locally
+            if (!result.isCancelled) {
+                post?.let {
+                    ReaderPostTable.setLikesForPost(it, it.numLikes, it.isLikedByCurrentUser)
+                    ReaderLikeTable.setCurrentUserLikesPost(it, it.isLikedByCurrentUser, wpComUserId)
+                }
+            }
+        } else {
+            AppLog.d(AppLog.T.READER, "post $actionName succeeded")
+        }
+        result is RestResult.Success
+    }
+
+    /**
+     * Adds the post to, or removes it from, the bookmarks
+     */
+    suspend fun setBookmarked(post: ReaderPost, bookmarked: Boolean) = withContext(ioDispatcher) {
+        if (bookmarked) {
+            val posts = ReaderPostList().apply { add(post) }
+            post.dateTagged = DateTimeUtils.iso8601UTCFromDate(Date())
+            ReaderTagTable.getBookmarkTags().forEach { tag -> ReaderPostTable.addOrUpdatePosts(tag, posts) }
+        }
+        ReaderPostTable.setBookmarkFlag(post.blogId, post.postId, bookmarked)
     }
 
     /**
