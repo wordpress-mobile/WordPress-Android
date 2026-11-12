@@ -55,10 +55,29 @@ internal fun PageRsTabListScreen(
         onRefresh = onRefresh,
         modifier = modifier,
     ) {
+        // Pages only on this device show whatever the server fetch is doing - offline above all - so the
+        // loading, error and empty states replace the list only when there are none.
+        val hasLocalDrafts = localDrafts.isNotEmpty()
         when {
             isSearchIdle -> Box(Modifier.fillMaxSize())
-            // Pages only on this device show whatever the server fetch is doing - offline above all.
-            localDrafts.isNotEmpty() -> PageListContent(
+            !hasLocalDrafts && state.isLoading -> ContentListShimmer()
+            !hasLocalDrafts && state.error != null && !state.items.hasRealPages -> {
+                ContentListErrorState(
+                    error = state.error,
+                    onRetry = if (state.isAuthError) null else onRefresh
+                )
+            }
+            !hasLocalDrafts && state.items.isEmpty() && !state.isRefreshing -> {
+                ContentListEmptyState(
+                    messageResId = if (isSearching) {
+                        R.string.pages_empty_search_result
+                    } else {
+                        emptyMessageResId
+                    }
+                )
+            }
+            // One call site with or without local pages, so their coming and going keeps the scroll position.
+            else -> PageListContent(
                 pages = state.items,
                 revealPageId = revealPageId,
                 onRevealHandled = onRevealHandled,
@@ -79,35 +98,6 @@ internal fun PageRsTabListScreen(
                 serverError = state.error,
                 onLocalDraftClick = onLocalDraftClick,
                 onLocalDraftAction = onLocalDraftAction
-            )
-            state.isLoading -> ContentListShimmer()
-            state.error != null && !state.items.hasRealPages -> {
-                ContentListErrorState(
-                    error = state.error,
-                    onRetry = if (state.isAuthError) null else onRefresh
-                )
-            }
-            state.items.isEmpty() && !state.isRefreshing -> {
-                ContentListEmptyState(
-                    messageResId = if (isSearching) {
-                        R.string.pages_empty_search_result
-                    } else {
-                        emptyMessageResId
-                    }
-                )
-            }
-            else -> PageListContent(
-                pages = state.items,
-                revealPageId = revealPageId,
-                onRevealHandled = onRevealHandled,
-                isLoadingMore = state.isLoadingMore,
-                canLoadMore = state.canLoadMore,
-                onLoadMore = onLoadMore,
-                onPageClick = onPageClick,
-                onPageMenuAction = onPageMenuAction,
-                onRowsVisible = onRowsVisible,
-                density = density,
-                isSearching = isSearching
             )
         }
     }

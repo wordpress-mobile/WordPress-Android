@@ -69,39 +69,19 @@ fun PostRsTabListScreen(
         onRefresh = onRefresh,
         modifier = modifier,
     ) {
+        // Drafts only on this device show whatever the server fetch is doing - offline above all - so the
+        // loading, error and empty states replace the list only when there are none.
+        val hasLocalDrafts = localDrafts.isNotEmpty()
         when {
             isSearchIdle -> Box(Modifier.fillMaxSize())
-            // Drafts only on this device show whatever the server fetch is doing - offline above all.
-            localDrafts.isNotEmpty() -> PostListContent(
-                posts = state.items,
-                localDrafts = localDrafts,
-                serverState = when {
-                    state.isLoading -> ServerRowsState.LOADING
-                    state.error != null && state.items.isEmpty() -> ServerRowsState.FAILED
-                    else -> ServerRowsState.LOADED
-                },
-                serverError = state.error,
-                revealPostId = revealPostId,
-                onRevealHandled = onRevealHandled,
-                isLoadingMore = state.isLoadingMore,
-                canLoadMore = state.canLoadMore,
-                onLoadMore = onLoadMore,
-                onPostClick = onPostClick,
-                onPostMenuAction = onPostMenuAction,
-                onLocalDraftClick = onLocalDraftClick,
-                onLocalDraftAction = onLocalDraftAction,
-                onRowsVisible = onRowsVisible,
-                showDateGroups = showDateGroups && !isSearching,
-                density = density
-            )
-            state.isLoading -> ContentListShimmer()
-            state.error != null && state.items.isEmpty() -> FadeInOnAppear {
+            !hasLocalDrafts && state.isLoading -> ContentListShimmer()
+            !hasLocalDrafts && state.error != null && state.items.isEmpty() -> FadeInOnAppear {
                 ContentListErrorState(
                     error = state.error,
                     onRetry = if (state.isAuthError) null else onRefresh
                 )
             }
-            state.items.isEmpty() && !state.isRefreshing -> FadeInOnAppear {
+            !hasLocalDrafts && state.items.isEmpty() && !state.isRefreshing -> FadeInOnAppear {
                 ContentListEmptyState(
                     messageResId = if (isSearching) {
                         R.string.post_list_search_nothing_found
@@ -110,8 +90,18 @@ fun PostRsTabListScreen(
                     }
                 )
             }
+            // One call site with or without local drafts, so their coming and going keeps the scroll position.
             else -> PostListContent(
                 posts = state.items,
+                localDrafts = localDrafts,
+                serverState = when {
+                    state.isLoading -> ServerRowsState.LOADING
+                    state.error != null && state.items.isEmpty() -> ServerRowsState.FAILED
+                    else -> ServerRowsState.LOADED
+                },
+                serverError = state.error,
+                onLocalDraftClick = onLocalDraftClick,
+                onLocalDraftAction = onLocalDraftAction,
                 revealPostId = revealPostId,
                 onRevealHandled = onRevealHandled,
                 isLoadingMore = state.isLoadingMore,
