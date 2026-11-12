@@ -44,7 +44,6 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.CoroutineContext
 
 const val UPDATE_TAGS_THRESHOLD = 1000 * 60 * 60 // 1 hr
 const val TRACK_TAB_CHANGED_THROTTLE = 100L
@@ -376,7 +375,6 @@ class ReaderViewModel @Inject constructor(
         initialDelay: Long = 0L,
         retryTime: Long = 50L,
         maxRetries: Int = 10,
-        runContext: CoroutineContext = mainDispatcher,
         block: suspend CoroutineScope.(topBarUiState: TopBarUiState) -> Unit
     ) {
         launch(bgDispatcher) {
@@ -388,11 +386,11 @@ class ReaderViewModel @Inject constructor(
                 remainingTries--
             }
 
-            // only run the block if the topBarUiState is not null, otherwise do nothing
-            _topBarUiState.value?.let { topBarUiState ->
-                withContext(runContext) {
-                    block(topBarUiState)
-                }
+            // read the state on the main thread, where the block sets it, so an update made while this one was
+            // waiting (such as a new filter count while the selected filter is cleared) isn't overwritten.
+            // Only run the block if the topBarUiState is not null, otherwise do nothing
+            withContext(mainDispatcher) {
+                _topBarUiState.value?.let { topBarUiState -> block(topBarUiState) }
             }
         }
     }
@@ -401,7 +399,7 @@ class ReaderViewModel @Inject constructor(
         // small delay to achieve a fluid animation since other UI updates are happening
         tryWaitNonNullTopBarUiStateThenRun(initialDelay = FILTER_UPDATE_DELAY) { topBarUiState ->
             val filterUiState = topBarUiState.filterUiState?.copy(selectedItem = null)
-            _topBarUiState.postValue(topBarUiState.copy(filterUiState = filterUiState))
+            _topBarUiState.value = topBarUiState.copy(filterUiState = filterUiState)
         }
     }
 
@@ -410,7 +408,7 @@ class ReaderViewModel @Inject constructor(
         tryWaitNonNullTopBarUiStateThenRun(initialDelay = FILTER_UPDATE_DELAY) { topBarUiState ->
             val filterUiState = topBarUiState.filterUiState
                 ?.copy(selectedItem = ReaderFilterSelectedItem(UiStringText(itemName), type))
-            _topBarUiState.postValue(topBarUiState.copy(filterUiState = filterUiState))
+            _topBarUiState.value = topBarUiState.copy(filterUiState = filterUiState)
         }
     }
 
@@ -420,7 +418,7 @@ class ReaderViewModel @Inject constructor(
 
         if (readerTab != selectedReaderTag) return@tryWaitNonNullTopBarUiStateThenRun
 
-        _topBarUiState.postValue(topBarUiState.copy(filterUiState = null))
+        _topBarUiState.value = topBarUiState.copy(filterUiState = null)
     }
 
     fun showTopBarFilterGroup(
@@ -449,9 +447,7 @@ class ReaderViewModel @Inject constructor(
                 showTagsFilter = shouldShowTagsFilter(selectedReaderTag),
             )
 
-        _topBarUiState.postValue(
-            topBarUiState.copy(filterUiState = filterState)
-        )
+        _topBarUiState.value = topBarUiState.copy(filterUiState = filterState)
     }
 
     private fun shouldShowBlogsFilter(readerTag: ReaderTag): Boolean {

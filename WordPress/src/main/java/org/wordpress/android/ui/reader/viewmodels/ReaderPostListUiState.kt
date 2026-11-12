@@ -112,6 +112,7 @@ sealed class ReaderPostListUiEvent {
     data class PostHeaderClicked(val post: ReaderPost) : ReaderPostListUiEvent()
     data class TagFollowFailed(val isFollowRequest: Boolean) : ReaderPostListUiEvent()
     data object SetDefaultSubfilter : ReaderPostListUiEvent()
+    data object ReloadSubfilters : ReaderPostListUiEvent()
     data object NoConnection : ReaderPostListUiEvent()
     data object DataLoaded : ReaderPostListUiEvent()
     data object BlogInfoFailed : ReaderPostListUiEvent()

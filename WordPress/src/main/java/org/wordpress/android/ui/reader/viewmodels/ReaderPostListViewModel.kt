@@ -314,6 +314,8 @@ class ReaderPostListViewModel @Inject constructor(
      * filtered on, if any.
      */
     fun onResumeAfterPause(siteSubfilter: SubfilterListItem.Site?) {
+        // a site may have been blocked or unsubscribed from elsewhere, such as the post detail screen
+        reloadSubfilters()
         when {
             listType == ReaderPostListType.TAG_FOLLOWED -> launch {
                 val tag = currentTag
@@ -373,6 +375,7 @@ class ReaderPostListViewModel @Inject constructor(
      * Called when a card action, such as blocking a site, changed the stored posts
      */
     private fun onPostsChanged() {
+        reloadSubfilters()
         val site = siteSubfilter
         if (!isFilterable || site == null) {
             reload()
@@ -386,6 +389,16 @@ class ReaderPostListViewModel @Inject constructor(
             } else {
                 sendUiEvent(ReaderPostListUiEvent.SetDefaultSubfilter)
             }
+        }
+    }
+
+    /*
+     * The Subscriptions filter, and the site count shown with it, are only rebuilt when a sync finds a change,
+     * so this rebuilds them from the local DB after an action such as blocking a site unfollowed one
+     */
+    private fun reloadSubfilters() {
+        if (isFilterable) {
+            sendUiEvent(ReaderPostListUiEvent.ReloadSubfilters)
         }
     }
 
