@@ -81,7 +81,9 @@ class RsLocalDrafts @Inject constructor(
     /** Starts the upload again; the change listener reports its progress. */
     fun retry(site: SiteModel, localId: Int) {
         val post = find(site, localId) ?: return
-        uploadServiceFacade.uploadPost(appContext, post, trackAnalytics = true, sourceForLogging = SOURCE_RETRY)
+        // Only a first publish is tracked as one, as the legacy list's retry does.
+        val trackAnalytics = PostUtils.isFirstTimePublish(post)
+        uploadServiceFacade.uploadPost(appContext, post, trackAnalytics, sourceForLogging = SOURCE_RETRY)
     }
 
     /**

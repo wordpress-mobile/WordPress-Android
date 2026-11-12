@@ -9,6 +9,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.stub
 import org.mockito.kotlin.verify
@@ -205,7 +206,18 @@ class RsLocalDraftsTest : BaseUnitTest() {
 
         localDrafts.retry(site, LOCAL_ID)
 
-        verify(uploadServiceFacade).uploadPost(any(), argThat<PostModel> { this === post }, any(), any())
+        // A draft that never reached the server would be published for the first time.
+        verify(uploadServiceFacade).uploadPost(any(), argThat<PostModel> { this === post }, eq(true), any())
+    }
+
+    @Test
+    fun `retrying a private post is not tracked as a first publish`() {
+        val post = localDraft().apply { setStatus("private") }
+        whenever(postStore.getPostByLocalPostId(LOCAL_ID)).thenReturn(post)
+
+        localDrafts.retry(site, LOCAL_ID)
+
+        verify(uploadServiceFacade).uploadPost(any(), argThat<PostModel> { this === post }, eq(false), any())
     }
 
     @Test
