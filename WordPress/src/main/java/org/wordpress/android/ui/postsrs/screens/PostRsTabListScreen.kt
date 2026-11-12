@@ -155,9 +155,8 @@ private fun PostListContent(
     }
 
     // Indexes the rendered entries, since group headers are list items too. Local drafts come first,
-    // under a header of their own, and the placeholder or error standing in for the server rows
-    // sits between the two.
-    val localItemCount = if (localDrafts.isEmpty()) 0 else localDrafts.size + 1
+    // and the placeholder or error standing in for the server rows sits between the two.
+    val localItemCount = localDrafts.size
     val serverStateItemCount = when (serverState) {
         ServerRowsState.LOADING -> SERVER_PLACEHOLDER_COUNT
         ServerRowsState.FAILED -> 1

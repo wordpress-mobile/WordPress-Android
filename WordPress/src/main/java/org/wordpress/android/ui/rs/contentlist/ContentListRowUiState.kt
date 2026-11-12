@@ -27,7 +27,7 @@ data class ContentListRowUiState(
     val badges: List<Int> = emptyList(),
     val isSyncing: Boolean = false,
     val hasSyncFailed: Boolean = false,
-    /** Shown after the date, e.g. a local draft's "Local draft" or upload error. */
+    /** Shown under the date, e.g. a local draft's upload error. */
     val statusLabels: List<UiString> = emptyList(),
     /** Draws [statusLabels] in the error colour. */
     val isStatusError: Boolean = false

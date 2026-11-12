@@ -9,7 +9,7 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 <!-- Add new entries directly below this line. -->
 
 - **Drafts that never uploaded appear in the redesigned Posts and Pages lists**
-  Posts and pages saved on the device but never uploaded, because saving failed or the device was offline, now appear under "Not uploaded" at the top of the Drafts tab, with their upload status or error. Previously these lists didn't show them at all, so once the upload-failure notification was dismissed there was no way back to the draft. Tap one to keep editing, even offline; its menu offers Retry after a failed upload, and Delete.
+  Posts and pages saved on the device but never uploaded, because saving failed or the device was offline, now appear at the top of the Drafts tab, each marked "Not uploaded" and showing its upload error if it has one. Previously these lists didn't show them at all, so once the upload-failure notification was dismissed there was no way back to the draft. Tap one to keep editing, even offline; its menu offers Retry after a failed upload, and Delete.
   - **Apps:** Both
   - **Type:** Fixed
   - **Availability:** Everyone

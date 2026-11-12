@@ -3,7 +3,6 @@ package org.wordpress.android.ui.rs.contentlist
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import org.wordpress.android.R
 import org.wordpress.android.ui.rs.RsLocalDraftUiModel
 
@@ -19,12 +18,15 @@ fun RsLocalDraftUiModel.toContentListRowUiState() = ContentListRowUiState(
     title = title,
     excerpt = excerpt,
     dateLabel = dateLabel,
+    // A badge rather than a section header: the pages list and search results have no headers of
+    // their own, so a header would seem to cover the server's rows below it too.
+    badges = listOf(R.string.rs_local_draft_badge),
     statusLabels = statusLabels,
     isStatusError = isUploadFailed
 )
 
 /**
- * The drafts that exist only on this device, under their own header ahead of the server's rows.
+ * The drafts that exist only on this device, ahead of the server's rows.
  *
  * Keyed by strings, so they can't collide with the remote-id keys of the rows below and drop out of
  * the visible-row reporting that fetches metrics - a draft the server has never seen has none.
@@ -35,13 +37,6 @@ fun LazyListScope.localDraftItems(
     onClick: (Int) -> Unit,
     onAction: (Int, RsLocalDraftMenuAction) -> Unit
 ) {
-    if (drafts.isEmpty()) return
-    item(key = LOCAL_DRAFTS_HEADER_KEY, contentType = LOCAL_DRAFTS_HEADER_KEY) {
-        ContentListSectionHeader(
-            text = stringResource(R.string.rs_local_drafts_header),
-            modifier = Modifier.animateItem()
-        )
-    }
     items(
         items = drafts,
         key = { "$LOCAL_DRAFT_KEY_PREFIX${it.localId}" },
@@ -61,5 +56,4 @@ fun LazyListScope.localDraftItems(
     }
 }
 
-private const val LOCAL_DRAFTS_HEADER_KEY = "local_drafts_header"
 private const val LOCAL_DRAFT_KEY_PREFIX = "local_draft_"

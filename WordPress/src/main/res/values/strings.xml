@@ -1034,7 +1034,7 @@
     <string name="post_rs_error_load_more">Couldn\'t load more posts</string>
     <string name="post_rs_error_auth">Your authentication has expired. Please sign in again.</string>
     <string name="post_rs_sync_failed">Sync failed</string>
-    <string name="rs_local_drafts_header">Not uploaded</string>
+    <string name="rs_local_draft_badge">Not uploaded</string>
     <string name="rs_local_draft_confirm_delete_message">This draft was never uploaded, so this is its only copy. Deleting it can\'t be undone.</string>
     <string name="post_rs_settings_protected">Protected</string>
     <string name="post_rs_settings_field_error">Couldn\'t load</string>

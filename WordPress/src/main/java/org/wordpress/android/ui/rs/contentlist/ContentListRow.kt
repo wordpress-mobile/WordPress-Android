@@ -137,18 +137,9 @@ fun ContentListGroupHeader(
     group: ContentDateGroup,
     modifier: Modifier = Modifier
 ) {
-    ContentListSectionHeader(text = group.label(), modifier = modifier)
-}
-
-/** A list section header in the date buckets' style, e.g. "NOT UPLOADED". */
-@Composable
-fun ContentListSectionHeader(
-    text: String,
-    modifier: Modifier = Modifier
-) {
     val locale = ConfigurationCompat.getLocales(LocalConfiguration.current)[0] ?: Locale.ROOT
     Text(
-        text = text.uppercase(locale),
+        text = group.label().uppercase(locale),
         style = MaterialTheme.typography.labelSmall,
         fontWeight = FontWeight.Bold,
         letterSpacing = GROUP_HEADER_TRACKING,
@@ -329,7 +320,7 @@ private fun RowBody(
 }
 
 /**
- * A local draft's "Local draft" or upload error. On a line of its own because an upload error is a
+ * A local draft's upload error or progress. On a line of its own because an upload error is a
  * sentence, which the metadata line would cut short.
  */
 @Composable

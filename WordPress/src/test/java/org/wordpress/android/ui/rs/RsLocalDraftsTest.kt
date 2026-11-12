@@ -84,12 +84,12 @@ class RsLocalDraftsTest : BaseUnitTest() {
     }
 
     @Test
-    fun `a draft with nothing to upload is labelled as a local draft`() = test {
+    fun `a draft with nothing to upload has no status label, since its badge already says it is local`() = test {
         whenever(postStore.getLocalDraftPosts(site)).thenReturn(listOf(localDraft()))
 
         val draft = load().single()
 
-        assertThat(draft.statusLabels).containsExactly(UiStringRes(R.string.local_draft))
+        assertThat(draft.statusLabels).isEmpty()
         assertThat(draft.isUploadFailed).isFalse
         assertThat(draft.canRetry).isFalse
     }
@@ -161,15 +161,16 @@ class RsLocalDraftsTest : BaseUnitTest() {
     }
 
     @Test
-    fun `pages are read from the page store and labelled as pages`() = test {
+    fun `pages are read from the page store and keep their qualifiers`() = test {
         val page = localDraft(isPage = true)
         pageStore.stub { on { getLocalDraftPages(site) } doReturn listOf(page) }
-        whenever(pageLabels.createLabels(any(), any()))
-            .thenReturn(listOf(UiStringRes(R.string.page_local_draft)) to null)
+        whenever(pageLabels.createLabels(any(), any())).thenReturn(
+            listOf(UiStringRes(R.string.page_local_draft), UiStringRes(R.string.page_status_pending_review)) to null
+        )
 
         val draft = load(isPage = true).single()
 
-        assertThat(draft.statusLabels).containsExactly(UiStringRes(R.string.page_local_draft))
+        assertThat(draft.statusLabels).containsExactly(UiStringRes(R.string.page_status_pending_review))
         verify(postStore, never()).getLocalDraftPosts(any())
     }
 

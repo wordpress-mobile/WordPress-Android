@@ -133,8 +133,8 @@ private fun PageListContent(
     onLocalDraftAction: (Int, RsLocalDraftMenuAction) -> Unit = { _, _ -> }
 ) {
     val listState = rememberLazyListState()
-    // Local pages come first, under a header of their own, ahead of every server row.
-    val localItemCount = if (localDrafts.isEmpty()) 0 else localDrafts.size + 1
+    // Local pages come first, ahead of every server row.
+    val localItemCount = localDrafts.size
     // The placeholder or error standing in for the server rows sits between the two.
     val serverStateItemCount = when (serverState) {
         ServerRowsState.LOADING -> SERVER_PLACEHOLDER_COUNT

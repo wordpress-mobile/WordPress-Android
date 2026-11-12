@@ -4,6 +4,7 @@ import android.content.Context
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.apache.commons.text.StringEscapeUtils
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.PostModel
@@ -16,6 +17,7 @@ import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.viewmodel.pages.CreatePageListItemLabelsUseCase
@@ -31,7 +33,7 @@ data class RsLocalDraftUiModel(
     val title: String,
     val excerpt: String,
     val dateLabel: String,
-    /** The upload error or progress, otherwise "Local draft" plus any status qualifiers. */
+    /** The upload error or progress, plus any status qualifiers such as "Pending review". */
     val statusLabels: List<UiString>,
     val isUploadFailed: Boolean,
 ) {
@@ -153,7 +155,8 @@ class RsLocalDrafts @Inject constructor(
             title = title.toPlainText(),
             excerpt = excerpt.ifBlank { content }.toPlainText(),
             dateLabel = date,
-            statusLabels = labels,
+            // The row's badge already says it's local, so the plain "Local draft" label would repeat it.
+            statusLabels = labels.filterNot { it in LOCAL_DRAFT_LABELS },
             isUploadFailed = uploadUiState is PostUploadUiState.UploadFailed,
         )
     }
@@ -164,5 +167,6 @@ class RsLocalDrafts @Inject constructor(
     private companion object {
         const val SOURCE_RETRY = "rs list retry"
         val WHITESPACE = Regex("\\s+")
+        val LOCAL_DRAFT_LABELS = setOf(UiStringRes(R.string.local_draft), UiStringRes(R.string.page_local_draft))
     }
 }
