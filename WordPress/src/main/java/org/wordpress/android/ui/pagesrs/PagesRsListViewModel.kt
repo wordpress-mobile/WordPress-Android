@@ -260,7 +260,6 @@ internal class PagesRsListViewModel @Inject constructor(
                     .collect {
                         clearCollections()
                         initTab(activeSearchTab)
-                        localDraftsSection?.reload()
                     }
             }
             @OptIn(FlowPreview::class)
@@ -381,6 +380,9 @@ internal class PagesRsListViewModel @Inject constructor(
         activeSearchTab = activeTab
         _searchQuery.value = query
         if (query.isBlank()) clearCollections()
+        // Not debounced like the server search: the screen shows local pages as soon as the query is
+        // long enough, and filtering them only reads the device.
+        localDraftsSection?.reload()
     }
 
     /**

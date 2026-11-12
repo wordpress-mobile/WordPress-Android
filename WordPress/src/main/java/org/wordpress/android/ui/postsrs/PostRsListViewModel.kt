@@ -232,7 +232,6 @@ class PostRsListViewModel @Inject constructor(
                             RsTabUiState(isLoading = true)
                         }
                         initTab(activeSearchTab)
-                        localDraftsSection?.reload()
                     }
             }
             // Subscribe before starting the listener - its flow has no replay, so a change
@@ -404,6 +403,9 @@ class PostRsListViewModel @Inject constructor(
         activeSearchTab = activeTab
         _searchQuery.value = query
         if (query.isBlank()) clearCollections()
+        // Not debounced like the server search: the screen shows local drafts as soon as the query is
+        // long enough, and filtering them only reads the device.
+        localDraftsSection?.reload()
     }
 
     /**

@@ -6,6 +6,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runCurrent
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
@@ -783,8 +784,23 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
+    fun `local drafts are filtered as soon as the query changes, without the search debounce`() = test {
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+        viewModel.onSearchOpen()
+
+        viewModel.onSearchQueryChanged("rec", PostRsListTab.DRAFTS)
+        runCurrent()
+
+        verifyBlocking(localDraftsSource) { load(eq(site), eq(false), eq("rec"), any(), anyOrNull()) }
+        // The debounced server search still runs once the test ends, so let its tab init settle first.
+        awaitTabInitFailure(viewModel, PostRsListTab.DRAFTS)
+    }
+
+    @Test
     fun `closing search lists every local draft again`() = test {
         val viewModel = createViewModel()
+        advanceUntilIdle()
         viewModel.onSearchOpen()
         viewModel.onSearchQueryChanged("recipe", PostRsListTab.DRAFTS)
         awaitTabInitFailure(viewModel, PostRsListTab.DRAFTS)
