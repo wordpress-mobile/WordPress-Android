@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtilsWrapper
 import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
+import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -153,7 +154,7 @@ class RsLocalDrafts @Inject constructor(
         return RsLocalDraftUiModel(
             localId = id,
             title = title.toPlainText(),
-            excerpt = excerpt.ifBlank { content }.toPlainText(),
+            excerpt = listExcerpt(),
             dateLabel = date,
             // The row's badge already says it's local, so the plain "Local draft" label would repeat it.
             statusLabels = labels.filterNot { it in LOCAL_DRAFT_LABELS },
@@ -161,12 +162,25 @@ class RsLocalDrafts @Inject constructor(
         )
     }
 
+    /**
+     * Built as the legacy list builds it, so gallery and VideoPress blocks are dropped and escaped text
+     * such as "&lt;div&gt;" survives stripping. Collapsed to one paragraph, as the row shows two lines.
+     */
+    private fun PostModel.listExcerpt(): String =
+        PostUtils.getPostListExcerptFromPost(this)
+            ?.let { StringEscapeUtils.unescapeHtml4(it) }
+            ?.let { PostUtils.collapseShortcodes(it) }
+            ?.split(LARGE_SPACE_GAP)?.first()
+            ?.replace(WHITESPACE, " ")?.trim()
+            .orEmpty()
+
     private fun String.toPlainText(): String =
         HtmlUtils.fastStripHtml(StringEscapeUtils.unescapeHtml4(this)).replace(WHITESPACE, " ").trim()
 
     private companion object {
         const val SOURCE_RETRY = "rs list retry"
         val WHITESPACE = Regex("\\s+")
+        val LARGE_SPACE_GAP = Regex("\\s+\\n+")
         val LOCAL_DRAFT_LABELS = setOf(UiStringRes(R.string.local_draft), UiStringRes(R.string.page_local_draft))
     }
 }

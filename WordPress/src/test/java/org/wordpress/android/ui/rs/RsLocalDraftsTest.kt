@@ -134,6 +134,20 @@ class RsLocalDraftsTest : BaseUnitTest() {
     }
 
     @Test
+    fun `the excerpt drops gallery blocks and keeps escaped text, as the legacy list does`() = test {
+        whenever(postStore.getLocalDraftPosts(site)).thenReturn(
+            listOf(
+                localDraft(
+                    content = "<!-- wp:gallery --><figure><figcaption>Caption</figcaption></figure>" +
+                        "<!-- /wp:gallery --><!-- wp:paragraph --><p>Use &lt;div&gt; wrappers</p>"
+                )
+            )
+        )
+
+        assertThat(load().single().excerpt).isEqualTo("Use <div> wrappers")
+    }
+
+    @Test
     fun `a query keeps the drafts whose title or content contains it, ignoring case`() = test {
         whenever(postStore.getLocalDraftPosts(site)).thenReturn(
             listOf(
