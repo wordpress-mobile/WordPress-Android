@@ -26,6 +26,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.NothingToUpload
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadFailed
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadQueued
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadWaitingForConnection
@@ -75,10 +76,14 @@ class PostListItemUiStateHelperTest {
             uploadUiStateUseCase,
             labelColorUseCase,
             blazeFeatureUtils,
-            buildConfigWrapper
+            buildConfigWrapper,
+            CreatePostListItemLabelsUseCase()
         )
         whenever(appPrefsWrapper.isAztecEditorEnabled).thenReturn(true)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+        // The real use case never returns null; tests that care about upload state stub their own.
+        whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull()))
+            .thenReturn(NothingToUpload)
     }
 
     @Test
