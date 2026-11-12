@@ -1,11 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-11-07 23:10:26+0000
+Translation-Revision-Date: 2026-11-11 23:02:58+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: de
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Editor neu laden</string>
+    <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Lade den Editor neu, um mit der Bearbeitung fortzufahren.</string>
+    <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Der Editor funktioniert nicht mehr</string>
+    <string name="gbk_editor_load_failed_unknown_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Unbekannter Fehler</string>
+    <string name="gbk_editor_load_failed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Editor konnte nicht geladen werden</string>
+    <string name="gbk_block_inserter_camera_unavailable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Auf diesem Gerät ist keine Kamera verfügbar</string>
+    <string name="gbk_block_inserter_camera" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Kamera</string>
+    <string name="gbk_block_inserter_photos" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Fotos</string>
+    <string name="gbk_block_inserter_no_results_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Keine Blöcke stimmen mit „%1$s“ überein</string>
+    <string name="gbk_block_inserter_no_results" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Keine Ergebnisse</string>
+    <string name="gbk_block_inserter_clear_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Suche leeren</string>
+    <string name="gbk_block_inserter_tab_recent" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Zuletzt verwendet</string>
+    <string name="gbk_block_inserter_close" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Schließen</string>
+    <string name="gbk_block_inserter_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Block hinzufügen</string>
+    <string name="gbk_block_inserter_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Blöcke suchen</string>
+    <string name="gbk_block_inserter_failure" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Der Block-Inserter kann nicht angezeigt werden.</string>
+    <string name="gbk_block_inserter_section_suggested" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Vorgeschlagen</string>
+    <string name="gbk_block_inserter_section_most_used" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Meistgenutzt</string>
+    <string name="comment_detail_in_reply_to">Als Antwort auf %1$s:</string>
+    <string name="comment_author_info_guest">Gast</string>
+    <string name="comment_author_info_registered">Registrierter Benutzer</string>
+    <string name="comment_author_info_bio">Biografie</string>
+    <string name="comment_author_info_posted_from">Veröffentlicht von</string>
+    <string name="comment_author_info_send_email">E-Mail senden</string>
+    <string name="comment_author_info_email">E-Mail-Adresse</string>
+    <string name="comment_author_info_website">Website</string>
+    <string name="comment_author_info_posted_at">Veröffentlicht am</string>
+    <string name="comment_author_info_show">Autorendetails anzeigen</string>
+    <string name="comment_detail_on_post">zu %1$s</string>
+    <string name="comment_reply_continue">Antwort fortsetzen</string>
+    <string name="comment_reply_save_draft">Entwurf speichern</string>
+    <string name="comment_reply_delete_draft">Entwurf löschen</string>
+    <string name="comment_reply_keep_editing">Weiter bearbeiten</string>
+    <string name="comment_reply_unsent">Du hast eine nicht gesendete Antwort.</string>
+    <string name="comment_trash_has_replies">Dieser Kommentar hat Antworten. Diese werden nicht mit in den Papierkorb verschoben.</string>
+    <string name="content_list_density_show_comfortable">Erweiterte Liste anzeigen</string>
+    <string name="content_list_density_show_condensed">Kompakte Liste anzeigen</string>
+    <string name="content_list_comment_count_plural">%1$s Kommentare</string>
+    <string name="content_list_comment_count_singular">%1$s Kommentar</string>
+    <string name="content_list_view_count_plural">%1$s Aufrufe</string>
+    <string name="content_list_view_count_singular">%1$s Aufruf</string>
+    <string name="content_list_fab_write">Schreiben</string>
+    <string name="content_list_group_this_week">Diese Woche</string>
+    <string name="content_list_group_yesterday">Gestern</string>
+    <string name="content_list_group_today">Heute</string>
+    <string name="unified_support_attachment_link_content_description">Link öffnen: %1$s</string>
+    <string name="unified_support_status_ai_assistant">KI-Assistent</string>
+    <string name="application_password_private_site_card">Diese Website ist privat, daher können wir die Verbindung nicht wiederherstellen.</string>
+    <string name="application_password_private_site_error">Diese Website ist privat, daher können wir die Einstellungen nicht auslesen, um dich anzumelden.</string>
+    <string name="prepublishing_tags_add_hint">Schlagwort hinzufügen</string>
+    <string name="photo_picker_choose_other_files">Andere Dateien</string>
+    <string name="photo_picker_choose_photo_or_video">Fotos und Videos</string>
+    <string name="editor_saving_locked_keep_editing">Weiter bearbeiten</string>
+    <string name="support_screen_login_description">Melde dich bei WordPress.com an, um auf den Support-Chat zuzugreifen.</string>
+    <string name="site_picker_add_site_menu_expanded">Menü „Website hinzufügen“ ausgeklappt</string>
+    <string name="site_picker_add_site_menu_collapsed">Menü „Website hinzufügen“ eingeklappt</string>
+    <string name="site_picker_add_a_site_collapse">Menü „Website hinzufügen“ schließen</string>
+    <string name="get_likes_empty_state_no_likes">Noch keine Likes</string>
+    <string name="stats_archives_section_taxonomies">Taxonomien</string>
+    <string name="stats_archives_section_error">Fehler</string>
+    <string name="stats_archives_section_authors">Autoren</string>
+    <string name="stats_archives_section_tags">Schlagwörter</string>
+    <string name="stats_archives_section_categories">Kategorien</string>
+    <string name="stats_archives_section_search">Suchbegriffe</string>
+    <string name="stats_archives_title_label">Archivseiten</string>
+    <string name="stats_archives_title">Archive</string>
+    <string name="stats_view_selected_period_content_description">Statistiken für den ausgewählten Zeitraum anzeigen</string>
+    <string name="stats_period_next_content_description">Nächster Zeitraum</string>
+    <string name="stats_period_previous_content_description">Vorheriger Zeitraum</string>
+    <string name="stats_period_this_year">Dieses Jahr</string>
+    <string name="stats_period_this_month">Dieser Monat</string>
+    <string name="stats_feature_gate_plans_unavailable">Die Tarifseite für diese Website kann nicht geöffnet werden</string>
+    <string name="stats_feature_gate_explore_plans">Tarife entdecken</string>
+    <string name="stats_error_not_available">Diese Statistiken sind für diese Website nicht verfügbar</string>
+    <string name="stats_next_day">Nächster Tag</string>
+    <string name="stats_previous_day">Vorheriger Tag</string>
+    <string name="stats_post_detail_total">Gesamt</string>
+    <string name="stats_post_detail_activity_more">Mehr</string>
+    <string name="stats_post_detail_activity_less">Weniger</string>
+    <string name="stats_post_detail_more_likers">+%1$s</string>
+    <string name="stats_post_detail_published">Veröffentlicht am %1$s</string>
+    <string name="stats_post_detail_title">Beitragsstatistiken</string>
+    <string name="stats_open_link">Link öffnen</string>
+    <string name="stats_show_views">Aufrufe anzeigen</string>
+    <string name="rs_date_trashed">In den Papierkorb verschoben: %s</string>
+    <string name="rs_date_modified">Geändert: %s</string>
+    <string name="rs_date_now">Jetzt</string>
+    <string name="comments_rs_moderation_failed_multiple">%1$d von %2$d Kommentaren konnten nicht aktualisiert werden</string>
+    <string name="comments_rs_moderation_failed_single">Der Kommentar konnte nicht aktualisiert werden</string>
+    <string name="comments_rs_search_nothing_found">Keine Kommentare entsprechen deiner Suche</string>
+    <string name="comments_rs_search_prompt">Kommentare suchen</string>
+    <string name="web_view_log_in_to_site">Bei dieser Website anmelden</string>
     <string name="support_screen_unified_support_description">Erhalte jederzeit Antworten von unserem Support-Team</string>
     <string name="support_screen_unified_support_title">Hilfe erhalten</string>
     <string name="unified_support_attachment_match_score">%1$d %% Übereinstimmung</string>
@@ -93,6 +185,7 @@ Language: de
     <string name="gutenberg_kit_announcement_learn_more">Mehr erfahren</string>
     <string name="gutenberg_kit_announcement_maybe_later">Vielleicht später</string>
     <string name="gutenberg_kit_announcement_activate">Aktivieren</string>
+    <string name="gutenberg_kit_announcement_body_deadline_v2">Bis Ende 2026 wird er für alle zum Standard-Editor. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">Der Block-Editor der nächsten Generation ist verfügbar und bietet zahlreiche neue Funktionen.</string>
     <string name="gutenberg_kit_announcement_title">Ein besserer Block-Editor ist in Vorbereitung</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Wechsle zunächst zum Block-Editor, um den neuen Editor auszuprobieren.</string>
@@ -1198,6 +1291,7 @@ Language: de
     <string name="photo_picker_media_thumbnail_content_description">Medien-Vorschaubild</string>
     <string name="stats_insights_popular_title">🔥 Beliebteste Zeit</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_period_this_week">Diese Woche</string>
     <string name="scan_vault_press_active_on_site_button_text">Dashboard aufrufen</string>
     <string name="scan_vault_press_active_on_site_subtitle">Deine Website ist bereits durch VaultPress geschützt. Tippe auf den nachfolgenden Button, um zu deinem VaultPress-Dashboard zu gelangen.</string>
     <string name="scan_vault_press_active_on_site_title">Deine Website hat VaultPress</string>

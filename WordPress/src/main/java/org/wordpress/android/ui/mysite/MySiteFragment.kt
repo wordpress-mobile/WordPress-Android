@@ -844,6 +844,15 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         WPMediaUtils.createProcessedMediaFile(context, SITE_ICON_CROP_FILE_NAME)
             ?: File(context.cacheDir, SITE_ICON_CROP_FILE_NAME)
 
+    /**
+     * Rebuilds the cards after the selected site was replaced outside the site picker (e.g. a fetch deleted it)
+     */
+    fun onSelectedSiteReplaced() {
+        if (::viewModel.isInitialized) {
+            viewModel.onSitePicked()
+        }
+    }
+
     companion object {
         @JvmField
         var TAG: String = MySiteFragment::class.java.simpleName
