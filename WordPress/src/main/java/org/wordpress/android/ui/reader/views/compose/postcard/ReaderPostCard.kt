@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.views.compose.postcard
 
 import android.content.res.Configuration
+import android.icu.text.CompactDecimalFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -21,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,15 +52,18 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiSt
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.InteractionSectionData
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
-import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.image.ImagePlaceholderManager
 import org.wordpress.android.util.image.ImageType
+import java.util.Locale
 
 private const val MEDIUM_EMPHASIS_ALPHA = 0.6f
 private const val HIGH_EMPHASIS_ALPHA = 0.87f
 private const val TEXT_MAX_LINES = 3
-private const val ACTION_MAX_WIDTH_DP = 140
+private val ACTION_TOUCH_TARGET = 40.dp
+
+// Between an action icon and the edge of its touch target
+private val ACTION_ICON_INSET = 8.dp
 
 // Stateless, so one instance serves every avatar
 private val avatarPlaceholders = ImagePlaceholderManager()
@@ -111,7 +117,6 @@ fun ReaderPostCard(
                 overflow = TextOverflow.Ellipsis,
             )
         }
-        InteractionCounts(uiState.interactionSection)
         ActionRow(uiState)
     }
 }
@@ -195,24 +200,6 @@ private fun CircleAvatar(url: String, imageType: ImageType, modifier: Modifier =
 }
 
 @Composable
-private fun InteractionCounts(interactionSection: InteractionSectionData) {
-    val context = LocalContext.current
-    val likeLabel = interactionSection.likeCount.takeIf { it > 0 }
-        ?.let { ReaderUtils.getShortLikeLabelText(context, it) }
-    val commentLabel = interactionSection.commentCount.takeIf { it > 0 }
-        ?.let { ReaderUtils.getShortCommentLabelText(context, it) }
-    if (likeLabel == null && commentLabel == null) return
-
-    Row(modifier = Modifier.padding(top = Margin.Medium.value)) {
-        likeLabel?.let { SecondaryText(it) }
-        if (likeLabel != null && commentLabel != null) {
-            DotSeparator()
-        }
-        commentLabel?.let { SecondaryText(it) }
-    }
-}
-
-@Composable
 private fun DotSeparator() {
     SecondaryText(
         text = stringResource(R.string.reader_dot_separator),
@@ -238,51 +225,40 @@ private fun ActionRow(uiState: ReaderPostUiState) {
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        // The buttons share the weighted space, so the more button keeps its width and long labels
-        // ellipsize instead of squeezing it out, as the View-based card's end constraint did
+        // As on iOS: icons without captions, save first, and the comment and like counts beside their icons.
+        // Shifted so the first icon, not its touch target, lines up with the text above
         Row(
-            modifier = Modifier.weight(1f),
-            horizontalArrangement = Arrangement.spacedBy(Margin.ExtraLarge.value),
+            modifier = Modifier
+                .weight(1f)
+                .offset(x = -ACTION_ICON_INSET),
+            horizontalArrangement = Arrangement.spacedBy(Margin.Medium.value),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            // Icon only, and first, as on iOS
             ActionButton(
                 uiState = uiState,
                 action = uiState.bookmarkAction,
-                labelRes = null,
                 iconRes = if (uiState.bookmarkAction.isSelected) {
                     R.drawable.ic_bookmark_fill_new_24dp
                 } else {
                     R.drawable.ic_bookmark_outline_new_24dp
                 },
             )
-            ActionButton(
-                uiState = uiState,
-                action = uiState.reblogAction,
-                labelRes = R.string.reader_view_reblog,
-                iconRes = R.drawable.ic_reblog_new_24dp,
-                modifier = Modifier.weight(1f, fill = false),
-            )
+            ActionButton(uiState = uiState, action = uiState.reblogAction, iconRes = R.drawable.ic_reblog_new_24dp)
             ActionButton(
                 uiState = uiState,
                 action = uiState.commentsAction,
-                labelRes = R.string.comment,
                 iconRes = R.drawable.ic_comment_outline_new_24dp,
-                modifier = Modifier.weight(1f, fill = false),
+                count = uiState.interactionSection.commentCount,
             )
             ActionButton(
                 uiState = uiState,
                 action = uiState.likeAction,
-                labelRes = R.string.like,
                 iconRes = if (uiState.likeAction.isSelected) {
                     R.drawable.ic_like_fill_new_24dp
                 } else {
                     R.drawable.ic_like_outline_new_24dp
                 },
-                // Only Like is capped, as in the View-based card
-                modifier = Modifier
-                    .weight(1f, fill = false)
-                    .widthIn(max = ACTION_MAX_WIDTH_DP.dp),
+                count = uiState.interactionSection.likeCount,
             )
         }
         if (uiState.moreMenuVisibility) {
@@ -295,9 +271,8 @@ private fun ActionRow(uiState: ReaderPostUiState) {
 private fun ActionButton(
     uiState: ReaderPostUiState,
     action: PrimaryAction,
-    labelRes: Int?,
     iconRes: Int,
-    modifier: Modifier = Modifier,
+    count: Int? = null,
 ) {
     if (!action.isEnabled) return
     val color = if (action.isSelected) {
@@ -307,27 +282,35 @@ private fun ActionButton(
     }
     val description = action.contentDescription?.let { uiStringText(it) }
     Row(
-        modifier = modifier
-            .heightIn(min = 40.dp)
+        modifier = Modifier
+            .heightIn(min = ACTION_TOUCH_TARGET)
+            .widthIn(min = ACTION_TOUCH_TARGET)
             .clickable { action.onClicked?.invoke(uiState.postId, uiState.blogId, action.type) }
             .semantics {
                 description?.let { contentDescription = it }
-                // TalkBack announces "selected" for a liked post, as it did for the View-based card
+                // TalkBack announces "selected" for a liked or saved post, as it did for the View-based card
                 selected = action.isSelected
-            },
+            }
+            .padding(horizontal = ACTION_ICON_INSET),
+        horizontalArrangement = Arrangement.spacedBy(Margin.ExtraSmall.value, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(painter = painterResource(iconRes), contentDescription = null, tint = color)
-        labelRes?.let {
+        count?.let {
             Text(
-                text = stringResource(it),
-                style = MaterialTheme.typography.bodyMedium,
+                text = compactCount(it),
+                style = MaterialTheme.typography.bodySmall,
                 color = color,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
             )
         }
     }
+}
+
+/** 1.2K rather than 1,234, as iOS shows counts on its post cards. */
+@Composable
+private fun compactCount(count: Int): String = remember(count) {
+    CompactDecimalFormat.getInstance(Locale.getDefault(), CompactDecimalFormat.CompactStyle.SHORT).format(count)
 }
 
 /**
