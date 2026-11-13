@@ -284,7 +284,15 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
             RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
             payload.isFirstTimePublish = sFirstPublishPosts.contains(mPost.getId());
 
-            switch (mUploadActionUseCase.getUploadAction(mPost)) {
+            UploadActionUseCase.UploadAction uploadAction = mUploadActionUseCase.getUploadAction(mPost);
+            // Explains why a post the user published can end up uploaded as a draft, or not at all (CMM-1297)
+            AppLog.i(T.POSTS, "PostUploadHandler > post " + mPost.getId()
+                              + " action=" + uploadAction
+                              + " status=" + mPost.getStatus()
+                              + " isLocalDraft=" + mPost.isLocalDraft()
+                              + " isLocallyChanged=" + mPost.isLocallyChanged()
+                              + " changesConfirmed=" + mUploadActionUseCase.uploadWillPushChanges(mPost));
+            switch (uploadAction) {
                 case UPLOAD:
                     AppLog.d(T.POSTS, "PostUploadHandler - UPLOAD. Post: " + mPost.getTitle());
                     mDispatcher.dispatch(
@@ -662,6 +670,13 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
     public void onPostUploaded(OnPostUploaded event) {
         // check if the event is related to the PostModel that is being uploaded by PostUploadHandler
         if (!isPostUploading(event.post)) {
+            PostModel currentPost = sCurrentUploadingPost;
+            AppLog.w(T.POSTS, "PostUploadHandler > onPostUploaded: ignoring event for post "
+                              + (event.post != null ? event.post.getId() : "null")
+                              + " because it is not the currently uploading post"
+                              + " (current=" + (currentPost != null ? currentPost.getId() : "null") + ")"
+                              + (event.isError() ? " error: " + event.error.type
+                              + " " + event.error.message : ""));
             return;
         }
         SiteModel site = mSiteStore.getSiteByLocalId(event.post.getLocalSiteId());

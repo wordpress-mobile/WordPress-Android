@@ -459,6 +459,13 @@ public class UploadUtils {
             if (onPublishingCallback != null) {
                 onPublishingCallback.onPublishing(isFirstTimePublish);
             }
+        } else {
+            AppLog.i(T.POSTS, "UploadUtils > publishPost: no network, post " + post.getId()
+                              + " (status=" + post.getStatus() + ") saved locally and not uploaded");
+            // UploadStarter uploads the post once the device is back online
+            ToastUtils.showToast(activity,
+                    getDeviceOfflinePostModelNotUploadedMessage(post, UploadAction.UPLOAD),
+                    ToastUtils.Duration.LONG);
         }
         PostUtils.trackSavePostAnalytics(post, site);
     }
