@@ -28,6 +28,7 @@ sealed class ReaderCardUiState {
         val thumbnailStripSection: GalleryThumbnailStripData?,
         val featuredImageVisibility: Boolean,
         val moreMenuVisibility: Boolean,
+        val bookmarkAction: PrimaryAction,
         val likeAction: PrimaryAction,
         val reblogAction: PrimaryAction,
         val commentsAction: PrimaryAction,

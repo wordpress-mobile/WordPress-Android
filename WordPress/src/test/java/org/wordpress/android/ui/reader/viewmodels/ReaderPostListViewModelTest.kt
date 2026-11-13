@@ -874,6 +874,7 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             thumbnailStripSection = null,
             featuredImageVisibility = false,
             moreMenuVisibility = true,
+            bookmarkAction = PrimaryAction(true, type = ReaderPostCardActionType.BOOKMARK),
             likeAction = PrimaryAction(true, type = ReaderPostCardActionType.LIKE),
             reblogAction = PrimaryAction(true, type = ReaderPostCardActionType.REBLOG),
             commentsAction = PrimaryAction(true, type = ReaderPostCardActionType.COMMENTS),

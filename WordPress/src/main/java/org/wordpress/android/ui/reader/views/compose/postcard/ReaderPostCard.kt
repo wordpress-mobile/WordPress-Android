@@ -245,6 +245,17 @@ private fun ActionRow(uiState: ReaderPostUiState) {
             horizontalArrangement = Arrangement.spacedBy(Margin.ExtraLarge.value),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            // Icon only, and first, as on iOS
+            ActionButton(
+                uiState = uiState,
+                action = uiState.bookmarkAction,
+                labelRes = null,
+                iconRes = if (uiState.bookmarkAction.isSelected) {
+                    R.drawable.ic_bookmark_fill_new_24dp
+                } else {
+                    R.drawable.ic_bookmark_outline_new_24dp
+                },
+            )
             ActionButton(
                 uiState = uiState,
                 action = uiState.reblogAction,
@@ -284,7 +295,7 @@ private fun ActionRow(uiState: ReaderPostUiState) {
 private fun ActionButton(
     uiState: ReaderPostUiState,
     action: PrimaryAction,
-    labelRes: Int,
+    labelRes: Int?,
     iconRes: Int,
     modifier: Modifier = Modifier,
 ) {
@@ -307,13 +318,15 @@ private fun ActionButton(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(painter = painterResource(iconRes), contentDescription = null, tint = color)
-        Text(
-            text = stringResource(labelRes),
-            style = MaterialTheme.typography.bodyMedium,
-            color = color,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
+        labelRes?.let {
+            Text(
+                text = stringResource(it),
+                style = MaterialTheme.typography.bodyMedium,
+                color = color,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
     }
 }
 
@@ -389,6 +402,7 @@ private fun previewUiState(): ReaderPostUiState {
         thumbnailStripSection = null,
         featuredImageVisibility = false,
         moreMenuVisibility = true,
+        bookmarkAction = action(ReaderPostCardActionType.BOOKMARK),
         likeAction = action(ReaderPostCardActionType.LIKE, isSelected = true),
         reblogAction = action(ReaderPostCardActionType.REBLOG),
         commentsAction = action(ReaderPostCardActionType.COMMENTS),

@@ -108,6 +108,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
             thumbnailStripSection = buildThumbnailStripUrls(post),
             featuredImageVisibility = buildFeaturedImageVisibility(post),
             moreMenuVisibility = accountStore.hasAccessToken(),
+            bookmarkAction = buildBookmarkSection(post, onButtonClicked),
             likeAction = buildLikeSection(post, onButtonClicked, isReaderImprovementsEnabled = true),
             reblogAction = buildReblogSection(post, onButtonClicked),
             commentsAction = buildCommentsSection(post, onButtonClicked),

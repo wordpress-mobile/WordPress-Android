@@ -98,6 +98,25 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
     // endregion
 
+    // region BOOKMARK
+    @Test
+    fun `the card's save button shows whether the post is saved`() = test {
+        whenever(savedPostsRepository.isSaved(any())).thenReturn(true)
+
+        val uiState = mapPostToUiState(createPost())
+
+        assertThat(uiState.bookmarkAction.isEnabled).isTrue()
+        assertThat(uiState.bookmarkAction.isSelected).isTrue()
+    }
+
+    @Test
+    fun `the card's save button is disabled for a post without IDs`() = test {
+        val uiState = mapPostToUiState(createPost(postId = 0L))
+
+        assertThat(uiState.bookmarkAction.isEnabled).isFalse()
+    }
+    // endregion
+
     // region BLOG HEADER
     @Test
     fun `clicks on blog header are disabled on blog preview`() = test {
