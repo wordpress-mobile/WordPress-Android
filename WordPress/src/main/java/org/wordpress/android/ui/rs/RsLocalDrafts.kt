@@ -40,8 +40,8 @@ class RsLocalDrafts @Inject constructor(
     private val uploadServiceFacade: UploadServiceFacade,
 ) {
     /**
-     * Local drafts for [site], most recently changed first. [dateFormat] wraps the date, e.g.
-     * "Modified: %s".
+     * Local drafts for [site] that aren't on their way to the server, most recently changed first.
+     * [dateFormat] wraps the date, e.g. "Modified: %s".
      */
     suspend fun load(site: SiteModel, nowLabel: String, dateFormat: String?): List<RsLocalDraftUiModel> =
         withContext(Dispatchers.IO) {
@@ -54,7 +54,12 @@ class RsLocalDrafts @Inject constructor(
                 .sortedWith(
                     compareByDescending<PostModel> { it.dateLocallyChangedMillis() }.thenByDescending { it.id }
                 )
-                .map { it.toUiModel(site, tracker, nowLabel, dateFormat) }
+                .mapNotNull { post ->
+                    val uploadUiState = uploadUiStateUseCase.createUploadUiState(post, site, tracker)
+                    // A new post is a local draft until its first upload lands, so listing uploads in flight
+                    // would flash the banner after every post written online. A failure is still listed.
+                    if (uploadUiState.isInFlight()) null else post.toUiModel(uploadUiState, nowLabel, dateFormat)
+                }
         }
 
     /** The draft to hand the editor, or null when it was uploaded or removed since the list loaded. */
@@ -83,13 +88,18 @@ class RsLocalDrafts @Inject constructor(
             ?.let { DateTimeUtils.timestampFromIso8601Millis(it) }
             ?: 0L
 
+    private fun PostUploadUiState.isInFlight(): Boolean = when (this) {
+        is PostUploadUiState.UploadingPost,
+        is PostUploadUiState.UploadingMedia,
+        PostUploadUiState.UploadQueued -> true
+        else -> false
+    }
+
     private fun PostModel.toUiModel(
-        site: SiteModel,
-        tracker: PostModelUploadStatusTracker,
+        uploadUiState: PostUploadUiState,
         nowLabel: String,
         dateFormat: String?
     ): RsLocalDraftUiModel {
-        val uploadUiState = uploadUiStateUseCase.createUploadUiState(this, site, tracker)
         val changedMillis = dateLocallyChangedMillis()
         val date = if (changedMillis > 0L) {
             RsDateFormatter.format(Date(changedMillis), nowLabel).let { dateFormat?.format(it) ?: it }

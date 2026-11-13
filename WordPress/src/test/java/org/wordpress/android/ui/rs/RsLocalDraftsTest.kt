@@ -17,6 +17,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType
@@ -97,10 +98,26 @@ class RsLocalDraftsTest : BaseUnitTest() {
     }
 
     @Test
-    fun `an upload in progress is not marked as failed`() = test {
+    fun `drafts on their way to the server are left out`() = test {
+        val states = listOf(
+            PostUploadUiState.UploadingPost(isDraft = true),
+            PostUploadUiState.UploadingMedia(progress = 50),
+            PostUploadUiState.UploadQueued,
+        )
+        val drafts = states.indices.map { localDraft(id = it + 1) }
+        whenever(postStore.getLocalDraftPosts(site)).thenReturn(drafts)
+        drafts.zip(states).forEach { (draft, state) ->
+            whenever(uploadUiStateUseCase.createUploadUiState(same(draft), any(), any())).thenReturn(state)
+        }
+
+        assertThat(load()).isEmpty()
+    }
+
+    @Test
+    fun `a draft waiting for a connection is listed`() = test {
         whenever(postStore.getLocalDraftPosts(site)).thenReturn(listOf(localDraft()))
         whenever(uploadUiStateUseCase.createUploadUiState(any(), any(), any()))
-            .thenReturn(PostUploadUiState.UploadingPost(isDraft = true))
+            .thenReturn(PostUploadUiState.UploadWaitingForConnection(PostStatus.DRAFT))
 
         assertThat(load().single().isUploadFailed).isFalse
     }
