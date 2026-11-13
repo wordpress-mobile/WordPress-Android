@@ -221,7 +221,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     /**
-     * [post] is null if it couldn't be refreshed. Only a new body needs the WebView to render it again.
+     * [post] is null if there was no WordPress.com post to refresh. Only a new body needs the WebView to render it
+     * again.
      */
     data class PostRefreshed(val post: ReaderPost?, val hasNewBody: Boolean)
 
@@ -477,8 +478,17 @@ class ReaderPostDetailViewModel @Inject constructor(
         this.isFeed = isFeedPost
     }
 
-    fun onNotAuthorisedRequestFailure() {
-        trackAndUpdateNotAuthorisedErrorState()
+    /**
+     * Shows the error for a post whose slug couldn't be looked up
+     */
+    fun onPostSlugRequestFailed(statusCode: Int) {
+        showFetchOutcomeWithoutContent(
+            if (networkUtilsWrapper.isNetworkAvailable()) {
+                FetchReaderPostState.fromStatusCode(statusCode)
+            } else {
+                FetchReaderPostState.Failed.NoNetwork
+            }
+        )
     }
 
     fun onMoreButtonClicked() {
@@ -574,22 +584,16 @@ class ReaderPostDetailViewModel @Inject constructor(
             _postRefreshed.value = Event(PostRefreshed(post = null, hasNewBody = false))
             return
         }
-        // refreshPost copies the server's body into this very post, so remember the one on screen
+        // refreshPost copies the server's changes into this very post, so remember the body on screen
         val bodyBeforeRefresh = post.text
         launch {
-            val result = readerPostRepository.refreshPost(post)
+            val isChanged = readerPostRepository.refreshPost(post).isNewOrChanged
             onRefreshCommentsData(post.blogId, post.postId)
-            var hasNewBody = false
-            if (result.isNewOrChanged) {
-                withContext(bgDispatcher) { readerPostTableWrapper.getBlogPost(post.blogId, post.postId, false) }
-                    ?.let {
-                        hasNewBody = it.text != bodyBeforeRefresh
-                        this@ReaderPostDetailViewModel.post = it
-                        onRefreshLikersData(it)
-                        onUpdatePost(it)
-                    }
+            if (isChanged) {
+                onRefreshLikersData(post)
+                onUpdatePost(post)
             }
-            _postRefreshed.value = Event(PostRefreshed(this@ReaderPostDetailViewModel.post, hasNewBody))
+            _postRefreshed.value = Event(PostRefreshed(post, hasNewBody = isChanged && post.text != bodyBeforeRefresh))
         }
     }
 

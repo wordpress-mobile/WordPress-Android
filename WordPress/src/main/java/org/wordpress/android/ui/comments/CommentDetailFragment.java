@@ -948,14 +948,14 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             // the title if it wasn't set above
             if (!postExists) {
                 AppLog.d(T.COMMENTS, "comment detail > retrieving post");
-                mReaderPostRepository.prefetchPost(site.getSiteId(), comment.getRemotePostId(), () -> {
+                mReaderPostRepository.prefetchPost(site.getSiteId(), comment.getRemotePostId(), post -> {
                     if (!isAdded()) {
                         return;
                     }
 
                     // update title if it wasn't set above
                     if (!hasTitle) {
-                        String postTitle = ReaderPostTable.getPostTitle(site.getSiteId(), comment.getRemotePostId());
+                        String postTitle = post.getTitle();
                         if (!TextUtils.isEmpty(postTitle)) {
                             setPostTitle(binding, comment, postTitle, true);
                         } else {

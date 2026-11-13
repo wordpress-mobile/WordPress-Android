@@ -39,12 +39,7 @@ class ReaderFetchPostUseCase @Inject constructor(
             val statusCode = withTimeoutOrNull(FETCH_TIMEOUT_MS) {
                 fetchPostAndWaitForResult(requestParams)
             }
-            when (statusCode) {
-                HttpURLConnection.HTTP_OK -> Success
-                HttpURLConnection.HTTP_UNAUTHORIZED, HttpURLConnection.HTTP_FORBIDDEN -> NotAuthorised
-                HttpURLConnection.HTTP_NOT_FOUND -> PostNotFound
-                else -> RequestFailed
-            }
+            statusCode?.let { FetchReaderPostState.fromStatusCode(it) } ?: RequestFailed
         } finally {
             // Always release the slot, including on timeout or coroutine cancellation, so a
             // later retry of the same post isn't wrongly rejected as AlreadyRunning.
@@ -66,6 +61,15 @@ class ReaderFetchPostUseCase @Inject constructor(
             object NotAuthorised : Failed()
             object PostNotFound : Failed()
             object RequestFailed : Failed()
+        }
+
+        companion object {
+            fun fromStatusCode(statusCode: Int) = when (statusCode) {
+                HttpURLConnection.HTTP_OK -> Success
+                HttpURLConnection.HTTP_UNAUTHORIZED, HttpURLConnection.HTTP_FORBIDDEN -> NotAuthorised
+                HttpURLConnection.HTTP_NOT_FOUND -> PostNotFound
+                else -> RequestFailed
+            }
         }
     }
 

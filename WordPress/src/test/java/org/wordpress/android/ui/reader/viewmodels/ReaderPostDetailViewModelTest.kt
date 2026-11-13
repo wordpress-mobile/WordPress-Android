@@ -1262,19 +1262,20 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given the server has a new body, when the post is refreshed, then the stored post replaces it`() = test {
+    fun `given the server has a new body, when the post is refreshed, then it says the body is new`() = test {
         val post = createDummyReaderPost(1)
-        val storedPost = createDummyReaderPost(1).apply { text = "<p>Edited</p>" }
         viewModel.post = post
-        whenever(readerPostRepository.refreshPost(post)).thenReturn(ReaderActions.UpdateResult.CHANGED)
-        whenever(readerPostTableWrapper.getBlogPost(post.blogId, post.postId, false)).thenReturn(storedPost)
+        // the repository copies the server's changes into the passed post
+        whenever(readerPostRepository.refreshPost(post)).doSuspendableAnswer {
+            post.text = "<p>Edited</p>"
+            ReaderActions.UpdateResult.CHANGED
+        }
         val refreshed = mutableListOf<PostRefreshed>()
         viewModel.postRefreshed.observeForever { refreshed.add(it.peekContent()) }
 
         viewModel.onRefreshPost()
 
-        assertThat(viewModel.post).isSameAs(storedPost)
-        assertThat(refreshed).containsExactly(PostRefreshed(post = storedPost, hasNewBody = true))
+        assertThat(refreshed).containsExactly(PostRefreshed(post = post, hasNewBody = true))
     }
 
     @Test

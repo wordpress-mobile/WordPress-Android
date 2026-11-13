@@ -5,15 +5,6 @@ package org.wordpress.android.ui.reader.actions
  */
 object ReaderActions {
     /*
-     * listener when the failure status code is required
-     */
-    interface OnRequestListener<T> {
-        fun onSuccess(result: T?)
-
-        fun onFailure(statusCode: Int)
-    }
-
-    /*
      * result when updating data (getting latest posts or comments for a post, etc.)
      */
     enum class UpdateResult {

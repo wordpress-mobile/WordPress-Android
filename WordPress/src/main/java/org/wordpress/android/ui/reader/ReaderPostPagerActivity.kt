@@ -143,10 +143,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     private var lastSelectedPosition = -1
     private var postListType: ReaderPostListType? = null
 
+    // looks up a post slug's IDs, then loads the pager itself
     private var slugResolutionJob: Job? = null
-
-    // the status code of a failed post slug request, which the page shows as its error
-    private var slugFailureStatus: Int? = null
     private var isRequestingMorePosts = false
     private var isSinglePostView = false
     private var isRelatedPostView = false
@@ -440,7 +438,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     private fun finishDeepLinkRequestFromOverlay(action: String, uri: Uri) {
         finishDeepLinkRequest(action, uri)
         // We interrupted the normal flow to show the overly, we now need to rerun these methods on a dismiss action
-        loadPosts(blogId, postId)
+        loadPostsUnlessResolvingSlug()
         backFromLogin = false
     }
 
@@ -550,7 +548,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                         commentId
                     )
 
-                    slugFailureStatus = null
                     // try to get the post from the local db
                     val post = ReaderPostTable.getBlogPost(blogIdentifier, postIdentifier, true)
                     if (post != null) {
@@ -574,15 +571,15 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         slugResolutionJob = lifecycleScope.launch {
             val result = readerPostRepository.fetchPostBySlug(blogSlug, postSlug)
             progressBar?.visibility = View.GONE
+            // the page tracks the post once it's selected, or shows the error
             when (result) {
                 is FetchPostResult.Success -> {
                     blogId = result.post.blogId
                     postId = result.post.postId
+                    loadPosts(blogId, postId)
                 }
-                is FetchPostResult.Failure -> slugFailureStatus = result.statusCode
+                is FetchPostResult.Failure -> loadPosts(blogId, postId, slugFailureStatus = result.statusCode)
             }
-            // the page tracks the post once it's selected
-            loadPosts(blogId, postId)
         }
     }
 
@@ -719,7 +716,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 handleDeepLinking()
             }
 
-            loadPosts(blogId, postId)
+            loadPostsUnlessResolvingSlug()
 
             // clear up the back-from-login flag anyway
             backFromLogin = false
@@ -830,9 +827,12 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
      * be made active after loading unless gotoNext=true, in which case the post after the passed
      * one will be made active
      */
-    private fun loadPosts(blogId: Long, postId: Long) {
+    private fun loadPostsUnlessResolvingSlug() {
         // resolvePostSlug loads them once it has the post's IDs
-        if (slugResolutionJob?.isActive == true) return
+        if (slugResolutionJob?.isActive != true) loadPosts(blogId, postId)
+    }
+
+    private fun loadPosts(blogId: Long, postId: Long, slugFailureStatus: Int? = null) {
         object : Thread() {
             override fun run() {
                 val idList: ReaderBlogIdPostIdList
@@ -868,7 +868,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                         AppLog.T.READER,
                         "reader pager > creating adapter"
                     )
-                    val adapter = PostPagerAdapter(idList)
+                    val adapter = PostPagerAdapter(idList, slugFailureStatus)
                     // Assigning the adapter triggers FragmentStateAdapter to restore any
                     // pending saved-state fragments. On a process-death restore those keys
                     // may point to fragments that no longer exist, which throws
@@ -1063,6 +1063,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
      */
     private inner class PostPagerAdapter(
         private val idList: ReaderBlogIdPostIdList,
+        // the status code of a failed post slug request, which the page shows as its error
+        private val slugFailureStatus: Int? = null,
     ) : FragmentStateAdapter(this@ReaderPostPagerActivity) {
         var allPostsLoaded: Boolean = false
 

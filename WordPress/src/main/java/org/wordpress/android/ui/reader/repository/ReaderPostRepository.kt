@@ -31,7 +31,6 @@ import org.wordpress.android.networking.RestClientUtils
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider.Companion.BLOGGING_PROMPT_TAG
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderConstants
-import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
@@ -48,6 +47,7 @@ import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.VolleyUtils
 import java.util.Date
+import java.util.function.Consumer
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.resume
@@ -72,7 +72,7 @@ class ReaderPostRepository @Inject constructor(
     suspend fun fetchNewerPostsForTag(tag: ReaderTag, maxPosts: Int = 10): ReaderPostList = withContext(ioDispatcher) {
         suspendCancellableCoroutine { cont ->
             val resultListener = UpdateResultListener { result ->
-                if (result == ReaderActions.UpdateResult.FAILED) {
+                if (result == UpdateResult.FAILED) {
                     cont.resumeWithException(
                         ReaderPostFetchException("Failed to fetch newer posts for tag: ${tag.tagSlug}")
                     )
@@ -93,7 +93,7 @@ class ReaderPostRepository @Inject constructor(
         if (routeDiscoverSubTab(tag, updateAction, resultListener)) return
         val path = getRelativeEndpointForTag(tag)
         if (path.isNullOrBlank()) {
-            resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+            resultListener.onUpdateResult(UpdateResult.FAILED)
             return
         }
         val sb = StringBuilder(path)
@@ -137,7 +137,7 @@ class ReaderPostRepository @Inject constructor(
 
         val errorListener = RestRequest.ErrorListener { volleyError: VolleyError? ->
             AppLog.e(AppLog.T.READER, volleyError)
-            resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+            resultListener.onUpdateResult(UpdateResult.FAILED)
         }
 
         getRestClientUtilsV1_2().get(sb.toString(), null, null, listener, errorListener)
@@ -162,7 +162,7 @@ class ReaderPostRepository @Inject constructor(
         }
         val errorListener = RestRequest.ErrorListener { volleyError ->
             AppLog.e(AppLog.T.READER, volleyError)
-            resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+            resultListener.onUpdateResult(UpdateResult.FAILED)
         }
         AppLog.d(AppLog.T.READER, "updating posts in blog $blogId")
         getRestClientUtilsV1_2().getWithLocale(path, null, null, listener, errorListener)
@@ -185,7 +185,7 @@ class ReaderPostRepository @Inject constructor(
         }
         val errorListener = RestRequest.ErrorListener { volleyError ->
             AppLog.e(AppLog.T.READER, volleyError)
-            resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+            resultListener.onUpdateResult(UpdateResult.FAILED)
         }
         AppLog.d(AppLog.T.READER, "updating posts in feed $feedId")
         getRestClientUtilsV1_2().getWithLocale(path, null, null, listener, errorListener)
@@ -294,22 +294,21 @@ class ReaderPostRepository @Inject constructor(
         )
 
     /**
-     * Fetches the post in the background, outliving the caller, and runs [onFetched] on the main thread if
-     * that succeeded
+     * Fetches the post in the background, outliving the caller, and passes it to [onFetched] on the main thread
+     * if that succeeded
      */
     @JvmOverloads
-    fun prefetchPost(blogId: Long, postId: Long, onFetched: Runnable? = null) {
+    fun prefetchPost(blogId: Long, postId: Long, onFetched: Consumer<ReaderPost>? = null) {
         applicationScope.launch {
-            if (fetchPost(blogId, postId) is FetchPostResult.Success && onFetched != null) {
-                withContext(Dispatchers.Main) { onFetched.run() }
+            val result = fetchPost(blogId, postId)
+            if (result is FetchPostResult.Success && onFetched != null) {
+                withContext(Dispatchers.Main) { onFetched.accept(result.post) }
             }
         }
     }
 
     private suspend fun requestPost(client: RestClientUtils, path: String): FetchPostResult {
-        val result = awaitRestRequest(cancelWithCaller = true) { listener, errorListener ->
-            client.getWithLocale(path, null, null, listener, errorListener)
-        }
+        val result = getWithLocale(client, path)
         val json = result.response
             ?: return FetchPostResult.Failure((result as? RestResult.Failure)?.let { statusCode(it.error) } ?: 0)
         return withContext(ioDispatcher) {
@@ -329,9 +328,7 @@ class ReaderPostRepository @Inject constructor(
      */
     suspend fun refreshPost(localPost: ReaderPost): UpdateResult {
         val path = "read/sites/${localPost.blogId}/posts/${localPost.postId}/?meta=site,likes"
-        val json = awaitRestRequest(cancelWithCaller = true) { listener, errorListener ->
-            getRestClientUtilsV1_2().getWithLocale(path, null, null, listener, errorListener)
-        }.response ?: return UpdateResult.FAILED
+        val json = getWithLocale(getRestClientUtilsV1_2(), path).response ?: return UpdateResult.FAILED
 
         return withContext(ioDispatcher) {
             val serverPost = ReaderPost.fromJson(json)
@@ -369,9 +366,7 @@ class ReaderPostRepository @Inject constructor(
             "?size_local=$NUM_RELATED_POSTS_TO_REQUEST" +
             "&size_global=$NUM_RELATED_POSTS_TO_REQUEST" +
             "&fields=" + ReaderSimplePost.SIMPLE_POST_FIELDS
-        val json = awaitRestRequest(cancelWithCaller = true) { listener, errorListener ->
-            getRestClientUtilsV1_2().getWithLocale(path, null, null, listener, errorListener)
-        }.response ?: return null
+        val json = getWithLocale(getRestClientUtilsV1_2(), path).response ?: return null
         val jsonPosts = json.optJSONArray("posts") ?: return null
 
         return withContext(ioDispatcher) {
@@ -414,6 +409,11 @@ class ReaderPostRepository @Inject constructor(
         WordPress.requestQueue?.add(request)
     }
 
+    private suspend fun getWithLocale(client: RestClientUtils, path: String) =
+        awaitRestRequest(cancelWithCaller = true) { listener, errorListener ->
+            client.getWithLocale(path, null, null, listener, errorListener)
+        }
+
     /**
      * Stores the users who like the post, from the "likes" meta of its JSON, and returns whether they changed
      */
@@ -449,7 +449,7 @@ class ReaderPostRepository @Inject constructor(
         requestedFeedId: Long? = null
     ) {
         if (jsonObject == null) {
-            resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+            resultListener.onUpdateResult(UpdateResult.FAILED)
             return
         }
 
@@ -537,7 +537,7 @@ class ReaderPostRepository @Inject constructor(
                     val pageHandle =
                         appPrefsWrapper.getReaderDiscoverStreamPageHandle(tag.tagSlug)
                     if (pageHandle.isNullOrEmpty()) {
-                        resultListener.onUpdateResult(ReaderActions.UpdateResult.UNCHANGED)
+                        resultListener.onUpdateResult(UpdateResult.UNCHANGED)
                         return@launch
                     }
                     params["page_handle"] = pageHandle
@@ -554,7 +554,7 @@ class ReaderPostRepository @Inject constructor(
                 }
                 val errorListener = RestRequest.ErrorListener { volleyError: VolleyError? ->
                     AppLog.e(AppLog.T.READER, volleyError)
-                    resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+                    resultListener.onUpdateResult(UpdateResult.FAILED)
                 }
 
                 WordPress.getRestClientUtilsV2().get(
@@ -566,7 +566,7 @@ class ReaderPostRepository @Inject constructor(
                 )
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.READER, "Discover stream request failed", e)
-                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+                resultListener.onUpdateResult(UpdateResult.FAILED)
             }
         }
     }
@@ -615,7 +615,7 @@ class ReaderPostRepository @Inject constructor(
                 }
                 val errorListener = RestRequest.ErrorListener { volleyError: VolleyError? ->
                     AppLog.e(AppLog.T.READER, volleyError)
-                    resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+                    resultListener.onUpdateResult(UpdateResult.FAILED)
                 }
 
                 WordPress.getRestClientUtilsV2().get(
@@ -627,7 +627,7 @@ class ReaderPostRepository @Inject constructor(
                 )
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.READER, "Latest stream request failed", e)
-                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+                resultListener.onUpdateResult(UpdateResult.FAILED)
             }
         }
     }
@@ -647,7 +647,7 @@ class ReaderPostRepository @Inject constructor(
         resultListener: UpdateResultListener
     ) {
         if (jsonObject == null) {
-            resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+            resultListener.onUpdateResult(UpdateResult.FAILED)
             return
         }
         try {
@@ -675,7 +675,7 @@ class ReaderPostRepository @Inject constructor(
             resultListener.onUpdateResult(updateResult)
         } catch (e: JSONException) {
             AppLog.e(AppLog.T.READER, e)
-            resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+            resultListener.onUpdateResult(UpdateResult.FAILED)
         }
     }
 

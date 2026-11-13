@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader
 
 import android.os.Bundle
+import androidx.core.os.BundleCompat
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
 import java.util.Stack
 
@@ -10,16 +11,13 @@ import java.util.Stack
 internal class ReaderPostHistory : Stack<ReaderBlogIdPostId>() {
     fun restoreInstance(bundle: Bundle?) {
         clear()
-        bundle?.getStringArrayList(HISTORY_KEY_NAME)?.forEach { idPair ->
-            val (blogId, postId) = idPair.split(":").map { it.toLongOrNull() ?: 0L }
-            add(ReaderBlogIdPostId(blogId, postId))
-        }
+        bundle?.let { BundleCompat.getSerializable(it, HISTORY_KEY_NAME, ArrayList::class.java) }
+            ?.filterIsInstance<ReaderBlogIdPostId>()
+            ?.let { addAll(it) }
     }
 
     fun saveInstance(bundle: Bundle) {
-        if (isNotEmpty()) {
-            bundle.putStringArrayList(HISTORY_KEY_NAME, mapTo(ArrayList()) { "${it.blogId}:${it.postId}" })
-        }
+        if (isNotEmpty()) bundle.putSerializable(HISTORY_KEY_NAME, ArrayList(this))
     }
 
     companion object {

@@ -70,6 +70,14 @@ class ReaderWebView @JvmOverloads constructor(
     @Named(OkHttpClientQualifiers.REGULAR)
     lateinit var okHttpClient: OkHttpClient
 
+    // the client that fetches a private post's images
+    private val imageClient by lazy {
+        okHttpClient.newBuilder()
+            .connectTimeout(TIMEOUT_MS, TimeUnit.MILLISECONDS)
+            .readTimeout(TIMEOUT_MS, TimeUnit.MILLISECONDS)
+            .build()
+    }
+
     private var readerChromeClient: ReaderWebChromeClient? = null
     private var token: String? = null
 
@@ -126,19 +134,6 @@ class ReaderWebView @JvmOverloads constructor(
         return message.data.getString("url")
     }
 
-    /**
-     * True if the tapped image is inside an anchor we want to respect - an Instagram embed or a Story block - so
-     * the anchor gets the click. See https://pacheco.dev/posts/android/webview-image-anchor/
-     */
-    private fun isValidEmbeddedImageClick(hitTestResult: HitTestResult): Boolean =
-        tappedImageAnchorUrl(hitTestResult)?.let { it.contains("ig_embed") || it.contains("wp-story") } == true
-
-    /**
-     * True if the anchor wrapping the tapped image is a fragment link, e.g. a footnote back-reference like #fn-1
-     */
-    private fun isFragmentAnchorClick(hitTestResult: HitTestResult): Boolean =
-        tappedImageAnchorUrl(hitTestResult)?.contains("#") == true
-
     private fun isVideoPressPreview(url: String) = url.startsWith("https://videos.files.wordpress.com")
 
     /*
@@ -164,12 +159,14 @@ class ReaderWebView @JvmOverloads constructor(
             UrlUtils.isImageUrl(url)
         if (!isImage) return listener.onUrlClick(url)
 
-        // For an image inside an anchor, defer to the WebView only when the anchor is a fragment link (e.g. a
-        // footnote back-reference), so the JS interceptor can handle it. Otherwise it's an image click, e.g. a
-        // gallery image linked to its media file.
-        val deferToWebView = isValidEmbeddedImageClick(hitTestResult) ||
-            isVideoPressPreview(url) ||
-            isFragmentAnchorClick(hitTestResult)
+        // The WebView handles the tap if the image is inside an anchor we want to respect - an Instagram embed or
+        // a Story block (see https://pacheco.dev/posts/android/webview-image-anchor/) - or one that's a fragment
+        // link (e.g. a footnote back-reference), so the JS interceptor can handle it. Otherwise it's an image
+        // click, e.g. a gallery image linked to its media file.
+        if (isVideoPressPreview(url)) return super.onTouchEvent(event)
+        val anchorUrl = tappedImageAnchorUrl(hitTestResult)
+        val deferToWebView = anchorUrl != null &&
+            (anchorUrl.contains("ig_embed") || anchorUrl.contains("wp-story") || anchorUrl.contains("#"))
         if (deferToWebView) return super.onTouchEvent(event)
         return listener.onImageUrlClick(url, this, event.x.toInt(), event.y.toInt())
     }
@@ -238,11 +235,7 @@ class ReaderWebView @JvmOverloads constructor(
                         .addHeader("User-Agent", readerWebView.userAgent.webViewUserAgent)
                         .addHeader("Connection", "Keep-Alive")
                         .build()
-                    val client = readerWebView.okHttpClient.newBuilder()
-                        .connectTimeout(TIMEOUT_MS, TimeUnit.MILLISECONDS)
-                        .readTimeout(TIMEOUT_MS, TimeUnit.MILLISECONDS)
-                        .build()
-                    val response = client.newCall(request).execute()
+                    val response = readerWebView.imageClient.newCall(request).execute()
                     return WebResourceResponse(
                         response.header("Content-Type"),
                         response.header("Content-Encoding"),

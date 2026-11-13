@@ -126,7 +126,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.ToastUtils
@@ -149,7 +148,6 @@ import org.wordpress.android.widgets.WPScrollView
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener
 import org.wordpress.android.widgets.WPSnackbar
 import org.wordpress.android.widgets.WPTextView
-import java.net.HttpURLConnection
 import java.util.EnumSet
 import javax.inject.Inject
 import com.google.android.material.R as MaterialR
@@ -368,7 +366,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 if (commentsSnippetFeatureConfig.isEnabled()) {
                     conversationViewModel.onRefresh()
                 }
-                updatePost()
+                viewModel.onRefreshPost()
             }
         }
     }
@@ -1437,13 +1435,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    /*
-     * get the latest version of this post
-     */
-    private fun updatePost() {
-        viewModel.onRefreshPost()
-    }
-
     private fun onPostRefreshed(refreshed: PostRefreshed) {
         setRefreshing(false)
         val post = refreshed.post ?: return
@@ -1596,20 +1587,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         )
     }
 
-    private fun onRequestFailure(statusCode: Int) {
-        if (!NetworkUtils.isNetworkAvailable(activity)) {
-            showError(getString(R.string.no_network_message))
-        } else {
-            when (statusCode) {
-                HttpURLConnection.HTTP_UNAUTHORIZED, HttpURLConnection.HTTP_FORBIDDEN ->
-                    viewModel.onNotAuthorisedRequestFailure()
-
-                HttpURLConnection.HTTP_NOT_FOUND -> showError(getString(R.string.reader_err_get_post_not_found))
-                else -> showError(getString(R.string.reader_err_get_post_generic))
-            }
-        }
-    }
-
     /*
      * shows an error message in the middle of the screen - used when requesting post fails
      */
@@ -1643,7 +1620,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun showPost() {
         slugFailureStatus?.let {
-            onRequestFailure(it)
+            viewModel.onPostSlugRequestFailed(it)
             return
         }
 
@@ -1725,8 +1702,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         // Watch for the body painting from here rather than from onPageFinished. The backstop is
         // armed with the render itself in [beginRenderWithWatchdog], not here - a private Atomic
         // post postpones its render until the access cookie arrives.
-        // A re-render over an article already on screen - updatePost() found a newer version of
-        // the post - stays silent: the spinner would otherwise cover content the reader is reading.
+        // A re-render over an article already on screen - a refresh found a newer version of the post -
+        // stays silent: the spinner would otherwise cover content the reader is reading.
         if (!hasWebViewContent) {
             readerProgressBar.visibility = View.VISIBLE
             registerWebViewLayoutListener()
@@ -1822,7 +1799,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 }
                 if (!hasAlreadyUpdatedPost) {
                     hasAlreadyUpdatedPost = true
-                    updatePost()
+                    viewModel.onRefreshPost()
                 }
                 viewModel.post?.let {
                     if (likesEnhancementsFeatureConfig.isEnabled()) {
