@@ -203,8 +203,12 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             context = requireContext()
         )
         // GutenbergKit captures the processor when the page starts loading, so it must be set here.
-        siteStore.getSiteByLocalId(siteLocalId)?.let { site ->
+        val site = siteStore.getSiteByLocalId(siteLocalId)
+        if (site != null) {
             gutenbergView.mediaProcessor = mediaProcessorFactory.create(site)
+        } else {
+            // Uploads still work without the processor, but skip the Media settings.
+            AppLog.w(AppLog.T.EDITOR, "Site $siteLocalId not found; uploads skip the Media settings")
         }
 
         gutenbergViewContainer.addView(
