@@ -6,6 +6,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -146,6 +147,30 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
             Assertions.assertThat(this[5]).isEqualTo(chips)
         }
         verify(statsWidgetUpdaters, times(1)).updateViewsWidget(siteId)
+    }
+
+    @Test
+    fun `trims leading periods without data from the chart`() = test {
+        val forced = false
+        setupCalendar()
+        val emptyPeriod1 = PeriodData("2018-10-06", 0, 0, 0, 0, 0, 0)
+        val emptyPeriod2 = PeriodData("2018-10-07", 0, 0, 0, 0, 0, 0)
+        val modelWithLeadingEmptyPeriods =
+                VisitsAndViewsModel(modelPeriod, listOf(emptyPeriod1, emptyPeriod2, periodData))
+        whenever(store.getVisits(site, statsGranularity, limitMode)).thenReturn(modelWithLeadingEmptyPeriods)
+        whenever(store.fetchVisits(site, statsGranularity, limitMode, forced)).thenReturn(
+            OnStatsFetched(
+                modelWithLeadingEmptyPeriods
+            )
+        )
+
+        val result = loadData(true, forced)
+
+        Assertions.assertThat(result.state).isEqualTo(SUCCESS)
+        argumentCaptor<List<PeriodData>>().apply {
+            verify(viewsAndVisitorsMapper, times(1)).buildChart(capture(), any(), any(), any(), any(), any())
+            Assertions.assertThat(firstValue).containsExactly(periodData)
+        }
     }
 
     @Test
