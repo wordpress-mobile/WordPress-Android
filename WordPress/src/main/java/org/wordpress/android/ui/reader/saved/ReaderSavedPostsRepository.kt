@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderPost
@@ -18,6 +19,7 @@ import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.
 import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import uniffi.wp_api.ReaderPostSaveIdentity
 import uniffi.wp_api.ReaderSavedKey
 import uniffi.wp_api.ReaderSavedSource
@@ -44,6 +46,7 @@ class ReaderSavedPostsRepository @Inject constructor(
     private val wpServiceProvider: WpServiceProvider,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val readerPostTableWrapper: ReaderPostTableWrapper,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     @Named(APPLICATION_SCOPE) private val appScope: CoroutineScope,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
@@ -105,9 +108,26 @@ class ReaderSavedPostsRepository @Inject constructor(
                         "unsaveable=${report.unsaveable}, alreadyImported=${report.alreadyImported}"
                 )
                 appPrefsWrapper.setReaderSavedPostsImported(userId)
+                if (!report.alreadyImported) {
+                    trackImport(
+                        "result" to "imported",
+                        "local_saves" to saves.size,
+                        "imported" to report.imported.toLong(),
+                        "refused" to report.rejected.size,
+                        "unsaveable" to report.unsaveable.toLong()
+                    )
+                }
                 true
             } catch (e: ReaderSavedException) {
+                // rs tries again next time
                 AppLog.e(T.READER, "Saved posts import failed", e)
+                trackImport(
+                    "result" to "failed",
+                    "local_saves" to saves.size,
+                    "error_kind" to importErrorKind(e),
+                    // the error's type only: its message can hold URLs or server text
+                    "api_error" to (e as? ReaderSavedException.Api)?.v1?.javaClass?.simpleName
+                )
                 false
             }
         }
@@ -119,6 +139,14 @@ class ReaderSavedPostsRepository @Inject constructor(
      */
     suspend fun setSaved(identity: ReaderPostSaveIdentity, saved: Boolean): Boolean = write {
         if (saved) it.save(identity) else it.unsave(identity)
+    }
+
+    /**
+     * Like [setSaved], but a save sends the post's details with it, so the Saved list shows the post
+     * straight away instead of an empty row until the next refresh.
+     */
+    suspend fun setSaved(post: ReaderPost, saved: Boolean): Boolean = write {
+        if (saved) it.saveWithDetails(post.toSavedPostDetails()) else it.unsave(post.toSaveIdentity())
     }
 
     /** Unsaves a key from the saved list that has no post, such as a page saved by URL. */
@@ -155,6 +183,22 @@ class ReaderSavedPostsRepository @Inject constructor(
                 false
             }
         }
+
+    /** How an import ended, as counts and error types only: no URLs or titles. Matches iOS. */
+    private fun trackImport(vararg properties: Pair<String, Any?>) {
+        analyticsTrackerWrapper.track(
+            Stat.READER_SAVED_POSTS_ACCOUNT_IMPORT,
+            properties.filter { it.second != null }.toMap()
+        )
+    }
+
+    private fun importErrorKind(e: ReaderSavedException): String = when (e) {
+        is ReaderSavedException.Api -> "api"
+        is ReaderSavedException.PostCannotBeSaved -> "post_cannot_be_saved"
+        is ReaderSavedException.UnexpectedImportResults -> "unexpected_import_results"
+        is ReaderSavedException.Database -> "database"
+        is ReaderSavedException.StaleLoadMore -> "stale_load_more"
+    }
 
     private fun peekService(): ReaderSavedService? = current?.takeIf { it.userId == userId }?.service
 

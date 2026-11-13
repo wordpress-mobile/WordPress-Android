@@ -93,6 +93,7 @@ public final class AnalyticsTracker {
         READER_POST_UNSAVED_FROM_DETAILS("reader_post_unsaved"),
         READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST("reader_saved_post_opened"),
         READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST("reader_saved_post_opened"),
+        READER_SAVED_POSTS_ACCOUNT_IMPORT,
         READER_SITE_SHARED,
         READER_FOLLOWING_FETCHED,
         READER_READING_PREFERENCES_OPENED,

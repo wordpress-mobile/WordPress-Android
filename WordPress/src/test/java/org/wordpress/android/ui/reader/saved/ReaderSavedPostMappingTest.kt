@@ -3,6 +3,9 @@ package org.wordpress.android.ui.reader.saved
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.models.ReaderTagList
+import org.wordpress.android.models.ReaderTagType
 
 class ReaderSavedPostMappingTest {
     @Test
@@ -49,6 +52,25 @@ class ReaderSavedPostMappingTest {
         assertThat(save.title).isEqualTo("Title")
         assertThat(save.excerpt).isNull()
         assertThat(save.dateSaved).isNull()
+    }
+
+    @Test
+    fun `saved post details carry the card's fields and leave out empty ones`() {
+        val details = post(blogId = 1, postId = 2).apply {
+            title = "Title"
+            featuredImage = "https://example.com/image.jpg"
+            numReplies = 3
+            tags = ReaderTagList().apply {
+                add(ReaderTag("travel", "Travel", "", "", ReaderTagType.DEFAULT))
+            }
+        }.toSavedPostDetails()
+
+        assertThat(details.title).isEqualTo("Title")
+        assertThat(details.displayImageUrl).isEqualTo("https://example.com/image.jpg")
+        assertThat(details.commentCount).isEqualTo(3UL)
+        assertThat(details.tags.map { it.slug to it.name }).containsExactly("travel" to "Travel")
+        assertThat(details.excerpt).isNull()
+        assertThat(details.siteIconUrl).isNull()
     }
 
     @Suppress("LongParameterList")

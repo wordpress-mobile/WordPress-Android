@@ -7,7 +7,6 @@ import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
-import org.wordpress.android.ui.reader.saved.toSaveIdentity
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Failed
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.NoNetwork
@@ -71,7 +70,7 @@ class ReaderPostBookmarkUseCase @Inject constructor(
         val setToBookmarked = !savedPostsRepository.isSaved(post)
         val localWasBookmarked = post.isBookmarked
         setLocalBookmark(post, setToBookmarked)
-        if (!savedPostsRepository.setSaved(post.toSaveIdentity(), setToBookmarked)) {
+        if (!savedPostsRepository.setSaved(post, setToBookmarked)) {
             if (localWasBookmarked != setToBookmarked) {
                 readerPostTableWrapper.setBookmarkFlag(blogId, postId, localWasBookmarked)
             }

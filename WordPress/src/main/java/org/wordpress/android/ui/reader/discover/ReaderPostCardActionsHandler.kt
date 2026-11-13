@@ -545,17 +545,20 @@ class ReaderPostCardActionsHandler @Inject constructor(
                         )
                     }
                     if (it.bookmarked && !isBookmarkList) {
-                        // the "saved only on this device" dialog doesn't apply once saves are synced
-                        val showSavedLocallyDialog = !savedPostsRepository.isEnabled &&
-                            appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()
-                        if (showSavedLocallyDialog) {
+                        if (appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()) {
                             _navigationEvents.postValue(
                                 Event(
                                     ShowBookmarkedSavedOnlyLocallyDialog(
                                         okButtonAction = {
                                             appPrefsWrapper.setBookmarksSavedLocallyDialogShown()
                                             showSnackbarAction.invoke()
-                                        })
+                                        },
+                                        message = if (savedPostsRepository.isEnabled) {
+                                            R.string.reader_save_posts_synced_dialog_message
+                                        } else {
+                                            R.string.reader_save_posts_locally_dialog_message
+                                        }
+                                    )
                                 )
                             )
                         } else {

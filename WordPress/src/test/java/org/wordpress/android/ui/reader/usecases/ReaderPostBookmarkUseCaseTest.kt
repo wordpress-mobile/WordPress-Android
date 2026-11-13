@@ -66,7 +66,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
 
         assertThat(result).containsExactly(BookmarkPostState.NoNetwork)
         verify(readerPostActionsWrapper, never()).addToBookmarked(any())
-        verify(savedPostsRepository, never()).setSaved(any(), any())
+        verify(savedPostsRepository, never()).setSaved(any<ReaderPost>(), any())
     }
 
     @Test
@@ -74,7 +74,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
         val dummyPost = init(isBookmarked = false)
         whenever(savedPostsRepository.isEnabled).thenReturn(true)
         whenever(savedPostsRepository.isSaved(dummyPost)).thenReturn(false)
-        whenever(savedPostsRepository.setSaved(any(), eq(true))).thenReturn(true)
+        whenever(savedPostsRepository.setSaved(any<ReaderPost>(), eq(true))).thenReturn(true)
 
         val result = useCase.toggleBookmark(post(), true, SOURCE).toList(mutableListOf())
 
@@ -87,7 +87,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
         val dummyPost = init(isBookmarked = false)
         whenever(savedPostsRepository.isEnabled).thenReturn(true)
         whenever(savedPostsRepository.isSaved(dummyPost)).thenReturn(true)
-        whenever(savedPostsRepository.setSaved(any(), eq(false))).thenReturn(true)
+        whenever(savedPostsRepository.setSaved(any<ReaderPost>(), eq(false))).thenReturn(true)
 
         val result = useCase.toggleBookmark(post(), true, SOURCE).toList(mutableListOf())
 
@@ -100,7 +100,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
         val dummyPost = init(isBookmarked = false)
         whenever(savedPostsRepository.isEnabled).thenReturn(true)
         whenever(savedPostsRepository.isSaved(dummyPost)).thenReturn(false)
-        whenever(savedPostsRepository.setSaved(any(), eq(true))).thenReturn(false)
+        whenever(savedPostsRepository.setSaved(any<ReaderPost>(), eq(true))).thenReturn(false)
 
         val result = useCase.toggleBookmark(post(), false, SOURCE).toList(mutableListOf())
 
