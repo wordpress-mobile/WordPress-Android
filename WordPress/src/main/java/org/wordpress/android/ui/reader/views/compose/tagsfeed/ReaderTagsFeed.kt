@@ -60,6 +60,7 @@ import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.Margin
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.ErrorType
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.PostList
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.TagChip
@@ -512,6 +513,15 @@ data class TagsFeedPostItem(
     val onPostCardClick: (TagsFeedPostItem) -> Unit,
     val onPostLikeClick: (TagsFeedPostItem) -> Unit,
     val onPostMoreMenuClick: (TagsFeedPostItem) -> Unit,
+    // the tag whose row shows this card, since a post under two tags has a card in each
+    val tagSlug: String = "",
+    // set by the view model while this card's more menu is open
+    val moreMenu: TagsFeedMoreMenu? = null,
+)
+
+data class TagsFeedMoreMenu(
+    val items: List<ReaderPostCardAction>,
+    val onDismiss: () -> Unit,
 )
 
 @Preview

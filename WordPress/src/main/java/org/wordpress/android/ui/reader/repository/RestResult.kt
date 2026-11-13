@@ -31,9 +31,11 @@ internal sealed class RestResult {
 }
 
 /**
- * Runs a Volley request and returns its result. Cancelling the caller doesn't cancel the request.
+ * Runs a Volley request and returns its result. Cancelling the caller cancels the request only if
+ * [cancelWithCaller] is true, which suits GETs; a POST may already have reached the server.
  */
 internal suspend fun awaitRestRequest(
+    cancelWithCaller: Boolean = false,
     start: (RestRequest.Listener, RestRequest.ErrorListener) -> Request<*>
 ): RestResult {
     val queue = WordPress.requestQueue
@@ -55,6 +57,7 @@ internal suspend fun awaitRestRequest(
                 if (isCancelled && continuation.isActive) continuation.resume(RestResult.Failure(null))
             }.also { queue?.addRequestEventListener(it) }
             if (request.isCanceled && continuation.isActive) continuation.resume(RestResult.Failure(null))
+            if (cancelWithCaller) continuation.invokeOnCancellation { request.cancel() }
         }
     } finally {
         cancelListener?.let { queue?.removeRequestEventListener(it) }

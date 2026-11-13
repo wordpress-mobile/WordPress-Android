@@ -58,6 +58,7 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
                     onPostCardClick = onPostCardClick,
                     onPostLikeClick = onPostLikeClick,
                     onPostMoreMenuClick = onPostMoreMenuClick,
+                    tagSlug = tag.tagSlug,
                 )
             }
         ),

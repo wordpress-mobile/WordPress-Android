@@ -17,30 +17,23 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.reader.ReaderTypes
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
-import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
-import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 
+import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedMoreMenu
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
-import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
-
-private const val PHOTON_WIDTH_QUALITY_RATION = 0.5 // load images in 1/2 screen width to save users' data
-private const val FEATURED_IMAGE_HEIGHT_WIDTH_RATION = 0.56 // 9:16
 
 @HiltViewModel
 class ReaderTagsFeedViewModel @Inject constructor(
@@ -51,8 +44,6 @@ class ReaderTagsFeedViewModel @Inject constructor(
     private val postLikeUseCase: PostLikeUseCase,
     private val readerPostTableWrapper: ReaderPostTableWrapper,
     private val readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder,
-    private val readerPostUiStateBuilder: ReaderPostUiStateBuilder,
-    private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val readerTracker: ReaderTracker,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
 
@@ -75,9 +66,6 @@ class ReaderTagsFeedViewModel @Inject constructor(
     // from this ViewModel.
     private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
-
-    private val _openMoreMenuEvents = SingleLiveEvent<MoreMenuUiState>()
-    val openMoreMenuEvents: LiveData<MoreMenuUiState> = _openMoreMenuEvents
 
     private var hasInitialized = false
 
@@ -367,70 +355,20 @@ class ReaderTagsFeedViewModel @Inject constructor(
         likePostRemote(postItem, isPostLikedUpdated)
     }
 
+    /*
+     * sets the like state on every card showing the post, starting from each card as it is now
+     */
     private fun updatePostItemUI(
         postItemToUpdate: TagsFeedPostItem,
         isPostLikedUpdated: Boolean,
         isLikeButtonEnabled: Boolean,
-    ) {
-        val uiState = _uiStateFlow.value as? UiState.Loaded ?: return
-        // Finds the TagFeedItem associated with the post that should be updated. Return if the item is
-        // not found.
-        val tagFeedItemToUpdate = findTagFeedItemToUpdate(uiState, postItemToUpdate) ?: return
-
-        // Finds the index associated with the TagFeedItem to be updated found above. Return if the index is not found.
-        val tagFeedItemToUpdateIndex = uiState.data.indexOf(tagFeedItemToUpdate)
-        if (tagFeedItemToUpdateIndex != -1 && tagFeedItemToUpdate.postList is PostList.Loaded) {
-            // Creates a new post list items collection with the post item updated values
-            val updatedTagFeedItemPostListItems = getPostListWithUpdatedPostItem(
-                postList = tagFeedItemToUpdate.postList,
-                postItemToUpdate = postItemToUpdate,
-                isPostLikedUpdated = isPostLikedUpdated,
-                isLikeButtonEnabled = isLikeButtonEnabled,
-            )
-            // Creates a copy of the TagFeedItem with the updated post list items collection
-            val updatedTagFeedItem = tagFeedItemToUpdate.copy(
-                postList = tagFeedItemToUpdate.postList.copy(
-                    items = updatedTagFeedItemPostListItems
-                )
-            )
-            // Creates a new TagFeedItem collection with the updated TagFeedItem
-            val updatedUiStateData = mutableListOf<TagFeedItem>().apply {
-                addAll(uiState.data)
-                this[tagFeedItemToUpdateIndex] = updatedTagFeedItem
-            }
-            // Updates the UI state value with the updated TagFeedItem collection
-            _uiStateFlow.value = uiState.copy(data = updatedUiStateData)
+    ) = updatePostItems { item ->
+        if (item.isSamePost(postItemToUpdate)) {
+            item.copy(isPostLiked = isPostLikedUpdated, isLikeButtonEnabled = isLikeButtonEnabled)
+        } else {
+            item
         }
     }
-
-    private fun getPostListWithUpdatedPostItem(
-        postList: PostList.Loaded,
-        postItemToUpdate: TagsFeedPostItem,
-        isPostLikedUpdated: Boolean,
-        isLikeButtonEnabled: Boolean
-    ) =
-        postList.items.toMutableList().apply {
-            val postItemToUpdateIndex =
-                indexOfFirst {
-                    it.postId == postItemToUpdate.postId && it.blogId == postItemToUpdate.blogId
-                }
-            if (postItemToUpdateIndex != -1) {
-                this[postItemToUpdateIndex] = postItemToUpdate.copy(
-                    isPostLiked = isPostLikedUpdated,
-                    isLikeButtonEnabled = isLikeButtonEnabled,
-                )
-            }
-        }
-
-    private fun findTagFeedItemToUpdate(
-        uiState: UiState.Loaded,
-        postItemToUpdate: TagsFeedPostItem
-    ) =
-        uiState.data.firstOrNull { tagFeedItem ->
-            tagFeedItem.postList is PostList.Loaded && tagFeedItem.postList.items.firstOrNull {
-                it.postId == postItemToUpdate.postId && it.blogId == postItemToUpdate.blogId
-            } != null
-        }
 
     private fun likePostRemote(postItem: TagsFeedPostItem, isPostLikedUpdated: Boolean) {
         launch {
@@ -480,6 +418,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
     }
 
     private fun onPostMoreMenuClick(postItem: TagsFeedPostItem) {
+        readerTracker.track(AnalyticsTracker.Stat.POST_CARD_MORE_TAPPED)
         launch {
             findPost(postItem.postId, postItem.blogId)?.let { post ->
                 val items = readerPostMoreButtonUiStateBuilder.buildMoreMenuItems(
@@ -487,28 +426,33 @@ class ReaderTagsFeedViewModel @Inject constructor(
                     includeBookmark = true,
                     onButtonClicked = ::onMoreMenuButtonClicked,
                 )
-                val photonWidth =
-                    (displayUtilsWrapper.getDisplayPixelWidth() * PHOTON_WIDTH_QUALITY_RATION).toInt()
-                val photonHeight = (photonWidth * FEATURED_IMAGE_HEIGHT_WIDTH_RATION).toInt()
-                _openMoreMenuEvents.postValue(
-                    MoreMenuUiState(
-                        readerCardUiState = readerPostUiStateBuilder.mapPostToUiState(
-                            source = ReaderTracker.SOURCE_TAGS_FEED,
-                            post = post,
-                            photonWidth = photonWidth,
-                            photonHeight = photonHeight,
-                            postListType = ReaderTypes.ReaderPostListType.TAGS_FEED,
-                            onButtonClicked = { _, _, _ -> },
-                            onItemClicked = { _, _ -> },
-                            onItemRendered = {},
-                            onMoreButtonClicked = {},
-                            onMoreDismissed = {},
-                            onPostHeaderViewClicked = { _, _ -> },
-                        ),
-                        readerPostCardActions = items,
-                    )
-                )
+                val moreMenu = TagsFeedMoreMenu(items, onDismiss = ::closeMoreMenu)
+                // only the tapped card, since a post under two tags has a card in each row
+                updatePostItems { item ->
+                    val isCard = item.tagSlug == postItem.tagSlug && item.isSamePost(postItem)
+                    item.withMoreMenu(if (isCard) moreMenu else null)
+                }
             }
+        }
+    }
+
+    private fun closeMoreMenu() = updatePostItems { it.withMoreMenu(null) }
+
+    private fun TagsFeedPostItem.withMoreMenu(moreMenu: TagsFeedMoreMenu?) =
+        if (this.moreMenu == moreMenu) this else copy(moreMenu = moreMenu)
+
+    private fun TagsFeedPostItem.isSamePost(other: TagsFeedPostItem) = postId == other.postId && blogId == other.blogId
+
+    /*
+     * applies [transform] to the cards as they are now, atomically, so it can't undo a change made since the tap
+     */
+    private fun updatePostItems(transform: (TagsFeedPostItem) -> TagsFeedPostItem) {
+        _uiStateFlow.update { uiState ->
+            if (uiState !is UiState.Loaded) return@update uiState
+            uiState.copy(data = uiState.data.map { tagFeedItem ->
+                val postList = tagFeedItem.postList as? PostList.Loaded ?: return@map tagFeedItem
+                tagFeedItem.copy(postList = postList.copy(items = postList.items.map(transform)))
+            })
         }
     }
 
@@ -597,11 +541,6 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
         data object NoContent : ErrorType
     }
-
-    data class MoreMenuUiState(
-        val readerCardUiState: ReaderCardUiState.ReaderPostUiState,
-        val readerPostCardActions: List<ReaderPostCardAction>,
-    )
 
     companion object {
         private const val NO_CONNECTION_DELAY = 500L

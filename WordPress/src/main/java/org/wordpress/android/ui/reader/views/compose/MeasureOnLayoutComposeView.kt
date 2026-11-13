@@ -16,7 +16,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
  */
 // only ever created in code, so it doesn't need the constructors XML inflation uses
 @SuppressLint("ViewConstructor")
-open class MeasureOnLayoutComposeView(
+class MeasureOnLayoutComposeView(
     context: Context,
     content: @Composable () -> Unit,
     configure: ComposeView.() -> Unit = {}
