@@ -7,6 +7,8 @@ import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
+import org.wordpress.android.ui.reader.saved.toSaveIdentity
+import org.wordpress.android.ui.reader.saved.toSavedPostDetails
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Failed
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.NoNetwork
@@ -61,29 +63,21 @@ class ReaderPostBookmarkUseCase @Inject constructor(
     }
 
     /**
-     * Saves or unsaves the post on the account, keeping the local copy in step so it can still be
-     * read offline. Returns whether the post is now saved, or null if the account couldn't be updated,
-     * in which case the local copy is put back as it was.
+     * Saves or unsaves the post on the account, then keeps the local copy in step so it can still be
+     * read offline. Returns whether the post is now saved, or null if the account couldn't be updated.
      */
     private suspend fun updatePostOnAccount(blogId: Long, postId: Long): Boolean? {
         val post = getPostFromDb(blogId, postId)
         val setToBookmarked = !savedPostsRepository.isSaved(post)
-        val localWasBookmarked = post.isBookmarked
-        setLocalBookmark(post, setToBookmarked)
-        if (!savedPostsRepository.setSaved(post, setToBookmarked)) {
-            if (localWasBookmarked != setToBookmarked) {
-                readerPostTableWrapper.setBookmarkFlag(blogId, postId, localWasBookmarked)
-            }
+        val details = if (setToBookmarked) post.toSavedPostDetails() else null
+        if (!savedPostsRepository.setSaved(post.toSaveIdentity(), setToBookmarked, details)) {
             return null
         }
-        return setToBookmarked
-    }
-
-    /** The local flag can disagree with the account, so only change it when it differs. */
-    private suspend fun setLocalBookmark(post: ReaderPost, bookmarked: Boolean) {
-        if (post.isBookmarked != bookmarked) {
-            readerPostRepository.setBookmarked(post, bookmarked)
+        // the local flag can disagree with the account, so only change it when it differs
+        if (post.isBookmarked != setToBookmarked) {
+            readerPostRepository.setBookmarked(post, setToBookmarked)
         }
+        return setToBookmarked
     }
 
     @Suppress("UseCheckOrError")

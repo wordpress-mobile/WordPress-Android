@@ -90,63 +90,58 @@ class ReaderSavedPostsRepository @Inject constructor(
         }
     }
 
-    /**
-     * Imports the posts saved on this device to the account, once. Returns whether they have been
-     * imported. Local saves are left in place either way.
-     */
-    suspend fun importLocalSavesIfNeeded(): Boolean = withContext(ioDispatcher) {
-        importMutex.withLock {
-            val userId = userId
-            if (appPrefsWrapper.isReaderSavedPostsImported(userId)) return@withLock true
-            val service = getService() ?: return@withLock false
-            val saves = readerPostTableWrapper.getBookmarkedPosts().map { it.toLocalSave() }
-            try {
-                val report = service.importLocalSaves(saves)
-                AppLog.i(
-                    T.READER,
-                    "Saved posts import: imported=${report.imported}, rejected=${report.rejected.size}, " +
-                        "unsaveable=${report.unsaveable}, alreadyImported=${report.alreadyImported}"
-                )
-                appPrefsWrapper.setReaderSavedPostsImported(userId)
-                if (!report.alreadyImported) {
-                    trackImport(
-                        "result" to "imported",
-                        "local_saves" to saves.size,
-                        "imported" to report.imported.toLong(),
-                        "refused" to report.rejected.size,
-                        "unsaveable" to report.unsaveable.toLong()
-                    )
-                }
-                true
-            } catch (e: ReaderSavedException) {
-                // rs tries again next time
-                AppLog.e(T.READER, "Saved posts import failed", e)
+    /** Imports the posts saved on this device to the account, once. Local saves are left in place. */
+    private suspend fun importLocalSavesIfNeeded(): Unit = importMutex.withLock {
+        val userId = userId
+        if (appPrefsWrapper.isReaderSavedPostsImported(userId)) return@withLock
+        val service = getService() ?: return@withLock
+        val saves = readerPostTableWrapper.getBookmarkedPosts().map { it.toLocalSave() }
+        try {
+            val report = service.importLocalSaves(saves)
+            AppLog.i(
+                T.READER,
+                "Saved posts import: imported=${report.imported}, rejected=${report.rejected.size}, " +
+                    "unsaveable=${report.unsaveable}, alreadyImported=${report.alreadyImported}"
+            )
+            appPrefsWrapper.setReaderSavedPostsImported(userId)
+            if (!report.alreadyImported) {
                 trackImport(
-                    "result" to "failed",
+                    "result" to "imported",
                     "local_saves" to saves.size,
-                    "error_kind" to importErrorKind(e),
-                    // the error's type only: its message can hold URLs or server text
-                    "api_error" to (e as? ReaderSavedException.Api)?.v1?.javaClass?.simpleName
+                    "imported" to report.imported.toLong(),
+                    "refused" to report.rejected.size,
+                    "unsaveable" to report.unsaveable.toLong()
                 )
-                false
             }
+        } catch (e: ReaderSavedException) {
+            // rs tries again next time
+            AppLog.e(T.READER, "Saved posts import failed", e)
+            trackImport(
+                "result" to "failed",
+                "local_saves" to saves.size,
+                "error_kind" to importErrorKind(e),
+                // the error's type only: its message can hold URLs or server text
+                "api_error" to (e as? ReaderSavedException.Api)?.v1?.javaClass?.simpleName
+            )
         }
     }
 
     /**
-     * Saves or unsaves a post on the account, and returns whether it worked. The write finishes even
-     * if the caller is cancelled, so the server sees writes in the order they were made.
+     * Saves or unsaves a post on the account, and returns whether it worked. A save with [details]
+     * sends them along, so the Saved list shows the post straight away instead of an empty row until
+     * the next refresh. The write finishes even if the caller is cancelled, so the server sees writes
+     * in the order they were made.
      */
-    suspend fun setSaved(identity: ReaderPostSaveIdentity, saved: Boolean): Boolean = write {
-        if (saved) it.save(identity) else it.unsave(identity)
-    }
-
-    /**
-     * Like [setSaved], but a save sends the post's details with it, so the Saved list shows the post
-     * straight away instead of an empty row until the next refresh.
-     */
-    suspend fun setSaved(post: ReaderPost, saved: Boolean): Boolean = write {
-        if (saved) it.saveWithDetails(post.toSavedPostDetails()) else it.unsave(post.toSaveIdentity())
+    suspend fun setSaved(
+        identity: ReaderPostSaveIdentity,
+        saved: Boolean,
+        details: uniffi.wp_api.ReaderPost? = null
+    ): Boolean = write {
+        when {
+            !saved -> it.unsave(identity)
+            details != null -> it.saveWithDetails(details)
+            else -> it.save(identity)
+        }
     }
 
     /** Unsaves a key from the saved list that has no post, such as a page saved by URL. */

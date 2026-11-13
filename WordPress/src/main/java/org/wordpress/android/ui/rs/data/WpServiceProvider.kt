@@ -81,7 +81,7 @@ class WpServiceProvider @Inject constructor(
      */
     fun createWpComDelegate(): WpApiClientDelegate = createDelegate(
         authProvider = createWpComAuthProvider(accountStore),
-        appNotifier = createAppNotifier(site = null)
+        appNotifier = noOpAppNotifier
     )
 
     private fun createDelegate(site: SiteModel): WpApiClientDelegate {
@@ -119,16 +119,18 @@ class WpServiceProvider @Inject constructor(
      * transport means an expired or revoked OAuth token — the rs screens surface that error
      * themselves — so bearer-authenticated services don't report to the handler at all.
      */
-    private fun createAppNotifier(site: SiteModel?): WpAppNotifier = if (site == null || site.isUsingWpComRestApi) {
-        object : WpAppNotifier {
-            override suspend fun requestedWithInvalidAuthentication(requestUrl: String) = Unit
-        }
+    private fun createAppNotifier(site: SiteModel): WpAppNotifier = if (site.isUsingWpComRestApi) {
+        noOpAppNotifier
     } else {
         object : WpAppNotifier {
             override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {
                 wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
             }
         }
+    }
+
+    private val noOpAppNotifier = object : WpAppNotifier {
+        override suspend fun requestedWithInvalidAuthentication(requestUrl: String) = Unit
     }
 
     /** The cache shared by every wordpress-rs service in the app. Opens the database on first use. */

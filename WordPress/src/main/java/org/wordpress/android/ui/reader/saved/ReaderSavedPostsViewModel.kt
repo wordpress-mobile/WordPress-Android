@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -17,6 +18,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -47,8 +49,8 @@ class ReaderSavedPostsViewModel @Inject constructor(
         val isRefreshing: Boolean = false,
         val isLoadingMore: Boolean = false,
         val hasMore: Boolean = false,
-        val loadFailed: Boolean = false,
-        val isOffline: Boolean = false,
+        /** Why the last refresh didn't load, shown when there's nothing else to show. */
+        val error: ReaderPostListEmptyState? = null,
     )
 
     sealed class Event {
@@ -64,6 +66,8 @@ class ReaderSavedPostsViewModel @Inject constructor(
     private val _events = Channel<Event>(Channel.BUFFERED)
     val events: Flow<Event> = _events.receiveAsFlow()
 
+    private val reloadRequests = Channel<Unit>(Channel.CONFLATED)
+
     private var collection: ReaderSavedPostsCollection? = null
     private var observable: ObservableCollection<ReaderSavedListItem>? = null
 
@@ -78,11 +82,14 @@ class ReaderSavedPostsViewModel @Inject constructor(
             ).also { observable ->
                 // The cache reports changes from inside the write that made them, while it still holds the
                 // database. Reloading in place (on Main.immediate, from a write polled on main) would wait for
-                // that lock on the thread holding it, so always dispatch the reload instead.
-                observable.addObserver { viewModelScope.launch(ioDispatcher) { reload() } }
+                // that lock on the thread holding it, so only queue the reload here.
+                observable.addObserver { requestReload() }
             }
+            // one reload at a time, and only the latest, since a burst of writes would otherwise read the list
+            // once per write and could land out of order
+            launch { reloadRequests.receiveAsFlow().collectLatest { reload() } }
             // what the cache has first, then catch up with the server
-            reload()
+            requestReload()
             refresh()
         }
     }
@@ -91,14 +98,15 @@ class ReaderSavedPostsViewModel @Inject constructor(
         val collection = collection
         if (collection == null || _uiState.value.isRefreshing) return
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            _uiState.update { it.copy(isOffline = true) }
+            _uiState.update { it.copy(error = ReaderPostListEmptyState.NoConnection) }
             return
         }
         viewModelScope.launch {
-            _uiState.update { it.copy(isRefreshing = true, isOffline = false) }
+            _uiState.update { it.copy(isRefreshing = true, error = null) }
             val succeeded = runRequest { collection.refresh() }
-            _uiState.update { it.copy(isRefreshing = false, loadFailed = !succeeded) }
-            reload()
+            val error = if (succeeded) null else ReaderPostListEmptyState.RequestFailed(isSearch = false)
+            _uiState.update { it.copy(isRefreshing = false, error = error) }
+            requestReload()
         }
     }
 
@@ -110,7 +118,7 @@ class ReaderSavedPostsViewModel @Inject constructor(
             _uiState.update { it.copy(isLoadingMore = true) }
             runRequest { collection.loadNextPage() }
             _uiState.update { it.copy(isLoadingMore = false) }
-            reload()
+            requestReload()
         }
     }
 
@@ -161,6 +169,10 @@ class ReaderSavedPostsViewModel @Inject constructor(
             }
         }
         return succeeded
+    }
+
+    private fun requestReload() {
+        reloadRequests.trySend(Unit)
     }
 
     private suspend fun reload() {

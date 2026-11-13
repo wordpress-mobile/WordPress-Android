@@ -130,9 +130,7 @@ fun ReaderSavedPostsScreen(
 private fun emptyState(uiState: ReaderSavedPostsViewModel.UiState): ReaderPostListEmptyState? = when {
     uiState.items.isNotEmpty() || !uiState.isLoaded -> null
     uiState.isRefreshing -> ReaderPostListEmptyState.Updating
-    uiState.isOffline -> ReaderPostListEmptyState.NoConnection
-    uiState.loadFailed -> ReaderPostListEmptyState.RequestFailed(isSearch = false)
-    else -> ReaderPostListEmptyState.Bookmarks
+    else -> uiState.error ?: ReaderPostListEmptyState.Bookmarks
 }
 
 /** A saved post. Swipe it away, or long-press it, to remove it, as on iOS. */
@@ -225,13 +223,7 @@ private fun SavedPostText(item: ReaderSavedListItem, modifier: Modifier) {
         post?.siteName?.takeIf { it.isNotBlank() }?.let { siteName ->
             Row(verticalAlignment = Alignment.CenterVertically) {
                 post.siteIconUrl?.takeIf { it.isNotBlank() }?.let { SiteIcon(it) }
-                Text(
-                    text = HtmlUtils.fastStripHtml(siteName),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                SecondaryText(HtmlUtils.fastStripHtml(siteName))
             }
         }
         Text(
@@ -251,24 +243,21 @@ private fun SavedPostText(item: ReaderSavedListItem, modifier: Modifier) {
             )
         }
         post?.tags.orEmpty().take(MAX_TAGS).takeIf { it.isNotEmpty() }?.let { tags ->
-            Text(
-                text = tags.joinToString(" ") { "#" + HtmlUtils.fastStripHtml(it.displayName ?: it.name) },
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            SecondaryText(tags.joinToString(" ") { "#" + HtmlUtils.fastStripHtml(it.displayName ?: it.name) })
         }
-        footnote(item)?.let {
-            Text(
-                text = it,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = FOOTNOTE_MAX_LINES,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
+        footnote(item)?.let { SecondaryText(it, maxLines = FOOTNOTE_MAX_LINES) }
     }
+}
+
+@Composable
+private fun SecondaryText(text: String, maxLines: Int = 1) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        maxLines = maxLines,
+        overflow = TextOverflow.Ellipsis
+    )
 }
 
 /** The site's icon, or an RSS feed's image, sized like the site avatar on Reader post cards. */

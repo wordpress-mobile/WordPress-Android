@@ -7,6 +7,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -15,6 +16,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.ui.reader.saved.ReaderSavedPostsViewModel.Event
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState
 import org.wordpress.android.util.NetworkUtilsWrapper
 import uniffi.wp_api.ReaderPostSaveIdentity
 import uniffi.wp_api.ReaderSavedKey
@@ -59,7 +61,7 @@ class ReaderSavedPostsViewModelTest : BaseUnitTest() {
         viewModel.onUnsaveClicked(postItem)
 
         assertThat(viewModel.events.first()).isEqualTo(Event.NoNetwork)
-        verify(repository, never()).setSaved(any<ReaderPostSaveIdentity>(), any())
+        verify(repository, never()).setSaved(any(), any(), anyOrNull())
     }
 
     @Test
@@ -108,7 +110,7 @@ class ReaderSavedPostsViewModelTest : BaseUnitTest() {
 
         val state = viewModel.uiState.value
         assertThat(state.items).containsExactly(postItem)
-        assertThat(state.loadFailed).isTrue()
+        assertThat(state.error).isInstanceOf(ReaderPostListEmptyState.RequestFailed::class.java)
         assertThat(state.isRefreshing).isFalse()
     }
 

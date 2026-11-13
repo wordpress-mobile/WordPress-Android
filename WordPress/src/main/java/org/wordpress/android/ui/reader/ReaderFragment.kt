@@ -392,8 +392,7 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
      */
     private fun getCurrentFeedFragment(): Fragment? {
         return childFragmentManager.fragments.lastOrNull {
-            it is ReaderPostListFragment || it is ReaderTagsFeedFragment || it is ReaderDiscoverTabsFragment ||
-                it is ReaderSavedPostsFragment
+            it is OnScrollToTopListener
         }
     }
 

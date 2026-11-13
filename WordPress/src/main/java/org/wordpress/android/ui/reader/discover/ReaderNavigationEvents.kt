@@ -35,7 +35,7 @@ sealed class ReaderNavigationEvents {
     /** Shown the first time a post is saved; [message] says whether saved posts sync. */
     class ShowBookmarkedSavedOnlyLocallyDialog(
         val okButtonAction: () -> Unit,
-        @StringRes val message: Int = R.string.reader_save_posts_locally_dialog_message
+        @StringRes val message: Int
     ) : ReaderNavigationEvents() {
         @StringRes
         val title: Int = R.string.reader_save_posts_locally_dialog_title

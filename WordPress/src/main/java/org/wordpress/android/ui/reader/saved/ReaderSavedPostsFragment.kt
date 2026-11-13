@@ -15,32 +15,33 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
-import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.ui.reader.repository.ReaderPostListRepository
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyButton
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.views.compose.MeasureOnLayoutComposeView
 import org.wordpress.android.widgets.WPSnackbar
 import uniffi.wp_api.ReaderSavedKey
 import uniffi.wp_mobile.ReaderSavedListItem
+import javax.inject.Inject
 
 /**
  * The Saved tab once saves are synced with the account. See [ReaderSavedPostsViewModel].
  */
 @AndroidEntryPoint
 class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListener {
+    @Inject
+    lateinit var readerPostListRepository: ReaderPostListRepository
+
     private val viewModel: ReaderSavedPostsViewModel by viewModels()
-    private var listState: LazyListState? = null
+    private val listState = LazyListState()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val listState = LazyListState().also { listState = it }
         val actions = ReaderSavedPostsActions(
             onRefresh = viewModel::refresh,
             onLoadMore = viewModel::loadMore,
@@ -66,13 +67,8 @@ class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListene
         viewModel.start()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        listState = null
-    }
-
     override fun onScrollToTop() {
-        listState?.requestScrollToItem(0)
+        listState.requestScrollToItem(0)
     }
 
     private fun handleEvent(event: ReaderSavedPostsViewModel.Event) {
@@ -129,10 +125,7 @@ class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListene
         }
         val readerViewModel = ViewModelProvider(requireParentFragment())[ReaderViewModel::class.java]
         viewLifecycleOwner.lifecycleScope.launch {
-            val tag = withContext(Dispatchers.IO) {
-                ReaderUtils.getTagFromEndpoint(path) ?: ReaderUtils.getDefaultTag()
-            }
-            readerViewModel.updateSelectedContent(tag)
+            readerViewModel.updateSelectedContent(readerPostListRepository.getTagFromEndpointOrDefault(path))
         }
     }
 

@@ -11,6 +11,7 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -66,7 +67,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
 
         assertThat(result).containsExactly(BookmarkPostState.NoNetwork)
         verify(readerPostRepository, never()).setBookmarked(any(), any())
-        verify(savedPostsRepository, never()).setSaved(any<ReaderPost>(), any())
+        verify(savedPostsRepository, never()).setSaved(any(), any(), anyOrNull())
     }
 
     @Test
@@ -74,7 +75,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
         val dummyPost = init(isBookmarked = false)
         whenever(savedPostsRepository.isEnabled).thenReturn(true)
         whenever(savedPostsRepository.isSaved(dummyPost)).thenReturn(false)
-        whenever(savedPostsRepository.setSaved(any<ReaderPost>(), eq(true))).thenReturn(true)
+        whenever(savedPostsRepository.setSaved(any(), eq(true), anyOrNull())).thenReturn(true)
 
         val result = useCase.toggleBookmark(post(), true, SOURCE).toList(mutableListOf())
 
@@ -87,7 +88,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
         val dummyPost = init(isBookmarked = false)
         whenever(savedPostsRepository.isEnabled).thenReturn(true)
         whenever(savedPostsRepository.isSaved(dummyPost)).thenReturn(true)
-        whenever(savedPostsRepository.setSaved(any<ReaderPost>(), eq(false))).thenReturn(true)
+        whenever(savedPostsRepository.setSaved(any(), eq(false), anyOrNull())).thenReturn(true)
 
         val result = useCase.toggleBookmark(post(), true, SOURCE).toList(mutableListOf())
 
@@ -96,16 +97,15 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when synced and the account write fails, the local flag is restored and Failed is emitted`() = test {
+    fun `when synced and the account write fails, the local flag is untouched and Failed is emitted`() = test {
         val dummyPost = init(isBookmarked = false)
         whenever(savedPostsRepository.isEnabled).thenReturn(true)
         whenever(savedPostsRepository.isSaved(dummyPost)).thenReturn(false)
-        whenever(savedPostsRepository.setSaved(any<ReaderPost>(), eq(true))).thenReturn(false)
+        whenever(savedPostsRepository.setSaved(any(), eq(true), anyOrNull())).thenReturn(false)
 
         val result = useCase.toggleBookmark(post(), false, SOURCE).toList(mutableListOf())
 
-        verify(readerPostRepository).setBookmarked(dummyPost, true)
-        verify(readerPostTableWrapper).setBookmarkFlag(anyLong(), anyLong(), eq(false))
+        verify(readerPostRepository, never()).setBookmarked(any(), any())
         assertThat(result).containsExactly(BookmarkPostState.Failed)
     }
 
