@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.withContext
+import org.wordpress.android.datasets.ReaderBlockedBlogTable
 import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.ReaderPostTable
@@ -38,7 +39,7 @@ class ReaderPostListRepository @Inject constructor(
                 is ReaderTagsAndSitesEvent.FollowedTagsChanged -> ReaderPostListEvent.FollowedTagsFetched
 
                 is ReaderTagsAndSitesEvent.FollowedBlogsChanged ->
-                    ReaderPostListEvent.FollowedBlogsFetched(event.didChange)
+                    ReaderPostListEvent.FollowedBlogsFetched(event.didChange, event.didClearBlocks)
             }
         }
     )
@@ -102,6 +103,10 @@ class ReaderPostListRepository @Inject constructor(
         ReaderBlogTable.hasFollowedBlogs()
     }
 
+    suspend fun isBlockedSite(blogId: Long): Boolean = withContext(ioDispatcher) {
+        ReaderBlockedBlogTable.isBlockedBlog(blogId)
+    }
+
     suspend fun isFollowedSite(blog: ReaderBlog): Boolean = withContext(ioDispatcher) {
         (blog.hasFeedUrl() && ReaderBlogTable.isFollowedFeed(blog.feedId)) ||
                 ReaderBlogTable.isFollowedBlog(blog.blogId)
@@ -160,5 +165,5 @@ sealed class ReaderPostListEvent {
     data class SearchStarted(val query: String, val offset: Int) : ReaderPostListEvent()
     data class SearchEnded(val query: String, val offset: Int, val didSucceed: Boolean) : ReaderPostListEvent()
     data object FollowedTagsFetched : ReaderPostListEvent()
-    data class FollowedBlogsFetched(val didChange: Boolean) : ReaderPostListEvent()
+    data class FollowedBlogsFetched(val didChange: Boolean, val didClearBlocks: Boolean) : ReaderPostListEvent()
 }

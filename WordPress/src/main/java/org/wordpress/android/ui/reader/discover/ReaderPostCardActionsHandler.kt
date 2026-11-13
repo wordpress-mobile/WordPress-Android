@@ -194,7 +194,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
             SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId, post.feedId)
             SHARE -> handleShareClicked(post, source)
             VISIT_SITE -> handleVisitSiteClicked(post)
-            BLOCK_SITE -> handleBlockSiteClicked(post.blogId, post.feedId, source)
+            BLOCK_SITE -> handleBlockSiteClicked(post.blogId, post.feedId)
             BLOCK_USER -> handleBlockUserClicked(post.authorId, post.feedId)
             LIKE -> handleLikeClicked(post, source)
             BOOKMARK -> handleBookmarkClicked(post, isBookmarkList, source)
@@ -400,8 +400,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     private suspend fun handleBlockSiteClicked(
         blogId: Long,
-        feedId: Long,
-        source: String
+        feedId: Long
     ) {
         blockBlogUseCase.blockBlog(blogId, feedId).collect {
             when (it) {
@@ -416,7 +415,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                 {
                                     coroutineScope.launch {
                                         val blogId = it.blockedBlogData.blogId
-                                        readerBlogRepository.undoBlockBlog(it.blockedBlogData, source)
+                                        readerBlogRepository.undoBlockBlog(it.blockedBlogData)
                                         _refreshPosts.postValue(Event(Unit))
                                         _scrollToSiteId.emit(blogId)
                                         _snackbarEvents.postValue(

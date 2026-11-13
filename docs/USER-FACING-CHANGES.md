@@ -15,6 +15,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Availability:** Everyone
   - **Where:** Reader → tap a site name or a tag → a post's Reblog button → editor → back
 
+- **Reader: a site unblocked on the web shows its posts again in the app**
+  If you blocked a site in the app's Reader and later unblocked it on the web, the site's posts now come back the next time the app refreshes the sites you follow. Before, the site was back in your subscriptions but its stream stayed at "This blog is empty" until you logged out and back in.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → Subscriptions, and the unblocked site's stream
+  - **Notes:** Unblocking a site on the web subscribes you to it again, and that is how the app finds out. A site you blocked without being subscribed to it comes back only after you subscribe to it, or log out and back in.
+
 - **Reader search reports a subscribe that couldn't start**
   On the Sites tab of Reader search, tapping Subscribe on a site that can't be subscribed to from there now shows the "Unable to subscribe to this blog" message, the same one shown when the request fails. Previously the button just flipped back without saying anything.
   - **Apps:** Both

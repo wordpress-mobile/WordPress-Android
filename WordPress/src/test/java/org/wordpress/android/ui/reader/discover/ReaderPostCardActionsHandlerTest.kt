@@ -822,7 +822,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Act
         observedValues.snackbarMsgs[0].buttonAction.invoke()
         // Assert
-        verify(readerBlogRepository).undoBlockBlog(anyOrNull(), any())
+        verify(readerBlogRepository).undoBlockBlog(anyOrNull())
     }
 
     @Test
