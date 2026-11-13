@@ -11,6 +11,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -21,6 +22,7 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val readerSavedPostsRepository: ReaderSavedPostsRepository,
 ) : ViewModel() {
     private val _switchStates = MutableStateFlow<Map<Feature, Boolean>>(emptyMap())
     val switchStates: StateFlow<Map<Feature, Boolean>> = _switchStates.asStateFlow()
@@ -56,6 +58,10 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
                 } else {
                     setFeatureSwitchState(feature, enabled)
                 }
+            }
+            Feature.READER_SAVED_POSTS_SYNC -> {
+                setFeatureSwitchState(feature, enabled)
+                if (!enabled) readerSavedPostsRepository.onSyncTurnedOff()
             }
             else -> setFeatureSwitchState(feature, enabled)
         }

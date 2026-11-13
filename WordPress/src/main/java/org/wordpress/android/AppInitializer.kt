@@ -764,11 +764,9 @@ class AppInitializer @Inject constructor(
         // reset all user prefs
         AppPrefs.reset()
 
-        // reset the reader database, but retain bookmarked posts unless they were imported to the account,
-        // which now holds them: keeping them would import them again at the next sign-in, bringing back
-        // any unsaved elsewhere in the meantime
-        ReaderDatabase.reset(!savedPostsImported)
-        readerSavedPostsRepository.clear(userId)
+        // reset the reader database, but retain bookmarked posts
+        ReaderDatabase.reset(true)
+        readerSavedPostsRepository.clear(userId, savesImported = savedPostsImported)
 
         // Reset Stats Data
         statsStore.deleteAllData()

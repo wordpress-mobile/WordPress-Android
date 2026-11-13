@@ -56,6 +56,7 @@ class ReaderSavedPostsViewModel @Inject constructor(
         data class OpenItem(val item: ReaderSavedListItem) : Event()
         data class Unsaved(val item: ReaderSavedListItem) : Event()
         data object RequestFailed : Event()
+        data object LoadMoreFailed : Event()
         data object NoNetwork : Event()
     }
 
@@ -67,13 +68,20 @@ class ReaderSavedPostsViewModel @Inject constructor(
 
     private val reloadRequests = Channel<Unit>(Channel.CONFLATED)
 
+    private var isStarted = false
     private var collection: ReaderSavedPostsCollection? = null
     private var observable: ObservableCollection<ReaderSavedListItem>? = null
 
     fun start() {
-        if (collection != null) return
+        // set before the collection, which is created off the main thread, so a view recreated meanwhile
+        // doesn't start a second one
+        if (isStarted) return
+        isStarted = true
         viewModelScope.launch {
-            val collection = repository.savedPosts()?.also { collection = it } ?: return@launch
+            val collection = repository.savedPosts()?.also { collection = it } ?: run {
+                isStarted = false
+                return@launch
+            }
             observable = createObservableCollection(
                 loadData = { collection.loadItems() },
                 isRelevantUpdate = { collection.isRelevantUpdate(it) }
@@ -114,26 +122,22 @@ class ReaderSavedPostsViewModel @Inject constructor(
         if (!state.hasMore || state.isLoadingMore || state.isRefreshing) return
         viewModelScope.launch {
             _uiState.update { it.copy(isLoadingMore = true) }
-            runRequest { collection.loadNextPage() }
+            val succeeded = runRequest { collection.loadNextPage() }
             _uiState.update { it.copy(isLoadingMore = false) }
             requestReload()
+            // the list only asks for more when it's scrolled to the end again, so offer a retry
+            if (!succeeded) _events.send(Event.LoadMoreFailed)
         }
     }
 
     fun onItemClicked(item: ReaderSavedListItem) {
-        val identity = item.post?.identity
-        readerTracker.trackBlog(
-            AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST,
-            identity?.localBlogId ?: 0L,
-            identity?.feedId?.toLong() ?: 0L,
-            item.post?.isFollowing,
-            ReaderTracker.SOURCE_SAVED
-        )
+        track(AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST, item)
         viewModelScope.launch { _events.send(Event.OpenItem(item)) }
     }
 
     fun onUnsaveClicked(item: ReaderSavedListItem) {
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
+        // a save only this device has is removed without the server
+        if (!item.isLocalOnly && !networkUtilsWrapper.isNetworkAvailable()) {
             viewModelScope.launch { _events.send(Event.NoNetwork) }
             return
         }
@@ -144,7 +148,12 @@ class ReaderSavedPostsViewModel @Inject constructor(
             } else {
                 repository.unsaveKey(item.key)
             }
-            _events.send(if (succeeded) Event.Unsaved(item) else Event.RequestFailed)
+            if (succeeded) {
+                track(AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_SAVED_POST_LIST, item)
+                _events.send(Event.Unsaved(item))
+            } else {
+                _events.send(Event.RequestFailed)
+            }
         }
     }
 
@@ -152,10 +161,24 @@ class ReaderSavedPostsViewModel @Inject constructor(
     fun onUndoUnsave(item: ReaderSavedListItem) {
         val identity = item.post?.identity ?: return
         viewModelScope.launch {
-            if (!setSaved(identity, saved = true)) {
+            if (setSaved(identity, saved = true)) {
+                track(AnalyticsTracker.Stat.READER_POST_SAVED_FROM_SAVED_POST_LIST, item)
+            } else {
                 _events.send(Event.RequestFailed)
             }
         }
+    }
+
+    /** Tracks as the device's Saved list does, so the two lists' numbers compare. */
+    private fun track(stat: AnalyticsTracker.Stat, item: ReaderSavedListItem) {
+        val identity = item.post?.identity
+        readerTracker.trackBlog(
+            stat,
+            identity?.localBlogId ?: 0L,
+            identity?.feedId?.toLong() ?: 0L,
+            item.post?.isFollowing,
+            ReaderTracker.SOURCE_SAVED
+        )
     }
 
     /** Saves or unsaves on the account, and keeps the post's local copy, if there is one, in step. */

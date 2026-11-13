@@ -23,6 +23,8 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import uniffi.wp_api.ReaderPostSaveIdentity
 import uniffi.wp_api.ReaderSavedKey
 import uniffi.wp_api.ReaderSavedSource
+import uniffi.wp_api.readerSavedKeyNormalized
+import uniffi.wp_api.readerSavedKeysForPost
 import uniffi.wp_mobile.ReaderSavedException
 import uniffi.wp_mobile.ReaderSavedPostsCollection
 import uniffi.wp_mobile.ReaderSavedService
@@ -103,7 +105,8 @@ class ReaderSavedPostsRepository @Inject constructor(
                 "Saved posts import: imported=${report.imported}, rejected=${report.rejected.size}, " +
                     "unsaveable=${report.unsaveable}, alreadyImported=${report.alreadyImported}"
             )
-            appPrefsWrapper.setReaderSavedPostsImported(userId)
+            // unless the account was signed out, or sync turned off, while the import ran
+            if (peekService() === service) appPrefsWrapper.setReaderSavedPostsImported(userId)
             if (!report.alreadyImported) {
                 trackImport(
                     "result" to "imported",
@@ -151,20 +154,53 @@ class ReaderSavedPostsRepository @Inject constructor(
     suspend fun savedPosts(): ReaderSavedPostsCollection? = withContext(ioDispatcher) { getService()?.savedPosts() }
 
     /**
-     * Forgets the account's synced saves on this device. Call at sign-out. Opening the cache loads the
-     * wordpress-rs library, so the removal runs off the main thread.
+     * Forgets the account's synced saves on this device. Call at sign-out, after resetting the Reader
+     * database, which keeps the device's saves.
+     *
+     * If they'd been imported, the local copies of the ones the account holds are dropped, so the next
+     * sign-in doesn't import them again and bring back any unsaved elsewhere since. The saves the
+     * account refused stay: this device is the only place they're kept.
+     *
+     * Opening the cache loads the wordpress-rs library, so this runs off the main thread, after any
+     * import that's under way.
      */
     @Synchronized
-    fun clear(userId: Long) {
+    fun clear(userId: Long, savesImported: Boolean) {
+        val service = current?.takeIf { it.userId == userId }?.service
         current = null
         if (userId <= 0) return
         appScope.launch(ioDispatcher) {
-            try {
-                wpServiceProvider.getOrCreateCache().cache.removeWordpressComAccount(userId.toULong())
-            } catch (e: SqliteDbException) {
-                AppLog.e(T.READER, "Removing saved posts for the signed-out account failed", e)
+            importMutex.withLock {
+                try {
+                    if (savesImported) {
+                        (service ?: createService(userId))?.let(::dropLocalCopiesOfAccountSaves)
+                    }
+                    wpServiceProvider.getOrCreateCache().cache.removeWordpressComAccount(userId.toULong())
+                } catch (e: SqliteDbException) {
+                    AppLog.e(T.READER, "Removing saved posts for the signed-out account failed", e)
+                }
             }
         }
+    }
+
+    /**
+     * Call when sync is turned off. Saves made until it's back on only reach this device, so the
+     * account's synced saves are forgotten here, and turning sync on again imports the device's saves
+     * again rather than hiding the new ones behind the synced list.
+     */
+    fun onSyncTurnedOff() {
+        val userId = userId
+        appPrefsWrapper.setReaderSavedPostsImported(0)
+        clear(userId, savesImported = false)
+    }
+
+    private fun dropLocalCopiesOfAccountSaves(service: ReaderSavedService) {
+        val localOnly = service.localOnlyKeys().toSet()
+        readerPostTableWrapper.getBookmarkedPosts()
+            .filter { post ->
+                readerSavedKeysForPost(post.toSaveIdentity()).none { readerSavedKeyNormalized(it) in localOnly }
+            }
+            .forEach { readerPostTableWrapper.setBookmarkFlag(it.blogId, it.postId, false) }
     }
 
     private suspend fun write(block: suspend (ReaderSavedService) -> Unit): Boolean =
@@ -201,7 +237,7 @@ class ReaderSavedPostsRepository @Inject constructor(
     @Synchronized
     private fun getService(): ReaderSavedService? {
         val userId = userId.takeIf { accountStore.hasAccessToken() && it > 0 } ?: return null
-        return peekService() ?: createService(userId)
+        return peekService() ?: createService(userId)?.also { current = AccountService(userId, it) }
     }
 
     private fun createService(userId: Long): ReaderSavedService? = try {
@@ -210,7 +246,7 @@ class ReaderSavedPostsRepository @Inject constructor(
             ReaderSavedSource.ANDROID,
             wpServiceProvider.getOrCreateCache().cache,
             userId.toULong()
-        ).also { current = AccountService(userId, it) }
+        )
     } catch (e: ReaderSavedException) {
         AppLog.e(T.READER, "Creating the saved posts service failed", e)
         null

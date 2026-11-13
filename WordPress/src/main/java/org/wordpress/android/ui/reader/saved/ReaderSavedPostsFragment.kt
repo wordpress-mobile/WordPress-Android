@@ -86,6 +86,11 @@ class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListene
                 snackbar.show()
             }
             ReaderSavedPostsViewModel.Event.RequestFailed -> showMessage(R.string.reader_error_request_failed_title)
+            ReaderSavedPostsViewModel.Event.LoadMoreFailed -> WPSnackbar.make(
+                snackbarParent(),
+                getString(R.string.reader_error_request_failed_title),
+                Snackbar.LENGTH_LONG
+            ).setAction(R.string.retry) { viewModel.loadMore() }.show()
             ReaderSavedPostsViewModel.Event.NoNetwork -> showMessage(R.string.error_network_connection)
         }
     }

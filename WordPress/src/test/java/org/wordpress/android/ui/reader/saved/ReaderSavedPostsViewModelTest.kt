@@ -13,6 +13,7 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.ui.reader.saved.ReaderSavedPostsViewModel.Event
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -73,6 +74,33 @@ class ReaderSavedPostsViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.events.first()).isEqualTo(Event.Unsaved(postItem))
         verify(readerPostTableWrapper).setBookmarkFlag(BLOG_ID, POST_ID, false)
+    }
+
+    @Test
+    fun `unsaving a save only this device has works offline`() = test {
+        val localOnlyItem = postItem.copy(isLocalOnly = true)
+        whenever(repository.setSaved(identity, false)).thenReturn(true)
+
+        viewModel.onUnsaveClicked(localOnlyItem)
+
+        assertThat(viewModel.events.first()).isEqualTo(Event.Unsaved(localOnlyItem))
+    }
+
+    @Test
+    fun `unsaving a post is tracked as the device's Saved list tracks it`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        whenever(repository.setSaved(identity, false)).thenReturn(true)
+
+        viewModel.onUnsaveClicked(postItem)
+        viewModel.events.first()
+
+        verify(readerTracker).trackBlog(
+            AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_SAVED_POST_LIST,
+            BLOG_ID,
+            0L,
+            null,
+            ReaderTracker.SOURCE_SAVED
+        )
     }
 
     @Test
