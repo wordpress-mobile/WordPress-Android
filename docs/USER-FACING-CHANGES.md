@@ -8,6 +8,13 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Opening a WordPress.com post link no longer sticks on a spinner**
+  Opening a link to a WordPress.com post that isn't already in the Reader (for example `example.wordpress.com/2026/11/01/a-post`) now always shows the post, or an error if it can't be loaded. Before, the post sometimes never appeared and the screen showed a spinner until you left it.
+  - **Apps:** Jetpack
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** A WordPress.com post link opened in the app
+
 - **Reblogging from a site's or tag's post list confirms the result**
   After you reblog a post from a site's or a tag's post list and leave the editor, the post list now shows the editor's result snackbar (for example, that the post was published or saved as a draft), and another when the upload finishes. Previously neither appeared there, though the reblog itself worked.
   - **Apps:** Both

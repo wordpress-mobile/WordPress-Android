@@ -4,7 +4,6 @@ import androidx.core.database.sqlite.transaction
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import org.wordpress.android.WordPress
@@ -24,8 +23,6 @@ import org.wordpress.android.models.ReaderUserList
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult
-import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener
-import org.wordpress.android.ui.reader.actions.ReaderPostActions
 import org.wordpress.android.ui.suggestion.Suggestion
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -34,7 +31,6 @@ import org.wordpress.android.util.JSONUtils
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.resume
 
 /**
  * Reader comments: fetching a post's comments into [ReaderCommentTable], and posting, liking and moderating
@@ -69,15 +65,6 @@ class ReaderCommentRepository @Inject constructor(
 
     suspend fun getSuggestions(blogId: Long): List<Suggestion> = withContext(ioDispatcher) {
         Suggestion.fromUserSuggestions(UserSuggestionTable.getSuggestionsForSite(blogId) ?: emptyList())
-    }
-
-    /**
-     * Refreshes the post itself, so the header and comment count are current
-     */
-    suspend fun updatePost(post: ReaderPost): UpdateResult = suspendCancellableCoroutine { continuation ->
-        ReaderPostActions.updatePost(post, UpdateResultListener { result ->
-            if (continuation.isActive) continuation.resume(result)
-        })
     }
 
     /**

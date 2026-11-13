@@ -1,27 +1,24 @@
 package org.wordpress.android.ui.reader.usecases
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
-import org.mockito.kotlin.any
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.verify
+import org.mockito.kotlin.doSuspendableAnswer
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.ui.reader.actions.ReaderActions
-import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
+import org.wordpress.android.ui.reader.repository.FetchPostResult
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.AlreadyRunning
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.Failed
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
 import java.net.HttpURLConnection
-
-private const val REQUEST_BLOG_LISTENER_PARAM_POSITION = 2
 
 @ExperimentalCoroutinesApi
 class ReaderFetchPostUseCaseTest : BaseUnitTest() {
@@ -29,7 +26,7 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
     private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     @Mock
-    private lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
+    private lateinit var readerPostRepository: ReaderPostRepository
     private lateinit var useCase: ReaderFetchPostUseCase
 
     private val postId = 1L
@@ -38,7 +35,7 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        useCase = ReaderFetchPostUseCase(networkUtilsWrapper, readerPostActionsWrapper)
+        useCase = ReaderFetchPostUseCase(networkUtilsWrapper, readerPostRepository)
     }
 
     @Test
@@ -52,36 +49,25 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `given feed, when reader post is fetched, then feed post is requested`() = test {
-        whenever(readerPostActionsWrapper.requestFeedPost(anyLong(), anyLong(), any())).then {
-            (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener<*>)
-                .onSuccess(null)
-        }
+        whenever(readerPostRepository.fetchPost(blogId, postId, true)).thenReturn(FetchPostResult.Success(mock()))
 
-        useCase.fetchPost(postId = postId, blogId = blogId, isFeed = true)
+        val result = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = true)
 
-        verify(readerPostActionsWrapper)
-            .requestFeedPost(feedId = eq(blogId), postId = eq(postId), requestListener = any())
+        assertThat(result).isEqualTo(Success)
     }
 
     @Test
     fun `given blog, when reader post is fetched, then blog post is requested`() = test {
-        whenever(readerPostActionsWrapper.requestBlogPost(anyLong(), anyLong(), any())).then {
-            (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener<*>)
-                .onSuccess(null)
-        }
+        whenever(readerPostRepository.fetchPost(blogId, postId, false)).thenReturn(FetchPostResult.Success(mock()))
 
-        useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)
+        val result = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)
 
-        verify(readerPostActionsWrapper)
-            .requestBlogPost(blogId = eq(blogId), postId = eq(postId), requestListener = any())
+        assertThat(result).isEqualTo(Success)
     }
 
     @Test
     fun `given success response, when reader post is fetched, then success is returned`() = test {
-        whenever(readerPostActionsWrapper.requestBlogPost(anyLong(), anyLong(), any())).then {
-            (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener<*>)
-                .onSuccess(null)
-        }
+        whenever(readerPostRepository.fetchPost(blogId, postId, false)).thenReturn(FetchPostResult.Success(mock()))
 
         val result = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)
 
@@ -90,10 +76,8 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `given http not found status code, when reader post is fetched, then post not found is returned`() = test {
-        whenever(readerPostActionsWrapper.requestBlogPost(anyLong(), anyLong(), any())).then {
-            (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener<*>)
-                .onFailure(HttpURLConnection.HTTP_NOT_FOUND)
-        }
+        whenever(readerPostRepository.fetchPost(blogId, postId, false))
+            .thenReturn(FetchPostResult.Failure(HttpURLConnection.HTTP_NOT_FOUND))
 
         val result = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)
 
@@ -102,10 +86,8 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `given http unauthorised status code, when reader post is fetched, then not authorised is returned`() = test {
-        whenever(readerPostActionsWrapper.requestBlogPost(anyLong(), anyLong(), any())).then {
-            (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener<*>)
-                .onFailure(HttpURLConnection.HTTP_UNAUTHORIZED)
-        }
+        whenever(readerPostRepository.fetchPost(blogId, postId, false))
+            .thenReturn(FetchPostResult.Failure(HttpURLConnection.HTTP_UNAUTHORIZED))
 
         val result = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)
 
@@ -114,10 +96,8 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `given http forbidden status code, when reader post is fetched, then not authorised is returned`() = test {
-        whenever(readerPostActionsWrapper.requestBlogPost(anyLong(), anyLong(), any())).then {
-            (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener<*>)
-                .onFailure(HttpURLConnection.HTTP_FORBIDDEN)
-        }
+        whenever(readerPostRepository.fetchPost(blogId, postId, false))
+            .thenReturn(FetchPostResult.Failure(HttpURLConnection.HTTP_FORBIDDEN))
 
         val result = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)
 
@@ -126,10 +106,7 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `given unknown status code, when reader post is fetched, then request failed is returned`() = test {
-        whenever(readerPostActionsWrapper.requestBlogPost(anyLong(), anyLong(), any())).then {
-            (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener<*>)
-                .onFailure(500)
-        }
+        whenever(readerPostRepository.fetchPost(blogId, postId, false)).thenReturn(FetchPostResult.Failure(500))
 
         val result = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)
 
@@ -138,7 +115,7 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `given the request never responds, when reader post is fetched, then request failed is returned`() = test {
-        // The request mock never invokes its listener, so resolution relies on the timeout
+        whenever(readerPostRepository.fetchPost(blogId, postId, false)).doSuspendableAnswer { awaitCancellation() }
         val result = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)
 
         assertThat(result).isEqualTo(Failed.RequestFailed)
@@ -146,7 +123,7 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `given a request for the same post is running, when fetched again, then already running is returned`() = test {
-        // The first request stays in flight because its listener is never invoked
+        whenever(readerPostRepository.fetchPost(blogId, postId, false)).doSuspendableAnswer { awaitCancellation() }
         val firstRequest = launch { useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false) }
 
         val secondResult = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)

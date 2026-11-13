@@ -26,8 +26,7 @@ import org.wordpress.android.ui.notifications.NotificationEvents.OnNoteCommentLi
 import org.wordpress.android.ui.notifications.utils.NotificationsActionsWrapper
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.reader.actions.ReaderActions
-import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
+import org.wordpress.android.ui.reader.repository.FetchPostResult
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.EventBusWrapper
@@ -53,7 +52,6 @@ class NotificationsListViewModel @Inject constructor(
     private val siteStore: SiteStore,
     private val commentStore: CommentsStore,
     private val readerPostTableWrapper: ReaderPostTableWrapper,
-    private val readerPostActionsWrapper: ReaderPostActionsWrapper,
     private val readerPostRepository: ReaderPostRepository,
     private val notificationsTableWrapper: NotificationsTableWrapper,
     private val notificationsActionsWrapper: NotificationsActionsWrapper,
@@ -137,20 +135,15 @@ class NotificationsListViewModel @Inject constructor(
             if (readerPost != null) {
                 openInTheReader(note.siteId.toLong(), note.postId.toLong(), note.commentId)
             } else {
-                readerPostActionsWrapper.requestBlogPost(
-                    note.siteId.toLong(),
-                    note.postId.toLong(),
-                    object : ReaderActions.OnRequestListener<String> {
-                        override fun onSuccess(result: String?) {
-                            openInTheReader(note.siteId.toLong(), note.postId.toLong(), note.commentId)
-                        }
-
-                        override fun onFailure(statusCode: Int) {
-                            appLogWrapper.w(AppLog.T.NOTIFS, "Failed to fetch post for comment: $statusCode")
-                            openDetailView()
-                        }
+                launch {
+                    val result = readerPostRepository.fetchPost(note.siteId.toLong(), note.postId.toLong())
+                    if (result is FetchPostResult.Failure) {
+                        appLogWrapper.w(AppLog.T.NOTIFS, "Failed to fetch post for comment: ${result.statusCode}")
+                        openDetailView()
+                    } else {
+                        openInTheReader(note.siteId.toLong(), note.postId.toLong(), note.commentId)
                     }
-                )
+                }
             }
         } else {
             openDetailView()
@@ -176,7 +169,7 @@ class NotificationsListViewModel @Inject constructor(
                 notificationsTableWrapper.saveNote(note)
                 if (post == null) {
                     // sync post from server
-                    readerPostActionsWrapper.requestBlogPost(note.siteId.toLong(), note.postId.toLong(), null)
+                    readerPostRepository.fetchPost(note.siteId.toLong(), note.postId.toLong())
                 }
             }
         }

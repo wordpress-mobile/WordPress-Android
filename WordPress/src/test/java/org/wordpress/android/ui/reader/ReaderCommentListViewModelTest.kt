@@ -29,6 +29,7 @@ import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult
 import org.wordpress.android.ui.reader.repository.ReaderCommentRepository
 import org.wordpress.android.ui.reader.repository.ReaderComments
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource
@@ -38,6 +39,7 @@ import org.wordpress.android.util.config.ReaderCommentsModerationFeatureConfig
 @ExperimentalCoroutinesApi
 class ReaderCommentListViewModelTest : BaseUnitTest() {
     @Mock lateinit var repository: ReaderCommentRepository
+    @Mock lateinit var postRepository: ReaderPostRepository
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var moderationFeatureConfig: ReaderCommentsModerationFeatureConfig
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
@@ -226,6 +228,7 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
     private fun createViewModel(savedStateHandle: SavedStateHandle) = ReaderCommentListViewModel(
         savedStateHandle,
         repository,
+        postRepository,
         accountStore,
         moderationFeatureConfig,
         networkUtilsWrapper,
