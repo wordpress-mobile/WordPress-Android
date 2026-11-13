@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.viewmodels
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import org.assertj.core.api.Assertions.assertThat
@@ -13,7 +14,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atLeastOnce
-import org.mockito.kotlin.eq
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -30,8 +31,7 @@ import org.wordpress.android.fluxc.store.ReaderStore.OnReaderSitesSearched
 import org.wordpress.android.fluxc.store.ReaderStore.ReaderError
 import org.wordpress.android.fluxc.store.ReaderStore.ReaderErrorType
 import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesPayload
-import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
-import org.wordpress.android.ui.reader.actions.ReaderBlogActionsWrapper
+import org.wordpress.android.ui.reader.repository.ReaderBlogRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.util.NetworkUtilsWrapper
 
@@ -41,7 +41,7 @@ class ReaderSearchViewModelTest : BaseUnitTest() {
     @Mock lateinit var readerStore: ReaderStore
     @Mock lateinit var searchTable: ReaderSearchTableWrapper
     @Mock lateinit var blogTable: ReaderBlogTableWrapper
-    @Mock lateinit var blogActions: ReaderBlogActionsWrapper
+    @Mock lateinit var blogRepository: ReaderBlogRepository
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var readerTracker: ReaderTracker
 
@@ -280,26 +280,26 @@ class ReaderSearchViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `following a site disables its button until the request returns`() {
+    fun `following a site disables its button until the request returns`() = test {
         val site = submitWithSite(isFollowing = false)
-        whenever(blogActions.followFeedById(eq(2L), eq(1L), eq(true), any(), any(), any())).thenReturn(true)
+        val result = CompletableDeferred<Boolean>()
+        whenever(blogRepository.followFeed(1L, true, ReaderTracker.SOURCE_SEARCH)).doSuspendableAnswer {
+            result.await()
+        }
 
         viewModel.onSiteFollowClicked(site)
         assertThat(viewModel.uiState.value.sites.single().isFollowing).isTrue
         assertThat(viewModel.uiState.value.sites.single().isFollowEnabled).isFalse
 
-        followListener(isAskingToFollow = true).onActionResult(true)
+        result.complete(true)
         assertThat(viewModel.uiState.value.sites.single().isFollowing).isTrue
         assertThat(viewModel.uiState.value.sites.single().isFollowEnabled).isTrue
     }
 
     @Test
-    fun `a follow that fails before the request returns leaves the button enabled`() {
+    fun `a failed follow reverts the button and enables it`() = test {
         val site = submitWithSite(isFollowing = false)
-        whenever(blogActions.followFeedById(any(), any(), any(), any(), any(), any())).thenAnswer {
-            it.getArgument<ActionListener>(3).onActionResult(false)
-            true
-        }
+        whenever(blogRepository.followFeed(any(), any(), any())).thenReturn(false)
 
         viewModel.onSiteFollowClicked(site)
 
@@ -312,12 +312,11 @@ class ReaderSearchViewModelTest : BaseUnitTest() {
     @Test
     fun `a failed unfollow reverts the button and shows an error`() = test {
         val site = submitWithSite(isFollowing = true)
-        whenever(blogActions.followFeedById(any(), any(), eq(false), any(), any(), any())).thenReturn(true)
+        whenever(blogRepository.followFeed(1L, false, ReaderTracker.SOURCE_SEARCH)).thenReturn(false)
         viewModel.onSiteFollowClicked(site)
 
         viewModel.events.test {
             skipItems(1) // the submit
-            followListener(isAskingToFollow = false).onActionResult(false)
             assertThat(awaitItem())
                 .isEqualTo(ReaderSearchEvent.ShowToast(R.string.reader_toast_err_unable_to_unfollow_blog))
         }
@@ -334,7 +333,7 @@ class ReaderSearchViewModelTest : BaseUnitTest() {
             viewModel.onSiteFollowClicked(site)
             assertThat(awaitItem()).isEqualTo(ReaderSearchEvent.ShowToast(R.string.no_network_message))
         }
-        verify(blogActions, never()).followFeedById(any(), any(), any(), any(), any(), any())
+        verify(blogRepository, never()).followFeed(any(), any(), any())
     }
 
     @Test
@@ -396,7 +395,7 @@ class ReaderSearchViewModelTest : BaseUnitTest() {
         readerStore,
         searchTable,
         blogTable,
-        blogActions,
+        blogRepository,
         networkUtilsWrapper,
         readerTracker,
         testDispatcher(),
@@ -414,19 +413,6 @@ class ReaderSearchViewModelTest : BaseUnitTest() {
             OnReaderSitesSearched(listOf(site(1, isFollowing = isFollowing)), "cats", 0, false)
         )
         return viewModel.uiState.value.sites.single()
-    }
-
-    private fun followListener(isAskingToFollow: Boolean): ActionListener {
-        val captor = argumentCaptor<ActionListener>()
-        verify(blogActions).followFeedById(
-            eq(2L),
-            eq(1L),
-            eq(isAskingToFollow),
-            captor.capture(),
-            eq(ReaderTracker.SOURCE_SEARCH),
-            eq(readerTracker)
-        )
-        return captor.lastValue
     }
 
     private fun siteSearches(): List<ReaderSearchSitesPayload> {

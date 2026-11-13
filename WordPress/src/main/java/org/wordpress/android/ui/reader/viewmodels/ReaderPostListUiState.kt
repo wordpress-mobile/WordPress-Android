@@ -5,6 +5,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
+import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 
 /**
  * Everything the post list needs to start, and everything it saves to survive process death
@@ -112,6 +113,8 @@ sealed class ReaderPostListUiEvent {
     data class PostHeaderClicked(val post: ReaderPost) : ReaderPostListUiEvent()
     data class TagFollowFailed(val isFollowRequest: Boolean) : ReaderPostListUiEvent()
     data object SetDefaultSubfilter : ReaderPostListUiEvent()
+    data object ReloadSubfilters : ReaderPostListUiEvent()
+    data class SetSubfilter(val subfilter: SubfilterListItem.Site) : ReaderPostListUiEvent()
     data object NoConnection : ReaderPostListUiEvent()
     data object DataLoaded : ReaderPostListUiEvent()
     data object BlogInfoFailed : ReaderPostListUiEvent()

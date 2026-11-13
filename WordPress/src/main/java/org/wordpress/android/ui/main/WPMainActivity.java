@@ -1520,23 +1520,25 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             }
         }
 
-        // Try to select the primary wpcom site
-        long siteId = mAccountStore.getAccount().getPrimarySiteId();
-        SiteModel primarySite = mSiteStore.getSiteBySiteId(siteId);
-        // Primary site found, select it
-        if (primarySite != null) {
-            setSelectedSite(primarySite);
-            return;
-        }
-
-        // Else select the first site in the list
-        List<SiteModel> sites = mSiteStore.getSites();
-        if (!sites.isEmpty()) {
-            setSelectedSite(sites.get(0));
+        SiteModel fallbackSite = getFallbackSite();
+        if (fallbackSite != null) {
+            setSelectedSite(fallbackSite);
         } else {
-            // No site selected
             AppLog.w(T.MAIN, "No site selected");
         }
+    }
+
+    /**
+     * @return the primary wpcom site if it exists, else the first site in the list, else null
+     */
+    @Nullable
+    private SiteModel getFallbackSite() {
+        SiteModel primarySite = mSiteStore.getSiteBySiteId(mAccountStore.getAccount().getPrimarySiteId());
+        if (primarySite != null) {
+            return primarySite;
+        }
+        List<SiteModel> sites = mSiteStore.getSites();
+        return sites.isEmpty() ? null : sites.get(0);
     }
 
     // FluxC events
@@ -1605,6 +1607,21 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             SiteModel site = mSiteStore.getSiteByLocalId(selectedSite.getId());
             if (site != null) {
                 mSelectedSiteRepository.updateSite(site);
+            } else {
+                // The selected site was deleted by the fetch (e.g. it's no longer returned by /me/sites
+                // because it's inactive), so switch to another site the way the site picker does. Only
+                // clear the selection when no site is left, so My Site doesn't flash its "no sites" view.
+                SiteModel fallbackSite = getFallbackSite();
+                if (fallbackSite != null) {
+                    mPrivateAtomicCookie.clearCookie();
+                    setSelectedSite(fallbackSite);
+                } else {
+                    mSelectedSiteRepository.removeSite();
+                }
+                MySiteFragment mySiteFragment = getMySiteFragment();
+                if (mySiteFragment != null) {
+                    mySiteFragment.onSelectedSiteReplaced();
+                }
             }
         }
     }

@@ -18,8 +18,8 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.Failed
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.Success
@@ -43,6 +43,9 @@ class PostLikeUseCaseTest : BaseUnitTest() {
     private lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
 
     @Mock
+    private lateinit var readerPostRepository: ReaderPostRepository
+
+    @Mock
     private lateinit var readerTracker: ReaderTracker
 
     private lateinit var useCase: PostLikeUseCase
@@ -56,6 +59,7 @@ class PostLikeUseCaseTest : BaseUnitTest() {
 
         useCase = PostLikeUseCase(
             readerPostActionsWrapper,
+            readerPostRepository,
             readerTracker,
             accountStore,
             networkUtilsWrapper
@@ -186,7 +190,7 @@ class PostLikeUseCaseTest : BaseUnitTest() {
             ).toList(mutableListOf())
 
             // Assert
-            verify(readerPostActionsWrapper).performLikeActionLocal(
+            verify(readerPostRepository).likePostLocal(
                 anyOrNull(),
                 anyBoolean(),
                 anyLong()
@@ -206,11 +210,12 @@ class PostLikeUseCaseTest : BaseUnitTest() {
             ).toList(mutableListOf())
 
             // Assert
-            verify(readerPostActionsWrapper).performLikeActionRemote(
+            verify(readerPostRepository).likePostRemote(
                 anyOrNull(),
-                anyBoolean(),
                 anyLong(),
-                anyOrNull()
+                anyLong(),
+                anyBoolean(),
+                anyLong()
             )
         }
 
@@ -245,19 +250,17 @@ class PostLikeUseCaseTest : BaseUnitTest() {
             verify(readerPostActionsWrapper, never()).bumpPageViewForPost(anyOrNull())
         }
 
-    private fun init(
+    private suspend fun init(
         isLikedByCurrentUser: Boolean = false,
         isNetworkAvailable: Boolean = true,
         localSucceeds: Boolean = true,
         remoteSucceeds: Boolean = true
     ): ReaderPost {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(isNetworkAvailable)
-        whenever(readerPostActionsWrapper.performLikeActionLocal(anyOrNull(), anyBoolean(), anyLong()))
+        whenever(readerPostRepository.likePostLocal(anyOrNull(), anyBoolean(), anyLong()))
             .thenReturn(localSucceeds)
-        whenever(readerPostActionsWrapper.performLikeActionRemote(anyOrNull(), anyBoolean(), anyLong(), anyOrNull()))
-            .then {
-                (it.arguments[3] as ActionListener).onActionResult(remoteSucceeds)
-            }
+        whenever(readerPostRepository.likePostRemote(anyOrNull(), anyLong(), anyLong(), anyBoolean(), anyLong()))
+            .thenReturn(remoteSucceeds)
         return createDummyReaderPost(isLikedByCurrentUser = isLikedByCurrentUser)
     }
 

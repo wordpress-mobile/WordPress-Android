@@ -393,6 +393,14 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         mViewModel.start(webViewUsageCategory);
     }
 
+    /**
+     * Lets subclasses observe the load state, which is owned here. Only valid once
+     * {@link #configureView()} has run, i.e. after super.onCreate().
+     */
+    @NonNull protected WPWebViewViewModel getWebPreviewViewModel() {
+        return mViewModel;
+    }
+
     public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url) {
         openWPCOMURL(context, url, null, null, false, false, null);
     }

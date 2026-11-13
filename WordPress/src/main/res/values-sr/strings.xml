@@ -899,8 +899,8 @@ Language: sr_RS
     <string name="privacy_banner_analytics">Аналитика</string>
     <string name="privacy_banner_analytics_description">Дозволите нам да побољшамо учинак прикупљањем информација о томе како корисници користе наше мобилне апликације.</string>
     <string name="privacy_banner_title">Управљај приватношћу</string>
-    <string name="privacy_banner_description">Ваша приватност нам је изузетно важна и увек је била. Ваше личне податке користимо, чувамо и обрађујемо да бисмо на разне начине побољшали нашу апликацију (и ваше искуство). Неке употребе ваших података су нам неопходне да би ствари радиле, а друге можете прилагодити у подешавањима.</string>
     <string name="tabbar_accessibility_label_me">Ја. Управљајте појединостима свог профила.</string>
+    <string name="privacy_banner_description">Ваша приватност нам је изузетно важна и увек је била. Ваше личне податке користимо, чувамо и обрађујемо да бисмо на разне начине побољшали нашу апликацију (и ваше искуство). Неке употребе ваших података су нам неопходне да би ствари радиле, а друге можете прилагодити у подешавањима.</string>
     <string name="social_item_message_title">Порука</string>
     <string name="virtual_homepage_title">Почетна страница</string>
     <string name="gutenberg_native_block_ungrouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Блок је разгруписан</string>
@@ -1621,10 +1621,10 @@ Language: sr_RS
     <string name="invite_links_disable_dialog_title">Онемогући везу позивнице</string>
     <string name="invite_links_bad_format_response">Примљен је неисправан одговор</string>
     <string name="invite_links_null_response">Није примљен одговор</string>
+    <string name="invite_links_helper_text">Користите ову везу да бисте укључили чланове тима без потребе да их позивате једног по једног. Свако ко посети овај URL моћи ће да се придружи вашој организацији, чак и ако је везу добио од неког другог, зато је делите само са особама од поверења.</string>
     <string name="invite_links_cannot_get_roles_error">Дошло је до грешке при добијању улога</string>
     <string name="invite_links_cannot_get_role_data_error">Дошло је до грешке при добијању података за улогу %1$s</string>
     <string name="invite_links_generic_get_data_error">Непозната грешка при довлачењу података о везама позивница</string>
-    <string name="invite_links_helper_text">Користите ову везу да бисте укључили чланове тима без потребе да их позивате једног по једног. Свако ко посети овај URL моћи ће да се придружи вашој организацији, чак и ако је везу добио од неког другог, зато је делите само са особама од поверења.</string>
     <string name="invite_links_expire_date">Истиче %1$s</string>
     <string name="invite_links_generate">Направи нову везу</string>
     <string name="invite_links_disable_invite_link">Онемогући везу позивнице</string>

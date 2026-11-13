@@ -341,12 +341,7 @@ platform :android do
       )
 
       if download_path.nil?
-        error_message = <<~ERROR
-          Can't download strings file for #{lib[:name]}.
-          Strings for this library won't get translated.
-          Do you want to continue anyway?
-        ERROR
-        UI.user_error! 'Abort.' unless UI.confirm(error_message)
+        UI.user_error!("Can't download the strings file for #{lib[:name]}; its strings won't be merged for translation.")
       else
         UI.message("`strings.xml` file for #{lib[:name]} downloaded to #{download_path}.")
         lib_to_merge = [{
@@ -394,13 +389,15 @@ platform :android do
   #####################################################################################
   # update_translations
   # -----------------------------------------------------------------------------------
-  # Downloads the latest WordPress & Jetpack translations from GlotPress and opens (or
-  # refreshes) a single rolling Pull Request, so `trunk` stays continuously localized.
-  # Intended to run on a daily schedule.
+  # Merges the libraries' strings into the main `strings.xml`, freezes the WordPress &
+  # Jetpack source strings into `fastlane/*resources/values/strings.xml` (the files
+  # GlotPress imports from `trunk`), downloads the latest translations from GlotPress,
+  # and opens (or refreshes) a single rolling Pull Request. Intended to run on a daily
+  # schedule.
   #
-  # Each run resets `translations/daily-update` to `trunk` and re-downloads, so the PR
-  # always shows the complete current translation delta against `trunk` (no accumulation).
-  # If GlotPress has nothing new, no commit is made and the lane exits without a PR.
+  # Each run resets `translations/daily-update` to `trunk` and redoes every step, so the
+  # PR always shows the complete current delta against `trunk` (no accumulation).
+  # If none of the steps change anything, the lane exits without a PR.
   # -----------------------------------------------------------------------------------
   # Usage:
   # bundle exec fastlane update_translations
@@ -414,18 +411,17 @@ platform :android do
     Fastlane::Helper::GitHelper.delete_local_branch_if_exists!(TRANSLATIONS_SYNC_BRANCH)
     Fastlane::Helper::GitHelper.create_branch(TRANSLATIONS_SYNC_BRANCH, from: DEFAULT_BRANCH)
 
-    download_translations
+    # Merge the libraries' strings before pruning, so translations for newly merged library keys aren't
+    # pruned as orphaned, and before freezing, so the frozen copy GlotPress imports includes them.
+    localize_libraries
+    update_frozen_strings_for_translation
 
-    # `download_translations` commits when GlotPress has updates; if nothing changed, HEAD still
-    # points at `trunk` and there is nothing to open a PR for.
-    if Fastlane::Helper::GitHelper.point_to_same_commit?(DEFAULT_BRANCH, 'HEAD')
-      UI.important('No new translations from GlotPress today; nothing to sync.')
-      next
-    end
+    download_translations
 
     # Prune translations whose key is no longer in the source strings (GlotPress can still serve them),
     # which would otherwise fail Lint's `ExtraTranslation` check. Done as a separate commit on top of the
-    # download so the PR shows exactly what was pruned vs. what was downloaded.
+    # download so the PR shows exactly what was pruned vs. what was downloaded. `GitHelper.commit` returns
+    # `false` instead of failing when the prune changed nothing.
     main_res = File.join('WordPress', 'src', 'main', 'res')
     jetpack_res = File.join('WordPress', 'src', 'jetpack', 'res')
     android_prune_orphaned_translations(res_dir: main_res)
@@ -435,13 +431,12 @@ platform :android do
     )
     Fastlane::Helper::GitHelper.commit(message: 'Prune orphaned translations', files: :all)
 
-    # The prune can remove exactly what the download added, when the only translations GlotPress has
-    # for us are for keys that no longer exist in the source strings. That leaves two commits whose
-    # combined diff against `trunk` is empty, so there is nothing to push or review. Compare trees
-    # rather than commit SHAs: HEAD is two commits ahead of `trunk` here even when the content matches.
+    # Nothing to push when no step changed anything, or when the prune removed exactly what the download
+    # added (GlotPress only had translations for keys that no longer exist in the source strings). Compare
+    # trees rather than commit SHAs: in the second case HEAD is ahead of `trunk` even though the content matches.
     trunk_tree, head_tree = [DEFAULT_BRANCH, 'HEAD'].map { |ref| sh('git', 'rev-parse', "#{ref}^{tree}").strip }
     if trunk_tree == head_tree
-      UI.important('Every translation downloaded today was pruned as orphaned; nothing to sync.')
+      UI.important('No changes to library strings, frozen strings or translations today; nothing to sync.')
       next
     end
 
@@ -454,6 +449,9 @@ platform :android do
       title: 'Update translations',
       body: <<~BODY,
         Automated daily translation sync from GlotPress. Opened by the `download-translations` scheduled pipeline.
+
+        Also merges the libraries' strings into `strings.xml` and freezes the source strings that GlotPress
+        imports from `trunk`. New source strings reach GlotPress once this PR is merged.
 
         ⚠️ This branch is reset to `trunk` and force-pushed daily — do not push commits here;
         they will be overwritten. Fix translations in GlotPress instead.

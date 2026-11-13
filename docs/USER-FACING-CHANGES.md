@@ -16,6 +16,45 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** Me → App Settings → Media (Optimize Images, Maximum Image Size, Image Quality, Remove location from media, Optimize Videos, Maximum Video Size, Video Quality); experimental block editor → Add media
   - **Notes:** Customers turn the flag on in Me → App Settings → Experimental Features → Experimental block editor. Video optimization stays off unless the user turns it on, as in the classic editors. GIFs always upload unchanged so they keep animating.
 
+- **Reblogging from a site's or tag's post list confirms the result**
+  After you reblog a post from a site's or a tag's post list and leave the editor, the post list now shows the editor's result snackbar (for example, that the post was published or saved as a draft), and another when the upload finishes. Previously neither appeared there, though the reblog itself worked.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → tap a site name or a tag → a post's Reblog button → editor → back
+
+- **Reader: a site unblocked on the web shows its posts again in the app**
+  If you blocked a site in the app's Reader and later unblocked it on the web, the site's posts now come back the next time the app refreshes the sites you follow. Before, the site was back in your subscriptions but its stream stayed at "This blog is empty" until you logged out and back in.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → Subscriptions, and the unblocked site's stream
+  - **Notes:** Unblocking a site on the web subscribes you to it again, and that is how the app finds out. A site you blocked without being subscribed to it comes back only after you subscribe to it, or log out and back in.
+
+- **Reader search reports a subscribe that couldn't start**
+  On the Sites tab of Reader search, tapping Subscribe on a site that can't be subscribed to from there now shows the "Unable to subscribe to this blog" message, the same one shown when the request fails. Previously the button just flipped back without saying anything.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Reader → Search → Sites → Subscribe
+  - **Notes:** Rare: it happens when the app has the site's feed on record but no feed address for it. Unsubscribing from the same place shows the matching "Unable to unsubscribe from blog" message.
+
+- **AI support chat says up front that you are chatting with AI**
+  The support chat now shows a fixed line above the conversation: "You're chatting with AI from WordPress.com Support." It sits outside the scrolling messages, so it stays visible however long the conversation gets, and it is there from the moment the chat opens, before the first reply. It appears in every AI chat, whether newly started or reopened from the list. Once a conversation has been handed to a Happiness Engineer and become a ticket, the ticket view does not show it.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Everyone
+  - **Where:** Me → Help & Support → Get help → any AI Assistant conversation; also the older Contact Support chat reached from the post editor
+  - **Notes:** Required by the EU AI Act (Art. 50), which asks for this label at the top of the chat rather than in a footer, everywhere in the world. The wording is written by the app, never by the bot, and is translated like any other string; "WordPress.com" in it is not translated. Both apps name WordPress.com, because that is who provides the support, so the Jetpack app says WordPress.com too. It is announced by screen readers along with the rest of the screen, and it wraps onto more lines rather than being cut off at larger text sizes.
+
+- **Inactive sites no longer appear in the site list**
+  Sites that WordPress.com reports as inactive, such as a self-hosted Jetpack site whose domain has expired, are no longer listed. Previously they stayed in the list, and removing one with the X button only lasted until the next refresh.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** My Site → site switcher
+  - **Notes:** Inactive sites already on the device are removed on the next site refresh. A site that still has unsynced local posts is kept until those are dealt with. This matches what the iOS app and the WordPress.com web dashboard already show.
+
 - **Referrers and Clicks in Stats show each source's icon**
   Rows in the redesigned Stats' Referrers and Clicks cards, and their full lists, now show the site icon the Stats API already reports for the referrer or link, matching the web version. A row the API has no icon for shows none, and its title stays where it was. Expanding a referrer group, such as Search Engines, shows an icon for each entry under it too.
   - **Apps:** Both
