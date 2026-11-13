@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.CloudOff
@@ -44,12 +45,13 @@ fun ContentListLocalDraftsBanner(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // Margin and corners match the tab chips and the list's cards, so the banner lines up with both.
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerHigh,
-        shape = MaterialTheme.shapes.medium,
+        shape = RoundedCornerShape(BANNER_RADIUS),
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = BANNER_HORIZONTAL_MARGIN, vertical = BANNER_VERTICAL_MARGIN)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -95,7 +97,13 @@ fun ContentListLocalDraftsSheet(
             Text(
                 text = stringResource(R.string.post_rs_local_drafts_title),
                 style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                modifier = Modifier.padding(horizontal = 16.dp).padding(top = 8.dp)
+            )
+            Text(
+                text = stringResource(R.string.post_rs_local_drafts_subtitle),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 16.dp).padding(top = 4.dp, bottom = 8.dp)
             )
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 items(items = drafts, key = { it.localId }) { draft ->
@@ -153,3 +161,7 @@ private fun LocalDraftDetails(draft: RsLocalDraftUiModel) {
         }
     }
 }
+
+private val BANNER_HORIZONTAL_MARGIN = 8.dp
+private val BANNER_VERTICAL_MARGIN = 4.dp
+private val BANNER_RADIUS = 14.dp

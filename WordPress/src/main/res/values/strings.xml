@@ -1027,6 +1027,7 @@
     <string name="post_rs_trashed">Post moved to trash</string>
     <string name="post_rs_deleted">Post permanently deleted</string>
     <string name="post_rs_local_drafts_title">Not uploaded</string>
+    <string name="post_rs_local_drafts_subtitle">These drafts are only on this device.</string>
     <string name="post_rs_local_drafts_upload_failed">Upload failed</string>
     <string name="post_rs_published">Post published</string>
     <string name="post_rs_moved_to_draft">Post moved to drafts</string>
