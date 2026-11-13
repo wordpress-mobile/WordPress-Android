@@ -30,6 +30,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
@@ -97,7 +100,10 @@ fun ContentListLocalDraftsSheet(
             Text(
                 text = stringResource(R.string.post_rs_local_drafts_title),
                 style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(horizontal = 16.dp).padding(top = 8.dp)
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 8.dp)
+                    .semantics { heading() }
             )
             Text(
                 text = stringResource(R.string.post_rs_local_drafts_subtitle),
@@ -124,10 +130,13 @@ private fun LocalDraftRow(
     onOpen: () -> Unit,
     onRetry: () -> Unit
 ) {
+    val title = draft.title.ifBlank { stringResource(R.string.untitled_in_parentheses) }
+    // Retry is its own focus stop, so it names its draft; otherwise every failed row's button reads the same.
+    val retryDescription = stringResource(R.string.post_rs_local_drafts_retry_description, title)
     ListItem(
         headlineContent = {
             Text(
-                text = draft.title.ifBlank { stringResource(R.string.untitled_in_parentheses) },
+                text = title,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
@@ -138,14 +147,22 @@ private fun LocalDraftRow(
             null
         },
         trailingContent = if (draft.isUploadFailed) {
-            { TextButton(onClick = onRetry) { Text(stringResource(R.string.retry)) } }
+            {
+                TextButton(
+                    onClick = onRetry,
+                    modifier = Modifier.semantics { contentDescription = retryDescription }
+                ) {
+                    Text(stringResource(R.string.retry))
+                }
+            }
         } else {
             null
         },
         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onOpen)
+            // TalkBack says "Double-tap to edit" rather than the generic "to activate".
+            .clickable(onClickLabel = stringResource(R.string.edit), onClick = onOpen)
     )
 }
 

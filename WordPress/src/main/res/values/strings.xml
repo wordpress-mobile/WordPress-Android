@@ -1029,6 +1029,7 @@
     <string name="post_rs_local_drafts_title">Not uploaded</string>
     <string name="post_rs_local_drafts_subtitle">These drafts are only on this device.</string>
     <string name="post_rs_local_drafts_upload_failed">Upload failed</string>
+    <string name="post_rs_local_drafts_retry_description">Retry uploading \"%s\"</string>
     <string name="post_rs_published">Post published</string>
     <string name="post_rs_moved_to_draft">Post moved to drafts</string>
     <string name="post_rs_error_trash">Failed to trash post</string>
