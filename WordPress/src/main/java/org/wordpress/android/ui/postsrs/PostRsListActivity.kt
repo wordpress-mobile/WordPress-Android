@@ -55,6 +55,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
             val authorFilter by viewModel.authorFilter.collectAsState()
             val confirmation by viewModel.pendingConfirmation.collectAsState()
             val density by viewModel.density.collectAsState()
+            val localDrafts by viewModel.localDrafts.collectAsState()
             AppThemeM3 {
                 PostRsListScreen(
                     tabStates = tabStates,
@@ -86,7 +87,10 @@ class PostRsListActivity : BaseAppCompatActivity() {
                     onRowsVisible = viewModel::onRowsVisible,
                     onDensityToggled = viewModel::onDensityToggled,
                     onCancelOpeningPost = viewModel::cancelOpeningPost,
-                    density = density
+                    density = density,
+                    localDrafts = localDrafts,
+                    onOpenLocalDraft = viewModel::openLocalDraft,
+                    onRetryLocalDraft = viewModel::retryLocalDraft,
                 )
             }
         }
