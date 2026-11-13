@@ -125,10 +125,11 @@ class ReaderSavedPostsViewModelTest : BaseUnitTest() {
             isExternal = false,
             url = null
         )
+        private val postKey = ReaderSavedKey.Post(BLOG_ID.toULong(), POST_ID)
         val postItem = ReaderSavedListItem(
-            key = ReaderSavedKey.Post(BLOG_ID.toULong(), POST_ID),
+            key = postKey,
             dateSaved = null,
-            post = ReaderPostRecord(key = ReaderSavedKey.Post(BLOG_ID.toULong(), POST_ID), identity = identity),
+            post = ReaderPostRecord(key = postKey, identity = identity),
             isRecent = false,
             isLocalOnly = false
         )

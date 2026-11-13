@@ -173,11 +173,7 @@ private fun SavedPostContent(item: ReaderSavedListItem, actions: ReaderSavedPost
             // the image the post's Reader card shows, else its featured image
             (post?.displayImageUrl ?: post?.featuredImage)?.takeIf { it.isNotBlank() }?.let { imageUrl ->
                 AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(imageUrl)
-                        .placeholder(R.color.placeholder)
-                        .error(R.color.placeholder)
-                        .build(),
+                    model = placeholderImageRequest(imageUrl),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -265,11 +261,7 @@ private fun SecondaryText(text: String, maxLines: Int = 1) {
 private fun SiteIcon(url: String) {
     val sizePx = with(LocalDensity.current) { SITE_ICON_SIZE.roundToPx() }
     AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(WPAvatarUtils.rewriteAvatarUrl(url, sizePx))
-            .placeholder(R.color.placeholder)
-            .error(R.color.placeholder)
-            .build(),
+        model = placeholderImageRequest(WPAvatarUtils.rewriteAvatarUrl(url, sizePx)),
         contentDescription = null,
         modifier = Modifier
             .padding(end = Margin.Medium.value)
@@ -277,6 +269,13 @@ private fun SiteIcon(url: String) {
             .clip(CircleShape)
     )
 }
+
+@Composable
+private fun placeholderImageRequest(url: String): ImageRequest = ImageRequest.Builder(LocalContext.current)
+    .data(url)
+    .placeholder(R.color.placeholder)
+    .error(R.color.placeholder)
+    .build()
 
 /** The author, the number of comments and when the post was saved. */
 @Composable

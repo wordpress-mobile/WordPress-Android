@@ -55,7 +55,8 @@ import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
-import org.wordpress.android.ui.reader.usecases.BookmarkPostState
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Failed
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.NoNetwork
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase
@@ -505,10 +506,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 is PreLoadPostContent -> _preloadPostEvents.postValue(
                     Event(PreLoadPostContent(post.blogId, post.postId))
                 )
-                BookmarkPostState.NoNetwork -> _snackbarEvents.postValue(
+                NoNetwork -> _snackbarEvents.postValue(
                     Event(SnackbarMessageHolder(UiStringRes(R.string.error_network_connection)))
                 )
-                BookmarkPostState.Failed -> {
+                Failed -> {
                     _refreshPosts.postValue(Event(Unit))
                     _snackbarEvents.postValue(
                         Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))

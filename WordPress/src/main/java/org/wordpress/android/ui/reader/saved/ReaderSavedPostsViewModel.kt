@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -74,8 +73,7 @@ class ReaderSavedPostsViewModel @Inject constructor(
     fun start() {
         if (collection != null) return
         viewModelScope.launch {
-            val collection = repository.savedPosts() ?: return@launch
-            this@ReaderSavedPostsViewModel.collection = collection
+            val collection = repository.savedPosts()?.also { collection = it } ?: return@launch
             observable = createObservableCollection(
                 loadData = { collection.loadItems() },
                 isRelevantUpdate = { collection.isRelevantUpdate(it) }
@@ -85,9 +83,9 @@ class ReaderSavedPostsViewModel @Inject constructor(
                 // that lock on the thread holding it, so only queue the reload here.
                 observable.addObserver { requestReload() }
             }
-            // one reload at a time, and only the latest, since a burst of writes would otherwise read the list
-            // once per write and could land out of order
-            launch { reloadRequests.receiveAsFlow().collectLatest { reload() } }
+            // one reload at a time, and at most one more queued behind it, since a burst of writes would
+            // otherwise read the list once per write and could land out of order
+            launch { reloadRequests.receiveAsFlow().collect { reload() } }
             // what the cache has first, then catch up with the server
             requestReload()
             refresh()

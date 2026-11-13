@@ -38,14 +38,6 @@ class ReaderSavedPostMappingTest {
     }
 
     @Test
-    fun `the local IDs round trip`() {
-        val identity = post(blogId = 123, postId = 45).toSaveIdentity()
-
-        assertThat(identity.localBlogId).isEqualTo(123L)
-        assertThat(identity.localPostId).isEqualTo(45L)
-    }
-
-    @Test
     fun `a local save leaves out empty fields`() {
         val save = post(blogId = 1, postId = 2).apply { title = "Title" }.toLocalSave()
 

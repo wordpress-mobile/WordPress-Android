@@ -92,7 +92,6 @@ class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListene
 
     private fun openItem(item: ReaderSavedListItem) {
         val context = requireContext()
-        val identity = item.post?.identity
         when (val key = item.key) {
             is ReaderSavedKey.Post -> ReaderActivityLauncher.showReaderPostDetail(
                 context,
@@ -100,6 +99,7 @@ class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListene
                 key.postId
             )
             is ReaderSavedKey.FeedItem -> {
+                val identity = item.post?.identity
                 val feedId = identity?.feedId?.toLong()
                 if (feedId != null) {
                     ReaderActivityLauncher.showReaderPostDetail(
