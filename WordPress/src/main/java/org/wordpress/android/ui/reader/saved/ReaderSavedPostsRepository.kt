@@ -205,21 +205,20 @@ class ReaderSavedPostsRepository @Inject constructor(
     /** Creates the account's service on first use, which reads the cache: call it off the main thread. */
     @Synchronized
     private fun getService(): ReaderSavedService? {
-        if (!accountStore.hasAccessToken()) return null
-        val userId = userId
-        if (userId <= 0) return null
-        peekService()?.let { return it }
-        return try {
-            ReaderSavedService(
-                wpServiceProvider.createWpComDelegate(),
-                ReaderSavedSource.ANDROID,
-                wpServiceProvider.getOrCreateCache().cache,
-                userId.toULong()
-            ).also { current = AccountService(userId, it) }
-        } catch (e: ReaderSavedException) {
-            AppLog.e(T.READER, "Creating the saved posts service failed", e)
-            null
-        }
+        val userId = userId.takeIf { accountStore.hasAccessToken() && it > 0 } ?: return null
+        return peekService() ?: createService(userId)
+    }
+
+    private fun createService(userId: Long): ReaderSavedService? = try {
+        ReaderSavedService(
+            wpServiceProvider.createWpComDelegate(),
+            ReaderSavedSource.ANDROID,
+            wpServiceProvider.getOrCreateCache().cache,
+            userId.toULong()
+        ).also { current = AccountService(userId, it) }
+    } catch (e: ReaderSavedException) {
+        AppLog.e(T.READER, "Creating the saved posts service failed", e)
+        null
     }
 
     private class AccountService(val userId: Long, val service: ReaderSavedService)

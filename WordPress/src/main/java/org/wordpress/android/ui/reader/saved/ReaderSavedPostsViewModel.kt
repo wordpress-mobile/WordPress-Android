@@ -88,8 +88,8 @@ class ReaderSavedPostsViewModel @Inject constructor(
     }
 
     fun refresh() {
-        val collection = collection ?: return
-        if (_uiState.value.isRefreshing) return
+        val collection = collection
+        if (collection == null || _uiState.value.isRefreshing) return
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _uiState.update { it.copy(isOffline = true) }
             return
@@ -194,6 +194,5 @@ class ReaderSavedPostsViewModel @Inject constructor(
 
     override fun onCleared() {
         observable?.close()
-        super.onCleared()
     }
 }

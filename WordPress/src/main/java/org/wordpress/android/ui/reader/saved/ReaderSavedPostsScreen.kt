@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.saved
 
 import android.content.Context
-import android.net.Uri
 import android.text.format.DateUtils
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -44,6 +43,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import kotlinx.coroutines.launch
@@ -324,11 +324,10 @@ private fun formatSavedDate(context: Context, date: Date): String {
 }
 
 /** The post's title, or for a page saved by URL, its host. */
-private fun ReaderSavedListItem.title(): String {
-    post?.title?.takeIf { it.isNotBlank() }?.let { return it }
-    val url = post?.identity?.url ?: (key as? ReaderSavedKey.Url)?.url ?: return ""
-    return Uri.parse(url).host ?: url
-}
+private fun ReaderSavedListItem.title(): String =
+    post?.title?.takeIf { it.isNotBlank() }
+        ?: (post?.identity?.url ?: (key as? ReaderSavedKey.Url)?.url)?.let { it.toUri().host ?: it }
+        ?: ""
 
 private fun ReaderSavedKey.stableKey(): String = when (this) {
     is ReaderSavedKey.Post -> "post:$blogId:$postId"
