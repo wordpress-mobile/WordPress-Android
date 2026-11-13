@@ -9,6 +9,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostStore
@@ -66,6 +67,18 @@ class RsPostChangeListener @Inject constructor(
      */
     val uploads: Flow<RsUploadedPost> = _uploads
 
+    private val _uploadResults = MutableSharedFlow<Unit>(
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+
+    /**
+     * Emits once for every upload of a post (or page, per [start]) that finished, whether it
+     * succeeded or failed. Either can change the posts that exist only on this device, which the
+     * server can't report. Kept apart from [changes] so a failure doesn't cost a server refresh.
+     */
+    val uploadResults: Flow<Unit> = _uploadResults
+
     /**
      * Starts listening for changes to [site]'s posts, or its pages when [isPages] is true.
      *
@@ -92,7 +105,14 @@ class RsPostChangeListener @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
         val post = event.post ?: return
-        if (event.isError || post.localSiteId != localSiteId || post.isPage != isPages) return
+        // A stopped listener has no site, so nothing matches it.
+        if (post.localSiteId != localSiteId || post.isPage != isPages) return
+        _uploadResults.tryEmit(Unit)
+        // Only a successful upload changed the server copy.
+        if (!event.isError) onPostUploadedToServer(post)
+    }
+
+    private fun onPostUploadedToServer(post: PostModel) {
         notifyChanged()
         // A post that never got an id is nothing a list can point at.
         if (post.remotePostId != 0L) {

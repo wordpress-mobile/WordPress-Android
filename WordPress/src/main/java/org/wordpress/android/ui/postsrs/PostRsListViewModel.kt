@@ -34,6 +34,8 @@ import org.wordpress.android.ui.rs.RsCommentCountFetcher
 import org.wordpress.android.ui.rs.RsErrorUtils
 import org.wordpress.android.ui.rs.RsFeaturedImages
 import org.wordpress.android.ui.rs.RsFluxCBridge
+import org.wordpress.android.ui.rs.RsLocalDraftUiModel
+import org.wordpress.android.ui.rs.RsLocalDrafts
 import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.ui.rs.RsReveal
 import org.wordpress.android.ui.rs.RsSnackbarMessage
@@ -88,6 +90,7 @@ class PostRsListViewModel @Inject constructor(
     private val changeListener: RsPostChangeListener,
     private val statsDataSource: StatsDataSource,
     private val commentCountFetcher: RsCommentCountFetcher,
+    private val localDraftsSource: RsLocalDrafts,
 ) : ViewModel() {
     private val _tabStates = MutableStateFlow<Map<PostRsListTab, RsTabUiState<PostRsUiModel>>>(emptyMap())
     val tabStates: StateFlow<Map<PostRsListTab, RsTabUiState<PostRsUiModel>>> = _tabStates.asStateFlow()
@@ -111,6 +114,18 @@ class PostRsListViewModel @Inject constructor(
 
     private var isScreenVisible = false
     private var hasDeferredChange = false
+
+    /**
+     * Posts that exist only on this device: never uploaded, or their upload failed. The server's
+     * collections can't contain them, so they're read from FluxC and offered from a banner.
+     */
+    private val _localDrafts = MutableStateFlow<List<RsLocalDraftUiModel>>(emptyList())
+    val localDrafts: StateFlow<List<RsLocalDraftUiModel>> = _localDrafts.asStateFlow()
+    private var localDraftsJob: Job? = null
+
+    // A local draft opens without a fetch, so nothing else stops a second tap from stacking another
+    // editor before this screen stops. Cleared when it comes back.
+    private var isOpeningLocalDraft = false
     private var pendingReveal: RsReveal<PostRsListTab>? = null
 
     /** Tabs whose collection has completed at least one fetch, so an empty list means empty. */
@@ -225,6 +240,9 @@ class PostRsListViewModel @Inject constructor(
             viewModelScope.launch {
                 changeListener.uploads.collect { onPostUploaded(it) }
             }
+            viewModelScope.launch {
+                changeListener.uploadResults.collect { reloadLocalDrafts() }
+            }
             changeListener.start(site, isPages = false)
         }
     }
@@ -233,7 +251,11 @@ class PostRsListViewModel @Inject constructor(
     @MainThread
     fun onScreenVisible() {
         isScreenVisible = true
+        isOpeningLocalDraft = false
         if (hasDeferredChange) onRemoteChangeDetected()
+        // The editor may have saved a new draft, and upload state lives partly in UploadService,
+        // which reports some changes without an event.
+        reloadLocalDrafts()
         emitPendingReveal()
     }
 
@@ -713,6 +735,75 @@ class PostRsListViewModel @Inject constructor(
                 )
             } finally {
                 _isOpeningPost.value = false
+            }
+        }
+    }
+
+    /**
+     * Opens a draft that exists only on this device. Refused while it's uploading or queued, since
+     * PostUploadHandler pushes its queued copy regardless and would race the edit.
+     */
+    @MainThread
+    fun openLocalDraft(localId: Int) {
+        if (_isOpeningPost.value || isOpeningLocalDraft) return
+        analyticsTracker.track(
+            Stat.POST_LIST_ITEM_SELECTED,
+            site,
+            mapOf(TRACKS_ACTION to "edit", TRACKS_IS_LOCAL_DRAFT to true)
+        )
+        val isUploading = localDraftsSource.isUploadingOrQueued(site, localId)
+        // Null when it was uploaded or removed since the sheet loaded.
+        val post = if (isUploading) null else localDraftsSource.open(site, localId)
+        if (post != null) {
+            isOpeningLocalDraft = true
+            _events.trySend(PostRsListEvent.EditPost(site, post))
+        } else {
+            if (isUploading) showDraftUploading()
+            reloadLocalDrafts()
+        }
+    }
+
+    /**
+     * Uploads a local draft whose upload failed again; the change listener reports the result. Refused
+     * while it's already uploading: the row keeps its failure until the upload succeeds, so Retry stays
+     * on screen, and another tap would queue the post a second time.
+     */
+    @MainThread
+    fun retryLocalDraft(localId: Int) {
+        analyticsTracker.track(
+            Stat.POST_LIST_BUTTON_PRESSED,
+            site,
+            mapOf(TRACKS_ACTION to "retry", TRACKS_IS_LOCAL_DRAFT to true)
+        )
+        if (localDraftsSource.isUploadingOrQueued(site, localId)) {
+            showDraftUploading()
+            return
+        }
+        if (!checkNetwork()) return
+        localDraftsSource.retry(site, localId)
+        reloadLocalDrafts()
+    }
+
+    private fun showDraftUploading() {
+        _snackbarMessages.trySend(RsSnackbarMessage(resourceProvider.getString(R.string.editor_uploading_draft)))
+    }
+
+    /** Reads the local drafts again, discarding any load still running. */
+    private fun reloadLocalDrafts() {
+        if (_site == null) return
+        localDraftsJob?.cancel()
+        localDraftsJob = viewModelScope.launch {
+            @Suppress("TooGenericExceptionCaught")
+            try {
+                _localDrafts.value = localDraftsSource.load(
+                    site,
+                    nowLabel = resourceProvider.getString(R.string.rs_date_now),
+                    dateFormat = resourceProvider.getString(R.string.rs_date_modified)
+                )
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.POSTS, "Failed to load local drafts", e)
             }
         }
     }
@@ -1348,6 +1439,7 @@ class PostRsListViewModel @Inject constructor(
         private const val TRACKS_ACTION = "action"
         private const val TRACKS_POST_ID = "post_id"
         private const val TRACKS_CREATE_NEW_POST = "create_new_post"
+        private const val TRACKS_IS_LOCAL_DRAFT = "is_local_draft"
     }
 }
 

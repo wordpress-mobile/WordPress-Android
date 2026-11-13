@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Posts list shows drafts that haven't been uploaded**
+  Posts saved on the device that never reached the site, because they were written offline or their upload failed, are reachable from the Posts list again. A banner above the tabs says how many there are ("2 drafts haven't been uploaded"); tapping it opens a sheet listing each one with its title and when it was last changed. Tapping a draft opens it in the editor. A draft whose upload failed reads "Upload failed" and offers Retry.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Sites added with an Application Password; WordPress.com sites behind `Flag: android_wp_rs_wpcom`
+  - **Where:** My Site → Posts → banner above the tabs
+  - **Notes:** Before, such a draft had no row in this list, so once the upload-failure notification was dismissed there was no way back to it. The banner is hidden while searching, and the drafts aren't included in search results. A post being uploaded for the first time isn't counted or listed until the upload fails, so a post written online doesn't show here while it uploads. A draft whose upload failed stays listed as failed while it's uploaded again, by Retry or automatically when the device reconnects; until that upload finishes, tapping the draft says it's uploading and Retry does nothing. There is no way to delete one of these drafts from the list. The sheet doesn't update live while an upload starts, only when one finishes. Pages are unchanged.
+
 - **Reblogging from a site's or tag's post list confirms the result**
   After you reblog a post from a site's or a tag's post list and leave the editor, the post list now shows the editor's result snackbar (for example, that the post was published or saved as a draft), and another when the upload finishes. Previously neither appeared there, though the reblog itself worked.
   - **Apps:** Both
