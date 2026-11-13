@@ -159,6 +159,9 @@ class ReaderPostListViewModel @Inject constructor(
     private var requestFailed = false
     private var autoUpdateSkipped = false
     private var isSiteAllSubfilter = false
+    private var siteSubfilter: SubfilterListItem.Site? = null
+    // the site filter left because its site was blocked, picked again if the block is undone or fails
+    private var siteSubfilterBeforeBlock: SubfilterListItem.Site? = null
     private var hasFollowedBlogs = false
     private var restorePosition = 0
     private var pendingScrollToBlogId: Long? = null
@@ -173,7 +176,7 @@ class ReaderPostListViewModel @Inject constructor(
     private val postHeaderClicked: (Long, Long) -> Unit = ::onPostHeaderClicked
 
     private val refreshPostsObserver = Observer<Event<Unit>> { event ->
-        event.getContentIfNotHandled()?.let { reload() }
+        event.getContentIfNotHandled()?.let { onPostsChanged() }
     }
     private val followStatusObserver = Observer<FollowStatusChanged> { onFollowStatusChanged(it) }
 
@@ -313,6 +316,8 @@ class ReaderPostListViewModel @Inject constructor(
      * filtered on, if any.
      */
     fun onResumeAfterPause(siteSubfilter: SubfilterListItem.Site?) {
+        // a site may have been blocked or unsubscribed from elsewhere, such as the post detail screen
+        reloadSubfilters()
         when {
             listType == ReaderPostListType.TAG_FOLLOWED -> launch {
                 val tag = currentTag
@@ -368,8 +373,46 @@ class ReaderPostListViewModel @Inject constructor(
         }
     }
 
+    /*
+     * Called when a card action, such as blocking a site, changed the stored posts
+     */
+    private fun onPostsChanged() {
+        reloadSubfilters()
+        val site = siteSubfilter
+        val siteBeforeBlock = siteSubfilterBeforeBlock
+        launch {
+            when {
+                // blocking the site picked in the Subscriptions filter would leave an empty list, so show all
+                // subscriptions instead
+                site != null && repository.isBlockedSite(site.blog.blogId) -> {
+                    siteSubfilterBeforeBlock = site
+                    sendUiEvent(ReaderPostListUiEvent.SetDefaultSubfilter)
+                }
+                // the block was undone or failed, so go back to the site
+                siteBeforeBlock != null && !repository.isBlockedSite(siteBeforeBlock.blog.blogId) -> {
+                    siteSubfilterBeforeBlock = null
+                    sendUiEvent(ReaderPostListUiEvent.SetSubfilter(siteBeforeBlock))
+                }
+                else -> reload()
+            }
+        }
+    }
+
+    /*
+     * The Subscriptions filter, and the site count shown with it, are only rebuilt when a sync finds a change,
+     * so this rebuilds them from the local DB after an action such as blocking a site unfollowed one
+     */
+    private fun reloadSubfilters() {
+        if (isFilterable) {
+            sendUiEvent(ReaderPostListUiEvent.ReloadSubfilters)
+        }
+    }
+
     fun onSubfilterChanged(subfilter: SubfilterListItem?) {
         isSiteAllSubfilter = subfilter is SubfilterListItem.SiteAll
+        siteSubfilter = subfilter as? SubfilterListItem.Site
+        // picking another site or tag means there's no blocked site to go back to
+        if (!isSiteAllSubfilter) siteSubfilterBeforeBlock = null
         updateUiState()
     }
 
@@ -622,9 +665,7 @@ class ReaderPostListViewModel @Inject constructor(
                 onFollowedTagsFetched()
             }
 
-            is ReaderPostListEvent.FollowedBlogsFetched -> if (event.didChange && isFollowedSitesList) {
-                reload()
-            }
+            is ReaderPostListEvent.FollowedBlogsFetched -> if (isFollowedSitesList) onFollowedBlogsFetched(event)
         }
     }
 
@@ -639,6 +680,12 @@ class ReaderPostListViewModel @Inject constructor(
             requestFailed = true
             setIsUpdating(false, action)
         }
+    }
+
+    private fun onFollowedBlogsFetched(event: ReaderPostListEvent.FollowedBlogsFetched) {
+        if (event.didChange) reload()
+        // posts from a site whose block was just cleared were dropped when they were saved, so ask again
+        if (event.didClearBlocks) currentTarget()?.let { requestPosts(it, UpdateAction.REQUEST_NEWER) }
     }
 
     private fun onFollowedTagsFetched() = launch {

@@ -188,16 +188,15 @@ class ReaderBlogRepository @Inject constructor(
             if (result is RestResult.Failure) logVolleyError("block blog", result.error)
             if (result is RestResult.Failure && !result.isCancelled) {
                 undoBlockBlogLocal(blockResult)
-                if (blockResult.wasFollowing) ReaderBlogTable.setIsFollowedBlogId(blockResult.blogId, true)
             }
             result is RestResult.Success
         }
 
     /**
-     * Undoes a site block locally, then unblocks it on the server and follows it again if it was followed.
-     * Only the local undo is waited for.
+     * Undoes a site block locally, then unblocks it on the server, which subscribes to the site again if it was
+     * subscribed before the block. Only the local undo is waited for.
      */
-    suspend fun undoBlockBlog(blockResult: BlockedBlogResult, source: String) {
+    suspend fun undoBlockBlog(blockResult: BlockedBlogResult) {
         // the server call is launched inside the non-cancellable block, so a caller cancelled during the local
         // undo can't leave the site unblocked locally but still blocked on the server
         withContext(ioDispatcher + NonCancellable) {
@@ -209,7 +208,6 @@ class ReaderBlogRepository @Inject constructor(
                     result is RestResult.Failure -> logVolleyError("unblock blog", result.error)
                     result.response?.optBoolean("success") != true ->
                         AppLog.w(T.READER, "failed to unblock blog ${blockResult.blogId}")
-                    blockResult.wasFollowing -> followBlog(blockResult.blogId, blockResult.feedId, true, source)
                 }
             }
         }
@@ -328,6 +326,9 @@ class ReaderBlogRepository @Inject constructor(
 
     private fun undoBlockBlogLocal(blockResult: BlockedBlogResult) {
         ReaderBlockedBlogTable.whitelistBlogLocally(blockResult.blogId)
+        // the server restores the subscription when the site is unblocked, so restore it here too - asking the
+        // server to follow it again fails because it's already followed
+        if (blockResult.wasFollowing) setBlogFollowedLocal(blockResult.blogId, true)
         restorePosts(blockResult.deletedRows)
     }
 
