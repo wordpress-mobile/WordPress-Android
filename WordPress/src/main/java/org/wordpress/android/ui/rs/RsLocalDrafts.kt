@@ -49,7 +49,11 @@ class RsLocalDrafts @Inject constructor(
             // its own: nothing is shared, and nothing cached by an earlier load can be stale.
             val tracker = uploadStatusTrackerProvider.get()
             postStore.getLocalDraftPosts(site)
-                .sortedByDescending { it.dateLocallyChangedMillis() }
+                // A failed upload stamps the change date too, so a batch that fails together ties; newest
+                // created (highest local id) first keeps those in a sensible order.
+                .sortedWith(
+                    compareByDescending<PostModel> { it.dateLocallyChangedMillis() }.thenByDescending { it.id }
+                )
                 .map { it.toUiModel(site, tracker, nowLabel, dateFormat) }
         }
 

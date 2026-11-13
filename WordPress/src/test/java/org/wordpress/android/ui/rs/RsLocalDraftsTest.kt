@@ -58,11 +58,21 @@ class RsLocalDraftsTest : BaseUnitTest() {
 
     @Test
     fun `local drafts are listed most recently changed first`() = test {
-        val older = localDraft(id = 1, dateLocallyChanged = OLDER)
-        val newer = localDraft(id = 2, dateLocallyChanged = NEWER)
+        // The older draft has the higher id, so the change date has to win over the tie-breaker.
+        val older = localDraft(id = 2, dateLocallyChanged = OLDER)
+        val newer = localDraft(id = 1, dateLocallyChanged = NEWER)
         whenever(postStore.getLocalDraftPosts(site)).thenReturn(listOf(older, newer))
 
-        assertThat(load().map { it.localId }).containsExactly(2, 1)
+        assertThat(load().map { it.localId }).containsExactly(1, 2)
+    }
+
+    @Test
+    fun `drafts changed at the same moment are listed newest created first`() = test {
+        // As after a batch of uploads fails together: each failure stamps the same change date.
+        val drafts = listOf(1, 2, 3).map { localDraft(id = it, dateLocallyChanged = NEWER) }
+        whenever(postStore.getLocalDraftPosts(site)).thenReturn(drafts)
+
+        assertThat(load().map { it.localId }).containsExactly(3, 2, 1)
     }
 
     @Test
