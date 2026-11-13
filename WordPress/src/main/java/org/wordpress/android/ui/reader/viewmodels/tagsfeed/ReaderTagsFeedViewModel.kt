@@ -355,70 +355,20 @@ class ReaderTagsFeedViewModel @Inject constructor(
         likePostRemote(postItem, isPostLikedUpdated)
     }
 
+    /*
+     * sets the like state on every card showing the post, starting from each card as it is now
+     */
     private fun updatePostItemUI(
         postItemToUpdate: TagsFeedPostItem,
         isPostLikedUpdated: Boolean,
         isLikeButtonEnabled: Boolean,
-    ) {
-        val uiState = _uiStateFlow.value as? UiState.Loaded ?: return
-        // Finds the TagFeedItem associated with the post that should be updated. Return if the item is
-        // not found.
-        val tagFeedItemToUpdate = findTagFeedItemToUpdate(uiState, postItemToUpdate) ?: return
-
-        // Finds the index associated with the TagFeedItem to be updated found above. Return if the index is not found.
-        val tagFeedItemToUpdateIndex = uiState.data.indexOf(tagFeedItemToUpdate)
-        if (tagFeedItemToUpdateIndex != -1 && tagFeedItemToUpdate.postList is PostList.Loaded) {
-            // Creates a new post list items collection with the post item updated values
-            val updatedTagFeedItemPostListItems = getPostListWithUpdatedPostItem(
-                postList = tagFeedItemToUpdate.postList,
-                postItemToUpdate = postItemToUpdate,
-                isPostLikedUpdated = isPostLikedUpdated,
-                isLikeButtonEnabled = isLikeButtonEnabled,
-            )
-            // Creates a copy of the TagFeedItem with the updated post list items collection
-            val updatedTagFeedItem = tagFeedItemToUpdate.copy(
-                postList = tagFeedItemToUpdate.postList.copy(
-                    items = updatedTagFeedItemPostListItems
-                )
-            )
-            // Creates a new TagFeedItem collection with the updated TagFeedItem
-            val updatedUiStateData = mutableListOf<TagFeedItem>().apply {
-                addAll(uiState.data)
-                this[tagFeedItemToUpdateIndex] = updatedTagFeedItem
-            }
-            // Updates the UI state value with the updated TagFeedItem collection
-            _uiStateFlow.value = uiState.copy(data = updatedUiStateData)
+    ) = updatePostItems { item ->
+        if (item.isSamePost(postItemToUpdate)) {
+            item.copy(isPostLiked = isPostLikedUpdated, isLikeButtonEnabled = isLikeButtonEnabled)
+        } else {
+            item
         }
     }
-
-    private fun getPostListWithUpdatedPostItem(
-        postList: PostList.Loaded,
-        postItemToUpdate: TagsFeedPostItem,
-        isPostLikedUpdated: Boolean,
-        isLikeButtonEnabled: Boolean
-    ) =
-        postList.items.toMutableList().apply {
-            val postItemToUpdateIndex =
-                indexOfFirst {
-                    it.postId == postItemToUpdate.postId && it.blogId == postItemToUpdate.blogId
-                }
-            if (postItemToUpdateIndex != -1) {
-                this[postItemToUpdateIndex] = postItemToUpdate.copy(
-                    isPostLiked = isPostLikedUpdated,
-                    isLikeButtonEnabled = isLikeButtonEnabled,
-                )
-            }
-        }
-
-    private fun findTagFeedItemToUpdate(
-        uiState: UiState.Loaded,
-        postItemToUpdate: TagsFeedPostItem
-    ) =
-        uiState.data.firstOrNull { tagFeedItem ->
-            tagFeedItem.postList is PostList.Loaded && tagFeedItem.postList.items.firstOrNull {
-                it.postId == postItemToUpdate.postId && it.blogId == postItemToUpdate.blogId
-            } != null
-        }
 
     private fun likePostRemote(postItem: TagsFeedPostItem, isPostLikedUpdated: Boolean) {
         launch {
@@ -469,8 +419,6 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     private fun onPostMoreMenuClick(postItem: TagsFeedPostItem) {
         readerTracker.track(AnalyticsTracker.Stat.POST_CARD_MORE_TAPPED)
-        // the row is found now, since the same post can be shown under more than one tag
-        val tagSlug = findTagFeedItemShowing(postItem)?.tagChip?.tag?.tagSlug ?: return
         launch {
             findPost(postItem.postId, postItem.blogId)?.let { post ->
                 val items = readerPostMoreButtonUiStateBuilder.buildMoreMenuItems(
@@ -479,39 +427,31 @@ class ReaderTagsFeedViewModel @Inject constructor(
                     onButtonClicked = ::onMoreMenuButtonClicked,
                 )
                 val moreMenu = TagsFeedMoreMenu(items, onDismiss = ::closeMoreMenu)
-                updatePostItems { tagFeedItem, item ->
-                    val isCard = tagFeedItem.tagChip.tag.tagSlug == tagSlug &&
-                            item.postId == postItem.postId && item.blogId == postItem.blogId
-                    // only one menu is open at a time
+                // only the tapped card, since a post under two tags has a card in each row
+                updatePostItems { item ->
+                    val isCard = item.tagSlug == postItem.tagSlug && item.isSamePost(postItem)
                     item.withMoreMenu(if (isCard) moreMenu else null)
                 }
             }
         }
     }
 
-    private fun closeMoreMenu() = updatePostItems { _, item -> item.withMoreMenu(null) }
+    private fun closeMoreMenu() = updatePostItems { it.withMoreMenu(null) }
 
-    // unchanged cards keep their instance, which findTagFeedItemShowing relies on
     private fun TagsFeedPostItem.withMoreMenu(moreMenu: TagsFeedMoreMenu?) =
         if (this.moreMenu == moreMenu) this else copy(moreMenu = moreMenu)
 
-    /*
-     * the row showing this card: by identity, since a post under two tags gives two equal cards, falling back to
-     * the first row with the post if the card has been replaced since
-     */
-    private fun findTagFeedItemShowing(postItem: TagsFeedPostItem): TagFeedItem? {
-        val rows = (_uiStateFlow.value as? UiState.Loaded)?.data ?: return null
-        fun TagFeedItem.cards() = (postList as? PostList.Loaded)?.items.orEmpty()
-        fun TagFeedItem.hasPost() = cards().any { it.postId == postItem.postId && it.blogId == postItem.blogId }
-        return rows.firstOrNull { row -> row.cards().any { it === postItem } } ?: rows.firstOrNull { it.hasPost() }
-    }
+    private fun TagsFeedPostItem.isSamePost(other: TagsFeedPostItem) = postId == other.postId && blogId == other.blogId
 
-    private fun updatePostItems(transform: (TagFeedItem, TagsFeedPostItem) -> TagsFeedPostItem) {
+    /*
+     * applies [transform] to the cards as they are now, atomically, so it can't undo a change made since the tap
+     */
+    private fun updatePostItems(transform: (TagsFeedPostItem) -> TagsFeedPostItem) {
         _uiStateFlow.update { uiState ->
             if (uiState !is UiState.Loaded) return@update uiState
             uiState.copy(data = uiState.data.map { tagFeedItem ->
                 val postList = tagFeedItem.postList as? PostList.Loaded ?: return@map tagFeedItem
-                tagFeedItem.copy(postList = postList.copy(items = postList.items.map { transform(tagFeedItem, it) }))
+                tagFeedItem.copy(postList = postList.copy(items = postList.items.map(transform)))
             })
         }
     }

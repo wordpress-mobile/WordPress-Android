@@ -513,6 +513,8 @@ data class TagsFeedPostItem(
     val onPostCardClick: (TagsFeedPostItem) -> Unit,
     val onPostLikeClick: (TagsFeedPostItem) -> Unit,
     val onPostMoreMenuClick: (TagsFeedPostItem) -> Unit,
+    // the tag whose row shows this card, since a post under two tags has a card in each
+    val tagSlug: String = "",
     // set by the view model while this card's more menu is open
     val moreMenu: TagsFeedMoreMenu? = null,
 )
