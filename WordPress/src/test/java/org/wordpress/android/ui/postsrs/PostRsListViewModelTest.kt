@@ -11,14 +11,19 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
+import org.mockito.kotlin.stub
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.timeout
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -32,6 +37,8 @@ import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.rs.RsFluxCBridge
+import org.wordpress.android.ui.rs.RsLocalDraftUiModel
+import org.wordpress.android.ui.rs.RsLocalDrafts
 import org.wordpress.android.ui.rs.RsReveal
 import org.wordpress.android.ui.rs.data.RsSiteRestClient
 import org.wordpress.android.ui.rs.data.WpServiceProvider
@@ -60,6 +67,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var statsDataSource: StatsDataSource
     @Mock lateinit var commentCountFetcher: RsCommentCountFetcher
     @Mock lateinit var dispatcher: Dispatcher
+    @Mock lateinit var localDraftsSource: RsLocalDrafts
 
     private lateinit var site: SiteModel
     private lateinit var changeListener: RsPostChangeListener
@@ -77,6 +85,13 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             .thenReturn(AuthorFilterSelection.EVERYONE)
         whenever(resourceProvider.getString(any())).thenReturn("error")
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        stubLocalDrafts(emptyList())
+    }
+
+    private fun stubLocalDrafts(drafts: List<RsLocalDraftUiModel>) {
+        localDraftsSource.stub {
+            on { load(any(), any(), anyOrNull()) } doReturn drafts
+        }
     }
 
     @After
@@ -100,6 +115,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         changeListener = changeListener,
         statsDataSource = statsDataSource,
         commentCountFetcher = commentCountFetcher,
+        localDraftsSource = localDraftsSource,
     ).also { activeViewModel = it }
 
     @Test
@@ -728,9 +744,154 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     // endregion
+
+    // region Local drafts
+
+    @Test
+    fun `local drafts are loaded when the screen becomes visible`() = test {
+        stubLocalDrafts(listOf(localDraft()))
+        val viewModel = createViewModel()
+
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        assertThat(viewModel.localDrafts.value).containsExactly(localDraft())
+    }
+
+    @Test
+    fun `a failed upload reloads local drafts without refreshing the server list`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(postUpload(), false).apply { error = genericPostError() })
+        advanceUntilIdle()
+
+        verifyBlocking(localDraftsSource, times(2)) { load(any(), any(), anyOrNull()) }
+        verify(restClient, never()).clearCaches()
+    }
+
+    @Test
+    fun `a successful upload reloads local drafts`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(postUpload(), false))
+        advanceUntilIdle()
+
+        verifyBlocking(localDraftsSource, times(2)) { load(any(), any(), anyOrNull()) }
+    }
+
+    @Test
+    fun `a local draft opens in the editor`() = test {
+        val post = postUpload()
+        whenever(localDraftsSource.open(site, LOCAL_DRAFT_ID)).thenReturn(post)
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        viewModel.events.test {
+            viewModel.openLocalDraft(LOCAL_DRAFT_ID)
+
+            assertThat(awaitItem()).isEqualTo(PostRsListEvent.EditPost(site, post))
+        }
+        verify(analyticsTracker).track(
+            Stat.POST_LIST_ITEM_SELECTED,
+            site,
+            mapOf("action" to "edit", "is_local_draft" to true)
+        )
+    }
+
+    @Test
+    fun `a second tap on a local draft opens nothing until the screen is back`() = test {
+        val post = postUpload()
+        whenever(localDraftsSource.open(site, LOCAL_DRAFT_ID)).thenReturn(post)
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        viewModel.events.test {
+            viewModel.openLocalDraft(LOCAL_DRAFT_ID)
+            viewModel.openLocalDraft(LOCAL_DRAFT_ID)
+            assertThat(awaitItem()).isEqualTo(PostRsListEvent.EditPost(site, post))
+            expectNoEvents()
+
+            viewModel.onScreenVisible()
+            viewModel.openLocalDraft(LOCAL_DRAFT_ID)
+            assertThat(awaitItem()).isEqualTo(PostRsListEvent.EditPost(site, post))
+        }
+    }
+
+    @Test
+    fun `a local draft that is uploading or queued is not opened`() = test {
+        whenever(localDraftsSource.isUploadingOrQueued(site, LOCAL_DRAFT_ID)).thenReturn(true)
+        whenever(resourceProvider.getString(R.string.editor_uploading_draft)).thenReturn("Uploading")
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        viewModel.snackbarMessages.test {
+            viewModel.openLocalDraft(LOCAL_DRAFT_ID)
+
+            assertThat(awaitItem().message).isEqualTo("Uploading")
+        }
+        advanceUntilIdle()
+        verify(localDraftsSource, never()).open(any(), any())
+        verifyBlocking(localDraftsSource) { load(any(), any(), anyOrNull()) }
+    }
+
+    @Test
+    fun `a local draft that is gone is not opened, and the drafts are reloaded`() = test {
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        viewModel.events.test {
+            viewModel.openLocalDraft(LOCAL_DRAFT_ID)
+            advanceUntilIdle()
+
+            expectNoEvents()
+        }
+        verifyBlocking(localDraftsSource) { load(any(), any(), anyOrNull()) }
+    }
+
+    @Test
+    fun `retry restarts the upload and reloads the drafts`() = test {
+        val viewModel = createViewModel()
+
+        viewModel.retryLocalDraft(LOCAL_DRAFT_ID)
+        advanceUntilIdle()
+
+        verify(localDraftsSource).retry(site, LOCAL_DRAFT_ID)
+        verifyBlocking(localDraftsSource) { load(any(), any(), anyOrNull()) }
+        verify(analyticsTracker).track(
+            Stat.POST_LIST_BUTTON_PRESSED,
+            site,
+            mapOf("action" to "retry", "is_local_draft" to true)
+        )
+    }
+
+    @Test
+    fun `retry offline does not start an upload`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        val viewModel = createViewModel()
+
+        viewModel.retryLocalDraft(LOCAL_DRAFT_ID)
+
+        verify(localDraftsSource, never()).retry(any(), any())
+    }
+
+    private fun localDraft() = RsLocalDraftUiModel(
+        localId = LOCAL_DRAFT_ID,
+        title = "Title",
+        dateLabel = "Modified: Jan 1, 2024",
+        isUploadFailed = false,
+    )
+
+    private fun genericPostError() = PostStore.PostError(PostStore.PostErrorType.GENERIC_ERROR)
+
+    // endregion
 }
 
 private const val UPLOADED_POST_ID = 4242L
+private const val LOCAL_DRAFT_ID = 11
 private const val PUBLISHED_ROW_ID = 1L
 private const val DRAFT_ROW_ID = 99L
 private const val FETCH_TIMEOUT_MS = 2_000L
