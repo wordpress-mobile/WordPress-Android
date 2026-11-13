@@ -16,6 +16,13 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** Reader → Saved; the bookmark button on Reader posts
   - **Notes:** Until the device's saves have been added to the account, the Saved tab keeps showing the device's own list. Saves the account refuses (it holds at most 1,000) stay on the device, marked "On this device only". The one-time dialog shown on the first save now says saved posts sync across devices. Signing out removes the saved posts from the device once they're on the account. A post saved elsewhere can't be opened offline.
 
+- **Reblogging from a site's or tag's post list confirms the result**
+  After you reblog a post from a site's or a tag's post list and leave the editor, the post list now shows the editor's result snackbar (for example, that the post was published or saved as a draft), and another when the upload finishes. Previously neither appeared there, though the reblog itself worked.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → tap a site name or a tag → a post's Reblog button → editor → back
+
 - **Reader: a site unblocked on the web shows its posts again in the app**
   If you blocked a site in the app's Reader and later unblocked it on the web, the site's posts now come back the next time the app refreshes the sites you follow. Before, the site was back in your subscriptions but its stream stayed at "This blog is empty" until you logged out and back in.
   - **Apps:** Both

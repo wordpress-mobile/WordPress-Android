@@ -190,16 +190,9 @@ class ReaderPostRepository @Inject constructor(
                 "&lang=" + perAppLocaleManager.getCurrentLocaleLanguageCode()
 
         AppLog.d(AppLog.T.READER, "reader search > starting search for $query")
-        val jsonObject = suspendCancellableCoroutine<JSONObject?> { cont ->
-            val listener = RestRequest.Listener { json: JSONObject? ->
-                if (cont.isActive) cont.resume(json)
-            }
-            val errorListener = RestRequest.ErrorListener { volleyError ->
-                AppLog.e(AppLog.T.READER, volleyError)
-                if (cont.isActive) cont.resume(null)
-            }
+        val jsonObject = awaitRestRequest { listener, errorListener ->
             getRestClientUtilsV1_2().get(path, null, null, listener, errorListener)
-        } ?: return false
+        }.response ?: return false
 
         withContext(ioDispatcher) {
             val serverPosts = ReaderPostList.fromJson(jsonObject)

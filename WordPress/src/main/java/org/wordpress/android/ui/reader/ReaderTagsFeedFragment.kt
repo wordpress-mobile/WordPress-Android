@@ -4,31 +4,44 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.ListPopupWindow
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.core.view.isVisible
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commitNow
 import androidx.fragment.app.viewModels
+import androidx.fragment.compose.AndroidFragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.databinding.ReaderTagFeedFragmentLayoutBinding
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.compose.theme.AppThemeM3WithoutBackground
 import org.wordpress.android.ui.main.WPMainActivity
-import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModelProvider
@@ -38,6 +51,8 @@ import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.ActionEvent
+import org.wordpress.android.ui.reader.views.compose.RetainedComposeView
+import org.wordpress.android.ui.reader.views.compose.enableNestedScrollInterop
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.ReaderTagsFeed
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.getSerializableCompat
@@ -46,16 +61,11 @@ import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 /**
- * Initial implementation of ReaderTagsFeedFragment with the idea of it containing both a ComposeView, which will host
- * all Compose content related to the new Tags Feed as well as an internal ReaderPostListFragment, which will be used
- * to display "filtered" content based on the currently selected tag on the top app bar filter.
- *
- * It might be tricky to get this working properly since a lot of places expect the ReaderPostListFragment to be the
- * main content of the ReaderFragment (e.g.: initializing the SubFilterViewModel), so a few changes might be needed.
+ * The Tags feed: a row of recent posts for each followed tag. Picking a tag in the top bar's filter fades in that
+ * tag's post list over the rows.
  */
 @AndroidEntryPoint
-class ReaderTagsFeedFragment : Fragment(R.layout.reader_tag_feed_fragment_layout),
-    WPMainActivity.OnScrollToTopListener {
+class ReaderTagsFeedFragment : Fragment(), WPMainActivity.OnScrollToTopListener {
     private val tagsFeedTag by lazy {
         // TODO maybe we can just create a static function somewhere that returns the Tags Feed ReaderTag, since it's
         //  used in multiple places, client-side only, and always the same.
@@ -77,30 +87,37 @@ class ReaderTagsFeedFragment : Fragment(R.layout.reader_tag_feed_fragment_layout
     @Inject
     lateinit var uiHelpers: UiHelpers
 
-    // binding
-    private lateinit var binding: ReaderTagFeedFragmentLayoutBinding
-
     private var bookmarksSavedLocallyDialog: AlertDialog? = null
 
     private var readerPostListActivityResultLauncher: ActivityResultLauncher<Intent>? = null
 
+    // the tag the top bar's filter is set to, if any, and the last one shown, which stays while the list fades out
+    private var filteredTag by mutableStateOf<ReaderTag?>(null)
+    private var shownTag by mutableStateOf<ReaderTag?>(null)
+
+    // retained, since the filtered tag's list is a fragment hosted with AndroidFragment
+    private val contentView = RetainedComposeView(this) {
+        AppThemeM3WithoutBackground {
+            TagsFeedContent()
+        }
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        contentView.view()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = ReaderTagFeedFragmentLayoutBinding.bind(view)
-
-        binding.composeView.setContent {
-            AppThemeM3WithoutBackground {
-                val uiState by viewModel.uiStateFlow.collectAsState()
-                ReaderTagsFeed(uiState)
-            }
-        }
         observeSubFilterViewModel(savedInstanceState)
         observeActionEvents()
         observeNavigationEvents()
         observeErrorMessageEvents()
         observeSnackbarEvents()
-        observeOpenMoreMenuEvents()
         viewModel.onViewCreated()
+    }
+
+    override fun onDestroyView() {
+        contentView.onDestroyView()
+        super.onDestroyView()
     }
 
     override fun onDestroy() {
@@ -111,6 +128,42 @@ class ReaderTagsFeedFragment : Fragment(R.layout.reader_tag_feed_fragment_layout
     override fun onAttach(context: Context) {
         super.onAttach(context)
         initReaderPostListActivityResultLauncher()
+    }
+
+    @Composable
+    private fun TagsFeedContent() {
+        val overlayState = remember { MutableTransitionState(false) }
+        overlayState.targetState = filteredTag != null
+        // once the list has faded in, the rows under it are hidden from drawing and from TalkBack, but stay composed
+        // so they keep their scroll position
+        val isFeedCovered = overlayState.isIdle && overlayState.currentState
+        Box(modifier = Modifier.fillMaxSize()) {
+            Box(
+                modifier = if (isFeedCovered) Modifier.alpha(0f).clearAndSetSemantics {} else Modifier
+            ) {
+                val uiState by viewModel.uiStateFlow.collectAsState()
+                ReaderTagsFeed(uiState)
+            }
+            AnimatedVisibility(
+                visibleState = overlayState,
+                // passes the list's scrolling on, so the Reader's top bar still hides as it scrolls
+                modifier = Modifier.nestedScroll(rememberNestedScrollInteropConnection()),
+                // delayed to give the list time to load some content
+                enter = fadeIn(tween(POST_LIST_FADE_DURATION, delayMillis = POST_LIST_FADE_IN_DELAY)),
+                exit = fadeOut(tween(POST_LIST_FADE_DURATION))
+            ) {
+                shownTag?.let { tag ->
+                    key(tag.tagSlug) {
+                        AndroidFragment<ReaderPostListFragment>(
+                            modifier = Modifier.fillMaxSize(),
+                            arguments = remember {
+                                ReaderPostListFragment.argumentsForTag(tag, ReaderTypes.ReaderPostListType.TAG_FOLLOWED)
+                            }
+                        ) { it.enableNestedScrollInterop() }
+                    }
+                }
+            }
+        }
     }
 
     private fun observeSubFilterViewModel(savedInstanceState: Bundle?) {
@@ -127,11 +180,9 @@ class ReaderTagsFeedFragment : Fragment(R.layout.reader_tag_feed_fragment_layout
         }
 
         subFilterViewModel.currentSubFilter.observe(viewLifecycleOwner) { subFilter ->
-            if (subFilter is SubfilterListItem.Tag) {
-                showTagPostList(subFilter.tag)
-            } else {
-                hideTagPostList()
-            }
+            val tag = (subFilter as? SubfilterListItem.Tag)?.tag
+            if (tag != null) shownTag = tag
+            filteredTag = tag
         }
     }
 
@@ -167,70 +218,6 @@ class ReaderTagsFeedFragment : Fragment(R.layout.reader_tag_feed_fragment_layout
                 }
             }
         }
-    }
-
-    private fun showTagPostList(tag: ReaderTag) {
-        startPostListFragment(tag)
-        binding.postListContainer.fadeIn(
-            withEndAction = { binding.composeView.isVisible = false },
-        )
-    }
-
-    private fun hideTagPostList() {
-        binding.composeView.isVisible = true
-        binding.postListContainer.fadeOut(
-            withEndAction = { removeCurrentPostListFragment() },
-        )
-    }
-
-    private fun startPostListFragment(tag: ReaderTag) {
-        val tagPostListFragment = ReaderPostListFragment.newInstanceForTag(
-            tag,
-            ReaderTypes.ReaderPostListType.TAG_FOLLOWED
-        )
-
-        childFragmentManager.commitNow {
-            replace(R.id.post_list_container, tagPostListFragment)
-        }
-    }
-
-    private fun removeCurrentPostListFragment() {
-        if (isAdded) {
-            childFragmentManager.run {
-                findFragmentById(R.id.post_list_container)?.let {
-                    commitNow {
-                        remove(it)
-                    }
-                }
-            }
-        }
-    }
-
-    private fun View.fadeIn(
-        withEndAction: (() -> Unit)? = null
-    ) {
-        alpha = 0f
-        isVisible = true
-
-        this.animate()
-            // add quick delay to give time for the fragment to be added and load some content
-            .setStartDelay(POST_LIST_FADE_IN_DELAY)
-            .setDuration(POST_LIST_FADE_DURATION)
-            .withEndAction { withEndAction?.invoke() }
-            .alpha(1f)
-    }
-
-    private fun View.fadeOut(
-        withEndAction: (() -> Unit)? = null,
-    ) {
-        this.animate()
-            .withEndAction {
-                isVisible = false
-                alpha = 1f
-                withEndAction?.invoke()
-            }
-            .setDuration(POST_LIST_FADE_DURATION)
-            .alpha(0f)
     }
 
     @Suppress("LongMethod")
@@ -284,7 +271,7 @@ class ReaderTagsFeedFragment : Fragment(R.layout.reader_tag_feed_fragment_layout
     }
 
     // the main activity's coordinator, which sits above the bottom navigation
-    private fun snackbarParent(): View = requireActivity().findViewById(R.id.coordinator) ?: binding.root
+    private fun snackbarParent(): View = requireActivity().findViewById(R.id.coordinator) ?: requireView()
 
     private fun observeSnackbarEvents() {
         viewModel.snackbarEvents.observeEvent(viewLifecycleOwner) { snackbarMessageHolder ->
@@ -302,31 +289,6 @@ class ReaderTagsFeedFragment : Fragment(R.layout.reader_tag_feed_fragment_layout
                     }
                     snackbar.show()
                 }
-            }
-        }
-    }
-
-    private fun observeOpenMoreMenuEvents() {
-        viewModel.openMoreMenuEvents.observe(viewLifecycleOwner) {
-            val readerCardUiState = it.readerCardUiState
-            val blogId = readerCardUiState.blogId
-            val postId = readerCardUiState.postId
-            val anchorView = binding.composeView.findViewWithTag<View>("$blogId$postId")
-            if (anchorView != null) {
-                readerTracker.track(AnalyticsTracker.Stat.POST_CARD_MORE_TAPPED)
-                val listPopup = ListPopupWindow(anchorView.context)
-                listPopup.width = anchorView.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
-                listPopup.setAdapter(ReaderMenuAdapter(anchorView.context, uiHelpers, it.readerPostCardActions))
-                listPopup.setDropDownGravity(Gravity.END)
-                listPopup.anchorView = anchorView
-                listPopup.isModal = true
-                listPopup.setOnItemClickListener { _, _, position, _ ->
-                    listPopup.dismiss()
-                    val item = it.readerPostCardActions[position]
-                    item.onClicked?.invoke(postId, blogId, item.type)
-                }
-                listPopup.setOnDismissListener { readerCardUiState.onMoreDismissed.invoke(readerCardUiState) }
-                listPopup.show()
             }
         }
     }
@@ -379,8 +341,8 @@ class ReaderTagsFeedFragment : Fragment(R.layout.reader_tag_feed_fragment_layout
         const val RESULT_SHOULD_REFRESH_TAGS_FEED = "RESULT_SHOULD_REFRESH_TAGS_FEED"
 
         private const val ARG_TAGS_FEED_TAG = "tags_feed_tag"
-        private const val POST_LIST_FADE_DURATION = 250L
-        private const val POST_LIST_FADE_IN_DELAY = 300L
+        private const val POST_LIST_FADE_DURATION = 250
+        private const val POST_LIST_FADE_IN_DELAY = 300
 
         /*
          * arguments for the tags feed, which the Reader tab hosts with AndroidFragment

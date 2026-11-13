@@ -60,9 +60,7 @@ object ReaderConstants {
     internal const val KEY_RESTORE_POSITION = "restore_position"
     internal const val KEY_WAS_PAUSED = "was_paused"
     internal const val KEY_ERROR_MESSAGE = "error_message"
-    internal const val KEY_ACTIVITY_TITLE = "activity_title"
     internal const val KEY_TRACKED_POSITIONS = "tracked_positions"
-    internal const val KEY_SITE_ID = "site_id"
 
     internal const val KEY_ALREADY_TRACKED_GLOBAL_RELATED_POSTS = "already_tracked_global_related_posts"
     internal const val KEY_ALREADY_TRACKED_LOCAL_RELATED_POSTS = "already_tracked_local_related_posts"

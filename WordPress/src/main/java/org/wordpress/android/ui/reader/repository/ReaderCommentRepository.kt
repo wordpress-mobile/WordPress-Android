@@ -1,8 +1,7 @@
 package org.wordpress.android.ui.reader.repository
 
 import androidx.core.database.sqlite.transaction
-import com.android.volley.Request
-import com.wordpress.rest.RestRequest
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -219,9 +218,9 @@ class ReaderCommentRepository @Inject constructor(
     private suspend fun fetchPage(blogId: Long, postId: Long, page: Int, count: Int): UpdateResult {
         val path = "sites/$blogId/posts/$postId/replies/?number=$count&meta=likes&force=wpcom" +
             "&hierarchical=true&order=ASC&page=$page"
-        val json = request { listener, errorListener ->
+        val json = awaitRestRequest(cancelWithCaller = true) { listener, errorListener ->
             WordPress.getRestClientUtilsV1_1().getWithLocale(path, null, null, listener, errorListener)
-        } ?: return UpdateResult.FAILED
+        }.response ?: return UpdateResult.FAILED
         return withContext(NonCancellable + ioDispatcher) { saveComments(json, blogId, postId, page) }
     }
 
@@ -250,28 +249,17 @@ class ReaderCommentRepository @Inject constructor(
         return if (comments.isNotEmpty()) UpdateResult.HAS_NEW else UpdateResult.UNCHANGED
     }
 
-    // a POST isn't cancelled with the caller, since the server may already have acted on it
-    private suspend fun post(path: String, params: Map<String, String>?): JSONObject? =
-        request { listener, errorListener ->
-            WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener)
-            null
-        }
-
     /**
-     * Runs a request and returns its response, or null if it fails. [start] returns the request when it
-     * can, so it's cancelled along with the caller.
+     * A POST isn't cancelled with the caller, since the server may already have acted on it. Volley cancels it
+     * at sign-out, though, which clears the Reader's data, so the caller is stopped as if it had been cancelled:
+     * that skips both its local writes and any failure message.
      */
-    private suspend fun request(
-        start: (RestRequest.Listener, RestRequest.ErrorListener) -> Request<*>?
-    ): JSONObject? = suspendCancellableCoroutine { continuation ->
-        val request = start(
-            { json -> if (continuation.isActive) continuation.resume(json) },
-            { volleyError ->
-                AppLog.e(T.READER, volleyError)
-                if (continuation.isActive) continuation.resume(null)
-            }
-        )
-        continuation.invokeOnCancellation { request?.cancel() }
+    private suspend fun post(path: String, params: Map<String, String>?): JSONObject? {
+        val result = awaitRestRequest { listener, errorListener ->
+            WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener)
+        }
+        if (result.isCancelled) throw CancellationException("$path was cancelled at sign-out")
+        return result.response
     }
 }
 

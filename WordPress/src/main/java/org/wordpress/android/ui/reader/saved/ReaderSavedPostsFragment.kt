@@ -26,7 +26,7 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyButton
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
-import org.wordpress.android.ui.reader.views.compose.postlist.ReaderPostListComposeView
+import org.wordpress.android.ui.reader.views.compose.MeasureOnLayoutComposeView
 import org.wordpress.android.widgets.WPSnackbar
 import uniffi.wp_api.ReaderSavedKey
 import uniffi.wp_mobile.ReaderSavedListItem
@@ -48,15 +48,12 @@ class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListene
             onUnsaveClicked = viewModel::onUnsaveClicked,
             onEmptyStateButtonClicked = ::onEmptyStateButtonClicked
         )
-        return ReaderPostListComposeView(requireContext(), listState) {
+        return MeasureOnLayoutComposeView(requireContext(), {
             AppThemeM3 {
                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
                 ReaderSavedPostsScreen(uiState = uiState, listState = listState, actions = actions)
             }
-        }.apply {
-            // the host activity's AppBarLayout uses this as its lift-on-scroll target
-            id = R.id.reader_post_list
-        }
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

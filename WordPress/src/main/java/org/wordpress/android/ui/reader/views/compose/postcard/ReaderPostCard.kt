@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -50,13 +47,10 @@ import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.CompactBlogSectionData
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.InteractionSectionData
-import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
-import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.image.ImagePlaceholderManager
 import org.wordpress.android.util.image.ImageType
 
@@ -350,35 +344,11 @@ private fun MoreMenu(uiState: ReaderPostUiState) {
             expanded = items != null,
             onDismissRequest = { uiState.onMoreDismissed(uiState) },
         ) {
-            items?.forEach { item -> MoreMenuItem(uiState, item) }
+            items?.forEach { item ->
+                // the item's handler re-binds the card without the menu items, which closes the menu
+                ReaderPostMoreMenuItem(item) { it.onClicked(uiState.postId, uiState.blogId, it.type) }
+            }
         }
-    }
-}
-
-@Composable
-private fun MoreMenuItem(uiState: ReaderPostUiState, item: ReaderPostCardAction) {
-    when (item) {
-        is SecondaryAction -> {
-            val context = LocalContext.current
-            DropdownMenuItem(
-                text = {
-                    Text(text = uiStringText(item.label), color = Color(context.getColorFromAttribute(item.labelColor)))
-                },
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(item.iconRes),
-                        contentDescription = null,
-                        tint = Color(context.getColorFromAttribute(item.iconColor)),
-                    )
-                },
-                // The item's handler re-binds the card without the menu items, which closes the menu
-                onClick = { item.onClicked(uiState.postId, uiState.blogId, item.type) },
-            )
-        }
-        is ReaderPostCardAction.SpacerNoAction -> {
-            HorizontalDivider(modifier = Modifier.padding(vertical = Margin.Small.value))
-        }
-        is PrimaryAction -> Unit // never part of the more menu
     }
 }
 

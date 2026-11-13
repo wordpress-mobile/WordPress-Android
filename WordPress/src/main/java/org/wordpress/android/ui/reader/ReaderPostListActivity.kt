@@ -3,18 +3,34 @@ package org.wordpress.android.ui.reader
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.core.os.BundleCompat
+import androidx.fragment.compose.AndroidFragment
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.databinding.ReaderActivityPostListBinding
 import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
@@ -24,6 +40,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.EditorConstants
@@ -31,6 +48,7 @@ import org.wordpress.android.ui.posts.EditorLauncher
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnBlogInfoFailedListener
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.views.compose.enableNestedScrollInterop
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
@@ -38,6 +56,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.onBackPressedCompat
+import org.wordpress.android.util.extensions.setContent
 import javax.inject.Inject
 
 /*
@@ -48,7 +67,7 @@ class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener
     private var source: String? = null
     private var postListType: ReaderPostListType = ReaderTypes.DEFAULT_POST_LIST_TYPE
     private var siteId: Long = 0
-    private lateinit var binding: ReaderActivityPostListBinding
+    private var listFragment: ReaderPostListFragment? = null
 
     @Inject
     lateinit var siteStore: SiteStore
@@ -77,17 +96,7 @@ class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ReaderActivityPostListBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        restoreState(savedInstanceState)
-        setupBackPressCallback()
-        setupToolbar()
-    }
-
-    private fun restoreState(savedInstanceState: Bundle?) {
         source = intent.getStringExtra(ReaderConstants.ARG_SOURCE)
-
         postListType = if (intent.hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
             BundleCompat.getSerializable(
                 intent.extras!!,
@@ -97,40 +106,89 @@ class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener
         } else {
             ReaderTypes.DEFAULT_POST_LIST_TYPE
         }
-
-        if (postListType == ReaderPostListType.BLOG_PREVIEW) {
-            setTitle(R.string.reader_activity_title_blog_preview)
-            if (savedInstanceState == null) {
-                val feedId = intent.getLongExtra(ReaderConstants.ARG_FEED_ID, 0)
-                if (feedId != 0L) {
-                    showListFragmentForFeed(feedId)
-                    siteId = feedId
-                } else {
-                    val blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0)
-                    showListFragmentForBlog(blogId)
-                    siteId = blogId
-                }
-            } else {
-                siteId = savedInstanceState.getLong(ReaderConstants.KEY_SITE_ID)
-            }
-        } else if (postListType == ReaderPostListType.TAG_PREVIEW) {
-            setTitle(R.string.reader_activity_title_tag_preview)
-            if (intent.hasExtra(ReaderConstants.ARG_TAG)) {
-                val tag =
-                    BundleCompat.getSerializable(
-                        intent.extras!!,
-                        ReaderConstants.ARG_TAG,
-                        ReaderTag::class.java
-                    )
-                if (tag != null && savedInstanceState == null) {
-                    showListFragmentForTag(tag, postListType)
-                }
+        // everything shown here comes from the intent, so there's no state to save; AndroidFragment restores the list
+        val listArguments = listArguments()
+        val title = screenTitle()
+        // also the window's title, which TalkBack announces and Recents shows
+        setTitle(title)
+        setupBackPressCallback()
+        setContent {
+            AppThemeM3 {
+                PostListScreen(title = title, listArguments = listArguments)
             }
         }
+    }
 
-        // restore the activity title
-        if (savedInstanceState?.containsKey(ReaderConstants.KEY_ACTIVITY_TITLE) == true) {
-            title = savedInstanceState.getString(ReaderConstants.KEY_ACTIVITY_TITLE)
+    /*
+     * the arguments for the list fragment, or null if there's nothing to show
+     */
+    private fun listArguments(): Bundle? = when (postListType) {
+        ReaderPostListType.BLOG_PREVIEW -> {
+            val feedId = intent.getLongExtra(ReaderConstants.ARG_FEED_ID, 0)
+            if (feedId != 0L) {
+                siteId = feedId
+                ReaderPostListFragment.argumentsForFeed(feedId)
+            } else {
+                siteId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0)
+                ReaderPostListFragment.argumentsForBlog(siteId)
+            }
+        }
+        ReaderPostListType.TAG_PREVIEW -> intent.extras
+            ?.let { BundleCompat.getSerializable(it, ReaderConstants.ARG_TAG, ReaderTag::class.java) }
+            ?.let { ReaderPostListFragment.argumentsForTag(it, postListType) }
+        else -> null
+    }
+
+    /*
+     * a feed shows its name; blogs and tags show their own header in the list, so the title is empty
+     */
+    private fun screenTitle(): String {
+        val feedId = intent.getLongExtra(ReaderConstants.ARG_FEED_ID, 0)
+        if (postListType != ReaderPostListType.BLOG_PREVIEW || feedId == 0L) return ""
+        return ReaderBlogTable.getFeedName(feedId).ifEmpty { getString(R.string.reader_activity_title_blog_preview) }
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    private fun PostListScreen(title: String, listArguments: Bundle?) {
+        val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+        Scaffold(
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            // BaseAppCompatActivity has already applied the window insets
+            contentWindowInsets = WindowInsets(0),
+            topBar = {
+                TopAppBar(
+                    title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                    navigationIcon = {
+                        IconButton(onClick = ::finish) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
+                        }
+                    },
+                    actions = {
+                        if (postListType == ReaderPostListType.BLOG_PREVIEW) {
+                            IconButton(onClick = ::shareSite) {
+                                Icon(
+                                    painterResource(R.drawable.ic_share_white_24dp),
+                                    stringResource(R.string.share_action)
+                                )
+                            }
+                        }
+                    },
+                    scrollBehavior = scrollBehavior
+                )
+            }
+        ) { contentPadding ->
+            listArguments?.let {
+                AndroidFragment<ReaderPostListFragment>(
+                    modifier = Modifier
+                        .padding(contentPadding)
+                        .fillMaxSize(),
+                    arguments = it
+                ) { fragment ->
+                    listFragment = fragment
+                    fragment.enableNestedScrollInterop()
+                }
+            }
         }
     }
 
@@ -148,61 +206,12 @@ class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener
     private fun setupBackPressCallback() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                val fragment = getListFragment()
-                if (fragment == null || !fragment.onActivityBackPressed()) {
+                if (listFragment?.onActivityBackPressed() != true) {
                     onBackPressedDispatcher.onBackPressedCompat(this)
                 }
             }
         }
         onBackPressedDispatcher.addCallback(this, callback)
-    }
-
-    private fun setupToolbar() {
-        setSupportActionBar(binding.toolbarMain)
-        supportActionBar?.let {
-            it.setDisplayShowTitleEnabled(true)
-            it.setDisplayHomeAsUpEnabled(true)
-        }
-
-        if (postListType == ReaderPostListType.TAG_PREVIEW || postListType == ReaderPostListType.BLOG_PREVIEW) {
-            binding.toolbarMain.setNavigationOnClickListener {
-                finish()
-            }
-        }
-    }
-
-    public override fun onSaveInstanceState(outState: Bundle) {
-        // store the title for blog/tag preview so we can restore it upon recreation
-        if (postListType == ReaderPostListType.BLOG_PREVIEW || postListType == ReaderPostListType.TAG_PREVIEW) {
-            outState.putString(ReaderConstants.KEY_ACTIVITY_TITLE, title.toString())
-            outState.putLong(ReaderConstants.KEY_SITE_ID, siteId)
-        }
-
-        super.onSaveInstanceState(outState)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        if (postListType == ReaderPostListType.BLOG_PREVIEW) {
-            menuInflater.inflate(R.menu.share, menu)
-        }
-
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                onBackPressedDispatcher.onBackPressed()
-                true
-            }
-
-            R.id.menu_share -> {
-                shareSite()
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
     @Suppress("SwallowedException")
@@ -240,75 +249,10 @@ class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener
         }
     }
 
-    /*
-     * show fragment containing list of latest posts for a specific tag
-     */
-    private fun showListFragmentForTag(tag: ReaderTag, listType: ReaderPostListType?) {
-        if (isFinishing) {
-            return
-        }
-        val fragment = ReaderPostListFragment.newInstanceForTag(tag, listType)
-        supportFragmentManager
-            .beginTransaction()
-            .replace(
-                R.id.fragment_container,
-                fragment,
-                getString(R.string.fragment_tag_reader_post_list)
-            )
-            .commit()
-        title = ""
-    }
-
-    /*
-     * show fragment containing list of latest posts in a specific blog
-     */
-    private fun showListFragmentForBlog(blogId: Long) {
-        if (isFinishing) {
-            return
-        }
-        val fragment = ReaderPostListFragment.newInstanceForBlog(blogId)
-        supportFragmentManager
-            .beginTransaction()
-            .replace(
-                R.id.fragment_container,
-                fragment,
-                getString(R.string.fragment_tag_reader_post_list)
-            )
-            .commit()
-        title = ""
-    }
-
-    private fun showListFragmentForFeed(feedId: Long) {
-        if (isFinishing) {
-            return
-        }
-        val fragment = ReaderPostListFragment.newInstanceForFeed(feedId)
-        supportFragmentManager
-            .beginTransaction()
-            .replace(
-                R.id.fragment_container,
-                fragment,
-                getString(R.string.fragment_tag_reader_post_list)
-            )
-            .commit()
-
-        var title = ReaderBlogTable.getFeedName(feedId)
-        if (title.isEmpty()) {
-            title = getString(R.string.reader_activity_title_blog_preview)
-        }
-        setTitle(title)
-    }
-
-    private fun getListFragment(): ReaderPostListFragment? {
-        val fragment =
-            supportFragmentManager.findFragmentByTag(getString(R.string.fragment_tag_reader_post_list))
-        return (fragment as? ReaderPostListFragment)
-    }
-
     /**
-     * Returns the view to attach the snackbar to. Note that this view isn't part of this activity.
+     * Returns the view to attach the snackbar to
      */
-    private fun getSnackbarAttachView(): View? = findViewById(R.id.coordinator)
+    private fun getSnackbarAttachView(): View? = findViewById(android.R.id.content)
 
     override fun onBlogInfoFailed() {
         appLogWrapper.d(AppLog.T.READER, "Blog or feed not found for siteId: $siteId")

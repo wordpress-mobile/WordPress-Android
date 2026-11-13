@@ -69,9 +69,9 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostListArgs
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListUiEvent
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
+import org.wordpress.android.ui.reader.views.compose.MeasureOnLayoutComposeView
 import org.wordpress.android.ui.reader.views.compose.ReaderScrollingFeed
 import org.wordpress.android.ui.reader.views.compose.postlist.ReaderPostListActions
-import org.wordpress.android.ui.reader.views.compose.postlist.ReaderPostListComposeView
 import org.wordpress.android.ui.reader.views.compose.postlist.ReaderPostListScreen
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DisplayUtils
@@ -494,7 +494,7 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
     ): View {
         val actions = buildActions()
         val listState = LazyListState(savedFirstVisibleIndex, savedFirstVisibleOffset).also { listState = it }
-        return ReaderPostListComposeView(requireContext(), listState) {
+        return MeasureOnLayoutComposeView(requireContext(), {
             AppThemeM3 {
                 val uiState by postListViewModel.uiState.collectAsStateWithLifecycle()
                 ReaderPostListScreen(
@@ -503,10 +503,7 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
                     actions = actions
                 )
             }
-        }.apply {
-            // the host activity's AppBarLayout uses this as its lift-on-scroll target
-            id = R.id.reader_post_list
-        }
+        })
     }
 
     override fun onDestroyView() {
@@ -892,24 +889,8 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
         private var hasPurgedReaderDb = false
 
         /*
-         * show posts with a specific tag (either TAG_FOLLOWED or TAG_PREVIEW)
-         */
-        @JvmOverloads
-        fun newInstanceForTag(
-            tag: ReaderTag,
-            listType: ReaderPostListType?,
-            isTopLevel: Boolean = false,
-            isFilterable: Boolean = false
-        ): ReaderPostListFragment {
-            AppLog.d(AppLog.T.READER, "reader post list > newInstance (tag)")
-
-            val fragment = ReaderPostListFragment()
-            fragment.arguments = argumentsForTag(tag, listType, isTopLevel, isFilterable)
-            return fragment
-        }
-
-        /*
-         * arguments for a tag's list, also used by the Reader and Discover tabs, which host it with AndroidFragment
+         * arguments for a tag's list, which the Reader and Discover tabs, the tags feed and tag preview host with
+         * AndroidFragment
          */
         fun argumentsForTag(
             tag: ReaderTag,
@@ -935,39 +916,15 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
         }
 
         /*
-         * show posts in a specific blog
+         * arguments for a blog's preview, which ReaderPostListActivity hosts with AndroidFragment
          */
-        fun newInstanceForBlog(blogId: Long): ReaderPostListFragment {
-            AppLog.d(AppLog.T.READER, "reader post list > newInstance (blog)")
-
-            val args = Bundle()
-            args.putLong(ReaderConstants.ARG_BLOG_ID, blogId)
-            args.putSerializable(
-                ReaderConstants.ARG_POST_LIST_TYPE,
-                ReaderPostListType.BLOG_PREVIEW
-            )
-
-            val fragment = ReaderPostListFragment()
-            fragment.arguments = args
-
-            return fragment
+        fun argumentsForBlog(blogId: Long) = Bundle().apply {
+            putLong(ReaderConstants.ARG_BLOG_ID, blogId)
+            putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW)
         }
 
-        fun newInstanceForFeed(feedId: Long): ReaderPostListFragment {
-            AppLog.d(AppLog.T.READER, "reader post list > newInstance (blog)")
-
-            val args = Bundle()
-            args.putLong(ReaderConstants.ARG_FEED_ID, feedId)
-            args.putLong(ReaderConstants.ARG_BLOG_ID, feedId)
-            args.putSerializable(
-                ReaderConstants.ARG_POST_LIST_TYPE,
-                ReaderPostListType.BLOG_PREVIEW
-            )
-
-            val fragment = ReaderPostListFragment()
-            fragment.arguments = args
-
-            return fragment
+        fun argumentsForFeed(feedId: Long) = argumentsForBlog(feedId).apply {
+            putLong(ReaderConstants.ARG_FEED_ID, feedId)
         }
     }
 }

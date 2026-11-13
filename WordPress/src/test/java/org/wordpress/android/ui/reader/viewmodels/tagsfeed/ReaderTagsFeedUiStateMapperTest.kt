@@ -113,6 +113,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
                         onPostLikeClick = onPostLikeClick,
                         onPostCardClick = onPostCardClick,
                         onPostMoreMenuClick = onPostMoreMenuClick,
+                        tagSlug = readerTag.tagSlug,
                     )
                 )
             ),
@@ -206,6 +207,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
                         onPostLikeClick = onPostLikeClick,
                         onPostCardClick = onPostCardClick,
                         onPostMoreMenuClick = onPostMoreMenuClick,
+                        tagSlug = readerTag.tagSlug,
                     )
                 )
             ),
@@ -298,6 +300,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
                         onPostLikeClick = onPostLikeClick,
                         onPostCardClick = onPostCardClick,
                         onPostMoreMenuClick = onPostMoreMenuClick,
+                        tagSlug = readerTag.tagSlug,
                     )
                 )
             ),
