@@ -58,6 +58,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Failed
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.NoNetwork
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Started
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase.FetchSiteState
@@ -506,6 +507,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 is PreLoadPostContent -> _preloadPostEvents.postValue(
                     Event(PreLoadPostContent(post.blogId, post.postId))
                 )
+                // the post reads as saved or unsaved already, so show it rather than wait for the server
+                is Started -> _refreshPosts.postValue(Event(Unit))
                 NoNetwork -> _snackbarEvents.postValue(
                     Event(SnackbarMessageHolder(UiStringRes(R.string.error_network_connection)))
                 )

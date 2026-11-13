@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.usecases
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -9,6 +10,7 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
+import org.mockito.Mockito.lenient
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
@@ -47,8 +49,11 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var savedPostsRepository: ReaderSavedPostsRepository
 
+    private val savedChanges = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+
     @Before
     fun setup() {
+        lenient().whenever(savedPostsRepository.changes).thenReturn(savedChanges)
         useCase = ReaderPostBookmarkUseCase(
             readerTracker,
             networkUtilsWrapper,
@@ -81,6 +86,22 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
 
         verify(readerPostRepository).setBookmarked(dummyPost, true)
         assertThat(result).containsExactly(BookmarkPostState.Success(true))
+    }
+
+    @Test
+    fun `when synced, the change shows as soon as the write starts, before the server answers`() = test {
+        val dummyPost = init(isBookmarked = false)
+        whenever(savedPostsRepository.isEnabled).thenReturn(true)
+        whenever(savedPostsRepository.isSaved(dummyPost)).thenReturn(false)
+        whenever(savedPostsRepository.setSaved(any(), eq(true), anyOrNull())).thenAnswer {
+            // what wordpress-rs does when the write starts
+            savedChanges.tryEmit(Unit)
+            true
+        }
+
+        val result = useCase.toggleBookmark(post(), true, SOURCE).toList(mutableListOf())
+
+        assertThat(result).containsExactly(BookmarkPostState.Started(true), BookmarkPostState.Success(true))
     }
 
     @Test

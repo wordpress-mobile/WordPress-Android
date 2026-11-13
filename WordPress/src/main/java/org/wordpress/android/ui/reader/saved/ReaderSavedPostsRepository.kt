@@ -3,6 +3,10 @@ package org.wordpress.android.ui.reader.saved
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.channels.BufferOverflow.DROP_OLDEST
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -26,6 +30,7 @@ import uniffi.wp_api.ReaderSavedSource
 import uniffi.wp_api.readerSavedKeyNormalized
 import uniffi.wp_api.readerSavedKeysForPost
 import uniffi.wp_mobile.ReaderSavedException
+import uniffi.wp_mobile.ReaderSavedObserver
 import uniffi.wp_mobile.ReaderSavedPostsCollection
 import uniffi.wp_mobile.ReaderSavedService
 import uniffi.wp_mobile.ReaderSavedStatus
@@ -56,6 +61,20 @@ class ReaderSavedPostsRepository @Inject constructor(
     @Volatile
     private var current: AccountService? = null
     private val importMutex = Mutex()
+
+    private val _changes = MutableSharedFlow<Unit>(extraBufferCapacity = 1, onBufferOverflow = DROP_OLDEST)
+
+    /**
+     * Emits when which posts are saved may have changed. A save or unsave emits as soon as it starts, before
+     * the server answers, since [isSaved] already reads the new state then, and again if the server refuses it.
+     */
+    val changes: SharedFlow<Unit> = _changes.asSharedFlow()
+
+    private val observer = object : ReaderSavedObserver {
+        override fun savedPostsChanged() {
+            _changes.tryEmit(Unit)
+        }
+    }
 
     val isEnabled: Boolean
         get() = experimentalFeatures.isEnabled(Feature.READER_SAVED_POSTS_SYNC) && accountStore.hasAccessToken()
@@ -237,7 +256,10 @@ class ReaderSavedPostsRepository @Inject constructor(
     @Synchronized
     private fun getService(): ReaderSavedService? {
         val userId = userId.takeIf { accountStore.hasAccessToken() && it > 0 } ?: return null
-        return peekService() ?: createService(userId)?.also { current = AccountService(userId, it) }
+        return peekService() ?: createService(userId)?.also {
+            it.setObserver(observer)
+            current = AccountService(userId, it)
+        }
     }
 
     private fun createService(userId: Long): ReaderSavedService? = try {
