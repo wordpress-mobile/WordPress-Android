@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Experimental block editor uploads follow the Media settings**
+  Photos and videos added from the device in the experimental block editor are now resized, compressed, and stripped of location as set in App Settings, as they already were in the classic editors. Before, they uploaded unchanged.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Flag: experimental_block_editor
+  - **Where:** Me → App Settings → Media (Optimize Images, Maximum Image Size, Image Quality, Remove location from media, Optimize Videos, Maximum Video Size, Video Quality); experimental block editor → Add media
+  - **Notes:** Customers turn the flag on in Me → App Settings → Experimental Features → Experimental block editor. Video optimization stays off unless the user turns it on, as in the classic editors. GIFs always upload unchanged so they keep animating.
+
 - **Reblogging from a site's or tag's post list confirms the result**
   After you reblog a post from a site's or a tag's post list and leave the editor, the post list now shows the editor's result snackbar (for example, that the post was published or saved as a draft), and another when the upload finishes. Previously neither appeared there, though the reblog itself worked.
   - **Apps:** Both

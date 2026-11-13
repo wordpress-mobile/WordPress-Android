@@ -27,7 +27,7 @@ class MediaUtilsStripLocationTest {
             assertThat(seeded.getAttribute(tag)).describedAs("seeded $tag").isNotNull
         }
 
-        MediaUtils.stripLocation(path)
+        assertThat(MediaUtils.stripLocation(path)).isTrue()
 
         val stripped = ExifInterface(path)
         assertThat(stripped.latLong).isNull()
@@ -37,6 +37,19 @@ class MediaUtilsStripLocationTest {
         assertThat(stripped.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED))
             .isEqualTo(ExifInterface.ORIENTATION_ROTATE_90)
         assertThat(stripped.getAttribute(ExifInterface.TAG_MAKE)).isEqualTo(MAKE)
+    }
+
+    @Test
+    fun `stripLocation reports a file it can't rewrite`() {
+        // ExifInterface sniffs the format from the bytes, so a misnamed file can't be saved.
+        val path = tempFolder.newFile("not-an-image.jpg").apply { writeText("not an image") }.absolutePath
+
+        assertThat(MediaUtils.stripLocation(path)).isFalse()
+    }
+
+    @Test
+    fun `stripLocation reports a missing path`() {
+        assertThat(MediaUtils.stripLocation(null)).isFalse()
     }
 
     private fun copyFixture(): String {
