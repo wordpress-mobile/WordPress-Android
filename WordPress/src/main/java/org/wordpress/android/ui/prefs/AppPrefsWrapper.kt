@@ -241,6 +241,10 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun shouldShowBookmarksSavedLocallyDialog(): Boolean = AppPrefs.shouldShowBookmarksSavedLocallyDialog()
     fun setBookmarksSavedLocallyDialogShown() = AppPrefs.setBookmarksSavedLocallyDialogShown()
 
+    fun isReaderSavedPostsImported(userId: Long): Boolean = AppPrefs.isReaderSavedPostsImported(userId)
+
+    fun setReaderSavedPostsImported(userId: Long) = AppPrefs.setReaderSavedPostsImported(userId)
+
     fun isPostListFabTooltipDisabled() = AppPrefs.isPostListFabTooltipDisabled()
     fun setPostListFabTooltipDisabled(disable: Boolean) = AppPrefs.setPostListFabTooltipDisabled(disable)
 

@@ -21,6 +21,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.TOGGLE_SEEN_STATUS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
@@ -34,6 +35,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
     private val seenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig,
+    private val savedPostsRepository: ReaderSavedPostsRepository,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     suspend fun buildMoreMenuItems(
@@ -54,7 +56,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
     ): MutableList<ReaderPostCardAction> {
         val menuItems = mutableListOf<ReaderPostCardAction>()
         val isPostFollowed = readerPostTableWrapper.isPostFollowed(post)
-        val isPostBookmarked = post.isBookmarked
+        val isPostBookmarked = savedPostsRepository.isSaved(post)
 
         menuItems.add(buildVisitSite(onButtonClicked))
         checkAndAddMenuItemForSiteNotifications(menuItems, isPostFollowed, post, onButtonClicked)

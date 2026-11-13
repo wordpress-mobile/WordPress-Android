@@ -7,6 +7,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
+import org.mockito.Mockito.lenient
+import org.mockito.kotlin.any
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.whenever
@@ -39,6 +42,9 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
     @Mock
     lateinit var mSeenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
 
+    @Mock
+    lateinit var savedPostsRepository: ReaderSavedPostsRepository
+
     @Before
     fun setUp() = test {
         whenever(mSeenUnseenWithCounterFeatureConfig.isEnabled()).thenReturn(true)
@@ -48,8 +54,12 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
             readerBlogTableWrapper,
             readerUtilsWrapper,
             mSeenUnseenWithCounterFeatureConfig,
+            savedPostsRepository,
             testDispatcher()
         )
+        lenient().whenever(savedPostsRepository.isSaved(any())).thenAnswer {
+            (it.arguments[0] as ReaderPost).isBookmarked
+        }
     }
 
     @Test

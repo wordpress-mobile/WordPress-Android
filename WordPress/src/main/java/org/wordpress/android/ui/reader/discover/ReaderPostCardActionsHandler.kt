@@ -49,12 +49,16 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.TOGGLE_
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderBlogRepository
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Failed
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.NoNetwork
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Started
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase.FetchSiteState
@@ -99,6 +103,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase,
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
     private val accountStore: AccountStore,
+    private val savedPostsRepository: ReaderSavedPostsRepository,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     private lateinit var coroutineScope: CoroutineScope
@@ -502,6 +507,17 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 is PreLoadPostContent -> _preloadPostEvents.postValue(
                     Event(PreLoadPostContent(post.blogId, post.postId))
                 )
+                // the post reads as saved or unsaved already, so show it rather than wait for the server
+                is Started -> _refreshPosts.postValue(Event(Unit))
+                NoNetwork -> _snackbarEvents.postValue(
+                    Event(SnackbarMessageHolder(UiStringRes(R.string.error_network_connection)))
+                )
+                Failed -> {
+                    _refreshPosts.postValue(Event(Unit))
+                    _snackbarEvents.postValue(
+                        Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
+                    )
+                }
                 is Success -> {
                     // Content needs to be manually refreshed in the legacy ReaderPostListAdapter and
                     // ReaderPostDetailFragment
@@ -531,7 +547,13 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                         okButtonAction = {
                                             appPrefsWrapper.setBookmarksSavedLocallyDialogShown()
                                             showSnackbarAction.invoke()
-                                        })
+                                        },
+                                        message = if (savedPostsRepository.isEnabled) {
+                                            R.string.reader_save_posts_synced_dialog_message
+                                        } else {
+                                            R.string.reader_save_posts_locally_dialog_message
+                                        }
+                                    )
                                 )
                             )
                         } else {

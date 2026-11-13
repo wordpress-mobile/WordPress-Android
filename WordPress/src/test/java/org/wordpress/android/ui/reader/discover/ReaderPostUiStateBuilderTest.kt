@@ -8,6 +8,9 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
+import org.mockito.Mockito.lenient
+import org.mockito.kotlin.any
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
@@ -67,6 +70,9 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     @Mock
     lateinit var readerUtilsWrapper: ReaderUtilsWrapper
 
+    @Mock
+    lateinit var savedPostsRepository: ReaderSavedPostsRepository
+
     @Before
     fun setUp() = test {
         builder = ReaderPostUiStateBuilder(
@@ -76,8 +82,12 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
             dateTimeUtilsWrapper,
             readerImageScannerProvider,
             readerUtilsWrapper,
+            savedPostsRepository,
             testDispatcher()
         )
+        lenient().whenever(savedPostsRepository.isSaved(any())).thenAnswer {
+            (it.arguments[0] as ReaderPost).isBookmarked
+        }
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(anyOrNull())).thenReturn("")
         whenever(avatarUtilsWrapper.rewriteAvatarUrlWithResource(anyOrNull(), anyInt())).thenReturn("")
         val imageScanner: ReaderImageScanner = mock()
@@ -85,6 +95,25 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
             .thenReturn(imageScanner)
         whenever(imageScanner.getImageList(anyInt(), anyInt())).thenReturn(ReaderImageList(false))
         whenever(accountStore.hasAccessToken()).thenReturn(true)
+    }
+    // endregion
+
+    // region BOOKMARK
+    @Test
+    fun `the card's save button shows whether the post is saved`() = test {
+        whenever(savedPostsRepository.isSaved(any())).thenReturn(true)
+
+        val uiState = mapPostToUiState(createPost())
+
+        assertThat(uiState.bookmarkAction.isEnabled).isTrue()
+        assertThat(uiState.bookmarkAction.isSelected).isTrue()
+    }
+
+    @Test
+    fun `the card's save button is disabled for a post without IDs`() = test {
+        val uiState = mapPostToUiState(createPost(postId = 0L))
+
+        assertThat(uiState.bookmarkAction.isEnabled).isFalse()
     }
     // endregion
 
@@ -829,27 +858,16 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
     // endregion
 
-    // region INTERACTION SECTION
+    // region LIKE COUNT
     @Test
-    fun `Count on comments section corresponds to number of comments on the post for new UI`() = test {
-        // Arrange
-        val numReplies = 15
-        val post = createPost(numOfReplies = numReplies)
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.interactionSection.commentCount).isEqualTo(numReplies)
-    }
-
-    @Test
-    fun `Count on likes section corresponds to number of likes on the post for new UI`() = test {
+    fun `Count on Like button corresponds to number of likes on the post`() = test {
         // Arrange
         val numLikes = 15
         val post = createPost(numOfLikes = numLikes)
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.interactionSection.likeCount).isEqualTo(numLikes)
+        assertThat(uiState.likeAction.count).isEqualTo(numLikes)
     }
     // endregion
 

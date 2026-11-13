@@ -37,7 +37,6 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.CompactBlogSectionData
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.InteractionSectionData
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
@@ -867,13 +866,13 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             blogSection = CompactBlogSectionData(
                 post.postId, post.blogId, "", UiStringText(""), null, null, false, ImageType.BLAVATAR, null
             ),
-            interactionSection = InteractionSectionData(0, 0),
             title = null,
             excerpt = null,
             featuredImageUrl = null,
             thumbnailStripSection = null,
             featuredImageVisibility = false,
             moreMenuVisibility = true,
+            bookmarkAction = PrimaryAction(true, type = ReaderPostCardActionType.BOOKMARK),
             likeAction = PrimaryAction(true, type = ReaderPostCardActionType.LIKE),
             reblogAction = PrimaryAction(true, type = ReaderPostCardActionType.REBLOG),
             commentsAction = PrimaryAction(true, type = ReaderPostCardActionType.COMMENTS),

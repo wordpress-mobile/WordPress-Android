@@ -83,6 +83,7 @@ import org.wordpress.android.ui.posts.editor.ImageEditorFileUtils
 import org.wordpress.android.ui.posts.editor.ImageEditorInitializer
 import org.wordpress.android.ui.posts.editor.ImageEditorTracker
 import org.wordpress.android.ui.rs.data.WpServiceProvider
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
@@ -232,6 +233,9 @@ class AppInitializer @Inject constructor(
 
     @Inject
     lateinit var wpApiClientProvider: WpApiClientProvider
+
+    @Inject
+    lateinit var readerSavedPostsRepository: ReaderSavedPostsRepository
 
     // Lazy because building it loads the wordpress-rs native library (via WpLoginClient), which caused startup
     // ANRs when done on the main thread. It's built off main in warmUpSiteProvisioningSource() instead.
@@ -725,6 +729,10 @@ class AppInitializer @Inject constructor(
 
     @Suppress("DEPRECATION")
     private fun removeWpComUserRelatedData(context: Context) {
+        // read before the account and prefs are reset below
+        val userId = accountStore.account.userId
+        val savedPostsImported = readerSavedPostsRepository.isSyncedListReady()
+
         // cancel all Volley requests - do this before unregistering push since that uses a Volley request
         VolleyUtils.cancelAllRequests(requestQueue)
 
@@ -758,6 +766,7 @@ class AppInitializer @Inject constructor(
 
         // reset the reader database, but retain bookmarked posts
         ReaderDatabase.reset(true)
+        readerSavedPostsRepository.clear(userId, savesImported = savedPostsImported)
 
         // Reset Stats Data
         statsStore.deleteAllData()

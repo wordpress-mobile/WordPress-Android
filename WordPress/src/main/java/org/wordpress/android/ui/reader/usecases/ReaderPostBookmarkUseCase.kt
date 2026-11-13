@@ -1,13 +1,24 @@
 package org.wordpress.android.ui.reader.usecases
 
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.selects.select
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
+import org.wordpress.android.ui.reader.saved.toSaveIdentity
+import org.wordpress.android.ui.reader.saved.toSavedPostDetails
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Failed
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.NoNetwork
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Started
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
@@ -20,14 +31,26 @@ class ReaderPostBookmarkUseCase @Inject constructor(
     private val readerTracker: ReaderTracker,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val readerPostRepository: ReaderPostRepository,
-    private val readerPostTableWrapper: ReaderPostTableWrapper
+    private val readerPostTableWrapper: ReaderPostTableWrapper,
+    private val savedPostsRepository: ReaderSavedPostsRepository
 ) {
     suspend fun toggleBookmark(
         post: ReaderPost,
         isBookmarkList: Boolean,
         source: String
     ) = flow {
-        val bookmarked = updatePostInDb(post.blogId, post.postId)
+        val bookmarked = if (savedPostsRepository.isEnabled) {
+            if (!networkUtilsWrapper.isNetworkAvailable()) {
+                emit(NoNetwork)
+                return@flow
+            }
+            updatePostOnAccount(post.blogId, post.postId) ?: run {
+                emit(Failed)
+                return@flow
+            }
+        } else {
+            updatePostInDb(post.blogId, post.postId)
+        }
         trackEvent(bookmarked, isBookmarkList, post, source)
         preloadPostContentIfNecessary(bookmarked, isBookmarkList, post.blogId, post.postId)
         emit(Success(bookmarked))
@@ -45,13 +68,47 @@ class ReaderPostBookmarkUseCase @Inject constructor(
         }
     }
 
+    /**
+     * Saves or unsaves the post on the account, then keeps the local copy in step so it can still be
+     * read offline. Returns whether the post is now saved, or null if the account couldn't be updated.
+     *
+     * Emits [Started] once the change shows, which is as soon as the write starts rather than when the
+     * server answers. If the server refuses it, the change is undone and [Failed] follows.
+     */
+    private suspend fun FlowCollector<BookmarkPostState>.updatePostOnAccount(blogId: Long, postId: Long): Boolean? {
+        val post = getPostFromDb(blogId, postId)
+        val setToBookmarked = !savedPostsRepository.isSaved(post)
+        val details = if (setToBookmarked) post.toSavedPostDetails() else null
+        val succeeded = coroutineScope {
+            // subscribed before the write starts, so its first change isn't missed
+            val changed = async(start = CoroutineStart.UNDISPATCHED) { savedPostsRepository.changes.first() }
+            val write = async { savedPostsRepository.setSaved(post.toSaveIdentity(), setToBookmarked, details) }
+            val showsChange = select {
+                changed.onAwait { true }
+                write.onAwait { false }
+            }
+            changed.cancel()
+            if (showsChange) emit(Started(setToBookmarked))
+            write.await()
+        }
+        if (!succeeded) {
+            return null
+        }
+        // the local flag can disagree with the account, so only change it when it differs
+        if (post.isBookmarked != setToBookmarked) {
+            readerPostRepository.setBookmarked(post, setToBookmarked)
+        }
+        return setToBookmarked
+    }
+
     @Suppress("UseCheckOrError")
-    private suspend fun updatePostInDb(blogId: Long, postId: Long): Boolean {
-        val post = readerPostTableWrapper.getBlogPost(blogId, postId, true)
+    private fun getPostFromDb(blogId: Long, postId: Long): ReaderPost =
+        readerPostTableWrapper.getBlogPost(blogId, postId, true)
             ?: throw IllegalStateException("Post displayed on the UI not found in DB.")
 
+    private suspend fun updatePostInDb(blogId: Long, postId: Long): Boolean {
+        val post = getPostFromDb(blogId, postId)
         val setToBookmarked = !post.isBookmarked
-
         readerPostRepository.setBookmarked(post, setToBookmarked)
         return setToBookmarked
     }
@@ -86,4 +143,9 @@ class ReaderPostBookmarkUseCase @Inject constructor(
 sealed class BookmarkPostState {
     data class PreLoadPostContent(val blogId: Long, val postId: Long) : BookmarkPostState()
     data class Success(val bookmarked: Boolean) : BookmarkPostState()
+
+    /** A synced save or unsave shows, while the server hasn't answered yet. [Success] or [Failed] follows. */
+    data class Started(val bookmarked: Boolean) : BookmarkPostState()
+    data object NoNetwork : BookmarkPostState()
+    data object Failed : BookmarkPostState()
 }

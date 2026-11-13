@@ -1179,7 +1179,7 @@ class ReaderPostListViewModel @Inject constructor(
         readerTracker.track(AnalyticsTracker.Stat.POST_CARD_MORE_TAPPED)
         val post = findPost(state.blogId, state.postId) ?: return
         launch {
-            val items = moreMenuBuilder.buildMoreMenuItems(post, true, cardButtonClicked)
+            val items = moreMenuBuilder.buildMoreMenuItems(post, includeBookmark = false, cardButtonClicked)
             moreMenu = post to items
             updateUiState()
         }
