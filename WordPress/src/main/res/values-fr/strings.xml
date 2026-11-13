@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-23 09:58:18+0000
+Translation-Revision-Date: 2026-11-11 13:55:26+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.1.0
 Language: fr
@@ -479,6 +479,7 @@ Language: fr
     <string name="experimental_features_feedback_dialog_title">Partager des commentaires</string>
     <string name="experimental_block_editor_description">Accéder à des types de blocs et réglages supplémentaires</string>
     <string name="experimental_block_editor_note">L’éditeur de blocs expérimental deviendra l’option par défaut dans une prochaine version et il ne sera plus possible de le désactiver.</string>
+    <string name="avatar_update_email_unverified">Pour modifier votre avatar, vous devez d’abord vérifier votre adresse e-mail.</string>
     <string name="personalization_screen_shortcuts_accessibility_label">(Dés)activer le raccourci %s</string>
     <string name="personalization_screen_card_accessibility_label">(Dés)activer la carte %s</string>
     <string name="user_avatar_content_description">Avatar pour l’utilisateur %s</string>

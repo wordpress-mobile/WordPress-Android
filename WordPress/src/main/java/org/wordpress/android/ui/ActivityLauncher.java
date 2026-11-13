@@ -1203,7 +1203,10 @@ public class ActivityLauncher {
     }
 
     /*
-     * Load the post preview as an authenticated URL so stats aren't bumped
+     * Load the post preview with the preview parameter so stats aren't bumped. See
+     * PostUtils.getPreviewUrlForPost(): the parameter makes WordPress treat the request as a preview whether
+     * or not the reader is logged in, so it is the parameter rather than the session that keeps the view out
+     * of the site's stats.
      */
     public static void browsePostOrPage(Context context, SiteModel site, PostImmutableModel post) {
         browsePostOrPageEx(context, site, post, RemotePreviewType.NOT_A_REMOTE_PREVIEW);

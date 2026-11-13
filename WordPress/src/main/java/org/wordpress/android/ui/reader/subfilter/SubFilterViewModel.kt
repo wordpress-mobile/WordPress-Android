@@ -345,6 +345,10 @@ class SubFilterViewModel @Inject constructor(
         changeSubfilter(subfilterListItem, true, mTagFragmentStartedWith)
     }
 
+    fun setSubfilter(filter: SubfilterListItem) {
+        updateSubfilter(filter)
+    }
+
     fun onSubfilterReselected() {
         changeSubfilter(getCurrentSubfilterValue(), false, mTagFragmentStartedWith)
     }

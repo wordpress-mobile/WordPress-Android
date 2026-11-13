@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.repository
 
 import com.android.volley.Request
-import com.android.volley.RequestQueue
 import com.wordpress.rest.RestRequest
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineDispatcher
@@ -11,11 +10,11 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.datasets.ReaderBlockedBlogTable
 import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.datasets.ReaderTagTable
@@ -28,8 +27,7 @@ import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderConstants
-import org.wordpress.android.ui.reader.actions.ReaderActions
-import org.wordpress.android.ui.reader.actions.ReaderTagActions
+import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.JSONUtils
 import org.wordpress.android.util.PerAppLocaleManager
@@ -37,7 +35,6 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
-import kotlin.coroutines.resume
 
 /**
  * Updates the Reader's followed tags and followed sites from the network and reports changes to them,
@@ -91,34 +88,27 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
      * Follows the passed tags and returns whether it succeeded. The local write happens right away, so
      * callers can read the new follow state before this returns.
      */
-    suspend fun followTags(tags: List<ReaderTag>): Boolean = awaitTagAction { listener, isLoggedIn ->
-        ReaderTagActions.addTags(tags, listener, isLoggedIn)
+    suspend fun followTags(tags: List<ReaderTag>): Boolean = awaitTagAction { isLoggedIn ->
+        addTags(tags, isLoggedIn)
     }
 
     /**
      * Unfollows the passed tag and returns whether it succeeded. The local write happens right away.
      */
-    suspend fun unfollowTag(tag: ReaderTag): Boolean = awaitTagAction { listener, isLoggedIn ->
-        ReaderTagActions.deleteTag(tag, listener, isLoggedIn)
+    suspend fun unfollowTag(tag: ReaderTag): Boolean = awaitTagAction { isLoggedIn ->
+        deleteTag(tag, isLoggedIn)
     }
 
     /*
-     * runs a tag action and reports the change to the followed tags. [start] returns false if the action
-     * didn't start, in which case nothing changed.
+     * runs a tag action and reports the change to the followed tags. [action] returns null if the action
+     * didn't start, in which case nothing changed, otherwise whether it succeeded.
      */
     private suspend fun awaitTagAction(
-        start: (ReaderActions.ActionListener, Boolean) -> Boolean
+        action: suspend (isLoggedIn: Boolean) -> Boolean?
     ): Boolean = launchInAppScope {
         val savedBefore = synchronized(updateLock) { tagsResponsesSaved }
-        var started = true
-        val succeeded = suspendCancellableCoroutine { continuation ->
-            val listener = ReaderActions.ActionListener { succeeded ->
-                if (continuation.isActive) continuation.resume(succeeded)
-            }
-            started = start(listener, accountStore.hasAccessToken())
-            if (!started && continuation.isActive) continuation.resume(false)
-        }
-        if (started) {
+        val succeeded = action(accountStore.hasAccessToken())
+        if (succeeded != null) {
             // a tags response that's on its way, or that was saved while this action ran, may have been sent
             // before this change reached the server and so may have undone it locally, so the tags are fetched
             // again now that the server has it
@@ -129,14 +119,92 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
             // a failed action is reverted locally, so it's a change too
             _events.emit(ReaderTagsAndSitesEvent.FollowedTagsChanged(ReaderTagTable.getFollowedTags().size, true))
         }
-        succeeded
+        succeeded == true
     }.await()
+
+    /*
+     * follows the passed tags locally and, when logged in, on the server, restoring the previously followed
+     * tags if that fails. Returns whether it succeeded.
+     */
+    private suspend fun addTags(tags: List<ReaderTag>, isLoggedIn: Boolean): Boolean {
+        val newTags = ReaderTagList()
+        tags.forEach { tag ->
+            val endpoint = ReaderUtils.getTagApiPath(tag.tagSlug, "posts")?.let { "/$it" }
+            newTags.add(ReaderTag(tag.tagSlug, tag.tagDisplayName, tag.tagTitle, endpoint, ReaderTagType.FOLLOWED))
+        }
+        if (!isLoggedIn) {
+            ReaderTagTable.addOrUpdateTags(newTags)
+            return true
+        }
+
+        val existingFollowedTags = ReaderTagTable.getFollowedTags()
+        ReaderTagTable.addOrUpdateTags(newTags)
+        val params = mapOf("tags" to ReaderUtils.getCommaSeparatedTagSlugs(newTags))
+        val result = awaitRestRequest { listener, errorListener ->
+            WordPress.getRestClientUtilsV1_2().post("read/tags/mine/new", params, null, listener, errorListener)
+        }
+        // the response contains the list of the user's followed tags
+        (result as? RestResult.Success)?.let { ReaderTagTable.replaceFollowedTags(parseFollowedTags(it.json)) }
+        return isTagActionSuccessful(result, "add tag", alreadyDoneError = "already_subscribed") {
+            ReaderTagTable.replaceFollowedTags(existingFollowedTags)
+        }
+    }
+
+    /*
+     * unfollows the passed tag locally and, when logged in, on the server, restoring it if that fails. Returns
+     * null if the tag's slug isn't valid, otherwise whether it succeeded.
+     */
+    private suspend fun deleteTag(tag: ReaderTag, isLoggedIn: Boolean): Boolean? {
+        val path = ReaderUtils.getTagApiPath(tag.tagSlug, "mine", "delete")
+        return when {
+            !isLoggedIn -> {
+                ReaderTagTable.deleteTag(tag)
+                true
+            }
+            path == null -> {
+                AppLog.w(AppLog.T.READER, "delete tag failed, invalid tag slug")
+                null
+            }
+            else -> {
+                ReaderTagTable.deleteTag(tag)
+                val result = awaitRestRequest { listener, errorListener ->
+                    WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener)
+                }
+                isTagActionSuccessful(result, "delete tag", alreadyDoneError = "not_subscribed") {
+                    ReaderTagTable.addOrUpdateTag(tag)
+                }
+            }
+        }
+    }
+
+    /*
+     * returns whether a tag action succeeded, treating [alreadyDoneError] (the server saying the tag was already
+     * followed or unfollowed) as a success, and calls [revert] if it failed (but not if it was cancelled)
+     */
+    private fun isTagActionSuccessful(
+        result: RestResult,
+        action: String,
+        alreadyDoneError: String,
+        revert: () -> Unit
+    ): Boolean = when {
+        result is RestResult.Success -> {
+            AppLog.i(AppLog.T.READER, "$action succeeded")
+            true
+        }
+        (result as RestResult.Failure).errorString == alreadyDoneError -> {
+            AppLog.w(AppLog.T.READER, "$action succeeded with error $alreadyDoneError")
+            true
+        }
+        else -> {
+            AppLog.w(AppLog.T.READER, "$action failed")
+            if (!result.isCancelled) revert()
+            false
+        }
+    }
 
     private fun start(task: UpdateTask): Deferred<Boolean> = when (task) {
         UpdateTask.TAGS -> start(task, ::fetchTags, ::saveTags)
-        UpdateTask.FOLLOWED_BLOGS -> start(task, ::fetchFollowedBlogs) { (blogs, total) ->
-            saveFollowedBlogs(blogs, total)
-        }
+        UpdateTask.FOLLOWED_BLOGS -> start(task, ::fetchFollowedBlogs, ::saveFollowedBlogs)
     }
 
     /*
@@ -260,7 +328,8 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
     /*
      * requests every page of the sites the user follows and returns them with the total number of sites
      */
-    private suspend fun fetchFollowedBlogs(): Pair<ReaderBlogList, Int>? {
+    private suspend fun fetchFollowedBlogs(): FollowedBlogs? {
+        val blockedBeforeRequest = ReaderBlockedBlogTable.getBlockedBlogIds()
         val serverBlogs = ReaderBlogList()
         var page = 1
         while (true) {
@@ -278,12 +347,13 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
             if (json.optInt("number", 0) > MIN_SITES_FOR_NEXT_PAGE) {
                 page = json.optInt("page", 1) + 1
             } else {
-                return serverBlogs to json.optInt("total_subscriptions", 0)
+                return FollowedBlogs(serverBlogs, json.optInt("total_subscriptions", 0), blockedBeforeRequest)
             }
         }
     }
 
-    private suspend fun saveFollowedBlogs(serverBlogs: ReaderBlogList, totalSites: Int) {
+    private suspend fun saveFollowedBlogs(followedBlogs: FollowedBlogs) {
+        val (serverBlogs, totalSites, blockedBeforeRequest) = followedBlogs
         var didChange = false
         val localBlogs = ReaderBlogTable.getFollowedBlogs()
         if (!localBlogs.isSameList(serverBlogs)) {
@@ -297,7 +367,12 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
                 didChange = true
             }
         }
-        _events.emit(ReaderTagsAndSitesEvent.FollowedBlogsChanged(totalSites, didChange))
+        // the server leaves blocked sites out of this list, and unblocking one on the web re-subscribes to it, so a
+        // local block on a site in it is stale. Only blocks from before the request are cleared, since a site
+        // blocked while it ran can still be in the response.
+        val unblockedIds = serverBlogs.map { it.blogId }.filter { it in blockedBeforeRequest }
+        ReaderBlockedBlogTable.removeBlockedBlogs(unblockedIds)
+        _events.emit(ReaderTagsAndSitesEvent.FollowedBlogsChanged(totalSites, didChange, unblockedIds.isNotEmpty()))
     }
 
     /*
@@ -305,41 +380,13 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
      */
     private suspend fun request(
         start: (RestRequest.Listener, RestRequest.ErrorListener) -> Request<*>
-    ): JSONObject? {
-        val queue = WordPress.requestQueue
-        var cancelListener: RequestQueue.RequestEventListener? = null
-        try {
-            return suspendCancellableCoroutine { continuation ->
-                val request = start(
-                    { json -> if (continuation.isActive) continuation.resume(json) },
-                    { volleyError ->
-                        AppLog.e(AppLog.T.READER, volleyError)
-                        if (continuation.isActive) continuation.resume(null)
-                    }
-                )
-                // Volley calls neither listener for a cancelled request (every request is cancelled at sign-out),
-                // so this watches for it finishing instead. Otherwise the update would never end, and every later
-                // one would join it.
-                cancelListener = RequestQueue.RequestEventListener { finished, event ->
-                    val isCancelled = finished === request && event == RequestQueue.RequestEvent.REQUEST_FINISHED &&
-                        finished.isCanceled
-                    if (isCancelled && continuation.isActive) continuation.resume(null)
-                }.also { queue?.addRequestEventListener(it) }
-                if (request.isCanceled && continuation.isActive) continuation.resume(null)
-            }
-        } finally {
-            cancelListener?.let { queue?.removeRequestEventListener(it) }
-        }
-    }
+    ): JSONObject? = awaitRestRequest(start).response
 
     private fun parseTags(json: JSONObject, name: String, tagType: ReaderTagType): ReaderTagList {
         val topics = ReaderTagList()
         val jsonTopics = json.optJSONObject(name) ?: return topics
         jsonTopics.keys().forEach { internalName ->
             val jsonTopic = jsonTopics.optJSONObject(internalName) ?: return@forEach
-            val title = JSONUtils.getStringDecoded(jsonTopic, ReaderConstants.JSON_TAG_TITLE)
-            val displayName = JSONUtils.getStringDecoded(jsonTopic, ReaderConstants.JSON_TAG_DISPLAY_NAME)
-            val slug = JSONUtils.getStringDecoded(jsonTopic, ReaderConstants.JSON_TAG_SLUG)
             val endpoint = JSONUtils.getString(jsonTopic, ReaderConstants.JSON_TAG_URL)
             // custom lists are included in the response as default tags
             val type = if (tagType == ReaderTagType.DEFAULT && endpoint.contains("/read/list/")) {
@@ -347,9 +394,30 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
             } else {
                 tagType
             }
-            topics.add(ReaderTag(slug, displayName, title, endpoint, type))
+            topics.add(parseTag(jsonTopic, type))
         }
         return topics
+    }
+
+    private fun parseTag(json: JSONObject?, type: ReaderTagType) = ReaderTag(
+        JSONUtils.getStringDecoded(json, ReaderConstants.JSON_TAG_SLUG),
+        JSONUtils.getStringDecoded(json, ReaderConstants.JSON_TAG_DISPLAY_NAME),
+        JSONUtils.getStringDecoded(json, ReaderConstants.JSON_TAG_TITLE),
+        JSONUtils.getString(json, ReaderConstants.JSON_TAG_URL),
+        type
+    )
+
+    /*
+     * returns the user's followed tags from the response to read/tags/mine/new, or null if it has none
+     */
+    private fun parseFollowedTags(json: JSONObject?): ReaderTagList? {
+        val jsonTags = json?.optJSONArray(ReaderConstants.JSON_TAG_TAGS_ARRAY)
+        if (jsonTags == null || jsonTags.length() == 0) return null
+        val tags = ReaderTagList()
+        for (i in 0 until jsonTags.length()) {
+            tags.add(parseTag(jsonTags.optJSONObject(i), ReaderTagType.FOLLOWED))
+        }
+        return tags
     }
 
     private fun parseInterestTags(json: JSONObject): ReaderTagList {
@@ -378,5 +446,15 @@ enum class UpdateTask {
 
 sealed class ReaderTagsAndSitesEvent {
     data class FollowedTagsChanged(val totalTags: Int, val didChange: Boolean) : ReaderTagsAndSitesEvent()
-    data class FollowedBlogsChanged(val totalSubscriptions: Int, val didChange: Boolean) : ReaderTagsAndSitesEvent()
+    data class FollowedBlogsChanged(
+        val totalSubscriptions: Int,
+        val didChange: Boolean,
+        val didClearBlocks: Boolean = false
+    ) : ReaderTagsAndSitesEvent()
 }
+
+private data class FollowedBlogs(
+    val blogs: ReaderBlogList,
+    val totalSites: Int,
+    val blockedBeforeRequest: Set<Long>
+)

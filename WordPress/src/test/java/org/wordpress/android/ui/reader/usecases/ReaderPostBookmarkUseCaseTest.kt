@@ -18,7 +18,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
@@ -38,7 +38,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     @Mock
-    lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
+    lateinit var readerPostRepository: ReaderPostRepository
 
     @Mock
     lateinit var readerPostTableWrapper: ReaderPostTableWrapper
@@ -51,7 +51,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
         useCase = ReaderPostBookmarkUseCase(
             readerTracker,
             networkUtilsWrapper,
-            readerPostActionsWrapper,
+            readerPostRepository,
             readerPostTableWrapper,
             savedPostsRepository
         )
@@ -65,7 +65,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
         val result = useCase.toggleBookmark(post(), false, SOURCE).toList(mutableListOf())
 
         assertThat(result).containsExactly(BookmarkPostState.NoNetwork)
-        verify(readerPostActionsWrapper, never()).addToBookmarked(any())
+        verify(readerPostRepository, never()).setBookmarked(any(), any())
         verify(savedPostsRepository, never()).setSaved(any<ReaderPost>(), any())
     }
 
@@ -78,7 +78,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
 
         val result = useCase.toggleBookmark(post(), true, SOURCE).toList(mutableListOf())
 
-        verify(readerPostActionsWrapper).addToBookmarked(dummyPost)
+        verify(readerPostRepository).setBookmarked(dummyPost, true)
         assertThat(result).containsExactly(BookmarkPostState.Success(true))
     }
 
@@ -91,7 +91,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
 
         val result = useCase.toggleBookmark(post(), true, SOURCE).toList(mutableListOf())
 
-        verify(readerPostActionsWrapper, never()).removeFromBookmarked(any())
+        verify(readerPostRepository, never()).setBookmarked(any(), any())
         assertThat(result).containsExactly(BookmarkPostState.Success(false))
     }
 
@@ -104,7 +104,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
 
         val result = useCase.toggleBookmark(post(), false, SOURCE).toList(mutableListOf())
 
-        verify(readerPostActionsWrapper).addToBookmarked(dummyPost)
+        verify(readerPostRepository).setBookmarked(dummyPost, true)
         verify(readerPostTableWrapper).setBookmarkFlag(anyLong(), anyLong(), eq(false))
         assertThat(result).containsExactly(BookmarkPostState.Failed)
     }
@@ -121,7 +121,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
         ).toList(mutableListOf())
 
         // Assert
-        verify(readerPostActionsWrapper).addToBookmarked(dummyPost)
+        verify(readerPostRepository).setBookmarked(dummyPost, true)
     }
 
     @Test
@@ -136,7 +136,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
         ).toList(mutableListOf())
 
         // Assert
-        verify(readerPostActionsWrapper).removeFromBookmarked(dummyPost)
+        verify(readerPostRepository).setBookmarked(dummyPost, false)
     }
 
     @Test

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -27,6 +28,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -52,6 +54,7 @@ class NotificationsListViewModel @Inject constructor(
     private val commentStore: CommentsStore,
     private val readerPostTableWrapper: ReaderPostTableWrapper,
     private val readerPostActionsWrapper: ReaderPostActionsWrapper,
+    private val readerPostRepository: ReaderPostRepository,
     private val notificationsTableWrapper: NotificationsTableWrapper,
     private val notificationsActionsWrapper: NotificationsActionsWrapper,
     private val eventBusWrapper: EventBusWrapper,
@@ -160,13 +163,15 @@ class NotificationsListViewModel @Inject constructor(
         // for updating the UI in other tabs
         eventBusWrapper.postSticky(NotificationEvents.OnNotePostLikeChanged(note, liked))
         val post = readerPostTableWrapper.getBlogPost(note.siteId.toLong(), note.postId.toLong(), true)
-        readerPostActionsWrapper.performLikeActionRemote(
-            post = post,
-            postId = note.postId.toLong(),
-            blogId = note.siteId.toLong(),
-            isAskingToLike = liked,
-            wpComUserId = accountStore.account.userId
-        ) { success ->
+        // saving the note is part of the like, so it isn't skipped if the screen goes away mid-request
+        withContext(NonCancellable) {
+            val success = readerPostRepository.likePostRemote(
+                post = post,
+                blogId = note.siteId.toLong(),
+                postId = note.postId.toLong(),
+                like = liked,
+                wpComUserId = accountStore.account.userId
+            )
             if (success) {
                 notificationsTableWrapper.saveNote(note)
                 if (post == null) {

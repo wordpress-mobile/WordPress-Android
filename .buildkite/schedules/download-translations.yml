@@ -1,8 +1,9 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
 ---
 
-# Runs on a daily schedule (configured in the Buildkite UI, ~06:00 UTC) to sync the latest
-# translations from GlotPress into a single rolling `translations/daily-update` PR.
+# Runs on a daily schedule (configured in the Buildkite UI, ~06:00 UTC) to merge the libraries'
+# strings, freeze the source strings GlotPress imports, and sync the latest translations from
+# GlotPress into a single rolling `translations/daily-update` PR.
 #
 # Runs on `mac-metal` because this job commits, pushes and opens a PR, which needs the bot git
 # identity from `use-bot-for-git` — that command is only available on those agents.
@@ -22,5 +23,5 @@ notify:
   - slack:
       channels:
         - "#build-and-ship"
-      message: "Failed to sync translations from GlotPress."
+      message: "Daily translations job failed (library strings, freeze, or GlotPress download). See the build log."
     if: build.state == "failed"
