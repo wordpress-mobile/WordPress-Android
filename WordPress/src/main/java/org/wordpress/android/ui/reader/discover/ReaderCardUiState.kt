@@ -21,7 +21,6 @@ sealed class ReaderCardUiState {
         val feedId: Long,
         val isFollowed: Boolean,
         val blogSection: CompactBlogSectionData,
-        val interactionSection: InteractionSectionData,
         val title: UiString?,
         val excerpt: String?,
         val featuredImageUrl: String?,
@@ -48,11 +47,6 @@ sealed class ReaderCardUiState {
             val isAuthorAvatarVisible: Boolean,
             val blavatarType: ImageType,
             val onClicked: ((Long, Long) -> Unit)?,
-        )
-
-        data class InteractionSectionData(
-            val likeCount: Int,
-            val commentCount: Int,
         )
 
         data class GalleryThumbnailStripData(

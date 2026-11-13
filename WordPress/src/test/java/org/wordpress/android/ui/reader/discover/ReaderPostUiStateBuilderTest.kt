@@ -858,27 +858,16 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
     // endregion
 
-    // region INTERACTION SECTION
+    // region LIKE COUNT
     @Test
-    fun `Count on comments section corresponds to number of comments on the post for new UI`() = test {
-        // Arrange
-        val numReplies = 15
-        val post = createPost(numOfReplies = numReplies)
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.interactionSection.commentCount).isEqualTo(numReplies)
-    }
-
-    @Test
-    fun `Count on likes section corresponds to number of likes on the post for new UI`() = test {
+    fun `Count on Like button corresponds to number of likes on the post`() = test {
         // Arrange
         val numLikes = 15
         val post = createPost(numOfLikes = numLikes)
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.interactionSection.likeCount).isEqualTo(numLikes)
+        assertThat(uiState.likeAction.count).isEqualTo(numLikes)
     }
     // endregion
 

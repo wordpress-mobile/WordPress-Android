@@ -11,7 +11,6 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.InteractionSectionData
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
@@ -101,7 +100,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
             feedId = post.feedId,
             isFollowed = post.isFollowedByCurrentUser,
             blogSection = buildCompactBlogSection(post, postListType, onPostHeaderViewClicked, post.isP2orA8C),
-            interactionSection = buildInteractionSection(post),
             title = buildTitle(post),
             excerpt = buildExcerpt(post),
             featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
@@ -194,13 +192,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
             null
         }
     }
-
-    private fun buildInteractionSection(
-        post: ReaderPost
-    ): InteractionSectionData = InteractionSectionData(
-        likeCount = post.numLikes,
-        commentCount = post.numReplies,
-    )
 
     private fun buildBlogUrl(post: ReaderPost) = post
         .takeIf { it.hasBlogUrl() }

@@ -74,23 +74,14 @@ class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListene
     private fun handleEvent(event: ReaderSavedPostsViewModel.Event) {
         when (event) {
             is ReaderSavedPostsViewModel.Event.OpenItem -> openItem(event.item)
-            is ReaderSavedPostsViewModel.Event.Unsaved -> {
-                val snackbar = WPSnackbar.make(
-                    snackbarParent(),
-                    getString(R.string.reader_saved_post_removed),
-                    Snackbar.LENGTH_LONG
-                )
-                if (event.item.post != null) {
-                    snackbar.setAction(R.string.undo) { viewModel.onUndoUnsave(event.item) }
-                }
-                snackbar.show()
-            }
+            // only an item with a post can be saved again
+            is ReaderSavedPostsViewModel.Event.Unsaved -> showMessage(
+                R.string.reader_saved_post_removed,
+                R.string.undo.takeIf { event.item.post != null }
+            ) { viewModel.onUndoUnsave(event.item) }
             ReaderSavedPostsViewModel.Event.RequestFailed -> showMessage(R.string.reader_error_request_failed_title)
-            ReaderSavedPostsViewModel.Event.LoadMoreFailed -> WPSnackbar.make(
-                snackbarParent(),
-                getString(R.string.reader_error_request_failed_title),
-                Snackbar.LENGTH_LONG
-            ).setAction(R.string.retry) { viewModel.loadMore() }.show()
+            ReaderSavedPostsViewModel.Event.LoadMoreFailed ->
+                showMessage(R.string.reader_error_request_failed_title, R.string.retry, viewModel::loadMore)
             ReaderSavedPostsViewModel.Event.NoNetwork -> showMessage(R.string.error_network_connection)
         }
     }
@@ -134,8 +125,10 @@ class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListene
         }
     }
 
-    private fun showMessage(stringRes: Int) {
-        WPSnackbar.make(snackbarParent(), getString(stringRes), Snackbar.LENGTH_LONG).show()
+    private fun showMessage(stringRes: Int, actionRes: Int? = null, onAction: () -> Unit = {}) {
+        val snackbar = WPSnackbar.make(snackbarParent(), getString(stringRes), Snackbar.LENGTH_LONG)
+        actionRes?.let { snackbar.setAction(it) { onAction() } }
+        snackbar.show()
     }
 
     // the main activity's coordinator, which sits above the bottom navigation

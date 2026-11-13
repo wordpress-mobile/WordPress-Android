@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -49,13 +50,11 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3WithoutBackground
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.CompactBlogSectionData
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.InteractionSectionData
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.image.ImagePlaceholderManager
 import org.wordpress.android.util.image.ImageType
-import java.util.Locale
 
 private const val MEDIUM_EMPHASIS_ALPHA = 0.6f
 private const val HIGH_EMPHASIS_ALPHA = 0.87f
@@ -221,6 +220,11 @@ private fun SecondaryText(text: String, modifier: Modifier = Modifier) {
 
 @Composable
 private fun ActionRow(uiState: ReaderPostUiState) {
+    val locale = LocalConfiguration.current.locales[0]
+    val countFormat = remember(locale) {
+        // 1.2K rather than 1,234, as iOS shows counts on its post cards
+        CompactDecimalFormat.getInstance(locale, CompactDecimalFormat.CompactStyle.SHORT)
+    }
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -237,28 +241,22 @@ private fun ActionRow(uiState: ReaderPostUiState) {
             ActionButton(
                 uiState = uiState,
                 action = uiState.bookmarkAction,
-                iconRes = if (uiState.bookmarkAction.isSelected) {
-                    R.drawable.ic_bookmark_fill_new_24dp
-                } else {
-                    R.drawable.ic_bookmark_outline_new_24dp
-                },
+                iconRes = R.drawable.ic_bookmark_outline_new_24dp,
+                selectedIconRes = R.drawable.ic_bookmark_fill_new_24dp,
             )
             ActionButton(uiState = uiState, action = uiState.reblogAction, iconRes = R.drawable.ic_reblog_new_24dp)
             ActionButton(
                 uiState = uiState,
                 action = uiState.commentsAction,
                 iconRes = R.drawable.ic_comment_outline_new_24dp,
-                count = uiState.interactionSection.commentCount,
+                countText = countFormat.format(uiState.commentsAction.count),
             )
             ActionButton(
                 uiState = uiState,
                 action = uiState.likeAction,
-                iconRes = if (uiState.likeAction.isSelected) {
-                    R.drawable.ic_like_fill_new_24dp
-                } else {
-                    R.drawable.ic_like_outline_new_24dp
-                },
-                count = uiState.interactionSection.likeCount,
+                iconRes = R.drawable.ic_like_outline_new_24dp,
+                selectedIconRes = R.drawable.ic_like_fill_new_24dp,
+                countText = countFormat.format(uiState.likeAction.count),
             )
         }
         if (uiState.moreMenuVisibility) {
@@ -272,7 +270,8 @@ private fun ActionButton(
     uiState: ReaderPostUiState,
     action: PrimaryAction,
     iconRes: Int,
-    count: Int? = null,
+    selectedIconRes: Int = iconRes,
+    countText: String? = null,
 ) {
     if (!action.isEnabled) return
     val color = if (action.isSelected) {
@@ -295,22 +294,15 @@ private fun ActionButton(
         horizontalArrangement = Arrangement.spacedBy(Margin.ExtraSmall.value, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(painter = painterResource(iconRes), contentDescription = null, tint = color)
-        count?.let {
-            Text(
-                text = compactCount(it),
-                style = MaterialTheme.typography.bodySmall,
-                color = color,
-                maxLines = 1,
-            )
+        Icon(
+            painter = painterResource(if (action.isSelected) selectedIconRes else iconRes),
+            contentDescription = null,
+            tint = color,
+        )
+        countText?.let {
+            Text(text = it, style = MaterialTheme.typography.bodySmall, color = color, maxLines = 1)
         }
     }
-}
-
-/** 1.2K rather than 1,234, as iOS shows counts on its post cards. */
-@Composable
-private fun compactCount(count: Int): String = remember(count) {
-    CompactDecimalFormat.getInstance(Locale.getDefault(), CompactDecimalFormat.CompactStyle.SHORT).format(count)
 }
 
 /**
@@ -378,7 +370,6 @@ private fun previewUiState(): ReaderPostUiState {
             blavatarType = ImageType.BLAVATAR_CIRCULAR,
             onClicked = { _, _ -> },
         ),
-        interactionSection = InteractionSectionData(likeCount = 15, commentCount = 4),
         title = UiStringText("This is the title of this post, which runs long enough to wrap"),
         excerpt = "This is the post excerpt. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
         featuredImageUrl = null,
@@ -386,9 +377,9 @@ private fun previewUiState(): ReaderPostUiState {
         featuredImageVisibility = false,
         moreMenuVisibility = true,
         bookmarkAction = action(ReaderPostCardActionType.BOOKMARK),
-        likeAction = action(ReaderPostCardActionType.LIKE, isSelected = true),
+        likeAction = action(ReaderPostCardActionType.LIKE, isSelected = true).copy(count = 15),
         reblogAction = action(ReaderPostCardActionType.REBLOG),
-        commentsAction = action(ReaderPostCardActionType.COMMENTS),
+        commentsAction = action(ReaderPostCardActionType.COMMENTS).copy(count = 4),
         onItemClicked = { _, _ -> },
         onItemRendered = {},
         onMoreButtonClicked = {},
