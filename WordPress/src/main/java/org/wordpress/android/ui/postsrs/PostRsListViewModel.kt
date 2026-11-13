@@ -758,16 +758,16 @@ class PostRsListViewModel @Inject constructor(
             isOpeningLocalDraft = true
             _events.trySend(PostRsListEvent.EditPost(site, post))
         } else {
-            if (isUploading) {
-                _snackbarMessages.trySend(
-                    RsSnackbarMessage(resourceProvider.getString(R.string.editor_uploading_draft))
-                )
-            }
+            if (isUploading) showDraftUploading()
             reloadLocalDrafts()
         }
     }
 
-    /** Uploads a local draft whose upload failed again; the change listener reports the result. */
+    /**
+     * Uploads a local draft whose upload failed again; the change listener reports the result. Refused
+     * while it's already uploading: the row keeps its failure until the upload succeeds, so Retry stays
+     * on screen, and another tap would queue the post a second time.
+     */
     @MainThread
     fun retryLocalDraft(localId: Int) {
         analyticsTracker.track(
@@ -775,9 +775,17 @@ class PostRsListViewModel @Inject constructor(
             site,
             mapOf(TRACKS_ACTION to "retry", TRACKS_IS_LOCAL_DRAFT to true)
         )
+        if (localDraftsSource.isUploadingOrQueued(site, localId)) {
+            showDraftUploading()
+            return
+        }
         if (!checkNetwork()) return
         localDraftsSource.retry(site, localId)
         reloadLocalDrafts()
+    }
+
+    private fun showDraftUploading() {
+        _snackbarMessages.trySend(RsSnackbarMessage(resourceProvider.getString(R.string.editor_uploading_draft)))
     }
 
     /** Reads the local drafts again, discarding any load still running. */

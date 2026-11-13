@@ -878,6 +878,20 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         verify(localDraftsSource, never()).retry(any(), any())
     }
 
+    @Test
+    fun `retry while the draft is already uploading is refused`() = test {
+        whenever(localDraftsSource.isUploadingOrQueued(site, LOCAL_DRAFT_ID)).thenReturn(true)
+        whenever(resourceProvider.getString(R.string.editor_uploading_draft)).thenReturn("Uploading")
+        val viewModel = createViewModel()
+
+        viewModel.snackbarMessages.test {
+            viewModel.retryLocalDraft(LOCAL_DRAFT_ID)
+
+            assertThat(awaitItem().message).isEqualTo("Uploading")
+        }
+        verify(localDraftsSource, never()).retry(any(), any())
+    }
+
     private fun localDraft() = RsLocalDraftUiModel(
         localId = LOCAL_DRAFT_ID,
         title = "Title",
