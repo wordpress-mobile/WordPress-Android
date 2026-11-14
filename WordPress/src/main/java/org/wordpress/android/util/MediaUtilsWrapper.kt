@@ -65,23 +65,25 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
         isVideo(mediaUri) || isVideoMimeType(getMimeType(mediaUri))
 
     fun isProhibitedVideoDuration(context: Context, site: SiteModel, uri: Uri): Boolean {
-        if (isVideoFile(uri) && site.hasFreePlan && !site.isActiveModuleEnabled("videopress")) {
-            val retriever = MediaMetadataRetriever()
-
-            try {
-                retriever.setDataSource(context, uri)
-            } catch (e: IllegalArgumentException) {
-                AppLog.d(T.MEDIA, "Cannot retrieve video file $e")
-            }
-
-            val videoDuration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0
-            retriever.release()
-
-            val allowedVideoDurationForFreeSites = TimeUnit.MILLISECONDS.convert(DURATION_5_MIN, TimeUnit.MINUTES)
-            return allowedVideoDurationForFreeSites < videoDuration
+        // The five-minute limit only applies to WordPress.com-hosted sites on the free plan. Self-hosted
+        // sites connected to Jetpack Free also report a free plan, but they upload to their own media library.
+        if (!isVideoFile(uri) || !site.isWPCom || !site.hasFreePlan || site.isActiveModuleEnabled("videopress")) {
+            return false
         }
 
-        return false
+        val retriever = MediaMetadataRetriever()
+
+        return try {
+            retriever.setDataSource(context, uri)
+            val videoDuration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0
+            val allowedVideoDurationForFreeSites = TimeUnit.MILLISECONDS.convert(DURATION_5_MIN, TimeUnit.MINUTES)
+            allowedVideoDurationForFreeSites < videoDuration
+        } catch (e: RuntimeException) {
+            AppLog.d(T.MEDIA, "Cannot retrieve video file $e")
+            false
+        } finally {
+            retriever.release()
+        }
     }
 
     companion object {
