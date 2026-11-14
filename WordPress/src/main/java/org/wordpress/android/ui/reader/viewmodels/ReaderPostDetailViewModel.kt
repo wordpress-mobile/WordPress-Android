@@ -224,7 +224,7 @@ class ReaderPostDetailViewModel @Inject constructor(
      * [post] is null if there was no WordPress.com post to refresh, or the user moved on to another post. Only a
      * new body needs the WebView to render it again.
      */
-    data class PostRefreshed(val post: ReaderPost?, val hasNewBody: Boolean)
+    data class PostRefreshed(val post: ReaderPost?, val hasNewBody: Boolean = false)
 
     data class CommentSnippetUiState(
         val commentsNumber: Int,
@@ -581,7 +581,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     fun onRefreshPost() {
         val post = post
         if (post == null || !post.isWP) {
-            _postRefreshed.value = Event(PostRefreshed(post = null, hasNewBody = false))
+            _postRefreshed.value = Event(PostRefreshed(post = null))
             return
         }
         // refreshPost copies the server's changes into this very post, so remember the body on screen
@@ -591,7 +591,7 @@ class ReaderPostDetailViewModel @Inject constructor(
             // the user may have moved on, e.g. to a related post, while this one was refreshing
             val current = this@ReaderPostDetailViewModel.post
             if (current == null || current.blogId != post.blogId || current.postId != post.postId) {
-                _postRefreshed.value = Event(PostRefreshed(post = null, hasNewBody = false))
+                _postRefreshed.value = Event(PostRefreshed(post = null))
                 return@launch
             }
             onRefreshCommentsData(post.blogId, post.postId)

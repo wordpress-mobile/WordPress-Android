@@ -219,7 +219,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      * a referrer, and changing that URL must not be able to silently disable this again.
      *
      * Once per *render*, not once per post - a post that renders twice runs the work twice. Only
-     * [updatePost] is latched per post, by [hasAlreadyUpdatedPost]; anything added here that must
+     * the refresh of the post is latched per post, by [hasAlreadyUpdatedPost]; anything added here that must
      * not repeat needs a latch of its own.
      */
     private var isAwaitingRenderedPageFinish: Boolean = false

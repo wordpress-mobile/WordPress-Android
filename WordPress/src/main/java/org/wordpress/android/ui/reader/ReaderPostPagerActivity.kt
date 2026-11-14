@@ -187,7 +187,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var seenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
 
-
     @Inject
     lateinit var deepLinkTrackingUtils: DeepLinkTrackingUtils
 
@@ -1064,7 +1063,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     private inner class PostPagerAdapter(
         private val idList: ReaderBlogIdPostIdList,
         // the status code of a failed post slug request, which the page shows as its error
-        private val slugFailureStatus: Int? = null,
+        private val slugFailureStatus: Int?,
     ) : FragmentStateAdapter(this@ReaderPostPagerActivity) {
         var allPostsLoaded: Boolean = false
 

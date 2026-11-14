@@ -313,9 +313,7 @@ class ReaderPostRepository @Inject constructor(
      * time
      */
     private suspend fun requestPost(client: RestClientUtils, path: String): FetchPostResult = applicationScope.async {
-        val result = awaitRestRequest { listener, errorListener ->
-            client.getWithLocale(path, null, null, listener, errorListener)
-        }
+        val result = getWithLocale(client, path)
         val json = result.response
             ?: return@async FetchPostResult.Failure((result as? RestResult.Failure)?.let { statusCode(it.error) } ?: 0)
         withContext(ioDispatcher) {

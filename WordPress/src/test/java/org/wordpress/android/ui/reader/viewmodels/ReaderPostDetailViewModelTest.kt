@@ -55,7 +55,6 @@ import org.wordpress.android.ui.engagement.utils.GetLikesTestConfig.TEST_CONFIG_
 import org.wordpress.android.ui.engagement.utils.getGetLikesState
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
-import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
@@ -1266,7 +1265,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         val post = createDummyReaderPost(1)
         val storedPost = createDummyReaderPost(1).apply { text = "<p>Edited</p>" }
         viewModel.post = post
-        whenever(readerPostRepository.refreshPost(post)).thenReturn(ReaderActions.UpdateResult.CHANGED)
+        whenever(readerPostRepository.refreshPost(post)).thenReturn(UpdateResult.CHANGED)
         whenever(readerPostTableWrapper.getBlogPost(post.blogId, post.postId, false)).thenReturn(storedPost)
         val refreshed = mutableListOf<PostRefreshed>()
         viewModel.postRefreshed.observeForever { refreshed.add(it.peekContent()) }
@@ -1284,7 +1283,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         viewModel.post = post
         whenever(readerPostRepository.refreshPost(post)).doSuspendableAnswer {
             viewModel.post = relatedPost
-            ReaderActions.UpdateResult.CHANGED
+            UpdateResult.CHANGED
         }
         val refreshed = mutableListOf<PostRefreshed>()
         viewModel.postRefreshed.observeForever { refreshed.add(it.peekContent()) }
@@ -1299,7 +1298,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     fun `given the post is unchanged, when the post is refreshed, then the post stays and has no new body`() = test {
         val post = createDummyReaderPost(1)
         viewModel.post = post
-        whenever(readerPostRepository.refreshPost(post)).thenReturn(ReaderActions.UpdateResult.UNCHANGED)
+        whenever(readerPostRepository.refreshPost(post)).thenReturn(UpdateResult.UNCHANGED)
         val refreshed = mutableListOf<PostRefreshed>()
         viewModel.postRefreshed.observeForever { refreshed.add(it.peekContent()) }
 

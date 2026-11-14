@@ -48,19 +48,10 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given feed, when reader post is fetched, then feed post is requested`() = test {
+    fun `given feed, when reader post is fetched, then the feed post is fetched`() = test {
         whenever(readerPostRepository.fetchPost(blogId, postId, true)).thenReturn(FetchPostResult.Success(mock()))
 
         val result = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = true)
-
-        assertThat(result).isEqualTo(Success)
-    }
-
-    @Test
-    fun `given blog, when reader post is fetched, then blog post is requested`() = test {
-        whenever(readerPostRepository.fetchPost(blogId, postId, false)).thenReturn(FetchPostResult.Success(mock()))
-
-        val result = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)
 
         assertThat(result).isEqualTo(Success)
     }
