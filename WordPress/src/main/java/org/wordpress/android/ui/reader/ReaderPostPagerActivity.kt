@@ -25,8 +25,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
@@ -59,16 +59,14 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.EditorConstants
 import org.wordpress.android.ui.posts.EditorLauncher
 import org.wordpress.android.ui.prefs.AppPrefs
-import org.wordpress.android.ui.reader.ReaderEvents.DoSignIn
-import org.wordpress.android.ui.reader.ReaderEvents.PostSlugsRequestCompleted
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment.Companion.newInstance
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.actions.ReaderActions
-import org.wordpress.android.ui.reader.actions.ReaderActions.OnRequestListener
-import org.wordpress.android.ui.reader.actions.ReaderPostActions
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList
+import org.wordpress.android.ui.reader.repository.FetchPostResult
 import org.wordpress.android.ui.reader.repository.ReaderPostListEvent
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.repository.ReaderPostListTarget
 import org.wordpress.android.ui.reader.repository.ReaderPostUpdater
 import org.wordpress.android.ui.reader.repository.UpdateAction
@@ -86,7 +84,6 @@ import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.UriWrapper
-import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
@@ -146,7 +143,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     private var lastSelectedPosition = -1
     private var postListType: ReaderPostListType? = null
 
-    private var postSlugsResolutionUnderway = false
+    // looks up a post slug's IDs, then loads the pager itself
+    private var slugResolutionJob: Job? = null
     private var isRequestingMorePosts = false
     private var isSinglePostView = false
     private var isRelatedPostView = false
@@ -158,6 +156,9 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
     @Inject
     lateinit var siteStore: SiteStore
+
+    @Inject
+    lateinit var readerPostRepository: ReaderPostRepository
 
     @Inject
     lateinit var readerTracker: ReaderTracker
@@ -185,9 +186,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
     @Inject
     lateinit var seenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
-
-    @Inject
-    lateinit var urlUtilsWrapper: UrlUtilsWrapper
 
     @Inject
     lateinit var deepLinkTrackingUtils: DeepLinkTrackingUtils
@@ -269,8 +267,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                         ReaderTag::class.java
                     )
             }
-            postSlugsResolutionUnderway =
-                savedInstanceState.getBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY)
             if (savedInstanceState.containsKey(ReaderConstants.KEY_TRACKED_POSITIONS)) {
                 BundleCompat.getSerializable(
                     savedInstanceState,
@@ -334,13 +330,13 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         })
 
         onBackPressedDispatcher.addCallback(this) {
-            pagerAdapter?.getFragmentAtPosition(lastSelectedPosition)?.let { fragment ->
+            // there's no page yet while a post slug is being looked up
+            val fragment = pagerAdapter?.getFragmentAtPosition(lastSelectedPosition)
+            when {
                 // if full screen video is showing, hide the custom view rather than navigate back
-                if (fragment.isCustomViewShowing) {
-                    fragment.hideCustomView()
-                } else if (!fragment.goBackInPostHistory()) {
-                    onBackPressedDispatcher.onBackPressedCompat(this)
-                }
+                fragment?.isCustomViewShowing == true -> fragment.hideCustomView()
+                fragment?.goBackInPostHistory() == true -> Unit
+                else -> onBackPressedDispatcher.onBackPressedCompat(this)
             }
         }
 
@@ -441,7 +437,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     private fun finishDeepLinkRequestFromOverlay(action: String, uri: Uri) {
         finishDeepLinkRequest(action, uri)
         // We interrupted the normal flow to show the overly, we now need to rerun these methods on a dismiss action
-        loadPosts(blogId, postId)
+        loadPostsUnlessResolvingSlug()
         backFromLogin = false
     }
 
@@ -558,58 +554,33 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                         blogId = post.blogId
                         postId = post.postId
                     } else {
-                        // not stored locally, so request it
-                        ReaderPostActions.requestBlogPost(
-                            blogIdentifier, postIdentifier,
-                            object : OnRequestListener<String?> {
-                                override fun onSuccess(result: String?) {
-                                    postSlugsResolutionUnderway = false
-
-                                    // the scheme is removed to match the query pattern in ReaderPostTable
-                                    // .getBlogPost
-                                    val primaryBlogIdentifier = urlUtilsWrapper.removeScheme(
-                                        result!!
-                                    )
-
-                                    // getBlogPost utilizes the primaryBlogIdentifier instead of blogIdentifier
-                                    // since
-                                    // the custom and *.wordpress.com domains need to be used interchangeably since
-                                    // they can both be used as the primary domain when identifying the blog_url
-                                    // in the ReaderPostTable query.
-                                    val readerPost =
-                                        ReaderPostTable.getBlogPost(
-                                            primaryBlogIdentifier, postIdentifier,
-                                            true
-                                        )
-                                    val slugsResolved = if (readerPost != null)
-                                        PostSlugsRequestCompleted(
-                                            200, readerPost.blogId,
-                                            readerPost.postId
-                                        )
-                                    else
-                                        PostSlugsRequestCompleted(200, 0, 0)
-                                    // notify that the slug resolution request has completed
-                                    EventBus.getDefault().post(slugsResolved)
-
-                                    // post wasn't available locally earlier so, track it now
-                                    if (readerPost != null) {
-                                        trackPost(readerPost.blogId, readerPost.postId)
-                                    }
-                                }
-
-                                override fun onFailure(statusCode: Int) {
-                                    postSlugsResolutionUnderway = false
-                                    // notify that the slug resolution request has completed
-                                    EventBus.getDefault()
-                                        .post(PostSlugsRequestCompleted(statusCode, 0, 0))
-                                }
-                            })
-                        postSlugsResolutionUnderway = true
+                        // not stored locally, so request it before showing the pager
+                        resolvePostSlug(blogIdentifier, postIdentifier)
                     }
                 }
             }
         } else {
             ToastUtils.showToast(this, R.string.error_generic)
+        }
+    }
+
+    private fun resolvePostSlug(blogSlug: String, postSlug: String) {
+        if (slugResolutionJob?.isActive == true) return
+        // the post is new to the pager, e.g. resolved after signing in, so it hasn't been tracked
+        trackedPositions.clear()
+        progressBar?.visibility = View.VISIBLE
+        slugResolutionJob = lifecycleScope.launch {
+            val result = readerPostRepository.fetchPostBySlug(blogSlug, postSlug)
+            progressBar?.visibility = View.GONE
+            // the page tracks the post once it's selected, or shows the error
+            when (result) {
+                is FetchPostResult.Success -> {
+                    blogId = result.post.blogId
+                    postId = result.post.postId
+                    loadPosts(blogId, postId)
+                }
+                is FetchPostResult.Failure -> loadPosts(blogId, postId, slugFailureStatus = result.statusCode)
+            }
         }
     }
 
@@ -735,7 +706,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         super.onResume()
         AppLog.d(AppLog.T.READER, "TRACK READER ReaderPostPagerActivity > START Count")
         readerTracker.start(ReaderTrackerType.PAGED_POST)
-        EventBus.getDefault().register(this)
 
         // We register the dispatcher in order to receive the OnPostUploaded event and show the snackbar
         dispatcher.register(this)
@@ -747,7 +717,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 handleDeepLinking()
             }
 
-            loadPosts(blogId, postId)
+            loadPostsUnlessResolvingSlug()
 
             // clear up the back-from-login flag anyway
             backFromLogin = false
@@ -758,7 +728,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         super.onPause()
         AppLog.d(AppLog.T.READER, "TRACK READER ReaderPostPagerActivity > STOP Count")
         readerTracker.stop(ReaderTrackerType.PAGED_POST)
-        EventBus.getDefault().unregister(this)
         dispatcher.unregister(this)
     }
 
@@ -796,11 +765,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             outState.putLong(ReaderConstants.ARG_POST_ID, id.postId)
         }
 
-        outState.putBoolean(
-            ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY,
-            postSlugsResolutionUnderway
-        )
-
         if (trackedPositions.size > 0) {
             outState.putSerializable(ReaderConstants.KEY_TRACKED_POSITIONS, trackedPositions)
         }
@@ -821,7 +785,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
      * if it hasn't already been done
      */
     private fun trackPostAtPositionIfNeeded(position: Int) {
-        if (!hasPagerAdapter() || trackedPositions.contains(position)) {
+        // a page whose post slug couldn't be looked up has no post to track
+        if (!hasPagerAdapter() || trackedPositions.contains(position) || pagerAdapter?.slugFailureStatus != null) {
             return
         }
 
@@ -843,11 +808,10 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         // ReaderPostTable.getBlogPost runs a rawQuery; do it off the main thread
         // (Volley/post-handler callbacks otherwise park on the SQLite connection pool).
         lifecycleScope.launch(Dispatchers.IO) {
-            ReaderPostActions.bumpPageViewForPost(siteStore, blogId, postId)
-
-            if (seenUnseenWithCounterFeatureConfig.isEnabled()) {
-                val currentPost = ReaderPostTable.getBlogPost(blogId, postId, true)
-                if (currentPost != null) {
+            val currentPost = ReaderPostTable.getBlogPost(blogId, postId, true)
+            if (currentPost != null) {
+                readerPostRepository.bumpPageView(currentPost)
+                if (seenUnseenWithCounterFeatureConfig.isEnabled()) {
                     postSeenStatusWrapper.markPostAsSeenSilently(currentPost)
                 }
             }
@@ -865,7 +829,12 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
      * be made active after loading unless gotoNext=true, in which case the post after the passed
      * one will be made active
      */
-    private fun loadPosts(blogId: Long, postId: Long) {
+    private fun loadPostsUnlessResolvingSlug() {
+        // resolvePostSlug loads them once it has the post's IDs
+        if (slugResolutionJob?.isActive != true) loadPosts(blogId, postId)
+    }
+
+    private fun loadPosts(blogId: Long, postId: Long, slugFailureStatus: Int? = null) {
         object : Thread() {
             override fun run() {
                 val idList: ReaderBlogIdPostIdList
@@ -901,7 +870,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                         AppLog.T.READER,
                         "reader pager > creating adapter"
                     )
-                    val adapter = PostPagerAdapter(idList)
+                    val adapter = PostPagerAdapter(idList, slugFailureStatus)
                     // Assigning the adapter triggers FragmentStateAdapter to restore any
                     // pending saved-state fragments. On a process-death restore those keys
                     // may point to fragments that no longer exist, which throws
@@ -1005,17 +974,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMainThread(event: DoSignIn?) {
-        if (isFinishing) {
-            return
-        }
-
-        readerTracker.trackUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, interceptedUri!!)
-        ActivityLauncher.loginWithoutMagicLink(this)
-    }
-
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -1107,6 +1065,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
      */
     private inner class PostPagerAdapter(
         private val idList: ReaderBlogIdPostIdList,
+        // the status code of a failed post slug request, which the page shows as its error
+        val slugFailureStatus: Int?,
     ) : FragmentStateAdapter(this@ReaderPostPagerActivity) {
         var allPostsLoaded: Boolean = false
 
@@ -1154,7 +1114,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 isRelatedPost = isRelatedPostView,
                 interceptedUri = interceptedUri,
                 postListType = postListType,
-                postSlugsResolutionUnderway = postSlugsResolutionUnderway
+                slugFailureStatus = slugFailureStatus
             )
         }
 

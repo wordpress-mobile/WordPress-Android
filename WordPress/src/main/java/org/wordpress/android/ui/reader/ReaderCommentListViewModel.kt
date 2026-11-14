@@ -27,6 +27,7 @@ import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
 import org.wordpress.android.ui.reader.repository.ReaderCommentRepository
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.suggestion.Suggestion
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -46,6 +47,7 @@ import javax.inject.Named
 class ReaderCommentListViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val repository: ReaderCommentRepository,
+    private val postRepository: ReaderPostRepository,
     private val accountStore: AccountStore,
     private val moderationFeatureConfig: ReaderCommentsModerationFeatureConfig,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
@@ -164,7 +166,7 @@ class ReaderCommentListViewModel @Inject constructor(
     fun onRefresh() {
         val post = post ?: return
         launch {
-            if (repository.updatePost(post).isNewOrChanged) reloadPost()
+            if (postRepository.refreshPost(post).isNewOrChanged) reloadPost()
         }
         launch { refresh(isPullToRefresh = true) }
     }

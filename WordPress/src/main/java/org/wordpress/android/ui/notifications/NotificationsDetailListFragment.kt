@@ -58,9 +58,9 @@ import org.wordpress.android.ui.notifications.blocks.UserNoteBlock
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock.OnGravatarClickedListener
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
-import org.wordpress.android.ui.reader.actions.ReaderPostActions
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.COMMENT_NOTIFICATION
 import org.wordpress.android.ui.reader.repository.ReaderCommentRepository
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.NOTIFS
@@ -87,6 +87,9 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
 
     @Inject
     lateinit var readerCommentRepository: ReaderCommentRepository
+
+    @Inject
+    lateinit var readerPostRepository: ReaderPostRepository
 
     @Inject
     lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
@@ -618,7 +621,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                 note.postId.toLong()
             )
         ) {
-            ReaderPostActions.requestBlogPost(note.siteId.toLong(), note.postId.toLong(), null)
+            readerPostRepository.prefetchPost(note.siteId.toLong(), note.postId.toLong())
         }
 
         // Request reader comments until we retrieve the comment for this note

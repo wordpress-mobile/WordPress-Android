@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.flow
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.AlreadyRunning
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.Failed
@@ -17,7 +16,6 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 
 class PostLikeUseCase @Inject constructor(
-    private val readerPostActionsWrapper: ReaderPostActionsWrapper,
     private val readerPostRepository: ReaderPostRepository,
     private val readerTracker: ReaderTracker,
     private val accountStore: AccountStore,
@@ -64,7 +62,7 @@ class PostLikeUseCase @Inject constructor(
             readerTracker.trackPost(likedStat, post, source)
             // Consider a like to be enough to push a page view - solves a long-standing question
             // from folks who ask 'why do I have more likes than page views?'.
-            readerPostActionsWrapper.bumpPageViewForPost(post)
+            readerPostRepository.bumpPageView(post)
         } else {
             val unLikedStat = if (source == ReaderTracker.SOURCE_POST_DETAIL) {
                 AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_UNLIKED

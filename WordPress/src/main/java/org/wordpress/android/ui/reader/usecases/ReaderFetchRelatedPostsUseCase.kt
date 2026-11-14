@@ -1,59 +1,35 @@
 package org.wordpress.android.ui.reader.usecases
 
-import kotlinx.coroutines.suspendCancellableCoroutine
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.ui.reader.ReaderEvents.RelatedPostsUpdated
-import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.FetchRelatedPostsState.AlreadyRunning
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.FetchRelatedPostsState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.FetchRelatedPostsState.Failed.RequestFailed
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.FetchRelatedPostsState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
+import java.util.Collections
 import javax.inject.Inject
-import kotlin.coroutines.Continuation
-import kotlin.coroutines.resume
 
 class ReaderFetchRelatedPostsUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val readerPostActionsWrapper: ReaderPostActionsWrapper
+    private val readerPostRepository: ReaderPostRepository
 ) {
-    private val continuations: MutableMap<RelatedPostsRequest, Continuation<FetchRelatedPostsState>?> = mutableMapOf()
+    private val inFlightRequests = Collections.synchronizedSet(mutableSetOf<RelatedPostsRequest>())
 
     suspend fun fetchRelatedPosts(sourcePost: ReaderPost): FetchRelatedPostsState {
         val request = RelatedPostsRequest(postId = sourcePost.postId, blogId = sourcePost.blogId)
-
         return when {
-            continuations[request] != null -> AlreadyRunning
-
             !networkUtilsWrapper.isNetworkAvailable() -> NoNetwork
-
-            else -> {
-                suspendCancellableCoroutine { cont ->
-                    continuations[request] = cont
-                    readerPostActionsWrapper.requestRelatedPosts(sourcePost)
-                }
+            !inFlightRequests.add(request) -> AlreadyRunning
+            else -> try {
+                readerPostRepository.fetchRelatedPosts(sourcePost)
+                    ?.let { (local, global) -> Success(localRelatedPosts = local, globalRelatedPosts = global) }
+                    ?: RequestFailed
+            } finally {
+                inFlightRequests.remove(request)
             }
         }
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    fun onRelatedPostUpdated(event: RelatedPostsUpdated) {
-        val result = if (event.didSucceed()) {
-            Success(
-                localRelatedPosts = event.localRelatedPosts,
-                globalRelatedPosts = event.globalRelatedPosts
-            )
-        } else {
-            RequestFailed
-        }
-
-        val request = RelatedPostsRequest(postId = event.sourcePostId, blogId = event.sourceSiteId)
-        continuations[request]?.resume(result)
-        continuations[request] = null
     }
 
     sealed class FetchRelatedPostsState {
