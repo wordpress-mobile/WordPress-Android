@@ -241,6 +241,9 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun shouldShowBookmarksSavedLocallyDialog(): Boolean = AppPrefs.shouldShowBookmarksSavedLocallyDialog()
     fun setBookmarksSavedLocallyDialogShown() = AppPrefs.setBookmarksSavedLocallyDialogShown()
 
+    fun shouldShowReaderSavedPostsSyncDialog(): Boolean = AppPrefs.shouldShowReaderSavedPostsSyncDialog()
+    fun setReaderSavedPostsSyncDialogShown() = AppPrefs.setReaderSavedPostsSyncDialogShown()
+
     fun isReaderSavedPostsImported(userId: Long): Boolean = AppPrefs.isReaderSavedPostsImported(userId)
 
     fun setReaderSavedPostsImported(userId: Long) = AppPrefs.setReaderSavedPostsImported(userId)

@@ -243,6 +243,10 @@ public class AppPrefs {
 
         BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN,
 
+        // Whether the dialog saying saved Reader posts sync with the account has been shown. Separate from
+        // BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN, so people who saw the local-only one still hear about syncing
+        READER_SAVED_POSTS_SYNC_DIALOG_SHOWN,
+
         // Set when the user explicitly turns New Stats off. Undeletable so the choice survives
         // sign-out - it is the only thing that can override the android_new_stats rollout flag,
         // so erasing it would silently push the user back into New Stats.
@@ -593,6 +597,14 @@ public class AppPrefs {
 
     public static void setBookmarksSavedLocallyDialogShown() {
         setBoolean(UndeletablePrefKey.BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN, false);
+    }
+
+    public static boolean shouldShowReaderSavedPostsSyncDialog() {
+        return !getBoolean(UndeletablePrefKey.READER_SAVED_POSTS_SYNC_DIALOG_SHOWN, false);
+    }
+
+    public static void setReaderSavedPostsSyncDialogShown() {
+        setBoolean(UndeletablePrefKey.READER_SAVED_POSTS_SYNC_DIALOG_SHOWN, true);
     }
 
     public static boolean isReaderSavedPostsImported(long userId) {

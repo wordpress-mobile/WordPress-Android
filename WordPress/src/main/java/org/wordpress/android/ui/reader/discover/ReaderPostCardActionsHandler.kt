@@ -540,15 +540,27 @@ class ReaderPostCardActionsHandler @Inject constructor(
                         )
                     }
                     if (it.bookmarked && !isBookmarkList) {
-                        if (appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()) {
+                        // each message is shown once, so people who saw the local-only one still hear that
+                        // saves now sync
+                        val isSynced = savedPostsRepository.isSyncedWithAccount
+                        val shouldShowDialog = if (isSynced) {
+                            appPrefsWrapper.shouldShowReaderSavedPostsSyncDialog()
+                        } else {
+                            appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()
+                        }
+                        if (shouldShowDialog) {
                             _navigationEvents.postValue(
                                 Event(
                                     ShowBookmarkedSavedOnlyLocallyDialog(
                                         okButtonAction = {
-                                            appPrefsWrapper.setBookmarksSavedLocallyDialogShown()
+                                            if (isSynced) {
+                                                appPrefsWrapper.setReaderSavedPostsSyncDialogShown()
+                                            } else {
+                                                appPrefsWrapper.setBookmarksSavedLocallyDialogShown()
+                                            }
                                             showSnackbarAction.invoke()
                                         },
-                                        message = if (savedPostsRepository.isSyncedWithAccount) {
+                                        message = if (isSynced) {
                                             R.string.reader_save_posts_synced_dialog_message
                                         } else {
                                             R.string.reader_save_posts_locally_dialog_message
