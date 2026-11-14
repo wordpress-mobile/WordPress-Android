@@ -373,8 +373,7 @@ class ReaderPostRepository @Inject constructor(
             "?size_local=$NUM_RELATED_POSTS_TO_REQUEST" +
             "&size_global=$NUM_RELATED_POSTS_TO_REQUEST" +
             "&fields=" + ReaderSimplePost.SIMPLE_POST_FIELDS
-        val json = getWithLocale(getRestClientUtilsV1_2(), path).response ?: return null
-        val jsonPosts = json.optJSONArray("posts") ?: return null
+        val jsonPosts = getWithLocale(getRestClientUtilsV1_2(), path).response?.optJSONArray("posts") ?: return null
 
         return withContext(ioDispatcher) {
             val local = ReaderSimplePostList()
@@ -428,10 +427,12 @@ class ReaderPostRepository @Inject constructor(
         val jsonLikes = JSONUtils.getJSONChild(jsonPost, "meta/data/likes") ?: return false
         val likingUsers = ReaderUserList.fromJsonLikes(jsonLikes)
         val likingUserIds = likingUsers.userIds
-        if (likingUserIds.isSameList(ReaderLikeTable.getLikesForPost(post))) return false
-        ReaderUserTable.addOrUpdateUsers(likingUsers)
-        ReaderLikeTable.setLikesForPost(post, likingUserIds)
-        return true
+        val changed = !likingUserIds.isSameList(ReaderLikeTable.getLikesForPost(post))
+        if (changed) {
+            ReaderUserTable.addOrUpdateUsers(likingUsers)
+            ReaderLikeTable.setLikesForPost(post, likingUserIds)
+        }
+        return changed
     }
 
     /**

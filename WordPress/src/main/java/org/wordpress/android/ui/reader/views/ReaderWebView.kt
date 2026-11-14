@@ -15,6 +15,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.core.view.isVisible
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.wordpress.android.WordPress
@@ -205,7 +206,7 @@ class ReaderWebView @JvmOverloads constructor(
         // without being clicked before the page has loaded
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
             val url = request.url.toString()
-            return view.visibility == View.VISIBLE &&
+            return view.isVisible &&
                 isValidClickedUrl(url) &&
                 readerWebView.urlClickListener?.onUrlClick(url) == true
         }

@@ -18,16 +18,17 @@ class ReaderFetchRelatedPostsUseCase @Inject constructor(
     private val inFlightRequests = Collections.synchronizedSet(mutableSetOf<RelatedPostsRequest>())
 
     suspend fun fetchRelatedPosts(sourcePost: ReaderPost): FetchRelatedPostsState {
-        if (!networkUtilsWrapper.isNetworkAvailable()) return NoNetwork
-
         val request = RelatedPostsRequest(postId = sourcePost.postId, blogId = sourcePost.blogId)
-        if (!inFlightRequests.add(request)) return AlreadyRunning
-        return try {
-            readerPostRepository.fetchRelatedPosts(sourcePost)
-                ?.let { (local, global) -> Success(localRelatedPosts = local, globalRelatedPosts = global) }
-                ?: RequestFailed
-        } finally {
-            inFlightRequests.remove(request)
+        return when {
+            !networkUtilsWrapper.isNetworkAvailable() -> NoNetwork
+            !inFlightRequests.add(request) -> AlreadyRunning
+            else -> try {
+                readerPostRepository.fetchRelatedPosts(sourcePost)
+                    ?.let { (local, global) -> Success(localRelatedPosts = local, globalRelatedPosts = global) }
+                    ?: RequestFailed
+            } finally {
+                inFlightRequests.remove(request)
+            }
         }
     }
 

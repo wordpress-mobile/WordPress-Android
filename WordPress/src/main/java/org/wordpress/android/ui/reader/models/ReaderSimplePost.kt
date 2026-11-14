@@ -11,15 +11,19 @@ import org.wordpress.android.util.PhotonUtils
 /**
  * Simplified version of a reader post, as returned by the related posts endpoint
  */
-class ReaderSimplePost private constructor(
-    val postId: Long,
-    val siteId: Long,
-    val title: String,
-    val excerpt: String,
-    val siteName: String,
-    val featuredImageUrl: String,
-    val railcarJson: String?
-) {
+class ReaderSimplePost private constructor(val postId: Long, val siteId: Long, json: JSONObject) {
+    val title: String = JSONUtils.getStringDecoded(json, "title")
+    val excerpt: String = HtmlUtils.fastStripHtml(JSONUtils.getString(json, "excerpt")).trim()
+    val siteName: String = JSONUtils.getStringDecoded(json, "site_name")
+    val featuredImageUrl: String = JSONUtils.getString(json, "featured_image").ifEmpty {
+        // with no featured image, use the featured media if it's an image
+        json.optJSONObject("featured_media")
+            ?.takeIf { JSONUtils.getString(it, "type") == "image" }
+            ?.let { JSONUtils.getString(it, "uri") }
+            .orEmpty()
+    }
+    val railcarJson: String? = json.optJSONObject("railcar")?.toString()
+
     private var featuredImageForDisplay: String? = null
 
     fun hasTitle() = title.isNotEmpty()
@@ -54,24 +58,7 @@ class ReaderSimplePost private constructor(
                 return null
             }
 
-            var featuredImageUrl = JSONUtils.getString(json, "featured_image")
-            // if there's no featured image, check if featured media has been set to an image
-            if (featuredImageUrl.isEmpty()) {
-                val jsonMedia = json.optJSONObject("featured_media")
-                if (JSONUtils.getString(jsonMedia, "type") == "image") {
-                    featuredImageUrl = JSONUtils.getString(jsonMedia, "uri")
-                }
-            }
-
-            return ReaderSimplePost(
-                postId = postId,
-                siteId = siteId,
-                title = JSONUtils.getStringDecoded(json, "title"),
-                excerpt = HtmlUtils.fastStripHtml(JSONUtils.getString(json, "excerpt")).trim(),
-                siteName = JSONUtils.getStringDecoded(json, "site_name"),
-                featuredImageUrl = featuredImageUrl,
-                railcarJson = json.optJSONObject("railcar")?.toString()
-            )
+            return ReaderSimplePost(postId, siteId, json)
         }
     }
 }
