@@ -35,6 +35,10 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun isVideoMimeType(mimeType: String?): Boolean =
         org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType(mimeType)
 
+    /** @return whether the location was removed; false leaves it in the file. */
+    fun stripImageLocation(imagePath: String): Boolean =
+        org.wordpress.android.fluxc.utils.MediaUtils.stripLocation(imagePath)
+
     fun isInMediaStore(mediaUri: Uri?): Boolean =
         MediaUtils.isInMediaStore(mediaUri)
 
